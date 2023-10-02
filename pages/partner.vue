@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
+const secondLevelReferrals = ref(0)
 
 definePageMeta({
   layout: 'app',
@@ -23,34 +24,44 @@ async function copyToClipboard(text: string) {
 const url = runtimeConfig.public.siteUrl
 
 const refUrl = computed(() => `${url}/register?ref=${client.username}`)
+
+async function getSecondLevelReferrals() {
+  const { data }: any = await useFetch('/api/partner/getSecondLevelReferrals', {
+    method: 'GET',
+  })
+  if (data.value && data.value.status === 'ok') {
+    secondLevelReferrals.value = data.value.secondLevelReferralsCount
+  }
+}
+
+await getSecondLevelReferrals()
 </script>
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mt-4">
-      Партнерская программа
-    </h1>
+    <h1 class="text-2xl font-bold mt-4">Партнерская программа</h1>
     <p class="text-xs font-light mt-1 lg:text-sm">
       Приглашайте друзей и получайте бонусы
     </p>
     <p class="text-xs mt-1 lg:text-sm font-bold">
-      Вывод финансовых средств недоступен до 15.10.2023. Для перевода реферальных на основной баланс напишите в службу заботы.
+      Вывод финансовых средств недоступен до 15.10.2023. Для перевода
+      реферальных на основной баланс напишите в службу заботы.
     </p>
     <div class="card bg-base-200 p-4 mt-6 flex flex-col gap-2">
       <div class="account">
-        <div>
-          Ваш партнерский счет:
-        </div>
+        <div>Ваш партнерский счет:</div>
         <div class="balance text-xl text-primary font-bold">
           {{ currency.format(store.client.partner.balance) }}
         </div>
       </div>
       <div class="referrals">
-        <div>
-          Приглашенных пользователей:
-        </div>
+        <div>Приглашенных пользователей:</div>
         <div class="count text-xl text-primary font-bold">
           {{ store.client.partner.refCount }} человек
+        </div>
+        <div>Рефералов 2 уровня:</div>
+        <div class="count text-xl text-primary font-bold">
+          {{ secondLevelReferrals }} человек
         </div>
       </div>
       <div class="divider m-0" />
@@ -58,7 +69,10 @@ const refUrl = computed(() => `${url}/register?ref=${client.username}`)
         <button class="btn btn-sm btn-primary" @click="withdrawModal = true">
           Вывод средств
         </button>
-        <button class="btn btn-sm btn-primary" @click="paymentHistoryModal = true">
+        <button
+          class="btn btn-sm btn-primary"
+          @click="paymentHistoryModal = true"
+        >
           История баланса
         </button>
       </div>
@@ -66,9 +80,16 @@ const refUrl = computed(() => `${url}/register?ref=${client.username}`)
     <div class="linkcard card bg-base-200 p-4 mt-2 flex flex-col gap-2">
       <div>
         <div>Ваша ссылка для приглашения:</div>
-        <div class="bg-base-100 rounded-lg p-2 border border-primary mt-2 flex justify-between gap-2 items-center">
-          <span class="link lg:link-hover" @click="copyToClipboard(refUrl)">{{ refUrl }}</span>
-          <button class="btn btn-sm btn-primary hidden lg:block" @click="copyToClipboard(refUrl)">
+        <div
+          class="bg-base-100 rounded-lg p-2 border border-primary mt-2 flex justify-between gap-2 items-center"
+        >
+          <span class="link lg:link-hover" @click="copyToClipboard(refUrl)">{{
+            refUrl
+          }}</span>
+          <button
+            class="btn btn-sm btn-primary hidden lg:block"
+            @click="copyToClipboard(refUrl)"
+          >
             Скопировать
           </button>
         </div>
@@ -80,11 +101,17 @@ const refUrl = computed(() => `${url}/register?ref=${client.username}`)
         </div>
       </div>
     </div>
-    <PartnerWithdrawModal v-if="withdrawModal" :state="withdrawModal" @close="withdrawModal = false" />
-    <PartnerPaymentHistoryModal v-if="paymentHistoryModal" :state="paymentHistoryModal" @close="paymentHistoryModal = false" />
+    <PartnerWithdrawModal
+      v-if="withdrawModal"
+      :state="withdrawModal"
+      @close="withdrawModal = false"
+    />
+    <PartnerPaymentHistoryModal
+      v-if="paymentHistoryModal"
+      :state="paymentHistoryModal"
+      @close="paymentHistoryModal = false"
+    />
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
