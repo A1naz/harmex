@@ -21,7 +21,6 @@ export default eventHandler(async (event) => {
   referralsRefAccs.forEach((el: any) => {
     secondLevelReferralsCount += el.referrals.length
   })
-  console.log(secondLevelReferralsCount);
   
   return { status: 'ok', secondLevelReferralsCount }
 })
