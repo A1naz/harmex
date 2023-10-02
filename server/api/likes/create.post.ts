@@ -16,6 +16,7 @@ export default eventHandler(async (event) => {
   const body = await readBody(event)
   const article = body.article
   const reviews: any[] = body.reviews
+  const dates: any[] = body.dates
   let likes = 0
   let dislikes = 0
   reviews.forEach((review: any) => {
@@ -39,6 +40,10 @@ export default eventHandler(async (event) => {
     image,
     createdDate: new Date(),
   })
+  if (dates) {
+    created.dateStart = new Date(dates[0])
+    created.dateEnd = new Date(dates[1])
+  }
   await created.save()
   return {
     status: 'ok',

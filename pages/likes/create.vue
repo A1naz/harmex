@@ -55,48 +55,43 @@ async function getProductReviews() {
 }
 function addLike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id)
-      review.addLikes++
+    if (review.id === id) review.addLikes++
     return review
   })
   changedReviews.value.find((review: any) => review.id === id)
-    ? changedReviews.value = changedReviews.value.map((review: any) => {
-      if (review.id === id)
-        review.likes++
+    ? (changedReviews.value = changedReviews.value.map((review: any) => {
+        if (review.id === id) review.likes++
 
-      return review
-    })
+        return review
+      }))
     : changedReviews.value.push({
-      id,
-      likes: 1,
-      dislikes: 0,
-    })
+        id,
+        likes: 1,
+        dislikes: 0,
+      })
 }
 
 function removeLike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id)
-      review.addLikes--
+    if (review.id === id) review.addLikes--
     return review
   })
   const review = changedReviews.value.find((review: any) => review.id === id)
   if (review) {
     if (review.likes > 1) {
       changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id)
-          review.likes--
+        if (review.id === id) review.likes--
 
         return review
       })
-    }
-    else {
+    } else {
       if (review.likes === 1 && review.dislikes === 0) {
-        changedReviews.value = changedReviews.value.filter((review: any) => review.id !== id)
-      }
-      else {
+        changedReviews.value = changedReviews.value.filter(
+          (review: any) => review.id !== id
+        )
+      } else {
         changedReviews.value = changedReviews.value.map((review: any) => {
-          if (review.id === id)
-            review.likes--
+          if (review.id === id) review.likes--
 
           return review
         })
@@ -106,46 +101,41 @@ function removeLike(id: string) {
 }
 function addDislike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id)
-      review.addDislikes++
+    if (review.id === id) review.addDislikes++
     return review
   })
   changedReviews.value.find((review: any) => review.id === id)
-    ? changedReviews.value = changedReviews.value.map((review: any) => {
-      if (review.id === id)
-        review.dislikes++
+    ? (changedReviews.value = changedReviews.value.map((review: any) => {
+        if (review.id === id) review.dislikes++
 
-      return review
-    })
+        return review
+      }))
     : changedReviews.value.push({
-      id,
-      likes: 0,
-      dislikes: 1,
-    })
+        id,
+        likes: 0,
+        dislikes: 1,
+      })
 }
 function removeDislike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id)
-      review.addDislikes--
+    if (review.id === id) review.addDislikes--
     return review
   })
   const review = changedReviews.value.find((review: any) => review.id === id)
   if (review) {
     if (review.dislikes > 1) {
       changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id)
-          review.dislikes--
+        if (review.id === id) review.dislikes--
         return review
       })
-    }
-    else {
+    } else {
       if (review.likes === 0 && review.dislikes === 1) {
-        changedReviews.value = changedReviews.value.filter((review: any) => review.id !== id)
-      }
-      else {
+        changedReviews.value = changedReviews.value.filter(
+          (review: any) => review.id !== id
+        )
+      } else {
         changedReviews.value = changedReviews.value.map((review: any) => {
-          if (review.id === id)
-            review.dislikes--
+          if (review.id === id) review.dislikes--
           return review
         })
       }
@@ -166,6 +156,10 @@ async function save() {
     body: {
       article: savedArticle.value,
       reviews: changedReviews.value,
+      dates:
+        productDateRangeModel.value.length > 0
+          ? productDateRangeModel.value
+          : null,
     },
   })
   if (error.value) {
@@ -191,45 +185,52 @@ async function cancel() {
   getProductReviews()
 }
 function getAddedLikes() {
-  const addedLikes = changedReviews.value.reduce((acc: any, review: any) => {
-    acc.likes += review.likes
-    acc.dislikes += review.dislikes
-    return acc
-  }, {
-    likes: 0,
-    dislikes: 0,
-  })
+  const addedLikes = changedReviews.value.reduce(
+    (acc: any, review: any) => {
+      acc.likes += review.likes
+      acc.dislikes += review.dislikes
+      return acc
+    },
+    {
+      likes: 0,
+      dislikes: 0,
+    }
+  )
   return addedLikes
 }
 function sortReviews() {
   const val = sortBy.value
   if (val === 'date') {
-    reviews.value = reviews.value.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  }
-  else if (val === 'rating') {
+    reviews.value = reviews.value.sort(
+      (a: any, b: any) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
+  } else if (val === 'rating') {
     reviews.value = reviews.value.sort((a: any, b: any) => {
-      if (b.rating > a.rating)
-        return 1
-      else if (b.rating < a.rating)
-        return -1
+      if (b.rating > a.rating) return 1
+      else if (b.rating < a.rating) return -1
       else return 0
     })
-  }
-  else if (val === 'rank') {
+  } else if (val === 'rank') {
     reviews.value = reviews.value.sort((a: any, b: any) => b.rank - a.rank)
   }
 }
-watch(() => sortBy.value, (route) => {
-  selectSortBy.value = sortBy.value.toString()
-  sortReviews()
-}, { deep: true, immediate: true })
+watch(
+  () => sortBy.value,
+  (route) => {
+    selectSortBy.value = sortBy.value.toString()
+    sortReviews()
+  },
+  { deep: true, immediate: true }
+)
+
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
+const productDateRangeModel = ref([])
 </script>
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mt-4">
-      Добавить лайки
-    </h1>
+    <h1 class="text-2xl font-bold mt-4">Добавить лайки</h1>
     <p class="text-xs text-gray-500 font-light mt-1 lg:text-sm">
       Укажите необходимое количество лайков/дизлайков к каждому отзыву.
     </p>
@@ -248,10 +249,16 @@ watch(() => sortBy.value, (route) => {
       </select>
       <div class="relative flex justify-end items-center flex-grow-0 w-60">
         <input
-          v-model="article" type="number" placeholder="Артикул" class="input input-primary input-sm input-bordered w-full"
+          v-model="article"
+          type="number"
+          placeholder="Артикул"
+          class="input input-primary input-sm input-bordered w-full"
           @keydown.enter="getProductReviews"
+        />
+        <button
+          class="btn btn-ghost btn-sm absolute normal-case"
+          @click="getProductReviews"
         >
-        <button class="btn btn-ghost btn-sm absolute normal-case" @click="getProductReviews">
           Найти
         </button>
       </div>
@@ -269,12 +276,32 @@ watch(() => sortBy.value, (route) => {
             Лайков: {{ getAddedLikes().likes }}
           </p>
           <p class="text-xs text-neutral-content lg:text-sm font-bold">
-            Дизлайков: {{ getAddedLikes().dislikes
-            }}
+            Дизлайков: {{ getAddedLikes().dislikes }}
           </p>
+
+{{ productDateRangeModel }}
+            <p class="text-xs text-neutral-content lg:text-sm font-bold hidden md:block">
+              Сроки выполнения:
+            </p>
+            <BuyoutDateRangePicker
+            v-model="productDateRangeModel"
+            class="w-32 hidden md:block"
+            :start-date="startDate"
+            />
         </div>
-        <div class="save ml-auto flex flex-col lg:flex-row gap-2">
-          <button class="btn btn-ghost text-neutral-content btn-sm" @click="cancel">
+        <div class="save ml-auto flex flex-col lg:flex-row gap-2 ">
+          <p class="text-xs text-neutral-content lg:text-sm font-bold block md:hidden">
+              Сроки выполнения:
+            </p>
+            <BuyoutDateRangePicker
+              v-model="productDateRangeModel"
+              class="w-32 block md:hidden"
+              :start-date="startDate"
+            />
+          <button
+            class="btn btn-ghost text-neutral-content btn-sm"
+            @click="cancel"
+          >
             Отмена
           </button>
           <button class="btn btn-primary btn-sm" @click="save">
@@ -283,12 +310,20 @@ watch(() => sortBy.value, (route) => {
         </div>
       </div>
     </Transition>
-    <div v-if="reviews.length" class="cards grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
+    <div
+      v-if="reviews.length"
+      class="cards grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12"
+    >
       <LikesReviewCard
-        v-for="(review, index) of reviews" :key="review.id" :index="index"
+        v-for="(review, index) of reviews"
+        :key="review.id"
+        :index="index"
         :add-likes="review.addLikes"
         :add-dislikes="review.addDislikes"
-        :info="review" @add-like="addLike" @remove-dislike="removeDislike" @add-dislike="addDislike"
+        :info="review"
+        @add-like="addLike"
+        @remove-dislike="removeDislike"
+        @add-dislike="addDislike"
         @remove-like="removeLike"
       />
       <div class="p-2 w-full col-span-1" />

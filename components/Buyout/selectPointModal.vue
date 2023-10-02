@@ -211,7 +211,7 @@ onKeyStroke('Escape', (e) => {
       'modal-open': props.state,
     }"
   >
-    <div v-if="state" class="modal-box w-11/12 max-w-7xl overflow-y-hidden">
+    <div v-if="state" class="modal-box w-11/12 max-w-7xl md:overflow-y-hidden">
       <div class="">
         <a class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</a>
         <div class="title mb-2">
@@ -223,11 +223,11 @@ onKeyStroke('Escape', (e) => {
         <div v-if="error" class="text-lg text-center text-error flex items-center justify-center h-full">
           {{ error }}
         </div>
-        <div v-if="!error" class="flex gap-4 min-h-112 md:h-full">
+        <div v-if="!error" class="flex-row md:flex md:flex-row gap-4 min-h-112 md:h-full">
           <div class="w-full h-full">
             <div id="ymap" class="yandex-container rounded-lg" />
           </div>
-          <div class="last h-full rounded-lg p-2 max-w-xs">
+          <div class="last md:h-full h-36 rounded-lg p-2 max-w-xs">
             <h2 class="font-bold">
               Последние использованные ПВЗ
             </h2>

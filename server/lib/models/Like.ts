@@ -12,6 +12,8 @@ const LikeSchema = new Schema({
   endedDate: { type: Date, default: null },
   progress: { type: Number },
   reviews: { type: Array },
+  dateStart: { type: Date },
+  dateEnd: { type: Date },
 })
 
 export const Like = model('Like', LikeSchema)

@@ -81,7 +81,7 @@ await getSecondLevelReferrals()
       <div>
         <div>Ваша ссылка для приглашения:</div>
         <div
-          class="bg-base-100 rounded-lg p-2 border border-primary mt-2 flex justify-between gap-2 items-center"
+          class="bg-base-100 rounded-lg p-2 border border-primary md:flex justify-between gap-2 items-center"
         >
           <span class="link lg:link-hover" @click="copyToClipboard(refUrl)">{{
             refUrl
@@ -93,6 +93,12 @@ await getSecondLevelReferrals()
             Скопировать
           </button>
         </div>
+        <button
+          class="btn btn-sm btn-primary block mt-2 lg:hidden"
+          @click="copyToClipboard(refUrl)"
+        >
+          Скопировать
+        </button>
       </div>
       <div>
         <div>Вознаграждение партнера:</div>
