@@ -117,7 +117,7 @@ await getSecondLevelReferrals()
       :state="paymentHistoryModal"
       @close="paymentHistoryModal = false"
     />
-    <div class="my-22"></div>
+    <div class="my-48"></div>
   </div>
 </template>
 
