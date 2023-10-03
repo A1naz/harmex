@@ -4,6 +4,7 @@ import { useWindowSize } from '@vueuse/core'
 import type { Rule } from '@/data/buyout/rules'
 import { rules } from '@/data/buyout/rules'
 import type { ISearchQueryChange } from '@/stores/buyout'
+const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
 
 const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
@@ -16,6 +17,13 @@ definePageMeta({
   auth: true,
   title: 'Добавить выкупы',
 })
+let isUserWarned: any = ref(false)
+onMounted(() => {
+  isUserWarned.value =
+    localStorage.getItem('isUserWarned') === 'true' ? true : false
+})
+
+const isWarningChecked = ref(false)
 
 const disabledCreateButton = ref(false)
 const ruleModal = ref(false)
@@ -33,17 +41,14 @@ const loading = ref(false)
 const now = useNow()
 
 async function addProduct() {
-  if (!article.value)
-    return
+  if (!article.value) return
   loading.value = true
   const string = article.value.toString().trim()
   if (string.includes(',')) {
     const articles = string.split(',')
-    for (const item of articles)
-      await store.addProduct(Number(item))
+    for (const item of articles) await store.addProduct(Number(item))
     loading.value = false
-  }
-  else {
+  } else {
     store.addProduct(Number(article.value)).finally(() => {
       loading.value = false
     })
@@ -119,7 +124,42 @@ const modalOpen = ref(false)
 function closeModal() {
   modalOpen.value = false
 }
-function openChecksModal() {
+async function openChecksModal() {
+  const productCountsByAddress: any = {}
+
+  if (!isUserWarned.value) {
+    const { data, error }: any = await useFetch(
+      '/api/buyout/checkPVZRestrictions',
+      {
+        method: 'GET',
+      }
+    )
+
+    if (data.value) {
+      const productsForTest = [...products.value, ...data.value.lastBuyouts]
+
+      for (const item of productsForTest) {
+        const dateStart: any = new Date(item.dateRange[0])
+        const dateEnd: any = new Date(item.dateRange[1])
+        const timeDiff = dateEnd - dateStart
+        const millisecondsPerDay = 24 * 60 * 60 * 1000
+        const daysBetween = Math.ceil(timeDiff / millisecondsPerDay)
+
+        productCountsByAddress[`${item.adress}:${item.article} `] =
+          (productCountsByAddress[`${item.adress}:${item.article} `] || 0) +
+          item.quantity
+        if (
+          Math.ceil(productCountsByAddress[`${item.adress}:${item.article} `]) /
+            daysBetween >
+          3
+        ) {
+          closeWarningModal.value?.click()
+          return
+        }
+      }
+    }
+  }
+
   let valid = true
   let errorMsg = ''
   products.value.forEach((item) => {
@@ -135,8 +175,7 @@ function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указан поисковый запрос'
     }
-    if (!item.selectedSize)
-      item.selectedSize = 'none'
+    if (!item.selectedSize) item.selectedSize = 'none'
   })
   if (!valid) {
     notify({
@@ -163,8 +202,7 @@ async function createBuyout() {
       type: 'error',
       duration: 3000,
     })
-  }
-  else if (data.value!.status === 'ok') {
+  } else if (data.value!.status === 'ok') {
     notify({
       title: 'Выкуп успешно создан',
       type: 'success',
@@ -177,11 +215,9 @@ async function createBuyout() {
 
 watch(products.value, (old, value) => {
   value.forEach((item, index) => {
-    if (item.quantity < 1)
-      products.value[index].quantity = 1
+    if (item.quantity < 1) products.value[index].quantity = 1
 
-    if (item.quantity > 1000)
-      products.value[index].quantity = 1000
+    if (item.quantity > 1000) products.value[index].quantity = 1000
   })
 })
 
@@ -192,8 +228,7 @@ async function getPickpoints() {
     })
     pickpoints.value = (data as any).points
     loading.value = false
-  }
-  catch (e: any) {
+  } catch (e: any) {
     notify({
       title: 'Что-то пошло не так',
       text: e?.message,
@@ -204,8 +239,7 @@ async function getPickpoints() {
 }
 
 async function pointModalOpen(index: number) {
-  if (!pickpoints.value)
-    loading.value = true
+  if (!pickpoints.value) loading.value = true
 
   store.selectedItem = index
   modalOpen.value = true
@@ -224,126 +258,111 @@ onKeyStroke('Escape', (e) => {
   ruleModal.value = false
   infoModal.value?.close()
 })
+
+function warned() {
+  isUserWarned.value = true
+  if (isWarningChecked.value == true) {
+    localStorage.setItem('isUserWarned', 'true')
+  }
+  openChecksModal()
+}
 </script>
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mt-4">
-      Добавить выкупы
-    </h1>
+    <h1 class="text-2xl font-bold mt-4">Добавить выкупы</h1>
     <p class="text-xs text-gray-500 font-light mt-1 lg:text-sm">
-      Создайте новые выкупы. Введите артикулы товаров и заполните необходимые данные.
+      Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
+      данные.
     </p>
     <div class="mt-6 flex items-center">
-      <div class="relative flex justify-end items-center flex-grow-0 w-80 gap-1">
+      <div
+        class="relative flex justify-end items-center flex-grow-0 w-80 gap-1"
+      >
         <input
-          v-model="article" placeholder="Артикул" class="input input-sm input-bordered w-full"
+          v-model="article"
+          placeholder="Артикул"
+          class="input input-sm input-bordered w-full"
           @keydown.enter="addProduct"
-        >
+        />
         <button class="btn btn-sm normal-case" @click="addProduct">
           Добавить
         </button>
       </div>
     </div>
     <ClientOnly>
-      <div v-if="width < 1500" class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
+      <div
+        v-if="width < 1500"
+        class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4"
+      >
         <BuyoutCreateCard
-          v-for="(product, index) in products" :key="index" :loading="!pickpoints?.length"
-          :product="product" :index="index" @point-modal-open="pointModalOpen"
+          v-for="(product, index) in products"
+          :key="index"
+          :loading="!pickpoints?.length"
+          :product="product"
+          :index="index"
+          @point-modal-open="pointModalOpen"
           @rule-modal-open="ruleModalOpen"
         />
       </div>
-      <div v-else class="products-table scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin">
+      <div
+        v-else
+        class="products-table scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin"
+      >
         <table class="table table-xs table-zebra w-full mt-4">
           <thead class="relative mb-2 text-sm text-base-content">
             <tr>
-              <th class="hidden 3xl:block">
-                №
-              </th>
+              <th class="hidden 3xl:block">№</th>
               <th class="w-12 text-center" @click="openInfoModal('picture')">
                 <IconCSS name="material-symbols:image-outline" size="20" />
               </th>
-              <th class="w-36 3xl:w-48">
-                Название
-              </th>
+              <th class="w-36 3xl:w-48">Название</th>
               <th @click="openInfoModal('price')">
                 <div class="flex justify-between w-full gap-1 items-center">
-                  <span>
-                    Цена
-                  </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs">
-                    ?
-                  </span>
+                  <span> Цена </span>
+                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th>
               <th @click="openInfoModal('quantity')">
-                <div class="flex justify-between w-full gap-1 items-center ">
-                  <span>
-                    Кол-во
-                  </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs">
-                    ?
-                  </span>
+                <div class="flex justify-between w-full gap-1 items-center">
+                  <span> Кол-во </span>
+                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th>
               <th @click="openInfoModal('size')">
                 <div class="flex justify-between w-full gap-1 items-center">
-                  <span>
-                    Размер
-                  </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs">
-                    ?
-                  </span>
+                  <span> Размер </span>
+                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th>
               <th @click="openInfoModal('sex')">
                 <div class="flex justify-between w-full gap-1 items-center">
-                  <span>
-                    Пол
-                  </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs">
-                    ?
-                  </span>
+                  <span> Пол </span>
+                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th>
               <th @click="openInfoModal('search')">
                 <div class="flex justify-between w-full gap-1 items-center">
-                  <span>
-                    Поисковые запросы
-                  </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs">
-                    ?
-                  </span>
+                  <span> Поисковые запросы </span>
+                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th>
               <th class="min-w-40" @click="openInfoModal('adress')">
                 <div class="flex justify-between w-full gap-1 items-center">
-                  <span>
-                    Адрес
-                  </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs">
-                    ?
-                  </span>
+                  <span> Адрес </span>
+                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th>
               <th @click="openInfoModal('dates')">
                 <div class="flex justify-between w-full gap-1 items-center">
-                  <span>
-                    Даты выкупов
-                  </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs">
-                    ?
-                  </span>
+                  <span> Даты выкупов </span>
+                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th>
               <th @click="openInfoModal('rules')">
                 <div class="flex justify-between w-full gap-1 items-center">
-                  <span>
-                    Правила
-                  </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs">
-                    ?
-                  </span>
+                  <span> Правила </span>
+                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th>
               <th class="text-base-content" />
@@ -356,52 +375,95 @@ onKeyStroke('Escape', (e) => {
 
           <tbody>
             <BuyoutCreateTableRow
-              v-for="(product, index) in products" :key="index" :product="product" :index="index" :loading="!pickpoints?.length" @rule-modal-open="ruleModalOpen" @point-modal-open="pointModalOpen"
+              v-for="(product, index) in products"
+              :key="index"
+              :product="product"
+              :index="index"
+              :loading="!pickpoints?.length"
+              @rule-modal-open="ruleModalOpen"
+              @point-modal-open="pointModalOpen"
             />
           </tbody>
         </table>
       </div>
       <BuyoutSelectPointModal
-        v-if="modalOpen" :state="modalOpen" :pickpoints="pickpoints" @callback="handleAddress"
+        v-if="modalOpen"
+        :state="modalOpen"
+        :pickpoints="pickpoints"
+        @callback="handleAddress"
         @close="closeModal"
       />
     </ClientOnly>
-    <div v-show="products.length" class="mt-6 flex justify-between items-center h-48">
+    <div
+      v-show="products.length"
+      class="mt-6 flex justify-between items-center h-48"
+    >
       <div>
         <div class="text-sm">
-          <span class="text-gray-500">Товаров:</span> <span class="font-bold">{{ totalQuantity
-          }} шт.</span>
+          <span class="text-gray-500">Товаров:</span>
+          <span class="font-bold">{{ totalQuantity }} шт.</span>
         </div>
         <div class="text-sm">
-          <span class="text-gray-500">Сумма:</span> <span class="font-bold">{{ currency.format(totalSum)
-          }}</span>
+          <span class="text-gray-500">Сумма:</span>
+          <span class="font-bold">{{ currency.format(totalSum) }}</span>
         </div>
       </div>
-      <button class="btn btn-primary btn-sm normal-case" :disabled="disabledCreateButton" @click="openChecksModal">
-        {{ products.length > 1 ? `Создать
-                            выкупы` : `Создать выкуп` }}
+      <button
+        class="btn btn-primary btn-sm normal-case"
+        :disabled="disabledCreateButton"
+        @click="openChecksModal"
+      >
+        {{
+          products.length > 1
+            ? `Создать
+                            выкупы`
+            : `Создать выкуп`
+        }}
       </button>
     </div>
 
     <div v-if="ruleModal">
-      <input id="ruleModal" type="checkbox" class="modal-toggle">
-      <label for="ruleModal" class="modal modal-open modal-bottom sm:modal-middle">
+      <input id="ruleModal" type="checkbox" class="modal-toggle" />
+      <label
+        for="ruleModal"
+        class="modal modal-open modal-bottom sm:modal-middle"
+      >
         <label for="" class="modal-box relative">
           <label
             for="ruleModal"
             class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
             @click="ruleModal = false"
-          >✕</label>
-          <h3 class="font-bold text-lg mb-2">Выберите нужные правила для этого выкупа</h3>
-          <div v-for="(rule) of defaultRules" :key="rule.id" class="">
+            >✕</label
+          >
+          <h3 class="font-bold text-lg mb-2">
+            Выберите нужные правила для этого выкупа
+          </h3>
+          <div v-for="rule of defaultRules" :key="rule.id" class="">
             <div class="label cursor-pointer flex gap-4 items-start">
-              <span class="label-text">{{ rule.id }}. {{ rule.description }}</span>
-              <input
-                :disabled="!!store.createProducts[selectedRuleProductIndex].rules.find(item => item.category === rule.category && item.id !== rule.id) || !!store.createProducts[selectedRuleProductIndex].rules.find(item => item.id === rule?.relies)"
-                type="checkbox" class="checkbox checkbox-primary"
-                :checked="!!store.createProducts[selectedRuleProductIndex].rules.find(item => item.id === rule.id)"
-                @change="onRuleChange($event, selectedRuleProductIndex, rule.id)"
+              <span class="label-text"
+                >{{ rule.id }}. {{ rule.description }}</span
               >
+              <input
+                :disabled="
+                  !!store.createProducts[selectedRuleProductIndex].rules.find(
+                    (item) =>
+                      item.category === rule.category && item.id !== rule.id
+                  ) ||
+                  !!store.createProducts[selectedRuleProductIndex].rules.find(
+                    (item) => item.id === rule?.relies
+                  )
+                "
+                type="checkbox"
+                class="checkbox checkbox-primary"
+                :checked="
+                  !!store.createProducts[selectedRuleProductIndex].rules.find(
+                    (item) => item.id === rule.id
+                  )
+                "
+                @change="
+                  onRuleChange($event, selectedRuleProductIndex, rule.id)
+                "
+              />
             </div>
           </div>
         </label>
@@ -409,88 +471,113 @@ onKeyStroke('Escape', (e) => {
     </div>
     <dialog id="infoModal" ref="infoModal" class="modal">
       <form method="dialog" class="modal-box p-4">
-        <h3 class="font-bold text-lg">
-          Информация
-        </h3>
+        <h3 class="font-bold text-lg">Информация</h3>
         <div class="py-4 flex flex-col gap-2">
           <p v-if="infoType === 'picture'">
-            <span class="font-bold">
-              Изображение
-            </span>
+            <span class="font-bold"> Изображение </span>
             - Увеличивайте изображение товара просто наводя на него курсором
           </p>
           <p v-if="infoType === 'price'">
-            <span class="font-bold">
-              Цена
-            </span>
+            <span class="font-bold"> Цена </span>
             - Цена товара указана без СПП
           </p>
           <p v-if="infoType === 'quantity'">
-            <span class="font-bold">
-              Количество
-            </span>
-            - Указывайте желаемое количество выкупов, но не более 3 штук на 1 ПВЗ в сутки
+            <span class="font-bold"> Количество </span>
+            - Указывайте желаемое количество выкупов, но не более 3 штук на 1
+            ПВЗ в сутки
           </p>
           <p v-if="infoType === 'size'">
-            <span class="font-bold">
-              Размер
-            </span>
+            <span class="font-bold"> Размер </span>
             - Выберите желаемый размер товара
           </p>
           <p v-if="infoType === 'sex'">
-            <span class="font-bold">
-              Пол
-            </span>
+            <span class="font-bold"> Пол </span>
             - Выберите желаемый Пол для выкупов
           </p>
           <div v-if="infoType === 'search'">
             <div>
-              <span class="font-bold">
-                Поисковые запросы
-              </span>
+              <span class="font-bold"> Поисковые запросы </span>
               - Введите поисковые запросы, чем больше, тем лучше нажимая на "+"
             </div>
             <div class="text-sm">
-              Например, при указании 5 поисковых запросов - каждый будет выкупаться по своему запросу, если по данному запросу товар не найден, то запрос игнорируется.
+              Например, при указании 5 поисковых запросов - каждый будет
+              выкупаться по своему запросу, если по данному запросу товар не
+              найден, то запрос игнорируется.
             </div>
           </div>
           <p v-if="infoType === 'adress'">
-            <span class="font-bold">
-              Адрес
-            </span>
+            <span class="font-bold"> Адрес </span>
             - Добавьте Адрес желаемого ПВЗ от куда вы будете забирать товар
           </p>
           <p v-if="infoType === 'dates'">
-            <span class="font-bold">
-              Даты выкупов
-            </span>
+            <span class="font-bold"> Даты выкупов </span>
             - Выберите желаемый диапазон дат и времени для выкупов
           </p>
           <p v-if="infoType === 'rules'">
-            <span class="font-bold">
-              Правила
-            </span>
-            - Используйте Правила для создания дополнительной безопасности ваших выкупов
+            <span class="font-bold"> Правила </span>
+            - Используйте Правила для создания дополнительной безопасности ваших
+            выкупов
           </p>
         </div>
         <div class="modal-action mt-0">
-          <button class="btn btn-sm">
-            Закрыть
-          </button>
+          <button class="btn btn-sm">Закрыть</button>
         </div>
       </form>
     </dialog>
-    <BuyoutCreateChecksModal v-if="checksModal" :state="checksModal" @create="createBuyout" @close="checksModal = false" />
+    <BuyoutCreateChecksModal
+      v-if="checksModal"
+      :state="checksModal"
+      @create="createBuyout"
+      @close="checksModal = false"
+    />
+
+    <input id="warning-modal" type="checkbox" class="modal-toggle" />
+    <div class="modal">
+      <div class="modal-box">
+        <label
+          ref="closeWarningModal"
+          for="warning-modal"
+          class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          >✕</label
+        >
+        <h3 class="font-bold text-lg">Принимаете ли вы риски штрафа?</h3>
+        <p class="py-4">
+          Мы рекомендуем ограничить количество заказываемых товаров на один
+          артикул на один пункт выдачи до 3 единиц в день.
+        </p>
+        <div class="modal-action flex justify-between">
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <span class="label-text mr-2">Запомнить выбор</span>
+              <input
+                type="checkbox"
+                v-model="isWarningChecked"
+                class="checkbox checkbox-primary"
+              />
+            </label>
+          </div>
+          <div class="flex flex-col lg:flex-row">
+            <label for="warning-modal" class="btn btn-ghost" @click=""
+              >Отмена</label
+            >
+
+            <label for="warning-modal" class="btn btn-primary" @click="warned"
+              >Принимаю</label
+            >
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 th {
-    @apply normal-case hover:text-primary hover:cursor-pointer;
+  @apply normal-case hover:text-primary hover:cursor-pointer;
 }
 
 table td,
 table td * {
-    vertical-align: top;
+  vertical-align: top;
 }
 </style>
