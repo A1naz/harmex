@@ -396,7 +396,7 @@ watch(() => status.value, async () => {
           />
         </TransitionSlide>
       </div>
-      <div ref="target" class="p-2 w-full col-span-1" />
+      <div ref="target" class="p-2 w-full col-span-1  h-40 md:h-10" />
     </div>
 
     <Hero v-else />

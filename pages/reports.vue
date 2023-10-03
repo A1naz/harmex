@@ -171,7 +171,7 @@ watch(() => status.value, async (newRoute) => {
     <div v-if="reports?.length">
       <TransitionSlide group class="grid grid-cols-1 gap-3">
         <ReportExpand v-for="(item, index) in reports" :key="index" :state="openAll" :info="item" />
-        <div ref="target" class="flex justify-center items-center h-4" />
+        <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
       </TransitionSlide>
     </div>
     <Hero v-else />

@@ -537,7 +537,7 @@ function warned() {
         <label
           ref="closeWarningModal"
           for="warning-modal"
-          class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
           >✕</label
         >
         <h3 class="font-bold text-lg">Принимаете ли вы риски штрафа?</h3>
@@ -546,18 +546,18 @@ function warned() {
           артикул на один пункт выдачи до 3 единиц в день.
         </p>
         <div class="modal-action flex justify-between">
-          <div class="form-control">
-            <label class="label cursor-pointer">
-              <span class="label-text mr-2">Запомнить выбор</span>
+          <div class="form-control md:block flex-row">
+            <label class="label cursor-pointer md:mt-0 mt-16">
               <input
-                type="checkbox"
-                v-model="isWarningChecked"
-                class="checkbox checkbox-primary"
+              type="checkbox"
+              v-model="isWarningChecked"
+              class="checkbox checkbox-primary"
               />
+              <span class="label-text ml-2">Запомнить</span>
             </label>
           </div>
           <div class="flex flex-col lg:flex-row">
-            <label for="warning-modal" class="btn btn-ghost" @click=""
+            <label for="warning-modal" class="btn btn-ghost my-2 md:my-0" @click=""
               >Отмена</label
             >
 

@@ -274,7 +274,7 @@ watch(() => status.value, async (newRoute) => {
             @open-penalty-modal="penaltyModal = true"
           />
         </li>
-        <div ref="target" class="flex justify-center items-center h-4" />
+        <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
       </TransitionSlide>
       <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
     </div>
