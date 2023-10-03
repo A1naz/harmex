@@ -193,7 +193,7 @@ function openBuyout(uuid: string) {
         <div class="flex gap-4 items-center">
           <div v-if="history.length" class="export">
             <ClientOnly>
-              <DateRangePicker v-model="exportDates" save-button="Экспорт в Excel" :start-date="new Date()" @select="exportToXLS">
+              <DateRangePicker v-model="exportDates" save-button=" в Excel" :start-date="new Date()" @select="exportToXLS">
                 <button class="btn btn-sm btn-primary">
                   Экспорт
                 </button>

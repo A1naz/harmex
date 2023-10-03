@@ -26,8 +26,11 @@ async function getReady(user: Document) {
       const foundLog = logs.find(item => item.text.includes('Выкуп выполнен'))
       const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt)
       const place = index + 1
-
-      const phone = delivery.recipientphone
+      const finishDateHours = finishDate.getHours()
+      const finishDateMinutes = finishDate.getMinutes()
+      const finishTime = `${finishDateHours.toString().padStart(2, '0')}:${finishDateMinutes.toString().padStart(2, '0')}`;      
+      
+      const phone: any = delivery.recipientphone
       const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
       const currentstatus = delivery.statusdelivery?.length ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status : 'Неизвестно'
       const statusupdated = delivery.statusdelivery?.length ? new Date(delivery.statusdelivery[delivery.statusdelivery.length - 1].date) : new Date()
@@ -56,11 +59,12 @@ async function getReady(user: Document) {
         createdAt: new Date(buyout.createdAt),
         recipientphone: replaced,
         finishDate,
+        finishTime,
         updatedAt: new Date(delivery.updatedAt),
       }
     }).filter(item => item !== undefined),
   )
-
+  
   return format
 }
 
@@ -77,6 +81,7 @@ export default eventHandler(async (event) => {
     const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
     const ready = (await getReady(user)).filter(item => item !== undefined)
+    
     const sheet = workbook.addWorksheet('Готовы к выдаче', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
     })
@@ -89,6 +94,7 @@ export default eventHandler(async (event) => {
       { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
       { header: 'Размер', key: 'size', width: 16, font: { bold: true } },
       { header: 'Дата создания заказа', key: 'finishDate', width: 16, font: { bold: true } },
+      { header: 'Время создания заказа', key: 'finishTime', width: 16, font: { bold: true } },
       { header: 'Дата доставки в ПВЗ', key: 'deliveryDate', width: 16, font: { bold: true } },
       { header: 'Дата окончания срока забора с ПВЗ', key: 'expireDate', width: 16, font: { bold: true } },
       { header: 'Код ПВЗ', key: 'receiptcode', width: 16, font: { bold: true } },

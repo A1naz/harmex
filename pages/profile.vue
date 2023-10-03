@@ -212,7 +212,7 @@ function onTelegramLink(data: any) {
 
             <LinkTelegram v-if="!store.client.telegramUserId" @callback="onTelegramLink" />
             <button
-              v-if="store.client.telegramUserId" class="btn btn-primary"
+              v-if="store.client.telegramUserId || store.client.telegram" class="btn btn-primary"
               @click="unlinkTelegram"
             >
               Отвязать
