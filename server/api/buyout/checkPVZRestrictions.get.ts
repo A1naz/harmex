@@ -10,7 +10,7 @@ export default eventHandler(async (event) => {
   const user = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const twentyFourHoursAgo = new Date(Date.now() - 100 * 60 * 60 * 1000) // Вычисляем время 24 часа назад
+  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000) // Вычисляем время 24 часа назад
 
   const lastBuyouts = await Buyout.find({
     user: user._id,
