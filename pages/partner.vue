@@ -79,7 +79,7 @@ await getSecondLevelReferrals()
     </div>
     <div class="linkcard card bg-base-200 p-4 mt-2 flex flex-col gap-2">
       <div>
-        <div>Ваша ссылка для приглашения:</div>
+        <div class="mb-1">Ваша ссылка для приглашения:</div>
         <div
           class="bg-base-100 rounded-lg p-2 border border-primary md:flex justify-between gap-2 items-center"
         >
@@ -101,9 +101,15 @@ await getSecondLevelReferrals()
         </button>
       </div>
       <div>
-        <div>Вознаграждение партнера:</div>
-        <div class="text-lg text-primary font-bold">
-          {{ partner.rewardPercent }}%
+        <div class="md:flex">
+          <div class="mt-0.5">Вознаграждение партнера:</div>
+          <div class="text-lg text-primary font-bold md:ml-2">
+            {{ partner.rewardPercent }}%
+          </div>
+        </div>
+        <div class="md:flex">
+          <div class="mt-0.5">Вознаграждение партнера 2 уровня:</div>
+          <div class="text-lg text-primary font-bold md:ml-2">5 %</div>
         </div>
       </div>
     </div>

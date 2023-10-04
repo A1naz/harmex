@@ -179,11 +179,11 @@ function openBuyout(uuid: string) {
 
 <template>
   <div>
-    <div class="flex items-center gap-2 mt-4">
+    <div class="flex flex-row items-center mt-4">
       <h1 class="text-2xl font-bold ">
         История платежей
       </h1>
-      <InfoButton @openModal="openInfoModal" />
+        <InfoButton @openModal="openInfoModal" class="mr-6 ml-0 md:mr-2 md:ml-2" />
     </div>
     <p class="text-xs font-light mt-1 lg:text-sm mb-6">
       Здесь можно увидеть движение вашего баланса

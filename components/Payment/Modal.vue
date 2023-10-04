@@ -149,10 +149,10 @@ async function checkForLink() {
 }
 
 async function pay() {
-  if (paymentForm.paymentSum > 20000 && paymentForm.paymentType === 'transfer') {
+  if (paymentForm.paymentSum > 100000 && paymentForm.paymentType === 'transfer') {
     notify({
       title: 'Что-то пошло не так',
-      text: 'Сумма для перевода не должна превышать 20000 руб.',
+      text: 'Сумма для перевода не должна превышать 100000 руб.',
     })
     return
   }
@@ -198,25 +198,24 @@ onMounted(() => {
     <label class="modal-box">
       <label
         ref="closePaymentModal"
-        for="payment-modal" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+        for="payment-modal" class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
         @click="cancelPayment"
       >✕</label>
-      <div class="flex items-center gap-2 mb-2">
-        <h3 class="text-xl font-bold ">Пополнить баланс</h3>
-        <button class="bg-base-300 p-1 rounded-lg px-2 text-sm" @click="infoModal?.showModal()">
+      <div class="flex justify-between items-center gap-2 mb-2">
+        <h3 class="font-bold">Пополнить баланс</h3>
+        <label class="bg-base-300 p-1 rounded-lg px-2 text-center text-sm mr-2" @click="infoModal?.showModal()">
           Как пополнить баланс?
-        </button>
+        </label>
       </div>
       <div>
-        <div class="w-full flex flex-col gap-2 justify-center items-start" action="">
+        <div class="w-full flex flex-col gap-2 justify-center items-start">
           <div class="sum w-full">
             <h3 class="text-lg mb-2">Сумма к пополнению</h3>
             <PaymentInput v-model="paymentForm.paymentSum" />
           </div>
-          <div class="fastbuttons flex gap-2 w-full">
+          <div class="fastbuttons flex gap-0.5 w-full">
             <button class="btn btn-sm flex-1" @click="setSum(5000)">5000 ₽</button>
             <button class="btn btn-sm flex-1" @click="setSum(10000)">10 000 ₽</button>
-            <button class="btn btn-sm flex-1" @click="setSum(15000)">15 000 ₽</button>
             <button class="btn btn-sm flex-1" @click="setSum(20000)">20 000 ₽</button>
           </div>
           <div class="join join-vertical w-full mt-4">
@@ -292,7 +291,7 @@ onMounted(() => {
   </div>
   <div v-if="details?.transferCard && details?.transferSum">
     <input id="transfer-modal" type="checkbox" class="modal-toggle">
-    <div class="modal modal-bottom sm:modal-middle modal-open">
+    <div class="modal modal-open">
       <div class="modal-box relative">
         <div v-if="!alertOpened" class="details-box">
           <label for="transfer-modal" class="btn btn-sm btn-ghost btn-circle absolute right-2 top-2" @click="cancelTransfer">✕</label>
@@ -338,7 +337,7 @@ onMounted(() => {
             QIWI Кошелек (Киви банк)
           </div>
         </div>
-        <div v-if="alertOpened" class="text-sm bg-base-200 p-2 rounded-lg">
+        <div v-if="alertOpened" class="text-sm bg-base-200 p-2 w-full rounded-lg">
           <div class="flex justify-between items-start gap-2 mb-2">
             <span class="font-bold text-red-500 text-lg text-center">
               Внимание!
@@ -420,9 +419,9 @@ onMounted(() => {
     <input id="sbpImageModal" type="checkbox" class="modal-toggle">
 
     <label for="sbpImageModal" class="modal cursor-pointer">
-      <label for="" class="modal-box max-h-[80vh] p-0 overflow-hidden">
+      <label for="sbpImageModal"  class="cursor-pointer modal-box max-h-[90vh] p-8 max-w-[32rem] overflow-hidden">
         <label for="sbpImageModal" class="btn btn-sm btn-ghost btn-circle absolute right-2 top-2">✕</label>
-        <nuxt-img v-if="openedPhoto" fit="contain" class="object-contain m-auto max-h-[80vh]" :src="openedPhoto || ''" loading="lazy" />
+        <nuxt-img v-if="openedPhoto" fit="contain" class="object-contain m-auto max-h-[80vh] rounded-lg" :src="openedPhoto || ''" loading="lazy" />
       </label>
     </label>
   </dialog>

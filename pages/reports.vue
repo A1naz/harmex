@@ -129,28 +129,29 @@ watch(() => status.value, async (newRoute) => {
     <p class="text-xs font-light mt-1 lg:text-sm">
       В этом разделе можно посмотреть как производились выкупы
     </p>
-    <div class="flex justify-between mb-8 mt-6 items-center">
-      <select class="select select-bordered select-sm" @change="selectStatus">
-        <option value="all" :selected="route.query.status === undefined">
-          Все отчеты
-        </option>
-        <option value="today" :selected="route.query.status === 'today'">
-          Сегодня
-        </option>
-        <option value="3days" :selected="route.query.status === '3days'">
-          3 дня
-        </option>
-        <option value="7days" :selected="route.query.status === '7days'">
-          7 дней
-        </option>
-      </select>
-      <div class="flex gap-2 items-center flex-wrap">
-        <div class="flex items-center">
+    <div class="flex flex-col justify-start md:flex-row  md:justify-between mb-8 mt-6">
+      <div class="flex justify-between md:justify-normal gap-x-2">
+        <select class="select select-bordered select-sm w-1/2 md:w-auto" @change="selectStatus">
+          <option value="all" :selected="route.query.status === undefined">
+            Все отчеты
+          </option>
+          <option value="today" :selected="route.query.status === 'today'">
+            Сегодня
+          </option>
+          <option value="3days" :selected="route.query.status === '3days'">
+            3 дня
+          </option>
+          <option value="7days" :selected="route.query.status === '7days'">
+            7 дней
+          </option>
+        </select>
+        <div class="flex items-center mt-0">
           <input id="openAll" v-model="openAll" type="checkbox" class="checkbox checkbox-primary checkbox-sm">
           <label for="openAll" class="cursor-pointer select-none ml-2">Развернуть все</label>
         </div>
-
-        <div class="flex gap-1 items-center">
+      </div>
+      <div class="flex flex-col flex-wrap-reverse justify-start md:flex-row gap-2 md:flex-wrap">
+        <div class="flex gap-1 mt-3 md:mt-0 items-center">
           <select v-model="search.type" disabled class="select select-bordered select-sm">
             <option value="uuid">
               ID
@@ -158,7 +159,6 @@ watch(() => status.value, async (newRoute) => {
           </select>
           <div class="relative flex items-center flex-grow-0 w-full">
             <input v-model="search.text" type="text" class="input input-sm input-bordered" placeholder="Поиск" @input="onSearchInput($event)">
-
             <span
               v-if="search.loading"
               class="absolute right-2 loading loading-spinner loading-xs p-2"
