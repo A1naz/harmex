@@ -61,6 +61,16 @@ async function getReviews(status: string, skip: number, limit: number) {
       },
     })
     return data.value as any[]
+  } else if (status === 'all') {
+    const { data } = await useFetch('/api/review/available', {
+      method: 'GET',
+      query: {
+        limit,
+        skip,
+        status
+      },
+    })
+    return data.value as any[]
   }
   else {
     const { data } = await useFetch('/api/review/published', {
@@ -86,14 +96,27 @@ async function findReviews(value: string, type: string) {
     search.loading = false
     return
   }
-  const { data, error } = await useFetch('/api/review/search', {
-    query: {
-      string: value,
-      type,
-    },
-  })
-  if (data.value)
-    reviews.value = data.value
+
+  if (status.value === 'all') {
+    const { data, error } = await useFetch('/api/review/searchAll', {
+      query: {
+        string: value,
+        type,
+      },
+    })
+    if (data.value)
+      reviews.value = data.value
+
+  } else {
+    const { data, error } = await useFetch('/api/review/search', {
+      query: {
+        string: value,
+        type,
+      },
+    })
+    if (data.value)
+      reviews.value = data.value
+  }
 
   search.loading = false
 }
@@ -208,9 +231,16 @@ function goToPublished() {
         >
           Недостаточно средств
         </NuxtLink>
+        <NuxtLink
+          to="/reviews?status=all" :class="{
+            'btn-active': route.query.status === 'all',
+          }" class="btn btn-ghost btn-sm normal-case font-medium"
+        >
+          Все
+        </NuxtLink>
       </div>
     </div>
-    <div v-if="status === 'available'" class="search flex justify-between items-center mb-8 flex-wrap gap-2">
+    <div v-if="status === 'available' || status === 'all'" class="search flex justify-between items-center mb-8 flex-wrap gap-2">
       <div />
       <div class="flex gap-1 items-center">
         <select v-model="search.type" class="select select-bordered select-sm">
@@ -234,6 +264,12 @@ function goToPublished() {
     <div v-if="reviews?.length">
       <div v-if="status === 'available'" class="cards grid grid-cols-1 gap-4">
         <ReviewCard
+          v-for="(review, index) of reviews" :key="index" :index="index"
+          :info="review" @open-modal="openModal"
+        />
+      </div>
+      <div v-else-if="status === 'all'" class="cards grid grid-cols-1 gap-4">
+        <ReviewAllCard
           v-for="(review, index) of reviews" :key="index" :index="index"
           :info="review" @open-modal="openModal"
         />
