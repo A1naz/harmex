@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UseImage } from '@vueuse/components'
+const router = useRouter()
 
 const props = defineProps({
   info: {
@@ -32,6 +33,10 @@ const getStatus = computed(() => {
       return 'Недостаточно средств'
   }
 })
+
+function openBuyout() {
+  router.push(`/buyouts?uuid=${props.info.buyoutuuid}`)
+}
 </script>
 
 <template>
@@ -53,6 +58,11 @@ const getStatus = computed(() => {
       <div class="flex flex-col gap-4">
         <div class="flex flex-col">
           <div class="relative w-full rounded-lg">
+            <label
+              class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
+              @click="openBuyout"
+            >#{{
+              info.buyoutuuid }}</label>
             <div class="truncate">
               {{ info.name }}
             </div>

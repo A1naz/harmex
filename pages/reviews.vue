@@ -97,8 +97,8 @@ async function findReviews(value: string, type: string) {
     return
   }
 
-  if (status.value === 'all') {
-    const { data, error } = await useFetch('/api/review/searchAll', {
+  if (status.value === 'available') {
+    const { data, error } = await useFetch('/api/review/search', {
       query: {
         string: value,
         type,
@@ -108,10 +108,11 @@ async function findReviews(value: string, type: string) {
       reviews.value = data.value
 
   } else {
-    const { data, error } = await useFetch('/api/review/search', {
+    const { data, error } = await useFetch('/api/review/searchReviews', {
       query: {
         string: value,
         type,
+        status: status.value
       },
     })
     if (data.value)
@@ -231,16 +232,16 @@ function goToPublished() {
         >
           Недостаточно средств
         </NuxtLink>
-        <NuxtLink
+        <!-- <NuxtLink
           to="/reviews?status=all" :class="{
             'btn-active': route.query.status === 'all',
           }" class="btn btn-ghost btn-sm normal-case font-medium"
         >
           Все
-        </NuxtLink>
+        </NuxtLink> -->
       </div>
     </div>
-    <div v-if="status === 'available' || status === 'all'" class="search flex justify-between items-center mb-8 flex-wrap gap-2">
+    <div class="search flex justify-between items-center mb-8 flex-wrap gap-2">
       <div />
       <div class="flex gap-1 items-center">
         <select v-model="search.type" class="select select-bordered select-sm">

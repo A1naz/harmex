@@ -15,6 +15,7 @@ const router = useRouter()
 function openBuyout() {
   router.push(`/buyouts?uuid=${props.info.buyoutuuid}`)
 }
+
 </script>
 
 <template>

@@ -5,17 +5,27 @@ import { Buyout } from '@/server/lib/models/Buyout'
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
-  const { type, string } = getQuery(event)
+  const { status, type, string } = getQuery(event)
 
   if (!session) return sendRedirect(event, '/auth', 302)
 
   const user = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
 
+  let trueStatus: any
+  if (status == 'all') {
+    trueStatus = {}
+  } else {
+    trueStatus = status
+  }
+
+  
+
   let readyForReview
 
   if (type === 'article') {
     readyForReview = await Delivery.find({
+      status: trueStatus,
       user,
       $text: { $search: string?.toString() },
     }).sort({
@@ -24,6 +34,7 @@ export default eventHandler(async (event) => {
   } else if (type === 'uuid') {
     const uuid = string?.toString().replaceAll('#', '')
     readyForReview = await Delivery.find({
+      status: trueStatus,
       user,
       uuidbuyout: uuid,
     }).sort({
@@ -38,6 +49,7 @@ export default eventHandler(async (event) => {
       const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
       if (!buyout) return undefined
       return {
+        status: trueStatus,
         buyoutuuid: buyout.uuid,
         sex: buyout.gender,
         article: delivery.article,

@@ -1,38 +1,51 @@
-import { User } from '@/server/lib/models/User'
+﻿import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
-import { Review } from '~~/server/lib/models/Review'
+import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
-import { Delivery } from '~/server/lib/models/Delivery'
-
+import { Review } from '@/server/lib/models/Review'
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
-
-  const { skip, limit } = getQuery(event)
+  const { status, type, string } = getQuery(event)
 
   if (!session) return sendRedirect(event, '/auth', 302)
 
   const user = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
-  const { status } = getQuery(event)
+
   let reviews: any = []
-  if (status === 'all')
-    reviews = await Review.find({ user })
-      .sort({ _id: -1 })
-      .skip((skip as number) || 0)
-      .limit((limit as number) || 0)
-  else if (status === 'work')
+
+  if (type === 'article') {
+    if (!Number(string)) {
+      return []
+    }
+    reviews = await Review.find({
+      user: user._id,
+      status: status,
+      article: string,
+    }).sort({
+      createdAt: -1,
+    })
+
+    if (!reviews) return []
+  } else if (type === 'uuid') {
+    const uuid = string?.toString().replaceAll('#', '')
+
+    const deliveries = await Delivery.findOne({
+      user,
+      uuidbuyout: uuid,
+    })
+
     reviews = await Review.find({
       user,
-      status: { $in: ['created', 'working', 'waiting', 'work'] },
+      status: status,
+      delivery: { $in: deliveries },
+    }).sort({
+      createdAt: -1,
     })
-      .sort({ _id: -1 })
-      .skip((skip as number) || 0)
-      .limit((limit as number) || 0)
-  else if (status)
-    reviews = await Review.find({ user, status: status.toString() })
-      .sort({ _id: -1 })
-      .skip((skip as number) || 0)
-      .limit((limit as number) || 0)
+  }
+
+  if (!reviews) return []
+
   const format = await Promise.all(
     reviews.map(async (review: any) => {
       const format: any = {
@@ -53,5 +66,5 @@ export default eventHandler(async (event) => {
       return format
     })
   )
-  return format
+  return format.filter((item) => item !== undefined)
 })
