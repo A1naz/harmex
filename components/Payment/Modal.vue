@@ -215,8 +215,8 @@ onMounted(() => {
           </div>
           <div class="fastbuttons flex gap-0.5 w-full">
             <button class="btn btn-sm flex-1" @click="setSum(5000)">5000 ₽</button>
-            <button class="btn btn-sm flex-1" @click="setSum(10000)">10 000 ₽</button>
-            <button class="btn btn-sm flex-1" @click="setSum(20000)">20 000 ₽</button>
+            <button class="btn btn-sm flex-1" @click="setSum(50000)">50 000 ₽</button>
+            <button class="btn btn-sm flex-1" @click="setSum(100000)">100 000 ₽</button>
           </div>
           <div class="join join-vertical w-full mt-4">
             <input
