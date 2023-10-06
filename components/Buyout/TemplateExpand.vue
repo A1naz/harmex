@@ -61,7 +61,7 @@ async function deleteTemplate() {
     >
       <div>
         <div>
-          {{ info.title }} - {{ props.uuid }}
+          {{ info.title }}
         </div>
       </div>
       <div class="flex z-10">
