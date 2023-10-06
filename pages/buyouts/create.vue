@@ -5,12 +5,18 @@ import type { Rule } from '@/data/buyout/rules'
 import { rules } from '@/data/buyout/rules'
 import type { ISearchQueryChange } from '@/stores/buyout'
 const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
-
+const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>
+const closeTemplateSelectModal = ref(null) as Ref<HTMLLabelElement | null>
 const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
 
 const { width, height } = useWindowSize()
 const { notify } = useNotification()
+
+const loadingTemplates = ref(false)
+const openAll = ref(false)
+const templateTitle = ref('')
+const templates = ref<any>([])
 
 definePageMeta({
   layout: 'app',
@@ -36,6 +42,7 @@ const infoType = ref('')
 const defaultRules: Rule[] = rules
 const route = useRoute()
 const article = ref<string>()
+
 const products = computed(() => store.createProducts)
 const loading = ref(false)
 const now = useNow()
@@ -266,6 +273,47 @@ function warned() {
   }
   openChecksModal()
 }
+
+const isCreatingTemplatesDisabled = ref(false)
+async function createBuyoutTemplate() {
+  isCreatingTemplatesDisabled.value = true
+  const { data, error } = await useFetch('/api/buyout/createTemplate', {
+    method: 'POST',
+    query: {
+      title: templateTitle.value,
+    },
+    body: products.value,
+  })
+
+  if (data.value) {
+    notify({
+      title: 'Шаблон выкупа создан',
+      type: 'success',
+    })
+
+    closeTemplateModal.value?.click()
+    isCreatingTemplatesDisabled.value = false
+  }
+}
+
+async function getTemplates() {
+  loadingTemplates.value = true
+  const { data, error }: any = await useFetch('/api/buyout/templates')
+  if (data.value) {
+    templates.value = data.value.templates
+  }
+  loadingTemplates.value = false
+}
+
+function deleteTemplate(uuid: any) {
+  templates.value = templates.value.filter((item: any) => {
+    return item.uuid !== uuid
+  })  
+}
+
+function closeTemplateModalFN() {
+  closeTemplateSelectModal.value?.click()
+}
 </script>
 
 <template>
@@ -275,7 +323,13 @@ function warned() {
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
       данные.
     </p>
-    <div class="mt-6 flex items-center">
+    <div class="mt-6 md:flex items-center">
+      <label
+        for="template-select-modal"
+        @click="getTemplates"
+        class="btn btn-primary btn-sm normal-case mr-1 mb-2 md:mb-0"
+        >Добавить выкупы из шаблона</label
+      >
       <div
         class="relative flex justify-end items-center flex-grow-0 w-80 gap-1"
       >
@@ -396,30 +450,40 @@ function warned() {
     </ClientOnly>
     <div
       v-show="products.length"
-      class="mt-6 flex justify-between items-center h-48"
+      class="mt-6 md:flex justify-between md:items-center h-48"
     >
       <div>
         <div class="text-sm">
-          <span class="text-gray-500">Товаров:</span>
+          <span class="text-gray-500">Товаров: </span>
           <span class="font-bold">{{ totalQuantity }} шт.</span>
         </div>
         <div class="text-sm">
-          <span class="text-gray-500">Сумма:</span>
+          <span class="text-gray-500">Сумма: </span>
           <span class="font-bold">{{ currency.format(totalSum) }}</span>
         </div>
       </div>
-      <button
-        class="btn btn-primary btn-sm normal-case"
-        :disabled="disabledCreateButton"
-        @click="openChecksModal"
-      >
-        {{
-          products.length > 1
-            ? `Создать
-                            выкупы`
-            : `Создать выкуп`
-        }}
-      </button>
+      <div>
+        <label
+          class="btn bg-blue-600 btn-sm normal-case mt-2 md:mt-0 md:ml-2 text-white"
+          @click=""
+          for="template-modal"
+        >
+          Создать шаблон
+        </label>
+
+        <button
+          class="btn btn-primary btn-sm normal-case ml-2"
+          :disabled="disabledCreateButton"
+          @click="openChecksModal"
+        >
+          {{
+            products.length > 1
+              ? `Создать
+          выкупы`
+              : `Создать выкуп`
+          }}
+        </button>
+      </div>
     </div>
 
     <div v-if="ruleModal">
@@ -549,15 +613,18 @@ function warned() {
           <div class="form-control md:block flex-row">
             <label class="label cursor-pointer md:mt-0 mt-16">
               <input
-              type="checkbox"
-              v-model="isWarningChecked"
-              class="checkbox checkbox-primary"
+                type="checkbox"
+                v-model="isWarningChecked"
+                class="checkbox checkbox-primary"
               />
               <span class="label-text ml-2">Запомнить</span>
             </label>
           </div>
           <div class="flex flex-col lg:flex-row">
-            <label for="warning-modal" class="btn btn-ghost my-2 md:my-0" @click=""
+            <label
+              for="warning-modal"
+              class="btn btn-ghost my-2 md:my-0"
+              @click=""
               >Отмена</label
             >
 
@@ -566,6 +633,80 @@ function warned() {
             >
           </div>
         </div>
+      </div>
+    </div>
+    <input id="template-modal" type="checkbox" class="modal-toggle" />
+    <div class="modal">
+      <div class="modal-box max-w-md">
+        <label
+          ref="closeTemplateModal"
+          for="template-modal"
+          class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
+          >✕</label
+        >
+        <h3 class="font-bold text-lg text-center mr-4">
+          Введите название шаблона
+        </h3>
+        <input
+          v-model="templateTitle"
+          type="text"
+          @keyup.enter="createBuyoutTemplate"
+          :disabled = "isCreatingTemplatesDisabled"
+          placeholder="Название шаблона"
+          class="input input-bordered w-full mt-2"
+        />
+        <div class="modal-action flex justify-between">
+          <label
+            for="template-modal"
+            class="btn btn-ghost my-2 md:my-0"
+            @click=""
+            >Отмена</label
+          >
+
+          <button class="btn btn-primary" :disabled="isCreatingTemplatesDisabled" @click="createBuyoutTemplate"
+            >Сохранить</button
+          >
+        </div>
+      </div>
+    </div>
+    <input id="template-select-modal" type="checkbox" class="modal-toggle" />
+    <div class="modal">
+      <div class="modal-box max-w-7xl min-h-[300px]">
+        <label
+          ref="closeTemplateSelectModal"
+          for="template-select-modal"
+          class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
+          >✕</label
+        >
+        <h3 class="font-bold text-lg text-center mr-4">{{ templates.length > 0 ? 'Выберите шаблон' : ''}}</h3>
+        <div v-if="templates.length > 0" class="flex items-center">
+          <input
+            id="openAll"
+            v-model="openAll"
+            type="checkbox"
+            class="checkbox checkbox-primary checkbox-sm"
+          />
+          <label for="openAll" class="cursor-pointer select-none ml-2"
+            >Развернуть все</label
+          >
+        </div>
+        <div v-else-if="!loadingTemplates" class="hero">
+          <Hero />
+        </div>
+        <div class="hero mt-20" v-else>
+          <span class="loading loading-spinner loading-lg"></span>
+        </div>
+        <BuyoutTemplateExpand
+          v-for="template in templates"
+          :key="template.uuid"
+          class="mt-1"
+          @getTemplates="deleteTemplate"
+          @closeModal="closeTemplateModalFN"
+          :uuid="template.uuid"
+          :opened="openAll"
+          :info="template"
+        ></BuyoutTemplateExpand>
+        <div class="modal-action flex justify-between"></div>
       </div>
     </div>
   </div>

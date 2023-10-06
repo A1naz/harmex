@@ -46,6 +46,10 @@ export const useBuyoutStore = defineStore('buyout', {
         this.createProducts.push(product as any)
       }
     },
+
+    clearProducts() {      
+      this.createProducts = []
+    },
     async addProduct(article: number) {
       const { data, error } = await useFetch(`/api/product/${article}`, {
         method: 'GET',
