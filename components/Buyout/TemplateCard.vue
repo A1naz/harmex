@@ -1,6 +1,5 @@
-﻿import { useBuyoutStore } from '../../stores/buyout';
-<!-- eslint-disable vue/no-mutating-props -->
-<script setup lang="ts">
+﻿<script setup lang="ts">
+import { useBuyoutStore } from '../../stores/buyout';
 const props = defineProps({
   product: {
     type: Object as any,

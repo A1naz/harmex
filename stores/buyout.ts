@@ -15,6 +15,19 @@ export const useBuyoutStore = defineStore('buyout', {
     storage: persistedState.localStorage,
   },
   actions: {
+    async createTemplate(title: String, products: Array<any>, dodge: Boolean = false) {
+      const { data, error } = await useFetch('/api/buyout/createBuyoutTemplate', {
+        method: 'DELETE',
+        query: {
+          title: title,
+          dodge: dodge,
+        },
+        body: products,
+      })
+
+      return { status: 'ok' }
+    },
+
     async cloneBuyout(uuid: string) {
       const { data, error } = await useFetch('/api/buyout/clone', {
         query: {

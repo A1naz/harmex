@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 export const useMainStore = defineStore('main', {
   state: () => ({
     client: {} as any,
+    dodge: false,
     theme: 'light',
     pickpoints: [] as any,
     selectedItem: null as number | null,

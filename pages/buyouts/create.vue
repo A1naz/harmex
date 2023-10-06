@@ -275,21 +275,22 @@ function warned() {
 }
 
 const isCreatingTemplatesDisabled = ref(false)
-async function createBuyoutTemplate() {
+async function createTemplate() {
+  const newProducts = products.value
   isCreatingTemplatesDisabled.value = true
-  const { data, error } = await useFetch('/api/buyout/createTemplate', {
-    method: 'POST',
-    query: {
-      title: templateTitle.value,
-    },
-    body: products.value,
-  })
 
-  if (data.value) {
+  const { status } = await store.createTemplate(
+    templateTitle.value,
+    newProducts,
+    true
+  )
+
+  if (status === 'ok') {
     notify({
       title: 'Шаблон выкупа создан',
       type: 'success',
     })
+    window.location.reload()
 
     closeTemplateModal.value?.click()
     isCreatingTemplatesDisabled.value = false
@@ -308,7 +309,7 @@ async function getTemplates() {
 function deleteTemplate(uuid: any) {
   templates.value = templates.value.filter((item: any) => {
     return item.uuid !== uuid
-  })  
+  })
 }
 
 function closeTemplateModalFN() {
@@ -465,7 +466,6 @@ function closeTemplateModalFN() {
       <div>
         <label
           class="btn bg-blue-600 btn-sm normal-case mt-2 md:mt-0 md:ml-2 text-white"
-          @click=""
           for="template-modal"
         >
           Создать шаблон
@@ -650,8 +650,8 @@ function closeTemplateModalFN() {
         <input
           v-model="templateTitle"
           type="text"
-          @keyup.enter="createBuyoutTemplate"
-          :disabled = "isCreatingTemplatesDisabled"
+          @keyup.enter="createTemplate"
+          :disabled="isCreatingTemplatesDisabled"
           placeholder="Название шаблона"
           class="input input-bordered w-full mt-2"
         />
@@ -663,9 +663,13 @@ function closeTemplateModalFN() {
             >Отмена</label
           >
 
-          <button class="btn btn-primary" :disabled="isCreatingTemplatesDisabled" @click="createBuyoutTemplate"
-            >Сохранить</button
+          <button
+            class="btn btn-primary"
+            :disabled="isCreatingTemplatesDisabled"
+            @click="createTemplate"
           >
+            Сохранить
+          </button>
         </div>
       </div>
     </div>
@@ -678,7 +682,9 @@ function closeTemplateModalFN() {
           class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
           >✕</label
         >
-        <h3 class="font-bold text-lg text-center mr-4">{{ templates.length > 0 ? 'Выберите шаблон' : ''}}</h3>
+        <h3 class="font-bold text-lg text-center mr-4">
+          {{ templates.length > 0 ? 'Выберите шаблон' : '' }}
+        </h3>
         <div v-if="templates.length > 0" class="flex items-center">
           <input
             id="openAll"

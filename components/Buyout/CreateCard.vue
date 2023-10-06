@@ -23,6 +23,7 @@ const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
 async function deleteBuyOut() {
   store.removeProduct(props.index)
+  
 }
 function onSizeChange(event: Event) {
   const target = event.target as HTMLInputElement

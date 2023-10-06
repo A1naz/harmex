@@ -26,6 +26,7 @@ function cloneBuyout() {
 }
 
 async function deleteBuyOut() {
+   
   const { data, error } = await useFetch('/api/buyout/delete', {
     method: 'DELETE',
     body: JSON.stringify({

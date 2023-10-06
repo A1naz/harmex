@@ -12,11 +12,19 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const query = getQuery(event)
+  const dodge: any = query.dodge
+  console.log(dodge);
+  
+  if (!dodge) {
+    return {
+      status: 'error',
+    }
+  }
   const title: any = query.title
   const templateUuid = uuid()
   const templateTitle = title.length > 0 ? title : `Шаблон #${templateUuid}`
   const body = await readBody(event)
-  const products: any = body  
+  const products: any = body
 
   await BuyoutTemplate.create({
     uuid: templateUuid,
