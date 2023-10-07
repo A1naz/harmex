@@ -21,7 +21,7 @@ const emit = defineEmits(['close', 'publish'])
 const closeButton = ref<HTMLElement>()
 
 const { notify } = useNotification()
-const inputs = {
+const inputs: any = {
   file1: ref(),
   file2: ref(),
   file3: ref(),
@@ -295,7 +295,7 @@ onMounted(() => {
                       <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
                     </div>
                     <input
-                      :ref="(el) => (inputs[`file${(index + 1)}`] = el)" type="file" accept="image/png, image/gif, image/jpeg"
+                      :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)" type="file" accept="image/png, image/gif, image/jpeg"
                       class="hidden" @change="(e: Event) => uploadToS3(e, index)"
                     >
                     <IconCSS

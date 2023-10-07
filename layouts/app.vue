@@ -24,14 +24,39 @@ async function logout() {
 onMounted(() => {
   theme.value = localStorage.getItem('theme') || 'light'
 })
+
+const drawerContent: any = ref(null)
+
+const showUpButton = computed(() => {
+  return scrollTop.value > 200
+})
+
+const scrollTop = ref(0)
+const handleScroll = (event: any) => {
+  scrollTop.value = event.target.scrollTop
+}
+
+function scrollToTop() {
+  drawerContent.value.scrollTop = 0
+}
 </script>
 
 <template>
   <div class="drawer lg:drawer-open z-10">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <div
+      ref="drawerContent"
+      @scroll="handleScroll"
       class="drawer-content w-full overflow-auto h-[100vh] px-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin"
     >
+      <Transition name="bounce">
+        <Icon
+          name="mdi-transfer-up"
+          class="scroll-to-top btn btn-primary btn-circle p-1.5 fixed bottom-5 z-50"
+          @click="scrollToTop"
+          v-if="showUpButton"
+        />
+      </Transition>
       <div class="w-full navbar bg-base-100 lg:hidden">
         <div class="flex-none">
           <label for="my-drawer" class="btn btn-square btn-ghost drawer-button">
@@ -233,4 +258,20 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.drawer-content {
+  /* Добавляем CSS-анимацию для плавной прокрутки */
+  scroll-behavior: smooth;
+}
+
+
+.bounce-enter-active,
+.bounce-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.bounce-enter-from,
+.bounce-leave-to {
+  opacity: 0;
+}
+</style>

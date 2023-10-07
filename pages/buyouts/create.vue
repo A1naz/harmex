@@ -452,6 +452,7 @@ function closeTemplateModalFN() {
       />
     </ClientOnly>
     <div
+    
       v-show="products.length"
       class="mt-6 md:flex justify-between md:items-center h-48"
     >
@@ -465,18 +466,20 @@ function closeTemplateModalFN() {
           <span class="font-bold">{{ currency.format(totalSum) }}</span>
         </div>
       </div>
-      <div>
+      <div  style="z-index: 9999;">
         <label
-          class="btn bg-blue-600 btn-sm normal-case mt-2 md:mt-0 md:ml-2 text-white"
+          class="btn bg-blue-600 btn-sm normal-case mt-2 md:mt-0 md:ml-2 text-white "
+          style="z-index: 9999;"
           for="template-modal"
         >
           Создать шаблон
         </label>
 
         <button
-          class="btn btn-primary btn-sm normal-case ml-2"
-          :disabled="disabledCreateButton"
-          @click="openChecksModal"
+        class="btn btn-primary btn-sm normal-case ml-2"
+        style="z-index: 999;"
+        :disabled="disabledCreateButton"
+        @click="openChecksModal"
         >
           {{
             products.length > 1
@@ -728,5 +731,15 @@ th {
 table td,
 table td * {
   vertical-align: top;
+}
+
+.b24-widget-button-wrapper {
+  position: hidden;
+  z-index: 0;
+}
+
+.b24-widget-button-shadow{
+  position: hidden;
+  z-index: 0;
 }
 </style>
