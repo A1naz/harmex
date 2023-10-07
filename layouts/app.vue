@@ -274,4 +274,8 @@ function scrollToTop() {
 .bounce-leave-to {
   opacity: 0;
 }
+
+.b24-widget-button-position-bottom-right {
+  left: 35px;
+}
 </style>
