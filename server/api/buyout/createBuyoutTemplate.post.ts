@@ -12,14 +12,7 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const query = getQuery(event)
-  const dodge: any = query.dodge
-  console.log(dodge);
   
-  if (!dodge) {
-    return {
-      status: 'error',
-    }
-  }
   const title: any = query.title
   const templateUuid = uuid()
   const templateTitle = title.length > 0 ? title : `Шаблон #${templateUuid}`

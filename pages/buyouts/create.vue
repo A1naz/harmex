@@ -276,16 +276,18 @@ function warned() {
 
 const isCreatingTemplatesDisabled = ref(false)
 async function createTemplate() {
-  const newProducts = products.value
   isCreatingTemplatesDisabled.value = true
 
-  const { status } = await store.createTemplate(
-    templateTitle.value,
-    newProducts,
-    true
-  )
+  const { data, error } = await useFetch('/api/buyout/createBuyoutTemplate', {
+    method: 'POST',
+    query: {
+      title: templateTitle,
+    },
+    body: products.value,
+  })
 
-  if (status === 'ok') {
+  if (data.value) {
+    store.createProducts = []
     notify({
       title: 'Шаблон выкупа создан',
       type: 'success',
