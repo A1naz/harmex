@@ -9,19 +9,21 @@ export default eventHandler(async (event) => {
   const user = await User.findOne({ uuid: session.uuid })
   if (!user)
     return sendRedirect(event, '/auth', 302)
-  const { amount, card, fio } = await readBody(event)
+  const { amount, card, fio, withdrawType } = await readBody(event)
 
-  if (!amount || !card || !fio) {
-    throw createError({
-      statusCode: 400,
-      message: 'Заполните все данные',
-    })
-  }
-  if (Number(amount) < 5000) {
-    return {
-      status: 'error',
-      message: 'Минимальная сумма вывода - 5000 руб.',
+  if (withdrawType === 'card') {
+    if (!amount || !card || !fio) {
+      throw createError({
+        statusCode: 400,
+        message: 'Заполните все данные',
+      })
     }
+    }
+    if (Number(amount) < 5000) {
+      return {
+        status: 'error',
+        message: 'Минимальная сумма вывода - 5000 руб.',
+      }
   }
   const balance = user.partner?.balance
 
@@ -31,13 +33,13 @@ export default eventHandler(async (event) => {
       message: 'Сумма вывода не должна быть больше доступного баланса',
     }
   }
-
+  
   const withdraw = await PartnerWithdraw.create({
     userUuid: user.uuid,
     user,
     amount: Number(amount),
     status: 'created',
-    type: 'card',
+    type: withdrawType,
     details: {
       card,
       fio,

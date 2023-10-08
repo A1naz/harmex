@@ -11,12 +11,16 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-
 })
-const emit = defineEmits(['callback', 'remove', 'openModal', 'openImage'])
+const emit = defineEmits([
+  'callback',
+  'remove',
+  'openModal',
+  'openImage',
+  'removeReview',
+])
 const { $dayjs } = useNuxtApp()
-onMounted(() => {
-})
+onMounted(() => {})
 const getStatus = computed(() => {
   switch (props.info.status) {
     case 'created':
@@ -31,28 +35,63 @@ const getStatus = computed(() => {
       return 'Отменен'
     case 'nofunds':
       return 'Недостаточно средств'
+    case 'deleted':
+      return 'Удален'
+    case 'deleting':
+      return 'На удалении'
   }
 })
 
 function openBuyout() {
   router.push(`/buyouts?uuid=${props.info.buyoutuuid}`)
 }
+
+function removeReview() {
+  emit('removeReview', props.info.uuid)
+}
 </script>
 
 <template>
   <div class="buyout-card card bg-base-200 shadow-lg">
-    <div class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative">
+    <div
+      class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
+    >
       <div class="flex justify-between item gap-2 mb-2">
-        <h2 class="card-title">
-          Отзыв
-        </h2> <span
-          :class="{
-
-            'bg-green-600': info.status === 'working' || info.status === 'published',
-            'bg-warning': info.status === 'waiting' || info.status === 'created' || info.status === 'nofunds',
-            'bg-error': info.status === 'canceled',
-          }" class="text-black p-2 px-4 rounded-lg text-center"
-        >{{ getStatus }}</span>
+        <h2 class="card-title">Отзыв</h2>
+        <div>
+          <span
+            :class="{
+              'bg-green-600':
+                info.status === 'working' || info.status === 'published',
+              'bg-warning':
+                info.status === 'waiting' ||
+                info.status === 'created' ||
+                info.status === 'nofunds',
+              'bg-error':
+                info.status === 'canceled' ||
+                info.status === 'deleted' ||
+                info.status === 'deleting',
+            }"
+            class="text-black p-2 px-4 rounded-lg text-center"
+            >{{ getStatus }}</span
+          >
+          <div
+            class="dropdown dropdown-bottom dropdown-end"
+            v-if="info.status === 'published'"
+          >
+            <label tabindex="0" class="btn ml-1 -mr-3 -mt-3 p-1">
+              <Icon name="ph:dots-three-outline-vertical-fill" size="18" />
+            </label>
+            <ul
+              tabindex="0"
+              class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li @click="() => emit('removeReview', info.uuid)">
+                <a>Удалить</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="flex flex-col gap-4">
@@ -61,13 +100,14 @@ function openBuyout() {
             <label
               class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
               @click="openBuyout"
-            >#{{
-              info.buyoutuuid }}</label>
+              >#{{ info.buyoutuuid }}</label
+            >
             <div class="truncate">
               {{ info.name }}
             </div>
             <a
-              :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
+              :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+              target="_blank"
               class="text-sm text-primary link link-hover"
             >
               {{ info.article }}
@@ -75,9 +115,7 @@ function openBuyout() {
           </div>
         </div>
         <div class="w-full">
-          <div class="font-bold">
-            Отзыв от товаре
-          </div>
+          <div class="font-bold">Отзыв от товаре</div>
           <div
             class="w-full bg-base-200 h-16 overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin"
           >
@@ -86,50 +124,58 @@ function openBuyout() {
         </div>
 
         <div>
-          <div class="font-bold">
-            Рейтинг
-          </div>
+          <div class="font-bold">Рейтинг</div>
           <div class="relative w-full rounded-lg">
             <div class="rating">
               <input
-                type="radio" disabled :checked="info.rating === 1" :name="`rating${index}`"
+                type="radio"
+                disabled
+                :checked="info.rating === 1"
+                :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              >
+              />
               <input
-                type="radio" disabled :checked="info.rating === 2" :name="`rating${index}`"
+                type="radio"
+                disabled
+                :checked="info.rating === 2"
+                :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              >
+              />
               <input
-                type="radio" disabled :checked="info.rating === 3" :name="`rating${index}`"
+                type="radio"
+                disabled
+                :checked="info.rating === 3"
+                :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              >
+              />
               <input
-                type="radio" disabled :checked="info.rating === 4" :name="`rating${index}`"
+                type="radio"
+                disabled
+                :checked="info.rating === 4"
+                :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              >
+              />
               <input
-                type="radio" disabled :checked="info.rating === 5" :name="`rating${index}`"
+                type="radio"
+                disabled
+                :checked="info.rating === 5"
+                :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              >
+              />
             </div>
           </div>
         </div>
 
         <div>
-          <div class="font-bold">
-            Дата отзыва
-          </div>
+          <div class="font-bold">Дата отзыва</div>
           <div class="relative w-full rounded-lg">
             <div>
-              {{
-                $dayjs(info.date).format('D MMMM HH:mm') }}
+              {{ $dayjs(info.date).format('D MMMM HH:mm') }}
             </div>
           </div>
         </div>
         <div>
-          <div class="font-bold pb-2">
-            Фото
-          </div>
+          <div class="font-bold pb-2">Фото</div>
 
           <div
             class="flex gap-2 items-center overflow-x-auto flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]"
@@ -143,10 +189,16 @@ function openBuyout() {
                   <div class="absolute inset-0">
                     <UseImage :src="photo">
                       <template #default>
-                        <nuxt-img :src="photo" class="w-full h-full object-contain rounded-lg" loading="lazy" />
+                        <nuxt-img
+                          :src="photo"
+                          class="w-full h-full object-contain rounded-lg"
+                          loading="lazy"
+                        />
                       </template>
                       <template #loading>
-                        <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="absolute inset-0 flex items-center justify-center"
+                        >
                           <Icon
                             name="mdi:loading"
                             class="loader ease-linear h-8 w-8 animate-spin"
@@ -154,8 +206,12 @@ function openBuyout() {
                         </div>
                       </template>
                       <template #error>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                          <div class="text-red-500 text-center">Ошибка загрузки</div>
+                        <div
+                          class="absolute inset-0 flex items-center justify-center"
+                        >
+                          <div class="text-red-500 text-center">
+                            Ошибка загрузки
+                          </div>
                         </div>
                       </template>
                     </UseImage>

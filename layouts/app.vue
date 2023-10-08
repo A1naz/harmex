@@ -52,7 +52,7 @@ function scrollToTop() {
       <Transition name="bounce">
         <Icon
           name="mdi-transfer-up"
-          class="scroll-to-top btn btn-primary btn-circle p-1.5 fixed bottom-5 z-50"
+          class="scroll-to-top btn btn-primary btn-circle p-1.5 fixed bottom-[13px] z-20"
           @click="scrollToTop"
           v-if="showUpButton"
         />

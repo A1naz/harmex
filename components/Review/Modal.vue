@@ -36,23 +36,28 @@ const form = reactive({
   text: '',
   rating: 5,
   date: now.value,
-  photos: [{
-    url: '',
-    public: '',
-  }, {
-    url: '',
-    public: '',
-  }, {
-    url: '',
-    public: '',
-  }, {
-    url: '',
-    public: '',
-  },
-  {
-    url: '',
-    public: '',
-  }],
+  photos: [
+    {
+      url: '',
+      public: '',
+    },
+    {
+      url: '',
+      public: '',
+    },
+    {
+      url: '',
+      public: '',
+    },
+    {
+      url: '',
+      public: '',
+    },
+    {
+      url: '',
+      public: '',
+    },
+  ],
 })
 
 const loadingIndex = ref(null) as Ref<number | null>
@@ -63,8 +68,7 @@ async function uploadToS3(event: Event, index: number) {
   loadingIndex.value = index
   const fileList = (event.target! as HTMLInputElement).files
   const files = Array.from(fileList!)
-  if (!files)
-    return
+  if (!files) return
   const { data, error } = await upload({
     files,
     url: null,
@@ -78,7 +82,10 @@ async function uploadToS3(event: Event, index: number) {
     })
   }
   if (data.value)
-    form.photos[index] = { url: data.value[0].url, public: getPublicUrl(data.value[0].url) }
+    form.photos[index] = {
+      url: data.value[0].url,
+      public: getPublicUrl(data.value[0].url),
+    }
 
   loadingIndex.value = null
 }
@@ -89,22 +96,28 @@ async function clearForm() {
   const photos = form.photos
 
   loadingIndex.value = null
-  form.photos = [{
-    url: '',
-    public: '',
-  }, {
-    url: '',
-    public: '',
-  }, {
-    url: '',
-    public: '',
-  }, {
-    url: '',
-    public: '',
-  }, {
-    url: '',
-    public: '',
-  }]
+  form.photos = [
+    {
+      url: '',
+      public: '',
+    },
+    {
+      url: '',
+      public: '',
+    },
+    {
+      url: '',
+      public: '',
+    },
+    {
+      url: '',
+      public: '',
+    },
+    {
+      url: '',
+      public: '',
+    },
+  ]
 }
 
 const headers = useRequestHeaders(['cookie']) as HeadersInit
@@ -113,8 +126,7 @@ async function publishReview() {
   for await (const photo of photos) {
     try {
       const response = await $fetch(photo.url)
-    }
-    catch {
+    } catch {
       notify({
         title: 'Что-то пошло не так',
         text: 'Не удалось загрузить все фото, попробуйте еще раз',
@@ -180,82 +192,93 @@ async function removePhoto(index: number) {
   loadingIndex.value = null
 }
 
-watch(() => props.uuid, (uuid) => {
-  clearForm()
-})
+watch(
+  () => props.uuid,
+  (uuid) => {
+    clearForm()
+  }
+)
 onMounted(() => {
   clearForm()
 })
 </script>
 
 <template>
-  <input id="review-modal" type="checkbox" class="modal-toggle">
+  <input id="review-modal" type="checkbox" class="modal-toggle" />
   <div
-    ref="closeButton" :class="{
+    ref="closeButton"
+    :class="{
       'modal-open': state,
     }"
     class="modal"
   >
-    <div class="modal-box">
+    <div class="modal-box z-50">
       <label
-        for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
+        for="review-modal"
+        class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
         @click="$emit('close')"
-      >✕</label>
-      <h3 class="text-xl font-bold mb-4">
-        Оставить отзыв
-      </h3>
+        >✕</label
+      >
+      <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
       <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-2">
-            Отзыв от товаре
-          </div>
+          <div class="pb-2">Отзыв от товаре</div>
           <textarea
-            v-model="form.text" class="textarea w-full textarea-md bg-base-200"
+            v-model="form.text"
+            class="textarea w-full textarea-md bg-base-200"
             placeholder="Например, хороший телефон"
           />
         </div>
 
         <div>
-          <div class="pb-2">
-            Рейтинг
-          </div>
+          <div class="pb-2">Рейтинг</div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
-            <div class="absolute left-3 top-3 text-gray-400">
-              Оценка
-            </div>
+            <div class="absolute left-3 top-3 text-gray-400">Оценка</div>
             <div class="rating absolute right-3 top-3">
               <input
-                type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400"
+                type="radio"
+                name="rating-2"
+                class="mask mask-star-2 bg-yellow-400"
                 @input="form.rating = 1"
-              >
+              />
               <input
-                type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400"
+                type="radio"
+                name="rating-2"
+                class="mask mask-star-2 bg-yellow-400"
                 @input="form.rating = 2"
-              >
+              />
               <input
-                type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400"
+                type="radio"
+                name="rating-2"
+                class="mask mask-star-2 bg-yellow-400"
                 @input="form.rating = 3"
-              >
+              />
               <input
-                type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400"
+                type="radio"
+                name="rating-2"
+                class="mask mask-star-2 bg-yellow-400"
                 @input="form.rating = 4"
-              >
+              />
               <input
-                type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400"
-                checked @input="form.rating = 5"
-              >
+                type="radio"
+                name="rating-2"
+                class="mask mask-star-2 bg-yellow-400"
+                checked
+                @input="form.rating = 5"
+              />
             </div>
           </div>
         </div>
 
         <div>
-          <div class="pb-2">
-            Запланировать отзыв
-          </div>
+          <div class="pb-2">Запланировать отзыв</div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3">
-              {{ form.date <= now ? 'Опубликовать сейчас'
-                : $dayjs(form.date).format('D MMMM HH:mm') }}
+              {{
+                form.date <= now
+                  ? 'Опубликовать сейчас'
+                  : $dayjs(form.date).format('D MMMM HH:mm')
+              }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
               <DatePicker v-model="form.date" />
@@ -263,9 +286,7 @@ onMounted(() => {
           </div>
         </div>
         <div>
-          <div>
-            Фото
-          </div>
+          <div>Фото</div>
           <p class="mb-2 text-sm font-light">
             Разрешены фото в формате PNG, JPG.
           </p>
@@ -278,10 +299,13 @@ onMounted(() => {
                   class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none"
                 >
                   <div
-                    v-if="photo.url" class="absolute right-0 top-0 z-50"
+                    v-if="photo.url"
+                    class="absolute right-0 top-0 z-50"
                     @click="removePhoto(index)"
                   >
-                    <label for="photo" class="btn btn-sm btn-circle btn-ghost">✕</label>
+                    <label for="photo" class="btn btn-sm btn-circle btn-ghost"
+                      >✕</label
+                    >
                   </div>
 
                   <label
@@ -295,12 +319,16 @@ onMounted(() => {
                       <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
                     </div>
                     <input
-                      :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)" type="file" accept="image/png, image/gif, image/jpeg"
-                      class="hidden" @change="(e: Event) => uploadToS3(e, index)"
-                    >
+                      :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)"
+                      type="file"
+                      accept="image/png, image/gif, image/jpeg"
+                      class="hidden"
+                      @change="(e: Event) => uploadToS3(e, index)"
+                    />
                     <IconCSS
                       v-show="loadingIndex !== index"
-                      name="material-symbols:add-photo-alternate-outline" size="30"
+                      name="material-symbols:add-photo-alternate-outline"
+                      size="30"
                     />
                   </label>
 
@@ -308,18 +336,26 @@ onMounted(() => {
                     <UseImage :src="photo.public">
                       <template #default>
                         <nuxt-img
-                          :src="photo.public" fit="contain"
+                          :src="photo.public"
+                          fit="contain"
                           class="w-full h-full object-contain rounded-lg"
                           loading="lazy"
                         />
                       </template>
                       <template #loading>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                          <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                        <div
+                          class="absolute inset-0 flex items-center justify-center"
+                        >
+                          <Icon
+                            name="mdi:loading"
+                            class="h-8 w-8 animate-spin"
+                          />
                         </div>
                       </template>
                       <template #error>
-                        <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="absolute inset-0 flex items-center justify-center"
+                        >
                           <div class="text-red-500 text-center">
                             Ошибка загрузки
                           </div>
@@ -340,11 +376,18 @@ onMounted(() => {
           </button>
         </div>
         <div class="flex gap-2">
-          <label for="review-modal" class="btn btn-sm btn-ghost" @click="$emit('close')">Отмена</label>
           <label
-            for="review-modal" class="btn btn-primary btn-sm"
+            for="review-modal"
+            class="btn btn-sm btn-ghost"
+            @click="$emit('close')"
+            >Отмена</label
+          >
+          <label
+            for="review-modal"
+            class="btn btn-primary btn-sm"
             @click="publishReview"
-          >Отправить</label>
+            >Отправить</label
+          >
         </div>
       </div>
     </div>
@@ -352,18 +395,19 @@ onMounted(() => {
 </template>
 
 <style scoped>
-input[type=file]::file-selector-button {
-    display: none;
+input[type='file']::file-selector-button {
+  display: none;
 }
 
-input[type=file]::-webkit-file-upload-button {
-    display: block;
-    width: 0;
-    height: 0;
-    margin-left: -100%;
+input[type='file']::-webkit-file-upload-button {
+  display: block;
+  width: 0;
+  height: 0;
+  margin-left: -100%;
 }
 
-input[type=file]::-ms-browse {
-    display: none;
+input[type='file']::-ms-browse {
+  display: none;
 }
+
 </style>

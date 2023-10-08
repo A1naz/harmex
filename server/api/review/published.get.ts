@@ -36,6 +36,7 @@ export default eventHandler(async (event) => {
   const format = await Promise.all(
     reviews.map(async (review: any) => {
       const format: any = {
+        uuid: review._id,
         article: review.article,
         name: review.name,
         text: review.text,

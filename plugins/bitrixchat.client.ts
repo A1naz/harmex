@@ -8,13 +8,16 @@ function inject(w: Window & typeof globalThis, d: Document, u: string) {
   w.document.head.appendChild(s)
   s.addEventListener('load', () => {
     // Находим элемент с классом 'b24-widget-button-position-bottom-right'
-    const widgetButton: any = d.querySelector(
+    const mainButton: any = d.querySelector(
       '.b24-widget-button-position-bottom-right'
     )
 
-    if (widgetButton) {
-      widgetButton.style.right = '10px' // Применяем правое смещение
-      widgetButton.style.bottom = '15px'
+    if (mainButton) {
+
+      mainButton.style.right = '10px' // Применяем правое смещение
+      mainButton.style.bottom = '10px'
+
+
     }
   })
 }

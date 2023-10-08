@@ -14,13 +14,21 @@ export default eventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/auth', 302)
 
-  const found = await Buyout.findOne({ uuid: body.uuid })
+  const found: any = await Buyout.findOne({ uuid: body.uuid })
   if (!found) {
     throw createError({
       statusCode: 404,
       message: 'Выкуп не найден',
     })
   }
+
+if (found.completed > 0) {
+  throw createError({
+    statusCode: 400,
+    message: 'Нельзя удалить выкуп с выполненым заказом',
+  })
+}
+
   if (found.status === 'work') {
     throw createError({
       statusCode: 404,
