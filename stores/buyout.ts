@@ -133,6 +133,7 @@ export const useBuyoutStore = defineStore('buyout', {
           })
         }
         this.createProducts[index].rules.push(finded)
+  
       }
       else { rules.splice(rules.indexOf(finded), 1) }
     },

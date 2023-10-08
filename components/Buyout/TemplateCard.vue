@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import { useBuyoutStore } from '../../stores/buyout';
+import { useBuyoutStore } from '../../stores/buyout'
 const props = defineProps({
   product: {
     type: Object as any,
@@ -9,7 +9,9 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="buyout-card max-w-[270px] md:max-w-[285px] card shadow-xl bg-base-100">
+  <div
+    class="buyout-card max-w-[270px] md:max-w-[285px] card shadow-xl bg-base-100"
+  >
     <div class="card-body flex flex-col justify-center md:justify-start p-3">
       <div class="flex justify-between items-center mt-2">
         <span class="text-xs">Даты выкупов: </span>
@@ -23,7 +25,7 @@ const props = defineProps({
           >
         </div>
       </div>
-      <div class="flex justify-between mt-2">
+      <div class="flex justify-between">
         <div class="w-full flex flex-col items-start gap-1">
           <div class="flex flex-col md:flex-row gap-1 w-full">
             <span class="text-xs">Адрес: </span>
@@ -33,8 +35,19 @@ const props = defineProps({
           </div>
         </div>
       </div>
+      <div class="flex justify-between">
+        <div class="w-full flex flex-col items-start">
+          <div v-if="product.rules.length > 0" class="flex gap-1 w-full">
+            <span class="text-xs">Правила: </span>
+            <div class="text-xs">
+              {{ product.rules.map((rule: any) => rule.id).join(', ') }}
+            </div>
+          </div>
+          <div v-else class="my-2"></div>
+        </div>
+      </div>
       <div></div>
-      <div class="divider" />
+      <div class="divider -my-2" />
       <div class="flex gap-1 items-center">
         <div
           class="flex items-center flex-none flex-0 h-full"

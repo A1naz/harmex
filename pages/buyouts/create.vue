@@ -44,6 +44,16 @@ const route = useRoute()
 const article = ref<string>()
 
 const products = computed(() => store.createProducts)
+// products.value.forEach((product: any, i: number) => {
+//   if ( wasRuleChanged) {
+//     products.value[i].rules.push({
+//       category: 3,
+//       description:
+//         'Не выкупать если товар не найден в поисковой выдаче (не выкупать по прямой ссылке)',
+//       id: 5,
+//     })
+//   }
+// })
 const loading = ref(false)
 const now = useNow()
 
@@ -519,15 +529,14 @@ function closeTemplateModalFN() {
                   ) ||
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) => item.id === rule?.relies
-                    || rule.id == 5
                   )
                 "
                 type="checkbox"
                 class="checkbox checkbox-primary"
                 :checked="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
-                    (item) => item.id === rule.id || rule.id == 5
-                  )
+                    (item) => item.id === rule.id
+                  ) || rule.id == 5
                 "
                 @change="
                   onRuleChange($event, selectedRuleProductIndex, rule.id)
