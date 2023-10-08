@@ -536,7 +536,7 @@ function closeTemplateModalFN() {
                 :checked="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) => item.id === rule.id
-                  ) || rule.id == 5
+                  )
                 "
                 @change="
                   onRuleChange($event, selectedRuleProductIndex, rule.id)
