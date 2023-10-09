@@ -336,18 +336,13 @@ function closeTemplateModalFN() {
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
       данные.
     </p>
-    <div class="flex flex-col md:flex-row  md:justify-between">
+    <div class="flex flex-col md:flex-row md:justify-between">
       <div class="mt-6 md:flex items-center">
         <label
           for="template-select-modal"
           @click="getTemplates"
-          class="btn btn-primary btn-sm normal-case mr-1 mb-2 md:mb-0"
+          class="btn btn-primary btn-sm normal-case mr-0 md:mr-1 mb-2 md:mb-0"
           >Добавить выкупы из шаблона</label
-        >    <label
-        v-if="store.createProducts.length > 0"
-        class="btn btn-sm btn-error bg-red-400 normal-case mt-6 md:hidden"
-        for="removeAllModelCreateProducts"
-        >Удалить все</label
         >
         <div
           class="relative flex justify-end items-center flex-grow-0 w-80 gap-1"
@@ -364,13 +359,12 @@ function closeTemplateModalFN() {
         </div>
       </div>
       <div>
-
-        <label
+        <!-- <label
         v-if="store.createProducts.length > 0"
         class="btn btn-sm btn-error bg-red-400 normal-case mt-6 mr-2 hidden md:flex"
         for="removeAllModelCreateProducts"
         >Удалить все</label
-        >
+        > -->
       </div>
     </div>
 
@@ -493,6 +487,12 @@ function closeTemplateModalFN() {
         </div>
       </div>
       <div style="z-index: 9999">
+        <label
+          v-if="store.createProducts.length > 0"
+          class="btn btn-sm btn-error bg-red-400 normal-case mt-1 ml-0 md:mt-0 md:ml-2"
+          for="removeAllModelCreateProducts"
+          >Удалить все</label
+        >
         <label
           class="btn bg-blue-600 btn-sm normal-case mt-2 md:mt-0 md:ml-2 text-white"
           style="z-index: 9999"
