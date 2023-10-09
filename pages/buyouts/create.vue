@@ -336,27 +336,44 @@ function closeTemplateModalFN() {
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
       данные.
     </p>
-    <div class="mt-6 md:flex items-center">
-      <label
-        for="template-select-modal"
-        @click="getTemplates"
-        class="btn btn-primary btn-sm normal-case mr-1 mb-2 md:mb-0"
-        >Добавить выкупы из шаблона</label
-      >
-      <div
-        class="relative flex justify-end items-center flex-grow-0 w-80 gap-1"
-      >
-        <input
-          v-model="article"
-          placeholder="Артикул"
-          class="input input-sm input-bordered w-full"
-          @keydown.enter="addProduct"
-        />
-        <button class="btn btn-sm normal-case" @click="addProduct">
-          Добавить
-        </button>
+    <div class="flex flex-col md:flex-row  md:justify-between">
+      <div class="mt-6 md:flex items-center">
+        <label
+          for="template-select-modal"
+          @click="getTemplates"
+          class="btn btn-primary btn-sm normal-case mr-1 mb-2 md:mb-0"
+          >Добавить выкупы из шаблона</label
+        >    <label
+        v-if="store.createProducts.length > 0"
+        class="btn btn-sm btn-error bg-red-400 normal-case mt-6 md:hidden"
+        for="removeAllModelCreateProducts"
+        >Удалить все</label
+        >
+        <div
+          class="relative flex justify-end items-center flex-grow-0 w-80 gap-1"
+        >
+          <input
+            v-model="article"
+            placeholder="Артикул"
+            class="input input-sm input-bordered w-full"
+            @keydown.enter="addProduct"
+          />
+          <button class="btn btn-sm normal-case" @click="addProduct">
+            Добавить
+          </button>
+        </div>
+      </div>
+      <div>
+
+        <label
+        v-if="store.createProducts.length > 0"
+        class="btn btn-sm btn-error bg-red-400 normal-case mt-6 mr-2 hidden md:flex"
+        for="removeAllModelCreateProducts"
+        >Удалить все</label
+        >
       </div>
     </div>
+
     <ClientOnly>
       <div
         v-if="width < 1500"
@@ -727,6 +744,28 @@ function closeTemplateModalFN() {
           :info="template"
         ></BuyoutTemplateExpand>
         <div class="modal-action flex justify-between"></div>
+      </div>
+    </div>
+  </div>
+
+  <input
+    type="checkbox"
+    id="removeAllModelCreateProducts"
+    class="modal-toggle"
+  />
+  <div class="modal">
+    <div class="modal-box max-w-xs">
+      <h3 class="font-bold text-lg">Вы уверены?</h3>
+      <div class="modal-action flex justify-between">
+        <label for="removeAllModelCreateProducts" class="btn btn-primary"
+          >Отмена</label
+        >
+        <label
+          for="removeAllModelCreateProducts"
+          class="btn btn-error"
+          @click="store.createProducts = []"
+          >Удалить</label
+        >
       </div>
     </div>
   </div>

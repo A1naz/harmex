@@ -72,10 +72,13 @@ function removeReview() {
                 info.status === 'deleted' ||
                 info.status === 'deleting',
             }"
-            class="text-black p-2 px-4 rounded-lg text-center"
+            class="text-black p-1.5 px-4 rounded-lg text-center"
             >{{ getStatus }}</span
           >
-          <div
+          <button v-if="info.status === 'published'" @click="emit('removeReview', info.uuid)" class="btn btn-sm btn-error ml-1">
+            Удалить
+          </button>
+          <!-- <div
             class="dropdown dropdown-bottom dropdown-end"
             v-if="info.status === 'published'"
           >
@@ -86,11 +89,10 @@ function removeReview() {
               tabindex="0"
               class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li @click="() => emit('removeReview', info.uuid)">
-                <a>Удалить</a>
+              <li>
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -226,4 +228,5 @@ function removeReview() {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
