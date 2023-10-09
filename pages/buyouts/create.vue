@@ -494,7 +494,7 @@ function closeTemplateModalFN() {
           >Удалить все</label
         >
         <label
-          class="btn bg-blue-600 btn-sm normal-case mt-2 md:mt-0 md:ml-2 text-white"
+          class="btn bg-blue-600 btn-sm normal-case mt-2 md:mt-0 ml-1 md:ml-2 text-white"
           style="z-index: 9999"
           for="template-modal"
         >
@@ -502,7 +502,7 @@ function closeTemplateModalFN() {
         </label>
 
         <button
-          class="btn btn-primary btn-sm normal-case ml-2"
+          class="btn btn-primary btn-sm normal-case mt-1 md:ml-2"
           style="z-index: 999"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
