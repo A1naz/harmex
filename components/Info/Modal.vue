@@ -61,7 +61,7 @@ onKeyStroke('Escape', (e) => {
       </h1>
       <p>{{ text }}</p>
 
-      <iframe class="w-full h-[30rem] rounded-lg my-4" src="https://www.youtube.com/embed/nE1GQd6XV9Y?si=fjE2fbBAPomggp_n" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen />
+      <iframe  class="w-full h-[30rem] rounded-lg my-4"  src="https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen />
     </div>
     <label class="modal-backdrop" for="infoModal" @click="store.infoModal = false">Close</label>
   </div>
