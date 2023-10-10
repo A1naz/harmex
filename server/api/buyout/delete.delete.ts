@@ -22,12 +22,12 @@ export default eventHandler(async (event) => {
     })
   }
 
-// if (found.completed > 0) {
-//   throw createError({
-//     statusCode: 400,
-//     message: 'Нельзя удалить выкуп с оформленным заказом',
-//   })
-// }
+if (found.completed > 0) {
+  throw createError({
+    statusCode: 400,
+    message: 'Нельзя удалить выкуп с оформленным заказом',
+  })
+}
 
   if (found.status === 'work') {
     throw createError({
