@@ -81,6 +81,7 @@ export default eventHandler(async (event) => {
     const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
     const ready = (await getReady(user)).filter(item => item !== undefined)
+    console.log(ready);
     
     const sheet = workbook.addWorksheet('Готовы к выдаче', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
