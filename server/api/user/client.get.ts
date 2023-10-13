@@ -31,7 +31,7 @@ export default eventHandler(async (event) => {
     telegramUserId: user.telegramUserId,
     wbApiKeys: user.wbApiKeys.length ? user.wbApiKeys : [],
     partner: user.partner,
-    isBannde: user.isBanned,
+    isBanned: user.isBanned,
   }
   return {
     client,
