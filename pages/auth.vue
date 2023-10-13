@@ -32,22 +32,27 @@ async function login() {
   //   return
 
   loading.value = true
-  const { error, url } = await signIn('credentials', { redirect: false, callbackUrl: '/buyouts', ...formData })
+  const { error, url } = await signIn('credentials', {
+    redirect: false,
+    callbackUrl: '/buyouts',
+    ...formData,
+  })
   if (error) {
     alertType.value = 'error'
     if (error === 'Email is not confirmed') {
       alertText.value = 'Подтвердите email для входа'
       alertType.value = 'warning'
-    }
-    else {
+    } else if (error == 'Account is banned') {
+      alertText.value = 'Аккаунт заблокирован'
+      alertType.value = 'warning'
+    } else {
       alertText.value = 'Неверный email или пароль'
     }
     alert.value = true
     setTimeout(() => {
       alert.value = false
     }, 3000)
-  }
-  else {
+  } else {
     store.getClient()
     return router.push('/buyouts')
   }
@@ -83,7 +88,10 @@ const rules = computed(() => {
     },
     password: {
       required: helpers.withMessage('Введите пароль', required),
-      minLength: helpers.withMessage('Пароль должен быть длиннее 6 символов', minLength(6)),
+      minLength: helpers.withMessage(
+        'Пароль должен быть длиннее 6 символов',
+        minLength(6)
+      ),
     },
   }
 })
@@ -93,7 +101,7 @@ const v$ = useVuelidate(rules, formData)
 
 <template>
   <div id="auth">
-    <Toast :type="alertType" style="z-index: 1000;" :active="alert">
+    <Toast :type="alertType" style="z-index: 1000" :active="alert">
       {{ alertText }}
     </Toast>
 
@@ -104,23 +112,34 @@ const v$ = useVuelidate(rules, formData)
         <form>
           <label>Email <span>*</span></label>
           <input
-            id="email" v-model="formData.email" type="email" name="email" placeholder="Введите свой email" :class="{
+            id="email"
+            v-model="formData.email"
+            type="email"
+            name="email"
+            placeholder="Введите свой email"
+            :class="{
               'input-error': v$.email.$error,
-            }" required="true"
-          >
+            }"
+            required="true"
+          />
 
           <label>Пароль <span>*</span></label>
           <input
-            id="password" v-model="formData.password" type="password" name="password" placeholder="••••••••" :class="{
+            id="password"
+            v-model="formData.password"
+            type="password"
+            name="password"
+            placeholder="••••••••"
+            :class="{
               'input-error': v$.password.$error,
-            }" required="true"
-          >
+            }"
+            required="true"
+          />
 
-          <NuxtLink href="/resetPassword">
-            Забыли пароль?
-          </NuxtLink>
+          <NuxtLink href="/resetPassword"> Забыли пароль? </NuxtLink>
           <button
-            type="submit" class="btn btn-primary w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            type="submit"
+            class="btn btn-primary w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
             @click.prevent="login"
           >
             <span v-show="loading" class="loading loading-spinner" />
@@ -129,9 +148,8 @@ const v$ = useVuelidate(rules, formData)
           </button>
 
           <p>
-            Ещё не зарегистрированы? <NuxtLink href="/register">
-              Регистрация
-            </NuxtLink>
+            Ещё не зарегистрированы?
+            <NuxtLink href="/register"> Регистрация </NuxtLink>
           </p>
         </form>
 
@@ -143,31 +161,34 @@ const v$ = useVuelidate(rules, formData)
         <TelegramLoginButton mode="callback" />
 
         <p class="text">
-          *Регистрируясь вы принимаете <a href="">Пользовательское соглашение</a>, <br>
-          и подтверждаете, что ознакомлены с <a href="">Политикой конфиденциальности</a>.
+          *Регистрируясь вы принимаете
+          <a href="">Пользовательское соглашение</a>, <br />
+          и подтверждаете, что ознакомлены с
+          <a href="">Политикой конфиденциальности</a>.
         </p>
       </div>
     </section>
 
     <section class="right">
       <div class="box">
-        <div class="logo">
-          wb
-        </div>
+        <div class="logo">wb</div>
 
-        <h1>Самовыкупы на <br> WildBerries</h1>
+        <h1>
+          Самовыкупы на <br />
+          WildBerries
+        </h1>
         <h2>
-          <span>[</span> комплексное продвижение <br>
+          <span>[</span> комплексное продвижение <br />
           - попробовать бесплатно <span>]</span>
         </h2>
       </div>
 
-      <img class="phone" src="~/assets/phone.png" alt="">
+      <img class="phone" src="~/assets/phone.png" alt="" />
 
-      <img class="figure1" src="~/assets/figure1.svg" alt="">
-      <img class="figure2" src="~/assets/figure2.svg" alt="">
-      <img class="figure3" src="~/assets/figure3.svg" alt="">
-      <img class="line" src="~/assets/line.svg" alt="">
+      <img class="figure1" src="~/assets/figure1.svg" alt="" />
+      <img class="figure2" src="~/assets/figure2.svg" alt="" />
+      <img class="figure3" src="~/assets/figure3.svg" alt="" />
+      <img class="line" src="~/assets/line.svg" alt="" />
     </section>
   </div>
 </template>

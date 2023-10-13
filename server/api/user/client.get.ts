@@ -4,12 +4,17 @@ import { getServerSession } from '#auth'
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
 
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+  if (!session) return sendRedirect(event, '/auth', 302)
 
   const user = await User.findOne({ uuid: session.uuid })
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  if (!user) return sendRedirect(event, '/auth', 302)
+
+  // if (user.isBanned) {
+  //   return sendRedirect(event, '/auth', 302)
+  // }
+  // if (user.isBanned) {
+  //   return sendRedirect(event, '/auth', 302)
+  // }
 
   if (!user.partner) {
     user.partner = {
@@ -33,6 +38,7 @@ export default eventHandler(async (event) => {
     partner: user.partner,
     isBanned: user.isBanned,
   }
+
   return {
     client,
     status: 'ok',
