@@ -18,8 +18,6 @@ useIntervalFn(() => {
   refresh()
 }, 1000 * 60)
 if (status.value === 'authenticated') await store.getClient()
-console.log(status.value);
-
 
 const app = ref()
 
