@@ -7,6 +7,7 @@ const partnerSchema = new Schema({
   rewardPercent: { type: Number, default: 10 },
 })
 const UserSchema = new Schema({
+  isBanned: { type: Boolean, default: false },
   username: { type: String, unique: true, required: true },
   firstName: { type: String, required: false },
   lastName: { type: String, required: false },
