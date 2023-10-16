@@ -14,4 +14,10 @@ const ProductLikeSchema = new Schema({
   amount: { type: Number, required: true },
 })
 
+ProductLikeSchema.pre('save', function (next) {
+  // Добавляем 3 часа к полю "date"
+  this.createdDate.setHours(this.createdDate.getHours() + 3)
+  next()
+})
+
 export const ProductLike = model('ProductLike', ProductLikeSchema)

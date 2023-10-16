@@ -3,7 +3,11 @@ import { Schema, model } from 'mongoose'
 const LikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   article: { type: String, required: true },
-  status: { type: String, default: 'created', enum: ['created', 'work', 'completed', 'nofunds'] },
+  status: {
+    type: String,
+    default: 'created',
+    enum: ['created', 'work', 'completed', 'nofunds'],
+  },
   image: { type: String },
   likes: { type: Number, default: 0 },
   dislikes: { type: Number, default: 0 },
@@ -16,4 +20,11 @@ const LikeSchema = new Schema({
   dateEnd: { type: Date },
 })
 
+LikeSchema.pre('save', function (next) {
+  // Добавляем 3 часа к полю "date"
+  this.createdDate.setHours(this.createdDate.getHours() + 3)
+  next()
+})
+
 export const Like = model('Like', LikeSchema)
+

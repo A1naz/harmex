@@ -279,7 +279,6 @@ const productDateRangeModel = ref([])
             Дизлайков: {{ getAddedLikes().dislikes }}
           </p>
 
-{{ productDateRangeModel }}
             <p class="text-xs text-neutral-content lg:text-sm font-bold hidden md:block">
               Сроки выполнения:
             </p>

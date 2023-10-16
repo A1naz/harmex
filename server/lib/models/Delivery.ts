@@ -33,4 +33,10 @@ const DeliverySchema = new Schema({
   data15: { type: {}, default: '' },
 })
 
+DeliverySchema.pre('save', function (next) {
+  // Добавляем 3 часа к полю "date"
+  this.updatedAt.setHours(this.updatedAt.getHours() + 3);
+  next();
+});
+
 export const Delivery = model('Delivery', DeliverySchema)

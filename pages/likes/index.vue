@@ -4,7 +4,6 @@ definePageMeta({
   auth: true,
   title: 'Лайки на отзывы',
 })
-const { $dayjs } = useNuxtApp()
 const route = useRoute()
 const router = useRouter()
 const review_likes = ref([]) as any
@@ -114,14 +113,14 @@ onMounted(() => {
         <Column field="createdDate" header="Дата создания">
           <template #body="{ data }">
             <div>
-              {{ $dayjs(data.createdDate).format('D MMMM HH:mm') }}
+              {{ defaultDate(data.createdDate) }}
             </div>
           </template>
         </Column>
         <Column field="endedDate" header="Дата завершения">
           <template #body="{ data }">
             <div v-if="data.endedDate">
-              {{ $dayjs(data.endedDate).format('D MMMM HH:mm') }}
+              {{ defaultDate(data.endedDate) }}
             </div>
             <div v-else>Нет</div>
           </template>
@@ -130,10 +129,10 @@ onMounted(() => {
           <template #body="{ data }">
             <div v-if="data.dateStart">
               <div>
-               с {{ $dayjs(data.dateStart).format('D MMMM HH:mm') }}
+               с {{ defaultDate(data.dateStart) }}
               </div>
               <div>
-                по {{ $dayjs(data.dateEnd).format('D MMMM HH:mm') }}
+                по {{ defaultDate(data.dateEnd) }}
               </div>
             </div>
             <div v-else>Нет</div>
@@ -192,7 +191,7 @@ onMounted(() => {
                 class="absolute top-0 text-gray-400 right-3 date text-xs text-center mt-2 xs:bottom-0 xs:top-20"
               >
                 <div>
-                  {{ $dayjs(item.createdDate).format('D MMMM HH:mm') }}
+                  {{ defaultDate(item.createdDate) }}
                 </div>
               </div>
             </div>
@@ -219,7 +218,7 @@ onMounted(() => {
                 </dt>
                 <dd class="font-semibold text-sm">
                   <div v-if="item.endedDate">
-                    {{ $dayjs(item.endedDate).format('D MMMM HH:mm') }}
+                    {{ defaultDate(item.endedDate) }}
                   </div>
                   <div v-else>Нет</div>
                 </dd>
@@ -231,10 +230,10 @@ onMounted(() => {
                 <dd class="font-semibold text-sm">
                   <div v-if="item.dateEnd">
                     <div>
-                      {{ `С ${$dayjs(item.dateStart).format('D MMMM HH:mm')}` }}
+                      {{ `С ${defaultDate(item.dateStart)}` }}
                     </div>
                     <div>
-                      {{ `По ${$dayjs(item.dateEnd).format('D MMMM HH:mm')}` }}
+                      {{ `По ${defaultDate(item.dateEnd)}` }}
                     </div>
                   </div>
                   <div v-else>Нет</div>

@@ -172,7 +172,7 @@ function removeReview() {
           <div class="font-bold">Дата отзыва</div>
           <div class="relative w-full rounded-lg">
             <div>
-              {{ $dayjs(info.date).format('D MMMM HH:mm') }}
+              {{ defaultDate(info.date) }}
             </div>
           </div>
         </div>

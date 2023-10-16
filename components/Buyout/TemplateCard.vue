@@ -17,11 +17,11 @@ const props = defineProps({
         <span class="text-xs">Даты выкупов: </span>
         <div class="text-xs">
           <span>
-            {{ $dayjs(product.dateRange[0]).format('D MMMM HH:mm') }}</span
+            {{ defaultDate(product.dateRange[0]) }}</span
           >
           -
           <span>
-            {{ $dayjs(product.dateRange[1]).format('D MMMM HH:mm') }}</span
+            {{ defaultDate(product.dateRange[1]) }}</span
           >
         </div>
       </div>

@@ -39,6 +39,9 @@ export default eventHandler(async (event) => {
   }
   const images = photos.map((photo: any) => photo.public)
 
+console.log(date);
+
+
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,

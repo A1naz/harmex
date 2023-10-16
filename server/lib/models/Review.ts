@@ -14,3 +14,9 @@ const ReviewSchema = new Schema({
 })
 
 export const Review = model('Review', ReviewSchema)
+
+// ReviewSchema.pre('save', function (next) {
+//   // Добавляем 3 часа к полю "date"
+//   this.date.setHours(this.date.getHours() + 3);
+//   next();
+// });

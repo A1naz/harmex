@@ -16,4 +16,10 @@ const AutoanswerModel = new Schema({
   expiryDate: { type: Date, required: false, default: Date.now },
 })
 
+AutoanswerModel.pre('save', function (next) {
+  // Добавляем 3 часа к полю "date"
+  this.createdAt.setHours(this.createdAt.getHours() + 3);
+  next();
+});
+
 export const Autoanswer = model('Autoanswer', AutoanswerModel)

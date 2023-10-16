@@ -9,7 +9,6 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['openModal', 'openStatusModal', 'openPenaltyModal'])
-const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
 const store = useMainStore()
 const router = useRouter()
@@ -73,7 +72,7 @@ function daysToPenalty(statusdelivery: any[]) {
               {{ daysToPenalty(info.statusdelivery) }}
             </div>
             <div class="mt-2 lg:m-0 text-xs">
-              Обновлено {{ $dayjs(info.updatedAt).format('D MMMM HH:mm') }}
+              Обновлено {{ defaultDate(info.updatedAt) }}
             </div>
           </div>
         </div>

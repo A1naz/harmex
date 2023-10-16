@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMainStore } from '~~/stores/main'
 
+
 const props = defineProps({
   modelValue: {
     required: true,
@@ -11,16 +12,16 @@ const props = defineProps({
     type: Date,
   },
 })
+
 const emit = defineEmits(['update:modelValue'])
 const colorMode = useColorMode()
-const { $dayjs } = useNuxtApp()
 const { width } = useWindowSize()
 const date = ref(props.modelValue)
 const store = useMainStore()
+const { $dayjs } = useNuxtApp()
 function getFirstDate(dates: [Date | null, Date | null] | []) {
   if (dates && dates[0])
     return `${$dayjs(dates[0]).format('D MMMM HH:mm')}`
-
   return ''
 }
 function getSecondDate(dates: [Date | null, Date | null] | []) {
@@ -74,7 +75,8 @@ function handleTime(index: number, value: number, hours = true, updateTime: upda
       v-model="date" position="left" :teleport-center="width < 1024"
       :teleport="true" :min-date="startDate" :prevent-min-max-navigation="true" :dark="colorMode.value === 'dark'"
       :time-picker-inline="true"
-      locale="ru" range cancel-text="" select-text="Сохранить" @update:model-value="handleDate"
+      timezone="UTC"
+  range cancel-text="" select-text="Сохранить" @update:model-value="handleDate"
     >
       <template #trigger>
         <button

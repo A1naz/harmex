@@ -21,7 +21,6 @@ const props = defineProps({
 
 })
 const emit = defineEmits(['addLike', 'removeLike', 'addDislike', 'removeDislike'])
-const { $dayjs } = useNuxtApp()
 
 const disabledMinusLikes = computed(() => {
   return props.addLikes <= 0
@@ -60,7 +59,7 @@ function removeDislike() {
           </div>
         </div>
         <div class="date text-gray-500 text-sm">
-          {{ $dayjs(info.date).calendar() }}
+          {{ defaultDate(info.date) }}
         </div>
       </div>
       <div class="relative w-full rounded-lg">

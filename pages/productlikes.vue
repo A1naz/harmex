@@ -278,14 +278,14 @@ onMounted(() => {
         <Column field="createdDate" header="Дата создания">
           <template #body="{ data }">
             <div>
-              {{ $dayjs(data.createdDate).format('D MMMM HH:mm') }}
+              {{ defaultDate(data.createdDate) }}
             </div>
           </template>
         </Column>
         <Column field="endedDate" header="Дата завершения">
           <template #body="{ data }">
             <div v-if="data.endedDate">
-              {{ $dayjs(data.endedDate).format('D MMMM HH:mm') }}
+              {{ defaultDate(data.endedDate) }}
             </div>
             <div v-else>
               Нет
@@ -299,7 +299,7 @@ onMounted(() => {
             <div class="collapse-title font-medium ">
               <div class="text-gray-400 right-3 date text-start text-xs pb-2">
                 <div>
-                  {{ $dayjs(item.createdDate).format('D MMMM HH:mm') }}
+                  {{ defaultDate(item.createdDate) }}
                 </div>
               </div>
               <div class="flex gap-6 items-center w-full">
@@ -360,7 +360,7 @@ onMounted(() => {
                 </dt>
                 <dd class="font-semibold text-sm">
                   <div v-if="item.endedDate">
-                    {{ $dayjs(item.endedDate).format('D MMMM HH:mm') }}
+                    {{ defaultDate(item.endedDate) }}
                   </div>
                   <div v-else>
                     Нет

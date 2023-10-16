@@ -5,7 +5,6 @@ interface Props {
 
 const props = defineProps<Props>()
 const emit = defineEmits(['close'])
-const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
 const store = useMainStore()
 

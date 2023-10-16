@@ -63,12 +63,12 @@ const props = defineProps<IProps>()
         <div class="card-actions justify-start mt-2">
           <div>Дата Создания:</div>
           <div class="date text-end">
-            {{ $dayjs(item.createdDate).format('D MMMM HH:mm') }}
+            {{ defaultDate(item.createdDate) }}
           </div>
           <div>Дата Завершения:</div>
           <div>
             <div v-if="item.endedDate">
-              {{ $dayjs(item.endedDate).format('D MMMM HH:mm') }}
+              {{ defaultDate(item.endedDate) }}
             </div>
             <div v-else>
               Нет

@@ -65,7 +65,7 @@ function openBuyout() {
             </div>
 
             <div class="mt-2 lg:m-0 text-xs">
-              Обновлено {{ $dayjs(info.updatedAt).format('D MMMM HH:mm') }}
+              Обновлено {{ defaultDate(info.updatedAt) }}
             </div>
           </div>
         </div>

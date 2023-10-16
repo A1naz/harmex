@@ -202,9 +202,9 @@ const productQuantityModel = computed({
         <div class="w-full">
           <div v-show="product.dateRange[1] && product.dateRange[0]" class="text-sm flex flex-col justify-center items-start mb-2">
             <div>
-              {{ `С ${$dayjs(product.dateRange[0]).format('D MMMM HH:mm')}` }}
+              {{ `С ${defaultDate(product.dateRange[0])}` }}
             </div>
-            <div> {{ `По ${$dayjs(product.dateRange[1]).format('D MMMM HH:mm')}` }}</div>
+            <div> {{ `По ${defaultDate(product.dateRange[1])}` }}</div>
           </div>
           <BuyoutDateRangePicker v-model="productDateRangeModel" :start-date="startDate" />
         </div>

@@ -10,7 +10,6 @@ interface Props {
 
 const props = defineProps<Props>()
 const emit = defineEmits(['close'])
-const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
 const store = useMainStore()
 
@@ -38,7 +37,7 @@ onKeyStroke('Escape', (e) => {
                   {{ status.status }}
                 </div>
                 <div class="text-sm">
-                  {{ $dayjs(status.date).format('D MMMM HH:mm') }}
+                  {{ defaultDate(status.date) }}
                 </div>
               </div>
             </li>

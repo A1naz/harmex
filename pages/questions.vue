@@ -6,7 +6,6 @@ definePageMeta({
   auth: true,
   title: 'Вопросы',
 })
-const { $dayjs } = useNuxtApp()
 const questions = ref([]) as any
 const amount = ref(0)
 const now = useNow()
@@ -146,10 +145,10 @@ onMounted(() => {
               <div class="relative w-full p-4 bg-base-100 rounded-lg mt-2">
                 <div class="absolute left-3 top-1.5 text-sm mt-auto">
                   {{ publishDate <= now ? 'Опубликовать сейчас'
-                    : $dayjs(publishDate).format('D MMMM HH:mm') }}
+                    : defaultDate(publishDate) }}
                 </div>
                 <div class="absolute right-0 top-0 w-60" style="z-index: 9999999">
-                  <DatePicker v-model="publishDate" class="w-40" />
+                  <DatePicker timezone="UTC" v-model="publishDate" class="w-40" />
                 </div>
               </div>
             </div>
@@ -275,14 +274,14 @@ onMounted(() => {
           <Column field="createdDate" header="Дата создания">
             <template #body="{ data }">
               <div>
-                {{ $dayjs(data.createdDate).format('D MMMM HH:mm') }}
+                {{ defaultDate(data.createdDate) }}
               </div>
             </template>
           </Column>
           <Column field="publishDate" header="Дата публикации">
             <template #body="{ data }">
               <div v-if="data.publishDate">
-                {{ $dayjs(data.publishDate).format('D MMMM HH:mm') }}
+                {{ defaultDate(data.publishDate) }}
               </div>
               <div v-else>
                 Нет
@@ -325,7 +324,7 @@ onMounted(() => {
                   </div>
                 </div>
                 <div class="date ml-auto text-xs text-end">
-                  {{ $dayjs(item.createdDate).format('D MMMM HH:mm') }}
+                  {{ defaultDate(item.createdDate) }}
                 </div>
               </div>
 
@@ -339,7 +338,7 @@ onMounted(() => {
               <div class="card-actions justify-start mt-2">
                 <div>Дата публикации:</div>
                 <div>
-                  {{ $dayjs(item.publishDate).format('D MMMM HH:mm') }}
+                  {{ defaultDate(item.publishDate) }}
                 </div>
               </div>
             </div>

@@ -113,11 +113,11 @@ const productQuantityModel = computed({
         <div class="flex flex-col items-end">
           <div>
             <span>
-              {{ $dayjs(product.dateRange[0]).format('DD.MM.YYYY') }}</span
+              {{ defaultDate(product.dateRange[0]) }}</span
             >
             -
             <span>
-              {{ $dayjs(product.dateRange[1]).format('DD.MM.YYYY') }}</span
+              {{ defaultDate(product.dateRange[1]) }}</span
             >
           </div>
         </div>

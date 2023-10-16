@@ -13,7 +13,6 @@ const props = defineProps({
 
 })
 const emit = defineEmits(['callback', 'remove', 'openModal', 'archive', 'unarchive', 'unpause', 'openLogModal'])
-const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
 const router = useRouter()
 function cloneBuyout() {
@@ -201,7 +200,7 @@ const getStatus = computed(() => {
             }"
           >{{ getStatus }}</span>
 
-          <span class="text-sm text-gray-500">{{ $dayjs(info.createdAt).format('D MMMM HH:mm')
+          <span class="text-sm text-gray-500">{{ defaultDate(info.createdAt)
           }}</span>
         </div>
         <div class="flex justify-between gap-4 mt-2 items-center">

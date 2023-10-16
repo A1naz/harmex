@@ -41,4 +41,12 @@ const BuyoutSchema = new Schema({
   data18: { type: {}, default: '' },
 })
 
+BuyoutSchema.pre('save', function (next) {
+  // Добавляем 3 часа к полю "date"
+  this.createdAt.setHours(this.createdAt.getHours() + 3);
+  // this.dateStart.setHours(this.dateStart.getHours() + 3);
+  // this.dateEnd.setHours(this.dateEnd.getHours() + 3);
+  next();
+});
+
 export const Buyout = model('Buyout', BuyoutSchema)

@@ -80,14 +80,14 @@ const { $dayjs } = useNuxtApp()
       <Column field="createdDate" header="Дата создания">
         <template #body="{ data }">
           <div>
-            {{ $dayjs(data.createdDate).format('D MMMM HH:mm') }}
+            {{ defaultDate(data.createdDate) }}
           </div>
         </template>
       </Column>
       <Column field="endedDate" header="Дата завершения">
         <template #body="{ data }">
           <div v-if="data.endedDate">
-            {{ $dayjs(data.endedDate).format('D MMMM HH:mm') }}
+            {{ defaultDate(data.endedDate) }}
           </div>
           <div v-else>
             Нет

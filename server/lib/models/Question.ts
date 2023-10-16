@@ -11,4 +11,10 @@ const QuestionSchema = new Schema({
   publishDate: { type: Date, required: true },
 })
 
+QuestionSchema.pre('save', function (next) {
+  // Добавляем 3 часа к полю "date"
+  this.createdDate.setHours(this.createdDate.getHours() + 3)
+  next()
+})
+
 export const Question = model('Question', QuestionSchema)

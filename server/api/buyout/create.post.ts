@@ -23,19 +23,21 @@ interface Item {
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
 
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+  if (!session) return sendRedirect(event, '/auth', 302)
 
   const user = await User.findOne({ uuid: session.uuid })
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
   const last = await Buyout.findOne({ user }).sort({ _id: -1 })
 
-  const activeBuyouts = await Buyout.find({ user, status: { $in: ['active', 'work', 'created'] } })
+  const activeBuyouts = await Buyout.find({
+    user,
+    status: { $in: ['active', 'work', 'created'] },
+  })
   const sum = activeBuyouts.reduce((acc, item) => {
-    const price = parseInt(item.product.price) * (item.quantity - item.completed)
+    const price =
+      parseInt(item.product.price) * (item.quantity - item.completed)
     return acc + price
   }, 0)
 
@@ -44,13 +46,12 @@ export default eventHandler(async (event) => {
 
   const products: Item[] = body
   for await (const product of products) {
-    const rules = product.rules.map(rule => rule.id)
+    const rules = product.rules.map((rule) => rule.id)
     const points = (await getPickpoints()).points
     const searchQueries = product.searchQuery.map((item: any) => item.value)
 
     const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
-    if (!foundPoint)
-      throw createError('Выберите существующий пункт выдачи')
+    if (!foundPoint) throw createError('Выберите существующий пункт выдачи')
     const buyout = new Buyout({
       article: product.article,
       searchQuery: searchQueries.join(', '),

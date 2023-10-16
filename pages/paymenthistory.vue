@@ -292,7 +292,7 @@ function openBuyout(uuid: string) {
         <Column field="dataoperation" sortable header="Дата">
           <template #body="{ data }">
             <div class="">
-              {{ $dayjs(data.dataoperation).format('D MMMM HH:mm') }}
+              {{ defaultDate(data.dataoperation) }}
             </div>
           </template>
         </Column>
@@ -315,7 +315,7 @@ function openBuyout(uuid: string) {
                 </div>
               </div>
               <div class="date text-xs text-gray-500 dark:text-gray-400">
-                {{ $dayjs(item.dataoperation).format('D MMMM HH:mm') }}
+                {{ defaultDate(item.dataoperation) }}
               </div>
             </div>
           </div>

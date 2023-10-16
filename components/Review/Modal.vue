@@ -277,7 +277,7 @@ onMounted(() => {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : $dayjs(form.date).format('D MMMM HH:mm')
+                  : defaultDate(form.date)
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">

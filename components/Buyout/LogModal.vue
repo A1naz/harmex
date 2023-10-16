@@ -15,7 +15,6 @@ const props = defineProps({
 
 })
 const emit = defineEmits(['close'])
-const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
 const store = useMainStore()
 const logs = ref<any[]>([])
@@ -59,7 +58,7 @@ onKeyStroke('Escape', (e) => {
               {{ log.text }}
             </div>
             <div class="logDate">
-              {{ $dayjs(log.date).format('D MMMM HH:mm') }}
+              {{ defaultDate(log.date) }}
             </div>
           </div>
         </div>

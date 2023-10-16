@@ -15,7 +15,6 @@ const props = defineProps({
 
 })
 const emit = defineEmits(['close'])
-const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
 const store = useMainStore()
 const getStatus = computed(() => {
@@ -75,7 +74,7 @@ onKeyStroke('Escape', (e) => {
                 'text-warning': info.status === 'archived',
               }"
             >{{ getStatus }}</span>
-            <span class="text-sm text-gray-500">{{ $dayjs(info.createdAt).format('D MMMM HH:mm')
+            <span class="text-sm text-gray-500">{{ defaultDate(info.createdAt)
             }}</span>
           </div>
           <div class="flex justify-between items-center flex-wrap">
@@ -102,9 +101,9 @@ onKeyStroke('Escape', (e) => {
             <span class="text-gray-500 text-sm">Даты выкупов:</span>
             <span class="text-sm flex flex-col justify-center items-end">
               <div>
-                {{ `С ${$dayjs(info.dateStart).format('D MMMM HH:mm')}` }}
+                {{ `С ${defaultDate(info.dateStart)}` }}
               </div>
-              <div> {{ `По ${$dayjs(info.dateEnd).format('D MMMM HH:mm')}` }}</div>
+              <div> {{ `По ${defaultDate(info.dateEnd)}` }}</div>
             </span>
           </div>
         </div>

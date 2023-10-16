@@ -489,7 +489,7 @@ function closeTemplateModalFN() {
       <div style="z-index: 9999">
         <label
           v-if="store.createProducts.length > 0"
-          class="btn btn-sm btn-error bg-red-400 normal-case mt-1 ml-0 md:mt-0 md:ml-2"
+          class="btn btn-sm btn-error bg-red-400 normal-case mt-1 ml-0 md:mt-0 md:ml-2 z-0"
           for="removeAllModelCreateProducts"
           >Удалить все</label
         >
@@ -705,7 +705,7 @@ function closeTemplateModalFN() {
       </div>
     </div>
     <input id="template-select-modal" type="checkbox" class="modal-toggle" />
-    <div class="modal">
+    <div class="modal" style="z-index: 9999;">
       <div class="modal-box max-w-7xl min-h-[300px]">
         <label
           ref="closeTemplateSelectModal"
