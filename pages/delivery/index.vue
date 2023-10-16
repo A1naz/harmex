@@ -184,7 +184,7 @@ watch(() => status.value, async (newRoute) => {
     </p>
     <p class="text-xs font-bold mt-1 lg:text-sm">
       Возвраты финансовых средств на не забранные товары с ПВЗ отсутствуют! Работаем по модели Выкупил - Забрал.
-    </p>
+    </p> Все услуги оказываются по Московскому времени.
 
     <div class="flex justify-between mb-2 mt-6 items-center flex-wrap gap-4">
       <div class="hidden lg:block">

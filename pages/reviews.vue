@@ -222,6 +222,7 @@ async function removeReview() {
       </p>
       <p class="text-xs font-light mt-1 lg:text-sm">
         Стоимость одного отзыва - <span class="font-bold">35 руб.</span>
+        Все услуги оказываются по Московскому времени.
       </p>
     </div>
     <div class="flex justify-between mb-2 mt-6 items-center">
