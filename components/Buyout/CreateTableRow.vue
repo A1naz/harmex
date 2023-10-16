@@ -15,11 +15,10 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-
 })
 const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
 
-const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
+const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
 
 const store = useBuyoutStore()
 
@@ -79,20 +78,31 @@ const productQuantityModel = computed({
     </td>
     <td>
       <div
-        style="width: 28px; height: 36px; overflow: visible; position: relative; border-radius: 4px"
+        style="
+          width: 28px;
+          height: 36px;
+          overflow: visible;
+          position: relative;
+          border-radius: 4px;
+        "
       >
         <div class="dropdown dropdown-hover">
-          <label tabindex="0"> <nuxt-img
-            class="rounded-lg" loading="lazy" fit="fill"
-            :src="product.image"
-          />
+          <label tabindex="0">
+            <nuxt-img
+              class="rounded-lg"
+              loading="lazy"
+              fit="fill"
+              :src="product.image"
+            />
           </label>
           <ul
             tabindex="0"
             class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-10"
           >
             <nuxt-img
-              class="rounded-lg" loading="lazy" fit="fill"
+              class="rounded-lg"
+              loading="lazy"
+              fit="fill"
               :src="product.image"
             />
           </ul>
@@ -106,7 +116,8 @@ const productQuantityModel = computed({
         </div>
         <a
           :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
-          target="_blank" class="text-sm text-secondary link link-hover"
+          target="_blank"
+          class="text-sm text-secondary link link-hover"
         >
           {{ product.article }}
         </a>
@@ -126,9 +137,12 @@ const productQuantityModel = computed({
           <IconCSS size="16" name="ic:round-minus" />
         </div>
         <input
-          v-model="productQuantityModel" type="number" min="1" max="1000"
+          v-model="productQuantityModel"
+          type="number"
+          min="1"
+          max="1000"
           class="input input-bordered input-sm w-full text-center"
-        >
+        />
         <div
           class="absolute right-0 btn btn-ghost btn-sm btn-square"
           @click="productQuantityModel++"
@@ -140,19 +154,20 @@ const productQuantityModel = computed({
     <td>
       <div class="w-20 2xl:w-full flex items-center">
         <select
-          v-if="product.sizes.length" class="select select-sm select-bordered w-full"
+          v-if="product.sizes.length"
+          class="select select-sm select-bordered w-full"
           @change="onSizeChange"
         >
           <option
-            v-for="size in product.sizes" :key="size"
-            :selected="product.selectedSize === size" :value="size"
+            v-for="size in product.sizes"
+            :key="size"
+            :selected="product.selectedSize === size"
+            :value="size"
           >
             {{ size }}
           </option>
         </select>
-        <div v-else class="text-sm text-center ml-2">
-          Нет
-        </div>
+        <div v-else class="text-sm text-center ml-2">Нет</div>
       </div>
     </td>
     <td>
@@ -161,52 +176,63 @@ const productQuantityModel = computed({
           class="select select-sm select-bordered w-full appearance-none"
           @change="onSexChange"
         >
-          <option value="none">
-            Нет
-          </option>
-          <option value="male">
-            Муж
-          </option>
-          <option value="female">
-            Жен
-          </option>
+          <option value="none">Нет</option>
+          <option value="male">Муж</option>
+          <option value="female">Жен</option>
         </select>
       </div>
     </td>
     <td>
       <div class="w-full flex flex-col gap-2">
-        <BuyoutCreateSearchQueries :product-index="props.index" :article="product.article" :queries="product.searchQuery" @update="productSearchQueryUpdate" @add="addSearchQuery" @remove="removeSearchQuery" />
+        <BuyoutCreateSearchQueries
+          :product-index="props.index"
+          :article="product.article"
+          :queries="product.searchQuery"
+          @update="productSearchQueryUpdate"
+          @add="addSearchQuery"
+          @remove="removeSearchQuery"
+        />
       </div>
     </td>
     <td class="break-all">
-      <div class="w-full flex flex-col items-start justify-center gap-1 flex-wrap overflow-hidden">
+      <div
+        class="w-full flex flex-col items-start justify-center gap-1 flex-wrap overflow-hidden"
+      >
         <div v-if="product.adress" class="text-xs mb-1 h-10 w-40 break-all">
           <p class="break-all whitespace-normal">
             {{ product.adress }}
           </p>
         </div>
         <button
-          :disabled="loading" :class="{
+          :disabled="loading"
+          :class="{
             'btn-outline': product.adress,
-          }" class="btn btn-primary btn-sm normal-case w-full" @click="$emit('pointModalOpen', index)"
+          }"
+          class="btn btn-primary btn-sm normal-case w-full"
+          @click="$emit('pointModalOpen', index)"
         >
           <span v-show="loading" class="loading loading-spinner" />
 
-          {{ product.adress
-            ? 'Изменить' : 'Добавить' }}
+          {{ product.adress ? 'Изменить' : 'Добавить' }}
         </button>
       </div>
     </td>
     <td>
       <div class="flex items-center">
         <div class="w-full">
-          <div v-show="product.dateRange[1] && product.dateRange[0]" class="text-sm flex flex-col justify-center items-start mb-2">
+          <div
+            v-show="product.dateRange[1] && product.dateRange[0]"
+            class="text-sm flex flex-col justify-center items-start mb-2"
+          >
             <div>
               {{ `С ${defaultDate(product.dateRange[0])}` }}
             </div>
-            <div> {{ `По ${defaultDate(product.dateRange[1])}` }}</div>
+            <div>{{ `По ${defaultDate(product.dateRange[1])}` }}</div>
           </div>
-          <BuyoutDateRangePicker v-model="productDateRangeModel" :start-date="startDate" />
+          <BuyoutDateRangePicker
+            v-model="productDateRangeModel"
+            :start-date="startDate"
+          />
         </div>
       </div>
     </td>
@@ -218,7 +244,9 @@ const productQuantityModel = computed({
         <button
           :class="{
             'btn-outline': product.rules,
-          }" class="btn btn-primary btn-sm normal-case " @click="$emit('ruleModalOpen', index)"
+          }"
+          class="btn btn-primary btn-sm normal-case"
+          @click="$emit('ruleModalOpen', index)"
         >
           {{ 'Настроить' }}
         </button>
@@ -235,6 +263,4 @@ const productQuantityModel = computed({
   </tr>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
