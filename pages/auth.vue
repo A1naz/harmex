@@ -53,6 +53,7 @@ async function login() {
       alert.value = false
     }, 3000)
   } else {
+    localStorage.removeItem('referralCode')
     store.getClient()
     return router.push('/buyouts')
   }
