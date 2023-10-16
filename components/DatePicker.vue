@@ -15,7 +15,7 @@ const { $dayjs } = useNuxtApp()
 const emit = defineEmits(['update:modelValue'])
 const colorMode = useColorMode()
 const { width, height } = useWindowSize()
-const startDate = ref(new Date())
+const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
 const date = ref(props.modelValue)
 const store = useMainStore()
 type UpdateMonthYear = (month: number, year: number) => void

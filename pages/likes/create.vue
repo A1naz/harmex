@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { useNotification } from '@kyvg/vue3-notification'
 
+const isPageBtnsDisabled = ref(false)
+const limit = ref(50)
+const page = ref(1)
+const feedbacksCount = ref(0)
+const maxPage = computed(() => Math.ceil(feedbacksCount.value / limit.value))
 definePageMeta({
   layout: 'app',
   auth: true,
@@ -19,19 +24,55 @@ const selectSortBy = ref('')
 const sortBy = computed(() => route.query?.sortBy || 'date')
 
 async function getProductReviews() {
+  reviews.value = []
   loading.value = true
   changedReviews.value = []
   savedArticle.value = article.value
+  const { data, error }: any = await useFetch('/api/likes/productReviews', {
+    method: 'GET',
+    headers: useRequestHeaders(['cookie']) as HeadersInit,
+    query: {
+      article: savedArticle.value,
+      limit: limit.value * page.value,
+      page: page.value,
+      sortBy: sortBy.value ?? 'date',
+    },
+  })
+  loading.value = false
+  if (error.value) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value.data.message,
+      type: 'error',
+    })
+    return
+  }
+  if (data.value?.feedbacks.length < 1) {
+    notify({
+      title: 'Отзывы не найдены',
+    })
+  }
+  const initial = (data.value.feedbacks as any).map((review: any) => {
+    review.addLikes = 0
+    review.addDislikes = 0
+    return review
+  }) as any[]
+  reviews.value = initial
+  feedbacksCount.value = data.value.feedbacksCount
+  sortReviews()
+}
+
+async function increaseReviews() {
+  limit.value += 50
   const { data, error } = await useFetch('/api/likes/productReviews', {
     method: 'GET',
     headers: useRequestHeaders(['cookie']) as HeadersInit,
     query: {
       article: savedArticle.value,
-      limit: 50,
+      limit: limit.value,
       sortBy: sortBy.value ?? 'date',
     },
   })
-  loading.value = false
   if (error.value) {
     notify({
       title: 'Что-то пошло не так',
@@ -50,9 +91,10 @@ async function getProductReviews() {
     review.addDislikes = 0
     return review
   }) as any[]
-  reviews.value = initial
+  reviews.value.push(...initial)
   sortReviews()
 }
+
 function addLike(id: string) {
   reviews.value.map((review: any) => {
     if (review.id === id) review.addLikes++
@@ -224,8 +266,26 @@ watch(
   { deep: true, immediate: true }
 )
 
-const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
+const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
 const productDateRangeModel = ref([])
+
+async function swapPage(value: number) {
+  if (value === -1 && page.value <= 1) {
+    return
+  }
+
+  if (value === 1 && page.value >= maxPage.value) {
+    notify({
+      type: 'error',
+      text: 'Последняя страница',
+    })
+    return
+  }
+  isPageBtnsDisabled.value = true
+  page.value += value
+  await getProductReviews()
+  isPageBtnsDisabled.value = false
+}
 </script>
 
 <template>
@@ -235,7 +295,7 @@ const productDateRangeModel = ref([])
       Укажите необходимое количество лайков/дизлайков к каждому отзыву.
     </p>
 
-    <div class="relative flex justify-between mb-8 mt-6 items-center">
+    <div class="relative flex justify-between mb-4 mt-6 items-center">
       <select class="select select-bordered select-sm" @change="selectSorting">
         <option value="date" :selected="route.query.sortBy === 'date'">
           По дате
@@ -247,19 +307,42 @@ const productDateRangeModel = ref([])
           По полезности
         </option>
       </select>
-      <div class="relative flex justify-end items-center flex-grow-0 w-60">
-        <input
-          v-model="article"
-          type="number"
-          placeholder="Артикул"
-          class="input input-primary input-sm input-bordered w-full"
-          @keydown.enter="getProductReviews"
-        />
+
+      <div>
+        <div class="relative flex justify-end items-center flex-grow-0 w-60">
+          <input
+            v-model="article"
+            type="number"
+            placeholder="Артикул"
+            class="input input-primary input-sm input-bordered w-full"
+            @keydown.enter="getProductReviews"
+          />
+          <button
+            class="btn btn-ghost btn-sm absolute normal-case"
+            @click="[page = 1, isPageBtnsDisabled = false, getProductReviews()]"
+          >
+            Найти
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-between my-2">
+      <div></div>
+      <div class="join" v-if="feedbacksCount">
         <button
-          class="btn btn-ghost btn-sm absolute normal-case"
-          @click="getProductReviews"
+          class="join-item btn"
+          @click="swapPage(-1)"
+          :disabled="isPageBtnsDisabled"
         >
-          Найти
+          «
+        </button>
+        <button class="join-item btn">{{ page }}</button>
+        <button
+          class="join-item btn"
+          @click="swapPage(1)"
+          :disabled="isPageBtnsDisabled"
+        >
+          »
         </button>
       </div>
     </div>
@@ -279,24 +362,28 @@ const productDateRangeModel = ref([])
             Дизлайков: {{ getAddedLikes().dislikes }}
           </p>
 
-            <p class="text-xs text-neutral-content lg:text-sm font-bold hidden md:block">
-              Сроки выполнения:
-            </p>
-            <BuyoutDateRangePicker
+          <p
+            class="text-xs text-neutral-content lg:text-sm font-bold hidden md:block"
+          >
+            Сроки выполнения:
+          </p>
+          <BuyoutDateRangePicker
             v-model="productDateRangeModel"
             class="w-32 hidden md:block"
             :start-date="startDate"
-            />
+          />
         </div>
-        <div class="save ml-auto flex flex-col lg:flex-row gap-2 ">
-          <p class="text-xs text-neutral-content lg:text-sm font-bold block md:hidden">
-              Сроки выполнения:
-            </p>
-            <BuyoutDateRangePicker
-              v-model="productDateRangeModel"
-              class="w-32 block md:hidden"
-              :start-date="startDate"
-            />
+        <div class="save ml-auto flex flex-col lg:flex-row gap-2">
+          <p
+            class="text-xs text-neutral-content lg:text-sm font-bold block md:hidden"
+          >
+            Сроки выполнения:
+          </p>
+          <BuyoutDateRangePicker
+            v-model="productDateRangeModel"
+            class="w-32 block md:hidden"
+            :start-date="startDate"
+          />
           <button
             class="btn btn-ghost text-neutral-content btn-sm"
             @click="cancel"
@@ -326,6 +413,29 @@ const productDateRangeModel = ref([])
         @remove-like="removeLike"
       />
       <div class="p-2 w-full col-span-1" />
+      <div>
+
+        <div class="flex justify-between mt-2 mb-10">
+          <div></div>
+          <div class="join mr-2" v-if="feedbacksCount">
+            <button
+            class="join-item btn"
+            @click="swapPage(-1)"
+            :disabled="isPageBtnsDisabled"
+            >
+            «
+          </button>
+          <button class="join-item btn">{{ page }}</button>
+          <button
+          class="join-item btn"
+          @click="swapPage(1)"
+          :disabled="isPageBtnsDisabled"
+          >
+          »
+        </button>
+      </div>
+      </div>
+    </div>
     </div>
   </div>
 </template>

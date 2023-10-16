@@ -59,7 +59,7 @@ function removeDislike() {
           </div>
         </div>
         <div class="date text-gray-500 text-sm">
-          {{ defaultDate(info.date) }}
+          {{ $dayjs(info.date).format('DD.MM.YYYY HH:mm') }}
         </div>
       </div>
       <div class="relative w-full rounded-lg">
