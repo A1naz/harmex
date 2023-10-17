@@ -30,7 +30,7 @@ const UserSchema = new Schema({
     default: {
       balance: 0,
       refCount: 0,
-      rewardPercent: 0,
+      rewardPercent: 10,
     },
   },
 })
