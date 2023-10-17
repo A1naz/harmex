@@ -14,6 +14,7 @@ export default eventHandler(async (event) => {
   const likes = await ProductLike.find({ user })
   const format = likes.map((like, index) => {
     return {
+      id: like._id,
       place: index + 1,
       name: like.name,
       url: like.url,

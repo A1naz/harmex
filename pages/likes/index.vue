@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { notify } from '@kyvg/vue3-notification'
+
 definePageMeta({
   layout: 'app',
   auth: true,
@@ -15,10 +17,45 @@ function getStatus(status: string) {
   else if (status === 'work') return 'В работе'
   else if (status === 'completed') return 'Завершен'
   else if (status === 'nofunds') return 'Недостаточно средств'
+  else if (status === 'deleting') return 'На удалении'
+  else if (status === 'deleted') return 'Удален'
 }
 onMounted(() => {
   review_likes.value = data.value
 })
+
+async function getLikes() {
+  const { data, error } = await useFetch('/api/likes/get')
+  review_likes.value = data.value
+}
+
+const reviewRemoveModalClose: any = ref(null)
+const idForRemove = ref('')
+function openRemoveReviewModal(id: any) {
+  idForRemove.value = id
+
+  reviewRemoveModalClose.value?.click()
+}
+
+async function deleteLike() {
+  const { data, error } = await useFetch('/api/likes/delete', {
+    method: 'POST',
+    body: {
+      id: idForRemove.value,
+    },
+  })
+
+  if (data.value) {
+    getLikes()
+  } else if (error.value) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+  }
+}
 </script>
 
 <template>
@@ -101,9 +138,11 @@ onMounted(() => {
           <template #body="{ data }">
             <div
               :class="{
-                'text-error': data.status === 'nofunds',
+                'text-error':
+                  data.status === 'nofunds' || data.status === 'deleted',
                 'text-primary': data.status === 'created',
-                'text-warning': data.status === 'work',
+                'text-warning':
+                  data.status === 'work' || data.status === 'deleting',
                 'text-success': data.status === 'completed',
               }"
             >
@@ -126,17 +165,25 @@ onMounted(() => {
             <div v-else>Нет</div>
           </template>
         </Column>
-        <Column header="Сроки выполнения"> 
+        <Column header="Сроки выполнения">
           <template #body="{ data }">
             <div v-if="data.dateStart">
-              <div>
-               с {{ defaultDate(data.dateStart) }}
-              </div>
-              <div>
-                по {{ defaultDate(data.dateEnd) }}
-              </div>
+              <div>с {{ defaultDate(data.dateStart) }}</div>
+              <div>по {{ defaultDate(data.dateEnd) }}</div>
             </div>
             <div v-else>Нет</div>
+          </template>
+        </Column>
+        <Column header=" ">
+          <template #body="{ data }">
+            <div v-if="data.status === 'created'">
+              <button
+                class="btn btn-error btn-sm -ml-16 -mr-4"
+                @click="openRemoveReviewModal(data.id)"
+              >
+                Удалить
+              </button>
+            </div>
           </template>
         </Column>
       </DataTable>
@@ -228,7 +275,7 @@ onMounted(() => {
                 <dt class="mb-1 text-gray-500 text-sm dark:text-gray-400">
                   Сроки выполнения
                 </dt>
-                <dd class="font-semibold text-sm">
+                <dd class="font-semibold text-sm flex">
                   <div v-if="item.dateEnd">
                     <div>
                       {{ `С ${defaultDate(item.dateStart)}` }}
@@ -241,12 +288,41 @@ onMounted(() => {
                 </dd>
               </div>
             </div>
+            <div class="ml-4 mb-2" v-if="item.status === 'created'">
+              <button
+              class="btn btn-sm btn-error"
+              @click="openRemoveReviewModal(item.id)"
+              >
+              Удалить
+            </button>
+          </div>
           </div>
         </li>
       </ul>
     </div>
 
     <Hero v-else />
+    <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
+    <div class="modal">
+      <div class="modal-box max-w-xs">
+        <h3 class="font-bold text-lg text-center">Вы уверены?</h3>
+        <p class="py-2"></p>
+        <div class="modal-action flex justify-between">
+          <label
+            for="reviewRemoveModal"
+            class="btn btn-primary"
+            ref="reviewRemoveModalClose"
+            >Отмена</label
+          >
+          <label
+            for="reviewRemoveModal"
+            class="btn btn-error"
+            @click="deleteLike"
+            >Удалить</label
+          >
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

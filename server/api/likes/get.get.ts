@@ -15,6 +15,7 @@ export default eventHandler(async (event) => {
   const likes = await Like.find({ user }).sort({ _id: -1 })
   const format = likes.map((review, index) => {
     return {
+      id: review._id,
       place: index + 1,
       image: review.image,
       article: review.article,

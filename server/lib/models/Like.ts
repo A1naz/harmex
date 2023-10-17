@@ -6,7 +6,7 @@ const LikeSchema = new Schema({
   status: {
     type: String,
     default: 'created',
-    enum: ['created', 'work', 'completed', 'nofunds'],
+    enum: ['created', 'work', 'completed', 'nofunds', 'deleting', 'deleted'],
   },
   image: { type: String },
   likes: { type: Number, default: 0 },
