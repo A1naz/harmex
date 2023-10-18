@@ -74,7 +74,7 @@ onKeyStroke('Escape', (e) => {
                 'text-warning': info.status === 'archived',
               }"
             >{{ getStatus }}</span>
-            <span class="text-sm text-gray-500">{{ defaultDate(info.createdAt)
+            <span class="text-sm text-gray-500">Создан: {{ defaultDate(info.createdAt)
             }}</span>
           </div>
           <div class="flex justify-between items-center flex-wrap">
