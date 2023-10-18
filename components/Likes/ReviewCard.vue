@@ -57,7 +57,7 @@ function removeDislike() {
           <div class="name font-bold">
             {{ info.user.name }}
           </div>
-        </div>с
+        </div>
         <div class="date text-gray-500 text-sm">
           {{ $dayjs(info.date).format('DD.MM.YYYY HH:mm') }}
         </div>

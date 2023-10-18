@@ -23,7 +23,7 @@ function copyBuyout() {
 
 const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
 const store = useBuyoutStore()
-const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
 async function deleteBuyOut() {
   store.removeProduct(props.index)

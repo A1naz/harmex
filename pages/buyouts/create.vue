@@ -206,10 +206,17 @@ async function openChecksModal() {
   checksModal.value = true
 }
 async function createBuyout() {
+  const userOffsetMinutes = new Date().getTimezoneOffset()
+  const userTimezoneOffsetHours = -userOffsetMinutes / 60
+  const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
   disabledCreateButton.value = true
   const { data, error } = await useFetch('/api/buyout/create', {
     method: 'POST',
     body: JSON.stringify(products.value),
+    query: {
+      userTimezoneOffsetHours,
+      userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
+    },
   })
   disabledCreateButton.value = false
   if (error.value) {
@@ -705,7 +712,7 @@ function closeTemplateModalFN() {
       </div>
     </div>
     <input id="template-select-modal" type="checkbox" class="modal-toggle" />
-    <div class="modal" style="z-index: 9999;">
+    <div class="modal" style="z-index: 9999">
       <div class="modal-box max-w-7xl min-h-[300px]">
         <label
           ref="closeTemplateSelectModal"

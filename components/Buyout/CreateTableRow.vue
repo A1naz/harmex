@@ -18,7 +18,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
 
-const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
+
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
 const store = useBuyoutStore()
 
@@ -225,9 +226,9 @@ const productQuantityModel = computed({
             class="text-sm flex flex-col justify-center items-start mb-2"
           >
             <div>
-              {{ `С ${defaultDate(product.dateRange[0])}` }}
+              {{ `С ${$dayjs(product.dateRange[0]).format('D MMMM HH:mm')}` }}
             </div>
-            <div>{{ `По ${defaultDate(product.dateRange[1])}` }}</div>
+            <div>{{ `По ${$dayjs(product.dateRange[1]).format('D MMMM HH:mm')}` }}</div>
           </div>
           <BuyoutDateRangePicker
             v-model="productDateRangeModel"

@@ -17,6 +17,7 @@ interface Item {
   searchQuery: any[]
   adress: string
   dateRange: [Date, Date]
+  newDateRange: [Date, Date]
   selectedSize: number | string
   rules: Rule[]
 }
@@ -30,6 +31,8 @@ export default eventHandler(async (event) => {
 
   const body = await readBody(event)
   const last = await Buyout.findOne({ user }).sort({ _id: -1 })
+  const params = getQuery(event)
+  const { userTimezoneOffsetHours, userOffsetMinutes } = params
 
   const activeBuyouts = await Buyout.find({
     user,
@@ -49,6 +52,14 @@ export default eventHandler(async (event) => {
     const rules = product.rules.map((rule) => rule.id)
     const points = (await getPickpoints()).points
     const searchQueries = product.searchQuery.map((item: any) => item.value)
+
+    const date1 = new Date(product.dateRange[0])
+    const date2 = new Date(product.dateRange[1])
+    date1.setHours(date1.getHours() + Number(userTimezoneOffsetHours))
+    date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
+    date1.setMinutes(date1.getMinutes() + Number(userOffsetMinutes))
+    date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
+    product.dateRange = [date1, date2]
 
     const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
     if (!foundPoint) throw createError('Выберите существующий пункт выдачи')

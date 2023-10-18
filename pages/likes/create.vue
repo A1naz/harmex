@@ -193,6 +193,10 @@ function selectSorting(e: any) {
   })
 }
 async function save() {
+  const userOffsetMinutes = new Date().getTimezoneOffset()
+  const userTimezoneOffsetHours = -userOffsetMinutes / 60
+  const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
+
   const { data, error } = await useFetch('/api/likes/create', {
     method: 'POST',
     body: {
@@ -202,6 +206,10 @@ async function save() {
         productDateRangeModel.value.length > 0
           ? productDateRangeModel.value
           : null,
+    },
+    query: {
+      userTimezoneOffsetHours,
+      userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
     },
   })
   if (error.value) {
@@ -266,7 +274,7 @@ watch(
   { deep: true, immediate: true }
 )
 
-const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
+const startDate = ref(new Date(Date.now() - 1000 * 60 * 5))
 const productDateRangeModel = ref([])
 
 async function swapPage(value: number) {

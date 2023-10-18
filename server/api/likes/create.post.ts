@@ -13,6 +13,9 @@ export default eventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/auth', 302)
 
+    const params = getQuery(event)
+    const { userTimezoneOffsetHours, userOffsetMinutes } = params
+
   const body = await readBody(event)
   const article = body.article
   const reviews: any[] = body.reviews
@@ -41,8 +44,16 @@ export default eventHandler(async (event) => {
     createdDate: new Date(),
   })
   if (dates) {
-    created.dateStart = new Date(dates[0])
-    created.dateEnd = new Date(dates[1])
+
+    const date1 = new Date(dates[0])
+    const date2 = new Date(dates[1])
+    date1.setHours(date1.getHours() + Number(userTimezoneOffsetHours))
+    date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
+    date1.setMinutes(date1.getMinutes() + Number(userOffsetMinutes))
+    date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
+
+    created.dateStart = date1
+    created.dateEnd = date2
   }
   await created.save()
   return {
