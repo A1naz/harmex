@@ -53,14 +53,16 @@ export default eventHandler(async (event) => {
     const points = (await getPickpoints()).points
     const searchQueries = product.searchQuery.map((item: any) => item.value)
 
-    const date1 = new Date(product.dateRange[0])
-    const date2 = new Date(product.dateRange[1])
-    date1.setHours(date1.getHours() + Number(userTimezoneOffsetHours))
-    date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
-    date1.setMinutes(date1.getMinutes() + Number(userOffsetMinutes))
-    date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
-    product.dateRange = [date1, date2]
-
+    if (userTimezoneOffsetHours && userOffsetMinutes) {
+      const date1 = new Date(product.dateRange[0])
+      const date2 = new Date(product.dateRange[1])
+      date1.setHours(date1.getHours() + Number(userTimezoneOffsetHours))
+      date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
+      date1.setMinutes(date1.getMinutes() + Number(userOffsetMinutes))
+      date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
+      product.dateRange = [date1, date2]
+    }
+      
     const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
     if (!foundPoint) throw createError('Выберите существующий пункт выдачи')
     const buyout = new Buyout({

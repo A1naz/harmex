@@ -23,7 +23,7 @@ function copyBuyout() {
 
 const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
 const store = useBuyoutStore()
-const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
+const startDate = ref(new Date(Date.now()))
 
 async function deleteBuyOut() {
   store.removeProduct(props.index)
@@ -113,11 +113,11 @@ const productQuantityModel = computed({
         <div class="flex flex-col items-end">
           <div>
             <span>
-              {{ defaultDate(product.dateRange[0]) }}</span
+              {{ $dayjs(product.dateRange[0]).format('D MMMM HH:mm') }}</span
             >
             -
             <span>
-              {{ defaultDate(product.dateRange[1]) }}</span
+              {{ $dayjs(product.dateRange[1]).format('D MMMM HH:mm') }}</span
             >
           </div>
         </div>
