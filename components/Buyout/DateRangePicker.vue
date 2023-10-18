@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMainStore } from '~~/stores/main'
 import { useNotification } from '@kyvg/vue3-notification'
+import { AnyTxtRecord } from 'dns'
 const { notify } = useNotification()
 
 const props = defineProps({
@@ -70,12 +71,25 @@ function handleTime(
   updateTime: updateTime,
   time: any
 ) {
-
   if (index === 0) {
     updateTime([value, time.hours[1]], true)
   } else {
     updateTime([time.hours[0], value], true)
   }
+}
+function selectDateInternal(date: any, selectDate: any) {
+  console.log(date)
+  const curDate = new Date()
+  const dateFirst = new Date(date[0])
+  if (dateFirst < curDate) {
+    notify({
+      title: 'Внимание',
+      text: 'Выбрано прошедшее время по МСК',
+      type: 'error',
+    })
+  }
+
+  selectDate(date)
 }
 </script>
 
@@ -120,7 +134,7 @@ function handleTime(
           </div>
           <button
             class="btn btn-primary btn-sm block normal-case"
-            @click="selectDate"
+            @click="selectDateInternal(internalModelValue, selectDate)"
           >
             Применить
           </button>
