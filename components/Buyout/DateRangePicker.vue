@@ -78,9 +78,17 @@ function handleTime(
   }
 }
 function selectDateInternal(date: any, selectDate: any) {
-  console.log(date)
-  const curDate = new Date()
-  const dateFirst = new Date(date[0])
+  const userOffsetMinutes = new Date().getTimezoneOffset()
+  const userTimezoneOffsetHours = -userOffsetMinutes / 60
+  const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
+  let curDate = new Date()
+  curDate.setHours(curDate.getHours() - userTimezoneOffsetHours + 3)
+  let dateFirst = new Date(date[0])
+  console.log(userTimezoneOffsetHours)
+  console.log(curDate)
+
+
+  console.log(dateFirst)
   if (dateFirst < curDate) {
     notify({
       title: 'Внимание',

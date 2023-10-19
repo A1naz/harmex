@@ -125,7 +125,7 @@ async function deleteLike() {
       «Избранное»
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного добавления - <span class="font-bold">2 руб.</span>
+      Стоимость одного добавления - <span class="font-bold">5 руб.</span>
       Все услуги оказываются по Московскому времени.
     </p>
     <div class="mb-4 mt-6 bg-base-200 p-6 rounded-lg">

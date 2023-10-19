@@ -274,7 +274,7 @@ watch(
   { deep: true, immediate: true }
 )
 
-const startDate = ref(new Date(Date.now() - 1000 * 60 * 5))
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 const productDateRangeModel = ref([])
 
 async function swapPage(value: number) {

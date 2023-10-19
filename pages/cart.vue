@@ -109,7 +109,7 @@ onMounted(() => {})
       Выберите товар, который будет добавлен в корзину
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного добавления - <span class="font-bold">2 руб.</span>
+      Стоимость одного добавления - <span class="font-bold">5 руб.</span>
       Все услуги оказываются по Московскому времени.
     </p>
     <div class="collapse collapse-plus bg-base-200 rounded-box mb-4 mt-6">
