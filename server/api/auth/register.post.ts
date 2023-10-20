@@ -69,7 +69,7 @@ export default eventHandler(async (event) => {
   }
 
   if (referral) {
-    const inviter = await User.findOne({ username: referral })
+    const inviter = await User.findOne({ uuid: referral })
     if (!inviter)
       return
     if (inviter.partner) {

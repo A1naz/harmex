@@ -29,7 +29,7 @@ async function copyToClipboard(text: string) {
 }
 const url = runtimeConfig.public.siteUrl
 
-const refUrl = computed(() => `${url}/register?ref=${client.username}`)
+const refUrl = computed(() => `${url}/register?ref=${client.uuid}`)
 
 async function getSecondLevelReferrals() {
   const { data }: any = await useFetch('/api/partner/getSecondLevelReferrals', {
