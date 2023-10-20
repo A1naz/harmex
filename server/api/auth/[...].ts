@@ -82,6 +82,8 @@ export default NuxtAuthHandler({
           })
           await newUser.save()
           if (referral) {
+            console.log(referral);
+            
             const inviter = await User.findOne({ uuid: referral })
             if (inviter && inviter.partner) {
               const refCount = inviter?.partner.refCount ?? 0

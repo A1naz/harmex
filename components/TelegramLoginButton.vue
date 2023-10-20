@@ -18,7 +18,7 @@ const bot_id = useRuntimeConfig().public.BOT_ID
 const bot_login = useRuntimeConfig().public.BOT_LOGIN
 const route = useRoute()
 async function onTelegramAuth(user: any) {
-  const referral = route.query.ref
+  const referral = localStorage.getItem('referralCode') || null
   const { error, url } = await signIn('telegram-login', { ...user, redirect: false, referral })
 
   if (error) {
