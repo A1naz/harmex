@@ -82,27 +82,31 @@ export default NuxtAuthHandler({
           })
           await newUser.save()
           if (referral) {
-            console.log(referral)
-
-            const inviter = await User.findOne({ uuid: referral })
+              const inviter = await User.findOne({ uuid: referral })
             if (inviter && inviter.partner) {
               const refCount = inviter?.partner.refCount ?? 0
               inviter.partner.refCount = refCount + 1
               const referralFound = await Referral.findOne({ user: inviter })
-              console.log(inviter, 'inviter')
-              console.log(referralFound, 'referralFound')
+
+              const foundUser = await User.findOne({
+                uuid: newUser.uuid,
+              })
 
               if (referralFound) {
-                referralFound.referrals.push({
-                  user: user._id,
-                  date: new Date(),
-                })
+                if (foundUser) {
+                  referralFound.referrals.push({
+                    user: foundUser._id,
+                    date: new Date(),
+                  })
+                }
                 await referralFound.save()
               } else {
-                await Referral.create({
-                  user: inviter,
-                  referrals: [{ user: user._id, date: new Date() }],
-                })
+                if (foundUser) {
+                  await Referral.create({
+                    user: inviter,
+                    referrals: [{ user: foundUser._id, date: new Date() }],
+                  })
+                }
               }
               await inviter.save()
             }
