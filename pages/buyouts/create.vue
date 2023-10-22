@@ -206,6 +206,8 @@ async function openChecksModal() {
   }
   checksModal.value = true
 }
+const mainStore = useMainStore()
+
 async function createBuyout() {
   isCreateButtonDisabled.value = true
   const userOffsetMinutes = new Date().getTimezoneOffset()
@@ -235,8 +237,9 @@ async function createBuyout() {
       type: 'success',
       duration: 3000,
     })
+    mainStore.client.balance = 123213
     store.createProducts = []
-    navigateTo({ path: '/buyouts' }, { external: true })
+    navigateTo({ path: '/buyouts' })
   }
 }
 
@@ -496,7 +499,7 @@ function closeTemplateModalFN() {
           <span class="font-bold">{{ currency.format(totalSum) }}</span>
         </div>
       </div>
-      <div style="z-index: 9999">
+      <div>
         <label
           v-if="store.createProducts.length > 0"
           class="btn btn-sm btn-error bg-red-400 normal-case mt-1 ml-0 md:mt-0 md:ml-2 z-0"
@@ -505,7 +508,6 @@ function closeTemplateModalFN() {
         >
         <label
           class="btn bg-blue-600 btn-sm normal-case mt-2 md:mt-0 ml-1 md:ml-2 text-white"
-          style="z-index: 9999"
           for="template-modal"
         >
           Создать шаблон
@@ -513,7 +515,6 @@ function closeTemplateModalFN() {
 
         <button
           class="btn btn-primary btn-sm normal-case mt-1 md:ml-2"
-          style="z-index: 999"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >
