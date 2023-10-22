@@ -9,7 +9,7 @@ const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>
 const closeTemplateSelectModal = ref(null) as Ref<HTMLLabelElement | null>
 const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
-
+const isCreateButtonDisabled = ref(false)
 const { width, height } = useWindowSize()
 const { notify } = useNotification()
 
@@ -141,6 +141,7 @@ const modalOpen = ref(false)
 function closeModal() {
   modalOpen.value = false
 }
+
 async function openChecksModal() {
   const productCountsByAddress: any = {}
 
@@ -206,6 +207,7 @@ async function openChecksModal() {
   checksModal.value = true
 }
 async function createBuyout() {
+  isCreateButtonDisabled.value = true
   const userOffsetMinutes = new Date().getTimezoneOffset()
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
@@ -226,6 +228,7 @@ async function createBuyout() {
       type: 'error',
       duration: 3000,
     })
+    isCreateButtonDisabled.value = false
   } else if (data.value!.status === 'ok') {
     notify({
       title: 'Выкуп успешно создан',
@@ -233,7 +236,7 @@ async function createBuyout() {
       duration: 3000,
     })
     store.createProducts = []
-    navigateTo('/buyouts')
+    navigateTo({ path: '/buyouts' }, { external: true })
   }
 }
 
@@ -628,6 +631,7 @@ function closeTemplateModalFN() {
     </dialog>
     <BuyoutCreateChecksModal
       v-if="checksModal"
+      :isCreateButtonDisabled="isCreateButtonDisabled"
       :state="checksModal"
       @create="createBuyout"
       @close="checksModal = false"

@@ -62,7 +62,7 @@ export default eventHandler(async (event) => {
       date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
       product.dateRange = [date1, date2]
     }
-      
+
     const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
     if (!foundPoint) throw createError('Выберите существующий пункт выдачи')
     const buyout = new Buyout({
@@ -88,6 +88,7 @@ export default eventHandler(async (event) => {
     })
     await buyout.save()
   }
+
   return {
     status: 'ok',
   }

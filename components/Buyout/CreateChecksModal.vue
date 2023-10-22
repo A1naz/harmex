@@ -5,8 +5,13 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-
+  isCreateButtonDisabled: {
+    type: Boolean,
+  },
 })
+
+const isCreateButtonDisabled = toRef(props, 'isCreateButtonDisabled')
+
 const emit = defineEmits(['close', 'create'])
 const store = useBuyoutStore()
 const message = ref('')
@@ -23,8 +28,7 @@ async function checkBuyouts() {
     message.value = 'Произошла ошибка при проверке'
   }
   if (data.value) {
-    if (data.value.success)
-      success.value = true
+    if (data.value.success) success.value = true
 
     message.value = data.value.message
   }
@@ -37,21 +41,23 @@ onMounted(async () => {
 
 <template>
   <div
-    id="buyoutChecksModal" :class="{
+    id="buyoutChecksModal"
+    :class="{
       'modal-open': state,
-    }" class="modal"
+    }"
+    class="modal"
   >
     <div class="modal-box">
-      <h3 class="font-bold text-lg">
-        Проверяем выкупы по правилам
-      </h3>
+      <h3 class="font-bold text-lg">Проверяем выкупы по правилам</h3>
       <span
         v-if="!loading"
         :class="{
           'text-error': !success,
           'text-success': success,
-        }" class="text-lg"
-      >{{ success ? 'Успешно' : 'Ошибка' }}</span>
+        }"
+        class="text-lg"
+        >{{ success ? 'Успешно' : 'Ошибка' }}</span
+      >
       <div class="flex justify-center mt-6">
         <span v-if="loading" class="loading loading-spinner loading-lg" />
         <span v-else>{{ message }}</span>
@@ -60,7 +66,12 @@ onMounted(async () => {
         <button v-if="!loading" class="btn btn-sm" @click="emit('close')">
           Закрыть
         </button>
-        <button v-if="success" class="btn btn-sm btn-primary" @click="emit('create')">
+        <button
+          :disabled="isCreateButtonDisabled"
+          v-if="success"
+          class="btn btn-sm btn-primary"
+          @click="emit('create')"
+        >
           Создать
         </button>
       </div>
@@ -68,6 +79,4 @@ onMounted(async () => {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
