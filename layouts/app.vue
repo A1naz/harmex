@@ -205,9 +205,14 @@ function scrollToTop() {
           href="/reports"
         />
         <SidebarItem
-          icon="fluent:people-team-24-filled"
-          title="Партнерская программа"
-          href="/partner"
+        icon="fluent:people-team-24-filled"
+        title="Партнерская программа"
+        href="/partner"
+        />
+        <SidebarItem
+          icon="mdi:google-analytics"
+          title="Аналитика"
+          href="/stats"
         />
 
         <div class="mt-auto">

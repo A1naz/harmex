@@ -237,7 +237,7 @@ async function createBuyout() {
       type: 'success',
       duration: 3000,
     })
-    mainStore.client.balance = 123213
+
     store.createProducts = []
     navigateTo({ path: '/buyouts' })
   }
