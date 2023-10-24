@@ -38,8 +38,7 @@ export default eventHandler(async (event) => {
     }
   }
   const session = await getServerSession(event)
-  if (session)
-    return { status: 'error', error: 'Вы уже авторизованы.' }
+  if (session) return { status: 'error', error: 'Вы уже авторизованы.' }
 
   const candidate = await User.findOne({ email })
   if (candidate) {
@@ -63,15 +62,18 @@ export default eventHandler(async (event) => {
   const link = `${url}/api/auth/activate?uuid=${user.uuid}`
   try {
     await MailService.sendActivationMail(user.email, link)
-  }
-  catch (error) {
+  } catch (error) {
     return { status: 'error', error: 'Ошибка отправки письма.' }
   }
 
   if (referral) {
-    const inviter = await User.findOne({ uuid: referral })
-    if (!inviter)
-      return
+    let inviter = await User.findOne({ uuid: referral })
+    if (!inviter) {
+      inviter = await User.findOne({ username: referral })
+      if (!inviter) {
+        return
+      }
+    }
     if (inviter.partner) {
       const refCount = inviter?.partner.refCount ?? 0
       inviter.partner.refCount = refCount + 1
@@ -80,8 +82,7 @@ export default eventHandler(async (event) => {
       if (referralFound) {
         referralFound.referrals.push({ user: user._id, date: new Date() })
         await referralFound.save()
-      }
-      else {
+      } else {
         await Referral.create({
           user: inviter,
           referrals: [{ user: user._id, date: new Date() }],
