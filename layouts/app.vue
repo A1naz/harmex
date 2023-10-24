@@ -209,11 +209,11 @@ function scrollToTop() {
         title="Партнерская программа"
         href="/partner"
         />
-        <SidebarItem
+        <!-- <SidebarItem
           icon="mdi:google-analytics"
           title="Аналитика"
           href="/stats"
-        />
+        /> -->
 
         <div class="mt-auto">
           <div class="w-full hover:cursor-default p-0 block mt-8">
