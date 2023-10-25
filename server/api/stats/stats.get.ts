@@ -139,7 +139,7 @@ export default eventHandler(async (event) => {
           (currentDate - recordDate) / (24 * 60 * 60 * 1000)
         )
         if (daysAgo >= 0 && daysAgo < 7) {
-          sumByDayArray[7 - daysAgo] += parseFloat(payment.summ)
+          sumByDayArray[6 - daysAgo] += parseFloat(payment.summ)
         }
       }
     }
