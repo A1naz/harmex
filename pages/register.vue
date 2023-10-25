@@ -120,7 +120,7 @@ async function submitForm() {
       <div class="box">
         <form class="relative">
           <div>
-            <label for="email" class="block mb-2 text-sm font-medium"
+            <label for="email" class="block mb-1 text-sm font-medium"
               >Email <span>*</span></label
             >
             <input
@@ -147,7 +147,7 @@ async function submitForm() {
             </div>
           </div>
           <div>
-            <label for="password" class="block mb-2 text-sm font-medium"
+            <label for="password" class="block mb-1 text-sm font-medium"
               >Пароль <span>*</span></label
             >
             <input
@@ -169,8 +169,8 @@ async function submitForm() {
               {{ v$.password?.$errors[0]?.$message }}
             </div>
           </div>
-          <div class="pb-4">
-            <label for="confirm-password" class="block mb-2 text-sm font-medium"
+          <div class="pb-0">
+            <label for="confirm-password" class="block mb-1 text-sm font-medium"
               >Пароль еще раз <span>*</span></label
             >
             <input
@@ -198,7 +198,7 @@ async function submitForm() {
 
           <button
             type="submit"
-            class="btn btn-block btn-primary bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-10"
+            class="btn btn-block btn-primary bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-6"
             @click.prevent="submitForm"
           >
             <span v-show="loading" class="loading loading-spinner" />
@@ -206,13 +206,13 @@ async function submitForm() {
           </button>
         </form>
 
-        <div class="line">
+        <div class="line -my-2">
           <div />
           <p>Или</p>
           <div />
         </div>
 
-        <TelegramLoginButton mode="callback" />
+        <TelegramLoginButton mode="callback" class="-my-1" />
 
         <p class="login">
           Уже есть аккаунт? <NuxtLink href="/auth"> Вход </NuxtLink>
@@ -225,6 +225,7 @@ async function submitForm() {
           <a href="">Политикой конфиденциальности</a>.
         </p>
       </div>
+      <div class="mb-28"></div>
     </section>
 
     <section class="right">

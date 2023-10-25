@@ -168,6 +168,7 @@ const v$ = useVuelidate(rules, formData)
           <a href="">Политикой конфиденциальности</a>.
         </p>
       </div>
+      <div class="mb-20"></div>
     </section>
 
     <section class="right">
