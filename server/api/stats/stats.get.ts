@@ -1,4 +1,4 @@
-﻿import { User } from '@/server/lib/models/User'
+﻿﻿import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 
@@ -30,12 +30,12 @@ export default eventHandler(async (event) => {
           currentDate.getFullYear(),
           currentDate.getMonth(),
           currentDate.getDate()
-        ),
+        ).setHours(3, 0, 0, 0),
         $lt: new Date(
           currentDate.getFullYear(),
           currentDate.getMonth(),
           currentDate.getDate() + 1
-        ),
+        ).setHours(23, 59, 59, 999),
       }
       break
     case 'yesterday':
@@ -44,12 +44,12 @@ export default eventHandler(async (event) => {
           currentDate.getFullYear(),
           currentDate.getMonth(),
           currentDate.getDate() - 1
-        ),
+        ).setHours(3, 0, 0, 0),
         $lt: new Date(
           currentDate.getFullYear(),
           currentDate.getMonth(),
           currentDate.getDate()
-        ),
+        ).setHours(3, 0, 0, 0),
       }
       break
     case 'week':
@@ -105,6 +105,7 @@ export default eventHandler(async (event) => {
   if (period == 'week' || period == 'today' || period == 'yesterday') {
     const sumByDayArray = new Array(7).fill(0)
     const currentDate: any = new Date()
+
     const oneWeekAgo = new Date(currentDate)
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
     oneWeekAgo.setHours(3, 0, 0, 0)
@@ -112,9 +113,9 @@ export default eventHandler(async (event) => {
     const daysArray = []
     const date = new Date(oneWeekAgo)
     while (daysArray.length < 7) {
-      let curDate = date.getDate().toString()
-      let month = (date.getMonth() + 1).toString()
-      curDate = curDate.toString().length == 1 ? '0' + curDate : curDate
+      let curDate: any = date.getDate().toString()
+      let month: any = (date.getMonth() + 1).toString()
+      curDate = curDate.toString().length == 1 ? '0' + curDate : +curDate
       month = month.toString().length == 1 ? '0' + month : month
       daysArray.push(`${curDate}.${month}`)
       date.setDate(date.getDate() + 1)
@@ -129,15 +130,17 @@ export default eventHandler(async (event) => {
       },
     })
 
-    
+    const trueCurDate: any = new Date()
+    trueCurDate.setHours(3, 0, 0, 0)
+    // console.log(trueCurDate)
     for (const payment of newHistory) {
       const recordDate: any = new Date(payment.dataoperation)
-      recordDate.setHours(3, 0, 0, 0)
 
-      if (recordDate >= oneWeekAgo && recordDate <= currentDate) {
+      if (recordDate >= oneWeekAgo && recordDate <= trueCurDate) {
         const daysAgo = Math.floor(
-          (currentDate - recordDate) / (24 * 60 * 60 * 1000)
+          (trueCurDate - recordDate) / (24 * 60 * 60 * 1000)
         )
+
         if (daysAgo >= 0 && daysAgo < 7) {
           sumByDayArray[6 - daysAgo] += parseFloat(payment.summ)
         }
@@ -146,7 +149,6 @@ export default eventHandler(async (event) => {
     format.data = sumByDayArray
     format.labels = daysArray
   } else if (period == 'month' || period == 'lastMonth') {
-    const date = new Date()
     const currentMonth: any = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth() + 1,
@@ -161,6 +163,7 @@ export default eventHandler(async (event) => {
       currentMonth.setMonth(currentMonth.getMonth() - 1)
       oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
     }
+
     oneMonthAgo.setHours(3, 0, 0, 0)
 
     const year = currentDate.getFullYear()
@@ -186,10 +189,11 @@ export default eventHandler(async (event) => {
     }
 
     const sumByDayArray = new Array(numberOfDaysInMonth).fill(0)
+    currentMonth.setHours(3)
+    // console.log(currentMonth)
 
     for (const payment of history) {
       const recordDate: any = new Date(payment.dataoperation)
-      recordDate.setHours(3, 0, 0, 0)
 
       const daysAgo = Math.floor(
         (currentMonth - recordDate) / (24 * 60 * 60 * 1000)
