@@ -298,10 +298,10 @@ if (!route.query.type || !route.query.period) {
         </div>
       </div>
     </div>
-    <div
-      class="flex flex-col-reverse md:flex-row mt-4 md:mt-10 md:ml-5"
-    >
-      <div class="overflow-x-auto shadow-xl flex-row md:flex-col -ml-3 md:w-1/2">
+    <div class="flex flex-col-reverse md:flex-row mt-4 md:mt-10 md:ml-5">
+      <div
+        class="overflow-x-auto shadow-xl flex-row md:flex-col -ml-3 md:w-1/2"
+      >
         <table class="table">
           <!-- head -->
           <thead>
@@ -405,6 +405,7 @@ if (!route.query.type || !route.query.period) {
       </div>
     </div>
   </div>
+  <div class="h-24"></div>
 </template>
 
 <style scoped></style>

@@ -24,17 +24,19 @@ export default eventHandler(async (event) => {
       error: 'Некорректный email.',
     }
   }
-  if (hasWhiteSpace(password)) {
+
+
+  // if (hasWhiteSpace(password)) {
+  //   return {
+  //     status: 'error',
+  //     error:
+  //       'Пароль не должен содержать пробелов, и состоять только из английских букв и цифр.',
+  //   }
+  // }
+  if (password.length < 6 || password.length > 36) {
     return {
       status: 'error',
-      error:
-        'Пароль не должен содержать пробелов, и состоять только из английских букв и цифр.',
-    }
-  }
-  if (password.length < 6 || password.length > 14) {
-    return {
-      status: 'error',
-      error: 'Пароль должен быть от 6 до 14 символов.',
+      error: 'Пароль должен быть от 6 до 36 символов.',
     }
   }
   const session = await getServerSession(event)

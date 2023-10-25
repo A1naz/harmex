@@ -64,7 +64,7 @@ async function getProductReviews() {
 
 async function increaseReviews() {
   limit.value += 50
-  const { data, error } = await useFetch('/api/likes/productReviews', {
+  const { data, error }: any = await useFetch('/api/likes/productReviews', {
     method: 'GET',
     headers: useRequestHeaders(['cookie']) as HeadersInit,
     query: {
@@ -184,13 +184,16 @@ function removeDislike(id: string) {
     }
   }
 }
-function selectSorting(e: any) {
+async function selectSorting(e: any) {
+  page.value = 1
+
   selectSortBy.value = e.target.value
   router.push({
     query: {
       sortBy: e.target.value,
     },
   })
+  await getProductReviews()
 }
 async function save() {
   const userOffsetMinutes = new Date().getTimezoneOffset()
@@ -327,7 +330,9 @@ async function swapPage(value: number) {
           />
           <button
             class="btn btn-ghost btn-sm absolute normal-case"
-            @click="[page = 1, isPageBtnsDisabled = false, getProductReviews()]"
+            @click="
+              ;[(page = 1), (isPageBtnsDisabled = false), getProductReviews()]
+            "
           >
             Найти
           </button>
@@ -422,28 +427,27 @@ async function swapPage(value: number) {
       />
       <div class="p-2 w-full col-span-1" />
       <div>
-
         <div class="flex justify-between mt-2 mb-10">
           <div></div>
           <div class="join mr-2" v-if="feedbacksCount">
             <button
-            class="join-item btn"
-            @click="swapPage(-1)"
-            :disabled="isPageBtnsDisabled"
+              class="join-item btn"
+              @click="swapPage(-1)"
+              :disabled="isPageBtnsDisabled"
             >
-            «
-          </button>
-          <button class="join-item btn">{{ page }}</button>
-          <button
-          class="join-item btn"
-          @click="swapPage(1)"
-          :disabled="isPageBtnsDisabled"
-          >
-          »
-        </button>
+              «
+            </button>
+            <button class="join-item btn">{{ page }}</button>
+            <button
+              class="join-item btn"
+              @click="swapPage(1)"
+              :disabled="isPageBtnsDisabled"
+            >
+              »
+            </button>
+          </div>
+        </div>
       </div>
-      </div>
-    </div>
     </div>
   </div>
 </template>
