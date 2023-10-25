@@ -129,6 +129,7 @@ export default eventHandler(async (event) => {
       },
     })
 
+    
     for (const payment of newHistory) {
       const recordDate: any = new Date(payment.dataoperation)
       recordDate.setHours(3, 0, 0, 0)
