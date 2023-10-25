@@ -2,6 +2,7 @@
 const { signIn } = useAuth()
 
 definePageMeta({ auth: false })
+navigateTo('/auth')
 </script>
 
 <template>
