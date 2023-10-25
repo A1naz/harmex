@@ -12,7 +12,7 @@ definePageMeta({
   colorMode: 'dark',
   auth: {
     unauthenticatedOnly: true,
-    navigateAuthenticatedTo: '/buyouts',
+    navigateAuthenticatedTo: '/stats?type=all&period=today',
   },
   title: 'Регистрация',
 })

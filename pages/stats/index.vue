@@ -5,10 +5,12 @@ import { relative } from 'path'
 import { Bar } from 'vue-chartjs'
 const currency = useCurrency()
 
+const secondLevelReferrals = ref(0)
 const route = useRoute()
 const router = useRouter()
 const status = computed(() => route.query?.status || 'all')
 const periodFromRoute = route.query.period
+const lastElements = ref<any>([])
 
 definePageMeta({
   layout: 'app',
@@ -19,25 +21,76 @@ definePageMeta({
 let chartDataValue = ref<any>([])
 const services = ref<any>([])
 let chartLabels = ref<any>([])
-const { data, error }: any = await useFetch('/api/stats/stats', {
-  method: 'GET',
-  params: {
-    type: route.query.type,
-    period: route.query.period,
-  },
+const buyoutsCount = ref<any>({
+  all: 0,
+  inAdvertisement: 0,
 })
-if (data.value) {
-  chartDataValue.value = data.value.data
-  chartLabels.value = data.value.labels
-  services.value = data.value.services
+const deliveriesCount = ref<any>({
+  all: 0,
+  active: 0,
+  complited: 0,
+  penalty: 0,
+})
+async function getData() {
+  const { data, error }: any = await useFetch('/api/stats/stats', {
+    method: 'GET',
+    params: {
+      type: route.query.type,
+      period: route.query.period,
+    },
+  })
+  if (data.value) {
+    chartDataValue.value = data.value.data
+    chartLabels.value = data.value.labels
+    services.value = data.value.services
+  }
 }
+
+async function getLast() {
+  const { data, error }: any = await useFetch('/api/stats/last10', {
+    method: 'GET',
+  })
+
+  if (data.value) {
+    lastElements.value = data.value
+  }
+}
+
+async function countBuyouts() {
+  const { data, error }: any = await useFetch('/api/stats/buyoutsCount', {
+    method: 'GET',
+  })
+  if (data.value) {
+    buyoutsCount.value = data.value
+  }
+}
+
+async function coutDeliveries() {
+  const { data, error }: any = await useFetch('/api/stats/deliveriesCount', {
+    method: 'GET',
+  })
+  if (data.value) {
+    deliveriesCount.value = data.value
+  }
+}
+
+async function getSecondLevelReferrals() {
+  const { data }: any = await useFetch('/api/partner/getSecondLevelReferrals', {
+    method: 'GET',
+  })
+  if (data.value && data.value.status === 'ok') {
+    secondLevelReferrals.value = data.value.secondLevelReferralsCount
+  }
+}
+
+await getSecondLevelReferrals()
+
+await coutDeliveries()
+await getData()
+await getLast()
+await countBuyouts()
 
 const store = useMainStore()
-
-function openInfoModal() {
-  store.infoModal = true
-  store.infoType = 'reviews'
-}
 
 const colorMode = useColorMode()
 const chardColor = computed(() =>
@@ -51,16 +104,22 @@ const selectedService: any = ref({
   quantity: 495,
 })
 
+const barThickness = computed(() => {
+  if (width.value > 768) {
+    return 30
+  } else {
+    return 10
+  }
+})
+
 const type = route.query.type ? route.query.type : ''
 const chartBar: any = ref(null)
 const chartData = ref({
   labels: chartLabels.value,
   datasets: [
     {
-      barPercentage: 0.5,
-      barThickness:
-        width.value > 768 ? 55 - chartDataValue.value.length : 42 - chartDataValue.value.length,
-      maxBarThickness: 30,
+      barPercentage: 1.3,
+      maxBarThickness: 33,
       borderRadius: 7,
       minBarLength: 0,
       label: '',
@@ -76,6 +135,24 @@ const chartOptions = ref({
   plugins: {
     legend: {
       display: false,
+    },
+    tooltip: {
+      callbacks: {
+        label: function (context: any) {
+          let label = context.dataset.label || ''
+
+          if (label) {
+            label += ': '
+          }
+          if (context.parsed.y !== null) {
+            label += new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'RUB',
+            }).format(context.parsed.y)
+          }
+          return label
+        },
+      },
     },
   },
 })
@@ -93,7 +170,9 @@ function selectService(event: any) {
 }
 
 if (!route.query.type || !route.query.period) {
-  navigateTo('/stats?type=all&period=today')
+  navigateTo('/stats?type=all&period=today', {
+    external: true,
+  })
 }
 </script>
 <template>
@@ -143,7 +222,7 @@ if (!route.query.type || !route.query.period) {
         Этот месяц
       </option>
       <option value="lastMonth" :selected="route.query.period === 'lastMonth'">
-        Прошедший месяц
+        Прошлый месяц
       </option>
     </select>
     <select
@@ -182,7 +261,7 @@ if (!route.query.type || !route.query.period) {
             ref="chartBar"
           />
         </div>
-        <div class="w-full lg:w-1/2">
+        <div class="w-full lg:w-1/2 mt-2">
           <div class="ml-5 flex gap-4 flex-wrap">
             <div
               v-for="service in services"
@@ -213,6 +292,112 @@ if (!route.query.type || !route.query.period) {
                       : 'за год'
                   }}
                 </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col-reverse md:flex-row mt-4 md:mt-10 md:ml-5"
+    >
+      <div class="overflow-x-auto shadow-xl flex-row md:flex-col -ml-3 md:w-1/2">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr>
+              <th>Последние артикулы</th>
+              <th>Последние ключи</th>
+              <th>Последние ПВЗ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="element in lastElements">
+              <td style="width: 3%">{{ element.article }}</td>
+              <td style="width: 10%" class="overflow-x-auto">
+                {{ element.searchQuery }}
+              </td>
+              <td style="width: 10%" class="overflow-x-auto">
+                {{ element.pvz }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex flex-col md:mb-0 md:w-1/2 md:flex-row flex-wrap">
+        <div class="ml-5 flex mb-2 md:mb-0 max-h-48 flex-wrap">
+          <div class="card w-full md:w-80 bg-base-100 shadow-md">
+            <div class="card-body">
+              <h2 class="text-center text-lg font-bold">Доставки</h2>
+              <div class="flex justify-between mt-4">
+                <h2 class="text-md font-bold h-3 mb-10">Всего доставок:</h2>
+                <p class="h-3 text-xl -mt-1 text-primary font-bold text-end">
+                  {{ deliveriesCount.all }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                  Готовы к выдаче:
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ deliveriesCount.active }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">Получено:</h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ deliveriesCount.completed }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3">
+                  Не забраны (штрафы):
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ deliveriesCount.penalty }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ml-5 flex gap-4 flex-wrap">
+          <div class="card w-full md:w-80 bg-base-100 max-h-48 shadow-md">
+            <div class="card-body">
+              <h2 class="text-center text-lg font-bold">Выкупы</h2>
+              <div class="flex justify-between mt-4">
+                <h2 class="text-md font-bold h-3 mb-10">Всего выкупов:</h2>
+                <p class="h-3 text-xl -mt-1 text-primary font-bold text-end">
+                  {{ buyoutsCount.all }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                  Выкуплено с рекламы:
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ buyoutsCount.inAdvertisement }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ml-5 flex gap-4 flex-wrap">
+          <div class="card w-full md:w-80 bg-base-100 max-h-48 shadow-md">
+            <div class="card-body">
+              <h2 class="text-center text-lg font-bold">Рефералы</h2>
+              <div class="flex justify-between mt-4">
+                <h2 class="text-md font-bold h-3 mb-10">Рефералов:</h2>
+                <p class="h-3 text-xl -mt-1 text-primary font-bold text-end">
+                  {{ store.client.partner.refCount }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                  Рефералов 2 уровня::
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ secondLevelReferrals }}
+                </p>
               </div>
             </div>
           </div>

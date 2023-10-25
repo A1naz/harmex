@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 const { signIn } = useAuth()
+
 definePageMeta({ auth: false })
 </script>
 
@@ -11,10 +12,11 @@ definePageMeta({ auth: false })
           <Logo />
         </div>
         <div class="navbar-end flex gap-4">
-          <NuxtLink to="/auth" class="primary text-sm">
-            Вход
-          </NuxtLink>
-          <NuxtLink to="/register" class="btn btn-primary btn-sm font-medium normal-case text-white">
+          <NuxtLink to="/auth" class="primary text-sm"> Вход </NuxtLink>
+          <NuxtLink
+            to="/register"
+            class="btn btn-primary btn-sm font-medium normal-case text-white"
+          >
             Регистрация
           </NuxtLink>
         </div>

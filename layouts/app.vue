@@ -205,15 +205,15 @@ function scrollToTop() {
           href="/reports"
         />
         <SidebarItem
-        icon="fluent:people-team-24-filled"
-        title="Партнерская программа"
-        href="/partner"
+          icon="fluent:people-team-24-filled"
+          title="Партнерская программа"
+          href="/partner"
         />
-        <!-- <SidebarItem
+        <SidebarItem
           icon="mdi:google-analytics"
           title="Аналитика"
-          href="/stats"
-        /> -->
+          href="/stats?type=all&period=today"
+        />
 
         <div class="mt-auto">
           <div class="w-full hover:cursor-default p-0 block mt-8">
@@ -268,7 +268,6 @@ function scrollToTop() {
   /* Добавляем CSS-анимацию для плавной прокрутки */
   scroll-behavior: smooth;
 }
-
 
 .bounce-enter-active,
 .bounce-leave-active {

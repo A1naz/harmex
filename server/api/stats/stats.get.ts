@@ -55,7 +55,7 @@ export default eventHandler(async (event) => {
     case 'week':
       const oneWeekAgo = new Date(currentDate)
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-      oneWeekAgo.setHours(5, 0, 0, 0)
+      oneWeekAgo.setHours(3, 0, 0, 0)
       filter.dataoperation = {
         $gte: oneWeekAgo,
         $lt: currentDate,
@@ -107,21 +107,17 @@ export default eventHandler(async (event) => {
     const currentDate: any = new Date()
     const oneWeekAgo = new Date(currentDate)
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-    oneWeekAgo.setHours(5, 0, 0, 0)
+    oneWeekAgo.setHours(3, 0, 0, 0)
 
     const daysArray = []
+    const date = new Date(oneWeekAgo)
     while (daysArray.length < 7) {
-      daysArray.push(
-        `${
-          (oneWeekAgo.getDate() + daysArray.length).toString().length === 1
-            ? `0${oneWeekAgo.getDate() + daysArray.length}`
-            : oneWeekAgo.getDate() + daysArray.length
-        }.${
-          (oneWeekAgo.getMonth() + 1).toString().length === 1
-            ? `0${oneWeekAgo.getMonth() + 1}`
-            : oneWeekAgo.getMonth() + 1
-        }`
-      )
+      let curDate = date.getDate().toString()
+      let month = (date.getMonth() + 1).toString()
+      curDate = curDate.toString().length == 1 ? '0' + curDate : curDate
+      month = month.toString().length == 1 ? '0' + month : month
+      daysArray.push(`${curDate}.${month}`)
+      date.setDate(date.getDate() + 1)
     }
 
     const newHistory: any = await paymenthistory.find({
@@ -135,14 +131,14 @@ export default eventHandler(async (event) => {
 
     for (const payment of newHistory) {
       const recordDate: any = new Date(payment.dataoperation)
-      recordDate.setHours(5, 0, 0, 0)
+      recordDate.setHours(3, 0, 0, 0)
 
       if (recordDate >= oneWeekAgo && recordDate <= currentDate) {
         const daysAgo = Math.floor(
           (currentDate - recordDate) / (24 * 60 * 60 * 1000)
         )
         if (daysAgo >= 0 && daysAgo < 7) {
-          sumByDayArray[6 - daysAgo] += parseFloat(payment.summ)
+          sumByDayArray[7 - daysAgo] += parseFloat(payment.summ)
         }
       }
     }
@@ -164,10 +160,13 @@ export default eventHandler(async (event) => {
       currentMonth.setMonth(currentMonth.getMonth() - 1)
       oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
     }
-    oneMonthAgo.setHours(5, 0, 0, 0)
+    oneMonthAgo.setHours(3, 0, 0, 0)
 
     const year = currentDate.getFullYear()
-    const month = currentDate.getMonth()
+    let month = new Date().getMonth()
+    if (period == 'lastMonth') {
+      month -= 1
+    }
     const lastDayOfMonth = new Date(year, month + 1, 0)
     const numberOfDaysInMonth = lastDayOfMonth.getDate()
     const daysArray = []
@@ -189,14 +188,14 @@ export default eventHandler(async (event) => {
 
     for (const payment of history) {
       const recordDate: any = new Date(payment.dataoperation)
-      recordDate.setHours(5, 0, 0, 0)
+      recordDate.setHours(3, 0, 0, 0)
 
       const daysAgo = Math.floor(
         (currentMonth - recordDate) / (24 * 60 * 60 * 1000)
       )
 
       if (daysAgo >= 0 && daysAgo < numberOfDaysInMonth) {
-        sumByDayArray[numberOfDaysInMonth - 2 - daysAgo] += parseFloat(
+        sumByDayArray[numberOfDaysInMonth - 1 - daysAgo] += parseFloat(
           payment.summ
         )
       }
@@ -235,9 +234,6 @@ export default eventHandler(async (event) => {
       payment.type + ' quantity',
       Number(typeSumMap.get(payment.type + ' quantity')) + 1
     )
-
-    typeSumMap.set('all', Number(typeSumMap.get('all')) + Number(payment.summ))
-    typeSumMap.set('all', Number(typeSumMap.get('all' + ' quantity')) + 1)
   })
 
   const services = [
@@ -295,9 +291,10 @@ export default eventHandler(async (event) => {
     services.forEach((item) => {
       if (item.value == key) {
         item.expenses = value
+
         item.quantity = typeSumMap.get(key + ' quantity')
         services[0].quantity += item.quantity
-        services[0].expenses += item.expenses
+        services[0].expenses = services[0].expenses + item.expenses
       }
     })
   })
