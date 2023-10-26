@@ -39,13 +39,12 @@ class MailService {
   }
 
   async sendActivationMail(to: string | undefined, link: string) {
-    const result = await this.transporter
-      .sendMail({
-        from: alias,
-        to,
-        subject: '[TOPVTOP] Завершите регистрацию',
-        text: '',
-        html: `
+    const result = await this.transporter.sendMail({
+      from: alias,
+      to,
+      subject: '[TOPVTOP] Завершите регистрацию',
+      text: '',
+      html: `
                 <div>
                 <h2>Приветствуем!</h2>
                 
@@ -87,18 +86,68 @@ class MailService {
                 </p>          
                 </div>
             `,
-      })
+    })
+    return result
+  }
+  async sendNewEmailActivationMail(to: string | undefined, link: string) {
+    const result = await this.transporter.sendMail({
+      from: alias,
+      to,
+      subject: '[TOPVTOP] Подтвердите новый адрес электронной почты',
+      text: '',
+      html: `
+                <div>
+                <h2>Приветствуем!</h2>
+                
+                <h3>
+                Вы собираетесь сменить адрес электронной почты 
+                на платформе TOPVTOP
+                </h3>
+                <h3>
+                Для смены адреса электронной почты 
+                вам необходимо перейти по ссылке
+                </h3>
+
+                <a href="${link}"><h2>https://app.topvtop.pro/auth</h2></a>
+                
+                <p>
+                Если вдруг вы не сменяли адрес и 
+                данное письмо получили случайно, 
+                просто его проигнорируйте
+                </p>
+
+                <p>
+                Данное письмо было создано автоматически 
+                и если вы напишите на него нам ответ, 
+                мы не сможем его прочитать
+                </p>
+
+
+                Все свои вопросы можете задавать тут
+                
+                <a href="https://t.me/+Y9WKYbGsMeM3ZDli">Поддержка</a>
+
+
+
+                <p>
+                Решайте любые задачи в TOPVTOP
+                </p>
+                <p>
+                С уважением, служба заботы TOPVTOP      
+                </p>          
+                </div>
+            `,
+    })
     return result
   }
 
   async sendUnlinkTelgramMail(to: string | undefined, link: string) {
-    const result = await this.transporter
-      .sendMail({
-        from: alias,
-        to,
-        subject: '[TOPVTOP] Подтверждение отвязки Telegram',
-        text: '',
-        html: `
+    const result = await this.transporter.sendMail({
+      from: alias,
+      to,
+      subject: '[TOPVTOP] Подтверждение отвязки Telegram',
+      text: '',
+      html: `
                 <div>
                     <h2>Для отвязки телеграма перейдите по ссылке</h2>
                     <a href="${link}"><h2>https://app.topvtop.pro/profile</h2></a>
@@ -111,18 +160,21 @@ class MailService {
                     </p>    
                 </div>
             `,
-      })
+    })
     return result
   }
 
-  async sendChangePasswordMail(to: string | undefined, link: string, username: string) {
-    const result = this.transporter
-      .sendMail({
-        from: alias,
-        to,
-        subject: '[TOPVTOP] Запрос на смену пароля',
-        text: '',
-        html: `
+  async sendChangePasswordMail(
+    to: string | undefined,
+    link: string,
+    username: string
+  ) {
+    const result = this.transporter.sendMail({
+      from: alias,
+      to,
+      subject: '[TOPVTOP] Запрос на смену пароля',
+      text: '',
+      html: `
                 <div>
                     <h2>Привет, ${username}!</h2>
                     <h3>Вы или кто-то другой использовал функцию смены пароля для доступа к личному кабинету</h3>
@@ -138,7 +190,7 @@ class MailService {
                     </p>    
                 </div>
             `,
-      })
+    })
     return result
   }
 }

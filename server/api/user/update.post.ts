@@ -1,12 +1,12 @@
 import validator from 'validator'
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
+import MailService from '~~/server/lib/mailService.js'
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
 
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+  if (!session) return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
 
@@ -26,8 +26,7 @@ export default eventHandler(async (event) => {
     })
   }
   const user = await User.findOne({ uuid: session.uuid })
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
   const foundByUsername = await User.findOne({ username: body.username })
   if (foundByUsername && foundByUsername.uuid !== user.uuid) {
@@ -44,12 +43,22 @@ export default eventHandler(async (event) => {
       message: 'Email уже занят',
     })
   }
+  let emailUpdated = false
+  if (email !== user.email) {
+    user.newEmail = email
+    const url = useRuntimeConfig().PUBLIC_SITE_URL
+    await MailService.sendNewEmailActivationMail(
+      email,
+      `${url}/api/auth/activate?uuid=${user.uuid}`
+    )
+    emailUpdated = true
+  }
   user.username = username
-  user.email = email
   user.firstName = firstName
   user.lastName = lastName
   await user.save()
   return {
     status: 'ok',
+    emailUpdated: emailUpdated,
   }
 })

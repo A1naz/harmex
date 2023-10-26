@@ -18,6 +18,7 @@ const UserSchema = new Schema({
   uuid: { type: String, unique: true, required: true, default: uuid() },
   roles: [{ type: String, ref: 'Role' }],
   tabs: [{ type: String }],
+  newEmail: { type: String, required: false },
   emailConfirmed: { type: Boolean, default: false },
   telegram: { type: String, required: false },
   telegramUserId: { type: String, required: false },
