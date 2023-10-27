@@ -46,18 +46,15 @@ export default eventHandler(async (event) => {
       .skip(skip as number)
       .limit(limit as number)
   }
-
-
   else if (status === 'pickupReady') {
-    deliveries = await Delivery.find({ user, status: 'active' })
+    const response = await Delivery.find({ user, status: 'active'})
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
+    deliveries = response.filter((delivery) => delivery.statusdelivery[delivery.statusdelivery.length-1].status == 'Готов к выдаче')
   }
-
-
   else {
     return {
       error: 'Неизвестный статус',
