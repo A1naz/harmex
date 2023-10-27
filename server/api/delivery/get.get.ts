@@ -53,8 +53,8 @@ export default eventHandler(async (event) => {
       })
       .skip(skip as number)
       .limit(limit as number)
-    deliveries = response.filter((delivery) => {
-        const substrings = ["Ожидается", "пути", "задерживается"];
+      const substrings = ["Ожидается", "пути", "задерживается"];
+      deliveries = response.filter((delivery) => {
         return delivery.statusdelivery[delivery.statusdelivery.length-1].status.split(' ').some((word: string) => substrings.includes(word))
     })
   }
