@@ -350,11 +350,35 @@ if (!route.query.type || !route.query.period) {
                 </p>
               </div>
               <div class="flex justify-between">
-                <h2 class="text-md -mt-4 font-bold h-3">
-                  Не забраны (штрафы):
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                  Штрафы:
                 </h2>
                 <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
-                  {{ deliveriesCount.penalty }}
+                  {{ currency.format(deliveriesCount.penalty) }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                  Количество штрафов:
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ deliveriesCount.penaltyCount }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                  Готовы к выдаче:
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ deliveriesCount.active }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                  Выдача со штрафом:
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ deliveriesCount.availableWithPenaltyCount }}
                 </p>
               </div>
             </div>
@@ -371,7 +395,7 @@ if (!route.query.type || !route.query.period) {
                 </p>
               </div>
               <div class="flex justify-between">
-                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                <h2 class="text-md -mt-4 font-bold h-3">
                   Выкуплено с рекламы:
                 </h2>
                 <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
