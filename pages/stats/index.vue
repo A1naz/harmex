@@ -82,7 +82,16 @@ async function getSecondLevelReferrals() {
     secondLevelReferrals.value = data.value.secondLevelReferralsCount
   }
 }
+async function getPatnerWithdraws() {
+  const { data }: any = await useFetch('/api/stats/getPartnerWithdraws', {
+    method: 'GET',
+  })
+  if (data.value && data.value.status === 'ok') {
 
+  }
+}
+
+await getPatnerWithdraws()
 await getSecondLevelReferrals()
 
 await coutDeliveries()
@@ -325,8 +334,59 @@ if (!route.query.type || !route.query.period) {
         </table>
       </div>
       <div class="flex flex-col md:mb-0 md:w-1/2 md:flex-row flex-wrap">
-        <div class="ml-5 flex mb-2 md:mb-0 max-h-48 flex-wrap">
+        <div class="ml-5 flex gap-4 flex-wrap">
           <div class="card w-full md:w-80 bg-base-100 shadow-md">
+            <div class="card-body">
+              <h2 class="text-center text-lg font-bold">Рефералы</h2>
+              <div class="flex justify-between mt-4">
+                <h2 class="text-md font-bold h-3 mb-10">Рефералов:</h2>
+                <p class="h-3 text-xl -mt-1 text-primary font-bold text-end">
+                  {{ store.client.partner.refCount }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                  Рефералов 2 уровня:
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ secondLevelReferrals }}
+                </p>
+              </div>
+
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">Баланс:</h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ store.client.partner.balance }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ml-5 flex gap-4 flex-wrap">
+          <div class="card w-full md:w-80 bg-base-100 shadow-md">
+            <div class="card-body">
+              <h2 class="text-center text-lg font-bold">Выкупы</h2>
+              <div class="flex justify-between mt-4">
+                <h2 class="text-md font-bold h-3 mb-10">Всего выкупов:</h2>
+                <p class="h-3 text-xl -mt-1 text-primary font-bold text-end">
+                  {{ buyoutsCount.all }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3">
+                  Выкуплено с рекламы:
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ buyoutsCount.inAdvertisement }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ml-5 flex mb-2 md:mb-0 mt-1 flex-wrap">
+          <div class="card w-full md:w-96 bg-base-100 shadow-md">
             <div class="card-body">
               <h2 class="text-center text-lg font-bold">Доставки</h2>
               <div class="flex justify-between mt-4">
@@ -350,53 +410,33 @@ if (!route.query.type || !route.query.period) {
                 </p>
               </div>
               <div class="flex justify-between">
-                <h2 class="text-md -mt-4 font-bold h-3">
-                  Не забраны (штрафы):
-                </h2>
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">Штрафы:</h2>
                 <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
-                  {{ deliveriesCount.penalty }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="ml-5 flex gap-4 flex-wrap">
-          <div class="card w-full md:w-80 bg-base-100 max-h-48 shadow-md">
-            <div class="card-body">
-              <h2 class="text-center text-lg font-bold">Выкупы</h2>
-              <div class="flex justify-between mt-4">
-                <h2 class="text-md font-bold h-3 mb-10">Всего выкупов:</h2>
-                <p class="h-3 text-xl -mt-1 text-primary font-bold text-end">
-                  {{ buyoutsCount.all }}
+                  {{ currency.format(deliveriesCount.penalty) }}
                 </p>
               </div>
               <div class="flex justify-between">
                 <h2 class="text-md -mt-4 font-bold h-3 mb-10">
-                  Выкуплено с рекламы:
+                  Количество штрафов:
                 </h2>
                 <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
-                  {{ buyoutsCount.inAdvertisement }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="ml-5 flex gap-4 flex-wrap">
-          <div class="card w-full md:w-80 bg-base-100 max-h-48 shadow-md">
-            <div class="card-body">
-              <h2 class="text-center text-lg font-bold">Рефералы</h2>
-              <div class="flex justify-between mt-4">
-                <h2 class="text-md font-bold h-3 mb-10">Рефералов:</h2>
-                <p class="h-3 text-xl -mt-1 text-primary font-bold text-end">
-                  {{ store.client.partner.refCount }}
+                  {{ deliveriesCount.penaltyCount }}
                 </p>
               </div>
               <div class="flex justify-between">
                 <h2 class="text-md -mt-4 font-bold h-3 mb-10">
-                  Рефералов 2 уровня::
+                  Готовы к выдаче:
                 </h2>
                 <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
-                  {{ secondLevelReferrals }}
+                  {{ deliveriesCount.active }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                  Готовы к выдаче со штрафом:
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ deliveriesCount.availableWithPenaltyCount }}
                 </p>
               </div>
             </div>
