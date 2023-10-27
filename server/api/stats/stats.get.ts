@@ -106,8 +106,6 @@ export default eventHandler(async (event) => {
     const sumByDayArray = new Array(7).fill(0)
     const currentDate: any = new Date()
     currentDate.setDate(currentDate.getDate() + 1)
-
-    console.log(currentDate);
     
     const oneWeekAgo = new Date(currentDate)
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
