@@ -209,6 +209,13 @@ watch(() => status.value, async (newRoute) => {
         >
           Завершенные
         </NuxtLink>
+        <NuxtLink
+          to="/delivery?status=pickupReady" :external="false" :class="{
+            'btn-active': route.query.status === 'pickupReady',
+          }" class="btn btn-ghost btn-sm normal-case font-medium"
+        >
+        Готовы к выдаче
+        </NuxtLink>
       </div>
       <select class="select select-bordered select-sm lg:hidden" @change="selectStatus">
         <option value="all" :selected="route.query.status === undefined">
@@ -219,6 +226,9 @@ watch(() => status.value, async (newRoute) => {
         </option>
         <option value="completed" :selected="route.query.status === 'completed'">
           Завершенные
+        </option>
+        <option value="pickupReady" :selected="route.query.status === 'pickupReady'">
+          Готовы к выдаче
         </option>
       </select>
       <div class="flex gap-4 items-center">

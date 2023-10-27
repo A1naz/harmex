@@ -46,6 +46,18 @@ export default eventHandler(async (event) => {
       .skip(skip as number)
       .limit(limit as number)
   }
+
+
+  else if (status === 'pickupReady') {
+    deliveries = await Delivery.find({ user, status: 'active' })
+      .sort({
+        _id: -1,
+      })
+      .skip(skip as number)
+      .limit(limit as number)
+  }
+
+
   else {
     return {
       error: 'Неизвестный статус',
