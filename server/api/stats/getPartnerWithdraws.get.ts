@@ -11,9 +11,11 @@ export default eventHandler(async (event) => {
   const user = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const ok = await PartnerWithdraw.aggregate([
+  let withdrawsCount = 0
+  await PartnerWithdraw.aggregate([
     {
       $match: {
+        status: 'completed',
         user: user._id,
       },
     },
@@ -23,11 +25,11 @@ export default eventHandler(async (event) => {
         totalAmount: { $sum: '$amount' }, // Вычисляем сумму 'amount' в каждой группе
       },
     },
-  ]).then((res) => {
-    console.log(res)
+  ]).then((res: any) => {
+    if (res && res[0]) {
+      withdrawsCount = res[0].totalAmount ? res[0].totalAmount : 0
+    }
   })
 
-  console.log(ok)
-
-  return { status: 'ok' }
+  return { withdrawsCount }
 })

@@ -74,6 +74,7 @@ async function coutDeliveries() {
   }
 }
 
+const withdrawsCount = ref(0)
 async function getSecondLevelReferrals() {
   const { data }: any = await useFetch('/api/partner/getSecondLevelReferrals', {
     method: 'GET',
@@ -86,8 +87,8 @@ async function getPatnerWithdraws() {
   const { data }: any = await useFetch('/api/stats/getPartnerWithdraws', {
     method: 'GET',
   })
-  if (data.value && data.value.status === 'ok') {
-
+  if (data.value) {
+    withdrawsCount.value = data.value.withdrawsCount
   }
 }
 
@@ -359,6 +360,13 @@ if (!route.query.type || !route.query.period) {
                   {{ store.client.partner.balance }}
                 </p>
               </div>
+
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3">Выведено:</h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ currency.format(withdrawsCount) }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -432,7 +440,7 @@ if (!route.query.type || !route.query.period) {
                 </p>
               </div>
               <div class="flex justify-between">
-                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
+                <h2 class="text-md -mt-4 font-bold h-3">
                   Готовы к выдаче со штрафом:
                 </h2>
                 <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
