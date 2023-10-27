@@ -210,6 +210,13 @@ watch(() => status.value, async (newRoute) => {
           Завершенные
         </NuxtLink>
         <NuxtLink
+          to="/delivery?status=onTheWay" :external="false" :class="{
+            'btn-active': route.query.status === 'onTheWay',
+          }" class="btn btn-ghost btn-sm normal-case font-medium"
+        >
+        В пути
+        </NuxtLink>
+        <NuxtLink
           to="/delivery?status=pickupReady" :external="false" :class="{
             'btn-active': route.query.status === 'pickupReady',
           }" class="btn btn-ghost btn-sm normal-case font-medium"
@@ -226,6 +233,9 @@ watch(() => status.value, async (newRoute) => {
         </option>
         <option value="completed" :selected="route.query.status === 'completed'">
           Завершенные
+        </option>
+        <option value="onTheWay" :selected="route.query.status === 'onTheWay'">
+            В пути
         </option>
         <option value="pickupReady" :selected="route.query.status === 'pickupReady'">
           Готовы к выдаче
