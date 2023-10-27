@@ -350,9 +350,7 @@ if (!route.query.type || !route.query.period) {
                 </p>
               </div>
               <div class="flex justify-between">
-                <h2 class="text-md -mt-4 font-bold h-3 mb-10">
-                  Штрафы:
-                </h2>
+                <h2 class="text-md -mt-4 font-bold h-3 mb-10">Штрафы:</h2>
                 <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
                   {{ currency.format(deliveriesCount.penalty) }}
                 </p>
@@ -384,27 +382,7 @@ if (!route.query.type || !route.query.period) {
             </div>
           </div>
         </div>
-        <div class="ml-5 flex gap-4 flex-wrap">
-          <div class="card w-full md:w-80 bg-base-100 max-h-48 shadow-md">
-            <div class="card-body">
-              <h2 class="text-center text-lg font-bold">Выкупы</h2>
-              <div class="flex justify-between mt-4">
-                <h2 class="text-md font-bold h-3 mb-10">Всего выкупов:</h2>
-                <p class="h-3 text-xl -mt-1 text-primary font-bold text-end">
-                  {{ buyoutsCount.all }}
-                </p>
-              </div>
-              <div class="flex justify-between">
-                <h2 class="text-md -mt-4 font-bold h-3">
-                  Выкуплено с рекламы:
-                </h2>
-                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
-                  {{ buyoutsCount.inAdvertisement }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+
         <div class="ml-5 flex gap-4 flex-wrap">
           <div class="card w-full md:w-80 bg-base-100 max-h-48 shadow-md">
             <div class="card-body">
@@ -421,6 +399,27 @@ if (!route.query.type || !route.query.period) {
                 </h2>
                 <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
                   {{ secondLevelReferrals }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ml-5 flex gap-4 flex-wrap">
+          <div class="card w-full md:w-80 bg-base-100 max-h-48 shadow-md">
+            <div class="card-body">
+              <h2 class="text-center text-lg font-bold">Выкупы</h2>
+              <div class="flex justify-between mt-4">
+                <h2 class="text-md font-bold h-3 mb-10">Всего выкупов:</h2>
+                <p class="h-3 text-xl -mt-1 text-primary font-bold text-end">
+                  {{ buyoutsCount.all }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="text-md -mt-4 font-bold h-3">
+                  Выкуплено с рекламы:
+                </h2>
+                <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
+                  {{ buyoutsCount.inAdvertisement }}
                 </p>
               </div>
             </div>

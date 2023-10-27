@@ -105,7 +105,10 @@ export default eventHandler(async (event) => {
   if (period == 'week' || period == 'today' || period == 'yesterday') {
     const sumByDayArray = new Array(7).fill(0)
     const currentDate: any = new Date()
+    currentDate.setDate(currentDate.getDate() + 1)
 
+    console.log(currentDate);
+    
     const oneWeekAgo = new Date(currentDate)
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
     oneWeekAgo.setHours(3, 0, 0, 0)
@@ -131,6 +134,7 @@ export default eventHandler(async (event) => {
     })
 
     const trueCurDate: any = new Date()
+    trueCurDate.setDate(trueCurDate.getDate() + 1)
     trueCurDate.setHours(3, 0, 0, 0)
     // console.log(trueCurDate)
     for (const payment of newHistory) {
