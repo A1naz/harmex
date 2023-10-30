@@ -165,8 +165,16 @@ watch(() => status.value, async (newRoute) => {
   })
   deliveries.value = data.value
 }, { deep: true, immediate: true })
-</script>
 
+const filters = [
+    {title: 'Все доставки', optionValue: 'all', params: '', queryStatus: undefined},
+    {title: 'Активные', optionValue: 'active', params: '?status=active', queryStatus: 'active'},    
+    {title: 'Завершенные', optionValue: 'completed', params: '?status=completed', queryStatus: 'completed'},
+    {title: 'В пути', optionValue: 'onTheWay', params: '?status=onTheWay', queryStatus: 'onTheWay'},
+    {title: 'Готовы к выдаче', optionValue: 'pickupReady', params: '?status=pickupReady', queryStatus: 'pickupReady'},   
+]
+
+</script>
 <template>
   <div>
     <div class="flex items-center gap-2 mt-4">
@@ -189,58 +197,30 @@ watch(() => status.value, async (newRoute) => {
     <div class="flex justify-between mb-2 mt-6 items-center flex-wrap gap-4">
       <div class="hidden lg:block">
         <NuxtLink
-          to="/delivery" :external="false" :class="{
-            'btn-active': route.query.status === undefined,
-          }" class="btn btn-ghost btn-sm normal-case font-medium"
+            v-for="filter in filters"
+            :to=" '/delivery' + filter.params"
+            :external="false" 
+            :class="{
+                'btn-active': route.query.status === filter.queryStatus,
+            }" 
+            class="btn btn-ghost btn-sm normal-case font-medium"
         >
-          Все доставки
-        </NuxtLink>
-        <NuxtLink
-          to="/delivery?status=active" :external="false" :class="{
-            'btn-active': route.query.status === 'active',
-          }" class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Активные
-        </NuxtLink>
-        <NuxtLink
-          to="/delivery?status=completed" :external="false" :class="{
-            'btn-active': route.query.status === 'completed',
-          }" class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Завершенные
-        </NuxtLink>
-        <NuxtLink
-          to="/delivery?status=onTheWay" :external="false" :class="{
-            'btn-active': route.query.status === 'onTheWay',
-          }" class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-        В пути
-        </NuxtLink>
-        <NuxtLink
-          to="/delivery?status=pickupReady" :external="false" :class="{
-            'btn-active': route.query.status === 'pickupReady',
-          }" class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-        Готовы к выдаче
+        {{ filter.title }}
         </NuxtLink>
       </div>
-      <select class="select select-bordered select-sm lg:hidden" @change="selectStatus">
-        <option value="all" :selected="route.query.status === undefined">
-          Все доставки
-        </option>
-        <option value="active" :selected="route.query.status === 'active'">
-          Активные
-        </option>
-        <option value="completed" :selected="route.query.status === 'completed'">
-          Завершенные
-        </option>
-        <option value="onTheWay" :selected="route.query.status === 'onTheWay'">
-            В пути
-        </option>
-        <option value="pickupReady" :selected="route.query.status === 'pickupReady'">
-          Готовы к выдаче
+      <select
+        class="select select-bordered select-sm lg:hidden"
+        @change="selectStatus"
+      >
+      <option 
+        v-for="filter in filters"
+        :value="filter.optionValue" 
+        :selected="route.query.status === filter.queryStatus"
+        >
+        {{ filter.title }}
         </option>
       </select>
+
       <div class="flex gap-4 items-center">
         <div class="flex items-center">
           <input id="openAll" v-model="openAll" type="checkbox" class="checkbox checkbox-primary checkbox-sm">
