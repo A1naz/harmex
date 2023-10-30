@@ -37,6 +37,21 @@ export default eventHandler(async (event) => {
       .skip(skip as number)
       .limit(limit as number)
   }
+
+  else if (status === 'completedByAds') {
+    const data = await Buyout.find({ user, status: 'completed' })
+     .sort({
+       createdAt: -1,
+     })
+     .skip(skip as number)
+     .limit(limit as number)
+     const rules = [8, 9]
+     buyouts = data.filter((bayOut) => {
+       return bayOut.rules.some((rule) => rules.includes(rule)) 
+   })
+ }
+
+
   else if (status === 'canceled') {
     buyouts = await Buyout.find({ user, status: 'canceled' })
       .sort({

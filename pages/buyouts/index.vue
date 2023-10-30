@@ -331,6 +331,16 @@ watch(
         >
           Завершенные
         </NuxtLink>
+        <NuxtLink
+          to="/buyouts?status=completedByAds"
+          :external="false"
+          :class="{
+            'btn-active': route.query.status === 'completedByAds',
+          }"
+          class="btn btn-ghost btn-sm normal-case font-medium"
+        >
+          Выкуплены по рекламе
+        </NuxtLink>
       </div>
       <select
         class="select select-bordered select-sm lg:hidden"
@@ -353,6 +363,12 @@ watch(
           :selected="route.query.status === 'completed'"
         >
           Завершенные
+        </option>
+        <option
+          value="completedByAds"
+          :selected="route.query.status === 'completedByAds'"
+        >
+          Выкуплены по рекламе
         </option>
       </select>
       <div class="flex items-center gap-2 flex-wrap">
