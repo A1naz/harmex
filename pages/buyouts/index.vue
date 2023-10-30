@@ -358,16 +358,10 @@ watch(
         <option value="paused" :selected="route.query.status === 'paused'">
           Пауза
         </option>
-        <option
-          value="completed"
-          :selected="route.query.status === 'completed'"
-        >
+        <option value="completed" :selected="route.query.status === 'completed'">
           Завершенные
         </option>
-        <option
-          value="completedByAds"
-          :selected="route.query.status === 'completedByAds'"
-        >
+        <option value="completedByAds" :selected="route.query.status === 'completedByAds'">
           Выкуплены по рекламе
         </option>
       </select>
