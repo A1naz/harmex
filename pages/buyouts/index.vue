@@ -220,7 +220,7 @@ function openInfoModal() {
   store.infoType = 'buyouts'
 }
 watch(targetIsVisible, async (isVisible) => {
-  if (isVisible && autoTarget.value) {
+  if (isVisible && autoTarget.value && buyouts.value.length >= 50) {
     if (end.value) return
     const { data } = await useFetch('/api/buyout/get', {
       method: 'GET',

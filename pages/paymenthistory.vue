@@ -123,7 +123,7 @@ function openInfoModal() {
 }
 
 watch(targetIsVisible, async (isVisible) => {
-  if (isVisible && autoTarget.value) {
+  if (isVisible && autoTarget.value && history.value.length >= 50) {
     if (end.value)
       return
     const { data, error } = await useFetch('/api/paymenthistory/get', {
