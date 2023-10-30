@@ -256,6 +256,15 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
+const filters = [
+    {title: 'Все выкупы', optionValue: 'all', params: '', queryStatus: undefined},
+    {title: 'В архиве', optionValue: 'archived', params: '?status=archived', queryStatus: 'archived'},
+    {title: 'Пауза', optionValue: 'paused', params: '?status=paused', queryStatus: 'paused'},
+    {title: 'Завершенные', optionValue: 'completed', params: '?status=completed', queryStatus: 'completed'},
+    {title: 'Выкуплены по рекламе', optionValue: 'completedByAds', params: '?status=completedByAds', queryStatus: 'completedByAds'},
+]
+
 </script>
 
 <template>
@@ -282,87 +291,27 @@ watch(
     <div class="flex justify-between mb-4 items-center mt-6">
       <div class="hidden lg:block">
         <NuxtLink
-          to="/buyouts"
-          :external="false"
-          :class="{
-            'btn-active': route.query.status === undefined,
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Все выкупы
-        </NuxtLink>
-        <NuxtLink
-          to="/buyouts?status=active"
-          :external="false"
-          :class="{
-            'btn-active': route.query.status === 'active',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Активные
-        </NuxtLink>
-        <NuxtLink
-          to="/buyouts?status=archived"
-          :external="false"
-          :class="{
-            'btn-active': route.query.status === 'archived',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          В архиве
-        </NuxtLink>
-        <NuxtLink
-          to="/buyouts?status=paused"
-          :external="false"
-          :class="{
-            'btn-active': route.query.status === 'paused',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Пауза
-        </NuxtLink>
-        <NuxtLink
-          to="/buyouts?status=completed"
-          :external="false"
-          :class="{
-            'btn-active': route.query.status === 'completed',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Завершенные
-        </NuxtLink>
-        <NuxtLink
-          to="/buyouts?status=completedByAds"
-          :external="false"
-          :class="{
-            'btn-active': route.query.status === 'completedByAds',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Выкуплены по рекламе
+            v-for="filter in filters"
+            :to=" '/buyouts' + filter.params"
+            :external="false"
+            :class="{
+                'btn-active': route.query.status === filter.queryStatus,
+            }"
+            class="btn btn-ghost btn-sm normal-case font-medium"
+            >
+          {{ filter.title }}
         </NuxtLink>
       </div>
       <select
         class="select select-bordered select-sm lg:hidden"
         @change="selectStatus"
       >
-        <option value="all" :selected="route.query.status === undefined">
-          Все выкупы
-        </option>
-        <option value="active" :selected="route.query.status === 'active'">
-          Активные
-        </option>
-        <option value="archived" :selected="route.query.status === 'archived'">
-          В архиве
-        </option>
-        <option value="paused" :selected="route.query.status === 'paused'">
-          Пауза
-        </option>
-        <option value="completed" :selected="route.query.status === 'completed'">
-          Завершенные
-        </option>
-        <option value="completedByAds" :selected="route.query.status === 'completedByAds'">
-          Выкуплены по рекламе
+      <option 
+        v-for="filter in filters"
+        :value="filter.optionValue" 
+        :selected="route.query.status === filter.queryStatus"
+        >
+        {{ filter.title }}
         </option>
       </select>
       <div class="flex items-center gap-2 flex-wrap">
@@ -380,7 +329,11 @@ watch(
           Добавить выкупы
         </NuxtLink>
       </div>
+
+
+
     </div>
+
     <div class="search flex justify-between items-center mb-4 flex-wrap gap-2">
       <select
         class="select select-bordered select-sm"
