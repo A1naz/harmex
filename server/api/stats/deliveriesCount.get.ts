@@ -53,6 +53,7 @@ export default eventHandler(async (event) => {
   })
 
   const deliveriesPenaltyCount = await Delivery.countDocuments({
+    user,
     $and: [{ data9: { $ne: null } }, { data9: { $ne: '' } }],
   })
 
