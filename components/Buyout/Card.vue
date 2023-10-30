@@ -206,7 +206,7 @@ const getStatus = computed(() => {
         <div class="flex justify-between gap-4 mt-2 items-center">
           <div
             :class="{
-              'opacity-0': info.status !== 'active' && info.status !== 'paused' && info.status !== 'work',
+              'opacity-0': info.status !== 'active' && info.status !== 'paused' && info.status !== 'work' && info.status !== 'archived',
             }" class="text-sm badge badge-lg badge-outline"
           >
             Выкуплено {{ info.completed }} шт.
