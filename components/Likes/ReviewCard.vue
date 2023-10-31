@@ -18,9 +18,13 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-
 })
-const emit = defineEmits(['addLike', 'removeLike', 'addDislike', 'removeDislike'])
+const emit = defineEmits([
+  'addLike',
+  'removeLike',
+  'addDislike',
+  'removeDislike',
+])
 
 const disabledMinusLikes = computed(() => {
   return props.addLikes <= 0
@@ -44,11 +48,15 @@ function removeDislike() {
 </script>
 
 <template>
-  <div class="flex border gap-4 border-base-200 bg-base-100 rounded-lg p-4">
+  <div v-if="info.likes <= 30 && info.dislikes <= 30" class="flex border gap-4 border-base-200 bg-base-100 rounded-lg p-4">
     <div class="photo">
       <div class="w-12 h-12 photo-container">
         <!-- <nuxt-img class="rounded-xl" src="/img/Profile.png" /> -->
-        <Icon name="mdi:account" size="40" class="bg-base-300 p-2 rounded-full opacity-40" />
+        <Icon
+          name="mdi:account"
+          size="40"
+          class="bg-base-300 p-2 rounded-full opacity-40"
+        />
       </div>
     </div>
     <div class="review flex flex-col w-full">
@@ -63,18 +71,25 @@ function removeDislike() {
         </div>
       </div>
       <div class="relative w-full rounded-lg">
-        <Rating class="text-yellow-400" :cancel="false" :model-value="info.rating" />
+        <Rating
+          class="text-yellow-400"
+          :cancel="false"
+          :model-value="info.rating"
+        />
       </div>
       <p class="text text-sm mt-2 h-28 overflow-auto rounded-lg py-2">
         {{ info.text }}
       </p>
-      <div class="rank mt-6 flex flex-col xl:flex-row justify-between gap-6 items-center">
+      <div
+        class="rank mt-6 flex flex-col xl:flex-row justify-between gap-6 items-center"
+      >
         <div class="likes flex gap-2 items-center w-full">
           <span class="emoji">👍</span>
           <span>Лайков:</span>
           <div class="relative flex items-center ml-auto">
             <button
-              :disabled="disabledMinusLikes" class="absolute left-0 btn btn-ghost btn-sm btn-square"
+              :disabled="disabledMinusLikes"
+              class="absolute left-0 btn btn-ghost btn-sm btn-square"
               @click="removeLike"
             >
               <IconCSS size="16" name="ic:round-minus" />
@@ -82,7 +97,11 @@ function removeDislike() {
             <div class="input-sm rounded-lg w-24 text-center bg-base-200">
               {{ info.likes + addLikes }}
             </div>
-            <button :disabled="addLikes >= 15" class="absolute right-0 btn btn-ghost btn-sm btn-square" @click="addLike">
+            <button
+              :disabled="addLikes >= 15"
+              class="absolute right-0 btn btn-ghost btn-sm btn-square"
+              @click="addLike"
+            >
               <IconCSS size="16" name="ic:round-plus" />
             </button>
           </div>
@@ -92,7 +111,8 @@ function removeDislike() {
           <span>Дизлайков:</span>
           <div class="relative flex items-center ml-auto">
             <button
-              :disabled="disabledMinusDislikes" class="absolute left-0 btn btn-ghost btn-sm btn-square"
+              :disabled="disabledMinusDislikes"
+              class="absolute left-0 btn btn-ghost btn-sm btn-square"
               @click="removeDislike"
             >
               <IconCSS size="16" name="ic:round-minus" />
@@ -100,13 +120,20 @@ function removeDislike() {
             <div class="input-sm rounded-lg w-24 text-center bg-base-200">
               {{ info.dislikes + addDislikes }}
             </div>
-            <button :disabled="addDislikes >= 15" class="absolute right-0 btn btn-ghost btn-sm btn-square" @click="addDislike">
+            <button
+              :disabled="addDislikes >= 15"
+              class="absolute right-0 btn btn-ghost btn-sm btn-square"
+              @click="addDislike"
+            >
               <IconCSS size="16" name="ic:round-plus" />
             </button>
           </div>
         </div>
       </div>
-      <div v-if="addLikes >= 15 || addDislikes >= 15" class="warning text-warning text-center mt-4">
+      <div
+        v-if="addLikes >= 15 || addDislikes >= 15"
+        class="warning text-warning text-center mt-4"
+      >
         Не рекомендуем добавлять больше 15 лайков/дизлайков
       </div>
     </div>
