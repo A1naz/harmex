@@ -4,10 +4,8 @@ import { Buyout } from '@/server/lib/models/Buyout'
 
 export default eventHandler(async (event) => {
 
-    const userCookie = getCookie(event, 'user')
-    if (!userCookie) return sendRedirect(event, '/auth', 302)
-
-    const user = JSON.parse(userCookie)
+    const user = JSON.parse(event.context.company)
+    if (!user) return sendRedirect(event, '/auth', 302)
 
     const { status, limit, skip } = getQuery(event)
 
