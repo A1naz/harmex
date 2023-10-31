@@ -1,18 +1,15 @@
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
+
 import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
 
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+    const userCookie = getCookie(event, 'user')
+    if (!userCookie) return sendRedirect(event, '/auth', 302)
 
-  const { status, limit, skip } = getQuery(event)
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+    const user = JSON.parse(userCookie)
+
+    const { status, limit, skip } = getQuery(event)
 
   // const all = await Delivery.find({ user })
   let deliveries
