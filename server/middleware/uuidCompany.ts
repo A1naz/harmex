@@ -1,7 +1,7 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 
-const pathes = [
+const pathes: string[] = [
     '/api/delivery/get'
 ]
 
