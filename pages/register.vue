@@ -8,6 +8,16 @@ import {
   sameAs,
 } from '@vuelidate/validators'
 
+onMounted(() => {
+  const isPageReloaded = localStorage.getItem('isPageReloaded')
+
+  if (!isPageReloaded) {
+    localStorage.setItem('isPageReloaded', 'true')
+    window.location.reload(true)
+    
+  }
+})
+
 definePageMeta({
   colorMode: 'dark',
   auth: {

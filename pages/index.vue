@@ -2,7 +2,9 @@
 const { signIn } = useAuth()
 
 definePageMeta({ auth: false })
-navigateTo('/auth')
+navigateTo('/auth', {
+  external: true,
+})
 </script>
 
 <template>
@@ -13,8 +15,11 @@ navigateTo('/auth')
           <Logo />
         </div>
         <div class="navbar-end flex gap-4">
-          <NuxtLink to="/auth" class="primary text-sm"> Вход </NuxtLink>
+          <NuxtLink :external="true" to="/auth" class="primary text-sm">
+            Вход
+          </NuxtLink>
           <NuxtLink
+            :external="true"
             to="/register"
             class="btn btn-primary btn-sm font-medium normal-case text-white"
           >
