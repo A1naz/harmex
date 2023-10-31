@@ -9,12 +9,11 @@ import {
 } from '@vuelidate/validators'
 
 onMounted(() => {
-  const isPageReloaded = localStorage.getItem('isPageReloaded')
+  const isPageReloaded = localStorage.getItem('isPageReloadedRegister')
 
   if (!isPageReloaded) {
-    localStorage.setItem('isPageReloaded', 'true')
+    localStorage.setItem('isPageReloadedRegister', 'true')
     window.location.reload(true)
-    
   }
 })
 
