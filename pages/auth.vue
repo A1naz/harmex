@@ -10,10 +10,8 @@ onMounted(() => {
 
   if (!isPageReloaded) {
     localStorage.setItem('isPageReloaded', 'true')
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaa')
-    setTimeout(() => {
-      window.location.reload(true)
-    }, 5000)
+
+    window.location.reload(true)
   }
 })
 
