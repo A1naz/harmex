@@ -15,8 +15,11 @@ const UserSchema = new Schema({
   wbApiKey: { type: String, required: false },
   wbApiKeys: { type: Array, required: false },
   password: { type: String, required: false },
+
   uuid: { type: String, unique: true, required: true, default: uuid() },
+  uuidCompany: { type: String, unique: false },
   roles: [{ type: String, ref: 'Role' }],
+
   tabs: [{ type: String }],
   newEmail: { type: String, required: false },
   emailConfirmed: { type: Boolean, default: false },
