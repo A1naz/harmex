@@ -87,7 +87,7 @@ function selectStatus(e: Event) {
 }
 
 watch(targetIsVisible, async (isVisible) => {
-  if (isVisible && autoTarget.value) {
+  if (isVisible && autoTarget.value && reports.value.length >= 20) {
     if (end.value)
       return
     const { data, error } = await useFetch('/api/reports/get', {

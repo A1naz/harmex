@@ -132,7 +132,7 @@ function openInfoModal() {
 }
 
 watch(targetIsVisible, async (isVisible) => {
-  if (isVisible && autoTarget.value) {
+  if (isVisible && autoTarget.value && reviews.value && reviews.value.length >= 25) {
     if (end.value) return
     const data = await getReviews(status.value as string, skip.value, 25)
     if (data.length === 0) {
