@@ -279,7 +279,7 @@ const filters = [
       нажмите на кнопку "Добавить выкупы".
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного выкупа - <span class="font-bold">80 руб.</span> Все
+      Стоимость одного выкупа - <span class="font-bold">100 руб.</span> Все
       услуги оказываются по Московскому времени.
     </p>
     <p
