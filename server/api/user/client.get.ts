@@ -27,7 +27,7 @@ export default eventHandler(async (event) => {
     await user.save()
   }
 
-  const preparedMenu = user.uuidCompany ? MenuBuilder.filter(user.acesses) : MenuBuilder.full()
+  const preparedMenu = user.uuidCompany ? MenuBuilder.filteredAccess(user.acesses) : MenuBuilder.fullAccess()
 
   const client = {
     email: user.email,
