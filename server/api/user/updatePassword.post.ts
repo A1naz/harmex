@@ -22,19 +22,19 @@ export default eventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/auth', 302)
 
-  if (newPassword.length < 6 || newPassword.length > 16) {
+  if (newPassword.length < 6 || newPassword.length > 36) {
     return {
       status: 'error',
-      error: 'Пароль должен быть от 6 до 16 символов.',
+      error: 'Пароль должен быть от 6 до 36 символов.',
     }
   }
-  if (hasWhiteSpace(newPassword)) {
-    return {
-      status: 'error',
-      error:
-        'Пароль не должен содержать пробелов, и состоять только из английских букв и цифр.',
-    }
-  }
+  // if (hasWhiteSpace(newPassword)) {
+  //   return {
+  //     status: 'error',
+  //     error:
+  //       'Пароль не должен содержать пробелов, и состоять только из английских букв и цифр.',
+  //   }
+  // }
 
   if (!user.password) {
     user.password = bcrypt.hashSync(newPassword, 7)
