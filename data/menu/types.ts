@@ -7,5 +7,5 @@ export interface SectionItem{
     id: number, 
     title: string, 
     icon: string, 
-    href: string 
+    path: string 
 }

@@ -1,6 +1,7 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import MenuBuilder from '~/server/utils/menuBuilder'
+import { Client } from '~/data/types'
 
 
 export default eventHandler(async (event) => {
@@ -27,9 +28,9 @@ export default eventHandler(async (event) => {
     await user.save()
   }
 
-  const preparedMenu = user.uuidCompany ? MenuBuilder.filteredAccess(user.acesses) : MenuBuilder.fullAccess()
+  const {menu, pathes} = user.uuidCompany ? MenuBuilder.filteredAccess(user.acesses) : MenuBuilder.fullAccess()
 
-  const client = {
+  const client: Client = {
     email: user.email,
     username: user.email === user.username ? undefined : user.username,
     uuid: user.uuid,
@@ -42,7 +43,8 @@ export default eventHandler(async (event) => {
     wbApiKeys: user.wbApiKeys?.length ? user.wbApiKeys : [],
     partner: user.partner,
     isBanned: user.isBanned,
-    mmenuItems: preparedMenu,
+    mmenuItems: menu,
+    allowedPathes: pathes
   }
 
   return {

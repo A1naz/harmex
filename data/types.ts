@@ -1,3 +1,16 @@
+import { MenuSection } from "./menu/types"
+
+export interface StateMain {
+    client: Client,
+    dodge: boolean,
+    theme: string,
+    pickpoints: any[],
+    selectedItem: number | null,
+    drawerOpened: boolean | null,
+    infoModal: boolean,
+    infoType: string,
+    faqModal: boolean,
+}
 
 export interface IUser {
     isBanned: boolean,
@@ -22,6 +35,17 @@ export interface IUser {
     balance: number,
     registrationDate: Date,
     partner: Partner
+}
+
+export interface Client extends Pick<
+    IUser, 
+    "email" | "username" | "uuid" | "telegram" | "balance" | 
+    "firstName" | "lastName" | "telegramUserId" | "wbApiKeys" | 
+    "partner" | "isBanned"
+    > {
+        hasPassword: boolean,
+        mmenuItems: MenuSection[],
+        allowedPathes: string[]
 }
 
 export interface MenuAcesses {
