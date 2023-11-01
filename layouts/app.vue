@@ -40,35 +40,7 @@ function scrollToTop() {
   drawerContent.value.scrollTop = 0
 }
 
-const menu = [
-    {
-        subTitle: 'Продвижение товаров',
-        items: [
-            { title: "Выкупы", icon: "fluent:payment-24-filled", href: "/buyouts" },
-            { title: "Доставки", icon: "fluent:box-24-filled", href: "/delivery" },
-            { title: "Отзывы", icon: "fluent:comment-24-filled", href: "/reviews" },
-        ]
-    },
-    {
-        subTitle: 'Улучшение репутации',
-        items: [
-            { title: "Лайки на отзывы", icon: "fluent:thumb-like-24-filled", href: "/likes" },
-            { title: "Лайки на товар / бренд", icon: "fluent:heart-24-filled", href: "/productlikes" },
-            { title: "Вопросы", icon: "fluent:chat-bubbles-question-24-filled", href: "/questions" },
-            { title: "Корзина", icon: "fluent:cart-24-filled", href: "/cart" },
-            { title: "Автоответчик на отзывы", icon: "fluent:phone-chat-24-filled", href: "/autoanswer" },
-        ]
-    },
-    {
-        subTitle: 'Дополнительно',
-        items: [
-            { title: "История платежей", icon: "fluent:history-24-filled", href: "/paymenthistory" },
-            { title: "Отчеты по выкупам", icon: "fluent:document-bullet-list-24-filled", href: "/reports" },
-            { title: "Партнерская программа", icon: "fluent:people-team-24-filled", href: "/partner" },
-            { title: "Аналитика", icon: "mdi:google-analytics", href: "/stats?type=all&period=today" },
-        ]
-    }
-]
+console.log(store.client.mmenuItems)
 
 </script>
 
@@ -178,7 +150,7 @@ const menu = [
           </div>
         </div>
 
-        <section v-for="section in menu" >
+        <section v-for="section in store.client.mmenuItems" >
             <h3 class="opacity-60 text-xs p-3 px-8 uppercase">{{ section.subTitle }}</h3>
 
             <SidebarItem
