@@ -1,12 +1,14 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
+import MenuBuilder from '~/server/utils/menuBuilder'
+
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
 
   if (!session) return sendRedirect(event, '/auth', 302)
 
-  const user = await User.findOne({ uuid: session.uuid })
+  const user: IUser = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
 
   // if (user.isBanned) {
@@ -24,6 +26,9 @@ export default eventHandler(async (event) => {
     }
     await user.save()
   }
+
+  const preparedMenu = user.uuidCompany ? MenuBuilder.filter(user.acesses) : MenuBuilder.full()
+
   const client = {
     email: user.email,
     username: user.email === user.username ? undefined : user.username,
@@ -34,9 +39,10 @@ export default eventHandler(async (event) => {
     lastName: user.lastName,
     hasPassword: !!user.password,
     telegramUserId: user.telegramUserId,
-    wbApiKeys: user.wbApiKeys.length ? user.wbApiKeys : [],
+    wbApiKeys: user.wbApiKeys?.length ? user.wbApiKeys : [],
     partner: user.partner,
     isBanned: user.isBanned,
+    mmenuItems: preparedMenu,
   }
 
   return {

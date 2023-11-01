@@ -1,5 +1,5 @@
-import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
+import { User } from '../lib/models/User'
 
 const pathes: string[] = [
     '/api/delivery/get'
