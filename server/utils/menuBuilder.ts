@@ -3,7 +3,7 @@ import { MenuAcesses } from "@/data/types"
 import { MenuSection, SectionItem } from "@/data/menu/types"
 
 class MenuBuilder  {
-    public static full = (): MenuSection[] => {
+    public static fullAccess = (): MenuSection[] => {
         const arr: MenuSection[] = []
         menuData.forEach((value) => arr.push({ 
             subTitle: value.subTitle, 
@@ -11,15 +11,21 @@ class MenuBuilder  {
         }))
         return arr
     }
-    public static filter = (acesses: MenuAcesses[]): MenuSection[] => {
+    public static filteredAccess = (acesses: MenuAcesses[]): MenuSection[] => {
         const arr: MenuSection[] = []
-        for(const acItem of acesses){
-            const menuItem = menuData.get(acItem.id)
-            if(menuItem){
-                arr.push({
-                    subTitle: menuItem.subTitle,
-                    items: menuItem.items.filter( (itm: SectionItem ) => acItem.items.includes( itm.id )) 
-                })
+        for(const accessSection of acesses){
+            const menuSection = menuData.get(accessSection.id)
+            if(menuSection){
+                let section: MenuSection = {
+                    subTitle: menuSection.subTitle,
+                    items: [] 
+                }
+                if (accessSection.items.length == 0){
+                    section.items = menuSection.items 
+                } else {
+                    section.items = menuSection.items.filter((itm: SectionItem) => accessSection.items.includes( itm.id )) 
+                }
+                arr.push(section)
             }
         }
         return arr
