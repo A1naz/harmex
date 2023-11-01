@@ -1,10 +1,11 @@
 
 import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
+import { getAdminEntity } from '~/server/utils/getAdmin'
 
 export default eventHandler(async (event) => {
 
-    const user = JSON.parse(event.context.company)
+    const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
     const { status, limit, skip } = getQuery(event)

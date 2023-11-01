@@ -40,8 +40,6 @@ function scrollToTop() {
   drawerContent.value.scrollTop = 0
 }
 
-console.log(store.client.mmenuItems)
-
 </script>
 
 <template>
@@ -157,7 +155,7 @@ console.log(store.client.mmenuItems)
                 v-for="item in section.items"
                 :title="item.title"
                 :icon="item.icon"
-                :href="item.href"
+                :href="item.path"
                 />   
         </section>
 
