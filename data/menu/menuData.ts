@@ -25,7 +25,7 @@ export const menuData = new Map<number, MenuSection>([
             { id: 1, title: "История платежей", icon: "fluent:history-24-filled", path: "/paymenthistory" },
             { id: 2, title: "Отчеты по выкупам", icon: "fluent:document-bullet-list-24-filled", path: "/reports" },
             { id: 3, title: "Партнерская программа", icon: "fluent:people-team-24-filled", path: "/partner" },
-            { id: 4, title: "Аналитика", icon: "mdi:google-analytics", path: "/stats?type=all&period=today" },
+            { id: 4, title: "Аналитика", icon: "mdi:google-analytics", path: "/stats" },
             { id: 5, title: "Моя команда", icon: "mdi:office-building-cog", path: "/team" },
         ]
     }],
