@@ -14,7 +14,8 @@ export const useMainStore = defineStore('main', {
     faqModal: false,
   }),
   getters: {
-    getAllowedPathes: (state): string[] => state.client.allowedPathes
+    getAllowedPathes: (state): string[] => state.client.allowedPathes,
+    getFirstPath: (state): string => state.client.allowedPathes[0]
   },
   actions: {
     checkTelegramId() {

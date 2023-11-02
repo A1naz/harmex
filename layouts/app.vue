@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+
 const store = useMainStore()
 const colorMode = useColorMode()
 
