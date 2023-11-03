@@ -45,6 +45,14 @@ export default eventHandler(async (event) => {
   }
   let emailUpdated = false
   if (email !== user.email) {
+
+    if (!user.password) {
+      throw createError({
+        statusCode: 400,
+        message: 'Сначала установите пароль',
+      })
+    }
+
     user.newEmail = email
     const url = useRuntimeConfig().PUBLIC_SITE_URL
     await MailService.sendNewEmailActivationMail(
