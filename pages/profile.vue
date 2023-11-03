@@ -87,14 +87,13 @@ async function updatePassword() {
       location.reload()
     }, 2000)
   } else {
-    alert.show = true
-    console.log(data.value)
-
+    
     if (data.value.newPassword) {
       alert.message = 'Пароль успешно установлен.'
     } else
-      alert.message = 'Подтверждение смены пароля было отправлено на ваш email.'
-
+    alert.message = 'Подтверждение смены пароля было отправлено на ваш email.'
+    
+    alert.show = true
     alert.type = 'success'
   }
   start()
