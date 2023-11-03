@@ -70,14 +70,9 @@ async function getReady(user: Document) {
 
 export default eventHandler(async (event) => {
   try {
-    const session = (await getServerSession(event)) as any
+    const user = await getAdminEntity(event)
+    if (!user) return sendRedirect(event, '/auth', 302)
 
-    if (!session)
-      return sendRedirect(event, '/auth', 302)
-
-    const user = await User.findOne({ uuid: session.uuid })
-    if (!user)
-      return sendRedirect(event, '/auth', 302)
     const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
     const ready = (await getReady(user)).filter(item => item !== undefined)
