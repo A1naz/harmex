@@ -13,10 +13,10 @@ export const useMainStore = defineStore('main', {
     infoType: '',
     faqModal: false,
   }),
-  getters: {
-    getAllowedPathes: (state): string[] => state.client.allowedPathes,
-    getFirstPath: (state): string => state.client.allowedPathes[0]
-  },
+//   getters: {
+//     getAllowedPathes: (state): string[] => state.client.allowedPathes,
+//     getFirstPath: (state): string => state.client.allowedPathes[0]
+//   },
   actions: {
     checkTelegramId() {
       if (this.client.telegram && !this.client.telegramUserId)
