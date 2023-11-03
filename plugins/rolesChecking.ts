@@ -39,7 +39,8 @@ console.log('allowedPathes: ', allowedPathes)
         console.log('allowedPathes.includes(to.path): ', allowedPathes.includes(to.path))
         if(await !allowedPathes.includes(to.path)) {
             console.log('trigger: forbiden')
-            return navigateTo('/stats?type=all&period=today')
+            // return navigateTo('/stats?type=all&period=today')
+            return
         }
 
         console.log('trigger: allowed')
