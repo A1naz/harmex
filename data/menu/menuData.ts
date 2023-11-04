@@ -1,32 +1,23 @@
-import { MenuSection } from "./types";
+import { MenuSectionList, MenuDataList } from "./types";
 
-export const menuData = new Map<number, MenuSection>([
-    [1000, {
-        subTitle: 'Продвижение товаров',
-        items: [
-            { id: 1, title: "Выкупы", icon: "fluent:payment-24-filled", path: "/buyouts" },
-            { id: 2, title: "Доставки", icon: "fluent:box-24-filled", path: "/delivery" },
-            { id: 3, title: "Отзывы", icon: "fluent:comment-24-filled", path: "/reviews" },
-        ]
-    }],
-    [2000, {
-        subTitle: 'Улучшение репутации',
-        items: [
-            { id: 1, title: "Лайки на отзывы", icon: "fluent:thumb-like-24-filled", path: "/likes" },
-            { id: 2, title: "Лайки на товар / бренд", icon: "fluent:heart-24-filled", path: "/productlikes" },
-            { id: 3, title: "Вопросы", icon: "fluent:chat-bubbles-question-24-filled", path: "/questions" },
-            { id: 4, title: "Корзина", icon: "fluent:cart-24-filled", path: "/cart" },
-            { id: 5, title: "Автоответчик на отзывы", icon: "fluent:phone-chat-24-filled", path: "/autoanswer" },
-        ]
-    }],
-    [3000, {
-        subTitle: 'Дополнительно',
-        items: [
-            { id: 1, title: "История платежей", icon: "fluent:history-24-filled", path: "/paymenthistory" },
-            { id: 2, title: "Отчеты по выкупам", icon: "fluent:document-bullet-list-24-filled", path: "/reports" },
-            { id: 3, title: "Партнерская программа", icon: "fluent:people-team-24-filled", path: "/partner" },
-            { id: 4, title: "Аналитика", icon: "mdi:google-analytics", path: "/stats" },
-            { id: 5, title: "Моя команда", icon: "mdi:office-building-cog", path: "/team" },
-        ]
-    }],
-])
+export const menuSectionList: MenuSectionList[] = [
+    { section: 'products', subTitle: 'Продвижение товаров' },
+    { section: 'reputation', subTitle: 'Улучшение репутации' },
+    { section: 'additional', subTitle: 'Дополнительно' },
+]
+
+export const menuDataList: MenuDataList[] = [
+    { section: 'products', path: "/buyouts", title: "Выкупы", icon: "fluent:payment-24-filled" },
+    { section: 'products', path: "/delivery", title: "Доставки", icon: "fluent:box-24-filled" },
+    { section: 'products', path: "/reviews", title: "Отзывы", icon: "fluent:comment-24-filled" },
+    { section: 'reputation', path: "/likes", title: "Лайки на отзывы", icon: "fluent:thumb-like-24-filled" },
+    { section: 'reputation', path: "/productlikes", title: "Лайки на товар / бренд", icon: "fluent:heart-24-filled" },
+    { section: 'reputation', path: "/questions", title: "Вопросы", icon: "fluent:chat-bubbles-question-24-filled" },
+    { section: 'reputation', path: "/cart", title: "Корзина", icon: "fluent:cart-24-filled" },
+    { section: 'reputation', path: "/autoanswer", title: "Автоответчик на отзывы", icon: "fluent:phone-chat-24-filled" },
+    { section: 'additional', path: "/paymenthistory", title: "История платежей", icon: "fluent:history-24-filled" },
+    { section: 'additional', path: "/reports", title: "Отчеты по выкупам", icon: "fluent:document-bullet-list-24-filled" },
+    { section: 'additional', path: "/partner", title: "Партнерская программа", icon: "fluent:people-team-24-filled" },
+    { section: 'additional', path: "/stats", title: "Аналитика", icon: "mdi:google-analytics" },
+    { section: 'additional', path: "/team", title: "Моя команда", icon: "mdi:office-building-cog" },
+]

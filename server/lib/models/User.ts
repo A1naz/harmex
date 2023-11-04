@@ -9,10 +9,7 @@ const partnerSchema = new Schema({
   refCount: { type: Number, default: 0 },
   rewardPercent: { type: Number, default: 10 },
 })
-const accessSchema = new Schema({
-    id: { type: Number, default: 0 },
-    items: [{ type: Number}],
-  })
+
 const UserSchema = new Schema({
   isBanned: { type: Boolean, default: false },
   username: { type: String, unique: true, required: true },
@@ -25,7 +22,7 @@ const UserSchema = new Schema({
   uuid: { type: String, unique: true, required: true, default: uuid() },
 
   uuidCompany: { type: String, unique: false },
-  acesses: [{ type: accessSchema, required: false}],
+  acesses: [{ type: String, required: false}],
 
   roles: [{ type: String, ref: 'Role' }],
   tabs: [{ type: String }],

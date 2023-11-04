@@ -9,7 +9,7 @@ export default eventHandler(async (event) => {
 
   if (!session) return sendRedirect(event, '/auth', 302)
 
-  const user: IUser = await User.findOne({ uuid: session.uuid })
+  const user = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
 
   // if (user.isBanned) {
@@ -28,7 +28,7 @@ export default eventHandler(async (event) => {
     await user.save()
   }
 
-  const {menu, pathes} = user.uuidCompany ? MenuBuilder.filteredAccess(user.acesses) : MenuBuilder.fullAccess()
+  const menu = user.uuidCompany ? MenuBuilder.filteredAccess(user.acesses) : MenuBuilder.fullAccess()
 
   const client: Client = {
     email: user.email,
@@ -44,7 +44,7 @@ export default eventHandler(async (event) => {
     partner: user.partner,
     isBanned: user.isBanned,
     mmenuItems: menu,
-    allowedPathes: pathes
+    allowedPathes: user.acesses
   }
 
   return {

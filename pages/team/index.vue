@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+import { FieldsType, OptionsMulti } from '~/data/types';
+import MenuBuilder from '~/server/utils/menuBuilder';
+
 
 definePageMeta({
   layout: 'app',
@@ -8,6 +10,11 @@ definePageMeta({
 })
 
 const { width, height } = useWindowSize()
+
+const modal = ref(false)
+const selectedUser = ref({})
+const selectedIndex = ref()
+
 const myTeam = ref([]) as any
 
 async function getMyTeam() {
@@ -15,17 +22,49 @@ async function getMyTeam() {
   myTeam.value = data.value
 }
 
-const columns = [
-    { field: 'username', header: 'Username' },
-    { field: 'firstName', header: 'Firs tName' },
-    { field: 'lastName', header: 'Last Name' },
+function userEdit (uuid: string, index: number) {
+    selectedUser.value = {...myTeam.value.find((user: any) => user.uuid == uuid)}
+    selectedIndex.value = index
+    modal.value = true
+}
+
+const saveUser = async () => {
+    const { error } = await useFetch('/api/user/post', )
+    if(error){
+        console.log(error)
+    }
+    modal.value = false
+}
+
+const configColumns = [
+    { field: 'username', header: 'Ник' },
+    { field: 'firstName', header: 'Имя' },
+    { field: 'lastName', header: 'Фамилия' },
     { field: 'email', header: 'E-Mail' },
-    { field: 'acesses', header: 'Acesses' }
+    { field: 'allowedPathes', header: 'Разрешения' },
+    { field: 'actions', header: 'Действия', actions: [
+        { label: 'Изменить', action: (uuid: string, index: number) => userEdit(uuid, index) },
+    ]},
 ];
 
-await getMyTeam()
+const configModal: ConfigModal[] = [
+    { field: 'username', header: 'Ник', type: FieldsType.text },
+    { field: 'firstName', header: 'Имя', type: FieldsType.text  },
+    { field: 'lastName', header: 'Фамилия', type: FieldsType.text  },
+    { field: 'email', header: 'E-Mail', type: FieldsType.text  },
+    { field: 'allowedPathes', header: 'Разрешения', type: FieldsType.array  }
+];
 
-const reviewRemoveModalClose: any = ref(null)
+const multiOptions = ref([]) as any
+
+
+const router = useRouter()
+console.log(
+    router.getRoutes()
+)
+// multiOptions.value = MenuBuilder.pathOptions()
+
+await getMyTeam()
 
 </script>
 
@@ -49,21 +88,32 @@ const reviewRemoveModalClose: any = ref(null)
 
     <div v-if="myTeam.length">
 
-
         <DataTable 
+            v-if="width > 1024"
             :value="myTeam" 
             class="bg-base-200 hidden lg:block overflow-visible"
             :rowsPerPageOptions="[5, 10, 20, 50]"
             >
             <Column
-                v-for="col of columns"
-                sortable
-                :key=col.field 
+                v-for="col of configColumns"
+                :sortable="!['actions', 'allowedPathes'].includes(col.field)"
+                :key=col.field
                 :field=col.field 
                 :header=col.header
                 >
-                <template v-if="col.field == 'acesses'" #body="{ data }">
-                    acesses: {{ data[col.field] }}
+                <template v-if="col.field == 'allowedPathes'" #body="{ data }" сlass="flex flex-row" >
+                        <span v-for="(itm, index) in data[col.field]"  class="text-sm text-warning z-10 link link-hover">
+                            {{ itm }}{{ index == data[col.field].length-1 ? '' : ', ' }}
+                        </span>
+                </template>
+                <template v-else-if="col.field == 'actions'" #body="{ data }">
+                    <Button 
+                        v-for="(act, index) in col.actions"
+                        :key="index"
+                        class="btn btn-sm btn-primary m-1" 
+                        :label="act.label"  
+                        @click="act.action(data.uuid, index)"
+                        ></Button>
                 </template>
                 <template v-else #body="{ data }">
                     {{ data[col.field] }}
@@ -71,11 +121,9 @@ const reviewRemoveModalClose: any = ref(null)
             </Column>
         </DataTable>
 
-
-<!-- 
-      <ul v-else class="w-full lg:hidden">
+      <!-- <ul v-else class="w-full lg:hidden">
         <li
-          v-for="(item, index) in review_likes"
+          v-for="(item, index) in myTeam"
           :key="index"
           class="pb-3 sm:pb-4"
         >
@@ -105,19 +153,6 @@ const reviewRemoveModalClose: any = ref(null)
                     </a>
                   </div>
                   <div class="status flex flex-col gap-0.5">
-                    <div class="text-xs">Статус</div>
-                    <div
-                      class="text-sm"
-                      :class="{
-                        'text-warning':
-                          item.status === 'created' || item.status === 'work',
-                        'text-success': item.status === 'completed',
-                      }"
-                    >
-                      <div>
-                        {{ getStatus(item.status) }}
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -177,7 +212,6 @@ const reviewRemoveModalClose: any = ref(null)
             <div class="ml-4 mb-2" v-if="item.status === 'created'">
               <button
               class="btn btn-sm btn-error"
-              @click="openRemoveReviewModal(item.id)"
               >
               Удалить
             </button>
@@ -191,25 +225,19 @@ const reviewRemoveModalClose: any = ref(null)
 
     <Hero v-else />
     <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
-    <div class="modal">
-      <div class="modal-box max-w-xs">
-        <h3 class="font-bold text-lg text-center">Вы уверены?</h3>
-        <p class="py-2"></p>
-        <div class="modal-action flex justify-between">
-          <label
-            for="reviewRemoveModal"
-            class="btn btn-primary"
-            ref="reviewRemoveModalClose"
-            >Отмена</label
-          >
-          <label
-            for="reviewRemoveModal"
-            class="btn btn-error"
-            >Удалить</label
-          >
-        </div>
-      </div>
-    </div>
+
+    <EditModal
+      v-if="modal"
+      titleModal="Редактирование пользователя"
+      :data="selectedUser"
+      :config="configModal"
+      :multiOptions="multiOptions"
+      :state="modal"
+      :index="selectedIndex"
+      @save="saveUser"
+      @close="modal = false"
+    />
+
   </div>
 </template>
 
