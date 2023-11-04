@@ -11,14 +11,20 @@ class MenuBuilder {
 
     public static filteredAccess = (acesses?: string[]): MenuBuided => {
         const menu: MenuSection[] = []
-        const allowedPathes: OptionsMulti[] = []
+        let allowedPathes: OptionsMulti[] = []
 
-        if(!acesses){
+        if(!acesses || acesses[0] == 'fullAccess'){
             menuSectionList.forEach( section => menu.push({
                 subTitle: section.subTitle,
                 section: section.subTitle,
                 items: menuDataList.filter( mnu => mnu.section == section.section)
             }))
+            allowedPathes = menuDataList.map(data => {
+                return {
+                    value: data.path,
+                    name: data.title
+                }
+            })
             return { menu, allowedPathes}
         }
         else{

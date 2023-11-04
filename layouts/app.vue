@@ -153,7 +153,8 @@ function scrollToTop() {
             <h3 class="opacity-60 text-xs p-3 px-8 uppercase">{{ section.subTitle }}</h3>
 
             <SidebarItem
-                v-for="item in section.items"
+                v-for="(item, index) in section.items"
+                :key="index"
                 :title="item.title"
                 :icon="item.icon"
                 :href="item.path"
