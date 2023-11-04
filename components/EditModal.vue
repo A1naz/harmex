@@ -10,8 +10,6 @@ const props = defineProps({
 
 defineEmits(['update:modelValue', 'save', 'close'])
 
-onKeyStroke('Escape', (e) => { e.preventDefault() })
-
 </script>
 
 <template>
@@ -45,7 +43,7 @@ onKeyStroke('Escape', (e) => { e.preventDefault() })
                     :options="conf.options"
                     optionLabel="name"
                     display="chip" 
-                    class="w-full md:w-20rem" 
+                    class="w-full h-8"
                     />
 
                 <input

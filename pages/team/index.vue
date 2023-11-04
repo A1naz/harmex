@@ -20,17 +20,6 @@ async function getMyTeam() {
 
 await getMyTeam()
 
-const configColumns = [
-    { field: 'username', header: 'Ник' },
-    { field: 'firstName', header: 'Имя' },
-    { field: 'lastName', header: 'Фамилия' },
-    { field: 'email', header: 'E-Mail' },
-    { field: 'allowedPathes', header: 'Разрешения' },
-    { field: 'actions', header: 'Действия', actions: [
-        { label: 'Изменить', action: (uuid: string, index: number) => userEdit(uuid, index) },
-    ]},
-];
-
 const modal = ref(false)
 const selectedUser = ref()
 const selectedIndex = ref()
@@ -50,7 +39,19 @@ function userEdit (uuid: string, index: number) {
     modal.value = true
 }
 
+const configColumns = [
+    { field: 'username', header: 'Ник' },
+    { field: 'firstName', header: 'Имя' },
+    { field: 'lastName', header: 'Фамилия' },
+    { field: 'email', header: 'E-Mail' },
+    { field: 'allowedPathes', header: 'Разрешения' },
+    { field: 'actions', header: 'Действия', actions: [
+        { label: 'Изменить', action: (uuid: string, index: number) => userEdit(uuid, index) },
+    ]},
+];
+
 const saveUser = async () => {
+
     const updatedUser = {
         username: selectedUser.value.username,
         firstName: selectedUser.value.firstName,
@@ -91,8 +92,9 @@ const saveUser = async () => {
         <DataTable 
             v-if="width > 1024"
             :value="myTeam" 
-            class="bg-base-200 hidden lg:block overflow-visible"
             :rowsPerPageOptions="[5, 10, 20, 50]"
+            class="bg-base-200 hidden lg:block overflow-visible"
+            :rowClass="(data) => `border-4 border-white`"
             >
             <Column
                 v-for="col of configColumns"
@@ -103,10 +105,15 @@ const saveUser = async () => {
                 >
                 <template v-if="col.field == 'allowedPathes'" #body="{ data }">
                     <div class="flex flex-wrap" >
+                        <div v-if="data[col.field].length == multiOptions.length"
+                            class="text-sm text-white bg-success px-3 py-1 m-1 rounded-2xl "
+                            > Полный доступ
+                        </div>
                         <div 
+                            v-else
                             v-for="(itm, index) in data[col.field]" 
                             :key="index"
-                            class="text-sm text-white bg-warning px-3 py-1 m-1 rounded-full "
+                            class="text-sm text-white bg-warning px-3 py-1 m-1 rounded-2xl "
                             >
                             {{ itm.name }}
                         </div>
