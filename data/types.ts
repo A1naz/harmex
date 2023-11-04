@@ -45,7 +45,7 @@ export interface Client extends Pick<
     > {
         hasPassword: boolean,
         mmenuItems: MenuSection[],
-        allowedPathes: string[]
+        allowedPathes: OptionsMulti[]
 }
 
 export interface Partner{
@@ -62,7 +62,7 @@ export interface OptionsMulti {
 export enum FieldsType {
     text = 'text',
     email = 'email',
-    array = 'array',
+    multiOptions = 'multiOptions',
     password = 'password'
 }
 
@@ -70,4 +70,5 @@ export interface ConfigModal {
     field: string, 
     header: string, 
     type: FieldsType,
+    options?: any[]
 }

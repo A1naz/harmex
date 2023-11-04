@@ -11,10 +11,6 @@ definePageMeta({
 
 const { width, height } = useWindowSize()
 
-const modal = ref(false)
-const selectedUser = ref({})
-const selectedIndex = ref()
-
 const myTeam = ref([]) as any
 
 async function getMyTeam() {
@@ -22,19 +18,7 @@ async function getMyTeam() {
   myTeam.value = data.value
 }
 
-function userEdit (uuid: string, index: number) {
-    selectedUser.value = {...myTeam.value.find((user: any) => user.uuid == uuid)}
-    selectedIndex.value = index
-    modal.value = true
-}
-
-const saveUser = async () => {
-    const { error } = await useFetch('/api/user/post', )
-    if(error){
-        console.log(error)
-    }
-    modal.value = false
-}
+await getMyTeam()
 
 const configColumns = [
     { field: 'username', header: 'Ник' },
@@ -47,24 +31,40 @@ const configColumns = [
     ]},
 ];
 
+const modal = ref(false)
+const selectedUser = ref()
+const selectedIndex = ref()
+const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions()
+
 const configModal: ConfigModal[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
     { field: 'firstName', header: 'Имя', type: FieldsType.text  },
     { field: 'lastName', header: 'Фамилия', type: FieldsType.text  },
     { field: 'email', header: 'E-Mail', type: FieldsType.text  },
-    { field: 'allowedPathes', header: 'Разрешения', type: FieldsType.array  }
+    { field: 'allowedPathes', header: 'Разрешения', type: FieldsType.multiOptions, options: multiOptions }
 ];
 
-const multiOptions = ref([]) as any
+function userEdit (uuid: string, index: number) {
+    selectedUser.value = {...myTeam.value.find((user: any) => user.uuid == uuid)}
+    selectedIndex.value = index
+    modal.value = true
+}
 
-
-const router = useRouter()
-console.log(
-    router.getRoutes()
-)
-// multiOptions.value = MenuBuilder.pathOptions()
-
-await getMyTeam()
+const saveUser = async () => {
+    const updatedUser = {
+        username: selectedUser.value.username,
+        firstName: selectedUser.value.firstName,
+        lastName: selectedUser.value.lastName,
+        email: selectedUser.value.email,
+        allowedPathes: selectedUser.value.allowedPathes
+    }
+    // const { error } = await useFetch('/api/user/post', )
+    // if(error){
+    //     console.log(error)
+    // }
+    console.log(updatedUser)
+    modal.value = false
+}
 
 </script>
 
@@ -231,7 +231,6 @@ await getMyTeam()
       titleModal="Редактирование пользователя"
       :data="selectedUser"
       :config="configModal"
-      :multiOptions="multiOptions"
       :state="modal"
       :index="selectedIndex"
       @save="saveUser"

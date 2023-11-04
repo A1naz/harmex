@@ -9,7 +9,10 @@ export default eventHandler(async (event) => {
   const myTeams = await User.find({ uuidCompany: user.uuid }).sort({ _id: -1 })
   
   const format = myTeams.map((user) => {
-    const menu = user.uuidCompany ? MenuBuilder.filteredAccess(user.acesses) : MenuBuilder.fullAccess()
+    const { menu, allowedPathes } = user.uuidCompany 
+        ? MenuBuilder.filteredAccess(user.acesses)
+        : MenuBuilder.filteredAccess()
+        
     return {
         isBanned: user.isBanned,
         username: user.username,
@@ -21,7 +24,7 @@ export default eventHandler(async (event) => {
         acesses: user.acesses,
         emailConfirmed: user.emailConfirmed,
         mmenuItems: menu,
-        allowedPathes: user.acesses
+        allowedPathes: allowedPathes
     }
   })
   return format

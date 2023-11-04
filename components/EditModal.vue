@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { OptionsMulti } from '~/data/types';
 
 const props = defineProps({
   titleModal: {
@@ -14,10 +13,6 @@ const props = defineProps({
     type: Object as PropType<ConfigModal[]>,
     required: true,
   },
-  multiOptions: {
-    type: Object as PropType<OptionsMulti[]>,
-    required: false,
-},
   index: {
     type: Number,
     required: true,
@@ -59,10 +54,10 @@ onKeyStroke('Escape', (e) => { e.preventDefault() })
                 </label><br>
 
                 <MultiSelect 
-                    v-if="conf.type == FieldsType.array && multiOptions"
+                    v-if="conf.type == FieldsType.multiOptions && conf.options"
                     :key="'multi' + index"
                     v-model="data[conf.field]" 
-                    :options="multiOptions"
+                    :options="conf.options"
                     optionLabel="name"
                     display="chip" 
                     class="w-full md:w-20rem" 

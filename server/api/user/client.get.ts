@@ -28,7 +28,9 @@ export default eventHandler(async (event) => {
     await user.save()
   }
 
-  const menu = user.uuidCompany ? MenuBuilder.filteredAccess(user.acesses) : MenuBuilder.fullAccess()
+  const { menu, allowedPathes} = user.uuidCompany 
+    ? MenuBuilder.filteredAccess(user.acesses) 
+    : MenuBuilder.filteredAccess()
 
   const client: Client = {
     email: user.email,
@@ -44,7 +46,7 @@ export default eventHandler(async (event) => {
     partner: user.partner,
     isBanned: user.isBanned,
     mmenuItems: menu,
-    allowedPathes: user.acesses
+    allowedPathes: allowedPathes
   }
 
   return {
