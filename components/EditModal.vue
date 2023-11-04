@@ -1,28 +1,13 @@
 <script setup lang="ts">
 
 const props = defineProps({
-  titleModal: {
-    type: String,
-    required: true,
-  },
-  data: {
-    type: Object as any,
-    required: true,
-  },
-  config: {
-    type: Object as PropType<ConfigModal[]>,
-    required: true,
-  },
-  index: {
-    type: Number,
-    required: true,
-  },
-  state: {
-    type: Boolean,
-    required: true,
-  },
-
+  titleModal: { type: String, required: true },
+  modelValue: { type: Object as any, required: true },
+  config: {  type: Object as PropType<ConfigModal[]>, required: true },
+  index: { type: Number, required: true },
+  state: { type: Boolean, required: true }
 })
+
 defineEmits(['update:modelValue', 'save', 'close'])
 
 onKeyStroke('Escape', (e) => { e.preventDefault() })
@@ -43,7 +28,7 @@ onKeyStroke('Escape', (e) => { e.preventDefault() })
         </div>
 
         <div class="text-xs text-gray-500">
-          #{{ data.uuid }}
+          #{{ modelValue.uuid }}
         </div>
 
         <div class="flex flex-col gap-2 mt-2 justify-center">
@@ -56,7 +41,7 @@ onKeyStroke('Escape', (e) => { e.preventDefault() })
                 <MultiSelect 
                     v-if="conf.type == FieldsType.multiOptions && conf.options"
                     :key="'multi' + index"
-                    v-model="data[conf.field]" 
+                    v-model="modelValue[conf.field]" 
                     :options="conf.options"
                     optionLabel="name"
                     display="chip" 
@@ -66,7 +51,7 @@ onKeyStroke('Escape', (e) => { e.preventDefault() })
                 <input
                     v-else
                     :key="index"
-                    v-model="data[conf.field]"
+                    v-model="modelValue[conf.field]"
                     :placeholder="conf.header"
                     :type="conf.type"
                     class="input input-bordered w-full"
