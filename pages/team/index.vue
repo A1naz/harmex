@@ -101,10 +101,16 @@ const saveUser = async () => {
                 :field=col.field 
                 :header=col.header
                 >
-                <template v-if="col.field == 'allowedPathes'" #body="{ data }" сlass="flex flex-row" >
-                        <span v-for="(itm, index) in data[col.field]"  class="text-sm text-warning z-10 link link-hover">
-                            {{ itm }}{{ index == data[col.field].length-1 ? '' : ', ' }}
-                        </span>
+                <template v-if="col.field == 'allowedPathes'" #body="{ data }">
+                    <div class="flex flex-wrap" >
+                        <div 
+                            v-for="(itm, index) in data[col.field]" 
+                            :key="index"
+                            class="text-sm text-white bg-warning px-3 py-1 m-1 rounded-full "
+                            >
+                            {{ itm.name }}
+                        </div>
+                    </div>
                 </template>
                 <template v-else-if="col.field == 'actions'" #body="{ data }">
                     <Button 
@@ -229,7 +235,7 @@ const saveUser = async () => {
     <EditModal
       v-if="modal"
       titleModal="Редактирование пользователя"
-      :data="selectedUser"
+      :modelValue="selectedUser"
       :config="configModal"
       :state="modal"
       :index="selectedIndex"
