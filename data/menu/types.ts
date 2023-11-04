@@ -1,11 +1,17 @@
 export interface MenuSection {
     subTitle: string,
-    items: SectionItem[]
+    section: string,
+    items: MenuDataList[]
 }
 
-export interface SectionItem{ 
-    id: number, 
+export interface MenuDataList{ 
+    section: string,
     title: string, 
     icon: string, 
     path: string 
+}
+
+export interface MenuSectionList {
+    section: string, 
+    subTitle: string
 }

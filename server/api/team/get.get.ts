@@ -1,3 +1,4 @@
+import MenuBuilder from '~/server/utils/menuBuilder'
 import { User } from '~~/server/lib/models/User'
 
 export default eventHandler(async (event) => {
@@ -6,7 +7,9 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const myTeams = await User.find({ uuidCompany: user.uuid }).sort({ _id: -1 })
+  
   const format = myTeams.map((user) => {
+    const menu = user.uuidCompany ? MenuBuilder.filteredAccess(user.acesses) : MenuBuilder.fullAccess()
     return {
         isBanned: user.isBanned,
         username: user.username,
@@ -17,6 +20,8 @@ export default eventHandler(async (event) => {
         uuidCompany: user.uuidCompany,
         acesses: user.acesses,
         emailConfirmed: user.emailConfirmed,
+        mmenuItems: menu,
+        allowedPathes: user.acesses
     }
   })
   return format

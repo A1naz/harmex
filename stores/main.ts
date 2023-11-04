@@ -25,11 +25,14 @@ export const useMainStore = defineStore('main', {
         return true
     },
     async getClient() {
-      const { data } = await useFetch('/api/user/client', {
-        headers: useRequestHeaders(['cookie']) as HeadersInit,
-      })
-      const client: Client = data.value?.client
-      this.setClient(client)
+        const { data } = await useFetch('/api/user/client', {
+            headers: useRequestHeaders(['cookie']) as HeadersInit,
+        })
+        if (data.value) {
+            this.setClient(data.value.client)
+        } else {
+            console.warn('store.getClient did not return client')
+        }
     },
 
     setClient(client: Client) {

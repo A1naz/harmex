@@ -14,7 +14,7 @@ export interface StateMain {
 
 export interface IUser {
     isBanned: boolean,
-    username: string,
+    username: string | undefined,
     firstName: string,
     lastName: string,
     email: string,
@@ -23,12 +23,12 @@ export interface IUser {
     password: string,
     uuid: string,
     uuidCompany: string,
-    acesses: MenuAcesses[],
+    acesses: string[],
     roles: string,
     tabs: string,
     newEmail: string,
     emailConfirmed: string,
-    telegram: string,
+    telegram: string | undefined,
     telegramUserId: string,
     telegramUnlinkEmailSend: Date,
     tg2fa: boolean,
@@ -48,13 +48,26 @@ export interface Client extends Pick<
         allowedPathes: string[]
 }
 
-export interface MenuAcesses {
-    id: number, 
-    items: number[]
-}
-
 export interface Partner{
     balance: number,
     refCount: number,
     rewardPercent: number,
+}
+
+export interface OptionsMulti {
+    value: any,
+    name: string
+}
+
+export enum FieldsType {
+    text = 'text',
+    email = 'email',
+    array = 'array',
+    password = 'password'
+}
+
+export interface ConfigModal {
+    field: string, 
+    header: string, 
+    type: FieldsType,
 }

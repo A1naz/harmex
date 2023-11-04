@@ -1,46 +1,58 @@
-import { menuData } from "~/data/menu/menuData"
-import { MenuAcesses } from "@/data/types"
-import { MenuSection, SectionItem } from "@/data/menu/types"
+import { menuDataList, menuSectionList } from "~/data/menu/menuData"
+import { OptionsMulti } from "@/data/types"
+import { MenuDataList, MenuSection } from "@/data/menu/types"
+import { access } from "node:fs"
 
-interface MenuRes {
-    menu: MenuSection[], 
-    pathes: string[]
-}
 
-class MenuBuilder  {
-    public static fullAccess = (): MenuRes => {
+
+class MenuBuilder {
+
+    public static fullAccess = (): MenuSection[] => {
         const menu: MenuSection[] = []
-        
-        menuData.forEach((value) => menu.push({ 
-            subTitle: value.subTitle, 
-            items: value.items 
+        menuSectionList.forEach( section => menu.push({
+            subTitle: section.subTitle,
+            section: section.subTitle,
+            items: menuDataList.filter( mnu => mnu.section == section.section)
         }))
-        const pathes: string[] = this.pathConstructor(menu)
-        return { menu, pathes }
+        return menu
     }
-    public static filteredAccess = (acesses: MenuAcesses[]): MenuRes => {
+
+    public static filteredAccess = (acesses: string[]): MenuSection[] => {
         const menu: MenuSection[] = []
-        for(const accessSection of acesses){
-            const menuSection = menuData.get(accessSection.id)
-            if(menuSection){
-                let section: MenuSection = {
-                    subTitle: menuSection.subTitle,
-                    items: [] 
-                }
-                if (accessSection.items.length == 0){
-                    section.items = menuSection.items 
+
+        acesses.forEach( acc => {
+            const menuItem = menuDataList.find( menu => menu.path == acc)
+            if(menuItem){
+                const sectionIndex: number = menu.findIndex( mnu => mnu.section == menuItem.section )
+                if(sectionIndex !== -1){
+                    menu[sectionIndex].items.push(menuItem)
                 } else {
-                    section.items = menuSection.items.filter((itm: SectionItem) => accessSection.items.includes( itm.id )) 
+                    const section = menuSectionList.find(sect => sect.section == menuItem.section)
+                    if(section){
+                        const newSection: MenuSection = {
+                            subTitle: section.subTitle,
+                            section: section.section,
+                            items: [{...menuItem}]
+                        }
+                        menu.push(newSection)
+                    } else {
+                        console.warn(`Did not find ${menuItem.section} in menuSectionList`)
+                    }
                 }
-                menu.push(section)
+            } else {
+                console.warn(`Did not find ${acc} in menuDataList`)
             }
-        }
-        const pathes: string[] = this.pathConstructor(menu)
-        return { menu, pathes }
+        })
+        return menu
     }
-    private static pathConstructor = (arr: MenuSection[]): string[] => {
-        const pathes: string[] = []
-        arr.forEach( el => el.items.forEach( itm => pathes.push(itm.path)) )
+
+    public static pathOptions = (arr: MenuDataList[]): OptionsMulti[] => {
+        const pathes: OptionsMulti[] = []
+        arr.forEach( (el: any) => el.items.forEach( (itm: any) => pathes.push({
+                value: itm.path,
+                name: itm.title
+            })
+        ))
         return pathes
     }
 }
