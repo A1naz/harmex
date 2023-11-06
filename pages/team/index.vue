@@ -2,7 +2,6 @@
 import { FieldsType, OptionsMulti } from '~/data/types';
 import MenuBuilder from '~/server/utils/menuBuilder';
 
-
 definePageMeta({
   layout: 'app',
   auth: true,
@@ -94,7 +93,7 @@ const saveUser = async () => {
             :value="myTeam" 
             :rowsPerPageOptions="[5, 10, 20, 50]"
             class="bg-base-200 hidden lg:block overflow-visible"
-            :rowClass="(data) => `border-4 border-white`"
+            :rowClass="(data) => `border-y-4 border-white rounded-sm`"
             >
             <Column
                 v-for="col of configColumns"
