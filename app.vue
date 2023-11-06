@@ -58,6 +58,7 @@ watch(client, (newClient) => {
 
 <style lang="css">
 @import '@/assets/style/datepicker.css';
+
 .scroll-primary {
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 }
