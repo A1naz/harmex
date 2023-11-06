@@ -5,7 +5,9 @@ defineProps({
   modelValue: { type: Object as any, required: true },
   config: {  type: Object as PropType<ConfigModal[]>, required: true },
   index: { type: Number, required: true },
-  state: { type: Boolean, required: true }
+  state: { type: Boolean, required: true },
+  btnSaveLoading: { type: Boolean, required: true },
+  saveError: { type: String, required: false }
 })
 
 defineEmits(['update:modelValue', 'save', 'close'])
@@ -188,10 +190,13 @@ const multiselectStyle = {
 
         </div>
 
+        <div v-if="saveError"><p class="text-red-600" > {{ saveError }}</p></div>
+
         <div class="flex m-4">
             <Button 
                 class="btn btn-sm btn-primary m-1" 
                 label="Сохранить"
+                :loading="btnSaveLoading"
                 @click="$emit('save')"
                 ></Button>
 
