@@ -9,8 +9,8 @@ definePageMeta({
 })
 
 const { width, height } = useWindowSize()
-
 const myTeam = ref([]) as any
+const headers = useRequestHeaders(['cookie']) as HeadersInit
 
 async function getMyTeam() {
   const { data, error } = await useFetch('/api/team/get')
@@ -22,6 +22,8 @@ await getMyTeam()
 const modal = ref(false)
 const selectedUser = ref()
 const selectedIndex = ref()
+const btnSaveLoading = ref(false)
+const saveError = ref('')
 const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions()
 
 const configModal: ConfigModal[] = [
@@ -38,6 +40,33 @@ function userEdit (uuid: string, index: number) {
     modal.value = true
 }
 
+const saveUser = async () => {
+    saveError.value = ''
+    btnSaveLoading.value = true
+    const updatedUser = {
+        uuid: selectedUser.value.uuid,
+        username: selectedUser.value.username,
+        firstName: selectedUser.value.firstName,
+        lastName: selectedUser.value.lastName,
+        email: selectedUser.value.email,
+        allowedPathes: selectedUser.value.allowedPathes.length == multiOptions.length
+                        ? ['fullAccess']
+                        : selectedUser.value.allowedPathes.map( (path: any) => { return path.value})
+    }
+    const { data, error } = await useFetch('/api/team/update', {
+        method: 'POST',
+        body: updatedUser,
+        headers,
+    })
+    if(error.value){
+        saveError.value = error.value ? error.value.data.message : 'Повторите попытку'
+    } else {
+        await getMyTeam()
+        modal.value = false
+    }
+    btnSaveLoading.value = false
+}
+
 const configColumns = [
     { field: 'username', header: 'Ник' },
     { field: 'firstName', header: 'Имя' },
@@ -48,23 +77,6 @@ const configColumns = [
         { label: 'Изменить', action: (uuid: string, index: number) => userEdit(uuid, index) },
     ]},
 ];
-
-const saveUser = async () => {
-
-    const updatedUser = {
-        username: selectedUser.value.username,
-        firstName: selectedUser.value.firstName,
-        lastName: selectedUser.value.lastName,
-        email: selectedUser.value.email,
-        allowedPathes: selectedUser.value.allowedPathes
-    }
-    // const { error } = await useFetch('/api/user/post', )
-    // if(error){
-    //     console.log(error)
-    // }
-    console.log(updatedUser)
-    modal.value = false
-}
 
 </script>
 
@@ -244,8 +256,10 @@ const saveUser = async () => {
       :modelValue="selectedUser"
       :config="configModal"
       :state="modal"
+      :btnSaveLoading="btnSaveLoading"
       :index="selectedIndex"
       @save="saveUser"
+      :saveError="saveError"
       @close="modal = false"
     />
 
