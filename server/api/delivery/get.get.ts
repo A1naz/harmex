@@ -5,9 +5,6 @@ import { getAdminEntity } from '~/server/utils/getAdmin'
 
 export default eventHandler(async (event) => {
 
-    // const isAcess = await checkAccess(event)
-    // if (!isAcess) return sendRedirect(event, '/', 302)
-
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
