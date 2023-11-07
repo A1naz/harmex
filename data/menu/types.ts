@@ -15,3 +15,7 @@ export interface MenuSectionList {
     section: string, 
     subTitle: string
 }
+
+export enum MenuEnums {
+    fullAccess = 'fullAccess'
+}

@@ -1,6 +1,6 @@
 import { menuDataList, menuSectionList } from "~/data/menu/menuData"
 import { OptionsMulti } from "@/data/types"
-import { MenuDataList, MenuSection } from "@/data/menu/types"
+import { MenuDataList, MenuEnums, MenuSection } from "@/data/menu/types"
 
 interface MenuBuided {
     menu: MenuSection[], 
@@ -13,7 +13,7 @@ class MenuBuilder {
         const menu: MenuSection[] = []
         let allowedPathes: OptionsMulti[] = []
 
-        if(!acesses || acesses[0] == 'fullAccess'){
+        if(!acesses || acesses[0] == MenuEnums.fullAccess){
             menuSectionList.forEach( section => menu.push({
                 subTitle: section.subTitle,
                 section: section.subTitle,
