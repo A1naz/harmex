@@ -30,16 +30,19 @@ const btnSaveLoading = ref(false)
 const saveError = ref('')
 const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions()
 
-const configModalEdit: ConfigModal[] = [
+const configModalBase: ConfigModal[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
     { field: 'firstName', header: 'Имя', type: FieldsType.text  },
     { field: 'lastName', header: 'Фамилия', type: FieldsType.text  },
     { field: 'email', header: 'E-Mail', type: FieldsType.text  },
-    { field: 'newPassword', header: 'Новый пароль', type: FieldsType.text  },
     { field: 'allowedPathes', header: 'Разрешения', type: FieldsType.multiOptions, options: multiOptions }
 ];
+const configModalEdit: ConfigModal[] = [
+    ...configModalBase,
+    { field: 'newPassword', header: 'Новый пароль', type: FieldsType.text  },
+];
 const configModalCreate: ConfigModal[] = [
-    ...configModalEdit,
+    ...configModalBase,
     { field: 'password', header: 'Пароль', type: FieldsType.text }
 ];
 
@@ -140,13 +143,13 @@ const configColumns = [
     { field: 'allowedPathes', header: 'Разрешения' },
     { field: 'actions', header: 'Действия', actions: [
         { 
-            label: 'Изменить', 
-            color: 'primary',
+            btnLabel: 'Изменить', 
+            btnClass: 'btn btn-sm m-1 btn-primary',
             action: (uuid: string, index: number) => openEditModal(false, uuid, index) 
         },
         {
-            icon: 'pi pi-trash',
-            color: 'error',
+            btnIcon: 'pi pi-trash',
+            btnClass: 'btn btn-sm  m-1 btn-outline btn-error',
             action: (uuid: string, index: number) => openConfirmModal(uuid, index) 
         },
     ]},
@@ -211,11 +214,11 @@ const configColumns = [
                         <Button 
                             v-for="(act, index) in col.actions"
                             :key="index"
-                            :class="`btn btn-sm btn-${act.color} m-1`"
+                            :class="act.btnClass"
                             @click="act.action(data.uuid, index)"
                             >
-                            <span v-if="act.label">{{ act.label }}</span>
-                            <span v-if="act.icon" :class=act.icon></span>
+                            <span v-if="act.btnLabel">{{ act.btnLabel }}</span>
+                            <span v-if="act.btnIcon" :class=act.btnIcon></span>
                         </Button>
                     </div>
                 </template>
@@ -225,7 +228,9 @@ const configColumns = [
             </Column>
         </DataTable>
 
-      <!-- <ul v-else class="w-full lg:hidden">
+
+
+        <ul v-else class="w-full lg:hidden">
         <li
           v-for="(item, index) in myTeam"
           :key="index"
@@ -238,92 +243,66 @@ const configColumns = [
             <div class="collapse-title font-medium">
               <div class="flex gap-6 items-center w-full">
                 <div class="flex gap-4 items-start">
-                  <div class="image">
-                    <nuxt-img
-                      width="32"
-                      class="rounded-lg object-contain"
-                      :src="item.image"
-                      loading="lazy"
-                    />
+
+                  <div class="article flex flex-col gap-0.5 text-sm">
+                        <div class="text-xs">Email</div>
+                        {{ item.email }}
                   </div>
                   <div class="article flex flex-col gap-0.5">
-                    <div class="text-xs">Артикул</div>
-                    <a
-                      :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`"
-                      target="_blank"
-                      class="text-secondary link link-hover text-sm"
-                    >
-                      {{ item.article }}
-                    </a>
+                    <div class="text-xs">Имя</div>
+                    {{ item.firstName }}
                   </div>
                   <div class="status flex flex-col gap-0.5">
+                    <div class="text-xs">Фамилия</div>
+                    {{ item.lastName }}
                   </div>
+
                 </div>
               </div>
-              <div
-                class="absolute top-0 text-gray-400 right-3 date text-xs text-center mt-2 xs:bottom-0 xs:top-20"
+              <div 
+                class="absolute top-0 text-gray-400 right-3 date text-xs text-center mt-2 xs:bottom-0 xs:top-20 sm:hidden"
               >
                 <div>
-                  {{ defaultDate(item.createdDate) }}
+                  #{{ item.uuid }}
                 </div>
               </div>
             </div>
             <div class="collapse-content flex gap-4">
               <div class="flex flex-col">
                 <dt class="mb-1 text-gray-500 text-sm dark:text-gray-400">
-                  Лайков
+                  Разрешения
                 </dt>
                 <dd class="font-semibold text-sm">
-                  {{ item.likes }}
-                </dd>
-              </div>
-              <div class="flex flex-col">
-                <dt class="mb-1 text-gray-500 text-sm dark:text-gray-400">
-                  Дизлайков
-                </dt>
-                <dd class="font-semibold text-sm">
-                  {{ item.dislikes }}
-                </dd>
-              </div>
-              <div class="flex flex-col">
-                <dt class="mb-1 text-gray-500 text-sm dark:text-gray-400">
-                  Дата завершения
-                </dt>
-                <dd class="font-semibold text-sm">
-                  <div v-if="item.endedDate">
-                    {{ defaultDate(item.endedDate) }}
-                  </div>
-                  <div v-else>Нет</div>
-                </dd>
-              </div>
-              <div class="flex flex-col">
-                <dt class="mb-1 text-gray-500 text-sm dark:text-gray-400">
-                  Сроки выполнения
-                </dt>
-                <dd class="font-semibold text-sm flex">
-                  <div v-if="item.dateEnd">
-                    <div>
-                      {{ `С ${defaultDate(item.dateStart)}` }}
+                    <div class="flex flex-wrap" >
+                        <div 
+                            v-for="(itm, index) in item.allowedPathes" 
+                            :key="index"
+                            class="text-sm text-white bg-warning px-3 py-1 m-1 rounded-2xl "
+                            >
+                            {{ itm.name }}
+                        </div>
                     </div>
-                    <div>
-                      {{ `По ${defaultDate(item.dateEnd)}` }}
-                    </div>
-                  </div>
-                  <div v-else>Нет</div>
                 </dd>
               </div>
+              
             </div>
-            <div class="ml-4 mb-2" v-if="item.status === 'created'">
-              <button
-              class="btn btn-sm btn-error"
-              >
-              Удалить
-            </button>
+            <div class="flex justify-end ml-4 mb-2" >
+                <Button 
+                    class="btn btn-sm m-1 btn-primary"
+                    @click="openEditModal(false, item.uuid, index)"
+                    >
+                    <span>Изменить</span>
+                </Button>
+                <Button 
+                    class="btn btn-sm  m-1 btn-outline btn-error"
+                    @click="openConfirmModal(item.uuid, index)"
+                    >
+                    <span class="pi pi-trash"></span>
+                </Button>
           </div>
           </div>
         </li>
-      </ul> -->
-
+      </ul>
 
     </div>
 
