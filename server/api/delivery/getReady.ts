@@ -1,10 +1,17 @@
+import { User } from '@/server/lib/models/User'
+import { getServerSession } from '#auth'
 import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
 
 export default eventHandler(async (event) => {
+  const session = (await getServerSession(event)) as any
 
-  const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
+
+  const user = await User.findOne({ uuid: session.uuid })
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const all = await Delivery.find({ user }).sort({ _id: -1 })
 

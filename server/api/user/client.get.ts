@@ -1,8 +1,5 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
-import MenuBuilder from '~/server/utils/menuBuilder'
-import { Client } from '~/data/types'
-
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
@@ -27,12 +24,7 @@ export default eventHandler(async (event) => {
     }
     await user.save()
   }
-
-  const { menu, allowedPathes} = user.uuidCompany 
-    ? MenuBuilder.filteredAccess(user.acesses) 
-    : MenuBuilder.filteredAccess()
-
-  const client: Client = {
+  const client = {
     email: user.email,
     username: user.email === user.username ? undefined : user.username,
     uuid: user.uuid,
@@ -42,11 +34,9 @@ export default eventHandler(async (event) => {
     lastName: user.lastName,
     hasPassword: !!user.password,
     telegramUserId: user.telegramUserId,
-    wbApiKeys: user.wbApiKeys?.length ? user.wbApiKeys : [],
+    wbApiKeys: user.wbApiKeys.length ? user.wbApiKeys : [],
     partner: user.partner,
     isBanned: user.isBanned,
-    mmenuItems: menu,
-    allowedPathes: allowedPathes
   }
 
   return {

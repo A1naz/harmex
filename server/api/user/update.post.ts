@@ -4,8 +4,8 @@ import { getServerSession } from '#auth'
 import MailService from '~~/server/lib/mailService.js'
 
 export default eventHandler(async (event) => {
-    
   const session = (await getServerSession(event)) as any
+
   if (!session) return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)

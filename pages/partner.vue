@@ -1,11 +1,5 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
-
-definePageMeta({
-  layout: 'app',
-  auth: true,
-  title: 'Партнерская программа',
-})
 const secondLevelReferrals = ref(0)
 
 const closePartnerVideo = ref(null) as Ref<HTMLLabelElement | null>
@@ -14,6 +8,11 @@ function closePartnerVideofn() {
   closePartnerVideo.value?.click()
 }
 
+definePageMeta({
+  layout: 'app',
+  auth: true,
+  title: 'Партнерская программа',
+})
 const currency = useCurrency()
 
 const runtimeConfig = useRuntimeConfig()

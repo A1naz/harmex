@@ -1,15 +1,11 @@
 import { Schema, model } from 'mongoose'
 import { v4 as uuid } from 'uuid'
-import { IUser } from '@/data/types'
-
-interface IUserSchema extends IUser, Document {}
 
 const partnerSchema = new Schema({
   balance: { type: Number, default: 0 },
   refCount: { type: Number, default: 0 },
   rewardPercent: { type: Number, default: 10 },
 })
-
 const UserSchema = new Schema({
   isBanned: { type: Boolean, default: false },
   username: { type: String, unique: true, required: true },
@@ -20,10 +16,6 @@ const UserSchema = new Schema({
   wbApiKeys: { type: Array, required: false },
   password: { type: String, required: false },
   uuid: { type: String, unique: true, required: true, default: uuid() },
-
-  uuidCompany: { type: String, unique: false },
-  acesses: [{ type: String, required: false}],
-
   roles: [{ type: String, ref: 'Role' }],
   tabs: [{ type: String }],
   newEmail: { type: String, required: false },
@@ -51,4 +43,4 @@ UserSchema.pre('save', function (next) {
   next()
 })
 
-export const User = model<IUserSchema>('User', UserSchema)
+export const User = model('User', UserSchema)

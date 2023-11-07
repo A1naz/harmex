@@ -51,9 +51,9 @@ onKeyStroke('Escape', (e) => {
 
 <template>
   <div
-    id="buyoutInfoModal" 
-    :class="{ 'modal-open': state }" 
-    class="modal"
+    id="buyoutInfoModal" :class="{
+      'modal-open': state,
+    }" class="modal"
   >
     <div v-if="state" class="modal-box max-w-2xl">
       <div class="">

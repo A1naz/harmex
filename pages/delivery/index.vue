@@ -269,8 +269,7 @@ const filters = [
         <li v-for="(delivery, index) of deliveries" :key="index" class="overflow-visible z-0">
           <DeliveryExpand
             :state="openAll"
-            :info="delivery" 
-            @open-modal="openModal"
+            :info="delivery" @open-modal="openModal"
             @open-status-modal="openStatusModal"
             @open-penalty-modal="penaltyModal = true"
           />
