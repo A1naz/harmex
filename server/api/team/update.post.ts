@@ -1,12 +1,13 @@
 import validator from 'validator'
 import { User } from '@/server/lib/models/User'
 import MailService from '~~/server/lib/mailService.js'
+import bcrypt from 'bcrypt'
 
 export default eventHandler(async (event) => {
 
   const body = await readBody(event)
 
-  const { uuid, email, username, firstName, lastName, allowedPathes } = body
+  const { uuid, email, username, firstName, lastName, newPassword, allowedPathes } = body
 
   if (!validator.isEmail(email)) {
     throw createError({
@@ -39,6 +40,11 @@ export default eventHandler(async (event) => {
     )
     emailUpdated = true
   }
+
+  if(newPassword){
+    const hash = bcrypt.hashSync(newPassword, 7)
+    user.password = hash
+  }
   
   user.username = username
   user.firstName = firstName
@@ -48,6 +54,5 @@ export default eventHandler(async (event) => {
   await user.save()
   return {
     status: 'ok',
-    emailUpdated: emailUpdated,
   }
 })

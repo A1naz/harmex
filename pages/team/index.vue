@@ -35,6 +35,7 @@ const configModalEdit: ConfigModal[] = [
     { field: 'firstName', header: 'Имя', type: FieldsType.text  },
     { field: 'lastName', header: 'Фамилия', type: FieldsType.text  },
     { field: 'email', header: 'E-Mail', type: FieldsType.text  },
+    { field: 'newPassword', header: 'Новый пароль', type: FieldsType.text  },
     { field: 'allowedPathes', header: 'Разрешения', type: FieldsType.multiOptions, options: multiOptions }
 ];
 const configModalCreate: ConfigModal[] = [
@@ -60,6 +61,7 @@ const saveUser = async () => {
         firstName: selectedUser.value.firstName,
         lastName: selectedUser.value.lastName,
         email: selectedUser.value.email,
+        newPassword: selectedUser.value.newPassword,
         allowedPathes: selectedUser.value.allowedPathes.length == multiOptions.length
                         ? [MenuEnums.fullAccess]
                         : selectedUser.value.allowedPathes.map( (path: any) => { return path.value})
