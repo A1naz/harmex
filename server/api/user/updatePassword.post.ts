@@ -11,35 +11,38 @@ export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
   const runtimeConfig = useRuntimeConfig()
 
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+  if (!session) return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
 
   const { oldPassword, newPassword } = body
 
   const user = await User.findOne({ uuid: session.uuid })
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
-  if (newPassword.length < 6 || newPassword.length > 16) {
+  if (newPassword.length < 6 || newPassword.length > 36) {
     return {
       status: 'error',
-      error: 'Пароль должен быть от 6 до 16 символов.',
+      error: 'Пароль должен быть от 6 до 36 символов.',
     }
   }
-  if (hasWhiteSpace(newPassword)) {
-    return {
-      status: 'error',
-      error:
-        'Пароль не должен содержать пробелов, и состоять только из английских букв и цифр.',
-    }
-  }
+
+  // if (hasWhiteSpace(newPassword)) {
+  //   return {
+  //     status: 'error',
+  //     error:
+  //       'Пароль не должен содержать пробелов, и состоять только из английских букв и цифр.',
+  //   }
+  // }
 
   if (!user.password) {
     user.password = bcrypt.hashSync(newPassword, 7)
-  }
-  else {
+    await user.save()
+    return {
+      status: 'ok',
+      newPassword: true,
+    }
+  } else {
     if (!bcrypt.compareSync(oldPassword, user.password)) {
       return {
         status: 'error',
@@ -54,7 +57,7 @@ export default eventHandler(async (event) => {
     runtimeConfig.SECRET,
     {
       expiresIn: '10m',
-    },
+    }
   )
 
   const url = `${runtimeConfig.PUBLIC_SITE_URL}/api/user/changePassword/${token}`
@@ -62,7 +65,7 @@ export default eventHandler(async (event) => {
   await mailService.sendChangePasswordMail(
     user.email,
     url,
-    user.firstName || user.username,
+    user.firstName || user.username
   )
   return {
     status: 'ok',

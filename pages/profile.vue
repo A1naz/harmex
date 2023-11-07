@@ -74,7 +74,7 @@ const disabledChangePasswordButton = computed(() => {
 async function updatePassword() {
   if (passwordForm.oldPassword == '' && passwordForm.newPassword == '') return
 
-  const { data, error } = await useFetch('/api/user/updatePassword', {
+  const { data, error }: any = await useFetch('/api/user/updatePassword', {
     method: 'POST',
     body: passwordForm,
     headers,
@@ -83,9 +83,17 @@ async function updatePassword() {
     alert.show = true
     alert.message = (data.value as any).error!
     alert.type = 'error'
+    setTimeout(() => {
+      location.reload()
+    }, 2000)
   } else {
-    alert.show = true
+    
+    if (data.value.newPassword) {
+      alert.message = 'Пароль успешно установлен.'
+    } else
     alert.message = 'Подтверждение смены пароля было отправлено на ваш email.'
+    
+    alert.show = true
     alert.type = 'success'
   }
   start()
