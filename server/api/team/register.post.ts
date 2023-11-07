@@ -3,7 +3,6 @@ import { v4 as uuid } from 'uuid'
 import validator from 'validator'
 import { getServerSession } from '#auth'
 import { User } from '~~/server/lib/models/User'
-import { Referral } from '~~/server/lib/models/Referral'
 
 import MailService from '~~/server/lib/mailService.js'
 

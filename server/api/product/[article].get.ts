@@ -3,10 +3,9 @@ import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '~~/server/lib/helpers'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
 
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+  const session = (await getServerSession(event)) as any
+  if (!session) return sendRedirect(event, '/auth', 302)
 
   const params = event.context.params as any
   const url = findProductCard(params.article)

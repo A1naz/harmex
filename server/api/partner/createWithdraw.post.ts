@@ -1,5 +1,3 @@
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { PartnerWithdraw } from '~/server/lib/models/PartnerWithdraw'
 
 export default eventHandler(async (event) => {

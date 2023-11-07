@@ -1,5 +1,4 @@
 import type { Rule } from '@/data/buyout/rules'
-import { getServerSession } from '#auth'
 import { findPositionByQuery } from '@/server/lib/helpers'
 
 interface Item {
@@ -19,10 +18,9 @@ interface Item {
 }
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
 
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+    const user = await getAdminEntity(event)
+    if (!user) return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
   const products: Item[] = body

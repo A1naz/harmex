@@ -2,8 +2,8 @@ import fs from 'node:fs'
 import { getServerSession } from '#auth'
 
 export default eventHandler(async (event) => {
+    
   const session = (await getServerSession(event)) as any
-
   if (!session) return sendRedirect(event, '/auth', 302)
 
   if (fs.existsSync('points.json')) {

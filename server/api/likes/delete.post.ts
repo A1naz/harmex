@@ -1,11 +1,10 @@
 ﻿import { getServerSession } from '#auth'
 import { User } from '~~/server/lib/models/User'
 import { Like } from '~~/server/lib/models/Like'
-import { findImage } from '~~/server/lib/helpers'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
 
+  const session = (await getServerSession(event)) as any
   if (!session) return sendRedirect(event, '/auth', 302)
 
   const user = await User.findOne({ uuid: session.uuid })

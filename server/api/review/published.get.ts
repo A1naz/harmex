@@ -1,18 +1,13 @@
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { Review } from '~~/server/lib/models/Review'
-import { Buyout } from '@/server/lib/models/Buyout'
 import { Delivery } from '~/server/lib/models/Delivery'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
+
+    const user = await getAdminEntity(event)
+    if (!user) return sendRedirect(event, '/auth', 302)
 
   const { skip, limit } = getQuery(event)
 
-  if (!session) return sendRedirect(event, '/auth', 302)
-
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user) return sendRedirect(event, '/auth', 302)
   const { status } = getQuery(event)
   let reviews: any = []
   if (status === 'all')

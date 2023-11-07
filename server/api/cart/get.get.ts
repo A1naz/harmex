@@ -3,14 +3,10 @@ import { getServerSession } from '#auth'
 import { Cart } from '~~/server/lib/models/Cart'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
 
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+    const user = await getAdminEntity(event)
+    if (!user) return sendRedirect(event, '/auth', 302)
 
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
   const carts = await Cart.find({ user })
   const format = carts.map((cart, index) => {
     return {
