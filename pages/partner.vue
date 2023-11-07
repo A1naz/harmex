@@ -4,7 +4,6 @@ import { notify } from '@kyvg/vue3-notification'
 definePageMeta({
   layout: 'app',
   auth: true,
-  middleware: 'roles',
   title: 'Партнерская программа',
 })
 const secondLevelReferrals = ref(0)
