@@ -259,12 +259,8 @@ const configColumns = [
 
                 </div>
               </div>
-              <div 
-                class="absolute top-0 text-gray-400 right-3 date text-xs text-center mt-2 xs:bottom-0 xs:top-20 sm:hidden"
-              >
-                <div>
+              <div class="absolute top-0 text-gray-400 right-3 date text-xs text-center mt-2 xs:bottom-0 xs:top-20 invisible md:visible">
                   #{{ item.uuid }}
-                </div>
               </div>
             </div>
             <div class="collapse-content flex gap-4">
