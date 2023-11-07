@@ -157,7 +157,7 @@ const multiselectStyle = {
             {{ titleModal }}
         </div>
 
-        <div class="text-xs text-gray-500">
+        <div v-if="modelValue.uuid" class="text-xs text-gray-500">
           #{{ modelValue.uuid }}
         </div>
 

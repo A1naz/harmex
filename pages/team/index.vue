@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { MenuEnums } from '~/data/menu/types';
 import { FieldsType, OptionsMulti } from '~/data/types';
 import MenuBuilder from '~/server/utils/menuBuilder';
 
@@ -19,50 +20,112 @@ async function getMyTeam() {
 
 await getMyTeam()
 
-const modal = ref(false)
+const modalEdit = ref(false)
+const modalConfirm = ref(false)
+const editModalConfig = ref()
+const titleModal = ref()
 const selectedUser = ref()
 const selectedIndex = ref()
 const btnSaveLoading = ref(false)
 const saveError = ref('')
 const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions()
 
-const configModal: ConfigModal[] = [
+const configModalEdit: ConfigModal[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
     { field: 'firstName', header: 'Имя', type: FieldsType.text  },
     { field: 'lastName', header: 'Фамилия', type: FieldsType.text  },
     { field: 'email', header: 'E-Mail', type: FieldsType.text  },
     { field: 'allowedPathes', header: 'Разрешения', type: FieldsType.multiOptions, options: multiOptions }
 ];
+const configModalCreate: ConfigModal[] = [
+    ...configModalEdit,
+    { field: 'password', header: 'Пароль', type: FieldsType.text }
+];
 
-function userEdit (uuid: string, index: number) {
-    selectedUser.value = {...myTeam.value.find((user: any) => user.uuid == uuid)}
-    selectedIndex.value = index
-    modal.value = true
+function openEditModal(isCreate: boolean, uuid?: string, index?: number){
+    titleModal.value = isCreate ? 'Создать сотрудника' : 'Редактирование сотрудника'
+    editModalConfig.value = isCreate ? configModalCreate : configModalEdit
+    selectedUser.value = isCreate ? {} : {...myTeam.value.find((user: any) => user.uuid == uuid)}
+    selectedIndex.value = isCreate ? 'new-user' : index
+    modalEdit.value = true
 }
 
 const saveUser = async () => {
     saveError.value = ''
     btnSaveLoading.value = true
-    const updatedUser = {
-        uuid: selectedUser.value.uuid,
+    let endpoint = ''
+
+    const userData: any = {
         username: selectedUser.value.username,
         firstName: selectedUser.value.firstName,
         lastName: selectedUser.value.lastName,
         email: selectedUser.value.email,
         allowedPathes: selectedUser.value.allowedPathes.length == multiOptions.length
-                        ? ['fullAccess']
+                        ? [MenuEnums.fullAccess]
                         : selectedUser.value.allowedPathes.map( (path: any) => { return path.value})
     }
-    const { data, error } = await useFetch('/api/team/update', {
+
+    if(selectedUser.value.uuid){
+        userData.uuid = selectedUser.value.uuid
+        endpoint = '/api/team/update'
+    } else {
+        userData.password = selectedUser.value.password
+        endpoint = '/api/team/register'
+    }
+
+    const { error } = await useFetch(endpoint, {
         method: 'POST',
-        body: updatedUser,
+        body: userData,
         headers,
     })
     if(error.value){
         saveError.value = error.value ? error.value.data.message : 'Повторите попытку'
     } else {
         await getMyTeam()
-        modal.value = false
+        closeEditModal()
+    }
+    btnSaveLoading.value = false
+}
+
+function closeEditModal(){
+    titleModal.value = ''
+    selectedUser.value = {}
+    selectedIndex.value = ''
+    saveError.value = ''
+    editModalConfig.value = {}
+    modalEdit.value = false
+}
+function closeConfirmModal(){
+    saveError.value = ''
+    selectedIndex.value = ''
+    selectedUser.value = {}
+    titleModal.value = ''
+    modalConfirm.value = false
+}
+
+function openConfirmModal(uuid: string, index: number){
+    selectedUser.value = {...myTeam.value.find((user: any) => user.uuid == uuid)}
+    selectedIndex.value = index
+    titleModal.value = 'Подтверждаете удаление сотрудника?'
+    modalConfirm.value = true
+}
+const closeConfirm = async (isConfirmed: boolean) => {
+    saveError.value = ''
+    btnSaveLoading.value = true
+    if(isConfirmed){
+        const { error } = await useFetch('/api/team/delete', {
+            method: 'DELETE',
+            body: selectedUser.value,
+            headers,
+        })
+        if(error.value){
+            saveError.value = error.value ? error.value.data.message : 'Повторите попытку'
+        } else {
+            await getMyTeam()
+            closeConfirmModal()
+        }
+    } else {
+        closeConfirmModal()
     }
     btnSaveLoading.value = false
 }
@@ -74,7 +137,16 @@ const configColumns = [
     { field: 'email', header: 'E-Mail' },
     { field: 'allowedPathes', header: 'Разрешения' },
     { field: 'actions', header: 'Действия', actions: [
-        { label: 'Изменить', action: (uuid: string, index: number) => userEdit(uuid, index) },
+        { 
+            label: 'Изменить', 
+            color: 'primary',
+            action: (uuid: string, index: number) => openEditModal(false, uuid, index) 
+        },
+        {
+            icon: 'pi pi-trash',
+            color: 'error',
+            action: (uuid: string, index: number) => openConfirmModal(uuid, index) 
+        },
     ]},
 ];
 
@@ -89,17 +161,19 @@ const configColumns = [
     </p>
 
     <div class="flex justify-end mb-8 mt-6 items-center">
-      <NuxtLink
-        to="/team/create"
-        class="btn btn-primary btn-sm gap-2 font-medium normal-case self-end"
-      >
-        <Icon name="fluent:add-24-filled" size="24" />
-        Добавить сотрудника
-      </NuxtLink>
+
+        <Button 
+            class="btn btn-sm btn-primary m-1" 
+            @click="openEditModal(true)"
+            >
+            <Icon name="fluent:add-24-filled" size="24" />
+            Добавить сотрудника
+        </Button>
+
+        <!-- <Icon name="" size="24" /> -->
     </div>
 
     <div v-if="myTeam.length">
-
         <DataTable 
             v-if="width > 1024"
             :value="myTeam" 
@@ -131,13 +205,17 @@ const configColumns = [
                     </div>
                 </template>
                 <template v-else-if="col.field == 'actions'" #body="{ data }">
-                    <Button 
-                        v-for="(act, index) in col.actions"
-                        :key="index"
-                        class="btn btn-sm btn-primary m-1" 
-                        :label="act.label"  
-                        @click="act.action(data.uuid, index)"
-                        ></Button>
+                    <div class="flex flex-column content-center">
+                        <Button 
+                            v-for="(act, index) in col.actions"
+                            :key="index"
+                            :class="`btn btn-sm btn-${act.color} m-1`"
+                            @click="act.action(data.uuid, index)"
+                            >
+                            <span v-if="act.label">{{ act.label }}</span>
+                            <span v-if="act.icon" :class=act.icon></span>
+                        </Button>
+                    </div>
                 </template>
                 <template v-else #body="{ data }">
                     {{ data[col.field] }}
@@ -251,17 +329,27 @@ const configColumns = [
     <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
 
     <EditModal
-      v-if="modal"
-      titleModal="Редактирование пользователя"
+      v-if="modalEdit"
+      :titleModal="titleModal"
       :modelValue="selectedUser"
-      :config="configModal"
-      :state="modal"
+      :config="editModalConfig"
+      :state="modalEdit"
       :btnSaveLoading="btnSaveLoading"
       :index="selectedIndex"
       @save="saveUser"
       :saveError="saveError"
-      @close="modal = false"
+      @close="closeEditModal"
     />
+
+    <ConfirmModal 
+        v-if="modalConfirm"
+        :titleModal="titleModal"
+        :modelValue="selectedUser"
+        :index="selectedIndex"
+        :state="modalConfirm"
+        :btnSaveLoading="btnSaveLoading"
+        @click="closeConfirm"
+        />
 
   </div>
 </template>
