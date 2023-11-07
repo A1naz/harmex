@@ -1,16 +1,13 @@
 import validator from 'validator'
 import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import MailService from '~~/server/lib/mailService.js'
+import bcrypt from 'bcrypt'
 
 export default eventHandler(async (event) => {
-    
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
 
-  const { email, username, firstName, lastName } = body
+  const { uuid, email, username, firstName, lastName, newPassword, allowedPathes } = body
 
   if (!validator.isEmail(email)) {
     throw createError({
@@ -25,34 +22,16 @@ export default eventHandler(async (event) => {
       message: 'Имя пользователя должно быть длиной от 4 до 14 символов',
     })
   }
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user) return sendRedirect(event, '/auth', 302)
-
-  const foundByUsername = await User.findOne({ username: body.username })
-  if (foundByUsername && foundByUsername.uuid !== user.uuid) {
+  const user = await User.findOne({ uuid: uuid })
+  if (!user) {
     throw createError({
-      statusCode: 400,
-      message: 'Это имя имя пользователя уже занято',
-    })
-  }
+    statusCode: 400,
+    message: 'Такого пользователя не существует',
+  })
+}
 
-  const foundByEmail = await User.findOne({ email: body.email })
-  if (foundByEmail && foundByEmail.uuid !== user.uuid) {
-    throw createError({
-      statusCode: 400,
-      message: 'Email уже занят',
-    })
-  }
   let emailUpdated = false
   if (email !== user.email) {
-
-    if (!user.password) {
-      throw createError({
-        statusCode: 400,
-        message: 'Сначала установите пароль',
-      })
-    }
-
     user.newEmail = email
     const url = useRuntimeConfig().PUBLIC_SITE_URL
     await MailService.sendNewEmailActivationMail(
@@ -61,12 +40,19 @@ export default eventHandler(async (event) => {
     )
     emailUpdated = true
   }
+
+  if(newPassword){
+    const hash = bcrypt.hashSync(newPassword, 7)
+    user.password = hash
+  }
+  
   user.username = username
   user.firstName = firstName
   user.lastName = lastName
+  user.acesses = allowedPathes
+
   await user.save()
   return {
     status: 'ok',
-    emailUpdated: emailUpdated,
   }
 })

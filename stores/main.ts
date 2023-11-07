@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
+import { StateMain } from '~/data/types'
 
 export const useMainStore = defineStore('main', {
-  state: () => ({
-    client: {} as any,
+  state: (): StateMain => ({
+    client: {} as Client,
     dodge: false,
     theme: 'light',
     pickpoints: [] as any,
@@ -12,8 +13,10 @@ export const useMainStore = defineStore('main', {
     infoType: '',
     faqModal: false,
   }),
-  // optional actions
-
+//   getters: {
+//     getAllowedPathes: (state): string[] => state.client.allowedPathes,
+//     getFirstPath: (state): string => state.client.allowedPathes[0]
+//   },
   actions: {
     checkTelegramId() {
       if (this.client.telegram && !this.client.telegramUserId)
@@ -22,14 +25,17 @@ export const useMainStore = defineStore('main', {
         return true
     },
     async getClient() {
-      const { data } = await useFetch('/api/user/client', {
-        headers: useRequestHeaders(['cookie']) as HeadersInit,
-      })
-      const client = data.value?.client
-      this.setClient(client as object)
+        const { data } = await useFetch('/api/user/client', {
+            headers: useRequestHeaders(['cookie']) as HeadersInit,
+        })
+        if (data.value) {
+            this.setClient(data.value.client)
+        } else {
+            console.warn('store.getClient did not return client')
+        }
     },
 
-    setClient(client: object) {
+    setClient(client: Client) {
       this.client = client
     },
   },

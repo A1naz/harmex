@@ -1,14 +1,11 @@
-﻿﻿import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
-import { paymenthistory } from '~/server/lib/models/Paymenthistory'
+﻿﻿import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
+  
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
   const { type, period } = getQuery(event)
-  if (!session) return sendRedirect(event, '/auth', 302)
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user) return sendRedirect(event, '/auth', 302)
 
   const currentDate = new Date() // Текущая дата
   let filter: any = {} // Начинаем с пустого фильтраD
