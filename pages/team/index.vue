@@ -184,7 +184,6 @@ const configColumns = [
             :value="myTeam" 
             :rowsPerPageOptions="[5, 10, 20, 50]"
             class="bg-base-200 hidden lg:block overflow-visible"
-            :rowClass="(data) => `border-y-4 border-white rounded-sm`"
             >
             <Column
                 v-for="col of configColumns"
@@ -196,14 +195,14 @@ const configColumns = [
                 <template v-if="col.field == 'allowedPathes'" #body="{ data }">
                     <div class="flex flex-wrap" >
                         <div v-if="data[col.field].length == multiOptions.length"
-                            class="text-sm text-white bg-success px-3 py-1 m-1 rounded-2xl "
+                            class="text-sm px-3 py-1 m-1 rounded-2xl border border-success text-success"
                             > Полный доступ
                         </div>
                         <div 
                             v-else
                             v-for="(itm, index) in data[col.field]" 
                             :key="index"
-                            class="text-sm text-white bg-warning px-3 py-1 m-1 rounded-2xl "
+                            class="text-sm px-3 py-1 m-1 rounded-2xl border border-warning text-warning"
                             >
                             {{ itm.name }}
                         </div>
@@ -244,15 +243,15 @@ const configColumns = [
               <div class="flex gap-6 items-center w-full">
                 <div class="flex gap-4 items-start">
 
-                  <div class="article flex flex-col gap-0.5 text-sm">
+                  <div class="flex flex-col gap-0.5 text-sm">
                         <div class="text-xs">Email</div>
                         {{ item.email }}
                   </div>
-                  <div class="article flex flex-col gap-0.5">
+                  <div class="flex flex-col gap-0.5">
                     <div class="text-xs">Имя</div>
                     {{ item.firstName }}
                   </div>
-                  <div class="status flex flex-col gap-0.5">
+                  <div class="flex flex-col gap-0.5">
                     <div class="text-xs">Фамилия</div>
                     {{ item.lastName }}
                   </div>
@@ -271,9 +270,15 @@ const configColumns = [
                 <dd class="font-semibold text-sm">
                     <div class="flex flex-wrap" >
                         <div 
+                            v-if="item.allowedPathes.length == multiOptions.length"
+                            class="text-sm px-3 py-1 m-1 rounded-2xl border border-success text-success"
+                            > Полный доступ
+                        </div>
+                        <div 
+                            v-else
                             v-for="(itm, index) in item.allowedPathes" 
                             :key="index"
-                            class="text-sm text-white bg-warning px-3 py-1 m-1 rounded-2xl "
+                            class="text-sm px-3 py-1 m-1 rounded-2xl border border-warning text-warning"
                             >
                             {{ itm.name }}
                         </div>
