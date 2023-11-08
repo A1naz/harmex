@@ -24,7 +24,7 @@ export interface IUser {
     uuid: string,
     uuidCompany: string,
     acesses: string[],
-    roles: string,
+    roles: UserRoles[],
     tabs: string,
     newEmail: string,
     emailConfirmed: string,
@@ -39,11 +39,11 @@ export interface IUser {
 
 export interface Client extends Pick<
     IUser, 
-    "email" | "username" | "uuid" | "telegram" | "balance" | 
-    "firstName" | "lastName" | "telegramUserId" | "wbApiKeys" | 
-    "partner" | "isBanned"
+    "email" | "username" | "uuid" | "telegram" | "balance" | "firstName" | 
+    "lastName" | "telegramUserId" | "wbApiKeys" | "partner" | "isBanned"
     > {
         hasPassword: boolean,
+        role: string,
         mmenuItems: MenuSection[],
         allowedPathes: OptionsMulti[]
 }
@@ -52,6 +52,12 @@ export interface Partner{
     balance: number,
     refCount: number,
     rewardPercent: number,
+}
+
+export enum UserRoles {
+    admin = 'admin',
+    user = 'user',
+    staff = 'staff'
 }
 
 export interface OptionsMulti {

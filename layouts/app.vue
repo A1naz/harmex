@@ -123,26 +123,32 @@ function scrollToTop() {
                       i
                     </NuxtLink>
                   </div>
-                  <div class="tooltip" data-tip="Профиль">
-                    <NuxtLink
-                      :class="{
-                        'bg-neutral-focus': route.path !== '/profile',
-                        'text-white': route.path === '/profile',
-                      }"
-                      to="/profile"
-                      class="btn btn-sm btn-neutral btn-circle relative hover:bg-neutral"
+                  <div 
+                    v-if="store.client.role !== UserRoles.staff" 
+                    class="tooltip" 
+                    data-tip="Профиль"
                     >
-                      <IconCSS name="fluent:person-24-filled" size="24" />
-                    </NuxtLink>
+                        <NuxtLink
+                        :class="{
+                            'bg-neutral-focus': route.path !== '/profile',
+                            'text-white': route.path === '/profile',
+                        }"
+                        to="/profile"
+                        class="btn btn-sm btn-neutral btn-circle relative hover:bg-neutral"
+                        >
+                        <IconCSS name="fluent:person-24-filled" size="24" />
+                        </NuxtLink>
                   </div>
                 </div>
               </div>
             </div>
-            <div>
-              <label
-                for="payment-modal"
-                class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
-              >
+            <div
+               v-if="store.client.role !== UserRoles.staff" 
+                >
+                <label
+                    for="payment-modal"
+                    class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
+                >
                 Пополнить
               </label>
             </div>

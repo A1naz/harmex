@@ -1,7 +1,7 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import MenuBuilder from '~/server/utils/menuBuilder'
-import { Client } from '~/data/types'
+import { Client, UserRoles } from '~/data/types'
 
 
 export default eventHandler(async (event) => {
@@ -28,7 +28,7 @@ export default eventHandler(async (event) => {
     await user.save()
   }
 
-  const { menu, allowedPathes} = user.uuidCompany 
+  const { menu, allowedPathes} = user.roles[0] == UserRoles.staff 
     ? MenuBuilder.filteredAccess(user.acesses) 
     : MenuBuilder.filteredAccess()
 
@@ -45,6 +45,7 @@ export default eventHandler(async (event) => {
     wbApiKeys: user.wbApiKeys?.length ? user.wbApiKeys : [],
     partner: user.partner,
     isBanned: user.isBanned,
+    role: user.roles[0],
     mmenuItems: menu,
     allowedPathes: allowedPathes
   }

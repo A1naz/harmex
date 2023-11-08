@@ -51,7 +51,7 @@ export default eventHandler(async (event) => {
     acesses: allowedPathes,
     uuidCompany: session.uuid,
     password: hash,
-    roles: ['user'],
+    roles: [UserRoles.staff],
     uuid: uuid(),
   })
 
