@@ -50,7 +50,7 @@ function openEditModal(isCreate: boolean, uuid?: string, index?: number){
     titleModal.value = isCreate ? 'Создать сотрудника' : 'Редактирование сотрудника'
     editModalConfig.value = isCreate ? configModalCreate : configModalEdit
     selectedUser.value = isCreate ? {} : {...myTeam.value.find((user: any) => user.uuid == uuid)}
-    selectedIndex.value = isCreate ? 'new-user' : index
+    selectedIndex.value = isCreate ? 10000 : index
     modalEdit.value = true
 }
 
