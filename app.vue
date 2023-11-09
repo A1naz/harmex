@@ -22,7 +22,7 @@ if (status.value === 'authenticated') await store.getClient()
 const app = ref()
 
 watch(client, (newClient) => {
-  store.setClient(newClient?.client as object)
+  store.setClient(newClient?.client as Client)
 })
 </script>
 

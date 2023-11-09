@@ -61,7 +61,7 @@ export enum UserRoles {
 }
 
 export interface OptionsMulti {
-    value: any,
+    value: string,
     name: string
 }
 

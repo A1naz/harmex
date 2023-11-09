@@ -19,7 +19,7 @@ async function logout() {
   await signOut({
     callbackUrl: '/auth',
   })
-  store.setClient({})
+  store.setClient()
 }
 
 onMounted(() => {

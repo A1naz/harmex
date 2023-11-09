@@ -35,8 +35,12 @@ export const useMainStore = defineStore('main', {
         }
     },
 
-    setClient(client: Client) {
-      this.client = client
+    setClient(client?: Client) {
+        if(client){
+            this.client = client
+        } else {
+            this.client = {} as Client
+        }
     },
   },
 })

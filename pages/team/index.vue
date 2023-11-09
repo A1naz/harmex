@@ -166,7 +166,6 @@ const configColumns = [
     </p>
 
     <div class="flex justify-end mb-8 mt-6 items-center">
-
         <Button 
             class="btn btn-sm btn-primary m-1" 
             @click="openEditModal(true)"
@@ -174,8 +173,6 @@ const configColumns = [
             <Icon name="fluent:add-24-filled" size="24" />
             Добавить сотрудника
         </Button>
-
-        <!-- <Icon name="" size="24" /> -->
     </div>
 
     <div v-if="myTeam.length">
@@ -183,7 +180,6 @@ const configColumns = [
             v-if="width > 1024"
             :value="myTeam" 
             :rowsPerPageOptions="[5, 10, 20, 50]"
-            class="bg-base-200 hidden lg:block overflow-visible"
             >
             <Column
                 v-for="col of configColumns"
@@ -227,8 +223,6 @@ const configColumns = [
             </Column>
         </DataTable>
 
-
-
         <ul v-else class="w-full lg:hidden">
         <li
           v-for="(item, index) in myTeam"
@@ -267,7 +261,7 @@ const configColumns = [
                 <dt class="mb-1 text-gray-500 text-sm dark:text-gray-400">
                   Разрешения
                 </dt>
-                <dd class="font-semibold text-sm">
+                <dd class="font-semibold">
                     <div class="flex flex-wrap" >
                         <div 
                             v-if="item.allowedPathes.length == multiOptions.length"
