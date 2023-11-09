@@ -1,9 +1,11 @@
 import { getServerSession } from '#auth'
 import { findProductCard } from '@/server/lib/helpers'
-const elPerPage = 50
-export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
 
+const elPerPage = 50
+
+export default eventHandler(async (event) => {
+    
+  const session = (await getServerSession(event)) as any
   if (!session) return sendRedirect(event, '/auth', 302)
 
   const { article, limit, page } = getQuery(event)

@@ -1,14 +1,10 @@
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { PartnerWithdraw } from '~/server/lib/models/PartnerWithdraw'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
+
   const { amount, card, fio, withdrawType } = await readBody(event)
 
   if (withdrawType === 'card') {

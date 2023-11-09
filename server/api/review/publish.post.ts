@@ -1,20 +1,15 @@
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
 import { Review } from '@/server/lib/models/Review'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
 
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
-  const body = await readBody(event)
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+    const user = await getAdminEntity(event)
+    if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { buyoutuuid, deliveryid, rating, text, photos, date } = body
+    const body = await readBody(event)
+    const { buyoutuuid, deliveryid, rating, text, photos, date } = body
+
   if (text) {
     if (text.length < 10 || text.length > 1000) {
       throw createError({

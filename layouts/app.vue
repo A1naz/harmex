@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+
 const store = useMainStore()
 const colorMode = useColorMode()
 
@@ -18,7 +19,7 @@ async function logout() {
   await signOut({
     callbackUrl: '/auth',
   })
-  store.setClient({})
+  store.setClient()
 }
 
 onMounted(() => {
@@ -39,6 +40,7 @@ const handleScroll = (event: any) => {
 function scrollToTop() {
   drawerContent.value.scrollTop = 0
 }
+
 </script>
 
 <template>
@@ -121,99 +123,49 @@ function scrollToTop() {
                       i
                     </NuxtLink>
                   </div>
-                  <div class="tooltip" data-tip="Профиль">
-                    <NuxtLink
-                      :class="{
-                        'bg-neutral-focus': route.path !== '/profile',
-                        'text-white': route.path === '/profile',
-                      }"
-                      to="/profile"
-                      class="btn btn-sm btn-neutral btn-circle relative hover:bg-neutral"
+                  <div 
+                    v-if="store.client.role !== UserRoles.staff" 
+                    class="tooltip" 
+                    data-tip="Профиль"
                     >
-                      <IconCSS name="fluent:person-24-filled" size="24" />
-                    </NuxtLink>
+                        <NuxtLink
+                        :class="{
+                            'bg-neutral-focus': route.path !== '/profile',
+                            'text-white': route.path === '/profile',
+                        }"
+                        to="/profile"
+                        class="btn btn-sm btn-neutral btn-circle relative hover:bg-neutral"
+                        >
+                        <IconCSS name="fluent:person-24-filled" size="24" />
+                        </NuxtLink>
                   </div>
                 </div>
               </div>
             </div>
-            <div>
-              <label
-                for="payment-modal"
-                class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
-              >
+            <div
+               v-if="store.client.role !== UserRoles.staff" 
+                >
+                <label
+                    for="payment-modal"
+                    class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
+                >
                 Пополнить
               </label>
             </div>
           </div>
         </div>
-        <h3 class="opacity-60 text-xs p-3 px-8 uppercase">
-          Продвижение товаров
-        </h3>
-        <SidebarItem
-          title="Выкупы"
-          icon="fluent:payment-24-filled"
-          href="/buyouts"
-        />
-        <SidebarItem
-          title="Доставки"
-          icon="fluent:box-24-filled"
-          href="/delivery"
-        />
-        <SidebarItem
-          title="Отзывы"
-          icon="fluent:comment-24-filled"
-          href="/reviews"
-        />
-        <h3 class="opacity-60 text-xs p-3 px-8 uppercase">
-          Улучшение репутации
-        </h3>
-        <SidebarItem
-          title="Лайки на отзывы"
-          icon="fluent:thumb-like-24-filled"
-          href="/likes"
-        />
-        <SidebarItem
-          title="Лайки на товар / бренд"
-          icon="fluent:heart-24-filled"
-          href="/productlikes"
-        />
-        <SidebarItem
-          title="Вопросы"
-          icon="fluent:chat-bubbles-question-24-filled"
-          href="/questions"
-        />
-        <SidebarItem
-          title="Корзина"
-          icon="fluent:cart-24-filled"
-          href="/cart"
-        />
-        <SidebarItem
-          title="Автоответчик на отзывы"
-          icon="fluent:phone-chat-24-filled"
-          href="/autoanswer"
-        />
 
-        <h3 class="opacity-60 text-xs p-3 px-8 uppercase">Дополнительно</h3>
-        <SidebarItem
-          icon="fluent:history-24-filled"
-          title="История платежей"
-          href="/paymenthistory"
-        />
-        <SidebarItem
-          icon="fluent:document-bullet-list-24-filled"
-          title="Отчеты по выкупам"
-          href="/reports"
-        />
-        <SidebarItem
-          icon="fluent:people-team-24-filled"
-          title="Партнерская программа"
-          href="/partner"
-        />
-        <SidebarItem
-          icon="mdi:google-analytics"
-          title="Аналитика"
-          href="/stats?type=all&period=today"
-        />
+        <section v-for="section in store.client.mmenuItems" >
+            <h3 class="opacity-60 text-xs p-3 px-8 uppercase">{{ section.subTitle }}</h3>
+
+            <SidebarItem
+                v-for="(item, index) in section.items"
+                :key="index"
+                :title="item.title"
+                :icon="item.icon"
+                :href="item.path"
+                />   
+        </section>
 
         <div class="mt-auto">
           <div class="w-full hover:cursor-default p-0 block mt-8">

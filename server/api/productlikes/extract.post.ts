@@ -15,12 +15,12 @@ function isValidUrl(urlString: string) {
   return !!urlPattern.test(urlString)
 }
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
 
-  if (!session) return sendRedirect(event, '/auth', 302)
+    const session = (await getServerSession(event)) as any
+    if (!session) return sendRedirect(event, '/auth', 302)
 
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user) return sendRedirect(event, '/auth', 302)
+    const user = await User.findOne({ uuid: session.uuid })
+    if (!user) return sendRedirect(event, '/auth', 302)
 
   const { url } = await readBody(event)
   if (!isValidUrl(url)) {

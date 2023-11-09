@@ -1,7 +1,4 @@
 import ExcelJS from 'exceljs'
-
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
 
@@ -10,14 +7,9 @@ const keys = Object.keys as <T>(obj: T) =>
 
 export default eventHandler(async (event) => {
   try {
-    const session = (await getServerSession(event)) as any
 
-    if (!session)
-      return sendRedirect(event, '/auth', 302)
-
-    const user = await User.findOne({ uuid: session.uuid })
-    if (!user)
-      return sendRedirect(event, '/auth', 302)
+    const user = await getAdminEntity(event)
+    if (!user) return sendRedirect(event, '/auth', 302)
 
     const runtimeConfig = useRuntimeConfig()
     const deliveries = await Delivery.find({ user }).sort({ _id: -1 })

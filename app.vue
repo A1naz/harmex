@@ -4,10 +4,11 @@ import { useMainStore } from '@/stores/main'
 
 const { notify } = useNotification()
 const colorMode = useColorMode()
-
 const { status, data } = useAuth()
-
 const store = useMainStore()
+const route = useRoute()
+const app = ref()
+
 const {
   pending,
   data: client,
@@ -19,10 +20,15 @@ useIntervalFn(() => {
 }, 1000 * 60)
 if (status.value === 'authenticated') await store.getClient()
 
-const app = ref()
+const accessChecker = computed(()=> {
+    if(store.client.role == UserRoles.staff){
+        return store.client.allowedPathes.find(acc => acc.value == '/' + route.path.replace(/^\/([^\/]*).*$/, '$1')) ? true : false
+    }
+    return true
+})
 
 watch(client, (newClient) => {
-  store.setClient(newClient?.client as object)
+  store.setClient(newClient?.client as Client)
 })
 </script>
 
@@ -50,7 +56,8 @@ watch(client, (newClient) => {
         :color="colorMode.value === 'light' ? '#570df8' : '#A56BF7'"
       />
       <SeoKit />
-      <NuxtPage />
+      <NuxtPage v-if="accessChecker" />
+      <Hero v-else />
       <div class="my-12 md:hidden"></div>
     </NuxtLayout>
   </div>
@@ -58,6 +65,7 @@ watch(client, (newClient) => {
 
 <style lang="css">
 @import '@/assets/style/datepicker.css';
+
 .scroll-primary {
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 }
