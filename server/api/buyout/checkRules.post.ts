@@ -18,9 +18,8 @@ interface Item {
 }
 
 export default eventHandler(async (event) => {
-
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
   const products: Item[] = body
@@ -29,23 +28,30 @@ export default eventHandler(async (event) => {
     message: '',
   }
   for (const item of products) {
-    const rules = item.rules.map(rule => rule.id)
+    const rules = item.rules.map((rule) => rule.id)
     let sort = 'popular'
 
-    if (rules.includes(11))
-      sort = 'priceup'
-    if (rules.includes(12))
-      sort = 'pricedown'
-    if (rules.includes(13))
-      sort = 'newly'
-    if (rules.includes(14))
-      sort = 'benefit'
-    if (rules.includes(15))
-      sort = 'rate'
+    const curDate = new Date()
+    const firstDate = new Date(item.dateRange[0])
+
+    if (firstDate < curDate) {
+      result.success = false
+      result.message = `Дата ${item.article} не может быть меньше текущей по МСК`
+    }
+
+    if (rules.includes(11)) sort = 'priceup'
+    if (rules.includes(12)) sort = 'pricedown'
+    if (rules.includes(13)) sort = 'newly'
+    if (rules.includes(14)) sort = 'benefit'
+    if (rules.includes(15)) sort = 'rate'
 
     if (rules.includes(5) || rules.includes(9)) {
       for (const query of item.searchQuery) {
-        const searchResult = await findPositionByQuery(query.value, item.article, sort)
+        const searchResult = await findPositionByQuery(
+          query.value,
+          item.article,
+          sort
+        )
         if (!searchResult.found) {
           result.success = false
           result.message = `Товар ${item.article} не найден в поисковой выдаче по запросу ${query.value}`
@@ -55,7 +61,11 @@ export default eventHandler(async (event) => {
     }
     if (rules.includes(8)) {
       for (const query of item.searchQuery) {
-        const searchResult = await findPositionByQuery(query.value, item.article, sort)
+        const searchResult = await findPositionByQuery(
+          query.value,
+          item.article,
+          sort
+        )
         if (!searchResult.found) {
           result.success = false
           result.message = `Товар ${item.article} не найден в поисковой выдаче по запросу ${query.value}`
