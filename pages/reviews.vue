@@ -85,7 +85,6 @@ async function getReviews(status: string, skip: number, limit: number) {
   }
 }
 const openedPhoto = ref('')
-reviews.value = await getReviews(status.value as string, 0, 25)
 
 const selectedUUID = ref('')
 
@@ -105,9 +104,7 @@ async function findReviews(value: string, type: string) {
       },
     })
     if (data.value) reviews.value = data.value
-  } 
-  
-  else {
+  } else {
     const { data, error } = await useFetch('/api/review/searchReviews', {
       query: {
         string: value,
@@ -216,10 +213,13 @@ onMounted(async () => {
         const uuid = route.query?.uuid
         if(uuid && typeof uuid == 'string') {
             await router.push("/reviews?status=published")
+            status.value = 'published'
             search.text = uuid
             search.type = 'uuidReview'
             onSearchInput()
         }
+    } else {
+        reviews.value = await getReviews(status.value as string, 0, 25)
     }
 })
 
