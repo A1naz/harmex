@@ -7,19 +7,55 @@ const props = defineProps({
 })
 const emit = defineEmits(['close', 'publish'])
 
-const currency = useCurrency()
-
 const closeButton = ref<HTMLElement>()
-const { data, error } = await useFetch('api/partner/paymenthistory')
-const history = ref(data.value as any[])
+
+const history = ref([]) as any
 const { $dayjs } = useNuxtApp()
 
-const now = useNow()
 onKeyStroke('Escape', (e) => {
   e.preventDefault()
   closeButton.value?.click()
   emit('close')
 })
+
+
+const limit = ref(20)
+const skip = ref(0)
+
+const end = ref(false)
+const target = ref(null)
+const targetIsVisible = ref(false)
+const { stop } = useIntersectionObserver(
+  target,
+  ([{ isIntersecting }], observerElement) => {
+    targetIsVisible.value = isIntersecting
+  },
+)
+
+async function getHistory(){
+      const { data, error } = await useFetch('/api/partner/paymenthistory', {
+      method: 'GET',
+      query: {
+        limit: limit.value,
+        skip: skip.value,
+      },
+      headers: useRequestHeaders(['cookie']) as HeadersInit,
+    })
+    if ((data.value as any)?.length === 0) {
+      end.value = true
+      return
+    }
+    history.value = [...history.value, ...data.value! as any]
+    skip.value += limit.value
+}
+
+await getHistory()
+
+watch(targetIsVisible, async (isVisible) => {
+  if (!end.value && isVisible && history.value.length >= limit.value) await getHistory()
+})
+
+
 </script>
 
 <template>
@@ -31,21 +67,22 @@ onKeyStroke('Escape', (e) => {
     class="modal"
   >
     <div class="modal-box w-10/12 max-w-4xl">
-      <label
-        for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
-        @click="$emit('close')"
-      >✕</label>
-      <div class="flex justify-between gap-2 items-center py-2">
-        <h3 class="text-lg font-bold mb-2">
-          История баланса
-        </h3>
-      </div>
+        <label
+            for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
+            @click="$emit('close')"
+        >✕</label>
+        <div class="flex justify-between gap-2 items-center py-2">
+            <h3 class="text-lg font-bold mb-2">
+            История баланса
+            </h3>
+        </div>
 
       <div class="overflow-x-auto">
         <table class="table table-sm">
           <!-- head -->
           <thead>
             <tr>
+              <th>№</th>
               <th>Дата</th>
               <th>Сумма</th>
               <th>Тип</th>
@@ -55,11 +92,13 @@ onKeyStroke('Escape', (e) => {
           <tbody>
             <!-- row 1 -->
             <tr v-for="(item, index) in history" :key="index">
+              <td>{{ index+1 }}</td>
               <td>{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
               <td>{{ item.amount }} руб.</td>
               <td>{{ item.type }}</td>
               <td>{{ item.description }}</td>
             </tr>
+            <div ref="target" class="flex justify-center items-center h-4" />
           </tbody>
         </table>
       </div>

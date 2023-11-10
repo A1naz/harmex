@@ -5,8 +5,16 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const history = await PartnerPaymentHistory.find({ user }).sort({ _id: -1 }).limit(10)
+  const { skip, limit } = getQuery(event)
+
+  const history = await PartnerPaymentHistory
+                            .find({ user })
+                            .sort({ _id: -1 })
+                            .limit(limit as number)
+                            .skip(skip as number)
+
   if (!history) return []
 
   return history
 })
+
