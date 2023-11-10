@@ -6,6 +6,7 @@ definePageMeta({
   auth: true,
   title: 'Отзывы',
 })
+
 const route = useRoute()
 const end = ref(false)
 const skip = ref(25)
@@ -104,7 +105,9 @@ async function findReviews(value: string, type: string) {
       },
     })
     if (data.value) reviews.value = data.value
-  } else {
+  } 
+  
+  else {
     const { data, error } = await useFetch('/api/review/searchReviews', {
       query: {
         string: value,
@@ -120,7 +123,7 @@ async function findReviews(value: string, type: string) {
 
 const findReviewsDebounced = useDebounceFn(findReviews, 1000)
 
-async function onSearchInput(event: Event) {
+function onSearchInput() {
   autoTarget.value = false
   search.loading = true
   findReviewsDebounced(search.text, search.type)
@@ -207,6 +210,19 @@ async function removeReview() {
     })
   }
 }
+
+onMounted(async () => {
+    if (route.query?.uuid) {
+        const uuid = route.query?.uuid
+        if(uuid && typeof uuid == 'string') {
+            await router.push("/reviews?status=published")
+            search.text = uuid
+            search.type = 'uuidReview'
+            onSearchInput()
+        }
+    }
+})
+
 </script>
 
 <template>
@@ -307,6 +323,10 @@ async function removeReview() {
         <select v-model="search.type" class="select select-bordered select-sm">
           <option value="article">Артикул</option>
           <option value="uuid">ID выкупа</option>
+          <option 
+            v-if="route.query.status !== 'available'" 
+            value="uuidReview"
+            >ID отзыва</option>
         </select>
         <div class="relative flex items-center flex-grow-0 w-full">
           <input
@@ -314,7 +334,7 @@ async function removeReview() {
             type="text"
             class="input input-sm input-bordered"
             placeholder="Поиск"
-            @input="onSearchInput($event)"
+            @input="onSearchInput()"
           />
 
           <span
