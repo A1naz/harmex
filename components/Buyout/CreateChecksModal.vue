@@ -19,9 +19,14 @@ const loading = ref(false)
 const success = ref(false)
 async function checkBuyouts() {
   loading.value = true
+  const userOffsetMinutes = new Date().getTimezoneOffset()
+  const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const { data, error } = await useFetch('/api/buyout/checkRules', {
     method: 'POST',
     body: JSON.stringify(store.createProducts),
+    query: {
+      userTimezoneOffsetHours: userTimezoneOffsetHours - 3,
+    },
   })
   if (error.value) {
     success.value = false

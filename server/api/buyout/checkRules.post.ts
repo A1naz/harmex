@@ -22,6 +22,10 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
+  const query = getQuery(event)
+  const { userTimezoneOffsetHours } = query
+  console.log(userTimezoneOffsetHours);
+  
   const products: Item[] = body
   const result = {
     success: true,
@@ -32,6 +36,7 @@ export default eventHandler(async (event) => {
     let sort = 'popular'
 
     const curDate = new Date()
+    curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))
     const firstDate = new Date(item.dateRange[0])
 
     if (firstDate < curDate) {
