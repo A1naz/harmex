@@ -14,10 +14,10 @@ export default eventHandler(async (event) => {
     reviewed: false,
   }
 
-  if (status && status == 'all') {
-    delete options.status
-    delete options.reviewed
-  }
+//   if (status && status == 'all') {
+//     delete options.status
+//     delete options.reviewed
+//   }  фильтр Все
 
   const readyForReview = await Delivery.find(options)
     .sort({
@@ -25,14 +25,13 @@ export default eventHandler(async (event) => {
     })
     .skip((skip as number) || 0)
     .limit((limit as number) || 0)
+
   if (!readyForReview) return []
+  
   const format = await Promise.all(
     readyForReview.map(async (delivery) => {
       const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
-      if (!buyout) {
-        return undefined
-      }
-
+      if (!buyout) return undefined
       return {
         buyoutuuid: buyout.uuid,
         sex: delivery.data8 ? delivery.data8 : buyout.gender,

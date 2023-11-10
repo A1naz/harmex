@@ -172,9 +172,16 @@ function getHistoryType(type: string) {
   return result
 }
 const router = useRouter()
-function openBuyout(uuid: string) {
+
+function openBuyout(data: any) {
+    const uuid = data.basisoperation.slice(data.basisoperation.indexOf('#') + 1, data.basisoperation.length)
   router.push(`/buyouts?uuid=${uuid}`)
 }
+function openReview(data: any) {
+    const uuid = data.basisoperation.slice(data.basisoperation.indexOf(' ') + 1, data.basisoperation.length)
+    router.push(`/reviews?uuid=${uuid}`)
+}
+
 </script>
 
 <template>
@@ -280,7 +287,14 @@ function openBuyout(uuid: string) {
             <div v-if="data.type === 'buyouts' || data.type === 'buyouts service'">
               <label
                 class="link link-hover hover:text-primary truncate z-10"
-                @click="openBuyout(data.basisoperation.slice(data.basisoperation.indexOf('#') + 1, data.basisoperation.length))"
+                @click="openBuyout(data)"
+              >
+                {{ data.basisoperation }}</label>
+            </div>
+            <div v-else-if="data.type === 'reviews'">
+              <label
+                class="link link-hover hover:text-primary truncate z-10"
+                @click="openReview(data)"
               >
                 {{ data.basisoperation }}</label>
             </div>
