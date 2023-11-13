@@ -26,11 +26,11 @@ export default eventHandler(async (event) => {
     })
 
     sheet.columns = [
-        { header: 'ID отзыва', key: '_id', font: { bold: true } },
-        { header: 'Дата публикации', key: 'date', font: { bold: true } },
-        { header: 'Статус', key: 'status', font: { bold: true } },
-        { header: 'Текст', key: 'text', font: { bold: true } },
-        { header: 'Рейтинг', key: 'rating', font: { bold: true } },
+        { header: 'ID отзыва', key: '_id', font: { bold: true }, width: 25 },
+        { header: 'Дата публикации', key: 'date', font: { bold: true }, width: 16 },
+        { header: 'Статус', key: 'status', font: { bold: true }, width: 16 },
+        { header: 'Текст', key: 'text', font: { bold: true }, width: 16 },
+        { header: 'Рейтинг', key: 'rating', font: { bold: true }, width: 16 },
     ]
 
     sheet.addRows(reviews)
