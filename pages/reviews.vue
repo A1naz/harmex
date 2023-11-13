@@ -209,7 +209,7 @@ async function removeReview() {
 }
 
 onMounted(async () => {
-    if (route.query?.uuid) {
+    if (route.query?.uuid && route.query?.uuid.length > 0 ) {
         const uuid = route.query?.uuid
         if(uuid && typeof uuid == 'string') {
             await router.push("/reviews?status=published")
@@ -219,6 +219,7 @@ onMounted(async () => {
             onSearchInput()
         }
     } else {
+        status.value = 'available'
         reviews.value = await getReviews(status.value as string, 0, 25)
     }
 })
@@ -317,32 +318,37 @@ onMounted(async () => {
         </NuxtLink> -->
       </div>
     </div>
-    <div class="search flex justify-between items-center mb-8 flex-wrap gap-2">
-      <div />
-      <div class="flex gap-1 items-center">
-        <select v-model="search.type" class="select select-bordered select-sm">
-          <option value="article">Артикул</option>
-          <option value="uuid">ID выкупа</option>
-          <option 
-            v-if="route.query.status !== 'available'" 
-            value="uuidReview"
-            >ID отзыва</option>
-        </select>
-        <div class="relative flex items-center flex-grow-0 w-full">
-          <input
-            v-model="search.text"
-            type="text"
-            class="input input-sm input-bordered"
-            placeholder="Поиск"
-            @input="onSearchInput()"
-          />
-
-          <span
-            v-if="search.loading"
-            class="absolute right-2 loading loading-spinner loading-xs p-2"
-          />
+    <div class="search flex justify-between content-center my-4 flex-wrap gap-2">
+        <div class="flex gap-1 items-center">
+            <ExportXls 
+                api="/api/review/export"
+                fileName="TOPVTOP Доступные отзывы"
+                :isVisible="true"
+            />
         </div>
-      </div>
+        <div class="flex gap-1 items-center">
+            <select v-model="search.type" class="select select-bordered select-sm">
+                <option value="article">Артикул</option>
+                <option value="uuid">ID выкупа</option>
+                <option 
+                    v-if="route.query.status !== 'available'" 
+                    value="uuidReview"
+                    >ID отзыва</option>
+            </select>
+            <div class="relative flex items-center flex-grow-0 w-full">
+                <input
+                    v-model="search.text"
+                    type="text"
+                    class="input input-sm input-bordered"
+                    placeholder="Поиск"
+                    @input="onSearchInput()"
+                    />
+                <span
+                    v-if="search.loading"
+                    class="absolute right-2 loading loading-spinner loading-xs p-2"
+                    />
+            </div>
+        </div>
     </div>
     <div v-if="reviews?.length">
       <div v-if="status === 'available'" class="cards grid grid-cols-1 gap-4">

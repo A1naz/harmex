@@ -35,7 +35,7 @@ async function exportToXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', props.fileName)
+  fileLink.setAttribute('download', `${props.fileName}.xlsx`)
   document.body.appendChild(fileLink)
   fileLink.click()
   btnLoading.value = false
@@ -44,7 +44,7 @@ async function exportToXLS() {
 </script>
 
 <template>
-    <div v-if="isVisible" class="export">
+    <div v-if="isVisible" >
         <ClientOnly>
             <DateRangePicker 
                 v-model="exportDates" 
