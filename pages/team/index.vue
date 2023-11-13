@@ -162,7 +162,7 @@ const configColumns = [
 
     <h1 class="text-2xl font-bold mt-4">Моя команда</h1>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Делигируйте задачи между вашими сотрудниками для эффективного продвижения товаров.
+        Делегируйте задачи между вашими сотрудниками для эффективного продвижения товаров.
     </p>
 
     <div class="flex justify-end mb-8 mt-6 items-center">
