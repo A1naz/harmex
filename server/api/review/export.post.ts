@@ -31,7 +31,6 @@ export default eventHandler(async (event) => {
         { header: 'Статус', key: 'status', font: { bold: true } },
         { header: 'Текст', key: 'text', font: { bold: true } },
         { header: 'Рейтинг', key: 'rating', font: { bold: true } },
-        { header: 'Фото', key: 'images', font: { bold: true } },
     ]
 
     sheet.addRows(reviews)
