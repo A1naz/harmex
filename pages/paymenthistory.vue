@@ -46,7 +46,7 @@ async function getPaymentHistory() {
 }
 await getPaymentHistory()
 
-const exportDates = ref([])
+
 async function selectType(e: Event) {
   const target = e.target as HTMLSelectElement
   filterType.value = target.value
@@ -102,21 +102,7 @@ async function selectFilterDate(e: Event) {
   })
   history.value = data.value
 }
-async function exportToXLS() {
-  const { data } = await useFetch('/api/paymenthistory/export', {
-    method: 'POST',
-    body: {
-      exportDates: exportDates.value,
-    },
-    responseType: 'blob',
-  })
-  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
-  const fileLink = document.createElement('a')
-  fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Финансовый отчет услуг TOPVTOP.xlsx')
-  document.body.appendChild(fileLink)
-  fileLink.click()
-}
+
 function openInfoModal() {
   store.infoModal = true
   store.infoType = 'paymenthistory'
@@ -198,15 +184,11 @@ function openReview(data: any) {
     <div class="flex gap-4 mb-8 mt-6 items-center justify-between flex-wrap">
       <div class="flex items-center gap-2">
         <div class="flex gap-4 items-center">
-          <div v-if="history.length" class="export">
-            <ClientOnly>
-              <DateRangePicker v-model="exportDates" save-button=" в Excel" :start-date="new Date()" @select="exportToXLS">
-                <button class="btn btn-sm btn-primary">
-                  Экспорт
-                </button>
-              </DateRangePicker>
-            </ClientOnly>
-          </div>
+            <ExportXls 
+                api="/api/paymenthistory/export"
+                fileName="Финансовый отчет услуг TOPVTOP.xlsx"
+                :isVisible="history.length ? true : false"
+            />
         </div>
         <select class="select select-bordered select-sm" @change="selectType">
           <option value="all">
