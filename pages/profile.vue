@@ -1,5 +1,6 @@
 <!-- eslint-disable eqeqeq -->
 <script setup lang="ts">
+import { notify } from '@kyvg/vue3-notification'
 definePageMeta({
   layout: 'app',
   auth: true,
@@ -7,9 +8,12 @@ definePageMeta({
 })
 const warning = ref('')
 
+const isChatBotEnabled = ref(false)
+
 const store = useMainStore()
+
 const wbApiKeys = ref([''])
-const form = reactive({
+const form: any = reactive({
   firstName: '',
   lastName: '',
   email: '',
@@ -31,7 +35,7 @@ const { start, stop } = useTimeoutFn(
   3000,
   { immediate: false }
 )
-const initialForm = reactive({
+const initialForm: any = reactive({
   firstName: '',
   lastName: '',
   email: '',
@@ -53,9 +57,9 @@ onMounted(async () => {
   form.email = store.client.email
   form.username = store.client.username
 })
-if (!store.checkTelegramId())
-  warning.value =
-    'Пожалуйста перепривяжите Телеграм для корректной работы портала.'
+// if (!store.checkTelegramId())
+// warning.value =
+//   'Пожалуйста перепривяжите Телеграм для корректной работы портала.'
 const headers = useRequestHeaders(['cookie']) as HeadersInit
 const disabledSaveButton = computed(() => {
   return (
@@ -87,12 +91,11 @@ async function updatePassword() {
       location.reload()
     }, 2000)
   } else {
-    
     if (data.value.newPassword) {
       alert.message = 'Пароль успешно установлен.'
     } else
-    alert.message = 'Подтверждение смены пароля было отправлено на ваш email.'
-    
+      alert.message = 'Подтверждение смены пароля было отправлено на ваш email.'
+
     alert.show = true
     alert.type = 'success'
   }
@@ -182,6 +185,125 @@ function onTelegramLink(data: any) {
     alert.type = 'error'
   }
   start()
+}
+
+const botNotifications: any = ref([
+  {
+    type: 1,
+    text: 'Ошибка при пополнении баланса',
+    isEnabled: false,
+  },
+  {
+    type: 2,
+    text: 'Вы успешно пополнили баланс',
+    isEnabled: false,
+  },
+  {
+    type: 3,
+    text: 'Выкуп ушел на паузу',
+    isEnabled: false,
+  },
+  {
+    type: 4,
+    text: 'Выкуп ушел в архив',
+    isEnabled: false,
+  },
+  {
+    type: 5,
+    text: 'Не хватает баланса для совершения услуги',
+    isEnabled: false,
+  },
+  {
+    type: 6,
+    text: 'Штраф за не забарнный товар',
+    isEnabled: false,
+  },
+  {
+    type: 7,
+    text: 'Начислено партнерское вознаграждение',
+    isEnabled: false,
+  },
+  {
+    type: 8,
+    text: 'Новый реферал в 1-й линии',
+    isEnabled: false,
+  },
+  {
+    type: 9,
+    text: 'Новый реферал в 2-й линии',
+    isEnabled: false,
+  },
+  {
+    type: 10,
+    text: 'Выкуп забран с ПВЗ: ID, адрес, Имя',
+    isEnabled: false,
+  },
+])
+
+async function getTGBotInfo() {
+  const { data, error }: any = await useFetch('/api/tgBot/getTGBotInfo', {
+    method: 'GET',
+  })
+
+  if (data.value) {
+    isChatBotEnabled.value = data.value.isEnabled
+    if (data.value.settings && data.value.settings.length > 0) {
+      botNotifications.value.forEach((el: any) => {
+        data.value.settings.forEach((setting: any) => {
+          if (el.type === setting.type) {
+            el.isEnabled = true
+          }
+        })
+      })
+    }
+  }
+}
+if (store.client.telegram) {
+  await getTGBotInfo()
+}
+
+async function setChatBot() {
+  if (!store.client.telegram) {
+    notify({
+      type: 'error',
+      title: 'Для включения чат-бота необходимо привязать Telegram',
+    })
+    isChatBotEnabled.value = false
+    return
+  }
+
+  const { data, error }: any = await useFetch('/api/tgBot/setChatBot', {
+    method: 'GET',
+    query: {
+      isEnabled: isChatBotEnabled.value,
+    },
+  })
+
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: data.value.message,
+    })
+  }
+}
+
+async function setChatBotSettings() {
+  const trueSettings: Array<any> = []
+  botNotifications.value.forEach((el: any) => {
+    if (el.isEnabled) {
+      trueSettings.push({ type: el.type, text: el.text })
+    }
+  })
+  const { data, error }: any = await useFetch('/api/tgBot/setChatBotSettings', {
+    method: 'POST',
+    body: {
+      settings: trueSettings,
+    },
+  })
+
+  if (data.value) {
+    window.location.reload()
+  }
 }
 </script>
 
@@ -385,7 +507,63 @@ function onTelegramLink(data: any) {
         </button>
       </div>
     </section>
+    <section>
+      <div
+        class="profile-options mt-14 flex flex-col justify-end items-end gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
+      >
+        <div class="self-start description-container xl:basis-1/3">
+          <div class="heading relative">Настройки чат-бота</div>
+        </div>
+        <div>
+          <div class="flex flex-col gap-2 w-full">
+            <div class="form-control w-52">
+              <label class="cursor-pointer label">
+                <span class="label-text">Включить чат-бота</span>
+                <input
+                  v-model="isChatBotEnabled"
+                  @change="setChatBot"
+                  type="checkbox"
+                  class="toggle toggle-primary"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex justify-end gap-2 w-full"
+        v-if="isChatBotEnabled && store.client.telegram"
+      >
+        <div class="flex flex-col gap-2 w-full">
+          <div
+            class="flex flex-wrap justify-end md:justify-start mt-4 mr-3 mb-2 mb:mr-0"
+          >
+            <div v-for="notification in botNotifications">
+              <div class="form-control md:w-80 w-full mt-2 mr-2">
+                <label class="cursor-pointer label">
+                  <span class="label-text mr-1">{{ notification.text }}</span>
+                  <input
+                    v-model="notification.isEnabled"
+                    type="checkbox"
+                    class="toggle toggle-primary"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <button
+            class="btn btn-primary xl:w-40 mr-0 self-end"
+            @click="setChatBotSettings"
+          >
+            Сохранить
+          </button>
+        </div>
+      </div>
+    </section>
   </div>
+  <div class="h-20"></div>
 </template>
 
 <style scoped></style>
