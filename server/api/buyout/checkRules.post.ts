@@ -24,7 +24,6 @@ export default eventHandler(async (event) => {
   const body = await readBody(event)
   const query = getQuery(event)
   const { userTimezoneOffsetHours } = query
-  console.log(userTimezoneOffsetHours);
   
   const products: Item[] = body
   const result = {

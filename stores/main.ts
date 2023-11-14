@@ -19,6 +19,7 @@ export const useMainStore = defineStore('main', {
 //   },
   actions: {
     checkTelegramId() {
+     
       if (this.client.telegram && !this.client.telegramUserId)
         return false
       else
