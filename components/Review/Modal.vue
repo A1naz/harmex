@@ -16,11 +16,14 @@ const props = defineProps({
     required: true,
   },
 })
-
 const emit = defineEmits(['close', 'publish'])
-const closeButton = ref<HTMLElement>()
 
+const headers = useRequestHeaders(['cookie']) as HeadersInit
+const closeButton = ref<HTMLElement>()
 const { notify } = useNotification()
+const { upload, getPublicUrl, remove } = useS3Object()
+const now = useNow()
+
 const inputs: any = {
   file1: ref(),
   file2: ref(),
@@ -28,10 +31,7 @@ const inputs: any = {
   file4: ref(),
   file5: ref(),
 }
-const { $dayjs } = useNuxtApp()
-const { upload, getPublicUrl, remove } = useS3Object()
 
-const now = useNow()
 const form = reactive({
   text: '',
   rating: 5,
@@ -62,8 +62,6 @@ const form = reactive({
 
 const loadingIndex = ref(null) as Ref<number | null>
 
-const fileInput = ref()
-const url = ref('')
 async function uploadToS3(event: Event, index: number) {
   loadingIndex.value = index
   const fileList = (event.target! as HTMLInputElement).files
@@ -93,7 +91,6 @@ async function clearForm() {
   form.date = new Date()
   form.text = ''
   form.rating = 5
-  const photos = form.photos
 
   loadingIndex.value = null
   form.photos = [
@@ -120,7 +117,7 @@ async function clearForm() {
   ]
 }
 
-const headers = useRequestHeaders(['cookie']) as HeadersInit
+
 async function publishReview() {
   const photos = form.photos
   for await (const photo of photos) {
@@ -198,6 +195,7 @@ watch(
     clearForm()
   }
 )
+
 onMounted(() => {
   clearForm()
 })
@@ -271,13 +269,13 @@ onMounted(() => {
         </div>
 
         <div>
-          <div class="pb-2">Запланировать отзыв</div>
+          <div class="pb-2">Запланировать отзыв <span class="text-xs">(по Московскому времени)</span></div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3">
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : defaultDate(form.date)
+                  : form.date.toLocaleString('en-GB', { timeZone: 'Europe/Moscow' })
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
