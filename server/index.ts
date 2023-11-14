@@ -1,6 +1,6 @@
 import type { Nitro } from 'nitropack'
 import mongoose from 'mongoose'
-import { standartPlan } from '~/data/migrations/tariff'
+import { setupTariffForAllUsers, standartPlan } from '~/data/migrations/tariff'
 
 export default async (_nitroApp: Nitro) => {
   const config = useRuntimeConfig()
@@ -11,6 +11,9 @@ export default async (_nitroApp: Nitro) => {
 
     // await standartPlan()
     // console.log('standartPlan creted')
+
+    await setupTariffForAllUsers()
+    console.log('setupTariffForAllUsers done')
 
   }
   catch (error) {
