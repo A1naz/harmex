@@ -6,18 +6,13 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-    const { status, skip, limit } = getQuery(event)
+    const { skip, limit } = getQuery(event)
 
   const options: any = {
     user,
     status: 'completed',
     reviewed: false,
   }
-
-//   if (status && status == 'all') {
-//     delete options.status
-//     delete options.reviewed
-//   }  фильтр Все
 
   const readyForReview = await Delivery.find(options)
     .sort({

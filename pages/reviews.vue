@@ -11,7 +11,6 @@ const route = useRoute()
 const end = ref(false)
 const skip = ref(25)
 const store = useMainStore()
-const readyForReview = ref<any[] | null>([])
 const reviews = ref<any[] | null>([])
 const router = useRouter()
 const autoTarget = ref(true)
@@ -131,32 +130,6 @@ function openInfoModal() {
   store.infoType = 'reviews'
 }
 
-watch(targetIsVisible, async (isVisible) => {
-  if (isVisible && autoTarget.value && reviews.value && reviews.value.length >= 25) {
-    if (end.value) return
-    const data = await getReviews(status.value as string, skip.value, 25)
-    if (data.length === 0) {
-      end.value = true
-      return
-    }
-    reviews.value = [...(reviews.value as any[]), ...data]
-    skip.value += 25
-  }
-})
-
-watch(
-  () => queryStatus.value,
-  async (newRoute, oldRoute) => {
-    skip.value = 25
-    end.value = false
-    console.log(newRoute)
-    if (oldRoute === newRoute) return
-    reviews.value = await getReviews(newRoute as string, 0, 25)
-    status.value = queryStatus.value
-  },
-  { deep: true, immediate: false }
-)
-
 function openPhoto(src: string) {
   openedPhoto.value = src
 }
@@ -208,15 +181,40 @@ async function removeReview() {
   }
 }
 
+watch(targetIsVisible, async (isVisible) => {
+  if (isVisible && autoTarget.value && reviews.value && reviews.value.length >= 25) {
+    if (end.value) return
+    const data = await getReviews(status.value as string, skip.value, 25)
+    if (data.length === 0) {
+      end.value = true
+      return
+    }
+    reviews.value = [...(reviews.value as any[]), ...data]
+    skip.value += 25
+  }
+})
+
+watch(
+  () => queryStatus.value,
+  async (newRoute, oldRoute) => {
+    skip.value = 25
+    end.value = false
+    if (oldRoute === newRoute) return
+    reviews.value = await getReviews(newRoute as string, 0, 25)
+    status.value = queryStatus.value
+  },
+  { deep: true, immediate: false }
+)
+
 onMounted(async () => {
     if (route.query?.uuid && route.query?.uuid.length > 0 ) {
         const uuid = route.query?.uuid
         if(uuid && typeof uuid == 'string') {
-            await router.push("/reviews?status=published")
-            status.value = 'published'
             search.text = uuid
             search.type = 'uuidReview'
             onSearchInput()
+        } else {
+            reviews.value = await getReviews(status.value as string, 0, 25)
         }
     } else {
         status.value = 'available'
