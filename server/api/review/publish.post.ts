@@ -7,8 +7,7 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-    const body = await readBody(event)
-    const { buyoutuuid, deliveryid, rating, text, photos, date } = body
+    const { buyoutuuid, deliveryid, rating, text, photos, date } = await readBody(event)
 
   if (text) {
     if (text.length < 10 || text.length > 1000) {
@@ -32,17 +31,16 @@ export default eventHandler(async (event) => {
       message: 'Доставка не найдена',
     })
   }
+
   const images = photos.map((photo: any) => photo.public)
-
-console.log(date);
-
+  const datePublish = new Date(new Date(date).getTime() + (3*60*60*1000)).toISOString() // to Moscow timezone (UTC + 3h)
 
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
     rating,
     text,
-    date,
+    date: datePublish,
     user,
     delivery,
     images,
