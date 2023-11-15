@@ -46,6 +46,7 @@ await getSecondLevelReferrals()
 
 <template>
   <div>
+
     <div class="flex">
       <h1 class="text-2xl font-bold mt-4">Партнерская программа</h1>
       <div class="flex md:flex-row items-center md:ml-1 mt-0 md:mt-6  mr-20 md:mr-0">
@@ -62,82 +63,67 @@ await getSecondLevelReferrals()
       Вывод финансовых средств недоступен до 15.10.2023. Для перевода
       реферальных на основной баланс напишите в службу заботы.
     </p>
+
+
     <div class="card bg-base-200 p-4 mt-6 flex flex-col gap-2">
-      <div class="account">
-        <div>Ваш партнерский счет:</div>
-        <div class="balance text-xl text-primary font-bold">
-          {{ currency.format(store.client.partner.balance) }}
-        </div>
-      </div>
-      <div class="referrals">
-        <div>Приглашенных пользователей:</div>
-        <div class="count text-xl text-primary font-bold">
-          {{ store.client.partner.refCount }} человек
-        </div>
-        <div>Рефералов 2 уровня:</div>
-        <div class="count text-xl text-primary font-bold">
-          {{ secondLevelReferrals }} человек
-        </div>
-      </div>
-      <div class="divider m-0" />
-      <div class="buttons flex gap-2">
-        <button class="btn btn-sm btn-primary" @click="withdrawModal = true">
-          Вывод средств
-        </button>
-        <button
-          class="btn btn-sm btn-primary"
-          @click="paymentHistoryModal = true"
-        >
-          История баланса
-        </button>
-      </div>
+        <PartnerDashboard 
+            :balance="store.client.partner.balance"
+            :ref-count="store.client.partner.refCount"
+            :second-level-referrals="secondLevelReferrals"
+            :ref-url="refUrl"
+            :reward-percent="partner.rewardPercent"
+            />
     </div>
+
+
     <div class="linkcard card bg-base-200 p-4 mt-2 flex flex-col gap-2">
-      <div>
+        <div>
         <div class="mb-1">Ваша ссылка для приглашения:</div>
-        <div
-          class="bg-base-100 rounded-lg p-2 border border-primary md:flex justify-between gap-2 items-center"
-        >
-          <span class="link lg:link-hover" @click="copyToClipboard(refUrl)">{{
-            refUrl
-          }}</span>
-          <button
-            class="btn btn-sm btn-primary hidden lg:block"
-            @click="copyToClipboard(refUrl)"
-          >
-            Скопировать
-          </button>
+            <div class="bg-base-100 rounded-lg p-2 border border-primary md:flex justify-between gap-2 items-center" >
+                <span class="link lg:link-hover" @click="copyToClipboard(refUrl)"> {{ refUrl }} </span>
+                <button
+                    class="btn btn-sm btn-primary hidden lg:block"
+                    @click="copyToClipboard(refUrl)"
+                    >
+                    Скопировать
+                </button>
+            </div>
+            <button
+                class="btn btn-sm btn-primary block mt-2 lg:hidden"
+                @click="copyToClipboard(refUrl)"
+                >
+                Скопировать
+            </button>
         </div>
-        <button
-          class="btn btn-sm btn-primary block mt-2 lg:hidden"
-          @click="copyToClipboard(refUrl)"
-        >
-          Скопировать
-        </button>
-      </div>
-      <div>
+
+        <div>
+            <div class="md:flex">
+            <div class="mt-0.5">Вознаграждение партнера:</div>
+            <div class="text-lg text-primary font-bold md:ml-2">
+                {{ partner.rewardPercent }}%
+            </div>
+            </div>
         <div class="md:flex">
-          <div class="mt-0.5">Вознаграждение партнера:</div>
-          <div class="text-lg text-primary font-bold md:ml-2">
-            {{ partner.rewardPercent }}%
-          </div>
-        </div>
-        <div class="md:flex">
-          <div class="mt-0.5">Вознаграждение партнера 2 уровня:</div>
-          <div class="text-lg text-primary font-bold md:ml-2">5 %</div>
+            <div class="mt-0.5">Вознаграждение партнера 2 уровня:</div>
+            <div class="text-lg text-primary font-bold md:ml-2">5 %</div>
         </div>
       </div>
     </div>
+
+
+
     <PartnerWithdrawModal
       v-if="withdrawModal"
       :state="withdrawModal"
       @close="withdrawModal = false"
     />
+
     <PartnerPaymentHistoryModal
       v-if="paymentHistoryModal"
       :state="paymentHistoryModal"
       @close="paymentHistoryModal = false"
     />
+
     <div class="my-48"></div>
   </div>
 
