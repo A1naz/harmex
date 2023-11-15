@@ -14,11 +14,7 @@ function closePartnerVideofn() {
   closePartnerVideo.value?.click()
 }
 
-const currency = useCurrency()
-
 const runtimeConfig = useRuntimeConfig()
-const withdrawModal = ref(false)
-const paymentHistoryModal = ref(false)
 const store = useMainStore()
 const client = store.client
 const partner = client.partner
@@ -64,65 +60,18 @@ await getSecondLevelReferrals()
       реферальных на основной баланс напишите в службу заботы.
     </p>
 
+    <PartnerDashboard 
+        :balance="store.client.partner.balance"
+        :ref-count="store.client.partner.refCount"
+        :second-level-referrals="secondLevelReferrals"
+        :ref-url="refUrl"
+        :reward-percent="partner.rewardPercent"
+        />
 
-    <div class="card bg-base-200 p-4 mt-6 flex flex-col gap-2">
-        <PartnerDashboard 
-            :balance="store.client.partner.balance"
-            :ref-count="store.client.partner.refCount"
-            :second-level-referrals="secondLevelReferrals"
-            :ref-url="refUrl"
-            :reward-percent="partner.rewardPercent"
-            />
-    </div>
-
-
-    <div class="linkcard card bg-base-200 p-4 mt-2 flex flex-col gap-2">
-        <div>
-        <div class="mb-1">Ваша ссылка для приглашения:</div>
-            <div class="bg-base-100 rounded-lg p-2 border border-primary md:flex justify-between gap-2 items-center" >
-                <span class="link lg:link-hover" @click="copyToClipboard(refUrl)"> {{ refUrl }} </span>
-                <button
-                    class="btn btn-sm btn-primary hidden lg:block"
-                    @click="copyToClipboard(refUrl)"
-                    >
-                    Скопировать
-                </button>
-            </div>
-            <button
-                class="btn btn-sm btn-primary block mt-2 lg:hidden"
-                @click="copyToClipboard(refUrl)"
-                >
-                Скопировать
-            </button>
-        </div>
-
-        <div>
-            <div class="md:flex">
-            <div class="mt-0.5">Вознаграждение партнера:</div>
-            <div class="text-lg text-primary font-bold md:ml-2">
-                {{ partner.rewardPercent }}%
-            </div>
-            </div>
-        <div class="md:flex">
-            <div class="mt-0.5">Вознаграждение партнера 2 уровня:</div>
-            <div class="text-lg text-primary font-bold md:ml-2">5 %</div>
-        </div>
-      </div>
-    </div>
-
-
-
-    <PartnerWithdrawModal
-      v-if="withdrawModal"
-      :state="withdrawModal"
-      @close="withdrawModal = false"
-    />
-
-    <PartnerPaymentHistoryModal
-      v-if="paymentHistoryModal"
-      :state="paymentHistoryModal"
-      @close="paymentHistoryModal = false"
-    />
+    <PartnerRefUrl 
+        :ref-url="refUrl"
+        :reward-percent="partner.rewardPercent"
+        />
 
     <div class="my-48"></div>
   </div>

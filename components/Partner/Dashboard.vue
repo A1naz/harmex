@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
 
 const props = defineProps({
     balance: { type: Number, required: true},
@@ -8,22 +7,15 @@ const props = defineProps({
     refUrl: { type: String, required: true},
     rewardPercent: { type: Number, required: true}
 })
-
 const currency = useCurrency()
 const withdrawModal = ref(false)
 const paymentHistoryModal = ref(false)
-
-async function copyToClipboard(text: string) {
-  await navigator.clipboard.writeText(text)
-  notify({
-    title: 'Ссылка скопирована в буфер обмена',
-  })
-}
 
 </script>
 
 <template>
 
+<div class="card bg-base-200 p-4 mt-6 flex flex-col gap-2">
     <div class="account">
         <div>
             Ваш партнерский счет:
@@ -68,8 +60,8 @@ async function copyToClipboard(text: string) {
         :state="paymentHistoryModal"
         @close="paymentHistoryModal = false"
         />
+    </div>
 
-    <div class="my-48"></div>
 
 </template>
 
