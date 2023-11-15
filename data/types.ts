@@ -1,5 +1,10 @@
 import { MenuSection } from "./menu/types"
 
+export interface Entity {
+    _id?: any;
+    id?: any;
+}
+
 export interface StateMain {
     client: Client,
     dodge: boolean,
@@ -12,7 +17,7 @@ export interface StateMain {
     faqModal: boolean,
 }
 
-export interface IUser {
+export interface IUser extends Entity {
     isBanned: boolean,
     username: string | undefined,
     firstName: string,
