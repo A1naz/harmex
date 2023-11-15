@@ -9,11 +9,11 @@ export default async (_nitroApp: Nitro) => {
     // eslint-disable-next-line no-console
     console.log('Connected to MongoDB')
 
-    // await standartPlan()
-    // console.log('standartPlan done')
+    await standartPlan()
+    console.log('standartPlan done')
 
-    // await setupTariffForAllUsers()
-    // console.log('setupTariffForAllUsers done')
+    await setupTariffForAllUsers()
+    console.log('setupTariffForAllUsers done')
 
   }
   catch (error) {
