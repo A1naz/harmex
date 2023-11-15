@@ -1,14 +1,18 @@
 <script lang="ts" setup>
+import { useNotification } from '@kyvg/vue3-notification'
 import { useMainStore } from '@/stores/main'
 
+const { notify } = useNotification()
 const colorMode = useColorMode()
-const { status } = useAuth()
+const { status, data } = useAuth()
 const store = useMainStore()
 const route = useRoute()
 const app = ref()
 
 const {
+  pending,
   data: client,
+  error,
   refresh,
 } = useLazyAsyncData('client', () => $fetch('/api/user/client'))
 useIntervalFn(() => {

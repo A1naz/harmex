@@ -1,7 +1,7 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import MenuBuilder from '~/server/utils/menuBuilder'
-import { UserRoles } from '~/data/enums'
+import { UserRoles } from '~/data/types'
 
 export default eventHandler(async (event) => {
 

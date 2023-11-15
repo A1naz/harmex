@@ -236,8 +236,7 @@ onMounted(async () => {
         от выкупа согласно вашему тарифу.
       </p>
       <p class="text-xs font-light mt-1 lg:text-sm">
-        Стоимость одного отзыва - 
-        <span class="font-bold"> {{ store.tariffString('review') }} </span>
+        Стоимость одного отзыва - <span class="font-bold">40 руб.</span>
         Все услуги оказываются по Московскому времени.
       </p>
     </div>

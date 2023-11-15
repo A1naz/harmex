@@ -5,8 +5,10 @@ const colorMode = useColorMode()
 
 const theme = ref('light')
 const route = useRoute()
-const { signOut } = useAuth()
+const infoModal = ref(false)
+const { status, data, signIn, signOut } = useAuth()
 const currency = useCurrency()
+const pageContent = ref()
 const lightMode = ref(colorMode.value === 'dark')
 function changeTheme() {
   if (colorMode.value === 'light') colorMode.preference = 'dark'

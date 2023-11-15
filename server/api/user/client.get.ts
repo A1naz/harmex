@@ -1,8 +1,7 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import MenuBuilder from '~/server/utils/menuBuilder'
-import { Client } from '~/data/types'
-import { UserRoles } from '~/data/enums'
+import { Client, UserRoles } from '~/data/types'
 
 
 export default eventHandler(async (event) => {
@@ -48,8 +47,7 @@ export default eventHandler(async (event) => {
     isBanned: user.isBanned,
     role: user.roles[0],
     mmenuItems: menu,
-    allowedPathes: allowedPathes,
-    tariff: user.tariff
+    allowedPathes: allowedPathes
   }
 
   return {

@@ -6,7 +6,6 @@ definePageMeta({
   auth: true,
   title: 'Вопросы',
 })
-const store = useMainStore()
 const questions = ref([]) as any
 const amount = ref(0)
 const now = useNow()
@@ -103,8 +102,7 @@ onMounted(() => {
       Выберите товар, чтобы добавить конкретные вопросы к нему
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного вопроса -  
-      <span class="font-bold"> {{ store.tariffString('questionProduct') }} </span>
+      Стоимость одного вопроса -  <span class="font-bold">7 руб.</span>
       Все услуги оказываются по Московскому времени.
     </p>
     <div class="collapse collapse-plus bg-base-200 rounded-box mb-4 mt-6">

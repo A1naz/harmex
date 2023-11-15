@@ -279,9 +279,8 @@ const filters = [
       нажмите на кнопку "Добавить выкупы".
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного выкупа - 
-      <span class="font-bold">{{ store.tariffString('buyouts') }}</span> 
-      Все услуги оказываются по Московскому времени.
+      Стоимость одного выкупа - <span class="font-bold">100 руб.</span> Все
+      услуги оказываются по Московскому времени.
     </p>
     <p
       v-if="route.query.status === 'archived'"
