@@ -10,10 +10,10 @@ export default async (_nitroApp: Nitro) => {
     console.log('Connected to MongoDB')
 
     // await standartPlan()
-    // console.log('standartPlan creted')
+    // console.log('standartPlan done')
 
-    await setupTariffForAllUsers()
-    console.log('setupTariffForAllUsers done')
+    // await setupTariffForAllUsers()
+    // console.log('setupTariffForAllUsers done')
 
   }
   catch (error) {

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { StateMain } from '~/data/types'
+import { ITariff } from '~/data/types';
 
 export const useMainStore = defineStore('main', {
   state: (): StateMain => ({
@@ -13,16 +14,16 @@ export const useMainStore = defineStore('main', {
     infoType: '',
     faqModal: false,
   }),
-//   getters: {
-//     getAllowedPathes: (state): string[] => state.client.allowedPathes,
-//     getFirstPath: (state): string => state.client.allowedPathes[0]
-//   },
   actions: {
     checkTelegramId() {
       if (this.client.telegram && !this.client.telegramUserId)
         return false
       else
         return true
+    },
+    tariffString(item: keyof ITariff): string {
+        const symbol = this.client.tariff[item].type == TariffTypeEnum.percent ? '%' : 'р.'
+        return this.client.tariff[item].value + symbol
     },
     async getClient() {
         const { data } = await useFetch('/api/user/client', {
@@ -34,7 +35,6 @@ export const useMainStore = defineStore('main', {
             console.warn('store.getClient did not return client')
         }
     },
-
     setClient(client?: Client) {
         if(client){
             this.client = client
