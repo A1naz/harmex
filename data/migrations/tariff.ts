@@ -22,7 +22,8 @@ const planNew = new Plans({
 // Stage 1
 export async function standartPlan(){
     try{
-        await planNew.save()
+        const plan = await Plans.findOne({name: 'Standart'})
+        if(!plan) await planNew.save()
     }
     catch(e: any){
         throw Error(e)
@@ -34,7 +35,7 @@ export async function setupTariffForAllUsers(){
     try{
         await User.updateMany(
             { 
-                username: 'vasyutenko2015',
+                // username: 'vasyutenko2015',
                 roles: { $nin: [ 'staff' ] } // SHOULD BE NOT STAFF
             }, 
             { $set: { tariff: tariff } }
