@@ -1,15 +1,16 @@
 import { TariffTypeEnum } from '~/data/enums';
 import { Plans } from '~/server/lib/models/Plans';
 import { User } from '~~/server/lib/models/User';
+import { ITariff } from '~/data/types';
 
-const tariff = {
+const tariff: ITariff = {
     buyouts: { type: TariffTypeEnum.price, value: 100},
     deliveryStorage: { type: TariffTypeEnum.price, value: 25},
     review: { type: TariffTypeEnum.price, value: 40},
     likeReview: { type: TariffTypeEnum.price, value: 5},
     likeProduct: { type: TariffTypeEnum.price, value: 5},
     questionProduct: { type: TariffTypeEnum.price, value: 7},
-    addToBasket: { type: TariffTypeEnum.price, value: 5},
+    cart: { type: TariffTypeEnum.price, value: 5},
     autoAnswer: { type: TariffTypeEnum.price, value: 100},
 }
 
@@ -18,6 +19,7 @@ const planNew = new Plans({
     tariff: tariff
 })
 
+// Stage 1
 export async function standartPlan(){
     try{
         await planNew.save()
@@ -27,6 +29,7 @@ export async function standartPlan(){
     }
 }
 
+// Stage 2
 export async function setupTariffForAllUsers(){
     try{
         await User.updateMany(

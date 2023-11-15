@@ -6,7 +6,6 @@ definePageMeta({
   auth: true,
   title: 'Автоответчик на отзывы',
 })
-const { $dayjs } = useNuxtApp()
 const store = useMainStore()
 
 const form = reactive({
@@ -27,12 +26,9 @@ const initial = {
 }
 const autoanswers = ref([]) as any
 const amount = ref(0)
-const now = useNow()
 const loading = ref(false)
 const loadingUrl = ref(false)
-const query = ref('')
 const article = ref('')
-const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 await getBots()
@@ -152,7 +148,8 @@ onMounted(() => {
       Добавьте апи ключ в настройках профиля и настройте автоотвечик
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного автоответчика -  <span class="font-bold">100 руб.</span>
+      Стоимость одного автоответчика -  
+      <span class="font-bold"> {{ store.tariffString('autoAnswer') }} </span>
       Все услуги оказываются по Московскому времени.
     </p>
     <div v-if="!store.client.wbApiKeys.length || store.client.wbApiKeys[0] === ''" class="alert alert-info mt-6">

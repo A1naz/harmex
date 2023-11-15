@@ -35,13 +35,14 @@ export interface IUser {
     tg2fa: boolean,
     balance: number,
     registrationDate: Date,
-    partner: Partner
+    partner: Partner,
+    tariff: ITariff
 }
 
-export interface Client extends Pick<
+export interface Client extends Omit<
     IUser, 
-    "email" | "username" | "uuid" | "telegram" | "balance" | "firstName" | 
-    "lastName" | "telegramUserId" | "wbApiKeys" | "partner" | "isBanned"
+    "acesses" | "tabs" | "newEmail" | "emailConfirmed" | "telegramUnlinkEmailSend"
+    | "tg2fa" | "registrationDate" | "wbApiKey" | "password" | "uuidCompany" | "roles"
     > {
         hasPassword: boolean,
         role: string,
@@ -80,7 +81,7 @@ export interface ITariff {
     likeReview: TariffProp,
     likeProduct: TariffProp,
     questionProduct: TariffProp,
-    addToBasket: TariffProp,
+    cart: TariffProp,
     autoAnswer: TariffProp,
 }
 

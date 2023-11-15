@@ -48,7 +48,8 @@ export default eventHandler(async (event) => {
     isBanned: user.isBanned,
     role: user.roles[0],
     mmenuItems: menu,
-    allowedPathes: allowedPathes
+    allowedPathes: allowedPathes,
+    tariff: user.tariff
   }
 
   return {
