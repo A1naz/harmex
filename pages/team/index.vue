@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { MenuEnums } from '~/data/menu/types';
-import { FieldsType, OptionsMulti } from '~/data/types';
+import { FieldsType } from '~/data/enums';
+import { OptionsMulti } from '~/data/types';
 import MenuBuilder from '~/server/utils/menuBuilder';
 
 definePageMeta({
