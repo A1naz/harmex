@@ -9,10 +9,11 @@ defineProps({
 const { width, height } = useWindowSize()
 
 const configColumns: ConfigTable[] = [
-    {field: 'username', header: 'Ник', type: FieldsType.text},
-    {field: 'email', header: 'E-mail', type: FieldsType.text},
-    {field: 'registrationDate', header: 'Дата регистрации', type: FieldsType.date},
-    {field: 'deals', header: 'Сделок', type: FieldsType.text},
+    { field: 'username', header: 'Ник', type: FieldsType.text },
+    { field: 'email', header: 'E-mail', type: FieldsType.text },
+    { field: 'registrationDate', header: 'Дата регистрации', type: FieldsType.date },
+    { field: 'deals', header: 'Кол-во услуг', type: FieldsType.text },
+    { field: 'summ', header: 'Сумма услуг', type: FieldsType.text },
 ]
 
 </script>

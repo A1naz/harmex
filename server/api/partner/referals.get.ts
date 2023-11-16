@@ -1,5 +1,6 @@
 import { Referral } from '~/server/lib/models/Referral'
-import { Buyout } from '~/server/lib/models/Buyout'
+import { paymenthistory } from '~/server/lib/models/Paymenthistory'
+import { ObjectId } from 'mongodb'
 
 export default eventHandler(async (event) => {
 
@@ -37,6 +38,7 @@ export default eventHandler(async (event) => {
                         __v: 0, 
                         tabs: 0, 
                         isBanned: 0, 
+                        tariff: 0,
                         partner: {
                             balance: 0, 
                             rewardPercent: 0
@@ -47,21 +49,37 @@ export default eventHandler(async (event) => {
         ]
     )
 
-  if (!reffers[0]) return {}
+  if (!reffers[0]) return []
 
     const result = await Promise.all(
         reffers[0].refInfo.map(async (refer: any) => {
-            let deals = 0
-            deals += await Buyout.find({user: refer._id}).count()
-            deals += await Buyout.find({user: refer._id}).count()
+            const deals = await paymenthistory.aggregate(
+                [
+                    {
+                      $match: {
+                        user: new ObjectId(refer._id), 
+                        typeoperations: "Расход"
+                      }
+                    }, 
+                    {
+                      $group: {
+                        _id: null, 
+                        counts: { $sum: 1 }, 
+                        summ: { $sum: "$summ" }
+                      }
+                    }
+                  ]
+                )
+console.log('deals: ', deals)
             return {
                 email: refer.email,
                 username: refer.username,
                 registrationDate: refer.registrationDate,
-                deals: deals
+                deals: deals.length > 0 ? deals[0].counts : 0,
+                summ: deals.length > 0 ? deals[0].summ : 0
             }
         })
     ) 
-
+console.log('result: ', result)
   return result
 })
