@@ -3,8 +3,8 @@ import { v4 as uuid } from 'uuid'
 import validator from 'validator'
 import { getServerSession } from '#auth'
 import { User } from '~~/server/lib/models/User'
+import { Plans } from '~/server/lib/models/Plans';
 import { Referral } from '~~/server/lib/models/Referral'
-
 import MailService from '~~/server/lib/mailService.js'
 
 function hasWhiteSpace(s: string) {
@@ -52,11 +52,15 @@ export default eventHandler(async (event) => {
 
   const hash = bcrypt.hashSync(password, 7)
 
-  const user = new User({
+  const plan = await Plans.findOne({name: 'Standart'})
+  if (!plan) return { status: 'error', error: 'Ошибка при регистрации. Тариф не найден, отправьте пожалуйста это сообщение в техподдержку' }
+
+  const user: IUser = new User({
     email,
     password: hash,
     username: email.split('@')[0].replaceAll('.', ''),
     roles: ['user'],
+    tariff: plan.tariff,
     uuid: uuid(),
   })
   await user.save()
