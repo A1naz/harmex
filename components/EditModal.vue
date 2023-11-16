@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FieldsType } from '~/data/enums';
 
 const colorMode = useColorMode()
 

@@ -6,8 +6,7 @@ definePageMeta({
   auth: true,
   title: 'Лайки на отзывы',
 })
-const route = useRoute()
-const router = useRouter()
+const store = useMainStore()
 const review_likes = ref([]) as any
 const { width, height } = useWindowSize()
 const { data, error } = await useFetch('/api/likes/get')
@@ -66,7 +65,8 @@ async function deleteLike() {
       самые важные отзывы.
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного лайка - <span class="font-bold">5 руб.</span>
+      Стоимость одного лайка - 
+      <span class="font-bold"> {{ store.tariffString('likeReview') }} </span>
       Все услуги оказываются по Московскому времени.
     </p>
     <div class="flex justify-end mb-8 mt-6 items-center">

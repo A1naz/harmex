@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose'
 import { v4 as uuid } from 'uuid'
 import { IUser } from '@/data/types'
+import { Tariff } from './Tariff';
 
 interface IUserSchema extends IUser, Document {}
 
@@ -25,6 +26,8 @@ const UserSchema = new Schema({
   acesses: [{ type: String, required: false}],
 
   roles: [{ type: String, ref: 'Role' }],
+  tariff: { type: Tariff.schema, required: true },
+
   tabs: [{ type: String }],
   newEmail: { type: String, required: false },
   emailConfirmed: { type: Boolean, default: false },
