@@ -9,9 +9,8 @@ import MailService from '~~/server/lib/mailService.js'
 
 export default eventHandler(async (event) => {
 
-  const body = await readBody(event)
   const session = (await getServerSession(event)) as any
-  const { email, username, firstName, lastName, allowedPathes, password } = body
+  const { email, username, firstName, lastName, allowedPathes, password, tariff } = await readBody(event)
 
   if (!email || !password){
     throw createError({
@@ -54,6 +53,7 @@ export default eventHandler(async (event) => {
     password: hash,
     roles: [UserRoles.staff],
     uuid: uuid(),
+    tariff: tariff
   })
 
   await user.save()

@@ -21,6 +21,7 @@ async function getMyTeam() {
 
 await getMyTeam()
 
+const store = useMainStore()
 const modalEdit = ref(false)
 const modalConfirm = ref(false)
 const editModalConfig = ref()
@@ -68,7 +69,8 @@ const saveUser = async () => {
         newPassword: selectedUser.value.newPassword,
         allowedPathes: selectedUser.value.allowedPathes.length == multiOptions.length
                         ? [MenuEnums.fullAccess]
-                        : selectedUser.value.allowedPathes.map( (path: any) => { return path.value})
+                        : selectedUser.value.allowedPathes.map( (path: any) => { return path.value}),
+        tariff: store.client.tariff
     }
 
     if(selectedUser.value.uuid){
