@@ -1,3 +1,4 @@
+import { TariffTypeEnum, FieldsType, UserRoles } from "./enums"
 import { MenuSection } from "./menu/types"
 
 export interface Entity {
@@ -39,13 +40,14 @@ export interface IUser extends Entity {
     tg2fa: boolean,
     balance: number,
     registrationDate: Date,
-    partner: Partner
+    partner: Partner,
+    tariff: ITariff
 }
 
-export interface Client extends Pick<
+export interface Client extends Omit<
     IUser, 
-    "email" | "username" | "uuid" | "telegram" | "balance" | "firstName" | 
-    "lastName" | "telegramUserId" | "wbApiKeys" | "partner" | "isBanned"
+    "acesses" | "tabs" | "newEmail" | "emailConfirmed" | "telegramUnlinkEmailSend"
+    | "tg2fa" | "registrationDate" | "wbApiKey" | "password" | "uuidCompany" | "roles"
     > {
         hasPassword: boolean,
         role: string,
@@ -59,22 +61,9 @@ export interface Partner{
     rewardPercent: number,
 }
 
-export enum UserRoles {
-    admin = 'admin',
-    user = 'user',
-    staff = 'staff'
-}
-
 export interface OptionsMulti {
     value: string,
     name: string
-}
-
-export enum FieldsType {
-    text = 'text',
-    email = 'email',
-    multiOptions = 'multiOptions',
-    password = 'password'
 }
 
 export interface ConfigModal {
@@ -82,4 +71,26 @@ export interface ConfigModal {
     header: string, 
     type: FieldsType,
     options?: any[]
+}
+
+export interface IPlan {
+    name: string,
+    createdAt: Date,
+    tariff: ITariff
+}
+
+export interface ITariff {
+    buyouts: TariffProp,
+    deliveryStorage: TariffProp,
+    review: TariffProp,
+    likeReview: TariffProp,
+    likeProduct: TariffProp,
+    questionProduct: TariffProp,
+    cart: TariffProp,
+    autoAnswer: TariffProp,
+}
+
+export interface TariffProp {
+    type: TariffTypeEnum, 
+    value: number
 }

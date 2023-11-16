@@ -6,7 +6,7 @@ definePageMeta({
   auth: true,
   title: 'Лайки на товар/бренд',
 })
-const { $dayjs } = useNuxtApp()
+const store = useMainStore()
 const product_likes = ref([]) as any
 const amount = ref(0)
 const loadingUrl = ref(false)
@@ -125,7 +125,8 @@ async function deleteLike() {
       «Избранное»
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного добавления - <span class="font-bold">5 руб.</span>
+      Стоимость одного добавления - 
+      <span class="font-bold"> {{ store.tariffString('likeProduct') }} </span>
       Все услуги оказываются по Московскому времени.
     </p>
     <div class="mb-4 mt-6 bg-base-200 p-6 rounded-lg">

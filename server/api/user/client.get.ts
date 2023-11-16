@@ -1,7 +1,8 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import MenuBuilder from '~/server/utils/menuBuilder'
-import { Client, UserRoles } from '~/data/types'
+import { Client } from '~/data/types'
+import { UserRoles } from '~/data/enums'
 
 
 export default eventHandler(async (event) => {
@@ -32,6 +33,12 @@ export default eventHandler(async (event) => {
     ? MenuBuilder.filteredAccess(user.acesses) 
     : MenuBuilder.filteredAccess()
 
+    if(user.roles[0] == UserRoles.staff){
+        const admin = await User.findOne({ uuid: user.uuidCompany })
+        if (!admin) return sendRedirect(event, '/auth', 302)
+        user.tariff = admin.tariff
+    }
+
   const client: Client = {
     email: user.email,
     username: user.email === user.username ? undefined : user.username,
@@ -47,7 +54,8 @@ export default eventHandler(async (event) => {
     isBanned: user.isBanned,
     role: user.roles[0],
     mmenuItems: menu,
-    allowedPathes: allowedPathes
+    allowedPathes: allowedPathes,
+    tariff: user.tariff
   }
 
   return {
