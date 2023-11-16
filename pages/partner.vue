@@ -21,7 +21,7 @@ async function getPartners() {
         partners.value = []
     } else {
         const { data }: any = await useFetch('/api/partner/referals', { method: 'GET' })
-        if(data) partners.value = data.value.refInfo
+        if(data) partners.value = data.value
     }
 }
 

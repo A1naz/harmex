@@ -66,6 +66,14 @@ export interface OptionsMulti {
     name: string
 }
 
+export interface ConfigTable {
+    field: string, 
+    header: string, 
+    type: FieldsType,
+    actions?: any
+}
+
+
 export interface ConfigModal {
     field: string, 
     header: string, 

@@ -1,4 +1,5 @@
 import { Referral } from '~/server/lib/models/Referral'
+import { Buyout } from '~/server/lib/models/Buyout'
 
 export default eventHandler(async (event) => {
 
@@ -27,7 +28,6 @@ export default eventHandler(async (event) => {
                     referrals: 0, 
                     refInfo: {
                         wbApiKeys: 0, 
-                        _id: 0, 
                         password: 0, 
                         uuid: 0, 
                         roles: 0, 
@@ -49,5 +49,19 @@ export default eventHandler(async (event) => {
 
   if (!reffers[0]) return {}
 
-  return reffers[0]
+    const result = await Promise.all(
+        reffers[0].refInfo.map(async (refer: any) => {
+            let deals = 0
+            deals += await Buyout.find({user: refer._id}).count()
+            deals += await Buyout.find({user: refer._id}).count()
+            return {
+                email: refer.email,
+                username: refer.username,
+                registrationDate: refer.registrationDate,
+                deals: deals
+            }
+        })
+    ) 
+
+  return result
 })
