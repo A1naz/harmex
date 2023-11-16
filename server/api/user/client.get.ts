@@ -33,6 +33,12 @@ export default eventHandler(async (event) => {
     ? MenuBuilder.filteredAccess(user.acesses) 
     : MenuBuilder.filteredAccess()
 
+    if(user.roles[0] == UserRoles.staff){
+        const admin = await User.findOne({ uuid: user.uuidCompany })
+        if (!admin) return sendRedirect(event, '/auth', 302)
+        user.tariff = admin.tariff
+    }
+
   const client: Client = {
     email: user.email,
     username: user.email === user.username ? undefined : user.username,
