@@ -1,5 +1,6 @@
 export enum FieldsType {
     text = 'text',
+    price = 'price',
     date = 'date',
     email = 'email',
     multiOptions = 'multiOptions',

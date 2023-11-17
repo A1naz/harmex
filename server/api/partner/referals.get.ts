@@ -70,16 +70,15 @@ export default eventHandler(async (event) => {
                     }
                   ]
                 )
-console.log('deals: ', deals)
             return {
                 email: refer.email,
                 username: refer.username,
                 registrationDate: refer.registrationDate,
+                refCount: refer.partner.refCount ? refer.partner.refCount : 0,
                 deals: deals.length > 0 ? deals[0].counts : 0,
                 summ: deals.length > 0 ? deals[0].summ : 0
             }
         })
     ) 
-console.log('result: ', result)
   return result
 })

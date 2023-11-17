@@ -102,3 +102,10 @@ export interface TariffProp {
     type: TariffTypeEnum, 
     value: number
 }
+
+
+export interface ITabs { 
+    title: string, 
+    slot: string, 
+    query: string 
+}

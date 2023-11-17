@@ -36,7 +36,7 @@ const paymentHistoryModal = ref(false)
 
     <div class="divider m-0" />
 
-    <div class="buttons flex gap-2">
+    <div class="buttons flex flex-wrap gap-2">
         <button class="btn btn-sm btn-primary" @click="withdrawModal = true">
             Вывод средств
         </button>

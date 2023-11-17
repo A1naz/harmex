@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ITabs } from '~/data/types';
 
 definePageMeta({
   layout: 'app',
@@ -6,23 +7,28 @@ definePageMeta({
   title: 'Партнерская программа',
 })
 
+const runtimeConfig = useRuntimeConfig()
+const route = useRoute()
+const router = useRouter()
+const store = useMainStore()
 const secondLevelReferrals = ref(0)
 const closePartnerVideo = ref(null) as Ref<HTMLLabelElement | null>
-const runtimeConfig = useRuntimeConfig()
-const store = useMainStore()
+const loadingList = ref(false)
+const partners = ref([])
+const refUrl = computed(() => `${url}/register?ref=${client.uuid}`)
+const url = runtimeConfig.public.siteUrl
 const client = store.client
 const partner = client.partner
-const url = runtimeConfig.public.siteUrl
-const refUrl = computed(() => `${url}/register?ref=${client.uuid}`)
-const partners = ref([])
 
 async function getPartners() {
+    loadingList.value = true
     if(client.partner.refCount == 0){
         partners.value = []
     } else {
         const { data }: any = await useFetch('/api/partner/referals', { method: 'GET' })
         if(data) partners.value = data.value
     }
+    loadingList.value = false
 }
 
 function closePartnerVideofn() {
@@ -32,52 +38,76 @@ function closePartnerVideofn() {
 await getPartners()
 
 
+const tabs: ITabs[] = [
+    {title: 'Главное', slot: 'main', query: ''},
+    {title: 'Приглашенные клиенты', slot: 'invited', query: '?tab=invited' },    
+    {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
+]
+
 </script>
 
 <template>
     <div>
 
-        <div class="flex">
-            <h1 class="text-2xl font-bold mt-4">Партнерская программа</h1>
-            <div class="flex md:flex-row items-center md:ml-1 mt-0 md:mt-6  mr-20 md:mr-0">
-            <button class="btn btn-xs btn-primary" @click="closePartnerVideofn">
-                <IconCSS size="18" class="h-8 w-8" name="uil:youtube" />
-                Как работает партнерка?
-            </button>
+        <div class="mb-4">
+            <div class="flex">
+                <h1 class="text-2xl font-bold mt-4">Партнерская программа</h1>
+                <div class="flex md:flex-row items-center md:ml-1 mt-0 md:mt-6  mr-20 md:mr-0">
+                <button class="btn btn-xs btn-primary" @click="closePartnerVideofn">
+                    <IconCSS size="18" class="h-8 w-8" name="uil:youtube" />
+                    Как работает партнерка?
+                </button>
+                </div>
             </div>
-        </div>
-        <p class="text-xs font-light mt-1 lg:text-sm">
-            Приглашайте друзей и получайте бонусы
-        </p>
-        <p class="text-xs mt-1 lg:text-sm font-bold">
-            Вывод финансовых средств недоступен до 15.10.2023. Для перевода
-            реферальных на основной баланс напишите в службу заботы.
-        </p>
-
-        <div class="card bg-base-200 p-4 mt-6 mb-2 flex flex-col gap-2">
-            <PartnerDashboard 
-                :balance="store.client.partner.balance"
-                :ref-count="store.client.partner.refCount"
-                :second-level-referrals="secondLevelReferrals"
-                :ref-url="refUrl"
-                :reward-percent="partner.rewardPercent"
-                />
+            <p class="text-xs font-light mt-1 lg:text-sm">
+                Приглашайте друзей и получайте бонусы
+            </p>
+            <p class="text-xs mt-1 lg:text-sm font-bold">
+                Вывод финансовых средств недоступен до 15.10.2023. Для перевода
+                реферальных на основной баланс напишите в службу заботы.
+            </p>
         </div>
 
-        <div class="linkcard card bg-base-200 p-4 mb-2 flex flex-col gap-2">
-            <PartnerRefUrl 
-                :ref-url="refUrl"
-                :reward-percent="partner.rewardPercent"
-                />
-        </div>
+        <Tabs 
+            :tabs="tabs"
+            :parent-route="route.path"
+            >
+            <template v-slot:main>
+                <div class="flex flex-col w-full ">
+                    <div class="bg-base-200 p-4 m-2 flex flex-col rounded-xl">
+                        <PartnerDashboard 
+                            :balance="store.client.partner.balance"
+                            :ref-count="partners.length"
+                            :second-level-referrals="secondLevelReferrals"
+                            :ref-url="refUrl"
+                            :reward-percent="partner.rewardPercent"
+                            />
+                    </div>
+                    <div class="bg-base-200 p-4 m-2 flex flex-col rounded-xl">
+                        <PartnerRefUrl 
+                            :ref-url="refUrl"
+                            :reward-percent="partner.rewardPercent"
+                            />
+                    </div>
+                </div>
+            </template>
+            <template v-slot:invited>
+                <div class="flex ">
+                    <div class="w-full bg-base-200 p-4 m-2 flex flex-col rounded-xl">
+                        <PartnerList 
+                            :data="partners"
+                            :isLoading="loadingList"
+                            @refresh="getPartners"
+                            />
+                    </div>
+                    <!-- <div class="my-48"></div> -->
+                </div>
+            </template>
+            <template v-slot:orders>
+                Orders
+            </template>
+        </Tabs>
 
-        <div class="linkcard card bg-base-200 p-4 mb-2 flex flex-col gap-2">
-            <PartnerList 
-                :data="partners"
-                />
-        </div>
-
-    <div class="my-48"></div>
     </div>
 
   <input type="checkbox" id="partnerVideo" class="modal-toggle" />
