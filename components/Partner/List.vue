@@ -16,6 +16,7 @@ const configColumns: ConfigTable[] = [
     { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
     { field: 'deals', header: 'Выполнено услуг', type: FieldsType.text },
     { field: 'summ', header: 'Сумма услуг', type: FieldsType.price },
+    { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
 ]
 
 </script>

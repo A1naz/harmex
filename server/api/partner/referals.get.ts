@@ -1,6 +1,7 @@
 import { Referral } from '~/server/lib/models/Referral'
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 import { ObjectId } from 'mongodb'
+import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory'
 
 export default eventHandler(async (event) => {
 
@@ -53,30 +54,32 @@ export default eventHandler(async (event) => {
 
     const result = await Promise.all(
         reffers[0].refInfo.map(async (refer: any) => {
-            const deals = await paymenthistory.aggregate(
-                [
-                    {
-                      $match: {
+            const deals = await paymenthistory.aggregate([
+                    { $match: {
                         user: new ObjectId(refer._id), 
                         typeoperations: "Расход"
-                      }
-                    }, 
-                    {
-                      $group: {
+                    }}, 
+                    { $group: {
                         _id: null, 
                         counts: { $sum: 1 }, 
                         summ: { $sum: "$summ" }
-                      }
-                    }
-                  ]
-                )
+                    } }
+                ])
+            const comissions = await PartnerPaymentHistory.aggregate([
+                { $match: { referral: refer._id} },
+                { $group: {
+                    _id: null,
+                    summ: { $sum: "$amount" }
+                }}
+            ])
             return {
                 email: refer.email,
                 username: refer.username,
                 registrationDate: refer.registrationDate,
                 refCount: refer.partner.refCount ? refer.partner.refCount : 0,
                 deals: deals.length > 0 ? deals[0].counts : 0,
-                summ: deals.length > 0 ? deals[0].summ : 0
+                summ: deals.length > 0 ? deals[0].summ : 0,
+                comission: comissions.length > 0 ? comissions[0].summ : 0
             }
         })
     ) 

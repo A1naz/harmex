@@ -2,27 +2,32 @@
 import { ITabs } from '~/data/types';
 
 defineProps({
-    parentRoute: { type: String, required: true },
     tabs: { type: Object as PropType<ITabs[]>, required: true },
 })
 const route = useRoute()
 const router = useRouter()
+
+function isActive(slot: string, query: string){
+    return route.query.tab ? route.query.tab == slot : '' == query
+}
 
 </script>
 <template>
 
     <Button
         v-for="tab in tabs"
-        :class="{ 'btn-active': route.query.tab ? route.query.tab == tab.slot : '' == tab.query }" 
+        :class="{ 'btn-active': isActive(tab.slot, tab.query) }" 
         class="btn btn-ghost btn-sm normal-case font-medium"
-        @click="router.push(`${parentRoute}${tab.query}`)"
+        @click="router.push(`${route.path}${tab.query}`)"
         >
             {{ tab.title }}
     </Button>
 
-    <div v-for="{slot, query} in tabs" >
-        <slot :name="slot"
-            v-if="route.query.tab ? route.query.tab == slot : '' == query"
+    <div v-for="(tab, index) in tabs" 
+        class="mt-2"
+        >
+        <slot :name="tab.slot" :key="index"
+            v-if="isActive(tab.slot, tab.query)"
             >
         </slot>
     </div>

@@ -1,13 +1,16 @@
 import { Schema, model } from 'mongoose'
 import { User } from './User'
 
+
 const PartnerPaymentHistoryModel = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: User, required: true },
-  amount: { type: Number, required: true },
-  type: { type: String, required: true },
-  description: { type: String, required: true },
-  date: { type: Date, default: Date.now(), required: true },
-})
+    user: { type: Schema.Types.ObjectId, ref: User, required: true },
+    referral: { type: Schema.Types.ObjectId, ref: User, required: true },
+    refLevel: { type: Number, required: true },
+    amount: { type: Number, required: true },
+    type: { type: String, required: true },
+    description: { type: String, required: true },
+    date: { type: Date, default: Date.now(), required: true },
+  });
 
 
 PartnerPaymentHistoryModel.pre('save', function (next) {

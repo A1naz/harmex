@@ -8,8 +8,6 @@ definePageMeta({
 })
 
 const runtimeConfig = useRuntimeConfig()
-const route = useRoute()
-const router = useRouter()
 const store = useMainStore()
 const secondLevelReferrals = ref(0)
 const closePartnerVideo = ref(null) as Ref<HTMLLabelElement | null>
@@ -70,11 +68,10 @@ const tabs: ITabs[] = [
 
         <Tabs 
             :tabs="tabs"
-            :parent-route="route.path"
             >
             <template v-slot:main>
-                <div class="flex flex-col w-full ">
-                    <div class="bg-base-200 p-4 m-2 flex flex-col rounded-xl">
+                <div class="flex flex-col gap-4 w-full ">
+                    <div class="bg-base-200 p-4 flex flex-col rounded-xl">
                         <PartnerDashboard 
                             :balance="store.client.partner.balance"
                             :ref-count="partners.length"
@@ -83,7 +80,7 @@ const tabs: ITabs[] = [
                             :reward-percent="partner.rewardPercent"
                             />
                     </div>
-                    <div class="bg-base-200 p-4 m-2 flex flex-col rounded-xl">
+                    <div class="bg-base-200 p-4 flex flex-col rounded-xl">
                         <PartnerRefUrl 
                             :ref-url="refUrl"
                             :reward-percent="partner.rewardPercent"
@@ -93,7 +90,7 @@ const tabs: ITabs[] = [
             </template>
             <template v-slot:invited>
                 <div class="flex ">
-                    <div class="w-full bg-base-200 p-4 m-2 flex flex-col rounded-xl">
+                    <div class="w-full bg-base-200 p-4 flex flex-col rounded-xl">
                         <PartnerList 
                             :data="partners"
                             :isLoading="loadingList"
@@ -104,7 +101,9 @@ const tabs: ITabs[] = [
                 </div>
             </template>
             <template v-slot:orders>
+
                 Orders
+            
             </template>
         </Tabs>
 
