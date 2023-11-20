@@ -9,40 +9,45 @@ definePageMeta({
 
 const runtimeConfig = useRuntimeConfig()
 const store = useMainStore()
+const route = useRoute()
 const secondLevelReferrals = ref(0)
 const closePartnerVideo = ref(null) as Ref<HTMLLabelElement | null>
 const loadingList = ref(false)
-const partners = ref([])
 const refUrl = computed(() => `${url}/register?ref=${client.uuid}`)
 const url = runtimeConfig.public.siteUrl
 const client = store.client
 const partner = client.partner
 
-async function getPartners() {
+interface ListData {
+    referals: any[], 
+    orders: any[]
+}
+const listData = ref<ListData>({
+    referals: [],
+    orders: []
+})
+
+async function getData() {
     loadingList.value = true
-    if(client.partner.refCount == 0){
-        partners.value = []
-    } else {
-        const { data }: any = await useFetch('/api/partner/referals', { method: 'GET' })
-        if(data) partners.value = data.value
+    const param = route.query.tab
+    if(param){
+        const { data }: any = await useFetch(`/api/partner/${param}`, { method: 'GET' })
+        if(data) listData.value[param as keyof ListData] = data.value
     }
-    loadingList.value = false
+    loadingList.value = false  
 }
 
 function closePartnerVideofn() {
   closePartnerVideo.value?.click()
 }
 
-await getPartners()
-
-
 const tabs: ITabs[] = [
     {title: 'Главное', slot: 'main', query: ''},
-    {title: 'Приглашенные клиенты', slot: 'invited', query: '?tab=invited' },    
+    {title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },    
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
 
-const listConfig: ConfigTable[] = [
+const listConfigPartners: ConfigTable[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
     { field: 'email', header: 'E-mail', type: FieldsType.text },
     { field: 'registrationDate', header: 'Дата регистрации', type: FieldsType.date },
@@ -51,7 +56,22 @@ const listConfig: ConfigTable[] = [
     { field: 'summ', header: 'Сумма услуг', type: FieldsType.price },
     { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
 ]
+const listConfigOrders: ConfigTable[] = [
+    { field: 'username', header: 'Ник', type: FieldsType.text },
+    { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
+    { field: 'dataoperation', header: 'Дата операции', type: FieldsType.date },
+    { field: 'summ', header: 'Стоимость', type: FieldsType.price },
+    { field: 'type', header: 'Тип', type: FieldsType.text },
+    { field: 'article', header: 'Артикул', type: FieldsType.text },
+]
 
+watch(() => route.query.tab,
+  async (newParam, oldParam) => {
+        if(newParam && listData.value[newParam as keyof ListData].length == 0){
+            getData()
+        }
+    }
+)
 </script>
 
 <template>
@@ -84,7 +104,7 @@ const listConfig: ConfigTable[] = [
                     <div class="bg-base-200 p-4 flex flex-col rounded-xl">
                         <PartnerDashboard 
                             :balance="store.client.partner.balance"
-                            :ref-count="partners.length"
+                            :ref-count="listData.referals.length"
                             :second-level-referrals="secondLevelReferrals"
                             :ref-url="refUrl"
                             :reward-percent="partner.rewardPercent"
@@ -98,20 +118,35 @@ const listConfig: ConfigTable[] = [
                     </div>
                 </div>
             </template>
-            <template v-slot:invited>
-                <div class="flex ">
-                    <List 
-                        :data="partners"
-                        :config="listConfig"
-                        :isLoading="loadingList"
-                        @refresh="getPartners"
-                        />
+            <template v-slot:referals>
+                <div class="flex justify-end bg-base-200 rounded-xl mb-2 p-2 gap-2" >
+                    <Button 
+                        class="btn btn-sm btn-primary rounded-xl"
+                        @click="getData" 
+                        >
+                        <span class="pi pi-refresh"></span>
+                    </Button>
                 </div>
+                <List 
+                    :data="listData.referals"
+                    :config="listConfigPartners"
+                    :isLoading="loadingList"
+                    />
             </template>
             <template v-slot:orders>
-
-                Orders
-            
+                <div class="flex justify-end bg-base-200 rounded-xl mb-2 p-2 gap-2" >
+                    <Button 
+                        class="btn btn-sm btn-primary rounded-xl"
+                        @click="getData" 
+                        >
+                        <span class="pi pi-refresh"></span>
+                    </Button>
+                </div>
+                <List 
+                    :data="listData.orders"
+                    :config="listConfigOrders"
+                    :isLoading="loadingList"
+                    />
             </template>
         </Tabs>
 

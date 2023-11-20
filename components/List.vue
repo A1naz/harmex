@@ -20,19 +20,6 @@ const { width, height } = useWindowSize()
         :loading="isLoading"
         :rowsPerPageOptions="[5, 10, 20, 50]"
         >
-        <template #header>
-            <div class="flex flex-wrap align-center justify-between gap-2">
-                <span class="text-xl text-900 font-bold">
-                    Приглашенных
-                </span>
-                <Button 
-                    class="btn btn-sm m-1 btn-primary rounded-xl"
-                    @click="$emit('refresh')" 
-                    >
-                    <span class="pi pi-refresh"></span>
-                </Button>
-            </div>
-        </template>
         <Column
             v-for="col of config"
             :sortable="!['user'].includes(col.field)"
@@ -53,26 +40,29 @@ const { width, height } = useWindowSize()
     </DataTable>
 
     <div v-else
-        class="w-full"
+        class="w-full flex flex-col gap-2"
         >
-        <v-row
+        <div
             v-for="item of data"
-            class="m-2 bg-base-200 w-full p-2"
+            class="w-full flex flex-col"
             >
-            <v-col>
+            <div
+                class="bg-base-200 p-2 w-full rounded-xl"
+                >
                 <div 
                     v-for="col of config" 
-                    class="w-full bg-base-200 flex flex-col p-1 rounded-xl"
                     >
-                    <p v-if="col.type == FieldsType.price" >
-                        <b>{{ col.header }} : </b> {{ item[col.field] }} р.
-                    </p>
-                    <p v-else ><b>{{ col.header }} : </b> {{ item[col.field] }}</p>
+                    <span v-if="col.type == FieldsType.price" >
+                        <b>{{ col.header }}: </b> {{ item[col.field] }} р.
+                    </span>
+                    <span v-else-if="col.type == FieldsType.date">
+                        <b>{{ col.header }}: </b>{{ defaultDate(item[col.field]) }}
+                    </span>
+                    <span v-else ><b>{{ col.header }}: </b> {{ item[col.field] }}</span>
                 </div>
-            </v-col>
-        </v-row>
+            </div>
+        </div>
     </div>
-
 
 </template>
 
