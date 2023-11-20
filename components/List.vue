@@ -3,21 +3,12 @@ import { ConfigTable } from '~/data/types';
 import { FieldsType } from '~/data/enums';
 
 defineProps({
-    data: { type: Array, required: true},
+    data: { type: Array as PropType<any[]>, required: true},
+    config:  { type: Array as PropType<ConfigTable[]>, required: true},
     isLoading: { type: Boolean, required: true},
 })
 defineEmits(['refresh'])
 const { width, height } = useWindowSize()
-
-const configColumns: ConfigTable[] = [
-    { field: 'username', header: 'Ник', type: FieldsType.text },
-    { field: 'email', header: 'E-mail', type: FieldsType.text },
-    { field: 'registrationDate', header: 'Дата регистрации', type: FieldsType.date },
-    { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
-    { field: 'deals', header: 'Выполнено услуг', type: FieldsType.text },
-    { field: 'summ', header: 'Сумма услуг', type: FieldsType.price },
-    { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
-]
 
 </script>
 
@@ -43,7 +34,7 @@ const configColumns: ConfigTable[] = [
             </div>
         </template>
         <Column
-            v-for="col of configColumns"
+            v-for="col of config"
             :sortable="!['user'].includes(col.field)"
             :key=col.field
             :field=col.field 
@@ -53,13 +44,35 @@ const configColumns: ConfigTable[] = [
                 {{ defaultDate(data[col.field]) }}
             </template>
             <template v-else-if="col.type == FieldsType.price" #body="{ data }">
-                {{ data[col.field] }}р.
+                {{ data[col.field] }} р.
             </template>
             <template v-else #body="{ data }">
                 {{ data[col.field] }}
             </template>
         </Column>
     </DataTable>
+
+    <div v-else
+        class="w-full"
+        >
+        <v-row
+            v-for="item of data"
+            class="m-2 bg-base-200 w-full p-2"
+            >
+            <v-col>
+                <div 
+                    v-for="col of config" 
+                    class="w-full bg-base-200 flex flex-col p-1 rounded-xl"
+                    >
+                    <p v-if="col.type == FieldsType.price" >
+                        <b>{{ col.header }} : </b> {{ item[col.field] }} р.
+                    </p>
+                    <p v-else ><b>{{ col.header }} : </b> {{ item[col.field] }}</p>
+                </div>
+            </v-col>
+        </v-row>
+    </div>
+
 
 </template>
 

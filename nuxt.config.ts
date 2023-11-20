@@ -139,7 +139,7 @@ export default defineNuxtConfig({
 
   primevue: {
     components: {
-      include: ['DataTable', 'Column', 'Chips', 'MultiSelect', 'Button', 'TabView'],
+      include: ['DataTable', 'Column', 'Chips', 'MultiSelect', 'Button', 'DataView'],
     },
   },
 

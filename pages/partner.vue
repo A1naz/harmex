@@ -42,6 +42,16 @@ const tabs: ITabs[] = [
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
 
+const listConfig: ConfigTable[] = [
+    { field: 'username', header: 'Ник', type: FieldsType.text },
+    { field: 'email', header: 'E-mail', type: FieldsType.text },
+    { field: 'registrationDate', header: 'Дата регистрации', type: FieldsType.date },
+    { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
+    { field: 'deals', header: 'Выполнено услуг', type: FieldsType.text },
+    { field: 'summ', header: 'Сумма услуг', type: FieldsType.price },
+    { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
+]
+
 </script>
 
 <template>
@@ -90,14 +100,12 @@ const tabs: ITabs[] = [
             </template>
             <template v-slot:invited>
                 <div class="flex ">
-                    <div class="w-full bg-base-200 p-4 flex flex-col rounded-xl">
-                        <PartnerList 
-                            :data="partners"
-                            :isLoading="loadingList"
-                            @refresh="getPartners"
-                            />
-                    </div>
-                    <!-- <div class="my-48"></div> -->
+                    <List 
+                        :data="partners"
+                        :config="listConfig"
+                        :isLoading="loadingList"
+                        @refresh="getPartners"
+                        />
                 </div>
             </template>
             <template v-slot:orders>

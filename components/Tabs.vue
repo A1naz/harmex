@@ -26,7 +26,9 @@ function isActive(slot: string, query: string){
     <div v-for="(tab, index) in tabs" 
         class="mt-2"
         >
-        <slot :name="tab.slot" :key="index"
+        <slot 
+            :name="tab.slot" 
+            :key="index"
             v-if="isActive(tab.slot, tab.query)"
             >
         </slot>
