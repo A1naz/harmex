@@ -290,7 +290,11 @@ async function setChatBotSettings() {
   const trueSettings: Array<any> = []
   botNotifications.value.forEach((el: any) => {
     if (el.isEnabled) {
-      trueSettings.push({ type: el.type, text: el.text, value: el.value !== null ? el.value : null })
+      trueSettings.push({
+        type: el.type,
+        text: el.text,
+        value: el.value !== null ? el.value : null,
+      })
     }
   })
   const { data, error }: any = await useFetch('/api/tgBot/setChatBotSettings', {
@@ -511,7 +515,22 @@ async function setChatBotSettings() {
         class="profile-options mt-14 flex flex-col justify-end items-end gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
       >
         <div class="self-start description-container xl:basis-1/3">
-          <div class="heading relative">Настройки чат-бота</div>
+          <div
+            class="self-start description-container xl:basis-1/3"
+            v-if="isChatBotEnabled && store.client.telegram"
+          >
+            <div class="heading relative">Настройки чат-бота</div>
+            <div class="mt-1 text-gray-40">
+              Ссылка на бота:
+              <a
+                href="https://t.me/topvtop_notifications_bot"
+                target="_blank"
+                class="text-primary text-lg"
+              >
+                @topvtop_notifications_bot</a
+              >
+            </div>
+          </div>
         </div>
         <div>
           <div class="flex flex-col gap-2 w-full">
