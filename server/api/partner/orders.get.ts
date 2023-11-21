@@ -6,25 +6,25 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-    const reffers = await Referral.aggregate(
-        [
-            {
-                $match: {
+    const { skip, limit } = getQuery(event)
+
+    const reffers = await Referral.aggregate([
+            { $match: {
                     user: user._id
                 }
-            }, {
-                $project: {
+            }, 
+            { $project: {
                     referrals: 1
                 }
-            }, {
-                $lookup: {
+            }, 
+            { $lookup: {
                     from: 'users', 
                     localField: 'referrals.user', 
                     foreignField: '_id', 
                     as: 'refInfo'
                 }
-            }, {
-                $project: {
+            }, 
+            { $project: {
                     referrals: 0, 
                     refInfo: {
                         wbApiKeys: 0, 
@@ -45,20 +45,22 @@ export default eventHandler(async (event) => {
                     }
                 }
             }
-        ]
-    )
+    ])
 
-  if (!reffers[0]) return []
+    if (!reffers[0]) return []
 
     const result = await Promise.all(
         reffers[0].refInfo.map(async (refer: any) => {
 
             const deals = await paymenthistory.find({user: refer._id})
+                                                .limit(limit as number)
+                                                .skip(skip as number)
             if(!deals) return
 
             return deals.map( deal => {
                 return {
                     username: refer.username,
+                    email: refer.email,
                     refCount: refer.partner.refCount ? refer.partner.refCount : 0,
                     dataoperation: deal.dataoperation,
                     summ: deal.summ,
@@ -70,8 +72,7 @@ export default eventHandler(async (event) => {
     ) 
 
     const data: any[] = []
-
     result.forEach( el => el.forEach( (i: any) => data.push(i)))
 
-  return data.sort( (a, b) => b.dataoperation - a.dataoperation)
+    return data.sort( (a, b) => b.dataoperation - a.dataoperation)
 })

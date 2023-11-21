@@ -8,25 +8,27 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-    const reffers = await Referral.aggregate(
-        [
-            {
-                $match: {
+    const params = getQuery(event)
+    const limit = params.limit ? parseInt(params.limit?.toString(), 10) : 50
+    const skip = params.skip ? parseInt(params.skip?.toString(), 10) : 0
+
+    const reffers = await Referral.aggregate([
+            { $match: {
                     user: user._id
                 }
-            }, {
-                $project: {
+            },
+            { $project: {
                     referrals: 1
                 }
-            }, {
-                $lookup: {
+            }, 
+            { $lookup: {
                     from: 'users', 
                     localField: 'referrals.user', 
                     foreignField: '_id', 
                     as: 'refInfo'
                 }
-            }, {
-                $project: {
+            }, 
+            { $project: {
                     referrals: 0, 
                     refInfo: {
                         wbApiKeys: 0, 
@@ -46,9 +48,10 @@ export default eventHandler(async (event) => {
                         }
                     }
                 }
-            }
-        ]
-    )
+            }, 
+            { $limit: limit},
+            { $skip: skip},
+    ])
 
   if (!reffers[0]) return []
 

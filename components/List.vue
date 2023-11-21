@@ -6,19 +6,27 @@ defineProps({
     data: { type: Array as PropType<any[]>, required: true},
     config:  { type: Array as PropType<ConfigTable[]>, required: true},
     isLoading: { type: Boolean, required: true},
+    modelValue: { type: Boolean, required: true }
 })
-defineEmits(['refresh'])
 const { width, height } = useWindowSize()
+const target = ref(null)
+
+const emit = defineEmits(['refresh', 'update:modelValue'])
+
+const { stop } = useIntersectionObserver( target,
+  ([{ isIntersecting }], observerElement) => {
+    emit('update:modelValue', isIntersecting)
+  },
+)
 
 </script>
 
 <template>
-
+<div>
     <DataTable 
         v-if="width > 1024"
         :value="data" 
         :loading="isLoading"
-        :rowsPerPageOptions="[5, 10, 20, 50]"
         >
         <Column
             v-for="col of config"
@@ -64,6 +72,9 @@ const { width, height } = useWindowSize()
         </div>
     </div>
 
+    <div id="target" ref="target" class="flex justify-center items-center h-4" />
+
+</div>
 </template>
 
 <style scoped></style>

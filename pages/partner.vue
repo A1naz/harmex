@@ -9,7 +9,6 @@ definePageMeta({
 
 const runtimeConfig = useRuntimeConfig()
 const store = useMainStore()
-const route = useRoute()
 const secondLevelReferrals = ref(0)
 const closePartnerVideo = ref(null) as Ref<HTMLLabelElement | null>
 const loadingList = ref(false)
@@ -18,24 +17,77 @@ const url = runtimeConfig.public.siteUrl
 const client = store.client
 const partner = client.partner
 
+const limitInit = 20
+
+interface itemData {
+    data: any [],
+    skip: number,
+    limit: number,
+    stopFetch: boolean
+}
 interface ListData {
-    referals: any[], 
-    orders: any[]
+    referals: itemData, 
+    orders: itemData
 }
 const listData = ref<ListData>({
-    referals: [],
-    orders: []
+    referals: {
+        data: [],
+        skip: 0,
+        limit: limitInit,
+        stopFetch: false
+    },
+    orders: {
+        data: [],
+        skip: 0,
+        limit: limitInit,
+        stopFetch: false
+    },
 })
+
+
+const route = useRoute()
+const tab = computed (() => route.query.tab)
 
 async function getData() {
     loadingList.value = true
-    const param = route.query.tab
-    if(param){
-        const { data }: any = await useFetch(`/api/partner/${param}`, { method: 'GET' })
-        if(data) listData.value[param as keyof ListData] = data.value
+    if(tab.value && !listData.value[tab.value as keyof ListData].stopFetch) {
+        const { skip, limit } = listData.value[tab.value as keyof ListData]
+        const { data }: any = await useFetch(`/api/partner/${tab.value}`, { 
+            query: { 
+                skip: skip, 
+                limit: limit
+            },
+            method: 'GET' 
+        })
+        if(data.value && data.value.length > 0){
+            listData.value[tab.value as keyof ListData].data = [
+                ...listData.value[tab.value as keyof ListData].data,
+                ...data.value
+            ]
+            listData.value[tab.value as keyof ListData].skip += limitInit
+            listData.value[tab.value as keyof ListData].limit += limitInit
+        } else {
+            listData.value[tab.value as keyof ListData].stopFetch = true
+        }
     }
     loadingList.value = false  
 }
+
+async function refreshData() {
+    if(tab.value ){
+        const currentTab = listData.value[tab.value as keyof ListData]
+        currentTab.data = []
+        currentTab.skip = 0
+        currentTab.limit = limitInit
+        currentTab.stopFetch = false
+        await getData()
+    }
+}
+
+const isListEnd = ref(false)
+watch( () => isListEnd.value, async (newValue, oldValue) => {
+    if (newValue) await getData()
+})
 
 function closePartnerVideofn() {
   closePartnerVideo.value?.click()
@@ -46,7 +98,6 @@ const tabs: ITabs[] = [
     {title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },    
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
-
 const listConfigPartners: ConfigTable[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
     { field: 'email', header: 'E-mail', type: FieldsType.text },
@@ -58,6 +109,7 @@ const listConfigPartners: ConfigTable[] = [
 ]
 const listConfigOrders: ConfigTable[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
+    { field: 'email', header: 'E-mail', type: FieldsType.text },
     { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
     { field: 'dataoperation', header: 'Дата операции', type: FieldsType.date },
     { field: 'summ', header: 'Стоимость', type: FieldsType.price },
@@ -65,13 +117,6 @@ const listConfigOrders: ConfigTable[] = [
     { field: 'article', header: 'Артикул', type: FieldsType.text },
 ]
 
-watch(() => route.query.tab,
-  async (newParam, oldParam) => {
-        if(newParam && listData.value[newParam as keyof ListData].length == 0){
-            getData()
-        }
-    }
-)
 </script>
 
 <template>
@@ -98,13 +143,14 @@ watch(() => route.query.tab,
 
         <Tabs 
             :tabs="tabs"
+            @changeTab="isListEnd = false"
             >
             <template v-slot:main>
                 <div class="flex flex-col gap-4 w-full ">
                     <div class="bg-base-200 p-4 flex flex-col rounded-xl">
                         <PartnerDashboard 
                             :balance="store.client.partner.balance"
-                            :ref-count="listData.referals.length"
+                            :ref-count="listData.referals.data.length"
                             :second-level-referrals="secondLevelReferrals"
                             :ref-url="refUrl"
                             :reward-percent="partner.rewardPercent"
@@ -122,30 +168,32 @@ watch(() => route.query.tab,
                 <div class="flex justify-end bg-base-200 rounded-xl mb-2 p-2 gap-2" >
                     <Button 
                         class="btn btn-sm btn-primary rounded-xl"
-                        @click="getData" 
+                        @click="refreshData" 
                         >
                         <span class="pi pi-refresh"></span>
                     </Button>
                 </div>
                 <List 
-                    :data="listData.referals"
+                    :data="listData.referals.data"
                     :config="listConfigPartners"
                     :isLoading="loadingList"
+                    v-model="isListEnd"
                     />
             </template>
             <template v-slot:orders>
                 <div class="flex justify-end bg-base-200 rounded-xl mb-2 p-2 gap-2" >
                     <Button 
                         class="btn btn-sm btn-primary rounded-xl"
-                        @click="getData" 
+                        @click="refreshData" 
                         >
                         <span class="pi pi-refresh"></span>
                     </Button>
                 </div>
                 <List 
-                    :data="listData.orders"
+                    :data="listData.orders.data"
                     :config="listConfigOrders"
                     :isLoading="loadingList"
+                    v-model="isListEnd"
                     />
             </template>
         </Tabs>
