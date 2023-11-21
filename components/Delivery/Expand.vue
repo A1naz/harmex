@@ -42,111 +42,139 @@ function daysToPenalty(statusdelivery: any[]) {
 </script>
 
 <template>
-  <div class="collapse collapse-arrow border border-base-100 bg-base-200 rounded-box z-0 overflow-hidden max-w-[95vw]">
+<div class="collapse collapse-arrow border border-base-100 bg-base-200 rounded-box z-0 overflow-hidden max-w-[95vw]">
+
     <input v-model="opened" type="checkbox">
+    
     <div class="collapse-title relative text-xl font-medium">
-      <div class="flex gap-4">
-        <nuxt-img
-          fit="contain" :src="info?.productimage" width="36"
-          loading="lazy"
-          class="rounded-lg transition-opacity ease-in-out duration-200 hidden lg:block"
-        />
-        <div class="w-full">
-          <div class="flex justify-between flex-wrap">
-            <span> Доставка
-            </span>
-            <label
-              class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
-              @click="openBuyout"
-            >#{{
-              info.uuid }}</label>
-          </div>
-          <div class="flex justify-between flex-wrap gap-2 items-center">
-            <button class="text-sm link link-hover z-10" @click="emit('openStatusModal', info.statusdelivery)">
-              <span class="text-primary">Статус: </span>
-              <span>
-                {{ info.currentstatus }}
-              </span>
-            </button>
-            <div v-if="info.currentstatus === 'Готов к выдаче' && info.statusdelivery.length > 1" class="text-sm text-warning link link-hover z-10" @click="emit('openPenaltyModal')">
-              {{ daysToPenalty(info.statusdelivery) }}
+        <div class="flex gap-4">
+            <nuxt-img
+                fit="contain" :src="info?.productimage" width="36"
+                loading="lazy"
+                class="rounded-lg transition-opacity ease-in-out duration-200 hidden lg:block"
+                />
+
+            <div class="w-full">
+
+                <div class="flex justify-between flex-wrap">
+                    <span> 
+                        Доставка
+                    </span>
+                    <label
+                        class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
+                        @click="openBuyout"
+                        >#{{info.uuid }}
+                    </label>
+                </div>
+
+                <div class="flex justify-between flex-wrap gap-2 items-center">
+                    <button 
+                        class="text-sm link link-hover z-10" 
+                        @click="emit('openStatusModal', info.statusdelivery)
+                        ">
+                        <span class="text-primary"> Статус: </span>
+                        <span> {{ info.currentstatus }} </span>
+                    </button>
+                    <div v-if="info.currentstatus === 'Готов к выдаче' && info.statusdelivery.length > 1" 
+                        class="text-sm text-warning link link-hover z-10" 
+                        @click="emit('openPenaltyModal')"
+                        >
+                        {{ daysToPenalty(info.statusdelivery) }}
+                    </div>
+                    <div class="mt-2 lg:m-0 text-xs">
+                        Обновлено {{ defaultDate(info.updatedAt) }}
+                    </div>
+                </div>
+
             </div>
-            <div class="mt-2 lg:m-0 text-xs">
-              Обновлено {{ defaultDate(info.updatedAt) }}
+
+        </div>
+    </div>
+
+
+    <div class="collapse-content ">
+        <div class="product flex gap-4 lg:gap-8 items-center flex-wrap">
+
+            <div>
+                <div class="text-sm text-gray-500">
+                    Артикул
+                </div>
+                <a
+                    :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
+                    class=" text-secondary link link-hover"
+                    >
+                    {{ info.article }}
+                </a>
             </div>
-          </div>
+
+            <div>
+                <div class="text-sm text-gray-500 ">
+                    Название
+                </div>
+                <div>
+                    {{ info.productname }}
+                </div>
+            </div>
+
+            <div>
+                <div class="text-sm text-gray-500">
+                    Размер
+                </div>
+                {{ info.size === 'none' ? 'Не указан' : info.size }}
+            </div>
+
+            <div class="flex-end">
+                <div class="text-sm text-gray-500">
+                    Цена
+                </div>
+                {{ currency.format(info.pricebuy) }}
+            </div>
+
         </div>
-      </div>
+
+        <div class="divider" />
+
+        <div class="receipt flex gap-4 lg:gap-8 items-center flex-wrap">
+
+            <div>
+                <div class="text-sm text-gray-500">
+                    Получатель:
+                </div>
+                {{ info.recipient }} {{ info.recipientphone }}
+            </div>
+
+            <div class="w-76 overflow-hidden truncate">
+                <div class="text-sm text-gray-500">
+                    Адрес:
+                </div>
+                <a
+                    target="_blank" class="text-secondary link link-hover w-52 lg:w-76 truncate overflow-hidden"
+                    :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
+                    >
+                    {{ info.point }}
+                </a>
+            </div>
+
+            <div>
+                <div class="text-sm text-gray-500">
+                    Код получения:
+                </div>
+                {{ info?.receiptcode ? info?.receiptcode : 'Товар не доставлен' }}
+            </div>
+
+            <div v-if="info.receiptcodeqr">
+                <label
+                    for="qr-modal" class="btn btn-primary btn-sm flex gap-2" @click="emit('openModal', parseInt(info.receiptcode), info.receiptcodeqr)"
+                    >
+                    <Icon name="material-symbols:qr-code" size="24" /> <span>QR-код</span>
+                </label>
+            </div>
+
+        </div>
+        
     </div>
-    <div class="collapse-content">
-      <div class="product flex gap-4 lg:gap-8 items-center flex-wrap">
-        <div>
-          <div class="text-sm text-gray-500">
-            Артикул
-          </div>
-          <a
-            :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
-            class=" text-secondary link link-hover"
-          >
-            {{ info.article }}
-          </a>
-        </div>
-        <div class="truncate w-50">
-          <div class="text-sm text-gray-500 ">
-            Название
-          </div>
-          <p class="break-all">
-            {{ info.productname }}
-          </p>
-        </div>
-        <div>
-          <div class="text-sm text-gray-500">
-            Размер
-          </div>
-          {{ info.size === 'none' ? 'Не указан' : info.size }}
-        </div>
-        <div class="flex-end">
-          <div class="text-sm text-gray-500">
-            Цена
-          </div>
-          {{ currency.format(info.pricebuy) }}
-        </div>
-      </div>
-      <div class="divider" />
-      <div class="receipt flex gap-4 lg:gap-8 items-center flex-wrap">
-        <div>
-          <div class="text-sm text-gray-500">
-            Получатель:
-          </div>
-          {{ info.recipient }} {{ info.recipientphone }}
-        </div>
-        <div class="w-76 overflow-hidden truncate">
-          <div class="text-sm text-gray-500">
-            Адрес:
-          </div>
-          <a
-            target="_blank" class="text-secondary link link-hover w-52 lg:w-76 truncate overflow-hidden"
-            :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
-          >
-            {{ info.point }}
-          </a>
-        </div>
-        <div>
-          <div class="text-sm text-gray-500">
-            Код получения:
-          </div>
-          {{ info?.receiptcode ? info?.receiptcode : 'Товар не доставлен' }}
-        </div>
-        <div v-if="info.receiptcodeqr">
-          <label
-            for="qr-modal" class="btn btn-primary btn-sm flex gap-2" @click="emit('openModal', parseInt(info.receiptcode), info.receiptcodeqr)"
-          >
-            <Icon name="material-symbols:qr-code" size="24" /> <span>QR-код</span>
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
+
+</div>
 </template>
 
 <style scoped></style>
