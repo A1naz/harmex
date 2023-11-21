@@ -78,8 +78,8 @@ function daysToPenalty(statusdelivery: any[]) {
         </div>
       </div>
     </div>
-    <div class="collapse-content overflow-hidden">
-      <div class="product flex gap-4 lg:gap-8 items-center flex-wrap overflow-hidden">
+    <div class="collapse-content">
+      <div class="product flex gap-4 lg:gap-8 items-center flex-wrap">
         <div>
           <div class="text-sm text-gray-500">
             Артикул
