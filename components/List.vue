@@ -6,18 +6,20 @@ defineProps({
     data: { type: Array as PropType<any[]>, required: true},
     config:  { type: Array as PropType<ConfigTable[]>, required: true},
     isLoading: { type: Boolean, required: true},
-    modelValue: { type: Boolean, required: true }
+    endList: { type: Boolean, required: true }
 })
 const { width, height } = useWindowSize()
 const target = ref(null)
 
-const emit = defineEmits(['refresh', 'update:modelValue'])
+const emit = defineEmits(['refresh', 'sortField', 'sortOrder', 'update:endList'])
 
 const { stop } = useIntersectionObserver( target,
   ([{ isIntersecting }], observerElement) => {
-    emit('update:modelValue', isIntersecting)
+    emit('update:endList', isIntersecting)
   },
 )
+
+let sortProp = { field: '', order: 1 }
 
 </script>
 
@@ -27,6 +29,8 @@ const { stop } = useIntersectionObserver( target,
         v-if="width > 1024"
         :value="data" 
         :loading="isLoading"
+        @update:sort-field="(f: string) => $emit('sortField', f)"
+        @update:sort-order="(o: number) => $emit('sortOrder', o)"
         >
         <Column
             v-for="col of config"
@@ -72,6 +76,7 @@ const { stop } = useIntersectionObserver( target,
         </div>
     </div>
 
+    <div v-if="isLoading" class="flex justify-center"> ... Loading </div>
     <div id="target" ref="target" class="flex justify-center items-center h-4" />
 
 </div>

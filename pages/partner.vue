@@ -9,14 +9,17 @@ definePageMeta({
 
 const runtimeConfig = useRuntimeConfig()
 const store = useMainStore()
+const route = useRoute()
+
+const tab = computed (() => route.query.tab)
+const refUrl = computed(() => `${runtimeConfig.public.siteUrl}/register?ref=${client.uuid}`)
+
 const secondLevelReferrals = ref(0)
 const closePartnerVideo = ref(null) as Ref<HTMLLabelElement | null>
 const loadingList = ref(false)
-const refUrl = computed(() => `${url}/register?ref=${client.uuid}`)
-const url = runtimeConfig.public.siteUrl
+
 const client = store.client
 const partner = client.partner
-
 const limitInit = 20
 
 interface itemData {
@@ -45,12 +48,12 @@ const listData = ref<ListData>({
 })
 
 
-const route = useRoute()
-const tab = computed (() => route.query.tab)
-
 async function getData() {
-    loadingList.value = true
-    if(tab.value && !listData.value[tab.value as keyof ListData].stopFetch) {
+    if (tab.value 
+        && !loadingList.value
+        && !listData.value[tab.value as keyof ListData].stopFetch
+        ) {
+        loadingList.value = true
         const { skip, limit } = listData.value[tab.value as keyof ListData]
         const { data }: any = await useFetch(`/api/partner/${tab.value}`, { 
             query: { 
@@ -84,10 +87,16 @@ async function refreshData() {
     }
 }
 
-const isListEnd = ref(false)
-watch( () => isListEnd.value, async (newValue, oldValue) => {
-    if (newValue) await getData()
-})
+// const filter = ref({
+//     sort: {},
+//     search: {}
+// })
+// function search({sorField?, sortOrder?}) {
+    
+//     filter.value.sort
+// }
+// @sort-field="(v: string) => search({sorField: v})"
+// @sort-order="(v: number) => search({sortOrder: v})"
 
 function closePartnerVideofn() {
   closePartnerVideo.value?.click()
@@ -98,6 +107,7 @@ const tabs: ITabs[] = [
     {title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },    
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
+
 const listConfigPartners: ConfigTable[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
     { field: 'email', header: 'E-mail', type: FieldsType.text },
@@ -116,12 +126,15 @@ const listConfigOrders: ConfigTable[] = [
     { field: 'type', header: 'Тип', type: FieldsType.text },
     { field: 'article', header: 'Артикул', type: FieldsType.text },
 ]
+const isListEnd = ref(false)
+watch( () => isListEnd.value, async (newValue, oldValue) => {
+    if (newValue) await getData()
+})
 
 </script>
 
 <template>
     <div>
-
         <div class="mb-4">
             <div class="flex">
                 <h1 class="text-2xl font-bold mt-4">Партнерская программа</h1>
@@ -177,7 +190,7 @@ const listConfigOrders: ConfigTable[] = [
                     :data="listData.referals.data"
                     :config="listConfigPartners"
                     :isLoading="loadingList"
-                    v-model="isListEnd"
+                    v-model:endList="isListEnd"
                     />
             </template>
             <template v-slot:orders>
@@ -193,40 +206,39 @@ const listConfigOrders: ConfigTable[] = [
                     :data="listData.orders.data"
                     :config="listConfigOrders"
                     :isLoading="loadingList"
-                    v-model="isListEnd"
+                    v-model:endList="isListEnd"
                     />
             </template>
         </Tabs>
-
     </div>
 
-  <input type="checkbox" id="partnerVideo" class="modal-toggle" />
-  <div class="modal">
-    <div class="modal-box w-11/12 max-w-4xl">
-      <button
-        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-        @click="closePartnerVideofn"
-      >
-        ✕
-      </button>
-      <iframe
-        class="w-full h-[30rem] rounded-lg my-4"
-        src="https://www.youtube.com/embed/GwGXzd8PwGE?si=C3lM_nbhlvFQ0Hvv"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-      />
-      <div class="modal-action flex justify-between">
-        <label
-          for="partnerVideo"
-          ref="closePartnerVideo"
-          class="btn btn-primary hidden"
-          ></label
-        >
-      </div>
+    <input type="checkbox" id="partnerVideo" class="modal-toggle" />
+    <div class="modal">
+        <div class="modal-box w-11/12 max-w-4xl">
+            <button
+                class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                @click="closePartnerVideofn"
+                >
+                ✕
+            </button>
+            <iframe
+                class="w-full h-[30rem] rounded-lg my-4"
+                src="https://www.youtube.com/embed/GwGXzd8PwGE?si=C3lM_nbhlvFQ0Hvv"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                />
+            <div class="modal-action flex justify-between">
+                <label
+                    for="partnerVideo"
+                    ref="closePartnerVideo"
+                    class="btn btn-primary hidden"
+                    >
+                </label>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <style scoped></style>
