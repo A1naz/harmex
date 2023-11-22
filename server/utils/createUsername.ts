@@ -11,7 +11,7 @@ export async function createUsername(email: string): Promise<string> {
         if (usernames.includes(userName)) {
             let start = 1
             let userNickToCheck = userName.toString()
-            while (usernames.includes(userNickToCheck + start)) {
+            while (usernames.includes(userNickToCheck + '_' + start)) {
                 start++
             }
             userName = userNickToCheck + '_' + start
