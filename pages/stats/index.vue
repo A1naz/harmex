@@ -1,22 +1,24 @@
 ﻿<script lang="ts" setup>
-const { width, height } = useWindowSize()
-import { notify } from '@kyvg/vue3-notification'
-import { relative } from 'path'
 import { Bar } from 'vue-chartjs'
-const currency = useCurrency()
-
-const secondLevelReferrals = ref(0)
-const route = useRoute()
-const router = useRouter()
-const status = computed(() => route.query?.status || 'all')
-const periodFromRoute = route.query.period
-const lastElements = ref<any>([])
 
 definePageMeta({
   layout: 'app',
   auth: true,
   title: 'Аналитика',
 })
+
+const currency = useCurrency()
+const route = useRoute()
+const { width } = useWindowSize()
+const secondLevelReferrals = ref(0)
+const lastElements = ref<any>([])
+const periodFromRoute = route.query.period
+
+if (!route.query.type || !route.query.period) {
+  navigateTo('/stats?type=all&period=today', {
+    external: true,
+  })
+}
 
 let chartDataValue = ref<any>([])
 const services = ref<any>([])
@@ -114,15 +116,6 @@ const selectedService: any = ref({
   quantity: 495,
 })
 
-const barThickness = computed(() => {
-  if (width.value > 768) {
-    return 30
-  } else {
-    return 10
-  }
-})
-
-const type = route.query.type ? route.query.type : ''
 const chartBar: any = ref(null)
 const chartData = ref({
   labels: chartLabels.value,
@@ -175,12 +168,6 @@ function selectPeriod(event: any) {
 
 function selectService(event: any) {
   navigateTo(`/stats?type=${event.target.value}&period=${route.query.period}`, {
-    external: true,
-  })
-}
-
-if (!route.query.type || !route.query.period) {
-  navigateTo('/stats?type=all&period=today', {
     external: true,
   })
 }

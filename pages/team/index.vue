@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { MenuEnums } from '~/data/menu/types';
 import { FieldsType } from '~/data/enums';
-import { OptionsMulti } from '~/data/types';
+import { ConfigTable, OptionsMulti } from '~/data/types';
 import MenuBuilder from '~/server/utils/menuBuilder';
 
 definePageMeta({
@@ -138,13 +138,13 @@ const closeConfirm = async (isConfirmed: boolean) => {
     btnSaveLoading.value = false
 }
 
-const configColumns = [
-    { field: 'username', header: 'Ник' },
-    { field: 'firstName', header: 'Имя' },
-    { field: 'lastName', header: 'Фамилия' },
-    { field: 'email', header: 'E-Mail' },
-    { field: 'allowedPathes', header: 'Разрешения' },
-    { field: 'actions', header: 'Действия', actions: [
+const configColumns: ConfigTable[] = [
+    { field: 'username', header: 'Ник', type: FieldsType.text },
+    { field: 'firstName', header: 'Имя', type: FieldsType.text },
+    { field: 'lastName', header: 'Фамилия', type: FieldsType.text },
+    { field: 'email', header: 'E-Mail', type: FieldsType.text },
+    { field: 'allowedPathes', header: 'Разрешения', type: FieldsType.multiOptions },
+    { field: 'actions', header: 'Действия', type: FieldsType.actions, actions: [
         { 
             btnLabel: 'Изменить', 
             btnClass: 'btn btn-sm m-1 btn-primary',
@@ -191,7 +191,7 @@ const configColumns = [
                 :field=col.field 
                 :header=col.header
                 >
-                <template v-if="col.field == 'allowedPathes'" #body="{ data }">
+                <template v-if="col.type == FieldsType.multiOptions" #body="{ data }">
                     <div class="flex flex-wrap" >
                         <div v-if="data[col.field].length == multiOptions.length"
                             class="text-sm px-3 py-1 m-1 rounded-2xl border border-success text-success"
@@ -207,7 +207,7 @@ const configColumns = [
                         </div>
                     </div>
                 </template>
-                <template v-else-if="col.field == 'actions'" #body="{ data }">
+                <template v-else-if="col.type == FieldsType.actions" #body="{ data }">
                     <div class="flex flex-column content-center">
                         <Button 
                             v-for="(act, index) in col.actions"

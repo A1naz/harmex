@@ -9,6 +9,10 @@ const props = defineProps({
         type: String, 
         required: true
     },
+    configColumns: { 
+        type: Array as PropType<ConfigTable[]>, 
+        required: false
+    },
     saveButton: {
         type: String, 
         default: "Скачать",
@@ -22,13 +26,30 @@ const props = defineProps({
 
 const exportDates = ref([])
 const btnLoading = ref(false)
+const columns = ref<ConfigTable[]>([])
+
+function prepareColummns() {
+    if(props.configColumns){
+        for(const column of props.configColumns){
+        columns.value.push(
+            {
+                header: column.header, 
+                key: column.field, 
+                font: { bold: true }, 
+                width: 25 
+            })
+        }
+    }
+}
 
 async function exportToXLS() {
   btnLoading.value = true
+  prepareColummns()
   const { data } = await useFetch(props.api, {
     method: 'POST',
     body: {
       exportDates: exportDates.value,
+      columns: columns
     },
     responseType: 'blob',
   })
