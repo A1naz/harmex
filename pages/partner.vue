@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ITabs } from '~/data/types';
+import { FieldsType } from '~/data/enums'
 
 definePageMeta({
   layout: 'app',
