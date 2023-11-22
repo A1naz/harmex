@@ -20,33 +20,31 @@ const loadingList = ref(false)
 
 const client = store.client
 const partner = client.partner
-const limitInit = 20
+
 
 interface itemData {
     data: any [],
     skip: number,
     limit: number,
+    sort: any,
     stopFetch: boolean
 }
 interface ListData {
     referals: itemData, 
     orders: itemData
 }
+const limitInit = 20
+const itemInitData = {
+    data: [],
+    skip: 0,
+    limit: limitInit,
+    sort: {},
+    stopFetch: false
+}
 const listData = ref<ListData>({
-    referals: {
-        data: [],
-        skip: 0,
-        limit: limitInit,
-        stopFetch: false
-    },
-    orders: {
-        data: [],
-        skip: 0,
-        limit: limitInit,
-        stopFetch: false
-    },
+    referals: {...itemInitData},
+    orders: {...itemInitData},
 })
-
 
 async function getData() {
     if (tab.value 
@@ -54,11 +52,12 @@ async function getData() {
         && !listData.value[tab.value as keyof ListData].stopFetch
         ) {
         loadingList.value = true
-        const { skip, limit } = listData.value[tab.value as keyof ListData]
+        const { skip, limit, sort } = listData.value[tab.value as keyof ListData]
         const { data }: any = await useFetch(`/api/partner/${tab.value}`, { 
             query: { 
                 skip: skip, 
-                limit: limit
+                limit: limit,
+                sort: JSON.stringify(sort)
             },
             method: 'GET' 
         })
@@ -73,30 +72,29 @@ async function getData() {
             listData.value[tab.value as keyof ListData].stopFetch = true
         }
     }
-    loadingList.value = false  
+    loadingListDebounce() // to avoid double fetch after click on sort
 }
+
+const getDataDebounced = useDebounceFn(()=> getData() , 1000)
+const loadingListDebounce = useDebounceFn(()=> loadingList.value = false , 500)  
 
 async function refreshData() {
     if(tab.value ){
-        const currentTab = listData.value[tab.value as keyof ListData]
-        currentTab.data = []
-        currentTab.skip = 0
-        currentTab.limit = limitInit
-        currentTab.stopFetch = false
+        listData.value[tab.value as keyof ListData] = {...itemInitData}
         await getData()
     }
 }
 
-// const filter = ref({
-//     sort: {},
-//     search: {}
-// })
-// function search({sorField?, sortOrder?}) {
-    
-//     filter.value.sort
-// }
-// @sort-field="(v: string) => search({sorField: v})"
-// @sort-order="(v: number) => search({sortOrder: v})"
+function search(sort: any) {
+    listData.value[tab.value as keyof ListData].sort = { 
+        [sort.sortField]: sort.sortOrder 
+    }
+    listData.value[tab.value as keyof ListData].data = []
+    listData.value[tab.value as keyof ListData].skip = 0
+    listData.value[tab.value as keyof ListData].limit = limitInit
+    listData.value[tab.value as keyof ListData].stopFetch = false
+    getDataDebounced()
+}
 
 function closePartnerVideofn() {
   closePartnerVideo.value?.click()
@@ -191,6 +189,8 @@ watch( () => isListEnd.value, async (newValue, oldValue) => {
                     :config="listConfigPartners"
                     :isLoading="loadingList"
                     v-model:endList="isListEnd"
+                    :sortCurrent="listData.referals.sort"
+                    @sort="(v: any) => search(v)"
                     />
             </template>
             <template v-slot:orders>
@@ -207,6 +207,8 @@ watch( () => isListEnd.value, async (newValue, oldValue) => {
                     :config="listConfigOrders"
                     :isLoading="loadingList"
                     v-model:endList="isListEnd"
+                    :sortCurrent="listData.referals.sort"
+                    @sort="(v: any) => search(v)"
                     />
             </template>
         </Tabs>

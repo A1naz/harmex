@@ -6,7 +6,8 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-    const { skip, limit } = getQuery(event)
+    const { skip, limit, sort } = getQuery(event)
+    const sortObj = sort ? JSON.parse(sort.toString()) : undefined
 
     const reffers = await Referral.aggregate([
             { $match: {
@@ -74,5 +75,13 @@ export default eventHandler(async (event) => {
     const data: any[] = []
     result.forEach( el => el.forEach( (i: any) => data.push(i)))
 
-    return data.sort( (a, b) => b.dataoperation - a.dataoperation)
+    if (sortObj && Object.keys(sortObj).length > 0) {
+        const key = Object.keys(sortObj)[0]
+        const value = sortObj[key]
+        if (key && value){
+            result.sort( (a, b)=> value==1 ? a[key]-b[key] : b[key]-a[key] )
+        }
+    }
+
+    return data
 })

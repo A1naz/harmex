@@ -11,6 +11,7 @@ export default eventHandler(async (event) => {
     const params = getQuery(event)
     const limit = params.limit ? parseInt(params.limit?.toString(), 10) : 50
     const skip = params.skip ? parseInt(params.skip?.toString(), 10) : 0
+    const sortObj = params.sort ? JSON.parse(params.sort.toString()) : undefined
 
     const reffers = await Referral.aggregate([
             { $match: {
@@ -26,8 +27,7 @@ export default eventHandler(async (event) => {
                     localField: 'referrals.user', 
                     foreignField: '_id', 
                     as: 'refInfo'
-                }
-            }, 
+            }}, 
             { $project: {
                     referrals: 0, 
                     refInfo: {
@@ -85,6 +85,15 @@ export default eventHandler(async (event) => {
                 comission: comissions.length > 0 ? comissions[0].summ : 0
             }
         })
-    ) 
-  return result
+    )
+
+    if (sortObj && Object.keys(sortObj).length > 0) {
+        const key = Object.keys(sortObj)[0]
+        const value = sortObj[key]
+        if (key && value){
+            result.sort( (a, b)=> value==1 ? a[key]-b[key] : b[key]-a[key] )
+        }
+    }
+
+    return result
 })

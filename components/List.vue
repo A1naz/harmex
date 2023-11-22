@@ -2,24 +2,32 @@
 import { ConfigTable } from '~/data/types';
 import { FieldsType } from '~/data/enums';
 
-defineProps({
+const props = defineProps({
     data: { type: Array as PropType<any[]>, required: true},
     config:  { type: Array as PropType<ConfigTable[]>, required: true},
     isLoading: { type: Boolean, required: true},
-    endList: { type: Boolean, required: true }
+    endList: { type: Boolean, required: true },
+    sortCurrent: { type: Object, required: false }
 })
+const emit = defineEmits(['sort', 'update:endList'])
+
 const { width, height } = useWindowSize()
 const target = ref(null)
 
-const emit = defineEmits(['refresh', 'sortField', 'sortOrder', 'update:endList'])
+const sort = computed( ()=> {
+    if (props.sortCurrent) {
+        const key = Object.keys(props.sortCurrent)[0]
+        const value = props.sortCurrent[key]
+        return { field: key, order: value }
+    }
+    return undefined
+})
 
 const { stop } = useIntersectionObserver( target,
   ([{ isIntersecting }], observerElement) => {
     emit('update:endList', isIntersecting)
   },
 )
-
-let sortProp = { field: '', order: 1 }
 
 </script>
 
@@ -28,9 +36,9 @@ let sortProp = { field: '', order: 1 }
     <DataTable 
         v-if="width > 1024"
         :value="data" 
-        :loading="isLoading"
-        @update:sort-field="(f: string) => $emit('sortField', f)"
-        @update:sort-order="(o: number) => $emit('sortOrder', o)"
+        :sort-field="sort?.field"
+        :sort-order="sort?.order"
+        @sort="(value: any) => $emit('sort', value)"
         >
         <Column
             v-for="col of config"
@@ -77,7 +85,7 @@ let sortProp = { field: '', order: 1 }
     </div>
 
     <div v-if="isLoading" class="flex justify-center"> ... Loading </div>
-    <div id="target" ref="target" class="flex justify-center items-center h-4" />
+    <div v-if="!isLoading" id="target" ref="target" class="flex justify-center items-center h-4" />
 
 </div>
 </template>
