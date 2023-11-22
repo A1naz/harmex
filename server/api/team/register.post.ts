@@ -41,6 +41,14 @@ export default eventHandler(async (event) => {
     })
 }
 
+const findUsername = await User.findOne({ username })
+if (findUsername){
+  throw createError({
+      statusCode: 400,
+      message: 'Пользователь с таким username уже существует.',
+  })
+}
+
   const hash = bcrypt.hashSync(password, 7)
 
   const user = new User({
