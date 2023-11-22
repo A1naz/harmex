@@ -123,7 +123,6 @@ const listConfigOrders: ConfigTable[] = [
     { field: 'dataoperation', header: 'Дата операции', type: FieldsType.date },
     { field: 'summ', header: 'Стоимость', type: FieldsType.price },
     { field: 'type', header: 'Тип', type: FieldsType.text },
-    { field: 'article', header: 'Артикул', type: FieldsType.text },
 ]
 const isListEnd = ref(false)
 watch( () => isListEnd.value, async (newValue, oldValue) => {
