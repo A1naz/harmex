@@ -42,8 +42,8 @@ export default eventHandler(async (event) => {
   const session = await getServerSession(event)
   if (session) return { status: 'error', error: 'Вы уже авторизованы.' }
 
-  const candidate = await User.findOne({ email })
-  if (candidate) {
+  const checkEmail = await User.findOne({ email })
+  if (checkEmail) {
     return {
       status: 'error',
       error: 'Пользователь с таким email уже существует.',
@@ -55,10 +55,29 @@ export default eventHandler(async (event) => {
   const plan = await Plans.findOne({name: 'Standart'})
   if (!plan) return { status: 'error', error: 'Ошибка при регистрации. Тариф не найден, отправьте пожалуйста это сообщение в техподдержку' }
 
+  // create username from email
+    let userName = email.split('@')[0].replaceAll('.', '').replaceAll('-', '_')
+  // find same username
+  const findUsernames = await User.find(
+        { username: {$regex: '^'+userName, $options: 'i'} },
+        { username: 1, _id: 0 }
+    ).lean()
+    if (findUsernames.length > 0) {
+        const usernames = findUsernames.map(user => user.username)
+        if (usernames.includes(userName)) {
+            let start = 1
+            let userNickToCheck = userName.toString()
+            while (usernames.includes(userNickToCheck + start)) {
+                start++
+            }
+            userName = userNickToCheck + '_' + start
+        }
+    }
+
   const user: IUser = new User({
     email,
     password: hash,
-    username: email.split('@')[0].replaceAll('.', ''),
+    username: userName,
     roles: ['user'],
     tariff: plan.tariff,
     uuid: uuid(),
