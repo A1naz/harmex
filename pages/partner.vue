@@ -25,6 +25,7 @@ const partner = client.partner
 
 interface itemData {
     data: any [],
+    count: number,
     skip: number,
     limit: number,
     sort: any,
@@ -37,6 +38,7 @@ interface ListData {
 const limitInit = 20
 const itemInitData = {
     data: [],
+    count: 0,
     skip: 0,
     limit: limitInit,
     sort: {},
@@ -62,11 +64,12 @@ async function getData() {
             },
             method: 'GET' 
         })
-        if(data.value && data.value.length > 0){
+        if(data.value.list && data.value.list.length > 0){
             listData.value[tab.value as keyof ListData].data = [
                 ...listData.value[tab.value as keyof ListData].data,
-                ...data.value
+                ...data.value.list
             ]
+            listData.value[tab.value as keyof ListData].count = data.value.count
             listData.value[tab.value as keyof ListData].skip += limitInit
             listData.value[tab.value as keyof ListData].limit += limitInit
         } else {
@@ -102,7 +105,7 @@ function closePartnerVideofn() {
 }
 
 const tabs: ITabs[] = [
-    {title: 'Главное', slot: 'main', query: ''},
+    {title: 'Главная', slot: 'main', query: ''},
     {title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },    
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
@@ -184,7 +187,7 @@ watch( () => isListEnd.value, async (newValue, oldValue) => {
                         <span class="pi pi-refresh"></span>
                     </Button>
                 </div>
-                <List 
+                <Table 
                     :data="listData.referals.data"
                     :config="listConfigPartners"
                     :isLoading="loadingList"

@@ -48,14 +48,25 @@ export default eventHandler(async (event) => {
                         }
                     }
                 }
-            }, 
+            },
+
+            { $addFields: {
+                    count: { $size: "$refInfo"}
+                }
+            },
+
             { $limit: limit},
             { $skip: skip},
     ])
 
   if (!reffers[0]) return []
 
-    const result = await Promise.all(
+  const result = { 
+    count: reffers[0].count,
+    list: [] as any
+  }
+
+    result.list = await Promise.all(
         reffers[0].refInfo.map(async (refer: any) => {
             const deals = await paymenthistory.aggregate([
                     { $match: {
