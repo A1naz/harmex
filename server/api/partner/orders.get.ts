@@ -66,7 +66,6 @@ export default eventHandler(async (event) => {
                     dataoperation: deal.dataoperation,
                     summ: deal.summ,
                     type: deal.type,
-                    article: deal.article
                 }
             }) 
         })

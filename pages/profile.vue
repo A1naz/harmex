@@ -190,51 +190,47 @@ function onTelegramLink(data: any) {
 const botNotifications: any = ref([
   {
     type: 1,
-    text: 'Ошибка при пополнении баланса',
-    isEnabled: false,
-  },
-  {
-    type: 2,
     text: 'Вы успешно пополнили баланс',
     isEnabled: false,
   },
   {
-    type: 3,
+    type: 2,
     text: 'Выкуп ушел на паузу',
     isEnabled: false,
   },
   {
-    type: 4,
+    type: 3,
     text: 'Выкуп ушел в архив',
     isEnabled: false,
   },
   {
+    type: 4,
+    text: 'Баланс меньше',
+    value: 100,
+    isEnabled: false,
+  },
+  {
     type: 5,
-    text: 'Не хватает баланса для совершения услуги',
+    text: 'Штраф за не забранный товар',
     isEnabled: false,
   },
   {
     type: 6,
-    text: 'Штраф за не забарнный товар',
-    isEnabled: false,
-  },
-  {
-    type: 7,
     text: 'Начислено партнерское вознаграждение',
     isEnabled: false,
   },
   {
-    type: 8,
+    type: 7,
     text: 'Новый реферал в 1-й линии',
     isEnabled: false,
   },
   {
-    type: 9,
+    type: 8,
     text: 'Новый реферал в 2-й линии',
     isEnabled: false,
   },
   {
-    type: 10,
+    type: 9,
     text: 'Выкуп забран с ПВЗ: ID, адрес, Имя',
     isEnabled: false,
   },
@@ -252,6 +248,9 @@ async function getTGBotInfo() {
         data.value.settings.forEach((setting: any) => {
           if (el.type === setting.type) {
             el.isEnabled = true
+            if (setting.value !== null) {
+              el.value = setting.value
+            }
           }
         })
       })
@@ -291,7 +290,11 @@ async function setChatBotSettings() {
   const trueSettings: Array<any> = []
   botNotifications.value.forEach((el: any) => {
     if (el.isEnabled) {
-      trueSettings.push({ type: el.type, text: el.text })
+      trueSettings.push({
+        type: el.type,
+        text: el.text,
+        value: el.value !== null ? el.value : null,
+      })
     }
   })
   const { data, error }: any = await useFetch('/api/tgBot/setChatBotSettings', {
@@ -512,7 +515,22 @@ async function setChatBotSettings() {
         class="profile-options mt-14 flex flex-col justify-end items-end gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
       >
         <div class="self-start description-container xl:basis-1/3">
-          <div class="heading relative">Настройки чат-бота</div>
+          <div
+            class="self-start description-container xl:basis-1/3"
+            v-if="isChatBotEnabled && store.client.telegram"
+          >
+            <div class="heading relative">Настройки чат-бота</div>
+            <div class="mt-1 text-gray-40">
+              Ссылка на бота:
+              <a
+                href="https://t.me/topvtop_notifications_bot"
+                target="_blank"
+                class="text-primary text-lg"
+              >
+                @topvtop_notifications_bot</a
+              >
+            </div>
+          </div>
         </div>
         <div>
           <div class="flex flex-col gap-2 w-full">
@@ -537,12 +555,19 @@ async function setChatBotSettings() {
       >
         <div class="flex flex-col gap-2 w-full">
           <div
-            class="flex flex-wrap justify-end md:justify-start mt-4 mr-3 mb-2 mb:mr-0"
+            class="flex flex-wrap justify-end md:justify-start mt-4 mr-3 mb-2 md:mr-5"
           >
             <div v-for="notification in botNotifications">
               <div class="form-control md:w-80 w-full mt-2 mr-2">
-                <label class="cursor-pointer label">
-                  <span class="label-text mr-1">{{ notification.text }}</span>
+                <label class="cursor-pointer text-right label flex justify-end">
+                  <span class="label-text mr-4">{{ notification.text }}</span>
+                  <input
+                    v-if="notification.type == 4"
+                    type="number"
+                    v-model="notification.value"
+                    placeholder="Сумма ₽"
+                    class="input w-20 input-sm input-bordered max-w-xs mr-2"
+                  />
                   <input
                     v-model="notification.isEnabled"
                     type="checkbox"

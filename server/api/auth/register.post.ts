@@ -6,6 +6,7 @@ import { User } from '~~/server/lib/models/User'
 import { Plans } from '~/server/lib/models/Plans';
 import { Referral } from '~~/server/lib/models/Referral'
 import MailService from '~~/server/lib/mailService.js'
+import { createUsername } from '~/server/utils/createUsername'
 
 function hasWhiteSpace(s: string) {
   return s.includes(' ') || !/^[a-zA-Z0-9_-]{4,14}$/.test(s)
@@ -42,8 +43,8 @@ export default eventHandler(async (event) => {
   const session = await getServerSession(event)
   if (session) return { status: 'error', error: 'Вы уже авторизованы.' }
 
-  const candidate = await User.findOne({ email })
-  if (candidate) {
+  const checkEmail = await User.findOne({ email })
+  if (checkEmail) {
     return {
       status: 'error',
       error: 'Пользователь с таким email уже существует.',
@@ -55,10 +56,12 @@ export default eventHandler(async (event) => {
   const plan = await Plans.findOne({name: 'Standart'})
   if (!plan) return { status: 'error', error: 'Ошибка при регистрации. Тариф не найден, отправьте пожалуйста это сообщение в техподдержку' }
 
+  const newUsername = await createUsername(email)
+
   const user: IUser = new User({
     email,
     password: hash,
-    username: email.split('@')[0].replaceAll('.', ''),
+    username: newUsername,
     roles: ['user'],
     tariff: plan.tariff,
     uuid: uuid(),

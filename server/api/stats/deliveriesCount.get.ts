@@ -6,7 +6,7 @@ function daysToPenalty(statusdelivery: any[]) {
   if (!item) return 0
 
   const updatedAt = new Date(item.date)
-  const penaltyDay = new Date(updatedAt.getTime() + 5 * 24 * 60 * 60 * 1000)
+  const penaltyDay = new Date(updatedAt.getTime() + 7 * 24 * 60 * 60 * 1000)
   const now = new Date()
   const timeLeft = penaltyDay.getTime() - now.getTime()
   // eslint-disable-next-line max-statements-per-line

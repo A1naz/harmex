@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ITabs } from '~/data/types';
+import { FieldsType } from '~/data/enums'
 
 definePageMeta({
   layout: 'app',
@@ -122,7 +123,6 @@ const listConfigOrders: ConfigTable[] = [
     { field: 'dataoperation', header: 'Дата операции', type: FieldsType.date },
     { field: 'summ', header: 'Стоимость', type: FieldsType.price },
     { field: 'type', header: 'Тип', type: FieldsType.text },
-    { field: 'article', header: 'Артикул', type: FieldsType.text },
 ]
 const isListEnd = ref(false)
 watch( () => isListEnd.value, async (newValue, oldValue) => {
@@ -147,8 +147,8 @@ watch( () => isListEnd.value, async (newValue, oldValue) => {
                 Приглашайте друзей и получайте бонусы
             </p>
             <p class="text-xs mt-1 lg:text-sm font-bold">
-                Вывод финансовых средств недоступен до 15.10.2023. Для перевода
-                реферальных на основной баланс напишите в службу заботы.
+                Вывод реферальных средств доступен и осуществляется в течение 24-72 часов.
+                Создайте заявку для получения поступлений и напишите в Службу заботы.
             </p>
         </div>
 
