@@ -182,7 +182,12 @@ async function removeReview() {
 }
 
 watch(targetIsVisible, async (isVisible) => {
-  if (isVisible && autoTarget.value && reviews.value && reviews.value.length >= 25) {
+  if (
+    isVisible &&
+    autoTarget.value &&
+    reviews.value &&
+    reviews.value.length >= 25
+  ) {
     if (end.value) return
     const data = await getReviews(status.value as string, skip.value, 25)
     if (data.length === 0) {
@@ -207,21 +212,20 @@ watch(
 )
 
 onMounted(async () => {
-    if (route.query?.uuid && route.query?.uuid.length > 0 ) {
-        const uuid = route.query?.uuid
-        if(uuid && typeof uuid == 'string') {
-            search.text = uuid
-            search.type = 'uuidReview'
-            onSearchInput()
-        } else {
-            reviews.value = await getReviews(status.value as string, 0, 25)
-        }
+  if (route.query?.uuid && route.query?.uuid.length > 0) {
+    const uuid = route.query?.uuid
+    if (uuid && typeof uuid == 'string') {
+      search.text = uuid
+      search.type = 'uuidReview'
+      onSearchInput()
     } else {
-        status.value = 'available'
-        reviews.value = await getReviews(status.value as string, 0, 25)
+      reviews.value = await getReviews(status.value as string, 0, 25)
     }
+  } else {
+    status.value = 'available'
+    reviews.value = await getReviews(status.value as string, 0, 25)
+  }
 })
-
 </script>
 
 <template>
@@ -236,8 +240,11 @@ onMounted(async () => {
         от выкупа согласно вашему тарифу.
       </p>
       <p class="text-xs font-light mt-1 lg:text-sm">
-        Стоимость одного отзыва - 
+        Стоимость одного отзыва -
         <span class="font-bold"> {{ store.tariffString('review') }} </span>
+        Стоимость удаления отзыва
+        <span class="font-bold"> 100р. </span>
+
         Все услуги оказываются по Московскому времени.
       </p>
     </div>
@@ -282,21 +289,21 @@ onMounted(async () => {
           Отмененные
         </NuxtLink>
         <NuxtLink
-        to="/reviews?status=deleting"
-        :class="{
+          to="/reviews?status=deleting"
+          :class="{
             'btn-active': route.query.status === 'deleting',
           }"
           class="btn btn-ghost btn-sm normal-case font-medium"
-          >
+        >
           На удалении
         </NuxtLink>
         <NuxtLink
-        to="/reviews?status=deleted"
-        :class="{
+          to="/reviews?status=deleted"
+          :class="{
             'btn-active': route.query.status === 'deleted',
           }"
           class="btn btn-ghost btn-sm normal-case font-medium"
-          >
+        >
           Удаленные
         </NuxtLink>
         <NuxtLink
@@ -317,37 +324,38 @@ onMounted(async () => {
         </NuxtLink> -->
       </div>
     </div>
-    <div class="search flex justify-between content-center my-4 flex-wrap gap-2">
-        <div class="flex gap-1 items-center">
-            <ExportXls 
-                api="/api/review/export"
-                fileName="TOPVTOP Доступные отзывы"
-                :isVisible="true"
-            />
+    <div
+      class="search flex justify-between content-center my-4 flex-wrap gap-2"
+    >
+      <div class="flex gap-1 items-center">
+        <ExportXls
+          api="/api/review/export"
+          fileName="TOPVTOP Доступные отзывы"
+          :isVisible="true"
+        />
+      </div>
+      <div class="flex gap-1 items-center">
+        <select v-model="search.type" class="select select-bordered select-sm">
+          <option value="article">Артикул</option>
+          <option value="uuid">ID выкупа</option>
+          <option v-if="route.query.status !== 'available'" value="uuidReview">
+            ID отзыва
+          </option>
+        </select>
+        <div class="relative flex items-center flex-grow-0 w-full">
+          <input
+            v-model="search.text"
+            type="text"
+            class="input input-sm input-bordered"
+            placeholder="Поиск"
+            @input="onSearchInput()"
+          />
+          <span
+            v-if="search.loading"
+            class="absolute right-2 loading loading-spinner loading-xs p-2"
+          />
         </div>
-        <div class="flex gap-1 items-center">
-            <select v-model="search.type" class="select select-bordered select-sm">
-                <option value="article">Артикул</option>
-                <option value="uuid">ID выкупа</option>
-                <option 
-                    v-if="route.query.status !== 'available'" 
-                    value="uuidReview"
-                    >ID отзыва</option>
-            </select>
-            <div class="relative flex items-center flex-grow-0 w-full">
-                <input
-                    v-model="search.text"
-                    type="text"
-                    class="input input-sm input-bordered"
-                    placeholder="Поиск"
-                    @input="onSearchInput()"
-                    />
-                <span
-                    v-if="search.loading"
-                    class="absolute right-2 loading loading-spinner loading-xs p-2"
-                    />
-            </div>
-        </div>
+      </div>
     </div>
     <div v-if="reviews?.length">
       <div v-if="status === 'available'" class="cards grid grid-cols-1 gap-4">

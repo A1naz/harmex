@@ -81,13 +81,18 @@ export async function findPositionByQuery(
         n++
         const random = Math.floor(Math.random() * 105)
 
-        const data: any = await $fetch(
+        const { data, error }: any = await $fetch(
           `https://search.wb.ru/exactmatch/ru/male/v4/search?TestGroup=test&TestID=188&appType=1&curr=rub&dest=-1257786&query=${query}&regions=80,38,4,64,83,33,68,70,69,30,86,75,40,1,66,110,22,31,48,71,114&resultset=catalog&sort=${sort}&spp=31&suppressSpellcheck=false&page=${i}`,
           {
             method: 'GET',
             agent: new HttpsProxyAgent(`${proxies[random]}`),
           }
         )
+
+        if (error) {
+          console.log(error);
+          
+        }
 
         const parsed = JSON.parse(data)
         const products = parsed?.data?.products

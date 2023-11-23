@@ -14,6 +14,8 @@ export default eventHandler(async (event) => {
     return result
   }
   catch (e) {
+    console.log(e);
+    
     throw createError(e as string)
   }
 })
