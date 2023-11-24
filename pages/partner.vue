@@ -56,11 +56,8 @@ const listData = ref<ListData>({
     orders: {...itemInitData},
 })
 
-async function getData() {
-    if (tab.value 
-        && !loadingList.value
-        ) {
-        loadingList.value = true
+async function _fetchData() {
+    if (tab.value) {
         listData.value[tab.value as keyof ListData].data = []
         const { search } = listData.value[tab.value as keyof ListData]
         const { data } = await useFetch<IResTable>(`/api/partner/${tab.value}`, { 
@@ -78,21 +75,26 @@ async function getData() {
     }
     loadingListDebounce() // to avoid double fetch after click on sort
 }
+const _getDataDebounced = useDebounceFn(()=> _fetchData() , 700)
 
-const getDataDebounced = useDebounceFn(()=> getData() , 500)
+function getData(){
+    loadingList.value = true
+    _getDataDebounced()
+}
+
 const loadingListDebounce = useDebounceFn(()=> loadingList.value = false , 500)  
 
-async function refreshData() {
+function refreshData() {
     if(tab.value ){
         listData.value[tab.value as keyof ListData] = {...itemInitData}
-        await getData()
+        getData()
     }
 }
 
-async function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
+function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
     if(key =='skip') value = limitInit * (value - 1)
     listData.value[tab.value as keyof ListData].search[key] = value
-    await getDataDebounced()
+    getData()
 }
 
 const tabs: ITabs[] = [
@@ -121,7 +123,7 @@ const listConfigOrders: ConfigTable[] = [
 ]
 
 
-onMounted(()=> getDataDebounced())
+onMounted(()=> getData())
 
 </script>
 
@@ -148,7 +150,7 @@ onMounted(()=> getDataDebounced())
 
         <Tabs 
             :tabs="tabs"
-            @change-tab="getDataDebounced"
+            @change-tab="getData"
             >
             <template v-slot:main>
                 <div class="flex flex-col gap-4 w-full ">
@@ -178,14 +180,15 @@ onMounted(()=> getDataDebounced())
                         <span class="pi pi-refresh"></span>
                     </Button>
                 </div>
-                <Table 
+                <Table
                     :data="listData.referals.data"
                     :count="listData.referals.count"
-                    :perPage="limitInit"
+                    :currentLimit="listData.referals.search.limit"
                     :currentSkip="listData.referals.search.skip"
                     :config="listConfigPartners"
                     :isLoading="loadingList"
-                    @changePage="updateFilter"
+                    @changePage="(p: number) => updateFilter('skip', p)"
+                    @changeLimit="(l: number) => updateFilter('limit', l)"
                     />
             </template>
             <template v-slot:orders>
@@ -200,11 +203,12 @@ onMounted(()=> getDataDebounced())
                 <Table 
                     :data="listData.orders.data"
                     :count="listData.orders.count"
-                    :perPage="limitInit"
+                    :currentLimit="listData.orders.search.limit"
                     :currentSkip="listData.orders.search.skip"
                     :config="listConfigOrders"
                     :isLoading="loadingList"
                     @changePage="(p: number) => updateFilter('skip', p)"
+                    @changeLimit="(l: number) => updateFilter('limit', l)"
                     />
             </template>
         </Tabs>

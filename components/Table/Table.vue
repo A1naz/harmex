@@ -5,64 +5,52 @@ import { FieldsType } from '~/data/enums';
 const props = defineProps({
     data: { type: Array as PropType<any[]>, required: true },
     count: { type: Number, required: true },
-    perPage: { type: Number, required: true },
+    currentLimit: { type: Number, required: true },
     currentSkip: { type: Number, required: true },
     config:  { type: Array as PropType<ConfigTable[]>, required: true },
-    isLoading: { type: Boolean, required: true },
-    
+    isLoading: { type: Boolean, required: true },    
 })
-const emit = defineEmits(['sort', 'changePage', 'update:endList'])
+const emit = defineEmits(['sort', 'changePage', 'changeLimit'])
 const { width, height } = useWindowSize()
-const target = ref(null)
+const displayed = ref('')
 
-const { stop } = useIntersectionObserver( target,
-  ([{ isIntersecting }], observerElement) => {
-    emit('update:endList', isIntersecting)
-  },
-)
+const limitList = [20 ,40, 60]
 
 const pageNum = computed( () => {
-    const res = props.count / props.perPage 
+    const res = props.count / props.currentLimit 
     return Math.ceil(res).toString()
 })
 
 const currentPage = computed ( () => {
-    return props.currentSkip == 0 ? 1 : props.currentSkip / props.perPage + 1
-})
-
-const displyed = computed( () => {
-    return props.isLoading
-        ? ''
-        : `Показано ${props.currentSkip + 1}-${props.currentSkip + props.data.length} из ${props.count}`
+    return props.currentSkip == 0 ? 1 : props.currentSkip / props.currentLimit + 1
 })
 
 const changePage = (numPage: number) => {
     emit('changePage', numPage)
 }
 
+const changeLimit = (limit: number) => {
+    emit('changeLimit', limit)
+}
+
+watch(() => props.isLoading, (val) => { 
+    if(!val) displayed.value = `Показано ${props.currentSkip + 1}-${props.currentSkip + props.data.length} из ${props.count}`
+})
+
 </script>
 
 <template>
 <div>
 
-<!-- pagination -->
-    <div class="flex flex-row justify-between content-center p-3">
-        <div class="flex flex-row gap-1">
-            <Button 
-                v-for="n in parseInt(pageNum)" 
-                :class="[
-                    'btn btn-sm rounded-xl',
-                    { 'btn-primary': n == currentPage }
-                    ]"
-                @click="changePage(n)"
-                >
-                {{ n }}
-            </Button>
-        </div>
-        <div class="inline-block align-middle text-sm">
-            {{ displyed }}
-        </div>
-    </div>
+    <TablePagination  
+        :page-nums="pageNum"
+        :current-page="currentPage"
+        :limit-list="limitList"
+        :current-limit="currentLimit"
+        :displayed="displayed"
+        @change-limit="changeLimit"
+        @change-page="changePage"
+        />
 
     <DataTable 
         v-if="width > 1024"
@@ -113,6 +101,18 @@ const changePage = (numPage: number) => {
             </div>
         </div>
     </div>
+
+    <TablePagination  
+        v-if="!isLoading && data.length > 10"
+        class="mb-20"
+        :page-nums="pageNum"
+        :current-page="currentPage"
+        :limit-list="limitList"
+        :current-limit="currentLimit"
+        :displayed="displayed"
+        @change-limit="changeLimit"
+        @change-page="changePage"
+        />
 
 </div>
 </template>
