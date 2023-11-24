@@ -200,36 +200,36 @@ async function save() {
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
 
-  const { data, error } = await useFetch('/api/likes/create', {
-    method: 'POST',
-    body: {
-      article: savedArticle.value,
-      reviews: changedReviews.value,
-      dates:
-        productDateRangeModel.value.length > 0
-          ? productDateRangeModel.value
-          : null,
-    },
-    query: {
-      userTimezoneOffsetHours,
-      userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
-    },
-  })
-  if (error.value) {
-    notify({
-      type: 'error',
-      title: 'Ошибка',
-      text: error.value.message,
-    })
-    return
-  }
-  if (data.value) {
-    notify({
-      type: 'success',
-      title: 'Успешно',
-    })
-    return router.push('/likes')
-  }
+//   const { data, error } = await useFetch('/api/likes/create', {
+//     method: 'POST',
+//     body: {
+//       article: savedArticle.value,
+//       reviews: changedReviews.value,
+//       dates:
+//         productDateRangeModel.value.length > 0
+//           ? productDateRangeModel.value
+//           : null,
+//     },
+//     query: {
+//       userTimezoneOffsetHours,
+//       userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
+//     },
+//   })
+//   if (error.value) {
+//     notify({
+//       type: 'error',
+//       title: 'Ошибка',
+//       text: error.value.message,
+//     })
+//     return
+//   }
+//   if (data.value) {
+//     notify({
+//       type: 'success',
+//       title: 'Успешно',
+//     })
+//     return router.push('/likes')
+//   }
 }
 
 async function cancel() {
@@ -408,9 +408,9 @@ async function swapPage(value: number) {
           >
             Отмена
           </button>
-          <button class="btn btn-primary btn-sm" @click="save">
+          <!-- <button class="btn btn-primary btn-sm" @click="save">
             Сохранить
-          </button>
+          </button> -->
         </div>
       </div>
     </Transition>

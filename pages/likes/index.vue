@@ -69,14 +69,17 @@ async function deleteLike() {
       <span class="font-bold"> {{ store.tariffString('likeReview') }} </span>
       Все услуги оказываются по Московскому времени.
     </p>
+    <p class="font-bold text-error mt-5">
+      Создание новых лайков на отзывы временно отключено.
+    </p>
     <div class="flex justify-end mb-8 mt-6 items-center">
-      <NuxtLink
+      <!-- <NuxtLink
         to="/likes/create"
         class="btn btn-primary btn-sm gap-2 font-medium normal-case self-end"
       >
         <Icon name="fluent:add-24-filled" size="24" />
         Добавить лайки
-      </NuxtLink>
+      </NuxtLink> -->
     </div>
     <div v-if="review_likes.length">
       <DataTable
