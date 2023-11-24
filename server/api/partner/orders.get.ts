@@ -8,12 +8,12 @@ export default eventHandler(async (event) => {
     if (!user) return sendRedirect(event, '/auth', 302)
 
     const params = getQuery(event)
-    const filtertObj = params.filter ? JSON.parse(params.filter.toString()) : undefined
-    const sortObj = params.sort ? JSON.parse(params.sort.toString()) : undefined
+    const filtertObj = params.filter ? JSON.parse(params.filter.toString()) : {}
+    const sortObj = params.sort ? JSON.parse(params.sort.toString()) : {}
     const limit = params.limit ? parseInt(params.limit?.toString(), 10) : undefined
     const skip = params.skip ? parseInt(params.skip?.toString(), 10) : undefined
 
-    const listPipeline: any[] = [
+    const listPl: any[] = [
         {  $match: {
             user: new ObjectId(user._id)
         }},
@@ -54,22 +54,19 @@ export default eventHandler(async (event) => {
             'refInfo'
         ]}
     ]
-    const countPipeline: any[] = listPipeline
 
-    if (filtertObj) {
-        listPipeline.push( {$match: filtertObj} )
-        countPipeline.push( {$match: filtertObj} )
-    }
-    if (sortObj && Object.keys(sortObj).length > 0 ) {
-        listPipeline.push( {$sort: sortObj} )
-    }
-    if (limit) listPipeline.push( {$limit: limit} )
-    if (skip) listPipeline.push( {$skip: skip} )
+    if (Object.keys(filtertObj).length > 0 ) listPl.push( {$match: {...filtertObj }} )
+
+    const countPl: any[] = [...listPl]
+
+    if (Object.keys(sortObj).length > 0 ) listPl.push( {$sort: sortObj} )
+    if (limit) listPl.push( {$limit: limit} )
+    if (skip) listPl.push( {$skip: skip} )
 
     const pipline: any[] = [
         { $facet: {
-            list: listPipeline,
-            count: [...countPipeline, { $count: 'count'}]
+            list: listPl,
+            count: [...countPl, { $count: 'count'}]
         }}
     ]
 
