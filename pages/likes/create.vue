@@ -13,6 +13,7 @@ definePageMeta({
 })
 const { notify } = useNotification()
 const changedReviews = ref<any>([])
+const isCreateButtonDisabled = ref(false)
 
 const route = useRoute()
 const router = useRouter()
@@ -196,6 +197,7 @@ async function selectSorting(e: any) {
   await getProductReviews()
 }
 async function save() {
+  isCreateButtonDisabled.value = true
   const userOffsetMinutes = new Date().getTimezoneOffset()
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
