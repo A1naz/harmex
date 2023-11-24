@@ -2,13 +2,27 @@
 
 const props = defineProps({
     pageNums: { type: String, required: true },
-    currentPage: { type: Number, required: true },
     limitList: { type: Array as PropType<number[]>, required: true },
+    currentPage: { type: Number, required: true },
+    currentSkip: { type: Number, required: true },
     currentLimit: { type: Number, required: true },
-    displayed: { type: String, required: true }
+    docsCount: { type: Number, required: true },
+    currentCount: { type: Number, required: true }
 })
 const emit = defineEmits(['changePage', 'changeLimit'])
 const { width, height } = useWindowSize()
+
+const displayed = computed( ()=>{
+    const from = props.currentSkip + 1
+    const to = props.currentSkip + props.currentCount
+    return `Показано ${from}-${to} из ${props.docsCount}`
+})
+
+function changePage(n: number) {
+    if (props.pageNums !== '1') {
+        emit('changePage', n)
+    }
+}
 
 </script>
 
@@ -41,7 +55,7 @@ const { width, height } = useWindowSize()
                     'btn btn-sm rounded-xl',
                     { 'btn-primary': n == currentPage }
                     ]"
-                @click="$emit('changePage', n)"
+                @click="changePage(n)"
                 >
                 {{ n }}
             </Button>

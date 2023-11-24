@@ -10,6 +10,7 @@ const emit = defineEmits(['changePage', 'changeLimit'])
 </script>
 
 <template>
-    
+
+    <input type="text" :value="phrase">
 
 </template>

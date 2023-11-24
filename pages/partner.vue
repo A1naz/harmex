@@ -93,7 +93,12 @@ function refreshData() {
 }
 
 function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
-    if(key =='skip') value = limitInit * (value - 1)
+    if(key =='skip') {
+        value = listData.value[tab.value as keyof ListData].search.limit * (value - 1)
+    }
+    if(key =='limit') {
+        listData.value[tab.value as keyof ListData].search.skip = 0
+    }
     listData.value[tab.value as keyof ListData].search[key] = value
     getData()
 }
@@ -103,6 +108,10 @@ const tabs: ITabs[] = [
     {title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },    
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
+function changeTab(newSlot: string){
+    if (listData.value[newSlot as keyof ListData].data.length == 0) getData()
+}
+
 const listConfigPartners: ConfigTable[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
     { field: 'email', header: 'E-mail', type: FieldsType.text },
@@ -151,7 +160,7 @@ onMounted(()=> getData())
 
         <Tabs 
             :tabs="tabs"
-            @change-tab="getData"
+            @change-tab="changeTab"
             >
             <template v-slot:main>
                 <div class="flex flex-col gap-4 w-full ">
@@ -173,7 +182,9 @@ onMounted(()=> getData())
                 </div>
             </template>
             <template v-slot:referals>
-                <div class="flex justify-end bg-base-200 rounded-xl mb-2 p-2 gap-2" >
+                <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-2" >
+                    <TableFilter 
+                        />
                     <Button 
                         class="btn btn-sm btn-primary rounded-xl"
                         @click="refreshData" 

@@ -12,7 +12,6 @@ const props = defineProps({
 })
 const emit = defineEmits(['sort', 'changePage', 'changeLimit'])
 const { width, height } = useWindowSize()
-const displayed = ref('')
 
 const limitList = [20 ,40, 60]
 
@@ -33,10 +32,6 @@ const changeLimit = (limit: number) => {
     emit('changeLimit', limit)
 }
 
-watch(() => props.isLoading, (val) => { 
-    if(!val) displayed.value = `Показано ${props.currentSkip + 1}-${props.currentSkip + props.data.length} из ${props.count}`
-})
-
 </script>
 
 <template>
@@ -44,10 +39,12 @@ watch(() => props.isLoading, (val) => {
 
     <TablePagination  
         :page-nums="pageNum"
-        :current-page="currentPage"
         :limit-list="limitList"
+        :docs-count="count"
+        :current-page="currentPage"
         :current-limit="currentLimit"
-        :displayed="displayed"
+        :current-skip="currentSkip"
+        :current-count="data.length"
         @change-limit="changeLimit"
         @change-page="changePage"
         />
@@ -104,12 +101,13 @@ watch(() => props.isLoading, (val) => {
 
     <TablePagination  
         v-if="!isLoading && data.length > 10"
-        class="mb-20"
         :page-nums="pageNum"
-        :current-page="currentPage"
         :limit-list="limitList"
+        :docs-count="count"
+        :current-page="currentPage"
         :current-limit="currentLimit"
-        :displayed="displayed"
+        :current-skip="currentSkip"
+        :current-count="data.length"
         @change-limit="changeLimit"
         @change-page="changePage"
         />
