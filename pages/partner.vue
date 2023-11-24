@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ITabs } from '~/data/types';
+import { IResTable, ITabs } from '~/data/types';
 import { FieldsType } from '~/data/enums'
 
 definePageMeta({
@@ -28,21 +28,19 @@ interface itemData {
     count: number,
     skip: number,
     limit: number,
-    sort: any,
-    stopFetch: boolean
+    sort: any
 }
 interface ListData {
     referals: itemData, 
     orders: itemData
 }
-const limitInit = 20
+const limitInit = 30
 const itemInitData = {
     data: [],
     count: 0,
     skip: 0,
     limit: limitInit,
     sort: {},
-    stopFetch: false
 }
 const listData = ref<ListData>({
     referals: {...itemInitData},
@@ -52,11 +50,11 @@ const listData = ref<ListData>({
 async function getData() {
     if (tab.value 
         && !loadingList.value
-        && !listData.value[tab.value as keyof ListData].stopFetch
         ) {
         loadingList.value = true
+        listData.value[tab.value as keyof ListData].data = []
         const { skip, limit, sort } = listData.value[tab.value as keyof ListData]
-        const { data }: any = await useFetch(`/api/partner/${tab.value}`, { 
+        const { data } = await useFetch<IResTable>(`/api/partner/${tab.value}`, { 
             query: { 
                 skip: skip, 
                 limit: limit,
@@ -64,16 +62,9 @@ async function getData() {
             },
             method: 'GET' 
         })
-        if(data.value.list && data.value.list.length > 0){
-            listData.value[tab.value as keyof ListData].data = [
-                ...listData.value[tab.value as keyof ListData].data,
-                ...data.value.list
-            ]
+        if(data.value && data.value.list.length > 0){
+            listData.value[tab.value as keyof ListData].data = data.value.list
             listData.value[tab.value as keyof ListData].count = data.value.count
-            listData.value[tab.value as keyof ListData].skip += limitInit
-            listData.value[tab.value as keyof ListData].limit += limitInit
-        } else {
-            listData.value[tab.value as keyof ListData].stopFetch = true
         }
     }
     loadingListDebounce() // to avoid double fetch after click on sort
@@ -89,16 +80,12 @@ async function refreshData() {
     }
 }
 
-function search(sort: any) {
-    listData.value[tab.value as keyof ListData].sort = { 
-        [sort.sortField]: sort.sortOrder 
-    }
-    listData.value[tab.value as keyof ListData].data = []
-    listData.value[tab.value as keyof ListData].skip = 0
-    listData.value[tab.value as keyof ListData].limit = limitInit
-    listData.value[tab.value as keyof ListData].stopFetch = false
-    getDataDebounced()
+function updateFilter(pageNum: number) {
+    const newSkip = pageNum * limitInit
+    listData.value[tab.value as keyof ListData].skip = newSkip
+    getData()
 }
+
 
 function closePartnerVideofn() {
   closePartnerVideo.value?.click()
@@ -120,17 +107,16 @@ const listConfigPartners: ConfigTable[] = [
     { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
 ]
 const listConfigOrders: ConfigTable[] = [
-    { field: 'username', header: 'Ник', type: FieldsType.text },
-    { field: 'email', header: 'E-mail', type: FieldsType.text },
-    { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
-    { field: 'dataoperation', header: 'Дата операции', type: FieldsType.date },
-    { field: 'summ', header: 'Стоимость', type: FieldsType.price },
-    { field: 'type', header: 'Тип', type: FieldsType.text },
+    { field: 'refUsername', header: 'Ник', type: FieldsType.text },
+    { field: 'refEmail', header: 'E-mail', type: FieldsType.text },
+    { field: 'serviceType', header: 'Тип', type: FieldsType.text },
+    { field: 'date', header: 'Дата операции', type: FieldsType.date },
+    { field: 'serviceSum', header: 'Стоимость', type: FieldsType.price },
+    { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
+    { field: 'qqqqqqqqqqqqqqqq', header: 'Рекомендатель', type: FieldsType.text },
+    { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
-const isListEnd = ref(false)
-watch( () => isListEnd.value, async (newValue, oldValue) => {
-    if (newValue) await getData()
-})
+
 
 </script>
 
@@ -157,14 +143,13 @@ watch( () => isListEnd.value, async (newValue, oldValue) => {
 
         <Tabs 
             :tabs="tabs"
-            @changeTab="isListEnd = false"
             >
             <template v-slot:main>
                 <div class="flex flex-col gap-4 w-full ">
                     <div class="bg-base-200 p-4 flex flex-col rounded-xl">
                         <PartnerDashboard 
                             :balance="store.client.partner.balance"
-                            :ref-count="listData.referals.data.length"
+                            :ref-count="partner.refCount"
                             :second-level-referrals="secondLevelReferrals"
                             :ref-url="refUrl"
                             :reward-percent="partner.rewardPercent"
@@ -189,11 +174,12 @@ watch( () => isListEnd.value, async (newValue, oldValue) => {
                 </div>
                 <Table 
                     :data="listData.referals.data"
+                    :count="listData.referals.count"
+                    :perPage="limitInit"
+                    :currentSkip="listData.referals.skip"
                     :config="listConfigPartners"
                     :isLoading="loadingList"
-                    v-model:endList="isListEnd"
-                    :sortCurrent="listData.referals.sort"
-                    @sort="(v: any) => search(v)"
+                    @changePage="updateFilter"
                     />
             </template>
             <template v-slot:orders>
@@ -205,13 +191,14 @@ watch( () => isListEnd.value, async (newValue, oldValue) => {
                         <span class="pi pi-refresh"></span>
                     </Button>
                 </div>
-                <List 
+                <Table 
                     :data="listData.orders.data"
+                    :count="listData.orders.count"
+                    :perPage="limitInit"
+                    :currentSkip="listData.orders.skip"
                     :config="listConfigOrders"
                     :isLoading="loadingList"
-                    v-model:endList="isListEnd"
-                    :sortCurrent="listData.referals.sort"
-                    @sort="(v: any) => search(v)"
+                    @changePage="updateFilter"
                     />
             </template>
         </Tabs>

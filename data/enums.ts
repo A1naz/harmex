@@ -1,11 +1,12 @@
 export enum FieldsType {
-    text = 'text',
-    price = 'price',
+    actions = 'actions',
+    boolean = 'boolean',
     date = 'date',
     email = 'email',
+    text = 'text',
     multiOptions = 'multiOptions',
     password = 'password',
-    actions = 'actions'
+    price = 'price',
 }
 
 export enum UserRoles {

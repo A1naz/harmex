@@ -3,26 +3,31 @@ import { ConfigTable } from '~/data/types';
 import { FieldsType } from '~/data/enums';
 
 const props = defineProps({
-    data: { type: Array as PropType<any[]>, required: true},
-    config:  { type: Array as PropType<ConfigTable[]>, required: true},
-    isLoading: { type: Boolean, required: true},
-    endList: { type: Boolean, required: true },
-    sortCurrent: { type: Object, required: false },
+    data: { type: Array as PropType<any[]>, required: true },
+    count: { type: Number, required: true },
+    perPage: { type: Number, required: true },
+    currentSkip: { type: Number, required: true },
+    config:  { type: Array as PropType<ConfigTable[]>, required: true },
+    isLoading: { type: Boolean, required: true },
     
 })
-const emit = defineEmits(['sort', 'update:endList'])
+const emit = defineEmits(['sort', 'changePage', 'update:endList'])
 
 const { width, height } = useWindowSize()
 const target = ref(null)
 
-const sort = computed( ()=> {
-    if (props.sortCurrent) {
-        const key = Object.keys(props.sortCurrent)[0]
-        const value = props.sortCurrent[key]
-        return { field: key, order: value }
-    }
-    return undefined
+const pageNum = computed( () => {
+    const res = props.count / props.perPage 
+    return res < props.perPage ? '1' : Math.ceil(res).toString()
 })
+
+const currentPage = computed ( () => {
+    return props.currentSkip == 0 ? 1 : props.currentSkip / props.perPage
+})
+
+const changePage = (numPage: number) => {
+    emit('changePage', numPage)
+}
 
 const { stop } = useIntersectionObserver( target,
   ([{ isIntersecting }], observerElement) => {
@@ -35,30 +40,37 @@ const { stop } = useIntersectionObserver( target,
 <template>
 <div>
 <!-- pagination -->
-    <div>
-
+    <div class="flex flex-row gap-1 ml-5 mb-1">
+        <Button 
+            v-for="n in parseInt(pageNum)" 
+            :class="[
+                'btn btn-sm rounded-xl',
+                { 'btn-primary': n == currentPage }
+                ]"
+            :disabled="n == currentPage"
+            @click="changePage(n)"
+            >{{ n }}</Button>
     </div>
 
 
     <DataTable 
         v-if="width > 1024"
         :value="data" 
-        :sort-field="sort?.field"
-        :sort-order="sort?.order"
-        @sort="(value: any) => $emit('sort', value)"
         >
         <Column
             v-for="col of config"
-            :sortable="!['user'].includes(col.field)"
             :key=col.field
             :field=col.field 
             :header=col.header
             >
+            <template v-if="col.type == FieldsType.boolean" #body="{ data }">
+                {{ data[col.field] ? "Выполнен" : "Активный" }}
+            </template>
             <template v-if="col.type == FieldsType.date" #body="{ data }">
-                {{ defaultDate(data[col.field]) }}
+                {{ defaultDateShort(data[col.field]) }}
             </template>
             <template v-else-if="col.type == FieldsType.price" #body="{ data }">
-                {{ data[col.field] }} р.
+                {{ Number.parseFloat(data[col.field]).toFixed(2)  }} р.
             </template>
             <template v-else #body="{ data }">
                 {{ data[col.field] }}

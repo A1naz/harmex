@@ -2,6 +2,7 @@ import { Referral } from '~/server/lib/models/Referral'
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 import { ObjectId } from 'mongodb'
 import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory'
+import { IResTable } from '~/data/types'
 
 export default eventHandler(async (event) => {
 
@@ -49,24 +50,22 @@ export default eventHandler(async (event) => {
                     }
                 }
             },
-
             { $addFields: {
                     count: { $size: "$refInfo"}
                 }
             },
-
             { $limit: limit},
             { $skip: skip},
     ])
 
   if (!reffers[0]) return []
 
-  const result = { 
-    count: reffers[0].count,
-    list: [] as any
+  const data: IResTable = { 
+    list: [] as any,
+    count: reffers[0].count
   }
 
-    result.list = await Promise.all(
+  data.list = await Promise.all(
         reffers[0].refInfo.map(async (refer: any) => {
             const deals = await paymenthistory.aggregate([
                     { $match: {
@@ -102,9 +101,9 @@ export default eventHandler(async (event) => {
         const key = Object.keys(sortObj)[0]
         const value = sortObj[key]
         if (key && value){
-            result.sort( (a, b)=> value==1 ? a[key]-b[key] : b[key]-a[key] )
+            data.list.sort( (a, b)=> value==1 ? a[key]-b[key] : b[key]-a[key] )
         }
     }
 
-    return result
+    return data
 })

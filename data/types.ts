@@ -109,3 +109,8 @@ export interface ITabs {
     slot: string, 
     query: string 
 }
+
+export interface IResTable {
+    list: any []
+    count: number
+}
