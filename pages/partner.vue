@@ -64,7 +64,8 @@ async function _fetchData() {
             query: { 
                 skip: search.skip, 
                 limit: search.limit,
-                sort: JSON.stringify(search.sort)
+                sort: JSON.stringify(search.sort),
+                filter: JSON.stringify(search.filter)
             },
             method: 'GET' 
         })
