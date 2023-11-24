@@ -113,7 +113,7 @@ const listConfigPartners: ConfigTable[] = [
     { field: 'registrationDate', header: 'Дата регистрации', type: FieldsType.date },
     { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
     { field: 'deals', header: 'Выполнено услуг', type: FieldsType.text },
-    { field: 'summ', header: 'Сумма услуг', type: FieldsType.price },
+    { field: 'summ', header: 'Фин. оборот', type: FieldsType.price },
     { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
 ]
 const listConfigOrders: ConfigTable[] = [
