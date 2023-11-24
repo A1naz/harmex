@@ -22,25 +22,34 @@ const loadingList = ref(false)
 const client = store.client
 const partner = client.partner
 
-
+function closePartnerVideofn() {
+  closePartnerVideo.value?.click()
+}
+interface ItemSearch {
+    skip: number,
+    limit: number,
+    sort: any,
+    filter: any
+}
 interface itemData {
     data: any [],
     count: number,
-    skip: number,
-    limit: number,
-    sort: any
+    search: ItemSearch
 }
 interface ListData {
     referals: itemData, 
     orders: itemData
 }
-const limitInit = 30
+const limitInit = 20
 const itemInitData = {
     data: [],
     count: 0,
-    skip: 0,
-    limit: limitInit,
-    sort: {},
+    search: {
+        skip: 0,
+        limit: limitInit,
+        sort: {},
+        filter: {}
+    }
 }
 const listData = ref<ListData>({
     referals: {...itemInitData},
@@ -53,12 +62,12 @@ async function getData() {
         ) {
         loadingList.value = true
         listData.value[tab.value as keyof ListData].data = []
-        const { skip, limit, sort } = listData.value[tab.value as keyof ListData]
+        const { search } = listData.value[tab.value as keyof ListData]
         const { data } = await useFetch<IResTable>(`/api/partner/${tab.value}`, { 
             query: { 
-                skip: skip, 
-                limit: limit,
-                sort: JSON.stringify(sort)
+                skip: search.skip, 
+                limit: search.limit,
+                sort: JSON.stringify(search.sort)
             },
             method: 'GET' 
         })
@@ -70,7 +79,7 @@ async function getData() {
     loadingListDebounce() // to avoid double fetch after click on sort
 }
 
-const getDataDebounced = useDebounceFn(()=> getData() , 1000)
+const getDataDebounced = useDebounceFn(()=> getData() , 500)
 const loadingListDebounce = useDebounceFn(()=> loadingList.value = false , 500)  
 
 async function refreshData() {
@@ -80,15 +89,10 @@ async function refreshData() {
     }
 }
 
-function updateFilter(pageNum: number) {
-    const newSkip = pageNum * limitInit
-    listData.value[tab.value as keyof ListData].skip = newSkip
-    getData()
-}
-
-
-function closePartnerVideofn() {
-  closePartnerVideo.value?.click()
+async function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
+    if(key =='skip') value = limitInit * (value - 1)
+    listData.value[tab.value as keyof ListData].search[key] = value
+    await getDataDebounced()
 }
 
 const tabs: ITabs[] = [
@@ -96,14 +100,13 @@ const tabs: ITabs[] = [
     {title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },    
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
-
 const listConfigPartners: ConfigTable[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
     { field: 'email', header: 'E-mail', type: FieldsType.text },
     { field: 'registrationDate', header: 'Дата регистрации', type: FieldsType.date },
     { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
     { field: 'deals', header: 'Выполнено услуг', type: FieldsType.text },
-    { field: 'summ', header: 'Сумма услуг', type: FieldsType.price },
+    { field: 'summ', header: 'Фин. оборот', type: FieldsType.price },
     { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
 ]
 const listConfigOrders: ConfigTable[] = [
@@ -117,6 +120,8 @@ const listConfigOrders: ConfigTable[] = [
     { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
 
+
+onMounted(()=> getDataDebounced())
 
 </script>
 
@@ -143,6 +148,7 @@ const listConfigOrders: ConfigTable[] = [
 
         <Tabs 
             :tabs="tabs"
+            @change-tab="getDataDebounced"
             >
             <template v-slot:main>
                 <div class="flex flex-col gap-4 w-full ">
@@ -176,7 +182,7 @@ const listConfigOrders: ConfigTable[] = [
                     :data="listData.referals.data"
                     :count="listData.referals.count"
                     :perPage="limitInit"
-                    :currentSkip="listData.referals.skip"
+                    :currentSkip="listData.referals.search.skip"
                     :config="listConfigPartners"
                     :isLoading="loadingList"
                     @changePage="updateFilter"
@@ -195,10 +201,10 @@ const listConfigOrders: ConfigTable[] = [
                     :data="listData.orders.data"
                     :count="listData.orders.count"
                     :perPage="limitInit"
-                    :currentSkip="listData.orders.skip"
+                    :currentSkip="listData.orders.search.skip"
                     :config="listConfigOrders"
                     :isLoading="loadingList"
-                    @changePage="updateFilter"
+                    @changePage="(p: number) => updateFilter('skip', p)"
                     />
             </template>
         </Tabs>

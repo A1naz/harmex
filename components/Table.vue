@@ -12,22 +12,8 @@ const props = defineProps({
     
 })
 const emit = defineEmits(['sort', 'changePage', 'update:endList'])
-
 const { width, height } = useWindowSize()
 const target = ref(null)
-
-const pageNum = computed( () => {
-    const res = props.count / props.perPage 
-    return res < props.perPage ? '1' : Math.ceil(res).toString()
-})
-
-const currentPage = computed ( () => {
-    return props.currentSkip == 0 ? 1 : props.currentSkip / props.perPage
-})
-
-const changePage = (numPage: number) => {
-    emit('changePage', numPage)
-}
 
 const { stop } = useIntersectionObserver( target,
   ([{ isIntersecting }], observerElement) => {
@@ -35,23 +21,48 @@ const { stop } = useIntersectionObserver( target,
   },
 )
 
+const pageNum = computed( () => {
+    const res = props.count / props.perPage 
+    return Math.ceil(res).toString()
+})
+
+const currentPage = computed ( () => {
+    return props.currentSkip == 0 ? 1 : props.currentSkip / props.perPage + 1
+})
+
+const displyed = computed( () => {
+    return props.isLoading
+        ? ''
+        : `Показано ${props.currentSkip + 1}-${props.currentSkip + props.data.length} из ${props.count}`
+})
+
+const changePage = (numPage: number) => {
+    emit('changePage', numPage)
+}
+
 </script>
 
 <template>
 <div>
-<!-- pagination -->
-    <div class="flex flex-row gap-1 ml-5 mb-1">
-        <Button 
-            v-for="n in parseInt(pageNum)" 
-            :class="[
-                'btn btn-sm rounded-xl',
-                { 'btn-primary': n == currentPage }
-                ]"
-            :disabled="n == currentPage"
-            @click="changePage(n)"
-            >{{ n }}</Button>
-    </div>
 
+<!-- pagination -->
+    <div class="flex flex-row justify-between content-center p-3">
+        <div class="flex flex-row gap-1">
+            <Button 
+                v-for="n in parseInt(pageNum)" 
+                :class="[
+                    'btn btn-sm rounded-xl',
+                    { 'btn-primary': n == currentPage }
+                    ]"
+                @click="changePage(n)"
+                >
+                {{ n }}
+            </Button>
+        </div>
+        <div class="inline-block align-middle text-sm">
+            {{ displyed }}
+        </div>
+    </div>
 
     <DataTable 
         v-if="width > 1024"
@@ -92,7 +103,7 @@ const { stop } = useIntersectionObserver( target,
                     v-for="col of config" 
                     >
                     <span v-if="col.type == FieldsType.price" >
-                        <b>{{ col.header }}: </b> {{ item[col.field] }} р.
+                        <b>{{ col.header }}: </b>{{ Number.parseFloat(item[col.field]).toFixed(2) }} р.
                     </span>
                     <span v-else-if="col.type == FieldsType.date">
                         <b>{{ col.header }}: </b>{{ defaultDate(item[col.field]) }}

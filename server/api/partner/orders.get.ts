@@ -60,8 +60,8 @@ export default eventHandler(async (event) => {
     const countPl: any[] = [...listPl]
 
     if (Object.keys(sortObj).length > 0 ) listPl.push( {$sort: sortObj} )
-    if (limit) listPl.push( {$limit: limit} )
     if (skip) listPl.push( {$skip: skip} )
+    if (limit) listPl.push( {$limit: limit} )
 
     const pipline: any[] = [
         { $facet: {
