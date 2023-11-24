@@ -336,6 +336,9 @@ async function setChatBotSettings() {
       <p class="description">
         Здесь вы можете управлять настройками вашего аккаунта.
       </p>
+      <p class="description">
+        Запустите чат-бот уведомлений по платформе. Привяжите Telegram-аккаунт и активируйте чат-бот.
+      </p>
     </div>
 
     <section
