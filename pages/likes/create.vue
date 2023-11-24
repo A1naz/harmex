@@ -13,6 +13,7 @@ definePageMeta({
 })
 const { notify } = useNotification()
 const changedReviews = ref<any>([])
+const isCreateButtonDisabled = ref(false)
 
 const route = useRoute()
 const router = useRouter()
@@ -196,6 +197,7 @@ async function selectSorting(e: any) {
   await getProductReviews()
 }
 async function save() {
+  isCreateButtonDisabled.value = true
   const userOffsetMinutes = new Date().getTimezoneOffset()
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
@@ -221,6 +223,7 @@ async function save() {
       title: 'Ошибка',
       text: error.value.message,
     })
+    isCreateButtonDisabled.value = false
     return
   }
   if (data.value) {
@@ -228,7 +231,8 @@ async function save() {
       type: 'success',
       title: 'Успешно',
     })
-    return router.push('/likes')
+
+    return navigateTo('/likes', { external: true })
   }
 }
 
@@ -408,7 +412,7 @@ async function swapPage(value: number) {
           >
             Отмена
           </button>
-          <button class="btn btn-primary btn-sm" @click="save">
+          <button class="btn btn-primary btn-sm" :disabled="isCreateButtonDisabled" @click="save">
             Сохранить
           </button>
         </div>
