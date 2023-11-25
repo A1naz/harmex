@@ -15,13 +15,20 @@ const route = useRoute()
 const tab = computed (() => route.query.tab)
 const refUrl = computed(() => `${runtimeConfig.public.siteUrl}/register?ref=${client.uuid}`)
 
-const secondLevelReferrals = ref(0)
 const closePartnerVideo = ref(null) as Ref<HTMLLabelElement | null>
 const loadingList = ref(false)
 
 const client = store.client
 const partner = client.partner
 
+const secondLevelReferrals = ref(0)
+async function getSecondartRefLevel(){
+    const { data } = await useFetch<
+        { status: string, secondLevelReferralsCount: number }
+    >('/api/partner/getSecondLevelReferrals',{ method: 'GET' })
+    if(data.value && data.value.status === 'ok') secondLevelReferrals.value = data.value.secondLevelReferralsCount
+}
+await getSecondartRefLevel()
 
 interface itemData {
     data: any [],
@@ -129,6 +136,7 @@ watch( () => isListEnd.value, async (newValue, oldValue) => {
     if (newValue) await getData()
 })
 
+
 </script>
 
 <template>
@@ -161,7 +169,7 @@ watch( () => isListEnd.value, async (newValue, oldValue) => {
                     <div class="bg-base-200 p-4 flex flex-col rounded-xl">
                         <PartnerDashboard 
                             :balance="store.client.partner.balance"
-                            :ref-count="listData.referals.data.length"
+                            :ref-count="partner.refCount"
                             :second-level-referrals="secondLevelReferrals"
                             :ref-url="refUrl"
                             :reward-percent="partner.rewardPercent"
