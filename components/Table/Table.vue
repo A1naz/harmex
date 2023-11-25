@@ -7,6 +7,7 @@ const props = defineProps({
     count: { type: Number, required: true },
     currentLimit: { type: Number, required: true },
     currentSkip: { type: Number, required: true },
+    currentSort: { type: Object, required: true },
     config:  { type: Array as PropType<ConfigTable[]>, required: true },
     isLoading: { type: Boolean, required: true },    
 })
@@ -51,6 +52,8 @@ const changeLimit = (limit: number) => {
 
     <DataTable 
         :value="data" 
+        :sort-field="Object.keys(currentSort)[0]"
+        :sort-order="Object.values(currentSort)[0]"
         @sort="(v: any) => $emit('sort', v)"
         >
         <Column

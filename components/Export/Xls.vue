@@ -30,11 +30,11 @@ const columns = ref<ConfigTable[]>([])
 
 function prepareColummns() {
     if(props.configColumns){
-        for(const column of props.configColumns){
+        for(let i=0; i<props.configColumns.length ;i++){
         columns.value.push(
             {
-                header: column.header, 
-                key: column.field, 
+                header: props.configColumns[i].header, 
+                key: props.configColumns[i].field, 
                 font: { bold: true }, 
                 width: 25 
             })
@@ -59,6 +59,7 @@ async function exportToXLS() {
   fileLink.setAttribute('download', `${props.fileName}.xlsx`)
   document.body.appendChild(fileLink)
   fileLink.click()
+  columns.value = []
   btnLoading.value = false
 }
 

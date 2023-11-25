@@ -27,9 +27,9 @@ function changePage(n: number) {
 </script>
 
 <template>
-    <div class="flex flex-row justify-between content-center p-3">
+    <div class="flex flex-row flex-wrap justify-between content-center p-3">
 
-        <div class="flex flex-row gap-1">
+        <div class="m-2 flex flex-row gap-1">
             <div class="flex flex-row">
                 <div class="self-center text-sm mr-1">Показывать по</div>
             </div>
@@ -45,7 +45,7 @@ function changePage(n: number) {
             </Button>
         </div>
 
-        <div class="flex flex-row gap-1 -ml-20">
+        <div class="m-2 flex flex-row gap-1">
             <div class="flex flex-row">
                 <div class="self-center text-sm mr-1">Страница</div>
             </div>
@@ -61,7 +61,7 @@ function changePage(n: number) {
             </Button>
         </div>
 
-        <div class="flex flex-row">
+        <div class="m-2 flex flex-row">
             <div class="self-center text-sm">{{ displayed }}</div>
         </div>
 

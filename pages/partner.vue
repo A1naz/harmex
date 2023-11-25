@@ -58,7 +58,6 @@ const listData = ref<ListData>({
 
 async function _fetchData() {
     if (tab.value) {
-        listData.value[tab.value as keyof ListData].data = []
         const { search } = listData.value[tab.value as keyof ListData]
         const { data } = await useFetch<IResTable>(`/api/partner/${tab.value}`, { 
             query: { 
@@ -79,6 +78,7 @@ async function _fetchData() {
 const _getDataDebounced = useDebounceFn(()=> _fetchData() , 700)
 
 function getData(){
+    listData.value[tab.value as keyof ListData].data = []
     loadingList.value = true
     _getDataDebounced()
 }
@@ -126,14 +126,16 @@ const listConfigPartners: ConfigTable[] = [
 const listConfigOrders: ConfigTable[] = [
     { field: 'refUsername', header: 'Ник', type: FieldsType.text },
     { field: 'refEmail', header: 'E-mail', type: FieldsType.text },
+    { field: 'refLevel', header: 'Рекомендатель', type: FieldsType.text },
     { field: 'serviceType', header: 'Тип', type: FieldsType.text },
     { field: 'date', header: 'Дата операции', type: FieldsType.date },
     { field: 'serviceSum', header: 'Стоимость', type: FieldsType.price },
     { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
-    { field: 'qqqqqqqqqqqqqqqq', header: 'Рекомендатель', type: FieldsType.text },
     { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
 
+listData.value.referals.search.sort = { username: 1 }
+listData.value.orders.search.sort = { date: 1 }
 
 onMounted(()=> getData())
 
@@ -197,6 +199,7 @@ onMounted(()=> getData())
                     :count="listData.referals.count"
                     :currentLimit="listData.referals.search.limit"
                     :currentSkip="listData.referals.search.skip"
+                    :current-sort="listData.referals.search.sort"
                     :config="listConfigPartners"
                     :isLoading="loadingList"
                     @changePage="(p: number) => updateFilter('skip', p)"
@@ -205,6 +208,12 @@ onMounted(()=> getData())
             </template>
             <template v-slot:orders>
                 <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-2" >
+                    <ExportXls 
+                        api="/api/partner/orders-export"
+                        fileName="TOPVTOP - Заказы партнеров"
+                        :config-columns="listConfigOrders"
+                        :isVisible="listData.orders.data.length > 0"
+                        />
                     <Button 
                         class="btn btn-sm btn-primary rounded-xl"
                         @click="refreshData" 
@@ -217,6 +226,7 @@ onMounted(()=> getData())
                     :count="listData.orders.count"
                     :currentLimit="listData.orders.search.limit"
                     :currentSkip="listData.orders.search.skip"
+                    :current-sort="listData.orders.search.sort"
                     :config="listConfigOrders"
                     :isLoading="loadingList"
                     @sort="(s: any) => updateFilter('sort', s)"

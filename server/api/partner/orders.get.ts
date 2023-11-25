@@ -1,6 +1,7 @@
 import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory'
 import { ObjectId } from 'mongodb';
 import { IResTable } from '~/data/types';
+import { Referral } from '~/server/lib/models/Referral';
 
 export default eventHandler(async (event) => {
 
@@ -9,7 +10,7 @@ export default eventHandler(async (event) => {
 
     const params = getQuery(event)
     const filtertObj = params.filter ? JSON.parse(params.filter.toString()) : {}
-    const sortObj = params.sort ? JSON.parse(params.sort.toString()) : {}
+    const sortObj: {[x: string]: number} = params.sort ? JSON.parse(params.sort.toString()) : {}
     const limit = params.limit ? parseInt(params.limit?.toString(), 10) : undefined
     const skip = params.skip ? parseInt(params.skip?.toString(), 10) : undefined
 
@@ -21,6 +22,7 @@ export default eventHandler(async (event) => {
             user: 1,
             paymenthistory: 1,
             referral: 1,
+            refLevel: 1,
             serviceType: 1,
             date: 1,
             amount: 1
@@ -49,32 +51,72 @@ export default eventHandler(async (event) => {
             'user',
             '_id',
             'paymenthistory',
-            'referral',
             'histInfo',
             'refInfo'
         ]}
     ]
 
-    if (Object.keys(filtertObj).length > 0 ) listPl.push( {$match: {...filtertObj }} )
+    const reffers = await PartnerPaymentHistory.aggregate(listPl)
 
-    const countPl: any[] = [...listPl]
+    let format = await Promise.all(
+        reffers.map( async (ref: any) =>  {
+            if(ref.refLevel === 2){
+                const refHost = await Referral.aggregate([
+                        { $match:
+                            { "referrals.user": new ObjectId(ref.referral),
+                        }},
+                        { $lookup:
+                            { from: "users",
+                              localField: "user",
+                              foreignField: "_id",
+                              as: "inviter",
+                        }},
+                        { $unwind:
+                            { path: "$inviter",
+                        }},
+                        { $project:
+                            { "inviter.username": 1,
+                        }}
+                ])
+                if(refHost[0]) user.username = "2-ой уровень " + refHost[0].inviter.username
+            }
+            return {
+                refUsername: ref.refUsername,
+                refEmail: ref.refEmail,
+                refLevel: user.username,
+                serviceType: ref.serviceType,
+                date: ref.date,
+                serviceSum: ref.serviceSum,
+                amount: ref.amount,
+                refRewarded: ref.refRewarded ? "Выплачено" : "Не завершено",
+            }
+        })
+    )
 
-    if (Object.keys(sortObj).length > 0 ) listPl.push( {$sort: sortObj} )
-    if (skip) listPl.push( {$skip: skip} )
-    if (limit) listPl.push( {$limit: limit} )
+    const count = format.length
 
-    const pipline: any[] = [
-        { $facet: {
-            list: listPl,
-            count: [...countPl, { $count: 'count'}]
-        }}
-    ]
-
-    const reffers = await PartnerPaymentHistory.aggregate(pipline)
+    if (Object.keys(filtertObj).length > 0 ) {
+        const filtered = format.filter( (el: any) => el[Object.keys(filtertObj)[0]] == Object.values(filtertObj)[0] )
+        format = filtered
+    }
+    if (Object.keys(sortObj).length > 0 ) {
+        const key: string = Object.keys(sortObj)[0]
+        const value: number = Object.values(sortObj)[0]
+        format.sort( (a: any, b: any) => {
+            if (typeof a[key] == 'number'){
+                return a[key] * value - b[key] * value
+            } else {
+                return a[key] < b[key] ? -1 * value : 1 * value
+            }
+        })
+    }
+    if (typeof skip == 'number' && typeof limit  == 'number') {
+        format = format.slice(skip, skip+limit)
+    }
 
     const data: IResTable = {
-        list: reffers[0].list,
-        count: reffers[0].count[0].count
+        list: format,
+        count: count
     }
 
     return data
