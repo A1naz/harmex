@@ -99,6 +99,8 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
     if(key =='limit') {
         listData.value[tab.value as keyof ListData].search.skip = 0
     }
+    if(key == 'sort') value = { [value.sortField]: value.sortOrder }
+
     listData.value[tab.value as keyof ListData].search[key] = value
     getData()
 }
@@ -183,8 +185,6 @@ onMounted(()=> getData())
             </template>
             <template v-slot:referals>
                 <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-2" >
-                    <TableFilter 
-                        />
                     <Button 
                         class="btn btn-sm btn-primary rounded-xl"
                         @click="refreshData" 
@@ -204,7 +204,7 @@ onMounted(()=> getData())
                     />
             </template>
             <template v-slot:orders>
-                <div class="flex justify-end bg-base-200 rounded-xl mb-2 p-2 gap-2" >
+                <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-2" >
                     <Button 
                         class="btn btn-sm btn-primary rounded-xl"
                         @click="refreshData" 
@@ -219,6 +219,7 @@ onMounted(()=> getData())
                     :currentSkip="listData.orders.search.skip"
                     :config="listConfigOrders"
                     :isLoading="loadingList"
+                    @sort="(s: any) => updateFilter('sort', s)"
                     @changePage="(p: number) => updateFilter('skip', p)"
                     @changeLimit="(l: number) => updateFilter('limit', l)"
                     />

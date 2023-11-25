@@ -50,11 +50,12 @@ const changeLimit = (limit: number) => {
         />
 
     <DataTable 
-        v-if="width > 1024"
         :value="data" 
+        @sort="(v: any) => $emit('sort', v)"
         >
         <Column
             v-for="col of config"
+            sortable
             :key=col.field
             :field=col.field 
             :header=col.header
@@ -74,7 +75,7 @@ const changeLimit = (limit: number) => {
         </Column>
     </DataTable>
 
-    <div v-else
+    <!-- <div v-else
         class="w-full flex flex-col gap-2"
         >
         <div
@@ -97,10 +98,11 @@ const changeLimit = (limit: number) => {
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <TablePagination  
         v-if="!isLoading && data.length > 10"
+        class="pb-20"
         :page-nums="pageNum"
         :limit-list="limitList"
         :docs-count="count"
