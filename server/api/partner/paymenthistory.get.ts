@@ -9,7 +9,7 @@ export default eventHandler(async (event) => {
 
   const history = await PartnerPaymentHistory
                             .find({ user })
-                            .sort({ _id: -1 })
+                            .sort({ date: -1 })
                             .limit(limit as number)
                             .skip(skip as number)
 
