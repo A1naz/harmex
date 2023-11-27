@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { useMainStore } from '~~/stores/main'
 
 const props = defineProps({
   modelValue: {
     required: true,
-    type: Array,
+    type: Array as PropType<Date[]>,
   },
   startDate: {
     required: true,
@@ -20,8 +19,7 @@ const emit = defineEmits(['update:modelValue', 'select'])
 const colorMode = useColorMode()
 const { $dayjs } = useNuxtApp()
 const { width } = useWindowSize()
-const date = ref(props.modelValue)
-const store = useMainStore()
+
 function getFirstDate(dates: [Date | null, Date | null] | []) {
   if (dates && dates[0])
     return `${$dayjs(dates[0]).format('D MMMM HH:mm')}`
@@ -48,24 +46,11 @@ const hoursArray = computed(() => {
   return arr
 })
 
-const minutesArray = computed(() => {
-  const arr = []
-  for (let i = 0; i < 60; i++)
-    arr.push({ text: i < 10 ? `0${i}` : i, value: i })
-
-  return arr
+const dates = computed({
+    get: () => props.modelValue,
+    set: (val) => emit('update:modelValue', val)
 })
-function handleDate(modelData: any) {
-  const first = modelData[0] as Date
-  const second = modelData[1] as Date
-  if (second.getHours() < first.getHours())
-    second.setHours(first.getHours())
-  if (second.getMinutes() < first.getMinutes())
-    second.setMinutes(first.getMinutes())
-  date.value = [first, second]
-  emit('update:modelValue', modelData)
-  emit('select')
-}
+
 function handleTime(index: number, value: number, hours = true, updateTime: updateTime, time: any) {
   if (index === 0)
     updateTime([value, time.hours[1]], true)
@@ -77,10 +62,18 @@ function handleTime(index: number, value: number, hours = true, updateTime: upda
 <template>
   <div>
     <VueDatePicker
-      v-model="date" position="left" :teleport-center="width < 1024"
-      :time-picker-inline="true"
-      :teleport="true" :max-date="startDate" :prevent-min-max-navigation="true" :dark="colorMode.value === 'dark'"
-      locale="ru" range cancel-text="" select-text="Сохранить" @update:model-value="handleDate"
+        v-model="dates"
+        @update:model-value="$emit('select')"
+        :max-date="startDate" 
+        range cancel-text="" 
+        select-text="Сохранить" 
+        locale="ru" 
+        :prevent-min-max-navigation="true" 
+        :dark="colorMode.value === 'dark'"
+        :teleport-center="width < 1024"
+        :time-picker-inline="true"
+        :teleport="true" 
+        position="left" 
     >
       <template #trigger>
         <slot />

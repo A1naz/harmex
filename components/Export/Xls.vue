@@ -24,14 +24,19 @@ const props = defineProps({
     }
 })
 
-const exportDates = ref([])
+const exportDates = ref<Date[]>([])
 const btnLoading = ref(false)
-const columns = ref<ConfigTable[]>([])
 
-function prepareColummns() {
+const expDatesVModel = computed({
+    get: () => exportDates.value,
+    set: (val) => exportDates.value = val
+})
+
+function prepareColummns(): any[] {
+    let cols: any[] = []
     if(props.configColumns){
         for(let i=0; i<props.configColumns.length ;i++){
-        columns.value.push(
+            cols.push(
             {
                 header: props.configColumns[i].header, 
                 key: props.configColumns[i].field, 
@@ -39,17 +44,18 @@ function prepareColummns() {
                 width: 25 
             })
         }
+        return cols
     }
+    return cols
 }
 
 async function exportToXLS() {
   btnLoading.value = true
-  prepareColummns()
   const { data } = await useFetch(props.api, {
     method: 'POST',
     body: {
-      exportDates: exportDates.value,
-      columns: columns
+      exportDates: expDatesVModel.value,
+      columns: prepareColummns()
     },
     responseType: 'blob',
   })
@@ -59,7 +65,6 @@ async function exportToXLS() {
   fileLink.setAttribute('download', `${props.fileName}.xlsx`)
   document.body.appendChild(fileLink)
   fileLink.click()
-  columns.value = []
   btnLoading.value = false
 }
 
@@ -69,7 +74,7 @@ async function exportToXLS() {
     <div v-if="isVisible" >
         <ClientOnly>
             <DateRangePicker 
-                v-model="exportDates" 
+                v-model="expDatesVModel" 
                 :save-button="saveButton" 
                 :start-date="new Date()" 
                 @select="exportToXLS"

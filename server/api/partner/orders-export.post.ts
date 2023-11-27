@@ -59,17 +59,18 @@ export default eventHandler(async (event) => {
                 if: {
                     $eq: [
                       "$refRewarded",
-                      "выплачено"
+                      "Выплачено"
                     ]
                   },
                 then: "Активен",
+                else: 'Неизвестен'
             }
         }
     }}
 ]
 if (startDate && endDate) {
     listPl.push( {$match: {   
-            dataoperation: {
+            date: {
                 $gt: startDate,
                 $lt: endDate,
             }, }} )

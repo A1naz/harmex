@@ -53,7 +53,6 @@ export default eventHandler(async (event) => {
     ]
 
     const reffers = await Referral.aggregate(reffersPL)
-    console.log(startDate, endDate)
 
   const data = await Promise.all(
         reffers[0].refInfo.map(async (refer: any) => {
