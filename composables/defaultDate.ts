@@ -21,7 +21,7 @@ export function defaultDate(newDate: Date | string) {
   return `${day} ${monthName} ${year} ${hours}:${minutes}`;
 }
 
-function DefaultDateWithoutMonthName(newDate: Date | string) {
+export function DefaultDateWithoutMonthName(newDate: Date | string) {
 
   const date = new Date(newDate)
   const day = addLeadingZero(date.getUTCDate())
@@ -32,3 +32,11 @@ function DefaultDateWithoutMonthName(newDate: Date | string) {
 
   return `${day}.${month}.${year} ${hours}:${minutes}`
 }
+
+export function defaultDateShort(newDate: Date | string) {
+    const date = new Date(newDate);
+    const day = date.getUTCDate();
+    const month = addLeadingZero(date.getUTCMonth() + 1)
+    const year = date.getUTCFullYear();  
+    return `${day}/${month}/${year}`
+  }

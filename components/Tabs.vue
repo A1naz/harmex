@@ -8,8 +8,8 @@ const emit = defineEmits(['changeTab'])
 const route = useRoute()
 const router = useRouter()
 
-function changeTab(newRoute: string){
-    emit('changeTab')
+function changeTab(newRoute: string, newSlot: string){
+    emit('changeTab', newSlot)
     router.push(newRoute)
 }
 
@@ -24,7 +24,7 @@ function isActive(slot: string, query: string){
         v-for="tab in tabs"
         :class="{ 'btn-active': isActive(tab.slot, tab.query) }" 
         class="btn btn-ghost btn-sm normal-case text-primary font-medium mx-1"
-        @click="changeTab(`${route.path}${tab.query}`)"
+        @click="changeTab(`${route.path}${tab.query}`, tab.slot)"
         >
         {{ tab.title }}
     </Button>
