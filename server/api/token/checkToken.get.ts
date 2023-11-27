@@ -2,34 +2,67 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import { tgBotOptions } from '~/server/lib/models/tgBotOptions'
+import { getToken } from '#auth'
 
 export default eventHandler(async (event) => {
+  const session = (await getServerSession(event)) as any
+  if (!session) return sendRedirect(event, '/auth', 302)
+
+  const { uuid } = getQuery(event)
+
+  const user = await User.findOne({ uuid })
+  if (!user) return sendRedirect(event, '/auth', 302)
+
+  let cookie = event.req.headers.cookie
+  if (!cookie) return sendRedirect(event, '/auth', 302)
+
+  const accountsToken = decodeURIComponent(
+    decodeURIComponent(
+      cookie.replace(
+        /(?:(?:^|.*;\s*)accountsSessionToken\s*=\s*([^;]*).*$)|^.*$/,
+        '$1'
+      )
+    )
+  )
+  if (!accountsToken) throw new Error('неизвестная ошибка')
+
+  const accountsTokenArray = JSON.parse(accountsToken)
+  const found = accountsTokenArray.find((el: any) => {
+    if (el.uuid === user.uuid) {
+      return el
+    }
+  })
+  if (!found) throw new Error('неизвестная ошибка')
+
   if (event.req.headers.cookie) {
     event.req.headers.cookie = event.req.headers.cookie.replace(
       /next-auth\.session-token=[^;]*/,
-      `next-auth.session-token=${event.req.headers.authorization}`
+      `next-auth.session-token=${found.token}`
     )
   }
+  let tokenTest
 
-  const session = (await getServerSession(event)) as any
+  tokenTest = (await getToken({ event })) as any
 
-  if (!session) {
-    console.log('error');
-    
+  if (!tokenTest) {
+    const userWithoutToken = await User.findOne({ uuid })
     return {
       status: 'error',
+      message: 'Сессия истекла, пожалуйста переавторизуйтесь',
+      email: userWithoutToken
+        ? userWithoutToken.email
+          ? userWithoutToken.email
+          : ''
+        : '',
     }
   }
 
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user)
-    return {
-      status: 'error',
-    }
+  (await getServerSession(event)) as any
 
-  console.log('ok')
+  
 
   return {
     status: 'ok',
+    token: found.token,
   }
 })

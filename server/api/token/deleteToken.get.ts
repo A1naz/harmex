@@ -2,6 +2,8 @@
 import { getServerSession } from '#auth'
 import { tgBotOptions } from '~/server/lib/models/tgBotOptions'
 import jwt from 'jsonwebtoken'
+import { setCookie } from 'h3'
+
 const runtimeConfig = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
@@ -14,6 +16,8 @@ export default eventHandler(async (event) => {
   const cookie = event.req.headers.cookie
   if (!cookie) return sendRedirect(event, '/auth', 302)
 
+  const { uuid } = getQuery(event)
+
   const nuxtAuthToken = cookie?.replace(
     /(?:(?:^|.*;\s*)next-auth.session-token\s*=\s*([^;]*).*$)|^.*$/,
     '$1'
@@ -23,7 +27,6 @@ export default eventHandler(async (event) => {
 
   let data: any[] = []
   let accounts: any[] = []
-  let token: string = ''
   const accountsToken = decodeURIComponent(
     decodeURIComponent(
       cookie.replace(
@@ -33,51 +36,54 @@ export default eventHandler(async (event) => {
     )
   )
 
+  if (!accountsToken) throw new Error('неизвестная ошибка')
+
   let accountsTokenArray: any[] = []
+  accountsTokenArray = JSON.parse(accountsToken)
 
   if (!accountsToken) {
-    data.push({
-      token: nuxtAuthToken,
-      uuid: user.uuid,
-    })
-
-    accounts.push({
-      uuid: user.uuid,
-      username: user.username,
-    })
+    throw new Error('неизвестная ошибка')
   } else {
-    accountsTokenArray = JSON.parse(accountsToken)
+    // console.log(accountsTokenArray);
+
     const findIndex = accountsTokenArray.findIndex((el: any) => {
-      if (el.uuid === user.uuid) {
+      if (el.uuid === uuid) {
         return el
       }
     })
 
     if (findIndex !== -1) {
-      accountsTokenArray[findIndex].token = nuxtAuthToken
-    } else if (accountsTokenArray.length < 5) {
-      accountsTokenArray.push({
-        token: nuxtAuthToken,
-        uuid: user.uuid,
+      accountsTokenArray.splice(findIndex, 1)
+      data = accountsTokenArray
+      const users = await User.find({
+        uuid: { $in: data.map((el) => el.uuid) },
       })
-    } else {
 
+      accounts = users.map((el: any) => {
+        return {
+          uuid: el.uuid,
+          username: el.username,
+        }
+      })
     }
-
-    data = accountsTokenArray
-    const users = await User.find({
-      uuid: { $in: data.map((el) => el.uuid) },
-    })
-    accounts = users.map((el: any) => {
-      return {
-        uuid: el.uuid,
-        username: el.username,
-      }
-    })
   }
 
+  const expiryDate = new Date()
+  expiryDate.setDate(expiryDate.getDate() + 32)
+  const expiresString = expiryDate.toUTCString()
+  const jsonString = JSON.stringify(data);
+  event.res.setHeader(
+    'Set-Cookie',
+    `accountsSessionToken=${encodeURIComponent(jsonString)}; HttpOnly; expires=${expiresString}`
+  )
+  setCookie(event, 'accountsSessionToken', encodeURIComponent(jsonString), {
+      httpOnly: true,
+      expires: expiryDate,
+  })
+
+
   return {
-    token: data,
+    token: [],
     accounts,
   }
 })
