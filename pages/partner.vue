@@ -200,7 +200,6 @@ onMounted(()=> getData())
                         <PartnerDashboard 
                             :balance="store.client.partner.balance"
                             :ref-count="partner.refCount"
-                            :ref-count="partner.refCount"
                             :second-level-referrals="secondLevelReferrals"
                             :ref-url="refUrl"
                             :reward-percent="partner.rewardPercent"
