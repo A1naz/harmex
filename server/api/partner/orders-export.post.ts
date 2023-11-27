@@ -1,6 +1,7 @@
 import ExcelJS from 'exceljs'
 import { ObjectId } from 'mongodb';
 import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory';
+import { Referral } from '~/server/lib/models/Referral';
 
 export default eventHandler(async (event) => {
 
@@ -76,13 +77,48 @@ if (startDate && endDate) {
 
 const reffers = await PartnerPaymentHistory.aggregate(listPl)
 
+let format = await Promise.all(
+    reffers.map( async (ref: any) =>  {
+        if(ref.refLevel === 2){
+            const refHost = await Referral.aggregate([
+                    { $match:
+                        { "referrals.user": new ObjectId(ref.referral),
+                    }},
+                    { $lookup:
+                        { from: "users",
+                          localField: "user",
+                          foreignField: "_id",
+                          as: "inviter",
+                    }},
+                    { $unwind:
+                        { path: "$inviter",
+                    }},
+                    { $project:
+                        { "inviter.username": 1,
+                    }}
+            ])
+            if(refHost[0]) user.username = "2-ой уровень " + refHost[0].inviter.username
+        }
+        return {
+            refUsername: ref.refUsername,
+            refEmail: ref.refEmail,
+            refLevel: user.username,
+            serviceType: ref.serviceType,
+            date: ref.date,
+            serviceSum: ref.serviceSum,
+            amount: ref.amount,
+            refRewarded: ref.refRewarded ? "Выплачено" : "Не завершено",
+        }
+    })
+)
+
   const workbook = new ExcelJS.Workbook()
   const sheet = workbook.addWorksheet('Заказы партнеров', {
-    headerFooter: { firstHeader: `Всего записей: ${reffers.length}` },
+    headerFooter: { firstHeader: `Всего записей: ${format.length}` },
   })
 
   sheet.columns = columns
-  sheet.addRows(reffers)
+  sheet.addRows(format)
   const buffer = await workbook.xlsx.writeBuffer()
   return buffer
 })

@@ -18,11 +18,17 @@ const limitList = [20 ,40, 60]
 
 const pageNum = computed( () => {
     const res = props.count / props.currentLimit 
-    return Math.ceil(res).toString()
+    return Math.ceil(res)
 })
 
 const currentPage = computed ( () => {
     return props.currentSkip == 0 ? 1 : props.currentSkip / props.currentLimit + 1
+})
+
+const displayed = computed( ()=>{
+    const from = props.currentSkip + 1
+    const to = props.currentSkip + props.data.length
+    return `Показано ${from}-${to} из ${props.count}`
 })
 
 const changePage = (numPage: number) => {
@@ -41,15 +47,16 @@ const changeLimit = (limit: number) => {
     <TablePagination  
         :page-nums="pageNum"
         :limit-list="limitList"
-        :docs-count="count"
         :current-page="currentPage"
         :current-limit="currentLimit"
-        :current-skip="currentSkip"
-        :current-count="data.length"
         @change-limit="changeLimit"
         @change-page="changePage"
         />
-
+    
+    <div class="flex flex-row w-full justify-end">
+        <div class="self-center text-sm">{{ displayed }}</div>
+    </div>
+    
     <DataTable 
         :value="data" 
         :sort-field="Object.keys(currentSort)[0]"
@@ -77,45 +84,22 @@ const changeLimit = (limit: number) => {
             </template>
         </Column>
     </DataTable>
+    
+    <div class="flex flex-row w-full justify-end">
+        <div class="self-center text-sm">{{ displayed }}</div>
+    </div>
 
-    <!-- <div v-else
-        class="w-full flex flex-col gap-2"
-        >
-        <div
-            v-for="item of data"
-            class="w-full flex flex-col"
-            >
-            <div
-                class="bg-base-200 p-2 w-full rounded-xl"
-                >
-                <div 
-                    v-for="col of config" 
-                    >
-                    <span v-if="col.type == FieldsType.price" >
-                        <b>{{ col.header }}: </b>{{ Number.parseFloat(item[col.field]).toFixed(2) }} р.
-                    </span>
-                    <span v-else-if="col.type == FieldsType.date">
-                        <b>{{ col.header }}: </b>{{ defaultDate(item[col.field]) }}
-                    </span>
-                    <span v-else ><b>{{ col.header }}: </b> {{ item[col.field] }}</span>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <TablePagination  
-        v-if="!isLoading && data.length > 10"
-        class="pb-20"
-        :page-nums="pageNum"
-        :limit-list="limitList"
-        :docs-count="count"
-        :current-page="currentPage"
-        :current-limit="currentLimit"
-        :current-skip="currentSkip"
-        :current-count="data.length"
-        @change-limit="changeLimit"
-        @change-page="changePage"
-        />
+    <div class="mb-24">
+        <TablePagination  
+            v-if="!isLoading && data.length > 10"
+            :page-nums="pageNum"
+            :limit-list="limitList"
+            :current-page="currentPage"
+            :current-limit="currentLimit"
+            @change-limit="changeLimit"
+            @change-page="changePage"
+            />
+    </div>
 
 </div>
 </template>

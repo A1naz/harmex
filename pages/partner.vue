@@ -51,13 +51,36 @@ const itemInitData = {
         filter: {}
     }
 }
-const listData = ref<ListData>({
-    referals: {...itemInitData},
-    orders: {...itemInitData},
-})
+const listData = ref<ListData>({} as ListData)
+function initListData(){
+    listData.value = {
+        referals: {    
+            data: [],
+            count: 0,
+            search: {
+                skip: 0,
+                limit: limitInit,
+                sort: { username: 1 },
+                filter: {}
+            }
+        },
+        orders: {    
+            data: [],
+            count: 0,
+            search: {
+                skip: 0,
+                limit: limitInit,
+                sort: { date: -1 },
+                filter: {}
+            }
+        },
+    }
+}
+initListData()
 
 async function _fetchData() {
     if (tab.value) {
+        listData.value[tab.value as keyof ListData].data = []
         const { search } = listData.value[tab.value as keyof ListData]
         const { data } = await useFetch<IResTable>(`/api/partner/${tab.value}`, { 
             query: { 
@@ -78,19 +101,11 @@ async function _fetchData() {
 const _getDataDebounced = useDebounceFn(()=> _fetchData() , 700)
 
 function getData(){
-    listData.value[tab.value as keyof ListData].data = []
     loadingList.value = true
     _getDataDebounced()
 }
 
 const loadingListDebounce = useDebounceFn(()=> loadingList.value = false , 500)  
-
-function refreshData() {
-    if(tab.value ){
-        listData.value[tab.value as keyof ListData] = {...itemInitData}
-        getData()
-    }
-}
 
 function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
     if(key =='skip') {
@@ -102,6 +117,7 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
     if(key == 'sort') value = { [value.sortField]: value.sortOrder }
 
     listData.value[tab.value as keyof ListData].search[key] = value
+    listData.value[tab.value as keyof ListData].data = []
     getData()
 }
 
@@ -111,7 +127,11 @@ const tabs: ITabs[] = [
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
 function changeTab(newSlot: string){
-    if (listData.value[newSlot as keyof ListData].data.length == 0) getData()
+    if (newSlot !== "main"
+        && listData.value[newSlot as keyof ListData].data.length == 0
+        ) { 
+            getData()
+    }
 }
 
 const listConfigPartners: ConfigTable[] = [
@@ -133,9 +153,6 @@ const listConfigOrders: ConfigTable[] = [
     { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
     { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
-
-listData.value.referals.search.sort = { username: 1 }
-listData.value.orders.search.sort = { date: 1 }
 
 onMounted(()=> getData())
 
@@ -187,12 +204,12 @@ onMounted(()=> getData())
             </template>
             <template v-slot:referals>
                 <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-2" >
-                    <Button 
-                        class="btn btn-sm btn-primary rounded-xl"
-                        @click="refreshData" 
-                        >
-                        <span class="pi pi-refresh"></span>
-                    </Button>
+                    <ExportXls 
+                        api="/api/partner/referals-export"
+                        fileName="TOPVTOP - Статистика партнеров"
+                        :config-columns="listConfigPartners"
+                        :isVisible="listData.referals.data.length > 0"
+                        />
                 </div>
                 <Table
                     :data="listData.referals.data"
@@ -214,12 +231,6 @@ onMounted(()=> getData())
                         :config-columns="listConfigOrders"
                         :isVisible="listData.orders.data.length > 0"
                         />
-                    <Button 
-                        class="btn btn-sm btn-primary rounded-xl"
-                        @click="refreshData" 
-                        >
-                        <span class="pi pi-refresh"></span>
-                    </Button>
                 </div>
                 <Table 
                     :data="listData.orders.data"
