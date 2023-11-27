@@ -3,8 +3,6 @@ import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import { tgBotOptions } from '~/server/lib/models/tgBotOptions'
 
-const runtimeConfig = useRuntimeConfig()
-
 export default eventHandler(async (event) => {
   if (event.req.headers.cookie) {
     event.req.headers.cookie = event.req.headers.cookie.replace(

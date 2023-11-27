@@ -110,8 +110,3 @@ export interface ITabs {
     slot: string, 
     query: string 
 }
-
-export interface Account {
-    username: string,
-    sessionToken: string,
-}

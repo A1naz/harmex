@@ -4,7 +4,6 @@ import { useMainStore } from '@/stores/main'
 const colorMode = useColorMode()
 const { status } = useAuth()
 const store = useMainStore()
-const accountStore = useAccountStore()
 const route = useRoute()
 const app = ref()
 
@@ -17,20 +16,7 @@ useIntervalFn(() => {
 
 if (status.value === 'authenticated') {
   await store.getClient()
-  const { data }: any = await useFetch('/api/token/get', {
-    method: 'GET',
-  })
 
-  if (data.value) {
-    
-    accountStore.setAccount(store.client.username as string, data.value.token)
-   await useFetch('/api/token/checkToken', {
-      method: 'GET',
-      headers: {
-        Authorization: `${data.value.token}`,
-      }
-    })
-  }
 }
 
 const accessChecker = computed(() => {
