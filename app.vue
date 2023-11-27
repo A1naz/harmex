@@ -4,23 +4,44 @@ import { useMainStore } from '@/stores/main'
 const colorMode = useColorMode()
 const { status } = useAuth()
 const store = useMainStore()
+const accountStore = useAccountStore()
 const route = useRoute()
 const app = ref()
 
-const {
-  data: client,
-  refresh,
-} = useLazyAsyncData('client', () => $fetch('/api/user/client'))
+const { data: client, refresh } = useLazyAsyncData('client', () =>
+  $fetch('/api/user/client')
+)
 useIntervalFn(() => {
   refresh()
 }, 1000 * 60)
-if (status.value === 'authenticated') await store.getClient()
 
-const accessChecker = computed(()=> {
-    if(store.client.role == UserRoles.staff){
-        return store.client.allowedPathes.find(acc => acc.value == '/' + route.path.replace(/^\/([^\/]*).*$/, '$1')) ? true : false
-    }
-    return true
+if (status.value === 'authenticated') {
+  await store.getClient()
+  const { data }: any = await useFetch('/api/token/get', {
+    method: 'GET',
+  })
+
+  if (data.value) {
+    
+    accountStore.setAccount(store.client.username as string, data.value.token)
+   await useFetch('/api/token/checkToken', {
+      method: 'GET',
+      headers: {
+        Authorization: `${data.value.token}`,
+      }
+    })
+  }
+}
+
+const accessChecker = computed(() => {
+  if (store.client.role == UserRoles.staff) {
+    return store.client.allowedPathes.find(
+      (acc) => acc.value == '/' + route.path.replace(/^\/([^\/]*).*$/, '$1')
+    )
+      ? true
+      : false
+  }
+  return true
 })
 
 watch(client, (newClient) => {

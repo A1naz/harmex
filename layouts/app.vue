@@ -150,6 +150,17 @@ function scrollToTop() {
                 Пополнить
               </label>
             </div>
+            <div
+               v-if="store.client.role !== UserRoles.staff" 
+               class="-mt-3"
+                >
+                <label
+                    for="swapAccountModal"
+                    class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
+                >
+                Сменить аккаунт
+              </label>
+            </div>
           </div>
         </div>
 
@@ -208,6 +219,7 @@ function scrollToTop() {
       </ul>
     </div>
     <PaymentModal />
+    <SwapAccountModal />
     <InfoModal :state="store.infoModal" />
     <InfoFaqModal />
   </div>
