@@ -37,7 +37,7 @@ export default NuxtAuthHandler({
       if (!found) return Promise.reject(new Error('User not found'))
       if (found.isBanned == true) {
         return Promise.reject(new Error('User is banned'))
-      }      
+      }
 
       return Promise.resolve(session)
     },

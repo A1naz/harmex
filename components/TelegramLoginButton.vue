@@ -19,15 +19,12 @@ const bot_login = useRuntimeConfig().public.BOT_LOGIN
 const route = useRoute()
 async function onTelegramAuth(user: any) {
   const referral = localStorage.getItem('referralCode') || null
-  const { error, url } = await signIn('telegram-login', {
-    ...user,
-    redirect: false,
-    referral,
-  })
+  const { error, url } = await signIn('telegram-login', { ...user, redirect: false, referral })
 
   if (error) {
     console.log(error)
-  } else {
+  }
+  else {
     // No error, continue with the sign in, e.g., by following the returned redirect:
     store.getClient()
     return navigateTo('/stats?type=all&period=today', { external: true })
@@ -38,13 +35,16 @@ const telegram = ref()
 function login() {
   const telegramLogin = bot_login
   // @ts-expect-error window global var
-  window.Telegram.Login.auth({ bot_id, request_access: true }, (data: any) => {
-    if (!data) {
-      // user cancelled login
-      return
-    }
-    onTelegramAuth(data)
-  })
+  window.Telegram.Login.auth(
+    { bot_id, request_access: true },
+    (data: any) => {
+      if (!data) {
+        // user cancelled login
+        return
+      }
+      onTelegramAuth(data)
+    },
+  )
 }
 onMounted(() => {
   // create script with given params
@@ -65,26 +65,17 @@ onMounted(() => {
     // @ts-expect-error workaround
     window.onTelegramAuth = onTelegramAuth
     script.setAttribute('data-onauth', 'window.onTelegramAuth(user)')
-  } else {
+  }
+  else {
     // script.setAttribute('data-auth-url', props.redirectUrl);
   }
   telegram.value.appendChild(script)
 })
-
-const loginButton = ref<any>(null)
-function clickToLogin() {
-  loginButton.value?.click()
-}
-defineExpose({ clickToLogin })
 </script>
 
 <template>
   <div ref="telegram" class="w-full flex justify-center">
-    <label
-      ref="loginButton"
-      class="btn btn-lg gap-2 btn-outline normal-case font-medium btn-block border-blue-500 text-blue-500"
-      @click="login"
-    >
+    <label class="btn btn-lg gap-2 btn-outline normal-case font-medium btn-block border-blue-500 text-blue-500" @click="login">
       <Icon size="24" name="logos:telegram" />
       Войти через Telegram
     </label>
