@@ -18,7 +18,7 @@ const limitList = [20 ,40, 60]
 
 const pageNum = computed( () => {
     const res = props.count / props.currentLimit 
-    return Math.ceil(res)
+    return res == 0 ? 1 : Math.ceil(res)
 })
 
 const currentPage = computed ( () => {
@@ -26,7 +26,7 @@ const currentPage = computed ( () => {
 })
 
 const displayed = computed( ()=>{
-    const from = props.currentSkip + 1
+    const from = props.count == 0 ? 0 : props.currentSkip + 1
     const to = props.currentSkip + props.data.length
     return `Показано ${from}-${to} из ${props.count}`
 })
@@ -84,21 +84,24 @@ const changeLimit = (limit: number) => {
             </template>
         </Column>
     </DataTable>
-    
-    <div class="flex flex-row w-full justify-end">
-        <div class="self-center text-sm">{{ displayed }}</div>
-    </div>
 
-    <div class="mb-24">
-        <TablePagination  
-            v-if="!isLoading && data.length > 10"
-            :page-nums="pageNum"
-            :limit-list="limitList"
-            :current-page="currentPage"
-            :current-limit="currentLimit"
-            @change-limit="changeLimit"
-            @change-page="changePage"
-            />
+    <div v-if="isLoading">Загрузка...</div>
+    <div v-if="!isLoading && count == 0">Нет данных</div>
+    
+    <div v-if="!isLoading && data.length > 10">
+        <div class="flex flex-row w-full justify-end">
+            <div class="self-center text-sm">{{ displayed }}</div>
+        </div>
+        <div class="mb-24">
+            <TablePagination  
+                :page-nums="pageNum"
+                :limit-list="limitList"
+                :current-page="currentPage"
+                :current-limit="currentLimit"
+                @change-limit="changeLimit"
+                @change-page="changePage"
+                />
+        </div>
     </div>
 
 </div>

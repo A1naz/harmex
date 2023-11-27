@@ -114,3 +114,8 @@ export interface IResTable {
     list: any []
     count: number
 }
+
+export interface DateFilterRanges {
+    header: string,
+    value: number 
+}

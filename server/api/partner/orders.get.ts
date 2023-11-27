@@ -56,6 +56,15 @@ export default eventHandler(async (event) => {
         ]}
     ]
 
+    if(filtertObj.dateRange) listPl.splice(1, 0, {
+        $match: { 
+            date: { 
+                $gte: new Date(filtertObj.dateRange.from),
+                $lte: new Date(filtertObj.dateRange.to)
+            }
+        }
+    })
+
     const reffers = await PartnerPaymentHistory.aggregate(listPl)
 
     let format = await Promise.all(
@@ -95,10 +104,6 @@ export default eventHandler(async (event) => {
 
     const count = format.length
 
-    if (Object.keys(filtertObj).length > 0 ) {
-        const filtered = format.filter( (el: any) => el[Object.keys(filtertObj)[0]] == Object.values(filtertObj)[0] )
-        format = filtered
-    }
     if (Object.keys(sortObj).length > 0 ) {
         const key: string = Object.keys(sortObj)[0]
         const value: number = Object.values(sortObj)[0]

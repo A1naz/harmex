@@ -60,7 +60,7 @@ function initListData(){
             search: {
                 skip: 0,
                 limit: limitInit,
-                sort: { username: 1 },
+                sort: { registrationDate: -1 },
                 filter: {}
             }
         },
@@ -118,6 +118,7 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
 
     listData.value[tab.value as keyof ListData].search[key] = value
     listData.value[tab.value as keyof ListData].data = []
+    listData.value[tab.value as keyof ListData].count = 0
     getData()
 }
 
@@ -126,11 +127,13 @@ const tabs: ITabs[] = [
     {title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },    
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
-function changeTab(newSlot: string){
-    if (newSlot !== "main"
-        && listData.value[newSlot as keyof ListData].data.length == 0
-        ) { 
+function changeTab(newTab: string){
+    if (newTab !== "main"){
+        if (listData.value[newTab as keyof ListData].search.filter) {
+            listData.value[newTab as keyof ListData].search.filter = {}
             getData()
+        }
+        if (listData.value[newTab as keyof ListData].data.length == 0) getData()
     }
 }
 
@@ -204,11 +207,14 @@ onMounted(()=> getData())
             </template>
             <template v-slot:referals>
                 <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-2" >
+                    <TableDateDefaultFilter 
+                        @range-upd="(r: number) => updateFilter('filter', r)"
+                        />
                     <ExportXls 
                         api="/api/partner/referals-export"
                         fileName="TOPVTOP - Статистика партнеров"
                         :config-columns="listConfigPartners"
-                        :isVisible="listData.referals.data.length > 0"
+                        :isVisible="true"
                         />
                 </div>
                 <Table
@@ -224,12 +230,15 @@ onMounted(()=> getData())
                     />
             </template>
             <template v-slot:orders>
-                <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-2" >
+                <div class="flex justify-between gap-2 content-center bg-base-200 rounded-xl mb-2 p-2" >
+                    <TableDateDefaultFilter 
+                        @range-upd="(r: number) => updateFilter('filter', r)"
+                        />
                     <ExportXls 
                         api="/api/partner/orders-export"
                         fileName="TOPVTOP - Заказы партнеров"
                         :config-columns="listConfigOrders"
-                        :isVisible="listData.orders.data.length > 0"
+                        :isVisible="true"
                         />
                 </div>
                 <Table 
