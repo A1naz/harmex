@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 const store = useMainStore()
 const colorMode = useColorMode()
 
@@ -13,10 +12,39 @@ function changeTheme() {
   else colorMode.preference = 'light'
 }
 
-async function logout() {
-  await signOut({
-    callbackUrl: '/auth',
+async function deleteToken(uuid: string) {
+  const { data, error }: any = await useFetch('/api/token/deleteToken', {
+    method: 'GET',
+    params: {
+      uuid,
+    },
   })
+}
+
+async function reloginCycle() {
+  const { data, error }: any = await useFetch('/api/token/reLoginCycle', {
+    method: 'GET',
+  })
+  if (data.value) {
+    if (data.value.status == 'logined') {
+      return 'logined'
+    } else {
+      return 'ol'
+    }
+  }
+}
+
+async function logout() {
+  await deleteToken(store.client.uuid)
+  const loginStatus = await reloginCycle()
+   
+  if (loginStatus !== 'logined') {
+    await signOut({
+      callbackUrl: '/auth',
+    })
+  } else {
+    location.reload()
+  }
   store.setClient()
 }
 
@@ -38,7 +66,6 @@ const handleScroll = (event: any) => {
 function scrollToTop() {
   drawerContent.value.scrollTop = 0
 }
-
 </script>
 
 <template>
@@ -121,48 +148,56 @@ function scrollToTop() {
                       i
                     </NuxtLink>
                   </div>
-                  <div 
-                    v-if="store.client.role !== UserRoles.staff" 
-                    class="tooltip" 
+                  <div
+                    v-if="store.client.role !== UserRoles.staff"
+                    class="tooltip"
                     data-tip="Профиль"
+                  >
+                    <NuxtLink
+                      :class="{
+                        'bg-neutral-focus': route.path !== '/profile',
+                        'text-white': route.path === '/profile',
+                      }"
+                      to="/profile"
+                      class="btn btn-sm btn-neutral btn-circle relative hover:bg-neutral"
                     >
-                        <NuxtLink
-                        :class="{
-                            'bg-neutral-focus': route.path !== '/profile',
-                            'text-white': route.path === '/profile',
-                        }"
-                        to="/profile"
-                        class="btn btn-sm btn-neutral btn-circle relative hover:bg-neutral"
-                        >
-                        <IconCSS name="fluent:person-24-filled" size="24" />
-                        </NuxtLink>
+                      <IconCSS name="fluent:person-24-filled" size="24" />
+                    </NuxtLink>
                   </div>
                 </div>
               </div>
             </div>
-            <div
-               v-if="store.client.role !== UserRoles.staff" 
-                >
-                <label
-                    for="payment-modal"
-                    class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
-                >
+            <div v-if="store.client.role !== UserRoles.staff">
+              <label
+                for="payment-modal"
+                class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
+              >
                 Пополнить
+              </label>
+            </div>
+            <div v-if="store.client.role !== UserRoles.staff" class="-mt-3">
+              <label
+                for="swapAccountModal"
+                class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
+              >
+                Сменить аккаунт
               </label>
             </div>
           </div>
         </div>
 
-        <section v-for="section in store.client.mmenuItems" >
-            <h3 class="opacity-60 text-xs p-3 px-8 uppercase">{{ section.subTitle }}</h3>
+        <section v-for="section in store.client.mmenuItems">
+          <h3 class="opacity-60 text-xs p-3 px-8 uppercase">
+            {{ section.subTitle }}
+          </h3>
 
-            <SidebarItem
-                v-for="(item, index) in section.items"
-                :key="index"
-                :title="item.title"
-                :icon="item.icon"
-                :href="item.path"
-                />   
+          <SidebarItem
+            v-for="(item, index) in section.items"
+            :key="index"
+            :title="item.title"
+            :icon="item.icon"
+            :href="item.path"
+          />
         </section>
 
         <div class="mt-auto">
@@ -208,6 +243,7 @@ function scrollToTop() {
       </ul>
     </div>
     <PaymentModal />
+    <SwapAccountModal />
     <InfoModal :state="store.infoModal" />
     <InfoFaqModal />
   </div>
