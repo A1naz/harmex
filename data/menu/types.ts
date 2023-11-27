@@ -19,8 +19,3 @@ export interface MenuSectionList {
 export enum MenuEnums {
     fullAccess = 'fullAccess'
 }
-
-export interface Account {
-    username: string,
-    sessionToken: string,
-}

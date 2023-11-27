@@ -7,27 +7,20 @@ const store = useMainStore()
 const route = useRoute()
 const app = ref()
 
-const { data: client, refresh } = useLazyAsyncData('client', () =>
-  $fetch('/api/user/client')
-)
+const {
+  data: client,
+  refresh,
+} = useLazyAsyncData('client', () => $fetch('/api/user/client'))
 useIntervalFn(() => {
   refresh()
 }, 1000 * 60)
+if (status.value === 'authenticated') await store.getClient()
 
-if (status.value === 'authenticated') {
-  await store.getClient()
-
-}
-
-const accessChecker = computed(() => {
-  if (store.client.role == UserRoles.staff) {
-    return store.client.allowedPathes.find(
-      (acc) => acc.value == '/' + route.path.replace(/^\/([^\/]*).*$/, '$1')
-    )
-      ? true
-      : false
-  }
-  return true
+const accessChecker = computed(()=> {
+    if(store.client.role == UserRoles.staff){
+        return store.client.allowedPathes.find(acc => acc.value == '/' + route.path.replace(/^\/([^\/]*).*$/, '$1')) ? true : false
+    }
+    return true
 })
 
 watch(client, (newClient) => {

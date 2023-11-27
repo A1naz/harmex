@@ -16,7 +16,6 @@ export interface StateMain {
     infoModal: boolean,
     infoType: string,
     faqModal: boolean,
-    swapAccountModal: boolean,
 }
 
 export interface IUser extends Entity {
