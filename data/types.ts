@@ -16,6 +16,7 @@ export interface StateMain {
     infoModal: boolean,
     infoType: string,
     faqModal: boolean,
+    swapAccountModal: boolean,
 }
 
 export interface IUser extends Entity {
@@ -108,14 +109,4 @@ export interface ITabs {
     title: string, 
     slot: string, 
     query: string 
-}
-
-export interface IResTable {
-    list: any []
-    count: number
-}
-
-export interface DateFilterRanges {
-    header: string,
-    value: number 
 }
