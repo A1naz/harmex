@@ -344,7 +344,7 @@ function selectService(event: any) {
               <div class="flex justify-between">
                 <h2 class="text-md -mt-4 font-bold h-3 mb-10">Баланс:</h2>
                 <p class="h-3 -mt-5 text-xl text-primary font-bold text-end">
-                  {{ store.client.partner.balance }}
+                  {{ currency.format(store.client.partner.balance) }}
                 </p>
               </div>
 
