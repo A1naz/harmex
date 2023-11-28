@@ -44,6 +44,7 @@ ENV fkApiKey=${fkApiKey}
 ENV fkSecret1=${fkSecret1}
 ENV fkSecret2=${fkSecret2}
 ENV fkID=${fkID}
+ENV sessionToken=${sessionToken}
 
 
 RUN npm install -g pnpm

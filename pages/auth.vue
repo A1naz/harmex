@@ -11,7 +11,7 @@ onMounted(() => {
   if (!isPageReloaded) {
     localStorage.setItem('isPageReloaded', 'true')
 
-    window.location.reload(true)
+    window.location.reload()
   }
 })
 
@@ -65,7 +65,7 @@ async function login() {
   } else {
     localStorage.removeItem('referralCode')
     store.getClient()
-    return router.push('/stats?type=all&period=today')
+    return navigateTo('/stats?type=all&period=today', { external: true })
   }
   loading.value = false
 }

@@ -4,6 +4,9 @@ import { getServerSession } from '#auth'
 import { tgBotOptions } from '~/server/lib/models/tgBotOptions'
 import { getToken } from '#auth'
 
+const runtimeConfig = useRuntimeConfig()
+const nuxtAuthCookieName = runtimeConfig.sessionToken
+
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
   if (!session) return sendRedirect(event, '/auth', 302)
@@ -34,8 +37,8 @@ export default eventHandler(async (event) => {
   for (const token of accountsTokenArray) {
     if (event.req.headers.cookie) {
       event.req.headers.cookie = event.req.headers.cookie.replace(
-        /next-auth\.session-token=[^;]*/,
-        `__Secure-next-auth.session-token=${token.token}`
+        new RegExp(`${nuxtAuthCookieName}=[^;]*`),
+        `${nuxtAuthCookieName}=${token.token}`
       )
     }
 

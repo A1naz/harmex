@@ -4,6 +4,9 @@ import { getServerSession } from '#auth'
 import { tgBotOptions } from '~/server/lib/models/tgBotOptions'
 import { getToken } from '#auth'
 
+const runtimeConfig = useRuntimeConfig()
+const nuxtAuthCookieName = runtimeConfig.sessionToken
+
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
   if (!session) return sendRedirect(event, '/auth', 302)
@@ -36,8 +39,8 @@ export default eventHandler(async (event) => {
 
   if (event.req.headers.cookie) {
     event.req.headers.cookie = event.req.headers.cookie.replace(
-      /__Secure-next-auth\.session-token=[^;]*/,
-      `__Secure-next-auth.session-token=${found.token}`
+      new RegExp(`${nuxtAuthCookieName}=[^;]*`),
+      `${nuxtAuthCookieName}=${found.token}`
     )
   }
   let tokenTest

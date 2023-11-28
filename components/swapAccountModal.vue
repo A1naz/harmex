@@ -80,8 +80,6 @@ async function getToken() {
   })
 
   if (data.value) {
-    // console.log(data.value)
-
     tokenCookie.value = data.value.token
     accounts.value = data.value.accounts
   }
@@ -173,7 +171,7 @@ const v$ = useVuelidate(rules, formData)
 const isOpen = ref(false)
 
 const toggleCollapse = () => {
-  if (isOpen.value && accounts.value.length >= 5) {
+  if (isOpen.value && accounts.value && accounts.value.length >= 5) {
     notify({
       type: 'warning',
       title: 'Максимум можно добавить 5 аккаунтов',
@@ -267,13 +265,13 @@ const toggleCollapse = () => {
       </div>
       <div
         class="text-xl font-bold text-center mb-2"
-        v-if="accounts.length > 0"
+        v-if="accounts && accounts.length > 0"
       >
         Аккаунты
       </div>
 
       <div
-        v-if="accounts.length > 0"
+        v-if="accounts && accounts.length > 0"
         v-for="account in accounts"
         class="mb-0.5"
       >

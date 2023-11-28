@@ -3,6 +3,7 @@ import { getServerSession } from '#auth'
 import { tgBotOptions } from '~/server/lib/models/tgBotOptions'
 import jwt from 'jsonwebtoken'
 const runtimeConfig = useRuntimeConfig()
+const nuxtAuthCookieName = runtimeConfig.sessionToken
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
@@ -15,24 +16,26 @@ export default eventHandler(async (event) => {
   if (!cookie) return sendRedirect(event, '/auth', 302)
 
   const nuxtAuthToken = cookie?.replace(
-    /(?:(?:^|.*;\s*)__Secure-next-auth.session-token\s*=\s*([^;]*).*$)|^.*$/,
+    new RegExp(`(?:(?:^|.*;\\s*)${nuxtAuthCookieName}\\s*=\\s*([^;]*).*$)|^.*$`),
     '$1'
   )
+    
+    if (!nuxtAuthToken) return sendRedirect(event, '/auth', 302)
+    
+    let data: any[] = []
+    let accounts: any[] = []
+    let token: string = ''
+        
 
-  if (!nuxtAuthToken) return sendRedirect(event, '/auth', 302)
-
-  let data: any[] = []
-  let accounts: any[] = []
-  let token: string = ''
-  const accountsToken = decodeURIComponent(
-    decodeURIComponent(
-      cookie.replace(
-        /(?:(?:^|.*;\s*)accountsSessionToken\s*=\s*([^;]*).*$)|^.*$/,
-        '$1'
-      )
-    )
-  )
-
+    const accountsToken = decodeURIComponent(
+      decodeURIComponent(
+        cookie.replace(
+          /(?:(?:^|.*;\s*)accountsSessionToken\s*=\s*([^;]*).*$)|^.*$/,
+          '$1'
+          )
+          )
+          )
+          
   let accountsTokenArray: any[] = []
 
   if (!accountsToken) {
@@ -61,7 +64,6 @@ export default eventHandler(async (event) => {
         uuid: user.uuid,
       })
     } else {
-
     }
 
     data = accountsTokenArray
@@ -75,6 +77,7 @@ export default eventHandler(async (event) => {
       }
     })
   }
+
 
   return {
     token: data,
