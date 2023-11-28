@@ -268,16 +268,18 @@ function selectService(event: any) {
               v-for="service in services"
               class="card w-full md:w-44 bg-base-100 shadow-md"
             >
-              <div class="card-body">
+              <div class="card-body flex flex-col justify-between">
                 <h2 class="text-md font-bold h-3 mb-10 -mt-5 text-center">
                   {{ service.title }}
                 </h2>
-                <h2 class="text-2xl text-primary font-bold text-center">
-                  {{ service.quantity }}
-                </h2>
-                <h2 class="mt-1 text-center">
-                  {{ currency.format(service.expenses) }}
-                </h2>
+                <div class="flex flex-col justify-stretch h-full">
+                    <h2 class="text-2xl text-primary font-bold text-center">
+                    {{ service.quantity }}
+                    </h2>
+                    <h2 v-if="service.value !== 'deliveries'" class="mt-1 text-center">
+                    {{ currency.format(service.expenses) }}
+                    </h2>
+                </div>
                 <h2 class="text-center">
                   {{
                     periodFromRoute === 'today'
