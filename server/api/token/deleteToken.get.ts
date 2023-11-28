@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { setCookie } from 'h3'
 
 const runtimeConfig = useRuntimeConfig()
-const nuxtAuthCookieName = runtimeConfig.sessionToken
+const nuxtAuthCookieName = runtimeConfig.SESSION_TOKEN
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any

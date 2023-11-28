@@ -25,6 +25,7 @@ ARG fkSecret2
 ARG fkID
 
 ENV MONGODB_URI=${MONGODB_URI}
+ENV SESSION_TOKEN=${SESSION_TOKEN}
 ENV NAME=${NAME}
 ENV SECRET=${SECRET}
 ENV PUBLIC_SITE_URL=${PUBLIC_SITE_URL}
@@ -44,8 +45,6 @@ ENV fkApiKey=${fkApiKey}
 ENV fkSecret1=${fkSecret1}
 ENV fkSecret2=${fkSecret2}
 ENV fkID=${fkID}
-ENV sessionToken=${sessionToken}
-
 
 RUN npm install -g pnpm
 RUN apk add --no-cache python3 make g++

@@ -5,7 +5,7 @@ import { tgBotOptions } from '~/server/lib/models/tgBotOptions'
 import { getToken } from '#auth'
 
 const runtimeConfig = useRuntimeConfig()
-const nuxtAuthCookieName = runtimeConfig.sessionToken
+const nuxtAuthCookieName = runtimeConfig.SESSION_TOKEN
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any

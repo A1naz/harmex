@@ -3,7 +3,7 @@ import { getServerSession } from '#auth'
 import { tgBotOptions } from '~/server/lib/models/tgBotOptions'
 import jwt from 'jsonwebtoken'
 const runtimeConfig = useRuntimeConfig()
-const nuxtAuthCookieName = runtimeConfig.sessionToken
+const nuxtAuthCookieName = runtimeConfig.SESSION_TOKEN
 
 
 export default eventHandler(async (event) => {
