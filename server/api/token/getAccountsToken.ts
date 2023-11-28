@@ -13,7 +13,6 @@ export default eventHandler(async (event) => {
   const user = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
   
-  console.log('nuxtAuthCookieName - ', nuxtAuthCookieName);
   const cookie = event.req.headers.cookie
   if (!cookie) return sendRedirect(event, '/auth', 302)
 
@@ -79,13 +78,7 @@ export default eventHandler(async (event) => {
       }
     })
   }
-
-
-  console.log(data);
-  console.log(accounts);
   
-  
-
   return {
     token: data,
     accounts,
