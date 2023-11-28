@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken'
 const runtimeConfig = useRuntimeConfig()
 const nuxtAuthCookieName = runtimeConfig.sessionToken
 
+console.log('nuxtAuthCookieName - ', nuxtAuthCookieName);
+
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
   if (!session) return sendRedirect(event, '/auth', 302)
@@ -78,6 +80,11 @@ export default eventHandler(async (event) => {
     })
   }
 
+
+  console.log(data);
+  console.log(accounts);
+  
+  
 
   return {
     token: data,
