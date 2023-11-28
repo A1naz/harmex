@@ -112,6 +112,9 @@ onMounted(() => {})
       <span class="font-bold"> {{ store.tariffString('cart') }} </span>
       Все услуги оказываются по Московскому времени.
     </p>
+    <p class="text-xs font-light mt-1 lg:text-sm">
+        Возвраты по данному разделу не осуществляются.
+    </p>
     <div class="collapse collapse-plus bg-base-200 rounded-box mb-4 mt-6">
       <input type="checkbox" />
 
