@@ -102,6 +102,8 @@ async function _fetchData() {
         if(data.value && data.value.list.length > 0){
             listData.value[tab.value as keyof ListData].data = data.value.list
             listData.value[tab.value as keyof ListData].count = data.value.count
+        } else {
+            listData.value[tab.value as keyof ListData].count = 0
         }
     }
     loadingListDebounce() // to avoid double fetch after click on sort
@@ -124,9 +126,11 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
     }
     if(key == 'sort') value = { [value.sortField]: value.sortOrder }
 
+    if(key == 'filter') {
+        listData.value[tab.value as keyof ListData].search.skip = 0
+    }
     listData.value[tab.value as keyof ListData].search[key] = value
     listData.value[tab.value as keyof ListData].data = []
-    listData.value[tab.value as keyof ListData].count = 0
     getData()
 }
 

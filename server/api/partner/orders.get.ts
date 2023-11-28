@@ -47,13 +47,6 @@ export default eventHandler(async (event) => {
             refEmail: '$refInfo.email',
             refUsername: '$refInfo.username'
         }},
-        { $unset: [
-            'user',
-            '_id',
-            'paymenthistory',
-            'histInfo',
-            'refInfo'
-        ]}
     ]
 
     if(filtertObj.dateRange) listPl.splice(1, 0, {
