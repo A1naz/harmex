@@ -1,4 +1,5 @@
-﻿﻿import { paymenthistory } from '~/server/lib/models/Paymenthistory'
+﻿﻿import { Delivery } from '~/server/lib/models/Delivery'
+import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 
 export default eventHandler(async (event) => {
   
@@ -88,11 +89,25 @@ export default eventHandler(async (event) => {
     filter.type = type
   }
 
-  const history: any = await paymenthistory.find({
-    user,
-    ...filter,
-  })
+  let history: any
+  if (type == 'deliveries') {
+    history = await Delivery.aggregate([
+        { $match: {
+            user: user._id,
+            status: 'completed'
+        }},
+        { $addFields: {
+            dataoperation: '$updatedAt'
+        }},
 
+    ])
+  } else {
+    history = await paymenthistory.find({
+        user,
+        ...filter,
+      })
+  }
+  
   const format: any = []
 
   if (period == 'week' || period == 'today' || period == 'yesterday') {
@@ -115,15 +130,31 @@ export default eventHandler(async (event) => {
       date.setDate(date.getDate() + 1)
     }
 
-    const newHistory: any = await paymenthistory.find({
-      user,
-      type: filter.type,
-      dataoperation: {
-        $gte: oneWeekAgo,
-        $lt: currentDate,
-      },
-    })
-
+    let newHistory: any
+    if (type == 'deliveries') {
+        newHistory = await Delivery.aggregate([
+            { $match: {
+                user: user._id,
+                status: 'completed',
+                updatedAt: {
+                    $gte: oneWeekAgo,
+                    $lt: currentDate
+                }
+            }},
+            { $addFields: {
+                dataoperation: '$updatedAt'
+            }}
+        ])
+      } else {
+        newHistory = await paymenthistory.find({
+            user,
+            type: filter.type,
+            dataoperation: {
+                $gte: oneWeekAgo,
+                $lt: currentDate,
+            },
+        })
+      }
     const trueCurDate: any = new Date()
     trueCurDate.setDate(trueCurDate.getDate() + 1)
     trueCurDate.setHours(3, 0, 0, 0)
@@ -137,7 +168,11 @@ export default eventHandler(async (event) => {
         )
 
         if (daysAgo >= 0 && daysAgo < 7) {
-          sumByDayArray[6 - daysAgo] += parseFloat(payment.summ)
+            if (type == 'deliveries') {
+                sumByDayArray[6 - daysAgo] += 1
+            } else {
+                sumByDayArray[6 - daysAgo] += parseFloat(payment.summ)
+            }
         }
       }
     }
@@ -207,13 +242,29 @@ export default eventHandler(async (event) => {
     format.labels = daysArray
   }
 
-  const paymentsForSumm: any = await paymenthistory.find({
+  let paymentsForSumm: any = await paymenthistory.find({
     user,
     dataoperation: filter.dataoperation,
     type: {
-      $in: types,
+      $in: types.filter( a=> a !== 'deliveries'),
     },
   })
+  if(type == 'deliveries') {
+        const paymentsForDeliverySumm = await Delivery.aggregate([
+            { $match: {
+                user: user._id,
+                status: 'completed',
+                updatedAt: filter.dataoperation
+            }},
+            { $addFields: {
+                type: 'deliveries',
+                dataoperation: '$updatedAt'
+            }}
+        ])
+        if(paymentsForDeliverySumm.length > 0){
+            paymentsForSumm = [...paymentsForSumm, ...paymentsForDeliverySumm]
+        }
+    }
 
   const typeSumMap = new Map()
   typeSumMap.set('all', 0)
@@ -224,13 +275,15 @@ export default eventHandler(async (event) => {
   })
 
   paymentsForSumm.forEach((payment: any) => {
-    if (typeSumMap.has(payment.type)) {
-      typeSumMap.set(
-        payment.type,
-        Number(typeSumMap.get(payment.type)) + Number(payment.summ)
-      )
-    } else {
-      typeSumMap.set(payment.type, Number(payment.summ))
+    if(type !== 'deliveries') {
+        if (typeSumMap.has(payment.type)) {
+        typeSumMap.set(
+            payment.type,
+            Number(typeSumMap.get(payment.type)) + Number(payment.summ)
+        )
+        } else {
+            typeSumMap.set(payment.type, Number(payment.summ))
+        }
     }
     typeSumMap.set(
       payment.type + ' quantity',

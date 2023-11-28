@@ -70,9 +70,9 @@ function handleTime(index: number, value: number, hours = true, updateTime: upda
         locale="ru" 
         :prevent-min-max-navigation="true" 
         :dark="colorMode.value === 'dark'"
-        :teleport-center="width < 1024"
         :time-picker-inline="true"
-        :teleport="true" 
+        :teleport-center="width < 1024"
+        :teleport="false" 
         position="left" 
     >
       <template #trigger>
