@@ -13,6 +13,7 @@ export default eventHandler(async (event) => {
   const types = [
     'buyouts service',
     'likes',
+    'deliveries',
     'reviews',
     'questions',
     'productlikes',
@@ -92,11 +93,6 @@ export default eventHandler(async (event) => {
     ...filter,
   })
 
-  // const count = history.length
-  // let summ = 0
-  // history.forEach((item: any) => {
-  //   summ += item.summ
-  // })
   const format: any = []
 
   if (period == 'week' || period == 'today' || period == 'yesterday') {
@@ -199,9 +195,11 @@ export default eventHandler(async (event) => {
       )
 
       if (daysAgo >= 0 && daysAgo < numberOfDaysInMonth) {
-        sumByDayArray[numberOfDaysInMonth - 1 - daysAgo] += parseFloat(
-          payment.summ
-        )
+        if(type == 'deliveries') {
+            sumByDayArray[numberOfDaysInMonth - 1 - daysAgo] += 1
+        } else {
+            sumByDayArray[numberOfDaysInMonth - 1 - daysAgo] += parseFloat(payment.summ)
+        }
       }
     }
     format.data = sumByDayArray
@@ -252,6 +250,12 @@ export default eventHandler(async (event) => {
       title: 'Выкупы',
       expenses: 0,
       quantity: 0,
+    },
+    {
+        value: 'deliveries',
+        title: 'Доставки',
+        expenses: 0,
+        quantity: 0,
     },
     {
       value: 'reviews',

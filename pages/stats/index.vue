@@ -148,10 +148,14 @@ const chartOptions = ref({
             label += ': '
           }
           if (context.parsed.y !== null) {
-            label += new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'RUB',
-            }).format(context.parsed.y)
+            if (route.query.type == 'deliveries') {
+                label += context.parsed.y + ' шт'
+            } else {
+                label += new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'RUB',
+                }).format(context.parsed.y)
+            }
           }
           return label
         },
