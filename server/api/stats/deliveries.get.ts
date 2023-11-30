@@ -78,19 +78,16 @@ export default eventHandler(async (event) => {
         { $project: { 
             updatedAt: 1,
             point: 1,
-            article: 1
-        }},
-        { $addFields: {
-            city: { 
-                $split: [ "$point", "," ]
-            }
+            article: 1,
+            point_city: 1,
+            point_state: 1,
         }}
     ])
     if(deliveries.length == 0) return {}
 
     const cityQty = new Map()
     deliveries.forEach( del => {
-        const city = del.city[0]
+        const city = del.point_city ? `${del.point_city} (${del.point_state})` : del.point
         const qty = cityQty.get(city) ? cityQty.get(city) + 1 : 1
         cityQty.set(city, qty)
     })

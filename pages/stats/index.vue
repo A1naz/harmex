@@ -313,18 +313,21 @@ const charttDelivOptions = ref({
       </div> -->
       <div class="flex flex-col md:flex md:flex-row md:flex-wrap">
         <div id="forBar" class="w-11/12 md:w-1/2 mt-10 h-full">
+            <div>По дням</div>
           <Bar
             id="chartId"
             :data="chartData"
             :options="chartOptions"
             ref="chartBar"
           />
-          <Bar
-            v-if="route.query.type == 'deliveries'"
-            id="chartDelivsId"
-            :data="chartDelivsData"
-            :options="charttDelivOptions"
-          />
+          <div  v-if="route.query.type == 'deliveries'">
+                <div class="mt-4">По городам</div>
+                <Bar
+                    id="chartDelivsId"
+                    :data="chartDelivsData"
+                    :options="charttDelivOptions"
+                />
+          </div>
         </div>
         <div class="w-full lg:w-1/2 mt-2">
           <div class="ml-5 flex gap-4 flex-wrap">
