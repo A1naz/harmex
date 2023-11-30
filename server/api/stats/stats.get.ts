@@ -1,4 +1,5 @@
-﻿﻿import { paymenthistory } from '~/server/lib/models/Paymenthistory'
+﻿﻿import { Delivery } from '~/server/lib/models/Delivery'
+import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 
 export default eventHandler(async (event) => {
   
@@ -13,6 +14,7 @@ export default eventHandler(async (event) => {
   const types = [
     'buyouts service',
     'likes',
+    'deliveries',
     'reviews',
     'questions',
     'productlikes',
@@ -87,16 +89,28 @@ export default eventHandler(async (event) => {
     filter.type = type
   }
 
-  const history: any = await paymenthistory.find({
-    user,
-    ...filter,
-  })
+  let history: any
+  if (type == 'deliveries') {
+    history = await Delivery.aggregate([
+        { $match: {
+            user: user._id,
+            status: 'completed'
+        }},
+        { $project: { 
+            updatedAt: 1,
+        }},
+        { $addFields: {
+            dataoperation: '$updatedAt'
+        }},
 
-  // const count = history.length
-  // let summ = 0
-  // history.forEach((item: any) => {
-  //   summ += item.summ
-  // })
+    ])
+  } else {
+    history = await paymenthistory.find({
+        user,
+        ...filter,
+      })
+  }
+  
   const format: any = []
 
   if (period == 'week' || period == 'today' || period == 'yesterday') {
@@ -119,15 +133,34 @@ export default eventHandler(async (event) => {
       date.setDate(date.getDate() + 1)
     }
 
-    const newHistory: any = await paymenthistory.find({
-      user,
-      type: filter.type,
-      dataoperation: {
-        $gte: oneWeekAgo,
-        $lt: currentDate,
-      },
-    })
-
+    let newHistory: any
+    if (type == 'deliveries') {
+        newHistory = await Delivery.aggregate([
+            { $match: {
+                user: user._id,
+                status: 'completed',
+                updatedAt: {
+                    $gte: oneWeekAgo,
+                    $lt: currentDate
+                }
+            }},
+            { $project: { 
+                updatedAt: 1,
+            }},
+            { $addFields: {
+                dataoperation: '$updatedAt'
+            }}
+        ])
+      } else {
+        newHistory = await paymenthistory.find({
+            user,
+            type: filter.type,
+            dataoperation: {
+                $gte: oneWeekAgo,
+                $lt: currentDate,
+            },
+        })
+      }
     const trueCurDate: any = new Date()
     trueCurDate.setDate(trueCurDate.getDate() + 1)
     trueCurDate.setHours(3, 0, 0, 0)
@@ -141,7 +174,11 @@ export default eventHandler(async (event) => {
         )
 
         if (daysAgo >= 0 && daysAgo < 7) {
-          sumByDayArray[6 - daysAgo] += parseFloat(payment.summ)
+            if (type == 'deliveries') {
+                sumByDayArray[6 - daysAgo] += 1
+            } else {
+                sumByDayArray[6 - daysAgo] += parseFloat(payment.summ)
+            }
         }
       }
     }
@@ -199,9 +236,11 @@ export default eventHandler(async (event) => {
       )
 
       if (daysAgo >= 0 && daysAgo < numberOfDaysInMonth) {
-        sumByDayArray[numberOfDaysInMonth - 1 - daysAgo] += parseFloat(
-          payment.summ
-        )
+        if(type == 'deliveries') {
+            sumByDayArray[numberOfDaysInMonth - 1 - daysAgo] += 1
+        } else {
+            sumByDayArray[numberOfDaysInMonth - 1 - daysAgo] += parseFloat(payment.summ)
+        }
       }
     }
     format.data = sumByDayArray
@@ -209,13 +248,29 @@ export default eventHandler(async (event) => {
     format.labels = daysArray
   }
 
-  const paymentsForSumm: any = await paymenthistory.find({
+  let paymentsForSumm: any = await paymenthistory.find({
     user,
     dataoperation: filter.dataoperation,
     type: {
-      $in: types,
+      $in: types.filter( a=> a !== 'deliveries'),
     },
   })
+    const paymentsForDeliverySumm = await Delivery.aggregate([
+        { $match: {
+            user: user._id,
+            status: 'completed',
+            updatedAt: filter.dataoperation
+        }},
+        { $project: { 
+            _id: 1,
+        }},
+        { $addFields: {
+            type: 'deliveries',
+        }},
+    ])
+    if(paymentsForDeliverySumm.length > 0){
+        paymentsForSumm = [...paymentsForSumm, ...paymentsForDeliverySumm]
+    }
 
   const typeSumMap = new Map()
   typeSumMap.set('all', 0)
@@ -226,13 +281,15 @@ export default eventHandler(async (event) => {
   })
 
   paymentsForSumm.forEach((payment: any) => {
-    if (typeSumMap.has(payment.type)) {
-      typeSumMap.set(
-        payment.type,
-        Number(typeSumMap.get(payment.type)) + Number(payment.summ)
-      )
-    } else {
-      typeSumMap.set(payment.type, Number(payment.summ))
+    if(payment.type !== 'deliveries') {
+        if (typeSumMap.has(payment.type)) {
+        typeSumMap.set(
+            payment.type,
+            Number(typeSumMap.get(payment.type)) + Number(payment.summ)
+        )
+        } else {
+            typeSumMap.set(payment.type, Number(payment.summ))
+        }
     }
     typeSumMap.set(
       payment.type + ' quantity',
@@ -252,6 +309,12 @@ export default eventHandler(async (event) => {
       title: 'Выкупы',
       expenses: 0,
       quantity: 0,
+    },
+    {
+        value: 'deliveries',
+        title: 'Доставки',
+        expenses: 0,
+        quantity: 0,
     },
     {
       value: 'reviews',
@@ -295,7 +358,6 @@ export default eventHandler(async (event) => {
     services.forEach((item) => {
       if (item.value == key) {
         item.expenses = value
-
         item.quantity = typeSumMap.get(key + ' quantity')
         services[0].quantity += item.quantity
         services[0].expenses = services[0].expenses + item.expenses

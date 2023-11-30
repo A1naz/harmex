@@ -15,6 +15,8 @@ const BuyoutSchema = new Schema({
   gender: { type: String, required: true, text: true },
   article: { type: Number, required: true, text: true },
   point: { type: String, required: true, text: true },
+  point_city: { type: String, required: true },
+  point_state: { type: String, required: true },
   dateStart: { type: Date, required: true },
   dateEnd: { type: Date, required: true },
   product: { type: ProductSchema, required: true },
