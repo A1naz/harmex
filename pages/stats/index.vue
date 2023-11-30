@@ -175,6 +175,64 @@ function selectService(event: any) {
     external: true,
   })
 }
+
+
+// Delivireis by city
+interface DelisDataChart {
+    data: number [],
+    labels: string []
+}
+const chartDelivs = ref<DelisDataChart>({
+    data: [],
+    labels: []
+})
+async function getDeliveries() {
+  const { data, error }: any = await useFetch('/api/stats/deliveries', {
+    method: 'GET',
+    params: {
+      period: route.query.period,
+    },
+  })
+  if (data.value) {
+        chartDelivs.value.data = data.value.data,
+        chartDelivs.value.labels = data.value.labels
+  }
+}
+await getDeliveries()
+
+
+const chartDelivsData = ref({
+  labels: chartDelivs.value.labels,
+  datasets: [
+    {
+      barPercentage: 1.3,
+      maxBarThickness: 33,
+      borderRadius: 7,
+      minBarLength: 0,
+      label: '',
+      data: chartDelivs.value.data,
+      backgroundColor: chardColor.value,
+    },
+  ],
+})
+const charttDelivOptions = ref({
+  responsive: true,
+  maintainAspectRatio: true,
+  borderWidth: 1,
+  plugins: {
+    legend: {
+      display: false,
+    },
+    tooltip: {
+      callbacks: {
+        label: function (context: any) {
+          return context.parsed.y + ' шт'
+        },
+      },
+    },
+  },
+})
+
 </script>
 <template>
   <div class="page-header">
@@ -261,6 +319,12 @@ function selectService(event: any) {
             :options="chartOptions"
             ref="chartBar"
           />
+          <Bar
+            v-if="route.query.type == 'deliveries'"
+            id="chartDelivsId"
+            :data="chartDelivsData"
+            :options="charttDelivOptions"
+          />
         </div>
         <div class="w-full lg:w-1/2 mt-2">
           <div class="ml-5 flex gap-4 flex-wrap">
@@ -268,7 +332,7 @@ function selectService(event: any) {
               v-for="service in services"
               class="card w-full md:w-44 bg-base-100 shadow-md"
             >
-              <div class="card-body flex flex-col justify-between">
+              <div class="card-body flex flex-col">
                 <h2 class="text-md font-bold h-3 mb-10 -mt-5 text-center">
                   {{ service.title }}
                 </h2>

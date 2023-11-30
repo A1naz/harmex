@@ -96,6 +96,9 @@ export default eventHandler(async (event) => {
             user: user._id,
             status: 'completed'
         }},
+        { $project: { 
+            updatedAt: 1,
+        }},
         { $addFields: {
             dataoperation: '$updatedAt'
         }},
@@ -140,6 +143,9 @@ export default eventHandler(async (event) => {
                     $gte: oneWeekAgo,
                     $lt: currentDate
                 }
+            }},
+            { $project: { 
+                updatedAt: 1,
             }},
             { $addFields: {
                 dataoperation: '$updatedAt'
@@ -249,21 +255,21 @@ export default eventHandler(async (event) => {
       $in: types.filter( a=> a !== 'deliveries'),
     },
   })
-  if(type == 'deliveries') {
-        const paymentsForDeliverySumm = await Delivery.aggregate([
-            { $match: {
-                user: user._id,
-                status: 'completed',
-                updatedAt: filter.dataoperation
-            }},
-            { $addFields: {
-                type: 'deliveries',
-                dataoperation: '$updatedAt'
-            }}
-        ])
-        if(paymentsForDeliverySumm.length > 0){
-            paymentsForSumm = [...paymentsForSumm, ...paymentsForDeliverySumm]
-        }
+    const paymentsForDeliverySumm = await Delivery.aggregate([
+        { $match: {
+            user: user._id,
+            status: 'completed',
+            updatedAt: filter.dataoperation
+        }},
+        { $project: { 
+            _id: 1,
+        }},
+        { $addFields: {
+            type: 'deliveries',
+        }},
+    ])
+    if(paymentsForDeliverySumm.length > 0){
+        paymentsForSumm = [...paymentsForSumm, ...paymentsForDeliverySumm]
     }
 
   const typeSumMap = new Map()
@@ -275,7 +281,7 @@ export default eventHandler(async (event) => {
   })
 
   paymentsForSumm.forEach((payment: any) => {
-    if(type !== 'deliveries') {
+    if(payment.type !== 'deliveries') {
         if (typeSumMap.has(payment.type)) {
         typeSumMap.set(
             payment.type,
@@ -352,7 +358,6 @@ export default eventHandler(async (event) => {
     services.forEach((item) => {
       if (item.value == key) {
         item.expenses = value
-
         item.quantity = typeSumMap.get(key + ' quantity')
         services[0].quantity += item.quantity
         services[0].expenses = services[0].expenses + item.expenses
