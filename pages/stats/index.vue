@@ -177,7 +177,7 @@ function selectService(event: any) {
 }
 
 
-// Delivireis by city
+// DELIVERIES by CITY
 interface DelisDataChart {
     data: number [],
     labels: string [],
@@ -188,21 +188,43 @@ const chartDelivs = ref<DelisDataChart>({
     labels: [],
     arcticles: []
 })
+const paramsDelivs = ref({
+    period: route.query.period,
+    article: null
+})
+
+const delivsLoading = ref(true)
+
 async function getDeliveries() {
-  const { data, error }: any = await useFetch<DelisDataChart>('/api/stats/deliveries', {
-    method: 'GET',
-    params: {
-      period: route.query.period,
-    },
-  })
-  if (data.value) {
+    delivsLoading.value = true
+    chartDelivs.value.data = [],
+    chartDelivs.value.labels = []
+    const { data, error }: any = await useFetch<DelisDataChart>('/api/stats/deliveries', {
+        method: 'GET',
+        params: paramsDelivs,
+    })
+    if (data.value) {
         chartDelivs.value.data = data.value.data,
         chartDelivs.value.labels = data.value.labels
         chartDelivs.value.arcticles = data.value.articles
-  }
+    }
+    delivsLoading.value = false
 }
 await getDeliveries()
 
+const seletArticleOptions = computed(()=> {
+     const all = { 
+        value: "Все артикулы", 
+        qty: chartDelivs.value.arcticles.reduce((acc, cur) => acc + cur.qty, 0) 
+    }
+    return [all,...chartDelivs.value.arcticles]
+})
+
+function selectDelArt(event: any){
+    const val = event.target.value
+    paramsDelivs.value.article = val == "Все артикулы" ? null : val
+    getDeliveries()
+}
 
 const chartDelivsData = ref({
   labels: chartDelivs.value.labels,
@@ -218,6 +240,7 @@ const chartDelivsData = ref({
     },
   ],
 })
+
 const charttDelivOptions = ref({
   responsive: true,
   maintainAspectRatio: true,
@@ -323,15 +346,35 @@ const charttDelivOptions = ref({
             :options="chartOptions"
             ref="chartBar"
           />
+
+
           <div  v-if="route.query.type == 'deliveries'">
-                <div class="mt-4">По городам</div>
-                <div>{{ chartDelivs.arcticles }}</div>
+                <div class="flex flex-row content-center gap-4 mt-10">
+                    <div>По городам</div>
+                    <select
+                        class="select select-bordered select-sm"
+                        @change="selectDelArt($event)"
+                        >
+                        <option
+                            v-for="art in seletArticleOptions"
+                            :value="art.value"
+                            :selected="route.query.type === art.value"
+                            >
+                            {{ art.value }} ( {{ art.qty }} шт)
+                        </option>
+                    </select>
+                </div>
+
                 <Bar
+                    v-if="!delivsLoading"
                     id="chartDelivsId"
                     :data="chartDelivsData"
                     :options="charttDelivOptions"
                 />
           </div>
+
+
+
         </div>
         <div class="w-full lg:w-1/2 mt-2">
           <div class="ml-5 flex gap-4 flex-wrap">
