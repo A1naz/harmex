@@ -72,6 +72,7 @@ export default eventHandler(async (event) => {
   })
   const priceText = currency.format(price)
   const image = findImage(Number(params.article))
+  
   return {
     product: {
       image,
