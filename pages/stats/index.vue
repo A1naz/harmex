@@ -180,14 +180,16 @@ function selectService(event: any) {
 // Delivireis by city
 interface DelisDataChart {
     data: number [],
-    labels: string []
+    labels: string [],
+    arcticles: any[]
 }
 const chartDelivs = ref<DelisDataChart>({
     data: [],
-    labels: []
+    labels: [],
+    arcticles: []
 })
 async function getDeliveries() {
-  const { data, error }: any = await useFetch('/api/stats/deliveries', {
+  const { data, error }: any = await useFetch<DelisDataChart>('/api/stats/deliveries', {
     method: 'GET',
     params: {
       period: route.query.period,
@@ -196,6 +198,7 @@ async function getDeliveries() {
   if (data.value) {
         chartDelivs.value.data = data.value.data,
         chartDelivs.value.labels = data.value.labels
+        chartDelivs.value.arcticles = data.value.articles
   }
 }
 await getDeliveries()
@@ -322,6 +325,7 @@ const charttDelivOptions = ref({
           />
           <div  v-if="route.query.type == 'deliveries'">
                 <div class="mt-4">По городам</div>
+                <div>{{ chartDelivs.arcticles }}</div>
                 <Bar
                     id="chartDelivsId"
                     :data="chartDelivsData"
