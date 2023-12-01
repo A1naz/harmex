@@ -193,12 +193,10 @@ const paramsDelivs = ref({
     article: null
 })
 
-const delivsLoading = ref(true)
+const delivsReady = ref(false)
 
 async function getDeliveries() {
-    delivsLoading.value = true
-    chartDelivs.value.data = [],
-    chartDelivs.value.labels = []
+    delivsReady.value = false
     const { data, error }: any = await useFetch<DelisDataChart>('/api/stats/deliveries', {
         method: 'GET',
         params: paramsDelivs,
@@ -208,16 +206,19 @@ async function getDeliveries() {
         chartDelivs.value.labels = data.value.labels
         chartDelivs.value.arcticles = data.value.articles
     }
-    delivsLoading.value = false
+    delivsReady.value = true
 }
 await getDeliveries()
 
 const seletArticleOptions = computed(()=> {
-     const all = { 
-        value: "Все артикулы", 
-        qty: chartDelivs.value.arcticles.reduce((acc, cur) => acc + cur.qty, 0) 
-    }
-    return [all,...chartDelivs.value.arcticles]
+    const all = {value: "Нет данных", qty: 0}
+    const arr: any[] = [all]
+    if(chartDelivs.value.arcticles ) {
+        all.value = "Все артикулы", 
+        all.qty = chartDelivs.value.arcticles.reduce((acc, cur) => acc + cur.qty, 0)
+        arr.push(...chartDelivs.value.arcticles)
+    } 
+    return arr
 })
 
 function selectDelArt(event: any){
@@ -239,6 +240,9 @@ const chartDelivsData = ref({
       backgroundColor: chardColor.value,
     },
   ],
+})
+watch(()=> chartDelivs.value.data, ()=>{
+    if(chartDelivs.value.data) chartDelivsData.value.datasets[0].data = chartDelivs.value.data
 })
 
 const charttDelivOptions = ref({
@@ -366,7 +370,7 @@ const charttDelivOptions = ref({
                 </div>
 
                 <Bar
-                    v-if="!delivsLoading"
+                    v-if="delivsReady"
                     id="chartDelivsId"
                     :data="chartDelivsData"
                     :options="charttDelivOptions"
