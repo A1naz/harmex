@@ -5,7 +5,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { period } = getQuery(event)
+  const { period, article } = getQuery(event)
 
   const currentDate = new Date() // Текущая дата
   let filter: any = {} // Начинаем с пустого фильтраD
@@ -69,32 +69,57 @@ export default eventHandler(async (event) => {
       break
   }
 
-  const deliveries = await Delivery.aggregate([
-        { $match: {
-            user: user._id,
-            status: 'completed',
-            updatedAt: filter.updatedAt
-        }},
-        { $project: { 
-            updatedAt: 1,
-            point: 1,
-            article: 1,
-            point_city: 1,
-            point_state: 1,
-        }}
-    ])
+  const delivsPL: any[] = [
+    { $match: {
+        user: user._id,
+        status: 'completed',
+        updatedAt: filter.updatedAt,
+    }},
+    { $project: {
+        idbuyout: 1,
+        updatedAt: 1,
+        point: 1,
+        article: 1
+    }},
+    { $lookup: {
+        from: "buyouts",
+        localField: "idbuyout",
+        foreignField: "_id",
+        as: "buyout",
+    }},
+    { $unwind: {
+        path: "$buyout",
+    }},
+    { $addFields: {
+        point_city: "$buyout.point_city",
+        point_state: "$buyout.point_state",
+    }},
+  ]
+
+    const deliveries = await Delivery.aggregate(delivsPL)
+
     if(deliveries.length == 0) return {}
 
-    const cityQty = new Map()
-    deliveries.forEach( del => {
-        const city = del.point_city ? `${del.point_city} (${del.point_state})` : del.point
-        const qty = cityQty.get(city) ? cityQty.get(city) + 1 : 1
-        cityQty.set(city, qty)
-    })
+    const cityQtys = new Map()
+    const articleQtys = new Map()
+
+    for(const del of deliveries){
+        const articleName = del.article
+        const articleQty = articleQtys.has(articleName) ? articleQtys.get(articleName) + 1 : 1
+        articleQtys.set(articleName, articleQty)
+
+        if(article !== '' && article !== articleName) continue
+
+        const cityName = del.point_city ? `${del.point_city} (${del.point_state})` : del.point
+        const citQty = cityQtys.has(cityName) ? cityQtys.get(cityName) + 1 : 1
+        cityQtys.set(cityName, citQty)
+    }
+
+
     const delivs = {
-        data: Array.from(cityQty.values()),
-        labels: Array.from(cityQty.keys()),
-        articles: []
+        data: Array.from(cityQtys.values()),
+        labels: Array.from(cityQtys.keys()),
+        articles: Array.from(articleQtys, ([value, qty]) => ({ value, qty }))
     }
 
     return delivs
