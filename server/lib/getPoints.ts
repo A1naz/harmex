@@ -46,12 +46,12 @@ export default async function () {
                     (el: any) => el.id === obj.id || el.a === obj.address
                 )
                 if (index === -1 && obj.id) {
-                    const city = await getCityByGeo(obj.coordinates[0], obj.coordinates[1])
+                    // const city = await getCityByGeo(obj.coordinates[0], obj.coordinates[1])
                     parsed.points.push({
                         id: obj.id,
                         lt: obj.coordinates[0],
                         lg: obj.coordinates[1],
-                        city: city,
+                        // city: city,
                         w: obj.workTime,
                         a: obj.address,
                         deleteMark: 0,
