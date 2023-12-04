@@ -224,7 +224,7 @@ onMounted(async () => {
   }
 })
 
-reviews.value = await getReviews(status.value as string, 0, 25)
+await getReviews(status.value as string, 0, 25)
 
 </script>
 

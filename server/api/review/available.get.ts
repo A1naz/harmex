@@ -1,4 +1,5 @@
 import { Delivery } from '@/server/lib/models/Delivery'
+import { ObjectId } from 'mongodb'
 
 export default eventHandler(async (event) => {
 
@@ -10,17 +11,13 @@ export default eventHandler(async (event) => {
     const limitA = limit ? parseInt(limit.toString(), 10) : 0
     const skipA = skip ? parseInt(skip.toString(), 10) : 0
 
-  const options: any = {
-    user,
-    status: 'completed',
-    reviewed: false,
-  }
-
   const pipeLine: any[] = [
-    { $match: options },
+    { $match: {
+        user: new ObjectId(user._id),
+        status: 'completed',
+        reviewed: false,
+    }},
     { $sort: { _id: -1 } },
-    { $skip: limitA },
-    { $limit: skipA },
     { $project: {
         _id: 1,
         article: 1,
@@ -59,32 +56,8 @@ export default eventHandler(async (event) => {
     }}
   ]
 
-  //   const readyForReview = await Delivery.find(options)
-//     .sort({
-//       _id: -1,
-//     })
-//     .skip((skip as number) || 0)
-//     .limit((limit as number) || 0)
-
-//   if (!readyForReview) return []
-  
-//   const format = await Promise.all(
-//     readyForReview.map(async (delivery) => {
-//       const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
-//       if (!buyout) return undefined
-//       return {
-//         buyoutuuid: buyout.uuid,
-//         sex: delivery.data8 ? delivery.data8 : buyout.gender,
-//         article: delivery.article,
-//         pricebuy: delivery.pricebuy,
-//         size: buyout.sizeparam,
-//         productname: buyout.product.name,
-//         productimage: buyout.product.image,
-//         updatedAt: delivery.updatedAt,
-//         id: delivery._id,
-//       }
-//     })
-//   )
+  if(limitA > 0) pipeLine.splice(2, 0, { $limit: limitA })
+  if(skipA > 0) pipeLine.splice(2, 0, { $skip: skipA })
 
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
