@@ -1,5 +1,4 @@
 import { Delivery } from '@/server/lib/models/Delivery'
-import { Buyout } from '@/server/lib/models/Buyout'
 
 export default eventHandler(async (event) => {
 
@@ -8,37 +7,87 @@ export default eventHandler(async (event) => {
 
     const { skip, limit } = getQuery(event)
 
+    const limitA = limit ? parseInt(limit.toString(), 10) : 0
+    const skipA = skip ? parseInt(skip.toString(), 10) : 0
+
   const options: any = {
     user,
     status: 'completed',
     reviewed: false,
   }
 
-  const readyForReview = await Delivery.find(options)
-    .sort({
-      _id: -1,
-    })
-    .skip((skip as number) || 0)
-    .limit((limit as number) || 0)
+  const pipeLine: any[] = [
+    { $match: options },
+    { $sort: { _id: -1 } },
+    { $skip: limitA },
+    { $limit: skipA },
+    { $project: {
+        _id: 1,
+        article: 1,
+        data8: 1,
+        updatedAt: 1,
+        pricebuy: 1,
+        idbuyout: 1,
+    }},
+    { $lookup: {
+        from: "buyouts",
+        localField: "idbuyout",
+        foreignField: "_id",
+        as: "buyout",
+    }},
+    { $unwind: {
+        path: "$buyout",
+    }},
+    { $addFields: {
+        size: "$buyout.sizeparam",
+        productname: "$buyout.product.name",
+        productimage: "$buyout.product.image",
+    }},
+    { $group: {
+        _id: "$article",
+        lastUpdated: { $last: "$updatedAt" },
+        count: { $sum: 1 },
+        productimage: {  $addToSet: "$productimage" },
+        productname: { $addToSet: "$productname" },
+        delivs: {
+          $push: {
+            deliv_id: "$_id",
+            pricebuy: "$pricebuy",
+            updatedAt: "$updatedAt",
+          }
+        }
+    }}
+  ]
 
-  if (!readyForReview) return []
+  //   const readyForReview = await Delivery.find(options)
+//     .sort({
+//       _id: -1,
+//     })
+//     .skip((skip as number) || 0)
+//     .limit((limit as number) || 0)
+
+//   if (!readyForReview) return []
   
-  const format = await Promise.all(
-    readyForReview.map(async (delivery) => {
-      const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
-      if (!buyout) return undefined
-      return {
-        buyoutuuid: buyout.uuid,
-        sex: delivery.data8 ? delivery.data8 : buyout.gender,
-        article: delivery.article,
-        pricebuy: delivery.pricebuy,
-        size: buyout.sizeparam,
-        productname: buyout.product.name,
-        productimage: buyout.product.image,
-        updatedAt: delivery.updatedAt,
-        id: delivery._id,
-      }
-    })
-  )
-  return format.filter((item) => item !== undefined)
+//   const format = await Promise.all(
+//     readyForReview.map(async (delivery) => {
+//       const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
+//       if (!buyout) return undefined
+//       return {
+//         buyoutuuid: buyout.uuid,
+//         sex: delivery.data8 ? delivery.data8 : buyout.gender,
+//         article: delivery.article,
+//         pricebuy: delivery.pricebuy,
+//         size: buyout.sizeparam,
+//         productname: buyout.product.name,
+//         productimage: buyout.product.image,
+//         updatedAt: delivery.updatedAt,
+//         id: delivery._id,
+//       }
+//     })
+//   )
+
+  const readyForReview = await Delivery.aggregate(pipeLine)
+  if (!readyForReview) return []
+
+  return readyForReview
 })
