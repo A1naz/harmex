@@ -45,6 +45,28 @@ export default eventHandler(async (event) => {
         refEmail: '$refInfo.email',
         refUsername: '$refInfo.username'
     }},
+    { $unset: [
+        'user',
+        '_id',
+        'paymenthistory',
+        'referral',
+        'histInfo',
+        'refInfo'
+    ]},
+    { $set: {
+        "refRewarded": {
+            $cond: {
+                if: {
+                    $eq: [
+                      "$refRewarded",
+                      "Выплачено"
+                    ]
+                  },
+                then: "Активен",
+                else: 'Неизвестен'
+            }
+        }
+    }}
 ]
 if (startDate && endDate) {
     listPl.push( {$match: {   
@@ -54,12 +76,10 @@ if (startDate && endDate) {
             }, }} )
     }
 
-    const reffers = await PartnerPaymentHistory.aggregate(listPl)
+const reffers = await PartnerPaymentHistory.aggregate(listPl)
 
-    const format: any[] = []
-
-    for(const ref of reffers){
-        let inviter = user.username
+let format = await Promise.all(
+    reffers.map( async (ref: any) =>  {
         if(ref.refLevel === 2){
             const refHost = await Referral.aggregate([
                     { $match:
@@ -67,9 +87,9 @@ if (startDate && endDate) {
                     }},
                     { $lookup:
                         { from: "users",
-                            localField: "user",
-                            foreignField: "_id",
-                            as: "inviter",
+                          localField: "user",
+                          foreignField: "_id",
+                          as: "inviter",
                     }},
                     { $unwind:
                         { path: "$inviter",
@@ -78,21 +98,20 @@ if (startDate && endDate) {
                         { "inviter.username": 1,
                     }}
             ])
-            if(refHost[0]) {
-                inviter = "2-ой уровень " + refHost[0].inviter.username
-            }
+            if(refHost[0]) user.username = "2-ой уровень " + refHost[0].inviter.username
         }
-        format.push({
+        return {
             refUsername: ref.refUsername,
             refEmail: ref.refEmail,
-            refLevel: inviter,
+            refLevel: user.username,
             serviceType: ref.serviceType,
             date: ref.date,
             serviceSum: ref.serviceSum,
             amount: ref.amount,
             refRewarded: ref.refRewarded ? "Выплачено" : "Не завершено",
-        })
-    }
+        }
+    })
+)
 
   const workbook = new ExcelJS.Workbook()
   const sheet = workbook.addWorksheet('Заказы партнеров', {

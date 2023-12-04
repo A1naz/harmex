@@ -23,36 +23,22 @@ export default eventHandler(async (event) => {
 
   if (!readyForReview) return []
   
-  const delivsMap = new Map()
-
-  for(const redReview of readyForReview){
-
-  }
-
-
-//   const format = await Promise.all(
-//     readyForReview.map(async (delivery) => {
-//       const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
-//       if (!buyout) return undefined
-//       return {
-//         buyoutuuid: buyout.uuid,
-//         sex: delivery.data8 ? delivery.data8 : buyout.gender,
-//         article: delivery.article,
-//         size: buyout.sizeparam,
-//         productname: buyout.product.name,
-//         productimage: buyout.product.image,
-
-//         updatedAt: delivery.updatedAt,
-//         pricebuy: delivery.pricebuy,
-
-//         id: delivery._id,
-
-//         // availables: [
-//                 { deliv_id: , updated_at: ,  pricebuy: }
-//              ]
-//       }
-//     })
-//   )
-//   return format.filter((item) => item !== undefined)
+  const format = await Promise.all(
+    readyForReview.map(async (delivery) => {
+      const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
+      if (!buyout) return undefined
+      return {
+        buyoutuuid: buyout.uuid,
+        sex: delivery.data8 ? delivery.data8 : buyout.gender,
+        article: delivery.article,
+        pricebuy: delivery.pricebuy,
+        size: buyout.sizeparam,
+        productname: buyout.product.name,
+        productimage: buyout.product.image,
+        updatedAt: delivery.updatedAt,
+        id: delivery._id,
+      }
+    })
+  )
+  return format.filter((item) => item !== undefined)
 })
-
