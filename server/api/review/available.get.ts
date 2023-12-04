@@ -25,6 +25,7 @@ export default eventHandler(async (event) => {
         updatedAt: 1,
         pricebuy: 1,
         idbuyout: 1,
+        uuidbuyout: 1
     }},
     { $lookup: {
         from: "buyouts",
@@ -39,21 +40,28 @@ export default eventHandler(async (event) => {
         size: "$buyout.sizeparam",
         productname: "$buyout.product.name",
         productimage: "$buyout.product.image",
+        gender: "$buyout.gender",
+        sizeparam: '$buyout.sizeparam'
     }},
     { $group: {
-        _id: "$article",
-        lastUpdated: { $last: "$updatedAt" },
-        count: { $sum: 1 },
-        productimage: {  $addToSet: "$productimage" },
-        productname: { $addToSet: "$productname" },
-        delivs: {
-          $push: {
-            deliv_id: "$_id",
-            pricebuy: "$pricebuy",
-            updatedAt: "$updatedAt",
-          }
-        }
-    }}
+          _id: "$article",
+          article: { $last: "$article"},
+          lastUpdated: { $last: "$updatedAt"},
+          count: { $sum: 1 },
+          productimage: { $addToSet: "$productimage" },
+          productname: { $addToSet: "$productname" },
+          delivs: {
+            $push: {
+              delivId: "$_id",
+              pricebuy: "$pricebuy",
+              updatedAt: "$updatedAt",
+              buyoutId: '$uuidbuyout',
+              gender: "$gender",
+              sizeparam: '$sizeparam'
+            },
+          },
+    }},
+    { $project: { _id: 0 } }
   ]
 
   if(limitA > 0) pipeLine.splice(2, 0, { $limit: limitA })
@@ -62,5 +70,5 @@ export default eventHandler(async (event) => {
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
 
-  return readyForReview
+  return [...readyForReview]
 })
