@@ -7,13 +7,23 @@ const props = defineProps({
   index: {
     type: Number,
     required: true,
-  },
-
+  }
 })
+
+const deliveryId = props.info.delivs[0].delivId
+const buyoutuuId = props.info.delivs[0].buyoutId
+const article = props.info.article
+const productimage = props.info.productimage[0]
+const productname = props.info.productname[0]
+const updatedAt = props.info.lastUpdated
+const sex = props.info.delivs[0].gender
+const size = props.info.delivs[0].sizeparam
+const count = props.info.count
+
 const emit = defineEmits(['openModal'])
 const router = useRouter()
 function openBuyout() {
-  router.push(`/buyouts?uuid=${props.info.buyoutuuid}`)
+  router.push(`/buyouts?uuid=${buyoutuuId}`)
 }
 
 </script>
@@ -23,14 +33,14 @@ function openBuyout() {
     <div class="p-4 relative text-xl font-medium flex flex-col gap-2">
       <div class="flex gap-4">
         <a
-          class="" :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+          class="" :href="`https://www.wildberries.ru/catalog/${article}/detail.aspx`"
           target="_blank"
         >
           <div class="dropdown dropdown-hover">
             <label tabindex="0"> <nuxt-img
               width="36"
               class="rounded-lg" loading="lazy" fit="fill"
-              :src="info?.productimage"
+              :src="productimage"
             />
             </label>
             <ul
@@ -39,46 +49,45 @@ function openBuyout() {
             >
               <nuxt-img
                 class="rounded-lg" loading="lazy" fit="fill"
-                :src="info?.productimage"
+                :src="productimage"
               />
             </ul>
           </div>
         </a>
         <div class="w-full">
           <div class="flex justify-between flex-wrap">
-            <span> {{ info.productname }}
+            <span> {{ productname }}
             </span>
             <label
               class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
               @click="openBuyout"
-            >#{{
-              info.buyoutuuid }}</label>
+            >#{{ buyoutuuId }}</label>
           </div>
           <div class="flex justify-between flex-wrap gap-2 items-center">
             <div class="text-sm">
               <a
-                :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
+                :href="`https://www.wildberries.ru/catalog/${article}/detail.aspx`" target="_blank"
                 class="text-sm text-secondary link link-hover"
               >
-                {{ info.article }}
+                {{ article }}
               </a>
             </div>
 
             <div class="mt-2 lg:m-0 text-xs">
-              Обновлено {{ defaultDate(info.updatedAt) }}
+              Обновлено {{ defaultDate(updatedAt) }}
             </div>
           </div>
         </div>
       </div>
       <div class="flex justify-between items-center">
         <div class="flex gap-2 text-sm">
-          <div>Пол: {{ info.sex.toLowerCase() === 'female' ? 'Женский' : info.sex.toLowerCase() === 'male' ? 'Мужской' : 'Нет' }}</div>
-          <div>Размер: {{ info.size === 'none' ? 'Нет' : info.size }}</div>
+          <div>Пол: {{ sex.toLowerCase() === 'female' ? 'Женский' : sex.toLowerCase() === 'male' ? 'Мужской' : 'Нет' }}</div>
+          <div>Размер: {{ size === 'none' ? 'Нет' : size }}</div>
         </div>
         <label
           for="review-modal" class="btn btn-sm btn-primary"
-          @click="$emit('openModal', info.buyoutuuid, info.id)"
-        >Оставить отзыв
+          @click="$emit('openModal', buyoutuuId, deliveryId)"
+        >Оставить отзыв (доступно: {{ count }})
         </label>
       </div>
     </div>

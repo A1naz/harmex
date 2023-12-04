@@ -1,5 +1,5 @@
 import { Delivery } from '@/server/lib/models/Delivery'
-import { Buyout } from '@/server/lib/models/Buyout'
+import { ObjectId } from 'mongodb'
 
 export default eventHandler(async (event) => {
 
@@ -8,37 +8,68 @@ export default eventHandler(async (event) => {
 
     const { skip, limit } = getQuery(event)
 
-  const options: any = {
-    user,
-    status: 'completed',
-    reviewed: false,
-  }
-  const readyForReview = await Delivery.find(options)
-    .sort({
-      _id: -1,
-    })
-    .skip((skip as number) || 0)
-    .limit((limit as number) || 0)
+    const limitA = limit ? parseInt(limit.toString(), 10) : 0
+    const skipA = skip ? parseInt(skip.toString(), 10) : 0
 
+  const pipeLine: any[] = [
+    { $match: {
+        user: new ObjectId(user._id),
+        status: 'completed',
+        reviewed: false,
+    }},
+    { $sort: { _id: -1 } },
+    { $project: {
+        _id: 1,
+        article: 1,
+        data8: 1,
+        updatedAt: 1,
+        pricebuy: 1,
+        idbuyout: 1,
+        uuidbuyout: 1
+    }},
+    { $lookup: {
+        from: "buyouts",
+        localField: "idbuyout",
+        foreignField: "_id",
+        as: "buyout",
+    }},
+    { $unwind: {
+        path: "$buyout",
+    }},
+    { $addFields: {
+        size: "$buyout.sizeparam",
+        productname: "$buyout.product.name",
+        productimage: "$buyout.product.image",
+        gender: "$buyout.gender",
+        sizeparam: '$buyout.sizeparam'
+    }},
+    { $group: {
+          _id: "$article",
+          article: { $last: "$article"},
+          lastUpdated: { $last: "$updatedAt"},
+          count: { $sum: 1 },
+          productimage: { $addToSet: "$productimage" },
+          productname: { $addToSet: "$productname" },
+          delivs: {
+            $push: {
+              delivId: "$_id",
+              pricebuy: "$pricebuy",
+              updatedAt: "$updatedAt",
+              buyoutId: '$uuidbuyout',
+              gender: "$gender",
+              sizeparam: '$sizeparam'
+            },
+          },
+    }},
+    { $project: { _id: 0 } }
+  ]
+
+  if(limitA > 0) pipeLine.splice(2, 0, { $limit: limitA })
+  if(skipA > 0) pipeLine.splice(2, 0, { $skip: skipA })
+
+  const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
-  
-  const format = await Promise.all(
-    readyForReview.map(async (delivery) => {
-      const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
-      if (!buyout) return undefined
-      return {
-        buyoutuuid: buyout.uuid,
-        sex: delivery.data8 ? delivery.data8 : buyout.gender,
-        article: delivery.article,
-        pricebuy: delivery.pricebuy,
-        size: buyout.sizeparam,
-        productname: buyout.product.name,
-        productimage: buyout.product.image,
-        updatedAt: delivery.updatedAt,
-        id: delivery._id,
-      }
-    })
-  )
-  return format.filter((item) => item !== undefined)
+
+  return [...readyForReview]
 })
 
