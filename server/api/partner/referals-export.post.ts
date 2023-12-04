@@ -54,41 +54,41 @@ export default eventHandler(async (event) => {
 
     const reffers = await Referral.aggregate(reffersPL)
 
-  const data = await Promise.all(
-        reffers[0].refInfo.map(async (refer: any) => {
-            if (refer.registrationDate >= startDate
-                && refer.registrationDate <= endDate
-            ){
-                const deals = await paymenthistory.aggregate([
-                        { $match: {
-                            user: new ObjectId(refer._id), 
-                            typeoperations: "Расход"
-                        }}, 
-                        { $group: {
-                            _id: null, 
-                            counts: { $sum: 1 }, 
-                            summ: { $sum: "$summ" }
-                        } }
-                    ])
-                const comissions = await PartnerPaymentHistory.aggregate([
-                    { $match: { referral: refer._id} },
+    const data = []
+
+    for(const refer of reffers[0].refInfo){
+        if (refer.registrationDate >= startDate
+            && refer.registrationDate <= endDate
+        ){
+            const deals = await paymenthistory.aggregate([
+                    { $match: {
+                        user: new ObjectId(refer._id), 
+                        typeoperations: "Расход"
+                    }}, 
                     { $group: {
-                        _id: null,
-                        summ: { $sum: "$amount" }
-                    }}
+                        _id: null, 
+                        counts: { $sum: 1 }, 
+                        summ: { $sum: "$summ" }
+                    } }
                 ])
-                return {
-                    email: refer.email,
-                    username: refer.username,
-                    registrationDate: refer.registrationDate,
-                    refCount: refer.partner.refCount ? refer.partner.refCount : 0,
-                    deals: deals.length > 0 ? deals[0].counts : 0,
-                    summ: deals.length > 0 ? deals[0].summ : 0,
-                    comission: comissions.length > 0 ? comissions[0].summ : 0
-                }
-            }
-        })
-    )
+            const comissions = await PartnerPaymentHistory.aggregate([
+                { $match: { referral: refer._id} },
+                { $group: {
+                    _id: null,
+                    summ: { $sum: "$amount" }
+                }}
+            ])
+            data.push({
+                email: refer.email,
+                username: refer.username,
+                registrationDate: refer.registrationDate,
+                refCount: refer.partner.refCount ? refer.partner.refCount : 0,
+                deals: deals.length > 0 ? deals[0].counts : 0,
+                summ: deals.length > 0 ? deals[0].summ : 0,
+                comission: comissions.length > 0 ? comissions[0].summ : 0
+            })
+        }
+    }
 
     const workbook = new ExcelJS.Workbook()
     const sheet = workbook.addWorksheet('Партнеры', {
