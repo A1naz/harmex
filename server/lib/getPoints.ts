@@ -1,0 +1,118 @@
+import fs from 'node:fs'
+import { getCityByGeo } from '~/server/utils/geo'
+
+export default async function () {
+    if (fs.existsSync('points.json')) {
+        const cached = fs.readFileSync('points.json', 'utf8')
+        const parsed = JSON.parse(cached)
+        const now = new Date()
+        const diff = now.getTime() - new Date(parsed.updated).getTime()
+        if (diff < 1000 * 60 * 60) {
+            return parsed
+        }
+    }
+
+    let collection = []
+
+    if (fs.existsSync('points.json')) {
+        const data: any = await $fetch(
+            'https://www.wildberries.ru/webapi/spa/modules/pickups',
+            {
+                method: 'GET',
+                headers: {
+                    'x-requested-with': 'XMLHttpRequest',
+                },
+            }
+        )
+        const cached = fs.readFileSync('points.json', 'utf8')
+        const parsed = JSON.parse(cached)
+
+        // Удаление объектов с deleteMark >= 10
+        parsed.points.forEach((obj: any) => {
+            if (obj.deleteMark && obj.deleteMark >= 5) {
+                const index = parsed.points.findIndex((el: any) => el.id === obj.id)
+                if (index !== -1) {
+                    parsed.points.splice(index, 1)
+                } else {
+                    parsed.points[index].deleteMark = 0
+                }
+            }
+        })
+
+        //Добавление новых пвз, только прилетевших из вб
+        for (const obj of data.value.pickups) {
+            if (obj.id) {
+                const index = parsed.points.findIndex(
+                    (el: any) => el.id === obj.id || el.a === obj.address
+                )
+                if (index === -1 && obj.id) {
+                    // const city = await getCityByGeo(obj.coordinates[0], obj.coordinates[1])
+                    parsed.points.push({
+                        id: obj.id,
+                        lt: obj.coordinates[0],
+                        lg: obj.coordinates[1],
+                        // city: city,
+                        w: obj.workTime,
+                        a: obj.address,
+                        deleteMark: 0,
+                    })
+                }
+            }
+        }
+
+        //Обновление deleteMark
+        parsed.points.forEach((obj: any) => {
+            if (!obj.deleteMark) {
+                obj.deleteMark = 0
+            }
+            //Увеличиваем deleteMark, для points(ПВЗ), которые не прилетели из вб
+            if (!data.value.pickups.some((el: any) => el.id === obj.id)) {
+                obj.deleteMark++
+            } else {
+                obj.deleteMark = 0
+            }
+        })
+
+        // const points = data.value.pickups
+        // const collection = points.map((point: any) => {
+        //   return {
+        //     id: point.id,
+        //     lt: point.coordinates[0],
+        //     lg: point.coordinates[1],
+        //     w: point.workTime,
+        //     a: point.address,
+        //   }
+        // })
+
+        collection = parsed.points
+
+    } else {
+        const data: any = await $fetch(
+            'https://www.wildberries.ru/webapi/spa/modules/pickups',
+            {
+                method: 'GET',
+                headers: {
+                    'x-requested-with': 'XMLHttpRequest',
+                },
+            }
+        )
+
+        for (const point of data.value.pickups) {
+            collection.push({
+                id: point.id,
+                lt: point.coordinates[0],
+                lg: point.coordinates[1],
+                w: point.workTime,
+                a: point.address
+            })
+        }
+    }
+
+    const cache = {
+        updated: new Date(),
+        points: collection,
+    }
+
+    fs.writeFileSync('points.json', JSON.stringify(cache))
+    return cache
+}

@@ -60,40 +60,43 @@ export default eventHandler(async (event) => {
 
     const reffers = await PartnerPaymentHistory.aggregate(listPl)
 
-    let format = await Promise.all(
-        reffers.map( async (ref: any) =>  {
-            if(ref.refLevel === 2){
-                const refHost = await Referral.aggregate([
-                        { $match:
-                            { "referrals.user": new ObjectId(ref.referral),
-                        }},
-                        { $lookup:
-                            { from: "users",
-                              localField: "user",
-                              foreignField: "_id",
-                              as: "inviter",
-                        }},
-                        { $unwind:
-                            { path: "$inviter",
-                        }},
-                        { $project:
-                            { "inviter.username": 1,
-                        }}
-                ])
-                if(refHost[0]) user.username = "2-ой уровень " + refHost[0].inviter.username
+    let format: any[] = []
+
+    for(const ref of reffers){
+        let inviter = user.username
+        if(ref.refLevel === 2){
+            const refHost = await Referral.aggregate([
+                    { $match:
+                        { "referrals.user": new ObjectId(ref.referral),
+                    }},
+                    { $lookup:
+                        { from: "users",
+                            localField: "user",
+                            foreignField: "_id",
+                            as: "inviter",
+                    }},
+                    { $unwind:
+                        { path: "$inviter",
+                    }},
+                    { $project:
+                        { "inviter.username": 1,
+                    }}
+            ])
+            if(refHost[0]) {
+                inviter = "2-ой уровень " + refHost[0].inviter.username
             }
-            return {
-                refUsername: ref.refUsername,
-                refEmail: ref.refEmail,
-                refLevel: user.username,
-                serviceType: ref.serviceType,
-                date: ref.date,
-                serviceSum: ref.serviceSum,
-                amount: ref.amount,
-                refRewarded: ref.refRewarded ? "Выплачено" : "Не завершено",
-            }
+        }
+        format.push({
+            refUsername: ref.refUsername,
+            refEmail: ref.refEmail,
+            refLevel: inviter,
+            serviceType: ref.serviceType,
+            date: ref.date,
+            serviceSum: ref.serviceSum,
+            amount: ref.amount,
+            refRewarded: ref.refRewarded ? "Выплачено" : "Не завершено",
         })
-    )
+    }
 
     const count = format.length
 

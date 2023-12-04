@@ -4,10 +4,10 @@ import { useWindowSize } from '@vueuse/core'
 import type { Rule } from '@/data/buyout/rules'
 import { rules } from '@/data/buyout/rules'
 import type { ISearchQueryChange } from '@/stores/buyout'
+
 const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
 const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>
 const closeTemplateSelectModal = ref(null) as Ref<HTMLLabelElement | null>
-const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
 const isCreateButtonDisabled = ref(false)
 const { width, height } = useWindowSize()
@@ -34,7 +34,6 @@ const isWarningChecked = ref(false)
 const disabledCreateButton = ref(false)
 const ruleModal = ref(false)
 const selectedRuleProductIndex = ref(0)
-const selectPointModal = ref<HTMLElement>()
 const checksModal = ref(false)
 const infoModal = ref<HTMLDialogElement>()
 const store = useBuyoutStore()
@@ -55,7 +54,6 @@ const products = computed(() => store.createProducts)
 //   }
 // })
 const loading = ref(false)
-const now = useNow()
 
 async function addProduct() {
   if (!article.value) return
@@ -206,7 +204,6 @@ async function openChecksModal() {
   }
   checksModal.value = true
 }
-const mainStore = useMainStore()
 
 async function createBuyout() {
   isCreateButtonDisabled.value = true

@@ -140,8 +140,9 @@ export default NuxtAuthHandler({
         if (!email || !password) return null
 
         const user =
-          (await User.findOne({ email })) ||
-          (await User.findOne({ username: email }))
+          (await User.findOne({
+            email: { $regex: new RegExp(email, 'i') },
+          })) || (await User.findOne({ username: email }))
         if (!user) {
           throw new Error('User not found')
         }

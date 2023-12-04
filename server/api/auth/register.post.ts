@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 import validator from 'validator'
 import { getServerSession } from '#auth'
 import { User } from '~~/server/lib/models/User'
-import { Plans } from '~/server/lib/models/Plans';
+import { Plans } from '~/server/lib/models/Plans'
 import { Referral } from '~~/server/lib/models/Referral'
 import MailService from '~~/server/lib/mailService.js'
 import { createUsername } from '~/server/utils/createUsername'
@@ -26,7 +26,6 @@ export default eventHandler(async (event) => {
     }
   }
 
-
   // if (hasWhiteSpace(password)) {
   //   return {
   //     status: 'error',
@@ -43,7 +42,9 @@ export default eventHandler(async (event) => {
   const session = await getServerSession(event)
   if (session) return { status: 'error', error: 'Вы уже авторизованы.' }
 
-  const checkEmail = await User.findOne({ email })
+  const checkEmail = await User.findOne({
+    email: { $regex: new RegExp(email, 'i') },
+  })
   if (checkEmail) {
     return {
       status: 'error',
@@ -53,8 +54,13 @@ export default eventHandler(async (event) => {
 
   const hash = bcrypt.hashSync(password, 7)
 
-  const plan = await Plans.findOne({name: 'Standart'})
-  if (!plan) return { status: 'error', error: 'Ошибка при регистрации. Тариф не найден, отправьте пожалуйста это сообщение в техподдержку' }
+  const plan = await Plans.findOne({ name: 'Standart' })
+  if (!plan)
+    return {
+      status: 'error',
+      error:
+        'Ошибка при регистрации. Тариф не найден, отправьте пожалуйста это сообщение в техподдержку',
+    }
 
   const newUsername = await createUsername(email)
 

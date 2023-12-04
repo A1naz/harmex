@@ -88,8 +88,9 @@ initListData()
 
 async function _fetchData() {
     if (tab.value) {
-        listData.value[tab.value as keyof ListData].data = []
-        const { search } = listData.value[tab.value as keyof ListData]
+        const dataKey = tab.value as keyof ListData
+        listData.value[dataKey].data = []
+        const { search } = listData.value[dataKey]
         const { data } = await useFetch<IResTable>(`/api/partner/${tab.value}`, { 
             query: { 
                 skip: search.skip, 
@@ -100,10 +101,10 @@ async function _fetchData() {
             method: 'GET' 
         })
         if(data.value && data.value.list.length > 0){
-            listData.value[tab.value as keyof ListData].data = data.value.list
-            listData.value[tab.value as keyof ListData].count = data.value.count
+            listData.value[dataKey].data = data.value.list
+            listData.value[dataKey].count = data.value.count
         } else {
-            listData.value[tab.value as keyof ListData].count = 0
+            listData.value[dataKey].count = 0
         }
     }
     loadingListDebounce() // to avoid double fetch after click on sort
@@ -118,19 +119,20 @@ function getData(){
 const loadingListDebounce = useDebounceFn(()=> loadingList.value = false , 500)  
 
 function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
+    const dataKey = tab.value as keyof ListData
     if(key =='skip') {
-        value = listData.value[tab.value as keyof ListData].search.limit * (value - 1)
+        value = listData.value[dataKey].search.limit * (value - 1)
     }
     if(key =='limit') {
-        listData.value[tab.value as keyof ListData].search.skip = 0
+        listData.value[dataKey].search.skip = 0
     }
     if(key == 'sort') value = { [value.sortField]: value.sortOrder }
 
     if(key == 'filter') {
-        listData.value[tab.value as keyof ListData].search.skip = 0
+        listData.value[dataKey].search.skip = 0
     }
-    listData.value[tab.value as keyof ListData].search[key] = value
-    listData.value[tab.value as keyof ListData].data = []
+    listData.value[dataKey].search[key] = value
+    listData.value[dataKey].data = []
     getData()
 }
 
