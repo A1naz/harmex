@@ -1,24 +1,22 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 const baseUrl = '/'
+const description = 'Уникальные самовыкупы для Вайлдберриз с TopvTop - Повысьте репутацию и продажи с нашим сервисом. Эффективная аналитика товаров на Wildberries для успешного продвижения на Валберис.'
 
-const description = 'TOPvTOP — платформа «всё в одном» для комплексного продвижения товаров на маркетплейсах: управление рекламными кампаниями, AB-тестирование карточек, закупка товаром, заборы с ПВЗ и фулфилмент по всему миру. Решайте любые задачи с TOPvTOP!'
 export default defineNuxtConfig({
   app: {
     baseURL: baseUrl,
     head: {
       viewport: 'width=device-width,initial-scale=1',
-      title: process.env.NAME,
+      title: 'Сервис сервис самовыкупов Wildberries - Максимизируйте продвижение на Валберис с TopvTop',
       link: [{ rel: 'icon', href: '/favicon.svg' }],
-      titleTemplate: '%pageTitle %titleSeparator %siteName',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'TOPVTOP - сервис продвижения Wildberries' },
+        { name: 'description', content: description },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
         { name: "yandex-verification", content: "efcf0e4c86faaa7c" }
-      ],
-    },
-
+      ]
+    }
   },
 
   colorMode: {
@@ -155,10 +153,8 @@ export default defineNuxtConfig({
       siteName: process.env.NAME,
       BOT_ID: process.env.BOT_ID,
       siteUrl: process.env.PUBLIC_SITE_URL,
-      siteDescription: description,
       language: 'ru',
       trailingSlash: true,
-      titleSeparator: '|',
       BOT_LOGIN: process.env.BOT_LOGIN,
     },
     env: process.env.ENV_WORK,
