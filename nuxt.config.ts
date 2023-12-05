@@ -11,9 +11,12 @@ export default defineNuxtConfig({
       title: process.env.NAME,
       link: [{ rel: 'icon', href: '/favicon.svg' }],
       titleTemplate: '%pageTitle %titleSeparator %siteName',
-      meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'TOPVTOP - сервис продвижения Wildberries' },
-        { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }],
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+        { name: "yandex-verification", content: "efcf0e4c86faaa7c" }
+      ],
     },
 
   },
