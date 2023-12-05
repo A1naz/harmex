@@ -21,11 +21,11 @@ export default eventHandler(async (event) => {
     { $project: {
         _id: 1,
         article: 1,
-        data8: 1,
         updatedAt: 1,
         pricebuy: 1,
         idbuyout: 1,
-        uuidbuyout: 1
+        uuidbuyout: 1,
+        data8: 1 // gender
     }},
     { $lookup: {
         from: "buyouts",
@@ -40,7 +40,7 @@ export default eventHandler(async (event) => {
         size: "$buyout.sizeparam",
         productname: "$buyout.product.name",
         productimage: "$buyout.product.image",
-        gender: "$buyout.gender",
+        gender: ["$data8","$buyout.gender"],
         sizeparam: '$buyout.sizeparam'
     }},
     { $group: {
