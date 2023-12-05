@@ -9,15 +9,16 @@ definePageMeta({
 
 const route = useRoute()
 const end = ref(false)
-const skip = ref(25)
+const limit = ref<number>(25)
+const skip = ref<number>(0)
 const store = useMainStore()
-const reviews = ref<any[] | null>([])
 const router = useRouter()
 const autoTarget = ref(true)
 const queryStatus = computed(() => route.query?.status ?? 'available')
 const status = ref(route.query?.status ?? 'available')
 const target = ref(null)
 const targetIsVisible = ref(false)
+const isFetch = ref(false)
 const search = reactive({
   text: '',
   loading: false,
@@ -31,90 +32,73 @@ const { stop } = useIntersectionObserver(
     targetIsVisible.value = isIntersecting
   }
 )
-async function getReviews(status: string, skip: number, limit: number) {
-  if (status === 'available') {
-    const { data } = await useFetch('/api/review/available', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-      },
-    })
-    return data.value as any[]
-  } else if (status === 'published') {
-    const { data } = await useFetch('/api/review/published', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-        status: 'published',
-      },
-    })
-    return data.value as any[]
-  } else if (status === 'nofunds') {
-    const { data } = await useFetch('/api/review/published', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-        status: 'nofunds',
-      },
-    })
-    return data.value as any[]
-  } else if (status === 'all') {
-    const { data } = await useFetch('/api/review/available', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-        status,
-      },
-    })
-    return data.value as any[]
-  } else {
-    const { data } = await useFetch('/api/review/published', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-        status,
-      },
-    })
-    return data.value as any[]
-  }
+
+const reviews = ref<any[]>([])
+async function getReviews() {
+    if(!isFetch.value){
+        isFetch.value = true
+        let endpoint = 'published'
+        let query = {
+            limit, 
+            skip, 
+            status: route.query.status
+        }
+
+        if (route.query.status === 'available') {
+            query.status = ''
+            endpoint = 'available'
+        }
+        if (route.query.status === 'published') query.status = 'published'
+        if (route.query.status === 'nofunds') query.status = 'nofunds'
+
+        const { data } = await useFetch(`/api/review/${endpoint}`, {
+            method: 'GET',
+            query: query
+        })
+
+        if (data.value) {
+            if (data.value.length === 0) {
+                end.value = true
+            } else {
+                reviews.value = [...reviews.value, ...data.value]
+                skip.value += 25
+            }
+        }
+    }
+    isFetch.value = false
 }
+
 const openedPhoto = ref('')
 
 const selectedUUID = ref('')
 
 async function findReviews(value: string, type: string) {
-  if (!value) {
-    autoTarget.value = true
-    reviews.value = await getReviews(status.value as string, 0, 25)
+    let res
+    if (!value) {
+        autoTarget.value = true
+        skip.value = 0
+        await getReviews()
+        search.loading = false
+    }
+
+    if (status.value === 'available') {
+        res = await useFetch('/api/review/search', {
+            query: {
+                string: value,
+                type,
+            },
+        })
+    } else {
+        res = await useFetch<any[]>('/api/review/searchReviews', {
+            query: {
+                string: value,
+                type,
+                status: status.value,
+            },
+        })
+    }
+    if (res && res.data?.value) reviews.value = [...res.data.value]
     search.loading = false
-    return
-  }
-
-  if (status.value === 'available') {
-    const { data, error } = await useFetch('/api/review/search', {
-      query: {
-        string: value,
-        type,
-      },
-    })
-    if (data.value) reviews.value = data.value
-  } else {
-    const { data, error } = await useFetch('/api/review/searchReviews', {
-      query: {
-        string: value,
-        type,
-        status: status.value,
-      },
-    })
-    if (data.value) reviews.value = data.value
-  }
-
-  search.loading = false
 }
 
 const findReviewsDebounced = useDebounceFn(findReviews, 1000)
@@ -169,7 +153,8 @@ async function removeReview() {
       text: 'Ваш отзыв выставлен на удаление',
       type: 'success',
     })
-    reviews.value = await getReviews('published', 0, 25)
+    const startIn = reviews.value.find( rev => rev.uuid == uuidForRemove.value)
+    reviews.value.splice(startIn, 1)
   }
   if (error.value) {
     notify({
@@ -181,47 +166,46 @@ async function removeReview() {
   }
 }
 
-watch(targetIsVisible, async (isVisible) => {
-  if (
-    isVisible &&
-    autoTarget.value &&
-    reviews.value &&
-    reviews.value.length >= 25
-  ) {
-    if (end.value) return
-    const data = await getReviews(status.value as string, skip.value, 25)
-    if (data.length === 0) {
-      end.value = true
-      return
-    }
-    reviews.value = [...(reviews.value as any[]), ...data]
-    skip.value += 25
-  }
-})
+// watch(targetIsVisible, async (isVisible) => {
+//     if (
+//         isVisible &&
+//         autoTarget.value &&
+//         reviews.value &&
+//         reviews.value.length >= 25
+//     ) {
+//         if (end.value) return
+//         skip.value += 25
+//         await getReviews()
+//     }
+// })
 
-watch(() => queryStatus.value, async (newRoute, oldRoute) => {
-    skip.value = 25
-    end.value = false
-    if (oldRoute === newRoute) return
-    reviews.value = await getReviews(newRoute as string, 0, 25)
-    status.value = queryStatus.value
-  },
-  { deep: true, immediate: false }
+watch(() => route.query.status,  async(newRoute, oldRoute) => {
+    if (oldRoute !== newRoute) {
+        reviews.value = []
+        skip.value = 0
+        end.value = false
+        await getReviews()
+    }
+},
+{ deep: true, immediate: false }
 )
 
-onMounted(async () => {
-  if (route.query?.uuid && route.query?.uuid.length > 0) {
-    const uuid = route.query?.uuid
-    if (uuid && typeof uuid == 'string') {
-      search.text = uuid
-      search.type = 'uuidReview'
-      onSearchInput()
-    } else {
-      reviews.value = await getReviews(status.value as string, 0, 25)
+onMounted( async () => {
+    reviews.value = []
+    skip.value = 0
+    end.value = false
+
+    if (route.query?.uuid && route.query?.uuid.length > 0) {
+        const uuid = route.query?.uuid
+        if (uuid && typeof uuid == 'string') {
+            search.text = uuid
+            search.type = 'uuidReview'
+            onSearchInput()
+        }
     }
-  }
-  reviews.value = await getReviews(status.value as string, 0, 25)
+    await getReviews()
 })
+// await getReviews()
 
 </script>
 
@@ -312,13 +296,6 @@ onMounted(async () => {
         >
           Недостаточно средств
         </NuxtLink>
-        <!-- <NuxtLink
-          to="/reviews?status=all" :class="{
-            'btn-active': route.query.status === 'all',
-          }" class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Все
-        </NuxtLink> -->
       </div>
     </div>
     <div
@@ -357,15 +334,6 @@ onMounted(async () => {
     <div v-if="reviews?.length">
       <div v-if="status === 'available'" class="cards grid grid-cols-1 gap-4">
         <ReviewCard
-          v-for="(review, index) of reviews"
-          :key="index"
-          :index="index"
-          :info="review"
-          @open-modal="openModal"
-        />
-      </div>
-      <div v-else-if="status === 'all'" class="cards grid grid-cols-1 gap-4">
-        <ReviewAllCard
           v-for="(review, index) of reviews"
           :key="index"
           :index="index"
