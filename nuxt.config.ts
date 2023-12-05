@@ -49,7 +49,7 @@ export default defineNuxtConfig({
   },
 
   yandexMetrika: {
-    id: '94036055',
+    id: '95768610',
   },
 
   lazyLoad: {
