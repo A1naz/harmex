@@ -64,8 +64,8 @@ export default eventHandler(async (event) => {
     { $project: { _id: 0 } }
   ]
 
-//   pipeLine.splice(2, 0, { $limit: limitA })
-//   if(skipA > 0) pipeLine.splice(2, 0, { $skip: skipA })
+  if(skipA > 0) pipeLine.push({ $skip: skipA })
+  if(limitA > 0) pipeLine.push({ $limit: limitA })
 
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
