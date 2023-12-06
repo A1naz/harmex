@@ -4,6 +4,7 @@ export const menuSectionList: MenuSectionList[] = [
     { section: 'products', subTitle: 'Продвижение товаров' },
     { section: 'reputation', subTitle: 'Улучшение репутации' },
     { section: 'additional', subTitle: 'Дополнительно' },
+    { section: 'bidder', subTitle: 'Биддер' },
 ]
 
 export const menuDataList: MenuDataList[] = [
@@ -20,4 +21,5 @@ export const menuDataList: MenuDataList[] = [
     { section: 'additional', path: "/partner", title: "Партнерская программа", icon: "fluent:people-team-24-filled" },
     { section: 'additional', path: "/stats", title: "Аналитика", icon: "mdi:google-analytics" },
     { section: 'additional', path: "/team", title: "Моя команда", icon: "mdi:office-building-cog" },
+    { section: 'bidder', path: "/campaigns", title: "Рекламные кампании", icon: "mdi:briefcase" },
 ]

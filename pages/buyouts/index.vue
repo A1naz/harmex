@@ -57,6 +57,8 @@ async function getBuyouts() {
   buyouts.value = data.value
 }
 
+// await getBuyouts()
+
 function removeBuyout(uuid: string) {
   buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid)
 }
