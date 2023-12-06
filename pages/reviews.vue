@@ -165,8 +165,7 @@ async function removeReview() {
 watch(targetIsVisible, (isVisible) => {
     if (
         isVisible &&
-        reviews.value &&
-        reviews.value.length >= limit.value &&
+        !isFetch.value &&
         !end.value
     ) {
         skip.value += limit.value
