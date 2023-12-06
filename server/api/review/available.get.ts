@@ -6,10 +6,11 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-    const { skip, limit } = getQuery(event)
+    const { skip, limit, search } = getQuery(event)
 
     const limitA = limit ? parseInt(limit.toString(), 10) : 100
     const skipA = skip ? parseInt(skip.toString(), 10) : 0
+    const searchParse = search ? JSON.parse(search?.toString()) : undefined
 
   const pipeLine: any[] = [
     { $match: {
@@ -63,7 +64,7 @@ export default eventHandler(async (event) => {
     }},
     { $project: { _id: 0 } }
   ]
-
+  if(searchParse) pipeLine.splice(1,0, { $match: {[searchParse.type]: searchParse.string}} )
   if(skipA > 0) pipeLine.push({ $skip: skipA })
   if(limitA > 0) pipeLine.push({ $limit: limitA })
 

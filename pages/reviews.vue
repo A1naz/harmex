@@ -65,7 +65,6 @@ function getReviews(){
 const loadingListDebounce = useDebounceFn(()=> {isFetch.value = false} , 500)  
 
 const openedPhoto = ref('')
-
 const selectedUUID = ref('')
 
 async function findReviews(value: string, type: string) {
@@ -78,12 +77,20 @@ async function findReviews(value: string, type: string) {
     }
 
     if (status.value === 'available') {
-        res = await useFetch('/api/review/search', {
+        res = await useFetch(`/api/review/available`, {
+            method: 'GET',
             query: {
-                string: value,
-                type,
+                search: { string: value, type}
             },
         })
+
+
+        // res = await useFetch('/api/review/search', {
+        //     query: {
+        //         string: value,
+        //         type,
+        //     },
+        // })
     } else {
         res = await useFetch<any[]>('/api/review/searchReviews', {
             query: {
@@ -162,7 +169,7 @@ async function removeReview() {
   }
 }
 
-watch(targetIsVisible, (isVisible) => {
+watch(()=> targetIsVisible.value, (isVisible) => {
     if (
         isVisible &&
         !isFetch.value &&
