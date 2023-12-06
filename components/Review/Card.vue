@@ -9,6 +9,8 @@ const props = defineProps({
     required: true,
   }
 })
+const emit = defineEmits(['openModal'])
+const router = useRouter()
 
 const deliveryId = props.info.delivs[0].delivId
 const buyoutuuId = props.info.delivs[0].buyoutId
@@ -16,12 +18,22 @@ const article = props.info.article
 const productimage = props.info.productimage[0]
 const productname = props.info.productname[0]
 const updatedAt = props.info.lastUpdated
-const sex = props.info.delivs[0].gender
 const size = props.info.delivs[0].sizeparam
 const count = props.info.count
 
-const emit = defineEmits(['openModal'])
-const router = useRouter()
+
+const genderMap = new Map<string, string>([
+    ['female', 'Женский'],
+    ['male', 'Мужской'],
+])
+
+const sex = props.info.delivs[0].gender.map( (g: string) => {
+    let gen = genderMap.get(g.toLowerCase())
+    if (gen) return gen
+    return 'Нет'
+})
+const sexFormated = sex[0]
+
 function openBuyout() {
   router.push(`/buyouts?uuid=${buyoutuuId}`)
 }
@@ -81,7 +93,7 @@ function openBuyout() {
       </div>
       <div class="flex justify-between items-center">
         <div class="flex gap-2 text-sm">
-          <div>Пол: {{ sex.toLowerCase() === 'female' ? 'Женский' : sex.toLowerCase() === 'male' ? 'Мужской' : 'Нет' }}</div>
+          <div>Пол: {{ sexFormated }}</div>
           <div>Размер: {{ size === 'none' ? 'Нет' : size }}</div>
         </div>
         <label

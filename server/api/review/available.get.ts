@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
 
     const { skip, limit } = getQuery(event)
 
-    const limitA = limit ? parseInt(limit.toString(), 10) : 0
+    const limitA = limit ? parseInt(limit.toString(), 10) : 100
     const skipA = skip ? parseInt(skip.toString(), 10) : 0
 
   const pipeLine: any[] = [
@@ -21,11 +21,11 @@ export default eventHandler(async (event) => {
     { $project: {
         _id: 1,
         article: 1,
-        data8: 1,
         updatedAt: 1,
         pricebuy: 1,
         idbuyout: 1,
-        uuidbuyout: 1
+        uuidbuyout: 1,
+        data8: 1 // gender
     }},
     { $lookup: {
         from: "buyouts",
@@ -40,7 +40,7 @@ export default eventHandler(async (event) => {
         size: "$buyout.sizeparam",
         productname: "$buyout.product.name",
         productimage: "$buyout.product.image",
-        gender: "$buyout.gender",
+        gender: ["$data8","$buyout.gender"],
         sizeparam: '$buyout.sizeparam'
     }},
     { $group: {
@@ -64,8 +64,8 @@ export default eventHandler(async (event) => {
     { $project: { _id: 0 } }
   ]
 
-  if(limitA > 0) pipeLine.splice(2, 0, { $limit: limitA })
-  if(skipA > 0) pipeLine.splice(2, 0, { $skip: skipA })
+  if(skipA > 0) pipeLine.push({ $skip: skipA })
+  if(limitA > 0) pipeLine.push({ $limit: limitA })
 
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []

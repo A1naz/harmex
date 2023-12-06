@@ -57,7 +57,6 @@ async function getBuyouts() {
   buyouts.value = data.value
 }
 
-await getBuyouts()
 function removeBuyout(uuid: string) {
   buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid)
 }
@@ -152,31 +151,6 @@ async function onSearchInput(event: Event) {
   search.loading = true
   findBuyoutsDebounced(search.text, search.type)
 }
-onMounted(async () => {
-  if (route.query?.uuid) {
-    const uuid = route.query?.uuid
-    if (buyouts.value) {
-      const index = buyouts.value!.findIndex(
-        (buyout: any) => buyout.uuid === uuid
-      )
-      if (index !== -1) {
-        openModal(index)
-      } else {
-        const { data, error } = await useFetch('/api/buyout/getOne', {
-          method: 'GET',
-          query: {
-            uuid,
-          },
-        })
-
-        if (data.value) {
-          buyouts.value = [data.value, ...buyouts.value]
-          openModal(0)
-        }
-      }
-    }
-  }
-})
 
 const activeBuyouts = computedEager(() => {
   if (!buyouts.value.length) return []
@@ -219,6 +193,15 @@ function openInfoModal() {
   store.infoModal = true
   store.infoType = 'buyouts'
 }
+
+const filters = [
+    {title: 'Все выкупы', optionValue: 'all', params: '', queryStatus: undefined},
+    {title: 'В архиве', optionValue: 'archived', params: '?status=archived', queryStatus: 'archived'},
+    {title: 'Пауза', optionValue: 'paused', params: '?status=paused', queryStatus: 'paused'},
+    {title: 'Завершенные', optionValue: 'completed', params: '?status=completed', queryStatus: 'completed'},
+    {title: 'Выкуплены по рекламе', optionValue: 'completedByAds', params: '?status=completedByAds', queryStatus: 'completedByAds'},
+]
+
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && buyouts.value.length >= 50) {
     if (end.value) return
@@ -257,13 +240,33 @@ watch(
   { deep: true, immediate: true }
 )
 
-const filters = [
-    {title: 'Все выкупы', optionValue: 'all', params: '', queryStatus: undefined},
-    {title: 'В архиве', optionValue: 'archived', params: '?status=archived', queryStatus: 'archived'},
-    {title: 'Пауза', optionValue: 'paused', params: '?status=paused', queryStatus: 'paused'},
-    {title: 'Завершенные', optionValue: 'completed', params: '?status=completed', queryStatus: 'completed'},
-    {title: 'Выкуплены по рекламе', optionValue: 'completedByAds', params: '?status=completedByAds', queryStatus: 'completedByAds'},
-]
+onMounted(async () => {
+  if (route.query?.uuid) {
+    const uuid = route.query?.uuid
+    if (buyouts.value) {
+      const index = buyouts.value!.findIndex(
+        (buyout: any) => buyout.uuid === uuid
+      )
+      if (index !== -1) {
+        openModal(index)
+      } else {
+        const { data, error } = await useFetch('/api/buyout/getOne', {
+          method: 'GET',
+          query: {
+            uuid,
+          },
+        })
+
+        if (data.value) {
+          buyouts.value = [data.value, ...buyouts.value]
+          openModal(0)
+        }
+      }
+    }
+  } else {
+    await getBuyouts()
+  }
+})
 
 </script>
 
