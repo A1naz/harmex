@@ -8,13 +8,13 @@ export default defineNuxtConfig({
     baseURL: baseUrl,
     head: {
       viewport: 'width=device-width,initial-scale=1',
-      title: 'Сервис сервис самовыкупов Wildberries - Максимизируйте продвижение на Валберис с TopvTop',
+      title: 'Сервис самовыкупов Wildberries - Максимизируйте продвижение на Валберис с TopvTop',
       link: [{ rel: 'icon', href: '/favicon.svg' }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: description },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
-        { name: "yandex-verification", content: "efcf0e4c86faaa7c" }
+        { name: "yandex-verification", content: "8b9387e0d0a4e1a8" }
       ]
     }
   },
@@ -47,7 +47,7 @@ export default defineNuxtConfig({
   },
 
   yandexMetrika: {
-    id: '95768610',
+    id: '95774883',
   },
 
   lazyLoad: {
