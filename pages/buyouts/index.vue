@@ -252,22 +252,18 @@ onMounted(async () => {
       } else {
         const { data, error } = await useFetch('/api/buyout/getOne', {
           method: 'GET',
-          query: {
-            uuid,
-          },
+          query: { uuid },
         })
-
         if (data.value) {
           buyouts.value = [data.value, ...buyouts.value]
           openModal(0)
         }
       }
     }
-  } else {
-    await getBuyouts()
   }
 })
 
+await getBuyouts()
 </script>
 
 <template>
@@ -370,7 +366,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div v-if="buyouts.length">
+    <div v-if="buyouts.length > 0">
       <div
         v-if="
           (route.query.status === 'active' || !route.query.status) &&
@@ -412,7 +408,6 @@ onMounted(async () => {
           <BuyoutCard
             v-for="(buyout, index) of buyouts"
             :key="buyout.uuid"
-            :place="buyouts.length - index"
             :index="index"
             :info="buyout"
             @unarchive="unarchiveBuyout"
