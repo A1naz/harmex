@@ -116,6 +116,9 @@ dependencies:
   validator:
     specifier: ^13.11.0
     version: 13.11.0
+  vue-analytics:
+    specifier: ^5.22.1
+    version: 5.22.1
   vue-chartjs:
     specifier: ^5.2.0
     version: 5.2.0(chart.js@4.4.0)(vue@3.3.4)
@@ -217,6 +220,9 @@ devDependencies:
   nuxt-delay-hydration:
     specifier: ^1.2.1
     version: 1.2.1(rollup@2.79.1)
+  nuxt-gtag:
+    specifier: ^1.1.1
+    version: 1.1.1(rollup@2.79.1)
   nuxt-icon:
     specifier: ^0.4.2
     version: 0.4.2(rollup@2.79.1)(vue@3.3.4)
@@ -12997,6 +13003,17 @@ packages:
       - supports-color
     dev: true
 
+  /nuxt-gtag@1.1.1(rollup@2.79.1):
+    resolution: {integrity: sha512-AkTK++e4vFHyoc04GcRx7dQvx9xchVLav/YAP3aM6oL/ZkZtW50M0/2re4zmPWjeu36ckbpcOHJrj+zptQIMyw==}
+    dependencies:
+      '@nuxt/kit': 3.7.1(rollup@2.79.1)
+      defu: 6.1.2
+      pathe: 1.1.1
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+    dev: true
+
   /nuxt-icon@0.4.2(rollup@2.79.1)(vue@3.3.4):
     resolution: {integrity: sha512-yFpvDA+FuUz+ixtt1eRzctTfR4sl7egZoXu7LL+CUc42qFlzCMaTZJ9eqFR2FTW8zu9tfLIZ83RJmUa1jNEWgg==}
     dependencies:
@@ -17454,6 +17471,11 @@ packages:
     resolution: {integrity: sha512-eOpPHogvorZRobNqJGhapa0JdwaxpjVvyBp0QIUMRMSf8ZAlqOdEquKuRmw9Qwu0qXtJIWqFtMkmvJjUZmMjVA==}
     dev: true
 
+  /vue-analytics@5.22.1:
+    resolution: {integrity: sha512-HPKQMN7gfcUqS5SxoO0VxqLRRSPkG1H1FqglsHccz6BatBatNtm/Vyy8brApktZxNCfnAkrSVDpxg3/FNDeOgQ==}
+    deprecated: Sorry but vue-analytics is no longer maintained. I would suggest you switch to vue-gtag, with love, the guy who made the package.
+    dev: false
+
   /vue-bundle-renderer@2.0.0:
     resolution: {integrity: sha512-oYATTQyh8XVkUWe2kaKxhxKVuuzK2Qcehe+yr3bGiaQAhK3ry2kYE4FWOfL+KO3hVFwCdLmzDQTzYhTi9C+R2A==}
     dependencies:
@@ -18179,7 +18201,7 @@ packages:
     dev: true
 
   '@cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz':
-    resolution: {tarball: https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz}
+    resolution: {registry: https://registry.npmjs.org/, tarball: https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz}
     name: xlsx
     version: 0.19.3
     engines: {node: '>=0.8'}

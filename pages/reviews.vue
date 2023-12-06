@@ -35,6 +35,8 @@ const { stop } = useIntersectionObserver(
 
 const reviews = ref<any[]>([])
 async function _getData() {
+    if(!isFetch.value) return
+    
     let endpoint = 'published'
     const query = {
         limit, 

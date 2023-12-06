@@ -49,6 +49,9 @@ export default defineNuxtConfig({
   yandexMetrika: {
     id: '95774883',
   },
+  gtag: {
+    id: 'G-3CZQZ6GGTK'
+  },
 
   lazyLoad: {
     // These are the default values
@@ -97,6 +100,7 @@ export default defineNuxtConfig({
     '@morev/vue-transitions/nuxt',
     '@sidebase/nuxt-pdf',
     '@artmizu/yandex-metrika-nuxt',
+    'nuxt-gtag'
   ],
 
   css: [
