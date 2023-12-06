@@ -20,6 +20,7 @@ export function findImage(article: number) {
   const result = `https://basket-${
     (a as number) < 10 ? `0${a}` : a
   }.wb.ru/vol${n}/part${Math.floor(article / 1e3)}/${article}/images/big/1.jpg`
+  
   return result
 }
 
