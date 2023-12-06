@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
 
     const { skip, limit } = getQuery(event)
 
-    const limitA = limit ? parseInt(limit.toString(), 10) : 0
+    const limitA = limit ? parseInt(limit.toString(), 10) : 100
     const skipA = skip ? parseInt(skip.toString(), 10) : 0
 
   const pipeLine: any[] = [

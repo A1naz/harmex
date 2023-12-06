@@ -9,15 +9,16 @@ definePageMeta({
 
 const route = useRoute()
 const end = ref(false)
-const skip = ref(25)
+const limit = ref<number>(25)
+const skip = ref<number>(0)
 const store = useMainStore()
-const reviews = ref<any[] | null>([])
 const router = useRouter()
 const autoTarget = ref(true)
-const queryStatus = computed(() => route.query?.status ?? 'available')
 const status = ref(route.query?.status ?? 'available')
+const currentTab = ref('')
 const target = ref(null)
 const targetIsVisible = ref(false)
+const isFetch = ref(false)
 const search = reactive({
   text: '',
   loading: false,
@@ -31,90 +32,69 @@ const { stop } = useIntersectionObserver(
     targetIsVisible.value = isIntersecting
   }
 )
-async function getReviews(status: string, skip: number, limit: number) {
-  if (status === 'available') {
-    const { data } = await useFetch('/api/review/available', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-      },
+
+const reviews = ref<any[]>([])
+async function _getData() {
+    let endpoint = 'published'
+    const query = {
+        limit, 
+        skip, 
+        status: currentTab.value
+    }
+
+    if (currentTab.value === 'available') {
+        query.status = ''
+        endpoint = 'available'
+    }
+
+    const { data } = await useFetch(`/api/review/${endpoint}`, {
+        method: 'GET',
+        query: {...query}
     })
-    return data.value as any[]
-  } else if (status === 'published') {
-    const { data } = await useFetch('/api/review/published', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-        status: 'published',
-      },
-    })
-    return data.value as any[]
-  } else if (status === 'nofunds') {
-    const { data } = await useFetch('/api/review/published', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-        status: 'nofunds',
-      },
-    })
-    return data.value as any[]
-  } else if (status === 'all') {
-    const { data } = await useFetch('/api/review/available', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-        status,
-      },
-    })
-    return data.value as any[]
-  } else {
-    const { data } = await useFetch('/api/review/published', {
-      method: 'GET',
-      query: {
-        limit,
-        skip,
-        status,
-      },
-    })
-    return data.value as any[]
-  }
+    if (data.value) {
+        if (data.value === 0) end.value = true
+        else reviews.value = [...reviews.value, ...data.value]
+    }
+    loadingListDebounce()
 }
+const _getDataDebounced = useDebounceFn(()=> _getData() , 700)
+function getReviews(){
+    isFetch.value = true
+    _getDataDebounced()
+}
+const loadingListDebounce = useDebounceFn(()=> {isFetch.value = false} , 500)  
+
 const openedPhoto = ref('')
 
 const selectedUUID = ref('')
 
 async function findReviews(value: string, type: string) {
-  if (!value) {
-    autoTarget.value = true
-    reviews.value = await getReviews(status.value as string, 0, 25)
+    let res
+    if (!value) {
+        autoTarget.value = true
+        skip.value = 0
+        getReviews()
+        search.loading = false
+    }
+
+    if (status.value === 'available') {
+        res = await useFetch('/api/review/search', {
+            query: {
+                string: value,
+                type,
+            },
+        })
+    } else {
+        res = await useFetch<any[]>('/api/review/searchReviews', {
+            query: {
+                string: value,
+                type,
+                status: status.value,
+            },
+        })
+    }
+    if (res && res.data?.value) reviews.value = [...res.data.value]
     search.loading = false
-    return
-  }
-
-  if (status.value === 'available') {
-    const { data, error } = await useFetch('/api/review/search', {
-      query: {
-        string: value,
-        type,
-      },
-    })
-    if (data.value) reviews.value = data.value
-  } else {
-    const { data, error } = await useFetch('/api/review/searchReviews', {
-      query: {
-        string: value,
-        type,
-        status: status.value,
-      },
-    })
-    if (data.value) reviews.value = data.value
-  }
-
-  search.loading = false
 }
 
 const findReviewsDebounced = useDebounceFn(findReviews, 1000)
@@ -169,7 +149,8 @@ async function removeReview() {
       text: 'Ваш отзыв выставлен на удаление',
       type: 'success',
     })
-    reviews.value = await getReviews('published', 0, 25)
+    const startIn = reviews.value.find( rev => rev.uuid == uuidForRemove.value)
+    reviews.value.splice(startIn, 1)
   }
   if (error.value) {
     notify({
@@ -181,55 +162,58 @@ async function removeReview() {
   }
 }
 
-watch(targetIsVisible, async (isVisible) => {
-  if (
-    isVisible &&
-    autoTarget.value &&
-    reviews.value &&
-    reviews.value.length >= 25
-  ) {
-    if (end.value) return
-    const data = await getReviews(status.value as string, skip.value, 25)
-    if (data.length === 0) {
-      end.value = true
-      return
+watch(targetIsVisible, (isVisible) => {
+    if (
+        isVisible &&
+        !isFetch.value &&
+        !end.value
+    ) {
+        skip.value += limit.value
+        getReviews()
     }
-    reviews.value = [...(reviews.value as any[]), ...data]
-    skip.value += 25
-  }
 })
 
-watch(
-  () => queryStatus.value,
-  async (newRoute, oldRoute) => {
-    skip.value = 25
-    end.value = false
-    if (oldRoute === newRoute) return
-    reviews.value = await getReviews(newRoute as string, 0, 25)
-    status.value = queryStatus.value
-  },
-  { deep: true, immediate: false }
-)
-
-onMounted(async () => {
-  if (route.query?.uuid && route.query?.uuid.length > 0) {
-    const uuid = route.query?.uuid
-    if (uuid && typeof uuid == 'string') {
-      search.text = uuid
-      search.type = 'uuidReview'
-      onSearchInput()
+onMounted( () => {
+    if (route.query?.uuid && route.query?.uuid.length > 0) {
+        const uuid = route.query?.uuid
+        if (uuid && typeof uuid == 'string') {
+            search.text = uuid
+            search.type = 'uuidReview'
+            onSearchInput()
+        }
+    } else if(route.query.status) {
+        currentTab.value = route.query.status.toString()
     } else {
-      reviews.value = await getReviews(status.value as string, 0, 25)
+        currentTab.value = 'available'
+        router.push('/reviews?status=available')
     }
-  } else {
-    status.value = 'available'
-    reviews.value = await getReviews(status.value as string, 0, 25)
-  }
+    getReviews()
 })
+
+const tabs = [
+    {value: 'available', name: 'Доступные'}, 
+    {value: 'published', name: 'Опубликованные'}, 
+    {value: 'work', name: 'В работе'}, 
+    {value: 'canceled', name: 'Отмененные'}, 
+    {value: 'deleting', name: 'На удалении'}, 
+    {value: 'deleted', name: 'Удаленные'},
+    {value: 'nofunds', name: 'Недостаточно средств'}
+]
+
+function changeTab(tab: string){
+    reviews.value = []
+    skip.value = 0
+    end.value = false
+    currentTab.value = tab
+    router.push(`/reviews?status=${tab}`)
+    getReviews()
+}
+
 </script>
 
 <template>
   <div>
+
     <div class="page-header">
       <div class="flex items-center gap-2 mt-4">
         <h1 class="text-2xl font-bold">Отзывы</h1>
@@ -248,85 +232,21 @@ onMounted(async () => {
         Все услуги оказываются по Московскому времени.
       </p>
     </div>
+
     <div class="flex justify-between mb-2 mt-6 items-center">
       <div class="">
-        <NuxtLink
-          to="/reviews?status=available"
-          :class="{
-            'btn-active':
-              route.query.status === 'available' ||
-              route.query.status === undefined,
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Доступные
-        </NuxtLink>
-        <NuxtLink
-          to="/reviews?status=published"
-          :class="{
-            'btn-active': route.query.status === 'published',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Опубликованные
-        </NuxtLink>
-        <NuxtLink
-          to="/reviews?status=work"
-          :class="{
-            'btn-active': route.query.status === 'work',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          В работе
-        </NuxtLink>
-        <NuxtLink
-          to="/reviews?status=canceled"
-          :class="{
-            'btn-active': route.query.status === 'canceled',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Отмененные
-        </NuxtLink>
-        <NuxtLink
-          to="/reviews?status=deleting"
-          :class="{
-            'btn-active': route.query.status === 'deleting',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          На удалении
-        </NuxtLink>
-        <NuxtLink
-          to="/reviews?status=deleted"
-          :class="{
-            'btn-active': route.query.status === 'deleted',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Удаленные
-        </NuxtLink>
-        <NuxtLink
-          to="/reviews?status=nofunds"
-          :class="{
-            'btn-active': route.query.status === 'nofunds',
-          }"
-          class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Недостаточно средств
-        </NuxtLink>
-        <!-- <NuxtLink
-          to="/reviews?status=all" :class="{
-            'btn-active': route.query.status === 'all',
-          }" class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-          Все
-        </NuxtLink> -->
+      <Button 
+        v-for="tab in tabs" 
+        :class="[
+            'btn btn-ghost btn-sm normal-case font-medium',
+            { 'btn-active': tab.value === currentTab },
+        ]"
+        @click="changeTab(tab.value)"
+        > {{ tab.name }}</Button>
       </div>
     </div>
-    <div
-      class="search flex justify-between content-center my-4 flex-wrap gap-2"
-    >
+
+    <div class="search flex justify-between content-center my-4 flex-wrap gap-2">
       <div class="flex gap-1 items-center">
         <ExportXls
           api="/api/review/export"
@@ -338,7 +258,7 @@ onMounted(async () => {
         <select v-model="search.type" class="select select-bordered select-sm">
           <option value="article">Артикул</option>
           <option value="uuid">ID выкупа</option>
-          <option v-if="route.query.status !== 'available'" value="uuidReview">
+          <option v-if="currentTab !== 'available'" value="uuidReview">
             ID отзыва
           </option>
         </select>
@@ -348,7 +268,7 @@ onMounted(async () => {
             type="text"
             class="input input-sm input-bordered"
             placeholder="Поиск"
-            @input="onSearchInput()"
+            @input="onSearchInput"
           />
           <span
             v-if="search.loading"
@@ -357,18 +277,10 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+
     <div v-if="reviews?.length">
-      <div v-if="status === 'available'" class="cards grid grid-cols-1 gap-4">
+      <div v-if="currentTab === 'available'" class="cards grid grid-cols-1 gap-4">
         <ReviewCard
-          v-for="(review, index) of reviews"
-          :key="index"
-          :index="index"
-          :info="review"
-          @open-modal="openModal"
-        />
-      </div>
-      <div v-else-if="status === 'all'" class="cards grid grid-cols-1 gap-4">
-        <ReviewAllCard
           v-for="(review, index) of reviews"
           :key="index"
           :index="index"
@@ -389,9 +301,12 @@ onMounted(async () => {
           @open-image="openPhoto"
         />
       </div>
-      <div ref="target" class="flex justify-center items-center h-4" />
+      <div ref="target" class="flex justify-center items-center h-4 mb-10" />
     </div>
-    <Hero v-else />
+    <div v-else>
+        <Hero v-if="reviews.length < 1 && !isFetch" />
+        <p v-else>загрузка...</p>
+    </div>
 
     <ReviewModal
       v-if="modalOpen"
