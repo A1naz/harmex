@@ -24,8 +24,11 @@ export const useMainStore = defineStore('main', {
         return true
     },
     tariffString(item: keyof ITariff): string {
-        const symbol = this.client.tariff[item].type == TariffTypeEnum.percent ? '%' : 'р.'
-        return this.client.tariff[item].value + symbol
+        if(this.client.tariff[item]){
+            const symbol = this.client.tariff[item].type == TariffTypeEnum.percent ? '%' : 'р.'
+            return this.client.tariff[item].value + symbol
+        }
+        return '"тариф не найден"'
     },
     async getClient() {
         const { data } = await useFetch('/api/user/client', {
