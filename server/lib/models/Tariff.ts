@@ -20,7 +20,7 @@ const TariffSchema = new Schema({
     likeReview: { type: TariffPropSchema },
     likeProduct: { type: TariffPropSchema },
     questionProduct: { type: TariffPropSchema },
-    addToBasket: { type: TariffPropSchema },
+    cart: { type: TariffPropSchema },
     autoAnswer: { type: TariffPropSchema }
 })
 
