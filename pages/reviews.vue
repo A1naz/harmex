@@ -36,11 +36,12 @@ const tabs = [
 ]
 
 function changeTab(tab: string){
+    reviews.value = []
     skip.value = 0
-    // end.value = false
+    end.value = false
     currentTab.value = tab
-    skip.value = 0
     router.push(`/reviews?status=${tab}`)
+    fetchData()
 }
 
 const skip = ref<number>(0)
@@ -53,104 +54,36 @@ const searchText = ref('')
 const currentTab = ref<string>('')
 const endpoint = computed(()=> currentTab.value == 'available' ? 'available' : 'published')
 
-const { data: reviews, error, pending: isFetch } = await useAsyncData(
-  'reviews',
-  () => $fetch( `/api/review/${endpoint.value}`, {
-    method: 'GET',
-    params: {
-    //   skip: skip.value,
-      limit: limit.value,
-      tab: currentTab.value,
-      search: {[searchType.value]: searchText.value},
+const isFetch = ref(true)
+const reviews = ref<any>([])
+const fetchData = async ()=> {
+    isFetch.value = true
+    const response = await $fetch( `/api/review/${endpoint.value}`, {
+        method: 'GET',
+        params: {
+            skip: skip.value,
+            limit: limit.value,
+            tab: currentTab.value,
+            search: searchText.value.length > 0 ? {[searchType.value]: searchText.value} : {}
+        }
+    })
+    if (response) {
+        reviews.value = [...reviews.value, ...response]
+        if (response.length < limit.value) end.value = true
     }
-  } ), {
-    watch: [currentTab, searchType, searchText, skip, limit],
-    // deep: true,
-    server: false
-  }
-);
+    isFetch.value = false
+}
 
 
 function onSearchInput(val: any) {
-    search.text = val.data
+    reviews.value = []
     skip.value = 0 
+    end.value = false
+    fetchData()
 }
-
-// const { data } = await useFetch(`/api/review/${endpoint}`, {
-//         method: 'GET',
-//         query: {...query},
-//     })
-// const reviews = computed(()=> data.value )
-
-
-// async function _getData() {
-//     if(!isFetch.value) return
-    
-//     let endpoint = 'published'
-//     const query = {
-//         limit, 
-//         skip, 
-//         status: currentTab.value
-//     }
-
-//     if (currentTab.value === 'available') {
-//         query.status = ''
-//         endpoint = 'available'
-//     }
-
-//     const { data } = await useFetch(`/api/review/${endpoint}`, {
-//         method: 'GET',
-//         query: {...query},
-//         watch: false
-//     })
-//     if (data.value) {
-//         // if (data.value === 0) end.value = true
-//         else reviews.value = [...reviews.value, ...data.value]
-//     }
-//     loadingListDebounce()
-// }
-// const _getDataDebounced = useDebounceFn(()=> _getData() , 700)
-// function getReviews(){
-//     isFetch.value = true
-//     _getDataDebounced()
-// }
-// const loadingListDebounce = useDebounceFn(()=> {isFetch.value = false} , 500)  
 
 const openedPhoto = ref('')
 const selectedUUID = ref('')
-
-// async function findReviews(value: string, type: string) {
-//     let res
-//     if (!value) {
-//         autoTarget.value = true
-//         skip.value = 0
-//         getReviews()
-//         search.loading = false
-//     }
-
-//     if (status.value === 'available') {
-//         res = await useFetch(`/api/review/available`, {
-//             method: 'GET',
-//             query: {
-//                 search: { string: value, type}
-//             },
-//         })
-//     } else {
-//         res = await useFetch<any[]>('/api/review/searchReviews', {
-//             query: {
-//                 string: value,
-//                 type,
-//                 status: status.value,
-//             },
-//         })
-//     }
-//     if (res && res.data?.value) reviews.value = [...res.data.value]
-//     search.loading = false
-// }
-
-// const findReviewsDebounced = useDebounceFn(findReviews, 1000)
-
-
 
 function openInfoModal() {
   store.infoModal = true
@@ -184,34 +117,35 @@ function openRemoveReviewModal(uuid: any) {
 }
 
 async function removeReview() {
-//   const { data, error } = await useFetch('/api/review/delete', {
-//     method: 'GET',
-//     query: {
-//       id: uuidForRemove.value,
-//     },
-//   })
-//   if (data.value) {
-//     notify({
-//       title: 'Отзыв удален',
-//       text: 'Ваш отзыв выставлен на удаление',
-//       type: 'success',
-//     })
-//     const startIn = reviews.value.find( rev => rev.uuid == uuidForRemove.value)
-//     reviews.value.splice(startIn, 1)
-//   }
-//   if (error.value) {
-//     notify({
-//       title: 'Что-то пошло не так',
-//       text: error.value.data?.message,
-//       type: 'error',
-//       duration: 3000,
-//     })
-//   }
+  const { data, error } = await useFetch('/api/review/delete', {
+    method: 'GET',
+    query: {
+      id: uuidForRemove.value,
+    },
+  })
+  if (data.value) {
+    notify({
+      title: 'Отзыв удален',
+      text: 'Ваш отзыв выставлен на удаление',
+      type: 'success',
+    })
+    const startIn = reviews.value.find( rev => rev.uuid == uuidForRemove.value)
+    reviews.value.splice(startIn, 1)
+  }
+  if (error.value) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+  }
 }
 
 watch(()=> targetIsVisible.value, (isVisible) => {
-    if (!isFetch.value && isVisible && !end.value) {
-        limit.value += limit.value
+    if (isVisible && !end.value) {
+        skip.value += limit.value
+        fetchData()
     }
 })
 
@@ -219,8 +153,9 @@ onMounted( () => {
     if (route.query?.uuid && route.query?.uuid.length > 0) {
         const uuid = route.query?.uuid
         if (uuid && typeof uuid == 'string') {
-            search.value = { uuidReview: uuid }
-            // onSearchInput()
+            currentTab.value = 'published'
+            searchType.value = 'id'
+            searchText.value = uuid
         }
     } else if(route.query.status) {
         currentTab.value = route.query.status.toString()
@@ -228,6 +163,7 @@ onMounted( () => {
         currentTab.value = 'available'
         router.push('/reviews?status=available')
     }
+    fetchData()
 })
 
 
@@ -280,7 +216,7 @@ onMounted( () => {
       <div class="flex gap-1 items-center">
         <select v-model="searchType" class="select select-bordered select-sm">
           <option value="article" default>Артикул</option>
-          <option value="uuid">ID выкупа</option>
+          <option value="id">ID выкупа</option>
           <option v-if="currentTab !== 'available'" value="uuidReview">ID отзыва</option>
         </select>
         <div class="relative flex items-center flex-grow-0 w-full">
@@ -299,7 +235,7 @@ onMounted( () => {
       </div>
     </div>
 
-    <div v-if="!isFetch && reviews">
+    <div v-if="reviews && reviews.length > 0">
       <div v-if="currentTab === 'available'" class="cards grid grid-cols-1 gap-4">
         <ReviewCard
           v-for="(review, index) of reviews"
@@ -319,12 +255,12 @@ onMounted( () => {
           @open-image="openPhoto"
         />
       </div>
-      <div v-if="reviews && reviews.length > 0" ref="target" class="flex justify-center items-center h-4 mb-10" />
+
+      <div v-if="!isFetch && reviews && reviews.length > 0" ref="target" class="flex justify-center items-center h-4 mb-10" />
+    
     </div>
-    <div v-else>
-        <Hero v-if="reviews && reviews.length < 1" />
-        <p v-else>загрузка...</p>
-    </div>
+    <div v-else-if="isFetch">Загрузка...</div>
+    <Hero v-else />
 
     <ReviewModal
       v-if="modalOpen"
