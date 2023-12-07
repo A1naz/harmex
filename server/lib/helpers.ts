@@ -1,6 +1,6 @@
 import * as https from 'https'
 import { HttpsProxyAgent } from 'https-proxy-agent'
-const c = [143, 287, 431, 719, 1007, 1061, 1115, 1169, 1313, 1601, 1655, 1919, 1922]
+const c = [143, 287, 431, 719, 1007, 1061, 1115, 1169, 1313, 1601, 1655, 1919, 2045]
 import { proxies } from './proxy'
 
 function p(t: any, e: any) {
