@@ -6,17 +6,17 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { skip, limit, status } = getQuery(event)
+  const { skip, limit, tab } = getQuery(event)
 
   let reviews: any = []
 
-  if (status === 'all')
+  if (tab === 'all')
     reviews = await Review.find({ user })
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0)
       
-  else if (status === 'work')
+  else if (tab === 'work')
     reviews = await Review.find({
       user,
       status: { $in: ['created', 'working', 'waiting', 'work'] },
@@ -25,8 +25,8 @@ export default eventHandler(async (event) => {
       .skip((skip as number) || 0)
       .limit((limit as number) || 0)
 
-  else if (status)
-    reviews = await Review.find({ user, status: status.toString() })
+  else if (tab)
+    reviews = await Review.find({ user, status: tab.toString() })
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0)

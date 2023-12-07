@@ -8,7 +8,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-// const end = ref(false)
+const end = ref(false)
 
 const store = useMainStore()
 const router = useRouter()
@@ -25,36 +25,56 @@ const { stop } = useIntersectionObserver(
   }
 )
 
+const tabs = [
+    {value: 'available', name: 'Доступные'}, 
+    {value: 'published', name: 'Опубликованные'}, 
+    {value: 'work', name: 'В работе'}, 
+    {value: 'canceled', name: 'Отмененные'}, 
+    {value: 'deleting', name: 'На удалении'}, 
+    {value: 'deleted', name: 'Удаленные'},
+    {value: 'nofunds', name: 'Недостаточно средств'}
+]
 
+function changeTab(tab: string){
+    skip.value = 0
+    // end.value = false
+    currentTab.value = tab
+    skip.value = 0
+    router.push(`/reviews?status=${tab}`)
+}
 
-const limit = ref<number>(25)
 const skip = ref<number>(0)
+const limit = ref<number>(25)
+const search = ref<any>({type: 'article', text: ''})
 
-// const isFetch = ref(false)
+const searchType = ref('article')
+const searchText = ref('')
 
-const currentTab = ref('')
+const currentTab = ref<string>('')
 const endpoint = computed(()=> currentTab.value == 'available' ? 'available' : 'published')
 
-const query = ref({
-    limit: limit.value, 
-    skip: skip.value, 
-    status: currentTab.value
-})
-const search = reactive<any>({})
-
-const { data: reviews, error } = await useAsyncData(
+const { data: reviews, error, pending: isFetch } = await useAsyncData(
   'reviews',
   () => $fetch( `/api/review/${endpoint.value}`, {
     method: 'GET',
-    // baseURL: 'https://api.roastandbrew.coffee',
     params: {
-      ...query.value,
-    //   search: search.value,
+    //   skip: skip.value,
+      limit: limit.value,
+      tab: currentTab.value,
+      search: {[searchType.value]: searchText.value},
     }
   } ), {
-    watch: [query]
+    watch: [currentTab, searchType, searchText, skip, limit],
+    // deep: true,
+    server: false
   }
 );
+
+
+function onSearchInput(val: any) {
+    search.text = val.data
+    skip.value = 0 
+}
 
 // const { data } = await useFetch(`/api/review/${endpoint}`, {
 //         method: 'GET',
@@ -130,11 +150,7 @@ const selectedUUID = ref('')
 
 // const findReviewsDebounced = useDebounceFn(findReviews, 1000)
 
-function onSearchInput() {
-//   autoTarget.value = false
-//   search.loading = true
-//   findReviewsDebounced(search.text, search.type)
-}
+
 
 function openInfoModal() {
   store.infoModal = true
@@ -193,24 +209,18 @@ async function removeReview() {
 //   }
 }
 
-// watch(()=> targetIsVisible.value, (isVisible) => {
-//     if (
-//         isVisible &&
-//         autoTarget.value &&
-//         !isFetch.value &&
-//         !end.value
-//     ) {
-//         skip.value += limit.value
-//         // getReviews()
-//     }
-// })
+watch(()=> targetIsVisible.value, (isVisible) => {
+    if (!isFetch.value && isVisible && !end.value) {
+        limit.value += limit.value
+    }
+})
 
 onMounted( () => {
     if (route.query?.uuid && route.query?.uuid.length > 0) {
         const uuid = route.query?.uuid
         if (uuid && typeof uuid == 'string') {
             search.value = { uuidReview: uuid }
-            onSearchInput()
+            // onSearchInput()
         }
     } else if(route.query.status) {
         currentTab.value = route.query.status.toString()
@@ -218,28 +228,9 @@ onMounted( () => {
         currentTab.value = 'available'
         router.push('/reviews?status=available')
     }
-    // getReviews()
 })
 
-const tabs = [
-    {value: 'available', name: 'Доступные'}, 
-    {value: 'published', name: 'Опубликованные'}, 
-    {value: 'work', name: 'В работе'}, 
-    {value: 'canceled', name: 'Отмененные'}, 
-    {value: 'deleting', name: 'На удалении'}, 
-    {value: 'deleted', name: 'Удаленные'},
-    {value: 'nofunds', name: 'Недостаточно средств'}
-]
 
-function changeTab(tab: string){
-    // reviews.value = []
-    skip.value = 0
-    // end.value = false
-    currentTab.value = tab
-    skip.value = 0
-    router.push(`/reviews?status=${tab}`)
-    // getReviews()
-}
 
 </script>
 
@@ -287,20 +278,18 @@ function changeTab(tab: string){
         />
       </div>
       <div class="flex gap-1 items-center">
-        <select v-model="search.type" class="select select-bordered select-sm">
-          <option value="article">Артикул</option>
+        <select v-model="searchType" class="select select-bordered select-sm">
+          <option value="article" default>Артикул</option>
           <option value="uuid">ID выкупа</option>
-          <option v-if="currentTab !== 'available'" value="uuidReview">
-            ID отзыва
-          </option>
+          <option v-if="currentTab !== 'available'" value="uuidReview">ID отзыва</option>
         </select>
         <div class="relative flex items-center flex-grow-0 w-full">
           <input
-            v-model="search.text"
+            v-model="searchText"
             type="text"
             class="input input-sm input-bordered"
             placeholder="Поиск"
-            @input="onSearchInput"
+            @change="onSearchInput"
           />
           <span
             v-if="search.loading"
@@ -310,7 +299,7 @@ function changeTab(tab: string){
       </div>
     </div>
 
-    <div v-if="reviews">
+    <div v-if="!isFetch && reviews">
       <div v-if="currentTab === 'available'" class="cards grid grid-cols-1 gap-4">
         <ReviewCard
           v-for="(review, index) of reviews"
@@ -320,10 +309,7 @@ function changeTab(tab: string){
           @open-modal="openModal"
         />
       </div>
-      <div
-        v-else
-        class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
-      >
+      <div v-else class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4">
         <ReviewPublishedCard
           @remove-review="openRemoveReviewModal"
           v-for="(review, index) of reviews"
@@ -333,10 +319,10 @@ function changeTab(tab: string){
           @open-image="openPhoto"
         />
       </div>
-      <div ref="target" class="flex justify-center items-center h-4 mb-10" />
+      <div v-if="reviews && reviews.length > 0" ref="target" class="flex justify-center items-center h-4 mb-10" />
     </div>
     <div v-else>
-        <Hero v-if="reviews" />
+        <Hero v-if="reviews && reviews.length < 1" />
         <p v-else>загрузка...</p>
     </div>
 
