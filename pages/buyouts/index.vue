@@ -53,6 +53,7 @@ async function getBuyouts() {
       dateFilter: dateFilter.value,
       limit: 50,
     },
+    watch: false
   })
   buyouts.value = data.value
 }
@@ -122,6 +123,7 @@ async function selectFilterDate(e: Event) {
       dateFilter: dateFilter.value,
       limit: 50,
     },
+    watch: false
   })
   buyouts.value = data.value
 }
@@ -137,6 +139,7 @@ async function findBuyouts(value: string, type: string) {
       string: value,
       type,
     },
+    watch: false
   })
   if (data.value) buyouts.value = data.value
 
@@ -213,6 +216,7 @@ watch(targetIsVisible, async (isVisible) => {
         dateFilter: dateFilter.value,
         skip: skip.value,
       },
+      watch: false
     })
     if ((data.value as any).length === 0) {
       end.value = true
@@ -234,6 +238,7 @@ watch(
         dateFilter: dateFilter.value,
         limit: 50,
       },
+      watch: false
     })
     buyouts.value = data.value
   },
@@ -253,6 +258,7 @@ onMounted(async () => {
         const { data, error } = await useFetch('/api/buyout/getOne', {
           method: 'GET',
           query: { uuid },
+          watch: false
         })
         if (data.value) {
           buyouts.value = [data.value, ...buyouts.value]

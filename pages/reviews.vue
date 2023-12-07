@@ -8,24 +8,16 @@ definePageMeta({
 })
 
 const route = useRoute()
-const end = ref(false)
-const limit = ref<number>(25)
-const skip = ref<number>(0)
+// const end = ref(false)
+
 const store = useMainStore()
 const router = useRouter()
-const autoTarget = ref(true)
+
 const status = ref(route.query?.status ?? 'available')
-const currentTab = ref('')
+
+
 const target = ref(null)
 const targetIsVisible = ref(false)
-const isFetch = ref(false)
-const search = reactive({
-  text: '',
-  loading: false,
-  error: false,
-  type: 'article',
-})
-
 const { stop } = useIntersectionObserver(
   target,
   ([{ isIntersecting }], observerElement) => {
@@ -33,85 +25,115 @@ const { stop } = useIntersectionObserver(
   }
 )
 
-const reviews = ref<any[]>([])
-async function _getData() {
-    if(!isFetch.value) return
+
+
+const limit = ref<number>(25)
+const skip = ref<number>(0)
+
+// const isFetch = ref(false)
+
+const currentTab = ref('')
+const endpoint = computed(()=> currentTab.value == 'available' ? 'available' : 'published')
+
+const query = ref({
+    limit: limit.value, 
+    skip: skip.value, 
+    status: currentTab.value
+})
+const search = reactive<any>({})
+
+const { data: reviews, error } = await useAsyncData(
+  'reviews',
+  () => $fetch( `/api/review/${endpoint.value}`, {
+    method: 'GET',
+    // baseURL: 'https://api.roastandbrew.coffee',
+    params: {
+      ...query.value,
+    //   search: search.value,
+    }
+  } ), {
+    watch: [query]
+  }
+);
+
+// const { data } = await useFetch(`/api/review/${endpoint}`, {
+//         method: 'GET',
+//         query: {...query},
+//     })
+// const reviews = computed(()=> data.value )
+
+
+// async function _getData() {
+//     if(!isFetch.value) return
     
-    let endpoint = 'published'
-    const query = {
-        limit, 
-        skip, 
-        status: currentTab.value
-    }
+//     let endpoint = 'published'
+//     const query = {
+//         limit, 
+//         skip, 
+//         status: currentTab.value
+//     }
 
-    if (currentTab.value === 'available') {
-        query.status = ''
-        endpoint = 'available'
-    }
+//     if (currentTab.value === 'available') {
+//         query.status = ''
+//         endpoint = 'available'
+//     }
 
-    const { data } = await useFetch(`/api/review/${endpoint}`, {
-        method: 'GET',
-        query: {...query}
-    })
-    if (data.value) {
-        if (data.value === 0) end.value = true
-        else reviews.value = [...reviews.value, ...data.value]
-    }
-    loadingListDebounce()
-}
-const _getDataDebounced = useDebounceFn(()=> _getData() , 700)
-function getReviews(){
-    isFetch.value = true
-    _getDataDebounced()
-}
-const loadingListDebounce = useDebounceFn(()=> {isFetch.value = false} , 500)  
+//     const { data } = await useFetch(`/api/review/${endpoint}`, {
+//         method: 'GET',
+//         query: {...query},
+//         watch: false
+//     })
+//     if (data.value) {
+//         // if (data.value === 0) end.value = true
+//         else reviews.value = [...reviews.value, ...data.value]
+//     }
+//     loadingListDebounce()
+// }
+// const _getDataDebounced = useDebounceFn(()=> _getData() , 700)
+// function getReviews(){
+//     isFetch.value = true
+//     _getDataDebounced()
+// }
+// const loadingListDebounce = useDebounceFn(()=> {isFetch.value = false} , 500)  
 
 const openedPhoto = ref('')
 const selectedUUID = ref('')
 
-async function findReviews(value: string, type: string) {
-    let res
-    if (!value) {
-        autoTarget.value = true
-        skip.value = 0
-        getReviews()
-        search.loading = false
-    }
+// async function findReviews(value: string, type: string) {
+//     let res
+//     if (!value) {
+//         autoTarget.value = true
+//         skip.value = 0
+//         getReviews()
+//         search.loading = false
+//     }
 
-    if (status.value === 'available') {
-        res = await useFetch(`/api/review/available`, {
-            method: 'GET',
-            query: {
-                search: { string: value, type}
-            },
-        })
+//     if (status.value === 'available') {
+//         res = await useFetch(`/api/review/available`, {
+//             method: 'GET',
+//             query: {
+//                 search: { string: value, type}
+//             },
+//         })
+//     } else {
+//         res = await useFetch<any[]>('/api/review/searchReviews', {
+//             query: {
+//                 string: value,
+//                 type,
+//                 status: status.value,
+//             },
+//         })
+//     }
+//     if (res && res.data?.value) reviews.value = [...res.data.value]
+//     search.loading = false
+// }
 
-
-        // res = await useFetch('/api/review/search', {
-        //     query: {
-        //         string: value,
-        //         type,
-        //     },
-        // })
-    } else {
-        res = await useFetch<any[]>('/api/review/searchReviews', {
-            query: {
-                string: value,
-                type,
-                status: status.value,
-            },
-        })
-    }
-    if (res && res.data?.value) reviews.value = [...res.data.value]
-    search.loading = false
-}
-
-const findReviewsDebounced = useDebounceFn(findReviews, 1000)
+// const findReviewsDebounced = useDebounceFn(findReviews, 1000)
 
 function onSearchInput() {
-  autoTarget.value = false
-  search.loading = true
-  findReviewsDebounced(search.text, search.type)
+//   autoTarget.value = false
+//   search.loading = true
+//   findReviewsDebounced(search.text, search.type)
 }
 
 function openInfoModal() {
@@ -146,48 +168,48 @@ function openRemoveReviewModal(uuid: any) {
 }
 
 async function removeReview() {
-  const { data, error } = await useFetch('/api/review/delete', {
-    method: 'GET',
-    query: {
-      id: uuidForRemove.value,
-    },
-  })
-  if (data.value) {
-    notify({
-      title: 'Отзыв удален',
-      text: 'Ваш отзыв выставлен на удаление',
-      type: 'success',
-    })
-    const startIn = reviews.value.find( rev => rev.uuid == uuidForRemove.value)
-    reviews.value.splice(startIn, 1)
-  }
-  if (error.value) {
-    notify({
-      title: 'Что-то пошло не так',
-      text: error.value.data?.message,
-      type: 'error',
-      duration: 3000,
-    })
-  }
+//   const { data, error } = await useFetch('/api/review/delete', {
+//     method: 'GET',
+//     query: {
+//       id: uuidForRemove.value,
+//     },
+//   })
+//   if (data.value) {
+//     notify({
+//       title: 'Отзыв удален',
+//       text: 'Ваш отзыв выставлен на удаление',
+//       type: 'success',
+//     })
+//     const startIn = reviews.value.find( rev => rev.uuid == uuidForRemove.value)
+//     reviews.value.splice(startIn, 1)
+//   }
+//   if (error.value) {
+//     notify({
+//       title: 'Что-то пошло не так',
+//       text: error.value.data?.message,
+//       type: 'error',
+//       duration: 3000,
+//     })
+//   }
 }
 
-watch(()=> targetIsVisible.value, (isVisible) => {
-    if (
-        isVisible &&
-        !isFetch.value &&
-        !end.value
-    ) {
-        skip.value += limit.value
-        getReviews()
-    }
-})
+// watch(()=> targetIsVisible.value, (isVisible) => {
+//     if (
+//         isVisible &&
+//         autoTarget.value &&
+//         !isFetch.value &&
+//         !end.value
+//     ) {
+//         skip.value += limit.value
+//         // getReviews()
+//     }
+// })
 
 onMounted( () => {
     if (route.query?.uuid && route.query?.uuid.length > 0) {
         const uuid = route.query?.uuid
         if (uuid && typeof uuid == 'string') {
-            search.text = uuid
-            search.type = 'uuidReview'
+            search.value = { uuidReview: uuid }
             onSearchInput()
         }
     } else if(route.query.status) {
@@ -196,7 +218,7 @@ onMounted( () => {
         currentTab.value = 'available'
         router.push('/reviews?status=available')
     }
-    getReviews()
+    // getReviews()
 })
 
 const tabs = [
@@ -210,12 +232,13 @@ const tabs = [
 ]
 
 function changeTab(tab: string){
-    reviews.value = []
+    // reviews.value = []
     skip.value = 0
-    end.value = false
+    // end.value = false
     currentTab.value = tab
+    skip.value = 0
     router.push(`/reviews?status=${tab}`)
-    getReviews()
+    // getReviews()
 }
 
 </script>
@@ -244,14 +267,14 @@ function changeTab(tab: string){
 
     <div class="flex justify-between mb-2 mt-6 items-center">
       <div class="">
-      <Button 
-        v-for="tab in tabs" 
-        :class="[
-            'btn btn-ghost btn-sm normal-case font-medium',
-            { 'btn-active': tab.value === currentTab },
-        ]"
-        @click="changeTab(tab.value)"
-        > {{ tab.name }}</Button>
+        <Button 
+            v-for="tab in tabs" 
+            :class="[
+                'btn btn-ghost btn-sm normal-case font-medium',
+                { 'btn-active': tab.value === currentTab },
+            ]"
+            @click="changeTab(tab.value)"
+            > {{ tab.name }}</Button>
       </div>
     </div>
 
@@ -287,7 +310,7 @@ function changeTab(tab: string){
       </div>
     </div>
 
-    <div v-if="reviews?.length">
+    <div v-if="reviews">
       <div v-if="currentTab === 'available'" class="cards grid grid-cols-1 gap-4">
         <ReviewCard
           v-for="(review, index) of reviews"
@@ -313,7 +336,7 @@ function changeTab(tab: string){
       <div ref="target" class="flex justify-center items-center h-4 mb-10" />
     </div>
     <div v-else>
-        <Hero v-if="reviews.length < 1 && !isFetch" />
+        <Hero v-if="reviews" />
         <p v-else>загрузка...</p>
     </div>
 

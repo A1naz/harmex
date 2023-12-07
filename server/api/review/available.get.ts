@@ -64,7 +64,7 @@ export default eventHandler(async (event) => {
     }},
     { $project: { _id: 0 } }
   ]
-  if(searchParse) pipeLine.splice(1,0, { $match: {[searchParse.type]: searchParse.string}} )
+  if(searchParse && searchParse.string.length > 0) pipeLine.splice(1,0, { $match: {[searchParse.type]: searchParse.string}} )
   if(skipA > 0) pipeLine.push({ $skip: skipA })
   if(limitA > 0) pipeLine.push({ $limit: limitA })
 
