@@ -53,6 +53,7 @@ async function getBuyouts() {
       dateFilter: dateFilter.value,
       limit: 50,
     },
+    watch: false
   })
   buyouts.value = data.value
 }
@@ -124,6 +125,7 @@ async function selectFilterDate(e: Event) {
       dateFilter: dateFilter.value,
       limit: 50,
     },
+    watch: false
   })
   buyouts.value = data.value
 }
@@ -139,6 +141,7 @@ async function findBuyouts(value: string, type: string) {
       string: value,
       type,
     },
+    watch: false
   })
   if (data.value) buyouts.value = data.value
 
@@ -215,6 +218,7 @@ watch(targetIsVisible, async (isVisible) => {
         dateFilter: dateFilter.value,
         skip: skip.value,
       },
+      watch: false
     })
     if ((data.value as any).length === 0) {
       end.value = true
@@ -236,6 +240,7 @@ watch(
         dateFilter: dateFilter.value,
         limit: 50,
       },
+      watch: false
     })
     buyouts.value = data.value
   },
@@ -254,22 +259,19 @@ onMounted(async () => {
       } else {
         const { data, error } = await useFetch('/api/buyout/getOne', {
           method: 'GET',
-          query: {
-            uuid,
-          },
+          query: { uuid },
+          watch: false
         })
-
         if (data.value) {
           buyouts.value = [data.value, ...buyouts.value]
           openModal(0)
         }
       }
     }
-  } else {
-    await getBuyouts()
   }
 })
 
+await getBuyouts()
 </script>
 
 <template>
@@ -372,7 +374,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div v-if="buyouts.length">
+    <div v-if="buyouts.length > 0">
       <div
         v-if="
           (route.query.status === 'active' || !route.query.status) &&
@@ -414,7 +416,6 @@ onMounted(async () => {
           <BuyoutCard
             v-for="(buyout, index) of buyouts"
             :key="buyout.uuid"
-            :place="buyouts.length - index"
             :index="index"
             :info="buyout"
             @unarchive="unarchiveBuyout"

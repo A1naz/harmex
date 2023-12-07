@@ -9,23 +9,15 @@ definePageMeta({
 
 const route = useRoute()
 const end = ref(false)
-const limit = ref<number>(25)
-const skip = ref<number>(0)
+
 const store = useMainStore()
 const router = useRouter()
-const autoTarget = ref(true)
+
 const status = ref(route.query?.status ?? 'available')
-const currentTab = ref('')
+
+
 const target = ref(null)
 const targetIsVisible = ref(false)
-const isFetch = ref(false)
-const search = reactive({
-  text: '',
-  loading: false,
-  error: false,
-  type: 'article',
-})
-
 const { stop } = useIntersectionObserver(
   target,
   ([{ isIntersecting }], observerElement) => {
@@ -33,86 +25,65 @@ const { stop } = useIntersectionObserver(
   }
 )
 
-const reviews = ref<any[]>([])
-async function _getData() {
-    if(!isFetch.value) return
-    
-    let endpoint = 'published'
-    const query = {
-        limit, 
-        skip, 
-        status: currentTab.value
-    }
+const tabs = [
+    {value: 'available', name: 'Доступные'}, 
+    {value: 'published', name: 'Опубликованные'}, 
+    {value: 'work', name: 'В работе'}, 
+    {value: 'canceled', name: 'Отмененные'}, 
+    {value: 'deleting', name: 'На удалении'}, 
+    {value: 'deleted', name: 'Удаленные'},
+    {value: 'nofunds', name: 'Недостаточно средств'}
+]
 
-    if (currentTab.value === 'available') {
-        query.status = ''
-        endpoint = 'available'
-    }
-
-    const { data } = await useFetch(`/api/review/${endpoint}`, {
-        method: 'GET',
-        query: {...query}
-    })
-    if (data.value) {
-        if (data.value === 0) end.value = true
-        else reviews.value = [...reviews.value, ...data.value]
-    }
-    loadingListDebounce()
+function changeTab(tab: string){
+    reviews.value = []
+    skip.value = 0
+    end.value = false
+    currentTab.value = tab
+    router.push(`/reviews?status=${tab}`)
+    fetchData()
 }
-const _getDataDebounced = useDebounceFn(()=> _getData() , 700)
-function getReviews(){
+
+const skip = ref<number>(0)
+const limit = ref<number>(25)
+const search = ref<any>({type: 'article', text: ''})
+
+const searchType = ref('article')
+const searchText = ref('')
+
+const currentTab = ref<string>('')
+const endpoint = computed(()=> currentTab.value == 'available' ? 'available' : 'published')
+
+const isFetch = ref(true)
+const reviews = ref<any>([])
+const fetchData = async ()=> {
     isFetch.value = true
-    _getDataDebounced()
+    const response = await $fetch( `/api/review/${endpoint.value}`, {
+        method: 'GET',
+        params: {
+            skip: skip.value,
+            limit: limit.value,
+            tab: currentTab.value,
+            search: searchText.value.length > 0 ? {[searchType.value]: searchText.value} : {}
+        }
+    })
+    if (response) {
+        reviews.value = [...reviews.value, ...response]
+        if (response.length < limit.value) end.value = true
+    }
+    isFetch.value = false
 }
-const loadingListDebounce = useDebounceFn(()=> {isFetch.value = false} , 500)  
+
+
+function onSearchInput(val: any) {
+    reviews.value = []
+    skip.value = 0 
+    end.value = false
+    fetchData()
+}
 
 const openedPhoto = ref('')
 const selectedUUID = ref('')
-
-async function findReviews(value: string, type: string) {
-    let res
-    if (!value) {
-        autoTarget.value = true
-        skip.value = 0
-        getReviews()
-        search.loading = false
-    }
-
-    if (status.value === 'available') {
-        res = await useFetch(`/api/review/available`, {
-            method: 'GET',
-            query: {
-                search: { string: value, type}
-            },
-        })
-
-
-        // res = await useFetch('/api/review/search', {
-        //     query: {
-        //         string: value,
-        //         type,
-        //     },
-        // })
-    } else {
-        res = await useFetch<any[]>('/api/review/searchReviews', {
-            query: {
-                string: value,
-                type,
-                status: status.value,
-            },
-        })
-    }
-    if (res && res.data?.value) reviews.value = [...res.data.value]
-    search.loading = false
-}
-
-const findReviewsDebounced = useDebounceFn(findReviews, 1000)
-
-function onSearchInput() {
-  autoTarget.value = false
-  search.loading = true
-  findReviewsDebounced(search.text, search.type)
-}
 
 function openInfoModal() {
   store.infoModal = true
@@ -172,13 +143,9 @@ async function removeReview() {
 }
 
 watch(()=> targetIsVisible.value, (isVisible) => {
-    if (
-        isVisible &&
-        !isFetch.value &&
-        !end.value
-    ) {
+    if (isVisible && !end.value) {
         skip.value += limit.value
-        getReviews()
+        fetchData()
     }
 })
 
@@ -186,9 +153,9 @@ onMounted( () => {
     if (route.query?.uuid && route.query?.uuid.length > 0) {
         const uuid = route.query?.uuid
         if (uuid && typeof uuid == 'string') {
-            search.text = uuid
-            search.type = 'uuidReview'
-            onSearchInput()
+            currentTab.value = 'published'
+            searchType.value = 'id'
+            searchText.value = uuid
         }
     } else if(route.query.status) {
         currentTab.value = route.query.status.toString()
@@ -196,27 +163,10 @@ onMounted( () => {
         currentTab.value = 'available'
         router.push('/reviews?status=available')
     }
-    getReviews()
+    fetchData()
 })
 
-const tabs = [
-    {value: 'available', name: 'Доступные'}, 
-    {value: 'published', name: 'Опубликованные'}, 
-    {value: 'work', name: 'В работе'}, 
-    {value: 'canceled', name: 'Отмененные'}, 
-    {value: 'deleting', name: 'На удалении'}, 
-    {value: 'deleted', name: 'Удаленные'},
-    {value: 'nofunds', name: 'Недостаточно средств'}
-]
 
-function changeTab(tab: string){
-    reviews.value = []
-    skip.value = 0
-    end.value = false
-    currentTab.value = tab
-    router.push(`/reviews?status=${tab}`)
-    getReviews()
-}
 
 </script>
 
@@ -244,14 +194,14 @@ function changeTab(tab: string){
 
     <div class="flex justify-between mb-2 mt-6 items-center">
       <div class="">
-      <Button 
-        v-for="tab in tabs" 
-        :class="[
-            'btn btn-ghost btn-sm normal-case font-medium',
-            { 'btn-active': tab.value === currentTab },
-        ]"
-        @click="changeTab(tab.value)"
-        > {{ tab.name }}</Button>
+        <Button 
+            v-for="tab in tabs" 
+            :class="[
+                'btn btn-ghost btn-sm normal-case font-medium',
+                { 'btn-active': tab.value === currentTab },
+            ]"
+            @click="changeTab(tab.value)"
+            > {{ tab.name }}</Button>
       </div>
     </div>
 
@@ -264,20 +214,18 @@ function changeTab(tab: string){
         />
       </div>
       <div class="flex gap-1 items-center">
-        <select v-model="search.type" class="select select-bordered select-sm">
-          <option value="article">Артикул</option>
-          <option value="uuid">ID выкупа</option>
-          <option v-if="currentTab !== 'available'" value="uuidReview">
-            ID отзыва
-          </option>
+        <select v-model="searchType" class="select select-bordered select-sm">
+          <option value="article" default>Артикул</option>
+          <option value="id">ID выкупа</option>
+          <option v-if="currentTab !== 'available'" value="uuidReview">ID отзыва</option>
         </select>
         <div class="relative flex items-center flex-grow-0 w-full">
           <input
-            v-model="search.text"
+            v-model="searchText"
             type="text"
             class="input input-sm input-bordered"
             placeholder="Поиск"
-            @input="onSearchInput"
+            @change="onSearchInput"
           />
           <span
             v-if="search.loading"
@@ -287,7 +235,7 @@ function changeTab(tab: string){
       </div>
     </div>
 
-    <div v-if="reviews?.length">
+    <div v-if="reviews && reviews.length > 0">
       <div v-if="currentTab === 'available'" class="cards grid grid-cols-1 gap-4">
         <ReviewCard
           v-for="(review, index) of reviews"
@@ -297,10 +245,7 @@ function changeTab(tab: string){
           @open-modal="openModal"
         />
       </div>
-      <div
-        v-else
-        class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
-      >
+      <div v-else class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4">
         <ReviewPublishedCard
           @remove-review="openRemoveReviewModal"
           v-for="(review, index) of reviews"
@@ -310,12 +255,12 @@ function changeTab(tab: string){
           @open-image="openPhoto"
         />
       </div>
-      <div ref="target" class="flex justify-center items-center h-4 mb-10" />
+
+      <div v-if="!isFetch && reviews && reviews.length > 0" ref="target" class="flex justify-center items-center h-4 mb-10" />
+    
     </div>
-    <div v-else>
-        <Hero v-if="reviews.length < 1 && !isFetch" />
-        <p v-else>загрузка...</p>
-    </div>
+    <div v-else-if="isFetch">Загрузка...</div>
+    <Hero v-else />
 
     <ReviewModal
       v-if="modalOpen"

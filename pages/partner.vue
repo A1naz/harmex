@@ -107,7 +107,7 @@ async function _fetchData() {
             listData.value[dataKey].count = 0
         }
     }
-    loadingListDebounce() // to avoid double fetch after click on sort
+    loadingList.value = false // to avoid double fetch after click on sort
 }
 const _getDataDebounced = useDebounceFn(()=> _fetchData() , 700)
 

@@ -1,22 +1,28 @@
 import { Review } from '~~/server/lib/models/Review'
 import { Delivery } from '~/server/lib/models/Delivery'
+import { ObjectId } from 'mongodb'
 
 export default eventHandler(async (event) => {
 
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { skip, limit, status } = getQuery(event)
+  const { skip, limit, tab, search } = getQuery(event)
+  let searchParse = search ? JSON.parse(search?.toString()) : {}
+
+  if(Object.keys(searchParse)[0] == 'id' && searchParse.id.length > 0 ){
+    searchParse = {_id: new ObjectId(searchParse.id)}
+  }
 
   let reviews: any = []
 
-  if (status === 'all')
+  if (tab === 'all')
     reviews = await Review.find({ user })
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0)
       
-  else if (status === 'work')
+  else if (tab === 'work')
     reviews = await Review.find({
       user,
       status: { $in: ['created', 'working', 'waiting', 'work'] },
@@ -25,8 +31,8 @@ export default eventHandler(async (event) => {
       .skip((skip as number) || 0)
       .limit((limit as number) || 0)
 
-  else if (status)
-    reviews = await Review.find({ user, status: status.toString() })
+  else if (tab)
+    reviews = await Review.find({ user, status: tab.toString(), ...searchParse })
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0)

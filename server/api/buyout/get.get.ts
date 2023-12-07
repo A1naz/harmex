@@ -1,5 +1,3 @@
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { Buyout } from '@/server/lib/models/Buyout'
 
 export default eventHandler(async (event) => {
@@ -9,7 +7,7 @@ export default eventHandler(async (event) => {
 
   const { status, limit, skip, dateFilter } = getQuery(event)
 
-  const all = await Buyout.find({ user })
+//   const all = await Buyout.find({ user })
   let buyouts
   if (status === 'all') {
     buyouts = await Buyout.find({ user, status: { $ne: 'completed' } })
@@ -85,9 +83,10 @@ export default eventHandler(async (event) => {
       break
   }
   const format = buyouts.map((buyout) => {
-    const place = all.findIndex(item => item.uuid === buyout.uuid)
+    // const place = all.findIndex(item => item.uuid === buyout.uuid)
     return {
-      place: buyout.place ? buyout.place : place + 1,
+    //   place: buyout.place ? buyout.place : place + 1,
+      place: buyout.place,
       uuid: buyout.uuid,
       article: buyout.article,
       searchQuery: buyout.searchQuery,
