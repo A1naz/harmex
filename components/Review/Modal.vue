@@ -3,7 +3,7 @@ import { useNotification } from '@kyvg/vue3-notification'
 import { UseImage } from '@vueuse/components'
 
 const props = defineProps({
-  review: {type: {} as any, required: true },
+  review: {} as any,
   state: { type: Boolean, required: true },
   uuid: { type: String, required: true },
   deliveryid: { type: String, required: true },
