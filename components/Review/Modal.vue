@@ -215,12 +215,13 @@ onMounted(() => {
         >✕</label
       >
       <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
-      <div>Доставка:</div>
-        <select v-model="selectedDeliv" class="select select-bordered select-sm w-full">
+      <div class="pb-2">Доставка:</div>
+        <select v-model="selectedDeliv" class="select select-bordered w-full mb-4">
             <option 
                 v-for="(rev, index) in review.delivs"
                 :default="index == rev[defaultDelIndex]"
                 :value="{deliveryid: rev.delivId, uuid: rev.buyoutId}"
+                class="m-6"
                 >{{ defaultDateShort(rev.updatedAt) + ' - пол: ' + rev.sex + ' - размер: ' + rev.sizeparam + ' - цена: ' + rev.pricebuy + "р." }}</option>
         </select>
       <div class="flex flex-col gap-4">
