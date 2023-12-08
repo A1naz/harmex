@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
+import { SelectOptionsReviews as SelectOptions } from '@/data/enums'
 
 definePageMeta({
   layout: 'app',
@@ -35,20 +36,17 @@ const tabs = [
     {value: 'nofunds', name: 'Недостаточно средств'}
 ]
 
-function changeTab(tab: string){
-    reviews.value = []
-    skip.value = 0
-    end.value = false
-    currentTab.value = tab
-    router.push(`/reviews?status=${tab}`)
-    fetchData()
-}
+const searchOptions = ref([
+    {value: SelectOptions.article, name: 'Артикул'}, 
+    {value: SelectOptions.uuidBuyout, name: 'ID выкупа'},
+    {value: SelectOptions.idReview, name: 'ID отзыва'}
+])
 
 const skip = ref<number>(0)
 const limit = ref<number>(25)
 const search = ref<any>({type: 'article', text: ''})
 
-const searchType = ref('article')
+const searchType = ref<SelectOptions>(SelectOptions.article)
 const searchText = ref('')
 
 const currentTab = ref<string>('')
@@ -72,6 +70,15 @@ const fetchData = async ()=> {
         if (response.length < limit.value) end.value = true
     }
     isFetch.value = false
+}
+
+function changeTab(tab: string){
+    reviews.value = []
+    skip.value = 0
+    end.value = false
+    currentTab.value = tab
+    router.push(`/reviews?status=${tab}`)
+    fetchData()
 }
 
 
@@ -129,7 +136,7 @@ async function removeReview() {
       text: 'Ваш отзыв выставлен на удаление',
       type: 'success',
     })
-    const startIn = reviews.value.find( rev => rev.uuid == uuidForRemove.value)
+    const startIn = reviews.value.find( (rev: any) => rev.uuid == uuidForRemove.value)
     reviews.value.splice(startIn, 1)
   }
   if (error.value) {
@@ -150,12 +157,12 @@ watch(()=> targetIsVisible.value, (isVisible) => {
 })
 
 onMounted( () => {
-    if (route.query?.uuid && route.query?.uuid.length > 0) {
-        const uuid = route.query?.uuid
-        if (uuid && typeof uuid == 'string') {
+    if (route.query?.idReview && route.query?.idReview.length > 0) {
+        const idReview = route.query?.idReview
+        if (idReview && typeof idReview == 'string') {
             currentTab.value = 'published'
-            searchType.value = 'id'
-            searchText.value = uuid
+            searchType.value = SelectOptions.idReview
+            searchText.value = idReview
         }
     } else if(route.query.status) {
         currentTab.value = route.query.status.toString()
@@ -215,22 +222,24 @@ onMounted( () => {
       </div>
       <div class="flex gap-1 items-center">
         <select v-model="searchType" class="select select-bordered select-sm">
-          <option value="article" default>Артикул</option>
-          <option value="id">ID выкупа</option>
-          <option v-if="currentTab !== 'available'" value="uuidReview">ID отзыва</option>
+            <option v-for="option in searchOptions" 
+                :value="option.value"
+                :key="'k-'+option.value"
+                :default="option.value == SelectOptions.article"
+                >{{ option.name }}</option>
         </select>
         <div class="relative flex items-center flex-grow-0 w-full">
-          <input
-            v-model="searchText"
-            type="text"
-            class="input input-sm input-bordered"
-            placeholder="Поиск"
-            @change="onSearchInput"
-          />
-          <span
-            v-if="search.loading"
-            class="absolute right-2 loading loading-spinner loading-xs p-2"
-          />
+            <input
+                v-model="searchText"
+                type="text"
+                class="input input-sm input-bordered"
+                placeholder="Поиск"
+                @change="onSearchInput"
+                />
+            <span
+                v-if="search.loading"
+                class="absolute right-2 loading loading-spinner loading-xs p-2"
+                />
         </div>
       </div>
     </div>

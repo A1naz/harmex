@@ -47,7 +47,7 @@ function openBuyout() {
 }
 
 function removeReview() {
-  emit('removeReview', props.info.uuid)
+  emit('removeReview', props.info.id)
 }
 </script>
 
@@ -75,7 +75,7 @@ function removeReview() {
             class="text-black p-1.5 px-4 rounded-lg text-center"
             >{{ getStatus }}</span
           >
-          <button v-if="info.status === 'published'" @click="emit('removeReview', info.uuid)" class="btn btn-sm btn-error ml-1">
+          <button v-if="info.status === 'published'" @click="emit('removeReview', info.id)" class="btn btn-sm btn-error ml-1">
             Удалить
           </button>
           <!-- <div

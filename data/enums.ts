@@ -19,3 +19,9 @@ export enum TariffTypeEnum {
     price = 'price',
     percent = 'percent',
 }
+
+export enum SelectOptionsReviews {
+    article = 'article',
+    uuidBuyout = 'uudidBuyout',
+    idReview = 'idReview'
+} 

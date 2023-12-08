@@ -164,8 +164,8 @@ function openBuyout(data: any) {
   router.push(`/buyouts?uuid=${uuid}`)
 }
 function openReview(data: any) {
-    const uuid = data.basisoperation.slice(data.basisoperation.indexOf(' ') + 1, data.basisoperation.length)
-    router.push(`/reviews?status=published&uuid=${uuid}`)
+    const idReview = data.basisoperation.slice(data.basisoperation.indexOf(' ') + 1, data.basisoperation.length)
+    router.push(`/reviews?status=published&idReview=${idReview}`)
 }
 
 </script>

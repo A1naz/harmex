@@ -1,5 +1,6 @@
 import { Delivery } from '@/server/lib/models/Delivery'
 import { ObjectId } from 'mongodb'
+import { SelectOptionsReviews } from '@/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -7,10 +8,6 @@ export default eventHandler(async (event) => {
     if (!user) return sendRedirect(event, '/auth', 302)
 
     const { skip, limit, search } = getQuery(event)
-
-    const limitA = limit ? parseInt(limit.toString(), 10) : 100
-    const skipA = skip ? parseInt(skip.toString(), 10) : 0
-    const searchParse = search ? JSON.parse(search?.toString()) : undefined
 
   const pipeLine: any[] = [
     { $match: {
@@ -42,7 +39,7 @@ export default eventHandler(async (event) => {
         productname: "$buyout.product.name",
         productimage: "$buyout.product.image",
         gender: ["$data8","$buyout.gender"],
-        sizeparam: '$buyout.sizeparam'
+        sizeparam: '$buyout.sizeparam',
     }},
     { $group: {
           _id: "$article",
@@ -56,7 +53,7 @@ export default eventHandler(async (event) => {
               delivId: "$_id",
               pricebuy: "$pricebuy",
               updatedAt: "$updatedAt",
-              buyoutId: '$uuidbuyout',
+              buyoutId: '$uuidBuyout',
               gender: "$gender",
               sizeparam: '$sizeparam'
             },
@@ -64,7 +61,18 @@ export default eventHandler(async (event) => {
     }},
     { $project: { _id: 0 } }
   ]
-  if(Object.values(searchParse)[0] !== '') pipeLine.splice(1,0, { $match: searchParse} )
+
+  const limitA = limit ? parseInt(limit.toString(), 10) : 100
+  const skipA = skip ? parseInt(skip.toString(), 10) : 0
+  const searchParse = search ? JSON.parse(search?.toString()) : undefined
+
+  if(Object.values(searchParse)[0] !== '') {
+    if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout){
+        pipeLine.splice(3,0, { $match: {...searchParse}} ) // after $project
+    } else {
+        pipeLine.splice(1,0, { $match: {...searchParse}} ) // after $match
+    }
+  }
   if(skipA > 0) pipeLine.push({ $skip: skipA })
   if(limitA > 0) pipeLine.push({ $limit: limitA })
 
