@@ -39,7 +39,7 @@ export default eventHandler(async (event) => {
         productname: "$buyout.product.name",
         productimage: "$buyout.product.image",
         gender: ["$data8","$buyout.gender"],
-        sizeparam: '$buyout.sizeparam',
+        sizeparam: '$buyout.sizeparam'
     }},
     { $group: {
           _id: "$article",
@@ -53,7 +53,7 @@ export default eventHandler(async (event) => {
               delivId: "$_id",
               pricebuy: "$pricebuy",
               updatedAt: "$updatedAt",
-              buyoutId: '$uuidBuyout',
+              buyoutId: '$uuidbuyout',
               gender: "$gender",
               sizeparam: '$sizeparam'
             },
@@ -73,12 +73,36 @@ export default eventHandler(async (event) => {
         pipeLine.splice(1,0, { $match: {...searchParse}} ) // after $match
     }
   }
+
   if(skipA > 0) pipeLine.push({ $skip: skipA })
   if(limitA > 0) pipeLine.push({ $limit: limitA })
 
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
 
-  return [...readyForReview]
+    const genderMap = new Map<string, string>([
+        ['female', 'Женский'],
+        ['male', 'Мужской'],
+    ])
+    const sex = (genders: string[]): string => {
+        for(const gen of genders){
+            let foundGen = genderMap.get(gen.toLowerCase())
+            if (foundGen) return foundGen
+        }
+        return 'Нет'
+    }
+    const formated = readyForReview.map(r => {
+        return {
+            ...r,
+            delivs: r.delivs.map((d: any) => {
+                return {
+                        ...d,
+                        sex: d.gender = sex(d.gender)
+                    }
+            })
+        }
+    })
+
+  return formated
 })
 

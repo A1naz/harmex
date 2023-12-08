@@ -12,27 +12,16 @@ const props = defineProps({
 const emit = defineEmits(['openModal'])
 const router = useRouter()
 
-const deliveryId = props.info.delivs[0].delivId
-const buyoutuuId = props.info.delivs[0].buyoutId
+const delIndex = 0
+const deliveryId = props.info.delivs[delIndex].delivId
+const buyoutuuId = props.info.delivs[delIndex].buyoutId
 const article = props.info.article
-const productimage = props.info.productimage[0]
-const productname = props.info.productname[0]
+const productimage = props.info.productimage[delIndex]
+const productname = props.info.productname[delIndex]
 const updatedAt = props.info.lastUpdated
-const size = props.info.delivs[0].sizeparam
+const size = props.info.delivs[delIndex].sizeparam
 const count = props.info.count
-
-
-const genderMap = new Map<string, string>([
-    ['female', 'Женский'],
-    ['male', 'Мужской'],
-])
-
-const sex = props.info.delivs[0].gender.map( (g: string) => {
-    let gen = genderMap.get(g.toLowerCase())
-    if (gen) return gen
-    return 'Нет'
-})
-const sexFormated = sex[0]
+const sex = props.info.delivs[delIndex].sex
 
 function openBuyout() {
   router.push(`/buyouts?uuid=${buyoutuuId}`)
@@ -93,12 +82,12 @@ function openBuyout() {
       </div>
       <div class="flex justify-between items-center">
         <div class="flex gap-2 text-sm">
-          <div>Пол: {{ sexFormated }}</div>
+          <div>Пол: {{ sex }}</div>
           <div>Размер: {{ size === 'none' ? 'Нет' : size }}</div>
         </div>
         <label
           for="review-modal" class="btn btn-sm btn-primary"
-          @click="$emit('openModal', buyoutuuId, deliveryId)"
+          @click="$emit('openModal', buyoutuuId, deliveryId )"
         >Оставить отзыв (доступно: {{ count }})
         </label>
       </div>

@@ -103,10 +103,13 @@ function openPhoto(src: string) {
 const selectedDelivery = ref('')
 const modalOpen = ref(false)
 
-function openModal(uuid: string, deliveryid: string) {
-  selectedUUID.value = uuid
-  selectedDelivery.value = deliveryid
-  modalOpen.value = true
+
+const selectedArticle = ref<any>({})
+function openModal(article: any, uuid: string, deliveryid: string) {
+    selectedArticle.value = article
+    selectedUUID.value = uuid
+    selectedDelivery.value = deliveryid
+    modalOpen.value = true
 }
 function closeModal() {
   modalOpen.value = false
@@ -226,6 +229,7 @@ onMounted( () => {
                 :value="option.value"
                 :key="'k-'+option.value"
                 :default="option.value == SelectOptions.article"
+                :hidden="option.value == SelectOptions.idReview && currentTab == 'available'"
                 >{{ option.name }}</option>
         </select>
         <div class="relative flex items-center flex-grow-0 w-full">
@@ -251,7 +255,7 @@ onMounted( () => {
           :key="index"
           :index="index"
           :info="review"
-          @open-modal="openModal"
+          @open-modal="(b: string, d: string)=> openModal(review, b, d )"
         />
       </div>
       <div v-else class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4">
@@ -273,6 +277,8 @@ onMounted( () => {
 
     <ReviewModal
       v-if="modalOpen"
+      :review="selectedArticle"
+
       :deliveryid="selectedDelivery"
       :state="modalOpen"
       :uuid="selectedUUID"
