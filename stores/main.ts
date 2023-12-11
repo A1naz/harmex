@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { StateMain } from '~/data/types'
 import { ITariff } from '~/data/types';
+import { InfoType } from '~/data/enums';
 
 export const useMainStore = defineStore('main', {
   state: (): StateMain => ({
@@ -11,7 +12,7 @@ export const useMainStore = defineStore('main', {
     selectedItem: null as number | null,
     drawerOpened: null as boolean | null,
     infoModal: false,
-    infoType: '',
+    infoType: InfoType.Buyouts,
     faqModal: false,
     swapAccountModal: false
   }),

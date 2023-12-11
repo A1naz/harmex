@@ -1,4 +1,4 @@
-import { TariffTypeEnum, FieldsType, UserRoles } from "./enums"
+import { TariffTypeEnum, FieldsType, UserRoles, InfoType } from "./enums"
 import { MenuSection } from "./menu/types"
 
 export interface Entity {
@@ -14,7 +14,7 @@ export interface StateMain {
     selectedItem: number | null,
     drawerOpened: boolean | null,
     infoModal: boolean,
-    infoType: string,
+    infoType: InfoType,
     faqModal: boolean,
     swapAccountModal: boolean,
 }

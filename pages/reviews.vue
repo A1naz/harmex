@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
-import { SelectOptionsReviews as SelectOptions } from '@/data/enums'
+import { SelectOptionsReviews as SelectOptions, InfoType } from '@/data/enums'
 
 definePageMeta({
   layout: 'app',
@@ -94,7 +94,7 @@ const selectedUUID = ref('')
 
 function openInfoModal() {
   store.infoModal = true
-  store.infoType = 'reviews'
+  store.infoType = InfoType.Reviews
 }
 
 function openPhoto(src: string) {

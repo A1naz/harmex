@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { InfoType } from '~/data/enums';
+
 definePageMeta({
   layout: 'app',
   auth: true,
@@ -12,7 +14,7 @@ const modal = ref(false)
 const logModal = ref(false)
 const selectedBuyout = ref({})
 const selectedIndex = ref(-1)
-const store = useMainStore()
+const storeMain = useMainStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 const dateFilter = ref('all')
@@ -166,7 +168,7 @@ const activeBuyouts = computedEager(() => {
 })
 const availableBuyouts = computedEager(() => {
   if (!activeBuyouts.value.length) return null
-  let balance = store.client.balance
+  let balance = storeMain.client.balance
   let result = 0
   activeBuyouts.value.forEach((buyout: any) => {
     balance -= buyout.product.price * buyout.quantity
@@ -180,7 +182,7 @@ const neededDeposit = computedEager(() => {
   activeBuyouts.value.forEach((buyout: any) => {
     sum += buyout.product.price * buyout.quantity
   })
-  if (sum > store.client.balance) result = sum - store.client.balance
+  if (sum > storeMain.client.balance) result = sum - storeMain.client.balance
 
   return result
 })
@@ -195,8 +197,8 @@ const formatAvailable = computedEager(() => {
 })
 
 function openInfoModal() {
-  store.infoModal = true
-  store.infoType = 'buyouts'
+    storeMain.infoModal = true
+    storeMain.infoType = InfoType.Buyouts
 }
 
 const filters = [
@@ -287,7 +289,7 @@ await getBuyouts()
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
       Стоимость одного выкупа - 
-      <span class="font-bold">{{ store.tariffString('buyouts') }}</span> 
+      <span class="font-bold">{{ storeMain.tariffString('buyouts') }}</span> 
       Все услуги оказываются по Московскому времени.
     </p>
     <p

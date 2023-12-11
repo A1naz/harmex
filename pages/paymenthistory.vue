@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { usePrimeVue } from 'primevue/config'
+import { InfoType } from '~/data/enums';
 
 definePageMeta({
   layout: 'app',
@@ -105,7 +106,7 @@ async function selectFilterDate(e: Event) {
 
 function openInfoModal() {
   store.infoModal = true
-  store.infoType = 'paymenthistory'
+  store.infoType = InfoType.Paymenthistory
 }
 
 watch(targetIsVisible, async (isVisible) => {

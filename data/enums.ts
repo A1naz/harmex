@@ -25,3 +25,10 @@ export enum SelectOptionsReviews {
     uuidBuyout = 'uudidBuyout',
     idReview = 'idReview'
 } 
+
+export enum InfoType {
+    Buyouts = 'buyouts',
+    Deliveries = 'deliveries',
+    Reviews = 'reviews',
+    Paymenthistory = 'paymenthistory'
+}
