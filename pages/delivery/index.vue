@@ -127,8 +127,9 @@ async function onSearchInput(event: Event) {
   findDeliveriesDebounced(search.text, search.type)
 }
 
-function openInfoModal() {
-  store.infoModal = true
+const isInfoModal = ref<boolean>(false)
+function toggleInfoModal() { 
+    isInfoModal.value = !isInfoModal.value 
 }
 
 watch(targetIsVisible, async (isVisible) => {
@@ -180,18 +181,30 @@ const filters = [
       <h1 class="text-2xl font-bold ">
         Доставки
       </h1>
-      <InfoButton @openModal="openInfoModal" />
+      <InfoButton @openModal="toggleInfoModal" />
     </div>
-    <p class="text-xs font-light mt-1 lg:text-sm">
-      В этом разделе можно отследить статусы выкупов после оплаты. Статус "Доставлен" означает, что товар можно
-      забирать из пункта выдачи.
-    </p>
-    <p class="text-xs font-light mt-1 lg:text-sm">
-      Совершайте заборы ваших товаров в течение 7 дней с момента прибытия на ПВЗ. За каждый последующий день вы получаете штраф {{ store.tariffString('deliveryStorage') }} за единицу не забранного товара.
-    </p>
-    <p class="text-xs font-bold mt-1 lg:text-sm">
-      Возвраты финансовых средств на не забранные товары с ПВЗ отсутствуют! Работаем по модели Выкупил - Забрал.
-    </p> Все услуги оказываются по Московскому времени.
+
+
+    <InfoModal 
+        :isModal="isInfoModal" 
+        title="Доставки"
+        ytSrc='https://www.youtube.com/embed/-SxurcapPcA?si=AxKD5hXOxqc6ZjqJ'
+        @changeVisibility="toggleInfoModal"
+        >
+
+        <p class="text-xs font-light mt-1 lg:text-sm">
+        В этом разделе можно отследить статусы выкупов после оплаты. Статус "Доставлен" означает, что товар можно
+        забирать из пункта выдачи.
+        </p>
+        <p class="text-xs font-light mt-1 lg:text-sm">
+        Совершайте заборы ваших товаров в течение 7 дней с момента прибытия на ПВЗ. За каждый последующий день вы получаете штраф {{ store.tariffString('deliveryStorage') }} за единицу не забранного товара.
+        </p>
+        <p class="text-xs font-bold mt-1 lg:text-sm">
+        Возвраты финансовых средств на не забранные товары с ПВЗ отсутствуют! Работаем по модели Выкупил - Забрал.
+        </p> Все услуги оказываются по Московскому времени.
+
+    </InfoModal>
+
 
     <div class="flex justify-between mb-2 mt-6 items-center flex-wrap gap-4">
       <div class="hidden lg:block">

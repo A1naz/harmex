@@ -103,10 +103,6 @@ async function selectFilterDate(e: Event) {
   history.value = data.value
 }
 
-function openInfoModal() {
-  store.infoModal = true
-}
-
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && history.value.length >= 50) {
     if (end.value)
@@ -175,7 +171,6 @@ function openReview(data: any) {
       <h1 class="text-2xl font-bold ">
         История платежей
       </h1>
-        <InfoButton @openModal="openInfoModal" class="mr-6 ml-0 md:mr-2 md:ml-2" />
     </div>
     <p class="text-xs font-light mt-1 lg:text-sm mb-6">
       Здесь можно увидеть движение вашего баланса

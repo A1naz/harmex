@@ -13,7 +13,6 @@ export interface StateMain {
     pickpoints: any[],
     selectedItem: number | null,
     drawerOpened: boolean | null,
-    infoModal: boolean,
     faqModal: boolean,
     swapAccountModal: boolean,
 }

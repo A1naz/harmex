@@ -1,90 +1,71 @@
 <script setup lang="ts">
-import { InfoType } from '#imports';
 
-interface InfoContent {
-    [key: string]: {
-        title: string,
-        text: string,
-        ytSrc: string
-    }
-}
-
-const storeMain = useMainStore()
-const route = useRoute()
-
-defineProps({
-  state: { type: Boolean, required: true }
+const props = defineProps({
+  isModal: { type: Boolean, required: true },
+  title: { type: String, required: true },
+  ytSrc: String
 })
 
-const emit = defineEmits(['close'])
-function closeModal(){ emit('close') }
+const emit = defineEmits(['changeVisibility'])
 
-const infoContent: InfoContent = {
-    buyouts: {
-        title: 'Выкупы',
-        text: 'Создавайте выкупы легче, проще, быстрее и эффективнее используя простые рекомендации. Просмотрите видео-инструкцию для изучения деталей по созданию выкупов',
-        ytSrc: 'https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr',
-    },
-    delivery: {
-        title: 'Доставки',
-        text: 'Отслеживайте ваши товары и забирайте до 5 дней с момента прибытия на ПВЗ. Просмотрите видео-инструкцию для изучения деталей по заборам товаров',
-        ytSrc: 'https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr',
-    },
-    reviews: {
-        title: 'Отзывы',
-        text: 'Публикуйте отзывы на ваши товары, используя планировщик. Просмотрите видео-инструкцию для изучения деталей по публикации отзывов',
-        ytSrc: 'https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr',
-    },
-    paymenthistory: {
-        title: 'История платежей',
-        text: 'Отслеживайте всю финансовую отчетность вашего кабинета в одном месте. Просмотрите видео-инструкцию для изучения деталей по финансовым операциям',
-        ytSrc: 'https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr',
-    },
+function toggleModal(){ 
+    emit('changeVisibility') 
 }
 
-const content = computed(()=>{
-    const key = Object.keys(infoContent).includes(route.name) ? route.name : undefined
-    if(key) return infoContent[key as InfoType]
-    return { title: '.', text: '.', ytSrc: '.' }
-})
+const lsKey = 'infoModal-' + props.title
+const isOpening = ref()
+
+function toggleCheckBox(){
+    isOpening.value = !isOpening.value
+    localStorage.setItem(lsKey, JSON.stringify(isOpening.value))
+}
 
 onKeyStroke('Escape', (e) => {
-  e.preventDefault()
-  closeModal()
+//   e.preventDefault()
+  toggleModal()
 })
+
+onMounted(()=>{
+    const ls = localStorage.getItem(lsKey)
+    if(ls){
+        const parse = JSON.parse(ls)
+        isOpening.value = parse ? true : false
+        if(!isOpening.value) toggleModal()
+    } else {
+        toggleModal()
+    }
+})
+
 </script>
 
 <template>
-  <input id="infoModal" type="checkbox" class="modal-toggle">
-  <div
-    :class="{
-      'modal-open': state,
-    }"
-    class="modal"
-  >
-    <div class="modal-box w-11/12 max-w-4xl">
-      <label
-        for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
-        @click="closeModal"
-      >✕</label>
-      <h1 class="text-xl font-bold">
-        {{ content.title }}
-      </h1>
-      <p>{{ content.text }}</p>
+    <input id="infoModal" type="checkbox" class="modal-toggle">
+    <div :class="[
+            'modal',
+            { 'modal-open': isModal }
+        ]" >
+        <div class="modal-box w-11/12 max-w-4xl">
+            <label for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
+                @click="toggleModal">✕</label>
+            <h1 class="text-xl font-bold mb-4"> {{ title }} </h1>
 
-      <iframe  
-        :src="content.ytSrc" 
-        class="w-full h-[30rem] rounded-lg my-4"  
-        title="YouTube video player" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        allowfullscreen 
-        />
+            <div class="flex flex-col gap-2">
+                <slot />
+
+            </div>
+
+            <iframe :src="ytSrc" class="w-full h-[30rem] rounded-lg my-4" title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen />
+
+            <input 
+                type="checkbox" 
+                id="checkBox" 
+                v-model="isOpening" 
+                @click="toggleCheckBox" >
+
+            <label for="checkBox"> Не показывать</label>
+        </div>
+        <label class="modal-backdrop" for="infoModal" @click="toggleModal">Close</label>
     </div>
-    <label class="modal-backdrop" for="infoModal" @click="closeModal">Close</label>
-  </div>
 </template>
-
-<style scoped>
-
-</style>

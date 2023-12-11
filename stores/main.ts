@@ -10,7 +10,6 @@ export const useMainStore = defineStore('main', {
     pickpoints: [] as any,
     selectedItem: null as number | null,
     drawerOpened: null as boolean | null,
-    infoModal: false,
     faqModal: false,
     swapAccountModal: false
   }),
@@ -44,9 +43,6 @@ export const useMainStore = defineStore('main', {
         } else {
             this.client = {} as Client
         }
-    },
-    closeInfoModal(){
-        this.infoModal = false
     }
   },
 })

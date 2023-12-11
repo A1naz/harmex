@@ -67,10 +67,6 @@ function scrollToTop() {
   drawerContent.value.scrollTop = 0
 }
 
-function closeInfoModal(){
-    storeMain.closeInfoModal()
-}
-
 </script>
 
 <template>
@@ -249,7 +245,6 @@ function closeInfoModal(){
     </div>
     <PaymentModal />
     <SwapAccountModal />
-    <InfoModal :state="storeMain.infoModal" @close="closeInfoModal"/>
     <InfoFaqModal />
   </div>
 </template>

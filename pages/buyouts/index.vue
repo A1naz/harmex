@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { InfoType } from '~/data/enums';
 
 definePageMeta({
   layout: 'app',
@@ -196,10 +195,6 @@ const formatAvailable = computedEager(() => {
   else return 'выкупов'
 })
 
-function openInfoModal() {
-    storeMain.infoModal = true
-}
-
 const filters = [
     {title: 'Все выкупы', optionValue: 'all', params: '', queryStatus: undefined},
     {title: 'В архиве', optionValue: 'archived', params: '?status=archived', queryStatus: 'archived'},
@@ -273,30 +268,47 @@ onMounted(async () => {
 })
 
 await getBuyouts()
+
+
+const isInfoModal = ref<boolean>(false)
+function toggleInfoModal() { 
+    isInfoModal.value = !isInfoModal.value 
+}
+
 </script>
 
 <template>
   <div>
+    
     <div class="flex items-center gap-2 mt-4">
       <h1 class="text-2xl font-bold">Выкупы</h1>
-      <InfoButton @openModal="openInfoModal" />
+      <InfoButton @openModal="toggleInfoModal" />
     </div>
 
-    <p class="text-xs font-light mt-1 lg:text-sm">
-      Здесь формируются и оплачиваются выкупы на Wildberries. Для добавления
-      нажмите на кнопку "Добавить выкупы".
-    </p>
-    <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного выкупа - 
-      <span class="font-bold">{{ storeMain.tariffString('buyouts') }}</span> 
-      Все услуги оказываются по Московскому времени.
-    </p>
-    <p
-      v-if="route.query.status === 'archived'"
-      class="text-xs font-light mt-1 lg:text-sm"
-    >
-      Выкупы в архиве удаляются через 10 дней.
-    </p>
+    <InfoModal 
+        :isModal="isInfoModal" 
+        title="Выкупы"
+        ytSrc='https://www.youtube.com/embed/YNFKOAgRAuU?si=bwAzeSLOmprr3NFe'
+        @changeVisibility="toggleInfoModal"
+        >
+        <div class="flex flex-col gap-2">
+            <p>Здесь формируются и оплачиваются выкупы на Wildberries. Для добавления
+                нажмите на кнопку "Добавить выкупы".
+            </p>
+            <p>Стоимость одного выкупа - 
+                <span class="font-bold">{{ storeMain.tariffString('buyouts') }}.</span> 
+                Все услуги оказываются по Московскому времени.
+            </p>
+            <p v-if="route.query.status === 'archived'"
+                class="text-xs font-light mt-1 lg:text-sm"
+                >
+                Выкупы в архиве удаляются через 10 дней.
+            </p>
+            <p>Создавайте выкупы легче, проще, быстрее и эффективнее используя простые рекомендации. Просмотрите видео-инструкцию для изучения деталей по созданию выкупов
+            </p>
+        </div>
+    </InfoModal>
+
     <div class="flex justify-between mb-4 items-center mt-6">
       <div class="hidden lg:block">
         <NuxtLink
