@@ -70,10 +70,6 @@ export default eventHandler(async (event) => {
             ({city, state} = await getCityByGeo(foundPoint.lt, foundPoint.lg))
         }
 
-        console.log(city);
-        console.log(state);
-        
-        
         const buyout = new Buyout({
             article: product.article,
             searchQuery: searchQueries.join(', '),
