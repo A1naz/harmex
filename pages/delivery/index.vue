@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
 import { useMainStore } from '../../stores/main'
-import { InfoType } from '~/data/enums';
 
 definePageMeta({
   layout: 'app',
@@ -130,7 +129,6 @@ async function onSearchInput(event: Event) {
 
 function openInfoModal() {
   store.infoModal = true
-  store.infoType = InfoType.Deliveries
 }
 
 watch(targetIsVisible, async (isVisible) => {

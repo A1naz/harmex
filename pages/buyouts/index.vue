@@ -198,7 +198,6 @@ const formatAvailable = computedEager(() => {
 
 function openInfoModal() {
     storeMain.infoModal = true
-    storeMain.infoType = InfoType.Buyouts
 }
 
 const filters = [

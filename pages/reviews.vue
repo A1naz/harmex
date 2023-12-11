@@ -94,7 +94,6 @@ const selectedUUID = ref('')
 
 function openInfoModal() {
   store.infoModal = true
-  store.infoType = InfoType.Reviews
 }
 
 function openPhoto(src: string) {

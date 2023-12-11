@@ -1,40 +1,52 @@
 <script setup lang="ts">
+import { InfoType } from '#imports';
+
+interface InfoContent {
+    [key: string]: {
+        title: string,
+        text: string,
+        ytSrc: string
+    }
+}
 
 const storeMain = useMainStore()
+const route = useRoute()
 
-const props = defineProps({
-  state: {
-    type: Boolean,
-    required: true,
-  },
-  type: {
-    type: String,
-    requited: true,
-  },
+defineProps({
+  state: { type: Boolean, required: true }
 })
 
-const infoContent = {
+const emit = defineEmits(['close'])
+function closeModal(){ emit('close') }
+
+const infoContent: InfoContent = {
     buyouts: {
         title: 'Выкупы',
         text: 'Создавайте выкупы легче, проще, быстрее и эффективнее используя простые рекомендации. Просмотрите видео-инструкцию для изучения деталей по созданию выкупов',
+        ytSrc: 'https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr',
     },
-    deliveries: {
+    delivery: {
         title: 'Доставки',
         text: 'Отслеживайте ваши товары и забирайте до 5 дней с момента прибытия на ПВЗ. Просмотрите видео-инструкцию для изучения деталей по заборам товаров',
+        ytSrc: 'https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr',
     },
     reviews: {
         title: 'Отзывы',
         text: 'Публикуйте отзывы на ваши товары, используя планировщик. Просмотрите видео-инструкцию для изучения деталей по публикации отзывов',
+        ytSrc: 'https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr',
     },
     paymenthistory: {
         title: 'История платежей',
         text: 'Отслеживайте всю финансовую отчетность вашего кабинета в одном месте. Просмотрите видео-инструкцию для изучения деталей по финансовым операциям',
+        ytSrc: 'https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr',
     },
 }
 
-function closeModal(){
-    storeMain.infoModal = false
-}
+const content = computed(()=>{
+    const key = Object.keys(infoContent).includes(route.name) ? route.name : undefined
+    if(key) return infoContent[key as InfoType]
+    return { title: '.', text: '.', ytSrc: '.' }
+})
 
 onKeyStroke('Escape', (e) => {
   e.preventDefault()
@@ -56,13 +68,13 @@ onKeyStroke('Escape', (e) => {
         @click="closeModal"
       >✕</label>
       <h1 class="text-xl font-bold">
-        {{ infoContent[storeMain.infoType].title }}
+        {{ content.title }}
       </h1>
-      <p>{{ infoContent[storeMain.infoType].text }}</p>
+      <p>{{ content.text }}</p>
 
       <iframe  
+        :src="content.ytSrc" 
         class="w-full h-[30rem] rounded-lg my-4"  
-        src="https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr" 
         title="YouTube video player" 
         frameborder="0" 
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
