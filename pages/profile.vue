@@ -308,6 +308,12 @@ async function setChatBotSettings() {
     window.location.reload()
   }
 }
+
+const isInfoModal = ref<boolean>(false)
+function toggleInfoModal() { 
+    isInfoModal.value = !isInfoModal.value 
+}
+
 </script>
 
 <template>
@@ -332,13 +338,23 @@ async function setChatBotSettings() {
       <span>{{ warning }}</span>
     </div>
     <div class="page-header mb-16">
-      <h1 class="text-2xl font-bold mt-4">Профиль</h1>
-      <p class="description">
-        Здесь вы можете управлять настройками вашего аккаунта.
-      </p>
-      <p class="description">
-        Запустите чат-бот уведомлений по платформе. Привяжите Telegram-аккаунт и активируйте чат-бот.
-      </p>
+        <h1 class="text-2xl font-bold mt-4">Профиль</h1>
+        <InfoButton @openModal="toggleInfoModal" />
+        <InfoModal 
+            :isModal="isInfoModal" 
+            title="Профиль"
+            ytSrc='https://www.youtube.com/embed/ZgybpF6IyAA?si=jk8dEnDKwWAfHFa3'
+            @changeVisibility="toggleInfoModal"
+            >
+            <div class="flex flex-col gap-2">
+                <p>
+                    Здесь вы можете управлять настройками вашего аккаунта.
+                </p>
+                <p>
+                    Запустите чат-бот уведомлений по платформе. Привяжите Telegram-аккаунт и активируйте чат-бот.
+                </p>
+            </div>
+        </InfoModal>
     </div>
 
     <section

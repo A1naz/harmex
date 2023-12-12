@@ -193,11 +193,11 @@ function toggleInfoModal() {
         ytSrc='https://www.youtube.com/embed/YNFKOAgRAuU?si=bwAzeSLOmprr3NFe'
         @changeVisibility="toggleInfoModal"
         >
-        <p class="description">
+        <p>
             На каждый полученный артикул можно оставить отзыв. Оплачивается отдельно
             от выкупа согласно вашему тарифу.
         </p>
-        <p class="text-xs font-light mt-1 lg:text-sm">
+        <p>
             Стоимость одного отзыва -
             <span class="font-bold"> {{ store.tariffString('review') }} </span>
             Стоимость удаления отзыва
