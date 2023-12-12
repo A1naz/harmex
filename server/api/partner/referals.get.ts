@@ -14,15 +14,6 @@ export default eventHandler(async (event) => {
   const skip = params.skip ? parseInt(params.skip?.toString(), 10) : 0
   const sortObj = params.sort ? JSON.parse(params.sort.toString()) : undefined
 
-  const referrals = await Referral.findOne({ user: user._id })
-
-  if (!referrals) {
-    return {
-      count: 0,
-      list: [],
-    }
-  }
-
   const reffers = await Referral.aggregate([
     {
       $match: {
@@ -91,16 +82,11 @@ export default eventHandler(async (event) => {
       }
     }
 
-    // const refDate: any = referrals.referrals.find((ref: any) => {
-    //   return ref.user.valueOf() === refer._id.valueOf()
-    // })
-
     const deals = await paymenthistory.aggregate([
       {
         $match: {
           user: new ObjectId(refer._id),
           typeoperations: 'Расход',
-          //   dataoperation: { $gt: new Date(refDate.date) },
           type: {
             $in: [
               'buyouts service',
