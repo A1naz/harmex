@@ -69,7 +69,7 @@ export default eventHandler(async (event) => {
         {
           $match: {
             user: new ObjectId(refer._id),
-            typeoperations: 'Расход',
+            typeoperations: 'Приход',
           },
         },
         {
@@ -80,22 +80,11 @@ export default eventHandler(async (event) => {
           },
         },
       ])
+
       const comissions = await PartnerPaymentHistory.aggregate([
         {
           $match: {
             referral: refer._id,
-            typeoperations: 'Расход',
-            type: {
-              $in: [
-                'buyouts service',
-                'likes',
-                'reviews',
-                'questions',
-                'productlikes',
-                'carts',
-                'autoanswers',
-              ],
-            },
           },
         },
         {
