@@ -1,72 +1,67 @@
 <script setup lang="ts">
+
 const props = defineProps({
-  state: {
-    type: Boolean,
-    required: true,
-  },
-  type: {
-    type: String,
-    requited: true,
-  },
+  isModal: { type: Boolean, required: true },
+  title: { type: String, required: true },
+  ytSrc: String
 })
-const store = useMainStore()
-const text = ref('')
-watch(() => store.infoType, () => {
-  switch (store.infoType) {
-    case 'buyouts':
-      text.value = 'Создавайте выкупы легче, проще, быстрее и эффективнее используя простые рекомендации. Просмотрите видео-инструкцию для изучения деталей по созданию выкупов'
-      break
-    case 'deliveries':
-      text.value = 'Отслеживайте ваши товары и забирайте до 5 дней с момента прибытия на ПВЗ. Просмотрите видео-инструкцию для изучения деталей по заборам товаров'
-      break
-    case 'reviews':
-      text.value = 'Публикуйте отзывы на ваши товары, используя планировщик. Просмотрите видео-инструкцию для изучения деталей по публикации отзывов'
-      break
-    case 'paymenthistory':
-      text.value = 'Отслеживайте всю финансовую отчетность вашего кабинета в одном месте. Просмотрите видео-инструкцию для изучения деталей по финансовым операциям'
-      break
-  }
-})
-const title = computed(() => {
-  if (store.infoType === 'buyouts')
-    return 'Выкупы'
-  else if (store.infoType === 'deliveries')
-    return 'Доставки'
-  else if (store.infoType === 'reviews')
-    return 'Отзывы'
-  else if (store.infoType === 'paymenthistory')
-    return 'История платежей'
-})
+
+const emit = defineEmits(['changeVisibility'])
+
+function toggleModal(){ 
+    emit('changeVisibility') 
+}
+
+const lsKey = 'infoModal-' + props.title
+
+const isOpening = ref()
+function toggleCheckBox(){
+    isOpening.value = !isOpening.value
+    localStorage.setItem(lsKey, JSON.stringify(isOpening.value))
+}
+
 onKeyStroke('Escape', (e) => {
-  e.preventDefault()
-  store.infoModal = false
+    if(props.isModal) toggleModal()
 })
+
+onMounted(()=>{
+    const ls = localStorage.getItem(lsKey)
+    if(ls){
+        const parse = JSON.parse(ls)
+        isOpening.value = parse ? true : false
+        if(!isOpening.value) toggleModal()
+    } else {
+        toggleModal()
+    }
+})
+
 </script>
 
 <template>
-  <input id="infoModal" type="checkbox" class="modal-toggle">
-  <div
-    :class="{
-      'modal-open': state,
-    }"
-    class="modal"
-  >
-    <div class="modal-box w-11/12 max-w-4xl">
-      <label
-        for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
-        @click="store.infoModal = false"
-      >✕</label>
-      <h1 class="text-xl font-bold">
-        {{ title }}
-      </h1>
-      <p>{{ text }}</p>
+    <div v-if="isModal">
+        <input id="infoModal" type="checkbox" class="modal-toggle">
+        <div class='modal modal-open' >
+            <div class="modal-box w-11/12 max-w-4xl">
+                <label for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
+                    @click="toggleModal">✕</label>
+                <h1 class="text-xl font-bold mb-4"> {{ title }} </h1>
 
-      <iframe  class="w-full h-[30rem] rounded-lg my-4"  src="https://www.youtube.com/embed/nVlXwCjq5WQ?si=m30sT9rqrj7Uvzhr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen />
+                <div class="flex flex-col gap-2">
+                    <slot />
+
+                </div>
+
+                <iframe :src="ytSrc" class="w-full h-[30rem] rounded-lg my-4" title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen />
+
+                <InputsCheckbox 
+                    :value="isOpening" 
+                    label="Не показывать"
+                    @updateValue="toggleCheckBox" />
+
+            </div>
+            <label class="modal-backdrop" for="infoModal" @click="toggleModal">Close</label>
+        </div>
     </div>
-    <label class="modal-backdrop" for="infoModal" @click="store.infoModal = false">Close</label>
-  </div>
 </template>
-
-<style scoped>
-
-</style>

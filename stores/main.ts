@@ -10,14 +10,11 @@ export const useMainStore = defineStore('main', {
     pickpoints: [] as any,
     selectedItem: null as number | null,
     drawerOpened: null as boolean | null,
-    infoModal: false,
-    infoType: '',
     faqModal: false,
     swapAccountModal: false
   }),
   actions: {
     checkTelegramId() {
-     
       if (this.client.telegram && !this.client.telegramUserId)
         return false
       else
@@ -46,6 +43,6 @@ export const useMainStore = defineStore('main', {
         } else {
             this.client = {} as Client
         }
-    },
+    }
   },
 })

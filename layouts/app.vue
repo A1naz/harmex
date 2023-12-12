@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const store = useMainStore()
+const storeMain = useMainStore()
 const colorMode = useColorMode()
 
 const theme = ref('light')
@@ -35,7 +35,7 @@ async function reloginCycle() {
 }
 
 async function logout() {
-  await deleteToken(store.client.uuid)
+  await deleteToken(storeMain.client.uuid)
   const loginStatus = await reloginCycle()
    
   if (loginStatus !== 'logined') {
@@ -45,7 +45,7 @@ async function logout() {
   } else {
     location.reload()
   }
-  store.setClient()
+  storeMain.setClient()
 }
 
 onMounted(() => {
@@ -66,6 +66,12 @@ const handleScroll = (event: any) => {
 function scrollToTop() {
   drawerContent.value.scrollTop = 0
 }
+
+const isInfoModal = ref<boolean>(false)
+function toggleInfoModal() { 
+    isInfoModal.value = !isInfoModal.value 
+}
+
 </script>
 
 <template>
@@ -126,30 +132,35 @@ function scrollToTop() {
                 <div class="">
                   <div class="font-bold">
                     {{
-                      store.client?.username
-                        ? store.client.username
-                        : store.client.telegram
-                        ? store.client.telegram
-                        : store.client.email.split('@')[0]
+                      storeMain.client?.username
+                        ? storeMain.client.username
+                        : storeMain.client.telegram
+                        ? storeMain.client.telegram
+                        : storeMain.client.email.split('@')[0]
                     }}
                   </div>
                   <div class="balance text-xs text-gray-400">
-                    Баланс: {{ currency.format(store.client.balance) }}
+                    Баланс: {{ currency.format(storeMain.client.balance) }}
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
                   <div class="tooltip" data-tip="Инструкция по платформе">
-                    <NuxtLink
+
+                    <button
+                        class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
+                        @click="toggleInfoModal">i</button>
+
+                    <!-- <NuxtLink
                       :external="true"
                       target="_blank"
                       to="https://drive.google.com/file/d/1d6FLWMIgqhrWXHpdHFdAu2H8wnVdB_2S/view?usp=sharing"
                       class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
                     >
                       i
-                    </NuxtLink>
+                    </NuxtLink> -->
                   </div>
                   <div
-                    v-if="store.client.role !== UserRoles.staff"
+                    v-if="storeMain.client.role !== UserRoles.staff"
                     class="tooltip"
                     data-tip="Профиль"
                   >
@@ -167,7 +178,7 @@ function scrollToTop() {
                 </div>
               </div>
             </div>
-            <div v-if="store.client.role !== UserRoles.staff">
+            <div v-if="storeMain.client.role !== UserRoles.staff">
               <label
                 for="payment-modal"
                 class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
@@ -175,7 +186,7 @@ function scrollToTop() {
                 Пополнить
               </label>
             </div>
-            <div v-if="store.client.role !== UserRoles.staff" class="-mt-3">
+            <div v-if="storeMain.client.role !== UserRoles.staff" class="-mt-3">
               <label
                 for="swapAccountModal"
                 class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
@@ -186,7 +197,7 @@ function scrollToTop() {
           </div>
         </div>
 
-        <section v-for="section in store.client.mmenuItems">
+        <section v-for="section in storeMain.client.mmenuItems">
           <h3 class="opacity-60 text-xs p-3 px-8 uppercase">
             {{ section.subTitle }}
           </h3>
@@ -244,8 +255,26 @@ function scrollToTop() {
     </div>
     <PaymentModal />
     <SwapAccountModal />
-    <InfoModal :state="store.infoModal" />
     <InfoFaqModal />
+
+    <InfoModal 
+        :isModal="isInfoModal" 
+        title="Как пользоваться платформой TOPvTOP?"
+        ytSrc='https://www.youtube.com/embed/ZgybpF6IyAA?si=jk8dEnDKwWAfHFa3'
+        @changeVisibility="toggleInfoModal"
+        >
+        <div class="flex flex-col gap-2">
+            <p>Посмотрите обзор кабинета прямо сейчас. Время просмотра 3 минуты.</p>
+            <p class="mb-6">Запустите чат-бот уведомлений по платформе. Привяжите Telegram-аккаунт и активируйте чат-бот.</p>
+
+            <button class="btn btn-outline btn-info max-w-fit mb-6">
+                <Icon size="40" name="logos:telegram" />
+                Вступайте в чат-клуб клиентов платформы TovTop!
+            </button>
+
+        </div>
+    </InfoModal>
+
   </div>
 </template>
 
