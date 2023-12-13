@@ -92,11 +92,6 @@ function onSearchInput(val: any) {
 const openedPhoto = ref('')
 const selectedUUID = ref('')
 
-function openInfoModal() {
-  store.infoModal = true
-  store.infoType = 'reviews'
-}
-
 function openPhoto(src: string) {
   openedPhoto.value = src
 }
@@ -176,7 +171,10 @@ onMounted( () => {
     fetchData()
 })
 
-
+const isInfoModal = ref<boolean>(false)
+function toggleInfoModal() { 
+    isInfoModal.value = !isInfoModal.value 
+}
 
 </script>
 
@@ -186,20 +184,28 @@ onMounted( () => {
     <div class="page-header">
       <div class="flex items-center gap-2 mt-4">
         <h1 class="text-2xl font-bold">Отзывы</h1>
-        <InfoButton @openModal="openInfoModal" />
+        <InfoButton @openModal="toggleInfoModal" />
       </div>
-      <p class="description">
-        На каждый полученный артикул можно оставить отзыв. Оплачивается отдельно
-        от выкупа согласно вашему тарифу.
-      </p>
-      <p class="text-xs font-light mt-1 lg:text-sm">
-        Стоимость одного отзыва -
-        <span class="font-bold"> {{ store.tariffString('review') }} </span>
-        Стоимость удаления отзыва
-        <span class="font-bold"> 100р. </span>
 
-        Все услуги оказываются по Московскому времени.
-      </p>
+      <InfoModal 
+        :isModal="isInfoModal" 
+        title="Отзывы"
+        ytSrc='https://www.youtube.com/embed/Zc0RYzPzNfY?si=LTgHXnmGixsDkmoG'
+        @changeVisibility="toggleInfoModal"
+        >
+        <p>
+            На каждый полученный артикул можно оставить отзыв. Оплачивается отдельно
+            от выкупа согласно вашему тарифу.
+        </p>
+        <p>
+            Стоимость одного отзыва -
+            <span class="font-bold"> {{ store.tariffString('review') }} </span>
+            Стоимость удаления отзыва
+            <span class="font-bold"> 100р. </span>
+
+            Все услуги оказываются по Московскому времени.
+        </p>
+        </InfoModal>
     </div>
 
     <div class="flex justify-between mb-2 mt-6 items-center">

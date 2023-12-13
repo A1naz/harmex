@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 definePageMeta({
   layout: 'app',
   auth: true,
@@ -12,7 +13,7 @@ const modal = ref(false)
 const logModal = ref(false)
 const selectedBuyout = ref({})
 const selectedIndex = ref(-1)
-const store = useMainStore()
+const storeMain = useMainStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 const dateFilter = ref('all')
@@ -166,7 +167,7 @@ const activeBuyouts = computedEager(() => {
 })
 const availableBuyouts = computedEager(() => {
   if (!activeBuyouts.value.length) return null
-  let balance = store.client.balance
+  let balance = storeMain.client.balance
   let result = 0
   activeBuyouts.value.forEach((buyout: any) => {
     balance -= buyout.product.price * buyout.quantity
@@ -180,7 +181,7 @@ const neededDeposit = computedEager(() => {
   activeBuyouts.value.forEach((buyout: any) => {
     sum += buyout.product.price * buyout.quantity
   })
-  if (sum > store.client.balance) result = sum - store.client.balance
+  if (sum > storeMain.client.balance) result = sum - storeMain.client.balance
 
   return result
 })
@@ -193,11 +194,6 @@ const formatAvailable = computedEager(() => {
   if (lastNumber > 1 && lastNumber < 5) return 'выкупа'
   else return 'выкупов'
 })
-
-function openInfoModal() {
-  store.infoModal = true
-  store.infoType = 'buyouts'
-}
 
 const filters = [
     {title: 'Все выкупы', optionValue: 'all', params: '', queryStatus: undefined},
@@ -272,30 +268,45 @@ onMounted(async () => {
 })
 
 await getBuyouts()
+
+
+const isInfoModal = ref<boolean>(false)
+function toggleInfoModal() { 
+    isInfoModal.value = !isInfoModal.value 
+}
+
 </script>
 
 <template>
   <div>
+    
     <div class="flex items-center gap-2 mt-4">
       <h1 class="text-2xl font-bold">Выкупы</h1>
-      <InfoButton @openModal="openInfoModal" />
+      <InfoButton @openModal="toggleInfoModal" />
     </div>
 
-    <p class="text-xs font-light mt-1 lg:text-sm">
-      Здесь формируются и оплачиваются выкупы на Wildberries. Для добавления
-      нажмите на кнопку "Добавить выкупы".
-    </p>
-    <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного выкупа - 
-      <span class="font-bold">{{ store.tariffString('buyouts') }}</span> 
-      Все услуги оказываются по Московскому времени.
-    </p>
-    <p
-      v-if="route.query.status === 'archived'"
-      class="text-xs font-light mt-1 lg:text-sm"
-    >
-      Выкупы в архиве удаляются через 10 дней.
-    </p>
+    <InfoModal 
+        :isModal="isInfoModal" 
+        title="Выкупы"
+        ytSrc='https://www.youtube.com/embed/YNFKOAgRAuU?si=bwAzeSLOmprr3NFe'
+        @changeVisibility="toggleInfoModal"
+        >
+        <div class="flex flex-col gap-2">
+            <p>Здесь формируются и оплачиваются выкупы на Wildberries. Для добавления
+                нажмите на кнопку "Добавить выкупы".
+            </p>
+            <p>Стоимость одного выкупа - 
+                <span class="font-bold">{{ storeMain.tariffString('buyouts') }}.</span> 
+                Все услуги оказываются по Московскому времени.
+            </p>
+            <p v-if="route.query.status === 'archived'"
+                class="text-xs font-light mt-1 lg:text-sm"
+                >
+                Выкупы в архиве удаляются через 10 дней.
+            </p>
+        </div>
+    </InfoModal>
+
     <div class="flex justify-between mb-4 items-center mt-6">
       <div class="hidden lg:block">
         <NuxtLink
