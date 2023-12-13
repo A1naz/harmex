@@ -7,23 +7,6 @@ export default eventHandler(async (event) => {
   if (!session)
     return sendRedirect(event, '/auth', 302)
 
-  interface Item {
-    image: string
-    name: string
-    article: number
-    price: number
-    priceText: string
-    quantity: number
-    sizes: number[] | string[]
-    sex: string
-    searchQuery: string
-    adress: string
-    dateRange: [Date | null, Date | null] | []
-    selectedSize: number | string
-    rules: {
-      [key: number]: boolean
-    }
-  }
   const query = getQuery(event)
   const buyout = await Buyout.findOne({ uuid: query.uuid })
   if (!buyout) {

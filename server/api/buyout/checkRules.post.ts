@@ -51,6 +51,11 @@ export default eventHandler(async (event) => {
 
     if (rules.includes(5) || rules.includes(9)) {
       for (const query of item.searchQuery) {
+        if(query.value === '') {
+            result.success = false
+            result.message = `У товара ${item.article} не заполнен поисковой запрос`  
+            return result
+        }
         const searchResult = await findPositionByQuery(
           query.value,
           item.article,
@@ -65,6 +70,11 @@ export default eventHandler(async (event) => {
     }
     if (rules.includes(8)) {
       for (const query of item.searchQuery) {
+        if(query.value === '') {
+            result.success = false
+            result.message = `У товара ${item.article} не заполнен поисковой запрос`  
+            return result
+        }
         const searchResult = await findPositionByQuery(
           query.value,
           item.article,
