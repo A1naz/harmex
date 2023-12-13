@@ -20,7 +20,8 @@ const productimage = props.info.productimage[delIndex]
 const productname = props.info.productname[delIndex]
 const updatedAt = props.info.lastUpdated
 const size = props.info.delivs[delIndex].sizeparam
-const count = props.info.count
+const countAllAvailable = props.info.countAvailable
+const countSoonAvailable = props.info.countSoon ? props.info.countSoon : undefined
 const sex = props.info.delivs[delIndex].sex
 
 function openBuyout() {
@@ -80,17 +81,27 @@ function openBuyout() {
           </div>
         </div>
       </div>
+
+
       <div class="flex justify-between items-center">
         <div class="flex gap-2 text-sm">
           <div>Пол: {{ sex }}</div>
           <div>Размер: {{ size === 'none' ? 'Нет' : size }}</div>
         </div>
-        <label
-          for="review-modal" class="btn btn-sm btn-primary"
-          @click="$emit('openModal', buyoutuuId, deliveryId )"
-        >Оставить отзыв (доступно: {{ count }})
-        </label>
+
+        <div class="flex flex-col justify-center gap-2">
+            <label
+                for="review-modal" class="btn btn-sm btn-primary"
+                @click="$emit('openModal', buyoutuuId, deliveryId )"
+                >Оставить отзыв (доступно: {{ countAllAvailable }})
+                </label>
+            <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto"
+                >Скоро будет доступно еще {{ countSoonAvailable }}</div>
+        </div>
+        
       </div>
+
+
     </div>
   </div>
 </template>
