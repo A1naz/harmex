@@ -13,7 +13,7 @@ const store = useMainStore()
 const route = useRoute()
 
 const tab = computed (() => route.query.tab)
-const refUrl = computed(() => `${runtimeConfig.public.siteUrl}/register?ref=${client.uuid}`)
+const refUrl = computed(() => `https://topvtop.pro?ref=${client.uuid}`)
 
 const closePartnerVideo = ref(null) as Ref<HTMLLabelElement | null>
 const loadingList = ref(false)
