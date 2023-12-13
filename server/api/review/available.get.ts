@@ -12,8 +12,8 @@ export default eventHandler(async (event) => {
   const pipeLine: any[] = [
     { $match: {
         user: new ObjectId(user._id),
-        status: 'completed',
         reviewed: false,
+        status: 'completed',
     }},
     { $sort: { _id: -1 } },
     { $project: {
@@ -45,7 +45,7 @@ export default eventHandler(async (event) => {
           _id: "$article",
           article: { $last: "$article"},
           lastUpdated: { $last: "$updatedAt"},
-          count: { $sum: 1 },
+          countAvailable: { $sum: 1 },
           productimage: { $addToSet: "$productimage" },
           productname: { $addToSet: "$productname" },
           delivs: {
@@ -77,8 +77,20 @@ export default eventHandler(async (event) => {
   if(skipA > 0) pipeLine.push({ $skip: skipA })
   if(limitA > 0) pipeLine.push({ $limit: limitA })
 
-  const readyForReview = await Delivery.aggregate(pipeLine)
-  if (!readyForReview) return []
+    const readyForReview = await Delivery.aggregate(pipeLine)
+    if (!readyForReview) return []
+
+    const soonForReview = await Delivery.aggregate([
+        { $match: {
+            user: new ObjectId(user._id),
+            status: 'active',
+            reviewed: false,
+        }},
+        { $group: {
+            _id: '$article',
+            count: { $sum: 1 }
+        }}
+    ])
 
     const genderMap = new Map<string, string>([
         ['female', 'Женский'],
@@ -91,9 +103,11 @@ export default eventHandler(async (event) => {
         }
         return 'Нет'
     }
-    const formated = readyForReview.map(r => {
+    const formated = readyForReview.map( r => {
+        const countSoon = soonForReview.filter( sfr => sfr._id == r.article)
         return {
             ...r,
+            countSoon: countSoon.length > 0 ? countSoon[0].count : 0,
             delivs: r.delivs.map((d: any) => {
                 return {
                         ...d,
