@@ -3,15 +3,18 @@ import { getServerSession } from '#auth'
 export default eventHandler(async (event) => {
 
     if(event.node.req.method !== 'GET'){
-        const time = new Date().toISOString()
         try{
+            var logg = ''
+
             const session = (await getServerSession(event)) as any
-            const metPath = event.node.req.method + ': ' + event.path
-            var logg = `${time} - userUuid: ${session.uuid} - api - ${metPath}`
-            console.log(logg)
+            if(session && session.uuid) logg += ` - userUuid: ${session.uuid }`
+
+            logg += `- api - ${event.node.req.method}: ${event.path}`
+
+            console.log(logg) // timestamp automaticaly adding in captain logs
         }
         catch(e: any){
-            console.log(time, 'logger error: ', e.message)
+            console.log('logger error: ', e.message, ` - path: ${event.node.req.method}: ${event.path}`)
         }
     }
 
