@@ -260,18 +260,17 @@ function toggleInfoModal() {
     <InfoModal 
         :isModal="isInfoModal" 
         title="Как пользоваться платформой TOPvTOP?"
-        ytSrc='https://www.youtube.com/embed/ZgybpF6IyAA?si=jk8dEnDKwWAfHFa3'
+        ytSrc='https://www.youtube.com/embed/YqIw35-LiOk?si=d1FdsCsb04ADG8JZ'
         @changeVisibility="toggleInfoModal"
         >
         <div class="flex flex-col gap-2">
             <p>Посмотрите обзор кабинета прямо сейчас. Время просмотра 3 минуты.</p>
-            <p class="mb-6">Запустите чат-бот уведомлений по платформе. Привяжите Telegram-аккаунт и активируйте чат-бот.</p>
-
-            <button class="btn btn-outline btn-info max-w-fit mb-6">
+            <NuxtLink to="https://t.me/+8kOkq5w7N2ZmODFi" target="_blank">
+                <button class="btn btn-outline btn-info max-w-fit mb-6" >
                 <Icon size="40" name="logos:telegram" />
-                Вступайте в чат-клуб клиентов платформы TovTop!
-            </button>
-
+                    Вступайте в чат-клуб клиентов платформы TovTop!
+                </button>
+            </NuxtLink>
         </div>
     </InfoModal>
 

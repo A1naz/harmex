@@ -19,7 +19,7 @@ definePageMeta({
   colorMode: 'dark',
   auth: {
     unauthenticatedOnly: true,
-    navigateAuthenticatedTo: '/stats?type=all&period=today',
+    navigateAuthenticatedTo: '/buyouts',
   },
   title: 'Вход',
 })
@@ -44,7 +44,7 @@ async function login() {
   loading.value = true
   const { error, url } = await signIn('credentials', {
     redirect: false,
-    callbackUrl: '/stats?type=all&period=today',
+    callbackUrl: '/buyouts',
     ...formData,
   })
   if (error) {
@@ -65,7 +65,7 @@ async function login() {
   } else {
     localStorage.removeItem('referralCode')
     store.getClient()
-    return navigateTo('/stats?type=all&period=today', { external: true })
+    return navigateTo('/buyouts', { external: true })
   }
   loading.value = false
 }

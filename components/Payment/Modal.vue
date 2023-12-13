@@ -409,7 +409,7 @@ onMounted(() => {
         </li>
       </ul>
       <p class="pt-2">
-        Пополняйте баланс один раз в 10 минут, не более 20 000 рублей
+        Пополняйте баланс один раз в 10 минут, не более 100 000 рублей
       </p>
 
         <iframe class="w-full mt-4" width="432" height="243" src="https://www.youtube.com/embed/_ZCuo-YeOUQ?si=r0rSS5uAnO0coA76" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>

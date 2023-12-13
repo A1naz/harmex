@@ -190,7 +190,7 @@ function toggleInfoModal() {
       <InfoModal 
         :isModal="isInfoModal" 
         title="Отзывы"
-        ytSrc='https://www.youtube.com/embed/YNFKOAgRAuU?si=bwAzeSLOmprr3NFe'
+        ytSrc='https://www.youtube.com/embed/Zc0RYzPzNfY?si=LTgHXnmGixsDkmoG'
         @changeVisibility="toggleInfoModal"
         >
         <p>

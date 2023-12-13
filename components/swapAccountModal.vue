@@ -42,7 +42,7 @@ async function login() {
   loading.value = true
   const { error, url } = await signIn('credentials', {
     redirect: false,
-    callbackUrl: '/stats?type=all&period=today',
+    callbackUrl: '/buyouts',
     ...formData,
   })
   if (error) {
