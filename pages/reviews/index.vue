@@ -16,7 +16,6 @@ const router = useRouter()
 
 const status = ref(route.query?.status ?? 'available')
 
-
 const target = ref(null)
 const targetIsVisible = ref(false)
 const { stop } = useIntersectionObserver(
@@ -228,6 +227,10 @@ function toggleInfoModal() {
           fileName="TOPVTOP Доступные отзывы"
           :isVisible="true"
         />
+        <NuxtLink 
+            to="/reviews/drafts" 
+            class="btn btn-primary btn-sm"
+            >Черновики</NuxtLink>
       </div>
       <div class="flex gap-1 items-center">
         <select v-model="searchType" class="select select-bordered select-sm">
