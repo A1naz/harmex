@@ -6,6 +6,19 @@ definePageMeta({
   title: 'Черновики отзывов',
 })
 
+const params = ref({})
+const drafts = ref<IReviewDraft>([])
+
+const getData = async () => { 
+    const res = await $fetch('/api/review/drafts', {
+        method: 'GET',
+        params: params
+    })
+    if(res && res.length > 0){
+        drafts.value = res
+    }
+}
+onMounted( ()=> getData() )
 
 
 </script>
@@ -21,8 +34,9 @@ definePageMeta({
     </div>
 
     <div>
+        <div>+ Новый черновик</div>
 
-        'drafts'
+        <div v-for="draft in drafts"> {{ draft }}</div>
 
     </div>
 </template>
