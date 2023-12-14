@@ -35,7 +35,7 @@ export function DefaultDateWithoutMonthName(newDate: Date | string) {
 
 export function defaultDateShort(newDate: Date | string) {
     const date = new Date(newDate);
-    const day = date.getUTCDate();
+    const day = addLeadingZero(date.getUTCDate())
     const month = addLeadingZero(date.getUTCMonth() + 1)
     const year = date.getUTCFullYear();  
     return `${day}/${month}/${year}`

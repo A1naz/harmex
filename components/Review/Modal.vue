@@ -3,18 +3,10 @@ import { useNotification } from '@kyvg/vue3-notification'
 import { UseImage } from '@vueuse/components'
 
 const props = defineProps({
-  state: {
-    type: Boolean,
-    required: true,
-  },
-  uuid: {
-    type: String,
-    required: true,
-  },
-  deliveryid: {
-    type: String,
-    required: true,
-  },
+  review: {} as any,
+  state: { type: Boolean, required: true },
+  uuid: { type: String, required: true },
+  deliveryid: { type: String, required: true },
 })
 const emit = defineEmits(['close', 'publish'])
 
@@ -58,6 +50,11 @@ const form = reactive({
       public: '',
     },
   ],
+})
+const defaultDelIndex = props.review.delivs.findIndex((rev: any) => rev.delivId == props.deliveryid)
+const selectedDeliv = ref({
+    deliveryid: props.review.delivs[defaultDelIndex].delivId,
+    uuid: props.review.delivs[defaultDelIndex].buyoutId
 })
 
 const loadingIndex = ref(null) as Ref<number | null>
@@ -134,8 +131,8 @@ async function publishReview() {
     method: 'POST',
     body: {
       ...form,
-      deliveryid: props.deliveryid,
-      buyoutuuid: props.uuid,
+      deliveryid: selectedDeliv.value.deliveryid,
+      buyoutuuid: selectedDeliv.value.uuid,
     },
     headers,
   })
@@ -218,6 +215,15 @@ onMounted(() => {
         >✕</label
       >
       <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
+      <div class="pb-2">Доставка:</div>
+        <select v-model="selectedDeliv" class="select select-bordered w-full mb-4">
+            <option 
+                v-for="(rev, index) in review.delivs"
+                :default="index == rev[defaultDelIndex]"
+                :value="{deliveryid: rev.delivId, uuid: rev.buyoutId}"
+                class="m-6"
+                >{{ defaultDateShort(rev.updatedAt) + ' - пол: ' + rev.sex + ' - размер: ' + rev.sizeparam + ' - цена: ' + rev.pricebuy + "р." }}</option>
+        </select>
       <div class="flex flex-col gap-4">
         <div class="w-full">
           <div class="pb-2">Отзыв от товаре</div>

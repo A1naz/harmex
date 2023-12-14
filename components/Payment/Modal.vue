@@ -201,12 +201,16 @@ onMounted(() => {
         for="payment-modal" class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
         @click="cancelPayment"
       >✕</label>
+
+
       <div class="flex justify-between items-center gap-2 mb-2">
         <h3 class="font-bold">Пополнить баланс</h3>
         <label class="bg-base-300 p-1 rounded-lg px-2 text-center text-sm mr-2" @click="infoModal?.showModal()">
           Как пополнить баланс?
         </label>
       </div>
+
+      
       <div>
         <div class="w-full flex flex-col gap-2 justify-center items-start">
           <div class="sum w-full">
@@ -405,8 +409,11 @@ onMounted(() => {
         </li>
       </ul>
       <p class="pt-2">
-        Пополняйте баланс один раз в 10 минут, не более 20 000 рублей
+        Пополняйте баланс один раз в 10 минут, не более 100 000 рублей
       </p>
+
+        <iframe class="w-full mt-4" width="432" height="243" src="https://www.youtube.com/embed/_ZCuo-YeOUQ?si=r0rSS5uAnO0coA76" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
       <div class="images flex gap-2 items-center justify-center mt-2">
         <label for="sbpImageModal" class="cursor-pointer"><nuxt-img class="rounded-lg" src="info/sbp1.jpg" loading="lazy" fit="fill" @click="openedPhoto = 'info/sbp1.jpg'" />
         </label>

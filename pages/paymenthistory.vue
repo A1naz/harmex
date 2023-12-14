@@ -103,11 +103,6 @@ async function selectFilterDate(e: Event) {
   history.value = data.value
 }
 
-function openInfoModal() {
-  store.infoModal = true
-  store.infoType = 'paymenthistory'
-}
-
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && history.value.length >= 50) {
     if (end.value)
@@ -164,8 +159,8 @@ function openBuyout(data: any) {
   router.push(`/buyouts?uuid=${uuid}`)
 }
 function openReview(data: any) {
-    const uuid = data.basisoperation.slice(data.basisoperation.indexOf(' ') + 1, data.basisoperation.length)
-    router.push(`/reviews?status=published&uuid=${uuid}`)
+    const idReview = data.basisoperation.slice(data.basisoperation.indexOf(' ') + 1, data.basisoperation.length)
+    router.push(`/reviews?status=published&idReview=${idReview}`)
 }
 
 </script>
@@ -176,7 +171,6 @@ function openReview(data: any) {
       <h1 class="text-2xl font-bold ">
         История платежей
       </h1>
-        <InfoButton @openModal="openInfoModal" class="mr-6 ml-0 md:mr-2 md:ml-2" />
     </div>
     <p class="text-xs font-light mt-1 lg:text-sm mb-6">
       Здесь можно увидеть движение вашего баланса

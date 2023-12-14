@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
 
     if (status.value === 'authenticated') {
         if (to.path === '/auth' || to.path === '/register' || to.path === '/'){
-            return navigateTo('/stats')
+            return navigateTo('/buyouts')
         }
     }
     else {

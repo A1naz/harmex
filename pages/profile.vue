@@ -308,6 +308,12 @@ async function setChatBotSettings() {
     window.location.reload()
   }
 }
+
+const isInfoModal = ref<boolean>(false)
+function toggleInfoModal() { 
+    isInfoModal.value = !isInfoModal.value 
+}
+
 </script>
 
 <template>
@@ -331,18 +337,30 @@ async function setChatBotSettings() {
       </svg>
       <span>{{ warning }}</span>
     </div>
-    <div class="page-header mb-16">
-      <h1 class="text-2xl font-bold mt-4">Профиль</h1>
-      <p class="description">
-        Здесь вы можете управлять настройками вашего аккаунта.
-      </p>
-      <p class="description">
-        Запустите чат-бот уведомлений по платформе. Привяжите Telegram-аккаунт и активируйте чат-бот.
-      </p>
+
+    <div class="flex items-center gap-2 mt-4">
+        <h1 class="text-2xl font-bold">Профиль</h1>
+        <InfoButton @openModal="toggleInfoModal" />
     </div>
 
+    <InfoModal 
+        :isModal="isInfoModal" 
+        title="Профиль"
+        ytSrc='https://www.youtube.com/embed/ZgybpF6IyAA?si=ZoSE_GxV-tFAAFrD'
+        @changeVisibility="toggleInfoModal"
+        >
+        <div class="flex flex-col gap-2">
+            <p>
+                Здесь вы можете управлять настройками вашего аккаунта.
+            </p>
+            <p>
+                Запустите чат-бот уведомлений по платформе. Привяжите Telegram-аккаунт и активируйте чат-бот.
+            </p>
+        </div>
+    </InfoModal>
+
     <section
-      class="profile-options flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
+      class="mt-6 profile-options flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
     >
       <div class="self-start description-container xl:basis-1/3">
         <div class="heading">Контактные данные</div>

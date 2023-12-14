@@ -213,6 +213,7 @@ async function createBuyout() {
   disabledCreateButton.value = true
   const { data, error } = await useFetch('/api/buyout/create', {
     method: 'POST',
+    watch: false,
     body: JSON.stringify(products.value),
     query: {
       userTimezoneOffsetHours,
