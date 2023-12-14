@@ -2,7 +2,8 @@
 
 defineProps({
   titleModal: { type: String, required: true },
-  modelValue: { type: Object as any, required: true },
+  subDescr: { type: String, required: false },
+  descr: { type: String, required: false },
   index: { type: Number, required: true },
   state: { type: Boolean, required: true },
   btnSaveLoading: { type: Boolean, required: true },
@@ -26,12 +27,12 @@ defineEmits(['click'])
             {{ titleModal }}
         </div>
 
-        <div v-if="modelValue.uuid" class="text-xs text-gray-500">
-          #{{ modelValue.uuid }}
+        <div v-if="subDescr" class="text-xs text-gray-500">
+          # {{ subDescr }}
         </div>
 
         <div class="flex flex-col gap-2 mt-2 justify-center">
-            фио: {{ modelValue.firstName + ' ' +  modelValue.lastName }}
+            {{ descr }}
         </div>
 
         <div v-if="saveError"><p class="text-red-600" > {{ saveError }}</p></div>

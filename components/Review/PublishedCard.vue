@@ -53,11 +53,10 @@ function removeReview() {
 
 <template>
   <div class="buyout-card card bg-base-200 shadow-lg">
-    <div
-      class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
-    >
+    <div class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative">
       <div class="flex justify-between item gap-2 mb-2">
-        <h2 class="card-title">Отзыв</h2>
+        <h2 v-if="info.draftName" class="card-title">{{ info.draftName }}</h2>
+        <h2 v-else class="card-title">Отзыв</h2>
         <div>
           <span
             :class="{
@@ -73,8 +72,8 @@ function removeReview() {
                 info.status === 'deleting',
             }"
             class="text-black p-1.5 px-4 rounded-lg text-center"
-            >{{ getStatus }}</span
-          >
+            >{{ getStatus }}
+            </span>
           <button v-if="info.status === 'published'" @click="emit('removeReview', info.id)" class="btn btn-sm btn-error ml-1">
             Удалить
           </button>
@@ -117,7 +116,7 @@ function removeReview() {
           </div>
         </div>
         <div class="w-full">
-          <div class="font-bold">Отзыв от товаре</div>
+          <div class="font-bold">Отзыв о товаре</div>
           <div
             class="w-full bg-base-200 h-16 overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin"
           >

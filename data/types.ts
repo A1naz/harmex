@@ -100,7 +100,7 @@ export interface ITariff {
 export interface IReviewDraft extends Entity {
     user: string,
     draftName?: string,
-    article: number,
+    article?: number,
     text: string,
     createdAt: string
 }
