@@ -8,6 +8,8 @@ definePageMeta({
   title: 'Отзывы',
 })
 
+const { getData } = useApi()
+
 const route = useRoute()
 const end = ref(false)
 
@@ -97,10 +99,20 @@ function openPhoto(src: string) {
 const selectedDelivery = ref('')
 const modalOpen = ref(false)
 
+const getDrafts = async(art: any) => {
+    const res = await getData( 'review/drafts', {search: { article: {$in: ['', art]} }} )
+    if(res && res.length > 0) {
+        selectedArticle.value = {
+            ...selectedArticle.value,
+            drafts: res
+        }
+    }
+}
 
 const selectedArticle = ref<any>({})
-function openModal(article: any, uuid: string, deliveryid: string) {
-    selectedArticle.value = article
+function openModal(review: any, uuid: string, deliveryid: string) {
+    selectedArticle.value = review
+    getDrafts(review.article)
     selectedUUID.value = uuid
     selectedDelivery.value = deliveryid
     modalOpen.value = true
@@ -287,7 +299,6 @@ function toggleInfoModal() {
     <ReviewModal
       v-if="modalOpen"
       :review="selectedArticle"
-
       :deliveryid="selectedDelivery"
       :state="modalOpen"
       :uuid="selectedUUID"

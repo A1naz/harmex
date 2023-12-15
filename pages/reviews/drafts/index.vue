@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import useApi from '~/composables/useApi';
 
 definePageMeta({
   layout: 'app',
@@ -38,7 +37,7 @@ const startFetch = () =>{
 
 const edit = async (draft: IReviewDraft, i: number) => { 
     drafts.value[i].isEdit = true
-    const res = await postData(endpoint, draft.value)
+    const res = await postData(endpoint, draft)
     if(res) {
         drafts.value[i] = draft
         drafts.value[i].isEdit = false
@@ -143,6 +142,12 @@ onMounted( ()=> startFetch() )
             <h1 class="text-2xl font-bold">Черновики отзывов</h1>
         </div>
       </div>
+        <p>
+            Вы можете создать сколь угодно черновиков на любой артикул.
+        </p>
+        <p>
+            Если артикул не указан в черновике, то такой черновик будет "общим" и будет доступен для выбора в каждом новом отзыве.
+        </p>
     </div>
 
 

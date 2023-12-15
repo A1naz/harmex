@@ -51,6 +51,11 @@ const form = reactive({
     },
   ],
 })
+
+function useDraft(draft: IReviewDraft){
+    form.text = draft.text
+}
+
 const defaultDelIndex = props.review.delivs.findIndex((rev: any) => rev.delivId == props.deliveryid)
 const selectedDeliv = ref({
     deliveryid: props.review.delivs[defaultDelIndex].delivId,
@@ -212,27 +217,43 @@ onMounted(() => {
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
         @click="$emit('close')"
-        >✕</label
-      >
+        >✕</label>
+        <div class="flex flex-row justify-center -mt-4">
+            <p class="text-xs text-gray-500 justify-self-center"> - {{ review.article }} - </p>
+        </div>
+
       <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
+
       <div class="pb-2">Доставка:</div>
-        <select v-model="selectedDeliv" class="select select-bordered w-full mb-4">
+      <select v-model="selectedDeliv" class="select select-bordered w-full mb-4">
             <option 
                 v-for="(rev, index) in review.delivs"
                 :default="index == rev[defaultDelIndex]"
                 :value="{deliveryid: rev.delivId, uuid: rev.buyoutId}"
                 class="m-6"
                 >{{ defaultDateShort(rev.updatedAt) + ' - пол: ' + rev.sex + ' - размер: ' + rev.sizeparam + ' - цена: ' + rev.pricebuy + "р." }}</option>
-        </select>
+      </select>
+
       <div class="flex flex-col gap-4">
-        <div class="w-full">
-          <div class="pb-2">Отзыв от товаре</div>
-          <textarea
-            v-model="form.text"
-            class="textarea w-full textarea-md bg-base-200"
-            placeholder="Например, хороший телефон"
-          />
-        </div>
+
+        <div class="w-full mb-4">
+            <div class="pb-2">Отзыв о товаре</div>          
+            <textarea
+                v-model="form.text"
+                class="textarea w-full textarea-md bg-base-200"
+                placeholder="Например, хороший телефон"
+                />
+                <div v-if="review.drafts" class="text-xs">черновики: 
+                    <button 
+                        v-for="draft in review.drafts" 
+                        class="mx-1 text-primary hover:underline hover:cursor-pointer"
+                        @click="useDraft(draft)"
+                        > 
+                        <p v-if="draft.draftName"> {{ draft.draftName }}</p>
+                        <i v-else> {{ '<без названия>' }} </i>
+                    </button>
+                </div>
+            </div>
 
         <div>
           <div class="pb-2">Рейтинг</div>
