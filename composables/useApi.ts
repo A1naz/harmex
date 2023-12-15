@@ -33,6 +33,20 @@ const useApi = () => {
         }
     }
 
+    const putData = async <T>(endPoint: string, body: any) => {
+        try {
+            const res = await $fetch<T>(`${basePoint}${endPoint}`, {
+                headers,
+                method: 'PUT',
+                body: body
+            })
+            if(res) return res
+            else _showMessage('Ничего не нашли')
+        } catch(e: any) {
+            _showMessage(e.message)
+        }
+    }
+
     const deleteData = async <T>(endPoint: string, body: any) => {
         try {
             const res = await $fetch<T>(`${basePoint}${endPoint}`, {
@@ -61,6 +75,7 @@ const useApi = () => {
         headers,
         getData,
         postData,
+        putData,
         deleteData
     }
 }

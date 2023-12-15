@@ -240,6 +240,13 @@ const multiselectStyle = {
                     :pt="multiselectStyle"
                     />
 
+                <textarea
+                    v-if="conf.type == FieldsType.textArea"
+                    :key="'textara' + index"
+                    v-model="modelValue[conf.field]" 
+                    class="input input-bordered w-full h-[10vh]"
+                    ></textarea>
+
                 <input
                     v-else
                     :key="index"

@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import useApi from '~/composables/useApi';
 
-
 definePageMeta({
   layout: 'app',
   auth: true,
   title: 'Черновики отзывов',
 })
 
-const { getData, postData, deleteData } = useApi()
+const { getData, postData, putData, deleteData } = useApi()
 
 const endpoint = '/review/drafts'
 const params = ref({})
 const drafts = ref<IReviewDraft>([])
-const modalEdit = ref(false)
+const modalCreate = ref(false)
 const modalConfirm = ref(false)
 
 const selectedDraft = ref()
@@ -21,12 +20,12 @@ const selectedIndex = ref()
 const btnSaveLoading = ref(false)
 const saveError = ref('')
 
-const get = async () => { 
+const fetch = async () => { 
     const res = await getData<any[]>(endpoint, params)
     if(res && res.length > 0) drafts.value = res
 }
 
-const post = async (draft: IReviewDraft, i: number) => { 
+const edit = async (draft: IReviewDraft, i: number) => { 
     drafts.value[i].isEdit = true
     const res = await postData(endpoint, draft)
     if(res) {
@@ -45,24 +44,39 @@ const deleteConfirmed = async (isConfirmed: boolean) => {
     btnSaveLoading.value = false
 }
 
+const createDraft = async () => {
+    btnSaveLoading.value = true
+    const res = await putData(endpoint, {...selectedDraft.value})
+    closeCreateModal()
+    btnSaveLoading.value = false
+    if(res) fetch()
+}
+
+
+function updateDraft(draft: IReviewDraft, i: number){
+    edit(draft, i)
+}
+
 function closeConfirmModal(){
     selectedIndex.value = ''
     selectedDraft.value = {}
     saveError.value = ''
     modalConfirm.value = false
 }
-function closeEditModal(){
+function closeCreateModal(){
     selectedIndex.value = ''
     selectedDraft.value = {}
     saveError.value = ''
-    modalEdit.value = false
+    modalCreate.value = false
 }
 
-function updateDraft(draft: IReviewDraft, i: number){
-    post(draft, i)
-}
-function createDraft(){
-
+function openCreate(){
+    selectedDraft.value = {
+        draftName: '',
+        article: '',
+        text: ''
+    }
+    modalCreate.value = true
 }
 
 function openDeleteConfirm(id: string, i: number){
@@ -71,13 +85,13 @@ function openDeleteConfirm(id: string, i: number){
     modalConfirm.value = true
 }
 
-const configModalEdit: ConfigModal[] = [
+const configModalCreate: ConfigModal[] = [
     { field: 'draftName', header: 'Название черновика', type: FieldsType.text },
     { field: 'article', header: 'Артикул', type: FieldsType.text  },
-    { field: 'text', header: 'Текст отзыва', type: FieldsType.text  },
+    { field: 'text', header: 'Текст отзыва', type: FieldsType.textArea  },
 ];
 
-onMounted( ()=> get() )
+onMounted( ()=> fetch() )
 </script>
 
 <template>
@@ -89,7 +103,9 @@ onMounted( ()=> get() )
         </NuxtLink>
         <div class="flex flex-row justify-between   w-full">
             <h1 class="text-2xl font-bold">Черновики отзывов</h1>
-            <button class='btn btn-primary btn-sm normal-case font-medium'>+ Новый черновик</button>
+            <button 
+                class='btn btn-primary btn-sm normal-case font-medium' 
+                @click="openCreate">+ Новый черновик</button>
         </div>
       </div>
     </div>
@@ -119,16 +135,16 @@ onMounted( ()=> get() )
         />
 
     <EditModal
-        v-if="modalEdit"
+        v-if="modalCreate"
         titleModal="Создать новый черновик"
         :modelValue="selectedDraft"
-        :config="configModalEdit"
-        :state="modalEdit"
+        :config="configModalCreate"
+        :state="modalCreate"
         :btnSaveLoading="btnSaveLoading"
-        :index="selectedIndex"
-        @save="createDraft"
+        :index=101109
         :saveError="saveError"
-        @close="closeEditModal"
+        @save="createDraft"
+        @close="closeCreateModal"
         />
 
 </template>
