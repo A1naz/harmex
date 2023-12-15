@@ -14,6 +14,7 @@ const params = reactive({
     sort: { createdAt: -1 },
     search: {}
 })
+const isLoading = ref(false)
 
 const drafts = ref<IReviewDraft>([])
 const modalCreate = ref(false)
@@ -27,8 +28,13 @@ const saveError = ref('')
 const fetch = async () => { 
     const res = await getData<any[]>(endpoint, params)
     if(res) drafts.value = res
+    isLoading.value = false
 }
 const fetchDebounce = useDebounceFn(()=> fetch(), 800)
+const startFetch = () =>{
+    isLoading.value = true
+    fetchDebounce()
+}
 
 const edit = async (draft: IReviewDraft, i: number) => { 
     drafts.value[i].isEdit = true
@@ -95,26 +101,26 @@ const inputChange = computed({
     set(val:any){ 
         if (val.length > 0) params.search = { article: val }
         else params.search = {}
-        fetchDebounce()
+        startFetch()
     }
 })
 const sortChange = computed({
     get(){ return params.sort },
     set(val:any){ 
         params.sort = val
-        fetchDebounce()
+        startFetch()
     }
 })
 
 const selectConfig = [
-    { title: 'Артикул A', value: { article: -1 } },
-    { title: 'Артикул D', value: { article: 1 } },
-    { title: 'Название A', value: { draftName: -1 } },
-    { title: 'Название D', value: { draftName: 1 } },
-    { title: 'Текст A', value: { text: -1 } },
-    { title: 'Текст D', value: { text: 1}  },
-    { title: 'Создан A', value: { createdAt: -1 } },
-    { title: 'Создан D', value: { createdAt: 1 } },
+    { title: 'Артикул', icon: 'd', value: { article: -1 } },
+    { title: 'Артикул', icon: 'a', value: { article: 1 } },
+    { title: 'Название', icon: 'd', value: { draftName: -1 } },
+    { title: 'Название', icon: 'a', value: { draftName: 1 } },
+    { title: 'Текст', icon: 'd', value: { text: -1 } },
+    { title: 'Текст', icon: 'a', value: { text: 1}  },
+    { title: 'Создан', icon: 'd', value: { createdAt: -1 } },
+    { title: 'Создан', icon: 'a', value: { createdAt: 1 } },
 ]
 
 const configModalCreate: ConfigModal[] = [
@@ -123,7 +129,7 @@ const configModalCreate: ConfigModal[] = [
     { field: 'text', header: 'Текст отзыва', type: FieldsType.textArea  },
 ];
 
-onMounted( ()=> fetch() )
+onMounted( ()=> startFetch() )
 </script>
 
 <template>
@@ -140,32 +146,36 @@ onMounted( ()=> fetch() )
     </div>
 
 
-    <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-4" >
-        <div class="flex flex-row gap-2">
-            <div class="flex flex-row gap-1">
-                <input type="text" class="bordered" v-model="inputChange" placeholder="Артикул">
-            </div>
-            <select
-                class="select select-bordered select-sm"
-                v-model="sortChange"
-            >
-            <option 
-                v-for="field in selectConfig"
-                :value="field.value" 
-                :selected="field.value.toString() == params.sort.toString()"
-                :default="field.value.toString() == params.sort.toString()"
+    <div class="flex justify-between flex-wrap bg-base-200 rounded-xl mb-2 p-2 gap-4" >
+        <div class="flex flex-row gap-4">
+            <input 
+                type="text" 
+                class="input input-sm input-bordered"
+                v-model="inputChange" 
+                placeholder="Поиск по артикулу">
+            <div class="flex flex-row  gap-1">
+                <p class="self-center">Сортировка:</p>
+                <select
+                    class="select select-bordered select-sm"
+                    v-model="sortChange"
                 >
-                {{ field.title }}
-                </option>
-            </select>
+                <option 
+                    v-for="field in selectConfig"
+                    :value="field.value" 
+                    :selected="field.value.toString() == params.sort.toString()"
+                    :default="field.value.toString() == params.sort.toString()"
+                    >
+                    {{ field.title + ' '}} {{ field.icon == 'd' ? `&darr;` : '&uarr;'  }}
+                    </option>
+                </select>
+            </div>
         </div>
         <button 
             class='btn btn-primary btn-sm normal-case font-medium' 
             @click="openCreate">+ Новый черновик</button>
-
     </div>
 
-    <div>
+    <div v-show="!isLoading">
         <div class="cards grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             <div v-for="(draft, index) in drafts"> 
                 <ReviewDraftCard 
@@ -176,6 +186,9 @@ onMounted( ()=> fetch() )
                     />
             </div>
         </div>
+    </div>
+    <div v-show="isLoading" class="flex justify-center mt-10">
+        <span class="loading loading-spinner loading-lg text-primary "/>
     </div>
 
     <ConfirmModal 
