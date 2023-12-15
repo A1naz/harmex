@@ -4,6 +4,7 @@ export enum FieldsType {
     date = 'date',
     email = 'email',
     text = 'text',
+    textArea = 'textArea',
     multiOptions = 'multiOptions',
     password = 'password',
     price = 'price',

@@ -323,7 +323,8 @@ const configColumns: ConfigTable[] = [
     <ConfirmModal 
         v-if="modalConfirm"
         :titleModal="titleModal"
-        :modelValue="selectedUser"
+        :sub-descr="selectedUser.uuid"
+        :descr="'фио: ' + selectedUser.firstName + ' ' +  selectedUser.lastName"
         :index="selectedIndex"
         :state="modalConfirm"
         :btnSaveLoading="btnSaveLoading"

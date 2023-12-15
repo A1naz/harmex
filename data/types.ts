@@ -97,6 +97,14 @@ export interface ITariff {
     autoAnswer: TariffProp,
 }
 
+export interface IReviewDraft extends Entity {
+    user: string,
+    draftName?: string,
+    article?: number,
+    text: string,
+    createdAt: string
+}
+
 export interface TariffProp {
     type: TariffTypeEnum, 
     value: number
