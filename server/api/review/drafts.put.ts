@@ -18,5 +18,5 @@ export default eventHandler(async (event) => {
 
     const res = await newDraft.save()
 
-  return res._id ? true : false
+    return res._id ? true : false
 })

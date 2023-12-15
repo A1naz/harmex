@@ -10,7 +10,11 @@ definePageMeta({
 const { getData, postData, putData, deleteData } = useApi()
 
 const endpoint = '/review/drafts'
-const params = ref({})
+const params = ref({
+    sort: { createdAt: -1 },
+    search: {}
+})
+
 const drafts = ref<IReviewDraft>([])
 const modalCreate = ref(false)
 const modalConfirm = ref(false)
@@ -21,13 +25,13 @@ const btnSaveLoading = ref(false)
 const saveError = ref('')
 
 const fetch = async () => { 
-    const res = await getData<any[]>(endpoint, params)
+    const res = await getData<any[]>(endpoint, params.value)
     if(res && res.length > 0) drafts.value = res
 }
 
 const edit = async (draft: IReviewDraft, i: number) => { 
     drafts.value[i].isEdit = true
-    const res = await postData(endpoint, draft)
+    const res = await postData(endpoint, draft.value)
     if(res) {
         drafts.value[i] = draft
         drafts.value[i].isEdit = false

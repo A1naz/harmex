@@ -10,7 +10,7 @@ const useApi = () => {
             const res = await $fetch<T>(`${basePoint}${endPoint}`, {
                 headers,
                 method: 'GET',
-                params: params
+                params
             })
             if(res) return res
             else _showMessage('Ничего не нашли')

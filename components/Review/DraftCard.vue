@@ -98,7 +98,7 @@ const classEditing = ['bg-white outline outline-warning rounded cursor-text p-2 
                         <div v-if="!isEdit"
                             :class="[
                                 classEditable,
-                                'p-1 w-full bg-base-200 h-[120px] lg:h-[300px] overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin'
+                                'p-1 w-full bg-base-200  h-[180px]  overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin'
                             ]" 
                             @dblclick="toEdit(true)"
                             >
@@ -108,7 +108,7 @@ const classEditing = ['bg-white outline outline-warning rounded cursor-text p-2 
                         <div v-else>
                             <textarea
                                 v-model="editData.text"
-                                :class="[ classEditing, 'h-[120px] lg:h-[300px]' ]" ></textarea>
+                                :class="[ classEditing,  'h-[180px]'  ]" ></textarea>
                             <div class="flex flex-row gap-2">
                                 <button class='btn btn-neutral btn-sm normal-case font-medium' @click="toEdit(false)">отменить</button>
                                 <button class='btn btn-primary btn-sm normal-case font-medium' @click="toSave">сохранить</button>
