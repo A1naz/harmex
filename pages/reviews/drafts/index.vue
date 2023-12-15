@@ -8,7 +8,7 @@ definePageMeta({
 
 const { getData, postData, putData, deleteData } = useApi()
 
-const endpoint = '/review/drafts'
+const endpoint = 'review/drafts'
 const params = reactive({
     sort: { createdAt: -1 },
     search: {}
