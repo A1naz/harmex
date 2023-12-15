@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import useApi from '~/composables/useApi';
+
 
 definePageMeta({
   layout: 'app',
@@ -6,57 +8,61 @@ definePageMeta({
   title: 'Черновики отзывов',
 })
 
-const headers = useRequestHeaders(['cookie']) as HeadersInit
+const { getData, postData, deleteData } = useApi()
 
+const endpoint = '/review/drafts'
 const params = ref({})
 const drafts = ref<IReviewDraft>([])
+const modalEdit = ref(false)
 const modalConfirm = ref(false)
 
 const selectedDraft = ref()
 const selectedIndex = ref()
 const btnSaveLoading = ref(false)
+const saveError = ref('')
 
-const getData = async () => { 
-    const res = await $fetch('/api/review/drafts', {
-        method: 'GET',
-        params: params
-    })
-    if(res && res.length > 0){
-        drafts.value = res
+const get = async () => { 
+    const res = await getData<any[]>(endpoint, params)
+    if(res && res.length > 0) drafts.value = res
+}
+
+const post = async (draft: IReviewDraft, i: number) => { 
+    drafts.value[i].isEdit = true
+    const res = await postData(endpoint, draft)
+    if(res) {
+        drafts.value[i] = draft
+        drafts.value[i].isEdit = false
     }
 }
 
-const postData = async (draft: IReviewDraft, i: number) => { 
-    drafts.value[i].isEdit = true
-    const res = await $fetch('/api/review/drafts', {
-        method: 'POST',
-        body: draft
-    })
-    if(res) drafts.value[i] = draft
-    drafts.value[i].isEdit = false
-
-}
-function closeConfirmModal(){
-    selectedIndex.value = ''
-    selectedDraft.value = {}
-    modalConfirm.value = false
-}
 const deleteConfirmed = async (isConfirmed: boolean) => {
     btnSaveLoading.value = true
     if(isConfirmed){
-        const res = await $fetch('/api/review/drafts', {
-            method: 'DELETE',
-            body: selectedDraft.value,
-            headers,
-        })
+        const res = await deleteData(endpoint, {...selectedDraft.value})
         if(res) drafts.value.splice(selectedIndex.value, 1)
     }
     closeConfirmModal()
     btnSaveLoading.value = false
 }
 
+function closeConfirmModal(){
+    selectedIndex.value = ''
+    selectedDraft.value = {}
+    saveError.value = ''
+    modalConfirm.value = false
+}
+function closeEditModal(){
+    selectedIndex.value = ''
+    selectedDraft.value = {}
+    saveError.value = ''
+    modalEdit.value = false
+}
+
 function updateDraft(draft: IReviewDraft, i: number){
-    postData(draft, i)
+    post(draft, i)
+}
+function createDraft(){
+
 }
 
 function openDeleteConfirm(id: string, i: number){
@@ -65,7 +71,13 @@ function openDeleteConfirm(id: string, i: number){
     modalConfirm.value = true
 }
 
-onMounted( ()=> getData() )
+const configModalEdit: ConfigModal[] = [
+    { field: 'draftName', header: 'Название черновика', type: FieldsType.text },
+    { field: 'article', header: 'Артикул', type: FieldsType.text  },
+    { field: 'text', header: 'Текст отзыва', type: FieldsType.text  },
+];
+
+onMounted( ()=> get() )
 </script>
 
 <template>
@@ -104,6 +116,19 @@ onMounted( ()=> getData() )
         :state="modalConfirm"
         :btnSaveLoading="btnSaveLoading"
         @click="deleteConfirmed"
+        />
+
+    <EditModal
+        v-if="modalEdit"
+        titleModal="Создать новый черновик"
+        :modelValue="selectedDraft"
+        :config="configModalEdit"
+        :state="modalEdit"
+        :btnSaveLoading="btnSaveLoading"
+        :index="selectedIndex"
+        @save="createDraft"
+        :saveError="saveError"
+        @close="closeEditModal"
         />
 
 </template>
