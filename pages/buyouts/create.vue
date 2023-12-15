@@ -381,7 +381,7 @@ function closeTemplateModalFN() {
 
     <ClientOnly>
       <div
-        v-if="width < 1500"
+        v-if="width < 1600"
         class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4"
       >
         <BuyoutCreateCard
