@@ -10,7 +10,7 @@ definePageMeta({
 const { getData, postData, putData, deleteData } = useApi()
 
 const endpoint = '/review/drafts'
-const params = ref({
+const params = reactive({
     sort: { createdAt: -1 },
     search: {}
 })
@@ -25,9 +25,10 @@ const btnSaveLoading = ref(false)
 const saveError = ref('')
 
 const fetch = async () => { 
-    const res = await getData<any[]>(endpoint, params.value)
-    if(res && res.length > 0) drafts.value = res
+    const res = await getData<any[]>(endpoint, params)
+    if(res) drafts.value = res
 }
+const fetchDebounce = useDebounceFn(()=> fetch(), 800)
 
 const edit = async (draft: IReviewDraft, i: number) => { 
     drafts.value[i].isEdit = true
@@ -89,6 +90,33 @@ function openDeleteConfirm(id: string, i: number){
     modalConfirm.value = true
 }
 
+const inputChange = computed({
+    get(){ return params.search.article ? params.search.article : '' },
+    set(val:any){ 
+        if (val.length > 0) params.search = { article: val }
+        else params.search = {}
+        fetchDebounce()
+    }
+})
+const sortChange = computed({
+    get(){ return params.sort },
+    set(val:any){ 
+        params.sort = val
+        fetchDebounce()
+    }
+})
+
+const selectConfig = [
+    { title: 'Артикул A', value: { article: -1 } },
+    { title: 'Артикул D', value: { article: 1 } },
+    { title: 'Название A', value: { draftName: -1 } },
+    { title: 'Название D', value: { draftName: 1 } },
+    { title: 'Текст A', value: { text: -1 } },
+    { title: 'Текст D', value: { text: 1}  },
+    { title: 'Создан A', value: { createdAt: -1 } },
+    { title: 'Создан D', value: { createdAt: 1 } },
+]
+
 const configModalCreate: ConfigModal[] = [
     { field: 'draftName', header: 'Название черновика', type: FieldsType.text },
     { field: 'article', header: 'Артикул', type: FieldsType.text  },
@@ -107,11 +135,34 @@ onMounted( ()=> fetch() )
         </NuxtLink>
         <div class="flex flex-row justify-between   w-full">
             <h1 class="text-2xl font-bold">Черновики отзывов</h1>
-            <button 
-                class='btn btn-primary btn-sm normal-case font-medium' 
-                @click="openCreate">+ Новый черновик</button>
         </div>
       </div>
+    </div>
+
+
+    <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-4" >
+        <div class="flex flex-row gap-2">
+            <div class="flex flex-row gap-1">
+                <input type="text" class="bordered" v-model="inputChange" placeholder="Артикул">
+            </div>
+            <select
+                class="select select-bordered select-sm"
+                v-model="sortChange"
+            >
+            <option 
+                v-for="field in selectConfig"
+                :value="field.value" 
+                :selected="field.value.toString() == params.sort.toString()"
+                :default="field.value.toString() == params.sort.toString()"
+                >
+                {{ field.title }}
+                </option>
+            </select>
+        </div>
+        <button 
+            class='btn btn-primary btn-sm normal-case font-medium' 
+            @click="openCreate">+ Новый черновик</button>
+
     </div>
 
     <div>

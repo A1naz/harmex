@@ -1,4 +1,4 @@
-import { FilterQuery, SortOrder } from "mongoose"
+import { SortOrder } from "mongoose"
 import { ReviewDraft } from "~/server/lib/models/ReviewDraft"
 
 export default eventHandler(async (event) => {
@@ -7,8 +7,8 @@ export default eventHandler(async (event) => {
     if (!user) return sendRedirect(event, '/auth', 302)
 
     const { sort, search } = getQuery(event)
-    const sortObj: {[x: string]: SortOrder} = sort ? JSON.parse(sort.toString()) : {}
     const searchObj: {[x: string]: string} = search ? JSON.parse(search.toString()) : {}
+    const sortObj: {[x: string]: SortOrder} = sort ? JSON.parse(sort.toString()) : {}
 
     const query = ReviewDraft.find({ user: user._id })
     if(searchObj) query.find(searchObj)
