@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose'
-import { v4 as uuid } from 'uuid'
 import { IUserLogs } from '@/data/types'
 
 interface IUserLogsSchema extends IUserLogs, Document {}

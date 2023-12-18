@@ -9,16 +9,17 @@ definePageMeta({
   auth: true,
   title: 'Моя команда',
 })
-
+const { getData, } = useApi()
 const { width, height } = useWindowSize()
 const myTeam = ref([]) as any
 const headers = useRequestHeaders(['cookie']) as HeadersInit
 
 async function getMyTeam() {
-  const { data, error } = await useFetch('/api/team/get')
-  myTeam.value = data.value
+  const res = await getData('/team/get')
+  if(res && res.length > 0) {
+    myTeam.value = res
+  }
 }
-
 await getMyTeam()
 
 const store = useMainStore()
@@ -197,7 +198,7 @@ function changeTab(newTab: string){
                 </Button>
             </div>
 
-            <div v-if="myTeam.length">
+            <div v-if="myTeam && myTeam.length">
                 <DataTable 
                     v-if="width > 1024"
                     :value="myTeam" 
