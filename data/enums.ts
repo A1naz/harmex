@@ -26,3 +26,14 @@ export enum SelectOptionsReviews {
     uuidBuyout = 'uudidBuyout',
     idReview = 'idReview'
 } 
+
+export enum OperationEnum {
+    Autoanswer = 'autoanswer',
+    Buyout = 'buyout',
+    Cart = 'cart',
+    Delivery = 'delivery',
+    Like = 'like',
+    ProductsLike = 'productsLike',
+    Question = 'question',
+    Review ='review',
+}

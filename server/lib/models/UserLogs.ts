@@ -6,8 +6,8 @@ interface IUserLogsSchema extends IUserLogs, Document {}
 const UserLogsSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     description: { type: String, required: true },
-    actionType: { type: String, required: true },
-    actionId: { type: String, required: true },
+    operationType: { type: String, required: true },
+    operationId: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
 })
 
@@ -17,4 +17,4 @@ UserLogsSchema.pre('save', function (next) {
   next()
 })
 
-export const UserLogs = model<IUserLogsSchema>('User', UserLogsSchema)
+export const UserLogs = model<IUserLogsSchema>('UserLogs', UserLogsSchema)

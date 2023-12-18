@@ -1,4 +1,5 @@
-import { TariffTypeEnum, FieldsType, UserRoles } from "./enums"
+import { ObjectId } from "mongoose";
+import { TariffTypeEnum, FieldsType, UserRoles, OperationEnum } from "./enums"
 import { MenuSection } from "./menu/types"
 
 export interface Entity {
@@ -46,10 +47,17 @@ export interface IUser extends Entity {
 export interface IUserLogs extends Entity {
     user: string,
     description: string,
-    actionType: string,
-    actionId: string,
+    operationType: OperationEnum,
+    operationId: ObjectId,
     createdAt: Date
 }
+export interface UserOperation extends Pick<
+    IUserLogs, 
+    'operationType'
+> {
+    operationId: any,
+}
+
 
 export interface Client extends Omit<
     IUser, 

@@ -2,6 +2,8 @@ import { v4 as uuid } from 'uuid'
 import type { Rule } from '@/data/buyout/rules'
 import { Buyout } from '@/server/lib/models/Buyout'
 import getPickpoints from '~/server/lib/getPoints'
+import { userLog } from '~/server/utils/userLog'
+import { OperationEnum } from '~/data/enums'
 
 interface Item {
   image: string
@@ -39,8 +41,8 @@ export default eventHandler(async (event) => {
     return acc + price
   }, 0)
 
-    if (user.balance < sum)
-    throw createError('Пополните баланс для создания новых выкупов.')
+    // if (user.balance < sum)
+    // throw createError('Пополните баланс для создания новых выкупов.')
 
     const { points } = await getPickpoints()
 
@@ -93,7 +95,13 @@ export default eventHandler(async (event) => {
             uuid: uuid(),
         place: last ? last.place + 1 : 1,
         })
-        await buyout.save()
+        const res = await buyout.save()
+
+        await userLog(event,
+            {
+                operationType: OperationEnum.Buyout,
+                operationId: res._id,
+            })
     }
 
   return { status: 'ok' }
