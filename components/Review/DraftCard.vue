@@ -26,7 +26,11 @@ function toEdit(bool?: boolean){
 
 function toSave(){
     isEdit.value = false
-    emit('updateDraft', {...editData.value}, props.index)
+    const nw = JSON.stringify(editData.value)
+    const old = JSON.stringify(props.draft)
+    if (nw !== old){
+        emit('updateDraft', {...editData.value}, props.index)
+    }
 }
 
 function deleteDraft(){
@@ -69,7 +73,7 @@ const classEditing = ['bg-white outline outline-warning rounded cursor-text p-2 
                                     <div v-if="!isEdit"   
                                         :class="[
                                             classEditable,
-                                            'w-full p-1 text-sm text-primary link link-hover'
+                                            'w-full p-1 text-sm text-primary link link-hover h-[30px]'
                                         ]" 
                                         @dblclick="toEdit(true)"
                                         >

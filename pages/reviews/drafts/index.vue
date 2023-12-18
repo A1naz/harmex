@@ -8,7 +8,7 @@ definePageMeta({
 
 const { getData, postData, putData, deleteData } = useApi()
 
-const endpoint = 'review/drafts'
+const endpoint = '/review/drafts'
 const params = reactive({
     sort: { createdAt: -1 },
     search: {}
@@ -40,8 +40,8 @@ const edit = async (draft: IReviewDraft, i: number) => {
     const res = await postData(endpoint, draft)
     if(res) {
         drafts.value[i] = draft
-        drafts.value[i].isEdit = false
     }
+    drafts.value[i].isEdit = false
 }
 
 const deleteConfirmed = async (isConfirmed: boolean) => {

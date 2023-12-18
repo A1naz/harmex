@@ -3,7 +3,7 @@ import { useNotification } from "@kyvg/vue3-notification"
 const useApi = () => {
     const { notify } = useNotification()
     const headers = useRequestHeaders(['cookie']) as HeadersInit
-    const basePoint = '/api/'
+    const basePoint = '/api'
 
     const getData = async <T>(endPoint: string, params: any) => {
         try {

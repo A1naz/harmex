@@ -100,7 +100,7 @@ const selectedDelivery = ref('')
 const modalOpen = ref(false)
 
 const getDrafts = async(art: any) => {
-    const res = await getData( 'review/drafts', {search: { article: {$in: ['', art]} }} )
+    const res = await getData( '/review/drafts', {search: { article: {$in: ['', art]} }} )
     if(res && res.length > 0) {
         selectedArticle.value = {
             ...selectedArticle.value,
