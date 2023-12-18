@@ -235,7 +235,7 @@ const multiselectStyle = {
                     :key="'multi' + index"
                     v-model="modelValue[conf.field]" 
                     :options="conf.options"
-                    optionLabel="name"
+                    :optionLabel="(data: any)=> data.name"
                     display="chip" 
                     :pt="multiselectStyle"
                     />

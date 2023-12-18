@@ -43,6 +43,14 @@ export interface IUser extends Entity {
     tariff: ITariff
 }
 
+export interface IUserLogs extends Entity {
+    user: string,
+    description: string,
+    actionType: string,
+    actionId: string,
+    createdAt: Date
+}
+
 export interface Client extends Omit<
     IUser, 
     "acesses" | "tabs" | "newEmail" | "emailConfirmed" | "telegramUnlinkEmailSend"
