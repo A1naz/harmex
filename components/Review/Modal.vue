@@ -15,6 +15,7 @@ const closeButton = ref<HTMLElement>()
 const { notify } = useNotification()
 const { upload, getPublicUrl, remove } = useS3Object()
 const now = useNow()
+const { restrictUrl } = useValidation()
 
 const inputs: any = {
   file1: ref(),
@@ -50,6 +51,13 @@ const form = reactive({
       public: '',
     },
   ],
+})
+
+const textValidation = computed(() => {
+    return restrictUrl(form.text)
+})
+const textValidError = computed(()=>{
+    return textValidation.value ? '' : 'В тексте присутствуют запрещенные символы (нельзя указыать ссылки)'
 })
 
 function useDraft(draft: IReviewDraft){
@@ -236,24 +244,35 @@ onMounted(() => {
 
       <div class="flex flex-col gap-4">
 
+
+
+
         <div class="w-full mb-4">
-            <div class="pb-2">Отзыв о товаре</div>          
+            <div class="pb-2">Отзыв о товаре</div>  
+
             <textarea
                 v-model="form.text"
                 class="textarea w-full textarea-md bg-base-200"
                 placeholder="Например, хороший телефон"
                 />
-                <div v-if="review.drafts" class="text-xs">черновики: 
-                    <button 
-                        v-for="draft in review.drafts" 
-                        class="mx-1 text-primary hover:underline hover:cursor-pointer"
-                        @click="useDraft(draft)"
-                        > 
-                        <p v-if="draft.draftName"> {{ draft.draftName }}</p>
-                        <i v-else> {{ '<без названия>' }} </i>
-                    </button>
-                </div>
+
+
+            <div v-if="review.drafts" class="text-xs">черновики: 
+                <button 
+                    v-for="draft in review.drafts" 
+                    class="mx-1 text-primary hover:underline hover:cursor-pointer"
+                    @click="useDraft(draft)"
+                    > 
+                    <p v-if="draft.draftName"> {{ draft.draftName }}</p>
+                    <i v-else> {{ '<без названия>' }} </i>
+                </button>
             </div>
+
+            <div class="text-error">  {{ textValidError }} </div>
+
+        </div>
+
+
 
         <div>
           <div class="pb-2">Рейтинг</div>
@@ -407,11 +426,12 @@ onMounted(() => {
             @click="$emit('close')"
             >Отмена</label
           >
-          <label
+          <button
             for="review-modal"
             class="btn btn-primary btn-sm"
+            :disabled="!textValidation"
             @click="publishReview"
-            >Отправить</label
+            >Отправить</button
           >
         </div>
       </div>
