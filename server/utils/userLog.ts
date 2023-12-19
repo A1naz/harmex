@@ -37,6 +37,6 @@ export const userLog = async (event: any, operation: UserOperation): Promise<voi
         await userLog.save()
     }    
     catch(e:any){
-        console.log()
+        logger(event, 'ошибка записи действия пользователя')
     }
 }
