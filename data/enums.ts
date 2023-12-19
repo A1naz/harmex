@@ -27,7 +27,7 @@ export enum SelectOptionsReviews {
     idReview = 'idReview'
 } 
 
-export enum OperationEnum {
+export enum DocuemntEnum {
     Autoanswer = 'autoanswer',
     Buyout = 'buyout',
     Cart = 'cart',

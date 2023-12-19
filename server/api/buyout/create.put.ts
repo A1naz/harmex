@@ -3,7 +3,7 @@ import type { Rule } from '@/data/buyout/rules'
 import { Buyout } from '@/server/lib/models/Buyout'
 import getPickpoints from '~/server/lib/getPoints'
 import { userLog } from '~/server/utils/userLog'
-import { OperationEnum } from '~/data/enums'
+import { DocuemntEnum } from '~/data/enums'
 
 interface Item {
   image: string
@@ -99,8 +99,8 @@ export default eventHandler(async (event) => {
 
         await userLog(event,
             {
-                operationType: OperationEnum.Buyout,
-                operationId: res._id,
+                documentType: DocuemntEnum.Buyout,
+                documentId: res._id,
             })
     }
 

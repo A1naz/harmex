@@ -2,7 +2,7 @@ import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import { Buyout } from '@/server/lib/models/Buyout'
 import { Delivery } from '@/server/lib/models/Delivery'
-import { OperationEnum } from '~/data/enums'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -50,8 +50,8 @@ if (found.completed > 0) {
 
     await userLog(event,
         {
-            operationType: OperationEnum.Buyout,
-            operationId: found._id,
+            documentType: DocuemntEnum.Buyout,
+            documentId: found._id,
         })
 
     return {

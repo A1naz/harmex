@@ -2,15 +2,23 @@ import { getServerSession } from '#auth'
 import { ObjectId } from 'mongodb'
 import { UserLogs } from '../lib/models/UserLogs'
 import { UserOperation } from '~/data/types'
+import { DocuemntEnum } from '~/data/enums'
 
-const OperationDescriptions = new Map<string, string>([
-   [ 'autoanswer', 'Автоответ' ],
-   [ 'buyout', 'Выкуп' ],
-])
+const operationDescriptions: {[key in DocuemntEnum]: string} = {
+   autoanswer: 'Автоответ',
+   buyout: 'Выкуп' ,
+   cart: 'Корзина',
+   delivery: 'Доставка',
+   like: 'Лайк',
+   productsLike: 'Лайк на продукт',
+   question: 'Вопрос',
+   review: 'Отзыв',
+}
+
 const OperationActions = new Map<string, string>([
-    [ 'PUT', 'Создание' ],
-    [ 'POST', 'Изменение' ],
-    [ 'DELETE', 'Удаление' ],
+    [ 'PUT', 'Созданан документ' ],
+    [ 'POST', 'Изменен документ' ],
+    [ 'DELETE', 'Удален документ' ],
  ])
 
 export const userLog = async (event: any, operation: UserOperation): Promise<void> => {
@@ -18,16 +26,17 @@ export const userLog = async (event: any, operation: UserOperation): Promise<voi
     try{
         const session = (await getServerSession(event)) as any
         if (!session) return sendRedirect(event, '/auth', 302)
-        
+        let description = OperationActions.get(event.method) + ' - ' +  operationDescriptions[operation.documentType] 
+        if (operation.comment) description += ` (${operation.comment})`
         const userLog = new UserLogs({
             user: new ObjectId(session._id),
-            description: OperationDescriptions.get(operation.operationType) + ' - ' + OperationActions.get(event.method),
-            operationType: operation.operationType,
-            operationId: operation.operationId,
+            description: description,
+            documentType: operation.documentType,
+            documentId: operation.documentId,
         })
         await userLog.save()
     }    
     catch(e:any){
-        return sendRedirect(event, '/auth', 302)
+        console.log()
     }
 }

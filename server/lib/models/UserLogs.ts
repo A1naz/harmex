@@ -6,8 +6,8 @@ interface IUserLogsSchema extends IUserLogs, Document {}
 const UserLogsSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     description: { type: String, required: true },
-    operationType: { type: String, required: true },
-    operationId: { type: String, required: true },
+    documentType: { type: String, required: true },
+    documentId: { type: Schema.Types.ObjectId, required: true },
     createdAt: { type: Date, default: Date.now }
 })
 
