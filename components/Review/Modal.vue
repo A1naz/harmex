@@ -57,7 +57,7 @@ const textValidation = computed(() => {
     return restrictUrl(form.text)
 })
 const textValidError = computed(()=>{
-    return textValidation.value ? '' : 'В тексте присутствуют запрещенные символы (нельзя указыать ссылки)'
+    return textValidation.value ? '' : 'В тексте присутствуют запрещенные символы (нельзя указывать ссылки)'
 })
 
 function useDraft(draft: IReviewDraft){

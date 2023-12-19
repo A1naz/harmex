@@ -293,7 +293,9 @@ function toggleInfoModal() {
       <div v-if="!isFetch && reviews && reviews.length > 0" ref="target" class="flex justify-center items-center h-4 mb-10" />
     
     </div>
-    <div v-else-if="isFetch">Загрузка...</div>
+    <div v-else-if="isFetch" class="flex justify-center mt-10">
+        <span class="loading loading-spinner loading-lg text-primary "/>
+    </div>
     <Hero v-else />
 
     <ReviewModal
