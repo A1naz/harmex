@@ -51,6 +51,9 @@ export default eventHandler(async (event) => {
         const rules = product.rules.map((rule) => rule.id)
         const searchQueries = product.searchQuery.map((item: any) => item.value)
 
+   
+        
+
         if (userTimezoneOffsetHours && userOffsetMinutes) {
             const date1 = new Date(product.dateRange[0])
             const date2 = new Date(product.dateRange[1])
@@ -72,6 +75,7 @@ export default eventHandler(async (event) => {
             ({city, state} = await getCityByGeo(foundPoint.lt, foundPoint.lg))
         }
 
+     
         const buyout = new Buyout({
             article: product.article,
             searchQuery: searchQueries.join(', '),
@@ -96,11 +100,14 @@ export default eventHandler(async (event) => {
         place: last ? last.place + 1 : 1,
         })
 
+        await buyout.save()
+
         await userLog(event,
             {
                 documentType: DocuemntEnum.Buyout,
                 documentId: buyout.uuid,
             })
+
     }
 
   return { status: 'ok' }
