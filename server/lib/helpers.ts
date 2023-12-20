@@ -1,6 +1,8 @@
 import * as https from 'https'
 import { HttpsProxyAgent } from 'https-proxy-agent'
-const c = [143, 287, 431, 719, 1007, 1061, 1115, 1169, 1313, 1601, 1655, 1919, 2045]
+const c = [
+  143, 287, 431, 719, 1007, 1061, 1115, 1169, 1313, 1601, 1655, 1919, 2045,
+]
 import { proxies } from './proxy'
 
 function p(t: any, e: any) {
@@ -20,7 +22,7 @@ export function findImage(article: number) {
   const result = `https://basket-${
     (a as number) < 10 ? `0${a}` : a
   }.wb.ru/vol${n}/part${Math.floor(article / 1e3)}/${article}/images/big/1.jpg`
-  
+
   return result
 }
 
@@ -112,7 +114,6 @@ export async function findPositionByQuery(
       return cycleResult
     } else return result
   } catch (e) {
-
     cycleCount++
     if (n <= 1) {
       const newResult: any = await findPositionByQuery(query, article, sort, n)
