@@ -59,7 +59,7 @@ const listData = reactive<ItemData>({
     }
 })
 
-const fetchData = async () => {
+const _fetchData = async () => {
     listData.data = []
     const { search } = listData
     const res = await getData(props.endpoint, {
@@ -68,12 +68,19 @@ const fetchData = async () => {
             sort: JSON.stringify(search.sort),
             filter: JSON.stringify(search.filter)
     })
-    if(res.status =='ok') {
+    if(res && res.status =='ok') {
         listData.data = res.data.list
         listData.count = res.data.count
     }
+    isLoading.value = false
 }
-await fetchData()
+const _getDataDebounced = useDebounceFn(()=> _fetchData() , 700)
+
+function fetchData(){
+    isLoading.value = true
+    _getDataDebounced()
+}
+fetchData()
 
 const pageNum = computed( () => {
     const res = listData.count / listData.search.limit
@@ -129,7 +136,7 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
         :value="listData.data" 
         :sort-field="Object.keys(listData.search.sort)[0]"
         :sort-order="Object.values(listData.search.sort)[0]"
-        @sort="(v: any) => $emit('sort', v)"
+        @sort="(v: any) => updateFilter('sort', v)"
         >
         <Column
             v-for="col of config"
@@ -157,7 +164,7 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
         <span class="loading loading-spinner loading-lg text-primary "/>
     </div>
 
-    <div v-if="!isLoading && listData.count == 0">Нет данных</div>
+    <Hero v-if="!isLoading && listData.count == 0" />
     
     <div v-if="!isLoading && listData.data.length > 10">
         <div class="flex flex-row w-full justify-end">

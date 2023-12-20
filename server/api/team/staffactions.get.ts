@@ -43,8 +43,8 @@ export default eventHandler(async (event) => {
     return {
         status: 'ok',
         data: {
-            list: logs[0].list,
-            count: logs[0].count[0].count
+            list: logs[0].list.length > 0 ? logs[0].list : [],
+            count: logs[0].count.length > 0 ? logs[0].count[0].count : 0
         }
     }
 })
