@@ -115,10 +115,11 @@ export default eventHandler(async (event) => {
         format = format.slice(skip, skip+limit)
     }
 
-    const data: IResTable = {
-        list: format,
-        count: count
+    return {
+        status: 'ok',
+        data: {
+            list: format,
+            count: count
+        }
     }
-
-    return data
 })

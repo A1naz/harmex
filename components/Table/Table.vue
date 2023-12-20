@@ -1,110 +1,168 @@
 <script setup lang="ts">
-import { ConfigTable } from '~/data/types';
+import { ConfigTable, ItemData, ItemSearch } from '~/data/types';
 import { FieldsType } from '~/data/enums';
 
 const props = defineProps({
-    data: { type: Array as PropType<any[]>, required: true },
-    count: { type: Number, required: true },
-    currentLimit: { type: Number, required: true },
-    currentSkip: { type: Number, required: true },
-    currentSort: { type: Object, required: true },
+    endpoint: { type: String, required: true },
     config:  { type: Array as PropType<ConfigTable[]>, required: true },
-    isLoading: { type: Boolean, required: true },    
+    useDefaultDateFilter: { type: Boolean, required: false },
 })
-const emit = defineEmits(['sort', 'changePage', 'changeLimit'])
-const { width, height } = useWindowSize()
 
+const changePage = (numPage: number) => {
+    updateFilter('skip', numPage)
+}
+
+const changeLimit = (limit: number) => {
+    updateFilter('limit', limit)
+}
+
+const { getData, } = useApi()
+const { width, height } = useWindowSize()
+const isLoading = ref(false)
 const limitList = [20 ,40, 60]
+const limitInit = 20
+
+
+const listData = reactive<ItemData>({
+    data: [],
+    count: 0,
+    search: {
+        skip: 0,
+        limit: limitInit,
+        sort: { createdAt: -1 },
+        filter: {}
+    }
+})
+
+const _fetchData = async () => {
+    listData.data = []
+    const { search } = listData
+    const res = await getData(props.endpoint, {
+            skip: search.skip, 
+            limit: search.limit,
+            sort: JSON.stringify(search.sort),
+            filter: JSON.stringify(search.filter)
+    })
+    if(res && res.status =='ok') {
+        listData.data = res.data.list
+        listData.count = res.data.count
+    }
+    isLoading.value = false
+}
+const _getDataDebounced = useDebounceFn(()=> _fetchData() , 700)
+
+function fetchData(){
+    isLoading.value = true
+    _getDataDebounced()
+}
+fetchData()
 
 const pageNum = computed( () => {
-    const res = props.count / props.currentLimit 
+    const res = listData.count / listData.search.limit
     return res == 0 ? 1 : Math.ceil(res)
 })
 
 const currentPage = computed ( () => {
-    return props.currentSkip == 0 ? 1 : props.currentSkip / props.currentLimit + 1
+    return listData.search.skip == 0 ? 1 : listData.search.skip / listData.search.limit + 1
 })
 
 const displayed = computed( ()=>{
-    const from = props.count == 0 ? 0 : props.currentSkip + 1
-    const to = props.currentSkip + props.data.length
-    return `Показано ${from}-${to} из ${props.count}`
+    const from = listData.count == 0 ? 0 : listData.search.skip + 1
+    const to = listData.search.skip + listData.data.length
+    return `Показано ${from}-${to} из ${listData.count}`
 })
 
-const changePage = (numPage: number) => {
-    emit('changePage', numPage)
-}
+function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
+    if(key =='skip') {
+        value = listData.search.limit * (value - 1)
+    }
+    if(key =='limit') {
+        listData.search.skip = 0
+    }
+    if(key == 'sort') value = { [value.sortField]: value.sortOrder }
 
-const changeLimit = (limit: number) => {
-    emit('changeLimit', limit)
+    if(key == 'filter') {
+        listData.search.skip = 0
+    }
+    listData.search[key] = value
+    listData.data = []
+    fetchData()
 }
 
 </script>
 
 <template>
-<div>
+    <div class="mt-8">
+        <TableDateDefaultFilter
+            v-if="useDefaultDateFilter"
+            @range-upd="(r: number) => updateFilter('filter', r)"
+            />
 
-    <TablePagination  
-        :page-nums="pageNum"
-        :limit-list="limitList"
-        :current-page="currentPage"
-        :current-limit="currentLimit"
-        @change-limit="changeLimit"
-        @change-page="changePage"
-        />
-    
-    <div class="flex flex-row w-full justify-end">
-        <div class="self-center text-sm">{{ displayed }}</div>
-    </div>
-    
-    <DataTable 
-        :value="data" 
-        :sort-field="Object.keys(currentSort)[0]"
-        :sort-order="Object.values(currentSort)[0]"
-        @sort="(v: any) => $emit('sort', v)"
-        >
-        <Column
-            v-for="col of config"
-            sortable
-            :key=col.field
-            :field=col.field 
-            :header=col.header
-            >
-            <template v-if="col.type == FieldsType.boolean" #body="{ data }">
-                {{ data[col.field] ? "Выполнен" : "Активный" }}
-            </template>
-            <template v-if="col.type == FieldsType.date" #body="{ data }">
-                {{ defaultDateShort(data[col.field]) }}
-            </template>
-            <template v-else-if="col.type == FieldsType.price" #body="{ data }">
-                {{ Number.parseFloat(data[col.field]).toFixed(2)  }} р.
-            </template>
-            <template v-else #body="{ data }">
-                {{ data[col.field] }}
-            </template>
-        </Column>
-    </DataTable>
-
-    <div v-if="isLoading">Загрузка...</div>
-    <div v-if="!isLoading && count == 0">Нет данных</div>
-    
-    <div v-if="!isLoading && data.length > 10">
+        <TablePagination  
+            :page-nums="pageNum"
+            :limit-list="limitList"
+            :current-page="currentPage"
+            :current-limit="listData.search.limit"
+            @change-limit="changeLimit"
+            @change-page="changePage"
+            />
+        
         <div class="flex flex-row w-full justify-end">
             <div class="self-center text-sm">{{ displayed }}</div>
         </div>
-        <div class="mb-24">
-            <TablePagination  
-                :page-nums="pageNum"
-                :limit-list="limitList"
-                :current-page="currentPage"
-                :current-limit="currentLimit"
-                @change-limit="changeLimit"
-                @change-page="changePage"
-                />
+        
+        <DataTable 
+            :value="listData.data" 
+            :sort-field="Object.keys(listData.search.sort)[0]"
+            :sort-order="Object.values(listData.search.sort)[0]"
+            @sort="(v: any) => updateFilter('sort', v)"
+            >
+            <Column
+                v-for="col of config"
+                sortable
+                :key=col.field
+                :field=col.field 
+                :header=col.header
+                >
+                <template v-if="col.type == FieldsType.boolean" #body="{ data }">
+                    {{ data[col.field] ? "Выполнен" : "Активный" }}
+                </template>
+                <template v-else-if="col.type == FieldsType.date" #body="{ data }">
+                    {{ defaultDateShort(data[col.field]) }}
+                </template>
+                <template v-else-if="col.type == FieldsType.datetime" #body="{ data }">
+                    {{ defaultDate(data[col.field]) }}
+                </template>
+                <template v-else-if="col.type == FieldsType.price" #body="{ data }">
+                    {{ Number.parseFloat(data[col.field]).toFixed(2)  }} р.
+                </template>
+                <template v-else #body="{ data }">
+                    {{ data[col.field] }}
+                </template>
+            </Column>
+        </DataTable>
+
+        <div v-if="isLoading" class="flex justify-center mt-10">
+            <span class="loading loading-spinner loading-lg text-primary "/>
         </div>
+
+        <Hero v-if="!isLoading && listData.count == 0" />
+        
+        <div v-if="!isLoading && listData.data.length > 10">
+            <div class="flex flex-row w-full justify-end">
+                <div class="self-center text-sm">{{ displayed }}</div>
+            </div>
+            <div class="mb-24">
+                <TablePagination  
+                    :page-nums="pageNum"
+                    :limit-list="limitList"
+                    :current-page="currentPage"
+                    :current-limit="listData.search.limit"
+                    @change-limit="changeLimit"
+                    @change-page="changePage"
+                    />
+            </div>
+        </div>
+
     </div>
-
-</div>
 </template>
-
-<style scoped></style>

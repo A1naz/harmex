@@ -132,5 +132,11 @@ export default eventHandler(async (event) => {
     }
   }
 
-  return data
+  return {
+    status: 'ok',
+    data: {
+        list: data.list,
+        count: data.count
+    }
+}
 })

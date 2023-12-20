@@ -2,7 +2,7 @@ export enum FieldsType {
     actions = 'actions',
     boolean = 'boolean',
     date = 'date',
-    dateTime = 'dateTime',
+    datetime = 'datetime',
     email = 'email',
     text = 'text',
     textArea = 'textArea',

@@ -173,7 +173,7 @@ const listConfigAcrions: ConfigTable[] = [
     { field: 'userNick', header: 'Ник', type: FieldsType.text },
     { field: 'userEmail', header: 'E-mail', type: FieldsType.email },
     { field: 'description', header: 'Действие', type: FieldsType.text },
-    { field: 'createdAt', header: 'Дата', type: FieldsType.dateTime },
+    { field: 'createdAt', header: 'Дата', type: FieldsType.datetime },
     { field: 'documentId', header: 'id документа', type: FieldsType.text },
 ]
 
@@ -332,7 +332,7 @@ const listConfigAcrions: ConfigTable[] = [
             <Hero v-else />
         </template>
         <template v-slot:staffactions>
-            <TableRenewTable
+            <Table
                 endpoint="/team/staffactions"
                 :config="listConfigAcrions"
                 />
