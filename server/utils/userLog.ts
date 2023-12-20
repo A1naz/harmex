@@ -20,8 +20,8 @@ const operationDescriptions: {[key in DocuemntEnum]: string} = {
 }
 
 const OperationActions = new Map<string, string>([
-    [ 'PUT', 'Создан документ' ],
-    [ 'POST', 'Изменен документ' ],
+    [ 'POST', 'Создан документ' ],
+    [ 'PUT', 'Изменен документ' ],
     [ 'DELETE', 'Удален документ' ],
  ])
 
