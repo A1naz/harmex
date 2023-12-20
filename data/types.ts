@@ -141,3 +141,24 @@ export interface IResTable {
     list: any[],
     count: number
 }
+
+
+export interface ItemData {
+    data: any [],
+    count: number,
+    search: ItemSearch
+}
+export interface ItemSearch {
+    skip: number,
+    limit: number,
+    sort: ItemSearchSort,
+    filter: any
+}
+export interface ItemSearchSort {
+    [key:string]: number
+}
+
+export interface DateFilterRanges {
+    header: string,
+    value: number 
+}

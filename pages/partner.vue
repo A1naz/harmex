@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IResTable, ITabs } from '~/data/types';
+import { IResTable, ITabs, ItemData, ItemSearch } from '~/data/types';
 import { FieldsType } from '~/data/enums'
 
 definePageMeta({
@@ -33,21 +33,7 @@ async function getSecondartRefLevel(){
 }
 await getSecondartRefLevel()
 
-interface ItemSearch {
-    skip: number,
-    limit: number,
-    sort: any,
-    filter: any
-}
-interface itemData {
-    data: any [],
-    count: number,
-    search: ItemSearch
-}
-interface ListData {
-    referals: itemData, 
-    orders: itemData
-}
+
 const limitInit = 20
 const itemInitData = {
     data: [],
@@ -58,6 +44,10 @@ const itemInitData = {
         sort: {},
         filter: {}
     }
+}
+interface ListData {
+    referals: ItemData, 
+    orders: ItemData
 }
 const listData = ref<ListData>({} as ListData)
 function initListData(){

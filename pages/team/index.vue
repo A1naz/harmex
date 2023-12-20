@@ -9,10 +9,13 @@ definePageMeta({
   auth: true,
   title: 'Моя команда',
 })
+
 const { getData, } = useApi()
+const route = useRoute()
 const { width, height } = useWindowSize()
 const myTeam = ref([]) as any
 const headers = useRequestHeaders(['cookie']) as HeadersInit
+const tab = computed (() => route.query.tab)
 
 async function getMyTeam() {
   const res = await getData('/team/get')
@@ -160,19 +163,20 @@ const configColumns: ConfigTable[] = [
 ];
 
 
-const getUserHistory = async ()=>{
-    const res = await getData('/')
-}
-
-
-
 const tabs: ITabs[] = [
     {title: 'Сотрудники', slot: 'main', query: ''},
-    {title: 'История действий', slot: 'staffhistory', query: '?tab=staffhistory' },
+    {title: 'История действий', slot: 'staffactions', query: '?tab=staffactions' },
 ]
-function changeTab(newTab: string){
 
-}
+
+const listConfigAcrions: ConfigTable[] = [
+    { field: 'userNick', header: 'Ник', type: FieldsType.text },
+    { field: 'userEmail', header: 'E-mail', type: FieldsType.email },
+    { field: 'description', header: 'Действие', type: FieldsType.text },
+    { field: 'createdAt', header: 'Дата', type: FieldsType.date },
+    { field: 'documentId', header: 'id документа', type: FieldsType.text },
+]
+
 
 </script>
 
@@ -190,7 +194,6 @@ function changeTab(newTab: string){
 
     <Tabs 
         :tabs="tabs"
-        @change-tab="changeTab"
         >
         <template v-slot:main>
             <div class="flex justify-end mb-8 mt-6 items-center">
@@ -328,18 +331,11 @@ function changeTab(newTab: string){
             </div>
             <Hero v-else />
         </template>
-        <template v-slot:staffhistory>
-            <!-- <Table
-                :data="listData.referals.data"
-                :count="listData.referals.count"
-                :currentLimit="listData.referals.search.limit"
-                :currentSkip="listData.referals.search.skip"
-                :current-sort="listData.referals.search.sort"
-                :config="listConfigPartners"
-                :isLoading="loadingList"
-                @changePage="(p: number) => updateFilter('skip', p)"
-                @changeLimit="(l: number) => updateFilter('limit', l)"
-                /> -->
+        <template v-slot:staffactions>
+            <TableRenewTable
+                endpoint="/team/staffactions"
+                :config="listConfigAcrions"
+                />
         </template>
     </Tabs>
 
