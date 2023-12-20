@@ -1,5 +1,6 @@
 import ExcelJS from 'exceljs'
 import { Review } from '~/server/lib/models/Review'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -35,5 +36,13 @@ export default eventHandler(async (event) => {
 
     sheet.addRows(reviews)
     const buffer = await workbook.xlsx.writeBuffer()
+
+    await userLog(event,
+        {
+            documentType: DocuemntEnum.Review,
+            documentId: '',
+            comment: 'Экспорт отзывов'
+        })
+
     return buffer
 })

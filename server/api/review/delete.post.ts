@@ -1,6 +1,7 @@
 ﻿import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import { Review } from '~~/server/lib/models/Review'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -29,6 +30,13 @@ export default eventHandler(async (event) => {
 
   found.status = 'deleting'
   await found.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Review,
+        documentId: found._id,
+        comment: 'Статус: удаление'
+    })
 
   return { status: 'ok' }
 })

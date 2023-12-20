@@ -1,4 +1,5 @@
 import { PartnerWithdraw } from '~/server/lib/models/PartnerWithdraw'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -44,7 +45,15 @@ export default eventHandler(async (event) => {
 
   if (withdraw) {
     user.partner.balance -= Number(amount)
-    await user.save()
+    const res = await user.save()
+
+    await userLog(event,
+        {
+            documentType: DocuemntEnum.Partners,
+            documentId: res._id,
+            comment: 'вывод средств'
+        })
+
     return { status: 'ok', document: withdraw, message: 'success' }
   }
   else { return { status: 'error', message: 'Не удалось создать вывод' } }

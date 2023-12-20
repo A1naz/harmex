@@ -30,7 +30,7 @@ async function getProductLikes() {
 await getProductLikes()
 async function create() {
   const { data, error } = await useFetch('/api/productlikes/create', {
-    method: 'POST',
+    method: 'PUT',
     body: {
       url: url.value,
       amount: amount.value,
@@ -98,7 +98,7 @@ function openRemoveReviewModal(id: any) {
 
 async function deleteLike() {
   const { data, error } = await useFetch('/api/productlikes/delete', {
-    method: 'POST',
+    method: 'DELETE',
     body: {
       id: idForRemove.value,
     },

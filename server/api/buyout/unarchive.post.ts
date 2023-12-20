@@ -1,6 +1,7 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import { Buyout } from '@/server/lib/models/Buyout'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -23,6 +24,14 @@ export default eventHandler(async (event) => {
   }
   found.status = 'active'
   await found.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Buyout,
+        documentId: found.uuid,
+        comment: 'убран из архива'
+    })
+
   return {
     status: 'ok',
   }

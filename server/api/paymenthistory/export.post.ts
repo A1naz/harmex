@@ -1,5 +1,6 @@
 import ExcelJS from 'exceljs'
 import { paymenthistory } from '~~/server/lib/models/Paymenthistory'
+import { DocuemntEnum } from '~/data/enums'
 
 function getHistoryType(type: string) {
   let result = ''
@@ -68,5 +69,13 @@ export default eventHandler(async (event) => {
   ]
   sheet.addRows(mapped)
   const buffer = await workbook.xlsx.writeBuffer()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.PaymentHistory,
+        documentId: '',
+        comment: 'Экспорт истории платежей'
+    })
+
   return buffer
 })

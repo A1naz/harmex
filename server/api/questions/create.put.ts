@@ -1,4 +1,5 @@
 import { Question } from '~/server/lib/models/Question'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -24,7 +25,14 @@ export default eventHandler(async (event) => {
     text: questionText,
     image,
   })
-  await created.save()
+  const res = await created.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Question,
+        documentId: res._id,
+    })
+
   return {
     status: 'ok',
   }

@@ -1,4 +1,5 @@
 import { Buyout } from '@/server/lib/models/Buyout'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -17,6 +18,14 @@ export default eventHandler(async (event) => {
   if (found.status === 'paused' || found.status === 'nofunds')
     found.status = 'active'
   await found.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Buyout,
+        documentId: found.uuid,
+        comment: 'снят с паузы'
+    })
+
   return {
     status: 'ok',
   }

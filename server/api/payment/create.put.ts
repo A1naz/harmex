@@ -1,4 +1,5 @@
 import { Payment } from '~~/server/lib/models/Payment'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -26,7 +27,14 @@ export default eventHandler(async (event) => {
     status: 'created',
     type: paymentType === 'fast' ? 0 : paymentType === 'transfer' ? 1 : undefined,
   })
-  await payment.save()
+  const res = await payment.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Payment,
+        documentId: res._id,
+    })
+
   return {
     type: paymentType as string,
     id: payment._id,

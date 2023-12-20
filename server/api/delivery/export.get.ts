@@ -1,6 +1,7 @@
 import ExcelJS from 'exceljs'
 import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
+import { DocuemntEnum } from '~/data/enums'
 
 const keys = Object.keys as <T>(obj: T) =>
 (keyof T extends infer U ? U extends string ? U : U extends number ? `${U}` : never : never)[]
@@ -79,6 +80,14 @@ export default eventHandler(async (event) => {
     })
     // export table
     const buffer = await workbook.xlsx.writeBuffer()
+
+    await userLog(event,
+        {
+            documentType: DocuemntEnum.Delivery,
+            documentId: '',
+            comment: 'Экспорт всех доставок XLS'
+        })
+
     return buffer
   }
   catch (e) {

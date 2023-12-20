@@ -95,7 +95,6 @@ export default eventHandler(async (event) => {
             uuid: uuid(),
         place: last ? last.place + 1 : 1,
         })
-        const res = await buyout.save()
 
         await userLog(event,
             {

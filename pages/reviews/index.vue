@@ -134,7 +134,7 @@ function openRemoveReviewModal(uuid: any) {
 
 async function removeReview() {
   const { data, error } = await useFetch('/api/review/delete', {
-    method: 'GET',
+    method: 'POST',
     query: {
       id: uuidForRemove.value,
     },

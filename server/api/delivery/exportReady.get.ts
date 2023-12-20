@@ -1,11 +1,10 @@
 import ExcelJS from 'exceljs'
 
 import type { Document } from 'mongoose'
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
 import { Buyoutlog } from '@/server/lib/models/Buyoutlog'
+import { DocuemntEnum } from '~/data/enums'
 
 const keys = Object.keys as <T>(obj: T) =>
 (keyof T extends infer U ? U extends string ? U : U extends number ? `${U}` : never : never)[]
@@ -116,6 +115,14 @@ export default eventHandler(async (event) => {
     }
     // export table
     const buffer = await workbook.xlsx.writeBuffer()
+
+    await userLog(event,
+        {
+            documentType: DocuemntEnum.Delivery,
+            documentId: '',
+            comment: 'Экспорт доставок готовых к выдаче'
+        })
+
     return buffer
   }
   catch (e) {
