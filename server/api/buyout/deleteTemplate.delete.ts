@@ -14,5 +14,12 @@ export default eventHandler(async (event) => {
   const uuid = query.uuid
   await BuyoutTemplate.deleteOne({ uuid })
 
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Buyout,
+        documentId: uuid,
+        comment: 'удаление шаблона'
+    })
+
   return { status: 'ok' }
 })

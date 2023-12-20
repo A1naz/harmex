@@ -1,7 +1,6 @@
 ﻿import { v4 as uuid } from 'uuid'
-import { getServerSession } from '#auth'
-import { User } from '~~/server/lib/models/User'
 import { BuyoutTemplate } from '~/server/lib/models/BuyoutTemplate'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -23,6 +22,13 @@ export default eventHandler(async (event) => {
     title: templateTitle,
     buyoutsArray: products,
   })
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Buyout,
+        documentId: templateUuid,
+        comment: 'создание шаблона'
+    })
 
   return {
     status: 'ok',

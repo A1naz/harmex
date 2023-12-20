@@ -1,4 +1,5 @@
 import { Cart } from '@/server/lib/models/Cart'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -24,7 +25,14 @@ export default eventHandler(async (event) => {
     name,
     createdDate: new Date(),
   })
-  await created.save()
+  const res = await created.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Cart,
+        documentId: res._id.toString(),
+    })
+
   return {
     status: 'ok',
   }

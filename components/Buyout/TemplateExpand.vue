@@ -36,7 +36,7 @@ async function selectTemplate() {
 
 async function deleteTemplate() {
   const { data, error }: any = await useFetch('/api/buyout/deleteTemplate', {
-    method: 'GET',
+    method: 'DELETE',
     params: { uuid: props.uuid },
   })
 

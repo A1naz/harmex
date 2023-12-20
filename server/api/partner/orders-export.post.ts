@@ -2,6 +2,7 @@ import ExcelJS from 'exceljs'
 import { ObjectId } from 'mongodb';
 import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory';
 import { Referral } from '~/server/lib/models/Referral';
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -102,5 +103,13 @@ if (startDate && endDate) {
   sheet.columns = columns
   sheet.addRows(format)
   const buffer = await workbook.xlsx.writeBuffer()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Partners,
+        documentId: '',
+        comment: 'Экспорт партнерских заказов'
+    })
+
   return buffer
 })

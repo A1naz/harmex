@@ -47,9 +47,16 @@ export default eventHandler(async (event) => {
     status: 'waiting',
     recipientphone: delivery.recipientphone,
   })
-  await review.save()
+  const res = await review.save()
   delivery.reviewed = true
   const saved = await delivery.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Review,
+        documentId: res._id,
+    })
+
   return {
     message: 'Отзыв успешно добавлен',
   }

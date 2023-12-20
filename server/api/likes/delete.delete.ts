@@ -1,6 +1,7 @@
 ﻿import { getServerSession } from '#auth'
 import { User } from '~~/server/lib/models/User'
 import { Like } from '~~/server/lib/models/Like'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -29,6 +30,13 @@ export default eventHandler(async (event) => {
   }
 
   await like.deleteOne()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Like,
+        documentId: like._id,
+    })
+
   return {
     status: 'ok',
   }

@@ -157,7 +157,7 @@ async function pay() {
     return
   }
   const { data, error } = await useFetch('/api/payment/create', {
-    method: 'POST',
+    method: 'PUT',
     body: {
       amount: paymentForm.paymentSum,
       paymentType: paymentForm.paymentType,
