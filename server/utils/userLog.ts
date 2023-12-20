@@ -3,7 +3,6 @@ import { UserLogs } from '../lib/models/UserLogs'
 import { UserOperation, IUserLogs } from '~/data/types'
 import { DocuemntEnum, UserRoles } from '~/data/enums'
 import { User } from '../lib/models/User'
-import { ObjectId } from 'mongodb'
 
 const operationDescriptions: {[key in DocuemntEnum]: string} = {
    autoanswer: 'Автоответ',

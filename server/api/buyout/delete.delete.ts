@@ -51,7 +51,7 @@ if (found.completed > 0) {
     await userLog(event,
         {
             documentType: DocuemntEnum.Buyout,
-            documentId: found._id,
+            documentId: body.uuid,
         })
 
     return {

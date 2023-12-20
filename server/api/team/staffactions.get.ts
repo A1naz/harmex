@@ -5,40 +5,36 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-    const { skip, limit, search, sort } = getQuery(event)
+    const { skip, limit, sort, search } = getQuery(event)
+    const skipParse = skip ? parseInt(skip.toString(), 10) : 0
+    const limitParse = limit ? parseInt(limit.toString(), 10) : 50
+    const sortParse = sort ? JSON.parse(sort.toString()) : {}
 
+    const match = { 
+        $match: {
+            uuidCompany: user.uuid
+    }}
+  
     const listPL: any[] = [
-        {
-            $match: {
-                uuidCompany: user.uuid
-            }
-        }
+        match,
+        { $sort : sortParse },
+        { $skip: skipParse },
+        { $limit: limitParse },
     ]
 
     const countPL: any[] = [
-        {
-            $match: {
-                uuidCompany: user.uuid
-            }
-        },
+        match,
         { $count: "count" }
     ]
 
     const pipeLine: any[] = [
-        {
-            $facet: {
-                list: listPL ,
-                count: countPL         
-            }
-        }
+        { $facet: {
+            list: listPL ,
+            count: countPL         
+        }}
     ]
 
     const logs = await UserLogs.aggregate(pipeLine)
-
-
-
-    //   const logs = await UserLogs.find({ uuidCompany: user.uuid }).sort({ _id: -1 })
-
 
     return {
         status: 'ok',

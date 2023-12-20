@@ -100,7 +100,7 @@ export default eventHandler(async (event) => {
         await userLog(event,
             {
                 documentType: DocuemntEnum.Buyout,
-                documentId: res._id,
+                documentId: buyout.uuid,
             })
     }
 

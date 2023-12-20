@@ -35,7 +35,7 @@ export default eventHandler(async (event) => {
   await userLog(event,
     {
         documentType: DocuemntEnum.Buyout,
-        documentId: found._id,
+        documentId: found.uuid,
         comment: 'помещен в архив'
     })
 
