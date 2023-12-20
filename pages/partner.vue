@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IResTable, ITabs } from '~/data/types';
+import { IResTable, ITabs, ItemData, ItemSearch } from '~/data/types';
 import { FieldsType } from '~/data/enums'
 
 definePageMeta({
@@ -8,22 +8,12 @@ definePageMeta({
   title: 'Партнерская программа',
 })
 
-const runtimeConfig = useRuntimeConfig()
 const store = useMainStore()
-const route = useRoute()
-
-const tab = computed (() => route.query.tab)
 const refUrl = computed(() => `https://topvtop.pro?ref=${client.uuid}`)
-
-const closePartnerVideo = ref(null) as Ref<HTMLLabelElement | null>
-const loadingList = ref(false)
 
 const client = store.client
 const partner = client.partner
 
-function closePartnerVideofn() {
-  closePartnerVideo.value?.click()
-}
 const secondLevelReferrals = ref(0)
 async function getSecondartRefLevel(){
     const { data } = await useFetch<
@@ -33,123 +23,11 @@ async function getSecondartRefLevel(){
 }
 await getSecondartRefLevel()
 
-interface ItemSearch {
-    skip: number,
-    limit: number,
-    sort: any,
-    filter: any
-}
-interface itemData {
-    data: any [],
-    count: number,
-    search: ItemSearch
-}
-interface ListData {
-    referals: itemData, 
-    orders: itemData
-}
-const limitInit = 20
-const itemInitData = {
-    data: [],
-    count: 0,
-    search: {
-        skip: 0,
-        limit: limitInit,
-        sort: {},
-        filter: {}
-    }
-}
-const listData = ref<ListData>({} as ListData)
-function initListData(){
-    listData.value = {
-        referals: {    
-            data: [],
-            count: 0,
-            search: {
-                skip: 0,
-                limit: limitInit,
-                sort: { registrationDate: -1 },
-                filter: {}
-            }
-        },
-        orders: {    
-            data: [],
-            count: 0,
-            search: {
-                skip: 0,
-                limit: limitInit,
-                sort: { date: -1 },
-                filter: {}
-            }
-        },
-    }
-}
-initListData()
-
-async function _fetchData() {
-    if (tab.value) {
-        const dataKey = tab.value as keyof ListData
-        listData.value[dataKey].data = []
-        const { search } = listData.value[dataKey]
-        const { data } = await useFetch<IResTable>(`/api/partner/${tab.value}`, { 
-            query: { 
-                skip: search.skip, 
-                limit: search.limit,
-                sort: JSON.stringify(search.sort),
-                filter: JSON.stringify(search.filter)
-            },
-            method: 'GET' 
-        })
-        if(data.value && data.value.list.length > 0){
-            listData.value[dataKey].data = data.value.list
-            listData.value[dataKey].count = data.value.count
-        } else {
-            listData.value[dataKey].count = 0
-        }
-    }
-    loadingList.value = false // to avoid double fetch after click on sort
-}
-const _getDataDebounced = useDebounceFn(()=> _fetchData() , 700)
-
-function getData(){
-    loadingList.value = true
-    _getDataDebounced()
-}
-
-const loadingListDebounce = useDebounceFn(()=> loadingList.value = false , 500)  
-
-function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
-    const dataKey = tab.value as keyof ListData
-    if(key =='skip') {
-        value = listData.value[dataKey].search.limit * (value - 1)
-    }
-    if(key =='limit') {
-        listData.value[dataKey].search.skip = 0
-    }
-    if(key == 'sort') value = { [value.sortField]: value.sortOrder }
-
-    if(key == 'filter') {
-        listData.value[dataKey].search.skip = 0
-    }
-    listData.value[dataKey].search[key] = value
-    listData.value[dataKey].data = []
-    getData()
-}
-
 const tabs: ITabs[] = [
     {title: 'Главная', slot: 'main', query: ''},
     {title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },    
     {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
-function changeTab(newTab: string){
-    if (newTab !== "main"){
-        if (listData.value[newTab as keyof ListData].search.filter) {
-            listData.value[newTab as keyof ListData].search.filter = {}
-            getData()
-        }
-        if (listData.value[newTab as keyof ListData].data.length == 0) getData()
-    }
-}
 
 const listConfigPartners: ConfigTable[] = [
     { field: 'username', header: 'Ник', type: FieldsType.text },
@@ -171,8 +49,6 @@ const listConfigOrders: ConfigTable[] = [
     { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
 
-onMounted(()=> getData())
-
 </script>
 
 <template>
@@ -192,7 +68,6 @@ onMounted(()=> getData())
 
         <Tabs 
             :tabs="tabs"
-            @change-tab="changeTab"
             >
             <template v-slot:main>
                 <div class="flex flex-col gap-4 w-full ">
@@ -215,9 +90,6 @@ onMounted(()=> getData())
             </template>
             <template v-slot:referals>
                 <div class="flex justify-between bg-base-200 rounded-xl mb-2 p-2 gap-2" >
-                    <TableDateDefaultFilter 
-                        @range-upd="(r: number) => updateFilter('filter', r)"
-                        />
                     <ExportXls 
                         api="/api/partner/referals-export"
                         fileName="TOPVTOP - Статистика партнеров"
@@ -225,23 +97,15 @@ onMounted(()=> getData())
                         :isVisible="true"
                         />
                 </div>
-                <Table
-                    :data="listData.referals.data"
-                    :count="listData.referals.count"
-                    :currentLimit="listData.referals.search.limit"
-                    :currentSkip="listData.referals.search.skip"
-                    :current-sort="listData.referals.search.sort"
+                <Table 
+                    endpoint="/partner/referals"
                     :config="listConfigPartners"
-                    :isLoading="loadingList"
-                    @changePage="(p: number) => updateFilter('skip', p)"
-                    @changeLimit="(l: number) => updateFilter('limit', l)"
+                    :useDefaultDateFilter="true"
                     />
+
             </template>
             <template v-slot:orders>
                 <div class="flex justify-between gap-2 content-center bg-base-200 rounded-xl mb-2 p-2" >
-                    <TableDateDefaultFilter 
-                        @range-upd="(r: number) => updateFilter('filter', r)"
-                        />
                     <ExportXls 
                         api="/api/partner/orders-export"
                         fileName="TOPVTOP - Заказы партнеров"
@@ -249,17 +113,10 @@ onMounted(()=> getData())
                         :isVisible="true"
                         />
                 </div>
-                <Table 
-                    :data="listData.orders.data"
-                    :count="listData.orders.count"
-                    :currentLimit="listData.orders.search.limit"
-                    :currentSkip="listData.orders.search.skip"
-                    :current-sort="listData.orders.search.sort"
+                <Table
+                    endpoint="/partner/orders"
                     :config="listConfigOrders"
-                    :isLoading="loadingList"
-                    @sort="(s: any) => updateFilter('sort', s)"
-                    @changePage="(p: number) => updateFilter('skip', p)"
-                    @changeLimit="(l: number) => updateFilter('limit', l)"
+                    :useDefaultDateFilter="true"
                     />
             </template>
         </Tabs>
@@ -267,4 +124,3 @@ onMounted(()=> getData())
 
 </template>
 
-<style scoped></style>

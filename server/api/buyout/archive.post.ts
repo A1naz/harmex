@@ -1,5 +1,6 @@
 import { Buyout } from '@/server/lib/models/Buyout'
 import { Delivery } from '~~/server/lib/models/Delivery'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -30,6 +31,14 @@ export default eventHandler(async (event) => {
   }
   found.status = 'archived'
   await found.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Buyout,
+        documentId: found.uuid,
+        comment: 'помещен в архив'
+    })
+
   return {
     status: 'ok',
   }

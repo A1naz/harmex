@@ -13,7 +13,7 @@ function changeTab(newRoute: string, newSlot: string){
     router.push(newRoute)
 }
 
-function isActive(slot: string, query: string){
+function isActive(slot: string, query: string): boolean {
     return route.query.tab ? route.query.tab == slot : '' == query
 }
 

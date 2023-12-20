@@ -2,6 +2,7 @@ export enum FieldsType {
     actions = 'actions',
     boolean = 'boolean',
     date = 'date',
+    datetime = 'datetime',
     email = 'email',
     text = 'text',
     textArea = 'textArea',
@@ -26,3 +27,14 @@ export enum SelectOptionsReviews {
     uuidBuyout = 'uudidBuyout',
     idReview = 'idReview'
 } 
+
+export enum DocuemntEnum {
+    Autoanswer = 'autoanswer',
+    Buyout = 'buyout',
+    Cart = 'cart',
+    Delivery = 'delivery',
+    Like = 'like',
+    ProductsLike = 'productsLike',
+    Question = 'question',
+    Review ='review',
+}

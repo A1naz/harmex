@@ -2,6 +2,7 @@ import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import { Buyout } from '@/server/lib/models/Buyout'
 import { Delivery } from '@/server/lib/models/Delivery'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -46,6 +47,13 @@ if (found.completed > 0) {
 
   const deleted = await Buyout.deleteOne({ uuid: body.uuid })
   if (deleted) {
+
+    await userLog(event,
+        {
+            documentType: DocuemntEnum.Buyout,
+            documentId: body.uuid,
+        })
+
     return {
       status: 'ok',
     }

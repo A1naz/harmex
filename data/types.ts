@@ -1,8 +1,9 @@
-import { TariffTypeEnum, FieldsType, UserRoles } from "./enums"
+import { ObjectId } from "mongoose";
+import { TariffTypeEnum, FieldsType, UserRoles, DocuemntEnum } from "./enums"
 import { MenuSection } from "./menu/types"
 
 export interface Entity {
-    _id?: any;
+    _id?: ObjectId;
     id?: any;
 }
 
@@ -32,7 +33,7 @@ export interface IUser extends Entity {
     roles: UserRoles[],
     tabs: string,
     newEmail: string,
-    emailConfirmed: string,
+    emailConfirmed: boolean,
     telegram: string | undefined,
     telegramUserId: string,
     telegramUnlinkEmailSend: Date,
@@ -42,6 +43,25 @@ export interface IUser extends Entity {
     partner: Partner,
     tariff: ITariff
 }
+
+export interface IUserLogs extends Entity {
+    userId: ObjectId,
+    userNick: string,
+    userEmail: string,
+    uuidCompany: string,
+    description: string,
+    documentType: DocuemntEnum,
+    documentId: string,
+    createdAt?: Date
+}
+export interface UserOperation extends Pick<
+    IUserLogs, 
+    'documentType'
+> {
+    documentId: any,
+    comment?: string
+}
+
 
 export interface Client extends Omit<
     IUser, 
@@ -120,4 +140,25 @@ export interface ITabs {
 export interface IResTable {
     list: any[],
     count: number
+}
+
+
+export interface ItemData {
+    data: any [],
+    count: number,
+    search: ItemSearch
+}
+export interface ItemSearch {
+    skip: number,
+    limit: number,
+    sort: ItemSearchSort,
+    filter: any
+}
+export interface ItemSearchSort {
+    [key:string]: number
+}
+
+export interface DateFilterRanges {
+    header: string,
+    value: number 
 }

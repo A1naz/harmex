@@ -5,12 +5,12 @@ const useApi = () => {
     const headers = useRequestHeaders(['cookie']) as HeadersInit
     const basePoint = '/api'
 
-    const getData = async <T>(endPoint: string, params: any) => {
+    const getData = async <T>(endPoint: string, params?: any) => {
         try {
             const res = await $fetch<T>(`${basePoint}${endPoint}`, {
                 headers,
                 method: 'GET',
-                params
+                params: params ?? ''
             })
             if(res) return res
             else _showMessage('Ничего не нашли')
@@ -30,6 +30,7 @@ const useApi = () => {
             else _showMessage('Ничего не нашли')
         } catch(e: any) {
             _showMessage(e.message)
+            return { error: e.data.message }
         }
     }
 
@@ -58,6 +59,7 @@ const useApi = () => {
             else _showMessage('Ничего не нашли')
         } catch(e: any) {
             _showMessage(e.message)
+            return { error: 'ошибка' }
         }
     }
 
