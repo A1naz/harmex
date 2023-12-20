@@ -3,6 +3,7 @@ import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 import { ObjectId } from 'mongodb'
 import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory'
 import ExcelJS from 'exceljs'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -119,5 +120,13 @@ export default eventHandler(async (event) => {
   sheet.columns = columns
   sheet.addRows(data)
   const buffer = await workbook.xlsx.writeBuffer()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Partners,
+        documentId: '',
+        comment: 'Экспорт зарегистрированных партнеров'
+    })
+
   return buffer
 })

@@ -34,7 +34,11 @@ export enum DocuemntEnum {
     Cart = 'cart',
     Delivery = 'delivery',
     Like = 'like',
+    Partners = 'partners',
+    Payment = 'payment',
+    PaymentHistory = 'paymentHistory',
     ProductsLike = 'productsLike',
     Question = 'question',
     Review ='review',
+    User ='user',
 }

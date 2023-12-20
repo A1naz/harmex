@@ -1,4 +1,5 @@
 import { User } from '@/server/lib/models/User'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -14,6 +15,13 @@ export default eventHandler(async (event) => {
 }
 
   await user.deleteOne()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.User,
+        documentId: user.uuid,
+    })
+
   return {
     status: 'ok',
     message: 'user was deleted',

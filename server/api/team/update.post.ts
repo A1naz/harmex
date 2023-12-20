@@ -2,6 +2,7 @@ import validator from 'validator'
 import { User } from '@/server/lib/models/User'
 import MailService from '~~/server/lib/mailService.js'
 import bcrypt from 'bcrypt'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -52,6 +53,14 @@ export default eventHandler(async (event) => {
   user.acesses = allowedPathes
 
   await user.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.User,
+        documentId: user.uuid,
+        comment: `Изменение данных пользователя ${email}`
+    })
+
   return {
     status: 'ok',
   }

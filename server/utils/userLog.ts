@@ -10,9 +10,13 @@ const operationDescriptions: {[key in DocuemntEnum]: string} = {
    cart: 'Корзина',
    delivery: 'Доставка',
    like: 'Лайк',
+   partners: 'Партнеры',
+   payment: 'Пополнение счета',
+   paymentHistory: 'История платежей',
    productsLike: 'Лайк на продукт',
    question: 'Вопрос',
    review: 'Отзыв',
+   user: 'Пользователь',
 }
 
 const OperationActions = new Map<string, string>([

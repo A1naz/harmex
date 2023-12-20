@@ -73,5 +73,12 @@ if (findUsername){
     return { status: 'error', error: 'Ошибка отправки письма.' }
   }
 
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.User,
+        documentId: user.uuid,
+        comment: `Создание пользователя ${email}`
+    })
+
   return { status: 'ok', error: null }
 })

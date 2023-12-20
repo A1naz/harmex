@@ -1,5 +1,6 @@
 import { Like } from '~~/server/lib/models/Like'
 import { findImage } from '~~/server/lib/helpers'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -49,7 +50,14 @@ export default eventHandler(async (event) => {
       created.dateEnd = date2
     }
   }
-  await created.save()
+  const res = await created.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Like,
+        documentId: res._id,
+    })
+
   return {
     status: 'ok',
   }

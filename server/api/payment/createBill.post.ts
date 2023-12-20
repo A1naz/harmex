@@ -1,4 +1,5 @@
 import freekassa from '@/server/lib/freekassa'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -20,6 +21,14 @@ export default eventHandler(async (event) => {
     currency: 'RUB',
   }, fkSecret1)
   console.log(signature)
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Payment,
+        documentId: '',
+        comment: 'счет'
+    })
+
   return {
     payUrl: url as string,
     status: 'ok',

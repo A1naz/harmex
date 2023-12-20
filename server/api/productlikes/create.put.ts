@@ -1,4 +1,5 @@
 import { ProductLike } from '@/server/lib/models/ProductLike'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -23,7 +24,14 @@ export default eventHandler(async (event) => {
     name,
     createdDate: new Date(),
   })
-  await created.save()
+  const res = await created.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.ProductsLike,
+        documentId: res._id,
+    })
+
   return {
     status: 'ok',
   }

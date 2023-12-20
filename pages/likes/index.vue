@@ -38,7 +38,7 @@ function openRemoveReviewModal(id: any) {
 
 async function deleteLike() {
   const { data, error } = await useFetch('/api/likes/delete', {
-    method: 'POST',
+    method: 'DELETE',
     body: {
       id: idForRemove.value,
     },

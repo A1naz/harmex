@@ -28,7 +28,7 @@ async function getQuestions() {
 await getQuestions()
 async function create() {
   const { data, error } = await useFetch('/api/questions/create', {
-    method: 'POST',
+    method: 'PUT',
     body: {
       article: article.value,
       publishDate: publishDate.value,

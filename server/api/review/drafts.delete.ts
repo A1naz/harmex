@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb"
 import { ReviewDraft } from "~/server/lib/models/ReviewDraft"
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -15,6 +16,13 @@ export default eventHandler(async (event) => {
             _id: body._id 
         }
     )
+
+    await userLog(event,
+        {
+            documentType: DocuemntEnum.Review,
+            documentId: body._id ,
+            comment: 'Удален черновик'
+        })
 
   return res
 })
