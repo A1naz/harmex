@@ -1,8 +1,9 @@
 import { getServerSession } from '#auth'
-import { ObjectId } from 'mongodb'
 import { UserLogs } from '../lib/models/UserLogs'
-import { UserOperation } from '~/data/types'
-import { DocuemntEnum } from '~/data/enums'
+import { UserOperation, IUserLogs } from '~/data/types'
+import { DocuemntEnum, UserRoles } from '~/data/enums'
+import { User } from '../lib/models/User'
+import { ObjectId } from 'mongodb'
 
 const operationDescriptions: {[key in DocuemntEnum]: string} = {
    autoanswer: 'Автоответ',
@@ -16,7 +17,7 @@ const operationDescriptions: {[key in DocuemntEnum]: string} = {
 }
 
 const OperationActions = new Map<string, string>([
-    [ 'PUT', 'Созданан документ' ],
+    [ 'PUT', 'Создан документ' ],
     [ 'POST', 'Изменен документ' ],
     [ 'DELETE', 'Удален документ' ],
  ])
@@ -25,16 +26,23 @@ export const userLog = async (event: any, operation: UserOperation): Promise<voi
 
     try{
         const session = (await getServerSession(event)) as any
-        if (!session) return sendRedirect(event, '/auth', 302)
+        const user = await User.findOne({ uuid: session.uuid })
         let description = OperationActions.get(event.method) + ' - ' +  operationDescriptions[operation.documentType] 
         if (operation.comment) description += ` (${operation.comment})`
-        const userLog = new UserLogs({
-            user: new ObjectId(session._id),
-            description: description,
-            documentType: operation.documentType,
-            documentId: operation.documentId,
-        })
-        await userLog.save()
+
+        if (user) {
+            const userLog = new UserLogs<IUserLogs>({
+                userId: user._id,
+                userNick: user?.username ?? "",
+                userEmail: user?.email ?? "",
+                uuidCompany: user?.roles.includes(UserRoles.staff) ? user?.uuidCompany : '',
+                description: description,
+                documentType: operation.documentType,
+                documentId: operation.documentId,
+            })
+            await userLog.save()
+        }
+
     }    
     catch(e:any){
         logger(event, 'ошибка записи действия пользователя')

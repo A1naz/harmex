@@ -3,18 +3,19 @@ import { IUserLogs } from '@/data/types'
 
 interface IUserLogsSchema extends IUserLogs, Document {}
 
-const UserLogsSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+const UserLogsSchema = new Schema<IUserLogsSchema>({
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userNick: { type: String, required: true },
+    userEmail: { type: String, required: true },
+    uuidCompany: { type: String, required: false },
     description: { type: String, required: true },
     documentType: { type: String, required: true },
     documentId: { type: Schema.Types.ObjectId, required: true },
-    createdAt: { type: Date, default: Date.now }
-})
-
-UserLogsSchema.pre('save', function (next) {
-  // Добавляем 3 часа к полю "date"
-  this.createdAt.setHours(this.createdAt.getHours() + 3)
-  next()
+    createdAt: { type: Date, default: ()=>{ 
+        const nowDate = new Date()
+        nowDate.setHours(nowDate.getHours() + 3)
+        return nowDate
+    } }
 })
 
 export const UserLogs = model<IUserLogsSchema>('UserLogs', UserLogsSchema)

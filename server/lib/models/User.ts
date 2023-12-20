@@ -11,14 +11,14 @@ const partnerSchema = new Schema({
   rewardPercent: { type: Number, default: 10 },
 })
 
-const UserSchema = new Schema({
+const UserSchema = new Schema<IUserSchema>({
   isBanned: { type: Boolean, default: false },
   username: { type: String, unique: true, required: true },
   firstName: { type: String, required: false },
   lastName: { type: String, required: false },
   email: { type: String, unique: false, required: false },
   wbApiKey: { type: String, required: false },
-  wbApiKeys: { type: Array, required: false },
+  wbApiKeys: { type: [String], required: false },
   password: { type: String, required: false },
   uuid: { type: String, unique: true, required: true, default: uuid() },
 

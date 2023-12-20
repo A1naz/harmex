@@ -160,6 +160,11 @@ const configColumns: ConfigTable[] = [
 ];
 
 
+const getUserHistory = async ()=>{
+    const res = await getData('/')
+}
+
+
 
 const tabs: ITabs[] = [
     {title: 'Сотрудники', slot: 'main', query: ''},

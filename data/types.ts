@@ -3,7 +3,7 @@ import { TariffTypeEnum, FieldsType, UserRoles, DocuemntEnum } from "./enums"
 import { MenuSection } from "./menu/types"
 
 export interface Entity {
-    _id?: any;
+    _id?: ObjectId;
     id?: any;
 }
 
@@ -33,7 +33,7 @@ export interface IUser extends Entity {
     roles: UserRoles[],
     tabs: string,
     newEmail: string,
-    emailConfirmed: string,
+    emailConfirmed: boolean,
     telegram: string | undefined,
     telegramUserId: string,
     telegramUnlinkEmailSend: Date,
@@ -45,11 +45,14 @@ export interface IUser extends Entity {
 }
 
 export interface IUserLogs extends Entity {
-    user: string,
+    userId: ObjectId,
+    userNick: string,
+    userEmail: string,
+    uuidCompany: string,
     description: string,
     documentType: DocuemntEnum,
     documentId: ObjectId,
-    createdAt: Date
+    createdAt?: Date
 }
 export interface UserOperation extends Pick<
     IUserLogs, 
