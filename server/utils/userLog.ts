@@ -34,7 +34,7 @@ export const userLog = async (event: any, operation: UserOperation): Promise<voi
                 userId: user._id,
                 userNick: user?.username ?? "",
                 userEmail: user?.email ?? "",
-                uuidCompany: user?.roles.includes(UserRoles.staff) ? user?.uuidCompany : '',
+                uuidCompany: user?.roles.includes(UserRoles.staff) ? user?.uuidCompany : user.uuid,
                 description: description,
                 documentType: operation.documentType,
                 documentId: operation.documentId,

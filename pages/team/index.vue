@@ -173,7 +173,7 @@ const listConfigAcrions: ConfigTable[] = [
     { field: 'userNick', header: 'Ник', type: FieldsType.text },
     { field: 'userEmail', header: 'E-mail', type: FieldsType.email },
     { field: 'description', header: 'Действие', type: FieldsType.text },
-    { field: 'createdAt', header: 'Дата', type: FieldsType.date },
+    { field: 'createdAt', header: 'Дата', type: FieldsType.dateTime },
     { field: 'documentId', header: 'id документа', type: FieldsType.text },
 ]
 

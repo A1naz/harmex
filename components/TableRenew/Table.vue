@@ -151,6 +151,9 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
             <template v-if="col.type == FieldsType.date" #body="{ data }">
                 {{ defaultDateShort(data[col.field]) }}
             </template>
+            <template v-if="col.type == FieldsType.dateTime" #body="{ data }">
+                {{ defaultDate(data[col.field]) }}
+            </template>
             <template v-else-if="col.type == FieldsType.price" #body="{ data }">
                 {{ Number.parseFloat(data[col.field]).toFixed(2)  }} р.
             </template>
