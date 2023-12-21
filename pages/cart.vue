@@ -67,6 +67,9 @@ async function getProductInfo() {
   })
   if ((data.value as any)?.product) {
     productData.value = (data.value as any).product
+    if (productData.value?.sizes && productData.value.sizes.length > 0) {
+      size.value = productData.value.sizes[0]
+    }
     urlError.value = false
   }
   if (error.value) urlError.value = true
@@ -188,7 +191,7 @@ onMounted(() => {})
                   :key="index"
                   :value="size"
                 >
-                  {{ size }}
+                  {{ size == '0' ? 'Без размера' : size }}
                 </option>
               </select>
             </div>

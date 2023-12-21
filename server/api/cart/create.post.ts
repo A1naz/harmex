@@ -13,6 +13,7 @@ export default eventHandler(async (event) => {
       message: 'Не больше 1000 добавлений за один заказ',
     })
   }
+  
   const { image, name } = productData
   const created = new Cart({
     user,
