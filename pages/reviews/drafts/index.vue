@@ -37,7 +37,7 @@ const startFetch = () =>{
 
 const edit = async (draft: IReviewDraft, i: number) => { 
     drafts.value[i].isEdit = true
-    const res = await postData(endpoint, draft)
+    const res = await putData(endpoint, draft)
     if(res) {
         drafts.value[i] = draft
     }
@@ -56,7 +56,7 @@ const deleteConfirmed = async (isConfirmed: boolean) => {
 
 const createDraft = async () => {
     btnSaveLoading.value = true
-    const res = await putData(endpoint, {...selectedDraft.value})
+    const res = await postData(endpoint, {...selectedDraft.value})
     closeCreateModal()
     btnSaveLoading.value = false
     if(res) fetch()

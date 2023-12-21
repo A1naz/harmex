@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb"
 import { ReviewDraft } from "~/server/lib/models/ReviewDraft"
 import { DocuemntEnum } from '~/data/enums'
 
@@ -8,22 +7,23 @@ export default eventHandler(async (event) => {
     if (!user) return sendRedirect(event, '/auth', 302)
 
     const body = await readBody(event)
-    if(!body) throw new Error('Неправильный запрос')
+    if(!body) throw new Error('Не все поля заполнены запрос')
 
-    const res = await ReviewDraft.updateOne(
-        { 
-            user: new ObjectId(user._id),
-            _id: body._id 
-        },
-        { ...body }
-    )
+    const newDraft = new ReviewDraft({
+        user,
+        draftName: body.draftName,
+        article: body.article,
+        text: body.text,
+    })
+
+    const res = await newDraft.save()
 
     await userLog(event,
         {
             documentType: DocuemntEnum.Review,
-            documentId: body._id ,
-            comment: 'Изменен черновик'
+            documentId: res._id ,
+            comment: 'Создан черновик'
         })
 
-  return res.modifiedCount == 1 ? true : false
+    return res._id ? true : false
 })

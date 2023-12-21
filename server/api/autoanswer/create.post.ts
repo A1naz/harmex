@@ -1,7 +1,6 @@
-import { getServerSession } from '#auth'
-import { User } from '@/server/lib/models/User'
 import { Autoanswer } from '@/server/lib/models/Autoanswer'
 import { findImage } from '@/server/lib/helpers'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -42,7 +41,14 @@ export default eventHandler(async (event) => {
     wbApiKey: apiKey,
     product,
   })
-  await created.save()
+  const res = await created.save()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Autoanswer,
+        documentId: res._id,
+    })
+
   return {
     status: 'ok',
   }

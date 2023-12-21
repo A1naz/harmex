@@ -53,7 +53,7 @@ async function deleteBuyOut() {
 }
 async function unpauseBuyout() {
   const { data, error } = await useFetch('/api/buyout/unpause', {
-    method: 'POST',
+    method: 'PUT',
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
@@ -79,7 +79,7 @@ async function unpauseBuyout() {
 }
 async function unarchiveBuyout() {
   const { data, error } = await useFetch('/api/buyout/unarchive', {
-    method: 'POST',
+    method: 'PUT',
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
@@ -105,7 +105,7 @@ async function unarchiveBuyout() {
 }
 async function archiveBuyout() {
   const { data, error } = await useFetch('/api/buyout/archive', {
-    method: 'POST',
+    method: 'PUT',
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
