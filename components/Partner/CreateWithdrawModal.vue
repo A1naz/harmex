@@ -25,7 +25,7 @@ async function createWithdraw() {
   }
 
   const { data, error } = await useFetch('/api/partner/createWithdraw', {
-    method: 'PUT',
+    method: 'POST',
     body: form,
   })
 

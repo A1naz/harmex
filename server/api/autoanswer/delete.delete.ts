@@ -15,6 +15,13 @@ export default eventHandler(async (event) => {
     })
   }
   await found?.deleteOne()
+
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Autoanswer,
+        documentId: found._id,
+    })
+
   return {
     status: 'ok',
   }

@@ -30,7 +30,7 @@ async function getProductLikes() {
 await getProductLikes()
 async function create() {
   const { data, error } = await useFetch('/api/productlikes/create', {
-    method: 'PUT',
+    method: 'POST',
     body: {
       url: url.value,
       amount: amount.value,

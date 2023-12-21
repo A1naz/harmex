@@ -39,7 +39,7 @@ async function getBots() {
 }
 async function deleteBot(id: string) {
   const { data, error } = await useFetch('/api/autoanswer/delete', {
-    method: 'POST',
+    method: 'DELETE',
     body: {
       id,
     },
