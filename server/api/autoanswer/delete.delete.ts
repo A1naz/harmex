@@ -1,4 +1,5 @@
 import { Autoanswer } from '~~/server/lib/models/Autoanswer'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
