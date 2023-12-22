@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
   const created = new Cart({
     user,
     query,
-    size,
+    size: size == '0' ? 'none' : size,
     article,
     amount,
     period,
