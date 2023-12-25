@@ -13,8 +13,8 @@ const props = defineProps({
 const { $dayjs } = useNuxtApp()
 const emit = defineEmits(['update:modelValue'])
 const colorMode = useColorMode()
-const { width, height } = useWindowSize()
-const startDate = ref(new Date())
+const { width } = useWindowSize()
+const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
 const date = ref(props.modelValue)
 type UpdateMonthYear = (month: number, year: number) => void
 
@@ -34,16 +34,16 @@ function handleDate(modelData: any) {
 <template>
   <ClientOnly>
     <VueDatePicker
-        v-model="date"
-        :teleport-center="width < 1280"
-        :teleport="true"
-        :min-date="startDate"
-        :prevent-min-max-navigation="true"
-        :dark="colorMode.value === 'dark'"
-        timezone="Europe/Moscow"
-        cancel-text=""
-        select-text="Сохранить"
-        @update:model-value="handleDate"
+    v-model="date"
+      :teleport-center="width < 1280"
+      :teleport="true"
+      :min-date="startDate"
+      :prevent-min-max-navigation="true"
+      :dark="colorMode.value === 'dark'"
+      :timezone="'UTC'"
+      cancel-text=""
+      select-text="Сохранить"
+      @update:model-value="handleDate"
         >
       <template #trigger>
         <div class="flex w-full justify-end">
