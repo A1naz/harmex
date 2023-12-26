@@ -54,20 +54,24 @@ const form = reactive({
 })
 
 const textValidation = computed(() => {
-    return restrictUrl(form.text)
+  return restrictUrl(form.text)
 })
-const textValidError = computed(()=>{
-    return textValidation.value ? '' : 'В тексте присутствуют запрещенные символы (нельзя указывать ссылки)'
+const textValidError = computed(() => {
+  return textValidation.value
+    ? ''
+    : 'В тексте присутствуют запрещенные символы (нельзя указывать ссылки)'
 })
 
-function useDraft(draft: IReviewDraft){
-    form.text = draft.text
+function useDraft(draft: IReviewDraft) {
+  form.text = draft.text
 }
 
-const defaultDelIndex = props.review.delivs.findIndex((rev: any) => rev.delivId == props.deliveryid)
+const defaultDelIndex = props.review.delivs.findIndex(
+  (rev: any) => rev.delivId == props.deliveryid
+)
 const selectedDeliv = ref({
-    deliveryid: props.review.delivs[defaultDelIndex].delivId,
-    uuid: props.review.delivs[defaultDelIndex].buyoutId
+  deliveryid: props.review.delivs[defaultDelIndex].delivId,
+  uuid: props.review.delivs[defaultDelIndex].buyoutId,
 })
 
 const loadingIndex = ref(null) as Ref<number | null>
@@ -77,6 +81,23 @@ async function uploadToS3(event: Event, index: number) {
   const fileList = (event.target! as HTMLInputElement).files
   const files = Array.from(fileList!)
   if (!files) return
+
+  if (
+    files[0] &&
+    files[0].name &&
+    files[0].name.toLowerCase().endsWith('.webp')
+  ) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: 'Нельзя загружать вебпикчи',
+      type: 'error',
+      duration: 3000,
+    })
+
+    loadingIndex.value = null
+    return
+  }
+
   const { data, error } = await upload({
     files,
     url: null,
@@ -126,7 +147,6 @@ async function clearForm() {
     },
   ]
 }
-
 
 async function publishReview() {
   const photos = form.photos
@@ -225,54 +245,64 @@ onMounted(() => {
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
         @click="$emit('close')"
-        >✕</label>
-        <div class="flex flex-row justify-center -mt-4">
-            <p class="text-xs text-gray-500 justify-self-center"> - {{ review.article }} - </p>
-        </div>
+        >✕</label
+      >
+      <div class="flex flex-row justify-center -mt-4">
+        <p class="text-xs text-gray-500 justify-self-center">
+          - {{ review.article }} -
+        </p>
+      </div>
 
       <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
 
       <div class="pb-2">Доставка:</div>
-      <select v-model="selectedDeliv" class="select select-bordered w-full mb-4">
-            <option 
-                v-for="(rev, index) in review.delivs"
-                :default="index == rev[defaultDelIndex]"
-                :value="{deliveryid: rev.delivId, uuid: rev.buyoutId}"
-                class="m-6"
-                >{{ defaultDateShort(rev.updatedAt) + ' - пол: ' + rev.sex + ' - размер: ' + rev.sizeparam + ' - цена: ' + rev.pricebuy + "р." }}</option>
+      <select
+        v-model="selectedDeliv"
+        class="select select-bordered w-full mb-4"
+      >
+        <option
+          v-for="(rev, index) in review.delivs"
+          :default="index == rev[defaultDelIndex]"
+          :value="{ deliveryid: rev.delivId, uuid: rev.buyoutId }"
+          class="m-6"
+        >
+          {{
+            defaultDateShort(rev.updatedAt) +
+            ' - пол: ' +
+            rev.sex +
+            ' - размер: ' +
+            rev.sizeparam +
+            ' - цена: ' +
+            rev.pricebuy +
+            'р.'
+          }}
+        </option>
       </select>
 
       <div class="flex flex-col gap-4">
-
-
-
-
         <div class="w-full mb-4">
-            <div class="pb-2">Отзыв о товаре</div>  
+          <div class="pb-2">Отзыв о товаре</div>
 
-            <textarea
-                v-model="form.text"
-                class="textarea w-full textarea-md bg-base-200"
-                placeholder="Например, хороший телефон"
-                />
+          <textarea
+            v-model="form.text"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, хороший телефон"
+          />
 
+          <div v-if="review.drafts" class="text-xs">
+            черновики:
+            <button
+              v-for="draft in review.drafts"
+              class="mx-1 text-primary hover:underline hover:cursor-pointer"
+              @click="useDraft(draft)"
+            >
+              <p v-if="draft.draftName">{{ draft.draftName }}</p>
+              <i v-else> {{ '<без названия>' }} </i>
+            </button>
+          </div>
 
-            <div v-if="review.drafts" class="text-xs">черновики: 
-                <button 
-                    v-for="draft in review.drafts" 
-                    class="mx-1 text-primary hover:underline hover:cursor-pointer"
-                    @click="useDraft(draft)"
-                    > 
-                    <p v-if="draft.draftName"> {{ draft.draftName }}</p>
-                    <i v-else> {{ '<без названия>' }} </i>
-                </button>
-            </div>
-
-            <div class="text-error">  {{ textValidError }} </div>
-
+          <div class="text-error">{{ textValidError }}</div>
         </div>
-
-
 
         <div>
           <div class="pb-2">Рейтинг</div>
@@ -315,13 +345,18 @@ onMounted(() => {
         </div>
 
         <div>
-          <div class="pb-2">Запланировать отзыв <span class="text-xs">(по Московскому времени)</span></div>
+          <div class="pb-2">
+            Запланировать отзыв
+            <span class="text-xs">(по Московскому времени)</span>
+          </div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3">
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : form.date.toLocaleString('en-GB', { timeZone: 'Europe/Moscow' })
+                  : form.date.toLocaleString('en-GB', {
+                      timeZone: 'Europe/Moscow',
+                    })
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
@@ -431,8 +466,9 @@ onMounted(() => {
             class="btn btn-primary btn-sm"
             :disabled="!textValidation"
             @click="publishReview"
-            >Отправить</button
           >
+            Отправить
+          </button>
         </div>
       </div>
     </div>
@@ -454,5 +490,4 @@ input[type='file']::-webkit-file-upload-button {
 input[type='file']::-ms-browse {
   display: none;
 }
-
 </style>
