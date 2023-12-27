@@ -34,7 +34,7 @@ function handleDate(modelData: any) {
 <template>
   <ClientOnly>
     <VueDatePicker
-    v-model="date"
+      v-model="date"
       :teleport-center="width < 1280"
       :teleport="true"
       :min-date="startDate"
@@ -44,7 +44,8 @@ function handleDate(modelData: any) {
       cancel-text=""
       select-text="Сохранить"
       @update:model-value="handleDate"
-        >
+    >
+
       <template #trigger>
         <div class="flex w-full justify-end">
           <button

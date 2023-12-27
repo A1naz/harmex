@@ -151,7 +151,7 @@ onMounted(() => {
                     : defaultDate(publishDate) }}
                 </div>
                 <div class="absolute right-0 top-0 w-60" style="z-index: 9999999">
-                  <DatePicker timezone="UTC" v-model="publishDate" class="w-40" />
+                  <DatePicker timezone="Europe/Moscow" v-model="publishDate" class="w-40" />
                 </div>
               </div>
             </div>

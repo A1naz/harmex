@@ -34,14 +34,13 @@ export default eventHandler(async (event) => {
   }
 
   const images = photos.map((photo: any) => photo.public)
-  const datePublish = new Date(new Date(date).getTime() + (3*60*60*1000)).toISOString() // to Moscow timezone (UTC + 3h)
 
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
     rating,
     text,
-    date: datePublish,
+    date,
     user,
     delivery,
     images,

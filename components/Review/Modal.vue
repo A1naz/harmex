@@ -354,9 +354,7 @@ onMounted(() => {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : form.date.toLocaleString('en-GB', {
-                      timeZone: 'Europe/Moscow',
-                    })
+                  : defaultDate(form.date)
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
