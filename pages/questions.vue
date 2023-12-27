@@ -83,6 +83,9 @@ function getStatus(status: string) {
     return 'Завершен'
   else if (status === 'nofunds')
     return 'Недостаточно средств'
+  else if (status === 'spam') {
+    return 'Определен как спам'
+  }
 }
 function removeProduct() {
   productData.value = null
@@ -264,7 +267,7 @@ onMounted(() => {
             <template #body="{ data }">
               <div
                 :class="{
-                  'text-error': data.status === 'nofunds',
+                  'text-error': data.status === 'nofunds' || data.status === 'spam',
                   'text-primary': data.status === 'created',
                   'text-warning': data.status === 'work',
                   'text-success': data.status === 'completed',
@@ -319,6 +322,7 @@ onMounted(() => {
                     :class="{
                       'text-warning': item.status === 'created' || item.status === 'work',
                       'text-success': item.status === 'completed',
+                      'text-error': item.status === 'nofunds' || item.status === 'spam',
                     }"
                   >
                     <div>
