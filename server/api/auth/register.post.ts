@@ -106,5 +106,6 @@ export default eventHandler(async (event) => {
       await inviter.save()
     }
   }
+
   return { status: 'ok', error: null }
 })
