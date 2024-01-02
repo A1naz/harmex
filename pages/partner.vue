@@ -8,8 +8,9 @@ definePageMeta({
   title: 'Партнерская программа',
 })
 
+const runtimeConfig = useRuntimeConfig()
 const store = useMainStore()
-const refUrl = computed(() => `https://topvtop.pro?ref=${client.uuid}`)
+const refUrl = computed(() => `${runtimeConfig.public.siteUrl}/register?ref=${client.uuid}`)
 
 const client = store.client
 const partner = client.partner
