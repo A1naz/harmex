@@ -2,6 +2,8 @@
 import { loadYmap } from 'vue-yandex-maps'
 import { notify } from '@kyvg/vue3-notification'
 
+const { height } = useWindowSize()
+
 const props = defineProps({
   pickpoints: {
     type: Array,
@@ -30,21 +32,30 @@ function handleSelect(address: string) {
   }
 
   let pointStore = localStorage.getItem('pointStore')
-  if (!pointStore)
-    pointStore = ''
+  if (!pointStore) pointStore = ''
 
   const arr = pointStore.trim().split('--').reverse()
-  if (arr[0] === '')
-    arr.shift()
-  if (arr.length > 13)
-    arr.shift()
+  if (arr[0] === '') arr.shift()
+  if (arr.length > 20) arr.shift()
   arr.push(address)
   const unique = [...new Set(arr)].reverse()
   localStorage.setItem('pointStore', unique.join('--'))
   emit('callback', address)
   closeModal()
 }
-const lastPoints = localStorage.getItem('pointStore')?.split('--')
+
+function handleDelete(address: string) {
+  let pointStore = localStorage.getItem('pointStore')
+  if (!pointStore) pointStore = ''
+  const arr = pointStore.trim().split('--').reverse()
+  arr.splice(arr.indexOf(address), 1)
+  const unique = [...new Set(arr)].reverse()
+  localStorage.setItem('pointStore', unique.join('--'))
+  emit('callback', address)
+  lastPoints.value = unique
+}
+
+const lastPoints = ref(localStorage.getItem('pointStore')?.split('--'))
 const presetCluster = 'islands#violetClusterIcons'
 
 const originalBounds = ref([
@@ -81,25 +92,22 @@ onMounted(async () => {
     searchControl.events.add('resultselect', (event: any) => {
       if (!event.get('skip') && searchControl.getResultsCount()) {
         const geoObjectsArray = searchControl.getResultsArray()
-        geoObjectsArray.forEach(
-          (marker: any) => {
-            marker.options.set({
-              hasBalloon: false,
-              preset: 'islands#violetDotIconWithCaption',
-              iconOffset: [0, -25],
-
-            })
-            marker.properties.set({
-              iconCaption: marker.properties._data.name,
-            })
-          },
-        )
+        geoObjectsArray.forEach((marker: any) => {
+          marker.options.set({
+            hasBalloon: false,
+            preset: 'islands#violetDotIconWithCaption',
+            iconOffset: [0, -25],
+          })
+          marker.properties.set({
+            iconCaption: marker.properties._data.name,
+          })
+        })
       }
     })
     myMap.controls.add(searchControl)
     myMap.setBounds(originalBounds.value)
     const objectManager = new ymaps.ObjectManager({
-    // Включаем кластеризацию.
+      // Включаем кластеризацию.
       clusterize: true,
       // Опции кластеров задаются с префиксом 'cluster'.
       clusterHasBalloon: false,
@@ -110,9 +118,12 @@ onMounted(async () => {
     // Опции можно задавать напрямую в дочерние коллекции.
     objectManager.clusters.options.set({
       preset: presetCluster,
-      hintContentLayout: ymaps.templateLayoutFactory.createClass('Группа объектов'),
+      hintContentLayout:
+        ymaps.templateLayoutFactory.createClass('Группа объектов'),
     })
-    const iconLayout = ymaps.templateLayoutFactory.createClass('<div>$[properties.iconContent]</div>')
+    const iconLayout = ymaps.templateLayoutFactory.createClass(
+      '<div>$[properties.iconContent]</div>'
+    )
     const collection = {
       type: 'FeatureCollection',
       features: props.pickpoints.map((point: any, index: number) => {
@@ -154,7 +165,7 @@ onMounted(async () => {
       const obj = objectManager.objects.getById(objectId)
 
       const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
-      `<div class="card rounded-lg">
+        `<div class="card rounded-lg">
           <div>
             <div class="text-lg font-semibold">Пункт выдачи Wildberries</div>
             <div class="text-sm">${obj.properties.data.a}</div>
@@ -162,20 +173,25 @@ onMounted(async () => {
             <a class="selectPoint mt-4 flex justify-center btn btn-primary">Выбрать</a>
           </div>
         </div>
-      `, {
-      // First, we call the "build" method of the parent class.
-        build() {
-          myBalloonContentLayout.superclass.build.call(this)
-          this._element.querySelector('.selectPoint').addEventListener('click', this.select)
-        },
-        clear() {
-          this._element.querySelector('.selectPoint').removeEventListener('click', this.select)
-          myBalloonContentLayout.superclass.clear.call(this)
-        },
-        select: () => {
-          handleSelect(obj.properties.data.a)
-        },
-      },
+      `,
+        {
+          // First, we call the "build" method of the parent class.
+          build() {
+            myBalloonContentLayout.superclass.build.call(this)
+            this._element
+              .querySelector('.selectPoint')
+              .addEventListener('click', this.select)
+          },
+          clear() {
+            this._element
+              .querySelector('.selectPoint')
+              .removeEventListener('click', this.select)
+            myBalloonContentLayout.superclass.clear.call(this)
+          },
+          select: () => {
+            handleSelect(obj.properties.data.a)
+          },
+        }
       )
       // set this layout as a custom balloon content layout
       objectManager.objects.setObjectOptions(objectId, {
@@ -190,8 +206,7 @@ onMounted(async () => {
       const geoObject = objectManager.objects.getById(objectId)
     })
     loading.value = false
-  }
-  catch (e) {
+  } catch (e) {
     loading.value = false
     // eslint-disable-next-line no-console
     console.log(e)
@@ -207,38 +222,83 @@ onKeyStroke('Escape', (e) => {
 
 <template>
   <div
-    id="selectPointModal" class="modal" :class="{
+    id="selectPointModal"
+    class="modal"
+    :class="{
       'modal-open': props.state,
     }"
   >
-    <div v-if="state" class="modal-box w-11/12 max-w-7xl md:overflow-y-hidden">
+    <div v-if="state" class="modal-box w-11/12 max-w-7xl">
       <div class="">
-        <a class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</a>
-        <div class="title mb-2">
-          Выберите ПВЗ
-        </div>
-        <div v-if="loading" class="loading flex justify-center items-center h-full">
+        <a
+          class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          @click="closeModal"
+          >✕</a
+        >
+        <div class="title mb-2">Выберите ПВЗ</div>
+        <div
+          v-if="loading"
+          class="loading flex justify-center items-center h-full"
+        >
           <Icon class="animate-spin" size="60" name="mdi:loading" />
         </div>
-        <div v-if="error" class="text-lg text-center text-error flex items-center justify-center h-full">
+        <div
+          v-if="error"
+          class="text-lg text-center text-error flex items-center justify-center h-full"
+        >
           {{ error }}
         </div>
-        <div v-if="!error" class="flex-row md:flex md:flex-row gap-4 min-h-112 md:h-full">
+        <div
+          v-if="!error"
+          class="flex-row md:flex md:flex-row gap-4 min-h-112 md:h-full"
+        >
           <div class="w-full h-full">
             <div id="ymap" class="yandex-container rounded-lg" />
           </div>
-          <div class="last md:h-full h-36 rounded-lg p-2 max-w-xs">
-            <h2 class="font-bold">
-              Последние использованные ПВЗ
-            </h2>
-            <div class="flex flex-col gap-2 mt-2">
-              <button v-for="(item, index) of lastPoints" :key="index" class="btn pvz text-xs btn-neutral rounded-lg p-2" @click="handleSelect(item)">
-                {{ item }}
-              </button>
+          <div class="last md:h-full rounded-lg p-2 max-w-xs">
+            <h2 class="font-bold">Последние использованные ПВЗ</h2>
+            <div class="flex flex-col gap-2 mt-2 overflow-y-auto overflow-x-hidden" :style="`height: ${height - height/3.3}px`">
+              <div
+                v-if="
+                  lastPoints && lastPoints.length > 0 && lastPoints[0] !== ''
+                "
+                v-for="(item, index) of lastPoints"
+                class="w-full flex flex-row pr-1"
+              >
+                <button
+                  :key="index"
+                  class="btn pvz text-xs btn-neutral rounded-md p-2 flex w-10/12"
+                  @click="handleSelect(item)"
+                >
+                  {{ item }}
+                </button>
+                <button
+                  class="btn btn-neutral btn-square"
+                  @click="handleDelete(item)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="modal-backdrop cursor-pointer" @click="closeModal">
+
     </div>
   </div>
 </template>
@@ -252,5 +312,21 @@ onKeyStroke('Escape', (e) => {
 .yandex-balloon {
   height: 200px;
   width: 300px;
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 0px;
+  border-radius: 4px;
 }
 </style>
