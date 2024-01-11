@@ -30,7 +30,7 @@ async function onTelegramAuth(user: any) {
   } else {
     // No error, continue with the sign in, e.g., by following the returned redirect:
     store.getClient()
-    return navigateTo('/stats?type=all&period=today', { external: true })
+    return navigateTo('/buyouts', { external: true })
   }
 }
 const telegram = ref()
