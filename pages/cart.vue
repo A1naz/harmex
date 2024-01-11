@@ -25,7 +25,7 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 async function getCarts() {
-  const { data, error } = await useFetch('/api/cart/get', { method: 'GET' })
+  const { data, error } = await useFetch('/api/cart/get', { method: 'GET', watch: false })
   if (data.value) carts.value = data.value
   if (error.value)
     notify({
@@ -138,7 +138,7 @@ onMounted(() => {})
                   tabindex="0"
                   class="input input-sm w-full"
                   placeholder="12312312"
-                  type="text"
+                  type="number"
                   @input="changeUrl"
                 />
                 <button
