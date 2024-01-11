@@ -14,12 +14,13 @@ export default eventHandler(async (event) => {
     })
   }
   
+
   const { image, name } = productData
   const created = new Cart({
     user,
     query,
     size: size == '0' ? 'none' : size,
-    article,
+    article: Number(article).toString(),
     amount,
     period,
     image,
