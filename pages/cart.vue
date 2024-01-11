@@ -46,6 +46,7 @@ async function create() {
       size: size.value,
       period: period.value,
     },
+    watch: false,
   })
   if (error.value)
     return notify({
