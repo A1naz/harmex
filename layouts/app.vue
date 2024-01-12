@@ -37,7 +37,7 @@ async function reloginCycle() {
 async function logout() {
   await deleteToken(storeMain.client.uuid)
   const loginStatus = await reloginCycle()
-   
+
   if (loginStatus !== 'logined') {
     await signOut({
       callbackUrl: '/auth',
@@ -68,10 +68,9 @@ function scrollToTop() {
 }
 
 const isInfoModal = ref<boolean>(false)
-function toggleInfoModal() { 
-    isInfoModal.value = !isInfoModal.value 
+function toggleInfoModal() {
+  isInfoModal.value = !isInfoModal.value
 }
-
 </script>
 
 <template>
@@ -145,10 +144,12 @@ function toggleInfoModal() {
                 </div>
                 <div class="flex items-center gap-2">
                   <div class="tooltip" data-tip="Инструкция по платформе">
-
                     <button
-                        class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
-                        @click="toggleInfoModal">i</button>
+                      class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
+                      @click="toggleInfoModal"
+                    >
+                      i
+                    </button>
 
                     <!-- <NuxtLink
                       :external="true"
@@ -257,23 +258,29 @@ function toggleInfoModal() {
     <SwapAccountModal />
     <InfoFaqModal />
 
-    <InfoModal 
-        :isModal="isInfoModal" 
-        title="Как пользоваться платформой TOPvTOP?"
-        ytSrc='https://www.youtube.com/embed/YqIw35-LiOk?si=d1FdsCsb04ADG8JZ'
-        @changeVisibility="toggleInfoModal"
-        >
-        <div class="flex flex-col gap-2">
-            <p>Посмотрите обзор кабинета прямо сейчас. Время просмотра 3 минуты.</p>
-            <NuxtLink to="https://t.me/+8kOkq5w7N2ZmODFi" target="_blank">
-                <button class="btn btn-outline btn-info max-w-fit mb-6" >
-                <Icon size="40" name="logos:telegram" />
-                    Вступайте в чат-клуб клиентов платформы TovTop!
-                </button>
-            </NuxtLink>
-        </div>
+    <InfoModal
+      :isModal="isInfoModal"
+      title="Как пользоваться платформой TOPvTOP?"
+      ytSrc="https://www.youtube.com/embed/YqIw35-LiOk?si=d1FdsCsb04ADG8JZ"
+      @changeVisibility="toggleInfoModal"
+    >
+      <div class="flex flex-col gap-2">
+        <p>Посмотрите обзор кабинета прямо сейчас. Время просмотра 3 минуты.</p>
+        <NuxtLink to="https://t.me/+8kOkq5w7N2ZmODFi" target="_blank">
+          <button class="btn btn-outline btn-info max-w-fit mb-1">
+            <Icon class="-ml-1" size="28" name="logos:telegram" />
+            Вступайте в чат-клуб клиентов платформы TovTop!
+          </button>
+        </NuxtLink>
+        <p>Закажите услугу Выкупы под ключ</p>
+        <NuxtLink to="https://t.me/topVtopsale_bot" target="_blank">
+          <button class="btn btn-outline btn-info max-w-fit mb-2">
+            <Icon class="-ml-1" size="28" name="logos:telegram" />
+            Узнать подробности
+          </button>
+        </NuxtLink>
+      </div>
     </InfoModal>
-
   </div>
 </template>
 
