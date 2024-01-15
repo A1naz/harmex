@@ -15,7 +15,9 @@ interface Item {
   dateRange: [Date, Date]
   selectedSize: number | string
   rules: Rule[]
+  purchaseSoon: boolean
 }
+
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -24,7 +26,8 @@ export default eventHandler(async (event) => {
   const body = await readBody(event)
   const query = getQuery(event)
   const { userTimezoneOffsetHours } = query
-  
+
+
   const products: Item[] = body
   const result = {
     success: true,
@@ -38,7 +41,7 @@ export default eventHandler(async (event) => {
     curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))
     const firstDate = new Date(item.dateRange[0])
 
-    if (firstDate < curDate) {
+    if (!item.purchaseSoon && firstDate < curDate) {
       result.success = false
       result.message = `Дата ${item.article} не может быть меньше текущей по МСК`
     }
