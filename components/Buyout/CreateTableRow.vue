@@ -16,8 +16,8 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
 
+const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
@@ -219,21 +219,47 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td>
+      <label class="label cursor-pointer -ml-1 text-sm -mb-1">
+        Выкупить в ближайшее время
+        <input
+          type="checkbox"
+          v-model="product.purchaseSoon"
+          class="checkbox checkbox-primary"
+        />
+      </label>
       <div class="flex items-center">
         <div class="w-full">
           <div
+            v-if="!product.purchaseSoon"
             v-show="product.dateRange[1] && product.dateRange[0]"
             class="text-sm flex flex-col justify-center items-start mb-2"
           >
             <div>
               {{ `С ${$dayjs(product.dateRange[0]).format('D MMMM HH:mm')}` }}
             </div>
-            <div>{{ `По ${$dayjs(product.dateRange[1]).format('D MMMM HH:mm')}` }}</div>
+            <div>
+              {{ `По ${$dayjs(product.dateRange[1]).format('D MMMM HH:mm')}` }}
+            </div>
           </div>
           <BuyoutDateRangePicker
+            v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"
             :start-date="startDate"
           />
+          <button
+            v-else
+            disabled
+            :class="{
+              'btn-outline': product.dateRange[0] && product.dateRange[1],
+            }"
+            class="btn btn-primary btn-sm normal-case w-full"
+          >
+            {{
+              product.dateRange[0] && product.dateRange[1]
+                ? 'Изменить'
+                : 'Выбрать'
+            }}
+          </button>
         </div>
       </div>
     </td>

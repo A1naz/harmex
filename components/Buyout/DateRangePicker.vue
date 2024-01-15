@@ -13,7 +13,9 @@ const props = defineProps({
     required: true,
     type: Date,
   },
+
 })
+
 const emit = defineEmits(['update:modelValue'])
 const colorMode = useColorMode()
 const { $dayjs } = useNuxtApp()
@@ -116,7 +118,7 @@ function selectDateInternal(date: any, selectDate: any) {
       select-text="Сохранить"
       @update:model-value="handleDate"
     >
-      <template #trigger>
+      <template #trigger >
         <button
           :class="{
             'btn-outline': date[0] && date[1],
