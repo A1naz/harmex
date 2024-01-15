@@ -66,13 +66,14 @@ export default eventHandler(async (event) => {
         date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
         date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
       } else {
+
         date1.setHours(date1.getHours() + 3)
         date2.setHours(date2.getHours() + 3)
+        
       }
 
       product.dateRange = [date1, date2]
     }
-
 
     const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
     if (!foundPoint) throw createError('Выберите существующий пункт выдачи')
