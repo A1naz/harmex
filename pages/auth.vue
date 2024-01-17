@@ -173,9 +173,9 @@ const v$ = useVuelidate(rules, formData)
 
         <p class="text">
           *Регистрируясь вы принимаете
-          <a href="">Пользовательское соглашение</a>, <br />
+          <a href="/user_agreement.pdf" target="_blank">Пользовательское соглашение</a>, <br />
           и подтверждаете, что ознакомлены с
-          <a href="">Политикой конфиденциальности</a>.
+          <a href="/conf_policy.pdf" target="_blank">Политикой конфиденциальности</a>.
         </p>
       </div>
       <div class="mb-20"></div>
