@@ -59,7 +59,7 @@ export async function findPositionByQuery(
     const advertData: any = await $fetch(
       `https://catalog-ads.wildberries.ru/api/v6/search?keyword=${query}`,
       {
-        agent: new HttpsProxyAgent(`${proxies[randomNumber]}`),
+        agent: new HttpsProxyAgent(`http://${proxies[randomNumber]}`),
         parseResponse: JSON.parse,
       }
     )
@@ -88,7 +88,7 @@ export async function findPositionByQuery(
           `https://search.wb.ru/exactmatch/ru/male/v4/search?TestGroup=test&TestID=188&appType=1&curr=rub&dest=-1257786&query=${query}&regions=80,38,4,64,83,33,68,70,69,30,86,75,40,1,66,110,22,31,48,71,114&resultset=catalog&sort=${sort}&spp=31&suppressSpellcheck=false&page=${i}`,
           {
             method: 'GET',
-            agent: new HttpsProxyAgent(`${proxies[random]}`),
+            agent: new HttpsProxyAgent(`http://${proxies[random]}`),
           }
         )
 
