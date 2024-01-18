@@ -555,6 +555,9 @@ function toggleInfoModal() {
         </div>
         <div>
           <div class="flex flex-col gap-2 w-full">
+
+          </div>
+          <div class="flex flex-col gap-2 w-full">
             <div class="form-control w-52">
               <label class="cursor-pointer label">
                 <span class="label-text">Включить чат-бота</span>

@@ -10,7 +10,8 @@ export const getAdminEntity = async (event: any): Promise<IUser | void> => {
         
         const user = await User.findOne({ uuid: session.uuid })
         if (!user) return sendRedirect(event, '/auth', 302)
-        
+
+
         if (user.uuidCompany) {
             const admin = await User.findOne({ uuid: user.uuidCompany })
             if (!admin) return sendRedirect(event, '/auth', 302)
