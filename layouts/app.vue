@@ -187,7 +187,7 @@ function toggleInfoModal() {
                 Пополнить
               </label>
             </div>
-            <div v-if="storeMain.client.role !== UserRoles.staff" class="-mt-3">
+            <div class="-mt-3">
               <label
                 for="swapAccountModal"
                 class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
