@@ -121,7 +121,7 @@ export async function findPositionByQuery(
       const newResult: any = await findPositionByQuery(query, article, sort, n)
       return newResult
     } else if (n < pages && cycleCount < 10) {
-      await sleep(10)
+      await sleep(5000)
       const newResult: any = await findPositionByQuery(
         query,
         article,
