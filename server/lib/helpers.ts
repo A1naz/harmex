@@ -61,6 +61,9 @@ export async function findPositionByQuery(
       {
         agent: new HttpsProxyAgent(`https://${proxies[randomNumber]}`),
         parseResponse: JSON.parse,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+        }
       }
     )
     const advertPages = advertData.pages
@@ -83,14 +86,19 @@ export async function findPositionByQuery(
       for (let i = n; i <= pages; i++) {
         n++
         const random = Math.floor(Math.random() * 105)
-
+        
+        // console.log(`http://${proxies[random]}`);
         const data: any = await $fetch(
           `https://search.wb.ru/exactmatch/ru/male/v4/search?TestGroup=test&TestID=188&appType=1&curr=rub&dest=-1257786&query=${query}&regions=80,38,4,64,83,33,68,70,69,30,86,75,40,1,66,110,22,31,48,71,114&resultset=catalog&sort=${sort}&spp=31&suppressSpellcheck=false&page=${i}`,
           {
             method: 'GET',
             agent: new HttpsProxyAgent(`https://${proxies[random]}`),
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+            }
           }
         )
+        
 
         const parsed = JSON.parse(data)
         const products = parsed?.data?.products
@@ -114,14 +122,17 @@ export async function findPositionByQuery(
       return cycleResult
     } else return result
   } catch (e) {
+    
     cycleCount++
+    // console.log(cycleCount);
+    // console.log('страница - ' + n);
+    
     
     if (n <= 1) {
-      
       const newResult: any = await findPositionByQuery(query, article, sort, n)
       return newResult
     } else if (n < pages && cycleCount < 10) {
-      await sleep(5000)
+      await sleep(100)
       const newResult: any = await findPositionByQuery(
         query,
         article,
