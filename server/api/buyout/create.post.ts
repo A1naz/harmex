@@ -48,7 +48,7 @@ export default eventHandler(async (event) => {
 
   const products: Item[] = body
   if (products.length > 10) {
-    throw createError('Можно создавать максимум 10 выкупов за раз')
+    throw createError('Можно создать максимум 10 выкупов за раз')
   }
   for await (const product of products) {
     const rules = product.rules.map((rule) => rule.id)
