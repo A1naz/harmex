@@ -30,7 +30,16 @@ watch(
 )
 
 async function selectTemplate() {
-  store.createProducts = props.info.buyoutsArray
+  if (props.info.buyoutsArray.length <= 10) {
+    store.createProducts = props.info.buyoutsArray
+  } else {
+    notify({
+      title: 'За раз можно создать максимум 10 выкупов',
+      text: 'Добавлены первые 10 выкупов',
+      type: 'error',
+    })
+    store.createProducts = props.info.buyoutsArray.slice(0, 10)
+  }
   emit('closeModal')
 }
 
@@ -85,6 +94,6 @@ async function deleteTemplate() {
         :product="product"
       ></BuyoutTemplateCard>
     </div>
-</div>
-<!-- <BuyoutDeleteConfirmModal :uuid="uuid" @delete-template="deleteTemplate"></BuyoutDeleteConfirmModal> -->
+  </div>
+  <!-- <BuyoutDeleteConfirmModal :uuid="uuid" @delete-template="deleteTemplate"></BuyoutDeleteConfirmModal> -->
 </template>

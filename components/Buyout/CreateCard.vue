@@ -1,6 +1,7 @@
 import { useBuyoutStore } from '../../stores/buyout';
 <!-- eslint-disable vue/no-mutating-props -->
 <script setup lang="ts">
+import { notify } from '@kyvg/vue3-notification'
 const props = defineProps({
   product: {
     type: Object as any,
@@ -17,6 +18,15 @@ const props = defineProps({
 })
 
 function copyBuyout() {
+
+  if (store.createProducts.length >= 10) {
+    notify({
+      title: 'За раз можно создать максимум 10 выкупов',
+      type: 'error',
+    })
+    return
+  }
+
   const item = JSON.stringify(store.createProducts[props.index])
   store.createProducts.push(JSON.parse(item))
 }
