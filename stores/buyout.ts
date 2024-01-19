@@ -21,6 +21,7 @@ export const useBuyoutStore = defineStore('buyout', {
     },
 
     async cloneBuyout(uuid: string) {
+
       const { data, error } = await useFetch('/api/buyout/clone', {
         query: {
           uuid,
@@ -56,6 +57,15 @@ export const useBuyoutStore = defineStore('buyout', {
       this.createProducts = []
     },
     async addProduct(article: number) {
+
+      if (this.createProducts.length >= 10) {
+        notify({
+          title: 'За раз можно создать максимум 10 выкупов',
+          type: 'error',
+        })
+        return
+      }
+
       const { data, error } = await useFetch(`/api/product/${article}`, {
         method: 'GET',
       })
