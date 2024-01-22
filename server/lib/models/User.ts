@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 import { v4 as uuid } from 'uuid'
 import { IUser } from '@/data/types'
-import { Tariff } from './Tariff';
+import { Tariff } from './Tariff'
 
 interface IUserSchema extends IUser, Document {}
 
@@ -23,7 +23,7 @@ const UserSchema = new Schema<IUserSchema>({
   uuid: { type: String, unique: true, required: true, default: uuid() },
 
   uuidCompany: { type: String, unique: false },
-  acesses: [{ type: String, required: false}],
+  acesses: [{ type: String, required: false }],
 
   roles: [{ type: String, ref: 'Role' }],
   tariff: { type: Tariff.schema, required: true },
@@ -46,6 +46,7 @@ const UserSchema = new Schema<IUserSchema>({
       rewardPercent: 10,
     },
   },
+  twoFa: { type: String },
 })
 
 UserSchema.pre('save', function (next) {

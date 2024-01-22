@@ -20,6 +20,7 @@ export default NuxtAuthHandler({
       const isSignIn = !!user
 
       if (isSignIn) {
+        token.twoFaNeeded = user ? (user as any)?.twoFa : false
         token.email = user ? (user as any)?.email : ''
         token.uuid = user ? (user as any)?.uuid : ''
         token.username = user ? (user as any)?.username : ''
@@ -33,6 +34,7 @@ export default NuxtAuthHandler({
       ;(session as any).uuid = token.uuid
       ;(session as any).username = token.username
       ;(session as any).balance = token.balance
+      ;(session as any).twoFaNeeded = false
       const found = await User.findOne({ uuid: token.uuid })
       if (!found) return Promise.reject(new Error('User not found'))
       if (found.isBanned == true) {

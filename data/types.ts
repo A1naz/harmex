@@ -42,6 +42,7 @@ export interface IUser extends Entity {
     registrationDate: Date,
     partner: Partner,
     tariff: ITariff
+    twoFa: string
 }
 
 export interface IUserLogs extends Entity {

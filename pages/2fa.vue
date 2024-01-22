@@ -1,16 +1,97 @@
 <script lang="ts" setup>
-const { height } = useWindowSize()
+import { notify } from '@kyvg/vue3-notification'
+const { signOut } = useAuth()
 
 definePageMeta({
   title: 'Двухфакторная аутентификация',
   auth: true,
 })
+
+const codeInput = ref()
+const code = ref('')
+const colorMode = useColorMode()
+
+onMounted(() => {
+  codeInput.value?.focus()
+})
+
+async function logOut() {
+  await signOut()
+}
+
+async function confirm2fa() {
+  if (!code.value) {
+    return
+  }
+
+  if (code.value.length < 6) {
+    notify({
+      title: 'Код должен содержать 6 цифр',
+    })
+    return
+  }
+
+  const { data, error } = await useFetch('/api/2fa/confirm', {
+    method: 'GET',
+    params: {
+      code: code.value,
+    },
+  })
+}
 </script>
 
 <template>
-  <div :class="{ mt: 100 + 'px' }" class="overflow-hidden" >
-    <div class="text-center text-xl mx-4">
-      Введите код с приложения Аутентификатор
+  <div class="hidden title w-full justify-center p-2 xl:flex"></div>
+  <div
+    class="absolute flex mt-[12%] flex-col justify-center w-full py-10 overflow-hidden"
+  >
+    <div class="w-full flex justify-center">
+      <div
+        class="card w-[400px] bg-base-100 shadow-2xl flex flex-col gap-4 justify-center"
+      >
+        <div class="flex justify-center mt-6">
+          <nuxt-img
+            v-show="$colorMode.value === 'light' || colorMode.unknown"
+            src="/logo/logocolor.svg"
+            :width="'100px'"
+            :height="'44px'"
+            alt="TOPVTOP"
+            srcset=""
+          />
+          <nuxt-img
+            v-show="$colorMode.value === 'dark'"
+            src="/logo/logowhite.svg"
+            :width="'100px'"
+            :height="'44px'"
+            alt="TOPVTOP"
+            srcset=""
+          />
+        </div>
+        <div class="text-center text-2xl mt-1 -mb-2">
+          Двухфакторная аутентификация
+        </div>
+        <div class="divider mx-2" />
+        <div class="text-center text-lg -mt-5">
+          Введите код с приложения Аутентификатор
+        </div>
+        <div class="flex justify-center flex-wrap gap-3">
+          <input
+            @keyup.enter="confirm2fa"
+            ref="codeInput"
+            placeholder="Введите 6-ти значный код"
+            v-maska
+            data-maska="### ###"
+            class="input text-xl input-bordered w-full max-w-xs"
+            v-model="code"
+          />
+          <div class="flex gap-28 mt-4 mb-5 justify-between">
+            <button class="btn w-32" @click="logOut">Выйти</button>
+            <button class="btn btn-primary" @click="confirm2fa">
+              Подтвердить
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
