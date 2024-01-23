@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
   const date = new Date(publishDate) < new Date() ? new Date() : publishDate
   const created = new Question({
     user,
-    article: article.replaceAll(' ', ''),
+    article: Number(article),
     publishDate: date,
     createdDate: new Date(),
     gender,
