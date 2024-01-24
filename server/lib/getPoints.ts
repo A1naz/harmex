@@ -16,7 +16,7 @@ export default async function () {
 
   if (fs.existsSync('points.json')) {
     const data: any = await $fetch(
-      'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v3.json',
+      'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
       {
         method: 'GET',
         headers: {
@@ -92,7 +92,7 @@ export default async function () {
     collection = parsed.points
   } else {
     const data: any = await $fetch(
-      'https://www.wildberries.ru/webapi/spa/modules/pickups',
+      'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
       {
         method: 'GET',
         headers: {
