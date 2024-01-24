@@ -1,14 +1,12 @@
-
 import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
 import { getAdminEntity } from '~/server/utils/getAdmin'
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
-
-    const { status, limit, skip } = getQuery(event)
+  const { status, limit, skip } = getQuery(event)
 
   // const all = await Delivery.find({ user })
   let deliveries
@@ -17,53 +15,54 @@ export default eventHandler(async (event) => {
       .sort({ _id: -1 })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else if (status === 'active') {
+  } else if (status === 'active') {
     deliveries = await Delivery.find({ user, status: 'active' })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else if (status === 'completed') {
+  } else if (status === 'completed') {
     deliveries = await Delivery.find({ user, status: 'completed' })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else if (status === 'canceled') {
+  } else if (status === 'canceled') {
     deliveries = await Delivery.find({ user, status: 'canceled' })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else if (status === 'onTheWay') {
-    const response = await Delivery.find({ user, status: 'active'})
-      .sort({
-        _id: -1,
-      })
-      .skip(skip as number)
-      .limit(limit as number)
-      const substrings = ["Ожидается", "пути", "задерживается"];
-      deliveries = response.filter((delivery) => {
-        return delivery.statusdelivery[delivery.statusdelivery.length-1].status.split(' ').some((word: string) => substrings.includes(word))
+  } else if (status === 'onTheWay') {
+    const response = await Delivery.find({ user, status: 'active' }).sort({
+      _id: -1,
     })
-  }
-  else if (status === 'pickupReady') {
-    const response = await Delivery.find({ user, status: 'active'})
-      .sort({
-        _id: -1,
+    const substrings = ['Ожидается', 'пути', 'задерживается']
+    deliveries = response
+      .filter((delivery) => {
+        return delivery.statusdelivery[
+          delivery.statusdelivery.length - 1
+        ].status
+          .split(' ')
+          .some((word: string) => substrings.includes(word))
       })
-      .skip(skip as number)
-      .limit(limit as number)
-    deliveries = response.filter((delivery) => delivery.statusdelivery[delivery.statusdelivery.length-1].status == 'Готов к выдаче')
-  }
-  else {
+      .splice((skip as number) ? (skip as number) : 0, limit as number)
+  } else if (status === 'pickupReady') {
+    const response = await Delivery.find({ user, status: 'active' }).sort({
+      _id: -1,
+    })
+
+    deliveries = response
+      .filter(
+        (delivery, index) =>
+          delivery.statusdelivery[delivery.statusdelivery.length - 1].status ==
+          'Готов к выдаче'
+      )
+      .splice(skip as number, limit as number)
+  } else {
     return {
       error: 'Неизвестный статус',
     }
@@ -71,8 +70,7 @@ export default eventHandler(async (event) => {
   const format = await Promise.all(
     deliveries.map(async (delivery) => {
       const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
-      if (!buyout)
-        return null
+      if (!buyout) return null
 
       // const place = all.findIndex(
       //   item => item._id.toString() === delivery._id.toString(),
@@ -80,8 +78,12 @@ export default eventHandler(async (event) => {
 
       const phone = delivery.recipientphone
       const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
-      const currentstatus = delivery.statusdelivery?.length ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status : 'Неизвестно'
-      const statusupdated = delivery.statusdelivery?.length ? delivery.statusdelivery[delivery.statusdelivery.length - 1].date : new Date()
+      const currentstatus = delivery.statusdelivery?.length
+        ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
+        : 'Неизвестно'
+      const statusupdated = delivery.statusdelivery?.length
+        ? delivery.statusdelivery[delivery.statusdelivery.length - 1].date
+        : new Date()
       return {
         // place: place + 1,
         uuid: buyout.uuid,
@@ -102,7 +104,7 @@ export default eventHandler(async (event) => {
         recipientphone: replaced,
         updatedAt: delivery.updatedAt,
       }
-    }),
+    })
   )
   const filtered = format.filter(Boolean)
   return filtered

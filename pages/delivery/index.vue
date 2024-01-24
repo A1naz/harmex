@@ -141,7 +141,7 @@ watch(targetIsVisible, async (isVisible) => {
       query: {
         status: route.query?.status || 'all',
         limit: 50,
-        skip: skip.value,
+        skip: skip.value ? skip.value : 0,
       },
     })
     if ((data.value as any)?.length === 0) {
