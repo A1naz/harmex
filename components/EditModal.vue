@@ -266,9 +266,7 @@ const multiselectStyle = {
 
         <div class="flex flex-col gap-2 mt-2 justify-center">
           <div v-for="(conf, index) in config">
-            <label :for="conf.type">
-              {{ conf.header }} </label
-            ><br />
+            <label :for="conf.type"> {{ conf.header }} </label><br />
 
             <MultiSelect
               v-if="conf.type == FieldsType.multiOptions && conf.options"
@@ -279,6 +277,12 @@ const multiselectStyle = {
               display="chip"
               :pt="multiselectStyle"
             />
+
+            <select v-else-if="conf.type == FieldsType.select" class="select select-bordered w-full">
+              <option disabled selected>Who shot first?</option>
+              <option>Han Solo</option>
+              <option>Greedo</option>
+            </select>
 
             <!-- <textarea
                     v-if="conf.type == FieldsType.textArea"
