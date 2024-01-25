@@ -263,7 +263,6 @@ const multiselectStyle = {
         <div v-if="modelValue.uuid" class="text-xs text-gray-500">
           #{{ modelValue.uuid }}
         </div>
-
         <div class="flex flex-col gap-2 mt-2 justify-center">
           <div v-for="(conf, index) in config">
             <label :for="conf.type"> {{ conf.header }} </label><br />
@@ -277,11 +276,10 @@ const multiselectStyle = {
               display="chip"
               :pt="multiselectStyle"
             />
-
-            <select v-else-if="conf.type == FieldsType.select" class="select select-bordered w-full">
-              <option disabled selected>Who shot first?</option>
-              <option>Han Solo</option>
-              <option>Greedo</option>
+            <select v-else-if="conf.type == FieldsType.select" class="select select-bordered w-full" v-model="modelValue[conf.field]">
+              <option v-for="(opt, index) in conf.options" :key="index" :value="opt.value">
+                {{ opt.text }}
+              </option>
             </select>
 
             <!-- <textarea

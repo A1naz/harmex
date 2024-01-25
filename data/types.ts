@@ -41,7 +41,8 @@ export interface IUser extends Entity {
     balance: number,
     registrationDate: Date,
     partner: Partner,
-    tariff: ITariff
+    tariff: ITariff,
+    post: Object,
 }
 
 export interface IUserLogs extends Entity {

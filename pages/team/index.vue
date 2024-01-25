@@ -36,8 +36,11 @@ const btnSaveLoading = ref(false)
 const saveError = ref('')
 const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions()
 const selectOptions = [
-  { value: 'Да', text: 'true' },
-  { name: 'Нет', value: 'false' },
+  { value: 'manager', text: 'Менеджер' },
+  { value: 'courier', text: 'Курьер' },
+  { value: 'financier', text: 'Финансист' },
+  { value: 'accountant', text: 'Бухгалтер' },
+  { value: 'admin', text: 'Админ' },
 ]
 
 const configModalBase: ConfigModal[] = [
@@ -45,7 +48,12 @@ const configModalBase: ConfigModal[] = [
   { field: 'firstName', header: 'Имя', type: FieldsType.text },
   { field: 'lastName', header: 'Фамилия', type: FieldsType.text },
   { field: 'email', header: 'E-Mail', type: FieldsType.text },
-  { field: 'email', header: 'E-Mail', type: FieldsType.select, options: [] },
+  {
+    field: 'post',
+    header: 'Должность',
+    type: FieldsType.select,
+    options: selectOptions,
+  },
   {
     field: 'allowedPathes',
     header: 'Разрешения',
@@ -92,6 +100,7 @@ const saveUser = async () => {
             return path.value
           }),
     tariff: store.client.tariff,
+    post: selectedUser.value.post,
   }
 
   if (selectedUser.value.uuid) {
@@ -170,6 +179,7 @@ const configColumns: ConfigTable[] = [
   { field: 'firstName', header: 'Имя', type: FieldsType.text },
   { field: 'lastName', header: 'Фамилия', type: FieldsType.text },
   { field: 'email', header: 'E-Mail', type: FieldsType.text },
+  { field: 'post', header: 'Должность', type: FieldsType.select, },
   {
     field: 'allowedPathes',
     header: 'Разрешения',
@@ -211,6 +221,11 @@ const listConfigAcrions: ConfigTable[] = [
   { field: 'createdAt', header: 'Дата', type: FieldsType.datetime },
   { field: 'documentId', header: 'id документа', type: FieldsType.text },
 ]
+
+const getPostName = (post: string) => {
+  return selectOptions.find((p: any) => p.value == post)?.text
+}
+
 </script>
 
 <template>
@@ -286,6 +301,9 @@ const listConfigAcrions: ConfigTable[] = [
                     <span v-if="act.btnIcon" :class="act.btnIcon"></span>
                   </Button>
                 </div>
+              </template>
+              <template v-else-if="col.type == FieldsType.select" #body="{ data }">
+                {{ getPostName(data[col.field]) }}
               </template>
               <template v-else #body="{ data }">
                 {{ data[col.field] }}

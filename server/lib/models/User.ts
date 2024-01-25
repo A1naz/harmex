@@ -28,6 +28,7 @@ const UserSchema = new Schema<IUserSchema>({
   roles: [{ type: String, ref: 'Role' }],
   tariff: { type: Tariff.schema, required: true },
 
+  post: { type: 'String' },
   tabs: [{ type: String }],
   newEmail: { type: String, required: false },
   emailConfirmed: { type: Boolean, default: false },
