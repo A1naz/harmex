@@ -28,7 +28,7 @@ export default async function () {
     const parsed = JSON.parse(cached)
 
     const allItems: any[] = []
-    data.forEach((item: any) => {
+    data[0].items.forEach((item: any) => {
         allItems.push(...item.items)
     })
 
@@ -101,7 +101,7 @@ export default async function () {
       }
     )
 
-    for (const point of data.value.pickups) {
+    for (const point of data[0].items) {
       collection.push({
         id: point.id,
         lt: point.coordinates[0],

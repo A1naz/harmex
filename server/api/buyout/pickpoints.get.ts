@@ -4,7 +4,7 @@ import getPoints from '~/server/lib/getPoints'
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
-  
+
   if (!session) return sendRedirect(event, '/auth', 302)
   if (fs.existsSync('points.json')) {
     const cached = fs.readFileSync('points.json', 'utf8')
@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
 
   if (fs.existsSync('points.json')) {
     const data: any = await $fetch(
-      'https://www.wildberries.ru/webapi/spa/modules/pickups',
+      'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
       {
         method: 'GET',
         headers: {
@@ -26,6 +26,9 @@ export default eventHandler(async (event) => {
         },
       }
     )
+
+    console.log(data[0].items)
+
     const cached = fs.readFileSync('points.json', 'utf8')
     const parsed = JSON.parse(cached)
 
@@ -42,7 +45,7 @@ export default eventHandler(async (event) => {
     })
 
     //Добавление новых пвз, только прилетевших из вб
-    data.value.pickups.forEach((obj: any) => {
+    data[0].items.forEach((obj: any) => {
       if (obj.id) {
         const index = parsed.points.findIndex(
           (el: any) => el.id === obj.id || el.a === obj.address
@@ -66,7 +69,7 @@ export default eventHandler(async (event) => {
         obj.deleteMark = 0
       }
       //Увеличиваем deleteMark, для points(ПВЗ), которые не прилетели из вб
-      if (!data.value.pickups.some((el: any) => el.id === obj.id)) {
+      if (!data[0].items.some((el: any) => el.id === obj.id)) {
         obj.deleteMark++
       } else {
         obj.deleteMark = 0
@@ -92,7 +95,7 @@ export default eventHandler(async (event) => {
     return sendStream(event, fs.createReadStream('points.json'))
   } else {
     const data: any = await $fetch(
-      'https://www.wildberries.ru/webapi/spa/modules/pickups',
+      'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
       {
         method: 'GET',
         headers: {
@@ -101,7 +104,7 @@ export default eventHandler(async (event) => {
       }
     )
 
-    const points = data.value.pickups
+    const points = data[0].items
     const collection = points.map((point: any) => {
       return {
         id: point.id,

@@ -1,5 +1,7 @@
 import type { Rule } from '@/data/buyout/rules'
 import { findPositionByQuery } from '@/server/lib/helpers'
+import getPickpoints from '~/server/lib/getPoints'
+
 
 interface Item {
   image: string
@@ -26,7 +28,7 @@ export default eventHandler(async (event) => {
   const body = await readBody(event)
   const query = getQuery(event)
   const { userTimezoneOffsetHours } = query
-
+  const { points } = await getPickpoints()
 
   const products: Item[] = body
   const result = {
@@ -95,6 +97,14 @@ export default eventHandler(async (event) => {
         }
       }
     }
+
+ const foundPoint = points.find((p: { a: string }) => p.a === item.adress)
+ if (!foundPoint) {
+  result.success = false
+  result.message = `ПВЗ ${item.adress} не найдено`
+  return result
+ } 
+ 
   }
 
   return result
