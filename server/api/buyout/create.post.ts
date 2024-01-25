@@ -79,7 +79,6 @@ export default eventHandler(async (event) => {
     }
 
     const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
-    if (!foundPoint) throw createError('Выберите существующий пункт выдачи')
 
     let city, state
     if (foundPoint.city && foundPoint.state) {

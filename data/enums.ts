@@ -8,6 +8,7 @@ export enum FieldsType {
     textArea = 'textArea',
     multiOptions = 'multiOptions',
     password = 'password',
+    select = 'select',
     price = 'price',
 }
 

@@ -24,7 +24,8 @@ export default eventHandler(async (event) => {
         acesses: user.acesses,
         emailConfirmed: user.emailConfirmed,
         mmenuItems: menu,
-        allowedPathes: allowedPathes
+        allowedPathes: allowedPathes,
+        post: user.post ? user.post : 'manager'
     }
   })
   return format
