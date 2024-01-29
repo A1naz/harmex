@@ -42,7 +42,9 @@ export interface IUser extends Entity {
     registrationDate: Date,
     partner: Partner,
     tariff: ITariff
-    twoFa: string
+    twoFaQR: string
+    twoFaSecret: string
+
 }
 
 export interface IUserLogs extends Entity {

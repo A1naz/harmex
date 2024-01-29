@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import { notify } from '@kyvg/vue3-notification'
-const { signOut } = useAuth()
+const { signOut, signIn } = useAuth()
+const store = useMainStore()
+
+if (!store.client || !store.client.uuid) {
+  await signOut()
+}
 
 definePageMeta({
   title: 'Двухфакторная аутентификация',
@@ -31,12 +36,26 @@ async function confirm2fa() {
     return
   }
 
-  const { data, error } = await useFetch('/api/2fa/confirm', {
-    method: 'GET',
-    params: {
-      code: code.value,
-    },
+  // const { data, error } = await useFetch('/api/2fa/confirm', {
+  //   method: 'GET',
+  //   params: {
+  //     code: code.value,
+  //   },
+  // })
+
+  const { error, url } = await signIn('2fa', {
+    redirect: false,
+    code: code.value,
+    uuid: store.client.uuid,
   })
+
+  if (error) {
+    notify({
+      title: 'Неверный код',
+    })
+  } else {
+    return navigateTo('/buyouts')
+  }
 }
 </script>
 

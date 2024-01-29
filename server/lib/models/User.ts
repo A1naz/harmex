@@ -28,6 +28,9 @@ const UserSchema = new Schema<IUserSchema>({
   roles: [{ type: String, ref: 'Role' }],
   tariff: { type: Tariff.schema, required: true },
 
+  twoFaQR: { type: String, required: false },
+  twoFaSecret: { type: String, required: false },
+
   tabs: [{ type: String }],
   newEmail: { type: String, required: false },
   emailConfirmed: { type: Boolean, default: false },
@@ -46,7 +49,6 @@ const UserSchema = new Schema<IUserSchema>({
       rewardPercent: 10,
     },
   },
-  twoFa: { type: String },
 })
 
 UserSchema.pre('save', function (next) {

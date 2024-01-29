@@ -19,8 +19,18 @@ export default NuxtAuthHandler({
     jwt: async ({ token, user }) => {
       const isSignIn = !!user
 
+      // console.log('token----------------------------')
+      // console.log(isSignIn)
+      // console.log('token----------------------------')
+
       if (isSignIn) {
-        token.twoFaNeeded = user ? (user as any)?.twoFa : false
+        console.log(user)
+
+        token.twoFaNeeded = (user as any)?.twoFaSecret
+          ? token.twoFaNeeded === 'none'
+            ? 'none'
+            : 'needed'
+          : 'none'
         token.email = user ? (user as any)?.email : ''
         token.uuid = user ? (user as any)?.uuid : ''
         token.username = user ? (user as any)?.username : ''
@@ -34,7 +44,6 @@ export default NuxtAuthHandler({
       ;(session as any).uuid = token.uuid
       ;(session as any).username = token.username
       ;(session as any).balance = token.balance
-      ;(session as any).twoFaNeeded = false
       const found = await User.findOne({ uuid: token.uuid })
       if (!found) return Promise.reject(new Error('User not found'))
       if (found.isBanned == true) {
@@ -161,6 +170,33 @@ export default NuxtAuthHandler({
           throw new Error('Account is banned')
         }
 
+        return user
+      },
+    }),
+    // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
+    CredentialsProvider.default({
+      id: '2fa',
+      name: '2fa',
+      credentials: {
+        code: {
+          type: 'text',
+        },
+      },
+
+      async authorize(credentials: any, event: any) {
+        // console.log(credentials)
+
+        const { code, uuid } = credentials
+
+        const user = await User.findOne({
+          uuid,
+        })
+
+        if (!user) {
+          return null
+        }
+
+        user.twoFaSecret = ''
         return user
       },
     }),

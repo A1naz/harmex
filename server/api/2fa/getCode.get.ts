@@ -4,8 +4,15 @@ import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
 
 export default eventHandler(async (event) => {
-  // const user = await getAdminEntity(event)
-  // if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
+
+  if (user.twoFaQR) {
+    return {
+      code: user.twoFaQR,
+      secret: user.twoFaSecret,
+    }
+  }
 
   const secret: any = speakeasy.generateSecret({
     length: 10,
