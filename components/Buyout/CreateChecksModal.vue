@@ -79,6 +79,14 @@ onMounted(async () => {
         >
           Создать
         </button>
+        <button
+          :disabled="isCreateButtonDisabled"
+          v-if="!success && !loading"
+          class="btn btn-sm btn-primary"
+          @click="emit('create')"
+        >
+          Игнорировать ошибку и создать
+        </button>
       </div>
     </div>
   </div>

@@ -106,7 +106,7 @@ export async function findPositionByQuery(
         if (!products) return result
 
         products.forEach((el: any) => {
-          if (el.id === article) {
+          if (el.id == article) {
             result.found = true
             result.page = i
             return result
