@@ -13,6 +13,8 @@ export default eventHandler(async (event) => {
   const limit = params.limit ? parseInt(params.limit?.toString(), 10) : 50
   const skip = params.skip ? parseInt(params.skip?.toString(), 10) : 0
   const sortObj = params.sort ? JSON.parse(params.sort.toString()) : undefined
+  
+
 
   const reffers = await Referral.aggregate([
     {
@@ -60,8 +62,6 @@ export default eventHandler(async (event) => {
         count: { $size: '$refInfo' },
       },
     },
-    { $limit: limit },
-    { $skip: skip },
   ])
 
   if (!reffers[0]) return []
@@ -70,6 +70,48 @@ export default eventHandler(async (event) => {
     list: [] as any,
     count: 0,
   }
+
+  const referIds: any = reffers[0].refInfo.map((refer: any) => refer._id)
+
+  const deals = await paymenthistory.aggregate([
+    {
+      $match: {
+        user: { $in: referIds },
+        typeoperations: 'Приход',
+      },
+    },
+    {
+      $group: {
+        _id: '$user',
+        counts: { $sum: 1 },
+        summ: { $sum: '$summ' },
+      },
+    },
+  ])
+
+  const comissions = await PartnerPaymentHistory.aggregate([
+    { $match: { referral: { $in: referIds } } },
+    {
+      $group: {
+        _id: '$referral',
+        summ: { $sum: '$amount' },
+      },
+    },
+  ])
+
+  const dealsCount = await PartnerPaymentHistory.aggregate([
+    { $match: { referral: { $in: referIds } } },
+    {
+      $group: {
+        _id: '$referral',
+        count: { $sum: 1 },
+      },
+    },
+  ])
+
+  const allDeals = deals ? deals : []
+  const allComissions = comissions ? comissions : []
+  const allDealsCount = dealsCount ? dealsCount : []
 
   for (const refer of reffers[0].refInfo) {
     if (filtertObj.dateRange) {
@@ -82,46 +124,28 @@ export default eventHandler(async (event) => {
       }
     }
 
-    const deals = await paymenthistory.aggregate([
-      {
-        $match: {
-          user: new ObjectId(refer._id),
-          typeoperations: 'Приход',
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          counts: { $sum: 1 },
-          summ: { $sum: '$summ' },
-        },
-      },
-    ])
+    const dealsCount = allDealsCount.find(
+      (deal: any) => deal._id.valueOf() === refer._id.valueOf()
+    )
+    const summ = allDeals.find(
+      (deal: any) => deal._id.valueOf() === refer._id.valueOf()
+    )
 
-    const comissions = await PartnerPaymentHistory.aggregate([
-      { $match: { referral: refer._id } },
-      {
-        $group: {
-          _id: null,
-          summ: { $sum: '$amount' },
-        },
-      },
-    ])
+    const comissions = allComissions.filter(
+      (comission: any) => comission._id.valueOf() === refer._id.valueOf()
+    )
 
-    const dealsCount = await PartnerPaymentHistory.countDocuments({
-      referral: refer._id,
-    })
-
-    data.count += 1
     data.list.push({
       email: refer.email,
       username: refer.username,
       registrationDate: refer.registrationDate,
       refCount: refer.partner.refCount ? refer.partner.refCount : 0,
-      deals: dealsCount ? dealsCount : 0,
-      summ: deals.length > 0 ? deals[0].summ : 0,
-      comission: comissions.length > 0 ? comissions[0].summ : 0,
+      deals: dealsCount ? dealsCount.count : 0,
+      summ: summ ? summ.summ : 0,
+      comission: comissions[0] ? comissions[0].summ : 0,
     })
+
+    data.count += 1
   }
 
   if (sortObj && Object.keys(sortObj).length > 0) {
@@ -135,8 +159,8 @@ export default eventHandler(async (event) => {
   return {
     status: 'ok',
     data: {
-        list: data.list,
-        count: data.count
-    }
-}
+      list: data.list.splice(skip, limit + skip),
+      count: data.count,
+    },
+  }
 })
