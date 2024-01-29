@@ -59,55 +59,74 @@ export default eventHandler(async (event) => {
 
   const reffers = await Referral.aggregate(reffersPL)
 
+  const referIds: any = reffers[0].refInfo.map((refer: any) => refer._id)
+
+  const deals = await paymenthistory.aggregate([
+    {
+      $match: {
+        user: { $in: referIds },
+        typeoperations: 'Приход',
+      },
+    },
+    {
+      $group: {
+        _id: '$user',
+        counts: { $sum: 1 },
+        summ: { $sum: '$summ' },
+      },
+    },
+  ])
+
+  const comissions = await PartnerPaymentHistory.aggregate([
+    { $match: { referral: { $in: referIds } } },
+    {
+      $group: {
+        _id: '$referral',
+        summ: { $sum: '$amount' },
+      },
+    },
+  ])
+
+  const dealsCount = await PartnerPaymentHistory.aggregate([
+    { $match: { referral: { $in: referIds } } },
+    {
+      $group: {
+        _id: '$referral',
+        count: { $sum: 1 },
+      },
+    },
+  ])
+
   const data = []
+  const allDeals = deals ? deals : []
+  const allComissions = comissions ? comissions : []
+  const allDealsCount = dealsCount ? dealsCount : []
+
 
   for (const refer of reffers[0].refInfo) {
     if (
       refer.registrationDate >= startDate &&
       refer.registrationDate <= endDate
     ) {
-      const deals = await paymenthistory.aggregate([
-        {
-          $match: {
-            user: new ObjectId(refer._id),
-            typeoperations: 'Приход',
-          },
-        },
-        {
-          $group: {
-            _id: null,
-            counts: { $sum: 1 },
-            summ: { $sum: '$summ' },
-          },
-        },
-      ])
-
-      const comissions = await PartnerPaymentHistory.aggregate([
-        {
-          $match: {
-            referral: refer._id,
-          },
-        },
-        {
-          $group: {
-            _id: null,
-            summ: { $sum: '$amount' },
-          },
-        },
-      ])
-
-      const dealsCount = await PartnerPaymentHistory.countDocuments({
-        referral: refer._id,
-      })
-
+      const dealsCount = allDealsCount.find(
+        (deal: any) => deal._id.valueOf() === refer._id.valueOf()
+      )
+      const summ = allDeals.find(
+        (deal: any) => deal._id.valueOf() === refer._id.valueOf()
+      )
+  
+      const comissions = allComissions.filter(
+        (comission: any) => comission._id.valueOf() === refer._id.valueOf()
+      )
+  
       data.push({
         email: refer.email,
         username: refer.username,
         registrationDate: refer.registrationDate,
         refCount: refer.partner.refCount ? refer.partner.refCount : 0,
-        deals: dealsCount ? dealsCount : 0,
-        summ: deals.length > 0 ? deals[0].summ : 0,
-        comission: comissions.length > 0 ? comissions[0].summ : 0,
+        deals: dealsCount ? dealsCount.count : 0,
+        summ: summ ? summ.summ : 0,
+        comission: comissions[0] ? comissions[0].summ : 0,
       })
     }
   }
@@ -121,12 +140,11 @@ export default eventHandler(async (event) => {
   sheet.addRows(data)
   const buffer = await workbook.xlsx.writeBuffer()
 
-  await userLog(event,
-    {
-        documentType: DocuemntEnum.Partners,
-        documentId: '',
-        comment: 'Экспорт зарегистрированных партнеров'
-    })
+  await userLog(event, {
+    documentType: DocuemntEnum.Partners,
+    documentId: '',
+    comment: 'Экспорт зарегистрированных партнеров',
+  })
 
   return buffer
 })

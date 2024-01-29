@@ -124,9 +124,6 @@ export async function findPositionByQuery(
   } catch (e) {
     
     cycleCount++
-    // console.log(cycleCount);
-    // console.log('страница - ' + n);
-    
     
     if (n <= 1) {
       const newResult: any = await findPositionByQuery(query, article, sort, n)

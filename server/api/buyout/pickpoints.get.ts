@@ -27,8 +27,6 @@ export default eventHandler(async (event) => {
       }
     )
 
-    console.log(data[0].items)
-
     const cached = fs.readFileSync('points.json', 'utf8')
     const parsed = JSON.parse(cached)
 
