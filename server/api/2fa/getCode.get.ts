@@ -8,30 +8,34 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   if (user.twoFaQR) {
+    
     return {
-      code: user.twoFaQR,
+      qrCode: user.twoFaQR,
       secret: user.twoFaSecret,
     }
-  }
-
-  const secret: any = speakeasy.generateSecret({
-    length: 10,
-    name: 'TOPVTOP',
-  })
-
-  const code = await new Promise((resolve, reject) => {
-    qrcode.toDataURL(secret.otpauth_url, (err: any, data: any) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
+  } else {
+    const secret: any = speakeasy.generateSecret({
+      length: 8,
+      name: 'TOPVTOP',
     })
-  })
 
-  
-  return {
-    code,
-    secret,
+    const qrCode = await new Promise((resolve, reject) => {
+      qrcode.toDataURL(secret.otpauth_url, (err: any, data: any) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
+      })
+    })
+
+    user.twoFaQR = qrCode
+    user.twoFaSecret = secret.hex
+    await user.save()
+
+    return {
+      qrCode,
+      secret: secret.hex,
+    }
   }
 })

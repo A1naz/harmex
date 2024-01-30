@@ -16,6 +16,7 @@ export interface StateMain {
     drawerOpened: boolean | null,
     faqModal: boolean,
     swapAccountModal: boolean,
+    twoFaQRModal: boolean
 }
 
 export interface IUser extends Entity {
@@ -44,7 +45,7 @@ export interface IUser extends Entity {
     tariff: ITariff
     twoFaQR: string
     twoFaSecret: string
-
+    isTwoFaEnabled: boolean
 }
 
 export interface IUserLogs extends Entity {
@@ -74,7 +75,8 @@ export interface Client extends Omit<
         hasPassword: boolean,
         role: string,
         mmenuItems: MenuSection[],
-        allowedPathes: OptionsMulti[]
+        allowedPathes: OptionsMulti[],
+        isTwoFaEnabled: boolean
 }
 
 export interface Partner{

@@ -20,10 +20,6 @@ onMounted(() => {
   codeInput.value?.focus()
 })
 
-async function logOut() {
-  await signOut()
-}
-
 async function confirm2fa() {
   if (!code.value) {
     return
@@ -45,7 +41,7 @@ async function confirm2fa() {
 
   const { error, url } = await signIn('2fa', {
     redirect: false,
-    code: code.value,
+    code: code.value.replaceAll(' ', ''),
     uuid: store.client.uuid,
   })
 
@@ -54,8 +50,48 @@ async function confirm2fa() {
       title: 'Неверный код',
     })
   } else {
-    return navigateTo('/buyouts')
+    await store.getClient()
+    return navigateTo('/buyouts', { external: true })
   }
+}
+
+async function deleteToken(uuid: string) {
+  const { data, error }: any = await useFetch('/api/token/deleteToken', {
+    method: 'GET',
+    params: {
+      uuid,
+    },
+  })
+}
+
+async function reloginCycle() {
+  const { data, error }: any = await useFetch('/api/token/reLoginCycle', {
+    method: 'GET',
+  })
+  if (data.value) {
+    if (data.value.status == 'logined') {
+      return 'logined'
+    } else {
+      return 'ol'
+    }
+  }
+}
+
+async function logout() {
+  // await deleteToken(store.client.uuid)
+  // const loginStatus = await reloginCycle()
+
+  // if (loginStatus !== 'logined') {
+  //   await signOut({
+  //     callbackUrl: '/auth',
+  //   })
+  // } else {
+  //   return navigateTo('/buyouts', { external: true })
+  // }
+
+  await signOut({
+    callbackUrl: '/auth',
+  })
 }
 </script>
 
@@ -104,7 +140,7 @@ async function confirm2fa() {
             v-model="code"
           />
           <div class="flex gap-28 mt-4 mb-5 justify-between">
-            <button class="btn w-32" @click="logOut">Выйти</button>
+            <button class="btn w-32" @click="logout">Выйти</button>
             <button class="btn btn-primary" @click="confirm2fa">
               Подтвердить
             </button>

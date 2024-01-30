@@ -42,8 +42,8 @@ export default eventHandler(async (event) => {
     }
 
   const client: Client = {
-    email: user.email,
-    username: user.email === user.username ? undefined : user.username,
+    email: user.email ? user.email : '',
+    username: user.email === user.username ? '' : user.username,
     uuid: user.uuid,
     telegram: user.telegram || undefined,
     balance: user.balance,
@@ -57,7 +57,8 @@ export default eventHandler(async (event) => {
     role: user.roles[0],
     mmenuItems: menu,
     allowedPathes: allowedPathes,
-    tariff: user.tariff
+    tariff: user.tariff,
+    isTwoFaEnabled: user.isTwoFaEnabled ? true : false,
   }
 
   return {

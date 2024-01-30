@@ -30,6 +30,7 @@ const UserSchema = new Schema<IUserSchema>({
 
   twoFaQR: { type: String, required: false },
   twoFaSecret: { type: String, required: false },
+  isTwoFaEnabled: { type: Boolean, default: false },
 
   tabs: [{ type: String }],
   newEmail: { type: String, required: false },

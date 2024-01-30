@@ -5,6 +5,7 @@ import { checkSignature } from '~~/server/lib/telegram/mod'
 import { User } from '~/server/lib/models/User'
 import { NuxtAuthHandler } from '#auth'
 import { Referral } from '~/server/lib/models/Referral'
+import confirmTwoFaCode from '~/server/utils/confirmTwoFaCode'
 
 const runtimeConfig = useRuntimeConfig()
 export default NuxtAuthHandler({
@@ -19,18 +20,12 @@ export default NuxtAuthHandler({
     jwt: async ({ token, user }) => {
       const isSignIn = !!user
 
-      // console.log('token----------------------------')
-      // console.log(isSignIn)
-      // console.log('token----------------------------')
-
       if (isSignIn) {
-        console.log(user)
-
-        token.twoFaNeeded = (user as any)?.twoFaSecret
-          ? token.twoFaNeeded === 'none'
-            ? 'none'
-            : 'needed'
-          : 'none'
+        token.twoFaNeeded = (user as any)?.isTwoFaEnabled
+          ? token.twoFaNeeded == false
+            ? false
+            : true
+          : false
         token.email = user ? (user as any)?.email : ''
         token.uuid = user ? (user as any)?.uuid : ''
         token.username = user ? (user as any)?.username : ''
@@ -196,7 +191,13 @@ export default NuxtAuthHandler({
           return null
         }
 
-        user.twoFaSecret = ''
+        const verified = confirmTwoFaCode(code, user.twoFaSecret)
+
+        if (!verified) {
+          throw new Error('Invalid code')
+        }
+
+        user.isTwoFaEnabled = false
         return user
       },
     }),
