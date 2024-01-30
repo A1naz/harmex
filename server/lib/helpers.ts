@@ -1,7 +1,7 @@
 import * as https from 'https'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 const c = [
-  143, 287, 431, 719, 1007, 1061, 1115, 1169, 1313, 1601, 1655, 1919, 2045,
+  143, 287, 431, 719, 1007, 1061, 1115, 1169, 1313, 1601, 1655, 1919, 2045, 2057
 ]
 import { proxies } from './proxy'
 
@@ -35,6 +35,7 @@ export function findProductCard(article: number) {
   const result = `https://basket-${
     (a as number) < 10 ? `0${a}` : a
   }.wb.ru/vol${n}/part${Math.floor(article / 1e3)}/${article}/info/ru/card.json`
+  
   return result
 }
 
