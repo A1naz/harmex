@@ -4,6 +4,8 @@ const qrCode = ref('null')
 const twoFaSecret = ref('')
 const loading = ref(true)
 const isCodeSaved = ref(false)
+const code = ref('')
+const isCodeConfirmed = ref(false)
 import { notify } from '@kyvg/vue3-notification'
 import turnOnOffGet from '~/server/api/2fa/turnOnOff.get'
 
@@ -20,6 +22,10 @@ async function getQr() {
 function clear() {
   qrCode.value = 'null'
   twoFaSecret.value = ''
+  loading.value = true
+  isCodeSaved.value = false
+  code.value = ''
+  isCodeConfirmed.value = false
 }
 
 async function copyToClipboard(text: string) {
@@ -43,6 +49,39 @@ async function turnOnTwoFa() {
     store.twoFaQRModal = false
   }
 }
+
+async function confirm2fa() {
+  await confirm2faDebounced()
+}
+
+async function findSearchQuery() {
+  if (isCodeConfirmed.value || !code.value || code.value.replaceAll(' ', '').length < 6) {
+    return
+  }
+
+  const { data, error }: any = await useFetch('/api/2fa/confirm', {
+    method: 'GET',
+    params: {
+      code: code.value.replaceAll(' ', ''),
+    },
+  })
+
+  if (data.value) {
+    isCodeConfirmed.value = data.value.status
+
+    if (!isCodeConfirmed.value) {
+      notify({
+        title: 'Неверный код',
+      })
+    } else {
+      notify({
+        title: 'Код подтвержден',
+      })
+    }
+  }
+}
+
+const confirm2faDebounced = useDebounceFn(findSearchQuery, 300)
 
 defineExpose({ getQr, clear })
 </script>
@@ -89,6 +128,17 @@ defineExpose({ getQr, clear })
               {{ twoFaSecret }}
             </span>
           </div>
+          <input
+            :disabled="isCodeConfirmed"
+            v-model="code"
+            @keyup.enter="confirm2fa"
+            @input="confirm2faDebounced"
+            ref="codeInput"
+            v-maska
+            data-maska="### ###"
+            placeholder="Подтвердите код Google Authenticator"
+            class="input-confirm input text-center text-2xl input-bordered w-full mt-3"
+          />
         </div>
         <span class="mt-2 flex text-center text-warning text-md">
           Пожалуйста, сохраните этот код на бумаге. Этот ключ позволит вам
@@ -109,7 +159,7 @@ defineExpose({ getQr, clear })
           </label>
         </div>
         <button
-          :disabled="!isCodeSaved"
+          :disabled="!isCodeSaved || !isCodeConfirmed"
           class="btn text-[15px] btn-primary mt-3"
           @click="turnOnTwoFa"
         >
@@ -126,4 +176,9 @@ defineExpose({ getQr, clear })
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.input-confirm::placeholder {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+</style>

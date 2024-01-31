@@ -1,10 +1,3 @@
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
-import speakeasy from 'speakeasy'
-import qrcode from 'qrcode'
-import jwt from 'jsonwebtoken'
-import { getToken } from '#auth'
-const runtimeConfig = useRuntimeConfig()
 
 
 export default eventHandler(async (event) => {
@@ -13,21 +6,11 @@ export default eventHandler(async (event) => {
 
   const { code }: any = getQuery(event)
   
-  const verified = speakeasy.totp.verify({
-    secret: user.secret,
-    encoding: 'hex',
-    token: code,
-  })
-
-  let cookie = event.req.headers.cookie
-  if (!cookie) return sendRedirect(event, '/auth', 302)
-
-const token = await getToken({ event })
-if (!token) return sendRedirect(event, '/auth', 302)  
-
-token.twoFaNeeded = 'none'
+  
+  
+  const isVerified = confirmTwoFaCode(code, user.twoFaSecret)
 
   return {
-    status: 'ok',
+    status: isVerified,
   }
 })

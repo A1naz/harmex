@@ -14,8 +14,6 @@ export default eventHandler(async (event) => {
 
   const { changeTo } = getQuery(event)
 
-  console.log(changeTo);
-  
   user.isTwoFaEnabled = changeTo
   await user.save()
 

@@ -555,13 +555,13 @@ async function openTwoFaQRModal() {
       </div>
     </section>
     <section
-      class="profile-options mt-20 flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
+      class="profile-options mt-20 flex flex-row flex-wrap justify-between xs:flex-col items-center gap-6"
     >
       <div class="self-start description-container xl:basis-2/3">
         <div class="heading relative">Двухфакторная аутентификация</div>
       </div>
       <div class="form-control">
-        <label class="cursor-pointer label">
+        <label class="cursor-pointer label xl:mr-12">
           <span class="label-text mr-4"
             >Включить двухфакторную аутентификацию</span
           >

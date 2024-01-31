@@ -15,9 +15,12 @@ export default eventHandler(async (event) => {
     }
   } else {
     const secret: any = speakeasy.generateSecret({
-      length: 8,
-      name: 'TOPVTOP',
+      length: 10,
+      name: 'TOPVTOP: ' + user.username,
     })
+
+    console.log(secret);
+    
 
     const qrCode = await new Promise((resolve, reject) => {
       qrcode.toDataURL(secret.otpauth_url, (err: any, data: any) => {
@@ -30,12 +33,12 @@ export default eventHandler(async (event) => {
     })
 
     user.twoFaQR = qrCode
-    user.twoFaSecret = secret.hex
+    user.twoFaSecret = secret.base32
     await user.save()
 
     return {
       qrCode,
-      secret: secret.hex,
+      secret: secret.base32,
     }
   }
 })
