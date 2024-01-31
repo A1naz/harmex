@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
 
   const body = await readBody(event)
 
-  const { uuid, email, username, firstName, lastName, newPassword, allowedPathes } = body
+  const { uuid, email, username, firstName, lastName, newPassword, allowedPathes, post } = body
 
   if (!validator.isEmail(email)) {
     throw createError({
@@ -51,6 +51,7 @@ export default eventHandler(async (event) => {
   user.firstName = firstName
   user.lastName = lastName
   user.acesses = allowedPathes
+  user.post = post
 
   await user.save()
 

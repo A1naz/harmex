@@ -10,7 +10,7 @@ import MailService from '~~/server/lib/mailService.js'
 export default eventHandler(async (event) => {
 
   const session = (await getServerSession(event)) as any
-  const { email, username, firstName, lastName, allowedPathes, password, tariff } = await readBody(event)
+  const { email, username, firstName, lastName, allowedPathes, password, tariff, post } = await readBody(event)
 
   if (!email || !password){
     throw createError({
@@ -61,7 +61,8 @@ if (findUsername){
     password: hash,
     roles: [UserRoles.staff],
     uuid: uuid(),
-    tariff: tariff
+    tariff: tariff,
+    post
   })
 
   await user.save()
@@ -73,12 +74,12 @@ if (findUsername){
     return { status: 'error', error: 'Ошибка отправки письма.' }
   }
 
-  await userLog(event,
-    {
-        documentType: DocuemntEnum.User,
-        documentId: user.uuid,
-        comment: `Создание пользователя ${email}`
-    })
+  // await userLog(event,
+  //   {
+  //       documentType: DocuemntEnum.User,
+  //       documentId: user.uuid,
+  //       comment: `Создание пользователя ${email}`
+  //   })
 
   return { status: 'ok', error: null }
 })

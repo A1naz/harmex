@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { notify } from '@kyvg/vue3-notification'
 import { useBuyoutStore } from '../../stores/buyout'
 import type { Rule } from '@/data/buyout/rules'
 
@@ -24,6 +25,14 @@ const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 const store = useBuyoutStore()
 
 function copyBuyout() {
+  if (store.createProducts.length >= 10) {
+    notify({
+      title: 'За раз можно создать максимум 10 выкупов',
+      type: 'error',
+    })
+    return
+  }
+
   const item = JSON.stringify(store.createProducts[props.index])
   store.createProducts.push(JSON.parse(item))
 }

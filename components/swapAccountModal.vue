@@ -16,9 +16,9 @@ const alertText = ref('')
 const alertType = ref('success')
 
 const tokenCookie = useCookie('accountsSessionToken', {
-    httpOnly: true,
-    maxAge: 60 * 60 * 24 * 35,
-  })
+  httpOnly: true,
+  maxAge: 60 * 60 * 24 * 35,
+})
 
 const accounts = ref<any[]>([])
 onKeyStroke('Escape', (e) => {
@@ -73,8 +73,6 @@ async function login() {
 }
 
 async function getToken() {
-
-
   const { data }: any = await useFetch('/api/token/getAccountsToken', {
     method: 'GET',
   })
@@ -128,7 +126,6 @@ async function deleteToken(uuid: string) {
   })
 
   if (data.value) {
-      
     tokenCookie.value = data.value.token
     accounts.value = data.value.accounts
   }
@@ -204,32 +201,34 @@ const toggleCollapse = () => {
           Добавить аккаунт
         </div>
         <div class="collapse-content">
-          <div class="flex justify-center gap-4 mx-2 flex-wrap">
-            <input
-              id="email"
-              v-model="formData.email"
-              type="email"
-              name="email"
-              placeholder="Введите свой email"
-              :class="{
-                'input-error': v$.email.$error,
-              }"
-              class="input input-bordered w-full"
-              required="true"
-            />
+          <div class="flex justify-center mx-2 flex-wrap">
+            <form>
+              <input
+                id="email"
+                v-model="formData.email"
+                type="email"
+                name="email"
+                placeholder="Введите свой email"
+                :class="{
+                  'input-error': v$.email.$error,
+                }"
+                class="input input-bordered w-full mb-3"
+                required="true"
+              />
 
-            <input
-              id="password"
-              v-model="formData.password"
-              type="password"
-              name="password"
-              placeholder="Введите пароль"
-              :class="{
-                'input-error': v$.password.$error,
-              }"
-              class="input input-bordered w-full"
-              required="true"
-            />
+              <input
+                id="password"
+                v-model="formData.password"
+                type="password"
+                name="password"
+                placeholder="Введите пароль"
+                :class="{
+                  'input-error': v$.password.$error,
+                }"
+                class="input input-bordered w-full"
+                required="true"
+              />
+            </form>
           </div>
           <div class="flex flex-col mt-3">
             <div class="flex justify-center">

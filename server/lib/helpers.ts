@@ -1,7 +1,7 @@
 import * as https from 'https'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 const c = [
-  143, 287, 431, 719, 1007, 1061, 1115, 1169, 1313, 1601, 1655, 1919, 2045,
+  143, 287, 431, 719, 1007, 1061, 1115, 1169, 1313, 1601, 1655, 1919, 2045, 2057
 ]
 import { proxies } from './proxy'
 
@@ -35,6 +35,7 @@ export function findProductCard(article: number) {
   const result = `https://basket-${
     (a as number) < 10 ? `0${a}` : a
   }.wb.ru/vol${n}/part${Math.floor(article / 1e3)}/${article}/info/ru/card.json`
+  
   return result
 }
 
@@ -106,7 +107,7 @@ export async function findPositionByQuery(
         if (!products) return result
 
         products.forEach((el: any) => {
-          if (el.id === article) {
+          if (el.id == article) {
             result.found = true
             result.page = i
             return result
@@ -124,9 +125,6 @@ export async function findPositionByQuery(
   } catch (e) {
     
     cycleCount++
-    // console.log(cycleCount);
-    // console.log('страница - ' + n);
-    
     
     if (n <= 1) {
       const newResult: any = await findPositionByQuery(query, article, sort, n)
