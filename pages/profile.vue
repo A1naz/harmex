@@ -12,6 +12,8 @@ const isChatBotEnabled = ref(false)
 
 const store = useMainStore()
 
+const twoFaQRModal = ref<any>(null)
+
 const wbApiKeys = ref([''])
 const form: any = reactive({
   firstName: '',
@@ -310,10 +312,32 @@ async function setChatBotSettings() {
 }
 
 const isInfoModal = ref<boolean>(false)
-function toggleInfoModal() { 
-    isInfoModal.value = !isInfoModal.value 
+function toggleInfoModal() {
+  isInfoModal.value = !isInfoModal.value
 }
 
+async function openTwoFaQRModal() {
+  if (!store.client.isTwoFaEnabled) {
+    const { data }: any = await useFetch('/api/2fa/turnOnOff', {
+      method: 'GET',
+      query: {
+        changeTo: store.client.isTwoFaEnabled,
+      },
+      watch: false
+    })
+    if (data.value) {
+      notify({
+        title: 'Двухфакторная аутентификация выключена',
+      })
+      twoFaQRModal.value?.clear()
+    }
+    return
+  }
+  {
+    twoFaQRModal.value?.getQr()
+    store.twoFaQRModal = true
+  }
+}
 </script>
 
 <template>
@@ -339,24 +363,23 @@ function toggleInfoModal() {
     </div>
 
     <div class="flex items-center gap-2 mt-4">
-        <h1 class="text-2xl font-bold">Профиль</h1>
-        <InfoButton @openModal="toggleInfoModal" />
+      <h1 class="text-2xl font-bold">Профиль</h1>
+      <InfoButton @openModal="toggleInfoModal" />
     </div>
 
-    <InfoModal 
-        :isModal="isInfoModal" 
-        title="Профиль"
-        ytSrc='https://www.youtube.com/embed/ZgybpF6IyAA?si=ZoSE_GxV-tFAAFrD'
-        @changeVisibility="toggleInfoModal"
-        >
-        <div class="flex flex-col gap-2">
-            <p>
-                Здесь вы можете управлять настройками вашего аккаунта.
-            </p>
-            <p>
-                Запустите чат-бот уведомлений по платформе. Привяжите Telegram-аккаунт и активируйте чат-бот.
-            </p>
-        </div>
+    <InfoModal
+      :isModal="isInfoModal"
+      title="Профиль"
+      ytSrc="https://www.youtube.com/embed/ZgybpF6IyAA?si=ZoSE_GxV-tFAAFrD"
+      @changeVisibility="toggleInfoModal"
+    >
+      <div class="flex flex-col gap-2">
+        <p>Здесь вы можете управлять настройками вашего аккаунта.</p>
+        <p>
+          Запустите чат-бот уведомлений по платформе. Привяжите Telegram-аккаунт
+          и активируйте чат-бот.
+        </p>
+      </div>
     </InfoModal>
 
     <section
@@ -531,6 +554,26 @@ function toggleInfoModal() {
         </button>
       </div>
     </section>
+    <section
+      class="profile-options mt-20 flex flex-row flex-wrap justify-between xs:flex-col items-center gap-6"
+    >
+      <div class="self-start description-container xl:basis-2/3">
+        <div class="heading relative">Двухфакторная аутентификация</div>
+      </div>
+      <div class="form-control">
+        <label class="cursor-pointer label xl:mr-12">
+          <span class="label-text mr-4"
+            >Включить двухфакторную аутентификацию</span
+          >
+          <input
+            v-model="store.client.isTwoFaEnabled"
+            @change="openTwoFaQRModal"
+            type="checkbox"
+            class="toggle toggle-primary"
+          />
+        </label>
+      </div>
+    </section>
     <section>
       <div
         class="profile-options mt-14 flex flex-col justify-end items-end gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
@@ -554,6 +597,7 @@ function toggleInfoModal() {
           </div>
         </div>
         <div>
+          <div class="flex flex-col gap-2 w-full"></div>
           <div class="flex flex-col gap-2 w-full">
             <div class="form-control w-52">
               <label class="cursor-pointer label">
@@ -609,6 +653,7 @@ function toggleInfoModal() {
       </div>
     </section>
   </div>
+  <TwoFaQRModal ref="twoFaQRModal" />
   <div class="h-20"></div>
 </template>
 

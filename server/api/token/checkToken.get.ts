@@ -62,8 +62,6 @@ export default eventHandler(async (event) => {
 
   (await getServerSession(event)) as any
 
-  
-
   return {
     status: 'ok',
     token: found.token,

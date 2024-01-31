@@ -5,6 +5,7 @@ import { checkSignature } from '~~/server/lib/telegram/mod'
 import { User } from '~/server/lib/models/User'
 import { NuxtAuthHandler } from '#auth'
 import { Referral } from '~/server/lib/models/Referral'
+import confirmTwoFaCode from '~/server/utils/confirmTwoFaCode'
 
 const runtimeConfig = useRuntimeConfig()
 export default NuxtAuthHandler({
@@ -20,6 +21,11 @@ export default NuxtAuthHandler({
       const isSignIn = !!user
 
       if (isSignIn) {
+        token.twoFaNeeded = (user as any)?.isTwoFaEnabled
+          ? token.twoFaNeeded == false
+            ? false
+            : true
+          : false
         token.email = user ? (user as any)?.email : ''
         token.uuid = user ? (user as any)?.uuid : ''
         token.username = user ? (user as any)?.username : ''
@@ -159,6 +165,39 @@ export default NuxtAuthHandler({
           throw new Error('Account is banned')
         }
 
+        return user
+      },
+    }),
+    // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
+    CredentialsProvider.default({
+      id: '2fa',
+      name: '2fa',
+      credentials: {
+        code: {
+          type: 'text',
+        },
+      },
+
+      async authorize(credentials: any, event: any) {
+        // console.log(credentials)
+
+        const { code, uuid } = credentials
+
+        const user = await User.findOne({
+          uuid,
+        })
+
+        if (!user) {
+          return null
+        }
+
+        const verified = confirmTwoFaCode(code, user.twoFaSecret)
+
+        if (!verified) {
+          throw new Error('Invalid code')
+        }
+
+        user.isTwoFaEnabled = false
         return user
       },
     }),

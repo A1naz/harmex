@@ -11,7 +11,8 @@ export const useMainStore = defineStore('main', {
     selectedItem: null as number | null,
     drawerOpened: null as boolean | null,
     faqModal: false,
-    swapAccountModal: false
+    swapAccountModal: false,
+    twoFaQRModal: false,
   }),
   actions: {
     checkTelegramId() {

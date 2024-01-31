@@ -18,7 +18,7 @@ onMounted(() => {
 definePageMeta({
   colorMode: 'dark',
   auth: {
-    unauthenticatedOnly: true,
+    unauthenticatedOnly: false,
     navigateAuthenticatedTo: '/buyouts',
   },
   title: 'Вход',
