@@ -46,6 +46,7 @@ export interface IUser extends Entity {
     twoFaQR: string
     twoFaSecret: string
     isTwoFaEnabled: boolean
+    post: Object,
 }
 
 export interface IUserLogs extends Entity {

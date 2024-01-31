@@ -41,6 +41,7 @@ const UserSchema = new Schema<IUserSchema>({
   tg2fa: { type: Boolean, required: false, default: false },
   balance: { type: Number, default: 0, required: true },
   registrationDate: { type: Date, default: Date.now },
+  post: { type: 'String' },
   partner: {
     type: partnerSchema,
     ref: 'Partner',
