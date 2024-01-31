@@ -554,7 +554,7 @@ async function openTwoFaQRModal() {
         </button>
       </div>
     </section>
-    <!-- <section
+    <section
       class="profile-options mt-20 flex flex-row flex-wrap justify-between xs:flex-col items-center gap-6"
     >
       <div class="self-start description-container xl:basis-2/3">
@@ -573,7 +573,7 @@ async function openTwoFaQRModal() {
           />
         </label>
       </div>
-    </section> -->
+    </section>
     <section>
       <div
         class="profile-options mt-14 flex flex-col justify-end items-end gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
