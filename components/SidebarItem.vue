@@ -35,6 +35,6 @@ const active = computed(() => {
 
 <style scoped>
 .router-link-active {
-  @apply bg-primary text-white bg-opacity-90 active:bg-primary active:text-white focus:bg-primary focus:text-white hover:bg-primary hover:text-white
+  @apply text-primary bg-opacity-90 active:bg-transparent active:text-primary focus:bg-transparent focus:text-primary hover:bg-primary hover:text-primary
 }
 </style>

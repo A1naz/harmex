@@ -23,7 +23,7 @@ module.exports = {
     themes: [
       {
         light: {
-          'primary': '#570df8',
+          'primary': '#2a6eff',
           'primary-focus': '#4506cb',
           'primary-content': '#ffffff',
 
