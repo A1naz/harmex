@@ -55,6 +55,7 @@ export default eventHandler(async (event) => {
   const hash = bcrypt.hashSync(password, 7)
 
   const plan = await Plans.findOne({ name: 'Standart' })
+
   if (!plan)
     return {
       status: 'error',
