@@ -115,10 +115,10 @@ function toggleInfoModal() {
       <!-- Page content here -->
       <slot />
     </div>
-    <div class="drawer-side z-30 shadow-sm">
+    <div class="drawer-side z-100 shadow-sm">
       <label for="my-drawer" class="drawer-overlay" />
       <ul
-        class="menu w-72 h-full bg-base-200 text-base-content flex-nowrap overflow-auto scrollbar-none"
+        class="menu w-72 z-100 h-full bg-base-200 text-base-content flex-nowrap overflow-auto scrollbar-none"
       >
         <!-- Sidebar content here -->
         <div class="hidden title w-full justify-center p-2 xl:flex">
@@ -159,7 +159,7 @@ function toggleInfoModal() {
                   </div> -->
                 </div>
                 <div class="flex items-center gap-2">
-                  <div class="tooltip tooltip-left" data-tip="Инструкция по платформе">
+                  <div class="tooltip before:w-[109px] before:content-[attr(data-tip)]" data-tip="Инструкция по платформе">
                     <button
                       class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
                       @click="toggleInfoModal"
@@ -196,7 +196,7 @@ function toggleInfoModal() {
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
-                  <div class="tooltip" data-tip="Пополнить">
+                  <div class="tooltip before:w-[109px] before:content-[attr(data-tip)]" data-tip="Пополнить баланс">
                     <div v-if="storeMain.client.role !== UserRoles.staff">
                       <label
                         for="payment-modal"
