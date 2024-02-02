@@ -75,7 +75,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <button ref="telegram" :disabled="store.client?.telegram" class="btn btn-primary" @click="login">
+  <button ref="telegram" :disabled="store.client?.telegram" class="btn btn-primary btn-sm mr-2" @click="login">
     {{
       store.client?.telegram
         ? 'Привязан'
