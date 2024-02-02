@@ -128,8 +128,24 @@ function toggleInfoModal() {
           <div class="card-body gap-4 p-4">
             <div>
               <div class="flex justify-between items-start">
-                <div class="">
-                  <div class="font-bold">
+                <div class="flex gap-5">
+                  <div
+                    v-if="storeMain.client.role !== UserRoles.staff"
+                    class="tooltip"
+                    data-tip="Профиль"
+                  >
+                    <NuxtLink
+                      :class="{
+                        'bg-neutral-focus': route.path !== '/profile',
+                        'text-white': route.path === '/profile',
+                      }"
+                      to="/profile"
+                      class="relative hover:bg-neutral"
+                    >
+                      <IconCSS name="gg:profile" size="24" />
+                    </NuxtLink>
+                  </div>
+                  <div class="font-bold mt-1">
                     {{
                       storeMain.client?.username
                         ? storeMain.client.username
@@ -138,9 +154,9 @@ function toggleInfoModal() {
                         : storeMain.client.email.split('@')[0]
                     }}
                   </div>
-                  <div class="balance text-xs text-gray-400">
+                  <!-- <div class="balance text-xs text-gray-400">
                     Баланс: {{ currency.format(storeMain.client.balance) }}
-                  </div>
+                  </div> -->
                 </div>
                 <div class="flex items-center gap-2">
                   <div class="tooltip" data-tip="Инструкция по платформе">
@@ -160,33 +176,57 @@ function toggleInfoModal() {
                       i
                     </NuxtLink> -->
                   </div>
+                </div>
+              </div>
+              <hr class="h-[2px] my-4 block box-border">
+              <div class="flex justify-between items-start">
+                <div class="flex gap-5">
                   <div
                     v-if="storeMain.client.role !== UserRoles.staff"
                     class="tooltip"
-                    data-tip="Профиль"
                   >
-                    <NuxtLink
-                      :class="{
-                        'bg-neutral-focus': route.path !== '/profile',
-                        'text-white': route.path === '/profile',
-                      }"
-                      to="/profile"
-                      class="btn btn-sm btn-neutral btn-circle relative hover:bg-neutral"
+                    <div
+                      class="relative hover:bg-neutral mt-1"
                     >
-                      <IconCSS name="fluent:person-24-filled" size="24" />
-                    </NuxtLink>
+                      <IconCSS name="fe:wallet" size="24" />
+                    </div>
+                  </div>
+                  <div class="balance font-bold mt-1">
+                    Баланс:  {{ currency.format(storeMain.client.balance) }}
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="tooltip" data-tip="Пополнить баланс">
+                    <div v-if="storeMain.client.role !== UserRoles.staff">
+                      <label
+                        for="payment-modal"
+                        class="btn btn-block relative btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold pb-2"
+                      >
+                        +
+                      </label>
+                    </div>
+  
+
+                    <!-- <NuxtLink
+                      :external="true"
+                      target="_blank"
+                      to="https://drive.google.com/file/d/1d6FLWMIgqhrWXHpdHFdAu2H8wnVdB_2S/view?usp=sharing"
+                      class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
+                    >
+                      i
+                    </NuxtLink> -->
                   </div>
                 </div>
               </div>
             </div>
-            <div v-if="storeMain.client.role !== UserRoles.staff">
+            <!-- <div v-if="storeMain.client.role !== UserRoles.staff">
               <label
                 for="payment-modal"
                 class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
               >
                 Пополнить
               </label>
-            </div>
+            </div> -->
             <div class="-mt-3">
               <label
                 for="swapAccountModal"
