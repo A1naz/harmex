@@ -159,7 +159,7 @@ function toggleInfoModal() {
                   </div> -->
                 </div>
                 <div class="flex items-center gap-2">
-                  <div class="tooltip" data-tip="Инструкция по платформе">
+                  <div class="tooltip tooltip-left" data-tip="Инструкция по платформе">
                     <button
                       class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
                       @click="toggleInfoModal"
@@ -196,7 +196,7 @@ function toggleInfoModal() {
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
-                  <div class="tooltip" data-tip="Пополнить баланс">
+                  <div class="tooltip" data-tip="Пополнить">
                     <div v-if="storeMain.client.role !== UserRoles.staff">
                       <label
                         for="payment-modal"
