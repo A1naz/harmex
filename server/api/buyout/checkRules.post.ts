@@ -28,7 +28,9 @@ export default eventHandler(async (event) => {
   const body = await readBody(event)
   const query = getQuery(event)
   const { userTimezoneOffsetHours } = query
-  const { points } = await getPickpoints()
+  const { points } = getPickpoints()
+  console.log(points);
+
 
   const products: Item[] = body
   const result = {
@@ -98,6 +100,7 @@ export default eventHandler(async (event) => {
       }
     }
 
+    
  const foundPoint = points.find((p: { a: string }) => p.a === item.adress)
  if (!foundPoint) {
   result.success = false

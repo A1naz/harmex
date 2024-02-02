@@ -24,7 +24,7 @@ module.exports = {
       {
         light: {
           'primary': '#2a6eff',
-          'primary-focus': '#4506cb',
+          'primary-focus': '#2a6eff',
           'primary-content': '#ffffff',
 
           'secondary': '#f000b8',
