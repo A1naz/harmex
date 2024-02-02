@@ -381,19 +381,19 @@ async function openTwoFaQRModal() {
         </p>
       </div>
     </InfoModal>
-
+    <!-- class="mt-6 profile-options flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start" -->
     <section
-      class="mt-6 profile-options flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
+      class="mt-6 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
     >
       <div class="self-start description-container xl:basis-1/3">
         <div class="heading">Контактные данные</div>
-        <div class="text-xs text-gray-400">
+        <div class="text-xs text-gray-400 mt-2.5">
           Заполните свои контактные данные, чтобы получать актуальные
           рекомендации по продвижению
         </div>
       </div>
-      <div class="flex flex-col gap-6 w-full mt-1">
-        <div class="w-full flex gap-8">
+      <div class="flex flex-col gap-2.5 w-full mt-1">
+        <div class="w-full flex flex-col gap-2.5 xl:flex-row">
           <input
             v-model="form.firstName"
             placeholder="Имя"
@@ -404,74 +404,47 @@ async function openTwoFaQRModal() {
             placeholder="Фамилия"
             class="input input-bordered w-full"
           />
+          <div class="hidden btn btn-primary xl:w-40 cursor-default xl:block opacity-0 self-end">&nbsp</div>
         </div>
 
-        <div class="flex flex-col w-full gap-8 xl:flex-row">
+        <div class="flex flex-col w-full gap-2.5 xl:flex-row">
+          <input
+            v-model="form.email"
+            type="text"
+            placeholder="Почта (email)"
+            class="input input-bordered w-full "
+          />
           <input
             v-model="form.username"
             type="text"
             placeholder="Никнейм"
-            class="input input-bordered w-full xl:w-1/2"
+            class="input input-bordered w-full "
           />
-          <div class="tg w-full justify-between flex gap-2 xl:gap-4 xl:w-1/2">
-            <div
-              class="relative flex justify-end w-full items-center flex-grow-0"
-            >
-              <input
-                :value="
-                  store.client?.telegram
-                    ? `@${store.client.telegram}`
-                    : `${store.client.telegramUserId ?? ''}`
-                "
-                placeholder="Telegram"
-                class="input input-bordered w-full"
-                disabled
-              />
-              <Icon class="absolute mr-4" size="24" name="logos:telegram" />
-            </div>
-
-            <LinkTelegram
-              v-if="!store.client.telegramUserId"
-              @callback="onTelegramLink"
-            />
+          <div>
             <button
-              v-if="store.client.telegramUserId || store.client.telegram"
-              class="btn btn-primary"
-              @click="unlinkTelegram"
+              :disabled="disabledSaveButton"
+              class="btn btn-primary xl:w-40 mr-0 self-end"
+              @click="update"
             >
-              Отвязать
+              Сохранить
             </button>
           </div>
-        </div>
-        <input
-          v-model="form.email"
-          type="text"
-          placeholder="Почта (email)"
-          class="input input-bordered w-full"
-        />
-
-        <div class="flex w-full gap-4 justify-end">
-          <button
-            :disabled="disabledSaveButton"
-            class="btn btn-primary xl:w-40 mr-0 self-end"
-            @click="update"
-          >
-            Сохранить
-          </button>
+          
         </div>
       </div>
     </section>
+    <!-- class="profile-options mt-20 flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start" -->
     <section
-      class="profile-options mt-20 flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
+      class="profile-options mt-5 flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
     >
       <div class="self-start description-container xl:basis-1/3">
         <div class="heading relative">Пароль</div>
-        <div class="text-xs text-gray-400">
+        <div class="text-xs text-gray-400 mt-2.5">
           Установите или поменяйте пароль для вашего аккаунта
         </div>
       </div>
-      <div class="flex flex-col gap-6 w-full mt-1">
-        <div class="w-full flex flex-col gap-4 xl:gap-8 xl:flex-row">
+      <div class="flex flex-col gap-2.5 w-full mt-1">
+        <div class="w-full flex flex-col gap-2.5 xl:flex-row">
           <input
             v-show="store.client.hasPassword"
             v-model="passwordForm.oldPassword"
@@ -488,23 +461,23 @@ async function openTwoFaQRModal() {
             placeholder="Новый пароль"
             class="input input-bordered w-full"
           />
+          <button
+            :disabled="disabledChangePasswordButton"
+            class="btn btn-primary xl:w-40 mr-0 self-start"
+            @click="updatePassword"
+          >
+            {{ store.client.hasPassword ? 'Изменить' : 'Сохранить' }}
+          </button>
         </div>
 
-        <button
-          :disabled="disabledChangePasswordButton"
-          class="btn btn-primary xl:w-40 mr-0 self-end"
-          @click="updatePassword"
-        >
-          {{ store.client.hasPassword ? 'Изменить' : 'Сохранить' }}
-        </button>
       </div>
     </section>
     <section
-      class="profile-options mt-20 flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
+      class="profile-options mt-5 flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
     >
       <div class="self-start description-container xl:basis-1/3">
         <div class="heading relative">Настройки</div>
-        <div class="text-xs text-gray-400">
+        <div class="text-xs text-gray-400 mt-2.5">
           Введите стандартный ключ api для работы автоответчика
         </div>
       </div>
@@ -514,47 +487,93 @@ async function openTwoFaQRModal() {
           :key="key"
           class="flex flex-col gap-6 w-full mt-1 relative"
         >
-          <div class="flex gap-2 relative">
-            <input
-              v-model="wbApiKeys[index]"
-              :disabled="store.client.wbApiKeys[index] === wbApiKeys[index]"
-              type="text"
-              placeholder="Стандартный апи ключ Wildberries"
-              class="input input-bordered input-primary w-full"
-            />
-
-            <div
-              v-if="index === 0"
-              class="btn btn-primary btn-square"
-              @click="wbApiKeys[0] = ''"
-            >
-              <IconCSS size="20" name="material-symbols:close" />
+          <div class="flex flex-col gap-2 relative">
+            <div class="flex xl:gap-x-8 gap-2.5">
+              <input
+                v-model="wbApiKeys[index]"
+                :disabled="store.client.wbApiKeys[index] === wbApiKeys[index]"
+                type="text"
+                placeholder="Стандартный апи ключ Wildberries"
+                class="input input-bordered input-primary w-full max-w-xl"
+                />
+              <button
+                class="btn btn-primary xl:w-40 mr-0 self-end"
+                @click="setApiKey"
+              >
+                Сохранить
+              </button>
             </div>
-            <div
-              v-else
-              class="btn btn-primary btn-square"
-              @click="wbApiKeys.splice(index, 1)"
-            >
-              <IconCSS size="20" name="material-symbols:close" />
+            <div class="flex gap-x-2.5">
+              <div
+                v-if="index === 0"
+                class="btn btn-primary btn-square sm:hidden"
+                @click="wbApiKeys[0] = ''"
+              >
+                <IconCSS size="20" name="material-symbols:close" />
+              </div>
+              <div
+                v-else
+                class="btn btn-primary btn-square"
+                @click="wbApiKeys.splice(index, 1)"
+              >
+                <IconCSS size="20" name="material-symbols:close" />
+              </div>
+              <div
+                v-if="index === 0"
+                class="btn btn-primary btn-square"
+                @click="wbApiKeys.push('')"
+              >
+                <IconCSS size="20" name="fluent:add-20-filled" />
+              </div>
             </div>
-            <div
-              v-if="index === 0"
-              class="btn btn-primary btn-square"
-              @click="wbApiKeys.push('')"
-            >
-              <IconCSS size="20" name="fluent:add-20-filled" />
-            </div>
+            
           </div>
         </div>
-        <button
-          class="btn btn-primary xl:w-40 mr-0 self-end"
-          @click="setApiKey"
-        >
-          Сохранить
-        </button>
+        <!-- x -->
       </div>
     </section>
     <section
+      class="mt-6 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
+    >
+      <div class="self-start description-container xl:basis-1/3">
+        <div class="heading relative">Подключите Telegram <Icon class="ml-2" size="24" name="logos:telegram" /> </div>
+        <div class="text-xs text-gray-400 mt-2.5">
+          Получайте уведомления благодаря нашему телерграмм боту
+        </div>
+      </div>
+      <div class="tg w-full justify-between flex gap-2 xl:gap-4 xl:w-3/5">
+            <div
+              class="relative flex bg-base-200 rounded-lg justify-end w-full items-center flex-grow-0"
+            >
+            <input
+            :value="
+              store.client?.telegram
+                ? `@${store.client.telegram}`
+                : `${store.client.telegramUserId ?? ''}`
+            "
+            placeholder="Telegram"
+            class="input input-bordered w-full"
+            disabled
+          />
+              <button
+                v-if="store.client.telegramUserId || store.client.telegram"
+                class="btn btn-primary btn-sm mr-2"
+                @click="unlinkTelegram"
+              >
+                Отвязать
+              </button>
+              <LinkTelegram
+                v-else
+                @callback="onTelegramLink"
+              />
+              <!-- <LinkTelegram
+                v-if="!store.client.telegramUserId"
+                @callback="onTelegramLink"
+              /> -->
+            </div>
+          </div>
+    </section>
+    <!-- <section
       class="profile-options mt-20 flex flex-row flex-wrap justify-between xs:flex-col items-center gap-6"
     >
       <div class="self-start description-container xl:basis-2/3">
@@ -573,11 +592,27 @@ async function openTwoFaQRModal() {
           />
         </label>
       </div>
-    </section>
+    </section> -->
     <section>
       <div
-        class="profile-options mt-14 flex flex-col justify-end items-end gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start"
+        class="profile-options mt-1 flex flex-col justify-start items-start gap-6 xl:pr-12 xl:justify-between"
       >
+      <div>
+          <div class="flex flex-col gap-2 w-full"></div>
+          <div class="flex flex-col gap-2 w-full">
+            <div class="form-control w-52">
+              <label class="cursor-pointer label">
+                <span class="label-text">Включить чат-бота</span>
+                <input
+                  v-model="isChatBotEnabled"
+                  @change="setChatBot"
+                  type="checkbox"
+                  class="toggle toggle-primary"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
         <div class="self-start description-container xl:basis-1/3">
           <div
             class="self-start description-container xl:basis-1/3"
@@ -596,22 +631,6 @@ async function openTwoFaQRModal() {
             </div>
           </div>
         </div>
-        <div>
-          <div class="flex flex-col gap-2 w-full"></div>
-          <div class="flex flex-col gap-2 w-full">
-            <div class="form-control w-52">
-              <label class="cursor-pointer label">
-                <span class="label-text">Включить чат-бота</span>
-                <input
-                  v-model="isChatBotEnabled"
-                  @change="setChatBot"
-                  type="checkbox"
-                  class="toggle toggle-primary"
-                />
-              </label>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div
@@ -619,19 +638,20 @@ async function openTwoFaQRModal() {
         v-if="isChatBotEnabled && store.client.telegram"
       >
         <div class="flex flex-col gap-2 w-full">
+          <!-- mt-4 mr-3 mb-2 md:mr-5 -->
           <div
-            class="flex flex-wrap justify-end md:justify-start mt-4 mr-3 mb-2 md:mr-5"
+            class="flex flex-col"
           >
             <div v-for="notification in botNotifications">
               <div class="form-control md:w-80 w-full mt-2 mr-2">
-                <label class="cursor-pointer text-right label flex justify-end">
+                <label class="cursor-pointer label flex justify-between">
                   <span class="label-text mr-4">{{ notification.text }}</span>
                   <input
                     v-if="notification.type == 4"
                     type="number"
                     v-model="notification.value"
                     placeholder="Сумма ₽"
-                    class="input w-20 input-sm input-bordered max-w-xs mr-2"
+                    class="input w-20 input-sm input-bordered max-w-xs"
                   />
                   <input
                     v-model="notification.isEnabled"
@@ -644,7 +664,7 @@ async function openTwoFaQRModal() {
           </div>
 
           <button
-            class="btn btn-primary xl:w-40 mr-0 self-end"
+            class="btn btn-primary xl:w-40 mr-0 self-start"
             @click="setChatBotSettings"
           >
             Сохранить

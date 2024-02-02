@@ -4,5 +4,6 @@
   "editor.mouseWheelScrollSensitivity": 4,
   "terminal.integrated.stickyScroll.maxLineCount": 5,
   "terminal.integrated.fastScrollSensitivity": 5,
-  "terminal.integrated.smoothScrolling": true
+  "terminal.integrated.smoothScrolling": true,
+  "editor.fontFamily": "Input Mono"
 }
