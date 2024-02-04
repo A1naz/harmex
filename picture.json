@@ -1,0 +1,247 @@
+{
+  "cellTrackingInfo": {
+    "uis": { "sizeTable": "d7756d3115f205ae0a92c875cc64641cc7b0d8c3" },
+    "aspects": {
+      "0_0": "622e6664a94769cae0b0fed1c52e075a78ca7a04",
+      "0_1": "73a37ef205fcc47254286a90e7c3394cfafa8a97",
+      "0_2": "4b532ab22f3794d202f7f608be0520538eb4ff75",
+      "0_3": "26115b096105d9efce23ac5c5f961b0c1e56b3c7",
+      "0_4": "36b72d68cd3ff4f079b2517c35dacfec6bc652ab",
+      "1_0": "c23289f8db85bc9f5a0d094a38f7ed9c775cc9f2",
+      "1_1": "dac908c1b05c4410cc640e0ffaab62e25e394646",
+      "1_2": "a9144aa74c2b641c7430217895e48e865faaa8f1",
+      "1_3": "a8e3e8f9e15c9586a42474e7713c46a5350b1590",
+      "1_4": "5512df76d05cf3b92f5178297e4d00f49c048bab",
+      "1_5": "b36fb755ed8e7e58a649e9d557421ffed1a75ac1"
+    }
+  },
+  "sliceTrackingInfo": "bf21a9e8fbc5a3846fb05b4fa0859e0917b2202f",
+  "aspects": [
+    {
+      "index": 0,
+      "type": "colorsMix",
+      "descriptionRs": [
+        { "type": "textGray", "content": "Цвет: " },
+        { "type": "text", "content": "черный" }
+      ],
+      "additionalInfo": {},
+      "variants": [
+        {
+          "sku": 1221846710,
+          "link": "/product/kurtka-finn-flare-1221846710/?from_sku=1221845532\\u0026oos_search=false",
+          "active": false,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "молочный",
+            "textRs": [{ "type": "text", "content": "молочный" }],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-1/wc140/6893854333.jpg",
+            "originalPrice": "9 999 ₽",
+            "colors": ["#ffffff"],
+            "picture": "https://cdn1.ozone.ru/s3/multimedia-1/c100/wc140/6893854333.jpg"
+          }
+        },
+        {
+          "sku": 1221849591,
+          "link": "/product/kurtka-finn-flare-1221849591/?from_sku=1221845532\\u0026oos_search=false",
+          "active": false,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "синий",
+            "textRs": [{ "type": "text", "content": "синий" }],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-o/wc140/6893854356.jpg",
+            "originalPrice": "9 999 ₽",
+            "colors": ["#0000ff"],
+            "picture": "https://cdn1.ozone.ru/s3/multimedia-o/c100/wc140/6893854356.jpg"
+          }
+        },
+        {
+          "sku": 1221845423,
+          "link": "/product/kurtka-finn-flare-1221845423/?from_sku=1221845532\\u0026oos_search=false",
+          "active": false,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "сиреневый",
+            "textRs": [{ "type": "text", "content": "сиреневый" }],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-5/wc140/6893854337.jpg",
+            "originalPrice": "9 999 ₽",
+            "colors": ["#9c85cd"],
+            "picture": "https://cdn1.ozone.ru/s3/multimedia-5/c100/wc140/6893854337.jpg"
+          }
+        },
+        {
+          "sku": 1221848200,
+          "link": "/product/kurtka-finn-flare-1221848200/?from_sku=1221845532\\u0026oos_search=false",
+          "active": false,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "хаки",
+            "textRs": [{ "type": "text", "content": "хаки" }],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-j/wc140/6893854351.jpg",
+            "originalPrice": "9 999 ₽",
+            "colors": ["#806b2a"],
+            "picture": "https://cdn1.ozone.ru/s3/multimedia-j/c100/wc140/6893854351.jpg"
+          }
+        },
+        {
+          "sku": 1221845532,
+          "link": "/product/kurtka-finn-flare-1221845532/?from_sku=1221845532\\u0026oos_search=false",
+          "active": true,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "черный",
+            "textRs": [{ "type": "text", "content": "черный" }],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-h/wc140/6893854349.jpg",
+            "originalPrice": "9 999 ₽",
+            "colors": ["#000000"],
+            "picture": "https://cdn1.ozone.ru/s3/multimedia-h/c100/wc140/6893854349.jpg",
+            "title": "Куртка Finn Flare"
+          }
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "type": "sizes",
+      "descriptionRs": [{ "type": "textGray", "content": "Выберите размер:" }],
+      "additionalInfo": {
+        "linkModal": "/modal/size-table?product_id=1221845532",
+        "linkModalText": "Таблица размеров"
+      },
+      "variants": [
+        {
+          "sku": 1221845545,
+          "link": "/product/kurtka-finn-flare-1221845545/?from_sku=1221845532\\u0026oos_search=false",
+          "active": false,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "44 RU / S (170-88-94) ",
+            "textRs": [{ "type": "text", "content": "44 RU / S (170-88-94) " }],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-h/wc140/6893854349.jpg",
+            "originalPrice": "9 999 ₽"
+          }
+        },
+        {
+          "sku": 1221845788,
+          "link": "/product/kurtka-finn-flare-1221845788/?from_sku=1221845532\\u0026oos_search=false",
+          "active": false,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "46 RU / M(170-92-98) ",
+            "textRs": [{ "type": "text", "content": "46 RU / M(170-92-98) " }],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-h/wc140/6893854349.jpg",
+            "originalPrice": "9 999 ₽"
+          }
+        },
+        {
+          "sku": 1221845825,
+          "link": "/product/kurtka-finn-flare-1221845825/?from_sku=1221845532\\u0026oos_search=false",
+          "active": false,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "48 RU / L(170-96-102) ",
+            "textRs": [{ "type": "text", "content": "48 RU / L(170-96-102) " }],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-h/wc140/6893854349.jpg",
+            "originalPrice": "9 999 ₽"
+          }
+        },
+        {
+          "sku": 1221845609,
+          "link": "/product/kurtka-finn-flare-1221845609/?from_sku=1221845532\\u0026oos_search=false",
+          "active": false,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "50 RU / XL(176-100-106) ",
+            "textRs": [
+              { "type": "text", "content": "50 RU / XL(176-100-106) " }
+            ],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-h/wc140/6893854349.jpg",
+            "originalPrice": "9 999 ₽"
+          }
+        },
+        {
+          "sku": 1221845532,
+          "link": "/product/kurtka-finn-flare-1221845532/?from_sku=1221845532\\u0026oos_search=false",
+          "active": true,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "52 RU / 2XL(176-104-110) ",
+            "textRs": [
+              { "type": "text", "content": "52 RU / 2XL(176-104-110) " }
+            ],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-h/wc140/6893854349.jpg",
+            "originalPrice": "9 999 ₽",
+            "title": "Куртка Finn Flare"
+          }
+        },
+        {
+          "sku": 1221845568,
+          "link": "/product/kurtka-finn-flare-1221845568/?from_sku=1221845532\\u0026oos_search=false",
+          "active": false,
+          "availability": "inStock",
+          "data": {
+            "searchableText": "54 RU / 3XL(176-108-114) ",
+            "textRs": [
+              { "type": "text", "content": "54 RU / 3XL(176-108-114) " }
+            ],
+            "price": "3 299 ₽",
+            "coverImage": "https://cdn1.ozone.ru/s3/multimedia-h/wc140/6893854349.jpg",
+            "originalPrice": "9 999 ₽"
+          }
+        }
+      ]
+    }
+  ],
+  "lexemes": {
+    "additionalText": "Еще",
+    "ariaLabel": "Подсказка",
+    "chooseRingSizeText": "Подобрать размер кольца",
+    "chooseRingSizeTitle": "Подбор размера кольца",
+    "chooseSizeText": "Выберите размер",
+    "chooseVariantText": "Выбрать",
+    "notAvailableCombinationText": "Нет в таком сочетании",
+    "notAvailableText": "Нет в наличии",
+    "ringSizeBtnText": "Показать",
+    "ringSizeCloseBtnText": "Закрыть",
+    "ringSizeLabel": "Длина в мм",
+    "ringSizePlaceHolder": "Введите значение",
+    "ringSizeTactic1": "Возьмите измерительную ленту или же любой шнурок, нитку, которую потом можно измерить по линейке.",
+    "ringSizeTactic2": "Обмотайте",
+    "ringSizeTactic3": "ленту вокруг пальца (например, безымянного, если вы подбираете обручальное или помолвочное кольцо).",
+    "ringSizeTactic4": "Измерьте длину этого отрезка в миллиметрах с помощью линейки. Введите получившееся значение.",
+    "ringSizeTactic5": "Не измеряйте замерзшие пальцы",
+    "ringSizeTactic6": "Замеры лучше делать в конце дня",
+    "ringSizeTactic7": "Если сустав шире самого пальца – измеряйте диаметр сустава",
+    "ringSizeTactic8": "Ваш размер кольца:",
+    "ringSizeTacticRs": [
+      {
+        "type": "text",
+        "content": "Возьмите измерительную ленту или же любой шнурок, нитку, которую потом можно измерить по линейке."
+      },
+      { "type": "newLine" },
+      {
+        "type": "text",
+        "content": "Обмотайте ленту вокруг пальца (например, безымянного, если вы подбираете обручальное или помолвочное кольцо)."
+      }
+    ],
+    "showAllText": "Посмотреть все",
+    "showMoreText": "Показать еще"
+  },
+  "params": {
+    "SizeTableName": "Таблица размеров",
+    "enableInModalOnboarding": true,
+    "enableInModalSearch": true,
+    "inModalOnboardingBodyText": "Нажмите, чтобы увидеть поиск в просмотре всех цветов. Можно искать по названию или номеру цвета",
+    "inModalOnboardingHeaderText": "Поиск в палитре",
+    "showPriceInAspects": true
+  }
+}

@@ -30,15 +30,17 @@ export default eventHandler(async (event) => {
     }
   })
 
- const pictureData = JSON.parse(data.widgetStates['webAspects-418255-default-1'])
- console.log(pictureData.aspects[0].variants[0].data.picture);
- const image = pictureData.aspects[0].variants[0].data.picture
+ const productData = JSON.parse(data.widgetStates['webStickyProducts-726428-default-1'])
+ 
+ console.log(productData.coverImageUrl);
+ const image = productData.coverImageUrl
+ const name = productData.name
 
   return {
     product: {
       image: image || '',
       article: params.article as number,
-      name: `dsaad${Math.random()}` || '',
+      name: name || '',
       sizes: ['0'],
       price: 0,
       priceText: '1323 руб.',
