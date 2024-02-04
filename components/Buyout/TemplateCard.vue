@@ -68,7 +68,7 @@ const props = defineProps({
               {{ product.name }}
             </p>
             <a
-              :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
+              :href="`https://www.ozon.ru/product/${product.article}`"
               target="_blank"
               class="text-sm text-secondary link link-hover"
             >

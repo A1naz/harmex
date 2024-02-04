@@ -2,7 +2,6 @@ import type { Rule } from '@/data/buyout/rules'
 import { findPositionByQuery } from '@/server/lib/helpers'
 import getPickpoints from '~/server/lib/getPoints'
 
-
 interface Item {
   image: string
   name: string
@@ -20,7 +19,6 @@ interface Item {
   purchaseSoon: boolean
 }
 
-
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
@@ -29,14 +27,14 @@ export default eventHandler(async (event) => {
   const query = getQuery(event)
   const { userTimezoneOffsetHours } = query
   const { points } = getPickpoints()
-  console.log(points);
-
+  console.log(points)
 
   const products: Item[] = body
   const result = {
     success: true,
     message: '',
   }
+  return result
   for (const item of products) {
     const rules = item.rules.map((rule) => rule.id)
     let sort = 'popular'
@@ -58,10 +56,10 @@ export default eventHandler(async (event) => {
 
     if (rules.includes(5) || rules.includes(9)) {
       for (const query of item.searchQuery) {
-        if(query.value === '') {
-            result.success = false
-            result.message = `У товара ${item.article} не заполнен поисковой запрос`  
-            return result
+        if (query.value === '') {
+          result.success = false
+          result.message = `У товара ${item.article} не заполнен поисковой запрос`
+          return result
         }
         const searchResult = await findPositionByQuery(
           query.value,
@@ -77,10 +75,10 @@ export default eventHandler(async (event) => {
     }
     if (rules.includes(8)) {
       for (const query of item.searchQuery) {
-        if(query.value === '') {
-            result.success = false
-            result.message = `У товара ${item.article} не заполнен поисковой запрос`  
-            return result
+        if (query.value === '') {
+          result.success = false
+          result.message = `У товара ${item.article} не заполнен поисковой запрос`
+          return result
         }
         const searchResult = await findPositionByQuery(
           query.value,
@@ -100,14 +98,12 @@ export default eventHandler(async (event) => {
       }
     }
 
-    
- const foundPoint = points.find((p: { a: string }) => p.a === item.adress)
- if (!foundPoint) {
-  result.success = false
-  result.message = `ПВЗ ${item.adress} не найдено`
-  return result
- } 
- 
+    const foundPoint = points.find((p: { a: string }) => p.a === item.adress)
+    if (!foundPoint) {
+      result.success = false
+      result.message = `ПВЗ ${item.adress} не найдено`
+      return result
+    }
   }
 
   return result

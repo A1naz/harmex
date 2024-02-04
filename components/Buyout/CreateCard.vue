@@ -199,13 +199,12 @@ const productQuantityModel = computed({
       <div class="flex gap-4 items-center">
         <div
           class="flex items-center flex-none flex-0 flex-shrink-0 h-full"
-          style="width: 130px"
+          style="max-width: 100px;"
         >
           <nuxt-img
             style="object-fit: fill"
-            class="rounded-xl h-full"
-            width="130"
-            height="204"
+            class="rounded-xl"
+            width="70"
             :src="product?.image || '/logo/logocolor.svg'"
             loading="lazy"
           />
@@ -216,7 +215,7 @@ const productQuantityModel = computed({
               {{ product.name }}
             </p>
             <a
-              :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
+              :href="`https://www.ozon.ru/product/${product.article}`"
               target="_blank"
               class="text-sm text-secondary link link-hover"
             >

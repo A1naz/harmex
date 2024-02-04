@@ -234,7 +234,7 @@ const getStatus = computed(() => {
               {{ info.product?.name }}
             </div>
             <a
-              :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
+              :href="`https://www.ozon.ru/product/${info.article}`" target="_blank"
               class="text-sm text-secondary link link-hover"
             >
               {{ info.article }}
