@@ -38,8 +38,14 @@ export default eventHandler(async (event) => {
 
   try {
     productPrice = parseInt(
-      JSON.parse(data.widgetStates['webPrice-3121879-default-1']).price
+      JSON.parse(
+        data.widgetStates['webPrice-3121879-default-1']
+      ).price.replaceAll(' ', '').replace(/[\s ]/g, '')
     )
+    const productPriceone = JSON.parse(
+      data.widgetStates['webPrice-3121879-default-1']
+    ).price.replaceAll(' ', '')
+    console.log(productPriceone)
   } catch (error) {}
 
   let sizesData: any
