@@ -3,6 +3,7 @@ import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '~~/server/lib/helpers'
 import { proxies } from '~~/server/lib/proxy'
 import { HttpsProxyAgent } from 'https-proxy-agent'
+import { ConnectionPoolClosedEvent } from 'mongodb'
 
 const randomNumber = Math.floor(Math.random() * proxies.length)
 
@@ -30,20 +31,41 @@ export default eventHandler(async (event) => {
     }
   })
 
- const productData = JSON.parse(data.widgetStates['webStickyProducts-726428-default-1'])
- 
- console.log(productData.coverImageUrl);
- const image = productData.coverImageUrl
- const name = productData.name
+  const productData = JSON.parse(
+    data.widgetStates['webStickyProducts-726428-default-1']
+  )
+  let productPrice = 0
+
+  try {
+    productPrice = parseInt(
+      JSON.parse(data.widgetStates['webPrice-3121879-default-1']).price
+    )
+  } catch (error) {}
+
+  let sizesData: any
+
+  try {
+    sizesData = JSON.parse(data.widgetStates['webAspects-418255-default-1'])
+  } catch (error) {}
+
+  let variants: any = []
+
+  try {
+    variants = sizesData.aspects.find((el: any) => el.type == 'sizes').variants
+  } catch (error) {}
+
+  const sizes = variants.map((el: any) => el.data.searchableText)
+  const image = productData.coverImageUrl
+  const name = productData.name
 
   return {
     product: {
       image: image || '',
       article: params.article as number,
       name: name || '',
-      sizes: ['0'],
-      price: 0,
-      priceText: '1323 руб.',
+      sizes: sizes.length ? sizes : ['0'],
+      price: productPrice,
+      priceText: productPrice ? productPrice + ' ₽' : '',
     },
   }
 })

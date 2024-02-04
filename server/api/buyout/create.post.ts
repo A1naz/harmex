@@ -69,10 +69,8 @@ export default eventHandler(async (event) => {
         date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
         date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
       } else {
-
         date1.setHours(date1.getHours() + 3)
         date2.setHours(date2.getHours() + 3)
-        
       }
 
       product.dateRange = [date1, date2]
@@ -88,10 +86,10 @@ export default eventHandler(async (event) => {
       ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
     }
 
-
     const buyout = new Buyout({
       article: product.article,
-      searchQuery: searchQueries.join(', '),
+      // searchQuery: searchQueries.join(', '),
+      searchQuery: '',
       point: product.adress,
       point_city: city,
       point_state: state,
