@@ -44,7 +44,7 @@ export default eventHandler(async (event) => {
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
 
-  const { points } = await getPickpoints()
+  const { points } = getPickpoints()
 
   const products: Item[] = body
   if (products.length > 10) {
@@ -87,6 +87,7 @@ export default eventHandler(async (event) => {
     } else {
       ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
     }
+
 
     const buyout = new Buyout({
       article: product.article,
