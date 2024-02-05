@@ -1,8 +1,5 @@
 module.exports = {
   theme: {
-    colors: {
-      'unusual': '#302E37'
-    },
     screens: {
       'sm': '640px',
       // => @media (min-width: 640px) { ... }
