@@ -204,7 +204,7 @@ onMounted(() => {
 
 
       <div class="flex justify-between items-center gap-2 mb-2">
-        <h2 class="font-bold text-xl">Пополнить баланс</h2>
+        <h3 class="font-bold">Пополнить баланс</h3>
         <label class="bg-base-300 p-1 rounded-lg px-2 text-center text-sm mr-2" @click="infoModal?.showModal()">
           Как пополнить баланс?
         </label>
@@ -214,16 +214,15 @@ onMounted(() => {
       <div>
         <div class="w-full flex flex-col gap-2 justify-center items-start">
           <div class="sum w-full">
-            <h3 class="mb-2">Сумма к пополнению</h3>
+            <h3 class="text-lg mb-2">Сумма к пополнению</h3>
             <PaymentInput v-model="paymentForm.paymentSum" />
           </div>
           <div class="fastbuttons flex gap-0.5 w-full">
             <button class="btn btn-sm flex-1" @click="setSum(5000)">5000 ₽</button>
-            <button class="btn btn-sm flex-1" @click="setSum(25000)">25000 ₽</button>
             <button class="btn btn-sm flex-1" @click="setSum(50000)">50 000 ₽</button>
             <button class="btn btn-sm flex-1" @click="setSum(100000)">100 000 ₽</button>
           </div>
-          <!-- <div class="join join-vertical w-full mt-4">
+          <div class="join join-vertical w-full mt-4">
             <input
               v-model="paymentForm.paymentType"
               disabled
@@ -241,7 +240,7 @@ onMounted(() => {
               aria-label="Перевод (без комиссии)"
               class="btn join-item"
             >
-          </div> -->
+          </div>
 
         </div>
 
@@ -254,7 +253,11 @@ onMounted(() => {
     </label>
     <div
       v-if="loading"
-      class="fixed z-[999999] top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden bg-gray-700 bg-opacity-80 flex flex-col items-center justify-center"
+      style="
+      background-color: rgb(37, 37, 42);
+      opacity: 80%;
+      "
+      class="fixed z-[50] top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center"
     >
       <div class="ease-linear rounded-full mb-4">
         <Icon name="mdi:loading" class="h-20 w-20 animate-spin text-white" />

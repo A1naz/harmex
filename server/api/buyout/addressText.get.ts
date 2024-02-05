@@ -14,5 +14,5 @@ export default eventHandler(async (event) => {
       `https://opp-api.ozon.ru/task/creation-availability?location.lat=${lt}&location.lon=${lg}&layer=PvzGroup`
   )
 
-  return ''
+  return data.geocode.fullText || 'Не удалось определить адрес'
 })

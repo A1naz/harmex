@@ -253,10 +253,16 @@ onKeyStroke('Escape', (e) => {
 async function getAddressText(lt: number, lg: number) {
   addressText.value = 'Загрузка...'
   const { data, error }: any = await useFetch(
-    `https://opp-api.ozon.ru/task/creation-availability?location.lat=${lt}&location.lon=${lg}&layer=PvzGroup`
+    `/api/buyout/addressText`, {
+      method: 'GET',
+      params: {
+        lt,
+        lg,
+      }
+    }
   )
   if (data.value) {
-    addressText.value = data.value.geocode.fullText
+    addressText.value = data.value
     lastAddress.value = { lt, lg }
     return addressText.value
   } else {
