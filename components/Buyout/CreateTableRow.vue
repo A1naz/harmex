@@ -125,7 +125,7 @@ const productQuantityModel = computed({
           {{ product.name }}
         </div>
         <a
-          :href="`https://www.ozon.ru/product/${product.article}`"
+          :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
           target="_blank"
           class="text-sm text-secondary link link-hover"
         >
@@ -204,11 +204,11 @@ const productQuantityModel = computed({
         />
       </div>
     </td> -->
-    <td class="break-all">
+    <td class="break-all max-w-[300px]">
       <div
-        class="w-full flex flex-col items-start justify-center gap-1 flex-wrap overflow-hidden"
+        class="w-full flex flex-col items-start gap-1 flex-wrap overflow-hidden"
       >
-        <div v-if="product.adress" class="text-xs mb-1 h-10 w-40 break-all">
+        <div v-if="product.adress" class="text-xs mb-1 h-10 w-full break-all">
           <p class="break-all whitespace-normal">
             {{ product.adress }}
           </p>
