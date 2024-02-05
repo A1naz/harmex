@@ -21,6 +21,10 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  pointCoordinates: {
+    lat: number
+    lon: number
+  }
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -76,21 +80,18 @@ export default eventHandler(async (event) => {
       product.dateRange = [date1, date2]
     }
 
-    const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
+    console.log(product);
 
     let city, state
-    if (foundPoint.city && foundPoint.state) {
-      city = foundPoint.city
-      state = foundPoint.state
-    } else {
-      ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
-    }
+      ;({ city, state } = await getCityByGeo(product.pointCoordinates.lat.toString(),  product.pointCoordinates.lon.toString()))
 
+    
     const buyout = new Buyout({
       article: product.article,
       // searchQuery: searchQueries.join(', '),
       searchQuery: '',
       point: product.adress,
+      pointCoordinates: product.pointCoordinates,
       point_city: city,
       point_state: state,
       dateStart: product.dateRange[0],
