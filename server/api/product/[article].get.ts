@@ -5,7 +5,7 @@ import { proxies } from '~~/server/lib/proxy'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { ConnectionPoolClosedEvent } from 'mongodb'
 
-const randomNumber = Math.floor(Math.random() * proxies.length)
+const randomNumber = Math.floor(Math.random() * (proxies.length - 1))
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
@@ -38,14 +38,10 @@ export default eventHandler(async (event) => {
 
   try {
     productPrice = parseInt(
-      JSON.parse(
-        data.widgetStates['webPrice-3121879-default-1']
-      ).price.replaceAll(' ', '').replace(/[\s ]/g, '')
+      JSON.parse(data.widgetStates['webPrice-3121879-default-1'])
+        .price.replaceAll(' ', '')
+        .replace(/[\s ]/g, '')
     )
-    const productPriceone = JSON.parse(
-      data.widgetStates['webPrice-3121879-default-1']
-    ).price.replaceAll(' ', '')
-    console.log(productPriceone)
   } catch (error) {}
 
   let sizesData: any

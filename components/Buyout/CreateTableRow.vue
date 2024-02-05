@@ -192,7 +192,7 @@ const productQuantityModel = computed({
         </select>
       </div>
     </td>
-    <td>
+    <!-- <td>
       <div class="w-full flex flex-col gap-2">
         <BuyoutCreateSearchQueries
           :product-index="props.index"
@@ -203,7 +203,7 @@ const productQuantityModel = computed({
           @remove="removeSearchQuery"
         />
       </div>
-    </td>
+    </td> -->
     <td class="break-all">
       <div
         class="w-full flex flex-col items-start justify-center gap-1 flex-wrap overflow-hidden"

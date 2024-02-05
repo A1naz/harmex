@@ -181,7 +181,7 @@ const productQuantityModel = computed({
           </button>
         </div>
       </div>
-      <div>
+      <!-- <div>
         <div class="w-full flex flex-col gap-2">
           <BuyoutCreateSearchQueries
             :product-index="props.index"
@@ -192,7 +192,7 @@ const productQuantityModel = computed({
             @remove="removeSearchQuery"
           />
         </div>
-      </div>
+      </div> -->
 
       <div class="divider" />
 
