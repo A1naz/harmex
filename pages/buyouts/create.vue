@@ -114,8 +114,8 @@ function removeProduct(index: number) {
   store.removeProduct(index)
 }
 
-function handleAddress(address: string) {
-  store.handleAddress(address)
+function handleAddress(address: string, lt: number, lg: number) {
+  store.handleAddress(address, lt, lg)
 }
 function openInfoModal(type: string) {
   infoType.value = type
@@ -430,12 +430,12 @@ function closeTemplateModalFN() {
                   <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th>
-              <th @click="openInfoModal('search')">
+              <!-- <th @click="openInfoModal('search')">
                 <div class="flex justify-between w-full gap-1 items-center">
                   <span> Поисковые запросы </span>
                   <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
-              </th>
+              </th> -->
               <th class="min-w-40" @click="openInfoModal('adress')">
                 <div class="flex justify-between w-full gap-1 items-center">
                   <span> Адрес </span>

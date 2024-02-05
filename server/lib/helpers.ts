@@ -55,7 +55,7 @@ export async function findPositionByQuery(
       advert: false,
     }
 
-    const randomNumber = Math.floor(Math.random() * 105)
+    const randomNumber = Math.floor(Math.random() * proxies.length)
 
     const advertData: any = await $fetch(
       `https://catalog-ads.wildberries.ru/api/v6/search?keyword=${query}`,
@@ -86,7 +86,9 @@ export async function findPositionByQuery(
     async function findPositionCycle() {
       for (let i = n; i <= pages; i++) {
         n++
-        const random = Math.floor(Math.random() * 105)
+        const random = Math.floor(Math.random() * proxies.length)
+        console.log(random);
+        
         
         // console.log(`http://${proxies[random]}`);
         const data: any = await $fetch(

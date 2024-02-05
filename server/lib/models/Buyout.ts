@@ -9,12 +9,13 @@ const ProductSchema = new Schema({
   image: { type: String, required: true },
 })
 const BuyoutSchema = new Schema({
-  searchQuery: { type: String, required: true, text: true },
+  searchQuery: { type: String, text: true, default: '' },
   sizeparam: { type: String, required: true, text: true },
   quantity: { type: Number, required: true, text: true, max: 50 },
   gender: { type: String, required: true, text: true },
   article: { type: Number, required: true, text: true },
   point: { type: String, required: true, text: true },
+  pointCoordinates: { type: Object, required: false },
   point_city: { type: String, required: false },
   point_state: { type: String, required: false },
   dateStart: { type: Date, required: true },

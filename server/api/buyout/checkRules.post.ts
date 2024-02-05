@@ -2,7 +2,6 @@ import type { Rule } from '@/data/buyout/rules'
 import { findPositionByQuery } from '@/server/lib/helpers'
 import getPickpoints from '~/server/lib/getPoints'
 
-
 interface Item {
   image: string
   name: string
@@ -18,8 +17,11 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  pointCoordinates: {
+    lat: number
+    lon: number
+  }
 }
-
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -28,7 +30,7 @@ export default eventHandler(async (event) => {
   const body = await readBody(event)
   const query = getQuery(event)
   const { userTimezoneOffsetHours } = query
-  const { points } = await getPickpoints()
+  const { points } = getPickpoints()
 
   const products: Item[] = body
   const result = {
@@ -36,6 +38,7 @@ export default eventHandler(async (event) => {
     message: '',
   }
   for (const item of products) {
+
     const rules = item.rules.map((rule) => rule.id)
     let sort = 'popular'
 
@@ -56,55 +59,55 @@ export default eventHandler(async (event) => {
 
     if (rules.includes(5) || rules.includes(9)) {
       for (const query of item.searchQuery) {
-        if(query.value === '') {
-            result.success = false
-            result.message = `У товара ${item.article} не заполнен поисковой запрос`  
-            return result
-        }
-        const searchResult = await findPositionByQuery(
-          query.value,
-          item.article,
-          sort
-        )
-        if (!searchResult.found) {
-          result.success = false
-          result.message = `Товар ${item.article} не найден в поисковой выдаче по запросу ${query.value}`
-          return result
-        }
+        // if (query.value === '') {
+        //   result.success = false
+        //   result.message = `У товара ${item.article} не заполнен поисковой запрос`
+        //   return result
+        // }
+        // const searchResult = await findPositionByQuery(
+        //   query.value,
+        //   item.article,
+        //   sort
+        // )
+        // if (!searchResult.found) {
+        //   result.success = false
+        //   result.message = `Товар ${item.article} не найден в поисковой выдаче по запросу ${query.value}`
+        //   return result
+        // }
       }
     }
     if (rules.includes(8)) {
-      for (const query of item.searchQuery) {
-        if(query.value === '') {
-            result.success = false
-            result.message = `У товара ${item.article} не заполнен поисковой запрос`  
-            return result
-        }
-        const searchResult = await findPositionByQuery(
-          query.value,
-          item.article,
-          sort
-        )
-        if (!searchResult.found) {
-          result.success = false
-          result.message = `Товар ${item.article} не найден в поисковой выдаче по запросу ${query.value}`
-          return result
-        }
-        if (!searchResult.advert) {
-          result.success = false
-          result.message = `Товар ${item.article} не найден в рекламе по запросу ${query.value}`
-          return result
-        }
-      }
+      // for (const query of item.searchQuery) {
+      //   if (query.value === '') {
+      //     result.success = false
+      //     result.message = `У товара ${item.article} не заполнен поисковой запрос`
+      //     return result
+      //   }
+      //   // const searchResult = await findPositionByQuery(
+      //   //   query.value,
+      //   //   item.article,
+      //   //   sort
+      //   // )
+      //   // if (!searchResult.found) {
+      //     // result.success = false
+      //     // result.message = `Товар ${item.article} не найден в поисковой выдаче по запросу ${query.value}`
+      //     // return result
+      //   // }
+      //   // if (!searchResult.advert) {
+      //     // result.success = false
+      //     // result.message = `Товар ${item.article} не найден в рекламе по запросу ${query.value}`
+      //     // return result
+      //   // }
+      // }
     }
 
- const foundPoint = points.find((p: { a: string }) => p.a === item.adress)
- if (!foundPoint) {
-  result.success = false
-  result.message = `ПВЗ ${item.adress} не найдено`
-  return result
- } 
- 
+    
+    const foundPoint = points.find((p: any) => p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon)
+    if (!foundPoint) {
+      result.success = false
+      result.message = `ПВЗ ${item.adress} не найдено`
+      return result
+    }
   }
 
   return result

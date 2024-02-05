@@ -22,8 +22,18 @@ function closeModal() {
 }
 const loading = ref(false)
 const map = ref()
+const addressText = ref('sadsd')
+const lastAddress = ref({
+  lt: 0,
+  lg: 0,
+})
 function handleSelect(address: string) {
-  if (props.pickpoints.findIndex((item: any) => item.a === address) === -1) {
+  if (
+    props.pickpoints.findIndex(
+      (item: any) =>
+        item.lt === lastAddress.value.lt && item.lg === lastAddress.value.lg
+    ) === -1
+  ) {
     return notify({
       type: 'error',
       title: 'Что-то пошло не так',
@@ -31,32 +41,45 @@ function handleSelect(address: string) {
     })
   }
 
-  let pointStore = localStorage.getItem('pointStore')
-  if (!pointStore) pointStore = ''
+  let pointStore: any = localStorage.getItem('pointStore')
 
-  const arr = pointStore.trim().split('--').reverse()
-  if (arr[0] === '') arr.shift()
-  if (arr.length > 20) arr.shift()
-  arr.push(address)
-  const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('pointStore', unique.join('--'))
-  emit('callback', address)
+  const arr = JSON.parse(pointStore) || []
+
+  if (arr.length > 5) arr.splice(arr.length - 1, 1)
+  if (
+    !arr.find(
+      (el: any) =>
+        el.lt === lastAddress.value.lt && el.lg === lastAddress.value.lg
+    )
+  ) {
+    arr.unshift({
+      address,
+      lt: lastAddress.value.lt,
+      lg: lastAddress.value.lg,
+    })
+  }
+
+  localStorage.setItem('pointStore', JSON.stringify(arr))
+  emit('callback', address, lastAddress.value.lt, lastAddress.value.lg)
   closeModal()
 }
 
-function handleDelete(address: string) {
-  let pointStore = localStorage.getItem('pointStore')
-  if (!pointStore) pointStore = ''
-  const arr = pointStore.trim().split('--').reverse()
-  arr.splice(arr.indexOf(address), 1)
-  const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('pointStore', unique.join('--'))
-  emit('callback', address)
-  lastPoints.value = unique
+function handleDelete(address: any) {
+  let pointStore: any = localStorage.getItem('pointStore')
+  const arr = JSON.parse(pointStore) || []
+  arr.splice(
+    arr.indexOf(arr.find((el: any) => el.address === address.address)),
+    1
+  )
+  localStorage.setItem('pointStore', JSON.stringify(arr))
+  emit('callback', address.address, lastAddress.value.lt, lastAddress.value.lg)
+  lastPoints.value = JSON.parse(localStorage.getItem('pointStore') || '[]')
 }
 
-const lastPoints = ref(localStorage.getItem('pointStore')?.split('--'))
-const presetCluster = 'islands#violetClusterIcons'
+const lastPoints = ref(JSON.parse(localStorage.getItem('pointStore') || '[]'))
+console.log(lastPoints.value)
+
+const presetCluster = 'slands#blueClusterIcons'
 
 const originalBounds = ref([
   [55.72435065000997, 37.421310551334145],
@@ -95,7 +118,7 @@ onMounted(async () => {
         geoObjectsArray.forEach((marker: any) => {
           marker.options.set({
             hasBalloon: false,
-            preset: 'islands#violetDotIconWithCaption',
+            preset: 'islands#darkBlueClusterIcons',
             iconOffset: [0, -25],
           })
           marker.properties.set({
@@ -136,16 +159,18 @@ onMounted(async () => {
             radius: 1000,
           },
           properties: {
-            iconContent: 'WB',
+            iconContent: 'OZON',
             data: {
-              a: point.a,
-              w: point.w,
+              lt: point.lt,
+              lg: point.lg,
+              a: 'Загрузка...',
             },
           },
           options: {
-            iconColor: '#8d297f',
+            iconColor: '#0340e9',
             iconLayout: 'default#image',
-            iconImageHref: '/img/pin-map.svg',
+            iconImageHref:
+              'https://ucarecdn.com/a1a464eb-edf1-41d7-875d-6b769199571a/',
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
@@ -160,16 +185,19 @@ onMounted(async () => {
     // Добавляем коллекцию на карту.
     myMap.geoObjects.add(objectManager)
 
-    objectManager.objects.events.add('click', (e: any) => {
+    objectManager.objects.events.add('click', async (e: any) => {
       const objectId = e.get('objectId')
       const obj = objectManager.objects.getById(objectId)
+
+      await getAddressText(obj.properties.data.lt, obj.properties.data.lg)
+
+      obj.properties.data.a = addressText.value
 
       const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
         `<div class="card rounded-lg">
           <div>
-            <div class="text-lg font-semibold">Пункт выдачи Wildberries</div>
-            <div class="text-sm">${obj.properties.data.a}</div>
-            <div class="text-sm">${obj.properties.data.w}</div>
+            <div class="text-lg font-semibold">Пункт выдачи Ozon</div>
+            <div class="text-sm">${addressText.value}</div>
             <a class="selectPoint mt-4 flex justify-center btn btn-primary">Выбрать</a>
           </div>
         </div>
@@ -201,9 +229,12 @@ onMounted(async () => {
       objectManager.objects.balloon.open(objectId)
     })
     // создаем кастомный балун
-    objectManager.objects.events.add('balloonopen', (e: any) => {
+    objectManager.objects.events.add('balloonopen', async (e: any) => {
       const objectId = e.get('objectId')
-      const geoObject = objectManager.objects.getById(objectId)
+      const geoObject: any = objectManager.objects.getById(objectId)
+
+      // objectManager.objects.balloon.close()
+      // objectManager.objects.balloon.open(objectId)
     })
     loading.value = false
   } catch (e) {
@@ -218,6 +249,21 @@ onKeyStroke('Escape', (e) => {
   e.preventDefault()
   emit('close')
 })
+
+async function getAddressText(lt: number, lg: number) {
+  addressText.value = 'Загрузка...'
+  const { data, error }: any = await useFetch(
+    `https://opp-api.ozon.ru/task/creation-availability?location.lat=${lt}&location.lon=${lg}&layer=PvzGroup`
+  )
+  if (data.value) {
+    addressText.value = data.value.geocode.fullText
+    lastAddress.value = { lt, lg }
+    return addressText.value
+  } else {
+    addressText.value = 'Нет данных'
+    return addressText.value
+  }
+}
 </script>
 
 <template>
@@ -257,7 +303,10 @@ onKeyStroke('Escape', (e) => {
           </div>
           <div class="last md:h-full rounded-lg p-2 max-w-xs">
             <h2 class="font-bold">Последние использованные ПВЗ</h2>
-            <div class="flex flex-col gap-2 mt-2 overflow-y-auto overflow-x-hidden" :style="`height: ${height - height/3.3}px`">
+            <div
+              class="flex flex-col gap-2 mt-2 overflow-y-auto overflow-x-hidden"
+              :style="`height: ${height - height / 3.3}px`"
+            >
               <div
                 v-if="
                   lastPoints && lastPoints.length > 0 && lastPoints[0] !== ''
@@ -268,9 +317,14 @@ onKeyStroke('Escape', (e) => {
                 <button
                   :key="index"
                   class="btn pvz text-xs btn-neutral rounded-md p-2 flex w-10/12"
-                  @click="handleSelect(item)"
+                  @click="
+                    ;[
+                      (lastAddress = { lt: item.lt, lg: item.lg }),
+                      handleSelect(item.address),
+                    ]
+                  "
                 >
-                  {{ item }}
+                  {{ item.address }}
                 </button>
                 <button
                   class="btn btn-neutral btn-square"
@@ -297,9 +351,7 @@ onKeyStroke('Escape', (e) => {
         </div>
       </div>
     </div>
-    <div class="modal-backdrop cursor-pointer" @click="closeModal">
-
-    </div>
+    <div class="modal-backdrop cursor-pointer" @click="closeModal"></div>
   </div>
 </template>
 

@@ -4,11 +4,6 @@
   "zWpQzs:9MwsuHjkwE@45.134.183.177:3000",
   "zWpQzs:9MwsuHjkwE@45.11.21.28:3000",
   "zWpQzs:9MwsuHjkwE@193.58.168.74:3000",
-  "zWpQzs:9MwsuHjkwE@188.130.136.93:3000",
-  "zWpQzs:9MwsuHjkwE@46.8.17.42:3000",
-  "zWpQzs:9MwsuHjkwE@45.134.183.177:3000",
-  "zWpQzs:9MwsuHjkwE@45.11.21.28:3000",
-  "zWpQzs:9MwsuHjkwE@193.58.168.74:3000",
   "zWpQzs:9MwsuHjkwE@46.8.111.116:3000",
   "zWpQzs:9MwsuHjkwE@188.130.185.137:3000",
   "zWpQzs:9MwsuHjkwE@194.156.97.153:3000",
@@ -103,5 +98,5 @@
   "zWpQzs:9MwsuHjkwE@188.130.142.38:3000",
   "zWpQzs:9MwsuHjkwE@45.140.55.143:3000",
   "zWpQzs:9MwsuHjkwE@46.8.14.248:3000",
-  "zWpQzs:9MwsuHjkwE@45.134.183.67:3000"
+  "zWpQzs:9MwsuHjkwE@45.134.183.67:3000",
 ]

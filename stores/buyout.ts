@@ -98,6 +98,7 @@ export const useBuyoutStore = defineStore('buyout', {
         selectedSize: product.sizes[0] ?? 'none',
         priceText: product.priceText,
         rules: [{ category: 3, description: 'Не выкупать если товар не найден в поисковой выдаче (не выкупать по прямой ссылке)', id: 5 }],
+        pointCoordinates: { lat: 0, lon: 0 },
       }))
     },
     removeSearchQuery(index: number, place: number) {
@@ -150,9 +151,13 @@ export const useBuyoutStore = defineStore('buyout', {
     removeProduct(index: number) {
       this.createProducts.splice(index, 1)
     },
-    handleAddress(address: string) {
+    handleAddress(address: string, lt: number, lg: number) {
       const index = this.selectedItem!
       this.createProducts[index].adress = address
+      this.createProducts[index].pointCoordinates = {
+        lat: lt,
+        lon: lg
+      }
     },
   },
 })

@@ -21,6 +21,10 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  pointCoordinates: {
+    lat: number
+    lon: number
+  }
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -44,7 +48,7 @@ export default eventHandler(async (event) => {
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
 
-  const { points } = await getPickpoints()
+  const { points } = getPickpoints()
 
   const products: Item[] = body
   if (products.length > 10) {
@@ -69,29 +73,25 @@ export default eventHandler(async (event) => {
         date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
         date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
       } else {
-
         date1.setHours(date1.getHours() + 3)
         date2.setHours(date2.getHours() + 3)
-        
       }
 
       product.dateRange = [date1, date2]
     }
 
-    const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
+    console.log(product);
 
     let city, state
-    if (foundPoint.city && foundPoint.state) {
-      city = foundPoint.city
-      state = foundPoint.state
-    } else {
-      ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
-    }
+      ;({ city, state } = await getCityByGeo(product.pointCoordinates.lat.toString(),  product.pointCoordinates.lon.toString()))
 
+    
     const buyout = new Buyout({
       article: product.article,
-      searchQuery: searchQueries.join(', '),
+      // searchQuery: searchQueries.join(', '),
+      searchQuery: '',
       point: product.adress,
+      pointCoordinates: product.pointCoordinates,
       point_city: city,
       point_state: state,
       dateStart: product.dateRange[0],
