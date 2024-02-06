@@ -348,15 +348,9 @@ function closeTemplateModalFN() {
       данные.
     </p>
     <div class="flex flex-col md:flex-row md:justify-between">
-      <div class="mt-6 md:flex items-center">
-        <label
-          for="template-select-modal"
-          @click="getTemplates"
-          class="btn btn-primary btn-sm normal-case mr-0 md:mr-1 mb-2 md:mb-0"
-          >Добавить выкупы из шаблона</label
-        >
+      <div class="mt-6 md:flex items-center gap-2.5">
         <div
-          class="relative flex justify-end items-center flex-grow-0 w-80 gap-1"
+          class="relative flex justify-end items-center flex-grow-0 w-80 gap-2.5"
         >
           <input
             v-model="article"
@@ -364,12 +358,21 @@ function closeTemplateModalFN() {
             class="input input-sm input-bordered w-full"
             @keydown.enter="addProduct"
           />
-          <button class="btn btn-sm normal-case" @click="addProduct">
+          
+          <button class="btn btn-primary btn-sm normal-case" @click="addProduct">
             Добавить
           </button>
         </div>
+        <label
+          for="template-select-modal"
+          @click="getTemplates"
+          class="btn btn-sm normal-case mr-0 md:mr-1 mb-2 md:mb-0"
+          >Шаблоны</label
+        >
       </div>
       <div>
+        
+        
         <!-- <label
         v-if="store.createProducts.length > 0"
         class="btn btn-sm btn-error bg-red-400 normal-case mt-6 mr-2 hidden md:flex"
@@ -378,6 +381,16 @@ function closeTemplateModalFN() {
         > -->
       </div>
     </div>
+    <div class="flex gap-2 mt-4">
+        <div class="text-sm">
+          <span class="text-gray-500">Товаров: </span>
+          <span >{{ totalQuantity }} шт.</span>
+        </div>
+        <div class="text-sm">
+          <span class="text-gray-500">Сумма: </span>
+          <span >{{ currency.format(totalSum) }}</span>
+        </div>
+      </div>
 
     <ClientOnly>
       <div
@@ -403,31 +416,35 @@ function closeTemplateModalFN() {
             <tr>
               <th class="hidden 3xl:block">№</th>
               <th class="w-12 text-center" @click="openInfoModal('picture')">
-                <IconCSS name="material-symbols:image-outline" size="20" />
+                <!-- <IconCSS name="material-symbols:image-outline" size="20" /> -->
+                Фото
               </th>
-              <th class="w-36 3xl:w-48">Название</th>
-              <th @click="openInfoModal('price')">
+              <th class="w-36 3xl:w-48 text-center">Название</th>
+              <th @click="openInfoModal('price')" >
                 <div class="flex justify-between w-full gap-1 items-center">
                   <span> Цена </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
               <th @click="openInfoModal('quantity')">
-                <div class="flex justify-between w-full gap-1 items-center">
-                  <span> Кол-во </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+                <!-- <div class="flex justify-between w-full gap-1 items-center text-center"> -->
+                <div class="text-center">
+                  <span > Кол-во </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
               <th @click="openInfoModal('size')">
-                <div class="flex justify-between w-full gap-1 items-center">
+                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <div class="text-center">
                   <span> Размер </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
               <th @click="openInfoModal('sex')">
-                <div class="flex justify-between w-full gap-1 items-center">
+                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <div class="text-center">
                   <span> Пол </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
               <!-- <th @click="openInfoModal('search')">
@@ -437,23 +454,27 @@ function closeTemplateModalFN() {
                 </div>
               </th> -->
               <th class="min-w-40" @click="openInfoModal('adress')">
-                <div class="flex justify-between w-full gap-1 items-center">
+                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <div class="text-center">
                   <span> Адрес </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
               <th @click="openInfoModal('dates')">
-                <div class="flex justify-between w-full gap-1 items-center">
+                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <div class="text-center">
                   <span> Даты выкупов </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
               <th @click="openInfoModal('rules')">
-                <div class="flex justify-between w-full gap-1 items-center">
+                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <div class="text-center">
                   <span> Правила </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
+              
               <th class="text-base-content" />
             </tr>
             <progress
@@ -485,43 +506,34 @@ function closeTemplateModalFN() {
     </ClientOnly>
     <div
       v-show="products.length"
-      class="mt-6 md:flex justify-between md:items-center h-48"
+      class="mt-6 md:flex justify-end md:items-center "
     >
-      <div>
-        <div class="text-sm">
-          <span class="text-gray-500">Товаров: </span>
-          <span class="font-bold">{{ totalQuantity }} шт.</span>
-        </div>
-        <div class="text-sm">
-          <span class="text-gray-500">Сумма: </span>
-          <span class="font-bold">{{ currency.format(totalSum) }}</span>
-        </div>
-      </div>
-      <div>
-        <label
+      <div class="m-5">
+        <!-- <label
           v-if="store.createProducts.length > 0"
           class="btn btn-sm btn-error bg-red-400 normal-case mt-1 ml-0 md:mt-0 md:ml-2 z-0"
           for="removeAllModelCreateProducts"
           >Удалить все</label
-        >
+        > -->
         <label
-          class="btn bg-blue-600 btn-sm normal-case mt-2 md:mt-0 ml-1 md:ml-2 text-white"
+          class="btn btn-sm normal-case mt-2 md:mt-0 ml-1 md:ml-2 px-6"
           for="template-modal"
         >
-          Создать шаблон
+          Шаблон
         </label>
 
         <button
-          class="btn btn-primary btn-sm normal-case mt-1 md:ml-2"
+          class="btn btn-sm normal-case mt-1 md:ml-2"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >
-          {{
+          <!-- {{
             products.length > 1
               ? `Создать
           выкупы`
               : `Создать выкуп`
-          }}
+          }} -->
+          Создать
         </button>
       </div>
     </div>
@@ -543,10 +555,11 @@ function closeTemplateModalFN() {
             Выберите нужные правила для этого выкупа
           </h3>
           <div v-for="rule of defaultRules" :key="rule.id" class="">
-            <div class="label cursor-pointer flex gap-4 items-start">
+            <div class="label cursor-pointer flex gap-4 items-start justify-around">
               <span class="label-text"
                 >{{ rule.id }}. {{ rule.description }}</span
               >
+              <div class="bg-accent cursor-default rounded-full px-4">0р.</div>
               <input
                 :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
@@ -569,6 +582,7 @@ function closeTemplateModalFN() {
                 "
               />
             </div>
+            
           </div>
         </label>
       </label>
@@ -763,16 +777,16 @@ function closeTemplateModalFN() {
     id="removeAllModelCreateProducts"
     class="modal-toggle"
   />
-  <div class="modal">
+  <div class="modal backdrop-filter backdrop-blur-sm">
     <div class="modal-box max-w-xs">
-      <h3 class="font-bold text-lg">Вы уверены?</h3>
-      <div class="modal-action flex justify-between">
-        <label for="removeAllModelCreateProducts" class="btn btn-primary"
+      <h3 class="font-bold text-md">Вы уверенны что хотите удалить все товары?</h3>
+      <div class="modal-action flex justify-around">
+        <label for="removeAllModelCreateProducts" class="btn px-6"
           >Отмена</label
         >
         <label
           for="removeAllModelCreateProducts"
-          class="btn btn-error"
+          class="btn btn-primary px-6"
           @click="store.createProducts = []"
           >Удалить</label
         >

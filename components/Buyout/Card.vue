@@ -148,15 +148,15 @@ const getStatus = computed(() => {
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-200 shadow-lg">
+  <div class="buyout-card card bg-base-200 shadow-lg min-w-[320px]">
     <div class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-4 relative">
       <div class="dropdown dropdown-end absolute right-2 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
-          <Icon name="ph:dots-three-outline-vertical-fill" size="18" />
+          <Icon name="ph:dots-three-outline-vertical-fill" size="28" />
         </label>
         <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
           <li>
-            <a @click="$emit('openLogModal', index)">
+            <a @click="$emit('openModal', index)">
               <Icon name="fluent:send-logging-24-filled" />Инфо о выкупе
             </a>
           </li>
@@ -176,32 +176,44 @@ const getStatus = computed(() => {
 
           <li v-if="info.status !== 'work'">
             <a
-              @click="deleteBuyOut"
+              for="removeAllModelCreateProducts"
             >
-              <Icon name="fluent:delete-24-filled" />Удалить
+              <Icon name="fluent:delete-24-filled" />
+              <label
+              for="removeAllModelCreateProducts"
+            >Удалить</label>
             </a>
           </li>
+          
         </ul>
       </div>
 
       <div class="truncate">
-        <h2 class="card-title">
-          Выкуп №{{ info.place }}
-        </h2>
-        <div class="text-xs text-gray-500 truncate">
-          #{{ info.uuid }}
-        </div>
-        <div class="flex justify-between mt-2">
-          <span
-            :class="{
-              'text-green-600': info.status === 'active' || info.status === 'work',
-              'text-error': info.status === 'completed' || info.status === 'nofunds',
-              'text-warning': info.status === 'archived' || info.status === 'paused',
-            }"
-          >{{ getStatus }}</span>
-
-          <span class="text-sm text-gray-500">Создан: {{ defaultDate(info.createdAt)
+        <span class="text-sm text-gray-500">Создан: {{ defaultDate(info.createdAt)
           }}</span>
+        <div class="flex gap-3">
+          <h2 class="card-title mt-2">
+            Выкуп №{{ info.place }}
+          </h2>
+          <span class="mt-2 rounded-2xl py-1 px-2"
+              :class="{
+                'text-green-600 bg-green-200': info.status === 'active' || info.status === 'work',
+                'text-error bg-red-400': info.status === 'completed' || info.status === 'nofunds',
+                'text-warning bg-yellow-400': info.status === 'archived' || info.status === 'paused',
+              }"
+            >{{ getStatus }}</span>
+            <a
+              :href="`https://www.ozon.ru/product/${info.article}`" target="_blank"
+              class="text-base text-primary link link-hover mt-3 "
+            >
+              {{ info.article }}
+            </a>
+        </div>
+        
+        <div class="flex justify-between mt-2">
+          
+
+         
         </div>
         <div class="flex justify-between gap-4 mt-2 items-center">
           <div
@@ -228,37 +240,56 @@ const getStatus = computed(() => {
             :src="info?.product?.image || '/logo/logocolor.svg'"
           />
         </div>
-        <div class="flex flex-col justify-between truncate">
+        <div class="flex flex-col">
           <div class="mb-2">
-            <div class=" truncate">
+            <div class="text-xs text-gray-500 truncate max-w-[150px]">
+              #{{ info.uuid }}
+            </div>
+            <div class="truncate text-bold max-w-[150px]">
               {{ info.product?.name }}
             </div>
-            <a
-              :href="`https://www.ozon.ru/product/${info.article}`" target="_blank"
-              class="text-sm text-secondary link link-hover"
-            >
-              {{ info.article }}
-            </a>
+            
           </div>
-          <div class="">
+          <div class="flex flex-col gap-4">
             <div>
               <span class="text-sm text-gray-500">Цена: </span>
-              <span class="">{{ info.product?.priceText }}</span>
+              <span class="bg-green-200 rounded-lg p-1">{{ info.product?.priceText }}</span>
             </div>
             <div>
               <span class="text-sm text-gray-500">Количество: </span>
-              <span class="">{{ info.quantity }} шт.</span>
+              <span class="bg-amber-100 rounded-lg p-1">{{ info.quantity }} шт.</span>
             </div>
             <div>
               <span class="text-sm text-gray-500">Сумма: </span>
-              <span class="">{{ currency.format(info.quantity * info.product?.price) }}</span>
+              <span class="bg-indigo-300 rounded-lg p-1">{{ currency.format(info.quantity * info.product?.price) }}</span>
             </div>
           </div>
         </div>
       </div>
-      <button class="btn mt-2" @click="$emit('openModal', index)">
+      <button class="btn mt-2 bg-indigo-400 border-indigo-400 btn-primary" @click="$emit('openModal', index)">
         Открыть
       </button>
+    </div>
+    <input
+      type="checkbox"
+      id="removeAllModelCreateProducts"
+      class="modal-toggle"
+    />
+    <div class="modal backdrop-filter backdrop-blur-sm">
+      <div class="modal-box max-w-xs">
+        <h3 class="font-bold text-md">Вы уверенны что хотите удалить ?</h3>
+        <div class="modal-action flex justify-around">
+          <label for="removeAllModelCreateProducts" class="btn px-6"
+            >Отмена</label
+          >
+          <label
+            for="removeAllModelCreateProducts"
+            class="btn btn-primary px-6"
+            @click="deleteBuyOut"
+            >Удалить</label
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>

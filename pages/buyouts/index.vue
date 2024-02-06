@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 definePageMeta({
   layout: 'app',
   auth: true,
@@ -54,7 +53,7 @@ async function getBuyouts() {
       dateFilter: dateFilter.value,
       limit: 50,
     },
-    watch: false
+    watch: false,
   })
   buyouts.value = data.value
 }
@@ -126,7 +125,7 @@ async function selectFilterDate(e: Event) {
       dateFilter: dateFilter.value,
       limit: 50,
     },
-    watch: false
+    watch: false,
   })
   buyouts.value = data.value
 }
@@ -142,7 +141,7 @@ async function findBuyouts(value: string, type: string) {
       string: value,
       type,
     },
-    watch: false
+    watch: false,
   })
   if (data.value) buyouts.value = data.value
 
@@ -196,11 +195,36 @@ const formatAvailable = computedEager(() => {
 })
 
 const filters = [
-    {title: 'Все выкупы', optionValue: 'all', params: '', queryStatus: undefined},
-    {title: 'В архиве', optionValue: 'archived', params: '?status=archived', queryStatus: 'archived'},
-    {title: 'Пауза', optionValue: 'paused', params: '?status=paused', queryStatus: 'paused'},
-    {title: 'Завершенные', optionValue: 'completed', params: '?status=completed', queryStatus: 'completed'},
-    {title: 'Выкуплены по рекламе', optionValue: 'completedByAds', params: '?status=completedByAds', queryStatus: 'completedByAds'},
+  {
+    title: 'Все выкупы',
+    optionValue: 'all',
+    params: '',
+    queryStatus: undefined,
+  },
+  {
+    title: 'В архиве',
+    optionValue: 'archived',
+    params: '?status=archived',
+    queryStatus: 'archived',
+  },
+  {
+    title: 'Пауза',
+    optionValue: 'paused',
+    params: '?status=paused',
+    queryStatus: 'paused',
+  },
+  {
+    title: 'Завершенные',
+    optionValue: 'completed',
+    params: '?status=completed',
+    queryStatus: 'completed',
+  },
+  {
+    title: 'Выкуплены по рекламе',
+    optionValue: 'completedByAds',
+    params: '?status=completedByAds',
+    queryStatus: 'completedByAds',
+  },
 ]
 
 watch(targetIsVisible, async (isVisible) => {
@@ -214,7 +238,7 @@ watch(targetIsVisible, async (isVisible) => {
         dateFilter: dateFilter.value,
         skip: skip.value,
       },
-      watch: false
+      watch: false,
     })
     if ((data.value as any).length === 0) {
       end.value = true
@@ -236,7 +260,7 @@ watch(
         dateFilter: dateFilter.value,
         limit: 50,
       },
-      watch: false
+      watch: false,
     })
     buyouts.value = data.value
   },
@@ -256,7 +280,7 @@ onMounted(async () => {
         const { data, error } = await useFetch('/api/buyout/getOne', {
           method: 'GET',
           query: { uuid },
-          watch: false
+          watch: false,
         })
         if (data.value) {
           buyouts.value = [data.value, ...buyouts.value]
@@ -269,47 +293,49 @@ onMounted(async () => {
 
 await getBuyouts()
 
-
 const isInfoModal = ref<boolean>(false)
-function toggleInfoModal() { 
-    isInfoModal.value = !isInfoModal.value 
+function toggleInfoModal() {
+  isInfoModal.value = !isInfoModal.value
 }
-
 </script>
 
 <template>
   <div>
-    
     <div class="flex items-center gap-2 mt-4">
       <h1 class="text-2xl font-bold">Выкупы</h1>
       <InfoButton @openModal="toggleInfoModal" />
     </div>
 
-    <InfoModal 
-        :isModal="isInfoModal" 
-        title="Выкупы"
-        ytSrc='https://www.youtube.com/embed/YNFKOAgRAuU?si=bwAzeSLOmprr3NFe'
-        @changeVisibility="toggleInfoModal"
+    <InfoModal
+      :isModal="isInfoModal"
+      title="Выкупы"
+      ytSrc="https://www.youtube.com/embed/YNFKOAgRAuU?si=bwAzeSLOmprr3NFe"
+      @changeVisibility="toggleInfoModal"
+    >
+      <div class="flex flex-col gap-2">
+        <p>
+          Здесь формируются и оплачиваются выкупы на Wildberries. Для добавления
+          нажмите на кнопку "Добавить выкупы".
+        </p>
+        <p>
+          Стоимость одного выкупа -
+          <span class="font-bold"
+            >{{ storeMain.tariffString('buyouts') }}.</span
+          >
+          Все услуги оказываются по Московскому времени.
+        </p>
+        <p
+          v-if="route.query.status === 'archived'"
+          class="text-xs font-light mt-1 lg:text-sm"
         >
-        <div class="flex flex-col gap-2">
-            <p>Здесь формируются и оплачиваются выкупы на Wildberries. Для добавления
-                нажмите на кнопку "Добавить выкупы".
-            </p>
-            <p>Стоимость одного выкупа - 
-                <span class="font-bold">{{ storeMain.tariffString('buyouts') }}.</span> 
-                Все услуги оказываются по Московскому времени.
-            </p>
-            <p v-if="route.query.status === 'archived'"
-                class="text-xs font-light mt-1 lg:text-sm"
-                >
-                Выкупы в архиве удаляются через 10 дней.
-            </p>
-        </div>
+          Выкупы в архиве удаляются через 10 дней.
+        </p>
+      </div>
     </InfoModal>
 
     <div class="flex justify-between mb-4 items-center mt-6">
-      <div class="hidden lg:block">
-        <NuxtLink
+      <div class="flex gap-5">
+        <!-- <NuxtLink
             v-for="filter in filters"
             :to=" '/buyouts' + filter.params"
             :external="false"
@@ -319,9 +345,25 @@ function toggleInfoModal() {
             class="btn btn-ghost btn-sm normal-case font-medium"
             >
           {{ filter.title }}
+        </NuxtLink> -->
+        <NuxtLink
+          to="/buyouts/create"
+          class="btn btn-primary btn-sm gap-2 font-medium normal-case"
+        >
+          <Icon name="fluent:add-24-filled" size="12" />
+          Выкупы
         </NuxtLink>
+        <select class="select select-bordered select-sm" @change="selectStatus">
+          <option
+            v-for="filter in filters"
+            :value="filter.optionValue"
+            :selected="route.query.status === filter.queryStatus"
+          >
+            {{ filter.title }}
+          </option>
+        </select>
       </div>
-      <select
+      <!-- <select
         class="select select-bordered select-sm lg:hidden"
         @change="selectStatus"
       >
@@ -332,59 +374,64 @@ function toggleInfoModal() {
         >
         {{ filter.title }}
         </option>
-      </select>
+      </select> -->
       <div class="flex items-center gap-2 flex-wrap">
-        <a
+        <div class="search flex items-center flex-wrap gap-5">
+          <select
+            class="select select-bordered select-sm"
+            @change="selectFilterDate"
+          >
+            <option value="all">За все время</option>
+            <option value="today">Сегодня</option>
+            <option value="3days">3 дня</option>
+            <option value="7days">Неделя</option>
+          </select>
+          <div class="flex gap-5 items-center">
+            <select
+              v-model="search.type"
+              class="select select-bordered select-sm"
+            >
+              <option value="article">Артикул</option>
+              <option value="uuid">ID выкупа</option>
+              <option value="name">Имя товара</option>
+            </select>
+            <div class="relative flex items-center flex-grow-0 w-full">
+              <input
+                v-model="search.text"
+                type="text"
+                class="input input-sm input-bordered"
+                placeholder="Поиск по товарам"
+                @input="onSearchInput($event)"
+              />
+              <Icon
+                v-if="!search.loading"
+                class="absolute right-2 p-2"
+                name="tabler:search"
+                size="30"
+              />
+              <span
+                v-if="search.loading"
+                class="absolute right-2 loading loading-spinner loading-xs p-2"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- <a
           href="info/Информационная таблица по выкупам.xlsx"
           class="btn btn-sm btn-primary hidden lg:flex lg:items-center"
         >
           Скачать шаблон
-        </a>
-        <NuxtLink
+        </a> -->
+        <!-- <NuxtLink
           to="/buyouts/create"
           class="btn btn-primary btn-sm gap-2 font-medium normal-case self-end"
         >
           <Icon name="fluent:add-24-filled" size="24" />
           Добавить выкупы
-        </NuxtLink>
-      </div>
-
-
-
-    </div>
-
-    <div class="search flex justify-between items-center mb-4 flex-wrap gap-2">
-      <select
-        class="select select-bordered select-sm"
-        @change="selectFilterDate"
-      >
-        <option value="all">За все время</option>
-        <option value="today">Сегодня</option>
-        <option value="3days">3 дня</option>
-        <option value="7days">Неделя</option>
-      </select>
-      <div class="flex gap-1 items-center">
-        <select v-model="search.type" class="select select-bordered select-sm">
-          <option value="article">Артикул</option>
-          <option value="uuid">ID выкупа</option>
-          <option value="name">Имя товара</option>
-        </select>
-        <div class="relative flex items-center flex-grow-0 w-full">
-          <input
-            v-model="search.text"
-            type="text"
-            class="input input-sm input-bordered"
-            placeholder="Поиск"
-            @input="onSearchInput($event)"
-          />
-
-          <span
-            v-if="search.loading"
-            class="absolute right-2 loading loading-spinner loading-xs p-2"
-          />
-        </div>
+        </NuxtLink> -->
       </div>
     </div>
+
     <div v-if="buyouts.length > 0">
       <div
         v-if="

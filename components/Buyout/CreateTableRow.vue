@@ -206,7 +206,7 @@ const productQuantityModel = computed({
     </td> -->
     <td class="break-all max-w-[300px]">
       <div
-        class="w-full flex flex-col items-start gap-1 flex-wrap overflow-hidden"
+        class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden  justify-center"
       >
         <div v-if="product.adress" class="text-xs mb-1 h-10 w-full break-all">
           <p class="break-all whitespace-normal">
@@ -214,6 +214,19 @@ const productQuantityModel = computed({
           </p>
         </div>
         <button
+          v-if="!product.adress"
+          :disabled="loading"
+          :class="{
+            'btn-outline': product.adress,
+          }"
+          class="btn btn-sm normal-case rounded-full p-1"
+          @click="$emit('pointModalOpen', index)"
+        >
+          <span v-show="loading" class="loading loading-spinner" />
+          <Icon name="fluent:add-24-filled" size="20" />
+        </button>
+        <button
+          v-if="product.adress"
           :disabled="loading"
           :class="{
             'btn-outline': product.adress,
@@ -222,8 +235,7 @@ const productQuantityModel = computed({
           @click="$emit('pointModalOpen', index)"
         >
           <span v-show="loading" class="loading loading-spinner" />
-
-          {{ product.adress ? 'Изменить' : 'Добавить' }}
+          Изменить
         </button>
       </div>
     </td>
@@ -243,13 +255,15 @@ const productQuantityModel = computed({
             v-show="product.dateRange[1] && product.dateRange[0]"
             class="text-sm flex flex-col justify-center items-start mb-2"
           >
-            <div>
-              {{ `С ${$dayjs(product.dateRange[0]).format('D MMMM HH:mm')}` }}
-            </div>
-            <div>
-              {{ `По ${$dayjs(product.dateRange[1]).format('D MMMM HH:mm')}` }}
+          <div>
+              {{
+                `${defaultDateShort(product.dateRange[0])} - ${defaultDateShort(
+                  product.dateRange[1]
+                )}`
+              }}
             </div>
           </div>
+
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"
@@ -273,7 +287,7 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td>
-      <div class="w-full">
+      <div class="w-full flex items-center justify-center gap-2">
         <div class="mb-1">
           {{ product.rules.map((rule: Rule) => rule.id).join(', ') }}
         </div>
@@ -281,10 +295,10 @@ const productQuantityModel = computed({
           :class="{
             'btn-outline': product.rules,
           }"
-          class="btn btn-primary btn-sm normal-case"
+          class="border-base-300 normal-case rounded-full"
           @click="$emit('ruleModalOpen', index)"
         >
-          {{ 'Настроить' }}
+          <Icon name="mdi:settings" size="20" />
         </button>
       </div>
     </td>
