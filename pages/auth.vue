@@ -5,16 +5,6 @@ import { email, helpers, minLength, required } from '@vuelidate/validators'
 
 const store = useMainStore()
 
-onMounted(() => {
-  const isPageReloaded = localStorage.getItem('isPageReloaded')
-
-  if (!isPageReloaded) {
-    localStorage.setItem('isPageReloaded', 'true')
-
-    window.location.reload()
-  }
-})
-
 definePageMeta({
   colorMode: 'dark',
   auth: {
@@ -183,11 +173,11 @@ const v$ = useVuelidate(rules, formData)
 
     <section class="right">
       <div class="box">
-        <div class="logo">wb</div>
+        <div class="logo">ozon</div>
 
         <h1>
           Самовыкупы на <br />
-          WildBerries
+          Ozon
         </h1>
         <h2>
           <span>[</span> комплексное продвижение <br />
