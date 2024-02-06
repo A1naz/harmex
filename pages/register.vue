@@ -240,11 +240,11 @@ async function submitForm() {
 
     <section class="right">
       <div class="box">
-        <div class="logo">wb</div>
+        <div class="logo">ozon</div>
 
         <h1>
           Самовыкупы на <br />
-          WildBerries
+          Ozon
         </h1>
         <h2>
           <span>[</span> комплексное продвижение <br />
