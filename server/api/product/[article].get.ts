@@ -1,16 +1,18 @@
 import fs from 'node:fs'
 import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '~~/server/lib/helpers'
-import { proxies } from '~~/server/lib/proxy'
+import { ProxySearchQuery } from '~/server/lib/models/ProxySearchQuery'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { ConnectionPoolClosedEvent } from 'mongodb'
 
-const randomNumber = Math.floor(Math.random() * (proxies.length - 1))
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
   if (!session) return sendRedirect(event, '/auth', 302)
-
+  
+  const allProxies: any = await ProxySearchQuery.find()
+  const proxies: string[] = allProxies[0].proxies
+  const randomNumber = Math.floor(Math.random() * (proxies.length - 1))
   const proxyAgent = new HttpsProxyAgent(`https://${proxies[randomNumber]}`)
 
   const params = event.context.params as any

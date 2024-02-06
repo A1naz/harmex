@@ -5,16 +5,6 @@ import { email, helpers, minLength, required } from '@vuelidate/validators'
 
 const store = useMainStore()
 
-onMounted(() => {
-  const isPageReloaded = localStorage.getItem('isPageReloaded')
-
-  if (!isPageReloaded) {
-    localStorage.setItem('isPageReloaded', 'true')
-
-    window.location.reload()
-  }
-})
-
 definePageMeta({
   colorMode: 'dark',
   auth: {
