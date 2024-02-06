@@ -17,10 +17,9 @@ export async function serverPingCycle() {
       }
     )
 
-    console.log('Сервис пингуется: ', data);
-    
+    console.log('Сервис пингуется: ', data)
   } catch (error) {}
 
-  await sleep(6000)
+  await sleep(60 * 1000)
   serverPingCycle()
 }
