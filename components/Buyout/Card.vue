@@ -10,9 +10,16 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-
 })
-const emit = defineEmits(['callback', 'remove', 'openModal', 'archive', 'unarchive', 'unpause', 'openLogModal'])
+const emit = defineEmits([
+  'callback',
+  'remove',
+  'openModal',
+  'archive',
+  'unarchive',
+  'unpause',
+  'openLogModal',
+])
 const currency = useCurrency()
 const router = useRouter()
 function cloneBuyout() {
@@ -25,7 +32,6 @@ function cloneBuyout() {
 }
 
 async function deleteBuyOut() {
-   
   const { data, error } = await useFetch('/api/buyout/delete', {
     method: 'DELETE',
     body: JSON.stringify({
@@ -40,8 +46,7 @@ async function deleteBuyOut() {
       type: 'error',
       duration: 3000,
     })
-  }
-  else {
+  } else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно удален',
@@ -66,8 +71,7 @@ async function unpauseBuyout() {
       type: 'error',
       duration: 3000,
     })
-  }
-  else {
+  } else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно возобновлен',
@@ -92,8 +96,7 @@ async function unarchiveBuyout() {
       type: 'error',
       duration: 3000,
     })
-  }
-  else {
+  } else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно восстановлен',
@@ -118,8 +121,7 @@ async function archiveBuyout() {
       type: 'error',
       duration: 3000,
     })
-  }
-  else {
+  } else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно архивирован',
@@ -149,12 +151,17 @@ const getStatus = computed(() => {
 
 <template>
   <div class="buyout-card card bg-base-200 shadow-lg min-w-[320px]">
-    <div class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-4 relative">
+    <div
+      class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-4 relative"
+    >
       <div class="dropdown dropdown-end absolute right-2 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
           <Icon name="ph:dots-three-outline-vertical-fill" size="28" />
         </label>
-        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+        <ul
+          tabindex="0"
+          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+        >
           <li>
             <a @click="$emit('openModal', index)">
               <Icon name="fluent:send-logging-24-filled" />Инфо о выкупе
@@ -165,7 +172,13 @@ const getStatus = computed(() => {
               <Icon name="fluent:copy-24-filled" />Дублировать
             </a>
           </li>
-          <li v-if="info.status === 'archived' || info.status === 'active' || info.status === 'paused'">
+          <li
+            v-if="
+              info.status === 'archived' ||
+              info.status === 'active' ||
+              info.status === 'paused'
+            "
+          >
             <a v-if="info.status !== 'archived'" @click="archiveBuyout">
               <Icon name="material-symbols:archive" />Архивировать
             </a>
@@ -175,56 +188,61 @@ const getStatus = computed(() => {
           </li>
 
           <li v-if="info.status !== 'work'">
-            <a
-              for="removeAllModelCreateProducts"
-            >
+            <a :for="`removeAllModelCreateProducts:${props.info.uuid}`">
               <Icon name="fluent:delete-24-filled" />
-              <label
-              for="removeAllModelCreateProducts"
-            >Удалить</label>
+              <label :for="`removeAllModelCreateProducts:${props.info.uuid}`"
+                >Удалить</label
+              >
             </a>
           </li>
-          
         </ul>
       </div>
 
       <div class="truncate">
-        <span class="text-sm text-gray-500">Создан: {{ defaultDate(info.createdAt)
-          }}</span>
+        <span class="text-sm text-gray-500"
+          >Создан: {{ defaultDate(info.createdAt) }}</span
+        >
         <div class="flex gap-3">
-          <h2 class="card-title mt-2">
-            Выкуп №{{ info.place }}
-          </h2>
-          <span class="mt-2 rounded-2xl py-1 px-2"
-              :class="{
-                'text-green-600 bg-green-200': info.status === 'active' || info.status === 'work',
-                'text-error bg-red-400': info.status === 'completed' || info.status === 'nofunds',
-                'text-warning bg-yellow-400': info.status === 'archived' || info.status === 'paused',
-              }"
-            >{{ getStatus }}</span>
-            <a
-              :href="`https://www.ozon.ru/product/${info.article}`" target="_blank"
-              class="text-base text-primary link link-hover mt-3 "
-            >
-              {{ info.article }}
-            </a>
+          <h2 class="card-title mt-2">Выкуп №{{ info.place }}</h2>
+          <span
+            class="mt-2 rounded-2xl py-1 px-2"
+            :class="{
+              'text-green-600 bg-green-200':
+                info.status === 'active' || info.status === 'work',
+              'text-error bg-red-400':
+                info.status === 'completed' || info.status === 'nofunds',
+              'text-warning bg-yellow-400':
+                info.status === 'archived' || info.status === 'paused',
+            }"
+            >{{ getStatus }}</span
+          >
+          <a
+            :href="`https://www.ozon.ru/product/${info.article}`"
+            target="_blank"
+            class="text-base text-primary link link-hover mt-3"
+          >
+            {{ info.article }}
+          </a>
         </div>
-        
-        <div class="flex justify-between mt-2">
-          
 
-         
-        </div>
+        <div class="flex justify-between mt-2"></div>
         <div class="flex justify-between gap-4 mt-2 items-center">
           <div
             :class="{
-              'opacity-0': info.status !== 'active' && info.status !== 'paused' && info.status !== 'work' && info.status !== 'archived',
-            }" class="text-sm badge badge-lg badge-outline"
+              'opacity-0':
+                info.status !== 'active' &&
+                info.status !== 'paused' &&
+                info.status !== 'work' &&
+                info.status !== 'archived',
+            }"
+            class="text-sm badge badge-lg badge-outline"
           >
             Выкуплено {{ info.completed }} шт.
           </div>
           <button
-            v-show="info.status === 'paused' || info.status === 'nofunds'" class="btn btn-sm btn-neutral" @click="unpauseBuyout"
+            v-show="info.status === 'paused' || info.status === 'nofunds'"
+            class="btn btn-sm btn-neutral"
+            @click="unpauseBuyout"
           >
             Возобновить
           </button>
@@ -232,9 +250,11 @@ const getStatus = computed(() => {
       </div>
 
       <div class="flex gap-4">
-        <div class="flex-none" style="width: 100px; height: 150px;">
+        <div class="flex-none" style="width: 100px; height: 150px">
           <nuxt-img
-            class="rounded-xl h-full" width="100" height="150"
+            class="rounded-xl h-full"
+            width="100"
+            height="150"
             format="webp"
             loading="lazy"
             :src="info?.product?.image || '/logo/logocolor.svg'"
@@ -248,42 +268,52 @@ const getStatus = computed(() => {
             <div class="truncate text-bold max-w-[150px]">
               {{ info.product?.name }}
             </div>
-            
           </div>
           <div class="flex flex-col gap-4">
             <div>
               <span class="text-sm text-gray-500">Цена: </span>
-              <span class="bg-green-200 rounded-lg p-1">{{ info.product?.priceText }}</span>
+              <span class="bg-green-200 rounded-lg p-1">{{
+                info.product?.priceText
+              }}</span>
             </div>
             <div>
               <span class="text-sm text-gray-500">Количество: </span>
-              <span class="bg-amber-100 rounded-lg p-1">{{ info.quantity }} шт.</span>
+              <span class="bg-amber-100 rounded-lg p-1"
+                >{{ info.quantity }} шт.</span
+              >
             </div>
             <div>
               <span class="text-sm text-gray-500">Сумма: </span>
-              <span class="bg-indigo-300 rounded-lg p-1">{{ currency.format(info.quantity * info.product?.price) }}</span>
+              <span class="bg-indigo-300 rounded-lg p-1">{{
+                currency.format(info.quantity * info.product?.price)
+              }}</span>
             </div>
           </div>
         </div>
       </div>
-      <button class="btn mt-2 bg-indigo-400 border-indigo-400 btn-primary" @click="$emit('openModal', index)">
+      <button
+        class="btn mt-2 bg-indigo-400 border-indigo-400 btn-primary"
+        @click="$emit('openModal', index)"
+      >
         Открыть
       </button>
     </div>
     <input
       type="checkbox"
-      id="removeAllModelCreateProducts"
+      :id="`removeAllModelCreateProducts:${props.info.uuid}`"
       class="modal-toggle"
     />
     <div class="modal backdrop-filter backdrop-blur-sm">
       <div class="modal-box max-w-xs">
         <h3 class="font-bold text-md">Вы уверенны что хотите удалить ?</h3>
         <div class="modal-action flex justify-around">
-          <label for="removeAllModelCreateProducts" class="btn px-6"
+          <label
+            :for="`removeAllModelCreateProducts:${props.info.uuid}`"
+            class="btn px-6"
             >Отмена</label
           >
           <label
-            for="removeAllModelCreateProducts"
+            :for="`removeAllModelCreateProducts:${props.info.uuid}`"
             class="btn btn-primary px-6"
             @click="deleteBuyOut"
             >Удалить</label
