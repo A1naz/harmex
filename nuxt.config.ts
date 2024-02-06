@@ -1,14 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 const baseUrl = '/'
-const description = 'Уникальные самовыкупы для Вайлдберриз с TopvTop - Повысьте репутацию и продажи с нашим сервисом. Эффективная аналитика товаров на Wildberries для успешного продвижения на Валберис.'
+const description = 'Уникальные самовыкупы для Ozon с OzonMP - Повысьте репутацию и продажи с нашим сервисом. Эффективная аналитика товаров на Ozon для успешного продвижения на Валберис.'
 
 export default defineNuxtConfig({
   app: {
     baseURL: baseUrl,
     head: {
       viewport: 'width=device-width,initial-scale=1',
-      title: 'Сервис самовыкупов Wildberries - Максимизируйте продвижение на Валберис с TopvTop',
+      title: 'Сервис самовыкупов Ozon - Максимизируйте продвижение на Ozon с OzonMP',
       link: [{ rel: 'icon', href: '/favicon.svg' }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
