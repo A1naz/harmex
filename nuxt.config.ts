@@ -177,6 +177,9 @@ export default defineNuxtConfig({
     fkApiKey: process.env.fkApiKey,
     fkID: process.env.fkID,
     SESSION_TOKEN: process.env.SESSION_TOKEN,
+    serverLoadApiKey: process.env.serverLoadApiKey,
+    server_ip: process.env.server_ip,
+    service_id: process.env.service_id,
   },
 
   security: {
