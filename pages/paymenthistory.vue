@@ -249,7 +249,7 @@ function openReview(data: any) {
           <template #body="{ data }">
             <div class="">
               <a
-                :href="`https://www.wildberries.ru/catalog/${data.article}/detail.aspx`" target="_blank"
+              :href="`https://www.ozon.ru/product/${data.article}`" target="_blank"
                 class="text-sm text-secondary link link-hover"
               >
                 {{ data.article }}
@@ -313,7 +313,7 @@ function openReview(data: any) {
             <div class="flex flex-col">
               <dd class="font-semibold text-sm">
                 <a
-                :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`" target="_blank"
+                :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
                 class="text-sm text-secondary link link-hover"
               >
                 {{ item.article }}

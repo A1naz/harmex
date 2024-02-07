@@ -177,7 +177,7 @@ const v$ = useVuelidate(rules, formData)
 
         <h1>
           Самовыкупы на <br />
-          Ozon
+          OZON
         </h1>
         <h2>
           <span>[</span> комплексное продвижение <br />

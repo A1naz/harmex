@@ -22,7 +22,7 @@ function openBuyout() {
     <div class="p-4 relative text-xl font-medium flex flex-col gap-2">
       <div class="flex gap-4">
         <a
-          class="" :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+        :href="`https://www.ozon.ru/product/${info.article}`"
           target="_blank"
         >
           <div class="dropdown dropdown-hover">
@@ -56,7 +56,7 @@ function openBuyout() {
           <div class="flex justify-between flex-wrap gap-2 items-center">
             <div class="text-sm">
               <a
-                :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
+              :href="`https://www.ozon.ru/product/${info.article}`" target="_blank"
                 class="text-sm text-secondary link link-hover"
               >
                 {{ info.article }}

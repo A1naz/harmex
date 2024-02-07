@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
   if (!user.wbApiKeys) {
     throw createError({
       statusCode: 400,
-      message: 'Добавьте апи ключ Wildberries для работы автоответчика!',
+      message: 'Добавьте апи ключ OZON для работы автоответчика!',
     })
   }
 

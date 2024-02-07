@@ -38,7 +38,7 @@ const { $dayjs } = useNuxtApp()
       <Column field="article" header="Артикул">
         <template #body="{ data }">
           <a
-            :href="`https://www.wildberries.ru/catalog/${data.article}/detail.aspx`" target="_blank"
+          :href="`https://www.ozon.ru/product/${data.article}`" target="_blank"
             class="text-sm text-secondary link link-hover"
           >
             {{ data.article }}

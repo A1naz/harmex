@@ -1,5 +1,6 @@
 import { getServerSession } from '#auth'
 import { findPositionByQuery } from '@/server/lib/helpers'
+import { ProxySearchQuery } from '~/server/lib/models/ProxySearchQuery'
 
 export default eventHandler(async (event) => {
   try {
@@ -10,7 +11,10 @@ export default eventHandler(async (event) => {
     if (!article || !query)
       return { found: false, page: -1, advert: false }
     
-    const result: any = await findPositionByQuery(query.toString().replaceAll(' ', '%20'), Number(article))
+      const allProxies: any = await ProxySearchQuery.find()
+      const proxies: string[] = allProxies[0].proxies
+
+    const result: any = await findPositionByQuery(query.toString().replaceAll(' ', '%20'), Number(article), proxies)
     return result
   }
   catch (e) {

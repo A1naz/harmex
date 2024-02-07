@@ -24,7 +24,7 @@ onKeyStroke('Escape', (e) => {
       <div class="">
         <a class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="$emit('close')">✕</a>
         <div>
-          В связи с новыми правилами продвижения на Wildberries:
+          В связи с новыми правилами продвижения на OZON:
           <ul>
             <li>
               1. Осуществляйте заборы до 7 дней с момента прибытия на ПВЗ.

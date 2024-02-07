@@ -265,7 +265,7 @@ onMounted(() => {})
               />
               <div class="article">
                 <a
-                  :href="`https://www.wildberries.ru/catalog/${productData.article}/detail.aspx`"
+                :href="`https://www.ozon.ru/product/${productData.article}`"
                   target="_blank"
                   class="text-secondary link link-hover"
                 >

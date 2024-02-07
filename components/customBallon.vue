@@ -12,7 +12,7 @@ function selectPoint() {
   <div class="card">
     <div>
       <div class="text-lg font-semibold">
-        Пункт выдачи Ozon
+        Пункт выдачи OZON
       </div>
       <div class="text-sm">
         {{ point.a }}

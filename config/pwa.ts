@@ -1,4 +1,4 @@
-const description = 'Сервис для продвижения Wildberries.'
+const description = 'Сервис для продвижения OZON.'
 
 const icons = [
   {
