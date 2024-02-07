@@ -305,7 +305,7 @@ const getStatus = computed(() => {
     />
     <div class="modal backdrop-filter backdrop-blur-sm">
       <div class="modal-box max-w-xs">
-        <h3 class="font-bold text-md">Вы уверенны что хотите удалить ?</h3>
+        <h3 class="font-bold text-md">Вы уверенны что хотите удалить выкуп № {{ info.place }} ?</h3>
         <div class="modal-action flex justify-around">
           <label
             :for="`removeAllModelCreateProducts:${props.info.uuid}`"

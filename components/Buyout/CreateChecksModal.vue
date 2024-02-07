@@ -52,29 +52,29 @@ onMounted(async () => {
     }"
     class="modal"
   >
-    <div class="modal-box">
-      <h3 class="font-bold text-lg">Проверяем выкупы по правилам</h3>
+    <div class="modal-box max-w-[400px]">
+      <h3 class="font-bold text-lg mb-2">Проверяем выкупы по правилам</h3>
       <span
         v-if="!loading"
         :class="{
-          'text-error': !success,
-          'text-success': success,
+          'text-error bg-red-400': !success,
+          'text-green-600 bg-green-200': success,
         }"
-        class="text-lg"
+        class="text-md mt-3 rounded-2xl py-1 px-2"
         >{{ success ? 'Успешно' : 'Ошибка' }}</span
       >
       <div class="flex justify-center mt-6">
         <span v-if="loading" class="loading loading-spinner loading-lg" />
-        <span v-else>{{ message }}</span>
+        <span v-else class="text-xs mb-2">{{ message }}</span>
       </div>
-      <div class="modal-action">
-        <button v-if="!loading" class="btn btn-sm" @click="emit('close')">
+      <div class="flex justify-around items-center">
+        <button v-if="!loading" class="btn btn-md" @click="emit('close')">
           Закрыть
         </button>
         <button
           :disabled="isCreateButtonDisabled"
           v-if="success"
-          class="btn btn-sm btn-primary"
+          class="btn btn-md btn-primary"
           @click="emit('create')"
         >
           Создать
@@ -82,7 +82,7 @@ onMounted(async () => {
         <button
           :disabled="isCreateButtonDisabled"
           v-if="!success && !loading"
-          class="btn btn-sm btn-primary"
+          class="btn btn-md btn-primary"
           @click="emit('create')"
         >
           Игнорировать ошибку и создать

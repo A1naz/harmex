@@ -347,32 +347,44 @@ function closeTemplateModalFN() {
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
       данные.
     </p>
-    <div class="flex flex-col md:flex-row md:justify-between">
-      <div class="mt-6 md:flex items-center gap-2.5">
+    <div class="flex flex-col  md:flex-row md:justify-between">
+      <div class="mt-6 md:flex items-center gap-2.5 w-full">
         <div
-          class="relative flex justify-end items-center flex-grow-0 w-80 gap-2.5"
+          class="relative flex justify-end items-center flex-grow-0 md:w-80 gap-2.5 w-full"
         >
           <input
             v-model="article"
             placeholder="Артикул"
-            class="input input-sm input-bordered w-full"
+            class="input input-sm input-bordered w-full mb-2 md:mb-0"
             @keydown.enter="addProduct"
           />
-          
+        </div>
+        <div class="flex gap-2.5">
           <button class="btn btn-primary btn-sm normal-case" @click="addProduct">
             Добавить
           </button>
+          <label
+            for="template-select-modal"
+            @click="getTemplates"
+            class="btn btn-sm normal-case mr-0 md:mr-1 mb-2 md:mb-0"
+            >Шаблоны</label
+          >
+          <label
+            v-if="store.createProducts.length > 0"
+            class="btn btn-sm text-red-400 bg-base-200 normal-case flex md:hidden"
+            for="removeAllModelCreateProducts"
+            >Удалить все</label
+          >
         </div>
-        <label
-          for="template-select-modal"
-          @click="getTemplates"
-          class="btn btn-sm normal-case mr-0 md:mr-1 mb-2 md:mb-0"
-          >Шаблоны</label
-        >
+        
       </div>
-      <div>
-        
-        
+      <div class="flex self-end">
+        <label
+            v-if="store.createProducts.length > 0"
+            class="btn btn-sm text-red-400 bg-base-200 normal-case self-end hidden md:flex"
+            for="removeAllModelCreateProducts"
+            >Удалить все</label
+          >
         <!-- <label
         v-if="store.createProducts.length > 0"
         class="btn btn-sm btn-error bg-red-400 normal-case mt-6 mr-2 hidden md:flex"
@@ -699,7 +711,7 @@ function closeTemplateModalFN() {
           class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
           >✕</label
         >
-        <h3 class="font-bold text-lg text-center mr-4">
+        <h3 class="font-bold text-lg mr-4">
           Введите название шаблона
         </h3>
         <input
@@ -708,9 +720,9 @@ function closeTemplateModalFN() {
           @keyup.enter="createTemplate"
           :disabled="isCreatingTemplatesDisabled"
           placeholder="Название шаблона"
-          class="input input-bordered w-full mt-2"
+          class="input input-bordered w-full mt-2 bg-base-200 border-base-200"
         />
-        <div class="modal-action flex justify-between">
+        <div class="modal-action flex self-end">
           <label
             for="template-modal"
             class="btn btn-ghost my-2 md:my-0"

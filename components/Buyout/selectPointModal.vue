@@ -280,7 +280,7 @@ async function getAddressText(lt: number, lg: number) {
       'modal-open': props.state,
     }"
   >
-    <div v-if="state" class="modal-box w-11/12 max-w-7xl">
+    <div v-if="state" class="modal-box w-11/12 max-w-4xl max-h-[40rem]">
       <div class="">
         <a
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -322,7 +322,7 @@ async function getAddressText(lt: number, lg: number) {
               >
                 <button
                   :key="index"
-                  class="btn pvz text-xs btn-neutral rounded-md p-2 flex w-10/12"
+                  class="btn pvz text-xs rounded-none rounded-l-md p-2 flex w-10/12 text-left "
                   @click="
                     ;[
                       (lastAddress = { lt: item.lt, lg: item.lg }),
@@ -333,7 +333,7 @@ async function getAddressText(lt: number, lg: number) {
                   {{ item.address }}
                 </button>
                 <button
-                  class="btn btn-neutral btn-square"
+                  class="btn btn-square rounded-none rounded-r-md"
                   @click="handleDelete(item)"
                 >
                   <svg
@@ -363,8 +363,10 @@ async function getAddressText(lt: number, lg: number) {
 
 <style>
 .yandex-container {
-  height: 75vh;
+  height: 60vh;
   width: 100%;
+  border-radius: 20px; /* Установите желаемый радиус скругления углов */
+  overflow: hidden;
 }
 
 .yandex-balloon {
