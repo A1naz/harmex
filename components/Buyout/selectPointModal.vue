@@ -196,7 +196,7 @@ onMounted(async () => {
       const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
         `<div class="card rounded-lg">
           <div>
-            <div class="text-lg font-semibold">Пункт выдачи Ozon</div>
+            <div class="text-lg font-semibold">Пункт выдачи OZON</div>
             <div class="text-sm">${addressText.value}</div>
             <a class="selectPoint mt-4 flex justify-center btn btn-primary">Выбрать</a>
           </div>

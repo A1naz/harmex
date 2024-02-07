@@ -65,7 +65,7 @@ async function deleteLike() {
       самые важные отзывы.
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного лайка - 
+      Стоимость одного лайка -
       <span class="font-bold"> {{ store.tariffString('likeReview') }} </span>
       Все услуги оказываются по Московскому времени.
     </p>
@@ -127,7 +127,7 @@ async function deleteLike() {
         <Column field="article" header="Артикул">
           <template #body="{ data }">
             <a
-              :href="`https://www.wildberries.ru/catalog/${data.article}/detail.aspx`"
+              :href="`https://www.ozon.ru/product/${data.article}`"
               target="_blank"
               class="text-secondary link link-hover"
             >
@@ -214,7 +214,7 @@ async function deleteLike() {
                   <div class="article flex flex-col gap-0.5">
                     <div class="text-xs">Артикул</div>
                     <a
-                      :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`"
+                      :href="`https://www.ozon.ru/product/${item.article}`"
                       target="_blank"
                       class="text-secondary link link-hover text-sm"
                     >
@@ -293,12 +293,12 @@ async function deleteLike() {
             </div>
             <div class="ml-4 mb-2" v-if="item.status === 'created'">
               <button
-              class="btn btn-sm btn-error"
-              @click="openRemoveReviewModal(item.id)"
+                class="btn btn-sm btn-error"
+                @click="openRemoveReviewModal(item.id)"
               >
-              Удалить
-            </button>
-          </div>
+                Удалить
+              </button>
+            </div>
           </div>
         </li>
       </ul>

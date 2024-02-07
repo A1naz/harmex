@@ -8,7 +8,7 @@ export default async (_nitroApp: Nitro) => {
     await mongoose.connect(config.MONGODB_URI)
     // eslint-disable-next-line no-console
     console.log('Connected to MongoDB')
-    serverPingCycle()
+    // serverPingCycle()
   }
   
   catch (error) {

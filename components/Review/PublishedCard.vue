@@ -53,7 +53,9 @@ function removeReview() {
 
 <template>
   <div class="buyout-card card bg-base-200 shadow-lg">
-    <div class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative">
+    <div
+      class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
+    >
       <div class="flex justify-between item gap-2 mb-2">
         <h2 v-if="info.draftName" class="card-title">{{ info.draftName }}</h2>
         <h2 v-else class="card-title">Отзыв</h2>
@@ -73,8 +75,12 @@ function removeReview() {
             }"
             class="text-black p-1.5 px-4 rounded-lg text-center"
             >{{ getStatus }}
-            </span>
-          <button v-if="info.status === 'published'" @click="emit('removeReview', info.id)" class="btn btn-sm btn-error ml-1">
+          </span>
+          <button
+            v-if="info.status === 'published'"
+            @click="emit('removeReview', info.id)"
+            class="btn btn-sm btn-error ml-1"
+          >
             Удалить
           </button>
           <!-- <div
@@ -107,7 +113,7 @@ function removeReview() {
               {{ info.name }}
             </div>
             <a
-              :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+              :href="`https://www.ozon.ru/product/${info.article}`"
               target="_blank"
               class="text-sm text-primary link link-hover"
             >
@@ -227,5 +233,4 @@ function removeReview() {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

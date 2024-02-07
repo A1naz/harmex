@@ -19,7 +19,7 @@ const props = defineProps<IProps>()
               Артикул
             </div>
             <a
-              :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`" target="_blank"
+            :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
               class="text-secondary link link-hover text-sm"
             >
               {{ item.article }}

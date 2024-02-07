@@ -29,18 +29,20 @@ const getStatus = computed(() => {
     <div class="card-body">
       <h2 class="card-title flex">
         <nuxt-img
-          fit="fill" :src="info?.product.image" width="36"
+          fit="fill"
+          :src="info?.product.image"
+          width="36"
           loading="lazy"
           class="rounded-lg transition-opacity ease-in-out duration-200"
         />
         <div>
-          <div>
-            Автоответчик  №{{ info.place }}
-          </div>
+          <div>Автоответчик №{{ info.place }}</div>
           <div class="text-sm">
-            Артикул: <a
-              :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
-              class=" text-secondary link link-hover"
+            Артикул:
+            <a
+              :href="`https://www.ozon.ru/product/${info.article}`"
+              target="_blank"
+              class="text-secondary link link-hover"
             >
               {{ info.article }}
             </a>
@@ -48,8 +50,10 @@ const getStatus = computed(() => {
         </div>
       </h2>
       <div class="flex items-center mt-2 gap-1">
-        Рейтинг: <span>От {{ info.rating[0] }} </span><Icon color="rgb(250 204 21)" size="20" name="fluent:star-24-filled" />
-        <span>До {{ info.rating[1] }} </span><Icon color="rgb(250 204 21)" size="20" name="fluent:star-20-filled" />
+        Рейтинг: <span>От {{ info.rating[0] }} </span
+        ><Icon color="rgb(250 204 21)" size="20" name="fluent:star-24-filled" />
+        <span>До {{ info.rating[1] }} </span
+        ><Icon color="rgb(250 204 21)" size="20" name="fluent:star-20-filled" />
       </div>
       <div class="flex flex-col gap-2">
         <p class="p-2 bg-base-200 rounded-lg break-all">
@@ -60,15 +64,19 @@ const getStatus = computed(() => {
       <div class="card-actions justify-between items-center mt-2">
         <span
           :class="{
-
             'bg-primary': info.status === 'work',
             'text-primary-content': info.status === 'work',
 
             'bg-warning': info.status === 'created',
             'bg-error': info.status === 'error',
-          }" class="text-black p-1 px-8 rounded-lg text-center"
-        >{{ getStatus }}  </span>
-        <span v-if="info.status === 'error'">Проверьте апи ключ в настройках профиля и пересоздайте автоответчик</span>
+          }"
+          class="text-black p-1 px-8 rounded-lg text-center"
+          >{{ getStatus }}
+        </span>
+        <span v-if="info.status === 'error'"
+          >Проверьте апи ключ в настройках профиля и пересоздайте
+          автоответчик</span
+        >
         <button class="btn btn-primary btn-sm" @click="emit('delete', info.id)">
           Удалить
         </button>
@@ -77,6 +85,4 @@ const getStatus = computed(() => {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

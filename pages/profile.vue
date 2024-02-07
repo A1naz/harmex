@@ -493,7 +493,7 @@ async function openTwoFaQRModal() {
                 v-model="wbApiKeys[index]"
                 :disabled="store.client.wbApiKeys[index] === wbApiKeys[index]"
                 type="text"
-                placeholder="Стандартный апи ключ Wildberries"
+                placeholder="Стандартный апи ключ OZON"
                 class="input input-bordered input-primary w-full max-w-xl"
                 />
               <button
