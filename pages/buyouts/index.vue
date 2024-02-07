@@ -15,6 +15,7 @@ const selectedIndex = ref(-1)
 const storeMain = useMainStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
+
 const dateFilter = ref('all')
 const autoTarget = ref(true)
 const search = reactive({
@@ -194,8 +195,6 @@ const formatAvailable = computedEager(() => {
   else return 'выкупов'
 })
 
-
-
 const filters = [
   {
     title: 'Все выкупы',
@@ -296,17 +295,22 @@ onMounted(async () => {
 await getBuyouts()
 
 const isInfoModal = ref<boolean>(false)
-const filter = {
-  title: "Все выкупы"
-};
 
-const updateTitle = (title: string) => {
-  filter.title = title;
-};
+const statusText = computed(() => {
+  return filters.find((el: any) => el.queryStatus === route.query.status)?.title
+})
+
 function toggleInfoModal() {
   isInfoModal.value = !isInfoModal.value
 }
 
+const openDropdown = ref('open')
+
+const openCloseDropdown = () => {
+  openDropdown.value == 'close'
+    ? (openDropdown.value = 'open')
+    : (openDropdown.value = 'close')
+}
 </script>
 
 <template>
@@ -365,51 +369,57 @@ function toggleInfoModal() {
             <span class="hidden lg:inline">Выкупы</span>
           </NuxtLink>
           <div class="relative flex items-center flex-grow-0 w-full lg:hidden">
-              <input
-                v-model="search.text"
-                type="text"
-                class="input input-sm input-bordered w-full"
-                placeholder="Поиск по товарам"
-                @input="onSearchInput($event)"
-              />
-              <Icon
-                v-if="!search.loading"
-                class="absolute right-2 p-2"
-                name="tabler:search"
-                size="30"
-              />
-              <span
-                v-if="search.loading"
-                class="absolute right-2 loading loading-spinner loading-xs p-2"
-              />
-            </div>
+            <input
+              v-model="search.text"
+              type="text"
+              class="input input-sm input-bordered w-full"
+              placeholder="Поиск по товарам"
+              @input="onSearchInput($event)"
+            />
+            <Icon
+              v-if="!search.loading"
+              class="absolute right-2 p-2"
+              name="tabler:search"
+              size="30"
+            />
+            <span
+              v-if="search.loading"
+              class="absolute right-2 loading loading-spinner loading-xs p-2"
+            />
+          </div>
         </div>
         <div clas="flex gap-2">
-          
           <div class="search flex items-center gap-3">
-            <details class="dropdown">
-              <summary tabindex="0" class="font-medium normal-case bg-base-200 btn btn-sm">{{ filter.title }}</summary>
-              <ul tabindex="0" class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]">
+            <div class="dropdown">
+              <div
+                tabindex="0"
+                role="button"
+                class="font-medium normal-case bg-base-200 btn btn-sm w-[120px]"
+              >
+                {{ statusText }}
+              </div>
+              <ul
+                tabindex="0"
+                class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
+              >
                 <li>
                   <NuxtLink
                     v-for="filter in filters"
-                    :to=" '/buyouts' + filter.params"
+                    :to="'/buyouts' + filter.params"
                     :external="false"
                     :class="{
-                        'btn-active': route.query.status === filter.queryStatus,
+                      'btn-active': route.query.status === filter.queryStatus,
                     }"
-                    
                     class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                    >
-                  <span @click="updateTitle(filter.title)">
-                    {{ filter.title }}
-                  </span>
-                  
-                </NuxtLink>
+                  >
+                    <span @click="openCloseDropdown">
+                      {{ filter.title }}
+                    </span>
+                  </NuxtLink>
                 </li>
               </ul>
-            </details>
-            
+            </div>
+
             <select
               class="select select-bordered select-sm sm:hidden"
               @change="selectFilterDate"
@@ -431,7 +441,7 @@ function toggleInfoModal() {
             </div>
           </div>
         </div>
-        
+
         <!-- <select class="select select-bordered select-sm" @change="selectStatus">
           <option
             v-for="filter in filters"
@@ -454,7 +464,7 @@ function toggleInfoModal() {
         {{ filter.title }}
         </option>
       </select> -->
-      <div class="items-center flex-wrap self-start hidden sm:flex ">
+      <div class="items-center flex-wrap self-start hidden sm:flex">
         <div class="search flex items-center flex-wrap gap-3">
           <select
             class="select select-bordered select-sm"
@@ -465,7 +475,7 @@ function toggleInfoModal() {
             <option value="3days">3 дня</option>
             <option value="7days">Неделя</option>
           </select>
-          <div class="flex gap-3 items-center ">
+          <div class="flex gap-3 items-center">
             <select
               v-model="search.type"
               class="select select-bordered select-sm"
@@ -474,7 +484,9 @@ function toggleInfoModal() {
               <option value="uuid">ID выкупа</option>
               <option value="name">Имя товара</option>
             </select>
-            <div class="relative items-center flex-grow-0 w-full hidden lg:flex">
+            <div
+              class="relative items-center flex-grow-0 w-full hidden lg:flex"
+            >
               <input
                 v-model="search.text"
                 type="text"
