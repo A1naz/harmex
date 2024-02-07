@@ -12,7 +12,7 @@ const props = defineProps({
   <div
     class="buyout-card max-w-[270px] md:max-w-[285px] card shadow-xl bg-base-100"
   >
-    <div class="card-body flex flex-col justify-center md:justify-start p-3">
+    <div class="card-body flex flex-col justify-center md:justify-start max-h-[312px] p-3">
       <div class="flex justify-between items-center mt-2">
         <span class="text-xs">Даты выкупов: </span>
         <div class="text-xs">

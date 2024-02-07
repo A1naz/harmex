@@ -208,8 +208,8 @@ const productQuantityModel = computed({
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden  justify-center"
       >
-        <div v-if="product.adress" class="text-xs mb-1 h-10 w-full break-all">
-          <p class="break-all whitespace-normal">
+        <div v-if="product.adress" class="text-xs h-10 w-full break-all">
+          <p @click="$emit('pointModalOpen', index)" class="break-all whitespace-normal cursor-pointer text-primary">
             {{ product.adress }}
           </p>
         </div>
@@ -223,9 +223,9 @@ const productQuantityModel = computed({
           @click="$emit('pointModalOpen', index)"
         >
           <span v-show="loading" class="loading loading-spinner" />
-          <Icon name="fluent:add-24-filled" size="20" />
+          <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
         </button>
-        <button
+        <!-- <button
           v-if="product.adress"
           :disabled="loading"
           :class="{
@@ -235,8 +235,9 @@ const productQuantityModel = computed({
           @click="$emit('pointModalOpen', index)"
         >
           <span v-show="loading" class="loading loading-spinner" />
-          Изменить
-        </button>
+          <span v-if="!loading">Изменить </span>
+          
+        </button> -->
       </div>
     </td>
     <td>

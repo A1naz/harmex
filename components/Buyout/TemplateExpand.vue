@@ -74,6 +74,10 @@ async function deleteTemplate() {
         </div>
       </div>
       <div class="flex z-10">
+        
+        <label @click="deleteTemplate" class="btn btn-sm text-red-400 z-10"
+          >Удалить</label
+        >
         <nuxt-link to="/buyouts/create">
           <label
             @click="selectTemplate"
@@ -81,9 +85,6 @@ async function deleteTemplate() {
             >Добавить</label
           >
         </nuxt-link>
-        <label @click="deleteTemplate" class="btn btn-sm bg-red-400 z-10"
-          >Удалить</label
-        >
       </div>
     </div>
     <div
