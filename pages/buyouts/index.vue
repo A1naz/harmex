@@ -304,13 +304,6 @@ function toggleInfoModal() {
   isInfoModal.value = !isInfoModal.value
 }
 
-const openDropdown = ref('open')
-
-const openCloseDropdown = () => {
-  openDropdown.value == 'close'
-    ? (openDropdown.value = 'open')
-    : (openDropdown.value = 'close')
-}
 </script>
 
 <template>
@@ -412,7 +405,7 @@ const openCloseDropdown = () => {
                     }"
                     class="btn btn-ghost btn-xs normal-case font-medium w-full"
                   >
-                    <span @click="openCloseDropdown">
+                    <span>
                       {{ filter.title }}
                     </span>
                   </NuxtLink>
