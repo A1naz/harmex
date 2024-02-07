@@ -194,6 +194,8 @@ const formatAvailable = computedEager(() => {
   else return 'выкупов'
 })
 
+
+
 const filters = [
   {
     title: 'Все выкупы',
@@ -294,9 +296,17 @@ onMounted(async () => {
 await getBuyouts()
 
 const isInfoModal = ref<boolean>(false)
+const filter = {
+  title: "Все выкупы"
+};
+
+const updateTitle = (title: string) => {
+  filter.title = title;
+};
 function toggleInfoModal() {
   isInfoModal.value = !isInfoModal.value
 }
+
 </script>
 
 <template>
@@ -314,7 +324,7 @@ function toggleInfoModal() {
     >
       <div class="flex flex-col gap-2">
         <p>
-          Здесь формируются и оплачиваются выкупы на Wildberries. Для добавления
+          Здесь формируются и оплачиваются выкупы на OZON. Для добавления
           нажмите на кнопку "Добавить выкупы".
         </p>
         <p>
@@ -334,7 +344,7 @@ function toggleInfoModal() {
     </InfoModal>
 
     <div class="flex justify-between mb-4 items-center mt-6">
-      <div class="flex gap-5">
+      <div class="flex gap-2 lg:gap-3 flex-col sm:flex-row w-full sm:w-max">
         <!-- <NuxtLink
             v-for="filter in filters"
             :to=" '/buyouts' + filter.params"
@@ -346,14 +356,83 @@ function toggleInfoModal() {
             >
           {{ filter.title }}
         </NuxtLink> -->
-        <NuxtLink
-          to="/buyouts/create"
-          class="btn btn-primary btn-sm gap-2 font-medium normal-case"
-        >
-          <Icon name="fluent:add-24-filled" size="12" />
-          Выкупы
-        </NuxtLink>
-        <select class="select select-bordered select-sm" @change="selectStatus">
+        <div class="flex gap-2">
+          <NuxtLink
+            to="/buyouts/create"
+            class="btn btn-primary btn-sm gap-2 font-medium normal-case"
+          >
+            <Icon name="fluent:add-24-filled" size="12" />
+            <span class="hidden lg:inline">Выкупы</span>
+          </NuxtLink>
+          <div class="relative flex items-center flex-grow-0 w-full lg:hidden">
+              <input
+                v-model="search.text"
+                type="text"
+                class="input input-sm input-bordered w-full"
+                placeholder="Поиск по товарам"
+                @input="onSearchInput($event)"
+              />
+              <Icon
+                v-if="!search.loading"
+                class="absolute right-2 p-2"
+                name="tabler:search"
+                size="30"
+              />
+              <span
+                v-if="search.loading"
+                class="absolute right-2 loading loading-spinner loading-xs p-2"
+              />
+            </div>
+        </div>
+        <div clas="flex gap-2">
+          
+          <div class="search flex items-center gap-3">
+            <details class="dropdown">
+              <summary tabindex="0" class="font-medium normal-case bg-base-200 btn btn-sm">{{ filter.title }}</summary>
+              <ul tabindex="0" class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]">
+                <li>
+                  <NuxtLink
+                    v-for="filter in filters"
+                    :to=" '/buyouts' + filter.params"
+                    :external="false"
+                    :class="{
+                        'btn-active': route.query.status === filter.queryStatus,
+                    }"
+                    
+                    class="btn btn-ghost btn-xs normal-case font-medium w-full"
+                    >
+                  <span @click="updateTitle(filter.title)">
+                    {{ filter.title }}
+                  </span>
+                  
+                </NuxtLink>
+                </li>
+              </ul>
+            </details>
+            
+            <select
+              class="select select-bordered select-sm sm:hidden"
+              @change="selectFilterDate"
+            >
+              <option value="all">За все время</option>
+              <option value="today">Сегодня</option>
+              <option value="3days">3 дня</option>
+              <option value="7days">Неделя</option>
+            </select>
+            <div class="flex gap-3 items-center sm:hidden">
+              <select
+                v-model="search.type"
+                class="select select-bordered select-sm"
+              >
+                <option value="article">Артикул</option>
+                <option value="uuid">ID выкупа</option>
+                <option value="name">Имя товара</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- <select class="select select-bordered select-sm" @change="selectStatus">
           <option
             v-for="filter in filters"
             :value="filter.optionValue"
@@ -361,7 +440,7 @@ function toggleInfoModal() {
           >
             {{ filter.title }}
           </option>
-        </select>
+        </select> -->
       </div>
       <!-- <select
         class="select select-bordered select-sm lg:hidden"
@@ -375,8 +454,8 @@ function toggleInfoModal() {
         {{ filter.title }}
         </option>
       </select> -->
-      <div class="flex items-center gap-2 flex-wrap">
-        <div class="search flex items-center flex-wrap gap-5">
+      <div class="items-center flex-wrap self-start hidden sm:flex ">
+        <div class="search flex items-center flex-wrap gap-3">
           <select
             class="select select-bordered select-sm"
             @change="selectFilterDate"
@@ -386,7 +465,7 @@ function toggleInfoModal() {
             <option value="3days">3 дня</option>
             <option value="7days">Неделя</option>
           </select>
-          <div class="flex gap-5 items-center">
+          <div class="flex gap-3 items-center ">
             <select
               v-model="search.type"
               class="select select-bordered select-sm"
@@ -395,7 +474,7 @@ function toggleInfoModal() {
               <option value="uuid">ID выкупа</option>
               <option value="name">Имя товара</option>
             </select>
-            <div class="relative flex items-center flex-grow-0 w-full">
+            <div class="relative items-center flex-grow-0 w-full hidden lg:flex">
               <input
                 v-model="search.text"
                 type="text"
