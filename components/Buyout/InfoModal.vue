@@ -62,20 +62,21 @@ onKeyStroke('Escape', (e) => {
             >Создан: {{ defaultDate(info.createdAt) }}</span
           >
           <div class="flex gap-3">
-              <div class="text-md font-bold mb-2">
-                Информация о выкупе № {{ info.place }}
-              </div>
-              <span class="rounded-2xl py-1 px-2 max-h-9"
-                :class="{
-                  'text-green-600 bg-green-200': info.status === 'active' || info.status === 'work',
-                  'text-error bg-red-400': info.status === 'completed' || info.status === 'nofunds',
-                  'text-warning bg-yellow-400': info.status === 'archived' || info.status === 'paused',
-                }"
-              >{{ getStatus }}</span>
-          </div>
-          
-          <div class="text-xs text-gray-500">
-            #{{ info.uuid }}
+            <div class="text-md font-bold mb-2">
+              Информация о выкупе № {{ info.place }}
+            </div>
+            <span
+              class="rounded-2xl py-1 px-2 max-h-9"
+              :class="{
+                'text-green-600 bg-green-200':
+                  info.status === 'active' || info.status === 'work',
+                'text-error bg-red-400':
+                  info.status === 'completed' || info.status === 'nofunds',
+                'text-warning bg-yellow-400':
+                  info.status === 'archived' || info.status === 'paused',
+              }"
+              >{{ getStatus }}</span
+            >
           </div>
 
           <div class="text-xs text-gray-500">#{{ info.uuid }}</div>
@@ -144,12 +145,14 @@ onKeyStroke('Escape', (e) => {
             <span class="text-gray-500 text-sm">Поисковый запрос:</span>
             <span class="text-sm">{{ info.searchQuery }}</span>
           </div> -->
-          <div class="flex items-start justify-between flex-col md:flex-row gap-2">
+          <div
+            class="flex items-start justify-between flex-col md:flex-row gap-2"
+          >
             <div class="flex items-start flex-col">
               <span class="text-lg font-bold mb-1">Пол:</span>
               <span class="text-sm">{{ getGender }}</span>
             </div>
-            
+
             <div class="flex justify-between flex-col self-start md:self-end">
               <span class="text-lg font-bold mb-1">Даты выкупов:</span>
               <div class="bg-white rounded-lg p-2">
