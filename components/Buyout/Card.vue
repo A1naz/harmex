@@ -150,11 +150,11 @@ const getStatus = computed(() => {
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-200 shadow-lg min-w-[320px]">
+  <div class="buyout-card card bg-base-100 shadow-lg min-w-[320px]">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-4 relative"
     >
-      <div class="dropdown dropdown-end absolute right-2 top-2">
+      <div class="dropdown dropdown-end absolute right-1 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
           <Icon name="ph:dots-three-outline-vertical-fill" size="28" />
         </label>
@@ -199,9 +199,34 @@ const getStatus = computed(() => {
       </div>
 
       <div class="truncate">
-        <span class="text-sm text-gray-500"
-          >Создан: {{ defaultDate(info.createdAt) }}</span
-        >
+        <div class="flex justify-between gap-1 items-center">
+          <div class="flex gap-x-3">
+            <span class="text-xs text-gray-500"
+            >Создан: {{ defaultDate(info.createdAt) }}
+            </span>
+            <div
+              :class="{
+                'opacity-0':
+                  info.status !== 'active' &&
+                  info.status !== 'paused' &&
+                  info.status !== 'work' &&
+                  info.status !== 'archived',
+              }"
+              class="text-xs rounded-2xl px-2 bg-base-200"
+            >
+              Выкуплено {{ info.completed }} шт.
+            </div>
+            <button
+              v-show="info.status === 'paused' || info.status === 'nofunds'"
+              class="btn btn-sm btn-neutral"
+              @click="unpauseBuyout"
+            >
+              Возобновить
+            </button>
+          </div>
+          
+        </div>
+       
         <div class="flex gap-3">
           <h2 class="card-title mt-2">Выкуп №{{ info.place }}</h2>
           <span
@@ -216,6 +241,7 @@ const getStatus = computed(() => {
             }"
             >{{ getStatus }}</span
           >
+          
           <a
             :href="`https://www.ozon.ru/product/${info.article}`"
             target="_blank"
@@ -226,27 +252,7 @@ const getStatus = computed(() => {
         </div>
 
         <div class="flex justify-between mt-2"></div>
-        <div class="flex justify-between gap-4 mt-2 items-center">
-          <div
-            :class="{
-              'opacity-0':
-                info.status !== 'active' &&
-                info.status !== 'paused' &&
-                info.status !== 'work' &&
-                info.status !== 'archived',
-            }"
-            class="text-sm badge badge-lg badge-outline"
-          >
-            Выкуплено {{ info.completed }} шт.
-          </div>
-          <button
-            v-show="info.status === 'paused' || info.status === 'nofunds'"
-            class="btn btn-sm btn-neutral"
-            @click="unpauseBuyout"
-          >
-            Возобновить
-          </button>
-        </div>
+        
       </div>
 
       <div class="flex gap-4">

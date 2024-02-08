@@ -267,7 +267,7 @@ const charttDelivOptions = ref({
 <template>
   <div class="page-header">
     <div class="flex items-center gap-2 mt-4">
-      <h1 class="text-2xl font-bold">Аналитика</h1>
+      <!-- <h1 class="text-2xl font-bold">Аналитика</h1> -->
       <!-- <InfoButton @openModal="openInfoModal" /> -->
     </div>
     <!-- <p class="description">
@@ -279,7 +279,7 @@ const charttDelivOptions = ref({
         Все услуги оказываются по Московскому времени.
       </p> -->
   </div>
-  <div class="flex justify-between mb-4 items-center mt-6">
+  <div class="flex justify-between mb-4 items-center mt-1">
     <div class="hidden lg:block">
       <NuxtLink
         @click="selectedService = service"

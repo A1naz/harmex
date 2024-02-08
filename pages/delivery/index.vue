@@ -177,12 +177,12 @@ const filters = [
 </script>
 <template>
   <div>
-    <div class="flex items-center gap-2 mt-4">
+    <!-- <div class="flex items-center gap-2 mt-4">
       <h1 class="text-2xl font-bold ">
         Доставки
       </h1>
       <InfoButton @openModal="toggleInfoModal" />
-    </div>
+    </div> -->
 
 
     <InfoModal 
@@ -207,7 +207,7 @@ const filters = [
     </InfoModal>
 
 
-    <div class="flex justify-between mb-2 mt-6 items-center flex-wrap gap-4">
+    <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-4">
       <div class="hidden lg:block">
         <NuxtLink
             v-for="filter in filters"
@@ -286,6 +286,7 @@ const filters = [
             @open-modal="openModal"
             @open-status-modal="openStatusModal"
             @open-penalty-modal="penaltyModal = true"
+            
           />
         </li>
         <div ref="target" class="flex justify-center items-center h-40 md:h-10" />

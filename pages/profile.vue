@@ -362,10 +362,10 @@ async function openTwoFaQRModal() {
       <span>{{ warning }}</span>
     </div>
 
-    <div class="flex items-center gap-2 mt-4">
+    <!-- <div class="flex items-center gap-2 mt-4">
       <h1 class="text-2xl font-bold">Профиль</h1>
       <InfoButton @openModal="toggleInfoModal" />
-    </div>
+    </div> -->
 
     <InfoModal
       :isModal="isInfoModal"
@@ -383,7 +383,7 @@ async function openTwoFaQRModal() {
     </InfoModal>
     <!-- class="mt-6 profile-options flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start" -->
     <section
-      class="mt-6 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
+      class="mt-4 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
     >
       <div class="self-start description-container xl:basis-1/3">
         <div class="heading">Контактные данные</div>
@@ -541,9 +541,9 @@ async function openTwoFaQRModal() {
           Получайте уведомления благодаря нашему телерграмм боту
         </div>
       </div>
-      <div class="tg w-full justify-between flex gap-2 xl:gap-4 xl:w-3/5">
+      <div class="tg w-full justify-between flex gap-2 xl:gap-4 xl:w-3/5 ">
             <div
-              class="relative flex bg-base-200 rounded-lg justify-end w-full items-center flex-grow-0"
+              class="relative flex rounded-lg justify-end w-full items-center flex-grow-0  bg-base-200"
             >
             <input
             :value="
@@ -552,7 +552,7 @@ async function openTwoFaQRModal() {
                 : `${store.client.telegramUserId ?? ''}`
             "
             placeholder="Telegram"
-            class="input input-bordered w-full"
+            class="bg-base-100 input input-bordered w-full"
             disabled
           />
               <button

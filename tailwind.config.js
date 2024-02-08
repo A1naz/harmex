@@ -51,10 +51,10 @@ module.exports = {
           'card-amber': '#fef3c7',
           'card-indigo': '#a5b4fc',
 
-          info: '#1c92f2',
-          success: '#009485',
-          warning: '#ff9900',
-          error: '#ff5724',
+          'info': '#1c92f2',
+          'success': '#009485',
+          'warning': '#ff9900',
+          'error': '#ff5724',
 
           '--rounded-box': '1rem',
           '--rounded-btn': '0.5rem',

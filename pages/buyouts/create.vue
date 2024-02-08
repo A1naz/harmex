@@ -366,7 +366,7 @@ function closeTemplateModalFN() {
           <label
             for="template-select-modal"
             @click="getTemplates"
-            class="btn btn-sm normal-case mr-0 md:mr-1 mb-2 md:mb-0"
+            class="btn btn-sm btn-primary normal-case mr-0 md:mr-1 mb-2 md:mb-0"
             >Шаблоны</label
           >
           <label
@@ -407,7 +407,7 @@ function closeTemplateModalFN() {
     <ClientOnly>
       <div
         v-if="width < 1600"
-        class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4"
+        class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-4"
       >
         <BuyoutCreateCard
           v-for="(product, index) in products"
@@ -425,9 +425,9 @@ function closeTemplateModalFN() {
       >
         <table class="table table-xs table-zebra w-full mt-4">
           <thead class="relative mb-2 text-sm text-base-content">
-            <tr>
+            <tr class="border-b-base-300">
               <th class="hidden 3xl:block">№</th>
-              <th class="w-12 text-center" @click="openInfoModal('picture')">
+              <th class="w-12 text-center " @click="openInfoModal('picture')">
                 <!-- <IconCSS name="material-symbols:image-outline" size="20" /> -->
                 Фото
               </th>
@@ -518,7 +518,7 @@ function closeTemplateModalFN() {
     </ClientOnly>
     <div
       v-show="products.length"
-      class="mt-6 md:flex justify-end md:items-center "
+      class="mt-6 md:flex justify-end md:justify-start "
     >
       <div class="m-5">
         <!-- <label
@@ -528,14 +528,14 @@ function closeTemplateModalFN() {
           >Удалить все</label
         > -->
         <label
-          class="btn btn-sm normal-case mt-2 md:mt-0 ml-1 md:ml-2 px-6"
+          class="btn btn-sm btn-primary normal-case mt-2 md:mt-0 ml-1 md:ml-2 px-6"
           for="template-modal"
         >
           Шаблон
         </label>
 
         <button
-          class="btn btn-sm normal-case mt-1 md:ml-2"
+          class="btn btn-sm btn-primary normal-case mt-1 md:ml-2"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >

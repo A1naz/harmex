@@ -107,8 +107,8 @@ onMounted(() => {})
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mt-4">Корзина</h1>
-    <p class="text-xs font-light mt-1 lg:text-sm">
+    <!-- <h1 class="text-2xl font-bold mt-4">Корзина</h1> -->
+    <p class="text-xs font-light mt-4 lg:text-sm">
       Выберите товар, который будет добавлен в корзину
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
@@ -119,7 +119,7 @@ onMounted(() => {})
     <p class="text-xs font-light mt-1 lg:text-sm">
         Возвраты по данному разделу не осуществляются.
     </p>
-    <div class="collapse collapse-plus bg-base-200 rounded-box mb-4 mt-6">
+    <div class="collapse collapse-plus bg-base-100 rounded-box mb-4 mt-6">
       <input type="checkbox" />
 
       <div class="collapse-title text-xl font-medium">Добавить в корзину</div>

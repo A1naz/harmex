@@ -55,10 +55,10 @@ const listConfigOrders: ConfigTable[] = [
 <template>
     <div>
         <div class="mb-4">
-            <div class="flex">
+            <!-- <div class="flex">
                 <h1 class="text-2xl font-bold mt-4">Партнерская программа</h1>
-            </div>
-            <p class="text-xs font-light mt-1 lg:text-sm">
+            </div> -->
+            <p class="text-xs font-light mt-4 lg:text-sm">
                 Приглашайте друзей и получайте бонусы
             </p>
             <p class="text-xs mt-1 lg:text-sm font-bold">
@@ -72,7 +72,7 @@ const listConfigOrders: ConfigTable[] = [
             >
             <template v-slot:main>
                 <div class="flex flex-col gap-4 w-full ">
-                    <div class="bg-base-200 p-4 flex flex-col rounded-xl">
+                    <div class="bg-base-100 p-4 flex flex-col rounded-xl">
                         <PartnerDashboard 
                             :balance="store.client.partner.balance"
                             :ref-count="partner.refCount"
@@ -81,7 +81,7 @@ const listConfigOrders: ConfigTable[] = [
                             :reward-percent="partner.rewardPercent"
                             />
                     </div>
-                    <div class="bg-base-200 p-4 flex flex-col rounded-xl">
+                    <div class="bg-base-100 p-4 flex flex-col rounded-xl">
                         <PartnerRefUrl 
                             :ref-url="refUrl"
                             :reward-percent="partner.rewardPercent"
