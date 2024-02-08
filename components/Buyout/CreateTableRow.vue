@@ -82,8 +82,8 @@ const productQuantityModel = computed({
 </script>
 
 <template>
-  <tr>
-    <td class="hidden 3xl:block">
+  <tr class=" border-b-base-300 ">
+    <td class="hidden 3xl:block text-center mt-9">
       {{ index + 1 }}
     </td>
     <td>

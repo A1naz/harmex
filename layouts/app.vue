@@ -71,15 +71,19 @@ const isInfoModal = ref<boolean>(false)
 function toggleInfoModal() {
   isInfoModal.value = !isInfoModal.value
 }
+const statusText = computed(() => {
+  return storeMain.client.mmenuItems.flatMap(section => section.items).find(item => item.path === route.path)?.title || 'Профиль'
+})
 </script>
 
 <template>
   <div class="drawer lg:drawer-open z-10">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+    
     <div
       ref="drawerContent"
       @scroll="handleScroll"
-      class="drawer-content w-full overflow-auto h-[100vh] px-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin"
+      class="drawer-content w-full overflow-auto h-[100vh] scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin bg-base-200"
     >
       <Transition name="bounce">
         <Icon
@@ -110,15 +114,22 @@ function toggleInfoModal() {
         <div class="flex-1 justify-center mr-12">
           <Logo />
         </div>
+        
       </div>
-
+      <div class="flex items-center gap-2 p-4 justify-between bg-base-100">
+        <h1 class="text-2xl font-bold">{{ statusText }}</h1>
+        <InfoButton @openModal="toggleInfoModal" />
+      </div>
+      <div class="px-4">
+        <slot />
+      </div>
       <!-- Page content here -->
-      <slot />
+      
     </div>
     <div class="drawer-side z-100 shadow-sm">
       <label for="my-drawer" class="drawer-overlay" />
       <ul
-        class="menu w-72 z-100 h-full bg-base-200 text-base-content flex-nowrap overflow-auto scrollbar-none"
+        class="menu w-72 z-100 h-full text-base-content flex-nowrap overflow-auto scrollbar-none bg-base-100"
       >
         <!-- Sidebar content here -->
         <div class="hidden title w-full justify-center p-2 xl:flex">
@@ -140,7 +151,7 @@ function toggleInfoModal() {
                         'text-white': route.path === '/profile',
                       }"
                       to="/profile"
-                      class="relative hover:bg-neutral"
+                      class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus border-none hover:bg-neutral text-xl font-bold text-center"
                     >
                       <IconCSS name="gg:profile" size="24" />
                     </NuxtLink>
@@ -185,8 +196,8 @@ function toggleInfoModal() {
                     v-if="storeMain.client.role !== UserRoles.staff"
                     class="tooltip"
                   >
-                    <div
-                      class="relative hover:bg-neutral mt-1"
+                    <div 
+                      class="relative btn btn-sm btn-neutral btn-circle border-none bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
                     >
                       <IconCSS name="fe:wallet" size="24" />
                     </div>

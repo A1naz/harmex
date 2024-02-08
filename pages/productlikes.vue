@@ -119,8 +119,8 @@ async function deleteLike() {
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mt-4">Лайки на товар/бренд</h1>
-    <p class="text-xs font-light mt-1 lg:text-sm">
+    <!-- <h1 class="text-2xl font-bold mt-4">Лайки на товар/бренд</h1> -->
+    <p class="text-xs font-light mt-4 lg:text-sm">
       Выберите товар или бренд, чтобы повысить количество добавлений в
       «Избранное»
     </p>
@@ -129,7 +129,7 @@ async function deleteLike() {
       <span class="font-bold"> {{ store.tariffString('likeProduct') }} </span>
       Все услуги оказываются по Московскому времени.
     </p>
-    <div class="mb-4 mt-6 bg-base-200 p-6 rounded-lg">
+    <div class="mb-4 mt-6 bg-base-100 p-6 rounded-lg">
       <div class="flex flex-wrap items-center gap-6 mb-2">
         <div class="relative">
           <div>Ссылка на бренд или товар:</div>
@@ -142,7 +142,7 @@ async function deleteLike() {
               }"
               :disabled="productData"
               tabindex="0"
-              class="input w-full input-sm"
+              class="input w-full input-sm bg-base-200"
               placeholder="Введите ссылку"
               type="text"
               @input="changeUrl"
@@ -180,7 +180,7 @@ async function deleteLike() {
             >
               <IconCSS size="16" name="ic:round-minus" />
             </button>
-            <div class="input-sm rounded-lg w-24 text-center bg-base-100">
+            <div class="input-sm rounded-lg w-24 text-center bg-base-200">
               {{ amount }}
             </div>
             <button

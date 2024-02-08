@@ -167,12 +167,12 @@ function openReview(data: any) {
 
 <template>
   <div>
-    <div class="flex flex-row items-center mt-4">
+    <!-- <div class="flex flex-row items-center mt-4">
       <h1 class="text-2xl font-bold ">
         История платежей
       </h1>
-    </div>
-    <p class="text-xs font-light mt-1 lg:text-sm mb-6">
+    </div> -->
+    <p class="text-xs font-light mt-4 lg:text-sm mb-6">
       Здесь можно увидеть движение вашего баланса
     </p>
     <div class="flex gap-4 mb-8 mt-6 items-center justify-between flex-wrap">
@@ -231,7 +231,7 @@ function openReview(data: any) {
       </div>
     </div>
     <div v-if="width > 1024">
-      <DataTable sort-field="dataoperation" :sort-order="-1" class="bg-base-200 hidden lg:block" :value="history" removable-sort>
+      <DataTable sort-field="dataoperation" :sort-order="-1" class="hidden lg:block" :value="history" removable-sort>
         <Column field="summ" sortable header="Сумма">
           <template #body="{ data }">
             {{ currency.format(data.summ) }}

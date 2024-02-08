@@ -43,10 +43,10 @@ function daysToPenalty(statusdelivery: any[]) {
 
 <template>
 <div class="collapse collapse-arrow border border-base-100 bg-base-200 rounded-box z-0 overflow-hidden max-w-[95vw]">
-
+    
     <input v-model="opened" type="checkbox">
     
-    <div class="collapse-title relative text-xl font-medium">
+    <div class="collapse-title relative text-xl font-medium bg-base-100">
         <div class="flex gap-4">
             <nuxt-img
                 fit="contain" :src="info?.productimage" width="36"

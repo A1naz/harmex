@@ -59,8 +59,8 @@ async function deleteLike() {
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mt-4">Лайки на отзывы</h1>
-    <p class="text-xs font-light mt-1 lg:text-sm">
+    <!-- <h1 class="text-2xl font-bold mt-4">Лайки на отзывы</h1> -->
+    <p class="text-xs font-light mt-4 lg:text-sm">
       Лайки на отзывах, помогут вашим покупателям обратить внимание только на
       самые важные отзывы.
     </p>
