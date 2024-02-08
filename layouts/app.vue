@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const storeMain = useMainStore()
 const colorMode = useColorMode()
+const { width } = useWindowSize()
 
 const theme = ref('light')
 const route = useRoute()
@@ -72,14 +73,18 @@ function toggleInfoModal() {
   isInfoModal.value = !isInfoModal.value
 }
 const statusText = computed(() => {
-  return storeMain.client.mmenuItems.flatMap(section => section.items).find(item => item.path === route.path)?.title || 'Профиль'
+  return (
+    storeMain.client.mmenuItems
+      .flatMap((section) => section.items)
+      .find((item) => item.path === route.path)?.title || 'Профиль'
+  )
 })
 </script>
 
 <template>
   <div class="drawer lg:drawer-open z-10">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-    
+
     <div
       ref="drawerContent"
       @scroll="handleScroll"
@@ -111,10 +116,9 @@ const statusText = computed(() => {
             </svg>
           </label>
         </div>
-        <div class="flex-1 justify-center mr-12">
+        <div v-if="width > 1024" class="flex-1 justify-center mr-12">
           <Logo />
         </div>
-        
       </div>
       <div class="flex items-center gap-2 p-4 justify-between bg-base-100">
         <h1 class="text-2xl font-bold">{{ statusText }}</h1>
@@ -124,7 +128,6 @@ const statusText = computed(() => {
         <slot />
       </div>
       <!-- Page content here -->
-      
     </div>
     <div class="drawer-side z-100 shadow-sm">
       <label for="my-drawer" class="drawer-overlay" />
@@ -170,7 +173,10 @@ const statusText = computed(() => {
                   </div> -->
                 </div>
                 <div class="flex items-center gap-2">
-                  <div class="tooltip before:w-[109px] before:content-[attr(data-tip)]" data-tip="Инструкция по платформе">
+                  <div
+                    class="tooltip before:w-[109px] before:content-[attr(data-tip)]"
+                    data-tip="Инструкция по платформе"
+                  >
                     <button
                       class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
                       @click="toggleInfoModal"
@@ -189,25 +195,28 @@ const statusText = computed(() => {
                   </div>
                 </div>
               </div>
-              <hr class="h-[2px] my-4 block box-border">
+              <hr class="h-[2px] my-4 block box-border" />
               <div class="flex justify-between items-start">
                 <div class="flex gap-5">
                   <div
                     v-if="storeMain.client.role !== UserRoles.staff"
                     class="tooltip"
                   >
-                    <div 
+                    <div
                       class="relative btn btn-sm btn-neutral btn-circle border-none bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
                     >
                       <IconCSS name="fe:wallet" size="24" />
                     </div>
                   </div>
                   <div class="balance font-bold mt-1">
-                    Баланс:  {{ currency.format(storeMain.client.balance) }}
+                    Баланс: {{ currency.format(storeMain.client.balance) }}
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
-                  <div class="tooltip before:w-[109px] before:content-[attr(data-tip)]" data-tip="Пополнить баланс">
+                  <div
+                    class="tooltip before:w-[109px] before:content-[attr(data-tip)]"
+                    data-tip="Пополнить баланс"
+                  >
                     <div v-if="storeMain.client.role !== UserRoles.staff">
                       <label
                         for="payment-modal"
@@ -216,7 +225,6 @@ const statusText = computed(() => {
                         +
                       </label>
                     </div>
-  
 
                     <!-- <NuxtLink
                       :external="true"

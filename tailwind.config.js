@@ -71,8 +71,10 @@ module.exports = {
       {
         dark: {
           ...require('daisyui/src/theming/themes')['[data-theme=dracula]'],
-          primary: '#A56BF7',
+          primary: '#6366f1',
           'primary-content': '#ffffff',
+          'primary-focus': '#7968ff',
+          
           'neutral-content': '#ffffff',
           'custom-dark-color': '#fedcba',
           'card-green': '#16a34a',
