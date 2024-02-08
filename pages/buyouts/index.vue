@@ -381,7 +381,9 @@ function toggleInfoModal() {
             />
           </div>
         </div>
+        
         <div clas="flex gap-2">
+          
           <div class="search flex items-center gap-3">
             <div class="dropdown">
               <div

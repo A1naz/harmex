@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const theme = useColorMode()
 const props = defineProps({
   info: {
     type: Object as any,
@@ -68,20 +69,26 @@ onKeyStroke('Escape', (e) => {
             <span
               class="rounded-2xl py-1 px-2 max-h-9"
               :class="{
-                'text-green-600 bg-green-200':
-                  info.status === 'active' || info.status === 'work',
-                'text-error bg-red-400':
-                  info.status === 'completed' || info.status === 'nofunds',
-                'text-warning bg-yellow-400':
-                  info.status === 'archived' || info.status === 'paused',
-              }"
+              'text-green-600 bg-green-200 ':
+                (info.status === 'active' || info.status === 'work') && theme.value === 'light',
+              'text-green-200 bg-green-600 ': 
+                (info.status === 'active' || info.status === 'work') && theme.value === 'dark',
+              'text-red-200 bg-red-700':
+                (info.status === 'completed' || info.status === 'nofunds') && theme.value === 'dark',
+              'text-error bg-red-200':
+                (info.status === 'completed' || info.status === 'nofunds') && theme.value === 'light',
+              'text-warning bg-yellow-200':
+                (info.status === 'archived' || info.status === 'paused') && theme.value === 'light',
+              'text-warning bg-yellow-400':
+              (info.status === 'archived' || info.status === 'paused') && theme.value === 'dark',
+            }"
               >{{ getStatus }}</span
             >
           </div>
 
           <div class="text-xs text-gray-500">#{{ info.uuid }}</div>
 
-          <div class="flex gap-3 mt-2">
+          <div class="flex gap-3 mt-2 justify-center items-center">
             <div class="flex-none" style="width: 100px; height: 150px">
               <nuxt-img
                 class="rounded-xl h-full"
@@ -116,19 +123,34 @@ onKeyStroke('Escape', (e) => {
               </div>
               <div>
                 <span class="text-sm text-gray-500 mr-2">Цена: </span>
-                <span class="bg-green-200 rounded-lg p-1">{{
+                <span class="rounded-lg p-1"
+                :class="{
+                  'bg-green-600': theme.value === 'dark',
+                  'bg-green-200': theme.value === 'light',
+                }"
+                >{{
                   info.product?.priceText
                 }}</span>
               </div>
               <div>
-                <span class="text-sm text-gray-500 mr-2">Количество: </span>
-                <span class="bg-amber-100 rounded-lg p-1"
+                <span class="text-sm text-gray-500 mr-2"
+                >Количество: </span>
+                <span class="rounded-lg p-1"
+                :class="{
+                  'bg-amber-500': theme.value === 'dark',
+                  'bg-amber-100': theme.value === 'light',
+                }"  
                   >{{ info.quantity }} шт.</span
                 >
               </div>
               <div>
                 <span class="text-sm text-gray-500 mr-2">Сумма: </span>
-                <span class="bg-indigo-300 rounded-lg p-1">{{
+                <span class="rounded-lg p-1"
+                :class="{
+                  'bg-indigo-500': theme.value === 'dark',
+                  'bg-indigo-300': theme.value === 'light',
+                }"  
+                >{{
                   currency.format(info.quantity * info.product?.price)
                 }}</span>
               </div>
@@ -139,7 +161,12 @@ onKeyStroke('Escape', (e) => {
         <!-- 
         <div class="divider" /> -->
 
-        <div class="flex flex-col gap-2 mt-2 justify-center bg-indigo-100 p-5">
+        <div class="flex flex-col gap-2 mt-2 justify-center  p-5"
+        :class="{
+                  'bg-violet-800': theme.value === 'dark',
+                  'bg-indigo-100': theme.value === 'light',
+                }"  
+        >
           <div class="flex justify-between"></div>
           <!-- <div class="flex justify-between items-center flex-wrap">
             <span class="text-gray-500 text-sm">Поисковый запрос:</span>
@@ -155,7 +182,7 @@ onKeyStroke('Escape', (e) => {
 
             <div class="flex justify-between flex-col self-start md:self-end">
               <span class="text-lg font-bold mb-1">Даты выкупов:</span>
-              <div class="bg-white rounded-lg p-2">
+              <div class="bg-base-100 rounded-lg p-2">
                 <span class="text-sm flex flex-col justify-center items-end">
                   <div>
                     {{ `С ${defaultDate(info.dateStart)}` }}
