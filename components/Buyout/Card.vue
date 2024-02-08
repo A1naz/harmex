@@ -286,9 +286,9 @@ const getStatus = computed(() => {
           <div class="flex flex-col gap-4">
             <div>
               <span class="text-sm text-gray-500">Цена: </span>
-              <span class="bg-green-200 rounded-lg p-1" 
+              <span class="rounded-lg p-1" 
               :class="{
-                  'bg-green-600': theme.value === 'dark',
+                  'bg-green-600': theme.value !== 'light',
                   'bg-green-200': theme.value === 'light',
                 }"
               >{{
@@ -297,9 +297,9 @@ const getStatus = computed(() => {
             </div>
             <div>
               <span class="text-sm text-gray-500">Количество: </span>
-              <span class=" rounded-lg p-1"
+              <span class="rounded-lg p-1"
               :class="{
-                  'bg-amber-500': theme.value === 'dark',
+                  'bg-amber-500': theme.value !== 'light',
                   'bg-amber-100': theme.value === 'light',
                 }"  
               >{{ info.quantity }} шт.</span
@@ -309,9 +309,9 @@ const getStatus = computed(() => {
               <span class="text-sm text-gray-500">Сумма: </span>
               <span class=" rounded-lg p-1"
               :class="{
-                  'bg-indigo-500': theme.value === 'dark',
-                  'bg-indigo-300': theme.value === 'light',
-                }"  
+                    'bg-indigo-500': theme.value !== 'light',
+                    'bg-indigo-300': theme.value === 'light',
+                  }"
               >{{
                 currency.format(info.quantity * info.product?.price)
               }}</span>
