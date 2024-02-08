@@ -312,7 +312,6 @@ function toggleInfoModal() {
       <h1 class="text-2xl font-bold">Выкупы</h1>
       <InfoButton @openModal="toggleInfoModal" />
     </div>
-
     <InfoModal
       :isModal="isInfoModal"
       title="Выкупы"
@@ -412,7 +411,6 @@ function toggleInfoModal() {
                 </li>
               </ul>
             </div>
-
             <select
               class="select select-bordered select-sm sm:hidden"
               @change="selectFilterDate"
