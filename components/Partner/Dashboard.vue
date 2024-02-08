@@ -15,7 +15,7 @@ const paymentHistoryModal = ref(false)
 
 <template>
 
-    <div class="account">
+    <div class="account ">
         <div>
             Ваш партнерский счет:
         </div>

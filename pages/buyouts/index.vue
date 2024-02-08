@@ -308,10 +308,7 @@ function toggleInfoModal() {
 
 <template>
   <div>
-    <div class="flex items-center gap-2 mt-4">
-      <h1 class="text-2xl font-bold">Выкупы</h1>
-      <InfoButton @openModal="toggleInfoModal" />
-    </div>
+    
 
     <InfoModal
       :isModal="isInfoModal"
@@ -340,7 +337,10 @@ function toggleInfoModal() {
       </div>
     </InfoModal>
 
-    <div class="flex justify-between mb-4 items-center mt-6">
+    <div>
+      
+    </div>
+    <div class="flex justify-between mb-4 items-center mt-4">
       <div class="flex gap-2 lg:gap-3 flex-col sm:flex-row w-full sm:w-max">
         <!-- <NuxtLink
             v-for="filter in filters"
@@ -522,7 +522,7 @@ function toggleInfoModal() {
           (route.query.status === 'active' || !route.query.status) &&
           activeBuyouts.length > 0
         "
-        class="flex justify-center py-2 rounded-lg px-2 mb-2 bg-base-100 border border-base-200"
+        class="flex justify-center py-2 rounded-lg px-2 mb-2 bg-base-200 border border-base-300"
       >
         <p
           v-if="availableBuyouts"

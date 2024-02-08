@@ -231,10 +231,10 @@ const getPostName = (post: string) => {
 <template>
   <div>
     <div class="mb-4">
-      <div class="flex">
+      <!-- <div class="flex">
         <h1 class="text-2xl font-bold mt-4">Моя команда</h1>
-      </div>
-      <p class="text-xs font-light mt-1 lg:text-sm">
+      </div> -->
+      <p class="text-xs font-light mt-4 lg:text-sm">
         Делегируйте задачи между вашими сотрудниками для эффективного
         продвижения товаров.
       </p>
@@ -257,6 +257,7 @@ const getPostName = (post: string) => {
             v-if="width > 1024"
             :value="myTeam"
             :rowsPerPageOptions="[5, 10, 20, 50]"
+            
           >
             <Column
               v-for="col of configColumns"
@@ -264,10 +265,12 @@ const getPostName = (post: string) => {
               :key="col.field"
               :field="col.field"
               :header="col.header"
+              class="bg-base-100"
             >
               <template
                 v-if="col.type == FieldsType.multiOptions"
                 #body="{ data }"
+                
               >
                 <div class="flex flex-wrap">
                   <div
@@ -319,7 +322,7 @@ const getPostName = (post: string) => {
             >
               <div
                 tabindex="0"
-                class="relative collapse collapse-arrow bg-base-200 rounded-box"
+                class="relative collapse collapse-arrow bg-base-100 rounded-box"
               >
                 <div class="collapse-title font-medium">
                   <div class="flex gap-6 items-center w-full">

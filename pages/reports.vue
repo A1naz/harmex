@@ -123,10 +123,10 @@ watch(() => status.value, async (newRoute) => {
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mt-4">
+    <!-- <h1 class="text-2xl font-bold mt-4">
       Отчеты по выкупам
-    </h1>
-    <p class="text-xs font-light mt-1 lg:text-sm">
+    </h1> -->
+    <p class="text-xs font-light mt-4 lg:text-sm">
       В этом разделе можно посмотреть как производились выкупы
     </p>
     <div class="flex flex-col justify-start md:flex-row  md:justify-between mb-8 mt-6">

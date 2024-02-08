@@ -193,10 +193,10 @@ function toggleInfoModal() {
   <div>
 
     <div class="page-header">
-      <div class="flex items-center gap-2 mt-4">
+      <!-- <div class="flex items-center gap-2 mt-4">
         <h1 class="text-2xl font-bold">Отзывы</h1>
         <InfoButton @openModal="toggleInfoModal" />
-      </div>
+      </div> -->
 
       <InfoModal 
         :isModal="isInfoModal" 
@@ -219,7 +219,7 @@ function toggleInfoModal() {
         </InfoModal>
     </div>
 
-    <div class="flex justify-between mb-2 mt-6 items-center">
+    <div class="flex justify-between mb-2 mt-4 items-center">
       <div class="">
         <Button 
             v-for="tab in tabs" 
