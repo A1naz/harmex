@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
+const theme = useColorMode()
+
 
 const props = defineProps({
   info: {
@@ -232,12 +234,18 @@ const getStatus = computed(() => {
           <span
             class="mt-2 rounded-2xl py-1 px-2"
             :class="{
-              'text-green-600 bg-green-200':
-                info.status === 'active' || info.status === 'work',
-              'text-error bg-red-400':
-                info.status === 'completed' || info.status === 'nofunds',
+              'text-green-600 bg-green-200 ':
+                (info.status === 'active' || info.status === 'work') && theme.value === 'light',
+              'text-green-200 bg-green-600 ': 
+                (info.status === 'active' || info.status === 'work') && theme.value === 'dark',
+              'text-red-200 bg-red-700':
+                (info.status === 'completed' || info.status === 'nofunds') && theme.value === 'dark',
+              'text-error bg-red-200':
+                (info.status === 'completed' || info.status === 'nofunds') && theme.value === 'light',
+              'text-warning bg-yellow-200':
+                (info.status === 'archived' || info.status === 'paused') && theme.value === 'light',
               'text-warning bg-yellow-400':
-                info.status === 'archived' || info.status === 'paused',
+              (info.status === 'archived' || info.status === 'paused') && theme.value === 'dark',
             }"
             >{{ getStatus }}</span
           >
@@ -278,19 +286,33 @@ const getStatus = computed(() => {
           <div class="flex flex-col gap-4">
             <div>
               <span class="text-sm text-gray-500">Цена: </span>
-              <span class="bg-green-200 rounded-lg p-1">{{
+              <span class="bg-green-200 rounded-lg p-1" 
+              :class="{
+                  'bg-green-600': theme.value === 'dark',
+                  'bg-green-200': theme.value === 'light',
+                }"
+              >{{
                 info.product?.priceText
               }}</span>
             </div>
             <div>
               <span class="text-sm text-gray-500">Количество: </span>
-              <span class="bg-amber-100 rounded-lg p-1"
-                >{{ info.quantity }} шт.</span
+              <span class=" rounded-lg p-1"
+              :class="{
+                  'bg-amber-500': theme.value === 'dark',
+                  'bg-amber-100': theme.value === 'light',
+                }"  
+              >{{ info.quantity }} шт.</span
               >
             </div>
             <div>
               <span class="text-sm text-gray-500">Сумма: </span>
-              <span class="bg-indigo-300 rounded-lg p-1">{{
+              <span class=" rounded-lg p-1"
+              :class="{
+                  'bg-indigo-500': theme.value === 'dark',
+                  'bg-indigo-300': theme.value === 'light',
+                }"  
+              >{{
                 currency.format(info.quantity * info.product?.price)
               }}</span>
             </div>

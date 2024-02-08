@@ -81,7 +81,7 @@ const productQuantityModel = computed({
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-100 shadow-lg">
+  <div class="buyout-card card bg-base-100 shadow-lg max-w-[350px] w-full">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
     >
@@ -129,7 +129,7 @@ const productQuantityModel = computed({
               <a
                 :href="`https://www.ozon.ru/product/${product.article}`"
                 target="_blank"
-                class="text-xs text-primary link link-hover"
+                class="text-xs text-primarym link link-hover"
               >
                 {{ product.article }}
               </a>
@@ -145,7 +145,7 @@ const productQuantityModel = computed({
           </div>
         </div>
       </div>
-      <div class="flex justify-start gap-3 lg:gap-1">
+      <div class="flex justify-start gap-3 md:gap-2">
         <div class="flex flex-col">
             <span class="text-md text-gray-500 mb-2">Цена: </span>
             <span class="text-sm font-bold">{{ product.priceText }}</span>
