@@ -1,16 +1,16 @@
 module.exports = {
   theme: {
     screens: {
-      'sm': '640px',
+      sm: '640px',
       // => @media (min-width: 640px) { ... }
 
-      'md': '768px',
+      md: '768px',
       // => @media (min-width: 768px) { ... }
 
-      'lg': '1024px',
+      lg: '1024px',
       // => @media (min-width: 1024px) { ... }
 
-      'xl': '1280px',
+      xl: '1280px',
       // => @media (min-width: 1280px) { ... }
 
       '2xl': '1536px',
@@ -23,19 +23,19 @@ module.exports = {
     themes: [
       {
         light: {
-          'primary': '#2a6eff',
+          primary: '#2a6eff',
           'primary-focus': '#2a6eff',
           'primary-content': '#ffffff',
 
-          'secondary': '#f000b8',
+          secondary: '#f000b8',
           'secondary-focus': '#bd0091',
           'secondary-content': '#ffffff',
 
-          'accent': '#37cdbe',
+          accent: '#37cdbe',
           'accent-focus': '#2ba69a',
           'accent-content': '#ffffff',
 
-          'neutral': '#3b424e',
+          neutral: '#3b424e',
           'neutral-focus': '#2a2e37',
           'neutral-content': '#ffffff',
 
@@ -71,7 +71,7 @@ module.exports = {
       {
         dark: {
           ...require('daisyui/src/theming/themes')['[data-theme=dracula]'],
-          'primary': '#A56BF7',
+          primary: '#A56BF7',
           'primary-content': '#ffffff',
           'neutral-content': '#ffffff',
           'custom-dark-color': '#fedcba',

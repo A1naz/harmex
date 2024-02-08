@@ -412,7 +412,6 @@ function toggleInfoModal() {
                 </li>
               </ul>
             </div>
-
             <select
               class="select select-bordered select-sm sm:hidden"
               @change="selectFilterDate"
