@@ -59,18 +59,18 @@ function daysToPenalty(statusdelivery: any[]) {
 
             <div class="w-full">
 
-                <div class="flex justify-between flex-wrap">
+                <div class="flex justify-between flex-wrap gap-1">
                     <span> 
                         Доставка
                     </span>
                     <label
-                        class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs hover:text-primary truncate z-10"
+                        class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs hover:text-primary break-all z-10"
                         @click="openBuyout"
                         >#{{info.uuid }}
                     </label>
                 </div>
 
-                <div class="flex justify-between flex-wrap gap-2 items-center">
+                <div class="flex justify-between flex-wrap gap-1 items-center">
                     <button 
                         class="text-xs btn btn-xs btn-primary bg-opacity-40 border-opacity-30  text-base-content rounded-md z-10 mt-1"
                         @click="emit('openStatusModal', info.statusdelivery)
@@ -79,7 +79,7 @@ function daysToPenalty(statusdelivery: any[]) {
                         <span>{{ info.currentstatus }} </span>
                     </button>
                     <div v-if="info.currentstatus === 'Готов к выдаче' && info.statusdelivery.length > 1" 
-                        class="text-sm text-warning link link-hover z-10" 
+                        class="text-sm text-error link link-hover z-10" 
                         @click="emit('openPenaltyModal')"
                         >
                         {{ daysToPenalty(info.statusdelivery) }}
@@ -97,15 +97,15 @@ function daysToPenalty(statusdelivery: any[]) {
     </div>
 
 
-    <div class="collapse-content bg-accent-focus bg-opacity-20"
+    <div class="collapse-content bg-primary bg-opacity-20"
     >
         <div class="product flex flex-col gap-4 lg:gap-8 flex-wrap">
             <div class="flex flex-col">
-                <div class="truncate">
+                <div >
                     <!-- <div class="text-sm text-gray-500 ">
                         Название
                     </div> -->
-                    <div class="truncate">
+                    <div >
                         {{ info.productname }}
                     </div>
                 </div>
@@ -158,7 +158,7 @@ function daysToPenalty(statusdelivery: any[]) {
 
         <div class="receipt flex gap-4 lg:gap-8 items-center flex-wrap">
 
-            <div class="flex gap-10">
+            <div class="flex gap-2 md:gap-10 lg:gap-10">
                 <div class="lg:mr-10">
                     <div class="text-sm text-gray-500">
                         Получатель:
@@ -178,17 +178,17 @@ function daysToPenalty(statusdelivery: any[]) {
                 <label
                     for="qr-modal" class="btn btn-primary btn-xs flex bg-opacity-20 border-opacity-5 text-primary rounded-md gap-2" @click="emit('openModal', parseInt(info.receiptcode), info.receiptcodeqr)"
                     >
-                    <Icon name="material-symbols:qr-code" size="24" /> <span>QR-код</span>
+                    <Icon name="material-symbols:qr-code" size="24" /> <span class="hidden lg:block">QR-код</span>
                 </label>
             </div>
             </div>
             
-            <div class="w-76 overflow-hidden truncate">
+            <div class="w-76">
                 <div class="text-sm text-gray-500">
                     Адрес:
                 </div>
                 <a
-                    target="_blank" class="text-primary link link-hover w-52 lg:w-76 truncate overflow-hidden"
+                    target="_blank" class="text-primary link link-hover w-52 lg:w-76 break-all"
                     :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
                     >
                     {{ info.point }}
