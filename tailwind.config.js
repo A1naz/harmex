@@ -24,7 +24,7 @@ module.exports = {
       {
         light: {
           primary: '#2a6eff',
-          'primary-focus': '#2a6eff',
+          'primary-focus': '#a5b4fc',
           'primary-content': '#ffffff',
 
           secondary: '#f000b8',
@@ -44,16 +44,11 @@ module.exports = {
           'base-300': '#ced3d9',
           'base-content': '#1e2734',
 
-          'custom-light-color': '#abcdef',
-          'card-green': '#bbf7d0',
-          'card-yellow': '#fef08a',
-          'card-red': '#fecaca',
-          'card-amber': '#fef3c7',
-          'card-indigo': '#a5b4fc',
+          '--custom': '#b2baff',
 
-          'info': '#1c92f2',
-          'success': '#009485',
-          'warning': '#ff9900',
+          'info': '#a5b4fc',
+          'success': '#bbf7d0',
+          'warning': '#fef3c7',
           'error': '#ff5724',
 
           '--rounded-box': '1rem',
@@ -73,15 +68,13 @@ module.exports = {
           ...require('daisyui/src/theming/themes')['[data-theme=dracula]'],
           primary: '#6366f1',
           'primary-content': '#ffffff',
-          'primary-focus': '#7968ff',
+          'primary-focus': '#6366f1',
           
           'neutral-content': '#ffffff',
-          'custom-dark-color': '#fedcba',
-          'card-green': '#16a34a',
-          'card-yellow': '#facc15',
-          'card-red': '#b91c1c',
-          'card-amber': '#f59e0b',
-          'card-indigo': '#6366f1',
+          'warning': '#f59e0b',
+          'success': '#16a34a',
+
+          '--custom': '#b2baff',
           '--btn-text-case': 'normalcase',
         },
       },

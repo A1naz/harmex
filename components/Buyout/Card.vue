@@ -2,7 +2,6 @@
 import { notify } from '@kyvg/vue3-notification'
 const theme = useColorMode()
 
-
 const props = defineProps({
   info: {
     type: Object as any,
@@ -204,7 +203,7 @@ const getStatus = computed(() => {
         <div class="flex justify-between gap-1 items-center">
           <div class="flex gap-x-3">
             <span class="text-xs text-gray-500"
-            >Создан: {{ defaultDate(info.createdAt) }}
+              >Создан: {{ defaultDate(info.createdAt) }}
             </span>
             <div
               :class="{
@@ -226,30 +225,35 @@ const getStatus = computed(() => {
               Возобновить
             </button>
           </div>
-          
         </div>
-       
+
         <div class="flex gap-3">
           <h2 class="card-title mt-2">Выкуп №{{ info.place }}</h2>
-          <span
+          <div
             class="mt-2 rounded-2xl py-1 px-2"
             :class="{
-              'text-green-600 bg-green-200 ':
-                (info.status === 'active' || info.status === 'work') && theme.value === 'light',
-              'text-green-200 bg-green-600 ': 
-                (info.status === 'active' || info.status === 'work') && theme.value === 'dark',
+              'bg-success ':
+                (info.status === 'active' || info.status === 'work'),
+              'text-green-200 bg-green-600 ':
+                (info.status === 'active' || info.status === 'work') &&
+                theme.value === 'dark',
               'text-red-200 bg-red-700':
-                (info.status === 'completed' || info.status === 'nofunds') && theme.value === 'dark',
+                (info.status === 'completed' || info.status === 'nofunds') &&
+                theme.value === 'dark',
               'text-error bg-red-200':
-                (info.status === 'completed' || info.status === 'nofunds') && theme.value === 'light',
+                (info.status === 'completed' || info.status === 'nofunds') &&
+                theme.value === 'light',
               'text-warning bg-yellow-200':
-                (info.status === 'archived' || info.status === 'paused') && theme.value === 'light',
+                (info.status === 'archived' || info.status === 'paused') &&
+                theme.value === 'light',
               'text-warning bg-yellow-400':
-              (info.status === 'archived' || info.status === 'paused') && theme.value === 'dark',
+                (info.status === 'archived' || info.status === 'paused') &&
+                theme.value === 'dark',
             }"
-            >{{ getStatus }}</span
           >
-          
+            {{ getStatus }}
+          </div>
+
           <a
             :href="`https://www.ozon.ru/product/${info.article}`"
             target="_blank"
@@ -260,7 +264,6 @@ const getStatus = computed(() => {
         </div>
 
         <div class="flex justify-between mt-2"></div>
-        
       </div>
 
       <div class="flex gap-4">
@@ -284,37 +287,23 @@ const getStatus = computed(() => {
             </div>
           </div>
           <div class="flex flex-col gap-4">
-            <div>
-              <span class="text-sm text-gray-500">Цена: </span>
-              <span class="rounded-lg p-1" 
-              :class="{
-                  'bg-green-600': theme.value !== 'light',
-                  'bg-green-200': theme.value === 'light',
-                }"
-              >{{
-                info.product?.priceText
-              }}</span>
+            <div class="flex gap-2">
+              <span class="text-sm text-gray-500 mt-1">Цена: </span>
+              <div class="rounded-lg bg-success p-1">
+                {{ info.product?.priceText }}
+              </div>
             </div>
-            <div>
-              <span class="text-sm text-gray-500">Количество: </span>
-              <span class="rounded-lg p-1"
-              :class="{
-                  'bg-amber-500': theme.value !== 'light',
-                  'bg-amber-100': theme.value === 'light',
-                }"  
-              >{{ info.quantity }} шт.</span
-              >
+            <div class="flex gap-2">
+              <span class="text-sm text-gray-500 mt-1">Количество: </span>
+              <div class="rounded-lg p-1 bg-warning">
+                {{ info.quantity }} шт.
+              </div>
             </div>
-            <div>
-              <span class="text-sm text-gray-500">Сумма: </span>
-              <span class=" rounded-lg p-1"
-              :class="{
-                    'bg-indigo-500': theme.value !== 'light',
-                    'bg-indigo-300': theme.value === 'light',
-                  }"
-              >{{
-                currency.format(info.quantity * info.product?.price)
-              }}</span>
+            <div class="flex gap-2">
+              <span class="text-sm text-gray-500 mt-1">Сумма: </span>
+              <div class="rounded-lg p-1 bg-info">
+                {{ currency.format(info.quantity * info.product?.price) }}
+              </div>
             </div>
           </div>
         </div>
@@ -333,7 +322,9 @@ const getStatus = computed(() => {
     />
     <div class="modal backdrop-filter backdrop-blur-sm">
       <div class="modal-box max-w-xs">
-        <h3 class="font-bold text-md">Вы уверенны что хотите удалить выкуп № {{ info.place }} ?</h3>
+        <h3 class="font-bold text-md">
+          Вы уверенны что хотите удалить выкуп № {{ info.place }} ?
+        </h3>
         <div class="modal-action flex justify-around">
           <label
             :for="`removeAllModelCreateProducts:${props.info.uuid}`"
