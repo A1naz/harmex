@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const theme = useColorMode()
 const props = defineProps({
   info: {
     type: Object as any,
@@ -42,11 +43,13 @@ function daysToPenalty(statusdelivery: any[]) {
 </script>
 
 <template>
-<div class="collapse collapse-arrow border border-base-100 bg-base-200 rounded-box z-0 overflow-hidden max-w-[95vw]">
+<div class="collapse collapse-arrow border bg-base-200 rounded-box z-0 overflow-hidden border-primary border-opacity-20 "
+>
     
-    <input v-model="opened" type="checkbox">
+    <input v-model="opened"  type="checkbox">
     
-    <div class="collapse-title relative text-xl font-medium bg-base-100">
+    <div class="collapse-title relative text-xl font-medium bg-primary bg-opacity-20 "
+    >
         <div class="flex gap-4">
             <nuxt-img
                 fit="contain" :src="info?.productimage" width="36"
@@ -61,7 +64,7 @@ function daysToPenalty(statusdelivery: any[]) {
                         Доставка
                     </span>
                     <label
-                        class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
+                        class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs hover:text-primary truncate z-10"
                         @click="openBuyout"
                         >#{{info.uuid }}
                     </label>
@@ -69,11 +72,11 @@ function daysToPenalty(statusdelivery: any[]) {
 
                 <div class="flex justify-between flex-wrap gap-2 items-center">
                     <button 
-                        class="text-sm link link-hover z-10" 
+                        class="text-xs btn btn-xs btn-primary bg-opacity-40 border-opacity-30  text-base-content rounded-md z-10 mt-1"
                         @click="emit('openStatusModal', info.statusdelivery)
                         ">
-                        <span class="text-primary"> Статус: </span>
-                        <span> {{ info.currentstatus }} </span>
+                        <span class=""> Статус:</span>
+                        <span>{{ info.currentstatus }} </span>
                     </button>
                     <div v-if="info.currentstatus === 'Готов к выдаче' && info.statusdelivery.length > 1" 
                         class="text-sm text-warning link link-hover z-10" 
@@ -81,7 +84,9 @@ function daysToPenalty(statusdelivery: any[]) {
                         >
                         {{ daysToPenalty(info.statusdelivery) }}
                     </div>
-                    <div class="mt-2 lg:m-0 text-xs">
+                    <div class="mt-2 lg:m-0 text-xs text-primary"
+                    
+                    >
                         Обновлено {{ defaultDate(info.updatedAt) }}
                     </div>
                 </div>
@@ -92,43 +97,60 @@ function daysToPenalty(statusdelivery: any[]) {
     </div>
 
 
-    <div class="collapse-content ">
-        <div class="product flex gap-4 lg:gap-8 items-center flex-wrap">
-
-            <div>
-                <div class="text-sm text-gray-500">
-                    Артикул
-                </div>
-                <a
-                :href="`https://www.ozon.ru/product/${info.article}`" target="_blank"
-                    class=" text-secondary link link-hover"
-                    >
-                    {{ info.article }}
-                </a>
-            </div>
-
-            <div>
-                <div class="text-sm text-gray-500 ">
-                    Название
+    <div class="collapse-content bg-accent-focus bg-opacity-20"
+    >
+        <div class="product flex flex-col gap-4 lg:gap-8 flex-wrap">
+            <div class="flex flex-col">
+                <div class="truncate">
+                    <!-- <div class="text-sm text-gray-500 ">
+                        Название
+                    </div> -->
+                    <div class="truncate">
+                        {{ info.productname }}
+                    </div>
                 </div>
                 <div>
-                    {{ info.productname }}
+                <!-- <div class="text-sm text-gray-500">
+                    Артикул
+                </div> -->
+                <a
+                    :href="`https://www.ozon.ru/product/${info.article}`" target="_blank"
+                        class=" text-primary link link-hover"
+                        >
+                        {{ info.article }}
+                    </a>
                 </div>
-            </div>
 
-            <div>
-                <div class="text-sm text-gray-500">
-                    Размер
-                </div>
-                {{ info.size === 'none' ? 'Не указан' : info.size }}
+                
             </div>
+            <div class="flex gap-10">
+                <div class="flex">
+                    <div class="text-sm text-gray-500">
+                        <span>Цена: </span>
+                        
+                        <span class="ml-2">{{ currency.format(info.pricebuy) }}</span>
+                    </div>
+                    
+                </div>
 
-            <div class="flex-end">
-                <div class="text-sm text-gray-500">
-                    Цена
+                <div class="flex text-sm">
+                    <div class=" text-gray-500">
+                        <span >Размер: </span>
+                    </div>
+                    <div class="ml-2">{{ info.size === 'none' ? 'Не указан' : info.size }}</div>
+                    
                 </div>
-                {{ currency.format(info.pricebuy) }}
+
+                <div class="flex">
+                    <div class="text-sm text-gray-500">
+                        <span>Скидка: </span>
+                        
+                        <span class="ml-2">{{ '%'}}</span>
+                    </div>
+                    
+                </div>
             </div>
+            
 
         </div>
 
@@ -136,38 +158,41 @@ function daysToPenalty(statusdelivery: any[]) {
 
         <div class="receipt flex gap-4 lg:gap-8 items-center flex-wrap">
 
-            <div>
-                <div class="text-sm text-gray-500">
-                    Получатель:
+            <div class="flex gap-10">
+                <div class="lg:mr-10">
+                    <div class="text-sm text-gray-500">
+                        Получатель:
+                    </div>
+                    {{ info.recipient }} {{ info.recipientphone }}
                 </div>
-                {{ info.recipient }} {{ info.recipientphone }}
-            </div>
 
+                
+                <div>
+                    <div class="text-sm text-gray-500">
+                        Код получения:
+                    </div>
+                    {{ info?.receiptcode ? info?.receiptcode : 'Товар не доставлен' }}
+                </div>
+                
+                <div v-if="info.receiptcodeqr" class="flex justify-end">
+                <label
+                    for="qr-modal" class="btn btn-primary btn-xs flex bg-opacity-20 border-opacity-5 text-primary rounded-md gap-2" @click="emit('openModal', parseInt(info.receiptcode), info.receiptcodeqr)"
+                    >
+                    <Icon name="material-symbols:qr-code" size="24" /> <span>QR-код</span>
+                </label>
+            </div>
+            </div>
+            
             <div class="w-76 overflow-hidden truncate">
                 <div class="text-sm text-gray-500">
                     Адрес:
                 </div>
                 <a
-                    target="_blank" class="text-secondary link link-hover w-52 lg:w-76 truncate overflow-hidden"
+                    target="_blank" class="text-primary link link-hover w-52 lg:w-76 truncate overflow-hidden"
                     :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
                     >
                     {{ info.point }}
                 </a>
-            </div>
-
-            <div>
-                <div class="text-sm text-gray-500">
-                    Код получения:
-                </div>
-                {{ info?.receiptcode ? info?.receiptcode : 'Товар не доставлен' }}
-            </div>
-
-            <div v-if="info.receiptcodeqr">
-                <label
-                    for="qr-modal" class="btn btn-primary btn-sm flex gap-2" @click="emit('openModal', parseInt(info.receiptcode), info.receiptcodeqr)"
-                    >
-                    <Icon name="material-symbols:qr-code" size="24" /> <span>QR-код</span>
-                </label>
             </div>
 
         </div>

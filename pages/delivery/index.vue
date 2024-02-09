@@ -173,7 +173,9 @@ const filters = [
     {title: 'В пути', optionValue: 'onTheWay', params: '?status=onTheWay', queryStatus: 'onTheWay'},
     {title: 'Готовы к выдаче', optionValue: 'pickupReady', params: '?status=pickupReady', queryStatus: 'pickupReady'},   
 ]
-
+const statusText = computed(() => {
+  return filters.find((el: any) => el.queryStatus === route.query.status)?.title
+})
 </script>
 <template>
   <div>
@@ -207,9 +209,106 @@ const filters = [
     </InfoModal>
 
 
-    <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-4">
-      <div class="hidden lg:block">
-        <NuxtLink
+    <div class="">
+      <div class="flex lg:hidden">
+        <div v-if="deliveries.length" class="export">
+          <div class="dropdown z-10">
+            <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-50 border-opacity-5 hover:border-opacity-10 hover:bg-opacity-50 mr-2">XLS</label>
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+              <li>
+                <NuxtLink target="blank" to="/delivery/export">
+                  Готовы к выдаче PDF
+                </NuxtLink>
+              </li>
+              <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
+
+              <li><a @click="exportXLS">Общая таблица Excel</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="relative flex items-center flex-grow-0 w-full">
+          <input v-model="search.text" type="text" class="input input-sm input-bordered w-full" placeholder="Поиск" @input="onSearchInput($event)">
+
+          <span
+            v-if="search.loading"
+            class="absolute right-2 loading loading-spinner loading-xs p-2"
+          />
+        </div>
+        
+      </div>
+      <div class="flex gap-2 mt-2 lg:hidden">
+        <div class="dropdown  ">
+              <div
+                tabindex="0"
+                role="button"
+                class="font-medium normal-case btn-primary bg-opacity-50 border-opacity-5 hover:border-opacity-10 hover:bg-opacity-50 btn btn-sm w-[120px]"
+              >
+                {{ statusText }}
+              </div>
+              <ul
+                tabindex="0"
+                class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
+              >
+                <li>
+                  <NuxtLink
+                    v-for="filter in filters"
+                    :to="'/buyouts' + filter.params"
+                    :external="false"
+                    :class="{
+                      'btn-active': route.query.status === filter.queryStatus,
+                    }"
+                    class="btn btn-ghost btn-xs normal-case font-medium w-full"
+                  >
+                    <span>
+                      {{ filter.title }}
+                    </span>
+                  </NuxtLink>
+                </li>
+              </ul>
+            </div>
+        <select v-model="search.type" class="select select-bordered select-sm">
+              <option value="article">
+                Артикул
+              </option>
+              <option value="uuid">
+                ID выкупа
+              </option>
+            </select>
+      </div>
+      
+      
+      <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-4">
+        <div class="dropdown hidden lg:block">
+              <div
+                tabindex="0"
+                role="button"
+                class="font-medium normal-case btn-primary bg-opacity-50 border-opacity-5 hover:border-opacity-10 hover:bg-opacity-50 btn btn-sm w-[120px]"
+              >
+                {{ statusText }}
+              </div>
+              <ul
+                tabindex="0"
+                class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
+              >
+                <li>
+                  <NuxtLink
+                    v-for="filter in filters"
+                    :to="'/buyouts' + filter.params"
+                    :external="false"
+                    :class="{
+                      'btn-active': route.query.status === filter.queryStatus,
+                    }"
+                    class="btn btn-ghost btn-xs normal-case font-medium w-full"
+                  >
+                    <span>
+                      {{ filter.title }}
+                    </span>
+                  </NuxtLink>
+                </li>
+              </ul>
+            </div>
+      <!--<div class="hidden lg:block">
+         <NuxtLink
             v-for="filter in filters"
             :to=" '/delivery' + filter.params"
             :external="false" 
@@ -232,16 +331,37 @@ const filters = [
         >
         {{ filter.title }}
         </option>
-      </select>
+      </select> -->
 
-      <div class="flex gap-4 items-center">
-        <div class="flex items-center">
+      <div class="gap-4 hidden lg:flex">
+        <!-- <div class="flex items-center">
           <input id="openAll" v-model="openAll" type="checkbox" class="checkbox checkbox-primary checkbox-sm">
           <label for="openAll" class="cursor-pointer select-none ml-2">Развернуть все</label>
+        </div> -->
+        <div class="search flex justify-between items-center gap-2">
+          <div />
+          <div class="flex gap-4 items-center">
+            <select v-model="search.type" class="select select-bordered select-sm">
+              <option value="article">
+                Артикул
+              </option>
+              <option value="uuid">
+                ID выкупа
+              </option>
+            </select>
+            <div class="relative flex items-center flex-grow-0 w-full">
+              <input v-model="search.text" type="text" class="input input-sm input-bordered" placeholder="Поиск" @input="onSearchInput($event)">
+
+              <span
+                v-if="search.loading"
+                class="absolute right-2 loading loading-spinner loading-xs p-2"
+              />
+            </div>
+          </div>
         </div>
         <div v-if="deliveries.length" class="export">
           <div class="dropdown dropdown-end z-10">
-            <label tabindex="0" class="btn btn-sm btn-primary m-1">Экспорт</label>
+            <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-50 border-opacity-5 hover:border-opacity-10 hover:bg-opacity-50 m-1">XLS</label>
             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <li>
                 <NuxtLink target="blank" to="/delivery/export">
@@ -256,29 +376,11 @@ const filters = [
         </div>
       </div>
     </div>
-    <div class="search flex justify-between items-center mb-8 flex-wrap gap-2">
-      <div />
-      <div class="flex gap-1 items-center">
-        <select v-model="search.type" class="select select-bordered select-sm">
-          <option value="article">
-            Артикул
-          </option>
-          <option value="uuid">
-            ID выкупа
-          </option>
-        </select>
-        <div class="relative flex items-center flex-grow-0 w-full">
-          <input v-model="search.text" type="text" class="input input-sm input-bordered" placeholder="Поиск" @input="onSearchInput($event)">
-
-          <span
-            v-if="search.loading"
-            class="absolute right-2 loading loading-spinner loading-xs p-2"
-          />
-        </div>
       </div>
-    </div>
-    <div v-if="deliveries?.length">
-      <TransitionSlide group tag="ul" class="flex flex-col gap-3">
+      
+    
+    <!-- <div v-if="deliveries?.length" class="" >
+      <TransitionSlide group tag="ul" class="flex md:hidden flex-col gap-3">
         <li v-for="(delivery, index) of deliveries" :key="index" class="overflow-visible z-0">
           <DeliveryExpand
             :state="openAll"
@@ -289,6 +391,34 @@ const filters = [
             
           />
         </li>
+        <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
+      </TransitionSlide>
+      <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
+    </div> -->
+    <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4">
+      <TransitionSlide group tag="ul" class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3">
+      <ul class="flex flex-col gap-3">
+      <li v-for="(delivery, index) of deliveries.slice(0, Math.ceil(deliveries.length / 2))" :key="index" class="overflow-visible z-0">
+        <DeliveryExpand
+          :state="openAll"
+          :info="delivery" 
+          @open-modal="openModal"
+          @open-status-modal="openStatusModal"
+          @open-penalty-modal="penaltyModal = true"
+        />
+      </li>
+    </ul>
+    <ul class="flex flex-col gap-3">
+      <li v-for="(delivery, index) of deliveries.slice(Math.ceil(deliveries.length / 2))" :key="index" class="overflow-visible z-0">
+        <DeliveryExpand
+          :state="openAll"
+          :info="delivery" 
+          @open-modal="openModal"
+          @open-status-modal="openStatusModal"
+          @open-penalty-modal="penaltyModal = true"
+        />
+      </li>
+    </ul>
         <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
       </TransitionSlide>
       <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
