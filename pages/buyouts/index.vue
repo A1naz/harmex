@@ -545,7 +545,7 @@ function toggleInfoModal() {
         </p>
         <p
           v-if="availableBuyouts === 0 && activeBuyouts.length > 0"
-          class="text-center text-warning text-sm"
+          class="text-center text-custom-500 text-sm"
         >
           Недостаточно средств для совершения выкупа, пополните баланс.
         </p>
