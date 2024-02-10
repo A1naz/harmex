@@ -1,0 +1,36 @@
+import AWS from 'aws-sdk'
+import * as fs from 'fs'
+const config = useRuntimeConfig()
+
+
+export default eventHandler(async (event) => {
+  const bucket = 'ozonmpportal'
+  AWS.config.update({
+    accessKeyId: config.VK_ACCESS_KEY,
+    secretAccessKey: config.VK_SECRET_KEY,
+    endpoint: 'https://hb.vkcs.cloud',
+  })
+
+  const params: AWS.S3.GetObjectRequest = {
+    Bucket: 'ozonmpportal',
+    Key: 'reviewImages/test.jpg',
+  }
+
+const getImage = (params: AWS.S3.GetObjectRequest) => {
+  return new Promise((resolve, reject) => {
+    s3.getObject(params, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data.Body);
+      }
+    });
+  });
+}
+
+  const s3 = new AWS.S3()
+
+  const data = await getImage(params)
+
+  return data
+})

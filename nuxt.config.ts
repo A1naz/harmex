@@ -161,6 +161,8 @@ export default defineNuxtConfig({
       trailingSlash: true,
       BOT_LOGIN: process.env.BOT_LOGIN,
     },
+    VK_ACCESS_KEY: process.env.VK_ACCESS_KEY,
+    VK_SECRET_KEY: process.env.VK_SECRET_KEY,
     env: process.env.ENV_WORK,
     indexable: true,
     MONGODB_URI: process.env.MONGODB_URI,
