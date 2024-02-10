@@ -187,7 +187,7 @@ const statusText = computed(() => {
     </div> -->
 
 
-    <InfoModal 
+    <!-- <InfoModal 
         :isModal="isInfoModal" 
         title="Доставки"
         ytSrc='https://www.youtube.com/embed/-SxurcapPcA?si=AxKD5hXOxqc6ZjqJ'
@@ -206,15 +206,15 @@ const statusText = computed(() => {
         <p>
             Все услуги оказываются по Московскому времени.
         </p>
-    </InfoModal>
+    </InfoModal> -->
 
 
     <div class="">
       <div class="flex lg:hidden">
         <div v-if="deliveries.length" class="export">
-          <div class="dropdown z-10">
+          <div class="dropdown">
             <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-50 border-opacity-5 hover:border-opacity-10 hover:bg-opacity-50 mr-2">XLS</label>
-            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10">
               <li>
                 <NuxtLink target="blank" to="/delivery/export">
                   Готовы к выдаче PDF

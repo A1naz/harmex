@@ -198,7 +198,7 @@ function toggleInfoModal() {
         <InfoButton @openModal="toggleInfoModal" />
       </div> -->
 
-      <InfoModal 
+      <!-- <InfoModal 
         :isModal="isInfoModal" 
         title="Отзывы"
         ytSrc='https://www.youtube.com/embed/Zc0RYzPzNfY?si=LTgHXnmGixsDkmoG'
@@ -216,7 +216,7 @@ function toggleInfoModal() {
 
             Все услуги оказываются по Московскому времени.
         </p>
-        </InfoModal>
+        </InfoModal> -->
     </div>
 
     <div class="flex justify-between mb-2 mt-4 items-center">

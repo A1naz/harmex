@@ -367,7 +367,7 @@ async function openTwoFaQRModal() {
       <InfoButton @openModal="toggleInfoModal" />
     </div> -->
 
-    <InfoModal
+    <!-- <InfoModal
       :isModal="isInfoModal"
       title="Профиль"
       ytSrc="https://www.youtube.com/embed/ZgybpF6IyAA?si=ZoSE_GxV-tFAAFrD"
@@ -380,7 +380,7 @@ async function openTwoFaQRModal() {
           и активируйте чат-бот.
         </p>
       </div>
-    </InfoModal>
+    </InfoModal> -->
     <!-- class="mt-6 profile-options flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start" -->
     <section
       class="mt-4 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
