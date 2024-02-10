@@ -310,7 +310,7 @@ function toggleInfoModal() {
   <div>
     
 
-    <InfoModal
+    <!-- <InfoModal
       :isModal="isInfoModal"
       title="Выкупы"
       ytSrc="https://www.youtube.com/embed/YNFKOAgRAuU?si=bwAzeSLOmprr3NFe"
@@ -335,7 +335,7 @@ function toggleInfoModal() {
           Выкупы в архиве удаляются через 10 дней.
         </p>
       </div>
-    </InfoModal>
+    </InfoModal> -->
 
     <div>
       
