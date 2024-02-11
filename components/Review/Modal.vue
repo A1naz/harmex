@@ -114,11 +114,10 @@ async function uploadToS3(event: Event, index: number) {
   }
   if (data.value)
     form.photos[index] = {
-      url: `${config.public.siteUrl}api/images/get?path=${data.value[0].key}`,
-      public: `${config.public.siteUrl}api/images/get?path=${data.value[0].key}`,
+      url: `${config.public.siteUrl}/api/images/get?path=${data.value[0].key}`,
+      public: `${config.public.siteUrl}/api/images/get?path=${data.value[0].key}`,
     }
     
-    console.log(`${config.public.siteUrl}api/images/get?path=${data.value[0].key}`);
     
   loadingIndex.value = null
 }
