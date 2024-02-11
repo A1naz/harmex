@@ -4,6 +4,9 @@ const server_ip = useRuntimeConfig().server_ip || ''
 const service_id = useRuntimeConfig().service_id || ''
 
 export async function serverPingCycle() {
+  if (!api_key || !server_ip || !service_id) {
+    return
+  }
   try {
     const data = await $fetch(
       'http://api.topvtop.pro/api/servers/pingService',

@@ -2,6 +2,8 @@
 import { useNotification } from '@kyvg/vue3-notification'
 import { UseImage } from '@vueuse/components'
 
+const config = useRuntimeConfig()
+
 const props = defineProps({
   review: {} as any,
   state: { type: Boolean, required: true },
@@ -112,10 +114,12 @@ async function uploadToS3(event: Event, index: number) {
   }
   if (data.value)
     form.photos[index] = {
-      url: data.value[0].url,
-      public: getPublicUrl(data.value[0].url),
+      url: `${config.public.siteUrl}api/images/get?path=${data.value[0].key}`,
+      public: `${config.public.siteUrl}api/images/get?path=${data.value[0].key}`,
     }
-
+    
+    console.log(`${config.public.siteUrl}api/images/get?path=${data.value[0].key}`);
+    
   loadingIndex.value = null
 }
 async function clearForm() {

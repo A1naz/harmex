@@ -45,7 +45,7 @@ function handleSelect(address: string) {
 
   const arr = JSON.parse(pointStore) || []
 
-  if (arr.length > 5) arr.splice(arr.length - 1, 1)
+  if (arr.length > 20) arr.splice(arr.length - 1, 1)
   if (
     !arr.find(
       (el: any) =>

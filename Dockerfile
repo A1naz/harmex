@@ -27,6 +27,8 @@ ARG SESSION_TOKEN
 ARG serverLoadApiKey
 ARG server_ip
 ARG service_id
+ARG VK_ACCESS_KEY
+ARG VK_SECRET_KEY
 
 ENV MONGODB_URI=${MONGODB_URI}
 ENV SESSION_TOKEN=${SESSION_TOKEN}
@@ -52,6 +54,8 @@ ENV fkID=${fkID}
 ENV serverLoadApiKey=${serverLoadApiKey}
 ENV server_ip=${server_ip}
 ENV service_id=${service_id}
+ENV VK_ACCESS_KEY=${VK_ACCESS_KEY}
+ENV VK_SECRET_KEY=${VK_SECRET_KEY}
 
 RUN npm install -g pnpm
 RUN apk add --no-cache python3 make g++
