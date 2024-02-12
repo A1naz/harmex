@@ -29,6 +29,7 @@ ARG server_ip
 ARG service_id
 ARG VK_ACCESS_KEY
 ARG VK_SECRET_KEY
+ARG DOMAIN_API_IMAGES_URL
 
 ENV MONGODB_URI=${MONGODB_URI}
 ENV SESSION_TOKEN=${SESSION_TOKEN}
@@ -56,6 +57,7 @@ ENV server_ip=${server_ip}
 ENV service_id=${service_id}
 ENV VK_ACCESS_KEY=${VK_ACCESS_KEY}
 ENV VK_SECRET_KEY=${VK_SECRET_KEY}
+ENV DOMAIN_API_IMAGES_URL=${DOMAIN_API_IMAGES_URL}
 
 RUN npm install -g pnpm
 RUN apk add --no-cache python3 make g++

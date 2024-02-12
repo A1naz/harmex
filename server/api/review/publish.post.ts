@@ -2,19 +2,22 @@ import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
 import { Review } from '@/server/lib/models/Review'
 import { DocuemntEnum } from '~/data/enums'
+const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
-
-    const { buyoutuuid, deliveryid, rating, text, photos, date } = await readBody(event)
+  const { buyoutuuid, deliveryid, rating, text, photos, date } = await readBody(
+    event
+  )
 
   if (text) {
     if (text.length < 10 || text.length > 1000) {
       throw createError({
         statusCode: 400,
-        message: 'Текст отзыва должен быть длиннее 10 символов и не больше 1000',
+        message:
+          'Текст отзыва должен быть длиннее 10 символов и не больше 1000',
       })
     }
   }
@@ -25,7 +28,11 @@ export default eventHandler(async (event) => {
       message: 'Выкуп не найден',
     })
   }
-  const delivery = await Delivery.findOne({ _id: deliveryid, idbuyout: buyout._id, reviewed: false })
+  const delivery = await Delivery.findOne({
+    _id: deliveryid,
+    idbuyout: buyout._id,
+    reviewed: false,
+  })
   if (!delivery) {
     return createError({
       statusCode: 400,
@@ -33,8 +40,12 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const images = photos.map((photo: any) => photo.public)
-
+  const images = photos.map((photo: any) =>
+    photo.public.replace(config.public.DOMAIN_API_IMAGES_URL, '')
+  )
+  
+  console.log(images);
+  
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
@@ -51,11 +62,10 @@ export default eventHandler(async (event) => {
   delivery.reviewed = true
   const saved = await delivery.save()
 
-  await userLog(event,
-    {
-        documentType: DocuemntEnum.Review,
-        documentId: res._id,
-    })
+  await userLog(event, {
+    documentType: DocuemntEnum.Review,
+    documentId: res._id,
+  })
 
   return {
     message: 'Отзыв успешно добавлен',

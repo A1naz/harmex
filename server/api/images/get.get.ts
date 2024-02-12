@@ -3,7 +3,7 @@ import * as fs from 'fs'
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
-  const { path } = getQuery(event)
+  const { path }: any = getQuery(event)
 
   const bucket = 'ozonmpportal'
   AWS.config.update({
@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
 
   const params: AWS.S3.GetObjectRequest = {
     Bucket: 'ozonmpportal',
-    Key: 'reviewImages/' + path,
+    Key: path,
   }
 
   const getImage = (params: AWS.S3.GetObjectRequest) => {
