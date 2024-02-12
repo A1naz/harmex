@@ -129,7 +129,7 @@ const productQuantityModel = computed({
               <a
                 :href="`https://www.ozon.ru/product/${product.article}`"
                 target="_blank"
-                class="text-xs text-primarym link link-hover"
+                class="text-xs text-primary link link-hover"
               >
                 {{ product.article }}
               </a>

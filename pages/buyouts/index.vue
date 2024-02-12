@@ -554,7 +554,7 @@ function toggleInfoModal() {
       <div>
         <TransitionSlide
           group
-          class="cards grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 h-full"
+          class="cards grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 h-full"
         >
           <BuyoutCard
             v-for="(buyout, index) of buyouts"

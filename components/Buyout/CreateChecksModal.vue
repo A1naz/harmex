@@ -57,7 +57,7 @@ onMounted(async () => {
       <span
         v-if="!loading"
         :class="{
-          'text-error bg-red-400': !success,
+          'text-error bg-error bg-opacity-20': !success,
           'text-green-600 bg-green-200': success,
         }"
         class="text-md mt-3 rounded-2xl py-1 px-2"

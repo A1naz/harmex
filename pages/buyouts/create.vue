@@ -342,11 +342,11 @@ function closeTemplateModalFN() {
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mt-4">Добавить выкупы</h1>
+    <!-- <h1 class="text-2xl font-bold mt-4">Добавить выкупы</h1>
     <p class="text-xs text-gray-500 font-light mt-1 lg:text-sm">
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
       данные.
-    </p>
+    </p> -->
     <div class="flex flex-col  md:flex-row md:justify-between">
       <div class="mt-6 md:flex items-center gap-2.5 w-full">
         <div
@@ -355,18 +355,18 @@ function closeTemplateModalFN() {
           <input
             v-model="article"
             placeholder="Артикул"
-            class="input input-sm input-bordered w-full mb-2 md:mb-0"
+            class="input input-sm w-full mb-2 md:mb-0 bg-base-300 border-base-300 bg-opacity-30 border-opacity-30"
             @keydown.enter="addProduct"
           />
         </div>
         <div class="flex gap-2.5">
-          <button class="btn btn-primary btn-sm normal-case" @click="addProduct">
+          <button class="btn btn-primary btn-sm normal-case bg-opacity-20 border-none text-base-content" @click="addProduct">
             Добавить
           </button>
           <label
             for="template-select-modal"
             @click="getTemplates"
-            class="btn btn-sm btn-primary normal-case mr-0 md:mr-1 mb-2 md:mb-0"
+            class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0"
             >Шаблоны</label
           >
           <label
@@ -424,11 +424,11 @@ function closeTemplateModalFN() {
         v-else
         class="products-table scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin"
       >
-        <table class="table table-xs table-zebra w-full mt-4">
+        <table class="table table-xs w-full mt-4">
           <thead class="relative mb-2 text-sm text-base-content">
-            <tr class="border-b-base-300">
+            <tr class="border-b-base-300 bg-primary bg-opacity-10 ">
               <th class="hidden 3xl:block">№</th>
-              <th class="w-12 text-center " @click="openInfoModal('picture')">
+              <th class="w-12 text-center p-2" @click="openInfoModal('picture')">
                 <!-- <IconCSS name="material-symbols:image-outline" size="20" /> -->
                 Фото
               </th>
@@ -519,7 +519,7 @@ function closeTemplateModalFN() {
     </ClientOnly>
     <div
       v-show="products.length"
-      class="mt-6 md:flex justify-end md:justify-start "
+      class="mt-6 md:flex justify-start lg:justify-end "
     >
       <div class="m-5">
         <!-- <label
@@ -529,14 +529,14 @@ function closeTemplateModalFN() {
           >Удалить все</label
         > -->
         <label
-          class="btn btn-sm btn-primary normal-case mt-2 md:mt-0 ml-1 md:ml-2 px-6"
+          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6"
           for="template-modal"
         >
           Шаблон
         </label>
 
         <button
-          class="btn btn-sm btn-primary normal-case mt-1 md:ml-2"
+          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-1 md:ml-2"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >
@@ -712,7 +712,7 @@ function closeTemplateModalFN() {
           class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
           >✕</label
         >
-        <h3 class="font-bold text-lg mr-4">
+        <h3 class="font-bold text-lg text-bas mr-4">
           Введите название шаблона
         </h3>
         <input
@@ -721,7 +721,7 @@ function closeTemplateModalFN() {
           @keyup.enter="createTemplate"
           :disabled="isCreatingTemplatesDisabled"
           placeholder="Название шаблона"
-          class="input input-bordered w-full mt-2 bg-base-200 border-base-200"
+          class="input input-bordered w-full mt-2 bg-base-200 placeholder-base-content placeholder-opacity-50 border-base-200"
         />
         <div class="modal-action flex self-end">
           <label
@@ -750,7 +750,7 @@ function closeTemplateModalFN() {
           class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
           >✕</label
         >
-        <h3 class="font-bold text-lg text-center mr-4">
+        <h3 class="font-bold text-lg mr-4 mb-4">
           {{ templates.length > 0 ? 'Выберите шаблон' : '' }}
         </h3>
         <div v-if="templates.length > 0" class="flex items-center">
@@ -770,6 +770,7 @@ function closeTemplateModalFN() {
         <div class="hero mt-20" v-else>
           <span class="loading loading-spinner loading-lg"></span>
         </div>
+        <div class="mb-10"></div>
         <BuyoutTemplateExpand
           v-for="template in templates"
           :key="template.uuid"

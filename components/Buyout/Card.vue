@@ -301,7 +301,7 @@ const getStatus = computed(() => {
             </div>
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 mt-1">Сумма: </span>
-              <div class="rounded-lg p-1 bg-info">
+              <div class="rounded-lg p-1 bg-primary bg-opacity-50">
                 {{ currency.format(info.quantity * info.product?.price) }}
               </div>
             </div>

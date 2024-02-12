@@ -82,7 +82,7 @@ const productQuantityModel = computed({
 </script>
 
 <template>
-  <tr class=" border-b-base-300 ">
+  <tr class="border-b-base-300 bg-base-100">
     <td class="hidden 3xl:block text-center mt-9">
       {{ index + 1 }}
     </td>
@@ -127,7 +127,7 @@ const productQuantityModel = computed({
         <a
         :href="`https://www.ozon.ru/product/${product.article}`"
           target="_blank"
-          class="text-sm text-secondary link link-hover"
+          class="text-sm text-primary link link-hover"
         >
           {{ product.article }}
         </a>
@@ -151,7 +151,7 @@ const productQuantityModel = computed({
           type="number"
           min="1"
           max="1000"
-          class="input input-bordered input-sm w-full text-center"
+          class="input input-bordered input-sm w-full text-center bg-base-200"
         />
         <div
           class="absolute right-0 btn btn-ghost btn-sm btn-square"
@@ -165,7 +165,7 @@ const productQuantityModel = computed({
       <div class="w-20 2xl:w-full flex items-center">
         <select
           v-if="product.sizes.length"
-          class="select select-sm select-bordered w-full"
+          class="select select-sm select-bordered w-full bg-base-200"
           @change="onSizeChange"
         >
           <option
@@ -183,7 +183,7 @@ const productQuantityModel = computed({
     <td>
       <div class="w-20 2xl:w-full">
         <select
-          class="select select-sm select-bordered w-full appearance-none"
+          class="select select-sm select-bordered w-full bg-base-200 max-w-[100px] appearance-none"
           @change="onSexChange"
         >
           <option value="none">Нет</option>
@@ -252,11 +252,11 @@ const productQuantityModel = computed({
       <div class="flex items-center">
         <div class="w-full">
           <div
-            v-if="!product.purchaseSoon"
+            v-if="!product.purchaseSoon"  
             v-show="product.dateRange[1] && product.dateRange[0]"
-            class="text-sm flex flex-col justify-center items-start mb-2"
+            class="mx-auto w-fit text-sm flex flex-col justify-center items-center bg-primary bg-opacity-10 rounded-md p-1 mb-2"
           >
-          <div>
+            <div>
               {{
                 `${defaultDateShort(product.dateRange[0])} - ${defaultDateShort(
                   product.dateRange[1]
@@ -264,7 +264,9 @@ const productQuantityModel = computed({
               }}
             </div>
           </div>
-
+          <div>
+            
+          </div>
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"
@@ -293,10 +295,7 @@ const productQuantityModel = computed({
           {{ product.rules.map((rule: Rule) => rule.id).join(', ') }}
         </div>
         <button
-          :class="{
-            'btn-outline': product.rules,
-          }"
-          class="border-base-300 normal-case rounded-full"
+          class="border-base-100 text-base-300"
           @click="$emit('ruleModalOpen', index)"
         >
           <Icon name="mdi:settings" size="20" />
@@ -304,11 +303,11 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td>
-      <div class="w-8 btn btn-ghost btn-sm btn-square" @click="copyBuyout">
-        <IconCSS name="fluent:copy-20-filled" size="20" />
-      </div>
-      <div class="w-8 btn btn-ghost btn-sm btn-square" @click="deleteBuyOut">
+      <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="deleteBuyOut">
         <IconCSS name="material-symbols:close" size="20" />
+      </div>
+      <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="copyBuyout">
+        <IconCSS name="fluent:copy-20-filled" size="20" />
       </div>
     </td>
   </tr>
