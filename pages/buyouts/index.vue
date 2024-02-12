@@ -384,12 +384,12 @@ function toggleInfoModal() {
         
         <div clas="flex gap-2">
           
-          <div class="search flex items-center gap-3">
+          <div class="search flex items-center gap-1 lg:gap-3 flex-wrap">
             <div class="dropdown">
               <div
                 tabindex="0"
                 role="button"
-                class="font-medium normal-case bg-base-200 btn btn-sm w-[120px]"
+                class="font-medium normal-case bg-base-200 btn btn-sm w-[100px] lg:w-[120px] "
               >
                 <span>{{ statusText }}</span>
               </div>
@@ -415,7 +415,7 @@ function toggleInfoModal() {
               </ul>
             </div>
             <select
-              class="select select-bordered select-sm sm:hidden"
+              class="select select-bordered select-sm max-w-[131px] sm:hidden"
               @change="selectFilterDate"
             >
               <option value="all">За все время</option>
@@ -423,10 +423,10 @@ function toggleInfoModal() {
               <option value="3days">3 дня</option>
               <option value="7days">Неделя</option>
             </select>
-            <div class="flex gap-3 items-center sm:hidden">
+            <div class="flex gap-3 items-center  sm:hidden">
               <select
                 v-model="search.type"
-                class="select select-bordered select-sm"
+                class="select select-bordered select-sm max-w-[100px]"
               >
                 <option value="article">Артикул</option>
                 <option value="uuid">ID выкупа</option>
