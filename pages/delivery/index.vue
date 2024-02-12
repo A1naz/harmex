@@ -213,7 +213,7 @@ const statusText = computed(() => {
       <div class="flex lg:hidden">
         <div v-if="deliveries.length" class="export">
           <div class="dropdown">
-            <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-50 border-opacity-5 hover:border-opacity-10 hover:bg-opacity-50 mr-2">XLS</label>
+            <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2">XLS</label>
             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10">
               <li>
                 <NuxtLink target="blank" to="/delivery/export">
@@ -241,7 +241,7 @@ const statusText = computed(() => {
               <div
                 tabindex="0"
                 role="button"
-                class="font-medium normal-case btn-primary bg-opacity-50 border-opacity-5 hover:border-opacity-10 hover:bg-opacity-50 btn btn-sm w-[120px]"
+                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[120px]"
               >
                 {{ statusText }}
               </div>
@@ -282,7 +282,7 @@ const statusText = computed(() => {
               <div
                 tabindex="0"
                 role="button"
-                class="font-medium normal-case btn-primary bg-opacity-50 border-opacity-5 hover:border-opacity-10 hover:bg-opacity-50 btn btn-sm w-[120px]"
+                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[120px]"
               >
                 {{ statusText }}
               </div>
@@ -361,7 +361,7 @@ const statusText = computed(() => {
         </div>
         <div v-if="deliveries.length" class="export">
           <div class="dropdown dropdown-end z-10">
-            <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-50 border-opacity-5 hover:border-opacity-10 hover:bg-opacity-50 m-1">XLS</label>
+            <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content m-1">XLS</label>
             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <li>
                 <NuxtLink target="blank" to="/delivery/export">

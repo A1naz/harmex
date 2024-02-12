@@ -280,7 +280,7 @@ async function getAddressText(lt: number, lg: number) {
       'modal-open': props.state,
     }"
   >
-    <div v-if="state" class="modal-box w-11/12 max-w-4xl max-h-[40rem]">
+    <div v-if="state" class="modal-box w-11/12 max-w-4xl">
       <div class="">
         <a
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -363,7 +363,7 @@ async function getAddressText(lt: number, lg: number) {
 
 <style>
 .yandex-container {
-  height: 60vh;
+  height: 75vh;
   width: 100%;
   border-radius: 20px; /* Установите желаемый радиус скругления углов */
   overflow: hidden;

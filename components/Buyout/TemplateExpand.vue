@@ -81,14 +81,14 @@ async function deleteTemplate() {
         <nuxt-link to="/buyouts/create">
           <label
             @click="selectTemplate"
-            class="btn btn-sm btn-primary truncate mr-1"
+            class="btn btn-sm btn-primary truncate mr-1 bg-opacity-20 border-none text-base-content"
             >Добавить</label
           >
         </nuxt-link>
       </div>
     </div>
     <div
-      class="collapse-content flex items-center justify-center md:justify-start gap-2 max-h-[56rem] md:max-h-full flex-wrap overflow-y-auto md:overflow-hidden"
+      class="collapse-content flex items-center justify-center md:justify-start gap-2 max-h-[56rem] md:max-h-full flex-row space-x-2 overflow-x-auto"
     >
       <BuyoutTemplateCard
         v-for="product in info.buyoutsArray"

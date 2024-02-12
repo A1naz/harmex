@@ -43,12 +43,12 @@ function daysToPenalty(statusdelivery: any[]) {
 </script>
 
 <template>
-<div class="collapse collapse-arrow border bg-base-200 rounded-box z-0 overflow-hidden border-primary border-opacity-20 "
+<div class="collapse collapse-arrow border bg-base-200 rounded-box z-0 overflow-hidden border-primary border-opacity-10 "
 >
     
     <input v-model="opened"  type="checkbox">
     
-    <div class="collapse-title relative text-xl font-medium bg-primary bg-opacity-20 "
+    <div class="collapse-title relative text-xl font-medium bg-primary bg-opacity-10 "
     >
         <div class="flex gap-4">
             <nuxt-img
@@ -72,7 +72,7 @@ function daysToPenalty(statusdelivery: any[]) {
 
                 <div class="flex justify-between flex-wrap gap-1 items-center">
                     <button 
-                        class="text-xs btn btn-xs btn-primary bg-opacity-40 border-opacity-30  text-base-content rounded-md z-10 mt-1"
+                        class="text-xs btn btn-xs btn-primary bg-opacity-20 border-none text-base-content rounded-md z-10 mt-1"
                         @click="emit('openStatusModal', info.statusdelivery)
                         ">
                         <span class=""> Статус:</span>
