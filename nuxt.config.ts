@@ -160,6 +160,7 @@ export default defineNuxtConfig({
       language: 'ru',
       trailingSlash: true,
       BOT_LOGIN: process.env.BOT_LOGIN,
+      DOMAIN_API_IMAGES_URL: process.env.DOMAIN_API_IMAGES_URL,
     },
     VK_ACCESS_KEY: process.env.VK_ACCESS_KEY,
     VK_SECRET_KEY: process.env.VK_SECRET_KEY,

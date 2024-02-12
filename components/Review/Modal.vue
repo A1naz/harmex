@@ -114,12 +114,13 @@ async function uploadToS3(event: Event, index: number) {
   }
   if (data.value)
     form.photos[index] = {
-      url: `${config.public.siteUrl}/api/images/get?path=${data.value[0].key}`,
-      public: `${config.public.siteUrl}/api/images/get?path=${data.value[0].key}`,
+      url: `${config.public.DOMAIN_API_IMAGES_URL}${data.value[0].key}`,
+      public: `${config.public.DOMAIN_API_IMAGES_URL}${data.value[0].key}`,
     }
-    
-    
-  loadingIndex.value = null
+
+  setTimeout(() => {
+    loadingIndex.value = null
+  }, 1500)
 }
 async function clearForm() {
   form.date = new Date()
@@ -155,7 +156,6 @@ async function publishReview() {
   const photos = form.photos
   for await (const photo of photos) {
     try {
-      const response = await $fetch(photo.url)
     } catch {
       notify({
         title: 'Что-то пошло не так',
@@ -350,7 +350,9 @@ onMounted(() => {
         <div>
           <div class="pb-2 font-medium">
             Запланировать отзыв
-            <span class="text-xs font-normal text-gray-500">(по Московскому времени)</span>
+            <span class="text-xs font-normal text-gray-500"
+              >(по Московскому времени)</span
+            >
           </div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
@@ -396,7 +398,7 @@ onMounted(() => {
                       v-show="loadingIndex === index"
                       class="absolute inset-0 flex items-center justify-center"
                     >
-                      <Icon name="mdi:loading" class="h-8 w-8 animate-spin " />
+                      <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
                     </div>
                     <input
                       :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)"
@@ -452,7 +454,10 @@ onMounted(() => {
       </div>
       <div class="modal-action justify-between">
         <div>
-          <button class="btn btn-sm btn-ghost btn-outline border-none text-error" @click="clearForm">
+          <button
+            class="btn btn-sm btn-ghost btn-outline border-none text-error"
+            @click="clearForm"
+          >
             Сбросить
           </button>
         </div>
