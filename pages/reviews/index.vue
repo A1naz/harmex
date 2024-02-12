@@ -186,7 +186,9 @@ const isInfoModal = ref<boolean>(false)
 function toggleInfoModal() { 
     isInfoModal.value = !isInfoModal.value 
 }
-
+const statusText = computed(() => {
+  return tabs.find((el: any) => el.value === route.query.status)?.name
+})
 </script>
 
 <template>
@@ -219,20 +221,128 @@ function toggleInfoModal() {
         </InfoModal> -->
     </div>
 
-    <div class="flex justify-between mb-2 mt-4 items-center">
-      <div class="">
-        <Button 
-            v-for="tab in tabs" 
-            :class="[
-                'btn btn-ghost btn-sm normal-case font-medium',
-                { 'btn-active': tab.value === currentTab },
-            ]"
-            @click="changeTab(tab.value)"
-            > {{ tab.name }}</Button>
+    <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-2">
+      <div class="flex w-full gap-2 lg:hidden">
+        <ExportXls
+          api="/api/review/export"
+          fileName="TOPVTOP Доступные отзывы"
+          :isVisible="true"
+        />
+          <input
+          v-model="searchText"
+          type="text"
+          class="input input-sm input-bordered w-full"
+          placeholder="Поиск"
+          @change="onSearchInput"
+          />
       </div>
+      <div class="flex gap-2 flex-wrap lg:hidden">
+        <div class="dropdown">
+              <div
+                tabindex="0"
+                role="button"
+                class="font-medium normal-case btn btn-primary bg-opacity-20 border-none text-base-content btn-sm w-[150px]"
+              >
+                <span>{{ statusText }}</span>
+              </div>
+              <ul
+                tabindex="0"
+                class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[150px]"
+              >
+                <li>
+                  <Button 
+                  class="btn btn-ghost btn-xs normal-case font-medium w-full"
+                    v-for="tab in tabs" 
+                    :class="[
+                        'btn btn-ghost btn-sm normal-case font-medium',
+                        { 'btn-active': tab.value === currentTab },
+                    ]"
+                    @click="changeTab(tab.value)"
+                    > {{ tab.name }}
+                  </Button>
+                </li>
+              </ul>
+              
+            </div>
+            <select v-model="searchType" class="select select-bordered select-sm">
+            <option v-for="option in searchOptions" 
+                :value="option.value"
+                :key="'k-'+option.value"
+                :default="option.value == SelectOptions.article"
+                :hidden="option.value == SelectOptions.idReview && currentTab == 'available'"
+                >{{ option.name }}</option>
+        </select>
+        <NuxtLink 
+            to="/reviews/drafts" 
+            class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
+            >Черновики</NuxtLink>
+      </div>
+      <div class="gap-2 hidden lg:flex">
+        <div class="dropdown">
+              <div
+                tabindex="0"
+                role="button"
+                class="font-medium normal-case btn btn-primary bg-opacity-20 border-none text-base-content btn-sm w-[150px]"
+              >
+                <span>{{ statusText }}</span>
+              </div>
+              <ul
+                tabindex="0"
+                class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[150px]"
+              >
+                <li>
+                  <Button 
+                  class="btn btn-ghost btn-xs normal-case font-medium w-full"
+                    v-for="tab in tabs" 
+                    :class="[
+                        'btn btn-ghost btn-sm normal-case font-medium',
+                        { 'btn-active': tab.value === currentTab },
+                    ]"
+                    @click="changeTab(tab.value)"
+                    > {{ tab.name }}
+                  </Button>
+                </li>
+              </ul>
+              
+            </div>
+            <NuxtLink 
+            to="/reviews/drafts" 
+            class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
+            >Черновики</NuxtLink>
+      </div>
+      <div class="gap-2 items-center hidden lg:flex">
+        <select v-model="searchType" class="select select-bordered select-sm">
+            <option v-for="option in searchOptions" 
+                :value="option.value"
+                :key="'k-'+option.value"
+                :default="option.value == SelectOptions.article"
+                :hidden="option.value == SelectOptions.idReview && currentTab == 'available'"
+                >{{ option.name }}</option>
+        </select>
+        <div class="w-full">
+            <input
+                v-model="searchText"
+                type="text"
+                class="input input-sm input-bordered"
+                placeholder="Поиск"
+                @change="onSearchInput"
+                />
+            <!-- <span
+                v-if="search.loading"
+                class="absolute right-2 loading loading-spinner loading-xs p-2"
+                /> -->
+        
+      </div>
+      <div class="flex gap-1 items-center">
+        <ExportXls
+          api="/api/review/export"
+          fileName="TOPVTOP Доступные отзывы"
+          :isVisible="true"
+        /></div>
+        </div>
     </div>
 
-    <div class="search flex justify-between content-center my-4 flex-wrap gap-2">
+    <!-- <div class="search flex justify-between content-center my-4 flex-wrap gap-2">
       <div class="flex gap-1 items-center">
         <ExportXls
           api="/api/review/export"
@@ -244,33 +354,25 @@ function toggleInfoModal() {
             class="btn btn-primary btn-sm"
             >Черновики</NuxtLink>
       </div>
-      <div class="flex gap-1 items-center">
-        <select v-model="searchType" class="select select-bordered select-sm">
-            <option v-for="option in searchOptions" 
-                :value="option.value"
-                :key="'k-'+option.value"
-                :default="option.value == SelectOptions.article"
-                :hidden="option.value == SelectOptions.idReview && currentTab == 'available'"
-                >{{ option.name }}</option>
-        </select>
-        <div class="relative flex items-center flex-grow-0 w-full">
-            <input
-                v-model="searchText"
-                type="text"
-                class="input input-sm input-bordered"
-                placeholder="Поиск"
-                @change="onSearchInput"
-                />
-            <span
-                v-if="search.loading"
-                class="absolute right-2 loading loading-spinner loading-xs p-2"
-                />
-        </div>
-      </div>
-    </div>
+      
+    </div> -->
 
-    <div v-if="reviews && reviews.length > 0">
+    <div v-if="reviews && reviews.length > 0" class="mt-6">
       <div v-if="currentTab === 'available'" class="cards grid grid-cols-1 gap-4">
+        <ReviewCard
+          v-for="(review, index) of reviews"
+          :key="index"
+          :index="index"
+          :info="review"
+          @open-modal="(b: string, d: string)=> openModal(review, b, d )"
+        />
+        <ReviewCard
+          v-for="(review, index) of reviews"
+          :key="index"
+          :index="index"
+          :info="review"
+          @open-modal="(b: string, d: string)=> openModal(review, b, d )"
+        />
         <ReviewCard
           v-for="(review, index) of reviews"
           :key="index"
