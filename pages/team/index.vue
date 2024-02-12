@@ -253,7 +253,7 @@ const getPostName = (post: string) => {
         </div>
 
         <div v-if="myTeam && myTeam.length">
-          <DataTable
+          <!-- <DataTable
             v-if="width > 1024"
             :value="myTeam"
             :rowsPerPageOptions="[5, 10, 20, 50]"
@@ -312,20 +312,77 @@ const getPostName = (post: string) => {
                 {{ data[col.field] }}
               </template>
             </Column>
-          </DataTable>
+          </DataTable> -->
 
-          <ul v-else class="w-full lg:hidden">
+          <ul class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <li
               v-for="(item, index) in myTeam"
               :key="index"
-              class="pb-3 sm:pb-4"
+              class="pb-3 sm:pb-4 col-span-1"
             >
               <div
                 tabindex="0"
-                class="relative collapse collapse-arrow bg-base-100 rounded-box"
+                class="relative bg-base-100 rounded-box px-5 py-4"
               >
-                <div class="collapse-title font-medium">
-                  <div class="flex gap-6 items-center w-full">
+              <div class="dropdown dropdown-right absolute right-1 top-2 z-10">
+                <label tabindex="0" class="btn btn-sm btn-square btn-ghost ">
+                  <Icon name="ph:dots-three-outline-vertical-fill" class="text-primary" size="20" />
+                </label>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+                >
+                  <li>
+                    <a @click="openEditModal(false, item.uuid, index)">
+                      <Icon name="fluent:send-logging-24-filled" />Изменить
+                    </a>
+                  </li>
+                  <li>
+                    <a @click="openConfirmModal(item.uuid, index)">
+                      <Icon name="fluent:delete-24-filled" />Удалить
+                    </a>
+                  </li>
+                </ul>
+              </div>
+                <div class="font-medium">
+                  <div class="flex flex-col flex-wrap gap-5">
+                    <div class="text-primary">
+                      @{{ item.username }}
+                    </div>
+                    <div class="text-lg">
+                      {{ item.firstName + " " + item.lastName }}
+                    </div>
+                    <div class="flex flex-col text-sm">
+                      <span>Email:</span>
+                      <span>{{ item.email }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <dt class="mb-2 text-sm ">
+                        Разрешения:
+                      </dt>
+                      <dd class="font-semibold">
+                        <div class="flex flex-wrap gap-1">
+                          <div
+                            v-if="
+                              item.allowedPathes.length == multiOptions.length
+                            "
+                            class="text-sm p-1 rounded-2xl btn-primary bg-success text-green-400 bg-opacity-50 border-none "
+                          >
+                            Полный доступ
+                          </div>
+                          <div
+                            v-else
+                            v-for="(itm, index) in item.allowedPathes"
+                            :key="index"
+                            class="text-sm py-1 px-2 rounded-2xl btn-primary bg-opacity-20 border-none text-primary"
+                          >
+                            {{ itm.name }}
+                          </div>
+                        </div>
+                      </dd>
+                    </div>
+                  </div>
+                  <!-- <div class="flex gap-6 items-center w-full">
                     <div class="flex gap-4 items-start">
                       <div class="flex flex-col gap-0.5 text-sm">
                         <div class="text-xs">Email</div>
@@ -340,14 +397,14 @@ const getPostName = (post: string) => {
                         {{ item.lastName }}
                       </div>
                     </div>
-                  </div>
-                  <div
+                  </div> -->
+                  <!-- <div
                     class="absolute top-0 text-gray-400 right-3 date text-xs text-center mt-2 xs:bottom-0 xs:top-20 invisible md:visible"
                   >
                     #{{ item.uuid }}
-                  </div>
+                  </div> -->
                 </div>
-                <div class="collapse-content flex gap-4">
+                <!-- <div class="collapse-content flex gap-4">
                   <div class="flex flex-col">
                     <dt class="mb-1 text-gray-500 text-sm dark:text-gray-400">
                       Разрешения
@@ -373,8 +430,8 @@ const getPostName = (post: string) => {
                       </div>
                     </dd>
                   </div>
-                </div>
-                <div class="flex justify-end ml-4 mb-2">
+                </div> -->
+                <!-- <div class="flex justify-end ml-4 mb-2">
                   <Button
                     class="btn btn-sm m-1 btn-primary"
                     @click="openEditModal(false, item.uuid, index)"
@@ -387,7 +444,7 @@ const getPostName = (post: string) => {
                   >
                     <span class="pi pi-trash"></span>
                   </Button>
-                </div>
+                </div> -->
               </div>
             </li>
           </ul>

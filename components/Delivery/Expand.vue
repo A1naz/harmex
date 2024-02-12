@@ -97,7 +97,7 @@ function daysToPenalty(statusdelivery: any[]) {
     </div>
 
 
-    <div class="collapse-content bg-primary bg-opacity-20"
+    <div class="collapse-content bg-primary bg-opacity-10"
     >
         <div class="product flex flex-col gap-4 lg:gap-8 flex-wrap">
             <div class="flex flex-col">

@@ -395,9 +395,9 @@ const statusText = computed(() => {
       </TransitionSlide>
       <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
     </div> -->
-    <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4">
+    <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
       <TransitionSlide group tag="ul" class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3">
-      <ul class="flex flex-col gap-3">
+      <ul class="flex flex-col gap-3 w-1/2">
       <li v-for="(delivery, index) of deliveries.slice(0, Math.ceil(deliveries.length / 2))" :key="index" class="overflow-visible z-0">
         <DeliveryExpand
           :state="openAll"
@@ -408,7 +408,7 @@ const statusText = computed(() => {
         />
       </li>
     </ul>
-    <ul class="flex flex-col gap-3">
+    <ul class="flex flex-col gap-3 w-1/2">
       <li v-for="(delivery, index) of deliveries.slice(Math.ceil(deliveries.length / 2))" :key="index" class="overflow-visible z-0">
         <DeliveryExpand
           :state="openAll"

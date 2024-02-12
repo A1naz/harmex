@@ -52,23 +52,27 @@ function removeReview() {
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-200 shadow-lg">
+  <div class="buyout-card card bg-base-100 shadow-lg">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
     >
+      <div>
+        {{ defaultDate(info.date) }}
+      </div>
       <div class="flex justify-between item gap-2 mb-2">
+        
         <h2 v-if="info.draftName" class="card-title">{{ info.draftName }}</h2>
         <h2 v-else class="card-title">Отзыв</h2>
         <div>
           <span
             :class="{
-              'bg-green-600':
+              'bg-success bg-opacity-50 text-green-500':
                 info.status === 'working' || info.status === 'published',
-              'bg-warning':
+              'bg-warning bg-opacity-50 text-amber-500':
                 info.status === 'waiting' ||
                 info.status === 'created' ||
                 info.status === 'nofunds',
-              'bg-error':
+              'bg-error bg-opacity-50 text-red-500':
                 info.status === 'canceled' ||
                 info.status === 'deleted' ||
                 info.status === 'deleting',
@@ -121,19 +125,12 @@ function removeReview() {
             </a>
           </div>
         </div>
-        <div class="w-full">
-          <div class="font-bold">Отзыв о товаре</div>
-          <div
-            class="w-full bg-base-200 h-16 overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin"
-          >
-            {{ info.text }}
-          </div>
-        </div>
+        
 
         <div>
           <div class="font-bold">Рейтинг</div>
           <div class="relative w-full rounded-lg">
-            <div class="rating">
+            <div class="rating gap-2">
               <input
                 type="radio"
                 disabled
@@ -172,15 +169,22 @@ function removeReview() {
             </div>
           </div>
         </div>
-
-        <div>
+        <div class="w-full">
+          <div class="font-bold">Отзыв о товаре</div>
+          <div
+            class="w-full bg-base-100 h-auto overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-100 scrollbar-thin"
+          >
+            {{ info.text }}
+          </div>
+        </div>
+        <!-- <div>
           <div class="font-bold">Дата отзыва</div>
           <div class="relative w-full rounded-lg">
             <div>
               {{ defaultDate(info.date) }}
             </div>
           </div>
-        </div>
+        </div> -->
         <div>
           <div class="font-bold pb-2">Фото</div>
 
@@ -190,7 +194,7 @@ function removeReview() {
             <div v-for="(photo, i) of info.images" :key="i">
               <label v-if="photo" for="reviewImageModal">
                 <div
-                  class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none"
+                  class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-16 h-16 hover:bg-base-200 rounded-lg flex-none"
                   @click="() => emit('openImage', photo)"
                 >
                   <div class="absolute inset-0">
