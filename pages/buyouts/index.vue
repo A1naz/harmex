@@ -391,7 +391,7 @@ function toggleInfoModal() {
                 role="button"
                 class="font-medium normal-case bg-base-200 btn btn-sm w-[120px]"
               >
-                {{ statusText }}
+                <span>{{ statusText }}</span>
               </div>
               <ul
                 tabindex="0"
@@ -488,12 +488,12 @@ function toggleInfoModal() {
                 placeholder="Поиск по товарам"
                 @input="onSearchInput($event)"
               />
-              <Icon
+              <!-- <Icon
                 v-if="!search.loading"
                 class="absolute right-2 p-2"
                 name="tabler:search"
                 size="30"
-              />
+              /> -->
               <span
                 v-if="search.loading"
                 class="absolute right-2 loading loading-spinner loading-xs p-2"

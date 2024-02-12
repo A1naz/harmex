@@ -241,7 +241,7 @@ onMounted(() => {
     :class="{
       'modal-open': state,
     }"
-    class="modal"
+    class="modal overflow-x-hidden"
   >
     <div class="modal-box z-50">
       <label
@@ -258,10 +258,10 @@ onMounted(() => {
 
       <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
 
-      <div class="pb-2">Доставка:</div>
+      <div class="pb-2 font-medium">Доставка:</div>
       <select
         v-model="selectedDeliv"
-        class="select select-bordered w-full mb-4"
+        class="select w-full mb-4 bg-base-200 text-gray-500"
       >
         <option
           v-for="(rev, index) in review.delivs"
@@ -283,8 +283,8 @@ onMounted(() => {
       </select>
 
       <div class="flex flex-col gap-4">
-        <div class="w-full mb-4">
-          <div class="pb-2">Отзыв о товаре</div>
+        <div class="w-full">
+          <div class="pb-2 font-medium">Отзыв о товаре</div>
 
           <textarea
             v-model="form.text"
@@ -308,10 +308,10 @@ onMounted(() => {
         </div>
 
         <div>
-          <div class="pb-2">Рейтинг</div>
-          <div class="relative w-full p-6 bg-base-200 rounded-lg">
-            <div class="absolute left-3 top-3 text-gray-400">Оценка</div>
-            <div class="rating absolute right-3 top-3">
+          <div class="font-medium">Рейтинг</div>
+          <div class="relative w-full py-6 bg-base-100 rounded-lg">
+            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
+            <div class="rating absolute left-0 top-3 gap-2">
               <input
                 type="radio"
                 name="rating-2"
@@ -348,12 +348,12 @@ onMounted(() => {
         </div>
 
         <div>
-          <div class="pb-2">
+          <div class="pb-2 font-medium">
             Запланировать отзыв
-            <span class="text-xs">(по Московскому времени)</span>
+            <span class="text-xs font-normal text-gray-500">(по Московскому времени)</span>
           </div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
-            <div class="absolute left-3 top-3">
+            <div class="absolute left-3 top-3 text-gray-500">
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
@@ -366,8 +366,8 @@ onMounted(() => {
           </div>
         </div>
         <div>
-          <div>Фото</div>
-          <p class="mb-2 text-sm font-light">
+          <div class="font-medium">Фото</div>
+          <p class="mb-2 text-sm font-light text-gray-500">
             Разрешены фото в формате PNG, JPG.
           </p>
           <ClientOnly>
@@ -396,7 +396,7 @@ onMounted(() => {
                       v-show="loadingIndex === index"
                       class="absolute inset-0 flex items-center justify-center"
                     >
-                      <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                      <Icon name="mdi:loading" class="h-8 w-8 animate-spin " />
                     </div>
                     <input
                       :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)"
@@ -408,6 +408,7 @@ onMounted(() => {
                     <IconCSS
                       v-show="loadingIndex !== index"
                       name="material-symbols:add-photo-alternate-outline"
+                      class="text-base-content bg-primary"
                       size="30"
                     />
                   </label>
@@ -451,7 +452,7 @@ onMounted(() => {
       </div>
       <div class="modal-action justify-between">
         <div>
-          <button class="btn btn-sm btn-ghost btn-outline" @click="clearForm">
+          <button class="btn btn-sm btn-ghost btn-outline border-none text-error" @click="clearForm">
             Сбросить
           </button>
         </div>
@@ -464,7 +465,7 @@ onMounted(() => {
           >
           <button
             for="review-modal"
-            class="btn btn-primary btn-sm"
+            class="btn btn-primary btn-sm bg-opacity-20 border-none text-base-content"
             :disabled="!textValidation"
             @click="publishReview"
           >

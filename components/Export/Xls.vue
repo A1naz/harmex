@@ -81,8 +81,8 @@ async function exportToXLS() {
                 >
                 <Button 
                     type="button" 
-                    label="Экспорт XLS" 
-                    class="btn btn-sm btn-primary" 
+                    label="XLS" 
+                    class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content" 
                     :loading="btnLoading" 
                     />
             </DateRangePicker>

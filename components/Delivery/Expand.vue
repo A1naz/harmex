@@ -97,7 +97,7 @@ function daysToPenalty(statusdelivery: any[]) {
     </div>
 
 
-    <div class="collapse-content bg-primary bg-opacity-20"
+    <div class="collapse-content bg-primary bg-opacity-10"
     >
         <div class="product flex flex-col gap-4 lg:gap-8 flex-wrap">
             <div class="flex flex-col">
@@ -128,24 +128,25 @@ function daysToPenalty(statusdelivery: any[]) {
                     <div class="text-sm text-gray-500">
                         <span>Цена: </span>
                         
-                        <span class="ml-2">{{ currency.format(info.pricebuy) }}</span>
+                        <span class="ml-2 rounded-lg bg-success p-1 text-base-content">{{ currency.format(info.pricebuy) }}</span>
                     </div>
-                    
-                </div>
-
-                <div class="flex text-sm">
-                    <div class=" text-gray-500">
-                        <span >Размер: </span>
-                    </div>
-                    <div class="ml-2">{{ info.size === 'none' ? 'Не указан' : info.size }}</div>
                     
                 </div>
 
                 <div class="flex">
                     <div class="text-sm text-gray-500">
-                        <span>Скидка: </span>
+                        <span>Размер: </span>
                         
-                        <span class="ml-2">{{ '%'}}</span>
+                        <span class="ml-2 rounded-lg bg-base-300 p-1 text-base-content">{{ info.size === 'none' ? 'Не указан' : info.size }}</span>
+                    </div>
+                    
+                </div>
+
+                <div class="flex">
+                    <div class="text-sm text-gray-500">
+                        <span>Размер: </span>
+                        
+                        <span class="ml-2 rounded-lg bg-base-300 p-1 text-base-content">{{ '%' }}</span>
                     </div>
                     
                 </div>
@@ -159,15 +160,16 @@ function daysToPenalty(statusdelivery: any[]) {
         <div class="receipt flex gap-4 lg:gap-8 items-center flex-wrap">
 
             <div class="flex gap-2 md:gap-10 lg:gap-10">
-                <div class="lg:mr-10">
+                <div class="lg:mr-10 text-primary">
                     <div class="text-sm text-gray-500">
                         Получатель:
                     </div>
                     {{ info.recipient }} {{ info.recipientphone }}
+                    
                 </div>
 
                 
-                <div>
+                <div class="text-primary">
                     <div class="text-sm text-gray-500">
                         Код получения:
                     </div>

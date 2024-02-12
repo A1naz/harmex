@@ -76,7 +76,7 @@ const statusText = computed(() => {
   return (
     storeMain.client.mmenuItems
       .flatMap((section) => section.items)
-      .find((item) => item.path === route.path)?.title || 'Профиль'
+      .find((item) => route.path.startsWith(item.path))?.title || 'Профиль'
   )
 })
 </script>
