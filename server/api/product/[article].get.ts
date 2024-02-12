@@ -14,6 +14,8 @@ export default eventHandler(async (event) => {
   const randomNumber = Math.floor(Math.random() * (proxies.length - 1))
   const proxyAgent = new HttpsProxyAgent(`https://${proxies[randomNumber]}`)
 
+  console.log(proxyAgent);
+  
   const params = event.context.params as any
   const url = `https://www.ozon.ru/api/entrypoint-api.bx/page/json/v2?url=%2Fproduct/${params.article}`
   const data: any = await $fetch(url, {
@@ -28,6 +30,8 @@ export default eventHandler(async (event) => {
     },
   }).catch((e) => {
     if (e.status === 404) {
+      console.log(e);
+      
       throw createError({
         message: 'Не найдена информация по данному артикулу.',
       })
