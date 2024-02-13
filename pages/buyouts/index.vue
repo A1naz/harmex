@@ -5,6 +5,7 @@ definePageMeta({
   title: 'Выкупы',
 })
 
+const { width } = useWindowSize()
 const route = useRoute()
 const router = useRouter()
 const buyouts = ref([]) as any
@@ -384,12 +385,16 @@ function toggleInfoModal() {
         
         <div clas="flex gap-2">
           
-          <div class="search flex items-center gap-1 lg:gap-3 flex-wrap">
+          <div class="search flex items-center gap-1 lg:gap-3"
+            :class="{
+              'flex-wrap': width < 350,
+            }"
+          >
             <div class="dropdown">
               <div
                 tabindex="0"
                 role="button"
-                class="font-medium normal-case bg-base-200 btn btn-sm w-[100px] lg:w-[120px] "
+                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] px-0 lg:w-[120px] "
               >
                 <span>{{ statusText }}</span>
               </div>
@@ -426,7 +431,7 @@ function toggleInfoModal() {
             <div class="flex gap-3 items-center  sm:hidden">
               <select
                 v-model="search.type"
-                class="select select-bordered select-sm max-w-[100px]"
+                class="select select-bordered select-sm max-w-[98px]"
               >
                 <option value="article">Артикул</option>
                 <option value="uuid">ID выкупа</option>

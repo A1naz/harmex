@@ -38,7 +38,7 @@ onMounted(()=>{
 </script>
 
 <template>
-    <div v-if="isModal">
+    <!-- <div v-if="isModal">
         <input id="infoModal" type="checkbox" class="modal-toggle">
         <div class='modal modal-open' >
             <div class="modal-box w-11/12 max-w-4xl">
@@ -63,5 +63,5 @@ onMounted(()=>{
             </div>
             <label class="modal-backdrop" for="infoModal" @click="toggleModal">Close</label>
         </div>
-    </div>
+    </div> -->
 </template>

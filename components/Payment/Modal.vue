@@ -415,8 +415,8 @@ onMounted(() => {
       <p class="pt-2">
         Пополняйте баланс один раз в 10 минут, не более 100 000 рублей
       </p>
-
-        <iframe class="w-full mt-4" width="432" height="243" src="https://www.youtube.com/embed/_ZCuo-YeOUQ?si=r0rSS5uAnO0coA76" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<!-- 
+        <iframe class="w-full mt-4" width="432" height="243" src="https://www.youtube.com/embed/_ZCuo-YeOUQ?si=r0rSS5uAnO0coA76" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
 
       <div class="images flex gap-2 items-center justify-center mt-2">
         <label for="sbpImageModal" class="cursor-pointer"><nuxt-img class="rounded-lg" src="info/sbp1.jpg" loading="lazy" fit="fill" @click="openedPhoto = 'info/sbp1.jpg'" />

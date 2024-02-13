@@ -99,7 +99,7 @@ const statusText = computed(() => {
         />
       </Transition>
       <div class="w-full navbar bg-base-100 lg:hidden">
-        <div class="flex-none">
+        <div class="flex-none justify-between w-full">
           <label for="my-drawer" class="btn btn-square btn-ghost drawer-button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -115,12 +115,13 @@ const statusText = computed(() => {
               />
             </svg>
           </label>
+          <InfoButton @openModal="toggleInfoModal" />
         </div>
         <div v-if="width > 1024" class="flex-1 justify-center mr-12">
           <Logo />
         </div>
       </div>
-      <div class="flex items-center gap-2 p-4 justify-between bg-base-100">
+      <div class="hidden items-center gap-2 p-4 justify-between bg-base-100 lg:flex">
         <h1 class="text-2xl font-bold">{{ statusText }}</h1>
         <InfoButton @openModal="toggleInfoModal" />
       </div>
@@ -317,7 +318,7 @@ const statusText = computed(() => {
     <SwapAccountModal />
     <InfoFaqModal />
 
-    <InfoModal
+    <!-- <InfoModal
       :isModal="isInfoModal"
       title="Как пользоваться платформой TOPvTOP?"
       ytSrc="https://www.youtube.com/embed/YqIw35-LiOk?si=d1FdsCsb04ADG8JZ"
@@ -339,7 +340,7 @@ const statusText = computed(() => {
           </button>
         </NuxtLink>
       </div>
-    </InfoModal>
+    </InfoModal> -->
   </div>
 </template>
 

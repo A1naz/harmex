@@ -233,16 +233,16 @@ const getPostName = (post: string) => {
     <div class="mb-4">
       <!-- <div class="flex">
         <h1 class="text-2xl font-bold mt-4">Моя команда</h1>
-      </div> -->
+      </div>
       <p class="text-xs font-light mt-4 lg:text-sm">
         Делегируйте задачи между вашими сотрудниками для эффективного
         продвижения товаров.
-      </p>
+      </p> -->
     </div>
 
-    <Tabs :tabs="tabs">
+    <Tabs :tabs="tabs" class="flex flex-col">
       <template v-slot:main>
-        <div class="flex justify-end mb-8 mt-6 items-center">
+        <div class="flex justify-start mb-4 mt-2 items-center">
           <Button
             class="btn btn-sm btn-primary m-1"
             @click="openEditModal(true)"
@@ -314,7 +314,7 @@ const getPostName = (post: string) => {
             </Column>
           </DataTable> -->
 
-          <ul class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <ul class="w-full grid grid-cols-1 sm:grid-cols-2 navbar:grid-cols-3 md:grid-cols-4 gap-4">
             <li
               v-for="(item, index) in myTeam"
               :key="index"
@@ -324,7 +324,7 @@ const getPostName = (post: string) => {
                 tabindex="0"
                 class="relative bg-base-100 rounded-box px-5 py-4"
               >
-              <div class="dropdown dropdown-right absolute right-1 top-2 z-10">
+              <div class="dropdown dropdown-end absolute right-1 top-2 z-10">
                 <label tabindex="0" class="btn btn-sm btn-square btn-ghost ">
                   <Icon name="ph:dots-three-outline-vertical-fill" class="text-primary" size="20" />
                 </label>
@@ -361,12 +361,14 @@ const getPostName = (post: string) => {
                         Разрешения:
                       </dt>
                       <dd class="font-semibold">
-                        <div class="flex flex-wrap gap-1">
+                        <div class="flex flex-wrap gap-1 overflow-y-auto h-[60px] scrollbar-thin align-center items-center"
+                        
+                        >
                           <div
                             v-if="
                               item.allowedPathes.length == multiOptions.length
                             "
-                            class="text-sm p-1 rounded-2xl btn-primary bg-success text-green-400 bg-opacity-50 border-none "
+                            class="text-sm p-1 rounded-2xl bg-success text-green-400 bg-opacity-50 border-none "
                           >
                             Полный доступ
                           </div>
@@ -374,7 +376,7 @@ const getPostName = (post: string) => {
                             v-else
                             v-for="(itm, index) in item.allowedPathes"
                             :key="index"
-                            class="text-sm py-1 px-2 rounded-2xl btn-primary bg-opacity-20 border-none text-primary"
+                            class="text-sm py-1 px-2 rounded-2xl bg-primary bg-opacity-20 border-none text-primary"
                           >
                             {{ itm.name }}
                           </div>
@@ -488,4 +490,5 @@ const getPostName = (post: string) => {
 .p-datatable-wrapper {
   @apply overflow-visible !important;
 }
+
 </style>
