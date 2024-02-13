@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
 const theme = useColorMode()
+const { width } = useWindowSize()
 
 const props = defineProps({
   info: {
@@ -201,7 +202,7 @@ const getStatus = computed(() => {
 
       <div class="truncate">
         <div class="flex justify-between gap-1 items-center">
-          <div class="flex gap-x-3">
+          <div class="flex gap-x-3 flex-wrap">
             <span class="text-xs text-gray-500"
               >Создан: {{ defaultDate(info.createdAt) }}
             </span>
@@ -227,7 +228,7 @@ const getStatus = computed(() => {
           </div>
         </div>
 
-        <div class="flex gap-3">
+        <div class="flex gap-3 flex-wrap">
           <h2 class="card-title mt-2">Выкуп №{{ info.place }}</h2>
           <div
             class="mt-2 rounded-2xl py-1 px-2"
@@ -257,7 +258,10 @@ const getStatus = computed(() => {
           <a
             :href="`https://www.ozon.ru/product/${info.article}`"
             target="_blank"
-            class="text-base text-primary link link-hover mt-3"
+            class="text-base text-primary link link-hover mt-0"
+            :class="{
+              'mt-3' : width > 364
+            }"
           >
             {{ info.article }}
           </a>

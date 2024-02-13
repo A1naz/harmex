@@ -23,7 +23,7 @@ function isActive(slot: string, query: string): boolean {
     <Button
         v-for="tab in tabs"
         :class="{ 'btn-active': isActive(tab.slot, tab.query) }" 
-        class="btn btn-ghost btn-sm normal-case text-primary font-medium mx-1"
+        class="btn btn-sm normal-case btn-primary bg-opacity-20 border-none text-base-content font-medium mx-1 mt-2"
         @click="changeTab(`${route.path}${tab.query}`, tab.slot)"
         >
         {{ tab.title }}

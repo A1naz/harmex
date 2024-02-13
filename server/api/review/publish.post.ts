@@ -41,7 +41,10 @@ export default eventHandler(async (event) => {
   }
 
   const images = photos.map((photo: any) =>
-    photo.public.replace(config.public.DOMAIN_API_IMAGES_URL, '')
+    photo.public.replace(
+      config.public.DOMAIN_API_IMAGES_URL + 'reviewImages/',
+      ''
+    )
   )
   
   console.log(images);
