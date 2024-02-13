@@ -19,7 +19,7 @@ const multiselectStyle = {
   root: ({ props }: any) => ({
     class: [
       {
-        'bg-white border-gray-400': colorMode.value == 'light',
+        'bg-base-200 border-gray-400': colorMode.value == 'light',
         'bg-gray-primary-content border-gray-600': colorMode.value == 'dark',
       },
       'inline-flex cursor-pointer select-none',
@@ -53,7 +53,7 @@ const multiselectStyle = {
   token: {
     class: [
       {
-        'bg-orange-300 text-gray-700': colorMode.value == 'light',
+        'bg-primary text-primary bg-opacity-10': colorMode.value == 'light',
         'bg-gray-700 text-white/80': colorMode.value == 'dark',
       },
       'py-1 px-2 mr-2 rounded-full',
@@ -110,12 +110,12 @@ const multiselectStyle = {
       },
       'flex items-center justify-center',
       'border-2 w-6 h-6 rounded-lg transition-colors duration-200',
-      'hover:border-orange-500 focus:outline-none focus:outline-offset-0',
+      'hover:border-primary focus:outline-none focus:outline-offset-0',
       {
-        'border-orange-500 bg-orange-500': context?.selected,
+        'border-primary bg-primary': context?.selected,
         'border-gray-300 bg-white':
           !context?.selected && colorMode.value == 'light',
-        'border-orange-900/40 bg-gray-900':
+        'border-primary bg-gray-900':
           !context?.selected && colorMode.value == 'dark',
       },
     ],
@@ -165,13 +165,13 @@ const multiselectStyle = {
           context.focused && !context.selected && colorMode.value == 'light',
         'bg-gray-800/90 text-white/80 hover:text-gray-700 hover:bg-gray-800':
           context.focused && !context.selected && colorMode.value == 'dark',
-        'bg-orange-100 text-orange-700':
+        'bg-primary bg-opacity-10 text-primary':
           context.focused && context.selected && colorMode.value == 'light',
-        'bg-orange-400 text-white/80':
+        'bg-primary bg-opacity-50 text-white/80':
           context.focused && context.selected && colorMode.value == 'dark',
-        'bg-orange-50 text-orange-700':
+        'bg-primary bg-opacity-5 text-primary':
           !context.focused && context.selected && colorMode.value == 'light',
-        'bg-orange-300 text-white/80':
+        'bg-primary bg-opacity-30 text-primary':
           !context.focused && context.selected && colorMode.value == 'dark',
       },
     ],
@@ -193,13 +193,13 @@ const multiselectStyle = {
       },
       'flex items-center justify-center',
       'border-2 w-6 h-6 rounded-lg transition-colors duration-200',
-      'hover:border-orange-500 focus:outline-none focus:outline-offset-0',
+      'hover:border-primary hover:border-opacity-50 focus:outline-none focus:outline-offset-0',
       {
         'border-gray-300 bg-white':
           !context?.selected && colorMode.value == 'light',
-        'border-orange-900/40 bg-gray-900':
+        'border-primary bg-gray-900':
           !context?.selected && colorMode.value == 'dark',
-        'border-orange-500 bg-orange-500': context?.selected,
+        'border-primary bg-primary': context?.selected,
       },
     ],
   }),
@@ -266,7 +266,6 @@ const multiselectStyle = {
         <div class="flex flex-col gap-2 mt-2 justify-center">
           <div v-for="(conf, index) in config">
             <label :for="conf.type"> {{ conf.header }} </label><br />
-
             <MultiSelect
               v-if="conf.type == FieldsType.multiOptions && conf.options"
               :key="'multi' + index"
@@ -276,7 +275,7 @@ const multiselectStyle = {
               display="chip"
               :pt="multiselectStyle"
             />
-            <select v-else-if="conf.type == FieldsType.select" class="select select-bordered w-full" v-model="modelValue[conf.field]">
+            <select v-else-if="conf.type == FieldsType.select" class="select select-bordered w-full bg-base-200" v-model="modelValue[conf.field]">
               <option v-for="(opt, index) in conf.options" :key="index" :value="opt.value">
                 {{ opt.text }}
               </option>
@@ -295,7 +294,7 @@ const multiselectStyle = {
               v-model="modelValue[conf.field]"
               :placeholder="conf.header"
               :type="conf.type"
-              class="input input-bordered w-full"
+              class="input input-bordered w-full bg-base-200"
             />
           </div>
         </div>
@@ -304,19 +303,20 @@ const multiselectStyle = {
           <p class="text-red-600">{{ saveError }}</p>
         </div>
 
-        <div class="flex m-4">
+        <div class="flex my-4 justify-between">
           <Button
-            class="btn btn-sm btn-primary m-1"
+            class="btn btn-sm btn-neutral m-1 sm:px-10"
+            label="Отменить"
+            @click="$emit('close')"
+          ></Button>
+          <Button
+            class="btn btn-sm btn-primary m-1 sm:px-10"
             label="Сохранить"
             :loading="btnSaveLoading"
             @click="$emit('save')"
           ></Button>
 
-          <Button
-            class="btn btn-sm btn-neutral m-1"
-            label="Отменить"
-            @click="$emit('close')"
-          ></Button>
+          
         </div>
       </div>
     </div>
