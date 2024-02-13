@@ -229,7 +229,8 @@ const getPostName = (post: string) => {
 </script>
 
 <template>
-  <div>
+  <div 
+  >
     <div class="mb-4">
       <!-- <div class="flex">
         <h1 class="text-2xl font-bold mt-4">Моя команда</h1>
@@ -314,7 +315,7 @@ const getPostName = (post: string) => {
             </Column>
           </DataTable> -->
 
-          <ul class="w-full grid grid-cols-1 sm:grid-cols-2 navbar:grid-cols-3 md:grid-cols-4 gap-4">
+          <ul class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 navbar:grid-cols-3 lg:grid-cols-4 gap-4">
             <li
               v-for="(item, index) in myTeam"
               :key="index"
@@ -361,14 +362,14 @@ const getPostName = (post: string) => {
                         Разрешения:
                       </dt>
                       <dd class="font-semibold">
-                        <div class="flex flex-wrap gap-1 overflow-y-auto h-[60px] scrollbar-thin align-center items-center"
+                        <div class="flex flex-wrap gap-1 overflow-y-hidden sm:overflow-y-auto sm:h-[60px] align-center items-center"
                         
                         >
                           <div
                             v-if="
                               item.allowedPathes.length == multiOptions.length
                             "
-                            class="text-sm p-1 rounded-2xl bg-success text-green-400 bg-opacity-50 border-none "
+                            class="text-sm p-1 rounded-2xl bg-success text-green-400 bg-opacity-50 w-fit border-none "
                           >
                             Полный доступ
                           </div>
@@ -486,9 +487,22 @@ const getPostName = (post: string) => {
   </div>
 </template>
 
-<style>
-.p-datatable-wrapper {
-  @apply overflow-visible !important;
+<style scoped>
+::-webkit-scrollbar {
+  width: 12px;
+  border-radius: 8px;
 }
 
+
+::-webkit-scrollbar-thumb {
+  background-color: #6366f1; 
+  border-radius: 8px; 
+}
+
+
+::-webkit-scrollbar-track {
+  background-color: rgba(99, 102, 241, .4) ;
+  
+  border-radius: 8px; 
+}
 </style>
