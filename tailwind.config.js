@@ -10,6 +10,7 @@ module.exports = {
       'lg': '1024px',
       // => @media (min-width: 1024px) { ... }
       'navbar': {'min': '1024px', 'max': '1100px'},
+      'nbar100': {'min': '1100px', 'max': '1210px'},
 
       'xl': '1280px',
       // => @media (min-width: 1280px) { ... }

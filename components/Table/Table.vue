@@ -92,8 +92,9 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
 </script>
 
 <template>
-    <div class="mt-8">
-        <TableDateDefaultFilter
+    <div class="">
+        <div class="flex justify-end gap-2 w-full mt-2">
+            <TableDateDefaultFilter
             v-if="useDefaultDateFilter"
             @range-upd="(r: number) => updateFilter('filter', r)"
             />
@@ -106,6 +107,8 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
             @change-limit="changeLimit"
             @change-page="changePage"
             />
+        </div>
+        
         
         <div class="flex flex-row w-full justify-end">
             <div class="self-center text-sm">{{ displayed }}</div>
@@ -166,3 +169,10 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
 
     </div>
 </template>
+
+<style scoped>
+.p-datatable .p-datatable-thead .p-column-header {
+    color: #fff; /* Цвет текста */
+    background-color: #333; /* Цвет фона */
+}
+</style>

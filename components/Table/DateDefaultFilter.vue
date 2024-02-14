@@ -44,24 +44,71 @@ function datePrepare(daysAgo: number) {
 }
 
 function changeRange(filter: DateFilterRanges){
+    dropdownOpened.value = false;
     currentRange.value = filter.value
     const dateRange = datePrepare(filter.value)
     emit('rangeUpd', dateRange)
 }
 
+const dropdownOpened = ref<boolean>(false);
+
+const statusText = computed(() => {
+  return props.rangesConfig.find((filter: DateFilterRanges) => filter.value == currentRange.value)?.header
+})
+
+const handleBodyClick = (event: MouseEvent) => {
+  // Проверяем, был ли клик вне элемента dropdown
+  const dropdown = document.querySelector('.dropdown');
+  if (dropdown && !dropdown.contains(event.target as Node)) {
+    dropdownOpened.value = false;
+  }
+};
+
+// Добавляем обработчик события клика при монтировании компонента
+onMounted(() => {
+  document.body.addEventListener('click', handleBodyClick);
+});
+
+// Удаляем обработчик события клика при демонтаже компонента
+onUnmounted(() => {
+  document.body.removeEventListener('click', handleBodyClick);
+});
+
 </script>
 
 <template>
     <div class="flex flex-row flex-wrap gap-1 content-center">
-        <Button             
-            v-for="filter in rangesConfig"
-            :class="[
-                'btn btn-ghost btn-sm normal-case font-medium',
-                { 'btn-active': filter.value == currentRange }
-            ]"
-            @click="changeRange(filter)"
+        <CustomDrop
+            :statusText="statusText || ''"
+            :rangesConfig="rangesConfig"
+            :currentRange="currentRange"
+            :changeRange="changeRange"
+        />
+
+        <!-- <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
+            <div
+                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
+              >
+                <span>{{ statusText }}</span>
+                <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
+                <Icon v-else name="formkit:down" size="18" />
+            </div>
+            <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
+            v-if="dropdownOpened"
             >
-            {{ filter.header }}
-        </Button>
+                <li>
+                    <Button             
+                        v-for="filter in rangesConfig"
+                        :class="[
+                            'btn btn-ghost btn-sm normal-case font-medium w-full my-0.5',
+                            { 'btn-active': filter.value == currentRange }
+                        ]"
+                        @click="changeRange(filter)"
+                        >
+                        {{ filter.header }}
+                    </Button>
+                </li>
+            </ul>
+        </div> -->
     </div>
 </template>

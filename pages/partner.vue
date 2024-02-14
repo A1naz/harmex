@@ -51,6 +51,7 @@ const listConfigOrders: ConfigTable[] = [
     { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
     { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
+
 </script>
 
 <template>
@@ -73,35 +74,10 @@ const listConfigOrders: ConfigTable[] = [
             >
             
             <template v-slot:main>
-                <div class="dropdown">
-                    <div
-                        tabindex="0"
-                        role="button"
-                        class=" font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] px-0 lg:w-[120px] "
-                    >
-                        <span>Главная </span>
-                    </div>
-                    <ul
-                        tabindex="0"
-                        class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
-                    >
-                        <li>
-                        <NuxtLink
-                            v-for="filter in tabs"
-                            :to="'/partner' + filter.query"
-                            :external="false"
-                            :class="{
-                            'btn-active': route.query.status === filter.query,
-                            }"
-                            class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                        >
-                            <span>
-                            {{ filter.title }}
-                            </span>
-                        </NuxtLink>
-                        </li>
-                    </ul>
-                </div>
+                <CustomDrop
+                    :statusText="'Главная'"
+                    :tabs="tabs"
+                />
                 <div class="flex gap-4 w-full flex-col md:flex-row bg-primary bg-opacity-10 rounded-xl mt-4">
                     <div class="px-2 py-7 md:p-5 flex flex-col md:w-[50%] w-full">
                         <PartnerDashboard 
@@ -126,35 +102,10 @@ const listConfigOrders: ConfigTable[] = [
             <template v-slot:referals>
                 
                 <div class="flex justify-between bg-base-200 rounded-xl gap-2" >
-                    <div class="dropdown">
-                    <div
-                        tabindex="0"
-                        role="button"
-                        class=" font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm px-0 w-[120px] "
-                    >
-                        <span>Приглашенные клиенты</span>
-                    </div>
-                    <ul
-                        tabindex="0"
-                        class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
-                    >
-                        <li>
-                        <NuxtLink
-                            v-for="filter in tabs"
-                            :to="'/partner' + filter.query"
-                            :external="false"
-                            :class="{
-                            'btn-active': route.query.status === filter.query,
-                            }"
-                            class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                        >
-                            <span>
-                            {{ filter.title }}
-                            </span>
-                        </NuxtLink>
-                        </li>
-                    </ul>
-                    </div>
+                    <CustomDrop
+                    :statusText="'Приглашенные клиенты'"
+                    :tabs="tabs"
+                />
                     <ExportXls 
                         api="/api/partner/referals-export"
                         fileName="TOPVTOP - Статистика партнеров"
@@ -171,41 +122,19 @@ const listConfigOrders: ConfigTable[] = [
             </template>
             <template v-slot:orders>
                 <div class="flex justify-between gap-2 content-center bg-base-200 rounded-xl" >
-                    <div class="dropdown">
-                    <div
-                        tabindex="0"
-                        role="button"
-                        class="font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm px-0 w-[120px] "
-                    >
-                        <span>Заказы клиентов</span>
-                    </div>
-                    <ul
-                        tabindex="0"
-                        class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
-                    >
-                        <li>
-                        <NuxtLink
-                            v-for="filter in tabs"
-                            :to="'/partner' + filter.query"
-                            :external="false"
-                            :class="{
-                            'btn-active': route.query.status === filter.query,
-                            }"
-                            class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                        >
-                            <span>
-                            {{ filter.title }}
-                            </span>
-                        </NuxtLink>
-                        </li>
-                    </ul>
-                    </div>
+                    <CustomDrop
+                    :statusText="'Заказы клиентов'"
+                    :tabs="tabs"
+                />
                     <ExportXls 
                         api="/api/partner/orders-export"
                         fileName="TOPVTOP - Заказы партнеров"
                         :config-columns="listConfigOrders"
                         :isVisible="true"
                         />
+                </div>
+                <div class="overflow-x-auto">
+                
                 </div>
                 <Table
                     endpoint="/partner/orders"
@@ -217,4 +146,9 @@ const listConfigOrders: ConfigTable[] = [
     </div>
 
 </template>
-
+<style>
+thead tr:first-child {
+    border-top-left-radius: 10px; /* Скругление верхнего левого угла */
+    border-top-right-radius: 10px; /* Скругление верхнего правого угла */
+}
+</style>

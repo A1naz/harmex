@@ -53,7 +53,7 @@ const multiselectStyle = {
   token: {
     class: [
       {
-        'bg-primary text-primary bg-opacity-10': colorMode.value == 'light',
+        'bg-primary text-primary bg-opacity-40': colorMode.value == 'light',
         'bg-gray-700 text-white/80': colorMode.value == 'dark',
       },
       'py-1 px-2 mr-2 rounded-full',
@@ -327,4 +327,5 @@ const multiselectStyle = {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
