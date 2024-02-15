@@ -6,6 +6,17 @@ const { status, signIn, signOut } = useAuth()
 const store = useMainStore()
 const route = useRoute()
 const app = ref()
+const tokenCookie = useCookie('token')
+const config = useRuntimeConfig()
+
+async function refreshToken() {
+  if (status.value === 'authenticated') {
+    await $fetch(`${config.public.siteUrl}/api/auth/refreshToken`)
+    refreshCookie('token')
+  }
+}
+
+refreshToken()
 
 async function reSign() {
   const isReload = status.value === 'unauthenticated' ? true : false
@@ -15,7 +26,7 @@ async function reSign() {
   })
 
   if (error) {
-    window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
+    // window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
   } else {
     if (isReload) {
       window.location.reload()
