@@ -2,25 +2,46 @@
 import { useMainStore } from '@/stores/main'
 
 const colorMode = useColorMode()
-const { status } = useAuth()
+const { status, signIn, signOut } = useAuth()
 const store = useMainStore()
 const route = useRoute()
 const app = ref()
 
-const {
-  data: client,
-  refresh,
-} = useLazyAsyncData('client', () => $fetch('/api/user/client'))
+async function reSign() {
+  const isReload = status.value === 'unauthenticated' ? true : false
+
+  const { error, url } = await signIn('credentials', {
+    redirect: false,
+  })
+
+  if (error) {
+    window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
+  } else {
+    if (isReload) {
+      window.location.reload()
+    }
+  }
+}
+
+reSign()
+
+const { data: client, refresh } = useLazyAsyncData('client', () =>
+  $fetch('/api/user/client')
+)
 useIntervalFn(() => {
   refresh()
 }, 1000 * 60)
 if (status.value === 'authenticated') await store.getClient()
 
-const accessChecker = computed(()=> {
-    if(store.client.role == UserRoles.staff){
-        return store.client.allowedPathes.find(acc => acc.value == '/' + route.path.replace(/^\/([^\/]*).*$/, '$1')) ? true : false
-    }
-    return true
+const accessChecker = computed(() => {
+  if (store.client.role == UserRoles.staff) {
+    return store.client.allowedPathes.find(
+      (acc) => acc.value == '/' + route.path.replace(/^\/([^\/]*).*$/, '$1')
+    )
+      ? true
+      : false
+  }
+  return true
 })
 
 watch(client, (newClient) => {
