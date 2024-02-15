@@ -81,22 +81,23 @@ watch(targetIsVisible, async (isVisible) => {
         <table class="table table-sm">
           <!-- head -->
           <thead>
-            <tr>
-              <th>№</th>
-              <th>Дата</th>
-              <th>Сумма</th>
-              <th>Тип</th>
-              <th>Описание</th>
+            <tr class="bg-primary bg-opacity-40">
+              <th class=" rounded-tl-xl text-center">№</th>
+              <th class="text-center">Дата</th>
+              <th class="text-center">Сумма</th>
+              <th class="text-center">Тип</th>
+              <th class="rounded-tr-xl text-center">Описание</th>
             </tr>
           </thead>
           <tbody>
             <!-- row 1 -->
-            <tr v-for="(item, index) in history" :key="index">
-              <td>{{ index+1 }}</td>
-              <td>{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
-              <td>{{ item.amount }} руб.</td>
-              <td>{{ item.type }}</td>
-              <td>{{ item.description }}</td>
+           
+            <tr class="bg-base-200" v-for="(item, index) in history" :key="index">
+              <td class="text-center">{{ index+1 }}</td>
+              <td class="text-center">{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
+              <td class="text-center">{{ item.amount }} руб.</td>
+              <td class="text-center">{{ item.type }}</td>
+              <td class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto">{{ item.description }}</td>
             </tr>
             <div ref="target" class="flex justify-center items-center h-4" />
           </tbody>

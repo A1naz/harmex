@@ -44,7 +44,7 @@ async function copyToClipboard(text: string) {
             </div>
             <div class="flex justify-between ">
                 <div class="mt-0.5">Вознаграждение партнера 2 уровня:</div>
-                <div class="text-lg text-primary bg-error bg-opacity-80 p-1 rounded-lg font-bold md:ml-2 ">5 %</div>
+                <div class="text-lg text-primary bg-error bg-opacity-70 p-1 rounded-lg font-bold md:ml-2 ">5 %</div>
             </div>
         </div>
     </div>

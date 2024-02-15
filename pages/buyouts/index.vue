@@ -301,10 +301,28 @@ const statusText = computed(() => {
   return filters.find((el: any) => el.queryStatus === route.query.status)?.title
 })
 
+const dropdownOpened = ref<boolean>(false);
+
+const handleBodyClick = (event: MouseEvent) => {
+  const dropdown = document.querySelector('.dropdown');
+  if (dropdown && !dropdown.contains(event.target as Node)) {
+    dropdownOpened.value = false;
+  }
+};
+
+onMounted(() => {
+  document.body.addEventListener('click', handleBodyClick);
+});
+
+onUnmounted(() => {
+  document.body.removeEventListener('click', handleBodyClick);
+});
+
 function toggleInfoModal() {
   isInfoModal.value = !isInfoModal.value
 }
 
+const codeInput = ref()
 </script>
 
 <template>
@@ -364,22 +382,25 @@ function toggleInfoModal() {
           </NuxtLink>
           <div class="relative flex items-center flex-grow-0 w-full lg:hidden">
             <input
+            ref="codeInput" 
               v-model="search.text"
               type="text"
               class="input input-sm input-bordered w-full"
               placeholder="Поиск по товарам"
               @input="onSearchInput($event)"
             />
-            <Icon
-              v-if="!search.loading"
-              class="absolute right-2 p-2"
-              name="tabler:search"
-              size="30"
-            />
+            
             <span
               v-if="search.loading"
               class="absolute right-2 loading loading-spinner loading-xs p-2"
             />
+            <Icon
+              v-else
+              class="absolute right-2 p-2 "
+              name="tabler:search"
+              size="30"
+              @click="codeInput.focus()"
+              />
           </div>
         </div>
         
@@ -390,18 +411,17 @@ function toggleInfoModal() {
               'flex-wrap': width < 350,
             }"
           >
-            <div class="dropdown">
-              <div
-                tabindex="0"
-                role="button"
-                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] px-0 lg:w-[120px] "
+          <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
+            <div
+                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
               >
                 <span>{{ statusText }}</span>
-              </div>
-              <ul
-                tabindex="0"
-                class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
-              >
+                <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
+                <Icon v-else name="formkit:down" size="18" />
+            </div>
+            <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
+            v-if="dropdownOpened"
+            >
                 <li>
                   <NuxtLink
                     v-for="filter in filters"
@@ -417,8 +437,10 @@ function toggleInfoModal() {
                     </span>
                   </NuxtLink>
                 </li>
-              </ul>
-            </div>
+            </ul>
+        </div>
+        
+        
             <select
               class="select select-bordered select-sm max-w-[131px] sm:hidden"
               @change="selectFilterDate"
@@ -487,21 +509,23 @@ function toggleInfoModal() {
               class="relative items-center flex-grow-0 w-full hidden lg:flex"
             >
               <input
+                ref="codeInput"
                 v-model="search.text"
                 type="text"
                 class="input input-sm input-bordered"
                 placeholder="Поиск по товарам"
                 @input="onSearchInput($event)"
               />
-              <!-- <Icon
-                v-if="!search.loading"
-                class="absolute right-2 p-2"
-                name="tabler:search"
-                size="30"
-              /> -->
               <span
                 v-if="search.loading"
                 class="absolute right-2 loading loading-spinner loading-xs p-2"
+              />
+              <Icon
+              v-else
+              class="absolute right-2 p-2 "
+              name="tabler:search"
+              size="30"
+              @click="codeInput.focus()"
               />
             </div>
           </div>

@@ -2,6 +2,10 @@
 import { notify } from '@kyvg/vue3-notification'
 
 const route = useRoute()
+
+interface filters {
+  [key: string]: string | number;
+}
 interface RangeConfigItem {
   header: string;
   value: number;
@@ -55,41 +59,47 @@ onUnmounted(() => {
                 <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
                 <Icon v-else name="formkit:down" size="18" />
             </div>
-            <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-1"
-            v-if="dropdownOpened"
-            >
-                <li v-if="rangesConfig">
-                    <Button             
-                        v-for="filter in rangesConfig"
-                        :class="[
-                            'btn btn-ghost btn-sm normal-case font-medium w-full my-0.5',
-                            { 'btn-active': filter.value == currentRange }
-                        ]"
-                        @click="{
-                            if (changeRange) {
-                                changeRange(filter);
-                            }
-                        }"
-                        >
-                        {{ filter.header }}
-                    </Button>
-                </li>
-                <li v-else>
-                    <NuxtLink
-                            v-for="filter in tabs"
-                            :to="'/partner' + filter.query"
-                            :external="false"
-                            :class="{
-                            'btn-active': route.query.status === filter.query,
+                <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-1"
+                v-if="dropdownOpened && rangesConfig"
+                >
+                    <li >
+                        <Button             
+                            v-for="filter in rangesConfig"
+                            :class="[
+                                'btn btn-ghost btn-sm normal-case font-medium w-full my-0.5',
+                                { 'btn-active': filter.value == currentRange }
+                            ]"
+                            @click="{
+                                if (changeRange) {
+                                    changeRange(filter);
+                                }
                             }"
-                            class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                        >
-                            <span>
-                            {{ filter.title }}
-                            </span>
-                        </NuxtLink>
-                </li>
-            </ul>
+                            >
+                            {{ filter.header }}
+                        </Button>
+                    </li>
+                    
+                </ul>
+                <ul class="absolute shadow z-[100] bg-base-100 p-1 rounded-lg mt-1"
+                v-if="dropdownOpened && tabs"
+                >
+                  <li>
+                          <NuxtLink
+                                  v-for="filter in tabs"
+                                  :to="'/partner' + filter.query"
+                                  :external="false"
+                                  :class="{
+                                  'btn-active': route.query.status === filter.query,
+                                  }"
+                                  class="btn btn-ghost btn-xs normal-case font-medium w-full"
+                              >
+                                  <span>
+                                  {{ filter.title }}
+                                  </span>
+                          </NuxtLink>
+                    </li>
+                    
+                </ul>
         </div>
 </template>
 

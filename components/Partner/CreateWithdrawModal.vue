@@ -148,7 +148,7 @@ const isCardFormDisabled = computed(() => {
               class="input input-bordered w-full"
             />
           </div>
-          <button class="btn btn-primary btn-block mt-2">Создать</button>
+          <button class="btn btn-primary bg-opacity-20 border-none text-base-content btn-block mt-2">Создать</button>
         </form>
       </div>
     </div>

@@ -119,6 +119,8 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
             :sort-field="Object.keys(listData.search.sort)[0]"
             :sort-order="Object.values(listData.search.sort)[0]"
             @sort="(v: any) => updateFilter('sort', v)"
+            tableStyle="min-width: 50vh"
+            
             >
             <Column
                 v-for="col of config"
@@ -143,6 +145,7 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
                     {{ data[col.field] }}
                 </template>
             </Column>
+
         </DataTable>
 
         <div v-if="isLoading" class="flex justify-center mt-10">
@@ -170,7 +173,7 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
     </div>
 </template>
 
-<style scoped>
+<style>
 .p-datatable .p-datatable-thead .p-column-header {
     color: #fff; /* Цвет текста */
     background-color: #333; /* Цвет фона */

@@ -48,7 +48,7 @@ onKeyStroke('Escape', (e) => {
         <h3 class="text-lg font-bold mb-2">
           Вывод средств
         </h3>
-        <button class="btn btn-sm btn-primary" @click="createWithdrawModal = true">
+        <button class="btn btn-sm btn-primary border-none bg-opacity-20 text-base-content" @click="createWithdrawModal = true">
           Создать вывод
         </button>
       </div>
@@ -57,15 +57,22 @@ onKeyStroke('Escape', (e) => {
         <table class="table table-sm">
           <!-- head -->
           <thead>
-            <tr>
-              <th>Дата</th>
-              <th>Статус</th>
-              <th>Сумма</th>
-              <th>Тип</th>
-              <th>Детали</th>
+            <tr class="bg-primary bg-opacity-40">
+              <th class="rounded-tl-xl text-center">Дата</th>
+              <th class="text-center">Статус</th>
+              <th class="text-center">Сумма</th>
+              <th class="text-center">Тип</th>
+              <th class="rounded-tr-xl text-center">Детали</th>
             </tr>
           </thead>
           <tbody>
+            <tr class="bg-base-200" >
+              <td class="text-center">111</td>
+              <td class="text-center">14.04.2024</td>
+              <td class="text-center">1112 Р.</td>
+              <td class="text-center">Пополнение</td>
+              <td class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto"> fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</td>
+            </tr>
             <!-- row 1 -->
             <tr v-for="(item, index) in withdraws" :key="index">
               <td>{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
