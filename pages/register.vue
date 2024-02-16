@@ -115,7 +115,7 @@ async function submitForm() {
     {{ alertText }}
   </Toast>
   <div id="auth">
-    <!-- <section class="left">
+    <section class="left">
       <h3>Создать аккаунт</h3>
 
       <div class="box">
@@ -221,9 +221,13 @@ async function submitForm() {
 
         <p class="text">
           *Регистрируясь вы принимаете
-          <a href="/user_agreement.pdf" target="_blank">Пользовательское соглашение</a>, <br />
+          <a href="/user_agreement.pdf" target="_blank"
+            >Пользовательское соглашение</a
+          >, <br />
           и подтверждаете, что ознакомлены с
-          <a href="/conf_policy.pdf" target="_blank">Политикой конфиденциальности</a>.
+          <a href="/conf_policy.pdf" target="_blank"
+            >Политикой конфиденциальности</a
+          >.
         </p>
       </div>
       <div class="mb-28"></div>
@@ -249,7 +253,7 @@ async function submitForm() {
       <img class="figure2" src="~/assets/figure2.svg" alt="" />
       <img class="figure3" src="~/assets/figure3.svg" alt="" />
       <img class="line" src="~/assets/line.svg" alt="" />
-    </section> -->
+    </section>
   </div>
 </template>
 

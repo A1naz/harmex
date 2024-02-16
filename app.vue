@@ -18,23 +18,23 @@ const config = useRuntimeConfig()
 
 // refreshToken()
 
-async function reSign() {
-  const isReload = status.value === 'unauthenticated' ? true : false
+// async function reSign() {
+//   const isReload = status.value === 'unauthenticated' ? true : false
 
-  const { error, url } = await signIn('credentials', {
-    redirect: false,
-  })
+//   const { error, url } = await signIn('credentials', {
+//     redirect: false,
+//   })
 
-  if (error) {
-    window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
-  } else {
-    if (isReload) {
-      window.location.reload()
-    }
-  }
-}
+//   if (error) {
+//     window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
+//   } else {
+//     if (isReload) {
+//       window.location.reload()
+//     }
+//   }
+// }
 
-reSign()
+// reSign()
 
 const { data: client, refresh } = useLazyAsyncData('client', () =>
   $fetch('/api/user/client')

@@ -144,70 +144,29 @@ export default NuxtAuthHandler({
       },
 
       async authorize(credentials: any, event: any) {
-        let cookie = event.headers.cookie
+        const { email, password, code } = credentials
+        if (!email || !password) return null
+        const user =
+          (await User.findOne({
+            email: { $regex: new RegExp(email, 'i') },
+          })) || (await User.findOne({ username: email }))
+        if (!user) {
+          throw new Error('User not found')
+        }
+        if (runtimeConfig.env === 'developer') return user
+        if (!user.password) throw new Error('Password not set')
 
-        const accessToken = decodeURIComponent(
-          decodeURIComponent(
-            cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
-          )
-        )
+        const isValid = await bcrypt.compare(password, user.password)
 
-        const refreshToken = decodeURIComponent(
-          decodeURIComponent(
-            cookie.replace(
-              /(?:(?:^|.*;\s*)refresh\s*=\s*([^;]*).*$)|^.*$/,
-              '$1'
-            )
-          )
-        )
-        const valid: any = await axios.get(
-          'https://auth.anykey.group/api/auth/users/me',
-          {
-            headers: {
-              Cookie: `token=${accessToken};refresh=${refreshToken}`,
-            },
-          }
-        )
-        
+        if (!isValid) throw new Error('Invalid password')
 
-        if (!valid.data || !valid.data.uuid) {
-          throw new Error('Сессия истекла')
+        if (!user.emailConfirmed) throw new Error('Email is not confirmed')
+        if (user.tg2fa && user.telegramUserId && !code) throw new Error('2fa')
+        if (user.isBanned) {
+          throw new Error('Account is banned')
         }
 
-        const foundUser = await User.findOne({ uuid: valid.data.uuid })
-
-        if (foundUser) {
-          if (foundUser.isBanned == true) {
-            throw new Error('Аккаунт заблокирован')
-          }
-
-          return foundUser
-        } else {
-          const plan = await Plans.findOne({ name: 'Standart' })
-
-          if (!plan)
-            return {
-              status: 'error',
-              error:
-                'Ошибка при регистрации. Тариф не найден, отправьте пожалуйста это сообщение в техподдержку',
-            }
-
-          const newUser = new User({
-            uuid: valid.data.uuid,
-            username: valid.data.username,
-            roles: ['user'],
-            firstName: valid.data.fullName
-              ? valid.data.fullName.split(' ')[0]
-              : '',
-            lastName: valid.data.fullName
-              ? valid.data.fullName.split(' ')[1]
-              : '',
-            tariff: plan.tariff,
-          })
-          await newUser.save()
-
-          return newUser
-        }
+        return user
       },
     }),
     // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
