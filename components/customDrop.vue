@@ -19,15 +19,17 @@ interface Props {
   changeRange: (filter: RangeConfigItem) => void;
 }
 
-defineProps({
+const props = defineProps({
   statusText: { type: String, required: true },
   rangesConfig: { type: Array as PropType<RangeConfigItem[]>},
   tabs: { type: Array as PropType<tabs[]>},
   currentRange: { type: Number || String},
   changeRange: Function as PropType<(filter: RangeConfigItem) => void>,
+  class: { type: String },
 });
 
 const dropdownOpened = ref<boolean>(false);
+const customClass = props.class || ''
 
 const handleBodyClick = (event: MouseEvent) => {
   // Проверяем, был ли клик вне элемента dropdown
@@ -53,8 +55,9 @@ onUnmounted(() => {
 <template>
     <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
             <div
-                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm min-w-[110px] flex items-center justify-between px-2 flex-nowrap"
-              >
+                class="font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm min-w-[110px] flex items-center justify-between px-2 flex-nowrap"
+                :class="customClass"
+            >
                 <span>{{ statusText }}</span>
                 <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
                 <Icon v-else name="formkit:down" size="18" />

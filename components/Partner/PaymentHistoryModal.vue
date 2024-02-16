@@ -64,40 +64,41 @@ watch(targetIsVisible, async (isVisible) => {
     ref="closeButton" :class="{
       'modal-open': state,
     }"
-    class="modal"
+    class="modal backdrop-filter backdrop-blur-sm"
   >
-    <div class="modal-box w-10/12 max-w-4xl">
-        <label
-            for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
-            @click="$emit('close')"
-        >✕</label>
-        <div class="flex justify-between gap-2 items-center py-2">
-            <h3 class="text-lg font-bold mb-2">
-            История баланса
-            </h3>
-        </div>
+    <div class="modal-box w-10/12 max-w-2xl py-3 px-5">
+      <div class="flex w-full justify-between mb-3">
+       
+       <h3 class="text-xl ">
+         История баланса
+       </h3>
+       <label
+       for="review-modal" class="btn btn-sm btn-circle self-end btn-ghost"
+       @click="$emit('close')"
+     ><Icon name="mingcute:close-fill" size="17" /></label>
+     </div>
 
       <div class="overflow-x-auto">
         <table class="table table-sm">
           <!-- head -->
           <thead>
-            <tr class="bg-primary bg-opacity-40">
-              <th class=" rounded-tl-xl text-center">№</th>
+            <tr class="bg-primary bg-opacity-5">
+              <th class="text-center">№</th>
               <th class="text-center">Дата</th>
               <th class="text-center">Сумма</th>
               <th class="text-center">Тип</th>
-              <th class="rounded-tr-xl text-center">Описание</th>
+              <th class="text-center">Описание</th>
             </tr>
           </thead>
           <tbody>
             <!-- row 1 -->
            
             <tr class="bg-base-200" v-for="(item, index) in history" :key="index">
-              <td class="text-center">{{ index+1 }}</td>
-              <td class="text-center">{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
-              <td class="text-center">{{ item.amount }} руб.</td>
-              <td class="text-center">{{ item.type }}</td>
-              <td class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto">{{ item.description }}</td>
+              <td class="text-center border-x border-primary border-opacity-5">{{ index+1 }}</td>
+              <td class="text-center border-r border-primary border-opacity-5">{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
+              <td class="text-center border-r border-primary border-opacity-5">{{ item.amount }} руб.</td>
+              <td class="text-center border-r border-primary border-opacity-5">{{ item.type }}</td>
+              <td class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5">{{ item.description }}</td>
             </tr>
             <div ref="target" class="flex justify-center items-center h-4" />
           </tbody>
@@ -109,4 +110,7 @@ watch(targetIsVisible, async (isVisible) => {
 
 <style scoped>
 
+tr.bg-base-100 {
+    border-bottom: none;
+}
 </style>

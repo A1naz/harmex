@@ -116,6 +116,15 @@ async function deleteLike() {
   }
 }
 
+const currentFilter = ref('')
+const changePage = (filter: string) => {
+    currentFilter.value = filter
+}
+const closeModal = () => {
+    modulShow.value = false
+    currentFilter.value = ''
+}
+
 const modulShow = ref<boolean>(false)
 </script>
 
@@ -133,22 +142,19 @@ const modulShow = ref<boolean>(false)
     </p> -->
       <div v-if="modulShow" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm">
        
-        <div class="flex flex-col bg-white rounded-lg w-full max-w-[810px] gap-5 p-4 ">
+        <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4 ">
           <div class="flex justify-between">
-            <button class="btn btn-sm btn-primary bg-opacity-20 text-base-content border-none ">
-              Тут что-то будет
-            </button>
-            <!-- <CustomSelect :rangesConfig="['Все', 'Созданные', 'В работе', 'Завершен']" /> -->
-            <button class=" text-gray-500 hover:text-gray-700 self-end mb-2" @click="modulShow = false">
+            <CustomSelect :rangesConfig="['Лайки на товар/бренд', 'Лайки на отзыв']" @change-text="changePage"/>
+            <button class=" text-gray-500 hover:text-gray-700 self-end mb-2" @click="closeModal">
               <Icon name="material-symbols:close-rounded" size="24" />
             </button>
           </div>
           
-          <div class="bg-base-100 rounded-lg">
-            <div class="flex flex-wrap items-center gap-6 mb-2">
+          <div v-if="currentFilter == 'Лайки на товар/бренд'" class="bg-base-100 rounded-lg">
+            <div  class="flex flex-wrap items-center gap-6 mb-2">
               <div class="relative">
                
-                <div>Вставьте ссылку:</div>
+                <div>Вставьте ссылку:</div> 
                 <div class="input-group w-64 min-h-min md:min-h-[48px] mt-2">
                   <input
                     v-model="url"
@@ -281,6 +287,9 @@ const modulShow = ref<boolean>(false)
                 </div>
               </div>
             </div>
+          </div>
+          <div v-if="currentFilter == 'Лайки на отзыв'" class="bg-base-100 rounded-lg">
+            <p class=text-red-500>Создание новых лайков на отзывы временно отключено.</p>
           </div>
         </div>
       </div>

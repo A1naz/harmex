@@ -115,8 +115,8 @@ function selectStatus(e: Event) {
   })
 }
 
-async function selectFilterDate(e: Event) {
-  const target = e.target as HTMLSelectElement
+async function selectFilterDate(e: any) {
+  const target = e
   dateFilter.value = target.value
   skip.value = 50
   end.value = false
@@ -323,6 +323,10 @@ function toggleInfoModal() {
 }
 
 const codeInput = ref()
+
+const updateSearchType = (filter: any) => {
+  search.type = filter.value;
+}
 </script>
 
 <template>
@@ -408,18 +412,18 @@ const codeInput = ref()
           
           <div class="search flex items-center gap-1 lg:gap-3"
             :class="{
-              'flex-wrap': width < 350,
+              'flex-wrap': width < 335,
             }"
           >
           <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
             <div
-                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
+                class="font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[120px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
               >
                 <span>{{ statusText }}</span>
                 <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
                 <Icon v-else name="formkit:down" size="18" />
             </div>
-            <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
+            <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg max-w-[200px] mt-2"
             v-if="dropdownOpened"
             >
                 <li>
@@ -430,7 +434,7 @@ const codeInput = ref()
                     :class="{
                       'btn-active': route.query.status === filter.queryStatus,
                     }"
-                    class="btn btn-ghost btn-xs normal-case font-medium w-full"
+                    class="btn btn-ghost btn-xs normal-case font-normal w-full"
                   >
                     <span>
                       {{ filter.title }}
@@ -440,8 +444,8 @@ const codeInput = ref()
             </ul>
         </div>
         
-        
-            <select
+            <CustomSelect class="sm:hidden" :tabs = "[{title: 'За все время', value: 'all'}, {title: 'Сегодня', value: 'today'}, {title: '3 дня', value: '3days'}, {title: 'Неделя', value: '7days'}]" @change-value="selectFilterDate"/>
+            <!-- <select
               class="select select-bordered select-sm max-w-[131px] sm:hidden"
               @change="selectFilterDate"
             >
@@ -449,16 +453,18 @@ const codeInput = ref()
               <option value="today">Сегодня</option>
               <option value="3days">3 дня</option>
               <option value="7days">Неделя</option>
-            </select>
+            </select> -->
             <div class="flex gap-3 items-center  sm:hidden">
-              <select
+              <CustomSelect :tabs = "[{title: 'Артикул', value: 'article'}, {title: 'ID выкупа', value: 'uuid'}, {title: 'Имя', value: 'name'}]" @change-value="updateSearchType" />
+
+              <!-- <select
                 v-model="search.type"
                 class="select select-bordered select-sm max-w-[98px]"
               >
                 <option value="article">Артикул</option>
                 <option value="uuid">ID выкупа</option>
                 <option value="name">Имя товара</option>
-              </select>
+              </select> -->
             </div>
           </div>
         </div>
@@ -487,7 +493,8 @@ const codeInput = ref()
       </select> -->
       <div class="items-center flex-wrap self-start hidden sm:flex">
         <div class="search flex items-center flex-wrap gap-3">
-          <select
+          <CustomSelect :tabs = "[{title: 'За все время', value: 'all'}, {title: 'Сегодня', value: 'today'}, {title: '3 дня', value: '3days'}, {title: 'Неделя', value: '7days'}]" @change-value="selectFilterDate"/>
+          <!-- <select
             class="select select-bordered select-sm"
             @change="selectFilterDate"
           >
@@ -495,18 +502,20 @@ const codeInput = ref()
             <option value="today">Сегодня</option>
             <option value="3days">3 дня</option>
             <option value="7days">Неделя</option>
-          </select>
-          <div class="flex gap-3 items-center">
-            <select
+          </select> -->
+          <div class="flex items-center justify-between gap-3">
+            <CustomSelect class="min-w-[100px]" :tabs = "[{title: 'Артикул', value: 'article'}, {title: 'ID выкупа', value: 'uuid'}, {title: 'Имя', value: 'name'}]" @change-value="updateSearchType" />
+
+            <!-- <select
               v-model="search.type"
               class="select select-bordered select-sm"
             >
               <option value="article">Артикул</option>
               <option value="uuid">ID выкупа</option>
               <option value="name">Имя товара</option>
-            </select>
+            </select> -->
             <div
-              class="relative items-center flex-grow-0 w-full hidden lg:flex"
+              class="relative justify-end flex-grow-0 w-full hidden lg:flex"
             >
               <input
                 ref="codeInput"

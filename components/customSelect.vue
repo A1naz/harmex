@@ -6,39 +6,50 @@ const route = useRoute()
 interface filters {
   [key: string]: string | number;
 }
-interface RangeConfigItem {
-  header: string;
-  value: number;
-}
 interface tabs {
   title: string;
-  slot: string;
-  query: string;
-}
-interface Props {
-  changeRange: (filter: RangeConfigItem) => void;
+  value: string | number;
 }
 
-defineProps({
-  rangesConfig: { type: Array as () => Array<string>, required: true }
+const props = defineProps({
+  rangesConfig: {
+    type: Array as PropType<Array<string>>,
+    default: () => []
+  },
+  tabs: {
+    type: Array as PropType<Array<tabs>>,
+    default: () => []
+  }
 });
+
+const emit = defineEmits(['changeText','changeValue'])
 
 const dropdownOpened = ref<boolean>(false);
 
 const handleBodyClick = (event: MouseEvent) => {
-  // Проверяем, был ли клик вне элемента dropdown
+
   const dropdown = document.querySelector('.dropdown');
   if (dropdown && !dropdown.contains(event.target as Node)) {
     dropdownOpened.value = false;
   }
 };
 
-// Добавляем обработчик события клика при монтировании компонента
+const statusText = ref<String>(route.path.startsWith('/productlikes')? 'Выберите категорию' : props.rangesConfig[0] || props.tabs[0]?.title);
+
+function updateText(filter: string){
+    statusText.value = filter;
+    emit('changeText', filter)
+}
+
+function updateValue(filter: any){
+    statusText.value = filter.title;
+    emit('changeValue', filter)
+}
+
 onMounted(() => {
   document.body.addEventListener('click', handleBodyClick);
 });
 
-// Удаляем обработчик события клика при демонтаже компонента
 onUnmounted(() => {
   document.body.removeEventListener('click', handleBodyClick);
 });
@@ -49,19 +60,26 @@ onUnmounted(() => {
 <template>
     <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
             <div
-                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm min-w-[110px] flex items-center justify-between px-2 flex-nowrap"
+                class="font-normal text-xs normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
               >
-                <span>{{ rangesConfig }}</span>
+                <span :class="{ 'text-base': rangesConfig.length > 0}">{{ statusText }}</span>
                 <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
                 <Icon v-else name="formkit:down" size="18" />
             </div>
-            <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-1" v-if="dropdownOpened && rangesConfig">
-        <li v-for="filter in rangesConfig" :key="filter">
-          <button class="btn btn-ghost btn-sm normal-case font-medium w-full my-0.5" :class="{ 'btn-active': filter }">
-            {{ filter }}
-          </button>
-        </li>
-      </ul>
+            <ul v-if="rangesConfig.length > 0 && dropdownOpened" class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-2" >
+              <li v-for="filter in rangesConfig" :key="filter">
+                <button class="btn btn-ghost btn-xs normal-case font-normal w-full my-0.5 text-base" @click="updateText(filter)" >
+                  {{ filter }}
+                </button>
+              </li>
+            </ul>
+            <ul v-if="tabs.length > 0 && dropdownOpened" class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg max-w-[200px] mt-2 w-full" >
+              <li v-for="filter in tabs" :key="filter.title">
+                <button class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full my-0.5" @click="updateValue(filter)" >
+                  {{ filter.title }}
+                </button>
+              </li>
+            </ul>
         </div>
 </template>
 

@@ -52,6 +52,34 @@ const listConfigOrders: ConfigTable[] = [
     { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
 
+function datePrepare(daysAgo: number) {
+    if(daysAgo == -1) return {}
+
+    const to = new Date()
+    to.setUTCHours(23,59,59,999)
+
+    const from = new Date()
+    from.setUTCHours(0,0,0,0);
+
+    if (daysAgo > 1) {
+        if(daysAgo == 30) {
+            from.setDate(1)
+        } else {
+            from.setDate(from.getDate() - daysAgo)
+        }
+    }
+    const dateRange = {
+        dateRange: { 
+            from: from.toISOString(), 
+            to: to.toISOString()
+    }}
+    return dateRange
+}
+
+const dateRange = ref(datePrepare(-1))
+function changeRange(filter: DateFilterRanges){
+    dateRange.value = datePrepare(filter.value)
+}
 </script>
 
 <template>
@@ -105,13 +133,26 @@ const listConfigOrders: ConfigTable[] = [
                     <CustomDrop
                     :statusText="'Приглашенные клиенты'"
                     :tabs="tabs"
-                />
+                    @change-value = "changeRange"
+                    />
+                
+                    
+                    <div class="flex gap-2">
+                    <CustomSelect :tabs="[{ title: 'Все время', value: -1 },
+                    { title: 'Сегодня', value: 1 },
+                    { title: '3 дня', value: 3 },
+                    { title: '7 дней', value: 7 },
+                    { title: 'Месяц', value: 30 },]" 
+                    @change-value = "changeRange"
+                    />
+                
                     <ExportXls 
                         api="/api/partner/referals-export"
                         fileName="TOPVTOP - Статистика партнеров"
                         :config-columns="listConfigPartners"
                         :isVisible="true"
                         />
+                    </div>
                 </div>
                 <Table 
                     endpoint="/partner/referals"
@@ -126,6 +167,7 @@ const listConfigOrders: ConfigTable[] = [
                     :statusText="'Заказы клиентов'"
                     :tabs="tabs"
                 />
+                
                     <ExportXls 
                         api="/api/partner/orders-export"
                         fileName="TOPVTOP - Заказы партнеров"

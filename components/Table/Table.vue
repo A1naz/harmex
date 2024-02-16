@@ -6,6 +6,7 @@ const props = defineProps({
     endpoint: { type: String, required: true },
     config:  { type: Array as PropType<ConfigTable[]>, required: true },
     useDefaultDateFilter: { type: Boolean, required: false },
+    dateRange: { type: Object as PropType<{ from: string, to: string }>, default: () => ({}) }
 })
 
 const changePage = (numPage: number) => {
@@ -16,6 +17,7 @@ const changeLimit = (limit: number) => {
     updateFilter('limit', limit)
 }
 
+const route = useRoute()
 const { getData, } = useApi()
 const { width, height } = useWindowSize()
 const isLoading = ref(false)
@@ -73,6 +75,7 @@ const displayed = computed( ()=>{
 })
 
 function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
+    console.log(key +'_'+ value)
     if(key =='skip') {
         value = listData.search.limit * (value - 1)
     }
@@ -110,7 +113,7 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
         </div>
         
         
-        <div class="flex flex-row w-full justify-end">
+        <div v-if="!route.path.startsWith('/partner')" class="flex flex-row w-full justify-end">
             <div class="self-center text-sm">{{ displayed }}</div>
         </div>
         
@@ -174,8 +177,5 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
 </template>
 
 <style>
-.p-datatable .p-datatable-thead .p-column-header {
-    color: #fff; /* Цвет текста */
-    background-color: #333; /* Цвет фона */
-}
+
 </style>

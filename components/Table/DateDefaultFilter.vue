@@ -56,23 +56,23 @@ const statusText = computed(() => {
   return props.rangesConfig.find((filter: DateFilterRanges) => filter.value == currentRange.value)?.header
 })
 
-const handleBodyClick = (event: MouseEvent) => {
-  // Проверяем, был ли клик вне элемента dropdown
-  const dropdown = document.querySelector('.dropdown');
-  if (dropdown && !dropdown.contains(event.target as Node)) {
-    dropdownOpened.value = false;
-  }
-};
+// const handleBodyClick = (event: MouseEvent) => {
 
-// Добавляем обработчик события клика при монтировании компонента
-onMounted(() => {
-  document.body.addEventListener('click', handleBodyClick);
-});
+//   const dropdown = document.querySelector('.dropdown');
+//   if (dropdown && !dropdown.contains(event.target as Node)) {
+//     dropdownOpened.value = false;
+//   }
+// };
 
-// Удаляем обработчик события клика при демонтаже компонента
-onUnmounted(() => {
-  document.body.removeEventListener('click', handleBodyClick);
-});
+
+// onMounted(() => {
+//   document.body.addEventListener('click', handleBodyClick);
+// });
+
+
+// onUnmounted(() => {
+//   document.body.removeEventListener('click', handleBodyClick);
+// });
 
 </script>
 
@@ -83,8 +83,8 @@ onUnmounted(() => {
             :rangesConfig="rangesConfig"
             :currentRange="currentRange"
             :changeRange="changeRange"
+            :class="'bg-base-300'"
         />
-
         <!-- <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
             <div
                 class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
