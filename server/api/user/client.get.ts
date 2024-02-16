@@ -4,13 +4,10 @@ import MenuBuilder from '~/server/utils/menuBuilder'
 import { Client } from '~/data/types'
 import { UserRoles } from '~/data/enums'
 
-
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
 
   if (!session) return sendRedirect(event, '/auth', 302)
-
-
 
   const user = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
@@ -31,15 +28,16 @@ export default eventHandler(async (event) => {
     await user.save()
   }
 
-  const { menu, allowedPathes} = user.roles[0] == UserRoles.staff 
-    ? MenuBuilder.filteredAccess(user.acesses) 
-    : MenuBuilder.filteredAccess()
+  const { menu, allowedPathes } =
+    user.roles[0] == UserRoles.staff
+      ? MenuBuilder.filteredAccess(user.acesses)
+      : MenuBuilder.filteredAccess()
 
-    if(user.roles[0] == UserRoles.staff){
-        const admin = await User.findOne({ uuid: user.uuidCompany })
-        if (!admin) return sendRedirect(event, '/auth', 302)
-        user.tariff = admin.tariff
-    }
+  if (user.roles[0] == UserRoles.staff) {
+    const admin = await User.findOne({ uuid: user.uuidCompany })
+    if (!admin) return sendRedirect(event, '/auth', 302)
+    user.tariff = admin.tariff
+  }
 
   const client: Client = {
     email: user.email ? user.email : '',

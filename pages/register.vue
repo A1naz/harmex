@@ -221,9 +221,13 @@ async function submitForm() {
 
         <p class="text">
           *Регистрируясь вы принимаете
-          <a href="/user_agreement.pdf" target="_blank">Пользовательское соглашение</a>, <br />
+          <a href="/user_agreement.pdf" target="_blank"
+            >Пользовательское соглашение</a
+          >, <br />
           и подтверждаете, что ознакомлены с
-          <a href="/conf_policy.pdf" target="_blank">Политикой конфиденциальности</a>.
+          <a href="/conf_policy.pdf" target="_blank"
+            >Политикой конфиденциальности</a
+          >.
         </p>
       </div>
       <div class="mb-28"></div>

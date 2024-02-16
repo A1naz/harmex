@@ -6,24 +6,35 @@ const { status, signIn, signOut } = useAuth()
 const store = useMainStore()
 const route = useRoute()
 const app = ref()
+const tokenCookie = useCookie('token')
+const config = useRuntimeConfig()
 
-async function reSign() {
-  const isReload = status.value === 'unauthenticated' ? true : false
+// async function refreshToken() {
+//   if (status.value === 'authenticated') {
+//     await $fetch(`${config.public.siteUrl}/api/auth/refreshToken`)
+//     refreshCookie('token')
+//   }
+// }
 
-  const { error, url } = await signIn('credentials', {
-    redirect: false,
-  })
+// refreshToken()
 
-  if (error) {
-    window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
-  } else {
-    if (isReload) {
-      window.location.reload()
-    }
-  }
-}
+// async function reSign() {
+//   const isReload = status.value === 'unauthenticated' ? true : false
 
-reSign()
+//   const { error, url } = await signIn('credentials', {
+//     redirect: false,
+//   })
+
+//   if (error) {
+//     window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
+//   } else {
+//     if (isReload) {
+//       window.location.reload()
+//     }
+//   }
+// }
+
+// reSign()
 
 const { data: client, refresh } = useLazyAsyncData('client', () =>
   $fetch('/api/user/client')
