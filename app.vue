@@ -9,14 +9,14 @@ const app = ref()
 const tokenCookie = useCookie('token')
 const config = useRuntimeConfig()
 
-async function refreshToken() {
-  if (status.value === 'authenticated') {
-    await $fetch(`${config.public.siteUrl}/api/auth/refreshToken`)
-    refreshCookie('token')
-  }
-}
+// async function refreshToken() {
+//   if (status.value === 'authenticated') {
+//     await $fetch(`${config.public.siteUrl}/api/auth/refreshToken`)
+//     refreshCookie('token')
+//   }
+// }
 
-refreshToken()
+// refreshToken()
 
 async function reSign() {
   const isReload = status.value === 'unauthenticated' ? true : false
