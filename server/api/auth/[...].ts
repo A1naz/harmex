@@ -195,14 +195,14 @@ export default NuxtAuthHandler({
 
           const newUser = new User({
             uuid: valid.data.uuid,
-            username: valid.data.username,
+            username: valid.data.username ? valid.data.username : valid.data.uuid,
             roles: ['user'],
             firstName: valid.data.fullName
               ? valid.data.fullName.split(' ')[0]
-              : '',
+              : 'Имя',
             lastName: valid.data.fullName
               ? valid.data.fullName.split(' ')[1]
-              : '',
+              : 'Фамилия',
             tariff: plan.tariff,
           })
           await newUser.save()
