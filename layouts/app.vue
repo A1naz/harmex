@@ -72,6 +72,7 @@ const isInfoModal = ref<boolean>(false)
 function toggleInfoModal() {
   isInfoModal.value = !isInfoModal.value
 }
+
 const statusText = computed(() => {
   return (
     storeMain.client.mmenuItems
@@ -166,7 +167,8 @@ const statusText = computed(() => {
                         ? storeMain.client.username
                         : storeMain.client.telegram
                         ? storeMain.client.telegram
-                        : storeMain.client.email.split('@')[0]
+                        : storeMain.client.email ?
+                          storeMain.client.email : 'Нет данных'
                     }}
                   </div>
                   <!-- <div class="balance text-xs text-gray-400">

@@ -102,7 +102,7 @@ const v$ = useVuelidate(rules, formData)
 
 <template>
   <div id="auth">
-    <Toast :type="alertType" style="z-index: 1000" :active="alert">
+    <!-- <Toast :type="alertType" style="z-index: 1000" :active="alert">
       {{ alertText }}
     </Toast>
 
@@ -191,7 +191,7 @@ const v$ = useVuelidate(rules, formData)
       <img class="figure2" src="~/assets/figure2.svg" alt="" />
       <img class="figure3" src="~/assets/figure3.svg" alt="" />
       <img class="line" src="~/assets/line.svg" alt="" />
-    </section>
+    </section> -->
   </div>
 </template>
 
