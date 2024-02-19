@@ -123,7 +123,7 @@ function toggleInfoModal() {
         </div>
       </div>
       <div class="hidden items-center gap-2 p-4 justify-between bg-base-100 lg:flex">
-        <h1 class="text-2xl font-bold">{{ statusText }}</h1>
+        <h1 class="text-2xl font-bold">{{ '' }}</h1>
         <InfoButton @openModal="toggleInfoModal" />
       </div>
       <div class="px-4">
@@ -164,10 +164,10 @@ function toggleInfoModal() {
                   <div class="font-bold mt-1">
                     {{
                       storeMain.client?.username
-                        ? storeMain.client.username
-                        : storeMain.client.telegram
-                        ? storeMain.client.telegram
-                        : storeMain.client.email.split('@')[0]
+                        // ? storeMain.client.username
+                        // : storeMain.client.telegram
+                        // ? storeMain.client.telegram
+                        // : storeMain.client.email ?
                     }}
                   </div>
                   <!-- <div class="balance text-xs text-gray-400">
