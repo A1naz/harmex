@@ -15,6 +15,7 @@ async function reSign() {
   })
 
   if (error) {
+    await signOut({ redirect: false })
     window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
   } else {
     if (isReload) {

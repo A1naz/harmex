@@ -171,7 +171,7 @@ export default NuxtAuthHandler({
 
         console.log(valid)
 
-        if (!valid.data) {
+        if (!valid.data || !valid.data.uuid) {
           throw new Error('Сессия истекла')
         }
 
