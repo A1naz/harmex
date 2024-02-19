@@ -72,13 +72,14 @@ const isInfoModal = ref<boolean>(false)
 function toggleInfoModal() {
   isInfoModal.value = !isInfoModal.value
 }
-const statusText = computed(() => {
-  return (
-    storeMain.client.mmenuItems
-      .flatMap((section) => section.items)
-      .find((item) => route.path.startsWith(item.path))?.title || 'Профиль'
-  )
-})
+
+// const statusText = computed(() => {
+//   return (
+//     storeMain.client.mmenuItems
+//       .flatMap((section) => section.items)
+//       .find((item) => route.path.startsWith(item.path))?.title || 'Профиль'
+//   )
+// })
 </script>
 
 <template>
