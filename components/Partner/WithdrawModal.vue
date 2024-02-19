@@ -37,19 +37,24 @@ onKeyStroke('Escape', (e) => {
     ref="closeButton" :class="{
       'modal-open': state,
     }"
-    class="modal"
+    class="modal backdrop-filter backdrop-blur-sm"
   >
-    <div class="modal-box w-10/12 max-w-4xl">
-      <label
-        for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
-        @click="$emit('close')"
-      >✕</label>
-      <div class="flex justify-between gap-2 items-center py-2 mt-2">
-        <h3 class="text-lg font-bold mb-2">
+    <div class="modal-box w-10/12 max-w-2xl py-3 px-5">
+      <div class="flex w-full justify-between">
+       
+        <h3 class="text-xl ">
           Вывод средств
         </h3>
-        <button class="btn btn-sm btn-primary" @click="createWithdrawModal = true">
+        <label
+        for="review-modal" class="btn btn-sm btn-circle self-end btn-ghost"
+        @click="$emit('close')"
+      ><Icon name="mingcute:close-fill" size="17" /></label>
+      </div>
+      
+      <div class="flex justify-end gap-2 items-center">
+        <button class="btn btn-sm btn-ghost text-primary p-0.5 pb-0" @click="createWithdrawModal = true">
           Создать вывод
+          <Icon name="ep:right" size="10" />
         </button>
       </div>
 
@@ -57,22 +62,22 @@ onKeyStroke('Escape', (e) => {
         <table class="table table-sm">
           <!-- head -->
           <thead>
-            <tr>
-              <th>Дата</th>
-              <th>Статус</th>
-              <th>Сумма</th>
-              <th>Тип</th>
-              <th>Детали</th>
+            <tr class="bg-primary bg-opacity-5">
+              <th class="text-center">Дата</th>
+              <th class="text-center">Статус</th>
+              <th class="text-center">Сумма</th>
+              <th class="text-center">Тип</th>
+              <th class="text-center">Детали</th>
             </tr>
           </thead>
           <tbody>
             <!-- row 1 -->
-            <tr v-for="(item, index) in withdraws" :key="index">
-              <td>{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
-              <td>{{ item.status }}</td>
-              <td>{{ currency.format(item.amount) }}</td>
-              <td>{{ item.type }}</td>
-              <td>{{ item.details.card }} {{ item.details.fio }}</td>
+            <tr v-for="(item, index) in withdraws" :key="index" class="bg-base-100">
+              <td class="text-center border-x border-primary border-opacity-5">{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
+              <td class="text-center border-r border-primary border-opacity-5">{{ item.status }}</td>
+              <td class="text-center border-r border-primary border-opacity-5">{{ currency.format(item.amount) }}</td>
+              <td class="text-center border-r border-primary border-opacity-5">{{ item.type }}</td>
+              <td class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5">{{ item.details.card }} {{ item.details.fio }}</td>
             </tr>
           </tbody>
         </table>
@@ -83,5 +88,7 @@ onKeyStroke('Escape', (e) => {
 </template>
 
 <style scoped>
-
+tr.bg-base-100 {
+    border-bottom: none;
+}
 </style>

@@ -115,21 +115,199 @@ async function deleteLike() {
     })
   }
 }
+
+const currentFilter = ref('')
+const changePage = (filter: string) => {
+    currentFilter.value = filter
+}
+const closeModal = (event: MouseEvent) => {
+    if ((event.target as HTMLElement).classList.contains('modalCustom')){
+      modalShow.value = false
+      currentFilter.value = ''
+    }
+}
+
+const modalShow = ref<boolean>(false)
 </script>
 
 <template>
-  <div>
+  <div >
+    <!-- {{ product_likes }} -->
     <!-- <h1 class="text-2xl font-bold mt-4">Лайки на товар/бренд</h1> -->
-    <p class="text-xs font-light mt-4 lg:text-sm">
+    <!-- <p class="text-xs font-light mt-4 lg:text-sm">
       Выберите товар или бренд, чтобы повысить количество добавлений в
       «Избранное»
-    </p>
-    <p class="text-xs font-light mt-1 lg:text-sm">
+    </p> -->
+    <!-- <p class="text-xs font-light mt-1 lg:text-sm">
       Стоимость одного добавления - 
       <span class="font-bold"> {{ store.tariffString('likeProduct') }} </span>
       Все услуги оказываются по Московскому времени.
-    </p>
-    <div class="mb-4 mt-6 bg-base-100 p-6 rounded-lg">
+    </p> -->
+      <div v-if="modalShow" @click="closeModal" class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm">
+       
+        <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4 ">
+          <div class="flex justify-between">
+            <CustomSelect :rangesConfig="['Лайки на товар/бренд', 'Лайки на отзыв']" @change-text="changePage"/>
+            <button class="text-gray-500 hover:text-gray-700 self-end mb-2" @click="modalShow = false ; currentFilter = ''">
+              <Icon name="material-symbols:close-rounded" size="24" />
+            </button>
+          </div>
+          
+          <div v-if="currentFilter == 'Лайки на товар/бренд'" class="bg-base-100 rounded-lg">
+            <div  class="flex flex-wrap items-center gap-6 mb-2">
+              <div class="relative">
+               
+                <div>Вставьте ссылку:</div> 
+                <div class="input-group w-64 min-h-min md:min-h-[48px] mt-2">
+                  <input
+                    v-model="url"
+                    :class="{
+                      'input-error': urlError,
+                      'input-success': productData,
+                    }"
+                    :disabled="productData"
+                    tabindex="0"
+                    class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
+                    placeholder="Введите ссылку"
+                    type="text"
+                    @input="changeUrl"
+                  />
+                  <button
+                    :class="{
+                      'btn-disabled': !productData,
+                    }"
+                    class="btn btn-sm btn-ghost btn-circle bg-base-100 min-h-min md:min-h-[48px]"
+                    @click="removeProduct"
+                  >
+                    <span
+                      v-show="loadingUrl"
+                      class="loading loading-spinner loading-xs p-2"
+                    />
+
+                    <!-- Insert a backspace svg -->
+                    <div v-if="!loadingUrl">
+                      <IconCSS
+                        v-if="productData"
+                        class="w-6 h-6"
+                        name="fluent:backspace-24-regular"
+                      />
+                    </div>
+                  </button>
+                </div>
+              </div>
+              <div>
+                <div>Количество:</div>
+                <div class="relative flex items-center justify-center ml-auto mt-2">
+                  <button
+                    :disabled="amount <= 0"
+                    class="absolute left-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
+                    @click="amount -= 10"
+                  >
+                    <IconCSS size="16" name="ic:round-minus" />
+                  </button>
+                  <div class="input-sm rounded-lg w-24 text-center bg-base-200 min-h-min md:min-h-[48px] pt-2.5 text-lg">
+                    {{ amount }}
+                  </div>
+                  <button
+                    :disabled="amount >= 1000"
+                    :class="{
+                      'btn-disabled': !productData,
+                    }"
+                    class="absolute right-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
+                    @click="amount += 10"
+                  >
+                    <IconCSS size="16" name="ic:round-plus" />
+                  </button>
+                </div>
+              </div>
+              <div>
+                <div>Период выполнения:</div>
+                <select
+                  :disabled="!productData"
+                  class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
+                  @change="selectPeriod"
+                >
+                  <option value="3h">3 часа</option>
+                  <option value="12h">12 часов</option>
+                  <option value="1day">1 день</option>
+                  <option value="3days">3 дня</option>
+                  <option value="7days">7 дней</option>
+                  <option value="14days">14 дней</option>
+                </select>
+              </div>
+              <div
+                v-if="productData && productData.type === 'brand'"
+                class="productinfo"
+              >
+                <div>Информация о бренде:</div>
+                <div class="flex gap-4 mt-2 items-start">
+                  <nuxt-img
+                    class="rounded-lg object-contain h-8"
+                    :src="productData.image"
+                  />
+                  <div class="name truncate">
+                    {{ productData.name }}
+                  </div>
+                </div>
+              </div>
+              <div class="w-full ml-auto self-end justify-end lg:w-40">
+                <button
+                  :class="{
+                    'btn-disabled': !productData || amount <= 0,
+                  }"
+                  class="btn w-full btn-primary"
+                  @click="create"
+                >
+                  Добавить
+                </button>
+              </div>
+            </div>
+            <div
+              v-if="productData && productData.type === 'product'"
+              class="productinfo mt-4"
+            >
+              <div>Информация о товаре:</div>
+              <div class="flex gap-4 mt-2 items-start">
+                <nuxt-img
+                  width="32"
+                  class="rounded-lg object-contain w-8"
+                  :src="productData.image"
+                />
+                <div class="article">
+                  <a
+                  :href="`https://www.ozon.ru/product/${productData.article}`"
+                    target="_blank"
+                    class="text-sm text-secondary link link-hover"
+                  >
+                    {{ productData.article }}
+                  </a>
+                </div>
+                <div class="name truncate">
+                  {{ productData.name }}
+                </div>
+                <div class="price">
+                  {{ productData.priceText }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-if="currentFilter == 'Лайки на отзыв'" class="bg-base-100 rounded-lg">
+            <p class=text-red-500>Создание новых лайков на отзывы временно отключено.</p>
+          </div>
+        </div>
+      </div>
+    <div class="flex mt-4 justify-between">
+      <div class="flex gap-2">
+        <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm hover:text-base-100 hover:bg-opacity-100 hover:bg-primary" @click="modalShow = !modalShow" @click.stop><Icon name="fluent:add-24-filled" size="12" /> Лайки</button>
+        <!-- <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm">Все лайки ></button> -->
+      </div>
+      <div class="flex gap-2">
+        <!-- <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm">За все время></button>
+        <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm">Артикул ></button> -->
+        <input class="input input-sm input-bordered" placeholder="Поиск по названию" type="text" />
+      </div>
+    </div>
+    <!-- <div class="mb-4 mt-6 bg-base-100 p-6 rounded-lg">
       <div class="flex flex-wrap items-center gap-6 mb-2">
         <div class="relative">
           <div>Ссылка на бренд или товар:</div>
@@ -159,7 +337,6 @@ async function deleteLike() {
                 class="loading loading-spinner loading-xs p-2"
               />
 
-              <!-- Insert a backspace svg -->
               <div v-if="!loadingUrl">
                 <IconCSS
                   v-if="productData"
@@ -265,15 +442,18 @@ async function deleteLike() {
           </div>
         </div>
       </div>
-    </div>
-    <div v-if="product_likes.length">
+    </div> -->
+    <div v-if="product_likes.length" class="mt-6">
       <DataTable
         v-if="width > 1024"
         class="bg-base-200 hidden lg:block"
         :value="product_likes"
+         showGridlines
       >
-        <Column field="place" header="№" />
-        <Column field="image" header="Фото">
+      
+        <Column class="bg-base-100 text-center" field="place" header="№" 
+        />
+        <Column class="bg-base-100 text-center" field="image" header="Фото">
           <template #body="{ data }">
             <div
               style="
@@ -284,7 +464,7 @@ async function deleteLike() {
                 border-radius: 4px;
               "
             >
-              <div class="dropdown dropdown-hover">
+              <div class="dropdown dropdown-hover bg-pri">
                 <label tabindex="0">
                   <nuxt-img
                     class="rounded-lg z-0"
@@ -309,55 +489,55 @@ async function deleteLike() {
             </div>
           </template>
         </Column>
-        <Column field="link" header="Ссылка">
+        <Column class="bg-base-100 text-center"  field="link" header="Ссылка">
           <template #body="{ data }">
             <a
               :href="data.url"
               target="_blank"
-              class="text-secondary link link-hover"
+              class="text-primary link link-hover"
             >
               {{ data.name }}
             </a>
           </template>
         </Column>
-        <Column field="type" header="Тип">
+        <Column class="bg-base-100 text-center" field="type" header="Тип">
           <template #body="{ data }">
             <div>{{ data.type === 'brand' ? 'Бренд' : 'Товар' }}</div>
           </template>
         </Column>
-        <Column field="amount" header="Количество" />
+        <Column class="bg-base-100 text-center" field="amount" header="Количество" />
 
-        <Column field="status" header="Статус">
+        <Column class="bg-base-100 text-center" field="status" header="Статус">
           <template #body="{ data }">
             <div
               :class="{
-                'text-error': data.status === 'nofunds',
-                'text-primary': data.status === 'created',
-                'text-warning': data.status === 'work',
-                'text-success': data.status === 'completed',
+                'bg-error text-base-content rounded-lg p-0.5 text-center': data.status === 'nofunds',
+                'bg-primary text-base-content rounded-lg p-0.5 text-center': data.status === 'created',
+                'bg-warning text-base-content rounded-lg p-0.5 text-center': data.status === 'work',
+                'bg-success text-base-content rounded-lg p-0.5 text-center': data.status === 'completed',
               }"
             >
               {{ getStatus(data.status) }}
             </div>
           </template>
         </Column>
-        <Column field="createdDate" header="Дата создания">
+        <Column class="bg-base-100 text-center" field="createdDate" header="Дата создания">
           <template #body="{ data }">
-            <div>
+            <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
               {{ defaultDate(data.createdDate) }}
             </div>
           </template>
         </Column>
-        <Column field="endedDate" header="Дата завершения">
+        <Column class="bg-base-100 text-center" field="endedDate" header="Дата завершения">
           <template #body="{ data }">
-            <div v-if="data.endedDate">
+            <div v-if="data.endedDate" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
               {{ defaultDate(data.endedDate) }}
             </div>
             <div v-else>Нет</div>
           </template>
         </Column>
 
-        <Column header=" ">
+        <Column class="bg-base-100 text-center" header=" ">
           <template #body="{ data }">
             <div v-if="data.status === 'created'">
               <button
@@ -486,4 +666,15 @@ async function deleteLike() {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+::v-deep(th){
+  background-color: rgba(99, 102, 241, 0.15) !important;
+  
+}
+::v-deep(.p-column-header-content){
+  text-align: center !important;
+  display: flex;
+  justify-content: center;
+}
+
+</style>

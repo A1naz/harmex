@@ -68,9 +68,9 @@ const isCardFormDisabled = computed(() => {
     :class="{
       'modal-open': state,
     }"
-    class="modal"
+    class="modal backdrop-filter backdrop-blur-sm"
   >
-    <div class="modal-box">
+    <div class="modal-box w-10/12 max-w-lg py-3 px-5">
       <label
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
@@ -93,7 +93,7 @@ const isCardFormDisabled = computed(() => {
               <input
               type="radio"
               name="radio-10"
-              class="radio radio-primary"
+              class="radio radio-base-content"
               @change="form.withdrawType = 'card'"
               checked
               />
@@ -105,7 +105,7 @@ const isCardFormDisabled = computed(() => {
               <input
               type="radio"
               name="radio-10"
-              class="radio radio-primary"
+              class="radio radio-base-content"
               @change="form.withdrawType = 'account'"
               />
               <span class="label-text ml-2">Баланс платформы</span>
@@ -115,40 +115,40 @@ const isCardFormDisabled = computed(() => {
         <form class="my-2 flex flex-col gap-2" @submit.prevent="createWithdraw">
           <div>
             <label class="label p-1">
-              <span class="label-text">Сумма вывода</span>
+              <span class="label-text text-gray-500 font-semibold">Сумма вывода</span>
             </label>
             <input
               v-model="form.amount"
               type="number"
               placeholder="Сумма"
-              class="input input-bordered w-full"
+              class="input bg-base-200 placeholder-gray-500 text-base-content w-full"
             />
           </div>
           <div>
             <label class="label p-1">
-              <span class="label-text">Номер карты получателя</span>
+              <span class="label-text text-gray-500 font-semibold">Номер карты получателя</span>
             </label>
             <input
               :disabled="isCardFormDisabled"
               v-model="form.card"
               type="text"
               placeholder="220077777777777"
-              class="input input-bordered w-full"
+              class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
             />
           </div>
           <div>
             <label class="label p-1">
-              <span class="label-text">ФИО получателя</span>
+              <span class="label-text text-gray-500 font-semibold">ФИО получателя</span>
             </label>
             <input
               :disabled="isCardFormDisabled"
               v-model="form.fio"
               type="text"
               placeholder="Пупкин Иван Игоревич"
-              class="input input-bordered w-full"
+              class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
             />
           </div>
-          <button class="btn btn-primary btn-block mt-2">Создать</button>
+          <button class="btn btn-primary bg-opacity-20 border-none text-base-content btn-block mt-2">Вывести</button>
         </form>
       </div>
     </div>

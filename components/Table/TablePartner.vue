@@ -50,6 +50,7 @@ const _fetchData = async () => {
         listData.count = res.data.count
     }
     isLoading.value = false
+    updateInfo()
 }
 const _getDataDebounced = useDebounceFn(()=> _fetchData() , 700)
 
@@ -67,6 +68,9 @@ const pageNum = computed( () => {
 const currentPage = computed ( () => {
     return listData.search.skip == 0 ? 1 : listData.search.skip / listData.search.limit + 1
 })
+const updateInfo = () => {
+    emit('updateInfo', pageNum.value, currentPage.value);
+};
 
 const displayed = computed( ()=>{
     const from = listData.count == 0 ? 0 : listData.search.skip + 1
@@ -90,30 +94,43 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
     listData.search[key] = value
     listData.data = []
     fetchData()
+    updateInfo()
 }
+
+const emit = defineEmits(['updateInfo'])
+
+
+
+defineExpose({
+    pageNum,
+    currentPage,
+    changePage,
+    updateFilter
+});
+
+
+
 
 </script>
 
 <template>
-    <div class="">
-        <div class="flex justify-end gap-2 w-full mt-2">
+    <div class="mt-7">
+        <!-- <div class="flex justify-end gap-2 w-full mt-2">
             <TableDateDefaultFilter
             v-if="useDefaultDateFilter"
             @range-upd="(r: number) => updateFilter('filter', r)"
             />
 
-        <TablePagination  
-            :page-nums="pageNum"
-            :limit-list="limitList"
-            :current-page="currentPage"
-            :current-limit="listData.search.limit"
-            @change-limit="changeLimit"
-            @change-page="changePage"
-            />
-        </div>
+            <TablePaginationPartner  
+                :page-nums="pageNum"
+                :current-page="currentPage"
+                @change-limit="changeLimit"
+                @change-page="changePage"
+                />
+        </div> -->
         
         
-        <div class="flex flex-row w-full justify-end">
+        <div v-if="!route.path.startsWith('/partner')" class="flex flex-row w-full justify-end">
             <div class="self-center text-sm">{{ displayed }}</div>
         </div>
         
@@ -122,18 +139,33 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
             :sort-field="Object.keys(listData.search.sort)[0]"
             :sort-order="Object.values(listData.search.sort)[0]"
             @sort="(v: any) => updateFilter('sort', v)"
-            tableStyle="min-width: 50vh"
-            
-            >
+            class="rounded-lg overflow-hidden"
+            :pt="{
+                headerRow: { class: '' }
+            }"
+        >
             <Column
-                v-for="col of config"
+                v-for="(col, index) of config"
                 sortable
-                :key=col.field
-                :field=col.field 
-                :header=col.header
-                >
+                :key="col.field"
+                :field="col.field" 
+                :header="col.header"
+                class="bg-base-100"
+               :class="{ 
+                    'border-r border-base-200': index < config.length - 1,
+                }" 
+                :pt="{
+                    headerCell:  { class: [
+                        {
+                            'rounded-tl-2xl': index == 0,
+                            'rounded-tr-2xl': index == config.length - 1
+                        },
+                        'bg-primary bg-opacity-40 border-none text-base-content'
+                    ] },
+                }"
+            >
                 <template v-if="col.type == FieldsType.boolean" #body="{ data }">
-                    {{ data[col.field] ? "Выполнен" : "Активный" }}
+                    <div class="text-green-400 font-bold">{{ data[col.field] ? "Выполнен" : "Активный" }}</div>
                 </template>
                 <template v-else-if="col.type == FieldsType.date" #body="{ data }">
                     {{ defaultDateShort(data[col.field]) }}
@@ -148,28 +180,17 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
                     {{ data[col.field] }}
                 </template>
             </Column>
-
         </DataTable>
 
         <div v-if="isLoading" class="flex justify-center mt-10">
             <span class="loading loading-spinner loading-lg text-primary "/>
         </div>
 
-        <Hero v-if="!isLoading && listData.count == 0" />
+        <Hero v-if="!isLoading && listData.count == 0"/>
         
         <div v-if="!isLoading && listData.data.length > 10">
             <div class="flex flex-row w-full justify-end">
                 <div class="self-center text-sm">{{ displayed }}</div>
-            </div>
-            <div class="mb-24">
-                <TablePagination  
-                    :page-nums="pageNum"
-                    :limit-list="limitList"
-                    :current-page="currentPage"
-                    :current-limit="listData.search.limit"
-                    @change-limit="changeLimit"
-                    @change-page="changePage"
-                    />
             </div>
         </div>
 
@@ -177,5 +198,4 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
 </template>
 
 <style>
-
 </style>

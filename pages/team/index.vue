@@ -148,7 +148,7 @@ function openConfirmModal(uuid: string, index: number) {
     ...myTeam.value.find((user: any) => user.uuid == uuid),
   }
   selectedIndex.value = index
-  titleModal.value = 'Подтверждаете удаление сотрудника?'
+  titleModal.value = 'Вы уверены что хотите удалить сотрудника?'
   modalConfirm.value = true
 }
 const closeConfirm = async (isConfirmed: boolean) => {
@@ -315,7 +315,9 @@ const getPostName = (post: string) => {
             </Column>
           </DataTable> -->
 
-          <ul class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 navbar:grid-cols-3 lg:grid-cols-4 gap-4">
+          <ul class="w-full grid-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 navbar:grid-cols-3 nbar100:grid-cols-3 lg:grid-cols-4 gap-4"
+
+          >
             <li
               v-for="(item, index) in myTeam"
               :key="index"
@@ -323,7 +325,7 @@ const getPostName = (post: string) => {
             >
               <div
                 tabindex="0"
-                class="relative bg-base-100 rounded-box px-5 py-4"
+                class="flex flex-col justify-start relative bg-base-100 rounded-box px-5 py-4"
               >
               <div class="dropdown dropdown-end absolute right-1 top-2 z-10">
                 <label tabindex="0" class="btn btn-sm btn-square btn-ghost ">
@@ -477,8 +479,8 @@ const getPostName = (post: string) => {
     <ConfirmModal
       v-if="modalConfirm"
       :titleModal="titleModal"
-      :sub-descr="selectedUser.uuid"
-      :descr="'ФИО: ' + selectedUser.firstName + ' ' + selectedUser.lastName"
+      :sub-descr="''"
+      :descr="selectedUser.firstName + ' ' + selectedUser.lastName"
       :index="selectedIndex"
       :state="modalConfirm"
       :btnSaveLoading="btnSaveLoading"

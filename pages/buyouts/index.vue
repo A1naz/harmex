@@ -115,8 +115,8 @@ function selectStatus(e: Event) {
   })
 }
 
-async function selectFilterDate(e: Event) {
-  const target = e.target as HTMLSelectElement
+async function selectFilterDate(e: any) {
+  const target = e
   dateFilter.value = target.value
   skip.value = 50
   end.value = false
@@ -301,10 +301,32 @@ const statusText = computed(() => {
   return filters.find((el: any) => el.queryStatus === route.query.status)?.title
 })
 
+const dropdownOpened = ref<boolean>(false);
+
+const handleBodyClick = (event: MouseEvent) => {
+  const dropdown = document.querySelector('.dropdown');
+  if (dropdown && !dropdown.contains(event.target as Node)) {
+    dropdownOpened.value = false;
+  }
+};
+
+onMounted(() => {
+  document.body.addEventListener('click', handleBodyClick);
+});
+
+onUnmounted(() => {
+  document.body.removeEventListener('click', handleBodyClick);
+});
+
 function toggleInfoModal() {
   isInfoModal.value = !isInfoModal.value
 }
 
+const codeInput = ref()
+
+const updateSearchType = (filter: any) => {
+  search.type = filter.value;
+}
 </script>
 
 <template>
@@ -357,29 +379,32 @@ function toggleInfoModal() {
         <div class="flex gap-2">
           <NuxtLink
             to="/buyouts/create"
-            class="btn btn-primary btn-sm gap-2 font-medium normal-case"
+            class="btn btn-primary btn-sm gap-2 font-medium normal-case "
           >
             <Icon name="fluent:add-24-filled" size="12" />
             <span class="hidden lg:inline">Выкупы</span>
           </NuxtLink>
           <div class="relative flex items-center flex-grow-0 w-full lg:hidden">
             <input
+            ref="codeInput" 
               v-model="search.text"
               type="text"
               class="input input-sm input-bordered w-full"
               placeholder="Поиск по товарам"
               @input="onSearchInput($event)"
             />
-            <Icon
-              v-if="!search.loading"
-              class="absolute right-2 p-2"
-              name="tabler:search"
-              size="30"
-            />
+            
             <span
               v-if="search.loading"
               class="absolute right-2 loading loading-spinner loading-xs p-2"
             />
+            <Icon
+              v-else
+              class="absolute right-2 p-2 "
+              name="tabler:search"
+              size="30"
+              @click="codeInput.focus()"
+              />
           </div>
         </div>
         
@@ -387,39 +412,40 @@ function toggleInfoModal() {
           
           <div class="search flex items-center gap-1 lg:gap-3"
             :class="{
-              'flex-wrap': width < 350,
+              'flex-wrap': width < 335,
             }"
           >
-            <div class="dropdown">
-              <div
-                tabindex="0"
-                role="button"
-                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] px-0 lg:w-[120px] "
+          <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
+            <div
+                class="font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[120px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
               >
                 <span>{{ statusText }}</span>
-              </div>
-              <ul
-                tabindex="0"
-                class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
-              >
+                <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
+                <Icon v-else name="formkit:down" size="18" />
+            </div>
+            <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg max-w-[200px] mt-2"
+            v-if="dropdownOpened"
+            >
                 <li>
                   <NuxtLink
                     v-for="filter in filters"
                     :to="'/buyouts' + filter.params"
                     :external="false"
                     :class="{
-                      'btn-active': route.query.status === filter.queryStatus,
+                      'bg-primary bg-opacity-20': route.query.status === filter.queryStatus,
                     }"
-                    class="btn btn-ghost btn-xs normal-case font-medium w-full"
+                    class="btn btn-ghost btn-xs normal-case font-normal w-full hover:bg-primary hover:bg-opacity-20"
                   >
                     <span>
                       {{ filter.title }}
                     </span>
                   </NuxtLink>
                 </li>
-              </ul>
-            </div>
-            <select
+            </ul>
+        </div>
+        
+            <CustomSelect class="sm:hidden" :tabs = "[{title: 'За все время', value: 'all'}, {title: 'Сегодня', value: 'today'}, {title: '3 дня', value: '3days'}, {title: 'Неделя', value: '7days'}]" @change-value="selectFilterDate"/>
+            <!-- <select
               class="select select-bordered select-sm max-w-[131px] sm:hidden"
               @change="selectFilterDate"
             >
@@ -427,16 +453,18 @@ function toggleInfoModal() {
               <option value="today">Сегодня</option>
               <option value="3days">3 дня</option>
               <option value="7days">Неделя</option>
-            </select>
+            </select> -->
             <div class="flex gap-3 items-center  sm:hidden">
-              <select
+              <CustomSelect :tabs = "[{title: 'Артикул', value: 'article'}, {title: 'ID выкупа', value: 'uuid'}, {title: 'Имя', value: 'name'}]" @change-value="updateSearchType" />
+
+              <!-- <select
                 v-model="search.type"
                 class="select select-bordered select-sm max-w-[98px]"
               >
                 <option value="article">Артикул</option>
                 <option value="uuid">ID выкупа</option>
                 <option value="name">Имя товара</option>
-              </select>
+              </select> -->
             </div>
           </div>
         </div>
@@ -465,7 +493,8 @@ function toggleInfoModal() {
       </select> -->
       <div class="items-center flex-wrap self-start hidden sm:flex">
         <div class="search flex items-center flex-wrap gap-3">
-          <select
+          <CustomSelect :tabs = "[{title: 'За все время', value: 'all'}, {title: 'Сегодня', value: 'today'}, {title: '3 дня', value: '3days'}, {title: 'Неделя', value: '7days'}]" @change-value="selectFilterDate"/>
+          <!-- <select
             class="select select-bordered select-sm"
             @change="selectFilterDate"
           >
@@ -473,35 +502,39 @@ function toggleInfoModal() {
             <option value="today">Сегодня</option>
             <option value="3days">3 дня</option>
             <option value="7days">Неделя</option>
-          </select>
-          <div class="flex gap-3 items-center">
-            <select
+          </select> -->
+          <div class="flex items-center justify-between gap-3">
+            <CustomSelect class="min-w-[100px]" :tabs = "[{title: 'Артикул', value: 'article'}, {title: 'ID выкупа', value: 'uuid'}, {title: 'Имя', value: 'name'}]" @change-value="updateSearchType" />
+
+            <!-- <select
               v-model="search.type"
               class="select select-bordered select-sm"
             >
               <option value="article">Артикул</option>
               <option value="uuid">ID выкупа</option>
               <option value="name">Имя товара</option>
-            </select>
+            </select> -->
             <div
-              class="relative items-center flex-grow-0 w-full hidden lg:flex"
+              class="relative justify-end flex-grow-0 w-full hidden lg:flex"
             >
               <input
+                ref="codeInput"
                 v-model="search.text"
                 type="text"
                 class="input input-sm input-bordered"
                 placeholder="Поиск по товарам"
                 @input="onSearchInput($event)"
               />
-              <!-- <Icon
-                v-if="!search.loading"
-                class="absolute right-2 p-2"
-                name="tabler:search"
-                size="30"
-              /> -->
               <span
                 v-if="search.loading"
                 class="absolute right-2 loading loading-spinner loading-xs p-2"
+              />
+              <Icon
+              v-else
+              class="absolute right-2 p-2 "
+              name="tabler:search"
+              size="30"
+              @click="codeInput.focus()"
               />
             </div>
           </div>

@@ -22,6 +22,7 @@ function isActive(slot: string, query: string): boolean {
 
     <Button
         v-for="tab in tabs"
+        v-if="!route.path.startsWith('/partner')"
         :class="{ 'btn-active': isActive(tab.slot, tab.query) }" 
         class="btn btn-sm normal-case btn-primary bg-opacity-20 border-none text-base-content font-medium mx-1 mt-2"
         @click="changeTab(`${route.path}${tab.query}`, tab.slot)"

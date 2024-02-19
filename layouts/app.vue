@@ -141,9 +141,9 @@ const statusText = computed(() => {
           <Logo />
         </div>
         <div class="card m-4 mx-4 bg-neutral-focus text-neutral-content">
-          <div class="card-body gap-4 p-4">
+          <div class="card-body gap-4 p-0">
             <div>
-              <div class="flex justify-between items-start">
+              <div class="flex justify-between items-start p-2">
                 <div class="flex gap-5">
                   <div
                     v-if="storeMain.client.role !== UserRoles.staff"
@@ -198,8 +198,8 @@ const statusText = computed(() => {
                   </div>
                 </div>
               </div>
-              <hr class="h-[2px] my-4 block box-border" />
-              <div class="flex justify-between items-start">
+              <hr class="border-gray-600 bg-gray-600 h-[1px]">
+              <div class="flex justify-between items-start p-2">
                 <div class="flex gap-5">
                   <div
                     v-if="storeMain.client.role !== UserRoles.staff"
@@ -249,14 +249,14 @@ const statusText = computed(() => {
                 Пополнить
               </label>
             </div> -->
-            <div class="-mt-3">
+            <!-- <div class="-mt-3">
               <label
                 for="swapAccountModal"
                 class="btn btn-block btn-sm btn-neutral hover:bg-neutral"
               >
                 Сменить аккаунт
               </label>
-            </div>
+            </div> -->
           </div>
         </div>
 

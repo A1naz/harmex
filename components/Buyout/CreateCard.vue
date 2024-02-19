@@ -81,7 +81,7 @@ const productQuantityModel = computed({
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-100 shadow-lg max-w-[350px] w-full">
+  <div class="buyout-card card bg-base-100 shadow-lg  w-full">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
     >
