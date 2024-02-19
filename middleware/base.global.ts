@@ -9,7 +9,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
   } else {
-
+    if (to.path !== '/auth' && to.path !== '/register') {
+      return navigateTo('/auth')
+    }
   }
 })
 
