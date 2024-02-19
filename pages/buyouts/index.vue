@@ -432,9 +432,9 @@ const updateSearchType = (filter: any) => {
                     :to="'/buyouts' + filter.params"
                     :external="false"
                     :class="{
-                      'btn-active': route.query.status === filter.queryStatus,
+                      'bg-primary bg-opacity-20': route.query.status === filter.queryStatus,
                     }"
-                    class="btn btn-ghost btn-xs normal-case font-normal w-full"
+                    class="btn btn-ghost btn-xs normal-case font-normal w-full hover:bg-primary hover:bg-opacity-20"
                   >
                     <span>
                       {{ filter.title }}

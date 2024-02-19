@@ -100,8 +100,8 @@ onUnmounted(() => {
                     <Button             
                         v-for="filter in rangesConfig"
                         :class="[
-                            'btn btn-ghost btn-sm normal-case font-normal w-full my-0.5',
-                            { 'btn-active': filter.value == currentRange }
+                            'btn btn-ghost btn-sm normal-case font-normal w-full my-0.5 hover:bg-primary hover:bg-opacity-20',
+                            { 'bg-primary bg-opacity-20': filter.value == currentRange }
                         ]"
                         @click="changeRange(filter)"
                         >
