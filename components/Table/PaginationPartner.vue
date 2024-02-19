@@ -13,6 +13,7 @@ const props = defineProps({
 })
 
 const route = useRoute()
+const page = ref(props.currentPage)
 
 const emit = defineEmits(['changePage', 'changeLimit'])
 const { width, height } = useWindowSize()
@@ -30,14 +31,16 @@ const renderPages = computed ( (): number[] => {
 function updateCurrentPage(event: KeyboardEvent){
   if (event.key === 'Enter') {
     const inputElement = event.target as HTMLInputElement;
-    const n:number = +inputElement.value
+    const n:number = +inputElement.value;
+    page.value = n <= 0 ? 1 : n > props.pageNums ? props.pageNums : n
     n <= 0 ? emit('changePage', 1) : n > props.pageNums ? emit('changePage', props.pageNums) : emit('changePage', n)
+    console.log('CurrentPage old: ' + props.currentPage)
   }
 }
 function changePage(n: number) {
     if (props.pageNums !== 1 && n !== props.currentPage) {
+        page.value = n
         emit('changePage', n)
-        console.log('changing page')
     }
 }
 </script>
@@ -63,7 +66,7 @@ function changePage(n: number) {
         type="number"
         class="btn btn-xs btn-ghost p-0 py-0 rounded-full font-medium text-center block max-w-[25px] max-h-[35px] my-auto outline-none"
         placeholder=""
-        :value="currentPage"
+        v-model="page"
         @keydown.enter="updateCurrentPage"
       />
       <Button
