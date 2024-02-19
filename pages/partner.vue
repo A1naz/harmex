@@ -16,6 +16,7 @@ const refUrl = computed(() => `${runtimeConfig.public.siteUrl}/register?ref=${cl
 
 const client = store.client
 const partner = client.partner
+const tablePartner = ref()
 
 const secondLevelReferrals = ref(0)
 async function getSecondartRefLevel(){
@@ -80,6 +81,26 @@ const dateRange = ref(datePrepare(-1))
 function changeRange(filter: DateFilterRanges){
     dateRange.value = datePrepare(filter.value)
 }
+
+const pageNum = ref(tablePartner.value?.pageNum || 1);
+const currentPage = ref(tablePartner.value?.currentPage || 1);
+
+const updateInfo = (newPageNum: number, newCurrentPage: number) => {
+    console.log('UpdateInfo: ',newPageNum)
+    pageNum.value = newPageNum;
+    currentPage.value = newCurrentPage;
+};
+
+function pagination(n: number){
+    tablePartner.value.changePage(n);
+}
+
+function defaultFilter(r: number){
+    tablePartner.value.updateFilter('filter', r)
+}
+
+
+
 </script>
 
 <template>
@@ -138,14 +159,14 @@ function changeRange(filter: DateFilterRanges){
                 
                     
                     <div class="flex gap-2">
-                    <CustomSelect :tabs="[{ title: 'Все время', value: -1 },
-                    { title: 'Сегодня', value: 1 },
-                    { title: '3 дня', value: 3 },
-                    { title: '7 дней', value: 7 },
-                    { title: 'Месяц', value: 30 },]" 
-                    @change-value = "changeRange"
+                    <TablePaginationPartner  
+                        :page-nums="pageNum"
+                        :current-page="currentPage"
+                        @change-page="pagination"
                     />
-                
+                    <TableDateDefaultFilter
+                        @range-upd="(r: number) => defaultFilter"
+                    />
                     <ExportXls 
                         api="/api/partner/referals-export"
                         fileName="TOPVTOP - Статистика партнеров"
@@ -154,12 +175,15 @@ function changeRange(filter: DateFilterRanges){
                         />
                     </div>
                 </div>
-                <Table 
+                
+                <TablePartner 
+                    ref="tablePartner"
                     endpoint="/partner/referals"
                     :config="listConfigPartners"
                     :useDefaultDateFilter="true"
+                    @update-info="updateInfo"
                     />
-
+  
             </template>
             <template v-slot:orders>
                 <div class="flex justify-between gap-2 content-center bg-base-200 rounded-xl" >

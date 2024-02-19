@@ -91,7 +91,7 @@ function changePage(n: number) {
             <Icon v-else name="formkit:right" class="ml-1 rounded-full bg-base-300 my-auto" size="22" />    
         </div>
 
-        <div v-if="!route.path.startsWith('/partner')" class="flex flex-row gap-1">
+        <div class="flex flex-row gap-1">
             <!-- <div class="flex flex-row">
                 <div class="self-center text-sm mr-1">Показывать по</div>
             </div> -->

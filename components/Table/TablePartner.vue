@@ -10,6 +10,7 @@ const props = defineProps({
 })
 
 const changePage = (numPage: number) => {
+    console.log('tableChangePage: ', numPage)
     updateFilter('skip', numPage)
 }
 
@@ -90,7 +91,24 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
     listData.search[key] = value
     listData.data = []
     fetchData()
+    updateInfo(pageNum.value, currentPage.value)
 }
+
+const emit = defineEmits(['updateInfo'])
+
+const updateInfo = (pageNum: Number, currentPage: Number) => {
+    emit('updateInfo', pageNum, currentPage);
+};
+
+defineExpose({
+    pageNum,
+    currentPage,
+    changePage,
+    updateFilter
+});
+
+
+
 
 </script>
 
@@ -102,18 +120,16 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
             @range-upd="(r: number) => updateFilter('filter', r)"
             />
 
-        <TablePagination  
-            :page-nums="pageNum"
-            :limit-list="limitList"
-            :current-page="currentPage"
-            :current-limit="listData.search.limit"
-            @change-limit="changeLimit"
-            @change-page="changePage"
-            />
+            <!-- <TablePaginationPartner  
+                :page-nums="pageNum"
+                :current-page="currentPage"
+                @change-limit="changeLimit"
+                @change-page="changePage"
+                /> -->
         </div>
         
         
-        <div class="flex flex-row w-full justify-end">
+        <div v-if="!route.path.startsWith('/partner')" class="flex flex-row w-full justify-end">
             <div class="self-center text-sm">{{ displayed }}</div>
         </div>
         
@@ -122,8 +138,6 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
             :sort-field="Object.keys(listData.search.sort)[0]"
             :sort-order="Object.values(listData.search.sort)[0]"
             @sort="(v: any) => updateFilter('sort', v)"
-            tableStyle="min-width: 50vh"
-            
             >
             <Column
                 v-for="col of config"
@@ -155,18 +169,16 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
             <span class="loading loading-spinner loading-lg text-primary "/>
         </div>
 
-        <Hero v-if="!isLoading && listData.count == 0" />
+        <Hero v-if="!isLoading && listData.count == 0"/>
         
         <div v-if="!isLoading && listData.data.length > 10">
             <div class="flex flex-row w-full justify-end">
                 <div class="self-center text-sm">{{ displayed }}</div>
             </div>
             <div class="mb-24">
-                <TablePagination  
+                <TablePaginationPartner  
                     :page-nums="pageNum"
-                    :limit-list="limitList"
                     :current-page="currentPage"
-                    :current-limit="listData.search.limit"
                     @change-limit="changeLimit"
                     @change-page="changePage"
                     />
@@ -177,5 +189,4 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
 </template>
 
 <style>
-
 </style>
