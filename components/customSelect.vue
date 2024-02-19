@@ -66,14 +66,14 @@ onUnmounted(() => {
                 <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
                 <Icon v-else name="formkit:down" size="18" />
             </div>
-            <ul v-if="rangesConfig.length > 0 && dropdownOpened" class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-2" >
+            <ul v-if="rangesConfig.length > 0 && dropdownOpened" class="absolute shadow-md z-[1] bg-base-100 p-1 rounded-lg mt-2" >
               <li v-for="filter in rangesConfig" :key="filter">
-                <button class="btn btn-ghost btn-xs normal-case font-normal w-full my-0.5 text-base" @click="updateText(filter)" >
+                <button class="btn btn-ghost btn-sm normal-case font-normal w-full my-0.5 py-0 text-base whitespace-normal leading-none" @click="updateText(filter)" >
                   {{ filter }}
                 </button>
               </li>
             </ul>
-            <ul v-if="tabs.length > 0 && dropdownOpened" class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg max-w-[200px] mt-2 w-full" >
+            <ul v-if="tabs.length > 0 && dropdownOpened" class="absolute shadow-md z-[1] bg-base-100 p-1 rounded-lg max-w-[200px] mt-2 w-full" >
               <li v-for="filter in tabs" :key="filter.title">
                 <button class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full my-0.5" @click="updateValue(filter)" >
                   {{ filter.title }}

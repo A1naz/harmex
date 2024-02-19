@@ -56,51 +56,51 @@ const statusText = computed(() => {
   return props.rangesConfig.find((filter: DateFilterRanges) => filter.value == currentRange.value)?.header
 })
 
-// const handleBodyClick = (event: MouseEvent) => {
+const handleBodyClick = (event: MouseEvent) => {
 
-//   const dropdown = document.querySelector('.dropdown');
-//   if (dropdown && !dropdown.contains(event.target as Node)) {
-//     dropdownOpened.value = false;
-//   }
-// };
-
-
-// onMounted(() => {
-//   document.body.addEventListener('click', handleBodyClick);
-// });
+  const dropdown = document.querySelector('.dropdown');
+  if (dropdown && !dropdown.contains(event.target as Node)) {
+    dropdownOpened.value = false;
+  }
+};
 
 
-// onUnmounted(() => {
-//   document.body.removeEventListener('click', handleBodyClick);
-// });
+onMounted(() => {
+  document.body.addEventListener('click', handleBodyClick);
+});
+
+
+onUnmounted(() => {
+  document.body.removeEventListener('click', handleBodyClick);
+});
 
 </script>
 
 <template>
     <div class="flex flex-row flex-wrap gap-1 content-center">
-        <CustomDrop
+        <!-- <CustomDrop
             :statusText="statusText || ''"
             :rangesConfig="rangesConfig"
             :currentRange="currentRange"
             :changeRange="changeRange"
             :class="'bg-base-300'"
-        />
-        <!-- <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
+        /> -->
+        <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
             <div
-                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
+                class=" font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
               >
                 <span>{{ statusText }}</span>
                 <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
                 <Icon v-else name="formkit:down" size="18" />
             </div>
-            <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
+            <ul class="absolute shadow-md z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
             v-if="dropdownOpened"
             >
                 <li>
                     <Button             
                         v-for="filter in rangesConfig"
                         :class="[
-                            'btn btn-ghost btn-sm normal-case font-medium w-full my-0.5',
+                            'btn btn-ghost btn-sm normal-case font-normal w-full my-0.5',
                             { 'btn-active': filter.value == currentRange }
                         ]"
                         @click="changeRange(filter)"
@@ -109,6 +109,6 @@ const statusText = computed(() => {
                     </Button>
                 </li>
             </ul>
-        </div> -->
+        </div>
     </div>
 </template>

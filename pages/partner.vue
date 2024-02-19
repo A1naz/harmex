@@ -96,6 +96,7 @@ function pagination(n: number){
 }
 
 function defaultFilter(r: number){
+    console.log('defaultFilter: ', r)
     tablePartner.value.updateFilter('filter', r)
 }
 
@@ -150,22 +151,27 @@ function defaultFilter(r: number){
             </template>
             <template v-slot:referals>
                 
-                <div class="flex justify-between bg-base-200 rounded-xl gap-2" >
-                    <CustomDrop
-                    :statusText="'Приглашенные клиенты'"
-                    :tabs="tabs"
-                    @change-value = "changeRange"
+                <div class="flex flex-col sm:flex-row justify-between bg-base-200 rounded-xl gap-2" >
+                    <div class="flex gap-1.5">
+                        <CustomDrop
+                        :statusText="'Приглашенные клиенты'"
+                        :tabs="tabs"
+                        @change-value = "changeRange"
+                        />
+                        <TableDateDefaultFilter
+                        class="sm:hidden"
+                        @range-upd="(r: number) => defaultFilter(r)"
                     />
-                
-                    
-                    <div class="flex gap-2">
+                    </div>
+                    <div class="flex gap-2 sm:gap-4">
                     <TablePaginationPartner  
                         :page-nums="pageNum"
                         :current-page="currentPage"
                         @change-page="pagination"
                     />
                     <TableDateDefaultFilter
-                        @range-upd="(r: number) => defaultFilter"
+                        class="hidden sm:flex"
+                        @range-upd="(r: number) => defaultFilter(r)"
                     />
                     <ExportXls 
                         api="/api/partner/referals-export"
@@ -186,12 +192,27 @@ function defaultFilter(r: number){
   
             </template>
             <template v-slot:orders>
-                <div class="flex justify-between gap-2 content-center bg-base-200 rounded-xl" >
+                <div class="flex flex-col sm:flex-row justify-between gap-2 content-center bg-base-200 rounded-xl" >
+                <div class="flex gap-1.5">
                     <CustomDrop
                     :statusText="'Заказы клиентов'"
                     :tabs="tabs"
-                />
-                
+                    />
+                    <TableDateDefaultFilter
+                        class="sm:hidden"
+                        @range-upd="(r: number) => defaultFilter(r)"
+                    />
+                </div>
+                <div class="flex gap-1.5 sm:gap-4">
+                    <TablePaginationPartner  
+                        :page-nums="pageNum"
+                        :current-page="currentPage"
+                        @change-page="pagination"
+                    />
+                    <TableDateDefaultFilter
+                        class="hidden sm:flex"
+                        @range-upd="(r: number) => defaultFilter(r)"
+                    />
                     <ExportXls 
                         api="/api/partner/orders-export"
                         fileName="TOPVTOP - Заказы партнеров"
@@ -199,13 +220,15 @@ function defaultFilter(r: number){
                         :isVisible="true"
                         />
                 </div>
-                <div class="overflow-x-auto">
-                
+                    
                 </div>
-                <Table
+               
+                <TablePartner 
+                    ref="tablePartner"
                     endpoint="/partner/orders"
                     :config="listConfigOrders"
                     :useDefaultDateFilter="true"
+                    @update-info="updateInfo"
                     />
             </template>
         </Tabs>

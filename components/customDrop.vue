@@ -62,14 +62,14 @@ onUnmounted(() => {
                 <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
                 <Icon v-else name="formkit:down" size="18" />
             </div>
-                <ul class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg mt-1"
+                <ul class="absolute shadow-md z-[1] bg-base-100 p-1 rounded-lg mt-1"
                 v-if="dropdownOpened && rangesConfig"
                 >
                     <li >
                         <Button             
                             v-for="filter in rangesConfig"
                             :class="[
-                                'btn btn-ghost btn-sm normal-case font-medium w-full my-0.5',
+                                'btn btn-ghost btn-sm normal-case font-normal w-full my-0.5',
                                 { 'btn-active': filter.value == currentRange }
                             ]"
                             @click="{
@@ -83,7 +83,7 @@ onUnmounted(() => {
                     </li>
                     
                 </ul>
-                <ul class="absolute shadow z-[100] bg-base-100 p-1 rounded-lg mt-1"
+                <ul class="absolute shadow-md z-[100] bg-base-100 p-1 rounded-lg mt-1"
                 v-if="dropdownOpened && tabs"
                 >
                   <li>

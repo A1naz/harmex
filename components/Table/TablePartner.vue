@@ -114,19 +114,19 @@ defineExpose({
 
 <template>
     <div class="">
-        <div class="flex justify-end gap-2 w-full mt-2">
+        <!-- <div class="flex justify-end gap-2 w-full mt-2">
             <TableDateDefaultFilter
             v-if="useDefaultDateFilter"
             @range-upd="(r: number) => updateFilter('filter', r)"
             />
 
-            <!-- <TablePaginationPartner  
+            <TablePaginationPartner  
                 :page-nums="pageNum"
                 :current-page="currentPage"
                 @change-limit="changeLimit"
                 @change-page="changePage"
-                /> -->
-        </div>
+                />
+        </div> -->
         
         
         <div v-if="!route.path.startsWith('/partner')" class="flex flex-row w-full justify-end">

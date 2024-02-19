@@ -120,16 +120,19 @@ const currentFilter = ref('')
 const changePage = (filter: string) => {
     currentFilter.value = filter
 }
-const closeModal = () => {
-    modulShow.value = false
-    currentFilter.value = ''
+const closeModal = (event: MouseEvent) => {
+    if ((event.target as HTMLElement).classList.contains('modalCustom')){
+      modalShow.value = false
+      currentFilter.value = ''
+    }
 }
 
-const modulShow = ref<boolean>(false)
+const modalShow = ref<boolean>(false)
 </script>
 
 <template>
-  <div>
+  <div >
+    <!-- {{ product_likes }} -->
     <!-- <h1 class="text-2xl font-bold mt-4">Лайки на товар/бренд</h1> -->
     <!-- <p class="text-xs font-light mt-4 lg:text-sm">
       Выберите товар или бренд, чтобы повысить количество добавлений в
@@ -140,12 +143,12 @@ const modulShow = ref<boolean>(false)
       <span class="font-bold"> {{ store.tariffString('likeProduct') }} </span>
       Все услуги оказываются по Московскому времени.
     </p> -->
-      <div v-if="modulShow" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm">
+      <div v-if="modalShow" @click="closeModal" class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm">
        
         <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4 ">
           <div class="flex justify-between">
             <CustomSelect :rangesConfig="['Лайки на товар/бренд', 'Лайки на отзыв']" @change-text="changePage"/>
-            <button class=" text-gray-500 hover:text-gray-700 self-end mb-2" @click="closeModal">
+            <button class="text-gray-500 hover:text-gray-700 self-end mb-2" @click="modalShow = false ; currentFilter = ''">
               <Icon name="material-symbols:close-rounded" size="24" />
             </button>
           </div>
@@ -295,7 +298,7 @@ const modulShow = ref<boolean>(false)
       </div>
     <div class="flex mt-4 justify-between">
       <div class="flex gap-2">
-        <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm hover:text-base-100 hover:bg-opacity-100 hover:bg-primary" @click="modulShow = !modulShow"><Icon name="fluent:add-24-filled" size="12" /> Лайки</button>
+        <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm hover:text-base-100 hover:bg-opacity-100 hover:bg-primary" @click="modalShow = !modalShow" @click.stop><Icon name="fluent:add-24-filled" size="12" /> Лайки</button>
         <!-- <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm">Все лайки ></button> -->
       </div>
       <div class="flex gap-2">

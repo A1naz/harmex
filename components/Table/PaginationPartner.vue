@@ -53,7 +53,7 @@ function changePage(n: number) {
             <Button 
                 :class="{
                     'rounded-full bg-primary bg-opacity-20 my-auto cursor-pointer text-base-content hover:bg-opacity-50': props.pageNums > 1,
-                    'rounded-full bg-gray-200 text-gray-400 my-auto cursor-default': props.pageNums <= 1
+                    'rounded-full bg-base-200 text-gray-400 my-auto cursor-default': props.pageNums <= 1
                     }"
                 :disabled="props.pageNums <= 1"
                 @click="changePage(currentPage - 1)"
@@ -64,7 +64,7 @@ function changePage(n: number) {
             <Button 
                 :class="{
                     'rounded-full bg-primary bg-opacity-20 my-auto cursor-pointer text-base-content hover:bg-opacity-50': props.pageNums > props.currentPage,
-                    'rounded-full bg-gray-200 text-gray-400 my-auto cursor-default': props.pageNums <= props.currentPage
+                    'rounded-full bg-base-200 text-gray-400 my-auto cursor-default': props.pageNums <= props.currentPage
                     }"
                 :disabled="props.pageNums <= props.currentPage"
                 @click="changePage(currentPage + 1)"
