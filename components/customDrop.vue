@@ -25,6 +25,7 @@ const props = defineProps({
   tabs: { type: Array as PropType<tabs[]>},
   currentRange: { type: Number || String},
   changeRange: Function as PropType<(filter: RangeConfigItem) => void>,
+  route: {type: String},
   class: { type: String },
 });
 
@@ -83,18 +84,18 @@ onUnmounted(() => {
                     </li>
                     
                 </ul>
-                <ul class="absolute shadow-md z-[100] bg-base-100 p-1 rounded-lg mt-1"
+                <ul class="absolute shadow-md z-[100] bg-base-100 p-1 rounded-lg mt-1 w-full"
                 v-if="dropdownOpened && tabs"
                 >
                   <li>
                           <NuxtLink
                                   v-for="filter in tabs"
-                                  :to="'/partner' + filter.query"
+                                  :to="props.route + filter.query"
                                   :external="false"
                                   :class="{
                                   'bg-primary bg-opacity-20': route.query.status === filter.query,
                                   }"
-                                  class="btn btn-ghost btn-xs normal-case font-medium w-full hover:bg-primary hover:bg-opacity-20"
+                                  class="btn btn-ghost btn-xs normal-case font-normal w-full hover:bg-primary hover:bg-opacity-20"
                               >
                                   <span>
                                   {{ filter.title }}
