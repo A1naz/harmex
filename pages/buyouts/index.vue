@@ -386,17 +386,16 @@ const updateSearchType = (filter: any) => {
           </NuxtLink>
           <div class="relative flex items-center flex-grow-0 w-full lg:hidden">
             <input
-            ref="codeInput" 
+              ref="codeInput" 
               v-model="search.text"
               type="text"
               class="input input-sm input-bordered w-full"
               placeholder="Поиск по товарам"
               @input="onSearchInput($event)"
             />
-            
             <span
               v-if="search.loading"
-              class="absolute right-2 loading loading-spinner loading-xs p-2"
+              class="absolute right-2 loading loading-spinner loading-xs p-2 "
             />
             <Icon
               v-else
@@ -527,7 +526,7 @@ const updateSearchType = (filter: any) => {
               />
               <span
                 v-if="search.loading"
-                class="absolute right-2 loading loading-spinner loading-xs p-2"
+                class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
               />
               <Icon
               v-else

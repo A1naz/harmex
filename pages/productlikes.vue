@@ -15,11 +15,29 @@ const period = ref('3h')
 const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
+const search = reactive({
+  text: '',
+  loading: false,
+  error: false,
+  type: 'name',
+})
+const codeInput = ref()
 async function getProductLikes() {
   const { data, error } = await useFetch('/api/productlikes/get', {
     method: 'GET',
   })
-  if (data.value) product_likes.value = data.value
+  if(data.value) product_likes.value = data.value
+//   if (data.value) {
+//     product_likes.value = data.value.map(product => {
+//         if (product.url) {
+//             const articleId = product.url.match(/\d+/);
+//             if (articleId) {
+//                 return { ...product, article: articleId[0] };
+//             }
+//         }
+//         return product;
+//     });
+// }
   if (error.value)
     notify({
       type: 'error',
@@ -90,9 +108,8 @@ onMounted(() => {})
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
-function openRemoveReviewModal(id: any) {
+function openRemoveReviewModal(id: any,name: any) {
   idForRemove.value = id
-
   reviewRemoveModalClose.value?.click()
 }
 
@@ -120,6 +137,7 @@ const currentFilter = ref('')
 const changePage = (filter: string) => {
     currentFilter.value = filter
 }
+const modalShow = ref<boolean>(false)
 const closeModal = (event: MouseEvent) => {
     if ((event.target as HTMLElement).classList.contains('modalCustom')){
       modalShow.value = false
@@ -127,12 +145,52 @@ const closeModal = (event: MouseEvent) => {
     }
 }
 
-const modalShow = ref<boolean>(false)
+async function selectFilterDate(e: any) {
+  const target = e
+  const { data } = await useFetch('/api/productlikes/get', {
+    method: 'GET',
+    query: {
+      dateFilter: target.value,
+    },
+    watch: false,
+  })
+  product_likes.value = data.value
+}
+async function findBuyouts(value: string, type: string) {
+  if (!value) {
+    search.loading = false
+    getProductLikes()
+    return
+  }
+  console.log('Searching: ', value, 'type: ', type)
+  const { data, error } = await useFetch('/api/productlikes/search', {
+    query: {
+      string: value,
+      type,
+    },
+    watch: false,
+  })
+  if (data.value) product_likes.value = data.value
+
+  search.loading = false
+}
+
+const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
+
+async function onSearchInput(event: Event) {
+  const newValue = (event.target as HTMLInputElement).value
+  search.loading = true
+  console.log(search.type)
+  findBuyoutsDebounced(search.text, search.type)
+}
+const updateSearchType = (filter: any) => {
+  search.type = filter.value;
+}
 </script>
 
 <template>
   <div >
-    <!-- {{ product_likes }} -->
+    
     <!-- <h1 class="text-2xl font-bold mt-4">Лайки на товар/бренд</h1> -->
     <!-- <p class="text-xs font-light mt-4 lg:text-sm">
       Выберите товар или бренд, чтобы повысить количество добавлений в
@@ -147,13 +205,15 @@ const modalShow = ref<boolean>(false)
        
         <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4 ">
           <div class="flex justify-between">
-            <CustomSelect :rangesConfig="['Лайки на товар/бренд', 'Лайки на отзыв']" @change-text="changePage"/>
+            <div class="font-medium text-lg">Лайк на товар/бренд</div>
+            <!-- <CustomSelect :rangesConfig="['Лайки на товар/бренд', 'Лайки на отзыв']" :category="true" @change-text="changePage"/> -->
             <button class="text-gray-500 hover:text-gray-700 self-end mb-2" @click="modalShow = false ; currentFilter = ''">
               <Icon name="material-symbols:close-rounded" size="24" />
             </button>
           </div>
           
-          <div v-if="currentFilter == 'Лайки на товар/бренд'" class="bg-base-100 rounded-lg">
+          <!-- <div v-if="currentFilter == 'Лайки на товар/бренд'" class="bg-base-100 rounded-lg"> -->
+          <div class="bg-base-100 rounded-lg">
             <div  class="flex flex-wrap items-center gap-6 mb-2">
               <div class="relative">
                
@@ -291,20 +351,70 @@ const modalShow = ref<boolean>(false)
               </div>
             </div>
           </div>
-          <div v-if="currentFilter == 'Лайки на отзыв'" class="bg-base-100 rounded-lg">
+          <!-- <div v-if="currentFilter == 'Лайки на отзыв'" class="bg-base-100 rounded-lg">
             <p class=text-red-500>Создание новых лайков на отзывы временно отключено.</p>
-          </div>
+          </div> -->
         </div>
       </div>
-    <div class="flex mt-4 justify-between">
-      <div class="flex gap-2">
-        <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm hover:text-base-100 hover:bg-opacity-100 hover:bg-primary" @click="modalShow = !modalShow" @click.stop><Icon name="fluent:add-24-filled" size="12" /> Лайки</button>
-        <!-- <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm">Все лайки ></button> -->
+    <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
+      <div class="flex gap-1 lg:gap-4">
+        <button class="btn btn-primary font-normal btn-sm" @click="modalShow = !modalShow" @click.stop><Icon name="fluent:add-24-filled" size="15" /> <span class="hidden lg:flex">Лайки</span></button>
+        <CustomSelect class="hidden lg:flex" :class="'sm:min-w-[120px]'" :tabs = "[{title: 'Все лайки', value: 'all'}, {title: 'Активные', value: 'work'}, {title: 'Завершенные', value: 'completed'}]" @change-value="selectFilterDate"/>
+        <div class="relative justify-end flex-grow-0 w-full lg:hidden">
+          <input
+            ref="codeInput" 
+            v-model="search.text"
+            type="text"
+            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            placeholder="Поиск по лайкам"
+            @input="onSearchInput($event)"
+          />
+          <span
+            v-if="search.loading"
+            class="absolute right-2 top-2 loading loading-spinner loading-xs p-2 "
+          />
+          <Icon
+          v-else
+          class="absolute right-0.5 p-2 my-auto text-gray-500"
+          name="tabler:search"
+          size="35"
+          @click="codeInput.focus()"
+          />
+        </div>
       </div>
-      <div class="flex gap-2">
-        <!-- <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm">За все время></button>
-        <button class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm">Артикул ></button> -->
-        <input class="input input-sm input-bordered" placeholder="Поиск по названию" type="text" />
+      <div class="flex gap-2 lg:gap-5">
+        <!-- <CustomDrop
+        class="lg:hidden"
+            :statusText="'Лайки на товар/бренд'"
+            :tabs="[{title: 'Лайки на отзывы', slot: '', query: ''}]"
+            :route="'/likes'"
+            :class="'bg-base-300'"
+        /> -->
+        <CustomSelect class="lg:hidden" :class="'sm:min-w-[120px]'" :tabs = "[{title: 'Все лайки', value: 'all'}, {title: 'Активные', value: 'work'}, {title: 'Завершенные', value: 'completed'}]" @change-value="selectFilterDate"/>
+        <CustomSelect :class="'bg-base-300 sm:min-w-[120px]'" :tabs = "[{title: 'За все время', value: 'all'}, {title: 'Сегодня', value: 'today'}, {title: '3 дня', value: '3days'}, {title: 'Неделя', value: '7days'}]" @change-value="selectFilterDate"/>
+        <CustomSelect :class="'bg-base-300'" :tabs = "[{title: 'Название', value: 'name'}]" @change-value="updateSearchType" />
+        <div class="relative justify-end flex-grow-0 w-full hidden lg:flex">
+          <input
+            ref="codeInput" 
+            v-model="search.text"
+            type="text"
+            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            placeholder="Поиск по лайкам"
+            @input="onSearchInput($event)"
+          />
+          <span
+            v-if="search.loading"
+            class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
+          />
+          <Icon
+          v-else
+          class="absolute right-0.5 p-2 my-auto text-gray-500"
+          name="tabler:search"
+          size="35"
+          @click="codeInput.focus()"
+          />
+        </div>
+        
       </div>
     </div>
     <!-- <div class="mb-4 mt-6 bg-base-100 p-6 rounded-lg">
@@ -445,15 +555,24 @@ const modalShow = ref<boolean>(false)
     </div> -->
     <div v-if="product_likes.length" class="mt-6">
       <DataTable
-        v-if="width > 1024"
-        class="bg-base-200 hidden lg:block"
+        class="bg-base-200"
         :value="product_likes"
          showGridlines
       >
-      
-        <Column class="bg-base-100 text-center" field="place" header="№" 
-        />
-        <Column class="bg-base-100 text-center" field="image" header="Фото">
+        <!-- <Column class="bg-base-100 text-center border-r border-base-200" field="place" header="№" 
+        :pt="{
+                headerCell:  { class: [
+                      'border-none text-base-content font-normal'
+                  ] },
+              }"
+        /> -->
+        <Column class="bg-base-100 text-center border-r border-base-200" field="image" header="Фото"
+        :pt="{
+                headerCell:  { class: [
+                      'border-none text-base-content font-normal'
+                  ] },
+              }"
+        >
           <template #body="{ data }">
             <div
               style="
@@ -464,7 +583,7 @@ const modalShow = ref<boolean>(false)
                 border-radius: 4px;
               "
             >
-              <div class="dropdown dropdown-hover bg-pri">
+              <div class="dropdown dropdown-hover">
                 <label tabindex="0">
                   <nuxt-img
                     class="rounded-lg z-0"
@@ -489,68 +608,131 @@ const modalShow = ref<boolean>(false)
             </div>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center"  field="link" header="Ссылка">
+        <Column class="bg-base-100 text-center border-r border-base-200"  field="link" header="Название"
+        :pt="{
+                headerCell:  { class: [
+                      'border-none text-base-content font-normal'
+                  ] },
+              }"
+        >
           <template #body="{ data }">
             <a
               :href="data.url"
               target="_blank"
               class="text-primary link link-hover"
             >
-              {{ data.name }}
+              <span >{{ data.name }}</span>
             </a>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center" field="type" header="Тип">
+        <Column class="bg-base-100 text-center truncate border-r border-base-200"  field="link" header="Ссылка"
+        :pt="{
+                headerCell:  { class: [
+                      'border-none text-base-content font-normal'
+                  ] },
+              }"
+        >
+          <template #body="{ data }">
+            <a
+              :href="data.url"
+              target="_blank"
+              class="text-base-content link link-hover w-[30px] break-all"
+            >
+              <span>{{ data.url }}</span>
+            </a>
+          </template>
+        </Column>
+        <Column class="bg-base-100 text-center border-r border-base-200" field="type" header="Тип"
+        :pt="{
+                headerCell:  { class: [
+                      'border-none text-base-content font-normal'
+                  ] },
+              }"
+        >
           <template #body="{ data }">
             <div>{{ data.type === 'brand' ? 'Бренд' : 'Товар' }}</div>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center" field="amount" header="Количество" />
+        <Column class="bg-base-100 text-center border-r border-base-200" field="amount" header="Количество" 
+        :pt="{
+                headerCell:  { class: [
+                      'border-none text-base-content font-normal'
+                  ] },
+              }"
+        />
 
-        <Column class="bg-base-100 text-center" field="status" header="Статус">
+        <Column class="bg-base-100 text-center" field="status" header="Статус"
+        :pt="{
+                headerCell:  { class: [
+                      'border-none text-base-content font-normal'
+                  ] },
+              }"
+        >
           <template #body="{ data }">
             <div
               :class="{
-                'bg-error text-base-content rounded-lg p-0.5 text-center': data.status === 'nofunds',
-                'bg-primary text-base-content rounded-lg p-0.5 text-center': data.status === 'created',
-                'bg-warning text-base-content rounded-lg p-0.5 text-center': data.status === 'work',
-                'bg-success text-base-content rounded-lg p-0.5 text-center': data.status === 'completed',
+                'bg-error text-base-content rounded-lg py-1 px-2  text-center': data.status === 'nofunds',
+                'bg-primary bg-opacity-20 text-base-content rounded-lg py-1 px-2  text-center': data.status === 'created',
+                'bg-warning text-base-content rounded-lg py-1 px-2  text-center': data.status === 'work',
+                'bg-success text-base-content rounded-lg py-1 px-2 text-center': data.status === 'completed',
               }"
             >
               {{ getStatus(data.status) }}
             </div>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center" field="createdDate" header="Дата создания">
+        <Column class="bg-base-100 text-center border-r border-base-200" field="createdDate" header="Дата создания"
+        :pt="{
+                headerCell:  { class: [
+                      'border-none text-base-content font-normal'
+                  ] },
+              }"
+        >
           <template #body="{ data }">
             <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
-              {{ defaultDate(data.createdDate) }}
+              {{ defaultDateShort(data.createdDate) }}
             </div>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center" field="endedDate" header="Дата завершения">
+        <Column class="bg-base-100 text-center" field="endedDate" header="Дата завершения"
+        :pt="{
+                headerCell:  { class: [
+                      'border-none text-base-content font-normal'
+                  ] },
+              }"
+        >
           <template #body="{ data }">
             <div v-if="data.endedDate" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
-              {{ defaultDate(data.endedDate) }}
+              {{ defaultDateShort(data.endedDate) }}
             </div>
-            <div v-else>Нет</div>
+            <div v-else
+            :class="{'flex justify-between self-end mr-4': data.status === 'created',}"
+            >
+              <div class="mt-1">Нет</div>
+              <button
+                v-if="data.status === 'created'"
+                class="btn btn-ghost bg-red-500 bg-opacity-70 text-base-contetn btn-sm -ml-16 -mr-4"
+                @click="openRemoveReviewModal(data.id, data.name)"
+              >
+                Удалить
+              </button></div>
           </template>
         </Column>
 
-        <Column class="bg-base-100 text-center" header=" ">
+        <!-- <Column class="bg-base-100 text-center max-w-0 " header=" ">
           <template #body="{ data }">
             <div v-if="data.status === 'created'">
               <button
-                class="btn btn-error btn-sm -ml-16 -mr-4"
+                class="btn btn-ghost text-error btn-sm -ml-16 -mr-4"
                 @click="openRemoveReviewModal(data.id)"
               >
                 Удалить
               </button>
             </div>
           </template>
-        </Column>
+        </Column> -->
       </DataTable>
-      <ul v-else class="w-full lg:hidden">
+      <!-- <ul v-else class="w-full lg:hidden">
         <li
           v-for="(item, index) in product_likes"
           :key="index"
@@ -580,9 +762,9 @@ const modalShow = ref<boolean>(false)
                     <a
                       :href="item.url"
                       target="_blank"
-                      class="text-secondary link link-hover text-sm truncate w-48"
+                      class="text-secondary link link-hover text-sm truncate"
                     >
-                      {{ item.name }}
+                    <div class="">{{ item.name }}</div>
                     </a>
                   </div>
                   <div class="status flex flex-col gap-0.5">
@@ -640,7 +822,7 @@ const modalShow = ref<boolean>(false)
           </div>
           </div>
         </li>
-      </ul>
+      </ul> -->
     </div>
 
     <Hero v-else />
@@ -649,7 +831,7 @@ const modalShow = ref<boolean>(false)
   <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
   <div class="modal">
     <div class="modal-box max-w-xs">
-      <h3 class="font-bold text-lg text-center">Вы уверены?</h3>
+      <h3 class="font-normal text-lg text-center">Вы уверены, что хотитет удалить лайки к данному товару?</h3>
       <p class="py-2"></p>
       <div class="modal-action flex justify-between">
         <label
@@ -658,7 +840,7 @@ const modalShow = ref<boolean>(false)
           ref="reviewRemoveModalClose"
           >Отмена</label
         >
-        <label for="reviewRemoveModal" class="btn btn-error" @click="deleteLike"
+        <label for="reviewRemoveModal" class="btn btn-error text-white" @click="deleteLike"
           >Удалить</label
         >
       </div>

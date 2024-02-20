@@ -125,6 +125,7 @@ function defaultFilter(r: number){
                 <CustomDrop
                     :statusText="'Главная'"
                     :tabs="tabs"
+                    :route="'/partner'"
                 />
                 <div class="flex gap-4 w-full flex-col md:flex-row bg-primary bg-opacity-10 rounded-xl mt-4">
                     <div class="px-2 py-7 md:p-5 flex flex-col md:w-[50%] w-full">
