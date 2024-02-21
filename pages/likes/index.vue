@@ -10,6 +10,13 @@ const store = useMainStore()
 const review_likes = ref([]) as any
 const { width, height } = useWindowSize()
 const { data, error } = await useFetch('/api/likes/get')
+const search = reactive({
+  text: '',
+  loading: false,
+  error: false,
+  type: 'name',
+})
+const codeInput = ref()
 review_likes.value = data.value
 function getStatus(status: string) {
   if (status === 'created') return 'Создан'
@@ -60,7 +67,7 @@ async function deleteLike() {
 <template>
   <div>
     <!-- <h1 class="text-2xl font-bold mt-4">Лайки на отзывы</h1> -->
-    <p class="text-xs font-light mt-4 lg:text-sm">
+    <!-- <p class="text-xs font-light mt-4 lg:text-sm">
       Лайки на отзывах, помогут вашим покупателям обратить внимание только на
       самые важные отзывы.
     </p>
@@ -68,21 +75,23 @@ async function deleteLike() {
       Стоимость одного лайка -
       <span class="font-bold"> {{ store.tariffString('likeReview') }} </span>
       Все услуги оказываются по Московскому времени.
-    </p>
-    <p class="font-bold text-error mt-5">
+    </p> -->
+    <!-- <p class="font-bold text-error mt-5">
       Создание новых лайков на отзывы временно отключено.
     </p>
     <div class="flex justify-end mb-8 mt-6 items-center">
-      <!-- <NuxtLink
+      <NuxtLink
         to="/likes/create"
         class="btn btn-primary btn-sm gap-2 font-medium normal-case self-end"
       >
         <Icon name="fluent:add-24-filled" size="24" />
         Добавить лайки
-      </NuxtLink> -->
-    </div>
+      </NuxtLink>
+    </div> -->
+
+    
     <div v-if="review_likes.length">
-      <DataTable
+      <DataTable 
         v-if="width > 1024"
         class="bg-base-200 hidden lg:block overflow-visible"
         :value="review_likes"
