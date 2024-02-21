@@ -60,6 +60,7 @@ async function getProductReviews() {
   }) as any[]
   reviews.value = initial
   feedbacksCount.value = data.value.feedbacksCount
+  modalShow.value = false;
   sortReviews()
 }
 
@@ -202,36 +203,33 @@ async function save() {
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
 
-//   const { data, error } = await useFetch('/api/likes/create', {
-//     method: 'POST',
-//     body: {
-//       article: savedArticle.value,
-//       reviews: changedReviews.value,
-//       dates:
-//         productDateRangeModel.value.length > 0
-//           ? productDateRangeModel.value
-//           : null,
-//     },
-//     query: {
-//       userTimezoneOffsetHours,
-//       userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
-//     },
-//   })
-//   if (error.value) {
-//     notify({
-//       type: 'error',
-//       title: 'Ошибка',
-//       text: error.value.message,
-//     })
-//     return
-//   }
-//   if (data.value) {
-//     notify({
-//       type: 'success',
-//       title: 'Успешно',
-//     })
-//     return router.push('/likes')
-//   }
+  const { data, error } = await useFetch('/api/likes/create', {
+    method: 'POST',
+    body: {
+      article: savedArticle.value,
+      reviews: changedReviews.value,
+      period: period.value,
+    },
+    query: {
+      userTimezoneOffsetHours,
+      userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
+    },
+  })
+  if (error.value) {
+    notify({
+      type: 'error',
+      title: 'Ошибка',
+      text: error.value.message,
+    })
+    return
+  }
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: 'Успешно',
+    })
+    return router.push('/likes')
+  }
 }
 
 async function cancel() {
@@ -280,7 +278,7 @@ watch(
 )
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
-const productDateRangeModel = ref([])
+const period = ref('3h')
 
 async function swapPage(value: number) {
   if (value === -1 && page.value <= 1) {
@@ -299,13 +297,23 @@ async function swapPage(value: number) {
   await getProductReviews()
   isPageBtnsDisabled.value = false
 }
+
+const modalShow = ref<boolean>(true)
+const closeModal = (event: MouseEvent) => {
+  if ((event.target as HTMLElement).classList.contains('modalCustom')) {
+    modalShow.value = false
+    currentFilter.value = ''
+  }
+}
+function selectPeriod(event: any) {
+  period.value = event.target.value
+}
 </script>
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mt-4">Добавить лайки</h1>
-
-    <p class="font-light text-gray-500 mt-1 lg:text-sm">
+    <!-- <h1 class="text-2xl font-bold mt-4">Добавить лайки</h1> -->
+    <p class="font-light text-gray-500 mt-4 lg:text-sm ">
       В целях безопасности все отзывы, на которых более 30 лайков или дизлайков,
       не выводятся в списке.
     </p>
@@ -332,7 +340,7 @@ async function swapPage(value: number) {
             v-model="article"
             type="number"
             placeholder="Артикул"
-            class="input input-primary input-sm input-bordered w-full"
+            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
             @keydown.enter="getProductReviews"
           />
           <button
@@ -366,7 +374,8 @@ async function swapPage(value: number) {
         </button>
       </div>
     </div>
-    <Transition name="fade">
+    <!-- <Transition name="fade">
+     
       <div
         v-show="changedReviews.length"
         class="save rounded-lg lg:sticky py-4 px-8 z-[9999] inset-x-0 top-0 bg-neutral-focus flex flex-wrap items-center justify-between gap-2 mb-2"
@@ -410,15 +419,72 @@ async function swapPage(value: number) {
           >
             Отмена
           </button>
-          <!-- <button class="btn btn-primary btn-sm" @click="save">
+          <button class="btn btn-primary btn-sm" @click="save">
             Сохранить
-          </button> -->
+          </button>
         </div>
       </div>
-    </Transition>
+    </Transition> -->
+    <div v-if="changedReviews.length" class="fixed bottom-20 right-1 md:bottom-30 lg:right-5 z-[9999] w-60 sm:w-70 p-4 bg-base-100 rounded-lg border border-base-300 text-2xl">
+      <div class="flex gap-0.5">
+        <IconCSS
+        class="text-primary mr-1"
+        name="mdi:bar-chart" size="22"
+       />  
+       <span class="text-lg mr-auto">Статистика оценок</span>
+      </div>
+      <div class="info flex flex-col gap-1 mt-2 ">
+          <!-- <div class="flex justify-between">
+            <p class="text-xs font-bold text-base-content lg:text-sm">
+            Всего отзывов: 
+            </p>
+            <span class="text-xs font-bold text-base-content lg:text-sm">{{ changedReviews.length }}</span>
+          </div> -->
+          <div class="flex gap-5 justify-around mb-1">
+            <div class="flex gap-5">
+              <p class="text-xs text-base-content lg:text-sm font-bold bg-primary bg-opacity-20 rounded-full px-3 py-1">
+                Да
+              </p>
+              <span class="text-xs text-base-content lg:text-sm font-bold my-auto">{{ getAddedLikes().likes }}</span>
+            </div>
+            
+            <div class="flex gap-5">
+              <p class="text-xs text-base-content lg:text-sm font-bold bg-primary bg-opacity-20 rounded-full px-3 py-1">
+                Нет
+              </p>
+              <span class="text-xs text-base-content lg:text-sm font-bold my-auto">{{ getAddedLikes().dislikes }}</span>
+            </div>
+          </div>
+          <!-- <div class="flex gap-0.5 flex-col justify-between">
+            <p
+            class="text-xs text-base-content lg:text-sm font-bold my-auto"
+          >
+            Сроки выполнения:
+          </p>
+          <BuyoutDateRangePicker
+            v-model="productDateRangeModel"
+            class="w-full"
+            :start-date="startDate"
+          />
+          </div> -->
+          
+        </div>
+        <div class="save ml-auto flex gap-2 mt-1">
+          <!-- <button
+            class="btn btn-ghost text-base-content btn-sm"
+            @click="cancel"
+          >
+            Отмена
+          </button> -->
+          <button class="btn btn-primary text-base-content bg-opacity-50 border-none btn-sm w-[100%] sm:w-[100%] rounded-full" @click="save">
+            Создать лайки
+            <Icon class="justify-end" name="formkit:right" size="20" />
+          </button>
+        </div>
+    </div>
     <div
       v-if="reviews.length"
-      class="cards grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12"
+      class="cards grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-5 gap-4 mb-12"
     >
       <LikesReviewCard
         v-for="(review, index) of reviews"
@@ -427,12 +493,13 @@ async function swapPage(value: number) {
         :add-likes="review.addLikes"
         :add-dislikes="review.addDislikes"
         :info="review"
+        :article="savedArticle"
         @add-like="addLike"
         @remove-dislike="removeDislike"
         @add-dislike="addDislike"
         @remove-like="removeLike"
       />
-      <div class="p-2 w-full col-span-1" />
+      <!-- <div class="p-2 w-full col-span-1" />
       <div>
         <div class="flex justify-between mt-2 mb-10">
           <div></div>
@@ -454,6 +521,70 @@ async function swapPage(value: number) {
             </button>
           </div>
         </div>
+      </div> -->
+    </div>
+    <div
+      v-if="modalShow"
+      class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
+    >
+      <div
+        class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4"
+      >
+        <div class="flex justify-between">
+          <div class="font-medium text-lg">Лайк на отзывы</div>
+          <NuxtLink to="/likes" 
+            class="text-gray-500 hover:text-gray-700 self-end mb-2"
+          >
+            <Icon name="material-symbols:close-rounded" size="24" />
+          </NuxtLink>
+        </div>
+        <div class="bg-base-100 rounded-lg">
+          <div class="flex flex-wrap items-center gap-6 mb-2">
+            <div class="relative">
+              <div>Вставьте ссылку:</div>
+              <div class="input-group w-64 min-h-min md:min-h-[48px] mt-2">
+                <input
+                 v-model="article"
+                  :class="{
+                    'input-error': !reviews,
+                    'input-success': reviews.length > 0,
+                  }"
+                  tabindex="0"
+                  class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
+                  placeholder="Введите артикул"
+                  type="text"
+                  @keydown.enter="getProductReviews"
+                />
+              </div>
+            </div>
+            <div>
+              <div>Период выполнения:</div>
+              <select
+                class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
+                @change="selectPeriod"
+              >
+                <option value="3h">3 часа</option>
+                <option value="12h">12 часов</option>
+                <option value="1day">1 день</option>
+                <option value="3days">3 дня</option>
+                <option value="7days">7 дней</option>
+                <option value="14days">14 дней</option>
+              </select>
+            </div>
+            <div class="w-full ml-auto self-end justify-end lg:w-40">
+              <button
+              
+                class="btn w-full btn-primary"
+                @click="
+              ;[(page = 1), (isPageBtnsDisabled = false), getProductReviews()]
+            "
+              >
+                Добавить
+              </button>
+            </div>
+          </div>
+        </div>
+        
       </div>
     </div>
   </div>

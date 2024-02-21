@@ -8,15 +8,15 @@ export default eventHandler(async (event) => {
   const { dateFilter } = getQuery(event)
 
   const likes = await ProductLike.find({ user })
-  let buyouts
-  if(dateFilter === 'all' || 'undefined') {
-    buyouts = likes 
+  let filter
+  if(dateFilter === 'all' || dateFilter === undefined) {
+    filter = likes 
   }
   const today = new Date(Date.now())
   today.setHours(0, 0, 0, 0)
   switch (dateFilter) {
     case 'completed':
-      buyouts = await ProductLike.find({
+      filter = await ProductLike.find({
         user,
         $or: [
           { status: { $regex: dateFilter, $options: 'i' } },
@@ -24,7 +24,7 @@ export default eventHandler(async (event) => {
       })
       break
     case 'work':
-      buyouts = await ProductLike.find({
+      filter = await ProductLike.find({
         user,
         $or: [
           { status: { $regex: dateFilter, $options: 'i' } },
@@ -32,16 +32,16 @@ export default eventHandler(async (event) => {
       })
       break
     case 'today':
-      buyouts = likes.filter(item => new Date(item.createdDate) > today)
+      filter = likes.filter(item => new Date(item.createdDate) > today)
       break
     case '3days':
-      buyouts = likes.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 3))
+      filter = likes.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 3))
       break
     case '7days':
-      buyouts = likes.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 7))
+      filter = likes.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 7))
       break
   }
-  const format = buyouts?.map((like, index) => {
+  const format = (filter ? filter : likes).map((like, index) => {
     return {
       id: like._id,
       place: index + 1,
