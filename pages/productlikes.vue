@@ -26,18 +26,18 @@ async function getProductLikes() {
   const { data, error } = await useFetch('/api/productlikes/get', {
     method: 'GET',
   })
-  if(data.value) product_likes.value = data.value
-//   if (data.value) {
-//     product_likes.value = data.value.map(product => {
-//         if (product.url) {
-//             const articleId = product.url.match(/\d+/);
-//             if (articleId) {
-//                 return { ...product, article: articleId[0] };
-//             }
-//         }
-//         return product;
-//     });
-// }
+  if (data.value) product_likes.value = data.value
+  //   if (data.value) {
+  //     product_likes.value = data.value.map(product => {
+  //         if (product.url) {
+  //             const articleId = product.url.match(/\d+/);
+  //             if (articleId) {
+  //                 return { ...product, article: articleId[0] };
+  //             }
+  //         }
+  //         return product;
+  //     });
+  // }
   if (error.value)
     notify({
       type: 'error',
@@ -66,6 +66,8 @@ async function create() {
     notify({ type: 'success', title: 'Упешно' })
     getProductLikes()
   }
+  modalShow.value = false
+  removeProduct()
 }
 async function sendUrl() {
   const { data, error } = await useFetch('/api/productlikes/extract', {
@@ -108,7 +110,7 @@ onMounted(() => {})
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
-function openRemoveReviewModal(id: any,name: any) {
+function openRemoveReviewModal(id: any, name: any) {
   idForRemove.value = id
   reviewRemoveModalClose.value?.click()
 }
@@ -135,14 +137,14 @@ async function deleteLike() {
 
 const currentFilter = ref('')
 const changePage = (filter: string) => {
-    currentFilter.value = filter
+  currentFilter.value = filter
 }
 const modalShow = ref<boolean>(false)
 const closeModal = (event: MouseEvent) => {
-    if ((event.target as HTMLElement).classList.contains('modalCustom')){
-      modalShow.value = false
-      currentFilter.value = ''
-    }
+  if ((event.target as HTMLElement).classList.contains('modalCustom')) {
+    modalShow.value = false
+    currentFilter.value = ''
+  }
 }
 
 async function selectFilterDate(e: any) {
@@ -156,13 +158,13 @@ async function selectFilterDate(e: any) {
   })
   product_likes.value = data.value
 }
+
 async function findBuyouts(value: string, type: string) {
   if (!value) {
     search.loading = false
     getProductLikes()
     return
   }
-  console.log('Searching: ', value, 'type: ', type)
   const { data, error } = await useFetch('/api/productlikes/search', {
     query: {
       string: value,
@@ -180,17 +182,15 @@ const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
 async function onSearchInput(event: Event) {
   const newValue = (event.target as HTMLInputElement).value
   search.loading = true
-  console.log(search.type)
   findBuyoutsDebounced(search.text, search.type)
 }
 const updateSearchType = (filter: any) => {
-  search.type = filter.value;
+  search.type = filter.value
 }
 </script>
 
 <template>
-  <div >
-    
+  <div>
     <!-- <h1 class="text-2xl font-bold mt-4">Лайки на товар/бренд</h1> -->
     <!-- <p class="text-xs font-light mt-4 lg:text-sm">
       Выберите товар или бренд, чтобы повысить количество добавлений в
@@ -201,168 +201,196 @@ const updateSearchType = (filter: any) => {
       <span class="font-bold"> {{ store.tariffString('likeProduct') }} </span>
       Все услуги оказываются по Московскому времени.
     </p> -->
-      <div v-if="modalShow" @click="closeModal" class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm">
-       
-        <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4 ">
-          <div class="flex justify-between">
-            <div class="font-medium text-lg">Лайк на товар/бренд</div>
-            <!-- <CustomSelect :rangesConfig="['Лайки на товар/бренд', 'Лайки на отзыв']" :category="true" @change-text="changePage"/> -->
-            <button class="text-gray-500 hover:text-gray-700 self-end mb-2" @click="modalShow = false ; currentFilter = ''">
-              <Icon name="material-symbols:close-rounded" size="24" />
-            </button>
-          </div>
-          
-          <!-- <div v-if="currentFilter == 'Лайки на товар/бренд'" class="bg-base-100 rounded-lg"> -->
-          <div class="bg-base-100 rounded-lg">
-            <div  class="flex flex-wrap items-center gap-6 mb-2">
-              <div class="relative">
-               
-                <div>Вставьте ссылку:</div> 
-                <div class="input-group w-64 min-h-min md:min-h-[48px] mt-2">
-                  <input
-                    v-model="url"
-                    :class="{
-                      'input-error': urlError,
-                      'input-success': productData,
-                    }"
-                    :disabled="productData"
-                    tabindex="0"
-                    class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
-                    placeholder="Введите ссылку"
-                    type="text"
-                    @input="changeUrl"
-                  />
-                  <button
-                    :class="{
-                      'btn-disabled': !productData,
-                    }"
-                    class="btn btn-sm btn-ghost btn-circle bg-base-100 min-h-min md:min-h-[48px]"
-                    @click="removeProduct"
-                  >
-                    <span
-                      v-show="loadingUrl"
-                      class="loading loading-spinner loading-xs p-2"
-                    />
+    <div
+      v-if="modalShow"
+      @click="closeModal"
+      class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
+    >
+      <div
+        class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4"
+      >
+        <div class="flex justify-between">
+          <div class="font-medium text-lg">Лайк на товар/бренд</div>
+          <!-- <CustomSelect :rangesConfig="['Лайки на товар/бренд', 'Лайки на отзыв']" :category="true" @change-text="changePage"/> -->
+          <button
+            class="text-gray-500 hover:text-gray-700 self-end mb-2"
+            @click="modalShow = false; currentFilter = ''"
+          >
+            <Icon name="material-symbols:close-rounded" size="24" />
+          </button>
+        </div>
 
-                    <!-- Insert a backspace svg -->
-                    <div v-if="!loadingUrl">
-                      <IconCSS
-                        v-if="productData"
-                        class="w-6 h-6"
-                        name="fluent:backspace-24-regular"
-                      />
-                    </div>
-                  </button>
-                </div>
-              </div>
-              <div>
-                <div>Количество:</div>
-                <div class="relative flex items-center justify-center ml-auto mt-2">
-                  <button
-                    :disabled="amount <= 0"
-                    class="absolute left-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
-                    @click="amount -= 10"
-                  >
-                    <IconCSS size="16" name="ic:round-minus" />
-                  </button>
-                  <div class="input-sm rounded-lg w-24 text-center bg-base-200 min-h-min md:min-h-[48px] pt-2.5 text-lg">
-                    {{ amount }}
-                  </div>
-                  <button
-                    :disabled="amount >= 1000"
-                    :class="{
-                      'btn-disabled': !productData,
-                    }"
-                    class="absolute right-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
-                    @click="amount += 10"
-                  >
-                    <IconCSS size="16" name="ic:round-plus" />
-                  </button>
-                </div>
-              </div>
-              <div>
-                <div>Период выполнения:</div>
-                <select
-                  :disabled="!productData"
-                  class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
-                  @change="selectPeriod"
-                >
-                  <option value="3h">3 часа</option>
-                  <option value="12h">12 часов</option>
-                  <option value="1day">1 день</option>
-                  <option value="3days">3 дня</option>
-                  <option value="7days">7 дней</option>
-                  <option value="14days">14 дней</option>
-                </select>
-              </div>
-              <div
-                v-if="productData && productData.type === 'brand'"
-                class="productinfo"
-              >
-                <div>Информация о бренде:</div>
-                <div class="flex gap-4 mt-2 items-start">
-                  <nuxt-img
-                    class="rounded-lg object-contain h-8"
-                    :src="productData.image"
-                  />
-                  <div class="name truncate">
-                    {{ productData.name }}
-                  </div>
-                </div>
-              </div>
-              <div class="w-full ml-auto self-end justify-end lg:w-40">
+        <!-- <div v-if="currentFilter == 'Лайки на товар/бренд'" class="bg-base-100 rounded-lg"> -->
+        <div class="bg-base-100 rounded-lg">
+          <div class="flex flex-wrap items-center gap-6 mb-2">
+            <div class="relative">
+              <div>Вставьте ссылку:</div>
+              <div class="input-group w-64 min-h-min md:min-h-[48px] mt-2">
+                <input
+                  v-model="url"
+                  :class="{
+                    'input-error': urlError,
+                    'input-success': productData,
+                  }"
+                  :disabled="productData"
+                  tabindex="0"
+                  class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
+                  placeholder="Введите ссылку"
+                  type="text"
+                  @input="changeUrl"
+                />
                 <button
                   :class="{
-                    'btn-disabled': !productData || amount <= 0,
+                    'btn-disabled': !productData,
                   }"
-                  class="btn w-full btn-primary"
-                  @click="create"
+                  class="btn btn-sm btn-ghost btn-circle bg-base-100 min-h-min md:min-h-[48px]"
+                  @click="removeProduct"
                 >
-                  Добавить
+                  <span
+                    v-show="loadingUrl"
+                    class="loading loading-spinner loading-xs p-2"
+                  />
+
+                  <!-- Insert a backspace svg -->
+                  <div v-if="!loadingUrl">
+                    <IconCSS
+                      v-if="productData"
+                      class="w-6 h-6"
+                      name="fluent:backspace-24-regular"
+                    />
+                  </div>
                 </button>
               </div>
             </div>
+            <div>
+              <div>Количество:</div>
+              <div
+                class="relative flex items-center justify-center ml-auto mt-2"
+              >
+                <button
+                  :disabled="amount <= 0"
+                  class="absolute left-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
+                  @click="amount -= 10"
+                >
+                  <IconCSS size="16" name="ic:round-minus" />
+                </button>
+                <div
+                  class="input-sm rounded-lg w-24 text-center bg-base-200 min-h-min md:min-h-[48px] pt-2.5 text-lg"
+                >
+                  {{ amount }}
+                </div>
+                <button
+                  :disabled="amount >= 1000"
+                  :class="{
+                    'btn-disabled': !productData,
+                  }"
+                  class="absolute right-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
+                  @click="amount += 10"
+                >
+                  <IconCSS size="16" name="ic:round-plus" />
+                </button>
+              </div>
+            </div>
+            <div>
+              <div>Период выполнения:</div>
+              <select
+                :disabled="!productData"
+                class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
+                @change="selectPeriod"
+              >
+                <option value="3h">3 часа</option>
+                <option value="12h">12 часов</option>
+                <option value="1day">1 день</option>
+                <option value="3days">3 дня</option>
+                <option value="7days">7 дней</option>
+                <option value="14days">14 дней</option>
+              </select>
+            </div>
             <div
-              v-if="productData && productData.type === 'product'"
-              class="productinfo mt-4"
+              v-if="productData && productData.type === 'brand'"
+              class="productinfo"
             >
-              <div>Информация о товаре:</div>
+              <div>Информация о бренде:</div>
               <div class="flex gap-4 mt-2 items-start">
                 <nuxt-img
-                  width="32"
-                  class="rounded-lg object-contain w-8"
+                  class="rounded-lg object-contain h-8"
                   :src="productData.image"
                 />
-                <div class="article">
-                  <a
-                  :href="`https://www.ozon.ru/product/${productData.article}`"
-                    target="_blank"
-                    class="text-sm text-secondary link link-hover"
-                  >
-                    {{ productData.article }}
-                  </a>
-                </div>
                 <div class="name truncate">
                   {{ productData.name }}
                 </div>
-                <div class="price">
-                  {{ productData.priceText }}
-                </div>
+              </div>
+            </div>
+            <div class="w-full ml-auto self-end justify-end lg:w-40">
+              <button
+                :class="{
+                  'btn-disabled': !productData || amount <= 0,
+                }"
+                class="btn w-full btn-primary"
+                @click="create"
+              >
+                Добавить
+              </button>
+            </div>
+          </div>
+          <div
+            v-if="productData && productData.type === 'product'"
+            class="productinfo mt-4"
+          >
+            <div>Информация о товаре:</div>
+            <div class="flex gap-4 mt-2 items-start">
+              <nuxt-img
+                width="32"
+                class="rounded-lg object-contain w-8"
+                :src="productData.image"
+              />
+              <div class="article">
+                <a
+                  :href="`https://www.ozon.ru/product/${productData.article}`"
+                  target="_blank"
+                  class="text-sm text-secondary link link-hover"
+                >
+                  {{ productData.article }}
+                </a>
+              </div>
+              <div class="name truncate">
+                {{ productData.name }}
+              </div>
+              <div class="price">
+                {{ productData.priceText }}
               </div>
             </div>
           </div>
-          <!-- <div v-if="currentFilter == 'Лайки на отзыв'" class="bg-base-100 rounded-lg">
-            <p class=text-red-500>Создание новых лайков на отзывы временно отключено.</p>
-          </div> -->
         </div>
+        <!-- <div v-if="currentFilter == 'Лайки на отзыв'" class="bg-base-100 rounded-lg">
+          <p class=text-red-500>Создание новых лайков на отзывы временно отключено.</p>
+        </div> -->
       </div>
+    </div>
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
-        <button class="btn btn-primary font-normal btn-sm" @click="modalShow = !modalShow" @click.stop><Icon name="fluent:add-24-filled" size="15" /> <span class="hidden lg:flex">Лайки</span></button>
-        <CustomSelect class="hidden lg:flex" :class="'sm:min-w-[120px]'" :tabs = "[{title: 'Все лайки', value: 'all'}, {title: 'Активные', value: 'work'}, {title: 'Завершенные', value: 'completed'}]" @change-value="selectFilterDate"/>
+        <button
+          class="btn btn-primary font-normal btn-sm"
+          @click="modalShow = !modalShow"
+          @click.stop
+        >
+          <Icon name="fluent:add-24-filled" size="24" />
+          <span class="hidden lg:flex">Лайки</span>
+        </button>
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'Все лайки', value: 'all' },
+            { title: 'Активные', value: 'work' },
+            { title: 'Завершенные', value: 'completed' },
+          ]"
+          :links="[{ title: 'Отзывы', slot: '/likes', query: '' }]"
+          @change-value="selectFilterDate"
+        />
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
           <input
-            ref="codeInput" 
+            ref="codeInput"
             v-model="search.text"
             type="text"
             class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
@@ -371,14 +399,14 @@ const updateSearchType = (filter: any) => {
           />
           <span
             v-if="search.loading"
-            class="absolute right-2 top-2 loading loading-spinner loading-xs p-2 "
+            class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
           />
           <Icon
-          v-else
-          class="absolute right-0.5 p-2 my-auto text-gray-500"
-          name="tabler:search"
-          size="35"
-          @click="codeInput.focus()"
+            v-else
+            class="absolute right-0.5 p-2 my-auto text-gray-500"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
           />
         </div>
       </div>
@@ -390,12 +418,35 @@ const updateSearchType = (filter: any) => {
             :route="'/likes'"
             :class="'bg-base-300'"
         /> -->
-        <CustomSelect class="lg:hidden" :class="'sm:min-w-[120px]'" :tabs = "[{title: 'Все лайки', value: 'all'}, {title: 'Активные', value: 'work'}, {title: 'Завершенные', value: 'completed'}]" @change-value="selectFilterDate"/>
-        <CustomSelect :class="'bg-base-300 sm:min-w-[120px]'" :tabs = "[{title: 'За все время', value: 'all'}, {title: 'Сегодня', value: 'today'}, {title: '3 дня', value: '3days'}, {title: 'Неделя', value: '7days'}]" @change-value="selectFilterDate"/>
-        <CustomSelect :class="'bg-base-300'" :tabs = "[{title: 'Название', value: 'name'}]" @change-value="updateSearchType" />
+        <CustomSelect
+          class="lg:hidden"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'Все лайки', value: 'all' },
+            { title: 'Активные', value: 'work' },
+            { title: 'Завершенные', value: 'completed' },
+          ]"
+          :links="[{ title: 'Отзывы', slot: '/likes', query: '' }]"
+          @change-value="selectFilterDate"
+        />
+        <CustomSelect
+          :class="'bg-base-300 sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'За все время', value: 'all' },
+            { title: 'Сегодня', value: 'today' },
+            { title: '3 дня', value: '3days' },
+            { title: 'Неделя', value: '7days' },
+          ]"
+          @change-value="selectFilterDate"
+        />
+        <CustomSelect
+          :class="'bg-base-300'"
+          :tabs="[{ title: 'Название', value: 'name' }]"
+          @change-value="updateSearchType"
+        />
         <div class="relative justify-end flex-grow-0 w-full hidden lg:flex">
           <input
-            ref="codeInput" 
+            ref="codeInput"
             v-model="search.text"
             type="text"
             class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
@@ -407,14 +458,13 @@ const updateSearchType = (filter: any) => {
             class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
           />
           <Icon
-          v-else
-          class="absolute right-0.5 p-2 my-auto text-gray-500"
-          name="tabler:search"
-          size="35"
-          @click="codeInput.focus()"
+            v-else
+            class="absolute right-0.5 p-2 my-auto text-gray-500"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
           />
         </div>
-        
       </div>
     </div>
     <!-- <div class="mb-4 mt-6 bg-base-100 p-6 rounded-lg">
@@ -554,24 +604,117 @@ const updateSearchType = (filter: any) => {
       </div>
     </div> -->
     <div v-if="product_likes.length" class="mt-6">
-      <DataTable
-        class="bg-base-200"
-        :value="product_likes"
-         showGridlines
-      >
-        <!-- <Column class="bg-base-100 text-center border-r border-base-200" field="place" header="№" 
-        :pt="{
-                headerCell:  { class: [
-                      'border-none text-base-content font-normal'
-                  ] },
+      <table class="table table-sm">
+          <!-- head -->
+          
+          <thead>
+            <tr class="bg-primary bg-opacity-5">
+              <!-- <th class="text-center">№</th> -->
+              <th class="text-center">Фото</th>
+              <th class="text-center">Название</th>
+              <th class="text-center">Ссылка</th>
+              <th class="text-center">Тип</th>
+              <th class="text-center">Количество</th>
+              <th class="text-center">Статус</th>
+              <th class="text-center">Дата создания</th>
+              <th class="text-center">Дата завершения</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-base-200" v-for="(item, index) in product_likes" :key="index">
+              <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
+              <td class="text-center border-r border-primary border-opacity-5 mx-auto">
+                <div style="
+                  width: 28px;
+                  height: 36px;
+                  border-radius: 4px;"
+                  class="mx-auto"
+                >
+              <div class="dropdown dropdown-hover">
+                <label tabindex="0">
+                  <nuxt-img
+                    class="rounded-lg z-0"
+                    alt=""
+                    loading="lazy"
+                    fit="fill"
+                    :src="item.image"
+                  />
+                </label>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
+                >
+                  <nuxt-img
+                    class="rounded-lg z-[1]"
+                    loading="lazy"
+                    fit="fill"
+                    :src="item.image"
+                  />
+                </ul>
+              </div>  
+            </div>
+              </td>
+              <td class="text-center border-r border-primary border-opacity-5 text-base-content truncate"> 
+                <span class="whitespace-normal break-words max-w-[150px]">{{ item.name }}</span>
+              </td>
+              <td class="text-center border-r border-primary border-opacity-5 text-primary overflow-x-auto max-w-[250px] truncate">
+                <a
+                  :href="item.url"
+                  target="_blank"
+                  class="text-primary link link-hover whitespace-normal break-words "
+                >
+                  <span class="max-w-[150px] truncate">{{ item.url }}</span>
+                </a>  
+              </td>
+              <td class="text-center border-r border-primary border-opacity-5"> 
+                <div class="flex flex-col">
+                  {{ item.type === 'brand' ? 'Лайк на бренд' : 'Лайк на товар' }}
+                </div>
+               
+              </td>
+              <td class="text-center border-r border-primary border-opacity-5"> 
+                <div class="flex flex-col">
+                  {{ item.amount }}
+                </div>
+               
+              </td>
+            
+              <td class="text-center border-r border-primary border-opacity-5"><div
+                :class="{
+                'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                  item.status === 'nofunds',
+                'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                item.status === 'created',
+                'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                item.status === 'work',
+                'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                item.status === 'completed',
               }"
-        /> -->
-        <Column class="bg-base-100 text-center border-r border-base-200" field="image" header="Фото"
-        :pt="{
-                headerCell:  { class: [
-                      'border-none text-base-content font-normal'
-                  ] },
-              }"
+            >
+              {{ getStatus(item.status) }}
+            </div></td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">{{ defaultDateShort(item.createdDate) }}</div>
+              </td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
+                {{ defaultDateShort(item.endedDate) }}
+              </div>
+            </td>
+            </tr>
+            <div ref="target" class="flex justify-center items-center h-4" />
+          </tbody>
+      </table>
+      <!-- <DataTable class="bg-base-200" :value="product_likes" showGridlines>
+        <Column
+          class="bg-base-100 text-center border-r border-base-200"
+          field="image"
+          header="Фото"
+          :pt="{
+            headerCell: {
+              class: ['border-none text-base-content font-normal'],
+            },
+          }"
         >
           <template #body="{ data }">
             <div
@@ -608,12 +751,15 @@ const updateSearchType = (filter: any) => {
             </div>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center border-r border-base-200"  field="link" header="Название"
-        :pt="{
-                headerCell:  { class: [
-                      'border-none text-base-content font-normal'
-                  ] },
-              }"
+        <Column
+          class="bg-base-100 text-center border-r border-base-200"
+          field="link"
+          header="Название"
+          :pt="{
+            headerCell: {
+              class: ['border-none text-base-content font-normal'],
+            },
+          }"
         >
           <template #body="{ data }">
             <a
@@ -621,72 +767,91 @@ const updateSearchType = (filter: any) => {
               target="_blank"
               class="text-primary link link-hover"
             >
-              <span >{{ data.name }}</span>
+              <span>{{ data.name }}</span>
             </a>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center truncate border-r border-base-200"  field="link" header="Ссылка"
-        :pt="{
-                headerCell:  { class: [
-                      'border-none text-base-content font-normal !w-10'
-                  ] },
-              }"
+        <Column
+          class="bg-base-100 text-center truncate border-r border-base-200 overflow-x-auto"
+          field="link"
+          header="Ссылка"
+          :pt="{
+            headerCell: {
+              class: ['border-none text-base-content font-normal'],
+            },
+          }"
         >
           <template #body="{ data }">
             <a
               :href="data.url"
               target="_blank"
-              class="text-base-content link link-hover w-[30px] break-all"
+              class="text-base-content link link-hover w-[30px] break-all overflow-x-auto"
             >
               <span>{{ data.url }}</span>
             </a>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center border-r border-base-200" field="type" header="Тип"
-        :pt="{
-                headerCell:  { class: [
-                      'border-none text-base-content font-normal'
-                  ] },
-              }"
+        <Column
+          class="bg-base-100 text-center border-r border-base-200"
+          field="type"
+          header="Тип"
+          :pt="{
+            headerCell: {
+              class: ['border-none text-base-content font-normal'],
+            },
+          }"
         >
           <template #body="{ data }">
             <div>{{ data.type === 'brand' ? 'Бренд' : 'Товар' }}</div>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center border-r border-base-200" field="amount" header="Количество" 
-        :pt="{
-                headerCell:  { class: [
-                      'border-none text-base-content font-normal'
-                  ] },
-              }"
+        <Column
+          class="bg-base-100 text-center border-r border-base-200"
+          field="amount"
+          header="Количество"
+          :pt="{
+            headerCell: {
+              class: ['border-none text-base-content font-normal'],
+            },
+          }"
         />
 
-        <Column class="bg-base-100 text-center" field="status" header="Статус"
-        :pt="{
-                headerCell:  { class: [
-                      'border-none text-base-content font-normal'
-                  ] },
-              }"
+        <Column
+          class="bg-base-100 text-center"
+          field="status"
+          header="Статус"
+          :pt="{
+            headerCell: {
+              class: ['border-none text-base-content font-normal'],
+            },
+          }"
         >
           <template #body="{ data }">
             <div
               :class="{
-                'bg-error text-base-content rounded-lg py-1 px-2  text-center': data.status === 'nofunds',
-                'bg-primary bg-opacity-20 text-base-content rounded-lg py-1 px-2  text-center': data.status === 'created',
-                'bg-warning text-base-content rounded-lg py-1 px-2  text-center': data.status === 'work',
-                'bg-success text-base-content rounded-lg py-1 px-2 text-center': data.status === 'completed',
+                'bg-error text-base-content rounded-lg py-1 px-2  text-center':
+                  data.status === 'nofunds',
+                'bg-primary bg-opacity-20 text-base-content rounded-lg py-1 px-2  text-center':
+                  data.status === 'created',
+                'bg-warning text-base-content rounded-lg py-1 px-2  text-center':
+                  data.status === 'work',
+                'bg-success text-base-content rounded-lg py-1 px-2 text-center':
+                  data.status === 'completed',
               }"
             >
               {{ getStatus(data.status) }}
             </div>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center border-r border-base-200" field="createdDate" header="Дата создания"
-        :pt="{
-                headerCell:  { class: [
-                      'border-none text-base-content font-normal'
-                  ] },
-              }"
+        <Column
+          class="bg-base-100 text-center border-r border-base-200"
+          field="createdDate"
+          header="Дата создания"
+          :pt="{
+            headerCell: {
+              class: ['border-none text-base-content font-normal'],
+            },
+          }"
         >
           <template #body="{ data }">
             <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
@@ -694,19 +859,28 @@ const updateSearchType = (filter: any) => {
             </div>
           </template>
         </Column>
-        <Column class="bg-base-100 text-center" field="endedDate" header="Дата завершения"
-        :pt="{
-                headerCell:  { class: [
-                      'border-none text-base-content font-normal'
-                  ] },
-              }"
+        <Column
+          class="bg-base-100 text-center"
+          field="endedDate"
+          header="Дата завершения"
+          :pt="{
+            headerCell: {
+              class: ['border-none text-base-content font-normal'],
+            },
+          }"
         >
           <template #body="{ data }">
-            <div v-if="data.endedDate" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
+            <div
+              v-if="data.endedDate"
+              class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+            >
               {{ defaultDateShort(data.endedDate) }}
             </div>
-            <div v-else
-            :class="{'flex justify-between self-end mr-4': data.status === 'created',}"
+            <div
+              v-else
+              :class="{
+                'flex justify-between self-end mr-4': data.status === 'created',
+              }"
             >
               <div class="mt-1">Нет</div>
               <button
@@ -715,11 +889,12 @@ const updateSearchType = (filter: any) => {
                 @click="openRemoveReviewModal(data.id, data.name)"
               >
                 Удалить
-              </button></div>
+              </button>
+            </div>
           </template>
         </Column>
 
-        <!-- <Column class="bg-base-100 text-center max-w-0 " header=" ">
+        <Column class="bg-base-100 text-center max-w-0 " header=" ">
           <template #body="{ data }">
             <div v-if="data.status === 'created'">
               <button
@@ -730,8 +905,8 @@ const updateSearchType = (filter: any) => {
               </button>
             </div>
           </template>
-        </Column> -->
-      </DataTable>
+        </Column>
+      </DataTable> -->
       <!-- <ul v-else class="w-full lg:hidden">
         <li
           v-for="(item, index) in product_likes"
@@ -831,7 +1006,9 @@ const updateSearchType = (filter: any) => {
   <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
   <div class="modal">
     <div class="modal-box max-w-xs">
-      <h3 class="font-normal text-lg text-center">Вы уверены, что хотитет удалить лайки к данному товару?</h3>
+      <h3 class="font-normal text-lg text-center">
+        Вы уверены, что хотитет удалить лайки к данному товару?
+      </h3>
       <p class="py-2"></p>
       <div class="modal-action flex justify-between">
         <label
@@ -840,7 +1017,10 @@ const updateSearchType = (filter: any) => {
           ref="reviewRemoveModalClose"
           >Отмена</label
         >
-        <label for="reviewRemoveModal" class="btn btn-error text-white" @click="deleteLike"
+        <label
+          for="reviewRemoveModal"
+          class="btn btn-error text-white"
+          @click="deleteLike"
           >Удалить</label
         >
       </div>
@@ -849,14 +1029,12 @@ const updateSearchType = (filter: any) => {
 </template>
 
 <style scoped>
-::v-deep(th){
+::v-deep(th) {
   background-color: rgba(99, 102, 241, 0.15) !important;
-  
 }
-::v-deep(.p-column-header-content){
+::v-deep(.p-column-header-content) {
   text-align: center !important;
   display: flex;
   justify-content: center;
 }
-
 </style>

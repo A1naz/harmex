@@ -18,6 +18,7 @@ const LikeSchema = new Schema({
   reviews: { type: Array },
   dateStart: { type: Date },
   dateEnd: { type: Date },
+  period: { type: String },
 })
 
 LikeSchema.pre('save', function (next) {
