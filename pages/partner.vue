@@ -156,6 +156,7 @@ function defaultFilter(r: number){
                         :statusText="'Приглашенные клиенты'"
                         :tabs="tabs"
                         @change-value = "changeRange"
+                        :route="'/partner'"
                         />
                         <TableDateDefaultFilter
                         class="sm:hidden"
@@ -196,6 +197,7 @@ function defaultFilter(r: number){
                     <CustomDrop
                     :statusText="'Заказы клиентов'"
                     :tabs="tabs"
+                    :route="'/partner'"
                     />
                     <TableDateDefaultFilter
                         class="sm:hidden"

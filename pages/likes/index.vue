@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
+import { useNotification } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
@@ -10,6 +11,13 @@ const store = useMainStore()
 const review_likes = ref([]) as any
 const { width, height } = useWindowSize()
 const { data, error } = await useFetch('/api/likes/get')
+const search = reactive({
+  text: '',
+  loading: false,
+  error: false,
+  type: 'article',
+})
+const codeInput = ref()
 review_likes.value = data.value
 function getStatus(status: string) {
   if (status === 'created') return 'Создан'
@@ -55,34 +63,545 @@ async function deleteLike() {
     })
   }
 }
+
+async function selectFilterDate(e: any) {
+  const target = e
+  const { data } = await useFetch('/api/likes/get', {
+    method: 'GET',
+    query: {
+      dateFilter: target.value,
+    },
+    watch: false,
+  })
+  review_likes.value = data.value
+}
+
+async function findBuyouts(value: string, type: string) {
+  if (!value) {
+    search.loading = false
+    getLikes()
+    return
+  }
+  const { data, error } = await useFetch('/api/likes/search', {
+    query: {
+      string: value,
+      type,
+    },
+    watch: false,
+  })
+  if (data.value) review_likes.value = data.value
+
+  search.loading = false
+}
+
+const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
+
+async function onSearchInput(event: Event) {
+  const newValue = (event.target as HTMLInputElement).value
+  search.loading = true
+  findBuyoutsDebounced(search.text, search.type)
+}
+const updateSearchType = (filter: any) => {
+  search.type = filter.value
+}
+
+//...............................................................
+
+const isPageBtnsDisabled = ref(false)
+const limit = ref(50)
+const page = ref(1)
+const feedbacksCount = ref(0)
+const maxPage = computed(() => Math.ceil(feedbacksCount.value / limit.value))
+
+const { notify } = useNotification()
+const changedReviews = ref<any>([])
+const isCreateButtonDisabled = ref(false)
+
+const route = useRoute()
+const router = useRouter()
+const reviews = ref<any>([])
+const article = ref('')
+const savedArticle = ref('')
+const loading = ref(false)
+const selectSortBy = ref('')
+const sortBy = computed(() => route.query?.sortBy || 'date')
+
+async function getProductReviews() {
+  reviews.value = []
+  loading.value = true
+  changedReviews.value = []
+  savedArticle.value = article.value
+  const { data, error }: any = await useFetch('/api/likes/productReviews', {
+    method: 'GET',
+    headers: useRequestHeaders(['cookie']) as HeadersInit,
+    query: {
+      article: savedArticle.value,
+      limit: limit.value * page.value,
+      page: page.value,
+      sortBy: sortBy.value ?? 'date',
+    },
+  })
+  loading.value = false
+  if (error.value) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value.data.message,
+      type: 'error',
+    })
+    return
+  }
+  if (data.value?.feedbacks.length < 1) {
+    notify({
+      title: 'Отзывы не найдены',
+    })
+  }
+  const initial = (data.value.feedbacks as any).map((review: any) => {
+    review.addLikes = 0
+    review.addDislikes = 0
+    return review
+  }) as any[]
+  reviews.value = initial
+  feedbacksCount.value = data.value.feedbacksCount
+  sortReviews()
+}
+
+async function increaseReviews() {
+  limit.value += 50
+  const { data, error }: any = await useFetch('/api/likes/productReviews', {
+    method: 'GET',
+    headers: useRequestHeaders(['cookie']) as HeadersInit,
+    query: {
+      article: savedArticle.value,
+      limit: limit.value,
+      sortBy: sortBy.value ?? 'date',
+    },
+  })
+  if (error.value) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value.data.message,
+      type: 'error',
+    })
+    return
+  }
+  if (!data.value.length) {
+    notify({
+      title: 'Отзывы не найдены',
+    })
+  }
+  const initial = (data.value as any).map((review: any) => {
+    review.addLikes = 0
+    review.addDislikes = 0
+    return review
+  }) as any[]
+  reviews.value.push(...initial)
+  sortReviews()
+}
+
+function addLike(id: string) {
+  reviews.value.map((review: any) => {
+    if (review.id === id) review.addLikes++
+    return review
+  })
+  changedReviews.value.find((review: any) => review.id === id)
+    ? (changedReviews.value = changedReviews.value.map((review: any) => {
+        if (review.id === id) review.likes++
+
+        return review
+      }))
+    : changedReviews.value.push({
+        id,
+        likes: 1,
+        dislikes: 0,
+      })
+}
+
+function removeLike(id: string) {
+  reviews.value.map((review: any) => {
+    if (review.id === id) review.addLikes--
+    return review
+  })
+  const review = changedReviews.value.find((review: any) => review.id === id)
+  if (review) {
+    if (review.likes > 1) {
+      changedReviews.value = changedReviews.value.map((review: any) => {
+        if (review.id === id) review.likes--
+
+        return review
+      })
+    } else {
+      if (review.likes === 1 && review.dislikes === 0) {
+        changedReviews.value = changedReviews.value.filter(
+          (review: any) => review.id !== id
+        )
+      } else {
+        changedReviews.value = changedReviews.value.map((review: any) => {
+          if (review.id === id) review.likes--
+
+          return review
+        })
+      }
+    }
+  }
+}
+function addDislike(id: string) {
+  reviews.value.map((review: any) => {
+    if (review.id === id) review.addDislikes++
+    return review
+  })
+  changedReviews.value.find((review: any) => review.id === id)
+    ? (changedReviews.value = changedReviews.value.map((review: any) => {
+        if (review.id === id) review.dislikes++
+
+        return review
+      }))
+    : changedReviews.value.push({
+        id,
+        likes: 0,
+        dislikes: 1,
+      })
+}
+function removeDislike(id: string) {
+  reviews.value.map((review: any) => {
+    if (review.id === id) review.addDislikes--
+    return review
+  })
+  const review = changedReviews.value.find((review: any) => review.id === id)
+  if (review) {
+    if (review.dislikes > 1) {
+      changedReviews.value = changedReviews.value.map((review: any) => {
+        if (review.id === id) review.dislikes--
+        return review
+      })
+    } else {
+      if (review.likes === 0 && review.dislikes === 1) {
+        changedReviews.value = changedReviews.value.filter(
+          (review: any) => review.id !== id
+        )
+      } else {
+        changedReviews.value = changedReviews.value.map((review: any) => {
+          if (review.id === id) review.dislikes--
+          return review
+        })
+      }
+    }
+  }
+}
+async function selectSorting(e: any) {
+  page.value = 1
+
+  selectSortBy.value = e.target.value
+  router.push({
+    query: {
+      sortBy: e.target.value,
+    },
+  })
+  await getProductReviews()
+}
+async function save() {
+  isCreateButtonDisabled.value = true
+  const userOffsetMinutes = new Date().getTimezoneOffset()
+  const userTimezoneOffsetHours = -userOffsetMinutes / 60
+  const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
+
+  const { data, error } = await useFetch('/api/likes/create', {
+    method: 'POST',
+    body: {
+      article: savedArticle.value,
+      reviews: changedReviews.value,
+      period:  productDateRangeModel.value,
+      
+    },
+    query: {
+      userTimezoneOffsetHours,
+      userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
+    },
+  })
+  if (error.value) {
+    notify({
+      type: 'error',
+      title: 'Ошибка',
+      text: error.value.message,
+    })
+    return
+  }
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: 'Успешно',
+    })
+    return router.push('/likes')
+  }
+}
+
+async function cancel() {
+  changedReviews.value = []
+  article.value = savedArticle.value
+  getProductReviews()
+}
+function getAddedLikes() {
+  const addedLikes = changedReviews.value.reduce(
+    (acc: any, review: any) => {
+      acc.likes += review.likes
+      acc.dislikes += review.dislikes
+      return acc
+    },
+    {
+      likes: 0,
+      dislikes: 0,
+    }
+  )
+  return addedLikes
+}
+function sortReviews() {
+  const val = sortBy.value
+  if (val === 'date') {
+    reviews.value = reviews.value.sort(
+      (a: any, b: any) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
+  } else if (val === 'rating') {
+    reviews.value = reviews.value.sort((a: any, b: any) => {
+      if (b.rating > a.rating) return 1
+      else if (b.rating < a.rating) return -1
+      else return 0
+    })
+  } else if (val === 'rank') {
+    reviews.value = reviews.value.sort((a: any, b: any) => b.rank - a.rank)
+  }
+}
+watch(
+  () => sortBy.value,
+  (route) => {
+    selectSortBy.value = sortBy.value.toString()
+    sortReviews()
+  },
+  { deep: true, immediate: true }
+)
+
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
+const period = ref('3h')
+
+async function swapPage(value: number) {
+  if (value === -1 && page.value <= 1) {
+    return
+  }
+
+  if (value === 1 && page.value >= maxPage.value) {
+    notify({
+      type: 'error',
+      text: 'Последняя страница',
+    })
+    return
+  }
+  isPageBtnsDisabled.value = true
+  page.value += value
+  await getProductReviews()
+  isPageBtnsDisabled.value = false
+}
+
+
+function selectPeriod(event: any) {
+  period.value = event.target.value
+}
 </script>
 
 <template>
   <div>
-    <!-- <h1 class="text-2xl font-bold mt-4">Лайки на отзывы</h1> -->
-    <p class="text-xs font-light mt-4 lg:text-sm">
-      Лайки на отзывах, помогут вашим покупателям обратить внимание только на
-      самые важные отзывы.
-    </p>
-    <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного лайка -
-      <span class="font-bold"> {{ store.tariffString('likeReview') }} </span>
-      Все услуги оказываются по Московскому времени.
-    </p>
-    <p class="font-bold text-error mt-5">
-      Создание новых лайков на отзывы временно отключено.
-    </p>
-    <div class="flex justify-end mb-8 mt-6 items-center">
-      <!-- <NuxtLink
-        to="/likes/create"
-        class="btn btn-primary btn-sm gap-2 font-medium normal-case self-end"
-      >
-        <Icon name="fluent:add-24-filled" size="24" />
-        Добавить лайки
-      </NuxtLink> -->
+    
+    <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 m-4">
+      <div class="flex gap-1 lg:gap-4">
+        <!-- <button
+          class="btn btn-primary font-normal btn-sm"
+          @click="modalShow = !modalShow"
+          @click.stop
+        >
+          <Icon name="fluent:add-24-filled" size="24" />
+          <span class="hidden lg:flex">Лайки</span>
+        </button> -->
+        <NuxtLink to="/likes/create" class="btn btn-primary font-normal btn-sm">
+          <Icon name="fluent:add-24-filled" size="24" />
+          <span class="hidden lg:flex">Лайки</span>
+        </NuxtLink>
+
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'Все лайки', value: 'all' },
+            { title: 'Активные', value: 'work' },
+            { title: 'Завершенные', value: 'completed' },
+          ]"
+          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' }]"
+          @change-value="selectFilterDate"
+        />
+        <div class="relative justify-end flex-grow-0 w-full lg:hidden">
+          
+          <input
+            type="text"
+            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            placeholder="Поиск по лайкам"
+            ref="codeInput" 
+            v-model="search.text"
+            @input="onSearchInput($event)"
+          />
+          <span
+            v-if="search.loading"
+            class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
+          />
+          <Icon
+            v-else
+            class="absolute right-0.5 p-2 my-auto text-gray-500"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
+          />
+        </div>
+      </div>
+      <div class="flex gap-2 lg:gap-5">
+        <CustomSelect
+          class="lg:hidden"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'Все лайки', value: 'all' },
+            { title: 'Активные', value: 'work' },
+            { title: 'Завершенные', value: 'completed' },
+          ]"
+          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' }]"
+          @change-value="selectFilterDate"
+        />
+
+        <CustomSelect
+          :class="'bg-base-300 sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'За все время', value: 'all' },
+            { title: 'Сегодня', value: 'today' },
+            { title: '3 дня', value: '3days' },
+            { title: 'Неделя', value: '7days' },
+          ]"
+          @change-value="selectFilterDate"
+        />
+
+        <CustomSelect
+          :class="'bg-base-300'"
+          :tabs="[{ title: 'Артикул', value: 'article' }]"
+          @change-value="updateSearchType"
+        />
+        <div class="relative justify-end flex-grow-0 w-full hidden lg:flex">
+          <input
+            ref="codeInput"
+            v-model="search.text"
+            type="text"
+            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            placeholder="Поиск по лайкам"
+            @input="onSearchInput($event)"
+          />
+          <span
+            v-if="search.loading"
+            class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
+          />
+          <Icon
+            v-else
+            class="absolute right-0.5 p-2 my-auto text-gray-500"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
+          />
+        </div>
+      </div>
     </div>
     <div v-if="review_likes.length">
-      <DataTable
+    
+      <table class="table table-sm">
+          <!-- head -->
+          <thead>
+            <tr class="bg-primary bg-opacity-5">
+              <!-- <th class="text-center">№</th> -->
+              <th class="text-center">Фото</th>
+              <th class="text-center">Артикул</th>
+              <th class="text-center">Количество</th>
+              <th class="text-center">Статус</th>
+              <th class="text-center">Дата создания</th>
+              <th class="text-center">Дата завершения</th>
+              <th class="text-center">Сроки выполнения</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-base-200" v-for="(item, index) in review_likes" :key="index">
+              <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
+              <td class="text-center border-r border-primary border-opacity-5 mx-auto">
+                <div style="
+                  width: 28px;
+                  height: 36px;
+                  border-radius: 4px;"
+                  class="mx-auto"
+                >
+              <div class="dropdown dropdown-hover">
+                <label tabindex="0">
+                  <nuxt-img
+                    class="rounded-lg z-0"
+                    alt=""
+                    loading="lazy"
+                    fit="fill"
+                    :src="item.image"
+                  />
+                </label>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
+                >
+                  <nuxt-img
+                    class="rounded-lg z-[1]"
+                    loading="lazy"
+                    fit="fill"
+                    :src="item.image"
+                  />
+                </ul>
+              </div>  
+            </div>
+                </td>
+              <td class="text-center border-r border-primary border-opacity-5 text-primary">{{ item.article }}</td>
+              <td class="text-center border-r border-primary border-opacity-5"> 
+                <div class="flex flex-col">
+                  <span>Да: {{ item.likes }}</span>
+                  <span>Нет: {{ item.dislikes }}</span>
+                </div>
+               
+              </td>
+            
+              <td class="text-center border-r border-primary border-opacity-5"><div
+                :class="{
+                'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                  item.status === 'nofunds',
+                'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                item.status === 'created',
+                'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                item.status === 'work',
+                'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                item.status === 'completed',
+              }"
+            >
+              {{ getStatus(item.status) }}
+            </div></td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">{{ defaultDateShort(item.createdDate) }}</div>
+              </td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
+                {{ defaultDateShort(item.endedDate) }}
+              </div>
+            </td>
+            <td class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5">
+              <div v-if="item.period" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
+                <div>{{ defaultDateShort(item.period) }}</div>
+              </div>
+              <div v-else>Нет</div>
+            </td>
+            </tr>
+            <div ref="target" class="flex justify-center items-center h-4" />
+          </tbody>
+      </table>
+      <!-- <DataTable
         v-if="width > 1024"
         class="bg-base-200 hidden lg:block overflow-visible"
         :value="review_likes"
@@ -189,8 +708,8 @@ async function deleteLike() {
             </div>
           </template>
         </Column>
-      </DataTable>
-      <ul v-else class="w-full lg:hidden">
+      </DataTable> -->
+      <!-- <ul v-else class="w-full lg:hidden">
         <li
           v-for="(item, index) in review_likes"
           :key="index"
@@ -301,7 +820,7 @@ async function deleteLike() {
             </div>
           </div>
         </li>
-      </ul>
+      </ul> -->
     </div>
 
     <Hero v-else />

@@ -11,6 +11,7 @@ export default eventHandler(async (event) => {
   const { userTimezoneOffsetHours, userOffsetMinutes } = params
 
   const body = await readBody(event)
+  const period = body.period
   const article = body.article
   const reviews: any[] = body.reviews
   const dates: any[] = body.dates
@@ -31,25 +32,26 @@ export default eventHandler(async (event) => {
     user,
     article,
     reviews,
+    period,
     likes,
     dislikes,
     total: likes + dislikes,
     image,
     createdDate: new Date(),
   })
-  if (dates) {
-    if (userTimezoneOffsetHours && userOffsetMinutes) {
-      const date1 = new Date(dates[0])
-      const date2 = new Date(dates[1])
-      date1.setHours(date1.getHours() + Number(userTimezoneOffsetHours))
-      date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
-      date1.setMinutes(date1.getMinutes() + Number(userOffsetMinutes))
-      date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
+  // if (dates) {
+  //   if (userTimezoneOffsetHours && userOffsetMinutes) {
+  //     const date1 = new Date(dates[0])
+  //     const date2 = new Date(dates[1])
+  //     date1.setHours(date1.getHours() + Number(userTimezoneOffsetHours))
+  //     date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
+  //     date1.setMinutes(date1.getMinutes() + Number(userOffsetMinutes))
+  //     date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
 
-      created.dateStart = date1
-      created.dateEnd = date2
-    }
-  }
+  //     created.dateStart = date1
+  //     created.dateEnd = date2
+  //   }
+  // }
   const res = await created.save()
 
   await userLog(event,

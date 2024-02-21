@@ -146,6 +146,16 @@ export default NuxtAuthHandler({
       async authorize(credentials: any, event: any) {
         let cookie = event.headers.cookie
 
+        if (runtimeConfig.env === 'developer') {
+          const testUser = await User.findOne({
+            uuid: 'c5fdc5d6-a8b0-4986-a829-e721f8e54deb',
+          })
+
+          if (testUser) {
+            return testUser
+          }
+        }
+
         const accessToken = decodeURIComponent(
           decodeURIComponent(
             cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')

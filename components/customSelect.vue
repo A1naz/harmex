@@ -7,6 +7,11 @@ interface tabs {
   title: string;
   value: string | number;
 }
+interface links {
+  title: string;
+  slot: string;
+  query: string;
+}
 
 const props = defineProps({
   rangesConfig: {
@@ -21,6 +26,7 @@ const props = defineProps({
     type: Boolean as PropType<boolean>,
     default: false
   },
+  links: { type: Array as PropType<links[]>},
   class: { type: String },
 });
 
@@ -71,18 +77,28 @@ onUnmounted(() => {
                 <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
                 <Icon v-else name="formkit:down" size="18" />
             </div>
-            <ul v-if="rangesConfig.length > 0 && dropdownOpened" class="absolute shadow-md z-[1] bg-base-100 p-1 rounded-lg mt-2" >
-              <li v-for="filter in rangesConfig" :key="filter">
-                <button class="btn btn-ghost btn-sm normal-case font-normal w-full my-0.5 py-0 text-base whitespace-normal leading-none hover:bg-primary hover:bg-opacity-20" @click="updateText(filter)" >
+            <ul v-if="dropdownOpened" class="absolute shadow-md z-[1] bg-base-100 rounded-lg mt-2 w-full flex flex-col gap-y-0.5" >
+              <li v-if="rangesConfig.length > 0" v-for="filter in rangesConfig" :key="filter">
+                <button class="btn btn-ghost btn-sm normal-case font-normal w-full py-0 text-base whitespace-normal leading-none hover:bg-primary hover:bg-opacity-20 mb-0.5" @click="updateText(filter)" >
                   {{ filter }}
                 </button>
               </li>
-            </ul>
-            <ul v-if="tabs.length > 0 && dropdownOpened" class="absolute shadow-md z-[1] bg-base-100 p-1 rounded-lg max-w-[200px] mt-2 w-full" >
-              <li v-for="filter in tabs" :key="filter.title">
-                <button class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full my-0.5 leading-none hover:bg-primary hover:bg-opacity-20" @click="updateValue(filter)" >
+              <li v-if="tabs.length > 0 " v-for="filter in tabs" :key="filter.title">
+                <button class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 mb-0.5" @click="updateValue(filter)" >
                   {{ filter.title }}
                 </button>
+              </li>
+              <li>
+                  <NuxtLink
+                    v-for="filter in links"
+                    :to="filter.slot + filter.query"
+                    :external="false"
+                    class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 mb-0.5"
+                  >
+                    <span>
+                    {{ filter.title }}
+                    </span>
+                  </NuxtLink>
               </li>
             </ul>
         </div>

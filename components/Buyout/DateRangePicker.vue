@@ -123,7 +123,7 @@ function selectDateInternal(date: any, selectDate: any) {
           :class="{
             'btn-outline': date[0] && date[1],
           }"
-          class="btn btn-primary btn-sm normal-case w-full"
+          class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm normal-case w-full"
         >
           {{ date[0] && date[1] ? 'Изменить' : 'Выбрать' }}
         </button>
