@@ -157,7 +157,6 @@ function defaultFilter(r: number){
                         :tabs="tabs"
                         :route="'/partner'"
                         @change-value = "changeRange"
-                        :route="'/partner'"
                         />
                         <TableDateDefaultFilter
                         class="sm:hidden"
