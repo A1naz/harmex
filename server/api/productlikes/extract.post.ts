@@ -2,6 +2,19 @@ import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '@/server/lib/helpers'
 import { User } from '@/server/lib/models/User'
 import { v4 as uuid } from 'uuid'
+const config = useRuntimeConfig()
+const proxy = config.CHANGING_PROXY
+import request from 'request'
+
+function extractArticulFromOzonLink(link: string) {
+  const pattern = /(\d+)\/?(?:\?.*?)?$/
+  const match = link.match(pattern)
+  if (match) {
+    return match[1]
+  } else {
+    return null
+  }
+}
 
 function isValidUrl(urlString: string) {
   const urlPattern = new RegExp(
@@ -22,13 +35,6 @@ export default eventHandler(async (event) => {
   const user = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  return {
-    type: 'brand',
-    name: 'Неизвестно',
-    id: uuid(),
-    image: 'Неизвестно',
-  }
-
   const { url } = await readBody(event)
   if (!isValidUrl(url)) {
     throw createError({
@@ -36,75 +42,71 @@ export default eventHandler(async (event) => {
       message: 'invalid url',
     })
   }
+  const type = url.includes('ozon.ru/brand') ? 'brand' : 'product'
 
-  let trueUrl = url
+  if (type === 'product') {
+    const article = extractArticulFromOzonLink(url)
+    const productUrl = `http://api.ozon.ru/composer-api.bx/page/json/v2?url=/products/${article}`
 
-  const index = trueUrl.indexOf('detail.aspx')
-  if (index !== -1) {
-    trueUrl = trueUrl.substring(0, index + 'detail.aspx'.length)
-  }
-  const splitted = trueUrl.split('/')
-  if (splitted.at(-1) === 'detail.aspx') {
-    const article = splitted[splitted.length - 2]
-    const url = findProductCard(article)
-    const data: any = await $fetch(url, {
-      method: 'GET',
+    const options = {
+      url: productUrl,
+      proxy: 'http://' + proxy,
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0',
+        Cookie:
+          '__Secure-ext_xcid=89c7c7cd172fff859cee568c5341d887; __Secure-user-id=0; __Secure-ab-group=80; abt_data=1b63138336bf1dfdba79892d04d9c817:8f7d0be5672b4ebe662babb09b5ba75405c0110a9df0e95f47b28201aeeaf676131138aea066178892f49489d2be1475c2f6c9f4b1f1d9283ec4f4662518b3a3bf47472f4b12cbd3c8c2882b38ba6c307af0f96b6a89e0aa6076fe868adebb7627aba68119fad45d59000cd1e545a7c935f6e0534756e2bd590ae47ea3a158edf43884f595616818a73b7603b677d2985f358eae8ca0038aed2b30d83ae5374465ea1a099c067a68f8a463f57e3bf87091ac46f52acd4cd4c1bf46c859d366d6; __Secure-refresh-token=4.0.vFaBlDu-SJCbJoyXxv5syQ.80.AeHnovws_Z3Z1M0__ENXF6TU6l4FRJy30a4BvraIXEF0_XOtQ7ua2KXCgsbZmRTHjg..20240213150705.18-X0vwjB-XbClTatUO9Pf1TWodGWzVzfqzRzaRkp-4; __Secure-access-token=4.0.vFaBlDu-SJCbJoyXxv5syQ.80.AeHnovws_Z3Z1M0__ENXF6TU6l4FRJy30a4BvraIXEF0_XOtQ7ua2KXCgsbZmRTHjg..20240213150705.07ZVnPGDT8dU2qUQW_hg3ydnN1vZolKYVz4rZGjg-0I',
+      },
+    }
+
+    const data: any = await new Promise((resolve, reject) => {
+      request.get(options, function (error, response, body) {
+        if (!error) {
+          resolve(JSON.parse(body)) // Разрешение обещания с данными, если запрос успешен
+        } else {
+          console.log(error)
+
+          reject(new Error(`Непредвиденный статус код`)) // Обработка непредвиденных статусов ответа
+        }
+      })
     })
 
-    const rawData: any = await $fetch(
-      `https://card.wb.ru/cards/detail?spp=0&regions=80,64,38,4,115,83,33,68,70,69,30,86,40,1,66,31,48,110,22&pricemarginCoeff=1.0&reg=0&appType=1&emp=0&locale=ru&lang=ru&curr=rub&couponsGeo=2,12,7,3,6,21&dest=12358353&nm=${article}`,
-      {
-        method: 'GET',
-      }
-    )
-    const priceData = rawData
-
-    const product = priceData?.data?.products.find(
-      (item: any) => item.id === Number(article)
-    )
-    const priceRaw = product?.salePriceU.toString()
-    if (!product) {
-      return createError({
+    if (!data) {
+      throw createError({
         statusCode: 400,
-        message: 'Не удалось получить данные о товаре',
-      })
-    }
-    if (!priceRaw) {
-      return createError({
-        statusCode: 400,
-        message: 'Не удалось получить данные о товаре',
+        message: 'Не удалось получить данные о продукте',
       })
     }
 
-    const price = priceRaw?.substring(0, priceRaw.length - 2)
-    const currency = new Intl.NumberFormat('ru-RU', {
-      style: 'currency',
-      currency: 'RUB',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    })
-    const priceText = currency.format(price)
-    const image = findImage(Number(article))
+    const productData = JSON.parse(
+      data.widgetStates['webStickyProducts-726428-default-1']
+    )
+    let price = 0
+
+    try {
+      price = parseInt(
+        JSON.parse(data.widgetStates['webPrice-3121879-default-1'])
+          .price.replaceAll(' ', '')
+          .replace(/[\s ]/g, '')
+      )
+    } catch (error) {}
+    const image = productData.coverImageUrl
+    const name = productData.name
+
     return {
       type: 'product',
-      image,
-      article: (data.nm_id as number) || (article as number),
-      name: `${data.selling.brand_name} / ${data.imt_name}` || '',
-      price: (price as number) || 0,
-      priceText: (priceText as string) || '',
+      image: image || '',
+      article: article,
+      name: name || '',
+      price: price || 0,
+      priceText: price + ' ₽' || '0 ₽',
     }
-  } else if (splitted.at(-2) === 'brands') {
-    const brand = splitted.at(-1)
-    const data: { name: string; id: number; siteId: number } = await $fetch(
-      `https://static.wbstatic.net/data/brands/${brand}.json`,
-      { method: 'GET' }
-    )
-    const image = `https://images.wbstatic.net/brands/small/${data.id}.jpg`
+  } else if (type === 'brand') {
     return {
       type: 'brand',
-      name: data.name,
-      id: data.id,
-      image,
+      name: 'неизвестно',
+      id: 'неизвестно',
+      image: 'неизвестно',
     }
   }
 })

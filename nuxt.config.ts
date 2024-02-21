@@ -183,6 +183,7 @@ export default defineNuxtConfig({
     serverLoadApiKey: process.env.serverLoadApiKey,
     server_ip: process.env.server_ip,
     service_id: process.env.service_id,
+    CHANGING_PROXY: process.env.CHANGING_PROXY,
   },
 
   security: {
