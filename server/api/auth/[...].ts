@@ -8,6 +8,7 @@ import { Referral } from '~/server/lib/models/Referral'
 import confirmTwoFaCode from '~/server/utils/confirmTwoFaCode'
 import { Plans } from '~/server/lib/models/Plans'
 import axios from 'axios'
+import { config } from 'process'
 
 const runtimeConfig = useRuntimeConfig()
 export default NuxtAuthHandler({
@@ -145,6 +146,16 @@ export default NuxtAuthHandler({
 
       async authorize(credentials: any, event: any) {
         let cookie = event.headers.cookie
+       
+        if (runtimeConfig.env === 'developer') {
+          const testUser = await User.findOne({
+            uuid: 'c5fdc5d6-a8b0-4986-a829-e721f8e54deb',
+          })
+          
+          if (testUser) {
+            return testUser
+          }
+        }
 
         const accessToken = decodeURIComponent(
           decodeURIComponent(
@@ -195,7 +206,9 @@ export default NuxtAuthHandler({
 
           const newUser = new User({
             uuid: valid.data.uuid,
-            username: valid.data.username ? valid.data.username : valid.data.uuid,
+            username: valid.data.username
+              ? valid.data.username
+              : valid.data.uuid,
             roles: ['user'],
             firstName: valid.data.fullName
               ? valid.data.fullName.split(' ')[0]
