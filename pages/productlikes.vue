@@ -628,7 +628,7 @@ const updateSearchType = (filter: any) => {
         <Column class="bg-base-100 text-center truncate border-r border-base-200"  field="link" header="Ссылка"
         :pt="{
                 headerCell:  { class: [
-                      'border-none text-base-content font-normal'
+                      'border-none text-base-content font-normal !w-10'
                   ] },
               }"
         >

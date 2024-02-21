@@ -32,6 +32,9 @@ dependencies:
   '@types/axios':
     specifier: ^0.14.0
     version: 0.14.0
+  '@types/request':
+    specifier: ^2.48.12
+    version: 2.48.12
   '@types/validator':
     specifier: ^13.11.1
     version: 13.11.1
@@ -116,6 +119,9 @@ dependencies:
   qrcode:
     specifier: ^1.5.3
     version: 1.5.3
+  request:
+    specifier: ^2.88.2
+    version: 2.88.2
   sass:
     specifier: ^1.66.1
     version: 1.66.1
@@ -5124,6 +5130,10 @@ packages:
       '@types/node': 20.5.9
     dev: true
 
+  /@types/caseless@0.12.5:
+    resolution: {integrity: sha512-hWtVTC2q7hc7xZ/RLbxapMvDMgUnDvKvMOpKal4DrMyfGBUfB1oKaZlIRr6mJL+If3bAP6sV/QneGzF6tJjZDg==}
+    dev: false
+
   /@types/chart.js@2.9.39:
     resolution: {integrity: sha512-FAsZ6v8ds40mVCgM44T1/ZDKuT1Lh6/a2D3nD8ZNX9SqBObBc0vH2VrcLjYP3PL8onPPt9rIw+QyEkgrzj31TQ==}
     dependencies:
@@ -5266,6 +5276,15 @@ packages:
     requiresBuild: true
     optional: true
 
+  /@types/request@2.48.12:
+    resolution: {integrity: sha512-G3sY+NpsA9jnwm0ixhAFQSJ3Q9JkpLZpJbI3GMv0mIAT0y3mRabYeINzal5WOChIiaTEGQYlHOKgkaM9EisWHw==}
+    dependencies:
+      '@types/caseless': 0.12.5
+      '@types/node': 20.5.9
+      '@types/tough-cookie': 4.0.5
+      form-data: 2.5.1
+    dev: false
+
   /@types/resolve@1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
@@ -5294,6 +5313,10 @@ packages:
 
   /@types/stack-utils@1.0.1:
     resolution: {integrity: sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==}
+    dev: false
+
+  /@types/tough-cookie@4.0.5:
+    resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
     dev: false
 
   /@types/trusted-types@2.0.3:
@@ -9507,6 +9530,15 @@ packages:
 
   /form-data@2.3.3:
     resolution: {integrity: sha512-1lLKB2Mu3aGP1Q/2eCOx0fNbRMe7XdwktwOruhfqqd0rIJWwN4Dh+E3hrPSlDCXnSR7UtZ1N38rVXm+6+MEhJQ==}
+    engines: {node: '>= 0.12'}
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      mime-types: 2.1.35
+    dev: false
+
+  /form-data@2.5.1:
+    resolution: {integrity: sha512-m21N3WOmEEURgk6B9GLOE4RuWOFf28Lhh9qGYeNlGq4VDXUlJy2th2slBNU8Gp8EzloYZOibZJ7t5ecIrFSjVA==}
     engines: {node: '>= 0.12'}
     dependencies:
       asynckit: 0.4.0
