@@ -155,6 +155,7 @@ function defaultFilter(r: number){
                         <CustomDrop
                         :statusText="'Приглашенные клиенты'"
                         :tabs="tabs"
+                        :route="'/partner'"
                         @change-value = "changeRange"
                         :route="'/partner'"
                         />

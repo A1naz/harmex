@@ -1,6 +1,7 @@
 import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '@/server/lib/helpers'
 import { User } from '@/server/lib/models/User'
+import { v4 as uuid } from 'uuid'
 
 function isValidUrl(urlString: string) {
   const urlPattern = new RegExp(
@@ -15,12 +16,18 @@ function isValidUrl(urlString: string) {
   return !!urlPattern.test(urlString)
 }
 export default eventHandler(async (event) => {
+  const session = (await getServerSession(event)) as any
+  if (!session) return sendRedirect(event, '/auth', 302)
 
-    const session = (await getServerSession(event)) as any
-    if (!session) return sendRedirect(event, '/auth', 302)
+  const user = await User.findOne({ uuid: session.uuid })
+  if (!user) return sendRedirect(event, '/auth', 302)
 
-    const user = await User.findOne({ uuid: session.uuid })
-    if (!user) return sendRedirect(event, '/auth', 302)
+  return {
+    type: 'brand',
+    name: 'Неизвестно',
+    id: uuid(),
+    image: 'Неизвестно',
+  }
 
   const { url } = await readBody(event)
   if (!isValidUrl(url)) {
@@ -31,9 +38,9 @@ export default eventHandler(async (event) => {
   }
 
   let trueUrl = url
-  
+
   const index = trueUrl.indexOf('detail.aspx')
-   if (index !== -1) {
+  if (index !== -1) {
     trueUrl = trueUrl.substring(0, index + 'detail.aspx'.length)
   }
   const splitted = trueUrl.split('/')
