@@ -77,7 +77,6 @@ function handleDelete(address: any) {
 }
 
 const lastPoints = ref(JSON.parse(localStorage.getItem('pointStore') || '[]'))
-console.log(lastPoints.value)
 
 const presetCluster = 'slands#blueClusterIcons'
 

@@ -245,8 +245,6 @@ export default NuxtAuthHandler({
       },
 
       async authorize(credentials: any, event: any) {
-        // console.log(credentials)
-
         const { code, uuid } = credentials
 
         const user = await User.findOne({

@@ -164,7 +164,7 @@ export default eventHandler(async (event) => {
     const trueCurDate: any = new Date()
     trueCurDate.setDate(trueCurDate.getDate() + 1)
     trueCurDate.setHours(3, 0, 0, 0)
-    // console.log(trueCurDate)
+
     for (const payment of newHistory) {
       const recordDate: any = new Date(payment.dataoperation)
 
@@ -226,7 +226,6 @@ export default eventHandler(async (event) => {
 
     const sumByDayArray = new Array(numberOfDaysInMonth).fill(0)
     currentMonth.setHours(3)
-    // console.log(currentMonth)
 
     for (const payment of history) {
       const recordDate: any = new Date(payment.dataoperation)

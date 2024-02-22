@@ -18,10 +18,7 @@ export default eventHandler(async (event) => {
       length: 10,
       name: 'TOPVTOP: ' + user.username,
     })
-
-    console.log(secret);
-    
-
+  
     const qrCode = await new Promise((resolve, reject) => {
       qrcode.toDataURL(secret.otpauth_url, (err: any, data: any) => {
         if (err) {

@@ -7,7 +7,6 @@ export default eventHandler(async (event) => {
   if (!cookie) {
     return
   }
-  console.log("rawAccessToken");
   
   const accessToken = decodeURIComponent(
     decodeURIComponent(

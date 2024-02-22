@@ -34,7 +34,6 @@ function updateCurrentPage(event: KeyboardEvent){
     const n:number = +inputElement.value;
     page.value = n <= 0 ? 1 : n > props.pageNums ? props.pageNums : n
     n <= 0 ? emit('changePage', 1) : n > props.pageNums ? emit('changePage', props.pageNums) : emit('changePage', n)
-    console.log('CurrentPage old: ' + props.currentPage)
   }
 }
 function changePage(n: number) {

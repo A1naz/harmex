@@ -45,7 +45,6 @@ export default eventHandler(async (event) => {
   if (!accountsToken) {
     throw new Error('no accounts token')
   } else {
-    // console.log(accountsTokenArray);
 
     const findIndex = accountsTokenArray.findIndex((el: any) => {
       if (el.uuid === uuid) {

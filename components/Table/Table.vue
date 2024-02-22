@@ -75,7 +75,6 @@ const displayed = computed( ()=>{
 })
 
 function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) {
-    console.log(key +'_'+ value)
     if(key =='skip') {
         value = listData.search.limit * (value - 1)
     }

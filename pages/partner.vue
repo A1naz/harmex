@@ -86,7 +86,6 @@ const pageNum = ref(tablePartner.value?.pageNum || 1);
 const currentPage = ref(tablePartner.value?.currentPage || 1);
 
 const updateInfo = (newPageNum: number, newCurrentPage: number) => {
-    console.log('Update info. CurrentPage: ', newCurrentPage)
     pageNum.value = newPageNum;
     currentPage.value = newCurrentPage;
 };

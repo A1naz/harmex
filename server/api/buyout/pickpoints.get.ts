@@ -9,8 +9,7 @@ export default eventHandler(async (event) => {
   if (fs.existsSync('points.json')) {
     const cached = fs.readFileSync('points.json', 'utf8')
     const parsed = JSON.parse(cached)
-    console.log(parsed.points.length);
-    
+ 
     const now = new Date()
     const diff = now.getTime() - new Date(parsed.updated).getTime()
     if (diff < 1000 * 60 * 60) {

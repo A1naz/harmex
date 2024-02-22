@@ -23,21 +23,16 @@ export default function getQR() {
   async function getCodeAndDoSomething() {
     try {
       code = await getQR()
-      // Ваш код, который использует значение code
-      console.log(code)
-      // Вы можете использовать code здесь, или вернуть его из функции, если необходимо
+
       return code
     } catch (error) {
-      // Обработка ошибки
+
       console.error(error)
-      return undefined // или другое значение по умолчанию
+      return undefined 
     }
   }
 
-  // Где-то в вашем коде вызывайте getCodeAndDoSomething()
   getCodeAndDoSomething().then((result) => {
-    // Вы можете использовать result здесь, если необходимо
-    console.log(result)
   })
   
 
