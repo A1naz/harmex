@@ -214,7 +214,7 @@ const updateSearchType = (filter: any) => {
           <!-- <CustomSelect :rangesConfig="['Лайки на товар/бренд', 'Лайки на отзыв']" :category="true" @change-text="changePage"/> -->
           <button
             class="text-gray-500 hover:text-gray-700 self-end mb-2"
-            @click="modalShow = false; currentFilter = ''"
+            @click="modalShow = false"
           >
             <Icon name="material-symbols:close-rounded" size="24" />
           </button>
@@ -605,105 +605,122 @@ const updateSearchType = (filter: any) => {
     </div> -->
     <div v-if="product_likes.length" class="mt-6">
       <table class="table table-sm">
-          <!-- head -->
-          
-          <thead>
-            <tr class="bg-primary bg-opacity-5">
-              <!-- <th class="text-center">№</th> -->
-              <th class="text-center">Фото</th>
-              <th class="text-center">Название</th>
-              <th class="text-center">Ссылка</th>
-              <th class="text-center">Тип</th>
-              <th class="text-center">Количество</th>
-              <th class="text-center">Статус</th>
-              <th class="text-center">Дата создания</th>
-              <th class="text-center">Дата завершения</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="bg-base-200" v-for="(item, index) in product_likes" :key="index">
-              <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
-              <td class="text-center border-r border-primary border-opacity-5 mx-auto">
-                <div style="
-                  width: 28px;
-                  height: 36px;
-                  border-radius: 4px;"
-                  class="mx-auto"
-                >
-              <div class="dropdown dropdown-hover">
-                <label tabindex="0">
-                  <nuxt-img
-                    class="rounded-lg z-0"
-                    alt=""
-                    loading="lazy"
-                    fit="fill"
-                    :src="item.image"
-                  />
-                </label>
-                <ul
-                  tabindex="0"
-                  class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
-                >
-                  <nuxt-img
-                    class="rounded-lg z-[1]"
-                    loading="lazy"
-                    fit="fill"
-                    :src="item.image"
-                  />
-                </ul>
-              </div>  
-            </div>
-              </td>
-              <td class="text-center border-r border-primary border-opacity-5 text-base-content truncate"> 
-                <span class="whitespace-normal break-words max-w-[150px]">{{ item.name }}</span>
-              </td>
-              <td class="text-center border-r border-primary border-opacity-5 text-primary overflow-x-auto max-w-[250px] truncate">
-                <a
-                  :href="item.url"
-                  target="_blank"
-                  class="text-primary link link-hover whitespace-normal break-words "
-                >
-                  <span class="max-w-[150px] truncate">{{ item.url }}</span>
-                </a>  
-              </td>
-              <td class="text-center border-r border-primary border-opacity-5"> 
-                <div class="flex flex-col">
-                  {{ item.type === 'brand' ? 'Лайк на бренд' : 'Лайк на товар' }}
-                </div>
-               
-              </td>
-              <td class="text-center border-r border-primary border-opacity-5"> 
-                <div class="flex flex-col">
-                  {{ item.amount }}
-                </div>
-               
-              </td>
-            
-              <td class="text-center border-r border-primary border-opacity-5"><div
-                :class="{
-                'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                  item.status === 'nofunds',
-                'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
-                item.status === 'created',
-                'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
-                item.status === 'work',
-                'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
-                item.status === 'completed',
-              }"
+        <!-- head -->
+
+        <thead>
+          <tr class="bg-primary bg-opacity-5">
+            <!-- <th class="text-center">№</th> -->
+            <th class="text-center">Фото</th>
+            <th class="text-center">Название</th>
+            <th class="text-center">Ссылка</th>
+            <th class="text-center">Тип</th>
+            <th class="text-center">Количество</th>
+            <th class="text-center">Статус</th>
+            <th class="text-center">Дата создания</th>
+            <th class="text-center">Дата завершения</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="bg-base-200"
+            v-for="(item, index) in product_likes"
+            :key="index"
+          >
+            <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
+            <td
+              class="text-center border-r border-primary border-opacity-5 mx-auto"
             >
-              {{ getStatus(item.status) }}
-            </div></td>
+              <div
+                style="width: 28px; height: 36px; border-radius: 4px"
+                class="mx-auto"
+              >
+                <div class="dropdown dropdown-hover">
+                  <label tabindex="0">
+                    <nuxt-img
+                      class="rounded-lg z-0"
+                      alt=""
+                      loading="lazy"
+                      fit="fill"
+                      :src="item.image"
+                    />
+                  </label>
+                  <ul
+                    tabindex="0"
+                    class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
+                  >
+                    <nuxt-img
+                      class="rounded-lg z-[1]"
+                      loading="lazy"
+                      fit="fill"
+                      :src="item.image"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </td>
+            <td
+              class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
+            >
+              <span class="whitespace-normal break-words max-w-[150px]">{{
+                item.name
+              }}</span>
+            </td>
+            <td
+              class="text-center border-r border-primary border-opacity-5 text-primary overflow-x-auto max-w-[250px] truncate"
+            >
+              <a
+                :href="item.url"
+                target="_blank"
+                class="text-primary link link-hover whitespace-normal break-words"
+              >
+                <span class="max-w-[150px] truncate">{{ item.url }}</span>
+              </a>
+            </td>
             <td class="text-center border-r border-primary border-opacity-5">
-              <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">{{ defaultDateShort(item.createdDate) }}</div>
-              </td>
+              <div class="flex flex-col">
+                {{ item.type === 'brand' ? 'Лайк на бренд' : 'Лайк на товар' }}
+              </div>
+            </td>
             <td class="text-center border-r border-primary border-opacity-5">
-              <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
+              <div class="flex flex-col">
+                {{ item.amount }}
+              </div>
+            </td>
+
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div
+                :class="{
+                  'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                    item.status === 'nofunds',
+                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                    item.status === 'created',
+                  'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                    item.status === 'work',
+                  'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                    item.status === 'completed',
+                }"
+              >
+                {{ getStatus(item.status) }}
+              </div>
+            </td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div
+                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+              >
+                {{ defaultDateShort(item.createdDate) }}
+              </div>
+            </td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div
+                v-if="item.endedDate"
+                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+              >
                 {{ defaultDateShort(item.endedDate) }}
               </div>
             </td>
-            </tr>
-            <div ref="target" class="flex justify-center items-center h-4" />
-          </tbody>
+          </tr>
+          <div ref="target" class="flex justify-center items-center h-4" />
+        </tbody>
       </table>
       <!-- <DataTable class="bg-base-200" :value="product_likes" showGridlines>
         <Column
