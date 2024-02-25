@@ -180,7 +180,7 @@ function openReview(data: any) {
         <div class="flex gap-4 items-center">
             <ExportXls 
                 api="/api/paymenthistory/export"
-                fileName="Финансовый отчет услуг TOPVTOP.xlsx"
+                fileName="Финансовый отчет услуг OZONMP.xlsx"
                 :isVisible="history.length ? true : false"
             />
         </div>

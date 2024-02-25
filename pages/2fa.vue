@@ -110,7 +110,7 @@ async function logout() {
             src="/logo/logocolor.svg"
             :width="'100px'"
             :height="'44px'"
-            alt="TOPVTOP"
+            alt=""
             srcset=""
           />
           <nuxt-img
@@ -118,7 +118,7 @@ async function logout() {
             src="/logo/logowhite.svg"
             :width="'100px'"
             :height="'44px'"
-            alt="TOPVTOP"
+            alt=""
             srcset=""
           />
         </div>

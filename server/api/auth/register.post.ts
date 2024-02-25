@@ -14,7 +14,23 @@ function hasWhiteSpace(s: string) {
 export default eventHandler(async (event) => {
   const body = await readBody(event)
 
-  const { email, password, referral } = body
+  const {
+    email,
+    password,
+    referral,
+    orgKey,
+    orgName,
+    orgOgrn,
+    orgInn,
+    lastname,
+    name,
+    middleName,
+    phoneNumber,
+  } = body
+
+  if (!name || !lastname) {
+    return { status: 'error', error: 'Некорректное имя' }
+  }
 
   if (!email || !password)
     return { status: 'error', error: 'missing email or password' }
@@ -26,13 +42,6 @@ export default eventHandler(async (event) => {
     }
   }
 
-  // if (hasWhiteSpace(password)) {
-  //   return {
-  //     status: 'error',
-  //     error:
-  //       'Пароль не должен содержать пробелов, и состоять только из английских букв и цифр.',
-  //   }
-  // }
   if (password.length < 6 || password.length > 36) {
     return {
       status: 'error',
@@ -52,10 +61,30 @@ export default eventHandler(async (event) => {
     }
   }
 
+  const checkNumber = await User.findOne({
+    phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
+  })
+
+  if (checkNumber) {
+    return {
+      status: 'error',
+      error: 'Пользователь с таким номером телефона уже существует.',
+    }
+  }
+
+  const checkInn = await User.findOne({
+    orgInn: { $regex: new RegExp(orgInn, 'i') },
+  })
+  if (checkInn) {
+    return {
+      status: 'error',
+      error: 'Пользователь с таким ИНН уже существует.',
+    }
+  }
+
   const hash = bcrypt.hashSync(password, 7)
 
   const plan = await Plans.findOne({ name: 'Standart' })
-
   if (!plan)
     return {
       status: 'error',
@@ -72,6 +101,14 @@ export default eventHandler(async (event) => {
     roles: ['user'],
     tariff: plan.tariff,
     uuid: uuid(),
+    orgKey,
+    orgName,
+    orgOgrn,
+    orgInn,
+    lastname,
+    name,
+    middleName,
+    phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
   })
   await user.save()
   const url = useRuntimeConfig().PUBLIC_SITE_URL
@@ -110,3 +147,4 @@ export default eventHandler(async (event) => {
 
   return { status: 'ok', error: null }
 })
+

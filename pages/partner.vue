@@ -174,7 +174,7 @@ function defaultFilter(r: number){
                     />
                     <ExportXls 
                         api="/api/partner/referals-export"
-                        fileName="TOPVTOP - Статистика партнеров"
+                        fileName="OZONMP - Статистика партнеров"
                         :config-columns="listConfigPartners"
                         :isVisible="true"
                         />
@@ -215,7 +215,7 @@ function defaultFilter(r: number){
                     />
                     <ExportXls 
                         api="/api/partner/orders-export"
-                        fileName="TOPVTOP - Заказы партнеров"
+                        fileName="OZONMP - Заказы партнеров"
                         :config-columns="listConfigOrders"
                         :isVisible="true"
                         />

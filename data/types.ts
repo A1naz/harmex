@@ -20,33 +20,40 @@ export interface StateMain {
 }
 
 export interface IUser extends Entity {
-    isBanned: boolean,
-    username: string | undefined,
-    firstName: string,
-    lastName: string,
-    email: string,
-    wbApiKey: string,
-    wbApiKeys: [],
-    password: string,
-    uuid: string,
-    uuidCompany: string,
-    acesses: string[],
-    roles: UserRoles[],
-    tabs: string,
-    newEmail: string,
-    emailConfirmed: boolean,
-    telegram: string | undefined,
-    telegramUserId: string,
-    telegramUnlinkEmailSend: Date,
-    tg2fa: boolean,
-    balance: number,
-    registrationDate: Date,
-    partner: Partner,
+    orgKey: string
+    orgName: string
+    orgOgrn: string
+    orgInn: string
+    middleName: string
+    phoneNumber: string
+    isBanned: boolean
+    username: string | undefined
+    firstName: string
+    lastName: string
+    email: string
+    wbApiKey: string
+    wbApiKeys: []
+    password: string
+    uuid: string
+    uuidCompany: string
+    acesses: string[]
+    roles: UserRoles[]
+    tabs: string
+    newEmail: string
+    emailConfirmed: boolean
+    telegram: string | undefined
+    telegramUserId: string
+    telegramUnlinkEmailSend: Date
+    tg2fa: boolean
+    balance: number
+    registrationDate: Date
+    partner: Partner
     tariff: ITariff
     twoFaQR: string
     twoFaSecret: string
     isTwoFaEnabled: boolean
-    post: Object,
+    post: Object
+  
 }
 
 export interface IUserLogs extends Entity {

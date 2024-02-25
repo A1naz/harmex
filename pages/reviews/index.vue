@@ -225,7 +225,7 @@ const statusText = computed(() => {
       <div class="flex w-full gap-2 lg:hidden">
         <ExportXls
           api="/api/review/export"
-          fileName="TOPVTOP Доступные отзывы"
+          fileName="OZONMP Доступные отзывы"
           :isVisible="true"
         />
           <input
@@ -336,7 +336,7 @@ const statusText = computed(() => {
       <div class="flex gap-1 items-center">
         <ExportXls
           api="/api/review/export"
-          fileName="TOPVTOP Доступные отзывы"
+          fileName="OZONMP Доступные отзывы"
           :isVisible="true"
         /></div>
         </div>
@@ -346,7 +346,7 @@ const statusText = computed(() => {
       <div class="flex gap-1 items-center">
         <ExportXls
           api="/api/review/export"
-          fileName="TOPVTOP Доступные отзывы"
+          fileName="OZONMP Доступные отзывы"
           :isVisible="true"
         />
         <NuxtLink 

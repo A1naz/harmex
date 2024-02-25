@@ -3,7 +3,7 @@ import qrcode from 'qrcode'
 
 export default function getQR() {
   const secret: any = speakeasy.generateSecret({
-    name: 'TOPVTOP',
+    name: 'OZONMP',
   })
 
   const getQR = () => {

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core'
 import { email, helpers, minLength, required, sameAs } from '@vuelidate/validators'
+import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({
   colorMode: 'dark',
@@ -9,10 +10,16 @@ definePageMeta({
 })
 const name = useRuntimeConfig().NAME
 
+const isCodeSent = ref(false)
+const confirmationCodeInput = ref<any>(null)
+const isNumberConfirmed = ref(false)
+const router = useRouter()
+
 const formData = reactive({
   email: '',
   password: '',
   confirmPassword: '',
+  verificationCode: '',
 })
 const alert = reactive({
   show: false,
@@ -22,8 +29,7 @@ const alert = reactive({
 const rules = computed(() => {
   return {
     email: {
-      required: helpers.withMessage('Введите email', required),
-      email: helpers.withMessage('Введите корректный email', email),
+     
     },
     password: {
       required: helpers.withMessage('Введите пароль', required),
@@ -44,7 +50,6 @@ async function submitForm() {
     method: 'POST',
     body: formData,
   })
-
   if (error.value) {
     alert.show = true
     alert.type = 'error'
@@ -54,12 +59,72 @@ async function submitForm() {
     }, 3000)
   }
   else {
-    alert.show = true
-    alert.type = 'success'
-    alert.message = 'Письмо для смены пароля отправлено'
-    useTimeoutFn(() => {
-      alert.show = false
-    }, 3000)
+    // alert.show = true
+    // alert.type = 'success'
+    // alert.message = 'Пароль успешно изменен'
+    // useTimeoutFn(() => {
+    //   alert.show = false
+    // }, 3000)
+   router.push('/auth?passwordChanged=true')
+  }
+}
+
+async function sendConfirmCode() {
+  if (formData.email.replace(/[\(\)\-\s]/g, '').length < 11) {
+    notify({
+      title: 'Введите корректный номер',
+    })
+    return
+  }
+  const { data, error }: any = await useFetch(
+    '/api/organization/confirmPhone',
+    {
+      method: 'POST',
+      body: {
+        phoneNumber: formData.email.replace(/[\(\)\-\s]/g, ''),
+      },
+    }
+  )
+
+  if (data.value.status == 'ok') {
+    isCodeSent.value = true
+    confirmationCodeInput.value.focus()
+    notify({
+      type: 'success',
+      title: 'Код отправлен',
+    })
+  } else {
+    notify({
+      type: 'error',
+      title: data.value.message,
+    })
+  }
+}
+
+async function confirmCode() {
+  const { data, error }: any = await useFetch(
+    '/api/organization/confirmPhone',
+    {
+      method: 'GET',
+      params: {
+        phoneNumber: formData.email.replace(/[\(\)\-\s]/g, ''),
+        code: formData.verificationCode,
+      },
+    }
+  )
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: 'Код подтвержден',
+    })
+
+    isCodeSent.value = false
+    isNumberConfirmed.value = true
+  } else {
+    notify({
+      type: 'error',
+      title: 'Неверный код',
+    })
   }
 }
 </script>
@@ -70,23 +135,33 @@ async function submitForm() {
       {{ alert.message }}
     </Toast>
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-      <NuxtLink to="/" class="flex items-center text-2xl font-semibold ">
-        <Logo />
-      </NuxtLink>
       <div class="card w-full p-6 rounded-lg shadow-lg  md:mt-0 sm:max-w-md sm:p-8">
         <h2 class="mb-1 text-xl font-bold leading-tight tracking-tight  md:text-2xl ">
           Смена пароля
         </h2>
         <form class="mt-4 space-y-4 lg:mt-5 md:space-y-5 relative" action="#">
-          <div>
-            <label for="email" class="block mb-2 text-sm font-medium  ">Email</label>
-            <input
-              id="email" v-model="formData.email" type="email" name="email"
-              class="input input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              :class="{
-                'input-error': v$.email.$error,
-              }" placeholder="name@company.com"
-            >
+          <div >
+            <label for="email" class="block mb-2 text-sm font-medium  ">Номер телефона</label>
+            <div class="join w-full">
+              
+              <input
+                id="email" v-model="formData.email" name="email"
+                class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                :class="{
+                  'input-error': v$.email.$error,
+                }" 
+                v-maska
+                data-maska="+7 (###) ###-##-##"
+                placeholder="+7 (___) ___-__-__"
+              >
+              <button
+                v-if="!isCodeSent"
+                class="btn join-item rounded-r-full"
+                @click.prevent="sendConfirmCode"
+              >
+                Код
+              </button>
+            </div>
             <div
               v-for="error of v$.email.$errors"
               :key="error.$uid" class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
@@ -94,6 +169,30 @@ async function submitForm() {
               <div class="error-msg">
                 {{ error.$message }}
               </div>
+            </div>
+            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium mt-5">
+              Код верификации с звонка
+            </label>
+            <div class="join w-full">
+              <input
+                ref="confirmationCodeInput"
+                :disabled="isNumberConfirmed || !isCodeSent"
+                id="verificationCode"
+                v-model="formData.verificationCode"
+                type="number"
+                name="verificationCode"
+                class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder=""
+                required="true"
+                @keydown.enter="confirmCode"
+              />
+              <button
+                :disabled="!isCodeSent || isNumberConfirmed"
+                class="btn join-item rounded-r-full"
+                @click.prevent="confirmCode"
+              >
+                <IconCSS class="w-12 h-12" size="20" name="mdi:check" />
+              </button>
             </div>
           </div>
           <div>
@@ -104,6 +203,7 @@ async function submitForm() {
               :class="{
                 'input-error': v$.password.$error,
               }" placeholder="••••••••"
+              :disabled="!isNumberConfirmed"
             >
             <div
               v-for="error of v$.password.$errors"
@@ -122,6 +222,7 @@ async function submitForm() {
               class="input input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" :class="{
                 'input-error': v$.confirmPassword.$error,
               }" name="confirm-password" placeholder="••••••••"
+              :disabled="!isNumberConfirmed"
             >
             <div
               v-if="v$.confirmPassword.$errors"
@@ -132,7 +233,7 @@ async function submitForm() {
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary block w-full" @click.prevent="submitForm">
+          <button type="submit" class="btn btn-primary block w-full" @click.prevent="submitForm" :disabled="!isNumberConfirmed">
             Сменить пароль
           </button>
         </form>

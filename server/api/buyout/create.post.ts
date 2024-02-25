@@ -80,8 +80,6 @@ export default eventHandler(async (event) => {
       product.dateRange = [date1, date2]
     }
 
-    console.log(product);
-
     let city, state
       ;({ city, state } = await getCityByGeo(product.pointCoordinates.lat.toString(),  product.pointCoordinates.lon.toString()))
 

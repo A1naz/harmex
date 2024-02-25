@@ -5,6 +5,16 @@ import { email, helpers, minLength, required } from '@vuelidate/validators'
 
 const store = useMainStore()
 
+onMounted(() => {
+  const isPageReloaded = localStorage.getItem('isPageReloaded')
+
+  if (!isPageReloaded) {
+    localStorage.setItem('isPageReloaded', 'true')
+
+    window.location.reload()
+  }
+})
+
 definePageMeta({
   colorMode: 'dark',
   auth: {
@@ -101,100 +111,77 @@ const v$ = useVuelidate(rules, formData)
 </script>
 
 <template>
-  <div id="auth">
-    <!-- <Toast :type="alertType" style="z-index: 1000" :active="alert">
+  <div id="auth" class="flex sm:items-center sm:justify-center h-screen">
+    <Toast :type="alertType" style="z-index: 1000" :active="alert">
       {{ alertText }}
     </Toast>
 
-    <section class="left">
-      <h3>Войдите в аккаунт</h3>
+    <section
+      class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3"
+    >
+      <h3 class="font-bold text-xl">Войдите в аккаунт</h3>
 
-      <div class="box">
-        <form>
-          <label>Email <span>*</span></label>
-          <input
-            id="email"
-            v-model="formData.email"
-            type="email"
-            name="email"
-            placeholder="Введите свой email"
-            :class="{
-              'input-error': v$.email.$error,
-            }"
-            required="true"
-          />
+      <div class="box flex flex-col gap-3">
+        <form class="flex flex-col gap-3">
+          <div class="flex flex-col gap-1">
+            <label>Номер телефона </label>
+            <input
+              v-maska
+              data-maska="+7 (###) ###-##-##"
+              v-model="formData.email"
+              placeholder="+7 (___) ___-__-__"
+              required="true"
+              class="input"
+            />
+          </div>
+          <div class="flex flex-col gap-1">
+            <label>Пароль </label>
+            <div class="flex flex-col gap-0.5">
+              <input
+                id="password"
+                v-model="formData.password"
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                required="true"
+                class="input"
+              />
+              <NuxtLink class="text-primary my-1" href="/resetPassword">
+                Забыли пароль?
+              </NuxtLink>
+            </div>
+          </div>
 
-          <label>Пароль <span>*</span></label>
-          <input
-            id="password"
-            v-model="formData.password"
-            type="password"
-            name="password"
-            placeholder="••••••••"
-            :class="{
-              'input-error': v$.password.$error,
-            }"
-            required="true"
-          />
+          <div class="flex flex-col gap-0.5">
+            <button
+              type="submit"
+              class="btn btn-primary w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              @click.prevent="login"
+            >
+              <span v-show="loading" class="loading loading-spinner" />
 
-          <NuxtLink href="/resetPassword"> Забыли пароль? </NuxtLink>
-          <button
-            type="submit"
-            class="btn btn-primary w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            @click.prevent="login"
-          >
-            <span v-show="loading" class="loading loading-spinner" />
+              Войти
+            </button>
 
-            Войти
-          </button>
-
-          <p>
-            Ещё не зарегистрированы?
-            <NuxtLink href="/register"> Регистрация </NuxtLink>
-          </p>
+            <p class="mt-3 mb-1">
+              Ещё не зарегистрированы?
+              <NuxtLink href="/register" class="text-primary underline">
+                Регистрация
+              </NuxtLink>
+            </p>
+          </div>
         </form>
 
-        <div class="line">
-          <div />
-          <p>Или</p>
-          <div />
-        </div>
-        <TelegramLoginButton mode="callback" />
-
-        <p class="text">
-          *Регистрируясь вы принимаете
+        <!-- 
+        <p class="text-xs text-gray-500">
+          Регистрируясь вы принимаете
           <a href="/user_agreement.pdf" target="_blank">Пользовательское соглашение</a>, <br />
           и подтверждаете, что ознакомлены с
           <a href="/conf_policy.pdf" target="_blank">Политикой конфиденциальности</a>.
-        </p>
+        </p> -->
       </div>
-      <div class="mb-20"></div>
     </section>
-
-    <section class="right">
-      <div class="box">
-        <div class="logo">ozon</div>
-
-        <h1>
-          Самовыкупы на <br />
-          OZON
-        </h1>
-        <h2>
-          <span>[</span> комплексное продвижение <br />
-          - попробовать бесплатно <span>]</span>
-        </h2>
-      </div>
-
-      <img class="phone" src="~/assets/phone.png" alt="" />
-
-      <img class="figure1" src="~/assets/figure1.svg" alt="" />
-      <img class="figure2" src="~/assets/figure2.svg" alt="" />
-      <img class="figure3" src="~/assets/figure3.svg" alt="" />
-      <img class="line" src="~/assets/line.svg" alt="" />
-    </section> -->
   </div>
 </template>
 
-<style scoped>
-@import url('~/assets/style/preview.css');
-</style>
+<style scoped></style>

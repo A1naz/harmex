@@ -622,11 +622,11 @@ async function openTwoFaQRModal() {
             <div class="mt-1 text-gray-40">
               Ссылка на бота:
               <a
-                href="https://t.me/topvtop_notifications_bot"
+
                 target="_blank"
                 class="text-primary text-lg"
               >
-                @topvtop_notifications_bot</a
+                @ozonmp_notifications_bot</a
               >
             </div>
           </div>

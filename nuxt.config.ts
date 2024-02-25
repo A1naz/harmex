@@ -1,22 +1,27 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 const baseUrl = '/'
-const description = 'Уникальные самовыкупы для OZON с OZONMP - Повысьте репутацию и продажи с нашим сервисом. Эффективная аналитика товаров на OZON для успешного продвижения на Валберис.'
+const description =
+  'Уникальные самовыкупы для OZON с OZONMP - Повысьте репутацию и продажи с нашим сервисом. Эффективная аналитика товаров на OZON для успешного продвижения на Валберис.'
 
 export default defineNuxtConfig({
   app: {
     baseURL: baseUrl,
     head: {
       viewport: 'width=device-width,initial-scale=1',
-      title: 'Сервис самовыкупов OZON - Максимизируйте продвижение на OZON с OZONMP',
+      title:
+        'Сервис самовыкупов OZON - Максимизируйте продвижение на OZON с OZONMP',
       link: [{ rel: 'icon', href: '/favicon.svg' }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: description },
-        { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
-        { name: "yandex-verification", content: "8b9387e0d0a4e1a8" }
-      ]
-    }
+        {
+          name: 'apple-mobile-web-app-status-bar-style',
+          content: 'black-translucent',
+        },
+        { name: 'yandex-verification', content: '8b9387e0d0a4e1a8' },
+      ],
+    },
   },
 
   colorMode: {
@@ -50,7 +55,7 @@ export default defineNuxtConfig({
     id: '95774883',
   },
   gtag: {
-    id: 'G-3CZQZ6GGTK'
+    id: 'G-3CZQZ6GGTK',
   },
 
   lazyLoad: {
@@ -100,7 +105,7 @@ export default defineNuxtConfig({
     '@morev/vue-transitions/nuxt',
     '@sidebase/nuxt-pdf',
     '@artmizu/yandex-metrika-nuxt',
-    'nuxt-gtag'
+    'nuxt-gtag',
   ],
 
   css: [
@@ -111,9 +116,7 @@ export default defineNuxtConfig({
     '@vuepic/vue-datepicker/dist/main.css',
   ],
 
-  extends: [
-    'nuxt-seo-kit',
-  ],
+  extends: ['nuxt-seo-kit'],
 
   s3: {
     client: {
@@ -144,7 +147,14 @@ export default defineNuxtConfig({
 
   primevue: {
     components: {
-      include: ['DataTable', 'Column', 'Chips', 'MultiSelect', 'Button', 'DataView'],
+      include: [
+        'DataTable',
+        'Column',
+        'Chips',
+        'MultiSelect',
+        'Button',
+        'DataView',
+      ],
     },
   },
 
@@ -184,6 +194,8 @@ export default defineNuxtConfig({
     server_ip: process.env.server_ip,
     service_id: process.env.service_id,
     CHANGING_PROXY: process.env.CHANGING_PROXY,
+    ORGANIZATION_KEY: process.env.ORGANIZATION_KEY,
+    HI_CALL_KEY: process.env.HI_CALL_KEY,
   },
 
   security: {

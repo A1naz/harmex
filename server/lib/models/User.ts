@@ -12,6 +12,13 @@ const partnerSchema = new Schema({
 })
 
 const UserSchema = new Schema<IUserSchema>({
+  orgKey: { type: String },
+  orgName: { type: String },
+  orgOgrn: { type: String },
+  orgInn: { type: String, required: true, unique: true },
+  middleName: { type: String },
+  phoneNumber: { type: String },
+
   isBanned: { type: Boolean, default: false },
   username: { type: String, unique: true, required: true },
   firstName: { type: String, required: false },
