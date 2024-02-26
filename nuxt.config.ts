@@ -31,8 +31,8 @@ export default defineNuxtConfig({
   },
 
   auth: {
-    origin: process.env.PUBLIC_SITE_URL || 'https://app.topvtop.pro',
-    enableGlobalAppMiddleware: false,
+    origin: process.env.PUBLIC_SITE_URL || 'https://app.ozonmp.ru',
+    enableGlobalAppMiddleware: true,
     defaultProvider: 'credentials',
   },
 
