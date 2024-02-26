@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const { status } = useAuth()
 
   if (status.value === 'authenticated') {
-    if (to.path === '/auth' || to.path === '/register' || to.path === '/') {
+    if (to.path === '/auth' || to.path === '/register' || to.path === '/' || to.path === '/resetPassword') {
       return navigateTo('/buyouts')
     }
 
