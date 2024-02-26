@@ -134,7 +134,7 @@ async function confirmCode() {
     <Toast :type="alert.type" :active="alert.show">
       {{ alert.message }}
     </Toast>
-    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
       <div class="card w-full p-6 rounded-lg shadow-lg  md:mt-0 sm:max-w-md sm:p-8">
         <h2 class="mb-1 text-xl font-bold leading-tight tracking-tight  md:text-2xl ">
           Смена пароля
@@ -156,7 +156,7 @@ async function confirmCode() {
               >
               <button
                 v-if="!isCodeSent"
-                class="btn join-item rounded-r-full"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
                 @click.prevent="sendConfirmCode"
               >
                 Код
@@ -188,10 +188,10 @@ async function confirmCode() {
               />
               <button
                 :disabled="!isCodeSent || isNumberConfirmed"
-                class="btn join-item rounded-r-full"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
                 @click.prevent="confirmCode"
               >
-                <IconCSS class="w-12 h-12" size="20" name="mdi:check" />
+                <IconCSS  size="27" name="mdi:check" />
               </button>
             </div>
           </div>
@@ -199,7 +199,7 @@ async function confirmCode() {
             <label for="password" class="block mb-2 text-sm font-medium  ">Новый пароль</label>
             <input
               id="password" v-model="formData.password" type="password" name="password"
-              class="input input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
               :class="{
                 'input-error': v$.password.$error,
               }" placeholder="••••••••"
@@ -219,7 +219,7 @@ async function confirmCode() {
             <input
               id="confirm-password" v-model="formData.confirmPassword"
               type="password"
-              class="input input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" :class="{
+              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" :class="{
                 'input-error': v$.confirmPassword.$error,
               }" name="confirm-password" placeholder="••••••••"
               :disabled="!isNumberConfirmed"
