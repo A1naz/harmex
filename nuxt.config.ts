@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   },
 
   auth: {
-    origin: process.env.PUBLIC_SITE_URL || 'https://app.ozonmp.ru',
+    origin: process.env.PUBLIC_SITE_URL || 'https://app.wbmp.pro',
     enableGlobalAppMiddleware: true,
     defaultProvider: 'credentials',
   },
@@ -177,6 +177,7 @@ export default defineNuxtConfig({
     env: process.env.ENV_WORK,
     indexable: true,
     MONGODB_URI: process.env.MONGODB_URI,
+    WB_DB_URI: process.env.WB_DB_URI,
     SECRET: process.env.SECRET,
     smtpHost: process.env.smtpHost,
     smtpPort: process.env.smtpPort,
