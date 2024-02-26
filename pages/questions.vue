@@ -95,6 +95,58 @@ function removeProduct() {
 onMounted(() => {
 
 })
+
+const search = reactive({
+  text: '',
+  loading: false,
+  error: false,
+  type: 'article',
+})
+const codeInput = ref()
+
+async function selectFilterDate(e: any) {
+  const target = e
+  const { data } = await useFetch('/api/questions/get', {
+    method: 'GET',
+    query: {
+      dateFilter: target.value,
+    },
+    watch: false,
+  })
+  questions.value = data.value
+}
+
+async function findBuyouts(value: string, type: string) {
+  if (!value) {
+    search.loading = false
+    await getQuestions()
+    return
+  }
+  const { data, error } = await useFetch('/api/questions/get', {
+    query: {
+      string: value,
+      type,
+    },
+    watch: false,
+  })
+  if (data.value) questions.value = data.value
+
+  search.loading = false
+}
+
+const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
+
+async function onSearchInput(event: Event) {
+  const newValue = (event.target as HTMLInputElement).value
+  search.loading = true
+  findBuyoutsDebounced(search.text, search.type)
+}
+
+const updateSearchType = (filter: any) => {
+  search.type = filter.value
+}
+
+const modalShow = ref<boolean>(false);
 </script>
 
 <template>
@@ -102,199 +154,226 @@ onMounted(() => {
     <!-- <h1 class="text-2xl font-bold mt-4">
       Вопросы
     </h1> -->
-    <p class="text-xs font-light mt-4 lg:text-sm">
+    <!-- <p class="text-xs font-light mt-4 lg:text-sm">
       Выберите товар, чтобы добавить конкретные вопросы к нему
     </p>
     <p class="text-xs font-light mt-1 lg:text-sm">
       Стоимость одного вопроса -  
       <span class="font-bold"> {{ store.tariffString('questionProduct') }} </span>
       Все услуги оказываются по Московскому времени.
-    </p>
-    <div class="collapse collapse-plus bg-base-100 rounded-box mb-4 mt-6">
+    </p> -->
+    <QuestionsCreateQuest :show="modalShow" @close-modal="modalShow = false"/>
+    <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
+      <div class="flex gap-1 lg:gap-4">
+     
+
+        <button @click="modalShow = true" class="btn btn-primary font-normal btn-sm">
+          <Icon name="fluent:add-24-filled" size="17" />
+          Вопрос
+        </button>
+
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'Все вопросы', value: 'all' },
+            { title: 'Активные', value: 'created' },
+            { title: 'Завершенные', value: 'completed' },
+          ]"
+          @change-value="selectFilterDate"
+        />
+        <div class="relative justify-end flex-grow-0 w-full lg:hidden">
+          
+          <input
+            type="text"
+            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            placeholder="Поиск по вопросам"
+            ref="codeInput" 
+            v-model="search.text"
+            @input="onSearchInput($event)"
+          />
+          <span
+            v-if="search.loading"
+            class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
+          />
+          <Icon
+            v-else
+            class="absolute right-0.5 p-2 my-auto text-gray-500"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
+          />
+        </div>
+      </div>
+      <div class="flex gap-2 lg:gap-5">
+        <CustomSelect
+          class="lg:hidden"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'Все вопросы', value: 'all' },
+            { title: 'Активные', value: 'created' },
+            { title: 'Завершенные', value: 'completed' },
+          ]"
+          @change-value="selectFilterDate"
+        />
+
+        <CustomSelect
+          :class="'bg-base-300 sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'За все время', value: 'all' },
+            { title: 'Сегодня', value: 'today' },
+            { title: '3 дня', value: '3days' },
+            { title: 'Неделя', value: '7days' },
+          ]"
+          @change-value="selectFilterDate"
+        />
+
+        <CustomSelect
+          :class="'bg-base-300'"
+          :tabs="[{ title: 'Артикул', value: 'article' }]"
+          @change-value="updateSearchType"
+        />
+        <div class="relative justify-end flex-grow-0 w-full hidden lg:flex">
+          <input
+            ref="codeInput"
+            v-model="search.text"
+            type="text"
+            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            placeholder="Поиск по вопросам"
+            @input="onSearchInput($event)"
+          />
+          <span
+            v-if="search.loading"
+            class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
+          />
+          <Icon
+            v-else
+            class="absolute right-0.5 p-2 my-auto text-gray-500"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- <div class="collapse collapse-plus bg-base-100 rounded-box mb-4 mt-6">
       <input type="checkbox" >
 
       <div class="collapse-title text-xl font-medium">
         Добавить вопрос
       </div>
       <div class="collapse-content">
-        <div class=" bg-base-200 rounded-lg">
-          <div class="flex items-center gap-6 mb-2 flex-wrap lg:flex-nowrap">
-            <div class="relative w-full lg:w-1/3">
-              <div>Артикул:</div>
-              <div class="input-group w-full mt-2">
-                <input
-                  v-model="article"
-                  :class="{
-                    'input-error': urlError,
-                    'input-success': productData,
-                  }"
-                  :disabled="productData"
-                  tabindex="0" class="input input-sm w-full" placeholder="12312312" type="text" @input="changeUrl"
-                >
-                <button
-                  :class="{
-                    'btn-disabled': !productData,
-                  }"
-                  class="btn btn-ghost btn-sm btn-circle bg-base-100" @click="removeProduct"
-                >
-                  <span v-show="loadingUrl" class="loading loading-spinner loading-xs p-2" />
-
-                  <!-- Insert a backspace svg -->
-                  <div v-if="!loadingUrl">
-                    <IconCSS v-if="productData" class="w-6 h-6" name="fluent:backspace-24-regular" />
-                  </div>
-                </button>
-              </div>
-            </div>
-            <div class="w-full lg:w-2/3">
-              <div>Дата публикации:</div>
-              <div class="relative w-full p-4 bg-base-100 rounded-lg mt-2">
-                <div class="absolute left-3 top-1.5 text-sm mt-auto">
-                  {{ publishDate <= now ? 'Опубликовать сейчас'
-                    : defaultDate(publishDate) }}
-                </div>
-                <div class="absolute right-0 top-0 w-60" style="z-index: 9999999">
-                  <DatePicker timezone="Europe/Moscow" v-model="publishDate" class="w-40" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mt-4 flex gap-6 items-start flex-wrap lg:flex-nowrap">
-            <div class="w-full lg:w-1/3">
-              <div>Пол:</div>
-              <select class="select select-sm w-full mt-2" @change="selectSex">
-                <option value="male">
-                  Мужской
-                </option>
-                <option value="female">
-                  Женский
-                </option>
-              </select>
-            </div>
-            <div class="w-full lg:w-2/3">
-              <div>Вопрос к товару:</div>
-              <textarea v-model="questionText" rows="1" class="textarea w-full py-0 h-4 bg-base-100 mt-2" />
-              <label class="label py-0">
-                <span class="label-text-alt">От до 10 до 1000 символов</span></label>
-            </div>
-          </div>
-          <div class="w-full ml-auto self-start justify-start mt-2 lg:w-40">
-            <button
-              :class="{
-                'btn-disabled': !productData || !questionText,
-              }" class="btn w-full btn-primary"
-              @click="create"
-            >
-              Добавить
-            </button>
-          </div>
-          <div v-if="productData" class="productinfo mt-4">
-            <div>Информация о товаре:</div>
-            <div class="flex gap-4 mt-2 items-start">
-              <nuxt-img width="32" class="rounded-lg object-contain w-8" :src="productData.image" />
-              <div class="article">
-                <a
-                :href="`https://www.ozon.ru/product/${productData.article}`" target="_blank"
-                  class="text-sm text-secondary link link-hover"
-                >
-                  {{ productData.article }}
-                </a>
-              </div>
-              <div class="name truncate">
-                {{ productData.name }}
-              </div>
-              <div class="price">
-                {{ productData.priceText }}
-              </div>
-            </div>
-          </div>
-        </div>
+        
       </div>
-    </div>
+    </div> -->
 
-    <div v-if="questions.length">
+    <div v-if="questions.length" class="mt-4 rounded-lg">
       <ClientOnly>
-        <DataTable v-if="width > 1024" class="bg-base-200 hidden lg:block" :value="questions">
-          <Column field="place" header="№" />
-          <Column field="image" header="Фото">
-            <template #body="{ data }">
+        <table v-if="width > 1024" class="table table-sm">
+        <thead>
+          <tr class="bg-primary bg-opacity-5">
+            <!-- <th class="text-center">№</th> -->
+            <th class="text-center">Фото</th>
+            <th class="text-center">Артикул</th>
+            <th class="text-center">Пол</th>
+            <th class="text-center">Вопрос</th>
+            <th class="text-center">Статус</th>
+            <th class="text-center">Дата создания</th>
+            <th class="text-center">Дата публикации</th>
+          </tr>
+        </thead>
+        <tbody class="rounded-b-lg">
+          <tr
+            class="bg-base-100 border-b-0 rounded-b-lg"
+            v-for="(item, index) in questions"
+            :key="index"
+          >
+            <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
+            <td
+              class="text-center border-r  border-primary border-opacity-5 mx-auto"
+            >
               <div
-                style="width: 28px; height: 36px; overflow: visible; position: relative; border-radius: 4px"
+                style="width: 28px; height: 36px; border-radius: 4px"
+                class="mx-auto"
               >
                 <div class="dropdown dropdown-hover">
-                  <label tabindex="0"> <nuxt-img
-                    class="rounded-lg z-0" alt="" loading="lazy" fit="fill"
-                    :src="data.image"
-                  />
+                  <label tabindex="0">
+                    <nuxt-img
+                      class="rounded-lg z-0"
+                      alt=""
+                      loading="lazy"
+                      fit="fill"
+                      :src="item.image"
+                    />
                   </label>
                   <ul
                     tabindex="0"
                     class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
                   >
                     <nuxt-img
-                      class="rounded-lg z-[1]" loading="lazy" fit="fill"
-                      :src="data.image"
+                      class="rounded-lg z-[9999]"
+                      loading="lazy"
+                      fit="fill"
+                      :src="item.image"
                     />
                   </ul>
                 </div>
               </div>
-            </template>
-          </Column>
-          <Column field="article" header="Артикул">
-            <template #body="{ data }">
-              <a
-              :href="`https://www.ozon.ru/product/${data.article}`" target="_blank"
-                class="text-sm text-secondary link link-hover"
-              >
-                {{ data.article }}
-              </a>
-            </template>
-          </Column>
-          <Column field="gender" header="Пол">
-            <template #body="{ data }">
-              <div>{{ data.gender === 'male' ? 'М' : 'Ж' }}</div>
-            </template>
-          </Column>
-          <Column field="text" header="Вопрос">
-            <template #body="{ data }">
-              <p class="max-w-xs truncate">
-                {{ data.text }}
-              </p>
-            </template>
-          </Column>
+            </td>
+            <td
+              class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
+            >
+              <span class="whitespace-normal break-words max-w-[150px] text-primary">{{
+                item.article
+              }}</span>
+            </td>
+            <td
+              class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
+            >
+            {{ item.gender === 'male' ? 'М' : 'Ж' }}
+            </td>
+            <td class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] whitespace-normal break-words">
+              <div class="flex flex-col">
+                {{  item.text  }}
+              </div>
+            </td>
 
-          <Column field="status" header="Статус">
-            <template #body="{ data }">
+            <td class="text-center border-r border-primary border-opacity-5">
               <div
                 :class="{
-                  'text-error': data.status === 'nofunds' || data.status === 'spam',
-                  'text-primary': data.status === 'created',
-                  'text-warning': data.status === 'work',
-                  'text-success': data.status === 'completed',
+                  'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                    item.status === 'nofunds',
+                  'text-error rounded-full py-1 px-2  text-center':
+                  item.status === 'spam',
+                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                    item.status === 'created',
+                  'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                    item.status === 'work',
+                  'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                    item.status === 'completed',
                 }"
               >
-                {{ getStatus(data.status) }}
+                {{ getStatus(item.status) }}
               </div>
-            </template>
-          </Column>
-          <Column field="createdDate" header="Дата создания">
-            <template #body="{ data }">
-              <div>
-                {{ defaultDate(data.createdDate) }}
+            </td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div
+                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+              >
+                {{ defaultDateShort(item.createdDate) }}
               </div>
-            </template>
-          </Column>
-          <Column field="publishDate" header="Дата публикации">
-            <template #body="{ data }">
-              <div v-if="data.publishDate">
-                {{ defaultDate(data.publishDate) }}
+            </td>
+            <td class="text-center border-opacity-5">
+              <div
+                v-if="item.publishDate"
+                class="bg-primary bg-opacity-10 p-0.5 text-center"
+              >
+              {{ defaultDateShort(item.publishDate) }}
               </div>
-              <div v-else>
-                Нет
-              </div>
-            </template>
-          </Column>
-        </DataTable>
+            </td>
+          </tr>
+        </tbody>
+      </table>
         <div v-else class="cards grid grid-cols-1 gap-4 lg:hidden">
           <div v-for="(item, index) in questions" :key="index" class="card card-compact bg-base-100 shadow-xl">
             <div class="card-body">
@@ -308,7 +387,7 @@ onMounted(() => {
                   </div>
                   <a
                   :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
-                    class="text-secondary link link-hover text-sm"
+                    class="text-primary link link-hover text-sm"
                   >
                     {{ item.article }}
                   </a>
@@ -320,10 +399,17 @@ onMounted(() => {
                   <div
                     class="text-sm"
                     :class="{
-                      'text-warning': item.status === 'created' || item.status === 'work',
-                      'text-success': item.status === 'completed',
-                      'text-error': item.status === 'nofunds' || item.status === 'spam',
-                    }"
+                  'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                    item.status === 'nofunds',
+                  'text-error rounded-full py-1 px-2  text-center':
+                  item.status === 'spam',
+                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                    item.status === 'created',
+                  'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                    item.status === 'work',
+                  'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                    item.status === 'completed',
+                }"
                   >
                     <div>
                       {{ getStatus(item.status) }}
@@ -357,4 +443,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.table {
+  border-radius: 100px !important; /* Пример значения радиуса */
+}</style>

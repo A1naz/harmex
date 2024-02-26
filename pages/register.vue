@@ -264,14 +264,14 @@ async function confirmCode() {
                 v-maska
                 data-maska="#######################"
                 name="orgInn"
-                class="input join-item input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="ИНН"
                 required="true"
               />
               <button
                 :disabled="isInnLoading"
                 v-if="!isInnConfirmed"
-                class="btn join-item rounded-r-full"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
                 @click="checkInn"
               >
                 Найти
@@ -387,7 +387,7 @@ async function confirmCode() {
               <button
                 v-if="!isCodeSent"
                 :disabled="isNumberConfirmed"
-                class="btn join-item rounded-r-full"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
                 @click="sendConfirmCode"
               >
                 Подтвердить
@@ -395,7 +395,7 @@ async function confirmCode() {
               <button
                 v-else
                 :disabled="isNumberConfirmed"
-                class="btn join-item rounded-r-full"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
                 @click=";(isCodeSent = false), (isNumberConfirmed = false)"
               >
                 <IconCSS
@@ -423,7 +423,7 @@ async function confirmCode() {
               />
               <button
                 :disabled="!isCodeSent || isNumberConfirmed"
-                class="btn join-item rounded-r-full"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
                 @click="confirmCode"
               >
                 <IconCSS size="20" name="mdi:check" />
