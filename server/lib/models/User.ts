@@ -34,7 +34,12 @@ const UserSchema = new Schema<IUserSchema>({
 
   roles: [{ type: String, ref: 'Role' }],
   tariff: { type: Tariff.schema, required: true },
-
+  MPTariffs: [
+    {
+      mp: { type: String },
+      prices: { type: Tariff.schema, required: true },
+    },
+  ],
   twoFaQR: { type: String, required: false },
   twoFaSecret: { type: String, required: false },
   isTwoFaEnabled: { type: Boolean, default: false },

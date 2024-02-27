@@ -11,10 +11,18 @@ const store = useMainStore()
 const review_likes = ref([]) as any
 const { width, height } = useWindowSize()
 const { data, error } = await useFetch('/api/likes/get')
+
+const MPTabs = [
+  { title: 'willberries', value: 'wb' },
+  { title: 'ozon', value: 'ozon' },
+]
+
 const selectedMP = ref('wb')
-onBeforeMount(() => {
+const MPSelect = ref<any>(null)
+onMounted(() => {
   const savedMP = localStorage.getItem('selectedMP')
   if (savedMP) selectedMP.value = savedMP
+  MPSelect.value?.updateText(MPTabs.find((t) => t.value === selectedMP.value)?.title)
 })
 const search = reactive({
   text: '',
@@ -70,6 +78,8 @@ async function deleteLike() {
 }
 
 async function selectFilterDate(e: any) {
+  console.log(e)
+
   const target = e
   const { data } = await useFetch('/api/likes/get', {
     method: 'GET',
@@ -119,14 +129,11 @@ const updateSearchType = (filter: any) => {
           <Icon name="fluent:add-24-filled" size="24" />
           <span class="hidden lg:flex">Лайки</span>
         </NuxtLink>
-        {{ selectedMP }}
         <CustomSelect
+          ref="MPSelect"
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
-          :tabs="[
-            { title: 'ozon', value: 'ozon' },
-            { title: 'willberries', value: 'wb' },
-          ]"
+          :tabs="MPTabs"
           @change-value="selectFilterDate"
         />
         <CustomSelect
