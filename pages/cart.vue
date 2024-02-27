@@ -24,7 +24,10 @@ const size = ref('none')
 const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
+const modalShow = ref<boolean>(false);
+
 async function getCarts() {
+  modalShow.value = false;
   const { data, error } = await useFetch('/api/cart/get', { method: 'GET', watch: false })
   if (data.value) carts.value = data.value
   if (error.value)
@@ -102,189 +105,167 @@ function removeProduct() {
   article.value = ''
   amount.value = 0
 }
+
+const search = reactive({
+  text: '',
+  loading: false,
+  error: false,
+  type: 'article',
+})
+const codeInput = ref()
+
+async function selectFilterDate(e: any) {
+  const target = e
+  const { data } = await useFetch('/api/cart/get', {
+    method: 'GET',
+    query: {
+      dateFilter: target.value,
+    },
+    watch: false,
+  })
+  carts.value = data.value
+}
+
+async function findBuyouts(value: string, type: string) {
+  if (!value) {
+    search.loading = false
+    await getCarts()
+    return
+  }
+  const { data, error } = await useFetch('/api/cart/get', {
+    query: {
+      string: value,
+      type,
+    },
+    watch: false,
+  })
+  if (data.value) carts.value = data.value
+
+  search.loading = false
+}
+
+const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
+
+async function onSearchInput(event: Event) {
+  const newValue = (event.target as HTMLInputElement).value
+  search.loading = true
+  findBuyoutsDebounced(search.text, search.type)
+}
+
+const updateSearchType = (filter: any) => {
+  search.type = filter.value
+}
+
+
 onMounted(() => {})
 </script>
 
 <template>
   <div>
     <!-- <h1 class="text-2xl font-bold mt-4">Корзина</h1> -->
-    <p class="text-xs font-light mt-4 lg:text-sm">
-      Выберите товар, который будет добавлен в корзину
-    </p>
-    <p class="text-xs font-light mt-1 lg:text-sm">
-      Стоимость одного добавления - 
-      <span class="font-bold"> {{ store.tariffString('cart') }} </span>
-      Все услуги оказываются по Московскому времени.
-    </p>
-    <p class="text-xs font-light mt-1 lg:text-sm">
-        Возвраты по данному разделу не осуществляются.
-    </p>
-    <div class="collapse collapse-plus bg-base-100 rounded-box mb-4 mt-6">
+    <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
+      <div class="flex gap-1 lg:gap-4">
+        <button @click="modalShow = true" class="btn btn-primary font-normal btn-sm">
+          <Icon name="fluent:add-24-filled" size="17" />
+          Корзина
+        </button>
+
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'Все корзины', value: 'all' },
+            { title: 'Активные', value: 'work' },
+            { title: 'Завершенные', value: 'completed' },
+          ]"
+          @change-value="selectFilterDate"
+        />
+        <div class="relative justify-end flex-grow-0 w-full lg:hidden">
+          
+          <input
+            type="text"
+            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            placeholder="Поиск по вопросам"
+            ref="codeInput" 
+            v-model="search.text"
+            @input="onSearchInput($event)"
+          />
+          <span
+            v-if="search.loading"
+            class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
+          />
+          <Icon
+            v-else
+            class="absolute right-0.5 p-2 my-auto text-gray-500"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
+          />
+        </div>
+      </div>
+      <div class="flex gap-2 lg:gap-5">
+        <CustomSelect
+          class="lg:hidden"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'Все корзины', value: 'all' },
+            { title: 'Активные', value: 'work' },
+            { title: 'Завершенные', value: 'completed' },
+          ]"
+          @change-value="selectFilterDate"
+        />
+
+        <CustomSelect
+          :class="'bg-base-300 sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'За все время', value: 'all' },
+            { title: 'Сегодня', value: 'today' },
+            { title: '3 дня', value: '3days' },
+            { title: 'Неделя', value: '7days' },
+          ]"
+          @change-value="selectFilterDate"
+        />
+
+        <CustomSelect
+          :class="'bg-base-300'"
+          :tabs="[{ title: 'Артикул', value: 'article' }]"
+          @change-value="updateSearchType"
+        />
+        <div class="relative justify-end flex-grow-0 w-full hidden lg:flex">
+          <input
+            ref="codeInput"
+            v-model="search.text"
+            type="text"
+            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            placeholder="Поиск по вопросам"
+            @input="onSearchInput($event)"
+          />
+          <span
+            v-if="search.loading"
+            class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
+          />
+          <Icon
+            v-else
+            class="absolute right-0.5 p-2 my-auto text-gray-500"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- <div class="collapse collapse-plus bg-base-100 rounded-box mb-4 mt-6">
       <input type="checkbox" />
 
       <div class="collapse-title text-xl font-medium">Добавить в корзину</div>
       <div class="collapse-content">
         <div class="bg-base-200 rounded-lg">
-          <div class="flex items-center gap-6 mb-2 flex-wrap lg:flex-nowrap">
-            <div class="relative w-full lg:w-1/3">
-              <div>Артикул:</div>
-              <div class="input-group w-full mt-2">
-                <input
-                  v-model="article"
-                  :class="{
-                    'input-error': urlError,
-                    'input-success': productData,
-                  }"
-                  :disabled="productData"
-                  tabindex="0"
-                  class="input input-sm w-full"
-                  placeholder="12312312"
-                  type="number"
-                  @input="changeUrl"
-                />
-                <button
-                  :class="{
-                    'btn-disabled': !productData,
-                  }"
-                  class="btn btn-ghost btn-sm btn-circle bg-base-100"
-                  @click="removeProduct"
-                >
-                  <span
-                    v-show="loadingUrl"
-                    class="loading loading-spinner loading-xs p-2"
-                  />
-
-                  <!-- Insert a backspace svg -->
-                  <div v-if="!loadingUrl">
-                    <IconCSS
-                      v-if="productData"
-                      class="w-6 h-6"
-                      name="fluent:backspace-24-regular"
-                    />
-                  </div>
-                </button>
-              </div>
-            </div>
-            <div class="w-full lg:w-2/3">
-              <div>Ключевой запрос:</div>
-              <input
-                v-model="query"
-                :disabled="!productData"
-                placeholder="Носки"
-                type="text"
-                class="input input-sm w-full bg-base-100 mt-2"
-              />
-            </div>
-          </div>
-          <div class="mt-4 flex gap-6 items-start flex-wrap lg:flex-nowrap">
-            <div class="w-full lg:w-1/3">
-              <div>Размер:</div>
-              <select
-                :disabled="!productData?.sizes.length"
-                class="select select-sm w-full mt-2"
-                @change="selectSize"
-              >
-                <option v-if="!productData?.sizes.length" value="none">
-                  Без размера
-                </option>
-                <option
-                  v-for="(size, index) of productData?.sizes"
-                  :key="index"
-                  :value="size"
-                >
-                  {{ size == '0' ? 'Без размера' : size }}
-                </option>
-              </select>
-            </div>
-            <div class="w-full grid grid-cols-6 md:grid-cols-12 gap-4 lg:w-2/3">
-              <div class="col-span-2 md:col-span-2 w-full">
-                <div>Количество:</div>
-                <div class="relative flex items-center ml-auto mt-2">
-                  <button
-                    :disabled="amount <= 0"
-                    class="absolute left-0 btn btn-ghost btn-sm btn-square"
-                    @click="amount -= 10"
-                  >
-                    <IconCSS size="16" name="ic:round-minus" />
-                  </button>
-                  <div
-                    :class="{
-                      'bg-base-200': !productData,
-                    }"
-                    class="input-sm rounded-lg w-full text-center bg-base-100"
-                  >
-                    {{ amount }}
-                  </div>
-                  <button
-                    :disabled="amount >= 1000"
-                    :class="{
-                      'btn-disabled': !productData,
-                    }"
-                    class="absolute right-0 btn btn-ghost btn-sm btn-square"
-                    @click="amount += 10"
-                  >
-                    <IconCSS size="16" name="ic:round-plus" />
-                  </button>
-                </div>
-              </div>
-              <div class="col-span-4 md:col-span-10">
-                <div>Период выполнения:</div>
-                <select
-                  :disabled="!productData"
-                  class="select w-full select-sm mt-2"
-                  @change="selectPeriod"
-                >
-                  <option value="3h">3 часа</option>
-                  <option value="12h">12 часов</option>
-                  <option value="1day">1 день</option>
-                  <option value="3days">3 дня</option>
-                  <option value="7days">7 дней</option>
-                  <option value="14days">14 дней</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="w-full ml-auto self-start justify-start mt-2 lg:w-40">
-            <button
-              :class="{
-                'btn-disabled': !productData || !query,
-              }"
-              class="btn w-full btn-primary"
-              @click="create"
-            >
-              Добавить
-            </button>
-          </div>
-          <div v-if="productData" class="productinfo mt-4">
-            <div class="flex text gap-4 mt-2 items-start">
-              <nuxt-img
-                width="48"
-                class="rounded-lg object-contain w-12"
-                loading="lazy"
-                :src="productData.image"
-              />
-              <div class="article">
-                <a
-                :href="`https://www.ozon.ru/product/${productData.article}`"
-                  target="_blank"
-                  class="text-secondary link link-hover"
-                >
-                  {{ productData.article }}
-                </a>
-              </div>
-              <div class="name truncate">
-                {{ productData.name }}
-              </div>
-              <div class="price">
-                {{ productData.priceText }}
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div v-if="carts.length">
+    <div v-if="carts.length" class="mt-4">
       <div v-if="width > 1024">
         <CartTable :get-status="getStatus" :carts="carts" />
       </div>
@@ -296,6 +277,7 @@ onMounted(() => {})
       <Hero />
     </div>
   </div>
+  <CartCreateCart :show="modalShow" @close-modal="modalShow = false" @create="getCarts()"/>
 </template>
 
 <style scoped></style>

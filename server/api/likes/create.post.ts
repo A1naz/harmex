@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
     if (!user) return sendRedirect(event, '/auth', 302)
 
   const params = getQuery(event)
-  const { userTimezoneOffsetHours, userOffsetMinutes } = params
+  // const { userTimezoneOffsetHours, userOffsetMinutes } = params
 
   const body = await readBody(event)
   const period = body.period

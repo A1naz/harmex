@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { notify } from '@kyvg/vue3-notification'
 
 const props = defineProps({
   show: { type: Boolean, required: true },
 })
+
+const emit = defineEmits(['closeModal','create'])
 
 const questions = ref([]) as any
 const amount = ref(0)
@@ -23,6 +26,7 @@ async function getQuestions() {
 }
 await getQuestions()
 async function create() {
+  
   const { data, error } = await useFetch('/api/questions/create', {
     method: 'POST',
     body: {
@@ -39,7 +43,7 @@ async function create() {
     notify({ type: 'success', title: 'Упешно' })
     removeProduct()
     publishDate.value = now.value
-    getQuestions()
+    emit('create')
   }
 }
 async function getProductInfo() {
@@ -75,7 +79,7 @@ function removeProduct() {
   article.value = ''
   amount.value = 0
 }
-defineEmits(['closeModal'])
+
 </script>
 
 <template>
