@@ -324,12 +324,12 @@ function selectPeriod(event: any) {
                 type="text"
                 @keydown.enter="getProductReviews"
               />
-              <button
+              <!-- <button
                 class="btn btn-ghost normal-case"
                 @click="getProductReviews"
               >
                 Найти
-              </button>
+              </button> -->
             </div>
           </div>
           <div>
@@ -347,12 +347,7 @@ function selectPeriod(event: any) {
             </select>
           </div>
           <div class="w-full ml-auto self-end justify-end lg:w-40">
-            <button
-              class="btn w-full btn-primary"
-              @click="
-                ;[(page = 1), (isPageBtnsDisabled = false), getProductReviews()]
-              "
-            >
+            <button class="btn w-full btn-primary" @click="getProductReviews">
               Добавить
             </button>
           </div>
