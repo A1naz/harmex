@@ -18,7 +18,9 @@ const sex = ref('male')
 const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
+const modalShow = ref<boolean>(false);
 async function getQuestions() {
+  modalShow.value = false
   const { data, error } = await useFetch('/api/questions/get', { method: 'GET' })
   if (data.value)
     questions.value = data.value
@@ -146,7 +148,7 @@ const updateSearchType = (filter: any) => {
   search.type = filter.value
 }
 
-const modalShow = ref<boolean>(false);
+
 </script>
 
 <template>
@@ -162,7 +164,7 @@ const modalShow = ref<boolean>(false);
       <span class="font-bold"> {{ store.tariffString('questionProduct') }} </span>
       Все услуги оказываются по Московскому времени.
     </p> -->
-    <QuestionsCreateQuest :show="modalShow" @close-modal="modalShow = false"/>
+    <QuestionsCreateQuest :show="modalShow" @close-modal="modalShow = false" @create="getQuestions()"/>
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
      
@@ -323,9 +325,12 @@ const modalShow = ref<boolean>(false);
             <td
               class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
             >
-              <span class="whitespace-normal break-words max-w-[150px] text-primary">{{
-                item.article
-              }}</span>
+            <a
+            :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`" target="_blank"
+              class="text-primary link link-hover text-sm"
+            >
+              {{ item.article }}
+            </a>
             </td>
             <td
               class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
@@ -352,6 +357,7 @@ const modalShow = ref<boolean>(false);
                   'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
                     item.status === 'completed',
                 }"
+                
               >
                 {{ getStatus(item.status) }}
               </div>
@@ -366,7 +372,7 @@ const modalShow = ref<boolean>(false);
             <td class="text-center border-opacity-5">
               <div
                 v-if="item.publishDate"
-                class="bg-primary bg-opacity-10 p-0.5 text-center"
+                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
               {{ defaultDateShort(item.publishDate) }}
               </div>

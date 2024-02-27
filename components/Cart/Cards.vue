@@ -8,7 +8,7 @@ const props = defineProps<IProps>()
 
 <template>
   <div class="cards grid grid-cols-1 gap-4 lg:hidden">
-    <div v-for="(item, index) in carts" :key="index" class="card card-compact bg-base-200 border ">
+    <div v-for="(item, index) in carts" :key="index" class="card card-compact bg-base-100 ">
       <div class="card-body">
         <div class="flex gap-4">
           <div class="image">
@@ -19,8 +19,8 @@ const props = defineProps<IProps>()
               Артикул
             </div>
             <a
-            :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
-              class="text-secondary link link-hover text-sm"
+            :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`" target="_blank"
+              class="text-primary link link-hover text-sm"
             >
               {{ item.article }}
             </a>
@@ -30,10 +30,14 @@ const props = defineProps<IProps>()
               Статус
             </div>
             <div
-              class="text-sm"
+            class="whitespace-nowrap text-sm"
               :class="{
-                'text-warning': item.status === 'created' || item.status === 'work',
-                'text-success': item.status === 'completed',
+                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-1.5 text-center':
+                    item.status === 'created',
+                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2 text-center':
+                    item.status === 'work',
+                  'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                    item.status === 'completed',
               }"
             >
               <div>
@@ -56,18 +60,18 @@ const props = defineProps<IProps>()
               Размер
             </div>
             <div class="text-sm">
-              {{ item.size }}
+              {{ item.size == "none" ? "Нет" : item.size }}
             </div>
           </div>
         </div>
         <div class="card-actions justify-start mt-2">
           <div>Дата Создания:</div>
-          <div class="date text-end">
+          <div class="date text-end bg-primary bg-opacity-10 rounded-lg p-0.5">
             {{ defaultDate(item.createdDate) }}
           </div>
           <div>Дата Завершения:</div>
           <div>
-            <div v-if="item.endedDate">
+            <div v-if="item.endedDate" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-end" >
               {{ defaultDate(item.endedDate) }}
             </div>
             <div v-else>

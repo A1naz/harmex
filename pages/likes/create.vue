@@ -199,10 +199,10 @@ async function selectSorting(e: any) {
 }
 async function save() {
   isCreateButtonDisabled.value = true
-  const userOffsetMinutes = new Date().getTimezoneOffset()
-  const userTimezoneOffsetHours = -userOffsetMinutes / 60
-  const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
-
+  // const userOffsetMinutes = new Date().getTimezoneOffset()
+  // const userTimezoneOffsetHours = -userOffsetMinutes / 60
+  // const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
+  console.log('article', )
   const { data, error } = await useFetch('/api/likes/create', {
     method: 'POST',
     body: {
@@ -210,10 +210,10 @@ async function save() {
       reviews: changedReviews.value,
       period: period.value,
     },
-    query: {
-      userTimezoneOffsetHours,
-      userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
-    },
+    // query: {
+    //   userTimezoneOffsetHours,
+    //   userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
+    // },
   })
   if (error.value) {
     notify({
@@ -302,12 +302,20 @@ const modalShow = ref<boolean>(true)
 const closeModal = (event: MouseEvent) => {
   if ((event.target as HTMLElement).classList.contains('modalCustom')) {
     modalShow.value = false
-    currentFilter.value = ''
   }
 }
 function selectPeriod(event: any) {
   period.value = event.target.value
 }
+
+function handleArticleChanged(periodChanged: any, reviewsChanged: any, feedbacksCountChanged: any, articleChanged: any) {
+    modalShow.value = false
+    savedArticle.value = articleChanged;
+    period.value = periodChanged;
+    feedbacksCount.value = feedbacksCountChanged;
+    reviews.value = reviewsChanged;
+    sortReviews();
+  }
 </script>
 
 <template>
@@ -321,7 +329,7 @@ function selectPeriod(event: any) {
       Укажите необходимое количество лайков/дизлайков к каждому отзыву.
     </p>
 
-    <div class="relative flex justify-between mb-4 mt-6 items-center">
+    <!-- <div class="relative flex justify-between mb-4 mt-6 items-center">
       <select class="select select-bordered select-sm" @change="selectSorting">
         <option value="date" :selected="route.query.sortBy === 'date'">
           По дате
@@ -353,24 +361,24 @@ function selectPeriod(event: any) {
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="flex justify-between my-2">
       <div></div>
       <div class="join" v-if="feedbacksCount">
         <button
-          class="join-item btn"
+          class="join-item btn btn-sm px-1"
           @click="swapPage(-1)"
           :disabled="isPageBtnsDisabled"
         >
-          «
+          <Icon name="formkit:left" class="rounded-full  my-auto cursor-pointer hover:bg-opacity-50" size="22" />
         </button>
-        <button class="join-item btn">{{ page }}</button>
+        <button class="join-item btn btn-sm hover:bg-base-200 border-none cursor-default">{{ page }}</button>
         <button
-          class="join-item btn"
+          class="join-item btn btn-sm px-1"
           @click="swapPage(1)"
           :disabled="isPageBtnsDisabled"
         >
-          »
+        <Icon name="formkit:right" class="rounded-full  my-auto cursor-pointer hover:bg-opacity-50" size="22" />
         </button>
       </div>
     </div>
@@ -523,70 +531,7 @@ function selectPeriod(event: any) {
         </div>
       </div> -->
     </div>
-    <div
-      v-if="modalShow"
-      class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
-    >
-      <div
-        class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4"
-      >
-        <div class="flex justify-between">
-          <div class="font-medium text-lg">Лайк на отзывы</div>
-          <NuxtLink to="/likes" 
-            class="text-gray-500 hover:text-gray-700 self-end mb-2"
-          >
-            <Icon name="material-symbols:close-rounded" size="24" />
-          </NuxtLink>
-        </div>
-        <div class="bg-base-100 rounded-lg">
-          <div class="flex flex-wrap items-center gap-6 mb-2">
-            <div class="relative">
-              <div>Вставьте ссылку:</div>
-              <div class="input-group w-64 min-h-min md:min-h-[48px] mt-2">
-                <input
-                 v-model="article"
-                  :class="{
-                    'input-error': !reviews,
-                    'input-success': reviews.length > 0,
-                  }"
-                  tabindex="0"
-                  class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
-                  placeholder="Введите артикул"
-                  type="text"
-                  @keydown.enter="getProductReviews"
-                />
-              </div>
-            </div>
-            <div>
-              <div>Период выполнения:</div>
-              <select
-                class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
-                @change="selectPeriod"
-              >
-                <option value="3h">3 часа</option>
-                <option value="12h">12 часов</option>
-                <option value="1day">1 день</option>
-                <option value="3days">3 дня</option>
-                <option value="7days">7 дней</option>
-                <option value="14days">14 дней</option>
-              </select>
-            </div>
-            <div class="w-full ml-auto self-end justify-end lg:w-40">
-              <button
-              
-                class="btn w-full btn-primary"
-                @click="
-              ;[(page = 1), (isPageBtnsDisabled = false), getProductReviews()]
-            "
-              >
-                Добавить
-              </button>
-            </div>
-          </div>
-        </div>
-        
-      </div>
-    </div>
+    <LikesCreateLike :show="modalShow" @close-modal="handleArticleChanged"/>
   </div>
 </template>
 

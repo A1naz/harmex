@@ -293,7 +293,7 @@ const statusText = computed(() => {
                 <li>
                   <NuxtLink
                     v-for="filter in filters"
-                    :to="'/buyouts' + filter.params"
+                    :to="'/delivery' + filter.params"
                     :external="false"
                     :class="{
                       'btn-active': route.query.status === filter.queryStatus,
