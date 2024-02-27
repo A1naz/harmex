@@ -194,6 +194,7 @@ export default defineNuxtConfig({
     server_ip: process.env.server_ip,
     service_id: process.env.service_id,
     CHANGING_PROXY: process.env.CHANGING_PROXY,
+    SECOND_CHANGING_PROXY: process.env.SECOND_CHANGING_PROXY,
     ORGANIZATION_KEY: process.env.ORGANIZATION_KEY,
     HI_CALL_KEY: process.env.HI_CALL_KEY,
   },

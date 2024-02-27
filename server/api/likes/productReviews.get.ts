@@ -1,8 +1,7 @@
 import { getServerSession } from '#auth'
 import request from 'request'
 const config = useRuntimeConfig()
-const proxy = config.CHANGING_PROXY
-import fs from 'node:fs'
+const proxy = config.SECOND_CHANGING_PROXY
 const elPerPage = 50
 
 export default eventHandler(async (event) => {
@@ -19,7 +18,7 @@ export default eventHandler(async (event) => {
   const productUrl = `http://api.ozon.ru/composer-api.bx/page/json/v2?url=%2Fproduct%2F${article}%2F%3Flayout_container%3Dreviewshelfpaginator%26layout_page_index%3D4%26page%3D2%26reviewsFilters%3De30K%26reviewsVariantMode%3D2%26sh%3Db93L0h4A6Q%26sort%3Dpublished_at_desc%26start_page_id%3D1dd1ae16494e63a9b04a45ab8ce917d5%26tab%3Dreviews`
   const options = {
     url: productUrl,
-    proxy: 'http://' + '12241368-all-country-RU:1fpqto385f@62.112.9.140:13791',
+    proxy: 'http://' + proxy,
     headers: {
       'User-Agent':
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0',
@@ -45,7 +44,6 @@ const productData: any = JSON.parse(widgetStates['webListReviews-3201466-reviews
 const reviews = productData['reviews']
 
 let feedbacks = reviews.map((feedback: any, index: number) => {
-console.log(feedback);
 
   return {
     id: feedback.uuid,
