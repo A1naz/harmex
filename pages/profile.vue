@@ -20,6 +20,12 @@ const form: any = reactive({
   lastName: '',
   email: '',
   username: '',
+  orgKey: '',
+  orgName: '',
+  orgOgrn: '',
+  orgInn: '',
+  middleName: '',
+  phoneNumber: '',
 })
 const passwordForm = reactive({
   oldPassword: '',
@@ -42,12 +48,16 @@ const initialForm: any = reactive({
   lastName: '',
   email: '',
   username: '',
+  middleName: '',
+  phoneNumber: '',
 })
 function updateInitital() {
   initialForm.firstName = store.client.firstName
   initialForm.lastName = store.client.lastName
   initialForm.email = store.client.email
   initialForm.username = store.client.username
+  initialForm.middleName = store.client.middleName
+  initialForm.phoneNumber = store.client.phoneNumber
   wbApiKeys.value = store.client.wbApiKeys.length
     ? JSON.parse(JSON.stringify(store.client.wbApiKeys))
     : ['']
@@ -58,6 +68,12 @@ onMounted(async () => {
   form.lastName = store.client.lastName
   form.email = store.client.email
   form.username = store.client.username
+  form.orgKey = store.client.orgKey
+  form.orgName = store.client.orgName
+  form.orgOgrn = store.client.orgOgrn
+  form.orgInn = store.client.orgInn
+  form.middleName = store.client.middleName
+  form.phoneNumber = store.client.phoneNumber
 })
 // if (!store.checkTelegramId())
 // warning.value =
@@ -68,7 +84,9 @@ const disabledSaveButton = computed(() => {
     form.firstName == initialForm.firstName &&
     form.lastName == initialForm.lastName &&
     form.email == initialForm.email &&
-    form.username == initialForm.username
+    form.username == initialForm.username &&
+    form.middleName == initialForm.middleName &&
+    form.phoneNumber.replace(/[\(\)\-\s]/g, '') == initialForm.phoneNumber 
   )
 })
 const disabledChangePasswordButton = computed(() => {
@@ -132,7 +150,9 @@ async function update() {
     form.firstName == store.client.firstName &&
     form.lastName == store.client.lastName &&
     form.email == store.client.email &&
-    form.username == store.client.username
+    form.username == store.client.username &&
+    form.middleName == store.client.middleName &&
+    form.phoneNumber == store.client.phoneNumber
   )
     return
 
@@ -386,6 +406,50 @@ async function openTwoFaQRModal() {
       class="mt-4 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
     >
       <div class="self-start description-container xl:basis-1/3">
+        <div class="heading">Данные организации</div>
+        <div class="text-xs text-gray-400 mt-2.5">
+          Данные организации заполняются при регистрации
+        </div>
+      </div>
+      <div class="flex flex-col gap-2.5 w-full mt-1">
+        <div class="w-full flex flex-col gap-2.5 xl:flex-row">
+          <input
+            v-model="form.orgName"
+            placeholder="Наименование организации"
+            class="input input-bordered w-full"
+            readonly
+          />
+          <input
+            v-model="form.orgKey"
+            placeholder="Форма организации"
+            class="input input-bordered w-full"
+            readonly
+          />
+        </div>
+
+        <div class="flex flex-col w-full gap-2.5 xl:flex-row">
+          <input
+            v-model="form.orgInn"
+            type="text"
+            placeholder="ИНН организации"
+            class="input input-bordered w-full "
+            readonly
+          />
+          <input
+            v-model="form.orgOgrn"
+            type="text"
+            placeholder="ОГРН(ОГРНИП)"
+            class="input input-bordered w-full "
+            readonly
+          />
+          
+        </div>
+      </div>
+    </section>
+    <section
+      class="mt-4 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
+    >
+      <div class="self-start description-container xl:basis-1/3">
         <div class="heading">Контактные данные</div>
         <div class="text-xs text-gray-400 mt-2.5">
           Заполните свои контактные данные, чтобы получать актуальные
@@ -404,9 +468,14 @@ async function openTwoFaQRModal() {
             placeholder="Фамилия"
             class="input input-bordered w-full"
           />
+          <input
+            v-model="form.middleName"
+            placeholder="Отчество"
+            class="input input-bordered w-full"
+          />
           <div class="hidden btn btn-primary xl:w-40 cursor-default xl:block opacity-0 self-end">&nbsp</div>
         </div>
-
+        
         <div class="flex flex-col w-full gap-2.5 xl:flex-row">
           <input
             v-model="form.email"
@@ -419,6 +488,15 @@ async function openTwoFaQRModal() {
             type="text"
             placeholder="Никнейм"
             class="input input-bordered w-full "
+          />
+          <input
+            v-model="form.phoneNumber"
+            type="text"
+            class="input input-bordered w-full "
+            v-maska
+            data-maska="+7 (###) ###-##-##"
+            placeholder="+7 (___) ___-__-__"
+            readOnly
           />
           <div>
             <button

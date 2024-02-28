@@ -10,7 +10,7 @@ export default eventHandler(async (event) => {
 
   const body = await readBody(event)
 
-  const { email, username, firstName, lastName } = body
+  const { email, username, firstName, lastName, middleName, phoneNumber} = body
 
   if (!validator.isEmail(email)) {
     throw createError({
@@ -35,6 +35,17 @@ export default eventHandler(async (event) => {
       message: 'Это имя имя пользователя уже занято',
     })
   }
+
+  // const checkNumber = await User.findOne({
+  //   phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
+  // })
+
+  // if (checkNumber && foundByUsername.uuid !== user.uuid) {
+  //   throw createError({
+  //     statusCode: 400,
+  //     message: 'Пользователь с таким номером телефона уже существует.',
+  //   })
+  // }
 
   const foundByEmail = await User.findOne({ email: body.email })
   if (foundByEmail && foundByEmail.uuid !== user.uuid) {
@@ -64,6 +75,8 @@ export default eventHandler(async (event) => {
   user.username = username
   user.firstName = firstName
   user.lastName = lastName
+  user.middleName = middleName
+  // user.phoneNumber = phoneNumber.replace(/[\(\)\-\s]/g, '')
   await user.save()
   return {
     status: 'ok',

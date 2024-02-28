@@ -275,7 +275,7 @@ const statusText = computed(() => {
         </section>
 
         <div class="mt-auto">
-          <div class="w-full hover:cursor-default p-0 block mt-8">
+          <div class="w-full hover:cursor-default p-0 block mt-8 lg:mt-0">
             <div class="join flex justify-between w-full items-center p-0 m-0">
               <div
                 class="join-item btn btn-ghost gap-2 flex justify-center items-center normal-case w-[60%] hover:cursor-pointer rounded-lg p-0 m-0"
