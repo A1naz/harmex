@@ -27,7 +27,7 @@ watch(() => props.state, (newState) => {
 </script>
 
 <template>
-  <div class="collapse collapse-arrow border border-base-100 bg-base-200 rounded-box z-0">
+  <div class="collapse collapse-arrow bg-primary bg-opacity-10 rounded-box z-0">
     <input v-model="opened" type="checkbox">
     <div class="collapse-title relative text-xl font-medium">
       <div class="flex gap-4">
@@ -41,13 +41,13 @@ watch(() => props.state, (newState) => {
             <span> Отчет по выкупу №{{ info.buyout.place }}
             </span>
             <label
-              class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
+              class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-base-content font-normal hover:text-primary truncate z-10"
               @click="openBuyout"
             >#{{
               info.buyout.uuid }}</label>
           </div>
-          <div class="flex justify-between flex-wrap gap-2 items-center">
-            <div class="mt-2 lg:m-0 text-sm">
+          <div class="flex justify-between flex-wrap gap-2 items-center mt-1 ">
+            <div class="mt-2 lg:m-0 text-xs font-normal text-base-content bg-primary bg-opacity-20 rounded-md px-5 py-0.5">
               Дата выкупа: {{ $dayjs(info.date).format('D MMMM HH:mm') }}
             </div>
           </div>

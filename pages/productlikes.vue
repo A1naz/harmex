@@ -509,7 +509,7 @@ const updateSearchType = (filter: any) => {
               }}</span>
             </td>
             <td
-              class="text-center border-r border-primary border-opacity-5 text-primary overflow-x-auto max-w-[250px] truncate"
+              class="text-center border-r border-primary border-opacity-5 text-primary overflow-x-auto max-w-xs truncate"
             >
               <a
                 :href="item.url"

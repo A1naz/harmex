@@ -31,6 +31,10 @@ export interface IUser extends Entity {
     firstName: string
     lastName: string
     email: string
+    apiKeys?: Array<{
+        mp: string;
+        keys: string[];
+      }>;
     wbApiKey: string
     wbApiKeys: []
     password: string
