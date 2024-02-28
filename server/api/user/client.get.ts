@@ -57,6 +57,12 @@ export default eventHandler(async (event) => {
     allowedPathes: allowedPathes,
     tariff: user.tariff,
     isTwoFaEnabled: user.isTwoFaEnabled ? true : false,
+    orgKey: user.orgKey ? user.orgKey : '',
+    orgName: user.orgName ? user.orgName : '',
+    orgOgrn: user.orgOgrn ? user.orgOgrn : '',
+    orgInn: user.orgInn ? user.orgInn : '',
+    middleName: user.middleName ? user.middleName : '',
+    phoneNumber: user.phoneNumber ? user.phoneNumber : '',
   }
 
   return {
