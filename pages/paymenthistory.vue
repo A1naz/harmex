@@ -47,8 +47,8 @@ async function getPaymentHistory() {
 await getPaymentHistory()
 
 
-async function selectType(e: Event) {
-  const target = e.target as HTMLSelectElement
+async function selectType(e: any) {
+  const target = e
   filterType.value = target.value
   skip.value = 50
   end.value = false
@@ -88,8 +88,8 @@ async function onSearchInput(event: Event) {
   search.loading = true
   findPaymentHistoryDebounced(search.text, search.type)
 }
-async function selectFilterDate(e: Event) {
-  const target = e.target as HTMLSelectElement
+async function selectFilterDate(e: any) {
+  const target = e
   dateFilter.value = target.value
   skip.value = 50
   end.value = false
@@ -163,6 +163,9 @@ function openReview(data: any) {
     router.push(`/reviews?status=published&idReview=${idReview}`)
 }
 
+const updateSearchType = (filter: any) => {
+  search.type = filter.value
+}
 </script>
 
 <template>
@@ -172,19 +175,28 @@ function openReview(data: any) {
         История платежей
       </h1>
     </div> -->
-    <p class="text-xs font-light mt-4 lg:text-sm mb-6">
+    <!-- <p class="text-xs font-light mt-4 lg:text-sm mb-6">
       Здесь можно увидеть движение вашего баланса
-    </p>
-    <div class="flex gap-4 mb-8 mt-6 items-center justify-between flex-wrap">
-      <div class="flex items-center gap-2">
-        <div class="flex gap-4 items-center">
-            <ExportXls 
+    </p> -->
+    <div class="flex lg:hidden gap-2 w-full mt-4">
+      <ExportXls 
                 api="/api/paymenthistory/export"
                 fileName="Финансовый отчет услуг OZONMP.xlsx"
                 :isVisible="history.length ? true : false"
             />
+
+      <div class="relative flex items-center flex-grow-0 w-full">
+          <input v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500 w-full" placeholder="Поиск" @input="onSearchInput($event)">
+
+          <span
+            v-if="search.loading"
+            class="absolute right-2 loading loading-spinner loading-xs p-2"
+          />
         </div>
-        <select class="select select-bordered select-sm" @change="selectType">
+    </div>
+    <div class="flex gap-2 mb-8 mt-2 lg:mt-4 items-center lg:justify-between flex-wrap ">
+      <div class="flex items-center gap-2">
+        <!-- <select class="select select-bordered select-sm" @change="selectType">
           <option value="all">
             Все
           </option>
@@ -197,8 +209,29 @@ function openReview(data: any) {
           <option value="questions">
             Вопросы
           </option>
-        </select>
-        <select class="select select-bordered select-sm" @change="selectFilterDate">
+        </select> -->
+        <CustomSelect
+          :class="'bg-base-300 sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'Все', value: 'all' },
+            { title: 'Выкупы', value: 'buyouts' },
+            { title: 'Отзывы', value: 'reviews' },
+            { title: 'Вопросы', value: 'questions' },
+          ]"
+          @change-value="selectType"
+        />
+        <CustomSelect
+        :class="'bg-base-300 sm:min-w-[120px]'"
+          :tabs="[
+            { title: 'За все время', value: 'all' },
+            { title: 'Сегодня', value: 'today' },
+            { title: '3 дня', value: '3days' },
+            { title: 'Неделя', value: '7days' },
+          ]"
+          @change-value="selectFilterDate"
+        />
+        
+        <!-- <select class="select select-bordered select-sm" @change="selectFilterDate">
           <option value="all">
             За все время
           </option>
@@ -211,46 +244,94 @@ function openReview(data: any) {
           <option value="7days">
             Неделя
           </option>
-        </select>
+        </select> -->
       </div>
 
       <div class="flex gap-1 items-center">
-        <select v-model="search.type" disabled class="select select-bordered select-sm">
+        <CustomSelect
+          :class="'bg-base-300 sm:min-w-[150px]'"
+          :tabs="[{ title: 'Основание / ID', value: 'uuid' }]"
+          @change-value="updateSearchType"
+        />
+        <!-- <select v-model="search.type" disabled class="select select-bordered select-sm bg-base-300">
           <option value="uuid">
             Основание / ID
           </option>
-        </select>
-        <div class="relative flex items-center flex-grow-0 w-full">
-          <input v-model="search.text" type="text" class="input input-sm input-bordered" placeholder="Поиск" @input="onSearchInput($event)">
+        </select> -->
+        <div class="relative items-center flex-grow-0 w-full hidden lg:flex">
+          <input v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500" placeholder="Поиск" @input="onSearchInput($event)">
 
           <span
             v-if="search.loading"
             class="absolute right-2 loading loading-spinner loading-xs p-2"
           />
         </div>
+        <div class="gap-2 items-center hidden lg:flex">
+            <ExportXls 
+                api="/api/paymenthistory/export"
+                fileName="Финансовый отчет услуг OZONMP.xlsx"
+                :isVisible="history.length ? true : false"
+            />
+        </div>
       </div>
     </div>
-    <div v-if="width > 1024">
-      <DataTable sort-field="dataoperation" :sort-order="-1" class="hidden lg:block" :value="history" removable-sort>
-        <Column field="summ" sortable header="Сумма">
+    <div v-if="width >= 1024">
+      <DataTable sort-field="dataoperation" :sort-order="-1" class="hidden lg:block" :value="history" removable-sort 
+      :pt="{
+                    headerRow:  { class: [
+                        'bg-primary bg-opacity-10 border-none text-base-content rounded-t-3xl text-center '
+                    ] },
+
+                }"
+      >
+        <Column field="summ" sortable header="Сумма" class="border-r border-base-200"   
+                :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100 '
+                    ] },
+                    headerCell:  { class: [
+                        'rounded-tl-3xl border-none text-center mx-auto'
+                    ] },
+                }">
           <template #body="{ data }">
             {{ currency.format(data.summ) }}
           </template>
         </Column>
-        <Column field="typeoperations" sortable header="Тип операции" />
-        <Column field="type" sortable header="Услуга">
+        <Column field="typeoperations" sortable header="Тип операции" class="border-r border-base-200"  :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100'
+                    ] },
+                    headerCell:  { class: [
+                        'border-none'
+                    ] },
+                }"/>
+        <Column field="type" sortable header="Услуга" class="border-r border-base-200"  :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100'
+                    ] },
+                    headerCell:  { class: [
+                        'border-none'
+                    ] },
+                }">
           <template #body="{ data }">
             <div class="">
               {{ getHistoryType(data.type) }}
             </div>
           </template>
         </Column>
-        <Column field="article" sortable header="Артикул">
+        <Column field="article" sortable header="Артикул" class="border-r border-base-200"  :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100'
+                    ] },
+                    headerCell:  { class: [
+                        'border-none'
+                    ] },
+                }">
           <template #body="{ data }">
             <div class="">
               <a
               :href="`https://www.ozon.ru/product/${data.article}`" target="_blank"
-                class="text-sm text-secondary link link-hover"
+                class="text-sm text-primary link link-hover"
               >
                 {{ data.article }}
               </a>
@@ -258,7 +339,14 @@ function openReview(data: any) {
           </template>
         </Column>
 
-        <Column field="basisoperation" sortable header="Основание операции">
+        <Column field="basisoperation" sortable header="Основание операции" class="border-r border-base-200"  :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100'
+                    ] },
+                    headerCell:  { class: [
+                        'border-none'
+                    ] },
+                }">
           <template #body="{ data }">
             <div v-if="data.type === 'buyouts' || data.type === 'buyouts service'">
               <label
@@ -279,21 +367,36 @@ function openReview(data: any) {
             </div>
           </template>
         </Column>
-        <Column field="dataoperation" sortable header="Дата">
+        <Column field="dataoperation" sortable header="Дата" class="border-r border-base-200 "  :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100 text-primary'
+                    ] },
+                    headerCell:  { class: [
+                        'border-none'
+                    ] },
+                }">
           <template #body="{ data }">
             <div class="">
               {{ defaultDate(data.dataoperation) }}
             </div>
           </template>
         </Column>
-        <Column field="comment" sortable header="Комментарий" />
+        <Column field="comment" sortable header="Комментарий" :pt="{
+                    headerCell:  { class: [
+                        'rounded-tr-3xl border-none'
+                    ] },
+                    bodyCell:  { class: [
+                        'bg-base-100'
+                    ] },
+                }"/>
       </DataTable>
       <div ref="target" class="flex justify-center items-center h-4" />
     </div>
-    <ul v-else class="w-full lg:hidden">
+    <ul v-else class="w-full lg:hidden ">
       <li v-for="(item, index) in history" :key="index" class="pb-3 sm:pb-4">
         <div tabindex="0" class="collapse collapse-arrow bg-base-200 rounded-box">
-          <div class="collapse-title font-medium ">
+          <input type="checkbox" class="peer" /> 
+          <div class="collapse-title font-medium bg-base-100">
             <div class="mb-2 text-sm text-start">
               {{ item.basisoperation }}
             </div>
@@ -309,12 +412,12 @@ function openReview(data: any) {
               </div>
             </div>
           </div>
-          <div class="collapse-content">
+          <div class="collapse-content bg-base-100">
             <div class="flex flex-col">
               <dd class="font-semibold text-sm">
                 <a
                 :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
-                class="text-sm text-secondary link link-hover"
+                class="text-sm text-primary link link-hover"
               >
                 {{ item.article }}
               </a>
@@ -346,12 +449,12 @@ function openReview(data: any) {
   @apply bg-base-200 rounded-lg
 }
 .p-datatable-table {
-  @apply table table-zebra rounded-lg
+  @apply table table-zebra rounded-lg text-center
 }
 .p-column-header-content {
-  @apply flex gap-2
+  @apply flex gap-2 text-center mx-auto justify-center 
 }
 .p-column-header-content {
-  @apply normal-case text-base
+  @apply normal-case text-base text-center justify-center 
 }
 </style>

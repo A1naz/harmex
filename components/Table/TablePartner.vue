@@ -150,7 +150,7 @@ defineExpose({
                 :field="col.field" 
                 :header="col.header"
                 class="bg-base-100"
-               :class="{ 
+                :class="{ 
                     'border-r border-base-200': index < config.length - 1,
                 }" 
                 :pt="{

@@ -450,6 +450,4 @@ const updateSearchType = (filter: any) => {
 </template>
 
 <style scoped>
-.table {
-  border-radius: 100px !important; /* Пример значения радиуса */
-}</style>
+</style>
