@@ -24,6 +24,12 @@ const UserSchema = new Schema<IUserSchema>({
   firstName: { type: String, required: false },
   lastName: { type: String, required: false },
   email: { type: String, unique: false, required: false },
+  apiKeys: [
+    {
+      mp: { type: String, required: true },
+      keys: { type: [String], required: false }
+    }
+  ],
   wbApiKey: { type: String, required: false },
   wbApiKeys: { type: [String], required: false },
   password: { type: String, required: false },
