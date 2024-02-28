@@ -163,6 +163,9 @@ function openReview(data: any) {
     router.push(`/reviews?status=published&idReview=${idReview}`)
 }
 
+const updateSearchType = (filter: any) => {
+  search.type = filter.value
+}
 </script>
 
 <template>
@@ -191,7 +194,7 @@ function openReview(data: any) {
           />
         </div>
     </div>
-    <div class="flex gap-4 mb-8 mt-4 items-center lg:justify-between flex-wrap ">
+    <div class="flex gap-2 mb-8 mt-2 lg:mt-4 items-center lg:justify-between flex-wrap ">
       <div class="flex items-center gap-2">
         <!-- <select class="select select-bordered select-sm" @change="selectType">
           <option value="all">
@@ -245,11 +248,16 @@ function openReview(data: any) {
       </div>
 
       <div class="flex gap-1 items-center">
-        <select v-model="search.type" disabled class="select select-bordered select-sm bg-base-300">
+        <CustomSelect
+          :class="'bg-base-300 sm:min-w-[150px]'"
+          :tabs="[{ title: 'Основание / ID', value: 'uuid' }]"
+          @change-value="updateSearchType"
+        />
+        <!-- <select v-model="search.type" disabled class="select select-bordered select-sm bg-base-300">
           <option value="uuid">
             Основание / ID
           </option>
-        </select>
+        </select> -->
         <div class="relative items-center flex-grow-0 w-full hidden lg:flex">
           <input v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500" placeholder="Поиск" @input="onSearchInput($event)">
 
@@ -258,7 +266,7 @@ function openReview(data: any) {
             class="absolute right-2 loading loading-spinner loading-xs p-2"
           />
         </div>
-        <div class="gap-4 items-center hidden lg:flex">
+        <div class="gap-2 items-center hidden lg:flex">
             <ExportXls 
                 api="/api/paymenthistory/export"
                 fileName="Финансовый отчет услуг OZONMP.xlsx"
@@ -267,11 +275,11 @@ function openReview(data: any) {
         </div>
       </div>
     </div>
-    <div v-if="width > 1024">
+    <div v-if="width >= 1024">
       <DataTable sort-field="dataoperation" :sort-order="-1" class="hidden lg:block" :value="history" removable-sort 
       :pt="{
                     headerRow:  { class: [
-                        'bg-primary bg-opacity-10 border-none text-base-content rounded-t-3xl'
+                        'bg-primary bg-opacity-10 border-none text-base-content rounded-t-3xl text-center '
                     ] },
 
                 }"
@@ -282,7 +290,7 @@ function openReview(data: any) {
                         'bg-base-100 '
                     ] },
                     headerCell:  { class: [
-                        'rounded-tl-3xl border-none'
+                        'rounded-tl-3xl border-none text-center mx-auto'
                     ] },
                 }">
           <template #body="{ data }">
@@ -387,6 +395,7 @@ function openReview(data: any) {
     <ul v-else class="w-full lg:hidden ">
       <li v-for="(item, index) in history" :key="index" class="pb-3 sm:pb-4">
         <div tabindex="0" class="collapse collapse-arrow bg-base-200 rounded-box">
+          <input type="checkbox" class="peer" /> 
           <div class="collapse-title font-medium bg-base-100">
             <div class="mb-2 text-sm text-start">
               {{ item.basisoperation }}
@@ -440,12 +449,12 @@ function openReview(data: any) {
   @apply bg-base-200 rounded-lg
 }
 .p-datatable-table {
-  @apply table table-zebra rounded-lg
+  @apply table table-zebra rounded-lg text-center
 }
 .p-column-header-content {
-  @apply flex gap-2
+  @apply flex gap-2 text-center mx-auto justify-center 
 }
 .p-column-header-content {
-  @apply normal-case text-base
+  @apply normal-case text-base text-center justify-center 
 }
 </style>
