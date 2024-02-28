@@ -310,7 +310,7 @@ function selectPeriod(event: any) {
       <div class="bg-base-100 rounded-lg">
         <div class="flex flex-wrap items-center gap-6 mb-2">
           <div class="relative">
-            <div>Вставьте ссылку:</div>
+            <div>Вставьте артикул:</div>
             <div class="w-64 min-h-min md:min-h-[48px] mt-2">
               <input
                 v-model="article"

@@ -1,7 +1,7 @@
 import { getServerSession } from '#auth'
 import request from 'request'
 const config = useRuntimeConfig()
-const proxy = config.SECOND_CHANGING_PROXY
+const proxy = config.CHANGING_PROXY
 const elPerPage = 50
 
 export default eventHandler(async (event) => {
@@ -47,14 +47,14 @@ let feedbacks = reviews.map((feedback: any, index: number) => {
 
   return {
     id: feedback.uuid,
-    rating: feedback.content.score,
-    text: feedback.content.comment,
+    rating: feedback.content.score || 0,
+    text: feedback.content.comment || '',
     user: {
       name: feedback.author.firstName || 'Покупатель OZON',
       country: 'Россия',
     },
-    likes: feedback.usefulness.useful || 0,
-    dislikes: feedback.usefulness.unuseful || 0,
+    likes: feedback.usefulness ? feedback.usefulness.useful || 0 : 0,
+    dislikes: feedback.usefulness ? feedback.usefulness.unuseful || 0 : 0,
     rank: index,
   }
 })
