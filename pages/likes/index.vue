@@ -26,6 +26,7 @@ function getStatus(status: string) {
   else if (status === 'nofunds') return 'Недостаточно средств'
   else if (status === 'deleting') return 'На удалении'
   else if (status === 'deleted') return 'Удален'
+  else if (status === 'canceled') return 'Отменен'
 }
 onMounted(() => {
   review_likes.value = data.value

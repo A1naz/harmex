@@ -25,7 +25,7 @@ const search = reactive({
 })
 const codeInput = ref()
 async function getProductLikes() {
-  modalShow.value=false
+  modalShow.value = false
   const { data, error } = await useFetch('/api/productlikes/get', {
     method: 'GET',
   })
@@ -103,6 +103,7 @@ function getStatus(status: string) {
   else if (status === 'work') return 'В работе'
   else if (status === 'completed') return 'Завершен'
   else if (status === 'nofunds') return 'Недостаточно средств'
+  else if (status === 'canceled') return 'Отменен'
 }
 function removeProduct() {
   productData.value = null
@@ -203,8 +204,12 @@ const updateSearchType = (filter: any) => {
       <span class="font-bold"> {{ store.tariffString('likeProduct') }} </span>
       Все услуги оказываются по Московскому времени.
     </p> -->
-    <ProductLikesCreateLike :show="modalShow" @close-modal="modalShow = false" @create="getProductLikes()"/>
-    
+    <ProductLikesCreateLike
+      :show="modalShow"
+      @close-modal="modalShow = false"
+      @create="getProductLikes()"
+    />
+
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
@@ -529,7 +534,7 @@ const updateSearchType = (filter: any) => {
               <div
                 :class="{
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'nofunds',
+                    item.status === 'nofunds' || item.status === 'deleted' || item.status === 'canceled',
                   'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
