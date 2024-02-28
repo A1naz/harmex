@@ -1,4 +1,4 @@
-import { Like } from '~~/server/lib/models/Like'
+import { Like } from '~~/server/lib/models/wildberries/Like'
 
 export default eventHandler(async (event) => {
     

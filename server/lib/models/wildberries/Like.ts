@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { OzonConnection } from '~/server/connections/ozon'
+import { wildberriesConnection } from '~/server/connections/wildberries'
 
 const LikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -28,5 +28,5 @@ const LikeSchema = new Schema({
 //   next()
 // })
 
-export const Like = OzonConnection.model('Like', LikeSchema)
+export const Like = wildberriesConnection.model('Like', LikeSchema)
 

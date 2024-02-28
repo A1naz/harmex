@@ -1,9 +1,11 @@
-import { Like } from '~~/server/lib/models/Like'
+import { Like } from '~~/server/lib/models/wildberries/Like'
 import { findImage } from '~~/server/lib/helpers'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
+  console.log('creating like');
+  
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
@@ -57,6 +59,7 @@ export default eventHandler(async (event) => {
         documentType: DocuemntEnum.Like,
         documentId: res._id,
     })
+console.log(created);
 
   return {
     status: 'ok',

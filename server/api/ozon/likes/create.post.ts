@@ -1,4 +1,4 @@
-import { LikeOzon } from '~/server/lib/models/OZON/Like'
+import { Like } from '~/server/lib/models/ozon/Like'
 import { findImage } from '~~/server/lib/helpers'
 import { DocuemntEnum } from '~/data/enums'
 
@@ -28,7 +28,7 @@ export default eventHandler(async (event) => {
     })
   }
   const image = findImage(Number(article))
-  const created = new LikeOzon({
+  const created = new Like({
     user,
     article,
     reviews,
