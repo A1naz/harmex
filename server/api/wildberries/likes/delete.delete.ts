@@ -1,6 +1,6 @@
 ﻿﻿import { getServerSession } from '#auth'
 import { User } from '~~/server/lib/models/User'
-import { Like } from '~~/server/lib/models/Like'
+import { Like } from '~~/server/lib/models/wildberries/Like'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
