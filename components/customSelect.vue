@@ -28,6 +28,9 @@ const props = defineProps({
   },
   links: { type: Array as PropType<links[]>},
   class: { type: String },
+  // modelValue: {
+    
+  // }
 });
 
 const customClass = props.class || ''
@@ -64,7 +67,9 @@ onUnmounted(() => {
   document.body.removeEventListener('click', handleBodyClick);
 });
 
-
+defineExpose({
+  updateText
+})
 </script>
 
 <template>

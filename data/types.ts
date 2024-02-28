@@ -53,6 +53,7 @@ export interface IUser extends Entity {
     twoFaSecret: string
     isTwoFaEnabled: boolean
     post: Object
+    MPTariffs: [],
   
 }
 

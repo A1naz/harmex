@@ -48,7 +48,7 @@ export default eventHandler(async (event) => {
       ? data.items[0][`${key}`]['ФИОПолн'].split(' ')[2] || ''
       : ''
   const orgOgrn =    orgKey === 'ИП' ?  data.items[0][`${key}`]['ОГРНИП'] : data.items[0][`${key}`]['ОГРН'] || ''
-  const orgName = orgKey === 'ООО' ? data.items[0][`${key}`]['НаимПолнЮЛ'] : `ИП ${name} ${lastname}`
+  const orgName = orgKey === 'ООО' ? data.items[0][`${key}`]['НаимПолнЮЛ'] : `ИП ${lastname} ${name}`
   console.log(
     'ИМЯ',
     name,

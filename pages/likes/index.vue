@@ -11,6 +11,19 @@ const store = useMainStore()
 const review_likes = ref([]) as any
 const { width, height } = useWindowSize()
 const { data, error } = await useFetch('/api/likes/get')
+
+const MPTabs = [
+  { title: 'willberries', value: 'wb' },
+  { title: 'ozon', value: 'ozon' },
+]
+
+const selectedMP = ref('wb')
+const MPSelect = ref<any>(null)
+onMounted(() => {
+  const savedMP = localStorage.getItem('selectedMP')
+  if (savedMP) selectedMP.value = savedMP
+  MPSelect.value?.updateText(MPTabs.find((t) => t.value === selectedMP.value)?.title)
+})
 const search = reactive({
   text: '',
   loading: false,
@@ -66,6 +79,8 @@ async function deleteLike() {
 }
 
 async function selectFilterDate(e: any) {
+  console.log(e)
+
   const target = e
   const { data } = await useFetch('/api/likes/get', {
     method: 'GET',
@@ -105,22 +120,23 @@ async function onSearchInput(event: Event) {
 const updateSearchType = (filter: any) => {
   search.type = filter.value
 }
-
-//...............................................................
-
 </script>
 
 <template>
   <div>
-    
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 m-4">
       <div class="flex gap-1 lg:gap-4">
-     
         <NuxtLink to="/likes/create" class="btn btn-primary font-normal btn-sm">
           <Icon name="fluent:add-24-filled" size="24" />
           <span class="hidden lg:flex">Лайки</span>
         </NuxtLink>
-
+        <CustomSelect
+          ref="MPSelect"
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="selectFilterDate"
+        />
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
@@ -133,12 +149,11 @@ const updateSearchType = (filter: any) => {
           @change-value="selectFilterDate"
         />
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
-          
           <input
             type="text"
             class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
             placeholder="Поиск по лайкам"
-            ref="codeInput" 
+            ref="codeInput"
             v-model="search.text"
             @input="onSearchInput($event)"
           />
@@ -208,95 +223,114 @@ const updateSearchType = (filter: any) => {
       </div>
     </div>
     <div v-if="review_likes.length">
-    
       <table class="table table-sm">
-          <!-- head -->
-          <thead>
-            <tr class="bg-primary bg-opacity-5">
-              <!-- <th class="text-center">№</th> -->
-              <th class="text-center">Фото</th>
-              <th class="text-center">Артикул</th>
-              <th class="text-center">Количество</th>
-              <th class="text-center">Статус</th>
-              <th class="text-center">Дата создания</th>
-              <th class="text-center">Дата завершения</th>
-              <th class="text-center">Сроки выполнения</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="bg-base-200" v-for="(item, index) in review_likes" :key="index">
-              <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
-              <td class="text-center border-r border-primary border-opacity-5 mx-auto">
-                <div style="
-                  width: 28px;
-                  height: 36px;
-                  border-radius: 4px;"
-                  class="mx-auto"
-                >
-              <div class="dropdown dropdown-hover">
-                <label tabindex="0">
-                  <nuxt-img
-                    class="rounded-lg z-0"
-                    alt=""
-                    loading="lazy"
-                    fit="fill"
-                    :src="item.image"
-                  />
-                </label>
-                <ul
-                  tabindex="0"
-                  class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
-                >
-                  <nuxt-img
-                    class="rounded-lg z-[1]"
-                    loading="lazy"
-                    fit="fill"
-                    :src="item.image"
-                  />
-                </ul>
-              </div>  
-            </div>
-                </td>
-              <td class="text-center border-r border-primary border-opacity-5 text-primary">{{ item.article }}</td>
-              <td class="text-center border-r border-primary border-opacity-5"> 
-                <div class="flex flex-col">
-                  <span>Да: {{ item.likes }}</span>
-                  <span>Нет: {{ item.dislikes }}</span>
-                </div>
-               
-              </td>
-            
-              <td class="text-center border-r border-primary border-opacity-5"><div
-                :class="{
-                'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                  item.status === 'nofunds',
-                'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
-                item.status === 'created',
-                'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
-                item.status === 'work',
-                'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
-                item.status === 'completed',
-              }"
+        <!-- head -->
+        <thead>
+          <tr class="bg-primary bg-opacity-5">
+            <!-- <th class="text-center">№</th> -->
+            <th class="text-center">Фото</th>
+            <th class="text-center">Артикул</th>
+            <th class="text-center">Количество</th>
+            <th class="text-center">Статус</th>
+            <th class="text-center">Дата создания</th>
+            <th class="text-center">Дата завершения</th>
+            <th class="text-center">Сроки выполнения</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="bg-base-200"
+            v-for="(item, index) in review_likes"
+            :key="index"
+          >
+            <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
+            <td
+              class="text-center border-r border-primary border-opacity-5 mx-auto"
             >
-              {{ getStatus(item.status) }}
-            </div></td>
+              <div
+                style="width: 28px; height: 36px; border-radius: 4px"
+                class="mx-auto"
+              >
+                <div class="dropdown dropdown-hover">
+                  <label tabindex="0">
+                    <nuxt-img
+                      class="rounded-lg z-0"
+                      alt=""
+                      loading="lazy"
+                      fit="fill"
+                      :src="item.image"
+                    />
+                  </label>
+                  <ul
+                    tabindex="0"
+                    class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
+                  >
+                    <nuxt-img
+                      class="rounded-lg z-[1]"
+                      loading="lazy"
+                      fit="fill"
+                      :src="item.image"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </td>
+            <td
+              class="text-center border-r border-primary border-opacity-5 text-primary"
+            >
+              {{ item.article }}
+            </td>
             <td class="text-center border-r border-primary border-opacity-5">
-              <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">{{ defaultDateShort(item.createdDate) }}</div>
-              </td>
+              <div class="flex flex-col">
+                <span>Да: {{ item.likes }}</span>
+                <span>Нет: {{ item.dislikes }}</span>
+              </div>
+            </td>
+
             <td class="text-center border-r border-primary border-opacity-5">
-              <div class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
+              <div
+                :class="{
+                  'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                    item.status === 'nofunds',
+                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                    item.status === 'created',
+                  'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                    item.status === 'work',
+                  'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                    item.status === 'completed',
+                }"
+              >
+                {{ getStatus(item.status) }}
+              </div>
+            </td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div
+                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+              >
+                {{ defaultDateShort(item.createdDate) }}
+              </div>
+            </td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              <div
+                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+              >
                 {{ defaultDateShort(item.endedDate) }}
               </div>
             </td>
-            <td class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5">
-              <div v-if="item.period" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center">
+            <td
+              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5"
+            >
+              <div
+                v-if="item.period"
+                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+              >
                 <div>{{ defaultDateShort(item.period) }}</div>
               </div>
               <div v-else>Нет</div>
             </td>
-            </tr>
-            <div ref="target" class="flex justify-center items-center h-4" />
-          </tbody>
+          </tr>
+          <div ref="target" class="flex justify-center items-center h-4" />
+        </tbody>
       </table>
       <!-- <DataTable
         v-if="width > 1024"
