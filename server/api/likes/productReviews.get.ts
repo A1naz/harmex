@@ -16,7 +16,6 @@ export default eventHandler(async (event) => {
     })
   }
 
-  
   const productUrl = `http://api.ozon.ru/composer-api.bx/page/json/v2?url=%2Fproduct%2F${article}%2F%3Flayout_container%3Dreviewshelfpaginator%26layout_page_index%3D4%26page%3D2%26reviewsFilters%3De30K%26reviewsVariantMode%3D2%26sh%3Db93L0h4A6Q%26sort%3Dpublished_at_desc%26start_page_id%3D1dd1ae16494e63a9b04a45ab8ce917d5%26tab%3Dreviews`
   const options = {
     url: productUrl,
@@ -30,11 +29,11 @@ export default eventHandler(async (event) => {
   const data: any = await new Promise((resolve, reject) => {
     request.get(options, function (error, response, body) {
       if (!error) {
-        resolve(JSON.parse(body)) // Разрешение обещания с данными, если запрос успешен
+        resolve(JSON.parse(body))
       } else {
         console.log(error)
 
-        reject(new Error(`Непредвиденный статус код`)) // Обработка непредвиденных статусов ответа
+        reject(new Error(`Непредвиденный статус код`))
       }
     })
   })
