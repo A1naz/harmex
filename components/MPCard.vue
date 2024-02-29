@@ -1,0 +1,36 @@
+<script setup lang="ts">
+defineProps({
+  info: {
+    type: Object,
+  },
+})
+const theme = useColorMode()
+</script>
+
+<template>
+  <div class="card xl:w-64 bg-base-100 shadow-xl">
+    <figure>
+      <img class="px-4 pt-4" :src="`/img/mp/${info?.value}.png`" alt="Shoes" />
+    </figure>
+    <div class="card-body -my-6 pl-4">
+      <h2 class="card-title text-primary">{{ info?.title }}</h2>
+      <div class="flex justify-start">
+        <span style="opacity: 0.8">Категория:</span>
+        <span class="ml-2">{{ info?.category }}</span>
+      </div>
+      <div class="card-actions justify-center mb-2">
+        <button
+        :disabled="info?.awaiting"
+          :class="{
+             'bg-base-300 hover:text-base-100 text-neutral': theme.value === 'light',
+             '': theme.value === 'dark',
+          }"
+          class="btn btn-primary w-full rounded-xl text-[19px] font-normal  border-none hover:bg-primary"
+          @click="navigateTo(`/buyouts/create/${info?.value}`)"
+        >
+        {{ info?.awaiting ? 'Ожидается' : 'Открыть' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
