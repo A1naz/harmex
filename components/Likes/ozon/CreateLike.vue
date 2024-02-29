@@ -21,12 +21,16 @@ const reviews = ref<any>([])
 const article = ref('')
 const savedArticle = ref('')
 const loading = ref(false)
+const btnDisabled = ref(false)
+const urlError = ref(false)
+const urlSuccess = ref(false)
 const selectSortBy = ref('')
 const sortBy = computed(() => route.query?.sortBy || 'date')
 
 async function getProductReviews() {
   reviews.value = []
   loading.value = true
+  btnDisabled.value = true
   changedReviews.value = []
   savedArticle.value = article.value
   const { data, error }: any = await useFetch('/api/ozon/likes/productReviews', {
@@ -40,7 +44,9 @@ async function getProductReviews() {
     },
   })
   loading.value = false
+  btnDisabled.value = false
   if (error.value) {
+    urlError.value = true
     notify({
       title: 'Что-то пошло не так',
       text: error.value.data.message,
@@ -49,10 +55,12 @@ async function getProductReviews() {
     return
   }
   if (data.value?.feedbacks.length < 1) {
+    urlError.value = true
     notify({
       title: 'Отзывы не найдены',
     })
   }
+  urlSuccess.value = true
   const initial = (data.value.feedbacks as any).map((review: any) => {
     review.addLikes = 0
     review.addDislikes = 0
@@ -311,18 +319,22 @@ function selectPeriod(event: any) {
         <div class="flex flex-wrap items-center gap-6 mb-2">
           <div class="relative">
             <div>Вставьте артикул:</div>
-            <div class="w-64 min-h-min md:min-h-[48px] mt-2">
+            <div class="relative w-64 min-h-min md:min-h-[48px] mt-2">
               <input
                 v-model="article"
                 :class="{
-                  'input-error': !reviews,
-                  'input-success': reviews.length > 0,
+                  'input-error': urlError,
+                  'input-success': urlSuccess,
                 }"
                 tabindex="0"
                 class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
                 placeholder="Введите артикул"
-                type="text"
+                type="number"
                 @keydown.enter="getProductReviews"
+              />
+              <span
+                v-if="loading === true"
+                class="absolute right-2 top-2 md:top-4 loading loading-spinner loading-xs p-2 my-auto"
               />
               <!-- <button
                 class="btn btn-ghost normal-case"
@@ -335,7 +347,7 @@ function selectPeriod(event: any) {
           <div>
             <div>Период выполнения:</div>
             <select
-              class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
+              class="select w-44  select-sm mt-2 min-h-min md:min-h-[48px] bg-base-200"
               @change="selectPeriod"
             >
               <option value="3h">3 часа</option>
@@ -347,7 +359,7 @@ function selectPeriod(event: any) {
             </select>
           </div>
           <div class="w-full ml-auto self-end justify-end lg:w-40">
-            <button class="btn w-full btn-primary" @click="getProductReviews">
+            <button class="btn w-full btn-primary" @click="getProductReviews" :disabled="btnDisabled">
               Добавить
             </button>
           </div>

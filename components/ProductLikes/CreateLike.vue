@@ -66,7 +66,7 @@ async function create() {
     emit('create')
     getProductLikes()
   }
-  modalShow.value = false
+  
   removeProduct()
 }
 async function sendUrl() {
