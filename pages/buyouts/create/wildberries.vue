@@ -3,7 +3,7 @@ import { useNotification } from '@kyvg/vue3-notification'
 import { useWindowSize } from '@vueuse/core'
 import type { Rule } from '@/data/buyout/rules'
 import { rules } from '@/data/buyout/rules'
-import type { ISearchQueryChange } from '@/stores/buyout'
+import type { ISearchQueryChange } from '@/stores/wildberriesBuyout'
 
 const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
 const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>
@@ -36,7 +36,7 @@ const ruleModal = ref(false)
 const selectedRuleProductIndex = ref(0)
 const checksModal = ref(false)
 const infoModal = ref<HTMLDialogElement>()
-const store = useBuyoutStore()
+const store = useWildberriesBuyoutStore()
 const infoType = ref('')
 const defaultRules: Rule[] = rules
 const route = useRoute()
@@ -145,7 +145,7 @@ async function openChecksModal() {
 
   if (!isUserWarned.value) {
     const { data, error }: any = await useFetch(
-      '/api/buyout/checkPVZRestrictions',
+      '/api/wildberries/buyout/checkPVZRestrictions',
       {
         method: 'GET',
       }
@@ -211,7 +211,7 @@ async function createBuyout() {
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
   disabledCreateButton.value = true
-  const { data, error } = await useFetch('/api/buyout/create', {
+  const { data, error } = await useFetch('/api/wildberries/buyout/create', {
     method: 'POST',
     watch: false,
     body: JSON.stringify(products.value),
@@ -299,7 +299,7 @@ const isCreatingTemplatesDisabled = ref(false)
 async function createTemplate() {
   isCreatingTemplatesDisabled.value = true
 
-  const { data, error } = await useFetch('/api/buyout/createBuyoutTemplate', {
+  const { data, error } = await useFetch('/api/wildberries/buyout/createBuyoutTemplate', {
     method: 'POST',
     query: {
       title: templateTitle,
@@ -322,7 +322,7 @@ async function createTemplate() {
 
 async function getTemplates() {
   loadingTemplates.value = true
-  const { data, error }: any = await useFetch('/api/buyout/templates')
+  const { data, error }: any = await useFetch('/api/wildberries/buyout/templates')
   if (data.value) {
     templates.value = data.value.templates
   }

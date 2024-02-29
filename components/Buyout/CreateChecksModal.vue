@@ -13,7 +13,7 @@ const props = defineProps({
 const isCreateButtonDisabled = toRef(props, 'isCreateButtonDisabled')
 
 const emit = defineEmits(['close', 'create'])
-const store = useBuyoutStore()
+const store = useOzonBuyoutStore()
 const message = ref('')
 const loading = ref(false)
 const success = ref(false)

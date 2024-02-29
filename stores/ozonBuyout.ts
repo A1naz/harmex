@@ -5,7 +5,7 @@ import { rules } from '@/data/buyout/rules'
 
 export interface ISearchQueryChange { value: string; queryIndex: number; productIndex: number }
 
-export const useBuyoutStore = defineStore('buyout', {
+export const useOzonBuyoutStore = defineStore('ozonBuyout', {
   state: () => ({
     createProducts: [] as Item[],
     selectedItem: null as number | null,

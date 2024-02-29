@@ -31,7 +31,7 @@ function copyBuyout() {
 }
 
 const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
-const store = useOzonBuyoutStore()
+const store = useWildberriesBuyoutStore()
 const startDate = ref(new Date(Date.now()))
 
 async function deleteBuyOut() {
