@@ -15,6 +15,9 @@ const store = useMainStore()
 const twoFaQRModal = ref<any>(null)
 
 const wbApiKeys = ref([''])
+const apiKey = ref([''])
+const apiKeys = ref<{ mp: string; keys: string[]; }[]>([])
+const currentMP = ref('wildberries')
 const form: any = reactive({
   firstName: '',
   lastName: '',
@@ -74,6 +77,10 @@ onMounted(async () => {
   form.orgInn = store.client.orgInn
   form.middleName = store.client.middleName
   form.phoneNumber = store.client.phoneNumber
+  if (store.client.apiKeys !== undefined) {
+    apiKeys.value = store.client.apiKeys;
+    console.log(apiKeys.value)
+  }
 })
 // if (!store.checkTelegramId())
 // warning.value =
@@ -125,10 +132,12 @@ async function updatePassword() {
   await store.getClient()
 }
 async function setApiKey() {
+
   const { data, error } = await useFetch('/api/user/setApiKey', {
     method: 'POST',
     body: {
-      wbApiKeys: wbApiKeys.value,
+      // wbApiKeys: wbApiKeys.value,
+      apiKeys: apiKeys.value,
     },
     headers,
   })
@@ -144,6 +153,22 @@ async function setApiKey() {
   start()
   await store.getClient()
   updateInitital()
+}
+
+async function setNewApi() {
+  if(apiKey.value[0] != '') {
+  const newKey = { mp: currentMP.value, keys: apiKey.value };
+
+  const existingKeyIndex = apiKeys.value.findIndex(key => key.mp === newKey.mp);
+
+  if (existingKeyIndex !== -1) {
+      apiKeys.value[existingKeyIndex].keys.push(...newKey.keys);
+  } else {
+    apiKeys.value.push(newKey);
+  }}
+
+  await setApiKey();
+
 }
 async function update() {
   if (
@@ -358,6 +383,10 @@ async function openTwoFaQRModal() {
     store.twoFaQRModal = true
   }
 }
+
+function changeMP(filter: any) {
+  currentMP.value = filter.value;
+}
 </script>
 
 <template>
@@ -566,25 +595,30 @@ async function openTwoFaQRModal() {
           class="flex flex-col gap-6 w-full mt-1 relative"
         >
           <div class="flex flex-col gap-2 relative">
-            <div class="flex xl:gap-x-8 gap-2.5">
+            <div class="flex gap-2.5" >
               <input
-                v-model="wbApiKeys[index]"
+                v-model="apiKey[0]"
                 :disabled="store.client.wbApiKeys[index] === wbApiKeys[index]"
                 type="text"
                 placeholder="Стандартный апи ключ OZON"
                 class="input input-bordered input-primary w-full max-w-xl"
                 />
+              <CustomSelect
+                :class="'btn btn-md btn-primary text-lg'"
+                :tabs="[{ title: 'Wb', value: 'wildberries' }, { title: 'Ozon', value: 'ozon' }, { title: 'Avito', value: 'avito' }]"
+                @change-value="changeMP"
+              />
               <button
                 class="btn btn-primary xl:w-40 mr-0 self-end"
-                @click="setApiKey"
+                @click="setNewApi"
               >
                 Сохранить
               </button>
             </div>
-            <div class="flex gap-x-2.5">
+            <!-- <div class="flex gap-x-2.5">
               <div
                 v-if="index === 0"
-                class="btn btn-primary btn-square sm:hidden"
+                class="btn btn-primary btn-square"
                 @click="wbApiKeys[0] = ''"
               >
                 <IconCSS size="20" name="material-symbols:close" />
@@ -603,10 +637,66 @@ async function openTwoFaQRModal() {
               >
                 <IconCSS size="20" name="fluent:add-20-filled" />
               </div>
-            </div>
+            </div> -->
             
           </div>
         </div>
+        <div class="flex flex-col">
+          <div
+          v-for="(apiKey, index) of apiKeys"
+          :key="index"
+          class="flex flex-col gap-2 mr-4 "
+        >
+          <!-- <div class="flex flex-col gap-2 relative"> -->
+            <div class="flex flex-col gap-2.5 mb-2.5">
+              <!-- <div class="text-lg font-semibold text-center">{{ apiKey.mp }}</div> -->
+              <div class="flex-col " v-for="(key, keyIndex) of apiKey.keys" :key="keyIndex">
+                  <div class=" flex gap-2 w-full">
+                    <div class="relative hidden lg:flex items-center flex-grow-0 w-full max-w-xl">
+                      <input
+                        v-model="apiKey.keys[keyIndex]"
+                        readonly
+                        type="text"
+                        :placeholder="`Стандартный апи ключ ${apiKey.mp}`"
+                        class="input input-bordered join-item input-primary w-full  border-base-300 bg-base-200"
+                      />
+                      <div class="absolute right-2 p-2 text-xs my-auto font-semibold text-center bg-base-300 rounded-lg">{{ apiKey.mp }}</div>
+                    </div>
+                    
+                    <div
+                      class="btn btn-primary btn-square"
+                      @click="apiKey.keys.splice(keyIndex, 1)"
+                    >
+                      <IconCSS size="20" name="material-symbols:close" />
+                    </div>
+                  </div>
+                    
+                </div>
+              <!-- <div class="flex gap-2 flex-col">
+                
+                <div class="flex flex-row gap-2">
+                  <button
+                    class="btn btn-primary xl:w-40"
+                    @click="setApiKey"
+                  >
+                    Сохранить
+                  </button>
+                  <div
+                    class="btn btn-primary btn-square"
+                    @click="apiKey.keys.push('')"
+                  >
+                    <IconCSS size="20" name="fluent:add-20-filled" />
+                  </div>
+                </div>
+                
+              </div>  -->
+            </div>
+
+          <!-- </div> -->
+        </div>
+        </div>
+        
+
         <!-- x -->
       </div>
     </section>
@@ -700,7 +790,6 @@ async function openTwoFaQRModal() {
             <div class="mt-1 text-gray-40">
               Ссылка на бота:
               <a
-
                 target="_blank"
                 class="text-primary text-lg"
               >

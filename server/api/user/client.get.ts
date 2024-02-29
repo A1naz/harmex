@@ -49,6 +49,7 @@ export default eventHandler(async (event) => {
     lastName: user.lastName,
     hasPassword: !!user.password,
     telegramUserId: user.telegramUserId,
+    apiKeys: user.apiKeys?.length ? user.apiKeys : [],
     wbApiKeys: user.wbApiKeys?.length ? user.wbApiKeys : [],
     partner: user.partner,
     isBanned: user.isBanned,
