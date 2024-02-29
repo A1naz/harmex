@@ -22,7 +22,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
 
     async cloneBuyout(uuid: string) {
 
-      const { data, error } = await useFetch('/api/buyout/clone', {
+      const { data, error } = await useFetch('/api/ozon/buyout/clone', {
         query: {
           uuid,
         },
@@ -66,7 +66,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
         return
       }
 
-      const { data, error } = await useFetch(`/api/product/${article}`, {
+      const { data, error } = await useFetch(`/api/ozon/product/${article}`, {
         method: 'GET',
       })
       if (error.value) {

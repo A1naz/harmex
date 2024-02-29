@@ -251,7 +251,7 @@ watch(products.value, (old, value) => {
 
 async function getPickpoints() {
   try {
-    const data = await $fetch('/api/buyout/pickpoints', {
+    const data = await $fetch('/api/wildberries/buyout/pickpoints', {
       method: 'GET',
     })
     pickpoints.value = (data as any).points
@@ -305,6 +305,7 @@ async function createTemplate() {
       title: templateTitle,
     },
     body: products.value,
+    watch: false,
   })
 
   if (data.value) {
@@ -313,7 +314,6 @@ async function createTemplate() {
       title: 'Шаблон выкупа создан',
       type: 'success',
     })
-    window.location.reload()
 
     closeTemplateModal.value?.click()
     isCreatingTemplatesDisabled.value = false
@@ -410,7 +410,7 @@ function closeTemplateModalFN() {
         v-if="width < 1600"
         class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-4"
       >
-        <BuyoutCreateCard
+        <BuyoutWildberriesCreateCard
           v-for="(product, index) in products"
           :key="index"
           :loading="!pickpoints?.length"
@@ -497,7 +497,7 @@ function closeTemplateModalFN() {
           </thead>
 
           <tbody>
-            <BuyoutCreateTableRow
+            <BuyoutWildberriesCreateTableRow
               v-for="(product, index) in products"
               :key="index"
               :product="product"
@@ -509,7 +509,7 @@ function closeTemplateModalFN() {
           </tbody>
         </table>
       </div>
-      <BuyoutSelectPointModal
+      <BuyoutWildberriesSelectPointModal
         v-if="modalOpen"
         :state="modalOpen"
         :pickpoints="pickpoints"
@@ -655,7 +655,7 @@ function closeTemplateModalFN() {
         </div>
       </form>
     </dialog>
-    <BuyoutCreateChecksModal
+    <BuyoutWildberriesCreateChecksModal
       v-if="checksModal"
       :isCreateButtonDisabled="isCreateButtonDisabled"
       :state="checksModal"
@@ -771,7 +771,7 @@ function closeTemplateModalFN() {
           <span class="loading loading-spinner loading-lg"></span>
         </div>
         <div class="mb-10"></div>
-        <BuyoutTemplateExpand
+        <BuyoutWildberriesTemplateExpand
           v-for="template in templates"
           :key="template.uuid"
           class="mt-1"
@@ -780,7 +780,7 @@ function closeTemplateModalFN() {
           :uuid="template.uuid"
           :opened="openAll"
           :info="template"
-        ></BuyoutTemplateExpand>
+        ></BuyoutWildberriesTemplateExpand>
         <div class="modal-action flex justify-between"></div>
       </div>
     </div>

@@ -252,7 +252,7 @@ onKeyStroke('Escape', (e) => {
 async function getAddressText(lt: number, lg: number) {
   addressText.value = 'Загрузка...'
   const { data, error }: any = await useFetch(
-    `/api/buyout/addressText`, {
+    `/api/ozon/buyout/addressText`, {
       method: 'GET',
       params: {
         lt,

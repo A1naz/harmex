@@ -1,6 +1,6 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
-import { Buyoutlog } from '@/server/lib/models/Buyoutlog'
+import { Buyoutlog } from '@/server/lib/models/wildberries/Buyoutlog'
 
 export default eventHandler(async (event) => {
 

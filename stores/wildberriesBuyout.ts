@@ -22,7 +22,7 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
 
     async cloneBuyout(uuid: string) {
 
-      const { data, error } = await useFetch('/api/buyout/clone', {
+      const { data, error } = await useFetch('/api/wildberries/buyout/clone', {
         query: {
           uuid,
         },
@@ -66,7 +66,7 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
         return
       }
 
-      const { data, error } = await useFetch(`/api/product/${article}`, {
+      const { data, error } = await useFetch(`/api/wildberries/product/${article}`, {
         method: 'GET',
       })
       if (error.value) {

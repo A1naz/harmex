@@ -1,5 +1,5 @@
 ﻿import { User } from '~/server/lib/models/User'
-import { BuyoutTemplate } from '~/server/lib/models/BuyoutTemplate'
+import { BuyoutTemplate } from '~/server/lib/models/wildberries/BuyoutTemplate'
 import { getServerSession } from '#auth'
 
 export default eventHandler(async (event) => {
@@ -14,12 +14,12 @@ export default eventHandler(async (event) => {
   const uuid = query.uuid
   await BuyoutTemplate.deleteOne({ uuid })
 
-  await userLog(event,
-    {
-        documentType: DocuemntEnum.Buyout,
-        documentId: uuid,
-        comment: 'удаление шаблона'
-    })
+  // await userLog(event,
+  //   {
+  //       documentType: DocuemntEnum.Buyout,
+  //       documentId: uuid,
+  //       comment: 'удаление шаблона'
+  //   })
 
   return { status: 'ok' }
 })

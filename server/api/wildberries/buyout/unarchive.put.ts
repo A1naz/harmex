@@ -1,6 +1,6 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
-import { Buyout } from '@/server/lib/models/Buyout'
+import { Buyout } from '@/server/lib/models/wildberries/Buyout'
 import { DocuemntEnum } from '~/data/enums'
 import * as fs from 'fs'
 

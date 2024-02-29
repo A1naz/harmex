@@ -44,7 +44,7 @@ async function selectTemplate() {
 }
 
 async function deleteTemplate() {
-  const { data, error }: any = await useFetch('/api/buyout/deleteTemplate', {
+  const { data, error }: any = await useFetch('/api/wildberries/buyout/deleteTemplate', {
     method: 'DELETE',
     params: { uuid: props.uuid },
   })

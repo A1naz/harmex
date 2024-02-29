@@ -1,5 +1,5 @@
 ﻿import { v4 as uuid } from 'uuid'
-import { BuyoutTemplate } from '~/server/lib/models/BuyoutTemplate'
+import { BuyoutTemplate } from '~/server/lib/models/wildberries/BuyoutTemplate'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {

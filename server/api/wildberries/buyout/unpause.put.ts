@@ -1,4 +1,4 @@
-import { Buyout } from '@/server/lib/models/Buyout'
+import { Buyout } from '@/server/lib/models/wildberries/Buyout'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {

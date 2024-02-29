@@ -3,7 +3,7 @@ import { useNotification } from '@kyvg/vue3-notification'
 import { useWindowSize } from '@vueuse/core'
 import type { Rule } from '@/data/buyout/rules'
 import { rules } from '@/data/buyout/rules'
-import type { ISearchQueryChange } from '@/stores/buyout'
+import type { ISearchQueryChange } from '@/stores/ozonBuyout'
 
 const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
 const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>
@@ -251,7 +251,7 @@ watch(products.value, (old, value) => {
 
 async function getPickpoints() {
   try {
-    const data = await $fetch('/api/buyout/pickpoints', {
+    const data = await $fetch('/api/ozon/buyout/pickpoints', {
       method: 'GET',
     })
     pickpoints.value = (data as any).points

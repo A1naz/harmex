@@ -1,6 +1,6 @@
 import type { Rule } from '@/data/buyout/rules'
 import { findPositionByQuery } from '@/server/lib/helpers'
-import getPickpoints from '~/server/lib/getPoints'
+import getPickpoints from '@/server/utils/wildberries/getPoints'
 import { ProxySearchQuery } from '~/server/lib/models/ProxySearchQuery'
 
 interface Item {
@@ -55,8 +55,8 @@ export default eventHandler(async (event) => {
   const query = getQuery(event)
   const { userTimezoneOffsetHours } = query
   const { points } = getPickpoints()
-  const allProxies: any = await ProxySearchQuery.find()
-  const proxies: string[] = allProxies[0].proxies
+  // const allProxies: any = await ProxySearchQuery.find()
+  // const proxies: string[] = allProxies[0].proxies
 
   const products: Item[] = body
   const result = {

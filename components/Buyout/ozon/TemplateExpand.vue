@@ -16,7 +16,7 @@ const props = defineProps({
 
 const uuid = toRef(props, 'uuid')
 const emit = defineEmits(['getTemplates', 'closeModal'])
-const store = useWildberriesBuyoutStore()
+const store = useOzonBuyoutStore()
 const opened = ref()
 
 onMounted(async () => {
@@ -44,7 +44,7 @@ async function selectTemplate() {
 }
 
 async function deleteTemplate() {
-  const { data, error }: any = await useFetch('/api/buyout/deleteTemplate', {
+  const { data, error }: any = await useFetch('/api/ozon/buyout/deleteTemplate', {
     method: 'DELETE',
     params: { uuid: props.uuid },
   })
@@ -78,7 +78,7 @@ async function deleteTemplate() {
         <label @click="deleteTemplate" class="btn btn-sm text-red-400 z-10"
           >Удалить</label
         >
-        <nuxt-link to="/buyouts/create/wildberries">
+        <nuxt-link to="/buyouts/create/ozon">
           <label
             @click="selectTemplate"
             class="btn btn-sm btn-primary truncate mr-1 bg-opacity-20 border-none text-base-content"
