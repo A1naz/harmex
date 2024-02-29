@@ -15,6 +15,9 @@ const store = useMainStore()
 const twoFaQRModal = ref<any>(null)
 
 const wbApiKeys = ref([''])
+const apiKey = ref([''])
+const apiKeys = ref<{ mp: string; keys: string[] }[]>([])
+const currentMP = ref('wildberries')
 const form: any = reactive({
   firstName: '',
   lastName: '',
@@ -58,9 +61,9 @@ function updateInitital() {
   initialForm.username = store.client.username
   initialForm.middleName = store.client.middleName
   initialForm.phoneNumber = store.client.phoneNumber
-  wbApiKeys.value = store.client.wbApiKeys.length
-    ? JSON.parse(JSON.stringify(store.client.wbApiKeys))
-    : ['']
+  // wbApiKeys.value = store.client.wbApiKeys.length
+  //   ? JSON.parse(JSON.stringify(store.client.wbApiKeys))
+  //   : ['']
 }
 onMounted(async () => {
   updateInitital()
@@ -74,6 +77,10 @@ onMounted(async () => {
   form.orgInn = store.client.orgInn
   form.middleName = store.client.middleName
   form.phoneNumber = store.client.phoneNumber
+  if (store.client.apiKeys !== undefined) {
+    apiKeys.value = store.client.apiKeys
+    console.log(apiKeys.value)
+  }
 })
 // if (!store.checkTelegramId())
 // warning.value =
@@ -86,7 +93,7 @@ const disabledSaveButton = computed(() => {
     form.email == initialForm.email &&
     form.username == initialForm.username &&
     form.middleName == initialForm.middleName &&
-    form.phoneNumber.replace(/[\(\)\-\s]/g, '') == initialForm.phoneNumber 
+    form.phoneNumber.replace(/[\(\)\-\s]/g, '') == initialForm.phoneNumber
   )
 })
 const disabledChangePasswordButton = computed(() => {
@@ -102,6 +109,7 @@ async function updatePassword() {
     method: 'POST',
     body: passwordForm,
     headers,
+    watch: false,
   })
   if ((data.value as any)?.status === 'error') {
     alert.show = true
@@ -125,12 +133,15 @@ async function updatePassword() {
   await store.getClient()
 }
 async function setApiKey() {
+
   const { data, error } = await useFetch('/api/user/setApiKey', {
     method: 'POST',
     body: {
-      wbApiKeys: wbApiKeys.value,
+      // wbApiKeys: wbApiKeys.value,
+      apiKeys: apiKeys.value,
     },
     headers,
+    watch: false,
   })
   if (error.value) {
     alert.show = true
@@ -144,6 +155,41 @@ async function setApiKey() {
   start()
   await store.getClient()
   updateInitital()
+}
+
+async function setNewApi() {
+  if (apiKey.value[0].trim() === '') {
+    notify({
+      type: 'error',
+      title: 'Необходимо ввести API ключ',
+    })
+    return
+  }
+
+  const newKey = { mp: currentMP.value, keys: apiKey.value }
+
+  const existingKeyIndex = apiKeys.value.findIndex(
+    (key) => key.mp === newKey.mp
+  )
+
+  if (existingKeyIndex !== -1) {
+    const existingKeys = apiKeys.value[existingKeyIndex].keys;
+    const keysToAdd = newKey.keys.filter(key => !existingKeys.includes(key));
+
+    if (keysToAdd.length !== newKey.keys.length) {
+        notify({
+            type: 'error',
+            title: `Ключ ${apiKey.value[0]} уже присутствует в списке API ключей MP ${newKey.mp}`,
+        });
+        return;
+    }
+
+    apiKeys.value[existingKeyIndex].keys.push(...keysToAdd);
+  } else {
+    apiKeys.value.push(newKey)
+  }
+  
+  await setApiKey()
 }
 async function update() {
   if (
@@ -160,6 +206,7 @@ async function update() {
     method: 'POST',
     body: form,
     headers,
+    watch: false, 
   })
   if (error.value) {
     alert.show = true
@@ -182,6 +229,7 @@ async function unlinkTelegram() {
   const { data, error } = await useFetch('/api/user/unlinkTelegram', {
     method: 'POST',
     headers,
+    watch: false,
   })
   if (error.value) {
     alert.show = true
@@ -261,6 +309,7 @@ const botNotifications: any = ref([
 async function getTGBotInfo() {
   const { data, error }: any = await useFetch('/api/tgBot/getTGBotInfo', {
     method: 'GET',
+    watch: false,
   })
 
   if (data.value) {
@@ -298,6 +347,7 @@ async function setChatBot() {
     query: {
       isEnabled: isChatBotEnabled.value,
     },
+    watch: false,
   })
 
   if (data.value) {
@@ -324,6 +374,7 @@ async function setChatBotSettings() {
     body: {
       settings: trueSettings,
     },
+    watch: false,
   })
 
   if (data.value) {
@@ -343,7 +394,7 @@ async function openTwoFaQRModal() {
       query: {
         changeTo: store.client.isTwoFaEnabled,
       },
-      watch: false
+      watch: false,
     })
     if (data.value) {
       notify({
@@ -357,6 +408,10 @@ async function openTwoFaQRModal() {
     twoFaQRModal.value?.getQr()
     store.twoFaQRModal = true
   }
+}
+
+function changeMP(filter: any) {
+  currentMP.value = filter.value
 }
 </script>
 
@@ -432,17 +487,16 @@ async function openTwoFaQRModal() {
             v-model="form.orgInn"
             type="text"
             placeholder="ИНН организации"
-            class="input input-bordered w-full "
+            class="input input-bordered w-full"
             readonly
           />
           <input
             v-model="form.orgOgrn"
             type="text"
             placeholder="ОГРН(ОГРНИП)"
-            class="input input-bordered w-full "
+            class="input input-bordered w-full"
             readonly
           />
-          
         </div>
       </div>
     </section>
@@ -473,26 +527,30 @@ async function openTwoFaQRModal() {
             placeholder="Отчество"
             class="input input-bordered w-full"
           />
-          <div class="hidden btn btn-primary xl:w-40 cursor-default xl:block opacity-0 self-end">&nbsp</div>
+          <div
+            class="hidden btn btn-primary xl:w-40 cursor-default xl:block opacity-0 self-end"
+          >
+            &nbsp
+          </div>
         </div>
-        
+
         <div class="flex flex-col w-full gap-2.5 xl:flex-row">
           <input
             v-model="form.email"
             type="text"
             placeholder="Почта (email)"
-            class="input input-bordered w-full "
+            class="input input-bordered w-full"
           />
           <input
             v-model="form.username"
             type="text"
             placeholder="Никнейм"
-            class="input input-bordered w-full "
+            class="input input-bordered w-full"
           />
           <input
             v-model="form.phoneNumber"
             type="text"
-            class="input input-bordered w-full "
+            class="input input-bordered w-full"
             v-maska
             data-maska="+7 (###) ###-##-##"
             placeholder="+7 (___) ___-__-__"
@@ -501,13 +559,12 @@ async function openTwoFaQRModal() {
           <div>
             <button
               :disabled="disabledSaveButton"
-              class="btn btn-primary xl:w-40 mr-0 self-end"
+              class="btn  btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-end"
               @click="update"
             >
               Сохранить
             </button>
           </div>
-          
         </div>
       </div>
     </section>
@@ -541,13 +598,12 @@ async function openTwoFaQRModal() {
           />
           <button
             :disabled="disabledChangePasswordButton"
-            class="btn btn-primary xl:w-40 mr-0 self-start"
+            class="btn btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-start"
             @click="updatePassword"
           >
             {{ store.client.hasPassword ? 'Изменить' : 'Сохранить' }}
           </button>
         </div>
-
       </div>
     </section>
     <section
@@ -561,30 +617,36 @@ async function openTwoFaQRModal() {
       </div>
       <div class="flex flex-col gap-2 w-full">
         <div
-          v-for="(key, index) of wbApiKeys"
-          :key="key"
           class="flex flex-col gap-6 w-full mt-1 relative"
         >
           <div class="flex flex-col gap-2 relative">
-            <div class="flex xl:gap-x-8 gap-2.5">
+            <div class="flex gap-2.5">
               <input
-                v-model="wbApiKeys[index]"
-                :disabled="store.client.wbApiKeys[index] === wbApiKeys[index]"
+                v-model="apiKey[0]"
                 type="text"
-                placeholder="Стандартный апи ключ OZON"
+                placeholder="Стандартный апи ключ"
                 class="input input-bordered input-primary w-full max-w-xl"
-                />
+              />
+              <CustomSelect
+                :class="'btn btn-md btn-primary text-lg'"
+                :tabs="[
+                  { title: 'Wildberries', value: 'wildberries' },
+                  { title: 'Ozon', value: 'ozon' },
+                  // { title: 'Avito', value: 'avito' },
+                ]"
+                @change-value="changeMP"
+              />
               <button
-                class="btn btn-primary xl:w-40 mr-0 self-end"
-                @click="setApiKey"
+                class="btn btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-end"
+                @click="setNewApi"
               >
                 Сохранить
               </button>
             </div>
-            <div class="flex gap-x-2.5">
+            <!-- <div class="flex gap-x-2.5">
               <div
                 v-if="index === 0"
-                class="btn btn-primary btn-square sm:hidden"
+                class="btn btn-primary btn-square"
                 @click="wbApiKeys[0] = ''"
               >
                 <IconCSS size="20" name="material-symbols:close" />
@@ -603,10 +665,52 @@ async function openTwoFaQRModal() {
               >
                 <IconCSS size="20" name="fluent:add-20-filled" />
               </div>
-            </div>
-            
+            </div> -->
           </div>
         </div>
+        <div class="flex flex-col">
+          <div
+            v-for="(apiKey, index) of apiKeys"
+            :key="index"
+            class="flex flex-col gap-2 mr-4"
+          >
+            <div class="flex flex-col gap-2.5 mb-2.5">
+              <div
+                class="flex-col"
+                v-for="(key, keyIndex) of apiKey.keys"
+                :key="keyIndex"
+              >
+                <div class="flex gap-2 w-full">
+                  <div
+                    class="relative flex items-center flex-grow-0 w-full max-w-xl"
+                  >
+                    <input
+                      v-model="apiKey.keys[keyIndex]"
+                      readonly
+                      type="text"
+                      :placeholder="`Стандартный апи ключ ${apiKey.mp}`"
+                      class="input input-bordered join-item input-primary w-full border-base-300 bg-base-200"
+                    />
+                    <div
+                      class="absolute right-2 p-2 text-xs my-auto font-semibold text-center bg-base-300 rounded-lg"
+                    >
+                      {{ apiKey.mp }}
+                    </div>
+                  </div>
+
+                  <div
+                    class="btn btn-primary btn-square bg-opacity-10 border-none text-base-300"
+                    @click="() => { apiKey.keys.splice(keyIndex, 1); setApiKey(); }"
+                  >
+                    <IconCSS size="20" name="material-symbols:close" />
+                  </div>
+                </div>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+
         <!-- x -->
       </div>
     </section>
@@ -614,16 +718,19 @@ async function openTwoFaQRModal() {
       class="mt-6 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
     >
       <div class="self-start description-container xl:basis-1/3">
-        <div class="heading relative">Подключите Telegram <Icon class="ml-2" size="24" name="logos:telegram" /> </div>
+        <div class="heading relative">
+          Подключите Telegram
+          <Icon class="ml-2" size="24" name="logos:telegram" />
+        </div>
         <div class="text-xs text-gray-400 mt-2.5">
           Получайте уведомления благодаря нашему телерграмм боту
         </div>
       </div>
-      <div class="tg w-full justify-between flex gap-2 xl:gap-4 xl:w-3/5 ">
-            <div
-              class="relative flex rounded-lg justify-end w-full items-center flex-grow-0  bg-base-200"
-            >
-            <input
+      <div class="tg w-full justify-between flex gap-2 xl:gap-4 xl:w-3/5">
+        <div
+          class="relative flex rounded-lg justify-end w-full items-center flex-grow-0 bg-base-200"
+        >
+          <input
             :value="
               store.client?.telegram
                 ? `@${store.client.telegram}`
@@ -633,23 +740,20 @@ async function openTwoFaQRModal() {
             class="bg-base-100 input input-bordered w-full"
             disabled
           />
-              <button
-                v-if="store.client.telegramUserId || store.client.telegram"
-                class="btn btn-primary btn-sm mr-2"
-                @click="unlinkTelegram"
-              >
-                Отвязать
-              </button>
-              <LinkTelegram
-                v-else
-                @callback="onTelegramLink"
-              />
-              <!-- <LinkTelegram
+          <button
+            v-if="store.client.telegramUserId || store.client.telegram"
+            class="btn btn-primary btn-sm mr-2"
+            @click="unlinkTelegram"
+          >
+            Отвязать
+          </button>
+          <LinkTelegram v-else @callback="onTelegramLink" />
+          <!-- <LinkTelegram
                 v-if="!store.client.telegramUserId"
                 @callback="onTelegramLink"
               /> -->
-            </div>
-          </div>
+        </div>
+      </div>
     </section>
     <!-- <section
       class="profile-options mt-20 flex flex-row flex-wrap justify-between xs:flex-col items-center gap-6"
@@ -675,7 +779,7 @@ async function openTwoFaQRModal() {
       <div
         class="profile-options mt-1 flex flex-col justify-start items-start gap-6 xl:pr-12 xl:justify-between"
       >
-      <div>
+        <div>
           <div class="flex flex-col gap-2 w-full"></div>
           <div class="flex flex-col gap-2 w-full">
             <div class="form-control w-52">
@@ -699,11 +803,7 @@ async function openTwoFaQRModal() {
             <div class="heading relative">Настройки чат-бота</div>
             <div class="mt-1 text-gray-40">
               Ссылка на бота:
-              <a
-
-                target="_blank"
-                class="text-primary text-lg"
-              >
+              <a target="_blank" class="text-primary text-lg">
                 @ozonmp_notifications_bot</a
               >
             </div>
@@ -717,9 +817,7 @@ async function openTwoFaQRModal() {
       >
         <div class="flex flex-col gap-2 w-full">
           <!-- mt-4 mr-3 mb-2 md:mr-5 -->
-          <div
-            class="flex flex-col"
-          >
+          <div class="flex flex-col">
             <div v-for="notification in botNotifications">
               <div class="form-control md:w-80 w-full mt-2 mr-2">
                 <label class="cursor-pointer label flex justify-between">
