@@ -143,8 +143,8 @@ async function selectMP(value: any) {
 
 <template>
   <div>
-    <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 m-4">
-      <div class="flex gap-1 lg:gap-4">
+    <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
+      <div class="flex gap-1 navbar:gap-2 lg:gap-3">
         <NuxtLink
           :to="`/likes/create/${selectedMP}`"
           class="btn btn-primary font-normal btn-sm"
@@ -155,13 +155,13 @@ async function selectMP(value: any) {
         <CustomSelect
           ref="MPSelect"
           class="hidden lg:flex"
-          :class="'sm:min-w-[120px]'"
+          :class="'navbar:min-w-[120px]'"
           :tabs="MPTabs"
           @change-value="selectMP"
         />
         <CustomSelect
           class="hidden lg:flex"
-          :class="'sm:min-w-[120px]'"
+          :class="'navbar:min-w-[120px]'"
           :tabs="[
             { title: 'Все лайки', value: 'all' },
             { title: 'Активные', value: 'work' },
@@ -184,7 +184,7 @@ async function selectMP(value: any) {
             class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
           />
           <Icon
-            v-else
+            v-if="search.text == '' && !search.loading"
             class="absolute right-0.5 p-2 my-auto text-gray-500"
             name="tabler:search"
             size="35"
@@ -192,10 +192,17 @@ async function selectMP(value: any) {
           />
         </div>
       </div>
-      <div class="flex gap-2 lg:gap-5">
+      <div class="flex gap-2 lg:gap-3">
+        <CustomSelect
+          ref="MPSelect"
+          class="lg:hidden"
+          :class="'navbar:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="selectMP"
+        />
         <CustomSelect
           class="lg:hidden"
-          :class="'sm:min-w-[120px]'"
+          :class="'navbar:min-w-[120px]'"
           :tabs="[
             { title: 'Все лайки', value: 'all' },
             { title: 'Активные', value: 'work' },
@@ -227,7 +234,7 @@ async function selectMP(value: any) {
             v-model="search.text"
             type="text"
             class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
-            placeholder="Поиск по лайкам"
+            placeholder="Поиск"
             @input="onSearchInput($event)"
           />
           <span
@@ -235,7 +242,7 @@ async function selectMP(value: any) {
             class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
           />
           <Icon
-            v-else
+            v-if="search.text == '' && !search.loading"
             class="absolute right-0.5 p-2 my-auto text-gray-500"
             name="tabler:search"
             size="35"
