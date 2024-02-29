@@ -61,9 +61,9 @@ function updateInitital() {
   initialForm.username = store.client.username
   initialForm.middleName = store.client.middleName
   initialForm.phoneNumber = store.client.phoneNumber
-  wbApiKeys.value = store.client.wbApiKeys.length
-    ? JSON.parse(JSON.stringify(store.client.wbApiKeys))
-    : ['']
+  // wbApiKeys.value = store.client.wbApiKeys.length
+  //   ? JSON.parse(JSON.stringify(store.client.wbApiKeys))
+  //   : ['']
 }
 onMounted(async () => {
   updateInitital()
@@ -134,20 +134,6 @@ async function updatePassword() {
 }
 async function setApiKey() {
 
-  if (apiKey.value[0] != '') {
-    const newKey = { mp: currentMP.value, keys: apiKey.value }
-
-    const existingKeyIndex = apiKeys.value.findIndex(
-      (key) => key.mp === newKey.mp
-    )
-
-    if (existingKeyIndex !== -1) {
-      apiKeys.value[existingKeyIndex].keys.push(...newKey.keys)
-    } else {
-      apiKeys.value.push(newKey)
-    }
-  }
-
   const { data, error } = await useFetch('/api/user/setApiKey', {
     method: 'POST',
     body: {
@@ -171,10 +157,40 @@ async function setApiKey() {
   updateInitital()
 }
 
-// async function setNewApi() {
+async function setNewApi() {
+  if (apiKey.value[0].trim() === '') {
+    notify({
+      type: 'error',
+      title: 'Необходимо ввести API ключ',
+    })
+    return
+  }
 
-//   await setApiKey()
-// }
+  const newKey = { mp: currentMP.value, keys: apiKey.value }
+
+  const existingKeyIndex = apiKeys.value.findIndex(
+    (key) => key.mp === newKey.mp
+  )
+
+  if (existingKeyIndex !== -1) {
+    const existingKeys = apiKeys.value[existingKeyIndex].keys;
+    const keysToAdd = newKey.keys.filter(key => !existingKeys.includes(key));
+
+    if (keysToAdd.length !== newKey.keys.length) {
+        notify({
+            type: 'error',
+            title: `Ключ ${apiKey.value[0]} уже присутствует в списке API ключей MP ${newKey.mp}`,
+        });
+        return;
+    }
+
+    apiKeys.value[existingKeyIndex].keys.push(...keysToAdd);
+  } else {
+    apiKeys.value.push(newKey)
+  }
+  
+  await setApiKey()
+}
 async function update() {
   if (
     form.firstName == store.client.firstName &&
@@ -543,7 +559,7 @@ function changeMP(filter: any) {
           <div>
             <button
               :disabled="disabledSaveButton"
-              class="btn btn-primary xl:w-40 mr-0 self-end"
+              class="btn  btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-end"
               @click="update"
             >
               Сохранить
@@ -582,7 +598,7 @@ function changeMP(filter: any) {
           />
           <button
             :disabled="disabledChangePasswordButton"
-            class="btn btn-primary xl:w-40 mr-0 self-start"
+            class="btn btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-start"
             @click="updatePassword"
           >
             {{ store.client.hasPassword ? 'Изменить' : 'Сохранить' }}
@@ -601,31 +617,28 @@ function changeMP(filter: any) {
       </div>
       <div class="flex flex-col gap-2 w-full">
         <div
-          v-for="(key, index) of wbApiKeys"
-          :key="key"
           class="flex flex-col gap-6 w-full mt-1 relative"
         >
           <div class="flex flex-col gap-2 relative">
             <div class="flex gap-2.5">
               <input
                 v-model="apiKey[0]"
-                :disabled="store.client.wbApiKeys[index] === wbApiKeys[index]"
                 type="text"
-                placeholder="Стандартный апи ключ OZON"
+                placeholder="Стандартный апи ключ"
                 class="input input-bordered input-primary w-full max-w-xl"
               />
               <CustomSelect
                 :class="'btn btn-md btn-primary text-lg'"
                 :tabs="[
-                  { title: 'Wb', value: 'wildberries' },
+                  { title: 'Wildberries', value: 'wildberries' },
                   { title: 'Ozon', value: 'ozon' },
-                  { title: 'Avito', value: 'avito' },
+                  // { title: 'Avito', value: 'avito' },
                 ]"
                 @change-value="changeMP"
               />
               <button
-                class="btn btn-primary xl:w-40 mr-0 self-end"
-                @click="setApiKey"
+                class="btn btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-end"
+                @click="setNewApi"
               >
                 Сохранить
               </button>
@@ -661,9 +674,7 @@ function changeMP(filter: any) {
             :key="index"
             class="flex flex-col gap-2 mr-4"
           >
-            <!-- <div class="flex flex-col gap-2 relative"> -->
             <div class="flex flex-col gap-2.5 mb-2.5">
-              <!-- <div class="text-lg font-semibold text-center">{{ apiKey.mp }}</div> -->
               <div
                 class="flex-col"
                 v-for="(key, keyIndex) of apiKey.keys"
@@ -671,7 +682,7 @@ function changeMP(filter: any) {
               >
                 <div class="flex gap-2 w-full">
                   <div
-                    class="relative hidden lg:flex items-center flex-grow-0 w-full max-w-xl"
+                    class="relative flex items-center flex-grow-0 w-full max-w-xl"
                   >
                     <input
                       v-model="apiKey.keys[keyIndex]"
@@ -688,34 +699,15 @@ function changeMP(filter: any) {
                   </div>
 
                   <div
-                    class="btn btn-primary btn-square"
-                    @click="apiKey.keys.splice(keyIndex, 1)"
+                    class="btn btn-primary btn-square bg-opacity-10 border-none text-base-300"
+                    @click="() => { apiKey.keys.splice(keyIndex, 1); setApiKey(); }"
                   >
                     <IconCSS size="20" name="material-symbols:close" />
                   </div>
                 </div>
               </div>
-              <!-- <div class="flex gap-2 flex-col">
-                
-                <div class="flex flex-row gap-2">
-                  <button
-                    class="btn btn-primary xl:w-40"
-                    @click="setApiKey"
-                  >
-                    Сохранить
-                  </button>
-                  <div
-                    class="btn btn-primary btn-square"
-                    @click="apiKey.keys.push('')"
-                  >
-                    <IconCSS size="20" name="fluent:add-20-filled" />
-                  </div>
-                </div>
-                
-              </div>  -->
+            
             </div>
-
-            <!-- </div> -->
           </div>
         </div>
 
