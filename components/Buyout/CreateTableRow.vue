@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
-import { useBuyoutStore } from '../../stores/buyout'
+import { useOzonBuyoutStore } from '../../stores/ozonBuyout'
 import type { Rule } from '@/data/buyout/rules'
 
 const props = defineProps({
@@ -22,7 +22,7 @@ const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
-const store = useBuyoutStore()
+const store = useOzonBuyoutStore()
 
 function copyBuyout() {
   if (store.createProducts.length >= 10) {

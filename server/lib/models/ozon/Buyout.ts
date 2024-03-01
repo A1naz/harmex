@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
+import { OzonConnection } from '~/server/connections/ozon'
 import { v4 as uuid } from 'uuid'
 import { User } from '../User'
-import { OzonConnection } from '~/server/connections/ozon'
 
 const ProductSchema = new Schema({
   name: { type: String, required: true, text: true },
@@ -45,12 +45,6 @@ const BuyoutSchema = new Schema({
   data18: { type: {}, default: '' },
 })
 
-BuyoutSchema.pre('save', function (next) {
-  // Добавляем 3 часа к полю "date"
-  this.createdAt.setHours(this.createdAt.getHours() + 3);
-  // this.dateStart.setHours(this.dateStart.getHours() + 3);
-  // this.dateEnd.setHours(this.dateEnd.getHours() + 3);
-  next();
-});
 
 export const Buyout = OzonConnection.model('Buyout', BuyoutSchema)
+

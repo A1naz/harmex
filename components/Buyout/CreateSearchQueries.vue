@@ -9,7 +9,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const emit = defineEmits(['update', 'add', 'remove'])
-const store = useBuyoutStore()
+const store = useWildberriesBuyoutStore()
 async function findSearchQuery(value: string) {
   const { data, error } = await useFetch('/api/product/getSearchPosition', {
     query: {

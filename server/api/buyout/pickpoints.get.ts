@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import { getServerSession } from '#auth'
-import { PVZ } from '@/server/lib/models/PVZ'
+import { PVZ } from '~/server/lib/models/ozon/PVZ'
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any

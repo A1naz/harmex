@@ -3,7 +3,7 @@ import { useNotification } from '@kyvg/vue3-notification'
 import { useWindowSize } from '@vueuse/core'
 import type { Rule } from '@/data/buyout/rules'
 import { rules } from '@/data/buyout/rules'
-import type { ISearchQueryChange } from '@/stores/buyout'
+import type { ISearchQueryChange } from '@/stores/wildberriesBuyout'
 
 const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
 const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>
@@ -36,7 +36,7 @@ const ruleModal = ref(false)
 const selectedRuleProductIndex = ref(0)
 const checksModal = ref(false)
 const infoModal = ref<HTMLDialogElement>()
-const store = useBuyoutStore()
+const store = useWildberriesBuyoutStore()
 const infoType = ref('')
 const defaultRules: Rule[] = rules
 const route = useRoute()
@@ -145,7 +145,7 @@ async function openChecksModal() {
 
   if (!isUserWarned.value) {
     const { data, error }: any = await useFetch(
-      '/api/buyout/checkPVZRestrictions',
+      '/api/wildberries/buyout/checkPVZRestrictions',
       {
         method: 'GET',
       }
@@ -211,7 +211,7 @@ async function createBuyout() {
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
   disabledCreateButton.value = true
-  const { data, error } = await useFetch('/api/buyout/create', {
+  const { data, error } = await useFetch('/api/wildberries/buyout/create', {
     method: 'POST',
     watch: false,
     body: JSON.stringify(products.value),
@@ -237,7 +237,7 @@ async function createBuyout() {
     })
 
     store.createProducts = []
-    navigateTo({ path: '/buyouts' })
+    navigateTo({ path: '/buyouts/wildberries' })
   }
 }
 
@@ -251,7 +251,7 @@ watch(products.value, (old, value) => {
 
 async function getPickpoints() {
   try {
-    const data = await $fetch('/api/buyout/pickpoints', {
+    const data = await $fetch('/api/wildberries/buyout/pickpoints', {
       method: 'GET',
     })
     pickpoints.value = (data as any).points
@@ -299,12 +299,13 @@ const isCreatingTemplatesDisabled = ref(false)
 async function createTemplate() {
   isCreatingTemplatesDisabled.value = true
 
-  const { data, error } = await useFetch('/api/buyout/createBuyoutTemplate', {
+  const { data, error } = await useFetch('/api/wildberries/buyout/createBuyoutTemplate', {
     method: 'POST',
     query: {
       title: templateTitle,
     },
     body: products.value,
+    watch: false,
   })
 
   if (data.value) {
@@ -313,7 +314,6 @@ async function createTemplate() {
       title: 'Шаблон выкупа создан',
       type: 'success',
     })
-    window.location.reload()
 
     closeTemplateModal.value?.click()
     isCreatingTemplatesDisabled.value = false
@@ -322,7 +322,7 @@ async function createTemplate() {
 
 async function getTemplates() {
   loadingTemplates.value = true
-  const { data, error }: any = await useFetch('/api/buyout/templates')
+  const { data, error }: any = await useFetch('/api/wildberries/buyout/templates')
   if (data.value) {
     templates.value = data.value.templates
   }
@@ -410,7 +410,7 @@ function closeTemplateModalFN() {
         v-if="width < 1600"
         class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-4"
       >
-        <BuyoutCreateCard
+        <BuyoutWildberriesCreateCard
           v-for="(product, index) in products"
           :key="index"
           :loading="!pickpoints?.length"
@@ -460,12 +460,12 @@ function closeTemplateModalFN() {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <!-- <th @click="openInfoModal('search')">
+              <th @click="openInfoModal('search')">
                 <div class="flex justify-between w-full gap-1 items-center">
                   <span> Поисковые запросы </span>
                   <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
-              </th> -->
+              </th>
               <th class="min-w-40" @click="openInfoModal('adress')">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
@@ -497,7 +497,7 @@ function closeTemplateModalFN() {
           </thead>
 
           <tbody>
-            <BuyoutCreateTableRow
+            <BuyoutWildberriesCreateTableRow
               v-for="(product, index) in products"
               :key="index"
               :product="product"
@@ -509,7 +509,7 @@ function closeTemplateModalFN() {
           </tbody>
         </table>
       </div>
-      <BuyoutSelectPointModal
+      <BuyoutWildberriesSelectPointModal
         v-if="modalOpen"
         :state="modalOpen"
         :pickpoints="pickpoints"
@@ -655,7 +655,7 @@ function closeTemplateModalFN() {
         </div>
       </form>
     </dialog>
-    <BuyoutCreateChecksModal
+    <BuyoutWildberriesCreateChecksModal
       v-if="checksModal"
       :isCreateButtonDisabled="isCreateButtonDisabled"
       :state="checksModal"
@@ -771,7 +771,7 @@ function closeTemplateModalFN() {
           <span class="loading loading-spinner loading-lg"></span>
         </div>
         <div class="mb-10"></div>
-        <BuyoutTemplateExpand
+        <BuyoutWildberriesTemplateExpand
           v-for="template in templates"
           :key="template.uuid"
           class="mt-1"
@@ -780,7 +780,7 @@ function closeTemplateModalFN() {
           :uuid="template.uuid"
           :opened="openAll"
           :info="template"
-        ></BuyoutTemplateExpand>
+        ></BuyoutWildberriesTemplateExpand>
         <div class="modal-action flex justify-between"></div>
       </div>
     </div>

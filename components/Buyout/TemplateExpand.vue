@@ -16,7 +16,7 @@ const props = defineProps({
 
 const uuid = toRef(props, 'uuid')
 const emit = defineEmits(['getTemplates', 'closeModal'])
-const store = useBuyoutStore()
+const store = useWildberriesBuyoutStore()
 const opened = ref()
 
 onMounted(async () => {
@@ -78,7 +78,7 @@ async function deleteTemplate() {
         <label @click="deleteTemplate" class="btn btn-sm text-red-400 z-10"
           >Удалить</label
         >
-        <nuxt-link to="/buyouts/create">
+        <nuxt-link to="/buyouts/create/wildberries">
           <label
             @click="selectTemplate"
             class="btn btn-sm btn-primary truncate mr-1 bg-opacity-20 border-none text-base-content"
