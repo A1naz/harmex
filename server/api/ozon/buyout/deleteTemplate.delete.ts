@@ -1,5 +1,5 @@
 ﻿import { User } from '~/server/lib/models/User'
-import { BuyoutTemplate } from '~/server/lib/models/BuyoutTemplate'
+import { BuyoutTemplate } from '~/server/lib/models/ozon/BuyoutTemplate'
 import { getServerSession } from '#auth'
 
 export default eventHandler(async (event) => {

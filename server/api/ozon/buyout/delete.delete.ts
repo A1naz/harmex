@@ -1,7 +1,7 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
-import { Buyout } from '@/server/lib/models/Buyout'
-import { Delivery } from '@/server/lib/models/Delivery'
+import { Buyout } from '@/server/lib/models/ozon/Buyout'
+import { Delivery } from '@/server/lib/models/ozon/Delivery'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {

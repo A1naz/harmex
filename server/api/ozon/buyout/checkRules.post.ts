@@ -1,6 +1,6 @@
 import type { Rule } from '@/data/buyout/rules'
 import { findPositionByQuery } from '@/server/lib/helpers'
-import getPickpoints from '~/server/lib/getPoints'
+import getPickpoints from '~/server/utils/ozon/getPoints'
 
 interface Item {
   image: string

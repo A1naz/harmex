@@ -145,7 +145,7 @@ async function openChecksModal() {
 
   if (!isUserWarned.value) {
     const { data, error }: any = await useFetch(
-      '/api/buyout/checkPVZRestrictions',
+      '/api/ozon/buyout/checkPVZRestrictions',
       {
         method: 'GET',
       }
@@ -211,7 +211,7 @@ async function createBuyout() {
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
   disabledCreateButton.value = true
-  const { data, error } = await useFetch('/api/buyout/create', {
+  const { data, error } = await useFetch('/api/ozon/buyout/create', {
     method: 'POST',
     watch: false,
     body: JSON.stringify(products.value),
@@ -237,7 +237,7 @@ async function createBuyout() {
     })
 
     store.createProducts = []
-    navigateTo({ path: '/buyouts' })
+    navigateTo({ path: '/buyouts/ozon' })
   }
 }
 
@@ -299,7 +299,7 @@ const isCreatingTemplatesDisabled = ref(false)
 async function createTemplate() {
   isCreatingTemplatesDisabled.value = true
 
-  const { data, error } = await useFetch('/api/buyout/createBuyoutTemplate', {
+  const { data, error } = await useFetch('/api/ozon/buyout/createBuyoutTemplate', {
     method: 'POST',
     query: {
       title: templateTitle,
@@ -322,7 +322,7 @@ async function createTemplate() {
 
 async function getTemplates() {
   loadingTemplates.value = true
-  const { data, error }: any = await useFetch('/api/buyout/templates')
+  const { data, error }: any = await useFetch('/api/ozon/buyout/templates')
   if (data.value) {
     templates.value = data.value.templates
   }
@@ -410,7 +410,7 @@ function closeTemplateModalFN() {
         v-if="width < 1600"
         class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-4"
       >
-        <BuyoutCreateCard
+        <BuyoutOzonCreateCard
           v-for="(product, index) in products"
           :key="index"
           :loading="!pickpoints?.length"
@@ -497,7 +497,7 @@ function closeTemplateModalFN() {
           </thead>
 
           <tbody>
-            <BuyoutCreateTableRow
+            <BuyoutOzonCreateTableRow
               v-for="(product, index) in products"
               :key="index"
               :product="product"
@@ -509,7 +509,7 @@ function closeTemplateModalFN() {
           </tbody>
         </table>
       </div>
-      <BuyoutSelectPointModal
+      <BuyoutOzonSelectPointModal
         v-if="modalOpen"
         :state="modalOpen"
         :pickpoints="pickpoints"
@@ -655,7 +655,7 @@ function closeTemplateModalFN() {
         </div>
       </form>
     </dialog>
-    <BuyoutCreateChecksModal
+    <BuyoutOzonCreateChecksModal
       v-if="checksModal"
       :isCreateButtonDisabled="isCreateButtonDisabled"
       :state="checksModal"
@@ -771,7 +771,7 @@ function closeTemplateModalFN() {
           <span class="loading loading-spinner loading-lg"></span>
         </div>
         <div class="mb-10"></div>
-        <BuyoutTemplateExpand
+        <BuyoutOzonTemplateExpand
           v-for="template in templates"
           :key="template.uuid"
           class="mt-1"
@@ -780,7 +780,7 @@ function closeTemplateModalFN() {
           :uuid="template.uuid"
           :opened="openAll"
           :info="template"
-        ></BuyoutTemplateExpand>
+        ></BuyoutOzonTemplateExpand>
         <div class="modal-action flex justify-between"></div>
       </div>
     </div>

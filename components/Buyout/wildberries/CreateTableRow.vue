@@ -125,7 +125,7 @@ const productQuantityModel = computed({
           {{ product.name }}
         </div>
         <a
-        :href="`https://www.ozon.ru/product/${product.article}`"
+        :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
           target="_blank"
           class="text-sm text-primary link link-hover"
         >
@@ -192,9 +192,9 @@ const productQuantityModel = computed({
         </select>
       </div>
     </td>
-    <!-- <td>
+    <td>
       <div class="w-full flex flex-col gap-2">
-        <BuyoutCreateSearchQueries
+        <BuyoutWildberriesCreateSearchQueries
           :product-index="props.index"
           :article="product.article"
           :queries="product.searchQuery"
@@ -203,7 +203,7 @@ const productQuantityModel = computed({
           @remove="removeSearchQuery"
         />
       </div>
-    </td> -->
+    </td>
     <td class="break-all max-w-[300px]">
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden  justify-center"

@@ -1,4 +1,4 @@
-import { Buyout } from '@/server/lib/models/Buyout'
+import { Buyout } from '@/server/lib/models/ozon/Buyout'
 import { Delivery } from '~~/server/lib/models/Delivery'
 import { DocuemntEnum } from '~/data/enums'
 
