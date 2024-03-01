@@ -9,4 +9,6 @@ dist
 .DS_Store
 sw.*
 points.json
+pvz/wildberriesPoints.json
+pvz/ozonPoints.json
 .unlighthouse

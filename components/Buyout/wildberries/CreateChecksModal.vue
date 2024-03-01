@@ -13,7 +13,7 @@ const props = defineProps({
 const isCreateButtonDisabled = toRef(props, 'isCreateButtonDisabled')
 
 const emit = defineEmits(['close', 'create'])
-const store = useOzonBuyoutStore()
+const store = useWildberriesBuyoutStore()
 const message = ref('')
 const loading = ref(false)
 const success = ref(false)
@@ -21,7 +21,7 @@ async function checkBuyouts() {
   loading.value = true
   const userOffsetMinutes = new Date().getTimezoneOffset()
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
-  const { data, error } = await useFetch('/api/buyout/checkRules', {
+  const { data, error } = await useFetch('/api/wildberries/buyout/checkRules', {
     method: 'POST',
     body: JSON.stringify(store.createProducts),
     query: {

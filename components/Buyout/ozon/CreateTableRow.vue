@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
-import { useOzonBuyoutStore } from '../../stores/ozonBuyout'
+import { useOzonBuyoutStore } from '../../../stores/ozonBuyout'
 import type { Rule } from '@/data/buyout/rules'
 
 const props = defineProps({

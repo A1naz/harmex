@@ -21,7 +21,7 @@ async function checkBuyouts() {
   loading.value = true
   const userOffsetMinutes = new Date().getTimezoneOffset()
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
-  const { data, error } = await useFetch('/api/buyout/checkRules', {
+  const { data, error } = await useFetch('/api/ozon/buyout/checkRules', {
     method: 'POST',
     body: JSON.stringify(store.createProducts),
     query: {

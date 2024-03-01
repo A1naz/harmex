@@ -5,7 +5,7 @@ import { rules } from '@/data/buyout/rules'
 
 export interface ISearchQueryChange { value: string; queryIndex: number; productIndex: number }
 
-export const useBuyoutStore = defineStore('buyout', {
+export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
   state: () => ({
     createProducts: [] as Item[],
     selectedItem: null as number | null,
@@ -22,7 +22,7 @@ export const useBuyoutStore = defineStore('buyout', {
 
     async cloneBuyout(uuid: string) {
 
-      const { data, error } = await useFetch('/api/buyout/clone', {
+      const { data, error } = await useFetch('/api/wildberries/buyout/clone', {
         query: {
           uuid,
         },
@@ -66,7 +66,7 @@ export const useBuyoutStore = defineStore('buyout', {
         return
       }
 
-      const { data, error } = await useFetch(`/api/product/${article}`, {
+      const { data, error } = await useFetch(`/api/wildberries/product/${article}`, {
         method: 'GET',
       })
       if (error.value) {

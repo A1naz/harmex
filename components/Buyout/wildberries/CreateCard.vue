@@ -31,7 +31,7 @@ function copyBuyout() {
 }
 
 const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
-const store = useOzonBuyoutStore()
+const store = useWildberriesBuyoutStore()
 const startDate = ref(new Date(Date.now()))
 
 async function deleteBuyOut() {
@@ -126,7 +126,7 @@ const productQuantityModel = computed({
                 {{ product.name }}
               </p>
               <a
-                :href="`https://www.ozon.ru/product/${product.article}`"
+                :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
                 target="_blank"
                 class="text-xs text-primary link link-hover"
               >
@@ -292,6 +292,18 @@ const productQuantityModel = computed({
             </button>
         </div>
       </div>
+      <div>
+        <div class="w-full flex flex-col gap-2">
+          <BuyoutWildberriesCreateSearchQueries
+            :product-index="props.index"
+            :article="product.article"
+            :queries="product.searchQuery"
+            @update="productSearchQueryUpdate"
+            @add="addSearchQuery"
+            @remove="removeSearchQuery"
+          />
+        </div>
+      </div>
       <div class="flex">
        <span class="text-md text-gray-500 mb-2 mr-3">Скидка: </span>
        <span class="text-md mb-2 font-bold">% </span>
@@ -359,18 +371,7 @@ const productQuantityModel = computed({
           </button>
         </div>
       </div> -->
-      <!-- <div>
-        <div class="w-full flex flex-col gap-2">
-          <BuyoutCreateSearchQueries
-            :product-index="props.index"
-            :article="product.article"
-            :queries="product.searchQuery"
-            @update="productSearchQueryUpdate"
-            @add="addSearchQuery"
-            @remove="removeSearchQuery"
-          />
-        </div>
-      </div> -->
+
 <!-- 
       <div class="divider" /> -->
 
