@@ -12,7 +12,7 @@ const mpStore = useMPStore()
 const review_likes = ref<any>([])
 const MPSelect = ref()
 const loading = ref(true)
-const selectedMP = ref(mpStore.selectedMP || 'wildberries')
+const selectedMP = ref<any>(mpStore.selectedMP || 'wildberries')
 const { width, height } = useWindowSize()
 // const { data, error } = await useFetch(`/api/${selectedMP.value}/likes/get`)
 // review_likes.value = data.value
@@ -28,9 +28,9 @@ onMounted(() => {
 
 async function setText() {
   loading.value = true
-  MPSelect.value?.updateText(
-    MPTabs.find((t) => t.value === selectedMP.value)?.title
-  )
+  console.log(mpStore.selectedMP)
+
+  MPSelect.value?.updateText(mpStore.selectedMP || 'wildberries')
   setTimeout(() => getLikes(), 100)
 }
 
@@ -55,7 +55,9 @@ function getStatus(status: string) {
 async function getLikes() {
   loading.value = true
 
-  const { data, error } = await useFetch(`/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`)
+  const { data, error } = await useFetch(
+    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`
+  )
   if (data.value) {
     review_likes.value = data.value
   }
@@ -158,6 +160,7 @@ async function selectMP(value: any) {
           :class="'navbar:min-w-[120px]'"
           :tabs="MPTabs"
           @change-value="selectMP"
+          :statusText="selectedMP"
         />
         <CustomSelect
           class="hidden lg:flex"

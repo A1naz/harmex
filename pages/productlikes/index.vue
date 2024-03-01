@@ -117,7 +117,7 @@ function removeProduct() {
 onMounted(() => {
   selectedMP.value = mpStore.selectedMP || 'wildberries'
   console.log(selectedMP.value)
-  router.push(`/productlikes/${selectedMP.value}`);
+  return navigateTo(`/productlikes/${selectedMP.value}`);
 })
 
 const reviewRemoveModalClose: any = ref(null)
