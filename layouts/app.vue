@@ -3,6 +3,8 @@ const storeMain = useMainStore()
 const colorMode = useColorMode()
 const { width } = useWindowSize()
 
+const mpStore = useMPStore()
+
 const theme = ref('light')
 const route = useRoute()
 const { signOut } = useAuth()
@@ -80,6 +82,21 @@ const statusText = computed(() => {
       .find((item) => route.path.startsWith(item.path))?.title || 'Профиль'
   )
 })
+
+const menuConditions = ref(storeMain.client.mmenuItems)
+
+onMounted(() => {
+  menuConditions.value.map((section: any) => {
+    for (const item of section.items) {
+      if (item.path == '/productlikes') {
+        item.path = mpStore.selectedMP
+          ? '/productlikes/' + mpStore.selectedMP
+          : '/productlikes/wildberries'
+      }
+    }
+    return section
+  })
+})
 </script>
 
 <template>
@@ -122,7 +139,9 @@ const statusText = computed(() => {
           <Logo />
         </div>
       </div>
-      <div class="hidden items-center gap-2 p-4 justify-between bg-base-100 lg:flex">
+      <div
+        class="hidden items-center gap-2 p-4 justify-between bg-base-100 lg:flex"
+      >
         <h1 class="text-2xl font-bold">{{ statusText }}</h1>
         <InfoButton @openModal="toggleInfoModal" />
       </div>
@@ -167,8 +186,9 @@ const statusText = computed(() => {
                         ? storeMain.client.username
                         : storeMain.client.telegram
                         ? storeMain.client.telegram
-                        : storeMain.client.email ?
-                          storeMain.client.email : 'Нет данных'
+                        : storeMain.client.email
+                        ? storeMain.client.email
+                        : 'Нет данных'
                     }}
                   </div>
                   <!-- <div class="balance text-xs text-gray-400">
@@ -198,7 +218,7 @@ const statusText = computed(() => {
                   </div>
                 </div>
               </div>
-              <hr class="border-gray-600 bg-gray-600 h-[1px]">
+              <hr class="border-gray-600 bg-gray-600 h-[1px]" />
               <div class="flex justify-between items-start p-2">
                 <div class="flex gap-5">
                   <div
@@ -260,7 +280,7 @@ const statusText = computed(() => {
           </div>
         </div>
 
-        <section v-for="section in storeMain.client.mmenuItems">
+        <section v-for="section in menuConditions">
           <h3 class="opacity-60 text-xs p-3 px-8 uppercase">
             {{ section.subTitle }}
           </h3>

@@ -28,10 +28,13 @@ const props = defineProps({
   },
   links: { type: Array as PropType<links[]>},
   class: { type: String },
+  statusText: { type: String },
   // modelValue: {
     
   // }
 });
+
+const reactiveStatusText = toRef(props, 'statusText');
 
 const customClass = props.class || ''
 
@@ -47,7 +50,7 @@ const handleBodyClick = (event: MouseEvent) => {
   }
 };
 
-const statusText = ref<String>(props.category ? 'Выберите категорию' : props.rangesConfig[0] || props.tabs[0]?.title);
+const statusText = ref<String>(reactiveStatusText.value ? reactiveStatusText.value : props.category ? 'Выберите категорию' : props.rangesConfig[0] || props.tabs[0]?.title );
 
 function updateText(filter: string){
     statusText.value = filter;
@@ -93,7 +96,7 @@ defineExpose({
                   {{ filter.title }}
                 </button>
               </li>
-              <li >
+              <li>
                   <NuxtLink
                     v-for="filter in links"
                     :to="filter.slot + filter.query"

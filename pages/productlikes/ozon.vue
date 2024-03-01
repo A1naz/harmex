@@ -7,9 +7,14 @@ definePageMeta({
   title: 'Лайки на товар/бренд',
 })
 const store = useMainStore()
+const mpStore = useMPStore()
+const router = useRouter()
+const MPSelect = ref()
+const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const product_likes = ref([]) as any
 const amount = ref(0)
 const loadingUrl = ref(false)
+const loading = ref(false)
 const url = ref('')
 const period = ref('3h')
 const { width, height } = useWindowSize()
@@ -26,7 +31,8 @@ const search = reactive({
 const codeInput = ref()
 async function getProductLikes() {
   modalShow.value = false
-  const { data, error } = await useFetch('/api/productlikes/get', {
+  loading.value = true
+  const { data, error } = await useFetch('/api/ozon/productlikes/get', {
     method: 'GET',
   })
   if (data.value) product_likes.value = data.value
@@ -47,10 +53,11 @@ async function getProductLikes() {
       title: 'Не удалось получить лайки',
       text: error.value.message,
     })
+  loading.value = false
 }
 await getProductLikes()
 async function create() {
-  const { data, error } = await useFetch('/api/productlikes/create', {
+  const { data, error } = await useFetch('/api/ozon/productlikes/create', {
     method: 'POST',
     body: {
       url: url.value,
@@ -73,7 +80,7 @@ async function create() {
   removeProduct()
 }
 async function sendUrl() {
-  const { data, error } = await useFetch('/api/productlikes/extract', {
+  const { data, error } = await useFetch('/api/ozon/productlikes/extract', {
     method: 'POST',
     body: {
       url: url.value,
@@ -110,7 +117,22 @@ function removeProduct() {
   url.value = ''
   amount.value = 0
 }
-onMounted(() => {})
+
+const MPTabs = [
+  { title: 'ozon', value: 'ozon' },
+  { title: 'wildberries', value: 'wildberries' },
+]
+
+onMounted(() => {
+  // setText()
+})
+
+async function setText() {
+  // loading.value = true
+  MPSelect.value?.updateText(
+    MPTabs.find((t) => t.value === selectedMP.value)?.title
+  )
+}
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
@@ -120,7 +142,7 @@ function openRemoveReviewModal(id: any, name: any) {
 }
 
 async function deleteLike() {
-  const { data, error } = await useFetch('/api/productlikes/delete', {
+  const { data, error } = await useFetch('/api/ozon/productlikes/delete', {
     method: 'DELETE',
     body: {
       id: idForRemove.value,
@@ -151,8 +173,9 @@ const closeModal = (event: MouseEvent) => {
 }
 
 async function selectFilterDate(e: any) {
+  loading.value = true
   const target = e
-  const { data } = await useFetch('/api/productlikes/get', {
+  const { data } = await useFetch('/api/ozon/productlikes/get', {
     method: 'GET',
     query: {
       dateFilter: target.value,
@@ -160,6 +183,12 @@ async function selectFilterDate(e: any) {
     watch: false,
   })
   product_likes.value = data.value
+  loading.value = false
+}
+
+async function changeFilter(e: any) {
+  mpStore.selectedMP = e.value
+  router.push(`/productlikes`)
 }
 
 async function findBuyouts(value: string, type: string) {
@@ -168,7 +197,7 @@ async function findBuyouts(value: string, type: string) {
     getProductLikes()
     return
   }
-  const { data, error } = await useFetch('/api/productlikes/search', {
+  const { data, error } = await useFetch('/api/ozon/productlikes/search', {
     query: {
       string: value,
       type,
@@ -193,6 +222,7 @@ const updateSearchType = (filter: any) => {
 </script>
 
 <template>
+  
   <div>
     <!-- <h1 class="text-2xl font-bold mt-4">Лайки на товар/бренд</h1> -->
     <!-- <p class="text-xs font-light mt-4 lg:text-sm">
@@ -204,7 +234,7 @@ const updateSearchType = (filter: any) => {
       <span class="font-bold"> {{ store.tariffString('likeProduct') }} </span>
       Все услуги оказываются по Московскому времени.
     </p> -->
-    <ProductLikesCreateLike
+    <ProductLikesOzonCreateLike
       :show="modalShow"
       @close-modal="modalShow = false"
       @create="getProductLikes()"
@@ -223,6 +253,12 @@ const updateSearchType = (filter: any) => {
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeFilter"
+        />
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
           :tabs="[
             { title: 'Все лайки', value: 'all' },
             { title: 'Активные', value: 'work' },
@@ -231,6 +267,7 @@ const updateSearchType = (filter: any) => {
           :links="[{ title: 'Отзывы', slot: '/likes', query: '' }]"
           @change-value="selectFilterDate"
         />
+        
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
           <input
             ref="codeInput"
@@ -261,6 +298,12 @@ const updateSearchType = (filter: any) => {
             :route="'/likes'"
             :class="'bg-base-300'"
         /> -->
+        <CustomSelect
+          class="lg:hidden"
+          :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeFilter"
+        />
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
@@ -447,7 +490,12 @@ const updateSearchType = (filter: any) => {
       </div>
     </div> -->
     <div v-if="product_likes.length" class="mt-6">
-      <table class="table table-sm">
+      <div v-if="loading" class="flex justify-center ">
+        <div>
+          <span class="loading loading-dots loading-lg text-primary"></span>
+        </div>
+      </div>
+      <table v-else class="table table-sm">
         <!-- head -->
 
         <thead>
@@ -542,6 +590,7 @@ const updateSearchType = (filter: any) => {
                   'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
                     item.status === 'completed',
                 }"
+                class="whitespace-nowrap"
               >
                 {{ getStatus(item.status) }}
               </div>
