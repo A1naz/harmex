@@ -1,7 +1,6 @@
 ﻿import { getServerSession } from '#auth'
 import { User } from '~~/server/lib/models/User'
 import { ProductLike } from '~/server/lib/models/ozon/ProductLike'
-import { Like } from '~/server/lib/models/ozon/Like'
 
 import { DocuemntEnum } from '~/data/enums'
 

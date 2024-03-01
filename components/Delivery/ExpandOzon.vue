@@ -60,9 +60,21 @@ function daysToPenalty(statusdelivery: any[]) {
             <div class="w-full">
 
                 <div class="flex justify-between flex-wrap gap-1">
-                    <span> 
-                        Доставка
-                    </span>
+                    <div class="flex gap-2">
+                        <span> 
+                            Доставка
+                        </span>
+                        <div v-if="info.currentstatus === 'Готов к выдаче' && info.statusdelivery.length > 1 " 
+                            class="text-s link bg-red-500 link-hover z-10 rounded-full my-auto max-h-6" 
+                            @click="emit('openPenaltyModal')"
+                            
+                            >
+                            <IconCSS class="text-base-100 bg-red-500 -mt-2" name="ph:warning-circle-light" size="25" />
+                            
+                            <!-- {{ daysToPenalty(info.statusdelivery) }} -->
+                        </div>
+                    </div>
+                    
                     <label
                         class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs hover:text-primary break-all z-10"
                         @click="openBuyout"
@@ -71,20 +83,21 @@ function daysToPenalty(statusdelivery: any[]) {
                 </div>
 
                 <div class="flex justify-between flex-wrap gap-1 items-center">
-                    <button 
-                        class="text-xs btn btn-xs btn-primary bg-opacity-20 border-none text-base-content rounded-md z-10 mt-1"
-                        @click="emit('openStatusModal', info.statusdelivery)
-                        ">
-                        <span class=""> Статус:</span>
-                        <span>{{ info.currentstatus }} </span>
-                    </button>
-                    <div v-if="info.currentstatus === 'Готов к выдаче' && info.statusdelivery.length > 1" 
-                        class="text-sm text-error link link-hover z-10" 
-                        @click="emit('openPenaltyModal')"
-                        >
-                        {{ daysToPenalty(info.statusdelivery) }}
+                    <div class="flex gap-2">
+                        <button 
+                            class="text-xs font-normal btn btn-xs btn-primary bg-opacity-20 border-none text-base-content rounded-md z-10 mt-1 px-3"
+                            @click="emit('openStatusModal', info.statusdelivery)
+                            ">
+                            <span class=" "> Статус:</span>
+                            <span>{{ info.currentstatus }} </span>
+                        </button>
+                        <div class="bg-base-300 rounded-md text-sm font-normal my-auto p-0.5 mt-1 px-2">
+                            Ozon
+                        </div>
                     </div>
-                    <div class="mt-2 lg:m-0 text-xs text-primary"
+                    
+                    
+                    <div class="mt-2 lg:m-0 text-xs text-primary font-normal"
                     
                     >
                         Обновлено {{ defaultDate(info.updatedAt) }}
@@ -115,7 +128,7 @@ function daysToPenalty(statusdelivery: any[]) {
                 </div> -->
                 <a
                     :href="`https://www.ozon.ru/product/${info.article}`" target="_blank"
-                        class=" text-primary link link-hover"
+                        class=" text-primary link link-hover text-sm"
                         >
                         {{ info.article }}
                     </a>
@@ -128,7 +141,7 @@ function daysToPenalty(statusdelivery: any[]) {
                     <div class="text-sm text-gray-500">
                         <span>Цена: </span>
                         
-                        <span class="ml-2 rounded-lg bg-success p-1 text-base-content">{{ currency.format(info.pricebuy) }}</span>
+                        <span class="ml-2 rounded-md bg-success p-1 text-base-content">{{ currency.format(info.pricebuy) }}</span>
                     </div>
                     
                 </div>
@@ -137,7 +150,7 @@ function daysToPenalty(statusdelivery: any[]) {
                     <div class="text-sm text-gray-500">
                         <span>Размер: </span>
                         
-                        <span class="ml-2 rounded-lg bg-base-300 p-1 text-base-content">{{ info.size === 'none' ? 'Не указан' : info.size }}</span>
+                        <span class="ml-2 rounded-md bg-base-300 bg-opacity-30  p-1 text-base-content">{{ info.size === 'none' ? 'Не указан' : info.size }}</span>
                     </div>
                     
                 </div>
@@ -146,7 +159,7 @@ function daysToPenalty(statusdelivery: any[]) {
                     <div class="text-sm text-gray-500">
                         <span>Размер: </span>
                         
-                        <span class="ml-2 rounded-lg bg-base-300 p-1 text-base-content">{{ '%' }}</span>
+                        <span class="ml-2 rounded-md bg-base-300 bg-opacity-30 p-1 text-base-content">{{ '%' }}</span>
                     </div>
                     
                 </div>
@@ -155,13 +168,13 @@ function daysToPenalty(statusdelivery: any[]) {
 
         </div>
 
-        <div class="divider" />
+        <div class="divider my-2" />
 
         <div class="receipt flex gap-4 lg:gap-8 items-center flex-wrap">
 
             <div class="flex gap-2 md:gap-10 lg:gap-10">
-                <div class="lg:mr-10 text-primary">
-                    <div class="text-sm text-gray-500">
+                <div class="lg:mr-10 text-primary text-xs">
+                    <div class="text-sm text-gray-500 mb-1">
                         Получатель:
                     </div>
                     {{ info.recipient }} {{ info.recipientphone }}
@@ -169,8 +182,8 @@ function daysToPenalty(statusdelivery: any[]) {
                 </div>
 
                 
-                <div class="text-primary">
-                    <div class="text-sm text-gray-500">
+                <div class="text-primary text-xs">
+                    <div class="text-sm text-gray-500 mb-1">
                         Код получения:
                     </div>
                     {{ info?.receiptcode ? info?.receiptcode : 'Товар не доставлен' }}
@@ -190,7 +203,7 @@ function daysToPenalty(statusdelivery: any[]) {
                     Адрес:
                 </div>
                 <a
-                    target="_blank" class="text-primary link link-hover w-52 lg:w-76 break-all"
+                    target="_blank" class="text-base-content text-xs link link-hover w-52 lg:w-76 break-all"
                     :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
                     >
                     {{ info.point }}
