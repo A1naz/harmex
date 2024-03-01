@@ -93,7 +93,7 @@ defineExpose({
                   {{ filter.title }}
                 </button>
               </li>
-              <li >
+              <li>
                   <NuxtLink
                     v-for="filter in links"
                     :to="filter.slot + filter.query"
