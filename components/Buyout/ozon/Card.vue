@@ -203,7 +203,7 @@ const getStatus = computed(() => {
       <div class="truncate">
         <div class="flex justify-between gap-1 items-center">
           <div class="flex gap-x-3 flex-wrap">
-            <span class="text-xs text-gray-500"
+            <span class="text-xs text-gray-500 py-1"
               >Создан: {{ defaultDate(info.createdAt) }}
             </span>
             <div
@@ -214,7 +214,7 @@ const getStatus = computed(() => {
                   info.status !== 'work' &&
                   info.status !== 'archived',
               }"
-              class="text-xs rounded-2xl px-2 bg-base-200"
+              class="text-xs rounded-2xl px-2 bg-base-200 py-1"
             >
               Выкуплено {{ info.completed }} шт.
             </div>
@@ -231,25 +231,21 @@ const getStatus = computed(() => {
         <div class="flex gap-3 flex-wrap">
           <h2 class="card-title mt-2">Выкуп №{{ info.place }}</h2>
           <div
-            class="mt-2 rounded-2xl py-1 px-2"
+            class="mt-2 rounded-2xl py-0 px-2 text-md"
             :class="{
               'bg-success ':
                 (info.status === 'active' || info.status === 'work'),
-              'text-green-200 bg-green-600 ':
+              'text-base-content bg-green-600 ':
                 (info.status === 'active' || info.status === 'work') &&
                 theme.value === 'dark',
-              'text-red-200 bg-red-700':
+              'text-base-content bg-red-700':
                 (info.status === 'completed' || info.status === 'nofunds') &&
                 theme.value === 'dark',
-              'text-error bg-red-200':
+              'text-base-content bg-red-200':
                 (info.status === 'completed' || info.status === 'nofunds') &&
                 theme.value === 'light',
-              'text-warning bg-yellow-200':
-                (info.status === 'archived' || info.status === 'paused') &&
-                theme.value === 'light',
-              'text-warning bg-yellow-400':
-                (info.status === 'archived' || info.status === 'paused') &&
-                theme.value === 'dark',
+              'text-base-content bg-yellow-300':
+                (info.status === 'archived' || info.status === 'paused') 
             }"
           >
             {{ getStatus }}
@@ -260,7 +256,7 @@ const getStatus = computed(() => {
             target="_blank"
             class="text-base text-primary link link-hover mt-0"
             :class="{
-              'mt-3' : width > 364
+              'mt-2' : width > 364
             }"
           >
             {{ info.article }}

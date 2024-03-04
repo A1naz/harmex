@@ -616,7 +616,7 @@ async function changeMP(e: any) {
         <p
           v-if="availableBuyouts"
           :class="{
-            'text-success': availableBuyouts === activeBuyouts.length,
+            'text-green-500': availableBuyouts === activeBuyouts.length,
           }"
           class="text-sm"
         >
@@ -633,7 +633,7 @@ async function changeMP(e: any) {
         </p>
         <p
           v-if="availableBuyouts === 0 && activeBuyouts.length > 0"
-          class="text-center text-orange-400 text-sm"
+          class="text-center text-orange-400 text-sm "
         >
           Недостаточно средств для совершения выкупа, пополните баланс.
         </p>

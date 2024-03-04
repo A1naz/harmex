@@ -5,6 +5,7 @@ definePageMeta({
   colorMode: 'light',
 })
 
+const mpStore = useMPStore()
 const pdfSection = ref<HTMLElement>()
 const { $dayjs } = useNuxtApp()
 const { $html2pdf } = useNuxtApp()
@@ -83,7 +84,7 @@ const { stop } = useIntersectionObserver(
 )
 const skip = ref(50)
 const end = ref(false)
-const { data, error } = await useFetch('/api/delivery/getReady', {
+const { data, error } = await useFetch(`/api/${mpStore.selectedMP || 'wildberries'}/delivery/getReady`, {
   method: 'GET',
   headers: useRequestHeaders(['cookie']) as HeadersInit,
 })
