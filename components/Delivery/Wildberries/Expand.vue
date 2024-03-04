@@ -17,7 +17,7 @@ const opened = ref()
 const qrCode = ref(null)
 
 function openBuyout() {
-  router.push(`/buyouts?uuid=${props.info.uuid}`)
+  router.push(`/buyouts/wildberries?uuid=${props.info.uuid}`)
 }
 onMounted(async () => {
   opened.value = props.state

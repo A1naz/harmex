@@ -188,7 +188,7 @@ const updateSearchType = (filter: any) => {
   search.type = filter.value;
 }
 
-async function changeFilter(e: any) {
+function changeFilter(e: any) {
   mpStore.selectedMP = e.value
   return navigateTo(
     '/delivery/' +

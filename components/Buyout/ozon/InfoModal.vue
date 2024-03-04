@@ -69,25 +69,20 @@ onKeyStroke('Escape', (e) => {
             <span
               class="rounded-2xl py-1 px-2 max-h-9"
               :class="{
-                'text-green-600 bg-green-200 ':
-                  (info.status === 'active' || info.status === 'work') &&
-                  theme.value === 'light',
-                'text-green-200 bg-green-600 ':
-                  (info.status === 'active' || info.status === 'work') &&
-                  theme.value === 'dark',
-                'text-red-200 bg-red-700':
-                  (info.status === 'completed' || info.status === 'nofunds') &&
-                  theme.value === 'dark',
-                'text-error bg-red-200':
-                  (info.status === 'completed' || info.status === 'nofunds') &&
-                  theme.value === 'light',
-                'text-warning bg-yellow-200':
-                  (info.status === 'archived' || info.status === 'paused') &&
-                  theme.value === 'light',
-                'text-warning bg-yellow-400':
-                  (info.status === 'archived' || info.status === 'paused') &&
-                  theme.value === 'dark',
-              }"
+              'bg-success ':
+                (info.status === 'active' || info.status === 'work'),
+              'text-base-content bg-green-600 ':
+                (info.status === 'active' || info.status === 'work') &&
+                theme.value === 'dark',
+              'text-base-content bg-red-700':
+                (info.status === 'completed' || info.status === 'nofunds') &&
+                theme.value === 'dark',
+              'text-base-content bg-red-200':
+                (info.status === 'completed' || info.status === 'nofunds') &&
+                theme.value === 'light',
+              'text-base-content bg-yellow-300':
+                (info.status === 'archived' || info.status === 'paused') 
+            }"
               >{{ getStatus }}</span
             >
           </div>
