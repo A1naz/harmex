@@ -25,7 +25,7 @@ watch(() => props.state, (newState) => {
   opened.value = newState
 })
 function daysToPenalty(statusdelivery: any[]) {
-  const item = statusdelivery.find(item => item.status === 'Готов к выдаче')
+  const item = statusdelivery.find(item => item.status)
   if (!item)
     return
 
@@ -37,7 +37,7 @@ function daysToPenalty(statusdelivery: any[]) {
   if (timeLeft < 0) { return 'Получение со штрафом!' }
   else {
     const days = Math.round(timeLeft / 1000 / 60 / 60 / 24)
-    return `Для получения без штрафа осталось: ${days} д.`
+    return `До штрафа осталось: ${days} д.`
   }
 }
 </script>
@@ -59,25 +59,25 @@ function daysToPenalty(statusdelivery: any[]) {
 
             <div class="w-full">
 
-                <div class="flex justify-between flex-wrap gap-1">
-                    <div class="flex gap-2">
+                <div class="flex justify-between flex-wrap lg:flex-nowrap gap-1">
+                    <div class="flex gap-1">
                         <span> 
                             Доставка
                         </span>
                         <div v-if="info.currentstatus === 'Готов к выдаче' && info.statusdelivery.length > 1 " 
-                            class="text-s link bg-red-500 link-hover z-10 rounded-full my-auto max-h-6" 
-                            @click="emit('openPenaltyModal')"
-                            
+                        class="text-s link bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"                            @click="emit('openPenaltyModal')"
+                        style="min-width: fit-content;"
                             >
-                            <IconCSS class="text-base-100 bg-red-500 -mt-2" name="ph:warning-circle-light" size="25" />
+                            <IconCSS name="ph:warning-circle-light" size="25" />
                             
-                            <!-- {{ daysToPenalty(info.statusdelivery) }} -->
+                            <span class="mr-1 my-auto">{{ daysToPenalty(info.statusdelivery) }}</span>
                         </div>
                     </div>
                     
                     <label
                         class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs hover:text-primary break-all z-10"
                         @click="openBuyout"
+                        style="white-space: nowrap;"
                         >#{{info.uuid }}
                     </label>
                 </div>

@@ -76,7 +76,7 @@ async function getDeliveries() {
 await getDeliveries()
 
 async function exportReadyXLS() {
-  const { data } = await useFetch('/api/delivery/exportReady', {
+  const { data } = await useFetch('/api/ozon/delivery/exportReady', {
     responseType: 'blob',
   })
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
@@ -190,13 +190,17 @@ const updateSearchType = (filter: any) => {
 
 async function changeFilter(e: any) {
   mpStore.selectedMP = e.value
-  router.push(`/delivery/${mpStore.selectedMP}`)
+  return navigateTo(
+    '/delivery/' +
+      e.value +
+      (route.query?.status ? '?status=' + route.query.status : '')
+  )
 }
 
 const customLinks = filters.map(filter => ({
   title: filter.title,
-  slot: '/delivery/ozon', // Можете указать нужное значение для слота, если требуется
-  query: filter.params // Используйте параметр, который соответствует вашим требованиям
+  slot: '/delivery/ozon', 
+  query: filter.params 
 }));
 </script>
 <template>
@@ -232,7 +236,7 @@ const customLinks = filters.map(filter => ({
 
 
     <div class="">
-      <div class="flex lg:hidden">
+      <div class="flex lg:hidden mt-2">
         <div v-if="deliveries.length" class="export">
           <div class="dropdown">
             <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2">XLS</label>
@@ -249,7 +253,7 @@ const customLinks = filters.map(filter => ({
           </div>
         </div>
         <div class="relative flex items-center flex-grow-0 w-full">
-          <input v-model="search.text" type="text" class="input input-sm input-bordered w-full" placeholder="Поиск" @input="onSearchInput($event)">
+          <input v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500 w-full" placeholder="Поиск" @input="onSearchInput($event)">
 
           <span
             v-if="search.loading"
@@ -399,7 +403,7 @@ const customLinks = filters.map(filter => ({
               </option>
             </select> -->
             <div class="relative flex items-center flex-grow-0 w-full">
-              <input v-model="search.text" type="text" class="input input-sm input-bordered" placeholder="Поиск" @input="onSearchInput($event)">
+              <input v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500" placeholder="Поиск" @input="onSearchInput($event)">
 
               <span
                 v-if="search.loading"

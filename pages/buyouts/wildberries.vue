@@ -618,7 +618,7 @@ async function changeMP(e: any) {
         <p
           v-if="availableBuyouts"
           :class="{
-            'text-success': availableBuyouts === activeBuyouts.length,
+            'text-green-500': availableBuyouts === activeBuyouts.length,
           }"
           class="text-sm"
         >
