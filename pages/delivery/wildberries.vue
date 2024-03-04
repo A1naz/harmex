@@ -451,7 +451,7 @@ const customLinks = filters.map(filter => ({
       <TransitionSlide group tag="ul" class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3">
       <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
       <li v-for="(delivery, index) of deliveries.slice(0, Math.ceil(deliveries.length / 2))" :key="index" class="overflow-visible z-0">
-        <DeliveryExpandWildberries
+        <DeliveryWildberriesExpand
           :state="openAll"
           :info="delivery" 
           @open-modal="openModal"
@@ -462,7 +462,7 @@ const customLinks = filters.map(filter => ({
     </ul>
     <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
       <li v-for="(delivery, index) of deliveries.slice(Math.ceil(deliveries.length / 2))" :key="index" class="overflow-visible z-0">
-        <DeliveryExpandWildberries
+        <DeliveryWildberriesExpand
           :state="openAll"
           :info="delivery" 
           @open-modal="openModal"
