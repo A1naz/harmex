@@ -7,6 +7,8 @@ definePageMeta({
   title: 'Вопросы',
 })
 const store = useMainStore()
+const mpStore = useMPStore()
+const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const questions = ref([]) as any
 const amount = ref(0)
 const now = useNow()
@@ -19,9 +21,13 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false);
+const MPTabs = [
+  { title: 'ozon', value: 'ozon' },
+  { title: 'wildberries', value: 'wildberries' },
+]
 async function getQuestions() {
   modalShow.value = false
-  const { data, error } = await useFetch('/api/questions/get', { method: 'GET' })
+  const { data, error } = await useFetch('/api/ozon/questions/get', { method: 'GET' })
   if (data.value)
     questions.value = data.value
   if (error.value)
@@ -29,7 +35,7 @@ async function getQuestions() {
 }
 await getQuestions()
 async function create() {
-  const { data, error } = await useFetch('/api/questions/create', {
+  const { data, error } = await useFetch('/api/ozon/questions/create', {
     method: 'POST',
     body: {
       article: article.value,
@@ -52,7 +58,7 @@ async function getProductInfo() {
   if (!article.value)
     return
 
-  const { data, error } = await useFetch(`/api/product/${article.value}`, {
+  const { data, error } = await useFetch(`/api/ozon/product/${article.value}`, {
     method: 'GET',
   })
   if ((data.value as any)?.product) {
@@ -108,7 +114,7 @@ const codeInput = ref()
 
 async function selectFilterDate(e: any) {
   const target = e
-  const { data } = await useFetch('/api/questions/get', {
+  const { data } = await useFetch('/api/ozon/questions/get', {
     method: 'GET',
     query: {
       dateFilter: target.value,
@@ -124,7 +130,7 @@ async function findBuyouts(value: string, type: string) {
     await getQuestions()
     return
   }
-  const { data, error } = await useFetch('/api/questions/get', {
+  const { data, error } = await useFetch('/api/ozon/questions/get', {
     query: {
       string: value,
       type,
@@ -148,7 +154,12 @@ const updateSearchType = (filter: any) => {
   search.type = filter.value
 }
 
-
+function changeFilter(e: any) {
+  mpStore.selectedMP = e.value
+  return navigateTo(
+    '/questions/' + e.value 
+  )
+}
 </script>
 
 <template>
@@ -164,7 +175,7 @@ const updateSearchType = (filter: any) => {
       <span class="font-bold"> {{ store.tariffString('questionProduct') }} </span>
       Все услуги оказываются по Московскому времени.
     </p> -->
-    <QuestionsCreateQuest :show="modalShow" @close-modal="modalShow = false" @create="getQuestions()"/>
+    <QuestionsOzonCreateQuest :show="modalShow" @close-modal="modalShow = false" @create="getQuestions()"/>
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
      
@@ -183,6 +194,12 @@ const updateSearchType = (filter: any) => {
             { title: 'Завершенные', value: 'completed' },
           ]"
           @change-value="selectFilterDate"
+        />
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeFilter"
         />
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
           
@@ -218,7 +235,12 @@ const updateSearchType = (filter: any) => {
           ]"
           @change-value="selectFilterDate"
         />
-
+        <CustomSelect
+          class="lg:hidden"
+          :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeFilter"
+        />
         <CustomSelect
           :class="'bg-base-300 sm:min-w-[120px]'"
           :tabs="[

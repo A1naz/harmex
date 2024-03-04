@@ -18,7 +18,7 @@ const sex = ref('male')
 const productData = ref<any>(null)
 const urlError = ref(false)
 async function getQuestions() {
-  const { data, error } = await useFetch('/api/questions/get', { method: 'GET' })
+  const { data, error } = await useFetch('/api/ozon/questions/get', { method: 'GET' })
   if (data.value)
     questions.value = data.value
   if (error.value)
@@ -27,7 +27,7 @@ async function getQuestions() {
 await getQuestions()
 async function create() {
   
-  const { data, error } = await useFetch('/api/questions/create', {
+  const { data, error } = await useFetch('/api/ozon/questions/create', {
     method: 'POST',
     body: {
       article: article.value,
@@ -50,7 +50,7 @@ async function getProductInfo() {
   if (!article.value)
     return
 
-  const { data, error } = await useFetch(`/api/product/${article.value}`, {
+  const { data, error } = await useFetch(`/api/ozon/product/${article.value}`, {
     method: 'GET',
   })
   if ((data.value as any)?.product) {
@@ -180,7 +180,7 @@ function removeProduct() {
               <div class="article">
                 <a
                 :href="`https://www.ozon.ru/product/${productData.article}`" target="_blank"
-                  class="text-sm text-secondary link link-hover"
+                  class="text-sm text-primary link link-hover"
                 >
                   {{ productData.article }}
                 </a>

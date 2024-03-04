@@ -28,7 +28,7 @@ const theme = useColorMode()
           class="btn btn-primary w-full rounded-xl text-[19px] font-normal ml-4 border-none hover:bg-primary"
           @click="navigateTo(`/buyouts/create/${info?.value}`)"
         >
-        {{ info?.awaiting ? 'Ожидается' : 'Открыть' }}
+        {{ info?.awaiting ? 'Ожидается' : 'Добавить' }}
         </button>
       </div>
     </div>
