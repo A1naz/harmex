@@ -8,18 +8,26 @@ export default eventHandler(async (event) => {
     if (!session) return sendRedirect(event, '/auth', 302)
 
     const { article, query } = getQuery(event)
-    if (!article || !query)
-      return { found: false, page: -1, advert: false }
-    
-      const allProxies: any = await ProxySearchQuery.find()
-      const proxies: string[] = allProxies[0].proxies
+    if (!article || !query) return { found: false, page: -1, advert: false }
 
-    const result: any = await findPositionByQuery(query.toString().replaceAll(' ', '%20'), Number(article), proxies)
+    return {
+      found: false,
+      page: -1,
+      advert: false,
+    }
+
+    const allProxies: any = await ProxySearchQuery.find()
+    const proxies: string[] = allProxies[0].proxies
+
+    const result: any = await findPositionByQuery(
+      query.toString().replaceAll(' ', '%20'),
+      Number(article),
+      proxies
+    )
     return result
-  }
-  catch (e) {
-    console.log(e);
-    
+  } catch (e) {
+    console.log(e)
+
     throw createError(e as string)
   }
 })
