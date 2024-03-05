@@ -70,7 +70,7 @@ const removeCart = (index: number) => {
               class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
             >
               <a
-              :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`" target="_blank"
+              :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
                 class="text-sm text-primary link link-hover"
               >
                 {{ item.article }}
@@ -129,15 +129,15 @@ const removeCart = (index: number) => {
                 Нет
               </div>
             </td>
-            <td class="text-center max-w-[60px]">
-              <!-- <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="removeCart(item.id)">
+            <!-- <td class="text-center max-w-[60px]">
+              <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="removeCart(item.id)">
                 <IconCSS name="material-symbols:close" size="15" />
               </div>
               <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="">
                 <IconCSS name="fluent:copy-20-filled" size="15" />
-              </div> -->
+              </div>
             
-            </td>
+            </td> -->
           </tr>
         </tbody>
     </table>

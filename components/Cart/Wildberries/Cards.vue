@@ -66,12 +66,12 @@ const props = defineProps<IProps>()
         </div>
         <div class="card-actions justify-start mt-2">
           <div>Дата Создания:</div>
-          <div class="date text-end bg-primary bg-opacity-10 rounded-lg p-0.5">
+          <div class="date text-end bg-primary bg-opacity-10 rounded-lg p-0.5 px-3">
             {{ defaultDate(item.createdDate) }}
           </div>
           <div>Дата Завершения:</div>
           <div>
-            <div v-if="item.endedDate" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-end" >
+            <div v-if="item.endedDate" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-end px-3" >
               {{ defaultDate(item.endedDate) }}
             </div>
             <div v-else>

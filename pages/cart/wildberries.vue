@@ -7,6 +7,10 @@ definePageMeta({
   title: 'Корзина',
 })
 const store = useMainStore()
+const mpStore = useMPStore()
+const selectedMP = ref(mpStore.selectedMP || 'wildberries')
+const route = useRoute()
+const router = useRouter()
 const cartForm = reactive({
   amount: 0,
   period: '3h',
@@ -25,10 +29,14 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false);
+const MPTabs = [
+  { title: 'wildberries', value: 'wildberries' },
+  { title: 'ozon', value: 'ozon' },
+]
 
 async function getCarts() {
   modalShow.value = false;
-  const { data, error } = await useFetch('/api/cart/get', { method: 'GET', watch: false })
+  const { data, error } = await useFetch('/api/wildberries/cart/get', { method: 'GET', watch: false })
   if (data.value) carts.value = data.value
   if (error.value)
     notify({
@@ -39,7 +47,7 @@ async function getCarts() {
 }
 await getCarts()
 async function create() {
-  const { data, error } = await useFetch('/api/cart/create', {
+  const { data, error } = await useFetch('/api/wildberries/cart/create', {
     method: 'POST',
     body: {
       amount: amount.value,
@@ -66,7 +74,7 @@ async function create() {
 async function getProductInfo() {
   if (!article.value) return
 
-  const { data, error } = await useFetch(`/api/product/${article.value}`, {
+  const { data, error } = await useFetch(`/api/wildberries/product/${article.value}`, {
     method: 'GET',
   })
   if ((data.value as any)?.product) {
@@ -116,7 +124,7 @@ const codeInput = ref()
 
 async function selectFilterDate(e: any) {
   const target = e
-  const { data } = await useFetch('/api/cart/get', {
+  const { data } = await useFetch('/api/wildberries/cart/get', {
     method: 'GET',
     query: {
       dateFilter: target.value,
@@ -132,7 +140,7 @@ async function findBuyouts(value: string, type: string) {
     await getCarts()
     return
   }
-  const { data, error } = await useFetch('/api/cart/get', {
+  const { data, error } = await useFetch('/api/wildberries/cart/get', {
     query: {
       string: value,
       type,
@@ -156,8 +164,21 @@ const updateSearchType = (filter: any) => {
   search.type = filter.value
 }
 
+function changeFilter(e: any) {
+  mpStore.selectedMP = e.value
+  return navigateTo(
+    '/cart/' + e.value 
+  )
+}
 
-onMounted(() => {})
+onMounted(() => {
+  if (route.query.modalShow) {
+    modalShow.value = route.query.modalShow === 'true';
+    const query = { ...route.query };
+        delete query.modalShow;
+        router.push({ query });
+  }
+})
 </script>
 
 <template>
@@ -165,11 +186,16 @@ onMounted(() => {})
     <!-- <h1 class="text-2xl font-bold mt-4">Корзина</h1> -->
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
-        <button @click="modalShow = true" class="btn btn-primary font-normal btn-sm">
+        <button @click="navigateTo(`/cart/create/`)" class="btn btn-primary font-normal btn-sm">
           <Icon name="fluent:add-24-filled" size="17" />
-          Корзина
+          <span class="hidden lg:flex">Корзина</span>
         </button>
-
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeFilter"
+        />
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
@@ -204,6 +230,12 @@ onMounted(() => {})
         </div>
       </div>
       <div class="flex gap-2 lg:gap-5">
+        <CustomSelect
+          class="lg:hidden"
+          :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeFilter"
+        />
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
@@ -266,18 +298,18 @@ onMounted(() => {})
     </div> -->
 
     <div v-if="carts.length" class="mt-4">
-      <div v-if="width > 1024">
-        <CartTable :get-status="getStatus" :carts="carts" />
+      <div v-if="width >= 1024">
+        <CartWildberriesTable :get-status="getStatus" :carts="carts" />
       </div>
       <div v-else>
-        <CartCards :carts="carts" :get-status="getStatus" />
+        <CartWildberriesCards :carts="carts" :get-status="getStatus" />
       </div>
     </div>
     <div v-else>
       <Hero />
     </div>
   </div>
-  <CartCreateCart :show="modalShow" @close-modal="modalShow = false" @create="getCarts()"/>
+  <CartWildberriesCreateCart :show="modalShow" @close-modal="modalShow = false" @create="getCarts()"/>
 </template>
 
 <style scoped></style>

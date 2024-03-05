@@ -20,7 +20,7 @@ const size = ref('none')
 const productData = ref<any>(null)
 const urlError = ref(false)
 async function getCarts() {
-  const { data, error } = await useFetch('/api/cart/get', { method: 'GET', watch: false })
+  const { data, error } = await useFetch('/api/wildberries/cart/get', { method: 'GET', watch: false })
   if (data.value) carts.value = data.value
   if (error.value)
     notify({
@@ -31,7 +31,7 @@ async function getCarts() {
 }
 await getCarts()
 async function create() {
-  const { data, error } = await useFetch('/api/cart/create', {
+  const { data, error } = await useFetch('/api/wildberries/cart/create', {
     method: 'POST',
     body: {
       amount: amount.value,
@@ -59,7 +59,7 @@ async function create() {
 async function getProductInfo() {
   if (!article.value) return
 
-  const { data, error } = await useFetch(`/api/product/${article.value}`, {
+  const { data, error } = await useFetch(`/api/wildberries/product/${article.value}`, {
     method: 'GET',
   })
   if ((data.value as any)?.product) {
@@ -260,7 +260,7 @@ function removeProduct() {
                 <a
                 :href="`https://www.ozon.ru/product/${productData.article}`"
                   target="_blank"
-                  class="text-secondary link link-hover"
+                  class="text-primary link link-hover"
                 >
                   {{ productData.article }}
                 </a>
