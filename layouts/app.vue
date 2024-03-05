@@ -92,8 +92,7 @@ const menuConditions = ref(storeMain.client.mmenuItems)
 onMounted(() => {
   menuConditions.value.map((section: any) => {
     for (const item of section.items) {
-      if (item.path == '/autoanswer') return null
-      if (item.path == '/productlikes' || item.path == '/delivery' || item.path == '/buyouts' || item.path == '/questions') {
+      if (item.path == '/productlikes' || item.path == '/delivery' || item.path == '/buyouts' || item.path == '/questions' || item.path == '/cart') {
         item.path = mpStore.selectedMP
           ? item.path + '/' + mpStore.selectedMP
           : item.path + '/wildberries'
