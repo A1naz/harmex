@@ -278,7 +278,7 @@ async function deleteLike() {
                 <a
                   :href="`https://www.ozon.ru/product/${productData.article}`"
                   target="_blank"
-                  class="text-sm text-secondary link link-hover"
+                  class="text-sm text-primary link link-hover"
                 >
                   {{ productData.article }}
                 </a>

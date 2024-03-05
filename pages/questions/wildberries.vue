@@ -21,6 +21,8 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false);
+const route = useRoute()
+const router = useRouter()
 const MPTabs = [
   { title: 'wildberries', value: 'wildberries' },
   { title: 'ozon', value: 'ozon' },
@@ -101,7 +103,12 @@ function removeProduct() {
   amount.value = 0
 }
 onMounted(() => {
-
+  if (route.query.modalShow) {
+    modalShow.value = route.query.modalShow === 'true';
+    const query = { ...route.query };
+        delete query.modalShow;
+        router.push({ query });
+  }
 })
 
 const search = reactive({
@@ -180,11 +187,16 @@ function changeFilter(e: any) {
       <div class="flex gap-1 lg:gap-4">
      
 
-        <button @click="modalShow = true" class="btn btn-primary font-normal btn-sm">
+        <button @click="navigateTo(`/questions/create/`)" class="btn btn-primary font-normal btn-sm">
           <Icon name="fluent:add-24-filled" size="17" />
-          Вопрос
+          <span class="hidden lg:flex">Вопрос</span>
         </button>
-
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeFilter"
+        />
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
@@ -195,18 +207,13 @@ function changeFilter(e: any) {
           ]"
           @change-value="selectFilterDate"
         />
-        <CustomSelect
-          class="hidden lg:flex"
-          :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
-          @change-value="changeFilter"
-        />
+        
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
           
           <input
             type="text"
             class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
-            placeholder="Поиск по вопросам"
+            placeholder="Поиск"
             ref="codeInput" 
             v-model="search.text"
             @input="onSearchInput($event)"
@@ -228,6 +235,12 @@ function changeFilter(e: any) {
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeFilter"
+        />
+        <CustomSelect
+          class="lg:hidden"
+          :class="'sm:min-w-[120px]'"
           :tabs="[
             { title: 'Все вопросы', value: 'all' },
             { title: 'Активные', value: 'created' },
@@ -235,12 +248,7 @@ function changeFilter(e: any) {
           ]"
           @change-value="selectFilterDate"
         />
-        <CustomSelect
-          class="lg:hidden"
-          :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
-          @change-value="changeFilter"
-        />
+        
         <CustomSelect
           :class="'bg-base-300 sm:min-w-[120px]'"
           :tabs="[
@@ -263,7 +271,7 @@ function changeFilter(e: any) {
             v-model="search.text"
             type="text"
             class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
-            placeholder="Поиск по вопросам"
+            placeholder="Поиск"
             @input="onSearchInput($event)"
           />
           <span
@@ -414,7 +422,7 @@ function changeFilter(e: any) {
                     Артикул
                   </div>
                   <a
-                  :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
+                  :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`" target="_blank"
                     class="text-primary link link-hover text-sm"
                   >
                     {{ item.article }}

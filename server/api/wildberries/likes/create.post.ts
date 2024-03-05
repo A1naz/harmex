@@ -4,8 +4,6 @@ import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
-  console.log('creating like');
-  
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 

@@ -4,7 +4,7 @@
 definePageMeta({
   layout: 'app',
   auth: true,
-  title: 'Добавить лайки',
+  title: 'Добавить вопросы',
 })
 
 const mps = [
@@ -53,7 +53,7 @@ const mps = [
 
 <template>
   <div class="mt-10 xl:ml-8 flex xl:gap-14 xl:justify-start justify-center flex-wrap gap-6">
-    <MPCard v-for="mp of mps" :info="mp" :page="'/likes/create'"  />
+    <MPCard v-for="mp of mps" :info="mp" :page="'/questions'"  :query="{modalShow: 'true'}"/>
   </div>
 </template>
 

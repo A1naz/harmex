@@ -9,6 +9,7 @@ definePageMeta({
 const store = useMainStore()
 const mpStore = useMPStore()
 const router = useRouter()
+const route = useRoute()
 const MPSelect = ref()
 const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const product_likes = ref([]) as any
@@ -124,7 +125,12 @@ const MPTabs = [
 ]
 
 onMounted(() => {
-  // setText()
+  if (route.query.modalShow) {
+    modalShow.value = route.query.modalShow === 'true';
+    const query = { ...route.query };
+        delete query.modalShow;
+        router.push({ query });
+  }
 })
 
 async function setText() {
@@ -244,7 +250,7 @@ const updateSearchType = (filter: any) => {
       <div class="flex gap-1 lg:gap-4">
         <button
           class="btn btn-primary font-normal btn-sm"
-          @click="modalShow = !modalShow"
+          @click="navigateTo(`/productlikes/create/`)"
           @click.stop
         >
           <Icon name="fluent:add-24-filled" size="24" />

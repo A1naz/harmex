@@ -1,8 +1,17 @@
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   info: {
     type: Object,
   },
+  page: {
+    type: String,
+    default: '/buyouts/create' 
+  },
+  query: {
+    type: Object,
+    default: {}
+  }
+  
 })
 const theme = useColorMode()
 </script>
@@ -26,7 +35,12 @@ const theme = useColorMode()
              '': theme.value === 'dark',
           }"
           class="btn btn-primary w-full rounded-xl text-[19px] font-normal ml-4 border-none hover:bg-primary"
-          @click="navigateTo(`/buyouts/create/${info?.value}`)"
+          @click="
+            navigateTo({
+              path: `${page}/${info?.value}`,
+              query: props.query,
+            })
+          "
         >
         {{ info?.awaiting ? 'Ожидается' : 'Добавить' }}
         </button>
