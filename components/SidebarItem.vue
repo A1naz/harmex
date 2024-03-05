@@ -17,7 +17,7 @@ const active = computed(() => {
 </script>
 
 <template>
-  <li>
+  <li v-if="props.href != '/autoanswer'">
     <NuxtLink
       :to="props.href" class="mx-4 rounded-lg"
     >

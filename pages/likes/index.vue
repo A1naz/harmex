@@ -148,7 +148,7 @@ async function selectMP(value: any) {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
       <div class="flex gap-1 navbar:gap-2 lg:gap-3">
         <NuxtLink
-          :to="`/likes/create/${selectedMP}`"
+          :to="`/likes/create`"
           class="btn btn-primary font-normal btn-sm"
         >
           <Icon name="fluent:add-24-filled" size="24" />

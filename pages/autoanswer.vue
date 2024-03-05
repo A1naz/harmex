@@ -1,138 +1,140 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+// import { notify } from '@kyvg/vue3-notification'
 
-definePageMeta({
-  layout: 'app',
-  auth: true,
-  title: 'Автоответчик на отзывы',
+// definePageMeta({
+//   layout: 'app',
+//   auth: true,
+//   title: 'Автоответчик на отзывы',
+// })
+// const store = useMainStore()
+
+// const form = reactive({
+//   ratingFilterFrom: 1,
+//   ratingFilterTo: 5,
+//   text: '',
+//   article: '',
+//   product: '',
+//   apiKey: store.client.wbApiKeys[0],
+// })
+// const initial = {
+//   ratingFilterFrom: 1,
+//   ratingFilterTo: 5,
+//   text: '',
+//   article: '',
+//   product: '',
+//   apiKey: store.client.wbApiKeys[0],
+// }
+// const autoanswers = ref([]) as any
+// const amount = ref(0)
+// const loading = ref(false)
+// const loadingUrl = ref(false)
+// const article = ref('')
+// const productData = ref<any>(null)
+// const urlError = ref(false)
+// await getBots()
+// async function getBots() {
+//   const { data, error } = await useFetch('/api/autoanswer/get', {
+//     method: 'GET',
+//   })
+//   if (data.value) autoanswers.value = data.value
+// }
+// async function deleteBot(id: string) {
+//   const { data, error } = await useFetch('/api/autoanswer/delete', {
+//     method: 'DELETE',
+//     body: {
+//       id,
+//     },
+//   })
+//   if (data.value) {
+//     notify({
+//       title: 'Автоответчик успешно удален',
+//     })
+//     getBots()
+//   }
+//   if (error.value) {
+//     notify({
+//       title: error.value.message,
+//     })
+//   }
+// }
+
+// async function createAutoAnswer() {
+//   if (!productData.value) return
+//   form.product = productData.value
+//   form.article = article.value
+//   form.ratingFilterFrom = Number(form.ratingFilterFrom)
+//   form.ratingFilterTo = Number(form.ratingFilterTo)
+
+//   loading.value = true
+//   const { data, error } = await useFetch('/api/autoanswer/create', {
+//     method: 'POST',
+//     body: form,
+//   })
+//   loading.value = false
+//   if (error.value) {
+//     if (error.value.data) {
+//       notify({
+//         title: 'Что-то пошло не так',
+//         text: error.value.data.message,
+//       })
+//       return
+//     }
+//     notify({
+//       title: 'Что-то пошло не так',
+//       text: error.value.message,
+//     })
+//     return
+//   }
+//   if (data.value?.status === 'ok') {
+//     notify({
+//       title: 'Успешно',
+//       text: 'Автоответчик успешно создан',
+//     })
+//     await getBots()
+//     form.ratingFilterFrom = initial.ratingFilterFrom
+//     form.ratingFilterTo = initial.ratingFilterTo
+//     form.text = initial.text
+//     form.article = initial.article
+//     form.product = initial.product
+//   }
+// }
+// async function getProductInfo() {
+//   if (!article.value) return
+//   const { data, error } = await useFetch(`/api/product/${article.value}`, {
+//     method: 'GET',
+//   })
+//   if ((data.value as any)?.product) {
+//     productData.value = (data.value as any).product
+//     urlError.value = false
+//   }
+//   if (error.value) urlError.value = true
+//   loadingUrl.value = false
+// }
+// let timeout = null as NodeJS.Timeout | null
+// async function changeUrl() {
+//   if (article.value === '') return
+//   loadingUrl.value = true
+//   if (timeout) clearTimeout(timeout)
+//   timeout = setTimeout(getProductInfo, 500)
+// }
+// function getStatus(status: string) {
+//   if (status === 'created') return 'Создан'
+//   else if (status === 'work') return 'В работе'
+//   else if (status === 'completed') return 'Завершен'
+// }
+// function removeProduct() {
+//   productData.value = null
+//   article.value = ''
+//   amount.value = 0
+// }
+onMounted(() => {
+  navigateTo('/buyouts')
 })
-const store = useMainStore()
-
-const form = reactive({
-  ratingFilterFrom: 1,
-  ratingFilterTo: 5,
-  text: '',
-  article: '',
-  product: '',
-  apiKey: store.client.wbApiKeys[0],
-})
-const initial = {
-  ratingFilterFrom: 1,
-  ratingFilterTo: 5,
-  text: '',
-  article: '',
-  product: '',
-  apiKey: store.client.wbApiKeys[0],
-}
-const autoanswers = ref([]) as any
-const amount = ref(0)
-const loading = ref(false)
-const loadingUrl = ref(false)
-const article = ref('')
-const productData = ref<any>(null)
-const urlError = ref(false)
-await getBots()
-async function getBots() {
-  const { data, error } = await useFetch('/api/autoanswer/get', {
-    method: 'GET',
-  })
-  if (data.value) autoanswers.value = data.value
-}
-async function deleteBot(id: string) {
-  const { data, error } = await useFetch('/api/autoanswer/delete', {
-    method: 'DELETE',
-    body: {
-      id,
-    },
-  })
-  if (data.value) {
-    notify({
-      title: 'Автоответчик успешно удален',
-    })
-    getBots()
-  }
-  if (error.value) {
-    notify({
-      title: error.value.message,
-    })
-  }
-}
-
-async function createAutoAnswer() {
-  if (!productData.value) return
-  form.product = productData.value
-  form.article = article.value
-  form.ratingFilterFrom = Number(form.ratingFilterFrom)
-  form.ratingFilterTo = Number(form.ratingFilterTo)
-
-  loading.value = true
-  const { data, error } = await useFetch('/api/autoanswer/create', {
-    method: 'POST',
-    body: form,
-  })
-  loading.value = false
-  if (error.value) {
-    if (error.value.data) {
-      notify({
-        title: 'Что-то пошло не так',
-        text: error.value.data.message,
-      })
-      return
-    }
-    notify({
-      title: 'Что-то пошло не так',
-      text: error.value.message,
-    })
-    return
-  }
-  if (data.value?.status === 'ok') {
-    notify({
-      title: 'Успешно',
-      text: 'Автоответчик успешно создан',
-    })
-    await getBots()
-    form.ratingFilterFrom = initial.ratingFilterFrom
-    form.ratingFilterTo = initial.ratingFilterTo
-    form.text = initial.text
-    form.article = initial.article
-    form.product = initial.product
-  }
-}
-async function getProductInfo() {
-  if (!article.value) return
-  const { data, error } = await useFetch(`/api/product/${article.value}`, {
-    method: 'GET',
-  })
-  if ((data.value as any)?.product) {
-    productData.value = (data.value as any).product
-    urlError.value = false
-  }
-  if (error.value) urlError.value = true
-  loadingUrl.value = false
-}
-let timeout = null as NodeJS.Timeout | null
-async function changeUrl() {
-  if (article.value === '') return
-  loadingUrl.value = true
-  if (timeout) clearTimeout(timeout)
-  timeout = setTimeout(getProductInfo, 500)
-}
-function getStatus(status: string) {
-  if (status === 'created') return 'Создан'
-  else if (status === 'work') return 'В работе'
-  else if (status === 'completed') return 'Завершен'
-}
-function removeProduct() {
-  productData.value = null
-  article.value = ''
-  amount.value = 0
-}
-onMounted(() => {})
 </script>
 
 <template>
-  <div>
-    <!-- <h1 class="text-2xl font-bold mt-4">Автоответчик на отзывы (beta)</h1> -->
+  <!-- <div>
+    <h1 class="text-2xl font-bold mt-4">Автоответчик на отзывы (beta)</h1>
     <p class="text-xs font-light mt-4 lg:text-sm">
       Добавьте апи ключ в настройках профиля и настройте автоотвечик
     </p>
@@ -197,7 +199,7 @@ onMounted(() => {})
                     class="loading loading-spinner loading-xs p-2"
                   />
 
-                  <!-- Insert a backspace svg -->
+                  Insert a backspace svg
                   <div v-if="!loadingUrl">
                     <IconCSS
                       v-if="productData"
@@ -344,7 +346,7 @@ onMounted(() => {})
       </div>
     </div>
     <Hero v-else />
-  </div>
+  </div> -->
 </template>
 
 <style scoped></style>
