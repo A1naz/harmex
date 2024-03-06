@@ -16,8 +16,9 @@ const store = useMainStore()
 const router = useRouter()
 const opened = ref()
 const qrCode = ref(null)
+const selectedMP = ref(route.path.split('/')[2])
 function openBuyout() {
-  router.push(`/buyouts/${route.path.split('/')[2]}?uuid=${props.info.buyout.uuid}`)
+  router.push(`/buyouts/${selectedMP}?uuid=${props.info.buyout.uuid}`)
 }
 onMounted(async () => {
   opened.value = props.state
@@ -28,7 +29,7 @@ watch(() => props.state, (newState) => {
 </script>
 
 <template>
-  <div class="collapse collapse-arrow bg-primary bg-opacity-10 rounded-box z-0">
+  <div class="collapse collapse-arrow bg-primary bg-opacity-10 rounded-box z-0" :class="{'text-primary': opened}">
     <input v-model="opened" type="checkbox">
     <div class="collapse-title relative text-xl font-medium">
       <div class="flex gap-4">
@@ -39,7 +40,7 @@ watch(() => props.state, (newState) => {
         />
         <div class="w-full">
           <div class="flex justify-between flex-wrap">
-            <span> Отчет по выкупу №{{ info.buyout.place }}
+            <span class="text-base-content"> Отчет по выкупу №{{ info.buyout.place }}
             </span>
             <label
               class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-base-content font-normal hover:text-primary truncate z-10"
@@ -47,9 +48,12 @@ watch(() => props.state, (newState) => {
             >#{{
               info.buyout.uuid }}</label>
           </div>
-          <div class="flex justify-between flex-wrap gap-2 items-center mt-1 ">
+          <div class="flex flex-wrap gap-2 items-center mt-1 ">
             <div class="mt-2 lg:m-0 text-xs font-normal text-base-content bg-primary bg-opacity-20 rounded-md px-5 py-0.5">
               Дата выкупа: {{ $dayjs(info.date).format('D MMMM HH:mm') }}
+            </div>
+            <div class="bg-base-300 rounded-md font-normal my-auto p-0.5 text-xs px-2 text-base-content">
+              {{ selectedMP.charAt(0).toUpperCase() + selectedMP.slice(1) }}
             </div>
           </div>
         </div>
@@ -74,4 +78,9 @@ watch(() => props.state, (newState) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.collapse-arrow .collapse-title:after {
+    height: 0.7rem;
+    width: 0.7rem;
+}
+</style>
