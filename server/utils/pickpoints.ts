@@ -1,14 +1,12 @@
 import fs from 'node:fs'
-import { ProxySearchQuery } from '~/server/lib/models/ProxySearchQuery'
-import { HttpsProxyAgent } from 'https-proxy-agent'
 
-async function getRandomProxy(): Promise<string> {
-  const allProxies: any = await ProxySearchQuery.find()
-  const proxies: string[] = allProxies[0].proxies
-  const randomNumber = Math.floor(Math.random() * proxies.length - 1)
+// async function getRandomProxy(): Promise<string> {
+//   const allProxies: any = await ProxySearchQuery.find()
+//   const proxies: string[] = allProxies[0].proxies
+//   const randomNumber = Math.floor(Math.random() * proxies.length - 1)
 
-  return `https://${proxies[randomNumber]}`
-}
+//   return `https://${proxies[randomNumber]}`
+// }
 
 export async function removeExtraPickpoints() {
   const cached = fs.readFileSync('pvz/wildberriesPoints.json', 'utf8')
@@ -21,13 +19,11 @@ export async function removeExtraPickpoints() {
   }
   fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
 
-  const proxyString = await getRandomProxy()
 
   const data: any = await $fetch(
     'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
     {
       method: 'GET',
-      agent: new HttpsProxyAgent(proxyString),
       headers: {
         'x-requested-with': 'XMLHttpRequest',
       },
@@ -86,13 +82,11 @@ export async function removeExtraPickpoints() {
 }
 
 export async function createPickpointsFile() {
-  const proxyString = await getRandomProxy()
 
   const data: any = await $fetch(
     'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
     {
       method: 'GET',
-      agent: new HttpsProxyAgent(proxyString),
       headers: {
         'x-requested-with': 'XMLHttpRequest',
       },
