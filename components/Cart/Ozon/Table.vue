@@ -79,7 +79,7 @@ const removeCart = (index: number) => {
             <td
               class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
             >
-            {{ item.size == "none" ? "Нет" : item.size }}
+            {{ item.size == "none" ? "-" : item.size }}
             </td>
             <td class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] whitespace-normal break-words">
               <div class="flex flex-col">
