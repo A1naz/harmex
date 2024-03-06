@@ -204,12 +204,12 @@ onMounted(() => {
                     class="tooltip before:w-[109px] before:content-[attr(data-tip)]"
                     data-tip="Инструкция по платформе"
                   >
-                    <button
+                    <!-- <button
                       class="relative btn btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold text-center"
                       @click="toggleInfoModal"
                     >
                       i
-                    </button>
+                    </button> -->
 
                     <!-- <NuxtLink
                       :external="true"
@@ -244,14 +244,14 @@ onMounted(() => {
                     class="tooltip before:w-[109px] before:content-[attr(data-tip)]"
                     data-tip="Пополнить баланс"
                   >
-                    <div v-if="storeMain.client.role !== UserRoles.staff">
+                    <!-- <div v-if="storeMain.client.role !== UserRoles.staff">
                       <label
                         for="payment-modal"
                         class="btn btn-block relative btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold pb-2"
                       >
                         +
                       </label>
-                    </div>
+                    </div> -->
 
                     <!-- <NuxtLink
                       :external="true"

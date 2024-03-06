@@ -28,7 +28,7 @@ onMounted(() => {
 
 async function setText() {
   loading.value = true
-  console.log(mpStore.selectedMP)
+  // console.log(mpStore.selectedMP)
 
   MPSelect.value?.updateText(mpStore.selectedMP || 'wildberries')
   setTimeout(() => getLikes(), 100)

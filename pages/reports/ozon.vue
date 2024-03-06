@@ -4,6 +4,8 @@ definePageMeta({
   auth: true,
   title: 'Отчеты по выкупам',
 })
+const mpStore = useMPStore()
+const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const openAll = ref(false)
 const reports = ref([]) as any
 const modalInfo = reactive({
@@ -14,6 +16,10 @@ const autoTarget = ref(true)
 const router = useRouter()
 const route = useRoute()
 const status = computed(() => route.query?.status || 'all')
+const MPTabs = [
+  { title: 'ozon', value: 'ozon' },
+  { title: 'wildberries', value: 'wildberries' },
+]
 const search = reactive({
   text: '',
   loading: false,
@@ -37,7 +43,7 @@ const { stop } = useIntersectionObserver(
 const skip = ref(20)
 const end = ref(false)
 async function getReports() {
-  const { data, error } = await useFetch('/api/reports/get', {
+  const { data, error } = await useFetch('/api/ozon/reports/get', {
     method: 'GET',
     query: {
       skip: 0,
@@ -57,7 +63,7 @@ async function findReports(value: string, type: string) {
     search.loading = false
     return
   }
-  const { data, error } = await useFetch('/api/reports/search', {
+  const { data, error } = await useFetch('/api/ozon/reports/search', {
     query: {
       string: value,
       type,
@@ -79,7 +85,7 @@ async function onSearchInput(event: Event) {
 function selectStatus(e: any) {
   const target = e
   router.push({
-    path: '/reports',
+    path: '/reports/ozon',
     query: {
       status: target.value,
     },
@@ -90,7 +96,7 @@ watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && reports.value.length >= 20) {
     if (end.value)
       return
-    const { data, error } = await useFetch('/api/reports/get', {
+    const { data, error } = await useFetch('/api/ozon/reports/get', {
       method: 'GET',
       query: {
         limit: 20,
@@ -110,7 +116,7 @@ watch(targetIsVisible, async (isVisible) => {
 watch(() => status.value, async (newRoute) => {
   skip.value = 20
   end.value = false
-  const { data } = await useFetch('/api/reports/get', {
+  const { data } = await useFetch('/api/ozon/reports/get', {
     method: 'GET',
     query: {
       status: status.value ?? 'all',
@@ -124,6 +130,12 @@ const updateSearchType = (filter: any) => {
   search.type = filter.value
 }
 const codeInput = ref()
+function changeFilter(e: any) {
+  mpStore.selectedMP = e.value
+  return navigateTo(
+    '/reports/' + e.value 
+  )
+}
 </script>
 
 <template>
@@ -150,6 +162,12 @@ const codeInput = ref()
     </div>
     <div class="flex lg:justify-between mb-8 mt-2 lg:mt-6 gap-2">
       <div class="flex justify-between md:justify-normal gap-2">
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeFilter"
+        />
         <CustomSelect
         :class="'bg-base-300 sm:min-w-[120px]'"
           :tabs="[
