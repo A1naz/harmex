@@ -8,6 +8,7 @@ const props = defineProps({
     type: Boolean,
   },
 })
+const route = useRoute()
 const emit = defineEmits(['openModal'])
 const { $dayjs } = useNuxtApp()
 const currency = useCurrency()
@@ -16,7 +17,7 @@ const router = useRouter()
 const opened = ref()
 const qrCode = ref(null)
 function openBuyout() {
-  router.push(`/buyouts?uuid=${props.info.buyout.uuid}`)
+  router.push(`/buyouts/${route.path.split('/')[2]}?uuid=${props.info.buyout.uuid}`)
 }
 onMounted(async () => {
   opened.value = props.state
