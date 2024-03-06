@@ -135,7 +135,7 @@ onMounted( ()=> startFetch() )
 
     <div class="page-header mb-10">
       <div class="flex flex-col items-start  gap-2 mt-4  w-full">
-        <NuxtLink to="/reviews" class="btn btn-ghost btn-sm "> 
+        <NuxtLink to="/reviews/wildberries" class="btn btn-ghost btn-sm "> 
             {{ `< назад` }} 
         </NuxtLink>
         <div class="flex flex-row justify-between   w-full">

@@ -112,12 +112,17 @@ async function uploadToS3(event: Event, index: number) {
       duration: 3000,
     })
   }
-  if (data.value)
-  form.photos[index] = {
-      url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
-      public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
+  if (data.value) {
+
+
+    console.log(`${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`);
+
+      form.photos[index] = {
+        url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
+        public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
+      }
     }
-    
+
 
   setTimeout(() => {
     loadingIndex.value = null
@@ -164,7 +169,7 @@ async function publishReview() {
       })
     }
   }
-  const { data, error } = await useFetch('/api/review/publish', {
+  const { data, error } = await useFetch('/api/wildberries/review/publish', {
     method: 'POST',
     body: {
       ...form,

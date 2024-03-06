@@ -2,6 +2,7 @@ import { Delivery } from '@/server/lib/models/wildberries/Delivery'
 import { Buyout } from '@/server/lib/models/wildberries/Buyout'
 import { Review } from '@/server/lib/models/wildberries/Review'
 import { DocuemntEnum } from '~/data/enums'
+import { log } from 'console'
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
@@ -21,7 +22,9 @@ export default eventHandler(async (event) => {
       })
     }
   }
+  console.log(buyoutuuid);
   const buyout = await Buyout.findOne({ uuid: buyoutuuid })
+  
   if (!buyout) {
     return createError({
       statusCode: 400,
