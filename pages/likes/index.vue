@@ -18,8 +18,8 @@ const { width, height } = useWindowSize()
 // review_likes.value = data.value
 
 const MPTabs = [
-  { title: 'wildberries', value: 'wildberries' },
-  { title: 'ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
 ]
 
 onMounted(() => {

@@ -24,8 +24,8 @@ const modalShow = ref<boolean>(false);
 const route = useRoute()
 const router = useRouter()
 const MPTabs = [
-  { title: 'wildberries', value: 'wildberries' },
-  { title: 'ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
 ]
 async function getQuestions() {
   modalShow.value = false

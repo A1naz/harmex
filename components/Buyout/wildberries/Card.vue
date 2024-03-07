@@ -26,7 +26,7 @@ const currency = useCurrency()
 const router = useRouter()
 function cloneBuyout() {
   router.push({
-    path: '/buyouts/create',
+    path: '/buyouts/create/wildberries',
     query: {
       uuid: props.info.uuid,
     },
@@ -36,9 +36,9 @@ function cloneBuyout() {
 async function deleteBuyOut() {
   const { data, error } = await useFetch('/api/wildberries/buyout/delete', {
     method: 'DELETE',
-    body: JSON.stringify({
+    body: {
       uuid: props.info.uuid,
-    }),
+    },
     headers: useRequestHeaders(['cookie']) as HeadersInit,
   })
   if (error.value) {

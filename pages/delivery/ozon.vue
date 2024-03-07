@@ -24,8 +24,8 @@ const search = reactive({
   type: 'article',
 })
 const MPTabs = [
-  { title: 'ozon', value: 'ozon' },
-  { title: 'wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
 ]
 function selectStatus(e: Event) {
   const target = e.target as HTMLSelectElement

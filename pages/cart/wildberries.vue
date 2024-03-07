@@ -30,8 +30,8 @@ const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false);
 const MPTabs = [
-  { title: 'wildberries', value: 'wildberries' },
-  { title: 'ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
 ]
 
 async function getCarts() {
