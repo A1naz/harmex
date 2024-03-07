@@ -14,6 +14,8 @@ const store = useMainStore()
 
 const twoFaQRModal = ref<any>(null)
 
+const isCodeSent = ref(false)
+const confirmationCode = ref('')
 const wbApiKeys = ref([''])
 const apiKey = ref([''])
 const apiKeys = ref<{ mp: string; keys: string[] }[]>([])
@@ -115,15 +117,13 @@ async function updatePassword() {
     alert.show = true
     alert.message = (data.value as any).error!
     alert.type = 'error'
-    setTimeout(() => {
-      location.reload()
-    }, 2000)
   } else {
     if (data.value.newPassword) {
-      alert.message = 'Пароль успешно установлен.'
+      alert.message = 'Пароль успешно установлен'
     } else
-      alert.message = 'Подтверждение смены пароля было отправлено на ваш email.'
+      alert.message = 'Введите код подтверждения'
 
+      isCodeSent.value = true
     alert.show = true
     alert.type = 'success'
   }
@@ -133,7 +133,6 @@ async function updatePassword() {
   await store.getClient()
 }
 async function setApiKey() {
-
   const { data, error } = await useFetch('/api/user/setApiKey', {
     method: 'POST',
     body: {
@@ -173,22 +172,22 @@ async function setNewApi() {
   )
 
   if (existingKeyIndex !== -1) {
-    const existingKeys = apiKeys.value[existingKeyIndex].keys;
-    const keysToAdd = newKey.keys.filter(key => !existingKeys.includes(key));
+    const existingKeys = apiKeys.value[existingKeyIndex].keys
+    const keysToAdd = newKey.keys.filter((key) => !existingKeys.includes(key))
 
     if (keysToAdd.length !== newKey.keys.length) {
-        notify({
-            type: 'error',
-            title: `Ключ ${apiKey.value[0]} уже присутствует в списке API ключей MP ${newKey.mp}`,
-        });
-        return;
+      notify({
+        type: 'error',
+        title: `Ключ ${apiKey.value[0]} уже присутствует в списке API ключей MP ${newKey.mp}`,
+      })
+      return
     }
 
-    apiKeys.value[existingKeyIndex].keys.push(...keysToAdd);
+    apiKeys.value[existingKeyIndex].keys.push(...keysToAdd)
   } else {
     apiKeys.value.push(newKey)
   }
-  
+
   await setApiKey()
 }
 async function update() {
@@ -206,7 +205,7 @@ async function update() {
     method: 'POST',
     body: form,
     headers,
-    watch: false, 
+    watch: false,
   })
   if (error.value) {
     alert.show = true
@@ -413,6 +412,32 @@ async function openTwoFaQRModal() {
 function changeMP(filter: any) {
   currentMP.value = filter.value
 }
+
+async function confirmCode() {
+  const { data, error }: any = await useFetch(
+    '/api/user/confirmUpdatePassword',
+    {
+      method: 'GET',
+      params: {
+        code: confirmationCode.value,
+      },
+    }
+  )
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: 'Код подтвержден',
+    })
+
+    isCodeSent.value = false
+    confirmationCode.value = ''
+  } else {
+    notify({
+      type: 'error',
+      title: 'Неверный код',
+    })
+  }
+}
 </script>
 
 <template>
@@ -559,7 +584,7 @@ function changeMP(filter: any) {
           <div>
             <button
               :disabled="disabledSaveButton"
-              class="btn  btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-end"
+              class="btn btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-end"
               @click="update"
             >
               Сохранить
@@ -581,6 +606,7 @@ function changeMP(filter: any) {
       <div class="flex flex-col gap-2.5 w-full mt-1">
         <div class="w-full flex flex-col gap-2.5 xl:flex-row">
           <input
+            :disabled="isCodeSent"
             v-show="store.client.hasPassword"
             v-model="passwordForm.oldPassword"
             type="password"
@@ -588,6 +614,7 @@ function changeMP(filter: any) {
             class="input input-bordered w-full"
           />
           <input
+            :disabled="isCodeSent"
             v-model="passwordForm.newPassword"
             :class="{
               'input-primary': !store.client.hasPassword,
@@ -604,6 +631,25 @@ function changeMP(filter: any) {
             {{ store.client.hasPassword ? 'Изменить' : 'Сохранить' }}
           </button>
         </div>
+        <div class="join w-full lg:w-1/4">
+          <input
+            :disabled="!isCodeSent"
+            v-model="confirmationCode"
+            type="number"
+            name="verificationCode"
+            class="input input-bordered block w-full p-2.5"
+            placeholder="Код подтверждения"
+            required="true"
+            @keydown.enter="confirmCode"
+          />
+          <button
+            :disabled="!isCodeSent"
+            class="btn join-item rounded-r-full -ml-2"
+            @click="confirmCode"
+          >
+            <IconCSS size="20" name="mdi:check" />
+          </button>
+        </div>
       </div>
     </section>
     <section
@@ -616,9 +662,7 @@ function changeMP(filter: any) {
         </div>
       </div>
       <div class="flex flex-col gap-2 w-full">
-        <div
-          class="flex flex-col gap-6 w-full mt-1 relative"
-        >
+        <div class="flex flex-col gap-6 w-full mt-1 relative">
           <div class="flex flex-col gap-2 relative">
             <div class="flex gap-2.5">
               <input
@@ -700,13 +744,17 @@ function changeMP(filter: any) {
 
                   <div
                     class="btn btn-primary btn-square bg-opacity-10 border-none text-base-300"
-                    @click="() => { apiKey.keys.splice(keyIndex, 1); setApiKey(); }"
+                    @click="
+                      () => {
+                        apiKey.keys.splice(keyIndex, 1)
+                        setApiKey()
+                      }
+                    "
                   >
                     <IconCSS size="20" name="material-symbols:close" />
                   </div>
                 </div>
               </div>
-            
             </div>
           </div>
         </div>
