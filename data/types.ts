@@ -58,7 +58,7 @@ export interface IUser extends Entity {
     isTwoFaEnabled: boolean
     post: Object
     MPTariffs: [],
-  
+    newPassword: string
 }
 
 export interface IUserLogs extends Entity {

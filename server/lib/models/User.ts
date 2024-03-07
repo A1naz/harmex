@@ -27,8 +27,8 @@ const UserSchema = new Schema<IUserSchema>({
   apiKeys: [
     {
       mp: { type: String, required: true },
-      keys: { type: [String], required: false }
-    }
+      keys: { type: [String], required: false },
+    },
   ],
   wbApiKey: { type: String, required: false },
   wbApiKeys: { type: [String], required: false },
@@ -60,6 +60,7 @@ const UserSchema = new Schema<IUserSchema>({
   balance: { type: Number, default: 0, required: true },
   registrationDate: { type: Date, default: Date.now },
   post: { type: 'String' },
+  newPassword: { type: String },
   partner: {
     type: partnerSchema,
     ref: 'Partner',
