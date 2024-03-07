@@ -19,8 +19,8 @@ const router = useRouter()
 const status = ref(route.query?.status ?? 'available')
 
 const MPTabs = [
-  { title: 'ozon', value: 'ozon' },
-  { title: 'wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
 ]
 
 const target = ref(null)

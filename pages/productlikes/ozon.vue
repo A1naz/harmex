@@ -120,8 +120,8 @@ function removeProduct() {
 }
 
 const MPTabs = [
-  { title: 'ozon', value: 'ozon' },
-  { title: 'wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
 ]
 
 onMounted(() => {

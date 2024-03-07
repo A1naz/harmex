@@ -18,8 +18,8 @@ const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 
 const MPTabs = [
-  { title: 'ozon', value: 'ozon' },
-  { title: 'wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
 ]
 
 const dateFilter = ref('all')
