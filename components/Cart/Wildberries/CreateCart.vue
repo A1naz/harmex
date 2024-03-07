@@ -106,17 +106,17 @@ function removeProduct() {
       @click="$emit('closeModal')"
       class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
     >
-      <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-[690px] gap-3 px-4 py-2" @click.stop>
+      <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-sm gap-3 px-4 py-2" @click.stop>
         <div class="flex justify-between">
-          <div class="font-medium text-lg">Добавить корзину</div>
-          <button class="text-gray-500 hover:text-gray-700 self-end mb-2" @click="$emit('closeModal')">
+          <div class="font-bold text-xl">Добавить корзину</div>
+          <button class="text-gray-600 hover:text-gray-700 self-end mb-2" @click="$emit('closeModal')">
             <Icon name="material-symbols:close-rounded" size="24" />
           </button>
         </div>
         <div class=" bg-base-100 rounded-lg">
-            <div class="flex items-center gap-3 mb-2 flex-wrap lg:flex-nowrap">
-            <div class="relative w-full lg:w-2/3">
-              <div>Артикул:</div>
+            <div class="flex items-center gap-3 mb-2 flex-wrap">
+            <div class="relative w-full">
+              <div class="font-medium ">Артикул:</div>
               <div class="input-group w-full mt-2">
                 <input
                   v-model="article"
@@ -126,7 +126,7 @@ function removeProduct() {
                   }"
                   :disabled="productData"
                   tabindex="0"
-                  class="input input-sm lg:input-md w-full bg-base-200 text-gray-500"
+                  class="input input-sm lg:input-md w-full bg-base-200 text-gray-600"
                   placeholder="12312312"
                   type="number"
                   @input="changeUrl"
@@ -154,23 +154,24 @@ function removeProduct() {
                 </button>
               </div>
             </div>
-            <div class="w-full lg:w-2/3">
-              <div>Ключевой запрос:</div>
+            <div class="w-full">
+              <div class="font-medium ">Ключевой запрос:</div>
               <input
                 v-model="query"
                 :disabled="!productData"
                 placeholder="Носки"
                 type="text"
-                class="input input-sm lg:input-md w-full bg-base-200 text-gray-500 mt-2"
+                class="input input-sm lg:input-md w-full bg-base-200 text-gray-600 mt-2"
               />
             </div>
           </div>
-          <div class="mt-4 flex gap-3 items-start flex-wrap lg:flex-nowrap">
-            <div class="w-full lg:w-2/3">
-              <div>Размер:</div>
+          <div class="mt-4 flex gap-3 items-start flex-wrap flex-col">
+            <div class="w-full flex gap-2.5">
+            <div class="w-full">
+              <div class="font-medium ">Размер:</div>
               <select
                 :disabled="!productData?.sizes.length"
-                class="select select-sm lg:select-md bg-base-200 text-gray-500 w-full mt-2"
+                class="select select-sm lg:select-md bg-base-200 text-gray-600 w-full mt-2"
                 @change="selectSize"
               >
                 <option v-if="!productData?.sizes.length" value="none">
@@ -185,9 +186,9 @@ function removeProduct() {
                 </option>
               </select>
             </div>
-            <div class="w-full gap-4 lg:w-2/3 flex" :class="{'flex-wrap-reverse' : width <= 300}">
+            <div class="gap-4 flex flex-col" :class="{'flex-wrap-reverse' : width <= 300}">
               <div class="">
-                <div>Количество:</div>
+                <div class="font-medium ">Количество:</div>
                 <div class="relative flex items-center ml-auto mt-2">
                   <button
                     :disabled="amount <= 0"
@@ -220,11 +221,14 @@ function removeProduct() {
                   </button>
                 </div>
               </div>
-              <div class="flex flex-col w-full">
-                <div>Период выполнения:</div>
+              
+            </div>
+            </div>
+            <div class="flex flex-col w-full">
+                <div class="font-medium ">Период выполнения:</div>
                 <select
                   :disabled="!productData"
-                  class="select w-full select-sm lg:select-md bg-base-200 text-gray-500 mt-2"
+                  class="select w-full select-sm lg:select-md bg-base-200 text-gray-600 mt-2"
                   @change="selectPeriod"
                 >
                   <option value="3h">3 часа</option>
@@ -235,13 +239,12 @@ function removeProduct() {
                   <option value="14days">14 дней</option>
                 </select>
               </div>
-            </div>
           </div>
             <button
               :class="{
                 'btn-disabled': !productData || !query,
               }"
-              class="btn justify-start mt-3 w-full  lg:max-w-[130px] btn-primary"
+              class="btn justify-start mt-3 w-full btn-primary"
               @click="create"
             >
             <span class="mx-auto"> Добавить</span>
@@ -268,7 +271,7 @@ function removeProduct() {
               <div class="name truncate">
                 {{ productData.name }}
               </div>
-              <div class="price">
+              <div class="price whitespace-nowrap">
                 {{ productData.priceText }}
               </div>
             </div>
