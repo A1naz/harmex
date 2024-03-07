@@ -298,12 +298,12 @@ onMounted(() => {
     </div> -->
 
     <div v-if="carts.length" class="mt-4">
-      <div v-if="width >= 1024">
+      <div>
         <CartOzonTable :get-status="getStatus" :carts="carts" />
       </div>
-      <div v-else>
+      <!-- <div>
         <CartOzonCards :carts="carts" :get-status="getStatus" />
-      </div>
+      </div> -->
     </div>
     <div v-else>
       <Hero />

@@ -121,20 +121,84 @@ function defaultFilter(r: number){
             >
             
             <template v-slot:main>
-                <CustomDrop
-                    :statusText="'Главная'"
-                    :tabs="tabs"
-                    :route="'/partner'"
-                />
-                <div class="flex gap-4 w-full flex-col md:flex-row bg-primary bg-opacity-10 rounded-xl mt-4">
-                    <div class="px-2 py-7 md:p-5 flex flex-col md:w-[50%] w-full">
-                        <PartnerDashboard 
+                <!-- <div class="w-full flex gap-2.5 mb-4">
+
+                    <div class="w-full max-w-md bg-base-100 rounded-lg drop-shadow-sm p-3.5">
+                        <div class="flex justify-between ">
+                            <div>
+                                <h2 class="text-lg">Партнерский счет</h2>
+                                <span class="font-bold text-xl">20 000 </span>
+                            </div>
+
+                            <div class="max-w-[200px]">
+                                <span class="text-xs text-base-300">Доходность зависит от количества приглашенных пользователей</span>
+                            </div>
+            
+                        </div>
+                        <div class=""></div>
+                    </div>
+                    <div class="flex flex-col gap-5 w-full">
+                        <div class="w-full flex justify-between gap-1">
+                            <button class="btn btn-sm normal-case font-normal px-10 border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100">
+                                Вывод с баланса
+                            </button>
+                            <button class="btn btn-sm normal-case font-normal px-10 border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100">
+                                История баланса
+                            </button>
+                            <NuxtLink
+                                  :to="'/partner?tab=referals'"
+                                  :external="false"
+                                  class="btn btn-sm normal-case font-normal px-10 border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
+                              >
+                                  <span>
+                                  {{ 'Моя генеалогия' }}
+                                  </span>
+                          </NuxtLink>
+                        </div>
+                        <div class="bg-base-100 rounded-lg drop-shadow-sm w-full p-3.5 flex flex-col gap-5" >
+                            <h2 class="text-md">Приглашайте друзей и получайте бонусы</h2>
+                            <div class="flex gap-1 justify-between">
+                                <div class="border-2 border-base-200 rounded-lg gap-3 p-3.5">
+                                    <h3 class="text-sm">Реферальная ссылка</h3>
+                                </div>
+                                <div class="border-2 border-base-200 rounded-lg gap-3 p-3.5">
+                                    <h3 class="text-sm">Реферальная ссылка</h3>
+                                </div>
+                                <div class="border-2 border-base-200 rounded-lg gap-3 p-3.5">
+                                    <h3 class="text-sm">Реферальная ссылка</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-10 w-full p-3.5 bg-base-100">
+                    <div class="w-full max-w-[70%]">
+                        <span>Воронка по партнерке</span>
+                        <div class="grid grid-cols-4 border drop-shadow-sm border-base-200 rounded-lg">
+                            <div class="text-center">1</div>
+                            <div class="flex justify-center align-center col-span-2">
+                                <div class="w-[calc(100%)] trapezoid"></div>
+                            </div>
+                            <div>3</div>
+                        </div>
+                    </div>
+                    <div class="ml-auto">Статистика</div>
+                </div> -->
+                <PartnerDashboard 
                             :balance="store.client.partner.balance"
                             :ref-count="partner.refCount"
                             :second-level-referrals="secondLevelReferrals"
                             :ref-url="refUrl"
                             :reward-percent="partner.rewardPercent"
                             />
+                <!-- <CustomDrop
+                    :statusText="'Главная'"
+                    :tabs="tabs"
+                    :route="'/partner'"
+                /> -->
+                <!-- <div class="flex gap-4 w-full flex-col md:flex-row bg-primary bg-opacity-10 rounded-xl mt-4">
+                    <div class="px-2 py-7 md:p-5 flex flex-col md:w-[50%] w-full">
+                        
                     </div>
                     <div v-if=" width > 768" class="divider divider-horizontal m-0" />
                     <div v-else class="divider m-0" />
@@ -145,7 +209,7 @@ function defaultFilter(r: number){
                             />
                     </div>
                     
-                </div>
+                </div> -->
             </template>
             <template v-slot:referals>
                 
@@ -240,4 +304,5 @@ thead tr:first-child {
     border-top-left-radius: 10px; /* Скругление верхнего левого угла */
     border-top-right-radius: 10px; /* Скругление верхнего правого угла */
 }
+
 </style>
