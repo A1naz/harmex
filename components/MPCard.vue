@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const store = useMainStore()
 const props = defineProps({
   info: {
     type: Object,
@@ -13,6 +14,7 @@ const props = defineProps({
   }
   
 })
+const awaiting = ref(store.client.username !== 'test')
 const theme = useColorMode()
 </script>
 
@@ -29,7 +31,7 @@ const theme = useColorMode()
       </div>
       <div class="flex justify-center mb-2">
         <button
-        :disabled="info?.awaiting"
+        :disabled="info?.awaiting || awaiting && info?.value === 'ozon'"
           :class="{
              'bg-base-300 hover:text-base-100 text-neutral': theme.value === 'light',
              '': theme.value === 'dark',

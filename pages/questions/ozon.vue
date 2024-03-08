@@ -20,20 +20,28 @@ const sex = ref('male')
 const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
-const modalShow = ref<boolean>(false);
+const modalShow = ref<boolean>(false)
 const route = useRoute()
 const router = useRouter()
-const MPTabs = [
-  { title: 'Ozon', value: 'ozon' },
-  { title: 'Wildberries', value: 'wildberries' },
-]
+const MPTabs =
+  store.client.username == 'test'
+    ? [
+        { title: 'Ozon', value: 'ozon' },
+        { title: 'Wildberries', value: 'wildberries' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 async function getQuestions() {
   modalShow.value = false
-  const { data, error } = await useFetch('/api/ozon/questions/get', { method: 'GET' })
-  if (data.value)
-    questions.value = data.value
+  const { data, error } = await useFetch('/api/ozon/questions/get', {
+    method: 'GET',
+  })
+  if (data.value) questions.value = data.value
   if (error.value)
-    notify({ type: 'error', title: 'Не удалось получить лайки', text: error.value.message })
+    notify({
+      type: 'error',
+      title: 'Не удалось получить лайки',
+      text: error.value.message,
+    })
 }
 await getQuestions()
 async function create() {
@@ -48,7 +56,11 @@ async function create() {
     },
   })
   if (error.value)
-    return notify({ type: 'error', title: 'Что-то пошло не так', text: error.value.message })
+    return notify({
+      type: 'error',
+      title: 'Что-то пошло не так',
+      text: error.value.message,
+    })
   if (data.value) {
     notify({ type: 'success', title: 'Упешно' })
     removeProduct()
@@ -57,8 +69,7 @@ async function create() {
   }
 }
 async function getProductInfo() {
-  if (!article.value)
-    return
+  if (!article.value) return
 
   const { data, error } = await useFetch(`/api/ozon/product/${article.value}`, {
     method: 'GET',
@@ -67,32 +78,25 @@ async function getProductInfo() {
     productData.value = (data.value as any).product
     urlError.value = false
   }
-  if (error.value)
-    urlError.value = true
+  if (error.value) urlError.value = true
 
   loadingUrl.value = false
 }
 let timeout = null as NodeJS.Timeout | null
 async function changeUrl() {
-  if (article.value === '')
-    return
+  if (article.value === '') return
   loadingUrl.value = true
-  if (timeout)
-    clearTimeout(timeout)
+  if (timeout) clearTimeout(timeout)
   timeout = setTimeout(getProductInfo, 2000)
 }
 function selectSex(event: any) {
   sex.value = event.target.value
 }
 function getStatus(status: string) {
-  if (status === 'created')
-    return 'Создан'
-  else if (status === 'work')
-    return 'В работе'
-  else if (status === 'completed')
-    return 'Завершен'
-  else if (status === 'nofunds')
-    return 'Недостаточно средств'
+  if (status === 'created') return 'Создан'
+  else if (status === 'work') return 'В работе'
+  else if (status === 'completed') return 'Завершен'
+  else if (status === 'nofunds') return 'Недостаточно средств'
   else if (status === 'spam') {
     return 'Определен как спам'
   }
@@ -104,10 +108,10 @@ function removeProduct() {
 }
 onMounted(() => {
   if (route.query.modalShow) {
-    modalShow.value = route.query.modalShow === 'true';
-    const query = { ...route.query };
-        delete query.modalShow;
-        router.push({ query });
+    modalShow.value = route.query.modalShow === 'true'
+    const query = { ...route.query }
+    delete query.modalShow
+    router.push({ query })
   }
 })
 
@@ -163,9 +167,7 @@ const updateSearchType = (filter: any) => {
 
 function changeFilter(e: any) {
   mpStore.selectedMP = e.value
-  return navigateTo(
-    '/questions/' + e.value 
-  )
+  return navigateTo('/questions/' + e.value)
 }
 </script>
 
@@ -182,15 +184,19 @@ function changeFilter(e: any) {
       <span class="font-bold"> {{ store.tariffString('questionProduct') }} </span>
       Все услуги оказываются по Московскому времени.
     </p> -->
-    <QuestionsOzonCreateQuest :show="modalShow" @close-modal="modalShow = false" @create="getQuestions()"/>
+    <QuestionsOzonCreateQuest
+      :show="modalShow"
+      @close-modal="modalShow = false"
+      @create="getQuestions()"
+    />
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
-     
-
-        <button @click="navigateTo(`/questions/create/`)" class="btn btn-primary font-normal btn-sm">
+        <button
+          @click="navigateTo(`/questions/create/`)"
+          class="btn btn-primary font-normal btn-sm"
+        >
           <Icon name="fluent:add-24-filled" size="17" />
           <span class="hidden lg:flex">Вопрос</span>
-          
         </button>
         <CustomSelect
           class="hidden lg:flex"
@@ -208,14 +214,13 @@ function changeFilter(e: any) {
           ]"
           @change-value="selectFilterDate"
         />
-        
+
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
-          
           <input
             type="text"
             class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
             placeholder="Поиск"
-            ref="codeInput" 
+            ref="codeInput"
             v-model="search.text"
             @input="onSearchInput($event)"
           />
@@ -249,7 +254,7 @@ function changeFilter(e: any) {
           ]"
           @change-value="selectFilterDate"
         />
-        
+
         <CustomSelect
           :class="'bg-base-300 sm:min-w-[120px]'"
           :tabs="[
@@ -303,150 +308,157 @@ function changeFilter(e: any) {
     <div v-if="questions.length" class="mt-4 rounded-lg">
       <ClientOnly>
         <table v-if="width > 1024" class="table table-sm">
-        <thead>
-          <tr class="bg-primary bg-opacity-5">
-            <!-- <th class="text-center">№</th> -->
-            <th class="text-center">Фото</th>
-            <th class="text-center">Артикул</th>
-            <th class="text-center">Пол</th>
-            <th class="text-center">Вопрос</th>
-            <th class="text-center">Статус</th>
-            <th class="text-center">Дата создания</th>
-            <th class="text-center">Дата публикации</th>
-          </tr>
-        </thead>
-        <tbody class="rounded-b-lg">
-          <tr
-            class="bg-base-100 border-b-0 rounded-b-lg"
+          <thead>
+            <tr class="bg-primary bg-opacity-5">
+              <!-- <th class="text-center">№</th> -->
+              <th class="text-center">Фото</th>
+              <th class="text-center">Артикул</th>
+              <th class="text-center">Пол</th>
+              <th class="text-center">Вопрос</th>
+              <th class="text-center">Статус</th>
+              <th class="text-center">Дата создания</th>
+              <th class="text-center">Дата публикации</th>
+            </tr>
+          </thead>
+          <tbody class="rounded-b-lg">
+            <tr
+              class="bg-base-100 border-b-0 rounded-b-lg"
+              v-for="(item, index) in questions"
+              :key="index"
+            >
+              <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
+              <td
+                class="text-center border-r border-primary border-opacity-5 mx-auto"
+              >
+                <div
+                  style="width: 28px; height: 36px; border-radius: 4px"
+                  class="mx-auto"
+                >
+                  <div class="dropdown dropdown-hover">
+                    <label tabindex="0">
+                      <nuxt-img
+                        class="rounded-lg z-0"
+                        alt=""
+                        loading="lazy"
+                        fit="fill"
+                        :src="item.image"
+                      />
+                    </label>
+                    <ul
+                      tabindex="0"
+                      class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
+                    >
+                      <nuxt-img
+                        class="rounded-lg z-[9999]"
+                        loading="lazy"
+                        fit="fill"
+                        :src="item.image"
+                      />
+                    </ul>
+                  </div>
+                </div>
+              </td>
+              <td
+                class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
+              >
+                <a
+                  :href="`https://www.ozon.ru/product/${item.article}`"
+                  target="_blank"
+                  class="text-primary link link-hover text-sm"
+                >
+                  {{ item.article }}
+                </a>
+              </td>
+              <td
+                class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
+              >
+                {{ item.gender === 'male' ? 'М' : 'Ж' }}
+              </td>
+              <td
+                class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] whitespace-normal break-words"
+              >
+                <div class="flex flex-col">
+                  {{ item.text }}
+                </div>
+              </td>
+
+              <td class="text-center border-r border-primary border-opacity-5">
+                <div
+                  :class="{
+                    'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                      item.status === 'nofunds',
+                    'text-error rounded-full py-1 px-2  text-center':
+                      item.status === 'spam',
+                    'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                      item.status === 'created',
+                    'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                      item.status === 'work',
+                    'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                      item.status === 'completed',
+                  }"
+                >
+                  {{ getStatus(item.status) }}
+                </div>
+              </td>
+              <td class="text-center border-r border-primary border-opacity-5">
+                <div
+                  class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+                >
+                  {{ defaultDateShort(item.createdDate) }}
+                </div>
+              </td>
+              <td class="text-center border-opacity-5">
+                <div
+                  v-if="item.publishDate"
+                  class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+                >
+                  {{ defaultDateShort(item.publishDate) }}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-else class="cards grid grid-cols-1 gap-4 lg:hidden">
+          <div
             v-for="(item, index) in questions"
             :key="index"
+            class="card card-compact bg-base-100 shadow-xl"
           >
-            <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
-            <td
-              class="text-center border-r  border-primary border-opacity-5 mx-auto"
-            >
-              <div
-                style="width: 28px; height: 36px; border-radius: 4px"
-                class="mx-auto"
-              >
-                <div class="dropdown dropdown-hover">
-                  <label tabindex="0">
-                    <nuxt-img
-                      class="rounded-lg z-0"
-                      alt=""
-                      loading="lazy"
-                      fit="fill"
-                      :src="item.image"
-                    />
-                  </label>
-                  <ul
-                    tabindex="0"
-                    class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
-                  >
-                    <nuxt-img
-                      class="rounded-lg z-[9999]"
-                      loading="lazy"
-                      fit="fill"
-                      :src="item.image"
-                    />
-                  </ul>
-                </div>
-              </div>
-            </td>
-            <td
-              class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
-            >
-            <a
-            :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
-              class="text-primary link link-hover text-sm"
-            >
-              {{ item.article }}
-            </a>
-            </td>
-            <td
-              class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
-            >
-            {{ item.gender === 'male' ? 'М' : 'Ж' }}
-            </td>
-            <td class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] whitespace-normal break-words">
-              <div class="flex flex-col">
-                {{  item.text  }}
-              </div>
-            </td>
-
-            <td class="text-center border-r border-primary border-opacity-5">
-              <div
-                :class="{
-                  'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'nofunds',
-                  'text-error rounded-full py-1 px-2  text-center':
-                  item.status === 'spam',
-                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'created',
-                  'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
-                    item.status === 'work',
-                  'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
-                    item.status === 'completed',
-                }"
-                
-              >
-                {{ getStatus(item.status) }}
-              </div>
-            </td>
-            <td class="text-center border-r border-primary border-opacity-5">
-              <div
-                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
-              >
-                {{ defaultDateShort(item.createdDate) }}
-              </div>
-            </td>
-            <td class="text-center border-opacity-5">
-              <div
-                v-if="item.publishDate"
-                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
-              >
-              {{ defaultDateShort(item.publishDate) }}
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-        <div v-else class="cards grid grid-cols-1 gap-4 lg:hidden">
-          <div v-for="(item, index) in questions" :key="index" class="card card-compact bg-base-100 shadow-xl">
             <div class="card-body">
               <div class="flex gap-4">
                 <div class="image">
-                  <nuxt-img width="32" class="rounded-lg object-contain" :src="item.image" />
+                  <nuxt-img
+                    width="32"
+                    class="rounded-lg object-contain"
+                    :src="item.image"
+                  />
                 </div>
                 <div class="article flex flex-col gap-0.5">
-                  <div class="text-xs">
-                    Артикул
-                  </div>
+                  <div class="text-xs">Артикул</div>
                   <a
-                  :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
+                    :href="`https://www.ozon.ru/product/${item.article}`"
+                    target="_blank"
                     class="text-primary link link-hover text-sm"
                   >
                     {{ item.article }}
                   </a>
                 </div>
                 <div class="status flex flex-col gap-0.5">
-                  <div class="text-xs">
-                    Статус
-                  </div>
+                  <div class="text-xs">Статус</div>
                   <div
                     class="text-sm"
                     :class="{
-                  'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'nofunds',
-                  'text-error rounded-full py-1 px-2  text-center':
-                  item.status === 'spam',
-                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'created',
-                  'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
-                    item.status === 'work',
-                  'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
-                    item.status === 'completed',
-                }"
+                      'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                        item.status === 'nofunds',
+                      'text-error rounded-full py-1 px-2  text-center':
+                        item.status === 'spam',
+                      'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                        item.status === 'created',
+                      'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                        item.status === 'work',
+                      'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                        item.status === 'completed',
+                    }"
                   >
                     <div>
                       {{ getStatus(item.status) }}
@@ -460,7 +472,9 @@ function changeFilter(e: any) {
 
               <div class="flex">
                 <div class="article flex flex-col gap-0.5">
-                  <p class="p-2 bg-base-200 mt-2 rounded-lg max-h-20 overflow-auto">
+                  <p
+                    class="p-2 bg-base-200 mt-2 rounded-lg max-h-20 overflow-auto"
+                  >
                     {{ item.text }}
                   </p>
                 </div>
@@ -480,5 +494,4 @@ function changeFilter(e: any) {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

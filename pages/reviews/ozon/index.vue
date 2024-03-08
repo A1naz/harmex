@@ -18,10 +18,12 @@ const router = useRouter()
 
 const status = ref(route.query?.status ?? 'available')
 
-const MPTabs = [
-  { title: 'Ozon', value: 'ozon' },
-  { title: 'Wildberries', value: 'wildberries' },
-]
+const MPTabs = store.client.username == 'test'
+    ? [
+        { title: 'Ozon', value: 'ozon' },
+        { title: 'Wildberries', value: 'wildberries' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 
 const target = ref(null)
 const targetIsVisible = ref(false)
@@ -249,7 +251,7 @@ async function changeMP(e: any) {
       <div class="flex w-full gap-2 lg:hidden">
         <ExportXls
           api="/api/review/export"
-          fileName="OZONMP Доступные отзывы"
+          fileName="MARKETMONSTR Доступные отзывы"
           :isVisible="true"
         />
         <input
@@ -379,7 +381,7 @@ async function changeMP(e: any) {
         <div class="flex gap-1 items-center">
           <ExportXls
             api="/api/review/export"
-            fileName="OZONMP Доступные отзывы"
+            fileName="MARKETMONSTR Доступные отзывы"
             :isVisible="true"
           />
         </div>
@@ -390,7 +392,7 @@ async function changeMP(e: any) {
       <div class="flex gap-1 items-center">
         <ExportXls
           api="/api/review/export"
-          fileName="OZONMP Доступные отзывы"
+          fileName="MARKETMONSTR Доступные отзывы"
           :isVisible="true"
         />
         <NuxtLink 

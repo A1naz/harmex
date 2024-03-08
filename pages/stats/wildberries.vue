@@ -273,10 +273,13 @@ const charttDelivOptions = ref({
   },
 })
 
-const MPTabs = [
-    { title: 'Wildberries', value: 'wildberries' },
-    { title: 'Ozon', value: 'ozon' },
+const MPTabs =  store.client.username == 'test' ? [
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
   { title: 'Все', value: '' },
+] : [
+  { title: 'Все', value: '' },
+  { title: 'Wildberries', value: 'wildberries' },
 ]
 
 async function changeMP(e: any) {

@@ -17,10 +17,13 @@ const storeMain = useMainStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 
-const MPTabs = [
-  { title: 'Wildberries', value: 'wildberries' },
-  { title: 'Ozon', value: 'ozon' },
-]
+const MPTabs =
+  storeMain.client.username == 'test'
+    ? [
+      { title: 'Wildberries', value: 'wildberries' },
+      { title: 'Ozon', value: 'ozon' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 
 const dateFilter = ref('all')
 const autoTarget = ref(true)

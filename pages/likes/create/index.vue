@@ -1,6 +1,4 @@
 <script setup lang="tsx">
-
-
 definePageMeta({
   layout: 'app',
   auth: true,
@@ -47,13 +45,15 @@ const mps = [
     value: 'sberMarket',
     category: 'товары',
     awaiting: true,
-  }
+  },
 ]
 </script>
 
 <template>
-  <div class="mt-10 xl:ml-8 flex xl:gap-14 xl:justify-start justify-center flex-wrap gap-6">
-    <MPCard v-for="mp of mps" :info="mp" :page="'/likes/create'"  />
+  <div
+    class="mt-10 xl:ml-8 flex xl:gap-14 xl:justify-start justify-center flex-wrap gap-6"
+  >
+    <MPCard v-for="mp of mps" :info="mp" :page="'/likes/create'" />
   </div>
 </template>
 

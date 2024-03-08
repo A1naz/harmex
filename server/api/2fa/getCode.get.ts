@@ -16,7 +16,7 @@ export default eventHandler(async (event) => {
   } else {
     const secret: any = speakeasy.generateSecret({
       length: 10,
-      name: 'OZONMP: ' + user.username,
+      name: 'MARKETMONSTR: ' + user.username,
     })
   
     const qrCode = await new Promise((resolve, reject) => {
