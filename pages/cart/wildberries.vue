@@ -32,8 +32,8 @@ const modalShow = ref<boolean>(false)
 const MPTabs =
   store.client.username == 'test'
     ? [
-        { title: 'Ozon', value: 'ozon' },
         { title: 'Wildberries', value: 'wildberries' },
+        { title: 'Ozon', value: 'ozon' },
       ]
     : [{ title: 'Wildberries', value: 'wildberries' }]
 
