@@ -23,7 +23,8 @@ const mpHref = computed(() => {
     props.href == '/buyouts' ||
     props.href == '/questions' ||
     props.href == '/cart' ||
-    props.href == '/reviews'
+    props.href == '/reviews' ||
+    props.href == '/reports'
   ) {
     return mpStore.selectedMP
       ? props.href + '/' + mpStore.selectedMP

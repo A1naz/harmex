@@ -7,6 +7,8 @@ definePageMeta({
   title: 'Аналитика',
 })
 
+const store = useMainStore()
+
 const currency = useCurrency()
 const route = useRoute()
 const { width } = useWindowSize()
@@ -103,7 +105,6 @@ await getData()
 await getLast()
 await countBuyouts()
 
-const store = useMainStore()
 
 const colorMode = useColorMode()
 const chardColor = computed(() =>
@@ -273,9 +274,12 @@ const charttDelivOptions = ref({
   },
 })
 
-const MPTabs = [
+const MPTabs =  store.client.username == 'test' ? [
   { title: 'Все', value: '' },
   { title: 'Ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
+] : [
+  { title: 'Все', value: '' },
   { title: 'Wildberries', value: 'wildberries' },
 ]
 

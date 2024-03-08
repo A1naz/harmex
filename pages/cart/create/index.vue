@@ -45,13 +45,20 @@ const mps = [
     value: 'sberMarket',
     category: 'товары',
     awaiting: true,
-  }
+  },
 ]
 </script>
 
 <template>
-  <div class="mt-10 xl:ml-8 flex xl:gap-14 xl:justify-start justify-center flex-wrap gap-6">
-    <MPCard v-for="mp of mps" :info="mp" :page="'/cart'"  :query="{modalShow: 'true'}"/>
+  <div
+    class="mt-10 xl:ml-8 flex xl:gap-14 xl:justify-start justify-center flex-wrap gap-6"
+  >
+    <MPCard
+      v-for="mp of mps"
+      :info="mp"
+      :page="'/cart'"
+      :query="{ modalShow: 'true' }"
+    />
   </div>
 </template>
 

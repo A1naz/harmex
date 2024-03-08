@@ -341,7 +341,7 @@ const statusText = computed(() => {
 
     <!-- <InfoModal
       :isModal="isInfoModal"
-      title="Как пользоваться платформой OZONMP?"
+      title="Как пользоваться платформой MARKETMONSTR?"
       ytSrc="https://www.youtube.com/embed/YqIw35-LiOk?si=d1FdsCsb04ADG8JZ"
       @changeVisibility="toggleInfoModal"
     >

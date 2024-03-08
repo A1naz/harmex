@@ -123,10 +123,12 @@ function removeProduct() {
   url.value = ''
   amount.value = 0
 }
-const MPTabs = [
-  { title: 'Wildberries', value: 'wildberries' },
-  { title: 'Ozon', value: 'ozon' },
-]
+const MPTabs = store.client.username == 'test'
+    ? [
+        { title: 'Ozon', value: 'ozon' },
+        { title: 'Wildberries', value: 'wildberries' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 
 onMounted(() => {
   if (route.query.modalShow) {

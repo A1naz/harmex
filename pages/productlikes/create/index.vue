@@ -7,6 +7,7 @@ definePageMeta({
   title: 'Добавить лайки на товар/бренд',
 })
 
+
 const mps = [
   {
     title: 'Wildberries',
