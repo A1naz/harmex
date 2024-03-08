@@ -25,8 +25,8 @@ const search = reactive({
 })
 const MPTabs = store.client.username == 'test'
     ? [
-        { title: 'Ozon', value: 'ozon' },
         { title: 'Wildberries', value: 'wildberries' },
+        { title: 'Ozon', value: 'ozon' },
       ]
     : [{ title: 'Wildberries', value: 'wildberries' }]
 function selectStatus(e: Event) {
