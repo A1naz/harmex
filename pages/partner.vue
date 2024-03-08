@@ -16,6 +16,7 @@ const refUrl = computed(() => `${runtimeConfig.public.siteUrl}/register?ref=${cl
 
 const client = store.client
 const partner = client.partner
+
 const tablePartner = ref()
 
 const secondLevelReferrals = ref(0)

@@ -87,21 +87,10 @@ const isCardFormDisabled = computed(() => {
         <p class="ml-1 mt-3">
           Вывести на:
         </p>
-        <div class="flex mt-1">
+        <div class="flex flex-col mt-1">
+          
           <div class="form-control">
-            <label class="label cursor-pointer">
-              <input
-              type="radio"
-              name="radio-10"
-              class="radio radio-base-content"
-              @change="form.withdrawType = 'card'"
-              checked
-              />
-              <span class="label-text ml-2">Карту</span>
-            </label>
-          </div>
-          <div class="form-control">
-            <label class="label cursor-pointer">
+            <label class="label justify-start cursor-pointer">
               <input
               type="radio"
               name="radio-10"
@@ -109,6 +98,29 @@ const isCardFormDisabled = computed(() => {
               @change="form.withdrawType = 'account'"
               />
               <span class="label-text ml-2">Баланс платформы</span>
+            </label>
+          </div>
+          <div class="form-control">
+            <label class="label justify-start cursor-pointer">
+              <input
+              type="radio"
+              name="radio-10"
+              class="radio radio-base-content"
+              @change="form.withdrawType = 'card'"
+              checked
+              />
+              <span class="label-text ml-2">Счет организации</span>
+            </label>
+          </div>
+          <div class="form-control">
+            <label class="label justify-start cursor-pointer">
+              <input
+              type="radio"
+              name="radio-10"
+              class="radio radio-base-content"
+              @change="form.withdrawType = 'account'"
+              />
+              <span class="label-text ml-2">Счет самозанятых</span>
             </label>
           </div>
         </div>
