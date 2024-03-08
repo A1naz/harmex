@@ -11,7 +11,7 @@ export default defineNuxtConfig({
       viewport: 'width=device-width,initial-scale=1',
       title:
         'Сервис самовыкупов OZON - Максимизируйте продвижение на OZON с OZONMP',
-      link: [{ rel: 'icon', href: '/favicon.svg' }],
+      link: [{ rel: 'icon', href: '/favicon.png' }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: description },

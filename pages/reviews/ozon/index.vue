@@ -413,20 +413,6 @@ async function changeMP(e: any) {
           :info="review"
           @open-modal="(b: string, d: string)=> openModal(review, b, d )"
         />
-        <ReviewOzonCard
-          v-for="(review, index) of reviews"
-          :key="index"
-          :index="index"
-          :info="review"
-          @open-modal="(b: string, d: string)=> openModal(review, b, d )"
-        />
-        <ReviewOzonCard
-          v-for="(review, index) of reviews"
-          :key="index"
-          :index="index"
-          :info="review"
-          @open-modal="(b: string, d: string)=> openModal(review, b, d )"
-        />
       </div>
       <div
         v-else
