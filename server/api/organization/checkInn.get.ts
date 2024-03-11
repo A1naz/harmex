@@ -13,7 +13,7 @@ export default eventHandler(async (event) => {
   }
 
   const rawData: any = await $fetch(
-    `https://app.wbmp.pro/api/organization/getData?inn=${inn}`
+    `https://api-fns.ru/api/multinfo?key=${organizationKey}&req=${inn}`
   )
 
   const data = rawData.data
