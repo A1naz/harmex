@@ -20,11 +20,15 @@ const partner = client.partner
 const tablePartner = ref()
 
 const secondLevelReferrals = ref(0)
+const firstLevelReferrals = ref(0)
 async function getSecondartRefLevel(){
     const { data } = await useFetch<
-        { status: string, secondLevelReferralsCount: number }
+        { status: string, secondLevelReferralsCount: number, firstLevelReferralsCount: number }
     >('/api/partner/getSecondLevelReferrals',{ method: 'GET' })
-    if(data.value && data.value.status === 'ok') secondLevelReferrals.value = data.value.secondLevelReferralsCount
+    if(data.value && data.value.status === 'ok') {
+        secondLevelReferrals.value = data.value.secondLevelReferralsCount
+        firstLevelReferrals.value = data.value.firstLevelReferralsCount
+    }
 }
 await getSecondartRefLevel()
 
@@ -189,8 +193,10 @@ function defaultFilter(r: number){
                             :balance="store.client.partner.balance"
                             :ref-count="partner.refCount"
                             :second-level-referrals="secondLevelReferrals"
+                            :first-level-referrals="firstLevelReferrals"
                             :ref-url="refUrl"
                             :reward-percent="partner.rewardPercent"
+                            :ref-link="store.client.partner.followCount"
                             />
                 <!-- <CustomDrop
                     :statusText="'Главная'"
@@ -216,6 +222,13 @@ function defaultFilter(r: number){
                 
                 <div class="flex flex-col sm:flex-row justify-between bg-base-200 rounded-xl gap-2" >
                     <div class="flex gap-1.5">
+                        <NuxtLink
+                                :to="'/partner'"
+                                :external="false"
+                                class="btn btn-sm bg-base-100 drop-shadow-md"
+                            >
+                            <IconCSS size="20" name="tdesign:arrow-left" />
+                        </NuxtLink>
                         <CustomDrop
                         :statusText="'Приглашенные клиенты'"
                         :tabs="tabs"
@@ -257,7 +270,14 @@ function defaultFilter(r: number){
             </template>
             <template v-slot:orders>
                 <div class="flex flex-col sm:flex-row justify-between gap-2 content-center bg-base-200 rounded-xl" >
-                <div class="flex gap-1.5">
+                <div class="flex gap-2.5">
+                    <NuxtLink
+                            :to="'/partner'"
+                            :external="false"
+                            class="btn btn-sm bg-base-100 drop-shadow-md"
+                        >
+                        <IconCSS size="20" name="tdesign:arrow-left" />
+                    </NuxtLink>
                     <CustomDrop
                     :statusText="'Заказы клиентов'"
                     :tabs="tabs"

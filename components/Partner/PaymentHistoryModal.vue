@@ -156,7 +156,7 @@ watch(targetIsVisible, async (isVisible) => {
                     ] },
                 }"/>
 </DataTable>
-
+<div ref="target" class="flex justify-center items-center h-4" />
       </div>
     </div>
   </div>
