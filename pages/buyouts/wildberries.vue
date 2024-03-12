@@ -68,7 +68,7 @@ async function getBuyouts() {
     watch: false,
   })
   buyouts.value = data.value
-  loading.value = true
+  loading.value = false
 }
 
 // await getBuyouts()

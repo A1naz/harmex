@@ -533,10 +533,10 @@ async function confirmCode() {
               @click="formData.checked = !formData.checked"
             >
               Регистрируясь вы принимаете
-              <a href="/user_agreement.pdf" target="_blank" class="text-primary"
+              <a target="_blank" class="text-primary"
                 >Пользовательское соглашение</a
               >, и подтверждаете, что ознакомлены с
-              <a href="/conf_policy.pdf" target="_blank" class="text-primary"
+              <a target="_blank" class="text-primary"
                 >Политикой конфиденциальности</a
               >.
             </p>
