@@ -17,6 +17,7 @@ const autoTarget = ref(true)
 const router = useRouter()
 const route = useRoute()
 const status = computed(() => route.query?.status || 'all')
+const loading = ref(false)
 const MPTabs =
   store.client.username == 'test'
     ? [
@@ -47,6 +48,7 @@ const { stop } = useIntersectionObserver(
 const skip = ref(20)
 const end = ref(false)
 async function getReports() {
+  loading.value = true
   const { data, error } = await useFetch('/api/ozon/reports/get', {
     method: 'GET',
     query: {
@@ -56,9 +58,10 @@ async function getReports() {
     },
   })
   reports.value = data.value
+  loading.value = false
 }
 
-await getReports()
+getReports()
 
 async function findReports(value: string, type: string) {
   if (!value) {
@@ -261,7 +264,10 @@ function changeFilter(e: any) {
         />
       </TransitionSlide>
     </div>
-    <Hero v-else />
+    <Hero v-else-if="!loading" />
+    <div v-else class="w-full flex justify-center items-center mt-20">
+      <span class="loading loading-dots loading-lg text-primary"></span>
+    </div>
   </div>
 </template>
 

@@ -19,16 +19,22 @@ const mpStore = useMPStore()
 const mpHref = computed(() => {
   if (
     props.href == '/productlikes' ||
-    props.href == '/delivery' ||
     props.href == '/buyouts' ||
     props.href == '/questions' ||
     props.href == '/cart' ||
-    props.href == '/reviews' ||
     props.href == '/reports'
   ) {
     return mpStore.selectedMP
       ? props.href + '/' + mpStore.selectedMP
       : props.href + '/wildberries'
+  } else if (props.href == '/reviews') {
+    return mpStore.selectedMP
+      ? props.href + '/' + mpStore.selectedMP + '?status=available'
+      : props.href + '/wildberries?status=available'
+  } else if (props.href == '/delivery') {
+    return mpStore.selectedMP
+      ? props.href + '/' + mpStore.selectedMP + '?status=all'
+      : props.href + '/wildberries?status=all'
   } else {
     return props.href
   }

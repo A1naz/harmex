@@ -436,8 +436,8 @@ async function changeMP(e: any) {
         class="flex justify-center items-center h-4 mb-10"
       />
     </div>
-    <div v-else-if="isFetch" class="flex justify-center mt-10">
-      <span class="loading loading-spinner loading-lg text-primary" />
+    <div v-else-if="isFetch" class="w-full mt-5 flex justify-center items-center">
+      <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
     <Hero v-else />
 
