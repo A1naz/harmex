@@ -42,6 +42,7 @@ async function getHistory() {
     headers: useRequestHeaders(['cookie']) as HeadersInit,
   })
   if ((data.value as any)?.length === 0) {
+    loading.value = false
     end.value = true
     return
   }
@@ -173,10 +174,7 @@ watch(targetIsVisible, async (isVisible) => {
         </DataTable>
 
         <Hero v-else-if="!loading" />
-        <div
-          v-if="loading"
-          class="w-full flex justify-center items-center mt-5"
-        >
+        <div v-else class="w-full flex justify-center items-center mt-5">
           <span class="loading loading-dots loading-lg text-primary"></span>
         </div>
         <div ref="target" class="flex justify-center items-center h-4" />
