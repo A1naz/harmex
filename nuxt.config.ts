@@ -2,7 +2,7 @@
 
 const baseUrl = '/'
 const description =
-  'Уникальные самовыкупы для OZON с OZONMP - Повысьте репутацию и продажи с нашим сервисом. Эффективная аналитика товаров на OZON для успешного продвижения на Валберис.'
+  'Уникальные самовыкупы для Маркет плейсов с MARKETMONSTR - Повысьте репутацию и продажи с нашим сервисом.'
 
 export default defineNuxtConfig({
   app: {
@@ -11,7 +11,7 @@ export default defineNuxtConfig({
       viewport: 'width=device-width,initial-scale=1',
       title:
         'Сервис самовыкупов OZON - Максимизируйте продвижение на OZON с OZONMP',
-      link: [{ rel: 'icon', href: '/favicon.svg' }],
+      link: [{ rel: 'icon', href: '/favicon.png' }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: description },

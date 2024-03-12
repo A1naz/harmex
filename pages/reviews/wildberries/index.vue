@@ -18,10 +18,12 @@ const router = useRouter()
 
 const status = ref(route.query?.status ?? 'available')
 
-const MPTabs = [
-  { title: 'wildberries', value: 'wildberries' },
-  { title: 'ozon', value: 'ozon' },
-]
+const MPTabs = store.client.username == 'test'
+    ? [
+      { title: 'Wildberries', value: 'wildberries' },
+      { title: 'Ozon', value: 'ozon' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 
 const target = ref(null)
 const targetIsVisible = ref(false)
@@ -251,7 +253,7 @@ async function changeMP(e: any) {
       <div class="flex w-full gap-2 lg:hidden">
         <ExportXls
           api="/api/wildberries/review/export"
-          fileName="OZONMP Доступные отзывы"
+          fileName="MARKETMONSTR Доступные отзывы"
           :isVisible="true"
         />
         <input
@@ -382,7 +384,7 @@ async function changeMP(e: any) {
         <div class="flex gap-1 items-center">
           <ExportXls
             api="/api/review/wildberries/export"
-            fileName="OZONMP Доступные отзывы"
+            fileName="MARKETMONSTR Доступные отзывы"
             :isVisible="true"
           />
         </div>
@@ -393,7 +395,7 @@ async function changeMP(e: any) {
       <div class="flex gap-1 items-center">
         <ExportXls
           api="/api/review/export"
-          fileName="OZONMP Доступные отзывы"
+          fileName="MARKETMONSTR Доступные отзывы"
           :isVisible="true"
         />
         <NuxtLink 
@@ -409,20 +411,6 @@ async function changeMP(e: any) {
         v-if="currentTab === 'available'"
         class="cards grid grid-cols-1 gap-4"
       >
-        <ReviewWildberriesCard
-          v-for="(review, index) of reviews"
-          :key="index"
-          :index="index"
-          :info="review"
-          @open-modal="(b: string, d: string)=> openModal(review, b, d )"
-        />
-        <ReviewWildberriesCard
-          v-for="(review, index) of reviews"
-          :key="index"
-          :index="index"
-          :info="review"
-          @open-modal="(b: string, d: string)=> openModal(review, b, d )"
-        />
         <ReviewWildberriesCard
           v-for="(review, index) of reviews"
           :key="index"

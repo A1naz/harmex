@@ -17,10 +17,13 @@ const storeMain = useMainStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 
-const MPTabs = [
-  { title: 'ozon', value: 'ozon' },
-  { title: 'wildberries', value: 'wildberries' },
-]
+const MPTabs =
+  storeMain.client.username == 'test'
+    ? [
+        { title: 'Ozon', value: 'ozon' },
+        { title: 'Wildberries', value: 'wildberries' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 
 const dateFilter = ref('all')
 const autoTarget = ref(true)
@@ -633,7 +636,7 @@ async function changeMP(e: any) {
         </p>
         <p
           v-if="availableBuyouts === 0 && activeBuyouts.length > 0"
-          class="text-center text-orange-400 text-sm "
+          class="text-center text-orange-400 text-sm"
         >
           Недостаточно средств для совершения выкупа, пополните баланс.
         </p>

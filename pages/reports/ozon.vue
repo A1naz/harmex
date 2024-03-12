@@ -5,6 +5,7 @@ definePageMeta({
   title: 'Отчеты по выкупам',
 })
 const mpStore = useMPStore()
+const store = useMainStore()
 const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const openAll = ref(false)
 const reports = ref([]) as any
@@ -16,10 +17,13 @@ const autoTarget = ref(true)
 const router = useRouter()
 const route = useRoute()
 const status = computed(() => route.query?.status || 'all')
-const MPTabs = [
-  { title: 'ozon', value: 'ozon' },
-  { title: 'wildberries', value: 'wildberries' },
-]
+const MPTabs =
+  store.client.username == 'test'
+    ? [
+        { title: 'Ozon', value: 'ozon' },
+        { title: 'Wildberries', value: 'wildberries' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 const search = reactive({
   text: '',
   loading: false,
@@ -38,7 +42,7 @@ const { stop } = useIntersectionObserver(
   target,
   ([{ isIntersecting }], observerElement) => {
     targetIsVisible.value = isIntersecting
-  },
+  }
 )
 const skip = ref(20)
 const end = ref(false)
@@ -69,8 +73,7 @@ async function findReports(value: string, type: string) {
       type,
     },
   })
-  if (data.value)
-    reports.value = data.value
+  if (data.value) reports.value = data.value
 
   search.loading = false
 }
@@ -94,8 +97,7 @@ function selectStatus(e: any) {
 
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && reports.value.length >= 20) {
-    if (end.value)
-      return
+    if (end.value) return
     const { data, error } = await useFetch('/api/ozon/reports/get', {
       method: 'GET',
       query: {
@@ -108,23 +110,27 @@ watch(targetIsVisible, async (isVisible) => {
       end.value = true
       return
     }
-    reports.value = [...reports.value, ...data.value! as any]
+    reports.value = [...reports.value, ...(data.value! as any)]
     skip.value += 20
   }
 })
 
-watch(() => status.value, async (newRoute) => {
-  skip.value = 20
-  end.value = false
-  const { data } = await useFetch('/api/ozon/reports/get', {
-    method: 'GET',
-    query: {
-      status: status.value ?? 'all',
-      limit: 20,
-    },
-  })
-  reports.value = data.value
-}, { deep: true, immediate: true })
+watch(
+  () => status.value,
+  async (newRoute) => {
+    skip.value = 20
+    end.value = false
+    const { data } = await useFetch('/api/ozon/reports/get', {
+      method: 'GET',
+      query: {
+        status: status.value ?? 'all',
+        limit: 20,
+      },
+    })
+    reports.value = data.value
+  },
+  { deep: true, immediate: true }
+)
 
 const updateSearchType = (filter: any) => {
   search.type = filter.value
@@ -132,9 +138,7 @@ const updateSearchType = (filter: any) => {
 const codeInput = ref()
 function changeFilter(e: any) {
   mpStore.selectedMP = e.value
-  return navigateTo(
-    '/reports/' + e.value 
-  )
+  return navigateTo('/reports/' + e.value)
 }
 </script>
 
@@ -147,18 +151,25 @@ function changeFilter(e: any) {
       В этом разделе можно посмотреть как производились выкупы
     </p> -->
     <div class="relative flex lg:hidden items-center w-full mt-6">
-            <input ref="codeInput" v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500 w-full" placeholder="Поиск" @input="onSearchInput($event)">
-            <span
-              v-if="search.loading"
-              class="absolute right-2 loading loading-spinner loading-xs p-2"
-            />
-            <Icon
-            v-else
-            class="absolute right-0.5 p-2 my-auto text-gray-500"
-            name="tabler:search"
-            size="35"
-            @click="codeInput.focus()"
-          />
+      <input
+        ref="codeInput"
+        v-model="search.text"
+        type="text"
+        class="input input-sm bg-base-300 bg-opacity-40 text-gray-500 w-full"
+        placeholder="Поиск"
+        @input="onSearchInput($event)"
+      />
+      <span
+        v-if="search.loading"
+        class="absolute right-2 loading loading-spinner loading-xs p-2"
+      />
+      <Icon
+        v-else
+        class="absolute right-0.5 p-2 my-auto text-gray-500"
+        name="tabler:search"
+        size="35"
+        @click="codeInput.focus()"
+      />
     </div>
     <div class="flex lg:justify-between mb-8 mt-2 lg:mt-6 gap-2">
       <div class="flex justify-between md:justify-normal gap-2">
@@ -169,7 +180,7 @@ function changeFilter(e: any) {
           @change-value="changeFilter"
         />
         <CustomSelect
-        :class="'bg-base-300 sm:min-w-[120px]'"
+          :class="'bg-base-300 sm:min-w-[120px]'"
           :tabs="[
             { title: 'Все отчеты', value: 'all' },
             { title: 'Сегодня', value: 'today' },
@@ -197,31 +208,40 @@ function changeFilter(e: any) {
           <label for="openAll" class="cursor-pointer select-none ml-2">Развернуть все</label>
         </div> -->
       </div>
-      <div class="flex flex-wrap-reverse justify-start md:flex-row gap-2 md:flex-wrap">
+      <div
+        class="flex flex-wrap-reverse justify-start md:flex-row gap-2 md:flex-wrap"
+      >
         <div class="flex gap-2 md:mt-0 items-center">
           <CustomSelect
-          :class="'bg-base-300 '"
-          :tabs="[{ title: 'ID', value: 'uuid' }]"
-          @change-value="updateSearchType"
-        />
+            :class="'bg-base-300 '"
+            :tabs="[{ title: 'ID', value: 'uuid' }]"
+            @change-value="updateSearchType"
+          />
           <!-- <select v-model="search.type" disabled class="select select-bordered select-sm">
             <option value="uuid">
               ID
             </option>
           </select> -->
           <div class="relative hidden lg:flex items-center flex-grow-0 w-full">
-            <input ref="codeInput" v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500" placeholder="Поиск" @input="onSearchInput($event)">
+            <input
+              ref="codeInput"
+              v-model="search.text"
+              type="text"
+              class="input input-sm bg-base-300 bg-opacity-40 text-gray-500"
+              placeholder="Поиск"
+              @input="onSearchInput($event)"
+            />
             <span
               v-if="search.loading"
               class="absolute right-2 loading loading-spinner loading-xs p-2"
             />
             <Icon
-            v-else
-            class="absolute right-0.5 p-2 my-auto text-gray-500"
-            name="tabler:search"
-            size="35"
-            @click="codeInput.focus()"
-          />
+              v-else
+              class="absolute right-0.5 p-2 my-auto text-gray-500"
+              name="tabler:search"
+              size="35"
+              @click="codeInput.focus()"
+            />
           </div>
         </div>
       </div>
@@ -229,8 +249,16 @@ function changeFilter(e: any) {
 
     <div v-if="reports?.length">
       <TransitionSlide group class="grid grid-cols-1 gap-3">
-        <ReportExpand v-for="(item, index) in reports" :key="index" :state="openAll" :info="item" />
-        <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
+        <ReportExpand
+          v-for="(item, index) in reports"
+          :key="index"
+          :state="openAll"
+          :info="item"
+        />
+        <div
+          ref="target"
+          class="flex justify-center items-center h-40 md:h-10"
+        />
       </TransitionSlide>
     </div>
     <Hero v-else />
@@ -240,12 +268,12 @@ function changeFilter(e: any) {
 <style scoped>
 .list-enter-active,
 .list-leave-active {
-    transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 
 .list-enter-from,
 .list-leave-to {
-    opacity: 0;
-    transform: translateY(30px);
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>

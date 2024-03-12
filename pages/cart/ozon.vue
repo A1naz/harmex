@@ -28,15 +28,21 @@ const size = ref('none')
 const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
-const modalShow = ref<boolean>(false);
-  const MPTabs = [
-  { title: 'ozon', value: 'ozon' },
-  { title: 'wildberries', value: 'wildberries' },
-]
+const modalShow = ref<boolean>(false)
+const MPTabs =
+  store.client.username == 'test'
+    ? [
+        { title: 'Ozon', value: 'ozon' },
+        { title: 'Wildberries', value: 'wildberries' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 
 async function getCarts() {
-  modalShow.value = false;
-  const { data, error } = await useFetch('/api/ozon/cart/get', { method: 'GET', watch: false })
+  modalShow.value = false
+  const { data, error } = await useFetch('/api/ozon/cart/get', {
+    method: 'GET',
+    watch: false,
+  })
   if (data.value) carts.value = data.value
   if (error.value)
     notify({
@@ -166,17 +172,15 @@ const updateSearchType = (filter: any) => {
 
 function changeFilter(e: any) {
   mpStore.selectedMP = e.value
-  return navigateTo(
-    '/cart/' + e.value 
-  )
+  return navigateTo('/cart/' + e.value)
 }
 
 onMounted(() => {
   if (route.query.modalShow) {
-    modalShow.value = route.query.modalShow === 'true';
-    const query = { ...route.query };
-        delete query.modalShow;
-        router.push({ query });
+    modalShow.value = route.query.modalShow === 'true'
+    const query = { ...route.query }
+    delete query.modalShow
+    router.push({ query })
   }
 })
 </script>
@@ -186,7 +190,10 @@ onMounted(() => {
     <!-- <h1 class="text-2xl font-bold mt-4">Корзина</h1> -->
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
-        <button @click="navigateTo(`/cart/create/`)" class="btn btn-primary font-normal btn-sm">
+        <button
+          @click="navigateTo(`/cart/create/`)"
+          class="btn btn-primary font-normal btn-sm"
+        >
           <Icon name="fluent:add-24-filled" size="17" />
           <span class="hidden lg:flex">Корзина</span>
         </button>
@@ -207,12 +214,11 @@ onMounted(() => {
           @change-value="selectFilterDate"
         />
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
-          
           <input
             type="text"
             class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
             placeholder="Поиск по вопросам"
-            ref="codeInput" 
+            ref="codeInput"
             v-model="search.text"
             @input="onSearchInput($event)"
           />
@@ -309,7 +315,11 @@ onMounted(() => {
       <Hero />
     </div>
   </div>
-  <CartOzonCreateCart :show="modalShow" @close-modal="modalShow = false" @create="getCarts()"/>
+  <CartOzonCreateCart
+    :show="modalShow"
+    @close-modal="modalShow = false"
+    @create="getCarts()"
+  />
 </template>
 
 <style scoped></style>

@@ -181,7 +181,7 @@ const updateSearchType = (filter: any) => {
     <div class="flex lg:hidden gap-2 w-full mt-4">
       <ExportXls 
                 api="/api/paymenthistory/export"
-                fileName="Финансовый отчет услуг OZONMP.xlsx"
+                fileName="Финансовый отчет услуг MARKETMONSTR.xlsx"
                 :isVisible="history.length ? true : false"
             />
 
@@ -269,7 +269,7 @@ const updateSearchType = (filter: any) => {
         <div class="gap-2 items-center hidden lg:flex">
             <ExportXls 
                 api="/api/paymenthistory/export"
-                fileName="Финансовый отчет услуг OZONMP.xlsx"
+                fileName="Финансовый отчет услуг MARKETMONSTR.xlsx"
                 :isVisible="history.length ? true : false"
             />
         </div>

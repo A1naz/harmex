@@ -252,7 +252,7 @@ function defaultFilter(r: number){
                     />
                     <ExportXls 
                         api="/api/partner/referals-export"
-                        fileName="OZONMP - Статистика партнеров"
+                        fileName="MARKETMONSTR - Статистика партнеров"
                         :config-columns="listConfigPartners"
                         :isVisible="true"
                         />
@@ -300,7 +300,7 @@ function defaultFilter(r: number){
                     />
                     <ExportXls 
                         api="/api/partner/orders-export"
-                        fileName="OZONMP - Заказы партнеров"
+                        fileName="MARKETMONSTR - Заказы партнеров"
                         :config-columns="listConfigOrders"
                         :isVisible="true"
                         />

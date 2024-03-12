@@ -42,7 +42,7 @@ class MailService {
     const result = await this.transporter.sendMail({
       from: alias,
       to,
-      subject: '[OZONMP] Завершите регистрацию',
+      subject: '[MARKETMONSTR] Завершите регистрацию',
       text: '',
       html: `
                 <div>
@@ -50,14 +50,14 @@ class MailService {
                 
                 <h3>
                 Вы успешно зарегистрировались 
-                на платформе OZONMP
+                на платформе MARKETMONSTR
                 </h3>
                 <h3>
                 Для завершения регистрации 
                 вам необходимо перейти по ссылке
                 </h3>
 
-                <a href="${link}"><h2>https://app.ozonmp.ru/auth</h2></a>
+                <a href="${link}"><h2>https://app.marketmonstr.pro/auth</h2></a>
                 
                 <p>
                 Если вдруг вы не регистрировались и 
@@ -79,10 +79,10 @@ class MailService {
 
 
                 <p>
-                Решайте любые задачи в OZONMP
+                Решайте любые задачи в MARKETMONSTR
                 </p>
                 <p>
-                С уважением, служба заботы OZONMP      
+                С уважением, служба заботы MARKETMONSTR      
                 </p>          
                 </div>
             `,
@@ -93,7 +93,7 @@ class MailService {
     const result = await this.transporter.sendMail({
       from: alias,
       to,
-      subject: '[OZONMP] Подтвердите новый адрес электронной почты',
+      subject: '[MARKETMONSTR] Подтвердите новый адрес электронной почты',
       text: '',
       html: `
                 <div>
@@ -101,14 +101,14 @@ class MailService {
                 
                 <h3>
                 Вы собираетесь сменить адрес электронной почты 
-                на платформе OZONMP
+                на платформе MARKETMONSTR
                 </h3>
                 <h3>
                 Для смены адреса электронной почты 
                 вам необходимо перейти по ссылке
                 </h3>
 
-                <a href="${link}"><h2>https://app.OZONMP.ru/auth</h2></a>
+                <a href="${link}"><h2>https://app.marketmonstr.pro/auth</h2></a>
                 
                 <p>
                 Если вдруг вы не сменяли адрес и 
@@ -130,10 +130,10 @@ class MailService {
 
 
                 <p>
-                Решайте любые задачи в OZONMP
+                Решайте любые задачи в MARKETMONSTR
                 </p>
                 <p>
-                С уважением, служба заботы OZONMP      
+                С уважением, служба заботы MARKETMONSTR      
                 </p>          
                 </div>
             `,
@@ -145,18 +145,18 @@ class MailService {
     const result = await this.transporter.sendMail({
       from: alias,
       to,
-      subject: '[OZONMP] Подтверждение отвязки Telegram',
+      subject: '[MARKETMONSTR] Подтверждение отвязки Telegram',
       text: '',
       html: `
                 <div>
                     <h2>Для отвязки телеграма перейдите по ссылке</h2>
-                    <a href="${link}"><h2>https://app.ozonmp.ru/profile</h2></a>
+                    <a href="${link}"><h2>https://app.marketmonstr.pro/profile</h2></a>
 
                     <p>
-                    Решайте любые задачи в OZONMP
+                    Решайте любые задачи в MARKETMONSTR
                     </p>
                     <p>
-                    С уважением, служба заботы OZONMP      
+                    С уважением, служба заботы MARKETMONSTR      
                     </p>    
                 </div>
             `,
@@ -180,7 +180,7 @@ class MailService {
                     <h3>Вы или кто-то другой использовал функцию смены пароля для доступа к личному кабинету</h3>
                     <h3>Вы собираетесь сменить пароль! Если это сделали не вы, то проигнорируйте это сообщение.</h3>
                     <h3>Для подтверждения смены пароля перейдите по ссылке</h3>
-                    <a href="${link}"><h2>https://app.ozonmp.ru/auth</h2></a>
+                    <a href="${link}"><h2>https://app.marketmonstr.pro/auth</h2></a>
 
                     <p>
                     Решайте любые задачи в TOPVTOP

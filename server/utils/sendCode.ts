@@ -2,17 +2,7 @@ import { ConfirmPhone } from '~/server/lib/models/ConfirmPhone'
 const config = useRuntimeConfig()
 const hiCallKey = config.HI_CALL_KEY
 
-
-export default eventHandler(async (event) => {
-  const { phoneNumber }: any = await readBody(event)
-  
-  if (phoneNumber.length < 11) {
-    throw createError({
-      statusCode: 400,
-      message: 'Телефон должен содержать 11 цифр',
-    })
-  }
-
+export default async function sendCode(phoneNumber: string) {
   const isConfirmExist = await ConfirmPhone.findOne({
     phone: phoneNumber,
   })
@@ -62,4 +52,4 @@ export default eventHandler(async (event) => {
   return {
     status: 'ok',
   }
-})
+}

@@ -23,10 +23,12 @@ const urlError = ref(false)
 const modalShow = ref<boolean>(false);
 const route = useRoute()
 const router = useRouter()
-const MPTabs = [
-  { title: 'wildberries', value: 'wildberries' },
-  { title: 'ozon', value: 'ozon' },
-]
+const MPTabs = store.client.username == 'test'
+    ? [
+      { title: 'Wildberries', value: 'wildberries' },
+      { title: 'Ozon', value: 'ozon' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 async function getQuestions() {
   modalShow.value = false
   const { data, error } = await useFetch('/api/wildberries/questions/get', { method: 'GET' })

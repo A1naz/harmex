@@ -23,10 +23,12 @@ const search = reactive({
   error: false,
   type: 'article',
 })
-const MPTabs = [
-  { title: 'wildberries', value: 'wildberries' },
-  { title: 'ozon', value: 'ozon' },
-]
+const MPTabs = store.client.username == 'test'
+    ? [
+        { title: 'Wildberries', value: 'wildberries' },
+        { title: 'Ozon', value: 'ozon' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 function selectStatus(e: Event) {
   const target = e.target as HTMLSelectElement
   router.push({

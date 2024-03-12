@@ -6,10 +6,11 @@ definePageMeta({
   auth: true,
   title: 'Лайки на товар/бренд',
 })
+
 const store = useMainStore()
 const mpStore = useMPStore()
 const router = useRouter()
-const route =  useRoute()
+const route = useRoute()
 const MPSelect = ref()
 const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const product_likes = ref([]) as any
@@ -56,15 +57,18 @@ async function getProductLikes() {
 }
 await getProductLikes()
 async function create() {
-  const { data, error } = await useFetch(`/api/wildberries/productlikes/create`, {
-    method: 'POST',
-    body: {
-      url: url.value,
-      amount: amount.value,
-      period: period.value,
-      productData: productData.value,
-    },
-  })
+  const { data, error } = await useFetch(
+    `/api/wildberries/productlikes/create`,
+    {
+      method: 'POST',
+      body: {
+        url: url.value,
+        amount: amount.value,
+        period: period.value,
+        productData: productData.value,
+      },
+    }
+  )
   if (error.value)
     return notify({
       type: 'error',
@@ -79,12 +83,15 @@ async function create() {
   removeProduct()
 }
 async function sendUrl() {
-  const { data, error } = await useFetch(`/api/wildberries/productlikes/extract`, {
-    method: 'POST',
-    body: {
-      url: url.value,
-    },
-  })
+  const { data, error } = await useFetch(
+    `/api/wildberries/productlikes/extract`,
+    {
+      method: 'POST',
+      body: {
+        url: url.value,
+      },
+    }
+  )
   if (data.value) {
     productData.value = data.value
     urlError.value = false
@@ -116,17 +123,19 @@ function removeProduct() {
   url.value = ''
   amount.value = 0
 }
-const MPTabs = [
-  { title: 'wildberries', value: 'wildberries' },
-  { title: 'ozon', value: 'ozon' },
-]
+const MPTabs = store.client.username == 'test'
+    ? [
+        { title: 'Wildberries', value: 'wildberries' },
+        { title: 'Ozon', value: 'ozon' },
+      ]
+    : [{ title: 'Wildberries', value: 'wildberries' }]
 
 onMounted(() => {
   if (route.query.modalShow) {
-    modalShow.value = route.query.modalShow === 'true';
-    const query = { ...route.query };
-        delete query.modalShow;
-        router.push({ query });
+    modalShow.value = route.query.modalShow === 'true'
+    const query = { ...route.query }
+    delete query.modalShow
+    router.push({ query })
   }
 })
 
@@ -145,12 +154,15 @@ function openRemoveReviewModal(id: any, name: any) {
 }
 
 async function deleteLike() {
-  const { data, error } = await useFetch(`/api/wildberries/productlikes/delete`, {
-    method: 'DELETE',
-    body: {
-      id: idForRemove.value,
-    },
-  })
+  const { data, error } = await useFetch(
+    `/api/wildberries/productlikes/delete`,
+    {
+      method: 'DELETE',
+      body: {
+        id: idForRemove.value,
+      },
+    }
+  )
 
   if (data.value) {
     getProductLikes()
@@ -176,7 +188,7 @@ const closeModal = (event: MouseEvent) => {
 }
 
 async function selectFilterDate(e: any) {
- loading.value = true
+  loading.value = true
   const target = e
   const { data } = await useFetch(`/api/wildberries/productlikes/get`, {
     method: 'GET',
@@ -200,13 +212,16 @@ async function findBuyouts(value: string, type: string) {
     getProductLikes()
     return
   }
-  const { data, error } = await useFetch(`/api/wildberries/productlikes/search`, {
-    query: {
-      string: value,
-      type,
-    },
-    watch: false,
-  })
+  const { data, error } = await useFetch(
+    `/api/wildberries/productlikes/search`,
+    {
+      query: {
+        string: value,
+        type,
+      },
+      watch: false,
+    }
+  )
   if (data.value) product_likes.value = data.value
 
   search.loading = false
@@ -269,7 +284,7 @@ const updateSearchType = (filter: any) => {
           :links="[{ title: 'Отзывы', slot: '/likes', query: '' }]"
           @change-value="selectFilterDate"
         />
-        
+
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
           <input
             ref="codeInput"
@@ -492,7 +507,7 @@ const updateSearchType = (filter: any) => {
       </div>
     </div> -->
     <div v-if="product_likes.length" class="mt-6">
-      <div v-if="loading" class="flex justify-center ">
+      <div v-if="loading" class="flex justify-center">
         <div>
           <span class="loading loading-dots loading-lg text-primary"></span>
         </div>
@@ -584,7 +599,9 @@ const updateSearchType = (filter: any) => {
               <div
                 :class="{
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'nofunds' || item.status === 'deleted' || item.status === 'canceled',
+                    item.status === 'nofunds' ||
+                    item.status === 'deleted' ||
+                    item.status === 'canceled',
                   'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':

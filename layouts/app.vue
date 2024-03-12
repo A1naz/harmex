@@ -16,12 +16,7 @@ function changeTheme() {
 }
 
 async function deleteToken(uuid: string) {
-  const { data, error }: any = await useFetch('/api/token/deleteToken', {
-    method: 'GET',
-    params: {
-      uuid,
-    },
-  })
+  const { data, error }: any = await useFetch('/api/token/deleteToken')
 }
 
 async function reloginCycle() {
@@ -87,20 +82,20 @@ const statusText = computed(() => {
   }
 })
 
-const menuConditions = ref(storeMain.client.mmenuItems)
+// const menuConditions = ref(storeMain.client.mmenuItems)
 
-onMounted(() => {
-  menuConditions.value.map((section: any) => {
-    for (const item of section.items) {
-      if (item.path == '/productlikes' || item.path == '/delivery' || item.path == '/buyouts' || item.path == '/questions' || item.path == '/cart') {
-        item.path = mpStore.selectedMP
-          ? item.path + '/' + mpStore.selectedMP
-          : item.path + '/wildberries'
-      }
-    }
-    return section
-  })
-})
+// onMounted(() => {
+//   menuConditions.value.map((section: any) => {
+//     for (const item of section.items) {
+//       if (item.path == '/productlikes' || item.path == '/delivery' || item.path == '/buyouts' || item.path == '/questions' || item.path == '/cart') {
+//         item.path = mpStore.selectedMP
+//           ? item.path + '/' + mpStore.selectedMP
+//           : item.path + '/wildberries'
+//       }
+//     }
+//     return section
+//   })
+// })
 </script>
 
 <template>
@@ -284,7 +279,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <section v-for="section in menuConditions">
+        <section v-for="section in storeMain.client.mmenuItems">
           <h3 class="opacity-60 text-xs p-3 px-8 uppercase">
             {{ section.subTitle }}
           </h3>
@@ -346,7 +341,7 @@ onMounted(() => {
 
     <!-- <InfoModal
       :isModal="isInfoModal"
-      title="Как пользоваться платформой OZONMP?"
+      title="Как пользоваться платформой MARKETMONSTR?"
       ytSrc="https://www.youtube.com/embed/YqIw35-LiOk?si=d1FdsCsb04ADG8JZ"
       @changeVisibility="toggleInfoModal"
     >

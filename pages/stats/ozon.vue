@@ -1,4 +1,4 @@
-﻿<script lang="ts" setup>
+<script lang="ts" setup>
 import { Bar } from 'vue-chartjs'
 
 definePageMeta({
@@ -6,8 +6,6 @@ definePageMeta({
   auth: true,
   title: 'Аналитика',
 })
-
-const store = useMainStore()
 
 const currency = useCurrency()
 const route = useRoute()
@@ -17,7 +15,7 @@ const lastElements = ref<any>([])
 const periodFromRoute = route.query.period
 
 if (!route.query.type || !route.query.period) {
-  navigateTo('/stats?type=all&period=today', {
+  navigateTo('/stats/ozon?type=all&period=today', {
     external: true,
   })
 }
@@ -36,7 +34,7 @@ const deliveriesCount = ref<any>({
   penalty: 0,
 })
 async function getData() {
-  const { data, error }: any = await useFetch('/api/stats/stats', {
+  const { data, error }: any = await useFetch('/api/ozon/stats/stats', {
     method: 'GET',
     params: {
       type: route.query.type,
@@ -52,7 +50,7 @@ async function getData() {
 }
 
 async function getLast() {
-  const { data, error }: any = await useFetch('/api/stats/last10', {
+  const { data, error }: any = await useFetch('/api/ozon/stats/last10', {
     method: 'GET',
   })
 
@@ -62,7 +60,7 @@ async function getLast() {
 }
 
 async function countBuyouts() {
-  const { data, error }: any = await useFetch('/api/stats/buyoutsCount', {
+  const { data, error }: any = await useFetch('/api/ozon/stats/buyoutsCount', {
     method: 'GET',
   })
   if (data.value) {
@@ -71,7 +69,7 @@ async function countBuyouts() {
 }
 
 async function coutDeliveries() {
-  const { data, error }: any = await useFetch('/api/stats/deliveriesCount', {
+  const { data, error }: any = await useFetch('/api/ozon/stats/deliveriesCount', {
     method: 'GET',
   })
   if (data.value) {
@@ -89,7 +87,7 @@ async function getSecondLevelReferrals() {
   }
 }
 async function getPatnerWithdraws() {
-  const { data }: any = await useFetch('/api/stats/getPartnerWithdraws', {
+  const { data }: any = await useFetch('/api/ozon/stats/getPartnerWithdraws', {
     method: 'GET',
   })
   if (data.value) {
@@ -105,6 +103,7 @@ await getData()
 await getLast()
 await countBuyouts()
 
+const store = useMainStore()
 
 const colorMode = useColorMode()
 const chardColor = computed(() =>
@@ -167,7 +166,7 @@ const chartOptions = ref({
 })
 
 function selectPeriod(event: any) {
-  navigateTo(`/stats?type=${route.query.type}&period=${event.target.value}`, {
+  navigateTo(`/stats/ozon?type=${route.query.type}&period=${event.target.value}`, {
     external: true,
   })
 }
@@ -199,7 +198,7 @@ const delivsReady = ref(false)
 async function getDeliveries() {
   delivsReady.value = false
   const { data, error }: any = await useFetch<DelisDataChart>(
-    '/api/stats/deliveries',
+    '/api/ozon/stats/deliveries',
     {
       method: 'GET',
       params: paramsDelivs,
@@ -275,9 +274,9 @@ const charttDelivOptions = ref({
 })
 
 const MPTabs =  store.client.username == 'test' ? [
-  { title: 'Все', value: '' },
   { title: 'Ozon', value: 'ozon' },
   { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Все', value: '' },
 ] : [
   { title: 'Все', value: '' },
   { title: 'Wildberries', value: 'wildberries' },
@@ -309,7 +308,7 @@ async function changeMP(e: any) {
       <NuxtLink
         @click="selectedService = service"
         v-for="service in services"
-        :to="`/stats?type=${service.value}&period=${route.query.period}`"
+        :to="`/stats/ozon?type=${service.value}&period=${route.query.period}`"
         :external="true"
         :class="{
           'btn-active': route.query.type === service.value,

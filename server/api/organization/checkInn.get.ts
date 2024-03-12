@@ -13,7 +13,7 @@ export default eventHandler(async (event) => {
   }
 
   const rawData: any = await $fetch(
-    `https://app.wbmp.pro/api/organization/getData?inn=${inn}`
+    `https://app.marketmonstr.pro/api/organization/getData?inn=${inn}`
   )
 
   const data = rawData.data
