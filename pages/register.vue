@@ -17,6 +17,7 @@ definePageMeta({
   },
   title: 'Регистрация',
 })
+
 const confirmationCodeInput = ref<any>(null)
 const isInnConfirmed = ref(false)
 const isInnLoading = ref(false)
@@ -28,6 +29,7 @@ const route = useRoute()
 const alertType = ref('success')
 const referral = ref(route.query?.ref || null)
 const { width, height } = useWindowSize()
+const linkRef = ref(false)
 const formData = reactive({
   email: '',
   password: '',
@@ -46,15 +48,26 @@ const formData = reactive({
 })
 
 const referralFromLocal: any = ref('')
-onMounted(() => {
-  if (route.query?.ref && typeof route.query?.ref === 'string') {
-    localStorage.setItem('referralCode', route.query?.ref)
-    navigateTo('https://wbmp.pro', { external: true })
-  }
 
+onMounted(async () => {
+  if (route.query?.ref && typeof route.query?.ref === 'string') { 
+    localStorage.setItem('referralCode', route.query?.ref)
+  }
   referralFromLocal.value = localStorage.getItem('referralCode')
   formData.referral = referralFromLocal.value
 })
+
+async function linkFollow() {
+  const { data, error }: any = await useFetch('/api/user/linkFollow', {
+      method: 'GET',
+      query: {
+        referral: formData.referral,
+      },
+  })
+}
+await linkFollow()
+
+
 
 const result = ref()
 const loading = ref(false)
@@ -93,8 +106,6 @@ const v$ = useVuelidate(rules, formData)
 
 async function submitForm() {
   v$.value.$validate()
-
-  console.log(v$.value.$errors)
 
   if (!v$.value.$errors.length) {
     loading.value = true
@@ -249,7 +260,6 @@ async function confirmCode() {
       class="flex flex-col justify-center align-center w-full max-w-lg rounded-lg p-2 shadow-lg gap-3 mt-auto mx-auto"
     >
       <h3 class="font-bold text-xl mt-5">Создать аккаунт</h3>
-
       <div class="px-5 pb-2">
         <div class="relative">
           <div>

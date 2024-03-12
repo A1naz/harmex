@@ -303,7 +303,7 @@ function changeFilter(e: any) {
 
     <div v-if="questions.length" class="mt-4 rounded-lg">
       <ClientOnly>
-        <table v-if="width > 1024" class="table table-sm">
+        <table class="table table-sm">
         <thead>
           <tr class="bg-primary bg-opacity-5">
             <!-- <th class="text-center">№</th> -->
@@ -412,7 +412,7 @@ function changeFilter(e: any) {
           </tr>
         </tbody>
       </table>
-        <div v-else class="cards grid grid-cols-1 gap-4 lg:hidden">
+        <!-- <div v-else class="cards grid grid-cols-1 gap-4 lg:hidden">
           <div v-for="(item, index) in questions" :key="index" class="card card-compact bg-base-100 shadow-xl">
             <div class="card-body">
               <div class="flex gap-4">
@@ -474,7 +474,7 @@ function changeFilter(e: any) {
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </ClientOnly>
     </div>
     <Hero v-else />

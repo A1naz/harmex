@@ -15,9 +15,10 @@ export default eventHandler(async (event) => {
   const referralsRefAccs = await Referral.find({ user: { $in: refIds } })
 
   let secondLevelReferralsCount = 0
+  let firstLevelReferralsCount = refIds.length
   referralsRefAccs.forEach((el: any) => {
     secondLevelReferralsCount += el.referrals.length
   })
   
-  return { status: 'ok', secondLevelReferralsCount }
+  return { status: 'ok', secondLevelReferralsCount, firstLevelReferralsCount }
 })
