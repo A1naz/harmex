@@ -6,7 +6,8 @@ const route = useRoute()
 
 <template>
   <div class="flex items-center gap-4">
-    <button class="btn bg-base-100 btn-xs border-none" @click="store.faqModal = true">
+    <!-- @click="store.faqModal = true" -->
+    <button class="btn bg-base-100 btn-xs border-none">
       FAQ
     </button>
     <!-- <button class="relative btn bg-base-100 btn-xs btn-circle border-none" @click="emit('openModal')"> -->

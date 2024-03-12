@@ -487,7 +487,7 @@ function changeFilter(e: any) {
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </ClientOnly>
     </div>
     <Hero v-else />

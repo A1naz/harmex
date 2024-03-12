@@ -13,41 +13,64 @@ const currency = useCurrency()
 
 const closeButton = ref<HTMLElement>()
 const { $dayjs } = useNuxtApp()
+const errorAmount = ref('')
+const errorOrgName = ref('')
+const errorInn = ref('')
+const errorCard = ref('')
+const errorFio= ref('')
+
 const form = reactive({
   amount: 0,
   card: '',
   fio: '',
-  withdrawType: 'card',
+  orgName: '',
+  inn: '',
+  withdrawType: 'account',
 })
 async function createWithdraw() {
-  if (form.withdrawType === 'card') {
-    if (!form.amount || !form.card || !form.fio) return
-  }
+  if(!form.amount || form.amount <= 0) {
+    errorAmount.value = 'Сумма не введена или меньше нуля'
+  } else errorAmount.value = ''
+  if(!form.orgName) {
+    errorOrgName.value = 'Наименование ИП/ООО не введен'
+  } else errorOrgName.value = ''
+  if(!form.card) {
+    errorCard.value = 'Номер карты / расчетный счет не введен'
+  } else errorCard.value = ''
+  if(!form.fio) {
+    errorFio.value = 'ФИО не введено '
+  } else errorFio.value = ''
+  if(!form.inn) {
+    errorInn.value = 'ИНН не введен'
+  } else errorInn.value = ''
+  // if (form.withdrawType === 'card') {
+  //   if (!form.amount || !form.card || !form.fio) return
+  // }
 
-  const { data, error } = await useFetch('/api/partner/createWithdraw', {
-    method: 'POST',
-    body: form,
-  })
+  // const { data, error } = await useFetch('/api/partner/createWithdraw', {
+  //   method: 'POST',
+  //   body: form,
+  // })
 
-  if (error.value)
-    notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: error.value?.message,
-    })
+  // if (error.value)
+  //   notify({
+  //     type: 'error',
+  //     title: 'Что-то пошло не так',
+  //     text: error.value?.message,
+  //   })
 
-  if (data.value) {
-    if (data.value.status === 'ok') {
-      notify({ type: 'success', title: 'Вывод успешно создан' })
-      emit('create')
-    } else {
-      notify({
-        type: 'error',
-        title: 'Что-то пошло не так',
-        text: data.value.message,
-      })
-    }
-  }
+  // if (data.value) {
+  //   if (data.value.status === 'ok') {
+  //     notify({ type: 'success', title: 'Вывод успешно создан' })
+  //     emit('create')
+  //   } else {
+  //     notify({
+  //       type: 'error',
+  //       title: 'Что-то пошло не так',
+  //       text: data.value.message,
+  //     })
+  //   }
+  // }
 }
 const now = useNow()
 onKeyStroke('Escape', (e) => {
@@ -57,7 +80,7 @@ onKeyStroke('Escape', (e) => {
 })
 
 const isCardFormDisabled = computed(() => {
-  return form.withdrawType !== 'card'
+  return form.withdrawType !== 'account'
 })
 </script>
 
@@ -87,33 +110,46 @@ const isCardFormDisabled = computed(() => {
         <p class="ml-1 mt-3">
           Вывести на:
         </p>
-        <div class="flex mt-1">
+        <div class="flex flex-col mt-1">
+          
           <div class="form-control">
-            <label class="label cursor-pointer">
-              <input
-              type="radio"
-              name="radio-10"
-              class="radio radio-base-content"
-              @change="form.withdrawType = 'card'"
-              checked
-              />
-              <span class="label-text ml-2">Карту</span>
-            </label>
-          </div>
-          <div class="form-control">
-            <label class="label cursor-pointer">
+            <label class="label justify-start cursor-pointer">
               <input
               type="radio"
               name="radio-10"
               class="radio radio-base-content"
               @change="form.withdrawType = 'account'"
+              checked
               />
               <span class="label-text ml-2">Баланс платформы</span>
             </label>
           </div>
+          <div class="form-control">
+            <label class="label justify-start cursor-pointer">
+              <input
+              type="radio"
+              name="radio-10"
+              class="radio radio-base-content"
+              @change="form.withdrawType = 'organization'"
+              
+              />
+              <span class="label-text ml-2">Счет организации</span>
+            </label>
+          </div>
+          <div class="form-control">
+            <label class="label justify-start cursor-pointer">
+              <input
+              type="radio"
+              name="radio-10"
+              class="radio radio-base-content"
+              @change="form.withdrawType = 'card'"
+              />
+              <span class="label-text ml-2">Счет самозанятых</span>
+            </label>
+          </div>
         </div>
         <form class="my-2 flex flex-col gap-2" @submit.prevent="createWithdraw">
-          <div>
+          <div class="flex flex-col">
             <label class="label p-1">
               <span class="label-text text-gray-500 font-semibold">Сумма вывода</span>
             </label>
@@ -122,31 +158,65 @@ const isCardFormDisabled = computed(() => {
               type="number"
               placeholder="Сумма"
               class="input bg-base-200 placeholder-gray-500 text-base-content w-full"
+              :class="{ 'input-error': errorAmount }"
             />
+            <span class="text-red-500 self-start">{{ errorAmount }}</span>
           </div>
-          <div>
+          <div v-if="form.withdrawType !== 'account' && form.withdrawType !== 'card' ">
             <label class="label p-1">
-              <span class="label-text text-gray-500 font-semibold">Номер карты получателя</span>
+              <span class="label-text text-gray-500 font-semibold">Наименование ИП/ООО</span>
             </label>
             <input
-              :disabled="isCardFormDisabled"
+              :disabled="!isCardFormDisabled"
+              v-model="form.orgName"
+              type="text"
+              placeholder="Иванов Иван Иванович "
+              class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
+              :class="{ 'input-error': errorOrgName }"
+            />
+            <span class="text-red-500 self-start">{{ errorOrgName  }}</span>
+          </div>
+          <div v-if="form.withdrawType !== 'account' && form.withdrawType !== 'organization' ">
+            <label class="label p-1">
+              <span class="label-text text-gray-500 font-semibold">ИНН</span>
+            </label>
+            <input
+              :disabled="!isCardFormDisabled"
+              v-model="form.inn"
+              type="text"
+              placeholder="2562542562542562 "
+              class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
+              :class="{ 'input-error': errorInn }"
+            />
+            <span class="text-red-500 self-start">{{ errorInn  }}</span>
+          </div>
+          <div v-if="form.withdrawType !== 'account'">
+            <label class="label p-1">
+              <span class="label-text text-gray-500 font-semibold">Номер карты / расчетный счет</span>
+            </label>
+            <input
+              :disabled="!isCardFormDisabled"
               v-model="form.card"
               type="text"
               placeholder="220077777777777"
               class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
+              :class="{ 'input-error': errorCard }"
             />
+            <span class="text-red-500 self-start">{{ errorCard  }}</span>
           </div>
-          <div>
+          <div v-if="form.withdrawType !== 'account'">
             <label class="label p-1">
               <span class="label-text text-gray-500 font-semibold">ФИО получателя</span>
             </label>
             <input
-              :disabled="isCardFormDisabled"
+              :disabled="!isCardFormDisabled"
               v-model="form.fio"
               type="text"
-              placeholder="Пупкин Иван Игоревич"
+              placeholder="Иванов Иван Иванович "
               class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
+              :class="{ 'input-error': errorFio }"
             />
+            <span class="text-red-500 self-start">{{ errorFio  }}</span>
           </div>
           <button class="btn btn-primary bg-opacity-20 border-none text-base-content btn-block mt-2">Вывести</button>
         </form>

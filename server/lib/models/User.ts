@@ -9,6 +9,7 @@ const partnerSchema = new Schema({
   balance: { type: Number, default: 0 },
   refCount: { type: Number, default: 0 },
   rewardPercent: { type: Number, default: 10 },
+  followCount: { type: Number, default: 0 }, 
 })
 
 const UserSchema = new Schema<IUserSchema>({
@@ -68,6 +69,7 @@ const UserSchema = new Schema<IUserSchema>({
       balance: 0,
       refCount: 0,
       rewardPercent: 10,
+      followCount: 0,
     },
   },
 })

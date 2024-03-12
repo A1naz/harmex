@@ -90,7 +90,7 @@ export default eventHandler(async (event) => {
   ])
 
   const comissions = await PartnerPaymentHistory.aggregate([
-    { $match: { referral: { $in: referIds } } },
+    { $match: {user: user._id  ,referral: { $in: referIds } } },
     {
       $group: {
         _id: '$referral',
@@ -130,7 +130,7 @@ export default eventHandler(async (event) => {
     const summ = allDeals.find(
       (deal: any) => deal._id.valueOf() === refer._id.valueOf()
     )
-
+    
     const comissions = allComissions.filter(
       (comission: any) => comission._id.valueOf() === refer._id.valueOf()
     )

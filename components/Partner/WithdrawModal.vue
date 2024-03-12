@@ -42,7 +42,7 @@ onKeyStroke('Escape', (e) => {
     <div class="modal-box w-10/12 max-w-2xl py-3 px-5">
       <div class="flex w-full justify-between">
        
-        <h3 class="text-xl ">
+        <h3 class="text-lg ">
           Вывод средств
         </h3>
         <label
@@ -59,8 +59,7 @@ onKeyStroke('Escape', (e) => {
       </div>
 
       <div class="overflow-x-auto">
-        <table class="table table-sm">
-          <!-- head -->
+        <!-- <table class="table table-sm">
           <thead>
             <tr class="bg-primary bg-opacity-5">
               <th class="text-center">Дата</th>
@@ -71,7 +70,6 @@ onKeyStroke('Escape', (e) => {
             </tr>
           </thead>
           <tbody>
-            <!-- row 1 -->
             <tr v-for="(item, index) in withdraws" :key="index" class="bg-base-100">
               <td class="text-center border-x border-primary border-opacity-5">{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
               <td class="text-center border-r border-primary border-opacity-5">{{ item.status }}</td>
@@ -80,7 +78,76 @@ onKeyStroke('Escape', (e) => {
               <td class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5">{{ item.details.card }} {{ item.details.fio }}</td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
+        <DataTable sort-field="dataoperation" :sort-order="-1" class="hidden lg:block" :value="withdraws" removable-sort 
+      :pt="{
+                    headerRow:  { class: [
+                        'bg-primary bg-opacity-10 border-none text-base-content text-center '
+                    ] },
+                    table: { class: [
+                      'bg-base-100'
+                    ]}
+
+                }"
+      >
+        <Column field="date" sortable header="Дата" class="border-r border-base-200"   
+                :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100 '
+                    ] },
+                    headerCell:  { class: [
+                        'border-none text-center mx-auto'
+                    ] },
+                }">
+          <template #body="{ data }">
+            <span class="text-primary">{{ $dayjs(data.date).format('D MMMM HH:mm') }}</span>
+          </template>
+        </Column>
+
+        <Column field="amount" sortable header="Сумма" class="border-r border-base-200"  :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100'
+                    ] },
+                    headerCell:  { class: [
+                        'border-none'
+                    ] },
+                }">
+          <template #body="{ data }">
+            <span class="">{{ currency.format(data.amount)+' ₽' }}</span>
+          </template>
+        </Column>
+        
+        
+        <Column field="type" sortable header="Тип" class="border-r border-base-200"  :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100'
+                    ] },
+                    headerCell:  { class: [
+                        'border-none'
+                    ] },
+                }"/>
+        <Column field="status" sortable header="Статус" class="border-r border-base-200"  :pt="{
+            bodyCell:  { class: [
+                'bg-base-100'
+            ] },
+            headerCell:  { class: [
+                'border-none'
+            ] },
+        }"/>
+        
+        <Column field="details" sortable header="Детали" :pt="{
+                    headerCell:  { class: [
+                        ' border-none'
+                    ] },
+                    bodyCell:  { class: [
+                        'bg-base-100'
+                    ] },
+                }">
+        <template #body="{ data }">
+            <span class="">{{ data.details.card }} {{ data.details.fio }}</span>
+          </template>
+        </Column>
+</DataTable>
       </div>
     </div>
   </div>

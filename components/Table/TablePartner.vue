@@ -132,7 +132,7 @@ defineExpose({
         <div v-if="!route.path.startsWith('/partner')" class="flex flex-row w-full justify-end">
             <div class="self-center text-sm">{{ displayed }}</div>
         </div>
-        
+        <!-- {{ config }} -->
         <DataTable 
             :value="listData.data" 
             :sort-field="Object.keys(listData.search.sort)[0]"
@@ -159,7 +159,7 @@ defineExpose({
                             'rounded-tl-2xl': index == 0,
                             'rounded-tr-2xl': index == config.length - 1
                         },
-                        'bg-primary bg-opacity-40 border-none text-base-content'
+                        'bg-primary bg-opacity-5 border-none text-base-content'
                     ] },
                 }"
             >

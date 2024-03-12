@@ -112,9 +112,9 @@ function openBuyout() {
             @click="$emit('openModal', buyoutuuId, deliveryId)"
             >Оставить отзыв (доступно: {{ countAllAvailable }})
           </label>
-          <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
+          <!-- <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
             Скоро будет доступно еще {{ countSoonAvailable }}
-          </div>
+          </div> -->
         </div>
       </div>
       </div>
@@ -128,9 +128,9 @@ function openBuyout() {
             @click="$emit('openModal', buyoutuuId, deliveryId)"
             >Оставить отзыв (доступно: {{ countAllAvailable }})
           </label>
-          <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
+          <!-- <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
             Скоро будет доступно еще {{ countSoonAvailable }}
-          </div>
+          </div> -->
         </div>
       
     </div>
