@@ -17,6 +17,7 @@ const currency = useCurrency()
 const withdrawModal = ref(false)
 const paymentHistoryModal = ref(false)
 const qrModal = ref(false)
+const qrCode = ref('null')
 
 const secondLevelComission = ref(0)
 const firstLevelComission = ref(0)
@@ -90,9 +91,7 @@ const filler = [
   {
     title: 'Конверсия в регистрацию',
     value: 
-    `${Math.round(
-      (props.firstLevelReferrals / props.refLink) * 100
-    )}%`,
+    `${ isFinite(Math.round((props.firstLevelReferrals / props.refLink) * 100)) ? `${Math.round((props.firstLevelReferrals / props.refLink) * 100)}%` : '0%'}`,
   },
   {
     title: 'Первых пополнений',
@@ -100,7 +99,8 @@ const filler = [
   },
   {
     title: 'Конверсия в пополнение',
-    value: `${(firstPaymentCounts.value / props.firstLevelReferrals) * 100}%`,
+    value: 
+    `${ isFinite(Math.round((firstPaymentCounts.value / props.firstLevelReferrals) * 100)) ? `${Math.round((firstPaymentCounts.value / props.firstLevelReferrals) * 100)}%` : '0%'}`,
   },
   {
     title: 'Заказано услуг',
@@ -108,9 +108,8 @@ const filler = [
   },
   {
     title: 'Конверсия в оплату',
-    value: `${Math.round(
-      (props.firstLevelReferrals / totalDeals.value) * 100
-    )}%`,
+    value: 
+    `${ isFinite(Math.round((props.firstLevelReferrals / totalDeals.value) * 100)) ? `${Math.round((props.firstLevelReferrals / totalDeals.value) * 100)}%` : '0%'}`,
   },
   {
     title: 'Повторных пополнений',
@@ -122,9 +121,8 @@ const filler = [
   },
   {
     title: 'Конверсия в повторную оплату',
-    value: `${Math.round(
-      (totalRepeatPayments.value / totalDealsCount.value) * 100
-    )}%`,
+    value: 
+    `${ isFinite(Math.round((totalRepeatPayments.value / totalDealsCount.value) * 100)) ? `${Math.round((totalRepeatPayments.value / totalDealsCount.value) * 100)}%` : '0%'}`,
   },
   {
     title: 'Поделилось реф. ссылкой',
@@ -152,10 +150,22 @@ function interpolateColor(index: any) {
 
   return `rgb(${interpolatedColor.join(',')})`
 }
+
+async function getQr() {
+    const { data }: any = await useFetch('/api/partner/getCode', {
+    method: 'GET',
+    query: {
+      refUrl: props.refUrl,
+    },
+  })
+    qrCode.value = data.value.qrCode
+    qrModal.value = true
+}
 </script>
 
 <template>
   <div class="w-full flex flex-col lg:flex-row gap-2.5 mb-4">
+    
     <div class="w-full flex justify-between gap-1 lg:hidden">
         <button
           class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
@@ -318,12 +328,12 @@ function interpolateColor(index: any) {
               <div class="join-item bg-base-200 rounded-lg w-full flex gap-1">
                 <button
                   class="w-full text-primary text-opacity-50 hover:text-opacity-100 m-3"
-                  @click="qrModal = true"
+                  @click="getQr()"
                 >
                   <IconCSS name="ooui:qr-code" size="30" />
                   <!-- <img class="px-4 pt-4" :src="`/img/mp/avito.png`" alt="Shoes" /> -->
                   <!-- <img class="w-8 h-8" src="/icons/figma/partner/qrIcon.svg" alt="qr" /> -->
-                  <span class="">QR-код</span>
+                  <span class="white-space-nowrap">QR-код</span>
                 </button>
               </div>
             </div>
@@ -453,7 +463,12 @@ function interpolateColor(index: any) {
     :state="paymentHistoryModal"
     @close="paymentHistoryModal = false"
   />
-  <PartnerQrModal v-if="qrModal" :src="refUrl" />
+  <PartnerQrModal 
+    v-if="qrModal" 
+    :show="qrModal"
+    :src="qrCode" 
+    @close-modal="qrModal = false"  
+  />
 </template>
 
 <style scoped>

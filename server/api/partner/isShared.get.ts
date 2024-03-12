@@ -1,6 +1,4 @@
 ﻿import { Referral } from '~/server/lib/models/Referral'
-import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory'
-import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 
 export default eventHandler(async (event) => {
 
@@ -22,6 +20,5 @@ export default eventHandler(async (event) => {
   
   return { 
     status: 'ok', 
-
   }
 })
