@@ -71,7 +71,7 @@ watch(client, (newClient) => {
     </notifications>
     <NuxtLayout>
       <NuxtLoadingIndicator
-        :color="colorMode.value === 'light' ? '#570df8' : '#A56BF7'"
+        :color="colorMode.value === 'light' ? '#296dff' : '#6467f2'"
       />
       <SeoKit />
       <NuxtPage v-if="accessChecker" />

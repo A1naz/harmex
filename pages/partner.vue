@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IResTable, ITabs, ItemData, ItemSearch } from '~/data/types';
+import { IResTable, ITabs, ItemData, ItemSearch } from '~/data/types'
 import { FieldsType } from '~/data/enums'
 
 definePageMeta({
@@ -12,8 +12,11 @@ const { width } = useWindowSize()
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const store = useMainStore()
-const refUrl = computed(() => `${runtimeConfig.public.siteUrl}/register?ref=${client.uuid}`)
+const refUrl = computed(
+  () => `${runtimeConfig.public.siteUrl}/register?ref=${client.uuid}`
+)
 
+const loading = ref(false)
 const client = store.client
 const partner = client.partner
 
@@ -30,85 +33,88 @@ async function getSecondartRefLevel(){
         firstLevelReferrals.value = data.value.firstLevelReferralsCount
     }
 }
-await getSecondartRefLevel()
+getSecondartRefLevel()
 
 const tabs: ITabs[] = [
-    {title: 'Главная', slot: 'main', query: ''},
-    {title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },    
-    {title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
+  { title: 'Главная', slot: 'main', query: '' },
+  { title: 'Приглашенные клиенты', slot: 'referals', query: '?tab=referals' },
+  { title: 'Заказы клиентов', slot: 'orders', query: '?tab=orders' },
 ]
 
 const listConfigPartners: ConfigTable[] = [
-    { field: 'username', header: 'Ник', type: FieldsType.text },
-    { field: 'email', header: 'E-mail', type: FieldsType.text },
-    { field: 'registrationDate', header: 'Дата регистрации', type: FieldsType.date },
-    { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
-    { field: 'deals', header: 'Выполнено услуг', type: FieldsType.text },
-    { field: 'summ', header: 'Фин. оборот', type: FieldsType.price },
-    { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
+  { field: 'username', header: 'Ник', type: FieldsType.text },
+  { field: 'email', header: 'E-mail', type: FieldsType.text },
+  {
+    field: 'registrationDate',
+    header: 'Дата регистрации',
+    type: FieldsType.date,
+  },
+  { field: 'refCount', header: 'Приглашенных', type: FieldsType.text },
+  { field: 'deals', header: 'Выполнено услуг', type: FieldsType.text },
+  { field: 'summ', header: 'Фин. оборот', type: FieldsType.price },
+  { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
 ]
 const listConfigOrders: ConfigTable[] = [
-    { field: 'refUsername', header: 'Ник', type: FieldsType.text },
-    { field: 'refEmail', header: 'E-mail', type: FieldsType.text },
-    { field: 'refLevel', header: 'Рекомендатель', type: FieldsType.text },
-    { field: 'serviceType', header: 'Тип', type: FieldsType.text },
-    { field: 'date', header: 'Дата операции', type: FieldsType.date },
-    { field: 'serviceSum', header: 'Стоимость', type: FieldsType.price },
-    { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
-    { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
+  { field: 'refUsername', header: 'Ник', type: FieldsType.text },
+  { field: 'refEmail', header: 'E-mail', type: FieldsType.text },
+  { field: 'refLevel', header: 'Рекомендатель', type: FieldsType.text },
+  { field: 'serviceType', header: 'Тип', type: FieldsType.text },
+  { field: 'date', header: 'Дата операции', type: FieldsType.date },
+  { field: 'serviceSum', header: 'Стоимость', type: FieldsType.price },
+  { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
+  { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
 
 function datePrepare(daysAgo: number) {
-    if(daysAgo == -1) return {}
+  if (daysAgo == -1) return {}
 
-    const to = new Date()
-    to.setUTCHours(23,59,59,999)
+  const to = new Date()
+  to.setUTCHours(23, 59, 59, 999)
 
-    const from = new Date()
-    from.setUTCHours(0,0,0,0);
+  const from = new Date()
+  from.setUTCHours(0, 0, 0, 0)
 
-    if (daysAgo > 1) {
-        if(daysAgo == 30) {
-            from.setDate(1)
-        } else {
-            from.setDate(from.getDate() - daysAgo)
-        }
+  if (daysAgo > 1) {
+    if (daysAgo == 30) {
+      from.setDate(1)
+    } else {
+      from.setDate(from.getDate() - daysAgo)
     }
-    const dateRange = {
-        dateRange: { 
-            from: from.toISOString(), 
-            to: to.toISOString()
-    }}
-    return dateRange
+  }
+  const dateRange = {
+    dateRange: {
+      from: from.toISOString(),
+      to: to.toISOString(),
+    },
+  }
+  return dateRange
 }
 
 const dateRange = ref(datePrepare(-1))
-function changeRange(filter: DateFilterRanges){
-    dateRange.value = datePrepare(filter.value)
+function changeRange(filter: DateFilterRanges) {
+  dateRange.value = datePrepare(filter.value)
 }
 
-const pageNum = ref(tablePartner.value?.pageNum || 1);
-const currentPage = ref(tablePartner.value?.currentPage || 1);
+const pageNum = ref(tablePartner.value?.pageNum || 1)
+const currentPage = ref(tablePartner.value?.currentPage || 1)
 
 const updateInfo = (newPageNum: number, newCurrentPage: number) => {
-    pageNum.value = newPageNum;
-    currentPage.value = newCurrentPage;
-};
-
-function pagination(n: number){
-    tablePartner.value.changePage(n);
+  pageNum.value = newPageNum
+  currentPage.value = newCurrentPage
 }
 
-function defaultFilter(r: number){
-    tablePartner.value.updateFilter('filter', r)
+function pagination(n: number) {
+  tablePartner.value.changePage(n)
 }
 
-
+function defaultFilter(r: number) {
+  tablePartner.value.updateFilter('filter', r)
+}
 </script>
 
 <template>
-    <div>
-        <!-- <div class="mb-4">
+  <div>
+    <!-- <div class="mb-4">
             <div class="flex">
                 <h1 class="text-2xl font-bold mt-4">Партнерская программа</h1>
             </div>
@@ -322,8 +328,8 @@ function defaultFilter(r: number){
 </template>
 <style>
 thead tr:first-child {
-    border-top-left-radius: 10px; /* Скругление верхнего левого угла */
-    border-top-right-radius: 10px; /* Скругление верхнего правого угла */
+  border-top-left-radius: 10px; /* Скругление верхнего левого угла */
+  border-top-right-radius: 10px; /* Скругление верхнего правого угла */
 }
 
 </style>

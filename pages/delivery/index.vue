@@ -9,7 +9,7 @@ const mpStore = useMPStore()
 const selectedMP = ref()
 onMounted(async () => {
   selectedMP.value = mpStore.selectedMP || 'wildberries'
-  navigateTo('/delivery/' + selectedMP.value)
+  navigateTo('/delivery/' + selectedMP.value + '?status=all')
 })
 </script>
 <template>

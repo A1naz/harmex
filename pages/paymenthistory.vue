@@ -26,6 +26,7 @@ const { width, height } = useWindowSize()
 const route = useRoute()
 const currency = useCurrency()
 const history = ref([]) as any
+const loading = ref(false)
 const search = reactive({
   text: '',
   loading: false,
@@ -33,6 +34,7 @@ const search = reactive({
   type: 'uuid',
 })
 async function getPaymentHistory() {
+  loading.value = true
   const { data, error } = await useFetch('/api/paymenthistory/get', {
     method: 'GET',
     query: {
@@ -43,8 +45,9 @@ async function getPaymentHistory() {
 
   })
   history.value = data.value
+  loading.value = false
 }
-await getPaymentHistory()
+getPaymentHistory()
 
 
 async function selectType(e: any) {
@@ -169,7 +172,7 @@ const updateSearchType = (filter: any) => {
 </script>
 
 <template>
-  <div>
+  <div v-if="!loading">
     <!-- <div class="flex flex-row items-center mt-4">
       <h1 class="text-2xl font-bold ">
         История платежей
@@ -439,6 +442,10 @@ const updateSearchType = (filter: any) => {
       <div ref="target" class="flex justify-center items-center p-4 h-4" />
     </ul>
   </div>
+  <Hero v-else-if="!loading" />
+    <div v-else class="w-full flex justify-center items-center mt-20">
+      <span class="loading loading-dots loading-lg text-primary"></span>
+    </div>
 </template>
 
 <style>
