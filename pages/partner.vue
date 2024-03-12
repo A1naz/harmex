@@ -55,14 +55,15 @@ const listConfigPartners: ConfigTable[] = [
   { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
 ]
 const listConfigOrders: ConfigTable[] = [
-  { field: 'refUsername', header: 'Ник', type: FieldsType.text },
-  { field: 'refEmail', header: 'E-mail', type: FieldsType.text },
-  { field: 'refLevel', header: 'Рекомендатель', type: FieldsType.text },
-  { field: 'serviceType', header: 'Тип', type: FieldsType.text },
-  { field: 'date', header: 'Дата операции', type: FieldsType.date },
-  { field: 'serviceSum', header: 'Стоимость', type: FieldsType.price },
-  { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
-  { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
+    { field: 'refUsername', header: 'Ник', type: FieldsType.text },
+    { field: 'refMp', header: 'Маркетплейс', type: FieldsType.text },
+    { field: 'refEmail', header: 'E-mail', type: FieldsType.text },
+    { field: 'refLevel', header: 'Рекомендатель', type: FieldsType.text },
+    { field: 'serviceType', header: 'Тип', type: FieldsType.text },
+    { field: 'date', header: 'Дата операции', type: FieldsType.date },
+    { field: 'serviceSum', header: 'Стоимость', type: FieldsType.price },
+    { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
+    { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
 
 function datePrepare(daysAgo: number) {
@@ -106,6 +107,12 @@ const updateInfo = (newPageNum: number, newCurrentPage: number) => {
 function pagination(n: number) {
   tablePartner.value.changePage(n)
 }
+// function mpFilter(r: any){
+//     tablePartner.value.updateFilter('sort', {
+//         sortField: 'refMp',
+//         sortOrder: r.value
+//     })
+// }
 
 function defaultFilter(r: number) {
   tablePartner.value.updateFilter('filter', r)
@@ -304,6 +311,7 @@ function defaultFilter(r: number) {
                         class="hidden sm:flex"
                         @range-upd="(r: number) => defaultFilter(r)"
                     />
+                    <!--  -->
                     <ExportXls 
                         api="/api/partner/orders-export"
                         fileName="MARKETMONSTR - Заказы партнеров"

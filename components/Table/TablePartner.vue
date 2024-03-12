@@ -85,7 +85,10 @@ function updateFilter<T extends keyof ItemSearch>(key: T, value: ItemSearch[T]) 
     if(key =='limit') {
         listData.search.skip = 0
     }
-    if(key == 'sort') value = { [value.sortField]: value.sortOrder }
+    if(key == 'sort') {
+        console.log({ [value.sortField]: value.sortOrder })
+        value = { [value.sortField]: value.sortOrder }
+    }
 
     if(key == 'filter') {
         listData.search.skip = 0
