@@ -18,6 +18,7 @@ const withdrawModal = ref(false)
 const paymentHistoryModal = ref(false)
 const qrModal = ref(false)
 const qrCode = ref('null')
+const qrLoading = ref(false)
 
 const secondLevelComission = ref(0)
 const firstLevelComission = ref(0)
@@ -64,19 +65,19 @@ const stats = [
   },
   {
     title: 'Комиссионные с 1-го уровня',
-    value: currency.format(firstLevelComission.value),
+    value: currency.format(firstLevelComission.value) || 0,
   },
   {
     title: 'Комиссионные со 2-го уровня',
-    value: currency.format(secondLevelComission.value),
+    value: currency.format(secondLevelComission.value) || 0,
   },
   {
     title: 'Средний доход с клиента',
-    value: currency.format(props.balance / props.refCount),
+    value: currency.format(props.balance / props.refCount) || 0,
   },
   {
     title: 'Общая сумма комиссионных',
-    value: currency.format(totalComission.value),
+    value: currency.format(totalComission.value) || 0,
   },
 ]
 const filler = [
@@ -152,6 +153,8 @@ function interpolateColor(index: any) {
 }
 
 async function getQr() {
+  qrLoading.value = true
+  qrModal.value = true
     const { data }: any = await useFetch('/api/partner/getCode', {
     method: 'GET',
     query: {
@@ -159,7 +162,7 @@ async function getQr() {
     },
   })
     qrCode.value = data.value.qrCode
-    qrModal.value = true
+    qrLoading.value = false
 }
 </script>
 
@@ -197,7 +200,7 @@ async function getQr() {
             <h2 class="text-lg">Партнерский счет</h2>
           </div>
           <span class="font-bold text-xl">
-            {{ currency.format(props.balance) }}
+            {{ currency.format(props.balance) || 0 }}
           </span>
         </div>
 
@@ -467,6 +470,7 @@ async function getQr() {
     v-if="qrModal" 
     :show="qrModal"
     :src="qrCode" 
+    :loading="qrLoading"
     @close-modal="qrModal = false"  
   />
 </template>
