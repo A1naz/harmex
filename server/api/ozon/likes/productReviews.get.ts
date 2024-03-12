@@ -93,5 +93,7 @@ export default eventHandler(async (event) => {
     }
   })
 
+  console.log(feedbacks)
+
   return { feedbacks, feedbacksCount: feedbacks.length }
 })

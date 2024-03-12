@@ -7,28 +7,31 @@ definePageMeta({
   auth: true,
   title: 'Доставки',
 })
+
+const mpStore = useMPStore()
 const openAll = ref(false)
 const route = useRoute()
 const router = useRouter()
 const store = useMainStore()
-const mpStore = useMPStore()
-const MPSelect = ref()
-const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const deliveries = ref([]) as any
 const autoTarget = ref(true)
 const status = computed(() => route.query?.status || 'all')
-const search = reactive({
+const loading = ref(false)
+const search = ref<any>({
   text: '',
   loading: false,
   error: false,
   type: 'article',
 })
+
 const MPTabs = store.client.username == 'test'
     ? [
         { title: 'Wildberries', value: 'wildberries' },
         { title: 'Ozon', value: 'ozon' },
       ]
     : [{ title: 'Wildberries', value: 'wildberries' }]
+
+
 function selectStatus(e: Event) {
   const target = e.target as HTMLSelectElement
   router.push({
@@ -66,6 +69,7 @@ const { stop } = useIntersectionObserver(
 const skip = ref(50)
 const end = ref(false)
 async function getDeliveries() {
+  loading.value = true
   const { data, error } = await useFetch('/api/wildberries/delivery/get', {
     method: 'GET',
     query: {
@@ -74,8 +78,9 @@ async function getDeliveries() {
     },
   })
   deliveries.value = data.value
+  loading.value = false
 }
-await getDeliveries()
+getDeliveries()
 
 async function exportReadyXLS() {
   const { data } = await useFetch('/api/wildberries/delivery/exportReady', {
@@ -112,7 +117,7 @@ async function findDeliveries(value: string, type: string) {
   if (!value) {
     autoTarget.value = true
     await getDeliveries()
-    search.loading = false
+    search.value.loading = false
     return
   }
   const { data, error } = await useFetch('/api/wildberries/delivery/search', {
@@ -124,7 +129,7 @@ async function findDeliveries(value: string, type: string) {
   if (data.value)
     deliveries.value = data.value
 
-  search.loading = false
+  search.value.loading = false
 }
 
 const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000)
@@ -132,13 +137,12 @@ const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000)
 async function onSearchInput(event: Event) {
   const newValue = (event.target as HTMLInputElement).value
   autoTarget.value = false
-  search.loading = true
-  findDeliveriesDebounced(search.text, search.type)
+  search.value.loading = true
+  findDeliveriesDebounced(search.value.text, search.value.type)
 }
 
-const isInfoModal = ref<boolean>(false)
-function toggleInfoModal() { 
-    isInfoModal.value = !isInfoModal.value 
+function openInfoModal() {
+  // store.infoModal = true
 }
 
 watch(targetIsVisible, async (isVisible) => {
@@ -150,7 +154,7 @@ watch(targetIsVisible, async (isVisible) => {
       query: {
         status: route.query?.status || 'all',
         limit: 50,
-        skip: skip.value ? skip.value : 0,
+        skip: skip.value,
       },
     })
     if ((data.value as any)?.length === 0) {
@@ -165,7 +169,7 @@ watch(targetIsVisible, async (isVisible) => {
 watch(() => status.value, async (newRoute) => {
   skip.value = 50
   end.value = false
-  const { data } = await useFetch('/api/wildberries/delivery/get', {
+  const { data } = await useFetch('/api/delivery/get', {
     method: 'GET',
     query: {
       status: status.value ?? 'all',
@@ -182,13 +186,17 @@ const filters = [
     {title: 'В пути', optionValue: 'onTheWay', params: '?status=onTheWay', queryStatus: 'onTheWay'},
     {title: 'Готовы к выдаче', optionValue: 'pickupReady', params: '?status=pickupReady', queryStatus: 'pickupReady'},   
 ]
-const statusText = computed(() => {
-  return filters.find((el: any) => el.queryStatus === route.query.status)?.title
-})
+
+const customLinks = filters.map(filter => ({
+  title: filter.title,
+  slot: '/delivery/wildberries', 
+  query: filter.params 
+}));
 
 const updateSearchType = (filter: any) => {
-  search.type = filter.value;
+  search.value.type = filter.value;
 }
+
 
 function changeFilter(e: any) {
   mpStore.selectedMP = e.value
@@ -199,12 +207,9 @@ function changeFilter(e: any) {
   )
 }
 
-const customLinks = filters.map(filter => ({
-  title: filter.title,
-  slot: '/delivery/wildberries', 
-  query: filter.params 
-}));
+
 </script>
+
 <template>
   <div>
     <!-- <div class="flex items-center gap-2 mt-4">
@@ -213,7 +218,6 @@ const customLinks = filters.map(filter => ({
       </h1>
       <InfoButton @openModal="toggleInfoModal" />
     </div> -->
-
 
     <!-- <InfoModal 
         :isModal="isInfoModal" 
@@ -236,13 +240,19 @@ const customLinks = filters.map(filter => ({
         </p>
     </InfoModal> -->
 
-
     <div class="">
       <div class="flex lg:hidden mt-2">
         <div v-if="deliveries.length" class="export">
           <div class="dropdown">
-            <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2">XLS</label>
-            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10">
+            <label
+              tabindex="0"
+              class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
+              >XLS</label
+            >
+            <ul
+              tabindex="0"
+              class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10"
+            >
               <li>
                 <NuxtLink target="blank" to="/delivery/export">
                   Готовы к выдаче PDF
@@ -255,14 +265,19 @@ const customLinks = filters.map(filter => ({
           </div>
         </div>
         <div class="relative flex items-center flex-grow-0 w-full">
-          <input v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500 w-full" placeholder="Поиск" @input="onSearchInput($event)">
+          <input
+            v-model="search.text"
+            type="text"
+            class="input input-sm bg-base-300 bg-opacity-40 text-gray-500 w-full"
+            placeholder="Поиск"
+            @input="onSearchInput($event)"
+          />
 
           <span
             v-if="search.loading"
             class="absolute right-2 loading loading-spinner loading-xs p-2"
           />
         </div>
-        
       </div>
       <div class="flex gap-2 mt-2 lg:hidden">
         <CustomSelect
@@ -272,10 +287,10 @@ const customLinks = filters.map(filter => ({
           @change-value="changeFilter"
         />
         <CustomSelect
-            class="lg:hidden"
-            :class="'navbar:min-w-[120px]'"
-            :links="customLinks"
-          />
+          class="lg:hidden"
+          :class="'navbar:min-w-[120px]'"
+          :links="customLinks"
+        />
         <!-- <div class="dropdown  ">
               <div
                 tabindex="0"
@@ -305,7 +320,14 @@ const customLinks = filters.map(filter => ({
                 </li>
               </ul>
             </div> -->
-        <CustomSelect :class="'bg-base-300'" :tabs = "[{title: 'Артикул', value: 'article'}, {title: 'ID выкупа', value: 'uuid'}]" @change-value="updateSearchType" />
+        <CustomSelect
+          :class="'bg-base-300'"
+          :tabs="[
+            { title: 'Артикул', value: 'article' },
+            { title: 'ID выкупа', value: 'uuid' },
+          ]"
+          @change-value="updateSearchType"
+        />
         <!-- <select v-model="search.type" class="select select-bordered select-sm">
               <option value="article">
                 Артикул
@@ -315,22 +337,21 @@ const customLinks = filters.map(filter => ({
               </option>
             </select> -->
       </div>
-      
-      
+
       <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-4">
         <div class="flex gap-2">
           <CustomSelect
-          class="hidden lg:flex"
-          :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
-          @change-value="changeFilter"
-        />
-        <CustomSelect
-          class="hidden lg:flex"
-          :class="'navbar:min-w-[120px]'"
-          :links="customLinks"
-        />
-        <!-- <div class="dropdown hidden lg:block">
+            class="hidden lg:flex"
+            :class="'sm:min-w-[120px]'"
+            :tabs="MPTabs"
+            @change-value="changeFilter"
+          />
+          <CustomSelect
+            class="hidden lg:flex"
+            :class="'navbar:min-w-[120px]'"
+            :links="customLinks"
+          />
+          <!-- <div class="dropdown hidden lg:block">
               <div
                 tabindex="0"
                 role="button"
@@ -360,8 +381,8 @@ const customLinks = filters.map(filter => ({
               </ul>
         </div>          -->
         </div>
-        
-      <!--<div class="hidden lg:block">
+
+        <!--<div class="hidden lg:block">
          <NuxtLink
             v-for="filter in filters"
             :to=" '/delivery' + filter.params"
@@ -387,16 +408,23 @@ const customLinks = filters.map(filter => ({
         </option>
       </select> -->
 
-      <div class="gap-4 hidden lg:flex">
-        <!-- <div class="flex items-center">
+        <div class="gap-4 hidden lg:flex">
+          <!-- <div class="flex items-center">
           <input id="openAll" v-model="openAll" type="checkbox" class="checkbox checkbox-primary checkbox-sm">
           <label for="openAll" class="cursor-pointer select-none ml-2">Развернуть все</label>
         </div> -->
-        <div class="search flex justify-between items-center gap-2">
-          <div />
-          <div class="flex gap-4 items-center">
-            <CustomSelect :class="'bg-base-300'" :tabs = "[{title: 'Артикул', value: 'article'}, {title: 'ID выкупа', value: 'uuid'}]" @change-value="updateSearchType" />
-            <!-- <select v-model="search.type" class="select select-bordered select-sm">
+          <div class="search flex justify-between items-center gap-2">
+            <div />
+            <div class="flex gap-4 items-center">
+              <CustomSelect
+                :class="'bg-base-300'"
+                :tabs="[
+                  { title: 'Артикул', value: 'article' },
+                  { title: 'ID выкупа', value: 'uuid' },
+                ]"
+                @change-value="updateSearchType"
+              />
+              <!-- <select v-model="search.type" class="select select-bordered select-sm">
               <option value="article">
                 Артикул
               </option>
@@ -404,35 +432,47 @@ const customLinks = filters.map(filter => ({
                 ID выкупа
               </option>
             </select> -->
-            <div class="relative flex items-center flex-grow-0 w-full">
-              <input v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500" placeholder="Поиск" @input="onSearchInput($event)">
-              <span
-                v-if="search.loading"
-                class="absolute right-2 loading loading-spinner loading-xs p-2"
-              />
+              <div class="relative flex items-center flex-grow-0 w-full">
+                <input
+                  v-model="search.text"
+                  type="text"
+                  class="input input-sm bg-base-300 bg-opacity-40 text-gray-500"
+                  placeholder="Поиск"
+                  @input="onSearchInput($event)"
+                />
+                <span
+                  v-if="search.loading"
+                  class="absolute right-2 loading loading-spinner loading-xs p-2"
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div v-if="deliveries.length" class="export">
-          <div class="dropdown dropdown-end z-10">
-            <label tabindex="0" class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content m-1">XLS</label>
-            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-              <li>
-                <NuxtLink target="blank" to="/delivery/export">
-                  Готовы к выдаче PDF
-                </NuxtLink>
-              </li>
-              <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
+          <div v-if="deliveries.length" class="export">
+            <div class="dropdown dropdown-end z-10">
+              <label
+                tabindex="0"
+                class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content m-1"
+                >XLS</label
+              >
+              <ul
+                tabindex="0"
+                class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <NuxtLink target="blank" to="/delivery/export">
+                    Готовы к выдаче PDF
+                  </NuxtLink>
+                </li>
+                <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
-              <li><a @click="exportXLS">Общая таблица Excel</a></li>
-            </ul>
+                <li><a @click="exportXLS">Общая таблица Excel</a></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </div>
-      </div>
-      
-    
+
     <!-- <div v-if="deliveries?.length" class="" >
       <TransitionSlide group tag="ul" class="flex md:hidden flex-col gap-3">
         <li v-for="(delivery, index) of deliveries" :key="index" class="overflow-visible z-0">
@@ -450,39 +490,69 @@ const customLinks = filters.map(filter => ({
       <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
     </div> -->
     <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
-      <TransitionSlide group tag="ul" class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3">
-      <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
-      <li v-for="(delivery, index) of deliveries.slice(0, Math.ceil(deliveries.length / 2))" :key="index" class="overflow-visible z-0">
-        <DeliveryWildberriesExpand
-          :state="openAll"
-          :info="delivery" 
-          @open-modal="openModal"
-          @open-status-modal="openStatusModal"
-          @open-penalty-modal="penaltyModal = true"
+      <TransitionSlide
+        group
+        tag="ul"
+        class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3"
+      >
+        <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
+          <li
+            v-for="(delivery, index) of deliveries.slice(
+              0,
+              Math.ceil(deliveries.length / 2)
+            )"
+            :key="index"
+            class="overflow-visible z-0"
+          >
+            <DeliveryWildberriesExpand
+              :state="openAll"
+              :info="delivery"
+              @open-modal="openModal"
+              @open-status-modal="openStatusModal"
+              @open-penalty-modal="penaltyModal = true"
+            />
+          </li>
+        </ul>
+        <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
+          <li
+            v-for="(delivery, index) of deliveries.slice(
+              Math.ceil(deliveries.length / 2)
+            )"
+            :key="index"
+            class="overflow-visible z-0"
+          >
+            <DeliveryWildberriesExpand
+              :state="openAll"
+              :info="delivery"
+              @open-modal="openModal"
+              @open-status-modal="openStatusModal"
+              @open-penalty-modal="penaltyModal = true"
+            />
+          </li>
+        </ul>
+        <div
+          ref="target"
+          class="flex justify-center items-center h-40 md:h-10"
         />
-      </li>
-    </ul>
-    <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
-      <li v-for="(delivery, index) of deliveries.slice(Math.ceil(deliveries.length / 2))" :key="index" class="overflow-visible z-0">
-        <DeliveryWildberriesExpand
-          :state="openAll"
-          :info="delivery" 
-          @open-modal="openModal"
-          @open-status-modal="openStatusModal"
-          @open-penalty-modal="penaltyModal = true"
-        />
-      </li>
-    </ul>
-        <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
       </TransitionSlide>
-      <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
+      <DeliveryQrModal
+        v-if="modal"
+        :code="modalInfo.code"
+        :src="modalInfo.src"
+      />
     </div>
-    <Hero v-else />
+    <Hero v-else-if="!loading" />
+    <div v-else class="w-full mt-5 flex justify-center items-center">
+      <span class="loading loading-dots loading-lg text-primary"></span>
+    </div>
     <DeliveryPenaltyModal :state="penaltyModal" @close="penaltyModal = false" />
-    <DeliveryStatusModal v-if="deliveries?.length" :statusdelivery="currentStatusdDelivery" :state="statusModal" @close="statusModal = false" />
+    <DeliveryStatusModal
+      v-if="deliveries?.length"
+      :statusdelivery="currentStatusdDelivery"
+      :state="statusModal"
+      @close="statusModal = false"
+    />
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

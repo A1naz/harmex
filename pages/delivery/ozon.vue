@@ -16,6 +16,7 @@ const MPSelect = ref()
 const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const deliveries = ref([]) as any
 const autoTarget = ref(true)
+const loading = ref(true)
 const status = computed(() => route.query?.status || 'all')
 const search = reactive({
   text: '',
@@ -66,6 +67,7 @@ const { stop } = useIntersectionObserver(
 const skip = ref(50)
 const end = ref(false)
 async function getDeliveries() {
+  loading.value = true
   const { data, error } = await useFetch('/api/ozon/delivery/get', {
     method: 'GET',
     query: {
@@ -74,8 +76,9 @@ async function getDeliveries() {
     },
   })
   deliveries.value = data.value
+  loading.value = false
 }
-await getDeliveries()
+getDeliveries()
 
 async function exportReadyXLS() {
   const { data } = await useFetch('/api/ozon/delivery/exportReady', {
@@ -537,7 +540,10 @@ const customLinks = filters.map(filter => ({
         :src="modalInfo.src"
       />
     </div>
-    <Hero v-else />
+    <Hero v-else-if="!loading" />
+    <div v-else class="w-full mt-5 flex justify-center items-center">
+      <span class="loading loading-dots loading-lg text-primary"></span>
+    </div>
     <DeliveryPenaltyModal :state="penaltyModal" @close="penaltyModal = false" />
     <DeliveryStatusModal
       v-if="deliveries?.length"

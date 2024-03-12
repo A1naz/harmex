@@ -48,26 +48,27 @@ const formData = reactive({
 })
 
 const referralFromLocal: any = ref('')
+async function linkFollow() {
+  const { data, error }: any = await useFetch('/api/user/linkFollow', {
+    method: 'GET',
+    query: {
+      referral: formData.referral,
+    },
+  })
+}
 
 onMounted(async () => {
-  if (route.query?.ref && typeof route.query?.ref === 'string') { 
+  if (route.query?.ref && typeof route.query?.ref === 'string') {
+    if (route.query?.ref != localStorage.getItem('referralCode')) {
+      setTimeout(() => {
+        linkFollow()
+      })
+    }
     localStorage.setItem('referralCode', route.query?.ref)
   }
   referralFromLocal.value = localStorage.getItem('referralCode')
   formData.referral = referralFromLocal.value
 })
-
-async function linkFollow() {
-  const { data, error }: any = await useFetch('/api/user/linkFollow', {
-      method: 'GET',
-      query: {
-        referral: formData.referral,
-      },
-  })
-}
-await linkFollow()
-
-
 
 const result = ref()
 const loading = ref(false)
@@ -291,10 +292,7 @@ async function confirmCode() {
                 class="btn join-item rounded-r-full"
                 @click="clearFormData"
               >
-                <IconCSS
-                  size="24"
-                  name="fluent:backspace-24-regular"
-                />
+                <IconCSS size="24" name="fluent:backspace-24-regular" />
               </button>
             </div>
 

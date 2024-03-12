@@ -16,7 +16,7 @@ const selectedIndex = ref(-1)
 const storeMain = useMainStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
-
+const loading = ref(false)
 const MPTabs =
   storeMain.client.username == 'test'
     ? [
@@ -56,6 +56,7 @@ const { stop } = useIntersectionObserver(
 const skip = ref(50)
 const end = ref(false)
 async function getBuyouts() {
+  loading.value = true
   const { data } = await useFetch(() => '/api/ozon/buyout/get', {
     method: 'GET',
     query: {
@@ -66,6 +67,7 @@ async function getBuyouts() {
     watch: false,
   })
   buyouts.value = data.value
+  loading.value = false
 }
 
 // await getBuyouts()
@@ -301,7 +303,7 @@ onMounted(async () => {
   }
 })
 
-await getBuyouts()
+getBuyouts()
 
 const isInfoModal = ref<boolean>(false)
 
@@ -664,7 +666,10 @@ async function changeMP(e: any) {
       <div ref="target" class="p-2 w-full col-span-1 h-40 md:h-10" />
     </div>
 
-    <Hero v-else />
+    <Hero v-else-if="!loading" />
+    <div v-else class="w-full mt-5 flex justify-center items-center">
+      <span class="loading loading-dots loading-lg text-primary"></span>
+    </div>
     <BuyoutOzonLogModal
       v-if="logModal"
       :info="selectedBuyout"
