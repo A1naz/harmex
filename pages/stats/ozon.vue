@@ -278,8 +278,8 @@ const MPTabs =  store.client.username == 'test' ? [
   { title: 'Wildberries', value: 'wildberries' },
   { title: 'Все', value: '' },
 ] : [
-  { title: 'Все', value: '' },
   { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Все', value: '' },
 ]
 
 async function changeMP(e: any) {
