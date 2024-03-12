@@ -69,7 +69,7 @@ onKeyStroke('Escape', (e) => {
               :src="src"
             />
           </div>
-          <button id="btnid" class="btn btn-primary w-full border-none bg-opacity-20 text-base-content" @click="copyImageToClipboard(src)">Копировать</button>
+          <button id="btnid" class="btn btn-primary w-full border-none bg-opacity-20 text-base-content mt-3" @click="copyImageToClipboard(src)">Копировать</button>
       </div>
     </div>
   </div>

@@ -49,6 +49,7 @@ const listConfigPartners: ConfigTable[] = [
 ]
 const listConfigOrders: ConfigTable[] = [
     { field: 'refUsername', header: 'Ник', type: FieldsType.text },
+    { field: 'refMp', header: 'Маркетплейс', type: FieldsType.text },
     { field: 'refEmail', header: 'E-mail', type: FieldsType.text },
     { field: 'refLevel', header: 'Рекомендатель', type: FieldsType.text },
     { field: 'serviceType', header: 'Тип', type: FieldsType.text },
@@ -102,6 +103,12 @@ function pagination(n: number){
 function defaultFilter(r: number){
     tablePartner.value.updateFilter('filter', r)
 }
+// function mpFilter(r: any){
+//     tablePartner.value.updateFilter('sort', {
+//         sortField: 'refMp',
+//         sortOrder: r.value
+//     })
+// }
 
 
 </script>
@@ -298,6 +305,7 @@ function defaultFilter(r: number){
                         class="hidden sm:flex"
                         @range-upd="(r: number) => defaultFilter(r)"
                     />
+                    <!--  -->
                     <ExportXls 
                         api="/api/partner/orders-export"
                         fileName="MARKETMONSTR - Заказы партнеров"

@@ -1,4 +1,5 @@
 import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory'
+import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 import { ObjectId } from 'mongodb';
 import { IResTable } from '~/data/types';
 import { Referral } from '~/server/lib/models/Referral';
@@ -86,8 +87,10 @@ export default eventHandler(async (event) => {
                 inviter = "2-ой уровень " + refHost[0].inviter.username
             }
         }
+
         format.push({
             refUsername: ref.refUsername,
+            refMp: ref.histInfo.mp || 'ozon',
             refEmail: ref.refEmail,
             refLevel: inviter,
             serviceType: ref.serviceType,
