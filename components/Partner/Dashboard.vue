@@ -73,7 +73,7 @@ const stats = [
   },
   {
     title: 'Средний доход с клиента',
-    value: currency.format(props.balance / props.refCount) || 0,
+    value: (props.firstLevelReferrals === 0 || props.balance === 0) ? '0 ₽' : currency.format(props.balance / props.firstLevelReferrals),
   },
   {
     title: 'Общая сумма комиссионных',
