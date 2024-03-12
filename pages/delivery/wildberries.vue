@@ -145,26 +145,26 @@ function openInfoModal() {
   // store.infoModal = true
 }
 
-// watch(targetIsVisible, async (isVisible) => {
-//   if (isVisible && autoTarget.value && deliveries.value.length >= 50) {
-//     if (end.value)
-//       return
-//     const { data, error } = await useFetch('/api/wildberries/delivery/get', {
-//       method: 'GET',
-//       query: {
-//         status: route.query?.status || 'all',
-//         limit: 50,
-//         skip: skip.value,
-//       },
-//     })
-//     if ((data.value as any)?.length === 0) {
-//       end.value = true
-//       return
-//     }
-//     deliveries.value = [...deliveries.value, ...data.value! as any]
-//     skip.value += 50
-//   }
-// })
+watch(targetIsVisible, async (isVisible) => {
+  if (isVisible && autoTarget.value && deliveries.value.length >= 50) {
+    if (end.value)
+      return
+    const { data, error } = await useFetch('/api/wildberries/delivery/get', {
+      method: 'GET',
+      query: {
+        status: route.query?.status || 'all',
+        limit: 50,
+        skip: skip.value,
+      },
+    })
+    if ((data.value as any)?.length === 0) {
+      end.value = true
+      return
+    }
+    deliveries.value = [...deliveries.value, ...data.value! as any]
+    skip.value += 50
+  }
+})
 
 watch(() => status.value, async (newRoute) => {
   skip.value = 50
