@@ -304,11 +304,11 @@ async function changeMP(e: any) {
             {{ option.name }}
           </option>
         </select>
-        <NuxtLink
+        <!-- <NuxtLink
           to="/reviews/ozon/drafts"
           class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
           >Черновики</NuxtLink
-        >
+        > -->
       </div>
       <div class="gap-2 hidden lg:flex">
         <CustomSelect
@@ -344,11 +344,11 @@ async function changeMP(e: any) {
             </li>
           </ul>
         </div>
-        <NuxtLink
+        <!-- <NuxtLink
           to="/reviews/drafts"
           class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
           >Черновики</NuxtLink
-        >
+        > -->
       </div>
       <div class="gap-2 items-center hidden lg:flex">
         <select v-model="searchType" class="select select-bordered select-sm">
