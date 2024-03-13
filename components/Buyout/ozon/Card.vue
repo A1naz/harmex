@@ -151,7 +151,6 @@ const getStatus = computed(() => {
 })
 </script>
 
-
 <template>
   <div class="buyout-card card bg-base-100 shadow-lg min-w-[320px]">
     <div
@@ -167,13 +166,21 @@ const getStatus = computed(() => {
         >
           <li>
             <a @click="$emit('openModal', index)">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/info.svg" alt="settings" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/info.svg"
+                alt="settings"
+              />
               О выкупе
             </a>
           </li>
           <li>
             <a @click="cloneBuyout">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/copy.svg" alt="settings" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/copy.svg"
+                alt="settings"
+              />
               Дублировать
             </a>
           </li>
@@ -185,18 +192,30 @@ const getStatus = computed(() => {
             "
           >
             <a v-if="info.status !== 'archived'" @click="archiveBuyout">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/archive.svg" alt="settings" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/archive.svg"
+                alt="settings"
+              />
               Архивировать
             </a>
             <a v-else @click="unarchiveBuyout">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/archive.svg" alt="settings" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/archive.svg"
+                alt="settings"
+              />
               Убрать из архива
             </a>
           </li>
 
           <li v-if="info.status !== 'work'">
             <a :for="`removeAllModelCreateProducts:${props.info.uuid}`">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/delete.svg" alt="settings" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/delete.svg"
+                alt="settings"
+              />
               <label :for="`removeAllModelCreateProducts:${props.info.uuid}`"
                 >Удалить</label
               >
@@ -238,8 +257,7 @@ const getStatus = computed(() => {
           <div
             class="mt-2 rounded-2xl py-0 px-2 text-md"
             :class="{
-              'bg-success ':
-                (info.status === 'active' || info.status === 'work'),
+              'bg-success ': info.status === 'active' || info.status === 'work',
               'text-base-content bg-green-600 ':
                 (info.status === 'active' || info.status === 'work') &&
                 theme.value === 'dark',
@@ -250,7 +268,7 @@ const getStatus = computed(() => {
                 (info.status === 'completed' || info.status === 'nofunds') &&
                 theme.value === 'light',
               'text-base-content bg-yellow-300':
-                (info.status === 'archived' || info.status === 'paused') 
+                info.status === 'archived' || info.status === 'paused',
             }"
           >
             {{ getStatus }}
@@ -261,7 +279,7 @@ const getStatus = computed(() => {
             target="_blank"
             class="text-base text-primary link link-hover mt-0"
             :class="{
-              'mt-2' : width > 364
+              'mt-2': width > 364,
             }"
           >
             {{ info.article }}
@@ -306,28 +324,29 @@ const getStatus = computed(() => {
             </div>
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto">Сумма: </span>
-              <div class="rounded-md py-0 px-2 bg-primary bg-opacity-50 text-sm">
+              <div
+                class="rounded-md py-0 px-2 bg-primary bg-opacity-50 text-sm"
+              >
                 {{ currency.format(info.quantity * info.product?.price) }}
               </div>
             </div>
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto">Скидка: </span>
-              <div class="rounded-md py-0 px-2 bg-primary bg-opacity-20 text-sm">
+              <div
+                class="rounded-md py-0 px-2 bg-primary bg-opacity-20 text-sm"
+              >
                 {{ info.discount || '%' }}
               </div>
             </div>
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto">Категория: </span>
-              <div class="bg-base-300 rounded-md py-0 px-2 text-sm">
-                Ozon
-              </div>
+              <div class="bg-base-300 rounded-md py-0 px-2 text-sm">Ozon</div>
             </div>
-            
           </div>
         </div>
       </div>
       <button
-        class="btn mt-2 bg-indigo-400 border-indigo-400 btn-primary"
+        class="btn mt-2 text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 btn-primary"
         @click="$emit('openModal', index)"
       >
         Открыть

@@ -121,7 +121,7 @@ onKeyStroke('Escape', (e) => {
                 <div>
                   <span class="text-sm text-gray-500 mr-2">Артикул: </span>
                   <a
-                    :href="`https://www.ozon.ru/product/${info.article}`"
+                    :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
                     target="_blank"
                     class="text-sm text-primary link link-hover font-bold"
                   >

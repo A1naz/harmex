@@ -154,7 +154,7 @@ const getStatus = computed(() => {
 <template>
   <div class="buyout-card card bg-base-100 shadow-lg min-w-[320px]">
     <div
-      class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-4 relative"
+      class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-3 relative"
     >
       <div class="dropdown dropdown-end absolute right-1 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
@@ -271,10 +271,10 @@ const getStatus = computed(() => {
       </div>
 
       <div class="flex gap-4">
-        <div class="flex-none" style="width: 100px; height: 150px">
+        <div class="flex-none" style="width: 120px; height: 170px">
           <nuxt-img
             class="rounded-xl h-full"
-            width="100"
+            width="120"
             height="150"
             format="webp"
             loading="lazy"
@@ -320,7 +320,7 @@ const getStatus = computed(() => {
         </div>
       </div>
       <button
-        class="btn mt-2 bg-indigo-400 border-indigo-400 btn-primary"
+        class="btn mt-2 text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 btn-primary"
         @click="$emit('openModal', index)"
       >
         Открыть

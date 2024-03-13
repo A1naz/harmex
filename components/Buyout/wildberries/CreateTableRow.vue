@@ -125,7 +125,7 @@ const productQuantityModel = computed({
           {{ product.name }}
         </div>
         <a
-        :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
+          :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
           target="_blank"
           class="text-sm text-primary link link-hover text-center"
         >
@@ -196,7 +196,11 @@ const productQuantityModel = computed({
       <div class="w-full flex items-center justify-center gap-2">
         <div class="my-auto">
           {{
-            product.purchaseSoon ? '1' + (product.rules && product.rules.length ? ', ' : '') + (product.rules ? product.rules.map((rule: Rule) => rule.id + 1).join(', ') : '') : ''
+            (product.purchaseSoon ? '1, ' : '') +
+            (product.rules && product.rules.length ? '' : '') +
+            (product.rules
+              ? product.rules.map((rule: Rule) => rule.id + 1).join(', ')
+              : '')
           }}
         </div>
         <button
@@ -240,15 +244,13 @@ const productQuantityModel = computed({
           <div>
             
           </div> -->
-          
+
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"
             :start-date="startDate"
           />
-          <div v-else class="text-center">
-            Выкуп в ближайшее время
-          </div>
+          <div v-else class="text-center">Выкуп в ближайшее время</div>
           <!-- <button
             v-else
             disabled
@@ -268,10 +270,16 @@ const productQuantityModel = computed({
     </td>
     <td class="break-all max-w-[300px] border-r border-base">
       <div
-        class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden  justify-center"
+        class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden justify-center"
       >
-        <div v-if="product.adress" class="text-xs h-10 w-full break-all text-center">
-          <p @click="$emit('pointModalOpen', index)" class="break-all whitespace-normal cursor-pointer text-primary">
+        <div
+          v-if="product.adress"
+          class="text-xs h-10 w-full break-all text-center"
+        >
+          <p
+            @click="$emit('pointModalOpen', index)"
+            class="break-all whitespace-normal cursor-pointer text-primary"
+          >
             {{ product.adress }}
           </p>
         </div>
@@ -302,7 +310,7 @@ const productQuantityModel = computed({
         </button> -->
       </div>
     </td>
-    
+
     <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
         <BuyoutWildberriesCreateSearchQueries
@@ -317,10 +325,16 @@ const productQuantityModel = computed({
     </td>
     <td class="border-r border-base w-[90px]">
       <div class="flex justify-end">
-        <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="deleteBuyOut">
+        <div
+          class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary"
+          @click="deleteBuyOut"
+        >
           <IconCSS name="material-symbols:close" size="20" />
         </div>
-        <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="copyBuyout">
+        <div
+          class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary"
+          @click="copyBuyout"
+        >
           <IconCSS name="fluent:copy-20-filled" size="20" />
         </div>
       </div>

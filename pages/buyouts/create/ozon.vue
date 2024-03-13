@@ -188,7 +188,7 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
     }
-    if (!item.searchQuery[0]) {
+    if (!item.searchQuery[0].value) {
       valid = false
       errorMsg = 'Не у всех товаров указан поисковый запрос'
     }
