@@ -90,7 +90,7 @@ export default eventHandler(async (event) => {
 
         format.push({
             refUsername: ref.refUsername,
-            refMp: ref.histInfo.mp || 'ozon',
+            refMp: ref.histInfo.mp || 'wildberries',
             refEmail: ref.refEmail,
             refLevel: inviter,
             serviceType: ref.serviceType,
