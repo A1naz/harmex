@@ -99,6 +99,7 @@ function selectDateInternal(date: any, selectDate: any) {
 
   selectDate(date)
 }
+
 </script>
 
 <template>

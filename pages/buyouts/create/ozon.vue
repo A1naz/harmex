@@ -426,34 +426,34 @@ function closeTemplateModalFN() {
       >
         <table class="table table-xs w-full mt-4">
           <thead class="relative mb-2 text-sm text-base-content">
-            <tr class="border-b-base-300 bg-primary bg-opacity-10 ">
-              <th class="hidden 3xl:block">№</th>
-              <th class="w-12 text-center p-2" @click="openInfoModal('picture')">
+            <tr class="bg-primary bg-opacity-10 ">
+              <!-- <th class="hidden 3xl:block">№</th> -->
+              <th class="w-12 text-center p-2 font-normal" @click="openInfoModal('picture')" >
                 <!-- <IconCSS name="material-symbols:image-outline" size="20" /> -->
                 Фото
               </th>
-              <th class="w-36 3xl:w-48 text-center">Название</th>
-              <th @click="openInfoModal('price')" >
+              <th class="w-36 3xl:w-48 text-center font-normal">Название</th>
+              <th @click="openInfoModal('price')" class="font-normal">
                 <div class="flex justify-between w-full gap-1 items-center">
                   <span> Цена </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <th @click="openInfoModal('quantity')">
+              <th @click="openInfoModal('quantity')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center text-center"> -->
                 <div class="text-center">
                   <span > Кол-во </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <th @click="openInfoModal('size')">
+              <th @click="openInfoModal('size')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
                   <span> Размер </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <th @click="openInfoModal('sex')">
+              <th @click="openInfoModal('sex')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
                   <span> Пол </span>
@@ -466,28 +466,41 @@ function closeTemplateModalFN() {
                   <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
                 </div>
               </th> -->
-              <th class="min-w-40" @click="openInfoModal('adress')">
-                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
-                <div class="text-center">
-                  <span> Адрес </span>
-                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
-                </div>
-              </th>
-              <th @click="openInfoModal('dates')">
-                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
-                <div class="text-center">
-                  <span> Даты выкупов </span>
-                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
-                </div>
-              </th>
-              <th @click="openInfoModal('rules')">
+              <th @click="openInfoModal('rules')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
                   <span> Правила </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
+              <th @click="openInfoModal('dates')" class="font-normal">
+                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <div class="text-center">
+                  <span> Даты выкупов </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                </div>
+              </th>
               
+              <th class="min-w-40 font-normal" @click="openInfoModal('adress')" >
+                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <div class="text-center">
+                  <span> Адрес </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                </div>
+              </th>
+              <!-- <th @click="openInfoModal('search')">
+                <div class="flex justify-between w-full gap-1 items-center">
+                  <span> Поисковые запросы </span>
+                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+                </div>
+              </th> -->
+              <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
+                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <div class="text-center">
+                  <span> Скидка </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                </div>
+              </th>
               <th class="text-base-content" />
             </tr>
             <progress
@@ -536,7 +549,7 @@ function closeTemplateModalFN() {
         </label>
 
         <button
-          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-1 md:ml-2"
+          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-1 ml-2"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >

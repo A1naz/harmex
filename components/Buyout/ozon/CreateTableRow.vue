@@ -24,6 +24,8 @@ const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
 const store = useOzonBuyoutStore()
 
+const dateRangePicker = ref()
+
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
@@ -79,14 +81,16 @@ const productQuantityModel = computed({
     store.changeQuantity(newValue, props.index)
   },
 })
+
+
 </script>
 
 <template>
-  <tr class="border-b-base-300 bg-base-100">
-    <td class="hidden 3xl:block text-center mt-9">
+  <tr class=" bg-base-100">
+    <!-- <td class="hidden 3xl:block text-center mt-9">
       {{ index + 1 }}
-    </td>
-    <td>
+    </td> -->
+    <td class="border-r border-base">
       <div
         style="
           width: 28px;
@@ -119,26 +123,26 @@ const productQuantityModel = computed({
         </div>
       </div>
     </td>
-    <td class="">
-      <div class="w-48 truncate">
-        <div class="text-sm font-medium truncate">
+    <td class="border-r border-base">
+      <div class="w-48 truncate flex flex-col justify-center">
+        <div class="text-sm font-normal truncate text-center">
           {{ product.name }}
         </div>
         <a
         :href="`https://www.ozon.ru/product/${product.article}`"
           target="_blank"
-          class="text-sm text-primary link link-hover"
+          class="text-sm text-primary link link-hover text-center"
         >
           {{ product.article }}
         </a>
       </div>
     </td>
-    <td>
-      <div class="text-sm">
+    <td class="border-r border-base text-center">
+      <div class="text-sm text-center w-full">
         {{ product.priceText }}
       </div>
     </td>
-    <td>
+    <td class="border-r border-base">
       <div class="relative flex items-center flex-grow-0 w-full">
         <div
           class="absolute left-0 btn btn-ghost btn-sm btn-square"
@@ -161,7 +165,7 @@ const productQuantityModel = computed({
         </div>
       </div>
     </td>
-    <td>
+    <td class="border-r border-base">
       <div class="w-20 2xl:w-full flex items-center">
         <select
           v-if="product.sizes.length"
@@ -180,10 +184,10 @@ const productQuantityModel = computed({
         <div v-else class="text-sm text-center ml-2">Нет</div>
       </div>
     </td>
-    <td>
+    <td class=" border-r border-base">
       <div class="w-20 2xl:w-full">
         <select
-          class="select select-sm select-bordered w-full bg-base-200 max-w-[100px] appearance-none"
+          class="select select-sm select-bordered w-full bg-base-200 max-w-[sm] appearance-none"
           @change="onSexChange"
         >
           <option value="none">Нет</option>
@@ -204,7 +208,78 @@ const productQuantityModel = computed({
         />
       </div>
     </td> -->
-    <td class="break-all max-w-[300px]">
+    <td class=" border-r border-base">
+      <div class="w-full flex items-center justify-center gap-2">
+        <div class="my-auto">
+          {{ product.rules.map((rule: Rule) => rule.id).join(', ') }}
+        </div>
+        <button
+          class="border-base-100 text-base-300"
+          @click="$emit('ruleModalOpen', index)"
+        >
+          <Icon name="mdi:settings" size="20" />
+        </button>
+      </div>
+    </td>
+    
+    <td class="border-r border-base w-xs max-w-[100px]">
+      <!-- <label class="label cursor-pointer -ml-1 text-sm -mb-1">
+        Выкупить в ближайшее время
+        <input
+          type="checkbox"
+          v-model="product.purchaseSoon"
+          class="checkbox checkbox-primary"
+        />
+      </label> -->
+      <div class="flex items-center mt-2 w-xs">
+        <div class="w-full">
+          <div
+            v-if="!product.purchaseSoon"  
+            v-show="product.dateRange[1] && product.dateRange[0]"
+            class="mx-auto text-sm flex justify-center items-center bg-primary bg-opacity-10 rounded-md p-1 mb-2 gap-1 px-5 cursor-pointer"
+            @click="openDateRangePicker"
+            >
+             <div class="flex flex-col">
+              <div>{{ `${$dayjs(product.dateRange[0]).format('YY.MM.DD')}` }}</div>
+              <div class="self-end">{{ `${$dayjs(product.dateRange[0]).format('HH:mm')}` }}</div>
+            </div>
+            <div class="flex flex-col">
+              <div>-</div>
+              <div class="self-end">-</div>
+            </div>
+            <div class="flex flex-col">
+              <div>{{ `${$dayjs(product.dateRange[1]).format('YY.MM.DD')}` }}</div>
+              <div class="self-start">{{ `${$dayjs(product.dateRange[1]).format('HH:mm')}` }}</div>
+            </div>
+
+          </div>
+          <div>
+            
+          </div>
+          
+          <BuyoutDateRangePicker
+            v-if="!product.purchaseSoon"
+            v-model="productDateRangeModel"
+            :start-date="startDate"
+          />
+          <button
+            v-else
+            disabled
+            :class="{
+              'btn-outline': product.dateRange[0] && product.dateRange[1],
+            }"
+            class="btn btn-primary btn-sm normal-case w-full"
+          >
+            {{
+              product.dateRange[0] && product.dateRange[1]
+                ? 'Изменить'
+                : 'Выбрать'
+            }}
+          </button>
+        </div>
+      </div>
+    </td>
+    <td class="break-all max-w-[300px] border-r border-base">
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden  justify-center"
       >
@@ -240,74 +315,19 @@ const productQuantityModel = computed({
         </button> -->
       </div>
     </td>
-    <td>
-      <label class="label cursor-pointer -ml-1 text-sm -mb-1">
-        Выкупить в ближайшее время
-        <input
-          type="checkbox"
-          v-model="product.purchaseSoon"
-          class="checkbox checkbox-primary"
-        />
-      </label>
-      <div class="flex items-center">
-        <div class="w-full">
-          <div
-            v-if="!product.purchaseSoon"  
-            v-show="product.dateRange[1] && product.dateRange[0]"
-            class="mx-auto w-fit text-sm flex flex-col justify-center items-center bg-primary bg-opacity-10 rounded-md p-1 mb-2"
-          >
-            <div>
-              {{
-                `${defaultDateShort(product.dateRange[0])} - ${defaultDateShort(
-                  product.dateRange[1]
-                )}`
-              }}
-            </div>
-          </div>
-          <div>
-            
-          </div>
-          <BuyoutDateRangePicker
-            v-if="!product.purchaseSoon"
-            v-model="productDateRangeModel"
-            :start-date="startDate"
-          />
-          <button
-            v-else
-            disabled
-            :class="{
-              'btn-outline': product.dateRange[0] && product.dateRange[1],
-            }"
-            class="btn btn-primary btn-sm normal-case w-full"
-          >
-            {{
-              product.dateRange[0] && product.dateRange[1]
-                ? 'Изменить'
-                : 'Выбрать'
-            }}
-          </button>
-        </div>
+    <td class="w-[80px] border-r border-base">
+      <div class="w-8 btn btn-ghost btn-sm btn-square text-base-content mx-auto flex justify-center items-center">
+        %
       </div>
     </td>
-    <td>
-      <div class="w-full flex items-center justify-center gap-2">
-        <div class="mb-1">
-          {{ product.rules.map((rule: Rule) => rule.id).join(', ') }}
+    <td class="border-r border-base w-[90px]">
+      <div class="flex justify-end">
+        <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="deleteBuyOut">
+          <IconCSS name="material-symbols:close" size="20" />
         </div>
-        <button
-          class="border-base-100 text-base-300"
-          @click="$emit('ruleModalOpen', index)"
-        >
-          <Icon name="mdi:settings" size="20" />
-        </button>
-      </div>
-    </td>
-    <td>
-      <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="deleteBuyOut">
-        <IconCSS name="material-symbols:close" size="20" />
-      </div>
-      <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="copyBuyout">
-        <IconCSS name="fluent:copy-20-filled" size="20" />
+        <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="copyBuyout">
+          <IconCSS name="fluent:copy-20-filled" size="20" />
+        </div>
       </div>
     </td>
   </tr>

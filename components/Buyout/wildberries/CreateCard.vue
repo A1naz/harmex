@@ -304,10 +304,10 @@ const productQuantityModel = computed({
           />
         </div>
       </div>
-      <div class="flex">
+      <!-- <div class="flex">
        <span class="text-md text-gray-500 mb-2 mr-3">Скидка: </span>
        <span class="text-md mb-2 font-bold">% </span>
-      </div>
+      </div> -->
       <!-- <div class="flex justify-between items-center">
         <span>Даты выкупов: </span>
         <div class="flex flex-col items-end">
