@@ -80,7 +80,7 @@ const productQuantityModel = computed({
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-100 shadow-lg  w-full">
+  <div class="buyout-card card bg-base-100 shadow-lg  w-full lg:max-w-[350px]">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
     >
@@ -109,38 +109,38 @@ const productQuantityModel = computed({
       <div class="flex gap-4 items-center">
         <div class="flex truncate gap-4">
           <div
-            class="flex items-center flex-none flex-0 flex-shrink-0 h-full"
+            class="flex items-center flex-none flex-0 flex-shrink-0 "
             style="max-width: 100px;"
           >
+          
             <nuxt-img
-              style="object-fit: fill"
-              class="rounded-xl"
-              width="70"
-              :src="product?.image || '/logo/logocolor.svg'"
+            class="w-8 rounded-md"
               loading="lazy"
+              fit="fill"            
+              :src="product?.image || '/logo/logocolor.svg'"
             />
           </div>
           <div class="flex flex-col truncate">
             <div class="mb-2 truncate">
-              <p class="text-xs truncate">
+              <p class="text-sm truncate">
                 {{ product.name }}
               </p>
               <a
                 :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
                 target="_blank"
-                class="text-xs text-primary link link-hover"
+                class="text-sm text-primary link link-hover"
               >
                 {{ product.article }}
               </a>
             </div>
           </div>
         </div>
-        <div class="flex gap-2 self-start">
-          <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300" @click="copyBuyout">
-            <IconCSS name="fluent:copy-20-filled" size="20" />
+        <div class="flex self-start -mt-2">
+          <div class="w-8 btn btn-ghost btn-sm btn-square text-base-content text-opacity-50 -mr-2" @click="copyBuyout">
+            <IconCSS name="material-symbols-light:content-copy" size="18" />
           </div>
-          <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300" @click="deleteBuyOut">
-            <IconCSS name="material-symbols:close" size="20" />
+          <div class="w-8 btn btn-ghost btn-sm btn-square text-base-content text-opacity-50" @click="deleteBuyOut">
+            <IconCSS name="material-symbols:close" size="18" />
           </div>
         </div>
       </div>
@@ -150,10 +150,10 @@ const productQuantityModel = computed({
             <span class="text-sm font-bold">{{ product.priceText }}</span>
         </div>
         <div class="flex flex-col">
-            <span class="text-md text-gray-500 mb-1">Количество: </span>
-            <span class="relative flex items-center flex-grow-0 w-20 ">
+            <span class="text-md text-gray-500 mb-1">Кол-во: </span>
+            <span class="relative flex items-center flex-grow-0 w-15 ">
               <div
-                class="absolute left-0 btn btn-ghost btn-sm btn-square"
+                class="absolute left-0 btn btn-ghost btn-sm btn-square bg-base-200 border-none rounded-l-xl"
                 @click="productQuantityModel--"
               >
                 <IconCSS size="16" name="ic:round-minus" />
@@ -163,10 +163,10 @@ const productQuantityModel = computed({
                 type="number"
                 min="1"
                 max="1000"
-                class="input input-bordered input-sm w-full text-center"
+                class="input border-none input-sm w-full text-center bg-base-200 rounded-xl"
               />
               <div
-                class="absolute right-0 btn btn-ghost btn-sm btn-square"
+                class="absolute right-0 btn btn-ghost btn-sm btn-square border-none bg-base-200 rounded-r-xl"
                 @click="productQuantityModel++"
               >
                 <IconCSS size="16" name="ic:round-plus" />
@@ -178,7 +178,7 @@ const productQuantityModel = computed({
             <div class="flex items-center m-1">
               <select
                 v-if="product.sizes.length"
-                class="select select-sm select-bordered w-full"
+                class="select select-sm border-none bg-base-200 w-full rounded-xl"
                 @change="onSizeChange"
               >
                 <option
@@ -196,7 +196,7 @@ const productQuantityModel = computed({
         <div class="flex flex-col">
             <span class="text-md text-gray-500 mb-1">Пол: </span>
             <select
-              class="select select-sm select-bordered w-15 appearance-none"
+              class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
               @change="onSexChange"
             >
               <option value="none">Нет</option>
@@ -218,25 +218,25 @@ const productQuantityModel = computed({
       </div> -->
       <div class="flex justify-start gap-5">
         <div class="flex flex-col">
-            <span class="text-md text-gray-500 ">Правила: </span>
+            <span class="text-md text-gray-500 mb-1">Правила: </span>
             <div class="w-full flex items-center justify-center gap-2">
-              <div class="mt-0.5">
+              <div class="text-sm">
                 {{
-                  product.rules.map((rule: any) => rule.id).join(', ')
+                  product.purchaseSoon ? '1' + (product.rules && product.rules.length ? ', ' : '') + (product.rules ? product.rules.map((rule: Rule) => rule.id + 1).join(', ') : '') : ''
                 }}
               </div>
               <button
                 class="border-base-100"
                 @click="$emit('ruleModalOpen', index)"
               >
-                <Icon name="mdi:settings" size="20" />
+              <img class="w-5 h-5" src="/icons/figma/buyouts/settings.svg" alt="settings" />
               </button>
             </div>
         </div>
         <div class="flex flex-col">
             <span class="text-md text-gray-500 mb-2">Дата выкупов: </span>
             <div>
-              <div
+              <!-- <div
                 v-if="!product.purchaseSoon"
                 v-show="product.dateRange[1] && product.dateRange[0]"
                 class="text-sm flex flex-col justify-center items-start mb-2"
@@ -248,7 +248,7 @@ const productQuantityModel = computed({
                     )}`
                   }}
                 </div>
-              </div>
+              </div> -->
 
               <BuyoutDateRangePicker
                 v-if="!product.purchaseSoon"
@@ -273,8 +273,8 @@ const productQuantityModel = computed({
         </div>
         <div class="flex flex-col">
             <span class="text-md text-gray-500 mb-2">Адрес: </span>
-            <div v-if="product.adress" class="text-xs h-10 w-full break-all">
-              <p @click="$emit('pointModalOpen', index)" class="break-all whitespace-normal cursor-pointer text-primary">
+            <div v-if="product.adress" class="text-xs h-10 w-full truncate max-w-[80px]">
+              <p @click="$emit('pointModalOpen', index)" class="truncate cursor-pointer text-primary">
                 {{ product.adress }}
               </p>
             </div>
@@ -293,7 +293,8 @@ const productQuantityModel = computed({
         </div>
       </div>
       <div>
-        <div class="w-full flex flex-col gap-2">
+        <div class="text-md text-gray-500 mb-1">Поисковые запросы: </div>
+        <div class="w-[60%] flex flex-col gap-2">
           <BuyoutWildberriesCreateSearchQueries
             :product-index="props.index"
             :article="product.article"

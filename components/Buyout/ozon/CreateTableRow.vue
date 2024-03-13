@@ -211,7 +211,9 @@ const productQuantityModel = computed({
     <td class=" border-r border-base">
       <div class="w-full flex items-center justify-center gap-2">
         <div class="my-auto">
-          {{ product.rules.map((rule: Rule) => rule.id).join(', ') }}
+          {{
+            product.purchaseSoon ? '1' + (product.rules && product.rules.length ? ', ' : '') + (product.rules ? product.rules.map((rule: Rule) => rule.id + 1).join(', ') : '') : ''
+          }}
         </div>
         <button
           class="border-base-100 text-base-300"
@@ -233,11 +235,11 @@ const productQuantityModel = computed({
       </label> -->
       <div class="flex items-center mt-2 w-xs">
         <div class="w-full">
-          <div
+          <!-- <div
             v-if="!product.purchaseSoon"  
             v-show="product.dateRange[1] && product.dateRange[0]"
             class="mx-auto text-sm flex justify-center items-center bg-primary bg-opacity-10 rounded-md p-1 mb-2 gap-1 px-5 cursor-pointer"
-            @click="openDateRangePicker"
+
             >
              <div class="flex flex-col">
               <div>{{ `${$dayjs(product.dateRange[0]).format('YY.MM.DD')}` }}</div>
@@ -252,17 +254,17 @@ const productQuantityModel = computed({
               <div class="self-start">{{ `${$dayjs(product.dateRange[1]).format('HH:mm')}` }}</div>
             </div>
 
-          </div>
-          <div>
-            
-          </div>
-          
+          </div> -->
+
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"
             :start-date="startDate"
           />
-          <button
+          <div v-else class="text-center">
+            Выкуп в ближайшее время
+          </div>
+          <!-- <button
             v-else
             disabled
             :class="{
@@ -275,15 +277,15 @@ const productQuantityModel = computed({
                 ? 'Изменить'
                 : 'Выбрать'
             }}
-          </button>
+          </button> -->
         </div>
       </div>
     </td>
-    <td class="break-all max-w-[300px] border-r border-base">
+    <td class="break-all border-r border-base">
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden  justify-center"
       >
-        <div v-if="product.adress" class="text-xs h-10 w-full break-all">
+        <div v-if="product.adress" class="text-xs h-10 w-full break-all text-center">
           <p @click="$emit('pointModalOpen', index)" class="break-all whitespace-normal cursor-pointer text-primary">
             {{ product.adress }}
           </p>
