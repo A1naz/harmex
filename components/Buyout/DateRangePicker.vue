@@ -13,7 +13,6 @@ const props = defineProps({
     required: true,
     type: Date,
   },
-
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -99,7 +98,6 @@ function selectDateInternal(date: any, selectDate: any) {
 
   selectDate(date)
 }
-
 </script>
 
 <template>
@@ -119,15 +117,8 @@ function selectDateInternal(date: any, selectDate: any) {
       select-text="Сохранить"
       @update:model-value="handleDate"
     >
-      <template #trigger >
-        <button
-          :class="{
-            'btn-outline': date[0] && date[1],
-          }"
-          class="btn btn-primary border-none bg-opacity-20 text-base-content btn-sm normal-case w-full"
-        >
-          {{ date[0] && date[1] ? 'Изменить' : 'Выбрать' }}
-        </button>
+      <template #trigger>
+        {{ defaultDateShort(date[0]) }} - {{ defaultDateShort(date[1]) }}
       </template>
       <template #action-row="{ internalModelValue, selectDate }">
         <div class="action-row flex flex-col justify-center gap-2 w-full">

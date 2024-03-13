@@ -170,7 +170,7 @@ onMounted(async () => {
             <div class="text-lg font-semibold">Пункт выдачи Wildberries</div>
             <div class="text-sm">${obj.properties.data.a}</div>
             <div class="text-sm">${obj.properties.data.w}</div>
-            <a class="selectPoint mt-4 flex justify-center btn btn-primary">Выбрать</a>
+            <a class="selectPoint mt-4 flex justify-center btn btn-primary hover:bg-primary">Выбрать</a>
           </div>
         </div>
       `,
