@@ -29,6 +29,7 @@ const BuyoutSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   place: { type: Number, required: true },
   completed: { type: Number, required: false, default: 0 },
+  discount: { type: String, required: false, default: 0 },
   data5: { type: {}, default: '' },
   data6: { type: {}, default: '' },
   data7: { type: {}, default: '' },

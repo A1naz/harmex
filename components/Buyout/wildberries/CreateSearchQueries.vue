@@ -136,7 +136,7 @@ onMounted(async () => {
           }"
           type="text"
           placeholder="Поисковый запрос"
-          class="input input-bordered input-sm w-full"
+          class="input bg-base-200 input-sm w-full rounded-xl"
           @input="onInput($event, index)"
         />
       </label>

@@ -79,6 +79,8 @@ function handleTime(
   }
 }
 function selectDateInternal(date: any, selectDate: any) {
+  if (!date || !date[0] || !date[1]) return
+
   const userOffsetMinutes = new Date().getTimezoneOffset()
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
@@ -118,7 +120,26 @@ function selectDateInternal(date: any, selectDate: any) {
       @update:model-value="handleDate"
     >
       <template #trigger>
-        {{ defaultDateShort(date[0]) }} - {{ defaultDateShort(date[1]) }}
+        <div
+          class="mx-auto text-sm flex justify-center items-center bg-primary bg-opacity-10 rounded-md p-1 mb-2 gap-1 px-5 cursor-pointer whitespace-nowrap flex-nowrap"
+        >
+          <div class="flex flex-col justify-center">
+            <div class="text-xs">
+              {{
+                `${$dayjs(date[0]).format('YY.MM.DD')} - ${$dayjs(
+                  date[1]
+                ).format('YY.MM.DD')}`
+              }}
+            </div>
+            <div class="self-center text-xs">
+              {{
+                `${$dayjs(date[0]).format('HH:mm')} - ${$dayjs(date[1]).format(
+                  'HH:mm'
+                )}`
+              }}
+            </div>
+          </div>
+        </div>
       </template>
       <template #action-row="{ internalModelValue, selectDate }">
         <div class="action-row flex flex-col justify-center gap-2 w-full">

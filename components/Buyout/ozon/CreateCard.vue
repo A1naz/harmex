@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
 const props = defineProps({
@@ -17,7 +16,6 @@ const props = defineProps({
 })
 
 function copyBuyout() {
-
   if (store.createProducts.length >= 10) {
     notify({
       title: 'За раз можно создать максимум 10 выкупов',
@@ -80,7 +78,7 @@ const productQuantityModel = computed({
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-100 shadow-lg  w-full">
+  <div class="buyout-card card bg-base-100 shadow-lg w-full lg:max-w-[350px]">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
     >
@@ -106,103 +104,110 @@ const productQuantityModel = computed({
       <!-- <div>
         <h2 class="card-title">Выкуп №{{ index + 1 }}</h2>
       </div> -->
-      <div class="flex gap-4 items-center">
+      <div class="flex gap-4 items-center justify-between">
         <div class="flex truncate gap-4">
           <div
-            class="flex items-center flex-none flex-0 flex-shrink-0 h-full"
-            style="max-width: 100px;"
+            class="flex items-center flex-none flex-0 flex-shrink-0"
+            style="max-width: 100px"
           >
             <nuxt-img
-              style="object-fit: fill"
-              class="rounded-xl"
-              width="70"
-              :src="product?.image || '/logo/logocolor.svg'"
+              class="w-8 rounded-md"
               loading="lazy"
+              fit="fill"
+              :src="product?.image || '/logo/logocolor.svg'"
             />
           </div>
           <div class="flex flex-col truncate">
             <div class="mb-2 truncate">
-              <p class="text-xs truncate">
+              <p class="text-sm truncate">
                 {{ product.name }}
               </p>
               <a
                 :href="`https://www.ozon.ru/product/${product.article}`"
                 target="_blank"
-                class="text-xs text-primary link link-hover"
+                class="text-sm text-primary link link-hover"
               >
                 {{ product.article }}
               </a>
             </div>
           </div>
         </div>
-        <div class="flex gap-2 self-start">
-          <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300" @click="copyBuyout">
-            <IconCSS name="fluent:copy-20-filled" size="20" />
+        <div class="flex self-start -mt-2">
+          <div
+            class="w-8 btn btn-ghost btn-sm btn-square text-base-content text-opacity-50 -mr-2"
+            @click="copyBuyout"
+          >
+            <IconCSS name="material-symbols-light:content-copy" size="18" />
           </div>
-          <div class="w-8 btn btn-ghost btn-sm btn-square text-base-300" @click="deleteBuyOut">
-            <IconCSS name="material-symbols:close" size="20" />
+          <div
+            class="w-8 btn btn-ghost btn-sm btn-square text-base-content text-opacity-50"
+            @click="deleteBuyOut"
+          >
+            <IconCSS name="material-symbols:close" size="18" />
           </div>
         </div>
       </div>
-      <div class="flex justify-start gap-3 md:gap-2">
+      <div
+        class="flex justify-start gap-3 md:gap-2 flex-wrap sm:flex-wrap-nowrap"
+      >
         <div class="flex flex-col">
-            <span class="text-md text-gray-500 mb-2">Цена: </span>
-            <span class="text-sm font-bold">{{ product.priceText }}</span>
+          <span class="text-md text-gray-500 mb-2">Цена: </span>
+          <span class="text-sm font-bold">{{ product.priceText }}</span>
         </div>
         <div class="flex flex-col">
-            <span class="text-md text-gray-500 mb-1">Количество: </span>
-            <span class="relative flex items-center flex-grow-0 w-20 ">
-              <div
-                class="absolute left-0 btn btn-ghost btn-sm btn-square"
-                @click="productQuantityModel--"
-              >
-                <IconCSS size="16" name="ic:round-minus" />
-              </div>
-              <input
-                v-model="productQuantityModel"
-                type="number"
-                min="1"
-                max="1000"
-                class="input input-bordered input-sm w-full text-center"
-              />
-              <div
-                class="absolute right-0 btn btn-ghost btn-sm btn-square"
-                @click="productQuantityModel++"
-              >
-                <IconCSS size="16" name="ic:round-plus" />
-              </div>
-            </span>
-        </div>
-        <div class="flex flex-col">
-            <span class="text-md text-gray-500">Размер: </span>
-            <div class="flex items-center m-1">
-              <select
-                v-if="product.sizes.length"
-                class="select select-sm select-bordered w-full"
-                @change="onSizeChange"
-              >
-                <option
-                  v-for="size in product.sizes"
-                  :key="size"
-                  :selected="product.selectedSize === size"
-                  :value="size"
-                >
-                  {{ size }}
-                </option>
-              </select>
-              <div v-else class="text-sm text-center ml-2">Нет</div>
-            </div>
-        </div>
-        <div class="flex flex-col">
-            <span class="text-md text-gray-500 mb-1">Пол: </span>
-            <select
-              class="select select-sm select-bordered w-15 appearance-none"
-              @change="onSexChange"
+          <span class="text-md text-gray-500 mb-1">Количество: </span>
+          <span class="relative flex items-center flex-grow-0 w-20">
+            <div
+              class="absolute left-0 btn btn-ghost btn-sm btn-square"
+              @click="productQuantityModel--"
             >
-              <option value="none">Нет</option>
-              <option value="male">Муж</option>
-              <option value="female">Жен</option>
+              <IconCSS size="16" name="ic:round-minus" />
+            </div>
+            <input
+              v-model="productQuantityModel"
+              type="number"
+              min="1"
+              max="1000"
+              class="input input-bordered input-sm w-full text-center"
+            />
+            <div
+              class="absolute right-0 btn btn-ghost btn-sm btn-square"
+              @click="productQuantityModel++"
+            >
+              <IconCSS size="16" name="ic:round-plus" />
+            </div>
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-md text-gray-500">Размер: </span>
+          <div class="flex items-center m-1">
+            <select
+              v-if="product.sizes.length"
+              class="select select-sm select-bordered w-full"
+              @change="onSizeChange"
+            >
+              <option
+                v-for="size in product.sizes"
+                :key="size"
+                :selected="product.selectedSize === size"
+                :value="size"
+              >
+                {{ size }}
+              </option>
             </select>
+            <div v-else class="text-sm text-center ml-2">Нет</div>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-md text-gray-500 mb-1">Пол: </span>
+          <select
+            class="select select-sm select-bordered w-15 appearance-none"
+            @change="onSexChange"
+          >
+            <option value="none">Нет</option>
+            <option value="male">Муж</option>
+            <option value="female">Жен</option>
+          </select>
         </div>
       </div>
       <!-- <div class="flex justify-between items-center">
@@ -216,27 +221,37 @@ const productQuantityModel = computed({
           <option value="female">Жен</option>
         </select>
       </div> -->
-      <div class="flex justify-start gap-5">
+      <div
+        class="flex justify-start gap-3 md:gap-2 flex-wrap sm:flex-wrap-nowrap"
+      >
         <div class="flex flex-col">
-            <span class="text-md text-gray-500 ">Правила: </span>
-            <div class="w-full flex items-center justify-center gap-2">
-              <div class="mt-0.5">
-                {{
-                  product.rules.map((rule: any) => rule.id).join(', ')
-                }}
-              </div>
-              <button
-                class="border-base-100"
-                @click="$emit('ruleModalOpen', index)"
-              >
-                <Icon name="mdi:settings" size="20" />
-              </button>
+          <span class="text-md text-gray-500 mb-1">Правила: </span>
+          <div class="w-full flex items-center justify-center gap-2">
+            <div class="text-sm">
+              {{
+                (product.purchaseSoon ? '1, ' : '') +
+                (product.rules && product.rules.length ? '' : '') +
+                (product.rules
+                  ? product.rules.map((rule: Rule) => rule.id + 1).join(', ')
+                  : '')
+              }}
             </div>
+            <button
+              class="border-base-100"
+              @click="$emit('ruleModalOpen', index)"
+            >
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/settings.svg"
+                alt="settings"
+              />
+            </button>
+          </div>
         </div>
         <div class="flex flex-col">
-            <span class="text-md text-gray-500 mb-2">Дата выкупов: </span>
-            <div>
-              <div
+          <span class="text-md text-gray-500 mb-2">Дата выкупов: </span>
+          <div>
+            <!-- <div
                 v-if="!product.purchaseSoon"
                 v-show="product.dateRange[1] && product.dateRange[0]"
                 class="text-sm flex flex-col justify-center items-start mb-2"
@@ -248,53 +263,62 @@ const productQuantityModel = computed({
                     )}`
                   }}
                 </div>
-              </div>
+              </div> -->
 
-              <BuyoutDateRangePicker
-                v-if="!product.purchaseSoon"
-                v-model="productDateRangeModel"
-                :start-date="startDate"
-              />
-              <button
-                v-else
-                disabled
-                :class="{
-                  'btn-outline': product.dateRange[0] && product.dateRange[1],
-                }"
-                class="btn btn-primary btn-sm normal-case w-full"
-              >
-                {{
-                  product.dateRange[0] && product.dateRange[1]
-                    ? 'Изменить'
-                    : 'Выбрать'
-                }}
-              </button>
-            </div>
+            <BuyoutDateRangePicker
+              v-if="!product.purchaseSoon"
+              v-model="productDateRangeModel"
+              :start-date="startDate"
+            />
+            <!-- <button
+              v-else
+              disabled
+              :class="{
+                'btn-outline': product.dateRange[0] && product.dateRange[1],
+              }"
+              class="btn btn-primary btn-sm normal-case w-full"
+            >
+              {{
+                product.dateRange[0] && product.dateRange[1]
+                  ? 'Изменить'
+                  : 'Выбрать'
+              }}
+            </button> -->
+            <div v-else class="text-center">Ближайшее время</div>
+          </div>
         </div>
         <div class="flex flex-col">
-            <span class="text-md text-gray-500 mb-2">Адрес: </span>
-            <div v-if="product.adress" class="text-xs h-10 w-full break-all">
-              <p @click="$emit('pointModalOpen', index)" class="break-all whitespace-normal cursor-pointer text-primary">
-                {{ product.adress }}
-              </p>
-            </div>
-            <button
-              v-if="!product.adress"
-              :disabled="loading"
-              :class="{
-                'btn-outline': product.adress,
-              }"
-              class="btn btn-sm normal-case rounded-full p-1"
+          <span class="text-md text-gray-500 mb-2">Адрес: </span>
+          <div
+            v-if="product.adress"
+            class="text-xs h-10 w-full truncate max-w-[80px]"
+          >
+            <p
               @click="$emit('pointModalOpen', index)"
+              class="truncate cursor-pointer text-primary"
             >
-              <span v-show="loading" class="loading loading-spinner" />
-              <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
-            </button>
+              {{ product.adress }}
+            </p>
+          </div>
+          <button
+            v-if="!product.adress"
+            :disabled="loading"
+            :class="{
+              'btn-outline': product.adress,
+            }"
+            class="btn btn-sm normal-case rounded-full p-1"
+            @click="$emit('pointModalOpen', index)"
+          >
+            <span v-show="loading" class="loading loading-spinner" />
+            <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
+          </button>
         </div>
       </div>
       <div class="flex">
-       <span class="text-md text-gray-500 mb-2 mr-3">Скидка: </span>
-       <span class="text-md mb-2 font-bold">% </span>
+        <span class="text-md text-gray-500 mr-3">Скидка: </span>
+        <div class="w-8 btn btn-ghost btn-sm btn-square text-base-content">
+          %
+        </div>
       </div>
       <!-- <div class="flex justify-between items-center">
         <span>Даты выкупов: </span>
@@ -371,7 +395,7 @@ const productQuantityModel = computed({
           />
         </div>
       </div> -->
-<!-- 
+      <!-- 
       <div class="divider" /> -->
 
       <!-- <div class="flex gap-4 items-center">

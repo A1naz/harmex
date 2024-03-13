@@ -166,12 +166,22 @@ const getStatus = computed(() => {
         >
           <li>
             <a @click="$emit('openModal', index)">
-              <Icon name="fluent:send-logging-24-filled" />Инфо о выкупе
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/info.svg"
+                alt="settings"
+              />
+              О выкупе
             </a>
           </li>
           <li>
             <a @click="cloneBuyout">
-              <Icon name="fluent:copy-24-filled" />Дублировать
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/copy.svg"
+                alt="settings"
+              />
+              Дублировать
             </a>
           </li>
           <li
@@ -182,16 +192,30 @@ const getStatus = computed(() => {
             "
           >
             <a v-if="info.status !== 'archived'" @click="archiveBuyout">
-              <Icon name="material-symbols:archive" />Архивировать
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/archive.svg"
+                alt="settings"
+              />
+              Архивировать
             </a>
             <a v-else @click="unarchiveBuyout">
-              <Icon name="material-symbols:unarchive" />Убрать из архива
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/archive.svg"
+                alt="settings"
+              />
+              Убрать из архива
             </a>
           </li>
 
           <li v-if="info.status !== 'work'">
             <a :for="`removeAllModelCreateProducts:${props.info.uuid}`">
-              <Icon name="fluent:delete-24-filled" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/delete.svg"
+                alt="settings"
+              />
               <label :for="`removeAllModelCreateProducts:${props.info.uuid}`"
                 >Удалить</label
               >
@@ -233,8 +257,7 @@ const getStatus = computed(() => {
           <div
             class="mt-2 rounded-2xl py-0 px-2 text-md"
             :class="{
-              'bg-success ':
-                (info.status === 'active' || info.status === 'work'),
+              'bg-success ': info.status === 'active' || info.status === 'work',
               'text-base-content bg-green-600 ':
                 (info.status === 'active' || info.status === 'work') &&
                 theme.value === 'dark',
@@ -245,18 +268,18 @@ const getStatus = computed(() => {
                 (info.status === 'completed' || info.status === 'nofunds') &&
                 theme.value === 'light',
               'text-base-content bg-yellow-300':
-                (info.status === 'archived' || info.status === 'paused') 
+                info.status === 'archived' || info.status === 'paused',
             }"
           >
             {{ getStatus }}
           </div>
 
           <a
-            :href="`https://www.ozon.ru/product/${info.article}`"
+            :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
             target="_blank"
             class="text-base text-primary link link-hover mt-0"
             :class="{
-              'mt-2' : width > 364
+              'mt-2': width > 364,
             }"
           >
             {{ info.article }}
@@ -288,28 +311,42 @@ const getStatus = computed(() => {
           </div>
           <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 mt-1">Цена: </span>
-              <div class="rounded-lg bg-success p-1">
+              <span class="text-sm text-gray-500 my-auto">Цена: </span>
+              <div class="rounded-md py-0 px-2 bg-success text-sm">
                 {{ info.product?.priceText }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 mt-1">Количество: </span>
-              <div class="rounded-lg p-1 bg-warning">
+              <span class="text-sm text-gray-500 my-auto">Количество: </span>
+              <div class="rounded-md py-0 px-2 bg-warning text-sm">
                 {{ info.quantity }} шт.
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 mt-1">Сумма: </span>
-              <div class="rounded-lg p-1 bg-primary bg-opacity-50">
+              <span class="text-sm text-gray-500 my-auto">Сумма: </span>
+              <div
+                class="rounded-md py-0 px-2 bg-primary bg-opacity-50 text-sm"
+              >
                 {{ currency.format(info.quantity * info.product?.price) }}
               </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-gray-500 my-auto">Скидка: </span>
+              <div
+                class="rounded-md py-0 px-2 bg-primary bg-opacity-20 text-sm"
+              >
+                {{ info.discount || '%' }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-gray-500 my-auto">Категория: </span>
+              <div class="bg-base-300 rounded-md py-0 px-2 text-sm">Ozon</div>
             </div>
           </div>
         </div>
       </div>
       <button
-        class="btn mt-2 bg-indigo-400 border-indigo-400 btn-primary"
+        class="btn mt-2 text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 btn-primary"
         @click="$emit('openModal', index)"
       >
         Открыть

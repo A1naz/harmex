@@ -187,7 +187,7 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
     }
-    if (!item.searchQuery[0]) {
+    if (!item.searchQuery[0].value) {
       valid = false
       errorMsg = 'Не у всех товаров указан поисковый запрос'
     }
@@ -570,11 +570,25 @@ function closeTemplateModalFN() {
             Выберите нужные правила для этого выкупа
           </h3>
           <div v-for="rule of defaultRules" :key="rule.id" class="">
-            <div class="label cursor-pointer flex gap-4 items-start justify-around">
+            <div v-if="rule.id === 1" class="label cursor-pointer flex gap-4 items-start justify-between">
               <span class="label-text"
-                >{{ rule.id }}. {{ rule.description }}</span
+                >{{ 1 }}. {{ 'Выкупить товар(-ы) прямо сейчас ' }}</span
               >
-              <div class="bg-accent cursor-default rounded-full px-4">0р.</div>
+              <div class="flex gap-4">
+                <div class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4">0р.</div>
+                <input
+                  type="checkbox"
+                  v-model="products[selectedRuleProductIndex].purchaseSoon"
+                  class="checkbox checkbox-primary border-base-content"
+                />
+              </div>
+            </div>
+            <div class="label cursor-pointer flex gap-4 items-start justify-around">
+              
+              <span class="label-text"
+                >{{ rule.id + 1 }}. {{ rule.description }}</span
+              >
+              <div class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4">0р.</div>
               <input
                 :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
@@ -586,7 +600,7 @@ function closeTemplateModalFN() {
                   )
                 "
                 type="checkbox"
-                class="checkbox checkbox-primary"
+                class="checkbox checkbox-primary border-base-content"
                 :checked="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) => item.id === rule.id

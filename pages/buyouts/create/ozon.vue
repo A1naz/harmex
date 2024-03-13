@@ -105,6 +105,7 @@ function onSexChange(event: Event, index: number) {
   store.changeSex(target.value, index)
 }
 
+
 function onRuleChange(event: Event, index: number, rule: number) {
   const target = event.target as HTMLInputElement
   store.changeRule(target.checked, index, rule)
@@ -187,7 +188,7 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
     }
-    if (!item.searchQuery[0]) {
+    if (!item.searchQuery[0].value) {
       valid = false
       errorMsg = 'Не у всех товаров указан поисковый запрос'
     }
@@ -570,22 +571,37 @@ function closeTemplateModalFN() {
         for="ruleModal"
         class="modal modal-open modal-bottom sm:modal-middle"
       >
+      
         <label for="" class="modal-box relative">
           <label
             for="ruleModal"
-            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            class="btn btn-sm btn-circle btn-ghost absolute right-6 top-2"
             @click="ruleModal = false"
             >✕</label
           >
           <h3 class="font-bold text-lg mb-2">
             Выберите нужные правила для этого выкупа
           </h3>
+
           <div v-for="rule of defaultRules" :key="rule.id" class="">
+            <div v-if="rule.id === 1" class="label cursor-pointer flex gap-4 items-start justify-between">
+              <span class="label-text"
+                >{{ 1 }}. {{ 'Выкупить товар(-ы) прямо сейчас ' }}</span
+              >
+              <div class="flex gap-4">
+                <div class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4">0р.</div>
+                <input
+                  type="checkbox"
+                  v-model="products[selectedRuleProductIndex].purchaseSoon"
+                  class="checkbox checkbox-primary border-base-content"
+                />
+              </div>
+            </div>
             <div class="label cursor-pointer flex gap-4 items-start justify-around">
               <span class="label-text"
-                >{{ rule.id }}. {{ rule.description }}</span
+                >{{ rule.id + 1 }}. {{ rule.description }}</span
               >
-              <div class="bg-accent cursor-default rounded-full px-4">0р.</div>
+              <div class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4">0р.</div>
               <input
                 :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
@@ -597,7 +613,7 @@ function closeTemplateModalFN() {
                   )
                 "
                 type="checkbox"
-                class="checkbox checkbox-primary"
+                class="checkbox checkbox-primary border-base-content"
                 :checked="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) => item.id === rule.id
