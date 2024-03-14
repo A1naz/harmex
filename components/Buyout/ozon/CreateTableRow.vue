@@ -12,6 +12,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  openDiscount: {
+    type: Function,
+    required: true,
+  },
   loading: {
     type: Boolean,
     required: true,
@@ -24,7 +28,7 @@ const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
 const store = useOzonBuyoutStore()
 
-const dateRangePicker = ref()
+
 
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
@@ -81,6 +85,9 @@ const productQuantityModel = computed({
     store.changeQuantity(newValue, props.index)
   },
 })
+
+
+
 </script>
 
 <template>
@@ -324,11 +331,12 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td class="w-[80px] border-r border-base">
-      <div
-        class="w-8 btn btn-ghost btn-sm btn-square text-base-content mx-auto flex justify-center items-center"
+      <button
+        class="w-8 btn btn-ghost btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary"
+        @click="props.openDiscount(index)"
       >
-        %
-      </div>
+        {{ !product.discount ? "%" : product.discount === 0 ? "%" : (product.discount+'%') }}
+      </button>
     </td>
     <td class="border-r border-base w-[90px]">
       <div class="flex justify-end">
@@ -347,6 +355,7 @@ const productQuantityModel = computed({
       </div>
     </td>
   </tr>
+  
 </template>
 
 <style scoped></style>

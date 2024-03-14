@@ -9,6 +9,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  openDiscount: {
+    type: Function,
+    required: true,
+  },
   loading: {
     type: Boolean,
     required: true,
@@ -284,7 +288,7 @@ const productQuantityModel = computed({
                   : 'Выбрать'
               }}
             </button> -->
-            <div v-else class="text-center">Ближайшее время</div>
+            <div v-else class="text-center text-xs">Ближайшее время</div>
           </div>
         </div>
         <div class="flex flex-col">
@@ -315,10 +319,13 @@ const productQuantityModel = computed({
         </div>
       </div>
       <div class="flex">
-        <span class="text-md text-gray-500 mr-3">Скидка: </span>
-        <div class="w-8 btn btn-ghost btn-sm btn-square text-base-content">
-          %
-        </div>
+        <span class="text-md text-gray-500 mr-3 my-auto">Скидка: </span>
+        <button
+          class="w-8 btn btn-ghost btn-sm btn-square text-base-content font-normal hover:text-primary"
+          @click="props.openDiscount(index)"
+        >
+        {{ !product.discount ? "%" : product.discount === 0 ? "%" : (product.discount+'%') }}
+      </button>
       </div>
       <!-- <div class="flex justify-between items-center">
         <span>Даты выкупов: </span>

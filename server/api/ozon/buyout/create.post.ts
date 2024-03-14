@@ -25,6 +25,7 @@ interface Item {
     lat: number
     lon: number
   }
+  discount: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -107,6 +108,7 @@ export default eventHandler(async (event) => {
         image: product.image,
       },
       uuid: uuid(),
+      discount: product.discount || '0',
       place: last ? last.place + 1 : 1,
     })
 
