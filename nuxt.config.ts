@@ -171,6 +171,7 @@ export default defineNuxtConfig({
       trailingSlash: true,
       BOT_LOGIN: process.env.BOT_LOGIN,
       DOMAIN_API_IMAGES_URL: process.env.DOMAIN_API_IMAGES_URL,
+      YANDEX_MAPS_API_KEY: process.env.YANDEX_MAPS_API_KEY,
     },
     VK_ACCESS_KEY: process.env.VK_ACCESS_KEY,
     VK_SECRET_KEY: process.env.VK_SECRET_KEY,
