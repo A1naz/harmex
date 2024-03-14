@@ -27,6 +27,7 @@ let isUserWarned: any = ref(false)
 onMounted(() => {
   isUserWarned.value =
     localStorage.getItem('isUserWarned') === 'true' ? true : false
+    if(products.value.length === 0) modalShow.value = true
 })
 
 const isWarningChecked = ref(false)
@@ -43,6 +44,7 @@ const route = useRoute()
 const article = ref<string>()
 const discountModal = ref(false)
 const currentProductIndex = ref(0)
+const modalShow = ref(false)
 
 const products = computed(() => store.createProducts)
 // products.value.forEach((product: any, i: number) => {
@@ -346,6 +348,10 @@ function closeTemplateModalFN() {
 function openDiscount(productIndex : number) {
   currentProductIndex.value = productIndex
   discountModal.value = true
+}
+function modalAddProduct(changedArticle: any){
+  article.value = changedArticle
+  addProduct()
 }
 </script>
 
@@ -867,6 +873,11 @@ function openDiscount(productIndex : number) {
     :show="discountModal"
     :index="currentProductIndex"
     @close-modal="discountModal = false" 
+  />
+  <BuyoutOzonCreateModal
+    :show="modalShow"
+    :add-product="modalAddProduct"
+    @close-modal="modalShow = false" 
   />
 </template>
 

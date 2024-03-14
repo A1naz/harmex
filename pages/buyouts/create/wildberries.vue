@@ -17,6 +17,7 @@ const loadingTemplates = ref(false)
 const openAll = ref(false)
 const templateTitle = ref('')
 const templates = ref<any>([])
+const modalShow = ref(false)
 
 definePageMeta({
   layout: 'app',
@@ -27,6 +28,7 @@ let isUserWarned: any = ref(false)
 onMounted(() => {
   isUserWarned.value =
     localStorage.getItem('isUserWarned') === 'true' ? true : false
+  if(products.value.length === 0) modalShow.value = true
 })
 
 const isWarningChecked = ref(false)
@@ -337,6 +339,10 @@ function deleteTemplate(uuid: any) {
 
 function closeTemplateModalFN() {
   closeTemplateSelectModal.value?.click()
+}
+function modalAddProduct(changedArticle: any){
+  article.value = changedArticle
+  addProduct()
 }
 </script>
 
@@ -823,6 +829,11 @@ function closeTemplateModalFN() {
       </div>
     </div>
   </div>
+  <BuyoutWildberriesCreateModal
+    :show="modalShow"
+    :add-product="modalAddProduct"
+    @close-modal="modalShow = false" 
+  />
 </template>
 
 <style scoped>
