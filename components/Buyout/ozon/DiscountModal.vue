@@ -3,7 +3,7 @@ import { useNotification } from '@kyvg/vue3-notification'
 import { notify } from '@kyvg/vue3-notification'
 
 const props = defineProps({
-  show: { type: Boolean, },
+  show: { type: Boolean },
   index: {
     type: Number,
     required: true,
@@ -21,27 +21,32 @@ const emit = defineEmits(['closeModal'])
 
 const productDiscountModel = computed({
   get() {
-    return products.value[props.index].discount
+    return products.value.length ? products.value[props.index]?.discount : 0
   },
   set(newValue: number) {
     store.changeDiscount(newValue, props.index)
-    
   },
 })
 
-const discount = computed(() => products.value[props.index].discount || 0)
+const discount = computed(() =>
+  products.value.length ? products.value[props.index]?.discount || 0 : 0
+)
 
-const discountValue = ref(discount.value);
+const discountValue = ref(discount.value)
 
-function saveDiscountValue(){
-  if(discountValue.value < 0 || discountValue.value >= 100 || !discountValue.value) {
+function saveDiscountValue() {
+  if (
+    discountValue.value < 0 ||
+    discountValue.value >= 100 ||
+    !discountValue.value
+  ) {
     notify({
       title: 'Скидка не должна быть отрицательной или больше 100',
     })
     return
   }
   productDiscountModel.value = discountValue.value
-  console.log('save',products.value[props.index].discount)
+  console.log('save', products.value[props.index].discount)
   emit('closeModal')
 }
 
@@ -73,24 +78,29 @@ onKeyStroke('Escape', (e) => {
       </div>
       <div class="bg-base-100 rounded-lg">
         <div class="w-full flex flex-col justify-center items-center">
-          <input type="number" v-model="discountValue" class="input input-sm lg:input-md w-full bg-base-300 bg-opacity-30 placeholder:text-base-content placeholder:text-opacity-50 text-gray-600 mt-2" placeholder="Скидка" />
+          <input
+            type="number"
+            v-model="discountValue"
+            class="input input-sm lg:input-md w-full bg-base-300 bg-opacity-30 placeholder:text-base-content placeholder:text-opacity-50 text-gray-600 mt-2"
+            placeholder="Скидка"
+          />
         </div>
-       <div class="flex gap-2">
-        <button
-          id="btnid"
-          class="btn btn-sm h-[2.5rem] btn-primary w-[49%] border-none bg-opacity-0 text-base-content mt-2"
-          @click="$emit('closeModal')"
-        >
-          Отмена
-        </button>
-        <button
-          id="btnid"
-          class="btn btn-sm h-[2.5rem] btn-primary w-[49%] border-none bg-opacity-10 text-base-content mt-2"
-          @click="saveDiscountValue"
-        >
-          Сохранить
-        </button>
-       </div>
+        <div class="flex gap-2">
+          <button
+            id="btnid"
+            class="btn btn-sm h-[2.5rem] btn-primary w-[49%] border-none bg-opacity-0 text-base-content mt-2"
+            @click="$emit('closeModal')"
+          >
+            Отмена
+          </button>
+          <button
+            id="btnid"
+            class="btn btn-sm h-[2.5rem] btn-primary w-[49%] border-none bg-opacity-10 text-base-content mt-2"
+            @click="saveDiscountValue"
+          >
+            Сохранить
+          </button>
+        </div>
         <!-- <div v-else class="w-full flex justify-center items-center">
           <span class="loading loading-dots loading-lg text-primary"></span>
         </div> -->

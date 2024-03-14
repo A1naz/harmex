@@ -8,6 +8,7 @@ export interface SearchQuery {
 }
 export interface Item {
   image: string
+  discount: number
   name: string
   article: number
   price: number
@@ -17,9 +18,8 @@ export interface Item {
   sex: string
   searchQuery: SearchQuery[]
   adress: string
-  pointCoordinates: { lat: number, lon: number }
+  pointCoordinates: { lat: number; lon: number }
   dateRange: [Date | null, Date | null]
   selectedSize: number | string
   rules: Rule[]
-  
 }
