@@ -23,7 +23,7 @@ export default eventHandler(async (event) => {
   found.status = 'active'
   await found.save()
 
-  const cached = fs.readFileSync('points.json', 'utf8')
+  const cached = fs.readFileSync('pvz/wildberriesPoints.json', 'utf8')
   const parsed = JSON.parse(cached)
 
   const isPVZExist = parsed.points.findIndex((el: any) => el.a == found.point)

@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     head: {
       viewport: 'width=device-width,initial-scale=1',
       title:
-        'Сервис самовыкупов OZON - Максимизируйте продвижение на OZON с OZONMP',
+        'Сервис самовыкупов MARKETMONSTR - Максимизируйте продвижение на МП',
       link: [{ rel: 'icon', href: '/favicon.png' }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -171,6 +171,7 @@ export default defineNuxtConfig({
       trailingSlash: true,
       BOT_LOGIN: process.env.BOT_LOGIN,
       DOMAIN_API_IMAGES_URL: process.env.DOMAIN_API_IMAGES_URL,
+      YANDEX_MAPS_API_KEY: process.env.YANDEX_MAPS_API_KEY,
     },
     VK_ACCESS_KEY: process.env.VK_ACCESS_KEY,
     VK_SECRET_KEY: process.env.VK_SECRET_KEY,
