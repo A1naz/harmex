@@ -56,7 +56,7 @@ async function login() {
       alertText.value = 'Аккаунт заблокирован'
       alertType.value = 'warning'
     } else {
-      alertText.value = 'Неверный email или пароль'
+      alertText.value = 'Неверный номер телефона или пароль'
     }
     alert.value = true
     setTimeout(() => {

@@ -1,9 +1,10 @@
 import { ProductLike } from '~~/server/lib/models/ProductLike'
+import { ConfirmInn } from '~/server/lib/models/ConfirmInn'
 const config = useRuntimeConfig()
 const organizationKey = config.ORGANIZATION_KEY
 
 export default eventHandler(async (event) => {
-  const { inn }: any = getQuery(event)
+  const { inn, phoneNumber }: any = getQuery(event)
 
   if (inn.length < 10) {
     throw createError({
@@ -12,12 +13,42 @@ export default eventHandler(async (event) => {
     })
   }
 
+  const confirm = await ConfirmInn.findOne({
+    $or: [{ inn }, { phone: phoneNumber }],
+  })
+
+  if (confirm) {
+    const lastDate = new Date(confirm.date)
+    const currentDate = new Date()
+    const difference = Math.abs(currentDate.getTime() - lastDate.getTime())
+
+    if (difference < 60000) {
+      return {
+        status: 'error',
+        error: 'С прошлого поиска прошло меньше минуты',
+      }
+    }
+
+    confirm.date = new Date()
+    await confirm.save()
+    
+  } else {
+    const newConfirm = new ConfirmInn({
+      inn,
+      phone: phoneNumber,
+      date: new Date(),
+    })
+
+    await newConfirm.save()
+  }
+  
+  // @ts-ignore
   const rawData: any = await $fetch(
     `https://app.marketmonstr.pro/api/organization/getData?inn=${inn}`
   )
 
   const data = rawData.data
-  
+
   if (!data || !data.items || !data.items.length) {
     throw createError({
       statusCode: 404,
@@ -27,8 +58,11 @@ export default eventHandler(async (event) => {
 
   const orgKey = data.items[0]['ИП'] ? 'ИП' : 'ООО'
   const key = data.items[0]['ИП'] ? 'ИП' : 'ЮЛ'
-  const orgInn =  orgKey === 'ИП' ? data.items[0][`${key}`]['ИННФЛ'] : data.items[0][`${key}`]['ИНН'] || ''
-  
+  const orgInn =
+    orgKey === 'ИП'
+      ? data.items[0][`${key}`]['ИННФЛ']
+      : data.items[0][`${key}`]['ИНН'] || ''
+
   if (orgInn !== inn) {
     throw createError({
       statusCode: 404,
@@ -47,8 +81,14 @@ export default eventHandler(async (event) => {
     orgKey === 'ИП'
       ? data.items[0][`${key}`]['ФИОПолн'].split(' ')[2] || ''
       : ''
-  const orgOgrn =    orgKey === 'ИП' ?  data.items[0][`${key}`]['ОГРНИП'] : data.items[0][`${key}`]['ОГРН'] || ''
-  const orgName = orgKey === 'ООО' ? data.items[0][`${key}`]['НаимПолнЮЛ'] : `ИП ${lastname} ${name}`
+  const orgOgrn =
+    orgKey === 'ИП'
+      ? data.items[0][`${key}`]['ОГРНИП']
+      : data.items[0][`${key}`]['ОГРН'] || ''
+  const orgName =
+    orgKey === 'ООО'
+      ? data.items[0][`${key}`]['НаимПолнЮЛ']
+      : `ИП ${lastname} ${name}`
   console.log(
     'ИМЯ',
     name,

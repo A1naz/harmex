@@ -154,12 +154,11 @@ async function checkInn() {
     method: 'GET',
     query: {
       inn: formData.orgInn,
+      phoneNumber: formData.phoneNumber.replace(/[\(\)\-\s]/g, ''),
     },
   })
 
   if (error.value) {
-    console.log(error.value.statusMessage)
-
     notify({
       title: 'Что-то пошло не так',
       text: 'Данные не получены',
@@ -167,6 +166,15 @@ async function checkInn() {
   }
 
   if (data.value) {
+    if (data.value.status === 'error') {
+      notify({
+        title: 'Что-то пошло не так',
+        text: data.value.error,
+      })
+      isInnLoading.value = false
+      return
+    }
+
     isInnConfirmed.value = true
     formData.orgKey = data.value.orgKey
     formData.orgName = data.value.orgName
@@ -264,13 +272,77 @@ async function confirmCode() {
       <div class="px-5 pb-2">
         <div class="relative">
           <div>
+            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+              Номер телефона
+            </label>
+            <div class="join w-full">
+              <input
+                :disabled="isCodeSent || isNumberConfirmed"
+                id="tnumber"
+                v-model="formData.phoneNumber"
+                name="tnumber"
+                class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                v-maska
+                data-maska="+7 (###) ###-##-##"
+                placeholder="+7 (___) ___-__-__"
+                required="true"
+                @keydown.enter="sendConfirmCode"
+              />
+              <button
+                v-if="!isCodeSent"
+                :disabled="isNumberConfirmed"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                @click="sendConfirmCode"
+              >
+                Подтвердить
+              </button>
+              <button
+                v-else
+                :disabled="isNumberConfirmed"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                @click=";(isCodeSent = false), (isNumberConfirmed = false)"
+              >
+                <IconCSS
+                  class="w-12 h-12"
+                  size="20"
+                  name="fluent:backspace-24-regular"
+                />
+              </button>
+            </div>
+            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+              Код верификации с звонка
+            </label>
+            <div class="join w-full">
+              <input
+                ref="confirmationCodeInput"
+                :disabled="isNumberConfirmed || !isCodeSent"
+                id="verificationCode"
+                v-model="formData.verificationCode"
+                type="text"
+                v-maska
+                data-maska="###"
+                name="verificationCode"
+                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder=""
+                required="true"
+                @keydown.enter="confirmCode"
+              />
+              <button
+                :disabled="!isCodeSent || isNumberConfirmed"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                @click="confirmCode"
+              >
+                <IconCSS size="20" name="mdi:check" />
+              </button>
+            </div>
+
             <label class="block ml-1 my-1 text-sm font-medium">
               ИНН организации
             </label>
             <div class="join w-full">
               <input
                 id="orgInn"
-                :disabled="isInnConfirmed"
+                :disabled="isInnConfirmed || !isNumberConfirmed"
                 v-model="formData.orgInn"
                 v-maska
                 data-maska="#######################"
@@ -280,7 +352,7 @@ async function confirmCode() {
                 required="true"
               />
               <button
-                :disabled="isInnLoading"
+                :disabled="isInnLoading || !isNumberConfirmed"
                 v-if="!isInnConfirmed"
                 class="btn btn-sm xl:btn-md join-item rounded-r-full"
                 @click="checkInn"
@@ -376,67 +448,6 @@ async function confirmCode() {
               placeholder="Петрович"
               required="true"
             />
-            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-              Номер телефона
-            </label>
-            <div class="join w-full">
-              <input
-                :disabled="!isInnConfirmed || isCodeSent || isNumberConfirmed"
-                id="tnumber"
-                v-model="formData.phoneNumber"
-                name="tnumber"
-                class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                v-maska
-                data-maska="+7 (###) ###-##-##"
-                placeholder="+7 (___) ___-__-__"
-                required="true"
-                @keydown.enter="sendConfirmCode"
-              />
-              <button
-                v-if="!isCodeSent"
-                :disabled="isNumberConfirmed"
-                class="btn btn-sm xl:btn-md join-item rounded-r-full"
-                @click="sendConfirmCode"
-              >
-                Подтвердить
-              </button>
-              <button
-                v-else
-                :disabled="isNumberConfirmed"
-                class="btn btn-sm xl:btn-md join-item rounded-r-full"
-                @click=";(isCodeSent = false), (isNumberConfirmed = false)"
-              >
-                <IconCSS
-                  class="w-12 h-12"
-                  size="20"
-                  name="fluent:backspace-24-regular"
-                />
-              </button>
-            </div>
-            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-              Код верификации с звонка
-            </label>
-            <div class="join w-full">
-              <input
-                ref="confirmationCodeInput"
-                :disabled="isNumberConfirmed || !isInnConfirmed"
-                id="verificationCode"
-                v-model="formData.verificationCode"
-                type="number"
-                name="verificationCode"
-                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder=""
-                required="true"
-                @keydown.enter="confirmCode"
-              />
-              <button
-                :disabled="!isCodeSent || isNumberConfirmed"
-                class="btn btn-sm xl:btn-md join-item rounded-r-full"
-                @click="confirmCode"
-              >
-                <IconCSS size="20" name="mdi:check" />
-              </button>
-            </div>
 
             <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
               Email
