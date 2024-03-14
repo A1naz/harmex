@@ -3,6 +3,7 @@ import { loadYmap } from 'vue-yandex-maps'
 import { notify } from '@kyvg/vue3-notification'
 
 const { height } = useWindowSize()
+const config = useRuntimeConfig()
 
 const props = defineProps({
   pickpoints: {
@@ -64,7 +65,7 @@ const originalBounds = ref([
 ])
 
 const settings = {
-  apiKey: '42f2d2d0-5650-479c-aca7-52277719fb42', // Индивидуальный ключ API
+  apiKey: config.public.YANDEX_MAPS_API_KEY || '', // Индивидуальный ключ API
   lang: 'ru_RU', // Используемый язык
   coordorder: 'latlong', // Порядок задания географических координат
   debug: false, // Режим отладки
