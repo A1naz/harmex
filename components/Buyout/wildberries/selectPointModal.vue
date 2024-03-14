@@ -64,7 +64,7 @@ const originalBounds = ref([
 ])
 
 const settings = {
-  apiKey: '42f2d2d0-5650-479c-aca7-52277719fb42', // Индивидуальный ключ API
+  apiKey: '1b7b34a3-46af-4a79-bd7e-29e78c71710d', // Индивидуальный ключ API
   lang: 'ru_RU', // Используемый язык
   coordorder: 'latlong', // Порядок задания географических координат
   debug: false, // Режим отладки
