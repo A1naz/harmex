@@ -165,7 +165,7 @@ const getStatus = computed(() => {
           class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
         >
           <li>
-            <a @click="$emit('openModal', index)">
+            <a @click="$emit('openLogModal', index)">
               <img class="w-5 h-5" src="/icons/figma/buyouts/info.svg" alt="settings" />
               О выкупе
             </a>
