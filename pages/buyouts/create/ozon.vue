@@ -105,7 +105,6 @@ function onSexChange(event: Event, index: number) {
   store.changeSex(target.value, index)
 }
 
-
 function onRuleChange(event: Event, index: number, rule: number) {
   const target = event.target as HTMLInputElement
   store.changeRule(target.checked, index, rule)
@@ -188,10 +187,10 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
     }
-    if (!item.searchQuery[0].value) {
-      valid = false
-      errorMsg = 'Не у всех товаров указан поисковый запрос'
-    }
+    //if (!item.searchQuery[0].value) {
+    //valid = false
+    //  errorMsg = 'Не у всех товаров указан поисковый запрос'
+    //  }
     if (!item.selectedSize) item.selectedSize = 'none'
   })
   if (!valid) {
@@ -300,13 +299,16 @@ const isCreatingTemplatesDisabled = ref(false)
 async function createTemplate() {
   isCreatingTemplatesDisabled.value = true
 
-  const { data, error } = await useFetch('/api/ozon/buyout/createBuyoutTemplate', {
-    method: 'POST',
-    query: {
-      title: templateTitle,
-    },
-    body: products.value,
-  })
+  const { data, error } = await useFetch(
+    '/api/ozon/buyout/createBuyoutTemplate',
+    {
+      method: 'POST',
+      query: {
+        title: templateTitle,
+      },
+      body: products.value,
+    }
+  )
 
   if (data.value) {
     store.createProducts = []
@@ -348,7 +350,7 @@ function closeTemplateModalFN() {
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
       данные.
     </p> -->
-    <div class="flex flex-col  md:flex-row md:justify-between">
+    <div class="flex flex-col md:flex-row md:justify-between">
       <div class="mt-6 md:flex items-center gap-2.5 w-full">
         <div
           class="relative flex justify-end items-center flex-grow-0 md:w-80 gap-2.5 w-full"
@@ -361,7 +363,10 @@ function closeTemplateModalFN() {
           />
         </div>
         <div class="flex gap-2.5">
-          <button class="btn btn-primary btn-sm normal-case bg-opacity-20 border-none text-base-content" @click="addProduct">
+          <button
+            class="btn btn-primary btn-sm normal-case bg-opacity-20 border-none text-base-content"
+            @click="addProduct"
+          >
             Добавить
           </button>
           <label
@@ -377,15 +382,14 @@ function closeTemplateModalFN() {
             >Удалить все</label
           >
         </div>
-        
       </div>
       <div class="flex self-end">
         <label
-            v-if="store.createProducts.length > 0"
-            class="btn btn-sm text-red-400 bg-base-200 normal-case self-end hidden md:flex"
-            for="removeAllModelCreateProducts"
-            >Удалить все</label
-          >
+          v-if="store.createProducts.length > 0"
+          class="btn btn-sm text-red-400 bg-base-200 normal-case self-end hidden md:flex"
+          for="removeAllModelCreateProducts"
+          >Удалить все</label
+        >
         <!-- <label
         v-if="store.createProducts.length > 0"
         class="btn btn-sm btn-error bg-red-400 normal-case mt-6 mr-2 hidden md:flex"
@@ -395,18 +399,17 @@ function closeTemplateModalFN() {
       </div>
     </div>
     <div class="flex gap-2 mt-4">
-        <div class="text-sm">
-          <span class="text-gray-500">Товаров: </span>
-          <span >{{ totalQuantity }} шт.</span>
-        </div>
-        <div class="text-sm">
-          <span class="text-gray-500">Сумма: </span>
-          <span >{{ currency.format(totalSum) }}</span>
-        </div>
+      <div class="text-sm">
+        <span class="text-gray-500">Товаров: </span>
+        <span>{{ totalQuantity }} шт.</span>
       </div>
+      <div class="text-sm">
+        <span class="text-gray-500">Сумма: </span>
+        <span>{{ currency.format(totalSum) }}</span>
+      </div>
+    </div>
 
     <ClientOnly>
-
       <div
         v-if="width < 1600"
         class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-4"
@@ -427,9 +430,12 @@ function closeTemplateModalFN() {
       >
         <table class="table table-xs w-full mt-4">
           <thead class="relative mb-2 text-sm text-base-content">
-            <tr class="bg-primary bg-opacity-10 ">
+            <tr class="bg-primary bg-opacity-10">
               <!-- <th class="hidden 3xl:block">№</th> -->
-              <th class="w-12 text-center p-2 font-normal" @click="openInfoModal('picture')" >
+              <th
+                class="w-12 text-center p-2 font-normal"
+                @click="openInfoModal('picture')"
+              >
                 <!-- <IconCSS name="material-symbols:image-outline" size="20" /> -->
                 Фото
               </th>
@@ -443,7 +449,7 @@ function closeTemplateModalFN() {
               <th @click="openInfoModal('quantity')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center text-center"> -->
                 <div class="text-center">
-                  <span > Кол-во </span>
+                  <span> Кол-во </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
@@ -481,8 +487,8 @@ function closeTemplateModalFN() {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              
-              <th class="min-w-40 font-normal" @click="openInfoModal('adress')" >
+
+              <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
                   <span> Адрес </span>
@@ -533,7 +539,7 @@ function closeTemplateModalFN() {
     </ClientOnly>
     <div
       v-show="products.length"
-      class="mt-6 md:flex justify-start lg:justify-end "
+      class="mt-6 md:flex justify-start lg:justify-end"
     >
       <div class="m-5">
         <!-- <label
@@ -571,7 +577,6 @@ function closeTemplateModalFN() {
         for="ruleModal"
         class="modal modal-open modal-bottom sm:modal-middle"
       >
-      
         <label for="" class="modal-box relative">
           <label
             for="ruleModal"
@@ -584,12 +589,19 @@ function closeTemplateModalFN() {
           </h3>
 
           <div v-for="rule of defaultRules" :key="rule.id" class="">
-            <div v-if="rule.id === 1" class="label cursor-pointer flex gap-4 items-start justify-between">
+            <div
+              v-if="rule.id === 1"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
+            >
               <span class="label-text"
                 >{{ 1 }}. {{ 'Выкупить товар(-ы) прямо сейчас ' }}</span
               >
               <div class="flex gap-4">
-                <div class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4">0р.</div>
+                <div
+                  class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
+                >
+                  0р.
+                </div>
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].purchaseSoon"
@@ -597,11 +609,17 @@ function closeTemplateModalFN() {
                 />
               </div>
             </div>
-            <div class="label cursor-pointer flex gap-4 items-start justify-around">
+            <div
+              class="label cursor-pointer flex gap-4 items-start justify-around"
+            >
               <span class="label-text"
                 >{{ rule.id + 1 }}. {{ rule.description }}</span
               >
-              <div class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4">0р.</div>
+              <div
+                class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
+              >
+                0р.
+              </div>
               <input
                 :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
@@ -624,7 +642,6 @@ function closeTemplateModalFN() {
                 "
               />
             </div>
-            
           </div>
         </label>
       </label>
@@ -822,7 +839,9 @@ function closeTemplateModalFN() {
   />
   <div class="modal backdrop-filter backdrop-blur-sm">
     <div class="modal-box max-w-xs">
-      <h3 class="font-bold text-md">Вы уверенны что хотите удалить все товары?</h3>
+      <h3 class="font-bold text-md">
+        Вы уверенны что хотите удалить все товары?
+      </h3>
       <div class="modal-action flex justify-around">
         <label for="removeAllModelCreateProducts" class="btn px-6"
           >Отмена</label
