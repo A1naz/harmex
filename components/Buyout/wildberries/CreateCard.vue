@@ -280,7 +280,7 @@ const productQuantityModel = computed({
                   : 'Выбрать'
               }}
             </button> -->
-            <div v-else class="text-center">
+            <div v-else class="text-center text-xs">
                 Ближайшее время
               </div>
           </div>

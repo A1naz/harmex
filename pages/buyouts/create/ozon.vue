@@ -41,6 +41,8 @@ const infoType = ref('')
 const defaultRules: Rule[] = rules
 const route = useRoute()
 const article = ref<string>()
+const discountModal = ref(false)
+const currentProductIndex = ref(0)
 
 const products = computed(() => store.createProducts)
 // products.value.forEach((product: any, i: number) => {
@@ -187,10 +189,10 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
     }
-    //if (!item.searchQuery[0].value) {
-    //valid = false
-    //  errorMsg = 'Не у всех товаров указан поисковый запрос'
-    //  }
+    // if (!item.searchQuery[0].value) {
+    //   valid = false
+    //   errorMsg = 'Не у всех товаров указан поисковый запрос'
+    // }
     if (!item.selectedSize) item.selectedSize = 'none'
   })
   if (!valid) {
@@ -341,6 +343,10 @@ function deleteTemplate(uuid: any) {
 function closeTemplateModalFN() {
   closeTemplateSelectModal.value?.click()
 }
+function openDiscount(productIndex : number) {
+  currentProductIndex.value = productIndex
+  discountModal.value = true
+}
 </script>
 
 <template>
@@ -420,6 +426,7 @@ function closeTemplateModalFN() {
           :loading="!pickpoints?.length"
           :product="product"
           :index="index"
+          :open-discount="openDiscount"
           @point-modal-open="pointModalOpen"
           @rule-modal-open="ruleModalOpen"
         />
@@ -522,6 +529,7 @@ function closeTemplateModalFN() {
               :key="index"
               :product="product"
               :index="index"
+              :open-discount="openDiscount"
               :loading="!pickpoints?.length"
               @rule-modal-open="ruleModalOpen"
               @point-modal-open="pointModalOpen"
@@ -855,6 +863,11 @@ function closeTemplateModalFN() {
       </div>
     </div>
   </div>
+  <BuyoutOzonDiscountModal
+    :show="discountModal"
+    :index="currentProductIndex"
+    @close-modal="discountModal = false" 
+  />
 </template>
 
 <style scoped>
