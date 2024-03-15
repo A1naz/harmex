@@ -152,7 +152,7 @@ const statusText = computed(() => {
     <div class="drawer-side z-100 shadow-sm">
       <label for="my-drawer" class="drawer-overlay" />
       <ul
-        class="menu w-72 z-100 h-full text-base-content flex-nowrap overflow-auto scrollbar-none bg-base-100"
+        class="menu w-72 z-100 h-full text-base-content flex-nowrap overflow-auto overflow-x-hidden scrollbar-none bg-base-100"
       >
         <!-- Sidebar content here -->
         <div class="hidden title w-full justify-center p-2 xl:flex">

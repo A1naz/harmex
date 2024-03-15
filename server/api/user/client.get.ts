@@ -18,10 +18,7 @@ export default eventHandler(async (event) => {
   // if (user.isBanned) {
   //   return sendRedirect(event, '/auth', 302)
   // }
-
-  console.log(user.partner);
   
-
   if (!user.partner || !user.partner.secondLevelPercent) {
     user.partner = {
       refCount: 0,
