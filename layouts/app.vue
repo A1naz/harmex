@@ -303,7 +303,7 @@ const statusText = computed(() => {
                 <Icon name="fluent:sign-out-24-filled" size="24" />
                 <span> Выйти </span>
               </div>
-              <a target="_blank" href="https://t.me/+8kOkq5w7N2ZmODFi">
+              <a>
                 <label class="join-item btn btn-ghost btn-square z-10"
                   ><Icon class="w-6 h-6" name="ic:baseline-telegram"
                 /></label>
