@@ -151,7 +151,7 @@ const productQuantityModel = computed({
           type="number"
           min="1"
           max="1000"
-          class="input input-bordered input-sm w-full text-center bg-base-200"
+          class="input input-sm w-full text-center bg-base-300 bg-opacity-40"
         />
         <div
           class="absolute right-0 btn btn-ghost btn-sm btn-square"
@@ -165,7 +165,7 @@ const productQuantityModel = computed({
       <div class="w-20 2xl:w-full flex items-center">
         <select
           v-if="product.sizes.length"
-          class="select select-sm select-bordered w-full bg-base-200"
+          class="select select-sm w-full bg-base-300 bg-opacity-40"
           @change="onSizeChange"
         >
           <option
@@ -180,10 +180,10 @@ const productQuantityModel = computed({
         <div v-else class="text-sm text-center ml-2">Нет</div>
       </div>
     </td>
-    <td class="border-r border-base">
-      <div class="w-20 2xl:w-full">
+    <td class="border-r border-base ">
+      <div class="w-20 2xl:w-full ">
         <select
-          class="select select-sm select-bordered w-full bg-base-200 max-w-[100px] appearance-none"
+          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none "
           @change="onSexChange"
         >
           <option value="none">Нет</option>

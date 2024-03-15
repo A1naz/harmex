@@ -280,7 +280,7 @@ const statusText = computed(() => {
         </div>
 
         <section v-for="section in storeMain.client.mmenuItems">
-          <h3 class="opacity-60 text-xs p-3 px-8 uppercase">
+          <h3 class="opacity-60 text-md p-2 px-8 uppercase">
             {{ section.subTitle }}
           </h3>
 
@@ -295,19 +295,15 @@ const statusText = computed(() => {
 
         <div class="mt-auto">
           <div class="w-full hover:cursor-default p-0 block mt-8 lg:mt-0">
-            <div class="join flex justify-between w-full items-center p-0 m-0">
-              <div
-                class="join-item btn btn-ghost gap-2 flex justify-center items-center normal-case w-[60%] hover:cursor-pointer rounded-lg p-0 m-0"
-                @click="logout"
-              >
-                <Icon name="fluent:sign-out-24-filled" size="24" />
-                <span> Выйти </span>
-              </div>
-              <a target="_blank" href="https://t.me/+8kOkq5w7N2ZmODFi">
-                <label class="join-item btn btn-ghost btn-square z-10"
-                  ><Icon class="w-6 h-6" name="ic:baseline-telegram"
+            <div class="join flex justify-around w-full items-center p-0 m-0">
+              <label class="join-item btn btn-ghost btn-square z-10"
+                  ><Icon class="w-6 h-6" name="mdi:support"
                 /></label>
-              </a>
+              <!-- <a target="_blank" href="#">
+                <label class="join-item btn btn-ghost btn-square z-10"
+                  ><Icon class="w-6 h-6" name="mdi:support"
+                /></label>
+              </a> -->
               <label
                 class="join-item btn btn-ghost btn-square z-10 w-[20%] swap swap-rotate"
               >
@@ -327,9 +323,16 @@ const statusText = computed(() => {
                 <!-- moon icon -->
                 <Icon
                   class="swap-off fill-current w-6 h-6"
-                  name="fluent:weather-moon-24-regular"
+                  name="ooui:moon"
                 />
               </label>
+              <div
+                class="join-item btn btn-ghost gap-2 flex justify-center items-center normal-case w-[20%] hover:cursor-pointer rounded-lg p-0 m-0"
+                @click="logout"
+              >
+                <Icon name="ion:exit" size="24"/>
+                <!-- <span> Выйти </span> -->
+              </div>
             </div>
           </div>
         </div>

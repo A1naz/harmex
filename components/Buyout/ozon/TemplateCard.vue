@@ -12,7 +12,7 @@ const props = defineProps({
     class="buyout-card max-w-[270px] md:max-w-[285px] card shadow-xl bg-base-100"
   >
     <div class="card-body flex flex-col justify-center md:justify-start max-h-[312px] p-3">
-      <div class="flex justify-between items-center mt-2">
+      <div class="flex flex-col justify-between mt-2">
         <span class="text-xs">Даты выкупов: </span>
         <div class="text-xs">
           <span>
@@ -31,12 +31,13 @@ const props = defineProps({
             <div v-if="product.adress" class="text-xs">
               {{ product.adress }}
             </div>
+            <div v-else class="text-xs ml-2">Нет</div>
           </div>
         </div>
       </div>
       <div class="flex justify-between">
         <div class="w-full flex flex-col items-start">
-          <div v-if="product.rules.length > 0" class="flex gap-1 w-full">
+          <div v-if="product.rules.length > 0" class="flex flex-col gap-1 w-full">
             <span class="text-xs">Правила: </span>
             <div class="text-xs">
               {{ product.rules.map((rule: any) => rule.id).join(', ') }}
@@ -63,31 +64,31 @@ const props = defineProps({
         </div>
         <div class="flex flex-col truncate">
           <div class="truncate">
-            <p class="text-sm truncate">
+            <p class="text-sm truncate font-semibold">
               {{ product.name }}
             </p>
             <a
               :href="`https://www.ozon.ru/product/${product.article}`"
               target="_blank"
-              class="text-sm text-secondary link link-hover"
+              class="text-sm text-primary link link-hover"
             >
               {{ product.article }}
             </a>
           </div>
           <div>
-            <span class="text-sm text-gray-500">Цена: </span>
-            <span class="">{{ product.priceText }}</span>
+            <span class="text-sm text-gray-500 mr-2">Цена: </span>
+            <span class="rounded-md py-0 px-2 bg-success text-sm">{{ product.priceText }}</span>
           </div>
-          <div>
-            <span class="text-sm text-gray-500">Количество: </span>
-            <span class="relative flex items-center flex-grow-0 w-20 m-1">
+          <div class="flex">
+            <span class="text-sm text-gray-500 my-auto mr-2">Количество: </span>
+            <span class="rounded-md py-0 px-2 bg-warning text-sm">
               {{ product.quantity }}
             </span>
           </div>
-          <div>
-            <span class="text-sm text-gray-500">Размер: </span>
+          <div class="flex">
+            <span class="text-sm text-gray-500 my-auto mr-2">Размер: </span>
             <div class="flex items-center m-1">
-              <div v-if="product.sizes" class="text-sm text-center mr-2">
+              <div v-if="product.sizes" class="rounded-md py-0 px-2 bg-success text-sm">
                 {{ product.sizes[0] }}
               </div>
               <div v-else class="text-sm text-center ml-2">Нет</div>
