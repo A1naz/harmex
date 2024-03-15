@@ -218,7 +218,7 @@ async function getQr() {
       <div class="flex justify-between p-3.5 flex-wrap">
         <div>
           <div class="flex gap-1">
-            <img
+            <nuxt-img
               class="w-6 h-6"
               src="/icons/figma/partner/moneyBag.svg"
               alt="graph"
@@ -295,7 +295,7 @@ async function getQr() {
         class="bg-base-100 rounded-lg drop-shadow-sm w-full p-3.5 flex flex-col gap-5 mt-auto"
       >
         <div class="flex gap-2">
-          <img
+          <nuxt-img
             class="w-6 h-6"
             src="/icons/figma/partner/human.svg"
             alt="human"
@@ -388,7 +388,7 @@ async function getQr() {
   >
     <div class="w-full lg:max-w-[60%]">
       <div class="flex gap-2">
-        <img
+        <nuxt-img
           class="w-6 h-6"
           src="/icons/figma/partner/graphCircle.svg"
           alt="graph"
@@ -443,19 +443,19 @@ async function getQr() {
           v-for="(item, index) in stats"
           class="flex flex-col bg-primary bg-opacity-5 rounded-lg p-5 navbar:p-2 gap-3"
         >
-          <img
+          <nuxt-img
             v-if="index < 2"
             class="w-8 h-8"
             src="/icons/figma/partner/stats1.svg"
             alt="stats1"
           />
-          <img
+          <nuxt-img
             v-if="index >= 2 && index !== stats.length - 1"
             class="w-8 h-8"
             src="/icons/figma/partner/stats2.svg"
             alt="stats2"
           />
-          <img
+          <nuxt-img
             v-if="index === stats.length - 1"
             class="w-8 h-8"
             src="/icons/figma/partner/stats3.svg"

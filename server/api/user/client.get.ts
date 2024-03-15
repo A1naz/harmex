@@ -19,12 +19,19 @@ export default eventHandler(async (event) => {
   //   return sendRedirect(event, '/auth', 302)
   // }
 
-  if (!user.partner) {
+  console.log(user.partner);
+  
+
+  if (!user.partner || !user.partner.secondLevelPercent) {
     user.partner = {
       refCount: 0,
-      rewardPercent: 10,
+      rewardPercent: 5,
+      secondLevelPercent: 2,
       balance: 0,
+      followCount: 0,
     }
+
+
     await user.save()
   }
 

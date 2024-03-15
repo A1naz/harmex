@@ -8,8 +8,9 @@ interface IUserSchema extends IUser, Document {}
 const partnerSchema = new Schema({
   balance: { type: Number, default: 0 },
   refCount: { type: Number, default: 0 },
-  rewardPercent: { type: Number, default: 10 },
+  rewardPercent: { type: Number, default: 5 },
   followCount: { type: Number, default: 0 }, 
+  secondLevelPercent: { type: Number, default: 2 },
 })
 
 const UserSchema = new Schema<IUserSchema>({
@@ -68,7 +69,8 @@ const UserSchema = new Schema<IUserSchema>({
     default: {
       balance: 0,
       refCount: 0,
-      rewardPercent: 10,
+      rewardPercent: 5,
+      secondLevelPercent: 2,
       followCount: 0,
     },
   },
