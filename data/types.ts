@@ -96,6 +96,7 @@ export interface Partner{
     balance: number,
     refCount: number,
     rewardPercent: number,
+    secondLevelPercent: number,
     followCount: number
 }
 

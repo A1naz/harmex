@@ -6,6 +6,7 @@ const props = defineProps({
   refCount: { type: Number, required: true },
   secondLevelReferrals: { type: Number, required: true },
   firstLevelReferrals: { type: Number, required: true },
+  secondLevelPercent: { type: Number, required: true },
   refUrl: { type: String, required: true },
   rewardPercent: { type: Number, required: true },
   refLink: { type: Number, required: true },
@@ -30,14 +31,14 @@ const totalDealsCount = ref(0)
 const sharedReferralsCount = ref(0)
 async function getComissions() {
   const { data } = await useFetch<{
-    status: string,
-    secondLevelComissions: number,
-    firstLevelComissions: number,
-    totalCommissions: number,
-    firstPaymentCounts: number,
-    firstLevelDealsCount: number,
-    totalRepeatPayments: number,
-    totalDealsCount: number,
+    status: string
+    secondLevelComissions: number
+    firstLevelComissions: number
+    totalCommissions: number
+    firstPaymentCounts: number
+    firstLevelDealsCount: number
+    totalRepeatPayments: number
+    totalDealsCount: number
     sharedReferralsCount: number
   }>('/api/partner/comissions', { method: 'GET' })
   if (data.value && data.value.status === 'ok') {
@@ -52,7 +53,6 @@ async function getComissions() {
   }
 }
 await getComissions()
-
 
 const stats = [
   {
@@ -73,7 +73,10 @@ const stats = [
   },
   {
     title: 'Средний доход с клиента',
-    value: (props.firstLevelReferrals === 0 || props.balance === 0) ? '0 ₽' : currency.format(props.balance / props.firstLevelReferrals),
+    value:
+      props.firstLevelReferrals === 0 || props.balance === 0
+        ? '0 ₽'
+        : currency.format(props.balance / props.firstLevelReferrals),
   },
   {
     title: 'Общая сумма комиссионных',
@@ -91,8 +94,11 @@ const filler = [
   },
   {
     title: 'Конверсия в регистрацию',
-    value: 
-    `${ isFinite(Math.round((props.firstLevelReferrals / props.refLink) * 100)) ? `${Math.round((props.firstLevelReferrals / props.refLink) * 100)}%` : '0%'}`,
+    value: `${
+      isFinite(Math.round((props.firstLevelReferrals / props.refLink) * 100))
+        ? `${Math.round((props.firstLevelReferrals / props.refLink) * 100)}%`
+        : '0%'
+    }`,
   },
   {
     title: 'Первых пополнений',
@@ -100,8 +106,15 @@ const filler = [
   },
   {
     title: 'Конверсия в пополнение',
-    value: 
-    `${ isFinite(Math.round((firstPaymentCounts.value / props.firstLevelReferrals) * 100)) ? `${Math.round((firstPaymentCounts.value / props.firstLevelReferrals) * 100)}%` : '0%'}`,
+    value: `${
+      isFinite(
+        Math.round((firstPaymentCounts.value / props.firstLevelReferrals) * 100)
+      )
+        ? `${Math.round(
+            (firstPaymentCounts.value / props.firstLevelReferrals) * 100
+          )}%`
+        : '0%'
+    }`,
   },
   {
     title: 'Заказано услуг',
@@ -109,8 +122,11 @@ const filler = [
   },
   {
     title: 'Конверсия в оплату',
-    value: 
-    `${ isFinite(Math.round((props.firstLevelReferrals / totalDeals.value) * 100)) ? `${Math.round((props.firstLevelReferrals / totalDeals.value) * 100)}%` : '0%'}`,
+    value: `${
+      isFinite(Math.round((props.firstLevelReferrals / totalDeals.value) * 100))
+        ? `${Math.round((props.firstLevelReferrals / totalDeals.value) * 100)}%`
+        : '0%'
+    }`,
   },
   {
     title: 'Повторных пополнений',
@@ -122,8 +138,15 @@ const filler = [
   },
   {
     title: 'Конверсия в повторную оплату',
-    value: 
-    `${ isFinite(Math.round((totalRepeatPayments.value / totalDealsCount.value) * 100)) ? `${Math.round((totalRepeatPayments.value / totalDealsCount.value) * 100)}%` : '0%'}`,
+    value: `${
+      isFinite(
+        Math.round((totalRepeatPayments.value / totalDealsCount.value) * 100)
+      )
+        ? `${Math.round(
+            (totalRepeatPayments.value / totalDealsCount.value) * 100
+          )}%`
+        : '0%'
+    }`,
   },
   {
     title: 'Поделилось реф. ссылкой',
@@ -155,48 +178,51 @@ function interpolateColor(index: any) {
 async function getQr() {
   qrLoading.value = true
   qrModal.value = true
-    const { data }: any = await useFetch('/api/partner/getCode', {
+  const { data }: any = await useFetch('/api/partner/getCode', {
     method: 'GET',
     query: {
       refUrl: props.refUrl,
     },
   })
-    qrCode.value = data.value.qrCode
-    qrLoading.value = false
+  qrCode.value = data.value.qrCode
+  qrLoading.value = false
 }
 </script>
 
 <template>
   <div class="w-full flex flex-col lg:flex-row gap-2.5 mb-4">
-    
     <div class="w-full flex justify-between gap-1 lg:hidden">
-        <button
-          class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
-          @click="withdrawModal = true"
-        >
-          Вывод с баланса
-        </button>
-        <button
-          class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
-          @click="paymentHistoryModal = true"
-        >
-          История баланса
-        </button>
-        <NuxtLink
-          :to="'/partner?tab=referals'"
-          :external="false"
-          class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
-        >
-          <span>
-            {{ 'Моя генеалогия' }}
-          </span>
-        </NuxtLink>
-      </div>
+      <button
+        class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
+        @click="withdrawModal = true"
+      >
+        Вывод с баланса
+      </button>
+      <button
+        class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
+        @click="paymentHistoryModal = true"
+      >
+        История баланса
+      </button>
+      <NuxtLink
+        :to="'/partner?tab=referals'"
+        :external="false"
+        class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
+      >
+        <span>
+          {{ 'Моя генеалогия' }}
+        </span>
+      </NuxtLink>
+    </div>
     <div class="w-full lg:max-w-[35%] bg-base-100 rounded-lg drop-shadow-sm">
       <div class="flex justify-between p-3.5 flex-wrap">
         <div>
           <div class="flex gap-1">
-            <img class="w-6 h-6" src="/icons/figma/partner/moneyBag.svg" alt="graph" />
+            <nuxt-img
+              class="w-6 h-6"
+              src="/icons/figma/partner/moneyBag.svg"
+              alt="graph"
+            />
             <h2 class="text-lg">Партнерский счет</h2>
           </div>
           <span class="font-bold text-xl">
@@ -215,7 +241,9 @@ async function getQr() {
           class="bg-base-100 self-end ml-5 mb-10 flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
         >
           <div class="text-gray-600 text-xs">1 уровень</div>
-          <div class="font-bold text-sm">{{ props.firstLevelReferrals+ ' человек' }}</div>
+          <div class="font-bold text-sm">
+            {{ props.firstLevelReferrals + ' человек' }}
+          </div>
           <div class="text-primary text-xs">
             {{ props.rewardPercent + '% дохода' }}
           </div>
@@ -229,8 +257,12 @@ async function getQr() {
           class="bg-base-100 self-end ml-3 mb-10 flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
         >
           <div class="text-gray-600 text-xs">2 уровень</div>
-          <div class="font-bold text-sm">{{ props.secondLevelReferrals+ ' человек' }}</div>
-          <div class="text-primary text-xs">{{ '5% дохода' }}</div>
+          <div class="font-bold text-sm">
+            {{ props.secondLevelReferrals + ' человек' }}
+          </div>
+          <div class="text-primary text-xs">
+            {{ props.secondLevelPercent + '% дохода' }}
+          </div>
         </div>
       </div>
     </div>
@@ -263,7 +295,11 @@ async function getQr() {
         class="bg-base-100 rounded-lg drop-shadow-sm w-full p-3.5 flex flex-col gap-5 mt-auto"
       >
         <div class="flex gap-2">
-          <img class="w-6 h-6" src="/icons/figma/partner/human.svg" alt="human" />
+          <nuxt-img
+            class="w-6 h-6"
+            src="/icons/figma/partner/human.svg"
+            alt="human"
+          />
           <h2 class="text-md">Приглашайте друзей и получайте бонусы</h2>
         </div>
         <div class="flex flex-col sm:flex-row gap-1">
@@ -296,7 +332,9 @@ async function getQr() {
           >
             <div class="flex justify-between mb-3 gap-2 flex-wrap">
               <h3 class="">Персональный промокод:</h3>
-              <button disabled class="text-xs text-primary my-auto">Сгенерировать</button>
+              <button disabled class="text-xs text-primary my-auto">
+                Сгенерировать
+              </button>
             </div>
             <div
               class="join bg-base-100 rounded-lg border border-none md:flex justify-between gap-2 items-center"
@@ -350,7 +388,11 @@ async function getQr() {
   >
     <div class="w-full lg:max-w-[60%]">
       <div class="flex gap-2">
-        <img class="w-6 h-6" src="/icons/figma/partner/graphCircle.svg" alt="graph" />
+        <nuxt-img
+          class="w-6 h-6"
+          src="/icons/figma/partner/graphCircle.svg"
+          alt="graph"
+        />
         <span class="text-lg">Воронка по партнерке</span>
       </div>
       <div class="grid grid-cols-6 mb-2 gap-2 mt-5">
@@ -367,7 +409,7 @@ async function getQr() {
             v-if="index !== filler.length - 1"
             class="trapezoid relative"
             :style="{
-              width: 'calc(100% - ' + (index * (width < 640 ? 7 : 9)) + '%)',
+              width: 'calc(100% - ' + index * (width < 640 ? 7 : 9) + '%)',
               borderTopColor: interpolateColor(index),
             }"
           >
@@ -381,7 +423,7 @@ async function getQr() {
             v-else
             class="triangle relative"
             :style="{
-              width: (width<640 ? 25 : 8) + '%',
+              width: (width < 640 ? 25 : 8) + '%',
               borderTopColor: interpolateColor(index),
             }"
           >
@@ -401,11 +443,28 @@ async function getQr() {
           v-for="(item, index) in stats"
           class="flex flex-col bg-primary bg-opacity-5 rounded-lg p-5 navbar:p-2 gap-3"
         >
-          <img v-if="index < 2" class="w-8 h-8" src="/icons/figma/partner/stats1.svg" alt="stats1" />
-          <img v-if="index >= 2 && index !== stats.length - 1" class="w-8 h-8" src="/icons/figma/partner/stats2.svg" alt="stats2" />
-          <img v-if="index === stats.length-1 " class="w-8 h-8" src="/icons/figma/partner/stats3.svg" alt="stats3" />
+          <nuxt-img
+            v-if="index < 2"
+            class="w-8 h-8"
+            src="/icons/figma/partner/stats1.svg"
+            alt="stats1"
+          />
+          <nuxt-img
+            v-if="index >= 2 && index !== stats.length - 1"
+            class="w-8 h-8"
+            src="/icons/figma/partner/stats2.svg"
+            alt="stats2"
+          />
+          <nuxt-img
+            v-if="index === stats.length - 1"
+            class="w-8 h-8"
+            src="/icons/figma/partner/stats3.svg"
+            alt="stats3"
+          />
           <span class="text-xs break-words">{{ item.title }}</span>
-          <span class="count navbar:text-lg text-2xl text-base-content font-bold">
+          <span
+            class="count navbar:text-lg text-2xl text-base-content font-bold"
+          >
             {{ item.value }}</span
           >
         </div>
@@ -466,21 +525,21 @@ async function getQr() {
     :state="paymentHistoryModal"
     @close="paymentHistoryModal = false"
   />
-  <PartnerQrModal 
-    v-if="qrModal" 
+  <PartnerQrModal
+    v-if="qrModal"
     :show="qrModal"
-    :src="qrCode" 
+    :src="qrCode"
     :loading="qrLoading"
-    @close-modal="qrModal = false"  
+    @close-modal="qrModal = false"
   />
 </template>
 
 <style scoped>
 .trapezoid {
-  border-top: 30px solid #4b5e71; 
+  border-top: 30px solid #4b5e71;
   border-left: calc(0.7vw) solid transparent; /* Используем calc для комбинирования vw и px */
   border-right: calc(0.7vw) solid transparent;
-  border-radius: 10px; 
+  border-radius: 10px;
 }
 .triangle {
   width: 0;
@@ -491,10 +550,10 @@ async function getQr() {
   border-radius: 5px;
 }
 .background-div {
-  width: 100%; 
+  width: 100%;
   height: 200px;
   background-image: url('/icons/figma/partner/graph.svg');
   background-repeat: no-repeat;
-  background-size: cover; 
+  background-size: cover;
 }
 </style>
