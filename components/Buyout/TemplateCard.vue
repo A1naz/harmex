@@ -12,7 +12,7 @@ const props = defineProps({
     class="buyout-card max-w-[270px] md:max-w-[285px] card shadow-xl bg-base-100"
   >
     <div class="card-body flex flex-col justify-center md:justify-start max-h-[312px] p-3">
-      <div class="flex justify-between items-center mt-2">
+      <div class="flex flex-col justify-between mt-2">
         <span class="text-xs">Даты выкупов: </span>
         <div class="text-xs">
           <span>
@@ -36,7 +36,7 @@ const props = defineProps({
       </div>
       <div class="flex justify-between">
         <div class="w-full flex flex-col items-start">
-          <div v-if="product.rules.length > 0" class="flex gap-1 w-full">
+          <div v-if="product.rules.length > 0" class="flex flex-col gap-1 w-full">
             <span class="text-xs">Правила: </span>
             <div class="text-xs">
               {{ product.rules.map((rule: any) => rule.id).join(', ') }}
@@ -63,13 +63,13 @@ const props = defineProps({
         </div>
         <div class="flex flex-col truncate">
           <div class="truncate">
-            <p class="text-sm truncate">
+            <p class="text-sm truncate font-semibold">
               {{ product.name }}
             </p>
             <a
               :href="`https://www.ozon.ru/product/${product.article}`"
               target="_blank"
-              class="text-sm text-secondary link link-hover"
+              class="text-sm text-primary link link-hover"
             >
               {{ product.article }}
             </a>

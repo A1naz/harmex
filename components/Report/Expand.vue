@@ -16,11 +16,13 @@ const store = useMainStore()
 const router = useRouter()
 const opened = ref()
 const qrCode = ref(null)
-const selectedMP = ref(route.path.split('/')[2])
+const selectedMP = ref('')
+
 function openBuyout() {
-  router.push(`/buyouts/${selectedMP}?uuid=${props.info.buyout.uuid}`)
+  router.push(`/buyouts/${selectedMP.value}?uuid=${props.info.buyout.uuid}`)
 }
 onMounted(async () => {
+  selectedMP.value = route.path.split('/')[2]
   opened.value = props.state
 })
 watch(() => props.state, (newState) => {

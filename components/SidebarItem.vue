@@ -49,8 +49,6 @@ const mpHref = computed(() => {
         :name="icon"
         size="24"
       />
-      <!-- <img v-if="!active" :src="`/icons/figma/navbar/${icon}.svg`" />
-      <img v-else :src="`/icons/figma/navbar/${icon}Active.svg`" /> -->
       <span
         :class="{
           'opacity-100': !active,

@@ -45,6 +45,7 @@ const article = ref<string>()
 const discountModal = ref(false)
 const currentProductIndex = ref(0)
 const modalShow = ref(false)
+const codeInput = ref()
 
 const products = computed(() => store.createProducts)
 // products.value.forEach((product: any, i: number) => {
@@ -368,15 +369,23 @@ function modalAddProduct(changedArticle: any){
           class="relative flex justify-end items-center flex-grow-0 md:w-80 gap-2.5 w-full"
         >
           <input
+            ref="codeInput"
             v-model="article"
             placeholder="Артикул"
             class="input input-sm w-full mb-2 md:mb-0 bg-base-300 border-base-300 bg-opacity-30 border-opacity-30"
             @keydown.enter="addProduct"
           />
+          <Icon
+              
+              class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
+              name="tabler:search"
+              size="35"
+              @click="codeInput.focus()"
+            />
         </div>
         <div class="flex gap-2.5">
           <button
-            class="btn btn-primary btn-sm normal-case bg-opacity-20 border-none text-base-content"
+            class="btn btn-primary btn-sm normal-case border-none text-base-content font-normal hover:bg-primary hover:text-base-100 bg-opacity-20"
             @click="addProduct"
           >
             Добавить
@@ -384,7 +393,7 @@ function modalAddProduct(changedArticle: any){
           <label
             for="template-select-modal"
             @click="getTemplates"
-            class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0"
+            class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-primary hover:text-base-100"
             >Шаблоны</label
           >
           <label
@@ -563,14 +572,14 @@ function modalAddProduct(changedArticle: any){
           >Удалить все</label
         > -->
         <label
-          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6"
+          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal hover:bg-primary hover:text-base-100"
           for="template-modal"
         >
           Шаблон
         </label>
 
         <button
-          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-1 ml-2"
+          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-1 ml-2 font-normal hover:bg-primary hover:text-base-100"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >
@@ -585,7 +594,7 @@ function modalAddProduct(changedArticle: any){
       </div>
     </div>
 
-    <div v-if="ruleModal">
+    <div v-if="ruleModal" >
       <input id="ruleModal" type="checkbox" class="modal-toggle" />
       <label
         for="ruleModal"
@@ -765,14 +774,14 @@ function modalAddProduct(changedArticle: any){
     </div>
     <input id="template-modal" type="checkbox" class="modal-toggle" />
     <div class="modal">
-      <div class="modal-box max-w-md">
+      <div class="modal-box max-w-md py-3">
         <label
           ref="closeTemplateModal"
           for="template-modal"
           class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
           >✕</label
         >
-        <h3 class="font-bold text-lg text-bas mr-4">
+        <h3 class="font-semibold text-lg text-bas mr-4">
           Введите название шаблона
         </h3>
         <input
@@ -786,13 +795,13 @@ function modalAddProduct(changedArticle: any){
         <div class="modal-action flex self-end">
           <label
             for="template-modal"
-            class="btn btn-ghost my-2 md:my-0"
+            class="btn btn-ghost my-2 md:my-0 w-[30%]"
             @click=""
             >Отмена</label
           >
 
           <button
-            class="btn btn-primary"
+            class="btn btn-primary w-[30%]"
             :disabled="isCreatingTemplatesDisabled"
             @click="createTemplate"
           >
@@ -853,16 +862,16 @@ function modalAddProduct(changedArticle: any){
   />
   <div class="modal backdrop-filter backdrop-blur-sm">
     <div class="modal-box max-w-xs">
-      <h3 class="font-bold text-md">
+      <h3 class="font-normal text-lg">
         Вы уверенны что хотите удалить все товары?
       </h3>
       <div class="modal-action flex justify-around">
-        <label for="removeAllModelCreateProducts" class="btn px-6"
+        <label for="removeAllModelCreateProducts" class="btn btn-sm h-[2.5rem] w-[40%] btn-ghost px-6"
           >Отмена</label
         >
         <label
           for="removeAllModelCreateProducts"
-          class="btn btn-primary px-6"
+          class="btn btn-sm btn-primary h-[2.5rem] w-[40%] px-6"
           @click="store.createProducts = []"
           >Удалить</label
         >

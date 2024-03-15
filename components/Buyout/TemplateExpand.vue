@@ -98,3 +98,6 @@ async function deleteTemplate() {
   </div>
   <!-- <BuyoutDeleteConfirmModal :uuid="uuid" @delete-template="deleteTemplate"></BuyoutDeleteConfirmModal> -->
 </template>
+<style scoped>
+
+</style>

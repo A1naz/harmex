@@ -62,7 +62,7 @@ async function deleteTemplate() {
 </script>
 <template>
   <div
-    class="collapse collapse-arrow border border-base-100 bg-base-200 rounded-box z-0 overflow-hidden"
+    class="collapse collapse-arrow bg-primary bg-opacity-5 rounded-box z-0 overflow-hidden"
   >
     <input type="checkbox" v-model="opened" />
     <div
@@ -73,9 +73,9 @@ async function deleteTemplate() {
           {{ info.title }}
         </div>
       </div>
-      <div class="flex z-10">
+      <div class="flex z-10 gap-3">
         
-        <label @click="deleteTemplate" class="btn btn-sm text-red-400 z-10"
+        <label @click="deleteTemplate" class="btn btn-ghost btn-sm text-red-500 z-10"
           >Удалить</label
         >
         <nuxt-link to="/buyouts/create/ozon">
@@ -90,10 +90,10 @@ async function deleteTemplate() {
     <div
       class="collapse-content flex items-center justify-center md:justify-start gap-2 max-h-[56rem] md:max-h-full flex-row space-x-2 overflow-x-auto"
     >
-      <BuyoutTemplateCard
+      <BuyoutOzonTemplateCard
         v-for="product in info.buyoutsArray"
         :product="product"
-      ></BuyoutTemplateCard>
+      ></BuyoutOzonTemplateCard>
     </div>
   </div>
   <!-- <BuyoutDeleteConfirmModal :uuid="uuid" @delete-template="deleteTemplate"></BuyoutDeleteConfirmModal> -->

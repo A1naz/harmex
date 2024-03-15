@@ -52,29 +52,35 @@ onMounted(async () => {
     }"
     class="modal"
   >
-    <div class="modal-box max-w-[400px]">
-      <h3 class="font-bold text-lg mb-2">Проверяем выкупы по правилам</h3>
-      <span
+    <div class="modal-box max-w-lg" :class="{'max-w-sm' : success} ">
+      <h3 class="font-semibold text-lg mb-2">Проверяем выкупы по правилам</h3>
+      <a
+        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+        @click="$emit('close')"
+        >✕</a
+      >
+      <div class="flex mt-1 gap-2">
+        <span
         v-if="!loading"
         :class="{
-          'text-error bg-error bg-opacity-20': !success,
-          'text-green-600 bg-green-200': success,
+          'text-base-100 bg-red-500 bg-opacity-90': !success,
+          'text-base-content bg-success': success,
         }"
-        class="text-md mt-3 rounded-2xl py-1 px-2"
-        >{{ success ? 'Успешно' : 'Ошибка' }}</span
+        class="text-md my-auto rounded-2xl py-0.5 text-xs px-2"
+        >{{ success ? 'Успешно' : 'Ошибка' }}
+        </span
       >
-      <div class="flex justify-center mt-6">
         <span v-if="loading" class="loading loading-spinner loading-lg" />
-        <span v-else class="text-xs mb-2">{{ message }}</span>
+        <span v-else class="text-xs my-auto">{{ message }}</span>
       </div>
-      <div class="flex justify-around items-center">
-        <button v-if="!loading" class="btn btn-md" @click="emit('close')">
+      <div class="flex justify-around items-center mt-2">
+        <button v-if="!loading" class="btn btn-ghost btn-sm h-[2.5rem] w-[49%] font-normal" @click="emit('close')">
           Закрыть
         </button>
         <button
           :disabled="isCreateButtonDisabled"
           v-if="success"
-          class="btn btn-md btn-primary"
+          class="btn btn-sm h-[2.5rem] btn-primary bg-opacity-20 text-base-content border-none w-[49%] font-normal"
           @click="emit('create')"
         >
           Создать
@@ -82,7 +88,7 @@ onMounted(async () => {
         <button
           :disabled="isCreateButtonDisabled"
           v-if="!success && !loading"
-          class="btn btn-md btn-primary"
+          class="btn btn-sm h-[2.5rem] btn-primary bg-opacity-20 text-base-content border-none w-[49%] font-normal"
           @click="emit('create')"
         >
           Игнорировать ошибку и создать
