@@ -24,14 +24,16 @@ const tablePartner = ref()
 
 const secondLevelReferrals = ref(0)
 const firstLevelReferrals = ref(0)
-async function getSecondartRefLevel(){
-    const { data } = await useFetch<
-        { status: string, secondLevelReferralsCount: number, firstLevelReferralsCount: number }
-    >('/api/partner/getSecondLevelReferrals',{ method: 'GET' })
-    if(data.value && data.value.status === 'ok') {
-        secondLevelReferrals.value = data.value.secondLevelReferralsCount
-        firstLevelReferrals.value = data.value.firstLevelReferralsCount
-    }
+async function getSecondartRefLevel() {
+  const { data } = await useFetch<{
+    status: string
+    secondLevelReferralsCount: number
+    firstLevelReferralsCount: number
+  }>('/api/partner/getSecondLevelReferrals', { method: 'GET' })
+  if (data.value && data.value.status === 'ok') {
+    secondLevelReferrals.value = data.value.secondLevelReferralsCount
+    firstLevelReferrals.value = data.value.firstLevelReferralsCount
+  }
 }
 getSecondartRefLevel()
 
@@ -55,15 +57,15 @@ const listConfigPartners: ConfigTable[] = [
   { field: 'comission', header: 'Комиссионные', type: FieldsType.price },
 ]
 const listConfigOrders: ConfigTable[] = [
-    { field: 'refUsername', header: 'Ник', type: FieldsType.text },
-    { field: 'refMp', header: 'Маркетплейс', type: FieldsType.text },
-    { field: 'refEmail', header: 'E-mail', type: FieldsType.text },
-    { field: 'refLevel', header: 'Рекомендатель', type: FieldsType.text },
-    { field: 'serviceType', header: 'Тип', type: FieldsType.text },
-    { field: 'date', header: 'Дата операции', type: FieldsType.date },
-    { field: 'serviceSum', header: 'Стоимость', type: FieldsType.price },
-    { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
-    { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
+  { field: 'refUsername', header: 'Ник', type: FieldsType.text },
+  { field: 'refMp', header: 'Маркетплейс', type: FieldsType.text },
+  { field: 'refEmail', header: 'E-mail', type: FieldsType.text },
+  { field: 'refLevel', header: 'Рекомендатель', type: FieldsType.text },
+  { field: 'serviceType', header: 'Тип', type: FieldsType.text },
+  { field: 'date', header: 'Дата операции', type: FieldsType.date },
+  { field: 'serviceSum', header: 'Стоимость', type: FieldsType.price },
+  { field: 'amount', header: 'Комиссионные', type: FieldsType.price },
+  { field: 'refRewarded', header: 'Статус', type: FieldsType.boolean },
 ]
 
 function datePrepare(daysAgo: number) {
@@ -133,13 +135,10 @@ function defaultFilter(r: number) {
                 Создайте заявку для получения поступлений и напишите в Службу заботы.
             </p>
         </div> -->
-        <div class="mt-4"></div>
-        <Tabs class="opacity-0"
-            :tabs="tabs"
-            >
-            
-            <template v-slot:main>
-                <!-- <div class="w-full flex gap-2.5 mb-4">
+    <div class="mt-4"></div>
+    <Tabs class="opacity-0" :tabs="tabs">
+      <template v-slot:main>
+        <!-- <div class="w-full flex gap-2.5 mb-4">
 
                     <div class="w-full max-w-md bg-base-100 rounded-lg drop-shadow-sm p-3.5">
                         <div class="flex justify-between ">
@@ -202,21 +201,22 @@ function defaultFilter(r: number) {
                     </div>
                     <div class="ml-auto">Статистика</div>
                 </div> -->
-                <PartnerDashboard 
-                            :balance="store.client.partner.balance"
-                            :ref-count="partner.refCount"
-                            :second-level-referrals="secondLevelReferrals"
-                            :first-level-referrals="firstLevelReferrals"
-                            :ref-url="refUrl"
-                            :reward-percent="partner.rewardPercent"
-                            :ref-link="store.client.partner.followCount"
-                            />
-                <!-- <CustomDrop
+        <PartnerDashboard
+          :secondLevelPercent="partner.secondLevelPercent"
+          :balance="store.client.partner.balance"
+          :ref-count="partner.refCount"
+          :second-level-referrals="secondLevelReferrals"
+          :first-level-referrals="firstLevelReferrals"
+          :ref-url="refUrl"
+          :reward-percent="partner.rewardPercent"
+          :ref-link="store.client.partner.followCount"
+        />
+        <!-- <CustomDrop
                     :statusText="'Главная'"
                     :tabs="tabs"
                     :route="'/partner'"
                 /> -->
-                <!-- <div class="flex gap-4 w-full flex-col md:flex-row bg-primary bg-opacity-10 rounded-xl mt-4">
+        <!-- <div class="flex gap-4 w-full flex-col md:flex-row bg-primary bg-opacity-10 rounded-xl mt-4">
                     <div class="px-2 py-7 md:p-5 flex flex-col md:w-[50%] w-full">
                         
                     </div>
@@ -230,114 +230,113 @@ function defaultFilter(r: number) {
                     </div>
                     
                 </div> -->
-            </template>
-            <template v-slot:referals>
-                
-                <div class="flex flex-col sm:flex-row justify-between bg-base-200 rounded-xl gap-2" >
-                    <div class="flex gap-1.5">
-                        <NuxtLink
-                                :to="'/partner'"
-                                :external="false"
-                                class="btn btn-sm bg-base-100 drop-shadow-md"
-                            >
-                            <IconCSS size="20" name="tdesign:arrow-left" />
-                        </NuxtLink>
-                        <CustomDrop
-                        :statusText="'Приглашенные клиенты'"
-                        :tabs="tabs"
-                        :route="'/partner'"
-                        @change-value = "changeRange"
-                        />
-                        <TableDateDefaultFilter
-                        class="sm:hidden"
-                        @range-upd="(r: number) => defaultFilter(r)"
-                    />
-                    </div>
-                    <div class="flex gap-2 sm:gap-4">
-                    <TablePaginationPartner  
-                        :page-nums="pageNum"
-                        :current-page="currentPage"
-                        @change-page="pagination"
-                    />
-                    <TableDateDefaultFilter
-                        class="hidden sm:flex"
-                        @range-upd="(r: number) => defaultFilter(r)"
-                    />
-                    <ExportXls 
-                        api="/api/partner/referals-export"
-                        fileName="MARKETMONSTR - Статистика партнеров"
-                        :config-columns="listConfigPartners"
-                        :isVisible="true"
-                        />
-                    </div>
-                </div>
-                
-                <TablePartner 
-                    ref="tablePartner"
-                    endpoint="/partner/referals"
-                    :config="listConfigPartners"
-                    :useDefaultDateFilter="true"
-                    @update-info="(newPageNum: number, newCurrentPage: number) => updateInfo(newPageNum, newCurrentPage)"
-                    />
-  
-            </template>
-            <template v-slot:orders>
-                <div class="flex flex-col sm:flex-row justify-between gap-2 content-center bg-base-200 rounded-xl" >
-                <div class="flex gap-2.5">
-                    <NuxtLink
-                            :to="'/partner'"
-                            :external="false"
-                            class="btn btn-sm bg-base-100 drop-shadow-md"
-                        >
-                        <IconCSS size="20" name="tdesign:arrow-left" />
-                    </NuxtLink>
-                    <CustomDrop
-                    :statusText="'Заказы клиентов'"
-                    :tabs="tabs"
-                    :route="'/partner'"
-                    />
-                    <TableDateDefaultFilter
-                        class="sm:hidden"
-                        @range-upd="(r: number) => defaultFilter(r)"
-                    />
-                </div>
-                <div class="flex gap-1.5 sm:gap-4">
-                    <TablePaginationPartner  
-                        :page-nums="pageNum"
-                        :current-page="currentPage"
-                        @change-page="pagination"
-                    />
-                    <TableDateDefaultFilter
-                        class="hidden sm:flex"
-                        @range-upd="(r: number) => defaultFilter(r)"
-                    />
-                    <!--  -->
-                    <ExportXls 
-                        api="/api/partner/orders-export"
-                        fileName="MARKETMONSTR - Заказы партнеров"
-                        :config-columns="listConfigOrders"
-                        :isVisible="true"
-                        />
-                </div>
-                    
-                </div>
-               
-                <TablePartner 
-                    ref="tablePartner"
-                    endpoint="/partner/orders"
-                    :config="listConfigOrders"
-                    :useDefaultDateFilter="true"
-                    @update-info="updateInfo"
-                    />
-            </template>
-        </Tabs>
-    </div>
+      </template>
+      <template v-slot:referals>
+        <div
+          class="flex flex-col sm:flex-row justify-between bg-base-200 rounded-xl gap-2"
+        >
+          <div class="flex gap-1.5">
+            <NuxtLink
+              :to="'/partner'"
+              :external="false"
+              class="btn btn-sm bg-base-100 drop-shadow-md"
+            >
+              <IconCSS size="20" name="tdesign:arrow-left" />
+            </NuxtLink>
+            <CustomDrop
+              :statusText="'Приглашенные клиенты'"
+              :tabs="tabs"
+              :route="'/partner'"
+              @change-value="changeRange"
+            />
+            <TableDateDefaultFilter
+              class="sm:hidden"
+              @range-upd="(r: number) => defaultFilter(r)"
+            />
+          </div>
+          <div class="flex gap-2 sm:gap-4">
+            <TablePaginationPartner
+              :page-nums="pageNum"
+              :current-page="currentPage"
+              @change-page="pagination"
+            />
+            <TableDateDefaultFilter
+              class="hidden sm:flex"
+              @range-upd="(r: number) => defaultFilter(r)"
+            />
+            <ExportXls
+              api="/api/partner/referals-export"
+              fileName="MARKETMONSTR - Статистика партнеров"
+              :config-columns="listConfigPartners"
+              :isVisible="true"
+            />
+          </div>
+        </div>
 
+        <TablePartner
+          ref="tablePartner"
+          endpoint="/partner/referals"
+          :config="listConfigPartners"
+          :useDefaultDateFilter="true"
+          @update-info="(newPageNum: number, newCurrentPage: number) => updateInfo(newPageNum, newCurrentPage)"
+        />
+      </template>
+      <template v-slot:orders>
+        <div
+          class="flex flex-col sm:flex-row justify-between gap-2 content-center bg-base-200 rounded-xl"
+        >
+          <div class="flex gap-2.5">
+            <NuxtLink
+              :to="'/partner'"
+              :external="false"
+              class="btn btn-sm bg-base-100 drop-shadow-md"
+            >
+              <IconCSS size="20" name="tdesign:arrow-left" />
+            </NuxtLink>
+            <CustomDrop
+              :statusText="'Заказы клиентов'"
+              :tabs="tabs"
+              :route="'/partner'"
+            />
+            <TableDateDefaultFilter
+              class="sm:hidden"
+              @range-upd="(r: number) => defaultFilter(r)"
+            />
+          </div>
+          <div class="flex gap-1.5 sm:gap-4">
+            <TablePaginationPartner
+              :page-nums="pageNum"
+              :current-page="currentPage"
+              @change-page="pagination"
+            />
+            <TableDateDefaultFilter
+              class="hidden sm:flex"
+              @range-upd="(r: number) => defaultFilter(r)"
+            />
+            <!--  -->
+            <ExportXls
+              api="/api/partner/orders-export"
+              fileName="MARKETMONSTR - Заказы партнеров"
+              :config-columns="listConfigOrders"
+              :isVisible="true"
+            />
+          </div>
+        </div>
+
+        <TablePartner
+          ref="tablePartner"
+          endpoint="/partner/orders"
+          :config="listConfigOrders"
+          :useDefaultDateFilter="true"
+          @update-info="updateInfo"
+        />
+      </template>
+    </Tabs>
+  </div>
 </template>
 <style>
 thead tr:first-child {
   border-top-left-radius: 10px; /* Скругление верхнего левого угла */
   border-top-right-radius: 10px; /* Скругление верхнего правого угла */
 }
-
 </style>
