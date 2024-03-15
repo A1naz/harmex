@@ -309,6 +309,7 @@ function changeFilter(e: any) {
             <!-- <th class="text-center">№</th> -->
             <th class="text-center">Фото</th>
             <th class="text-center">Артикул</th>
+            <th class="text-center">Маркетплейс</th>
             <th class="text-center">Пол</th>
             <th class="text-center">Вопрос</th>
             <th class="text-center">Статус</th>
@@ -364,6 +365,11 @@ function changeFilter(e: any) {
               {{ item.article }}
             </a>
             </td>
+            <td
+                class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
+              >
+                Wildberries
+              </td>
             <td
               class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
             >

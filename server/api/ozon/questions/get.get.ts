@@ -67,6 +67,7 @@ export default eventHandler(async (event) => {
       createdDate: question.createdDate,
       text: question.text,
       publishDate: question.publishDate,
+      anonim: question.anonim,
     }
   })
   return format

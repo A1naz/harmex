@@ -6,7 +6,7 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { productData, article, publishDate, gender, questionText } = await readBody(event)
+  const { productData, article, publishDate, gender, questionText, anonim } = await readBody(event)
   const { image } = productData
   console.log(productData, article, publishDate, gender, questionText, image)
 
@@ -25,6 +25,7 @@ export default eventHandler(async (event) => {
     gender,
     text: questionText,
     image,
+    anonim: anonim,
   })
   const res = await created.save()
 

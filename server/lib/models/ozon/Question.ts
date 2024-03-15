@@ -10,6 +10,7 @@ const QuestionSchema = new Schema({
   gender: { type: String },
   createdDate: { type: Date, default: new Date(Date.now()) },
   publishDate: { type: Date, required: true },
+  anonim: {type: Boolean, default: false},
 })
 
 QuestionSchema.pre('save', function (next) {

@@ -313,8 +313,10 @@ function changeFilter(e: any) {
               <!-- <th class="text-center">№</th> -->
               <th class="text-center">Фото</th>
               <th class="text-center">Артикул</th>
+              <th class="text-center">Маркетплейс</th>
               <th class="text-center">Пол</th>
               <th class="text-center">Вопрос</th>
+              
               <th class="text-center">Статус</th>
               <th class="text-center">Дата создания</th>
               <th class="text-center">Дата публикации</th>
@@ -372,6 +374,11 @@ function changeFilter(e: any) {
               <td
                 class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
               >
+                Ozon
+              </td>
+              <td
+                class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
+              >
                 {{ item.gender === 'male' ? 'М' : 'Ж' }}
               </td>
               <td
@@ -381,6 +388,13 @@ function changeFilter(e: any) {
                   {{ item.text }}
                 </div>
               </td>
+              <!-- <td
+                class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] whitespace-normal break-words"
+              >
+                <div class="flex flex-col">
+                  {{ (!item.anonim || item.anonim === 'false') ? 'Нет' : 'Анонимный вопрос' }}
+                </div>
+              </td> -->
 
               <td class="text-center border-r border-primary border-opacity-5">
                 <div
@@ -487,7 +501,7 @@ function changeFilter(e: any) {
               </div>
             </div>
           </div>
-        </div> -->
+        </div> 
       </ClientOnly>
     </div>
     <Hero v-else />

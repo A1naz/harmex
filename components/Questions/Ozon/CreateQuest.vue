@@ -16,6 +16,7 @@ const questionText = ref('')
 const article = ref('')
 const sex = ref('male')
 const productData = ref<any>(null)
+const anonim = ref(false)
 const urlError = ref(false)
 async function getQuestions() {
   const { data, error } = await useFetch('/api/ozon/questions/get', { method: 'GET' })
@@ -35,6 +36,7 @@ async function create() {
       gender: sex.value,
       productData: productData.value,
       questionText: questionText.value,
+      anonim: anonim.value,
     },
   })
   if (error.value)
@@ -155,6 +157,16 @@ function removeProduct() {
               <label class="label py-0">
                 <span class="label-text-alt">От до 10 до 1000 символов</span></label>
             </div>
+            <div class="flex gap-2">
+            <input
+              type="checkbox"
+              v-model="anonim"
+              class="checkbox checkbox-primary border-base-content"
+            />
+            <span class="text-sm cursor-pointer" @click="anonim = !anonim">
+              Добавить вопрос анонимно
+            </span>
+          </div>
           </div>
           <div class="flex justify-end gap-2">
             <button
@@ -193,6 +205,7 @@ function removeProduct() {
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
