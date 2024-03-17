@@ -3,6 +3,7 @@ import { getServerSession } from '#auth'
 import MenuBuilder from '~/server/utils/menuBuilder'
 import { Client } from '~/data/types'
 import { UserRoles } from '~/data/enums'
+import getTariffs from '~/server/utils/getTariffs'
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
@@ -12,13 +13,8 @@ export default eventHandler(async (event) => {
   const user = await User.findOne({ uuid: session.uuid })
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  // if (user.isBanned) {
-  //   return sendRedirect(event, '/auth', 302)
-  // }
-  // if (user.isBanned) {
-  //   return sendRedirect(event, '/auth', 302)
-  // }
-  
+  const tariffs = await getTariffs(user.MPTariffs)
+ 
   if (!user.partner || !user.partner.secondLevelPercent) {
     user.partner = {
       refCount: 0,
@@ -27,7 +23,6 @@ export default eventHandler(async (event) => {
       balance: 0,
       followCount: 0,
     }
-
 
     await user.save()
   }
@@ -60,7 +55,7 @@ export default eventHandler(async (event) => {
     role: user.roles[0],
     mmenuItems: menu,
     allowedPathes: allowedPathes,
-    tariff: user.tariff,
+    tariff: tariffs,
     isTwoFaEnabled: user.isTwoFaEnabled ? true : false,
     orgKey: user.orgKey ? user.orgKey : '',
     orgName: user.orgName ? user.orgName : '',
@@ -70,6 +65,8 @@ export default eventHandler(async (event) => {
     phoneNumber: user.phoneNumber ? user.phoneNumber : '',
   }
 
+  console.log(client.tariff);
+  
   return {
     client,
     status: 'ok',
