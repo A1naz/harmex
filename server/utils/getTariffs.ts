@@ -67,6 +67,8 @@ export default async function getTariffs(userTariffs: any) {
       return defaultTariffs
     }
   } catch (error) {
+    console.log('Ошибка при тарифах')
+    console.log(error)
     return defaultTariffs
   }
 }
