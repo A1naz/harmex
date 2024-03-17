@@ -6,6 +6,11 @@ const props = defineProps<{
 }>()
 const route = useRoute()
 
+const color = computed(() => {
+  useColorMode().value === 'dark' ? 'white' : 'black'
+})
+
+
 const currentPath = ref(useRoute().path)
 
 watchEffect(() => {
@@ -44,8 +49,8 @@ const mpHref = computed(() => {
 <template>
   <li v-if="props.href != '/autoanswer'">
     <NuxtLink :to="mpHref" class="mx-4 rounded-lg">
-      <IconCSS
-        :color="active ? 'white' : 'black'"
+      <Icon
+        :color="color"
         :name="icon"
         size="24"
       />
