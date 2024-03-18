@@ -26,18 +26,42 @@ export default eventHandler(async (event) => {
     },
   }
 
-  const data: any = await new Promise((resolve, reject) => {
-    request.get(options, function (error, response, body) {
-      if (!error) {
-        resolve(JSON.parse(body))
-      } else {
-        console.log(error)
+  // const data: any = await new Promise((resolve, reject) => {
+  //   request.get(options, function (error, response, body) {
+  //     if (!error) {
+  //       resolve(JSON.parse(body))
+  //     } else {
+  //       console.log(error)
 
-        reject(new Error(`Непредвиденный статус код`))
+  //       reject(new Error(`Непредвиденный статус код`))
+  //     }
+  //   })
+  // })
+  const data: any = await new Promise((resolve, reject) => {
+    request.post(
+      {
+        url: `http://95.163.249.133:4141`,
+        body: {
+          type: 'ozonReviews',
+          url: 'https://www.ozon.ru/product/svetilnik-potolochnyy-svetodiodnyy-dlya-komnaty-spalni-kuhni-lyustra-comfort-galaxy-55vt-3000-704545965/',
+          count: 10,
+        },
+      },
+      function (error, response, body) {
+        if (!error) {
+          console.log(body);
+          
+          resolve(JSON.parse(body))
+        } else {
+          console.log(error)
+
+          reject(new Error(`Непредвиденный статус код`))
+        }
       }
-    })
+    )
   })
 
+  console.log(data)
   const widgetStates: any = data['widgetStates']
   const productData: any = JSON.parse(
     widgetStates['webListReviews-3201466-reviewshelfpaginator-4']
