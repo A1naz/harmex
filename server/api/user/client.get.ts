@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const tariffs = await getTariffs(user.MPTariffs)
- 
+
   if (!user.partner || !user.partner.secondLevelPercent) {
     user.partner = {
       refCount: 0,
@@ -65,8 +65,6 @@ export default eventHandler(async (event) => {
     phoneNumber: user.phoneNumber ? user.phoneNumber : '',
   }
 
-  console.log(client.tariff);
-  
   return {
     client,
     status: 'ok',
