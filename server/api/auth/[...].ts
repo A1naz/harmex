@@ -181,7 +181,6 @@ export default NuxtAuthHandler({
       },
 
       async authorize(credentials: any, event: any) {
-        // console.log(credentials)
 
         const { code, uuid } = credentials
 
@@ -399,8 +398,6 @@ export default NuxtAuthHandler({
 //             },
 //           }
 //         )
-
-//         console.log(valid)
 
 //         if (!valid.data || !valid.data.uuid) {
 //           throw new Error('Сессия истекла')

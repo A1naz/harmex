@@ -11,7 +11,6 @@ const props = defineProps({
 })
 
 // const loading = ref(false)
-// console.log('src', props.src)
 
 
 // const qrCode = toRef(props, 'src')
@@ -48,7 +47,6 @@ const emit = defineEmits(['closeModal'])
 //     return
 //   }
 //   productDiscountModel.value = discountValue.value
-//   // console.log('save', products.value[props.index].discount)
 //   emit('closeModal')
 // }
 

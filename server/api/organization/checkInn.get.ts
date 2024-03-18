@@ -89,20 +89,6 @@ export default eventHandler(async (event) => {
     orgKey === 'ООО'
       ? data.items[0][`${key}`]['НаимПолнЮЛ']
       : `ИП ${lastname} ${name}`
-  console.log(
-    'ИМЯ',
-    name,
-    'ФАМИЛИЯ',
-    lastname,
-    'ОТЧЕСТВО',
-    middleName,
-    'ИНН',
-    orgInn,
-    'ОГРН',
-    orgOgrn,
-    'КЛЮЧ',
-    key
-  )
 
   return {
     orgKey,

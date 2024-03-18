@@ -320,7 +320,7 @@ async function confirmCode() {
                 v-model="formData.verificationCode"
                 type="text"
                 v-maska
-                data-maska="###"
+                data-maska="####"
                 name="verificationCode"
                 class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder=""
