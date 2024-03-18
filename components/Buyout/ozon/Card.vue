@@ -275,7 +275,7 @@ const getStatus = computed(() => {
           </div>
 
           <a
-            :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+            :href="`https://www.ozon.ru/product/${info.article}`"
             target="_blank"
             class="text-base text-primary link link-hover mt-0"
             :class="{
@@ -335,7 +335,7 @@ const getStatus = computed(() => {
               <div
                 class="rounded-md py-0 px-2 bg-primary bg-opacity-20 text-sm"
               >
-                {{ (info.discount + '%') || '%' }}
+                {{ info.discount + '%' || '%' }}
               </div>
             </div>
             <div class="flex gap-2">
