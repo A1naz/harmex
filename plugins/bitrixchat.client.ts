@@ -4,6 +4,7 @@ function inject(w: Window & typeof globalThis, d: Document, u: string) {
   const s = d.createElement('script')
   s.async = true
   s.src = `${u}?${(Date.now() / 60000) | 0}`
+  const h = d.getElementsByTagName('script')[0]
   // s.type = 'text/partytown'
   w.document.head.appendChild(s)
   s.addEventListener('load', () => {
@@ -13,11 +14,8 @@ function inject(w: Window & typeof globalThis, d: Document, u: string) {
     )
 
     if (mainButton) {
-
       mainButton.style.right = '10px' // Применяем правое смещение
       mainButton.style.bottom = '10px'
-
-
     }
   })
 }
