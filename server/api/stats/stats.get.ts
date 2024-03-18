@@ -19,7 +19,6 @@ export default eventHandler(async (event) => {
     'questions',
     'productlikes',
     'carts',
-    'autoanswers',
   ]
 
   switch (period) {
@@ -342,12 +341,6 @@ export default eventHandler(async (event) => {
     {
       value: 'carts',
       title: 'Корзина',
-      expenses: 0,
-      quantity: 0,
-    },
-    {
-      value: 'autoanswer',
-      title: 'Автоответчик',
       expenses: 0,
       quantity: 0,
     },
