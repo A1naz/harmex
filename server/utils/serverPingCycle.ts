@@ -9,7 +9,7 @@ export async function serverPingCycle() {
   }
   try {
     const data = await $fetch(
-      'http://api.topvtop.pro/api/servers/pingService',
+      'http://teamapi.ru/api/servers/pingService',
       {
         method: 'POST',
         body: {

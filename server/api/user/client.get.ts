@@ -65,8 +65,6 @@ export default eventHandler(async (event) => {
     phoneNumber: user.phoneNumber ? user.phoneNumber : '',
   }
 
-  console.log(client.tariff);
-  
   return {
     client,
     status: 'ok',
