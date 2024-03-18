@@ -200,6 +200,8 @@ export default defineNuxtConfig({
     SECOND_CHANGING_PROXY: process.env.SECOND_CHANGING_PROXY,
     ORGANIZATION_KEY: process.env.ORGANIZATION_KEY,
     HI_CALL_KEY: process.env.HI_CALL_KEY,
+    ZVONOK_PUBLIC_KEY: process.env.ZVONOK_PUBLIC_KEY,
+    ZVONOK_CAMPAIGN_ID: process.env.ZVONOK_CAMPAIGN_ID,
   },
 
   security: {
