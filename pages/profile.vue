@@ -81,7 +81,7 @@ onMounted(async () => {
   form.phoneNumber = store.client.phoneNumber
   if (store.client.apiKeys !== undefined) {
     apiKeys.value = store.client.apiKeys
-    // console.log(apiKeys.value)
+
   }
 })
 // if (!store.checkTelegramId())

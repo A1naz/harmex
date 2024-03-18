@@ -5,33 +5,27 @@ import { Client } from '~/data/types'
 import { UserRoles } from '~/data/enums'
 
 export default eventHandler(async (event) => {
+  const { referral }: any = getQuery(event)
 
-    const { referral }: any = getQuery(event)
-    console.log('referral', referral)
+  let inviter = await User.findOne({ uuid: referral })
 
-    let inviter = await User.findOne({ uuid: referral })
-    
+  if (!inviter) {
+    inviter = await User.findOne({ username: referral })
     if (!inviter) {
-        inviter = await User.findOne({ username: referral })
-        if (!inviter) {
-        console.log('inviter not found')
-        return
-        }
+      return
     }
-    console.log('inviter', inviter.username)
-
-
-    if (!inviter.partner.followCount) {
-      inviter.partner.followCount = 1;
-  } else {
-      inviter.partner.followCount += 1;
   }
-    const count = inviter.partner.followCount
-    console.log('count', count)
-    await inviter.save();
+
+  if (!inviter.partner.followCount) {
+    inviter.partner.followCount = 1
+  } else {
+    inviter.partner.followCount += 1
+  }
+  const count = inviter.partner.followCount
+  await inviter.save()
 
   return {
     status: 'ok',
-    count
+    count,
   }
 })

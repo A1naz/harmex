@@ -8,7 +8,6 @@ export default eventHandler(async (event) => {
 
   const { productData, article, publishDate, gender, questionText, anonim } = await readBody(event)
   const { image } = productData
-  console.log(productData, article, publishDate, gender, questionText, image)
 
   if (questionText.length < 10 || questionText.length > 1000) {
     throw createError({

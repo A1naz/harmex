@@ -89,8 +89,6 @@ export default eventHandler(async (event) => {
       code: data.code,
       date: new Date(),
     })
-
-    console.log(data);
     
     await newConfirm.save()
 

@@ -22,7 +22,7 @@ export default eventHandler(async (event) => {
       })
     }
   }
-  console.log(buyoutuuid);
+
   const buyout = await Buyout.findOne({ uuid: buyoutuuid })
   
   if (!buyout) {
