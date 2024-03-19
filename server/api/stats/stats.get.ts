@@ -309,10 +309,10 @@ export default eventHandler(async (event) => {
       quantity: 0,
     },
     {
-        value: 'deliveries',
-        title: 'Доставки',
-        expenses: 0,
-        quantity: 0,
+      value: 'deliveries',
+      title: 'Доставки',
+      expenses: 0,
+      quantity: 0,
     },
     {
       value: 'reviews',
@@ -320,18 +320,18 @@ export default eventHandler(async (event) => {
       expenses: 0,
       quantity: 0,
     },
-    {
-      value: 'likes',
-      title: 'Лайки на отзывы',
-      expenses: 0,
-      quantity: 0,
-    },
-    {
-      value: 'productlikes',
-      title: 'Лайки на товар/бренд',
-      expenses: 0,
-      quantity: 0,
-    },
+    // {
+    //   value: 'likes',
+    //   title: 'Лайки на отзывы',
+    //   expenses: 0,
+    //   quantity: 0,
+    // },
+    // {
+    //   value: 'productlikes',
+    //   title: 'Лайки на товар/бренд',
+    //   expenses: 0,
+    //   quantity: 0,
+    // },
     {
       value: 'questions',
       title: 'Вопросы',
@@ -346,16 +346,38 @@ export default eventHandler(async (event) => {
     },
   ]
 
+  const likesItem = {
+    value: 'likes',
+    title: 'Лайки',
+    expenses: 0,
+    quantity: 0,
+  };
+
+  
+
   typeSumMap.forEach((value, key) => {
-    services.forEach((item) => {
-      if (item.value == key) {
-        item.expenses = value
-        item.quantity = typeSumMap.get(key + ' quantity')
-        services[0].quantity += item.quantity
-        services[0].expenses = services[0].expenses + item.expenses
-      }
-    })
+    if (key === 'likes' || key === 'productlikes') {
+      likesItem.expenses += value;
+      likesItem.quantity += typeSumMap.get(key + ' quantity');
+    } else {
+      services.forEach((item) => {
+        if (item.value === key) {
+          item.expenses = value;
+          item.quantity = typeSumMap.get(key + ' quantity');
+          services[0].quantity += item.quantity;
+          services[0].expenses += item.expenses;
+        }
+      });
+    }
   })
+
+  const penalty = {
+    value: 'panalty',
+    title: 'Штрафы',
+    expenses: 0,
+    quantity: 0,
+  };
+
   const penaltyDeliveriesPayments = await paymenthistory.find({
     user,
     dataoperation: filter.dataoperation,
@@ -364,10 +386,15 @@ export default eventHandler(async (event) => {
     comment: { $regex: 'Штраф', $options: 'i' },
   })
 
-  let penaltyDeliveriesSumm = 0
   penaltyDeliveriesPayments.forEach((item) => {
-    penaltyDeliveriesSumm += +item.summ
+    penalty.expenses += +item.summ
+    penalty.quantity += 1
+    console.log('penalty: ', item)
   })
+  services.splice(4, 0, likesItem);
+  services.push(penalty);
 
-  return { data: format.data, labels: format.labels, services, penalty: penaltyDeliveriesSumm }
+
+
+  return { data: format.data, labels: format.labels, services, penalty: 0 }
 })

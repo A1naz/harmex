@@ -80,6 +80,8 @@ export default eventHandler(async (event) => {
 
     const expense = history.filter((item:any)=> item.typeoperations === 'Расход')
 
+    console.log('expense', expense)
+
     
     const totalSumm = payments.reduce((acc:any, payment:any) => {
       return acc + parseInt(payment.summ);

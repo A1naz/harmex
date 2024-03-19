@@ -37,7 +37,6 @@ const deliveriesCount = ref<any>({
   penalty: 0,
 })
 
-const deliveryPenaltyCount = ref<any>(0)
 async function getData() {
   const { data, error }: any = await useFetch('/api/stats/stats', {
     method: 'GET',
@@ -51,7 +50,6 @@ async function getData() {
     chartDataValue.value = data.value.data
     chartLabels.value = data.value.labels
     services.value = data.value.services
-    deliveryPenaltyCount.value = data.value.penalty
   }
 }
 
@@ -580,7 +578,7 @@ const deliveryStats = [
               <td class="border-r border-primary border-opacity-5 text-center">{{ defaultDateShort(element.purchaseDate) }}</td>
               <td class="border-r border-primary border-opacity-5 text-center">{{ element.id }}</td>
               <td class="border-r border-primary border-opacity-5 text-center">{{ defaultDateShort(element.receiptDate) }}</td>
-              <td class="border-r border-primary border-opacity-5 text-center">{{ defaultDateShort(element.receiveDate) || '-' }}</td>
+              <td class="border-r border-primary border-opacity-5 text-center">{{ element.receiveDate ? defaultDateShort(element.receiveDate) : '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -606,7 +604,7 @@ const deliveryStats = [
         Все услуги оказываются по Московскому времени.
       </p> -->
   <!-- </div> -->
-  <div class="flex justify-between mb-4 items-center mt-1 mt-60">
+  <!-- <div class="flex justify-between mb-4 items-center mt-1 mt-60">
     <div class="hidden lg:block">
       <NuxtLink
         @click="selectedService = service"
@@ -620,7 +618,7 @@ const deliveryStats = [
       >
         {{ service.title }}
       </NuxtLink>
-    </div>
+    </div> -->
     <!-- <div class="flex">
       <CustomSelect
         class="lg:flex"
@@ -656,7 +654,7 @@ const deliveryStats = [
       </select>
     </div> -->
 
-    <select
+    <!-- <select
       class="select select-bordered select-sm lg:hidden"
       @change="selectService($event)"
     >
@@ -669,9 +667,9 @@ const deliveryStats = [
       </option>
     </select>
   </div>
-  <div>
-    <div class="flex gap-5 flex-wrap">
-      <!-- <div class="card w-60 bg-base-100 shadow-2xl">
+  <div> -->
+    <!-- <div class="flex gap-5 flex-wrap">
+      <div class="card w-60 bg-base-100 shadow-2xl">
         <div class="card-body">
           <h2 class="text-md font-bold text-start">
             {{ selectedService.title }}
@@ -682,7 +680,7 @@ const deliveryStats = [
           <h2 class="mt-1">{{ currency.format(selectedService.expenses) }}</h2>
           <h2>за неделю</h2>
         </div>
-      </div> -->
+      </div>
       <div class="flex flex-col md:flex md:flex-row md:flex-wrap">
         <div id="forBar" class="w-11/12 md:w-1/2 mt-10 h-full">
           <div>По дням</div>
@@ -759,13 +757,13 @@ const deliveryStats = [
           </div>
         </div>
       </div>
-    </div>
-    <div class="flex flex-col-reverse md:flex-row mt-4 md:mt-10 md:ml-5">
+    </div> -->
+    <!-- <div class="flex flex-col-reverse md:flex-row mt-4 md:mt-10 md:ml-5">
       <div
         class="overflow-x-auto shadow-xl flex-row md:flex-col -ml-3 md:w-1/2"
       >
         <table class="table">
-          <!-- head -->
+         
           <thead>
             <tr>
               <th>Последние артикулы</th>
@@ -909,8 +907,8 @@ const deliveryStats = [
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </div> -->
+  <!-- </div> -->
   <div class="h-24"></div>
 </template>
 
