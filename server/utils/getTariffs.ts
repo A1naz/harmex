@@ -3,11 +3,7 @@ import { DefaultPrices } from '../lib/models/defaultPrices'
 import fs from 'fs'
 
 export default async function getTariffs(userTariffs: any) {
-  let defaultPrices = fs.readFileSync(
-    'server/lib/files/defaultPrices.json',
-    'utf8'
-  )
-  if (!defaultPrices) {
+  if (!fs.existsSync('server/lib/files/defaultPrices.json')) {
     const newPrices: any = await DefaultPrices.findOne({})
 
     fs.writeFileSync(
@@ -18,11 +14,13 @@ export default async function getTariffs(userTariffs: any) {
       })
     )
 
-    defaultPrices = fs.readFileSync(
-      'server/lib/files/defaultPrices.json',
-      'utf8'
-    )
+    fs.readFileSync('server/lib/files/defaultPrices.json', 'utf8')
   }
+
+  let defaultPrices = fs.readFileSync(
+    'server/lib/files/defaultPrices.json',
+    'utf8'
+  )
 
   const parsed = JSON.parse(defaultPrices)
 
