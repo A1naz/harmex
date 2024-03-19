@@ -126,7 +126,7 @@ function selectDateInternal(date: any, selectDate: any) {
           <div class="flex flex-col justify-center">
             <div class="text-xs">
               {{
-                `${$dayjs(date[0]).format('YY.MM.DD')} - ${$dayjs(
+                `${$dayjs(date[0]).format('DD.MM.YY')} - ${$dayjs(
                   date[1]
                 ).format('YY.MM.DD')}`
               }}
