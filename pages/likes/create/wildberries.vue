@@ -364,7 +364,7 @@ function handleArticleChanged(periodChanged: any, reviewsChanged: any, feedbacks
     </div> -->
     <div class="flex justify-between my-2">
       <div></div>
-      <div class="join" v-if="feedbacksCount">
+      <!-- <div class="join" v-if="feedbacksCount">
         <button
           class="join-item btn btn-sm px-1"
           @click="swapPage(-1)"
@@ -380,7 +380,7 @@ function handleArticleChanged(periodChanged: any, reviewsChanged: any, feedbacks
         >
         <Icon name="formkit:right" class="rounded-full  my-auto cursor-pointer hover:bg-opacity-50" size="22" />
         </button>
-      </div>
+      </div> -->
     </div>
     <!-- <Transition name="fade">
      

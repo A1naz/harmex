@@ -18,81 +18,22 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const accountData: any = await $fetch(
-    'http://api.topvtop.pro/api/accounts/getAccountOzon',
-    {
-      method: 'POST',
-      parseResponse: JSON.parse,
-      body: {
-        api_key: apiKey,
-        type: 'walk',
-        article: article,
-        required: {
-          cookies: true,
-        },
-      },
-    }
-  )
-
-  const isFree: any = await $fetch(
-    'http://api.topvtop.pro/api/accounts/freeAccountOzon',
-    {
-      method: 'POST',
-      body: {
-        api_key: apiKey,
-        account_id: accountData.info.account._id,
-      },
-    }
-  )
-
-  const cookies = accountData.info.cookies.find(
-    (cookie: any) => cookie.name === 'abt_data'
-  ).value
-
-  const productUrl = `http://api.ozon.ru/composer-api.bx/page/json/v2?url=%2Fproduct%2F${article}%2F%3Flayout_container%3Dreviewshelfpaginator%26layout_page_index%3D4%26page%3D2%26reviewsFilters%3De30K%26reviewsVariantMode%3D2%26sh%3Db93L0h4A6Q%26sort%3Dpublished_at_desc%26start_page_id%3D1dd1ae16494e63a9b04a45ab8ce917d5%26tab%3Dreviews`
-  const options = {
-    url: productUrl,
-    proxy: 'http://' + proxy,
-    headers: {
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0',
-      Cookie: 'abt_data=' + cookies,
+  const data: any = await $fetch('http://95.163.249.133:4141', {
+    method: 'POST',
+    parseResponse: JSON.parse,
+    body: {
+      type: 'ozonReviews',
+      url: `https://www.ozon.ru/product/${article}/`,
+      count: elPerPage,
     },
+  })
+
+  if (!data || data.status === 'error') {
+    return {
+      feedbacks: [],
+      feedbacksCount: 0,
+    }
   }
 
-  const data: any = await new Promise((resolve, reject) => {
-    request.get(options, function (error, response, body) {
-      if (!error) {
-        resolve(JSON.parse(body)) // Разрешение обещания с данными, если запрос успешен
-      } else {
-        console.log(error)
-
-        reject(new Error(`Непредвиденный статус код`)) // Обработка непредвиденных статусов ответа
-      }
-    })
-  })
-
-  const widgetStates: any = data['widgetStates']
-  const productData: any = JSON.parse(
-    widgetStates['webListReviews-3201466-reviewshelfpaginator-4']
-  )
-  const reviews = productData['reviews']
-
-  let feedbacks = reviews.map((feedback: any, index: number) => {
-    return {
-      id: feedback.uuid,
-      rating: feedback.content.score || 0,
-      text: feedback.content.comment || '',
-      user: {
-        name: feedback.author.firstName || 'Покупатель OZON',
-        country: 'Россия',
-      },
-      likes: feedback.usefulness ? feedback.usefulness.useful || 0 : 0,
-      dislikes: feedback.usefulness ? feedback.usefulness.unuseful || 0 : 0,
-      rank: index,
-    }
-  })
-
-
-  return { feedbacks, feedbacksCount: feedbacks.length }
+  return { feedbacks: data, feedbacksCount: 0 }
 })
