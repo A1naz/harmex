@@ -54,6 +54,7 @@ async function linkFollow() {
     query: {
       referral: formData.referral,
     },
+    watch: false,
   })
 }
 
@@ -156,6 +157,7 @@ async function checkInn() {
       inn: formData.orgInn,
       phoneNumber: formData.phoneNumber.replace(/[\(\)\-\s]/g, ''),
     },
+    watch: false,
   })
 
   if (error.value) {
@@ -221,6 +223,7 @@ async function sendConfirmCode() {
       body: {
         phoneNumber: formData.phoneNumber.replace(/[\(\)\-\s]/g, ''),
       },
+      watch: false,
     }
   )
 
@@ -248,6 +251,7 @@ async function confirmCode() {
         phoneNumber: formData.phoneNumber.replace(/[\(\)\-\s]/g, ''),
         code: formData.verificationCode,
       },
+      watch: false,
     }
   )
   if (data.value) {

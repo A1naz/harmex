@@ -30,11 +30,10 @@ export default eventHandler(async (event) => {
       isConfirmExist.count = 1
     }
 
-    isConfirmExist.count++
-
     if (isConfirmExist.count >= 4) {
       isConfirmExist.count = 1
     }
+    isConfirmExist.count++
 
     const lastDate = new Date(isConfirmExist.date)
     const currentDate = new Date()
@@ -49,7 +48,7 @@ export default eventHandler(async (event) => {
 
     isConfirmExist.date = new Date()
     await isConfirmExist.save()
-    if (isConfirmExist.count >= 2) {
+    if (isConfirmExist.count > 2) {
       data = await confirmViaHiCall(hiCallKey, phoneNumber)
     } else {
       data = await confirmViaZvonokApi(
@@ -63,7 +62,6 @@ export default eventHandler(async (event) => {
       isConfirmExist.save()
     }
 
-    isConfirmExist.count++
     isConfirmExist.code = data.code
     isConfirmExist.date = new Date()
     isConfirmExist.save()
@@ -95,8 +93,8 @@ export default eventHandler(async (event) => {
         status: 'ok',
       }
     } catch (e) {
-      console.log(e);
-      
+      console.log(e)
+
       return {
         status: 'error',
         message: 'Не удалось отправить код',
