@@ -11,4 +11,5 @@ sw.*
 points.json
 pvz/wildberriesPoints.json
 pvz/ozonPoints.json
+server/lib/files/defaultPrices.json
 .unlighthouse
