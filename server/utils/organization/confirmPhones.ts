@@ -1,6 +1,7 @@
 import request from 'request'
 
 export async function confirmViaHiCall(hiCallKey: string, phoneNumber: string) {
+  console.log('HiCall')
   const data: any = await $fetch(
     `https://a.hi-call.ru/voice/${hiCallKey}/${phoneNumber.replace('+', '')}`
   )
@@ -31,7 +32,7 @@ export async function confirmViaZvonokApi(
         } else {
           console.log(error)
 
-          reject(new Error(`Непредвиденный статус код`))
+          reject(new Error(`Не удалось отправить код`))
         }
       }
     )

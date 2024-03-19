@@ -204,6 +204,16 @@ async function sendConfirmCode() {
     return
   }
 
+  if (timerRunning.value) {
+    notify({
+      title: `Следующая попытка будет доступна через ${timer.value} сек.`,
+    })
+    return
+  }
+  timer.value = 60
+  timerFinished.value = false
+  startTimer()
+
   const { data, error }: any = await useFetch(
     '/api/organization/confirmPhone',
     {
@@ -254,6 +264,33 @@ async function confirmCode() {
       title: 'Неверный код',
     })
   }
+}
+
+const timer = ref(60)
+const timerRunning = ref(false)
+const timerVisible = ref(false)
+const timerFinished = ref(false)
+
+let interval: any
+
+const startTimer = () => {
+  timerRunning.value = true
+  timerVisible.value = true
+  interval = setInterval(() => {
+    if (timer.value > 0) {
+      timer.value--
+    } else {
+      clearInterval(interval)
+      timerRunning.value = false
+      timerFinished.value = true
+    }
+  }, 1000)
+}
+
+const resend = () => {
+  timer.value = 60
+  timerFinished.value = false
+  startTimer()
 }
 </script>
 
@@ -308,6 +345,15 @@ async function confirmCode() {
                   name="fluent:backspace-24-regular"
                 />
               </button>
+            </div>
+            <div class="flex">
+              <div class="hidden">{{ timer }}</div>
+              <span
+                class="text-md font-medium underline cursor-pointer ml-1 mt-1"
+                v-if="isCodeSent && !isNumberConfirmed"
+                @click="sendConfirmCode"
+                >Отправить код повторно</span
+              >
             </div>
             <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
               Код верификации с звонка
