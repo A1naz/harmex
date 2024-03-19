@@ -19,6 +19,7 @@ export async function confirmViaZvonokApi(
   campaignId: string,
   phoneNumber: string
 ) {
+  console.log('Звонок апи')
   const data: any = await new Promise((resolve, reject) => {
     request.get(
       {
