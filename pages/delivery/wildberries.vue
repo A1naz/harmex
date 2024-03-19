@@ -169,7 +169,7 @@ watch(targetIsVisible, async (isVisible) => {
 watch(() => status.value, async (newRoute) => {
   skip.value = 50
   end.value = false
-  const { data } = await useFetch('/api/delivery/get', {
+  const { data } = await useFetch('/api/wildberries/delivery/get', {
     method: 'GET',
     query: {
       status: status.value ?? 'all',
