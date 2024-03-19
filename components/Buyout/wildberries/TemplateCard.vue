@@ -40,7 +40,13 @@ const props = defineProps({
           <div v-if="product.rules.length > 0" class="flex flex-col gap-1 w-full">
             <span class="text-xs">Правила: </span>
             <div class="text-xs">
-              {{ product.rules.map((rule: any) => rule.id).join(', ') }}
+              {{ 
+                (product.purchaseSoon ? '1, ' : '') +
+            (product.rules && product.rules.length ? '' : '') +
+            (product.rules
+              ? product.rules.map((rule: any) => rule.id + 1).join(', ')
+              : '')  
+              }}
             </div>
           </div>
           <div v-else class="my-2"></div>

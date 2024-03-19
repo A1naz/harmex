@@ -102,6 +102,7 @@ export default eventHandler(async (event) => {
       createdAt: buyout.createdAt,
       product: buyout.product,
       discount: buyout.discount,
+      purchaseSoon: buyout.purchaseSoon,
     }
   })
   return format

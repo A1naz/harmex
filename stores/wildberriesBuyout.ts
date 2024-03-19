@@ -3,7 +3,11 @@ import { notify } from '@kyvg/vue3-notification'
 import type { Item } from '@/data/buyout/createProduct'
 import { rules } from '@/data/buyout/rules'
 
-export interface ISearchQueryChange { value: string; queryIndex: number; productIndex: number }
+export interface ISearchQueryChange {
+  value: string
+  queryIndex: number
+  productIndex: number
+}
 
 export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
   state: () => ({
@@ -16,12 +20,10 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
   },
   actions: {
     async createTemplate(title: String, products: Array<any>) {
-
       return { status: 'ok' }
     },
 
     async cloneBuyout(uuid: string) {
-
       const { data, error } = await useFetch('/api/wildberries/buyout/clone', {
         query: {
           uuid,
@@ -45,7 +47,11 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
         endDate.setHours(20, 0)
         const product = {
           ...productData,
-          searchQuery: productData.searchQuery.map(item => ({ value: item, error: false, loading: false })),
+          searchQuery: productData.searchQuery.map((item) => ({
+            value: item,
+            error: false,
+            loading: false,
+          })),
           rules: [],
           dateRange: [startDate, endDate],
         }
@@ -53,11 +59,10 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
       }
     },
 
-    clearProducts() {      
+    clearProducts() {
       this.createProducts = []
     },
     async addProduct(article: number) {
-
       if (this.createProducts.length >= 10) {
         notify({
           title: 'За раз можно создать максимум 10 выкупов',
@@ -66,9 +71,12 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
         return
       }
 
-      const { data, error } = await useFetch(`/api/wildberries/product/${article}`, {
-        method: 'GET',
-      })
+      const { data, error } = await useFetch(
+        `/api/wildberries/product/${article}`,
+        {
+          method: 'GET',
+        }
+      )
       if (error.value) {
         notify({
           title: 'Ошибка',
@@ -84,40 +92,60 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
       startDate.setHours(9, 0)
       endDate.setHours(20, 0)
 
-      this.createProducts.push(reactive({
-        image: product.image,
-        name: product.name,
-        article: product.article,
-        price: product.price,
-        quantity: 1,
-        sex: 'Нет',
-        sizes: product?.sizes,
-        dateRange: [startDate, endDate],
-        adress: '',
-        searchQuery: [{ value: '', loading: false, error: false }],
-        selectedSize: product.sizes[0] ?? 'none',
-        priceText: product.priceText,
-        rules: [{ category: 3, description: 'Не выкупать если товар не найден в поисковой выдаче (не выкупать по прямой ссылке)', id: 5 }],
-        pointCoordinates: { lat: 0, lon: 0 },
-      }))
+      this.createProducts.push(
+        reactive({
+          image: product.image,
+          name: product.name,
+          article: product.article,
+          price: product.price,
+          quantity: 1,
+          sex: 'Нет',
+          sizes: product?.sizes,
+          dateRange: [startDate, endDate],
+          adress: '',
+          searchQuery: [{ value: '', loading: false, error: false }],
+          selectedSize: product.sizes[0] ?? 'none',
+          priceText: product.priceText,
+          rules: [],
+          pointCoordinates: { lat: 0, lon: 0 },
+        })
+      )
+      this.changeRule(true, this.createProducts.length - 1, 5)
     },
     removeSearchQuery(index: number, place: number) {
       this.createProducts[index].searchQuery.splice(place, 1)
     },
     addSearchQuery(index: number) {
-      this.createProducts[index].searchQuery.push({ value: '', loading: false, error: false })
+      this.createProducts[index].searchQuery.push({
+        value: '',
+        loading: false,
+        error: false,
+      })
     },
     changeDateRange(value: unknown[], index: number) {
       this.createProducts[index].dateRange = value as [Date | null, Date | null]
     },
-    changeSearchQueryStatus(index: number, productIndex: number, error = false, loading = false, message?: string) {
+    changeSearchQueryStatus(
+      index: number,
+      productIndex: number,
+      error = false,
+      loading = false,
+      message?: string
+    ) {
       const query = this.createProducts[productIndex].searchQuery[index]
       query.error = error
       query.loading = loading
       query.message = message
     },
-    changeSearchQuery(options: ISearchQueryChange, error = false, loading = false) {
-      const query = this.createProducts[options.productIndex].searchQuery[options.queryIndex]
+    changeSearchQuery(
+      options: ISearchQueryChange,
+      error = false,
+      loading = false
+    ) {
+      const query =
+        this.createProducts[options.productIndex].searchQuery[
+          options.queryIndex
+        ]
       query.value = options.value
       query.error = error
       query.loading = loading
@@ -132,21 +160,20 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
       this.createProducts[index].sex = value
     },
     changeRule(value: boolean, index: number, rule: number) {
+    
       const rules = this.createProducts[index].rules
-      const finded = this.defaultRules.find(item => item.id === rule)
-      if (!finded)
-        return
+      const finded = this.defaultRules.find((item) => item.id === rule)
+      if (!finded) return
       if (value) {
         if (finded.id === 8) {
           rules.forEach((rule, index) => {
-            if (rule.id >= 10)
-              rules.splice(index, 1)
+            if (rule.id >= 10) rules.splice(index, 1)
           })
         }
         this.createProducts[index].rules.push(finded)
-  
+      } else {
+        rules.splice(rules.indexOf(finded), 1)
       }
-      else { rules.splice(rules.indexOf(finded), 1) }
     },
     removeProduct(index: number) {
       this.createProducts.splice(index, 1)
@@ -156,7 +183,7 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
       this.createProducts[index].adress = address
       this.createProducts[index].pointCoordinates = {
         lat: lt,
-        lon: lg
+        lon: lg,
       }
     },
   },

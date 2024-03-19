@@ -243,7 +243,9 @@ onKeyStroke('Escape', (e) => {
           <div class="flex items-start flex-col">
             <span class="text-lg font-bold mb-1">Правила:</span>
             <span class="text-sm">{{
-              !info.rules.length ? 'Не выбраны' : info.rules.join(', ')
+            (info.purchaseSoon ? '1' : '') + ((info.rules.length && info.purchaseSoon) ? ', ' : '') +
+            (info.rules && info.rules.length ? '' : '') +
+            ((!info.rules.length && !info.purchaseSoon) ? 'Не выбраны' : info.rules.map((rule: any) => rule+1).join(', '))
             }}</span>
           </div>
         </div>
