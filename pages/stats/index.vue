@@ -14,6 +14,7 @@ const route = useRoute()
 const { width } = useWindowSize()
 const secondLevelReferrals = ref(0)
 const lastElements = ref<any>([])
+const deliveries = ref<any>([])
 const periodFromRoute = route.query.period
 
 if (!route.query.type || !route.query.period) {
@@ -35,6 +36,8 @@ const deliveriesCount = ref<any>({
   complited: 0,
   penalty: 0,
 })
+
+const deliveryPenaltyCount = ref<any>(0)
 async function getData() {
   const { data, error }: any = await useFetch('/api/stats/stats', {
     method: 'GET',
@@ -48,36 +51,54 @@ async function getData() {
     chartDataValue.value = data.value.data
     chartLabels.value = data.value.labels
     services.value = data.value.services
+    deliveryPenaltyCount.value = data.value.penalty
   }
 }
 
 const totalSumm = ref(0)
 const totalExpense = ref(0)
 const totalDeals = ref(0)
+const comissions = ref(0)
 async function getDataHeader() {
   const { data, error }: any = await useFetch('/api/stats/statsHeader', {
     method: 'GET',
     params: {
-      type: route.query.type,
+      // type: route.query.type,
       period: route.query.period,
     },
     watch: false,
   })
   if (data.value) {
-    // console.log(data.value, data.value.totalSumm)
     totalSumm.value = data.value.totalSumm
     totalExpense.value = data.value.totalExpense
     totalDeals.value = data.value.totalDeals
+    comissions.value = data.value.comissions
   }
 }
-getDataHeader()
+await getDataHeader()
+
+const purchaseDelivery = ref(0)
+const inTransit = ref(0)
+const readyToPickup = ref(0)
+const received = ref(0)
+const cancelled = ref(0)
 async function getLast() {
-  const { data, error }: any = await useFetch('/api/stats/last10', {
+  const { data, error }: any = await useFetch('/api/stats/statsDelivery', {
     method: 'GET',
+    params: {
+      // type: route.query.type,
+      period: route.query.period,
+    },
+    watch: false,
   })
 
   if (data.value) {
-    lastElements.value = data.value
+    lastElements.value = data.value.lastElements
+    purchaseDelivery.value = data.value.purchase
+    inTransit.value = data.value.inTransit
+    readyToPickup.value = data.value.ready
+    received.value = data.value.received
+    cancelled.value = data.value.cancelled
   }
 }
 
@@ -197,7 +218,7 @@ function selectService(event: any) {
     external: true,
   })
 }
-
+  
 // DELIVERIES by CITY
 interface DelisDataChart {
   data: number[]
@@ -343,35 +364,35 @@ onMounted(() => {
 
 const stats = [
   {
-    icon: 'ph:wallet-fill',
+    icon: 'coins',
     title: 'Пополнено',
-    value: totalSumm.value,
+    value: currency.format(totalSumm.value) || 0,
   },
   {
-    icon: 'ph:wallet-fill',
+    icon: 'hand',
     title: 'Расходы',
-    value: totalExpense.value,
+    value: currency.format(totalExpense.value) || 0,
   },
   {
-    icon: 'ph:wallet-fill',
+    icon: 'mbox',
     title: 'Остаток',
-    value: (totalSumm.value-totalExpense.value)<0 ? 0 : totalSumm.value-totalExpense.value,
+    value: (totalSumm.value-totalExpense.value)<0 ?( 0+' ₽') : currency.format(totalSumm.value-totalExpense.value) || totalSumm.value-totalExpense.value,
   },
   {
-    icon: 'ph:wallet-fill',
+    icon: 'box',
     title: 'Заказано услуг',
     value: totalDeals.value,
   },
   {
-    icon: 'ph:wallet-fill',
+    icon: 'crystal',
     title: 'Партнерские вознаграждения',
-    value: 0,
+    value: currency.format(comissions.value) || 0,
   },
 ]
 const deliveryStats = [
   {
     title: 'Выкуплено',
-    value: 0,
+    value: purchaseDelivery.value,
   },
   {
     title: 'Доступных отзывов',
@@ -379,19 +400,19 @@ const deliveryStats = [
   },
   {
     title: 'В пути',
-    value: 0,
+    value: inTransit.value,
   },
   {
     title: 'Готовы к выдаче',
-    value: 0,
+    value: readyToPickup.value,
   },
   {
     title: 'Получено',
-    value: 0,
+    value: received.value,
   },
   {
     title: 'Отменено',
-    value: 0,
+    value: cancelled.value,
   }
 ]
 </script>
@@ -443,11 +464,16 @@ const deliveryStats = [
     </div>
     <div class="flex gap-3.5">
       <div v-for="item in stats" class="flex flex-col gap-2 w-[20%] rounded-lg bg-neutral-focus px-3.5 py-3">
-        <IconCSS
+        <nuxt-img
+            class="w-6 h-6"
+            :src="`/icons/figma/stats/${item.icon}.svg`"
+            alt="stats1"
+        />
+        <!-- <IconCSS
           class="text-neutral-content text-opacity-70"
           :name="item.icon"
           size="24"
-        />
+        /> -->
         <span class="text-neutral-content text-opacity-70">
           {{ item.title }}
         </span>

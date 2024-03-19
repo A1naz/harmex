@@ -356,6 +356,18 @@ export default eventHandler(async (event) => {
       }
     })
   })
+  const penaltyDeliveriesPayments = await paymenthistory.find({
+    user,
+    dataoperation: filter.dataoperation,
+    typeoperations: 'Расход',
+    type: 'deliveries',
+    comment: { $regex: 'Штраф', $options: 'i' },
+  })
 
-  return { data: format.data, labels: format.labels, services }
+  let penaltyDeliveriesSumm = 0
+  penaltyDeliveriesPayments.forEach((item) => {
+    penaltyDeliveriesSumm += +item.summ
+  })
+
+  return { data: format.data, labels: format.labels, services, penalty: penaltyDeliveriesSumm }
 })

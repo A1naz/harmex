@@ -1,9 +1,7 @@
-﻿﻿import { Delivery } from '~/server/lib/models/Delivery'
-import { paymenthistory } from '~/server/lib/models/Paymenthistory'
-import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory'
+﻿import { Delivery } from '~/server/lib/models/Delivery'
 
 export default eventHandler(async (event) => {
-  
+
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
@@ -71,57 +69,36 @@ export default eventHandler(async (event) => {
       break
     }
 
-    const history = await paymenthistory.find({
-      user,
-      dataoperation: filter.dataoperation,
-    });
+  const deliveries = await Delivery.find({ user, updatedAt: filter.dataoperation, })
+  
+  const purchase = deliveries.length
+  
+  const lastElements: any[] = []
+  let inTransit = 0;
+  let ready = 0;
+  let received = 0;
+  let cancelled = 0;
 
-    const payments = history.filter((item:any)=> item.typeoperations === 'Приход')
+  deliveries.forEach((item: any) => {
+    const sentToAssembly = item.statusdelivery.find((item: any) => item.status === 'Отправлен на сборку');
+    const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
+    const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получено');
+    const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
 
-    const expense = history.filter((item:any)=> item.typeoperations === 'Расход')
+    status === 'В пути' ? inTransit++ :
+    status === 'Готов к выдаче' ? ready++ :
+    status === 'Получено' ? received++ : item.status === 'canceled' ? cancelled++ : null;
 
-    
-    const totalSumm = payments.reduce((acc:any, payment:any) => {
-      return acc + parseInt(payment.summ);
-    }, 0);
-    const totalExpense = expense.reduce((acc:any, payment:any) => {
-      return acc + parseInt(payment.summ);
-    }, 0);
+    lastElements.push({
+      article: item.article,
+      pvz: item.point,
+      status: status,
+      purchaseDate: sentToAssembly?.date || '',
+      id: item.uuidbuyout,
+      receiptDate: receiptDate?.date || '',
+      receiveDate: receiveDate?.date || '',
+    })
+  })
 
-    
-  //   const dealsCount = await paymenthistory.aggregate([
-  //     {  
-  //       $match: { 
-  //         user: user._id,
-  //         dataoperation: filter.dataoperation 
-  //       }  
-  //     },
-  //     {
-  //       $group: {
-  //         _id: '$user',
-  //         count: { $sum: 1 },
-  //       },
-  //     },
-  //   ])
-  // const totalDeals = dealsCount.reduce((total, deal) => total + deal.count, 0);
-  //   console.log('totalDeals', totalDeals)
-  const comissions = await PartnerPaymentHistory.aggregate([
-    { $match: {
-      user: user._id,
-      date: filter.dataoperation,
-    } },
-    {
-      $group: {
-        _id: '$referral',
-        summ: { $sum: '$amount' },
-        date: { $first: '$date' },
-      },
-    },
-  ])
-  const totalCommissions = comissions.reduce((count, comission) => count + comission.summ, 0);
-
-  const totalDeals = expense.length
-  // console.log('totalSumm:', totalSumm, 'totalExpense:', totalExpense, 'totalDeals:', totalDeals, 'comissions:', totalCommissions)
-
-  return { totalSumm: totalSumm, totalExpense: totalExpense, totalDeals: totalDeals, comissions: totalCommissions }
+  return {lastElements, purchase , inTransit, ready, received, cancelled}
 })
