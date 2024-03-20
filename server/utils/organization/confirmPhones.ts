@@ -1,7 +1,7 @@
 import request from 'request'
 
 export async function confirmViaHiCall(hiCallKey: string, phoneNumber: string) {
-  console.log('HiCall')
+
   const data: any = await $fetch(
     `https://a.hi-call.ru/voice/${hiCallKey}/${phoneNumber.replace('+', '')}`
   )
@@ -12,6 +12,8 @@ export async function confirmViaHiCall(hiCallKey: string, phoneNumber: string) {
       statusMessage: 'Не удалось отправить код',
     })
   }
+  console.log(data);
+  
   return data
 }
 
@@ -20,7 +22,7 @@ export async function confirmViaZvonokApi(
   campaignId: string,
   phoneNumber: string
 ) {
-  console.log('Звонок апи')
+
   const data: any = await new Promise((resolve, reject) => {
     request.get(
       {
@@ -36,6 +38,7 @@ export async function confirmViaZvonokApi(
         }
       }
     )
+    console.log(data);
   })
 
   if (!data) {

@@ -19,7 +19,6 @@ export async function removeExtraPickpoints() {
   }
   fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
 
-
   const data: any = await $fetch(
     'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
     {
@@ -82,7 +81,6 @@ export async function removeExtraPickpoints() {
 }
 
 export async function createPickpointsFile() {
-
   const data: any = await $fetch(
     'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
     {
@@ -109,4 +107,5 @@ export async function createPickpointsFile() {
     points: collection,
   }
   fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
+  return
 }
