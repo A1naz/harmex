@@ -3,7 +3,7 @@ import { notify } from '@kyvg/vue3-notification'
 import type { Item } from '@/data/buyout/createProduct'
 import { rules } from '@/data/buyout/rules'
 
-export interface ISearchQueryChange { value: string; queryIndex: number; productIndex: number }
+export interface ISearchQueryChangeOzon { value: string; queryIndex: number; productIndex: number }
 
 export const useOzonBuyoutStore = defineStore('ozonBuyout', {
   state: () => ({
@@ -116,7 +116,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
       query.loading = loading
       query.message = message
     },
-    changeSearchQuery(options: ISearchQueryChange, error = false, loading = false) {
+    changeSearchQuery(options: ISearchQueryChangeOzon, error = false, loading = false) {
       const query = this.createProducts[options.productIndex].searchQuery[options.queryIndex]
       query.value = options.value
       query.error = error

@@ -29,16 +29,19 @@ async function getProductReviews() {
   loading.value = true
   changedReviews.value = []
   savedArticle.value = article.value
-  const { data, error }: any = await useFetch('/api/wildberries/likes/productReviews', {
-    method: 'GET',
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-    query: {
-      article: savedArticle.value,
-      limit: limit.value * page.value,
-      page: page.value,
-      sortBy: sortBy.value ?? 'date',
-    },
-  })
+  const { data, error }: any = await useFetch(
+    '/api/wildberries/likes/productReviews',
+    {
+      method: 'GET',
+      headers: useRequestHeaders(['cookie']) as HeadersInit,
+      query: {
+        article: savedArticle.value,
+        limit: limit.value * page.value,
+        page: page.value,
+        sortBy: sortBy.value ?? 'date',
+      },
+    }
+  )
   loading.value = false
   if (error.value) {
     notify({
@@ -60,21 +63,24 @@ async function getProductReviews() {
   }) as any[]
   reviews.value = initial
   feedbacksCount.value = data.value.feedbacksCount
-  modalShow.value = false;
+  modalShow.value = false
   sortReviews()
 }
 
 async function increaseReviews() {
   limit.value += 50
-  const { data, error }: any = await useFetch('/api/wildberries/likes/productReviews', {
-    method: 'GET',
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-    query: {
-      article: savedArticle.value,
-      limit: limit.value,
-      sortBy: sortBy.value ?? 'date',
-    },
-  })
+  const { data, error }: any = await useFetch(
+    '/api/wildberries/likes/productReviews',
+    {
+      method: 'GET',
+      headers: useRequestHeaders(['cookie']) as HeadersInit,
+      query: {
+        article: savedArticle.value,
+        limit: limit.value,
+        sortBy: sortBy.value ?? 'date',
+      },
+    }
+  )
   if (error.value) {
     notify({
       title: 'Что-то пошло не так',
@@ -202,7 +208,6 @@ async function save() {
   // const userOffsetMinutes = new Date().getTimezoneOffset()
   // const userTimezoneOffsetHours = -userOffsetMinutes / 60
   // const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
-  console.log('article', )
   const { data, error } = await useFetch('/api/wildberries/likes/create', {
     method: 'POST',
     body: {
@@ -221,6 +226,7 @@ async function save() {
       title: 'Ошибка',
       text: error.value.message,
     })
+    isCreateButtonDisabled.value = false
     return
   }
   if (data.value) {
@@ -229,6 +235,7 @@ async function save() {
       title: 'Успешно',
     })
     return router.push('/likes')
+    isCreateButtonDisabled.value = false
   }
 }
 
@@ -308,20 +315,25 @@ function selectPeriod(event: any) {
   period.value = event.target.value
 }
 
-function handleArticleChanged(periodChanged: any, reviewsChanged: any, feedbacksCountChanged: any, articleChanged: any) {
-    modalShow.value = false
-    savedArticle.value = articleChanged;
-    period.value = periodChanged;
-    feedbacksCount.value = feedbacksCountChanged;
-    reviews.value = reviewsChanged;
-    sortReviews();
-  }
+function handleArticleChanged(
+  periodChanged: any,
+  reviewsChanged: any,
+  feedbacksCountChanged: any,
+  articleChanged: any
+) {
+  modalShow.value = false
+  savedArticle.value = articleChanged
+  period.value = periodChanged
+  feedbacksCount.value = feedbacksCountChanged
+  reviews.value = reviewsChanged
+  sortReviews()
+}
 </script>
 
 <template>
   <div>
     <!-- <h1 class="text-2xl font-bold mt-4">Добавить лайки</h1> -->
-    <p class="font-light text-gray-500 mt-4 lg:text-sm ">
+    <p class="font-light text-gray-500 mt-4 lg:text-sm">
       В целях безопасности все отзывы, на которых более 30 лайков или дизлайков,
       не выводятся в списке.
     </p>
@@ -433,37 +445,47 @@ function handleArticleChanged(periodChanged: any, reviewsChanged: any, feedbacks
         </div>
       </div>
     </Transition> -->
-    <div v-if="changedReviews.length" class="fixed bottom-20 right-1 md:bottom-30 lg:right-5 z-[9999] w-60 sm:w-70 p-4 bg-base-100 rounded-lg border border-base-300 text-2xl">
+    <div
+      v-if="changedReviews.length"
+      class="fixed bottom-20 right-1 md:bottom-30 lg:right-5 z-[9999] w-60 sm:w-70 p-4 bg-base-100 rounded-lg border border-base-300 text-2xl"
+    >
       <div class="flex gap-0.5">
-        <IconCSS
-        class="text-primary mr-1"
-        name="mdi:bar-chart" size="22"
-       />  
-       <span class="text-lg mr-auto">Статистика оценок</span>
+        <IconCSS class="text-primary mr-1" name="mdi:bar-chart" size="22" />
+        <span class="text-lg mr-auto">Статистика оценок</span>
       </div>
-      <div class="info flex flex-col gap-1 mt-2 ">
-          <!-- <div class="flex justify-between">
+      <div class="info flex flex-col gap-1 mt-2">
+        <!-- <div class="flex justify-between">
             <p class="text-xs font-bold text-base-content lg:text-sm">
             Всего отзывов: 
             </p>
             <span class="text-xs font-bold text-base-content lg:text-sm">{{ changedReviews.length }}</span>
           </div> -->
-          <div class="flex gap-5 justify-around mb-1">
-            <div class="flex gap-5">
-              <p class="text-xs text-base-content lg:text-sm font-bold bg-primary bg-opacity-20 rounded-full px-3 py-1">
-                Да
-              </p>
-              <span class="text-xs text-base-content lg:text-sm font-bold my-auto">{{ getAddedLikes().likes }}</span>
-            </div>
-            
-            <div class="flex gap-5">
-              <p class="text-xs text-base-content lg:text-sm font-bold bg-primary bg-opacity-20 rounded-full px-3 py-1">
-                Нет
-              </p>
-              <span class="text-xs text-base-content lg:text-sm font-bold my-auto">{{ getAddedLikes().dislikes }}</span>
-            </div>
+        <div class="flex gap-5 justify-around mb-1">
+          <div class="flex gap-5">
+            <p
+              class="text-xs text-base-content lg:text-sm font-bold bg-primary bg-opacity-20 rounded-full px-3 py-1"
+            >
+              Да
+            </p>
+            <span
+              class="text-xs text-base-content lg:text-sm font-bold my-auto"
+              >{{ getAddedLikes().likes }}</span
+            >
           </div>
-          <!-- <div class="flex gap-0.5 flex-col justify-between">
+
+          <div class="flex gap-5">
+            <p
+              class="text-xs text-base-content lg:text-sm font-bold bg-primary bg-opacity-20 rounded-full px-3 py-1"
+            >
+              Нет
+            </p>
+            <span
+              class="text-xs text-base-content lg:text-sm font-bold my-auto"
+              >{{ getAddedLikes().dislikes }}</span
+            >
+          </div>
+        </div>
+        <!-- <div class="flex gap-0.5 flex-col justify-between">
             <p
             class="text-xs text-base-content lg:text-sm font-bold my-auto"
           >
@@ -475,20 +497,23 @@ function handleArticleChanged(periodChanged: any, reviewsChanged: any, feedbacks
             :start-date="startDate"
           />
           </div> -->
-          
-        </div>
-        <div class="save ml-auto flex gap-2 mt-1">
-          <!-- <button
+      </div>
+      <div class="save ml-auto flex gap-2 mt-1">
+        <!-- <button
             class="btn btn-ghost text-base-content btn-sm"
             @click="cancel"
           >
             Отмена
           </button> -->
-          <button class="btn btn-primary text-base-content bg-opacity-50 border-none btn-sm w-[100%] sm:w-[100%] rounded-full" @click="save">
-            Создать лайки
-            <Icon class="justify-end" name="formkit:right" size="20" />
-          </button>
-        </div>
+        <button
+          class="btn btn-primary text-base-content bg-opacity-50 border-none btn-sm w-[100%] sm:w-[100%] rounded-full"
+          @click="save"
+          :disabled="isCreateButtonDisabled"
+        >
+          Создать лайки
+          <Icon class="justify-end" name="formkit:right" size="20" />
+        </button>
+      </div>
     </div>
     <div
       v-if="reviews.length"
@@ -531,7 +556,10 @@ function handleArticleChanged(periodChanged: any, reviewsChanged: any, feedbacks
         </div>
       </div> -->
     </div>
-    <LikesWildberriesCreateLike :show="modalShow" @close-modal="handleArticleChanged"/>
+    <LikesWildberriesCreateLike
+      :show="modalShow"
+      @close-modal="handleArticleChanged"
+    />
   </div>
 </template>
 

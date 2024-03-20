@@ -18,7 +18,10 @@ export default eventHandler(async (event) => {
     const now = new Date()
     const diff = now.getTime() - new Date(parsed.updated).getTime()
     if (diff < 1000 * 60 * 60) {
-      return sendStream(event, fs.createReadStream('pvz/wildberriesPoints.json'))
+      return sendStream(
+        event,
+        fs.createReadStream('pvz/wildberriesPoints.json')
+      )
     }
   }
 

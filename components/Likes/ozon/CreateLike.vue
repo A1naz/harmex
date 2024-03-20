@@ -28,21 +28,25 @@ const selectSortBy = ref('')
 const sortBy = computed(() => route.query?.sortBy || 'date')
 
 async function getProductReviews() {
+  startTimer()
   reviews.value = []
   loading.value = true
   btnDisabled.value = true
   changedReviews.value = []
   savedArticle.value = article.value
-  const { data, error }: any = await useFetch('/api/ozon/likes/productReviews', {
-    method: 'GET',
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-    query: {
-      article: savedArticle.value,
-      limit: limit.value * page.value,
-      page: page.value,
-      sortBy: sortBy.value ?? 'date',
-    },
-  })
+  const { data, error }: any = await useFetch(
+    '/api/ozon/likes/productReviews',
+    {
+      method: 'GET',
+      headers: useRequestHeaders(['cookie']) as HeadersInit,
+      query: {
+        article: savedArticle.value,
+        limit: limit.value * page.value,
+        page: page.value,
+        sortBy: sortBy.value ?? 'date',
+      },
+    }
+  )
   loading.value = false
   btnDisabled.value = false
   if (error.value) {
@@ -80,15 +84,18 @@ async function getProductReviews() {
 
 async function increaseReviews() {
   limit.value += 50
-  const { data, error }: any = await useFetch('/api/ozon/likes/productReviews', {
-    method: 'GET',
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-    query: {
-      article: savedArticle.value,
-      limit: limit.value,
-      sortBy: sortBy.value ?? 'date',
-    },
-  })
+  const { data, error }: any = await useFetch(
+    '/api/ozon/likes/productReviews',
+    {
+      method: 'GET',
+      headers: useRequestHeaders(['cookie']) as HeadersInit,
+      query: {
+        article: savedArticle.value,
+        limit: limit.value,
+        sortBy: sortBy.value ?? 'date',
+      },
+    }
+  )
   if (error.value) {
     notify({
       title: 'Что-то пошло не так',
@@ -296,9 +303,39 @@ const period = ref('3h')
 function selectPeriod(event: any) {
   period.value = event.target.value
 }
+
+const timer = ref(25)
+const timerRunning = ref(false)
+const timerFinished = ref(false)
+let interval: any
+
+const startTimer = () => {
+  timerRunning.value = true
+  interval = setInterval(() => {
+    if (timer.value > 0) {
+      timer.value--
+    } else {
+      clearInterval(interval)
+      timerRunning.value = false
+      timerFinished.value = true
+    }
+  }, 1000)
+}
 </script>
 
 <template>
+  <div
+    v-if="loading"
+    style="background-color: rgb(37, 37, 42); opacity: 80%; z-index: 9999"
+    class="fixed z-[50] top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center"
+  >
+    <span class="text-white text-2xl text-center">
+      До получения отзывов осталось приблизительно {{ timer }} сек.
+    </span>
+    <div class="ease-linear rounded-full mb-4">
+      <Icon name="mdi:loading" class="h-20 w-20 animate-spin text-white" />
+    </div>
+  </div>
   <div
     v-if="props.show === true"
     class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
@@ -334,7 +371,7 @@ function selectPeriod(event: any) {
               />
               <span
                 v-if="loading === true"
-                class="absolute right-2 top-2 md:top-4 loading loading-spinner loading-xs p-2 my-auto"
+                class="absolute right-2 top-2 md:top-4 loading loading-dots loading-xs p-2 my-auto"
               />
               <!-- <button
                 class="btn btn-ghost normal-case"
@@ -347,7 +384,7 @@ function selectPeriod(event: any) {
           <div>
             <div>Период выполнения:</div>
             <select
-              class="select w-44  select-sm mt-2 min-h-min md:min-h-[48px] bg-base-200"
+              class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px] bg-base-200"
               @change="selectPeriod"
             >
               <option value="3h">3 часа</option>
@@ -359,7 +396,11 @@ function selectPeriod(event: any) {
             </select>
           </div>
           <div class="w-full ml-auto self-end justify-end lg:w-40">
-            <button class="btn w-full btn-primary" @click="getProductReviews" :disabled="btnDisabled">
+            <button
+              class="btn w-full btn-primary"
+              @click="getProductReviews"
+              :disabled="btnDisabled"
+            >
               Добавить
             </button>
           </div>
