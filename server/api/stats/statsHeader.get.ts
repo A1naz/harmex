@@ -9,6 +9,7 @@ export default eventHandler(async (event) => {
 
   const { period } = getQuery(event)
 
+
   const currentDate = new Date() // Текущая дата
   let filter: any = {} // Начинаем с пустого фильтраD
 
@@ -80,7 +81,7 @@ export default eventHandler(async (event) => {
 
     const expense = history.filter((item:any)=> item.typeoperations === 'Расход')
 
-    console.log('expense', expense)
+   
 
     
     const totalSumm = payments.reduce((acc:any, payment:any) => {
