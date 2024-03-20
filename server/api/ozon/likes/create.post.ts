@@ -53,8 +53,6 @@ export default eventHandler(async (event) => {
 
   
   const res = await created.save()
-
-  console.log(res.reviews.length);
   
   await userLog(event, {
     documentType: DocuemntEnum.Like,
