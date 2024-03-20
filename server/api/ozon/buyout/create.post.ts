@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid'
 import type { Rule } from '@/data/buyout/rules'
 import { Buyout } from '@/server/lib/models/ozon/Buyout'
-import getPickpoints from '~/server/utils/ozon/getPoints'
+import getPickpoints from '~/server/utils/ozon/getOzonPoints'
 import { userLog } from '~/server/utils/userLog'
 import { DocuemntEnum } from '~/data/enums'
 

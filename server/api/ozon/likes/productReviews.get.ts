@@ -35,16 +35,16 @@ export default eventHandler(async (event) => {
     }
   }
 
-  // data.forEach((feedback: any) => {
-  //   feedback.comments.forEach((comment: any) => {
-  //     comment.addLikes = 0
-  //     comment.addDislikes = 0
-  //   })
-  // })
+  data.forEach((feedback: any) => {
+    feedback.comments.forEach((comment: any) => {
+      comment.addLikes = 0
+      comment.addDislikes = 0
+    })
+  })
 
-  // data.forEach((feedback: any) => {
-  //   console.log(feedback.comments)
-  // })
 
-  return { feedbacks: data, feedbacksCount: 0 }
+  return {
+    feedbacks: data,
+    feedbacksCount: 0,
+  }
 })

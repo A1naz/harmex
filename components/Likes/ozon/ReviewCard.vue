@@ -27,6 +27,7 @@ const emit = defineEmits([
   'removeLike',
   'addDislike',
   'removeDislike',
+  'changeCommentLikes',
 ])
 
 const disabledMinusLikes = computed(() => {
@@ -48,6 +49,10 @@ function addDislike() {
 }
 function removeDislike() {
   emit('removeDislike', props.info.id)
+}
+
+function changeCommentLikes(type: string, add: boolean, commentId: string) {
+  emit('changeCommentLikes', props.info.id, commentId, add, type)
 }
 </script>
 
@@ -185,7 +190,12 @@ function removeDislike() {
                         comment.likes + comment.addLikes <= comment.likes
                       "
                       class="absolute left-0 btn btn-ghost btn-sm btn-square"
-                      @click="comment.addLikes--"
+                      @click="
+                        ;[
+                          comment.addLikes--,
+                          changeCommentLikes('likes', false, comment.id),
+                        ]
+                      "
                     >
                       <IconCSS size="16" name="ic:round-minus" />
                     </button>
@@ -197,7 +207,12 @@ function removeDislike() {
                     <button
                       :disabled="comment.likes + comment.addLikes >= 15"
                       class="absolute right-0 btn btn-ghost btn-sm btn-square"
-                      @click="comment.addLikes++"
+                      @click="
+                        ;[
+                          comment.addLikes++,
+                          changeCommentLikes('likes', true, comment.id),
+                        ]
+                      "
                     >
                       <IconCSS size="16" name="ic:round-plus" />
                     </button>
@@ -211,7 +226,12 @@ function removeDislike() {
                           comment.dislikes
                         "
                         class="absolute left-0 btn btn-ghost btn-sm btn-square"
-                        @click="comment.addDislikes--"
+                        @click="
+                          ;[
+                            comment.addDislikes--,
+                            changeCommentLikes('dislikes', false, comment.id),
+                          ]
+                        "
                       >
                         <IconCSS size="16" name="ic:round-minus" />
                       </button>
@@ -223,7 +243,12 @@ function removeDislike() {
                       <button
                         :disabled="comment.dislikes + comment.addDislikes >= 15"
                         class="absolute right-0 btn btn-ghost btn-sm btn-square"
-                        @click="comment.addDislikes++"
+                        @click="
+                          ;[
+                            comment.addDislikes++,
+                            changeCommentLikes('dislikes', true, comment.id),
+                          ]
+                        "
                       >
                         <IconCSS size="16" name="ic:round-plus" />
                       </button>

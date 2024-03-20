@@ -10,7 +10,6 @@ export default eventHandler(async (event) => {
   const { dateFilter,string, type } = getQuery(event)
 
   const carts = await Cart.find({ user })
-  // console.log(carts)
   let filter = carts
 
   if (type === 'article') {

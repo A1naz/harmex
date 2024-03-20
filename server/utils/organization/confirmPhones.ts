@@ -12,7 +12,6 @@ export async function confirmViaHiCall(hiCallKey: string, phoneNumber: string) {
       statusMessage: 'Не удалось отправить код',
     })
   }
-  console.log(data);
   
   return data
 }

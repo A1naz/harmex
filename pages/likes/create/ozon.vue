@@ -13,9 +13,10 @@ definePageMeta({
 })
 const { notify } = useNotification()
 const changedReviews = ref<any>([])
+const changedComments = ref<any>([])
 const isCreateButtonDisabled = ref(false)
 
-const modalShow = ref<boolean>(false)
+const modalShow = ref<boolean>(true)
 const route = useRoute()
 const router = useRouter()
 const reviews = ref<any>([])
@@ -41,6 +42,7 @@ async function getProductReviews() {
         page: page.value,
         sortBy: sortBy.value ?? 'date',
       },
+      watch: false,
     }
   )
   loading.value = false
@@ -80,6 +82,7 @@ async function increaseReviews() {
         limit: limit.value,
         sortBy: sortBy.value ?? 'date',
       },
+      watch: false,
     }
   )
   if (error.value) {
@@ -209,14 +212,15 @@ async function save() {
   // const userOffsetMinutes = new Date().getTimezoneOffset()
   // const userTimezoneOffsetHours = -userOffsetMinutes / 60
   // const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
-  console.log('article')
   const { data, error } = await useFetch('/api/ozon/likes/create', {
     method: 'POST',
     body: {
       article: savedArticle.value,
       reviews: changedReviews.value,
+      comments: changedComments.value,
       period: period.value,
     },
+    watch: false,
     // query: {
     //   userTimezoneOffsetHours,
     //   userOffsetMinutes: userTimezoneOffsetMinutesRemainder,
@@ -228,6 +232,7 @@ async function save() {
       title: 'Ошибка',
       text: error.value.message,
     })
+    isCreateButtonDisabled.value = false
     return
   }
   if (data.value) {
@@ -235,7 +240,9 @@ async function save() {
       type: 'success',
       title: 'Успешно',
     })
+
     return router.push('/likes')
+    isCreateButtonDisabled.value = false
   }
 }
 
@@ -328,348 +335,410 @@ function handleArticleChanged(
   sortReviews()
 }
 
-onMounted(() => {
-  const testReviews = [
-    {
-      id: '018e4182-c4ac-f5c0-c409-2b8aade3280c',
-      rating: 5,
-      text: 'Самая лучшая умывалка !!! \nОчень сильно её люблю 💘 с моей жирной, проблемной, чувствительной кожей очень трудно управляться, поэтому я рада,что она с этим справляется. Матирует и сужает поры. Кароче кайф для моей кожи 🥰 спасибо за быструю доставку 🫶🏼',
-      positiveText: '',
-      negativeText: '',
-      user: {
-        name: 'Анастасия С.',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e4204-0789-3aa9-3b36-4ae1d4ffa39a',
-          text: 'Здравствуйте! Спасибо за выбор нашей продукции. Надеемся, другие средства компании «Аравия» также придутся Вам по душе.',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-        {
-          id: '018e4c84-3a07-9876-d18e-4a012c61dd29',
-          text: 'Простите. А можно название средства, которое рядом на фотографии, для чего оно?',
-          user: {
-            name: 'Катя Т.',
-            country: 'Россия',
-          },
-          likes: 4,
-          dislikes: 4,
-          rank: 2,
-        },
-      ],
-      rank: 9,
-    },
-    {
-      id: '018e591c-03c9-5176-2121-290503dc9107',
-      rating: 3,
-      text: 'Не очень очищает даже без косметики. Косметикой не пользуюсь. Наращенные ресницы не промывает. От черных точек не помогает, кожа после умывания требует срочно крема.',
-      positiveText: '',
-      negativeText: '',
-      user: {
-        name: 'Клименко Оксана Сергеевна',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [],
-      rank: 1,
-    },
-    {
-      id: '018e51e7-9e57-65fb-b1cd-d93d02c9de07',
-      rating: 5,
-      text: 'Хорошая пенка, прям реально КРЕМ-пенка, такая нежная, приятный запах, для мягкого очищения самое то😍',
-      positiveText: '',
-      negativeText: '',
-      user: {
-        name: 'Анастасия С.',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e5647-d618-9332-e1d0-35eefd9029ca',
-          text: 'Здравствуйте! Благодарим Вас за положительный отзыв о нашем продукте.',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-      ],
-      rank: 2,
-    },
-    {
-      id: '018e51ab-0eda-9d66-72e9-2f16f1bb95ed',
-      rating: 5,
-      text: 'Понравилось, к покупке рекомендую',
-      positiveText: '',
-      negativeText: '',
-      user: {
-        name: 'Ольга Р.',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e51d4-1b24-4bc2-6f61-aff7c9141971',
-          text: 'Здравствуйте! Спасибо за отзыв. Мы рады, что Вы остались довольны результатом использования продукта.',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-      ],
-      rank: 3,
-    },
-    {
-      id: '018e4ddc-add4-4c24-b6c1-6ae430e7ed81',
-      rating: 3,
-      text: 'Через некоторое время начала шелушиться кожа',
-      positiveText: '',
-      negativeText: '',
-      user: {
-        name: 'Анастасия Ф.',
-        country: 'Россия',
-      },
-      likes: 3,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e506d-9bbd-0500-d993-0879763cecd0',
-          text: 'Здравствуйте! Спасибо за отзыв. Перенаправьте, пожалуйста, ваше обращение на почту, которая указана на этикетке, для дальнейшей консультации. В письме опишите, что произошло. Напишите, по какой схеме вы используете данное средство. В теме письма укажите "Консультация по продукту".',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-      ],
-      rank: 4,
-    },
-    {
-      id: '018e4f88-9701-c309-552b-8a98095b671b',
-      rating: 5,
-      text: 'Спасибо продавцу и производителю!',
-      positiveText: '',
-      negativeText: '',
-      user: {
-        name: 'Валентинс Л.',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e5089-e701-29e1-1265-bed47de9c1cc',
-          text: 'Здравствуйте! Спасибо за обратную связь и высокую оценку, будем стараться и дальше вас радовать.',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-      ],
-      rank: 5,
-    },
-    {
-      id: '018e47a1-47b7-3fac-cf09-5acc6d7d6218',
-      rating: 5,
-      text: '',
-      positiveText: 'все продукты этой фирмы нравятся, давно ей пользуюсь',
-      negativeText: '',
-      user: {
-        name: 'Ирина Т.',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e47b5-3c10-d52b-be6e-0b0882c4988d',
-          text: 'Здравствуйте! Спасибо, что выбираете косметические средства компании "Аравия".',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-      ],
-      rank: 6,
-    },
-    {
-      id: '018e4737-6b96-978a-31bc-b230090dd455',
-      rating: 5,
-      text: 'Крем пенка очень понравился. Расход минимальный, эффект хороший.',
-      positiveText: '',
-      negativeText: '',
-      user: {
-        name: 'Ина О.',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e4749-1a32-ec03-1437-fefadd867c05',
-          text: 'Здравствуйте! Благодарим Вас за отзыв и выбор нашей продукции.',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-      ],
-      rank: 7,
-    },
-    {
-      id: '018e46ae-7178-6a12-4a06-512c4ed84bdd',
-      rating: 2,
-      text: 'Сушит кожу и обсыпает прыщами',
-      positiveText: '',
-      negativeText: '',
-      user: {
-        name: 'Пользователь предпочёл скрыть свои данные',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e471a-7358-eb74-b2bc-7c0cc92ffac3',
-          text: 'Здравствуйте! Спасибо за отзыв. Нам очень жаль, что данное средство Вам не подошло. Если Вы уверены, что именно этот продукт стал причиной, то рекомендуем прекратить его использование. Перенаправьте, пожалуйста, Ваше обращение на почту, которая указана на этикетке, для дальнейшей консультации. В письме опишите, что произошло. Напишите, по какой схеме Вы используете данное средство. В теме письма укажите "Консультация по продукту".',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-      ],
-      rank: 8,
-    },
-    {
-      id: '018e3db5-507c-fe96-77ca-8be85c8e7eab',
-      rating: 3,
-      text: '',
-      positiveText: '',
-      negativeText: 'Сушит',
-      user: {
-        name: 'Мария П.',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e419b-1cc7-0253-2d28-b385adec8312',
-          text: 'Здравствуйте! Спасибо за отзыв. Во избежание ощущения сухости рекомендуем после очищения наносить тоник и крем по типу кожи.',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 5,
-          dislikes: 3,
-          rank: 1,
-        },
-      ],
-      rank: 10,
-    },
-    {
-      id: '018e3d27-3a27-0ccc-ab11-d67f32c8a0ca',
-      rating: 5,
-      text: '',
-      positiveText: 'Хорошая умывашка , приятный запах и нежная консистенция',
-      negativeText: '',
-      user: {
-        name: 'Виктория М.',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e3d5f-a954-4ec2-0949-b10947ac33d8',
-          text: 'Здравствуйте! Спасибо за отзыв. Мы рады, что качество продукта оправдало Ваши ожидания.',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-      ],
-      rank: 11,
-    },
-    {
-      id: '018e3ccd-eb2d-7806-a20f-394c2c613e23',
-      rating: 5,
-      text: 'Ну  у меня не сильно высокие требования к очищающим средствам. Для меня ок. Косметика смывается.',
-      positiveText: 'Очищает щадяще.',
-      negativeText: '',
-      user: {
-        name: 'Таня Т.',
-        country: 'Россия',
-      },
-      likes: 0,
-      dislikes: 0,
-      comments: [
-        {
-          id: '018e3d1f-d366-f461-8b93-6f5f553cce25',
-          text: 'Здравствуйте! Спасибо за выбор нашего бренда и оставленный отзыв.',
-          user: {
-            name: 'ООО Аравия',
-            country: 'Россия',
-          },
-          likes: 0,
-          dislikes: 0,
-          rank: 1,
-        },
-      ],
-      rank: 12,
-    },
-  ]
+// onMounted(() => {
+//   const testReviews = [
+//     {
+//       id: '018e5c98-95b9-1be1-de60-aceef4c92b07',
+//       rating: 5,
+//       text: '👍',
+//       positiveText: '',
+//       negativeText: '',
+//       user: {
+//         name: 'Irlna T.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [],
+//       rank: 1,
+//     },
+//     {
+//       id: '018e591c-03c9-5176-2121-290503dc9107',
+//       rating: 3,
+//       text: 'Не очень очищает даже без косметики. Косметикой не пользуюсь. Наращенные ресницы не промывает. От черных точек не помогает, кожа после умывания требует срочно крема.',
+//       positiveText: '',
+//       negativeText: '',
+//       user: {
+//         name: 'Клименко Оксана Сергеевна',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e5c50-a118-84ec-36fe-2f342ded6f4e',
+//           text: 'Здравствуйте! Спасибо за отзыв. Нам очень жаль, что покупка не оправдала Ваших ожиданий. Профессиональная пенка бережно очищает от повседневных загрязнений и остатков макияжа, подготавливая кожу к дальнейшему уходу. Активные ингредиенты в составе нейтрализуют свободные радикалы, укрепляют стенки сосудов, осветляют и тонизируют кожу. Не рекомендуем наносить пенку на область вокруг глаз. После очищения используйте тоник и крем по типу кожи.',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 2,
+//     },
+//     {
+//       id: '018e51e7-9e57-65fb-b1cd-d93d02c9de07',
+//       rating: 5,
+//       text: 'Хорошая пенка, прям реально КРЕМ-пенка, такая нежная, приятный запах, для мягкого очищения самое то😍',
+//       positiveText: '',
+//       negativeText: '',
+//       user: {
+//         name: 'Анастасия С.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e5647-d618-9332-e1d0-35eefd9029ca',
+//           text: 'Здравствуйте! Благодарим Вас за положительный отзыв о нашем продукте.',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 3,
+//     },
+//     {
+//       id: '018e4f88-9701-c309-552b-8a98095b671b',
+//       rating: 5,
+//       text: 'Спасибо продавцу и производителю!',
+//       positiveText: '',
+//       negativeText: '',
+//       user: {
+//         name: 'Валентинс Л.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e5089-e701-29e1-1265-bed47de9c1cc',
+//           text: 'Здравствуйте! Спасибо за обратную связь и высокую оценку, будем стараться и дальше вас радовать.',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 4,
+//     },
+//     {
+//       id: '018e4ddc-add4-4c24-b6c1-6ae430e7ed81',
+//       rating: 3,
+//       text: 'Через некоторое время начала шелушиться кожа',
+//       positiveText: '',
+//       negativeText: '',
+//       user: {
+//         name: 'Анастасия Ф.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e506d-9bbd-0500-d993-0879763cecd0',
+//           text: 'Здравствуйте! Спасибо за отзыв. Перенаправьте, пожалуйста, ваше обращение на почту, которая указана на этикетке, для дальнейшей консультации. В письме опишите, что произошло. Напишите, по какой схеме вы используете данное средство. В теме письма укажите "Консультация по продукту".',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 5,
+//     },
+//     {
+//       id: '018e51ab-0eda-9d66-72e9-2f16f1bb95ed',
+//       rating: 5,
+//       text: 'Понравилось, к покупке рекомендую',
+//       positiveText: '',
+//       negativeText: '',
+//       user: {
+//         name: 'Ольга Р.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e51d4-1b24-4bc2-6f61-aff7c9141971',
+//           text: 'Здравствуйте! Спасибо за отзыв. Мы рады, что Вы остались довольны результатом использования продукта.',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 6,
+//     },
+//     {
+//       id: '018e4737-6b96-978a-31bc-b230090dd455',
+//       rating: 5,
+//       text: 'Крем пенка очень понравился. Расход минимальный, эффект хороший.',
+//       positiveText: '',
+//       negativeText: '',
+//       user: {
+//         name: 'Ина О.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e4749-1a32-ec03-1437-fefadd867c05',
+//           text: 'Здравствуйте! Благодарим Вас за отзыв и выбор нашей продукции.',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 7,
+//     },
+//     {
+//       id: '018e47a1-47b7-3fac-cf09-5acc6d7d6218',
+//       rating: 5,
+//       text: '',
+//       positiveText: 'все продукты этой фирмы нравятся, давно ей пользуюсь',
+//       negativeText: '',
+//       user: {
+//         name: 'Ирина Т.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e47b5-3c10-d52b-be6e-0b0882c4988d',
+//           text: 'Здравствуйте! Спасибо, что выбираете косметические средства компании "Аравия".',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 8,
+//     },
+//     {
+//       id: '018e46ae-7178-6a12-4a06-512c4ed84bdd',
+//       rating: 2,
+//       text: 'Сушит кожу и обсыпает прыщами',
+//       positiveText: '',
+//       negativeText: '',
+//       user: {
+//         name: 'Пользователь предпочёл скрыть свои данные',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e471a-7358-eb74-b2bc-7c0cc92ffac3',
+//           text: 'Здравствуйте! Спасибо за отзыв. Нам очень жаль, что данное средство Вам не подошло. Если Вы уверены, что именно этот продукт стал причиной, то рекомендуем прекратить его использование. Перенаправьте, пожалуйста, Ваше обращение на почту, которая указана на этикетке, для дальнейшей консультации. В письме опишите, что произошло. Напишите, по какой схеме Вы используете данное средство. В теме письма укажите "Консультация по продукту".',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 9,
+//     },
+//     {
+//       id: '018e3d27-3a27-0ccc-ab11-d67f32c8a0ca',
+//       rating: 5,
+//       text: '',
+//       positiveText: 'Хорошая умывашка , приятный запах и нежная консистенция',
+//       negativeText: '',
+//       user: {
+//         name: 'Виктория М.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e3d5f-a954-4ec2-0949-b10947ac33d8',
+//           text: 'Здравствуйте! Спасибо за отзыв. Мы рады, что качество продукта оправдало Ваши ожидания.',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 10,
+//     },
+//     {
+//       id: '018e4182-c4ac-f5c0-c409-2b8aade3280c',
+//       rating: 5,
+//       text: 'Самая лучшая умывалка !!! \nОчень сильно её люблю 💘 с моей жирной, проблемной, чувствительной кожей очень трудно управляться, поэтому я рада,что она с этим справляется. Матирует и сужает поры. Кароче кайф для моей кожи 🥰 спасибо за быструю доставку 🫶🏼',
+//       positiveText: '',
+//       negativeText: '',
+//       user: {
+//         name: 'Анастасия С.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e4204-0789-3aa9-3b36-4ae1d4ffa39a',
+//           text: 'Здравствуйте! Спасибо за выбор нашей продукции. Надеемся, другие средства компании «Аравия» также придутся Вам по душе.',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//         {
+//           id: '018e4c84-3a07-9876-d18e-4a012c61dd29',
+//           text: 'Простите. А можно название средства, которое рядом на фотографии, для чего оно?',
+//           user: {
+//             name: 'Катя Т.',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 2,
+//         },
+//       ],
+//       rank: 11,
+//     },
+//     {
+//       id: '018e3db5-507c-fe96-77ca-8be85c8e7eab',
+//       rating: 3,
+//       text: '',
+//       positiveText: '',
+//       negativeText: 'Сушит',
+//       user: {
+//         name: 'Мария П.',
+//         country: 'Россия',
+//       },
+//       likes: 0,
+//       dislikes: 0,
+//       comments: [
+//         {
+//           id: '018e419b-1cc7-0253-2d28-b385adec8312',
+//           text: 'Здравствуйте! Спасибо за отзыв. Во избежание ощущения сухости рекомендуем после очищения наносить тоник и крем по типу кожи.',
+//           user: {
+//             name: 'ООО Аравия',
+//             country: 'Россия',
+//           },
+//           likes: 0,
+//           dislikes: 0,
+//           rank: 1,
+//         },
+//       ],
+//       rank: 12,
+//     },
+//   ]
 
-  const initialTest = testReviews.map((review: any) => {
-    review.addLikes = 0
-    review.addDislikes = 0
-    review.comments = review.comments.map((comment: any) => {
-      comment.addLikes = 0
-      comment.addDislikes = 0
-      return comment
-    })
-    return review
-  }) as any[]
-  reviews.value = initialTest
-  feedbacksCount.value = 40
-  modalShow.value = false
-  sortReviews()
-})
+//   const initialTest = testReviews.map((review: any) => {
+//     review.addLikes = 0
+//     review.addDislikes = 0
+//     review.comments = review.comments.map((comment: any) => {
+//       comment.addLikes = 0
+//       comment.addDislikes = 0
+//       return comment
+//     })
+//     return review
+//   }) as any[]
+//   reviews.value = initialTest
+//   feedbacksCount.value = 40
+//   modalShow.value = false
+//   sortReviews()
+// })
+
+function changeCommentLikes(
+  reviewId: string,
+  commentId: string,
+  add: boolean,
+  type: string
+) {
+  const adding = add ? 1 : -1
+
+  const isChangedCommentsIncludes = changedComments.value.findIndex(
+    (comment: any) => comment.id == commentId
+  )
+
+  if (isChangedCommentsIncludes < 0) {
+    if (type === 'likes') {
+      changedComments.value.push({
+        id: commentId,
+        reviewId,
+        likes: 1,
+        dislikes: 0,
+      })
+    } else {
+      changedComments.value.push({
+        id: commentId,
+        reviewId,
+        likes: 0,
+        dislikes: 1,
+      })
+    }
+  } else {
+    if (type === 'likes') {
+      changedComments.value[isChangedCommentsIncludes].likes =
+        changedComments.value[isChangedCommentsIncludes].likes + 1 * adding
+    } else {
+      changedComments.value[isChangedCommentsIncludes].dislikes =
+        changedComments.value[isChangedCommentsIncludes].dislikes + 1 * adding
+    }
+
+    if (
+      changedComments.value[isChangedCommentsIncludes].likes <= 0 &&
+      changedComments.value[isChangedCommentsIncludes].dislikes <= 0
+    ) {
+      changedComments.value.splice(isChangedCommentsIncludes, 1)
+    }
+  }
+}
+
+function getAddedCommentsLikes() {
+  const likes = {
+    likes: 0,
+    dislikes: 0,
+    count: 0,
+  }
+  changedComments.value.forEach((comment: any) => {
+    likes.likes += comment.likes
+    likes.dislikes += comment.dislikes
+  })
+  likes.count = likes.likes + likes.dislikes
+  return likes
+}
+
+const changedCommentsLikes = computed(() => getAddedCommentsLikes())
 </script>
 
 <template>
@@ -716,7 +785,7 @@ onMounted(() => {
     </div> -->
 
     <div
-      v-if="changedReviews.length"
+      v-if="changedReviews.length || changedComments.length"
       class="fixed bottom-20 right-1 md:bottom-30 lg:right-5 z-[9999] w-60 sm:w-70 p-4 bg-base-100 rounded-lg border border-base-300 text-2xl"
     >
       <div class="flex gap-0.5">
@@ -733,7 +802,7 @@ onMounted(() => {
             </p>
             <span
               class="text-xs text-base-content lg:text-sm font-bold my-auto"
-              >{{ getAddedLikes().likes }}</span
+              >{{ getAddedLikes().likes + changedCommentsLikes.likes }}</span
             >
           </div>
 
@@ -745,7 +814,9 @@ onMounted(() => {
             </p>
             <span
               class="text-xs text-base-content lg:text-sm font-bold my-auto"
-              >{{ getAddedLikes().dislikes }}</span
+              >{{
+                getAddedLikes().dislikes + changedCommentsLikes.dislikes
+              }}</span
             >
           </div>
         </div>
@@ -754,6 +825,7 @@ onMounted(() => {
         <button
           class="btn btn-primary text-base-content bg-opacity-50 border-none btn-sm w-[100%] sm:w-[100%] rounded-full"
           @click="save"
+          :disabled="isCreateButtonDisabled"
         >
           Создать лайки
           <Icon class="justify-end" name="formkit:right" size="20" />
@@ -776,6 +848,7 @@ onMounted(() => {
         @remove-dislike="removeDislike"
         @add-dislike="addDislike"
         @remove-like="removeLike"
+        @changeCommentLikes="changeCommentLikes"
       />
     </div>
     <LikesOzonCreateLike

@@ -57,7 +57,6 @@ export default eventHandler(async (event) => {
         documentType: DocuemntEnum.Like,
         documentId: res._id,
     })
-console.log(created);
 
   return {
     status: 'ok',

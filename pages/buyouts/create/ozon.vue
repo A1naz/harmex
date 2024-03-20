@@ -3,7 +3,7 @@ import { useNotification } from '@kyvg/vue3-notification'
 import { useWindowSize } from '@vueuse/core'
 import type { Rule } from '@/data/buyout/rules'
 import { rules } from '@/data/buyout/rules'
-import type { ISearchQueryChange } from '@/stores/ozonBuyout'
+import type { ISearchQueryChangeOzon } from '@/stores/ozonBuyout'
 
 const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
 const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>
@@ -92,7 +92,7 @@ function onDateRangeChange(value: unknown[], index: number) {
   store.changeDateRange(value, index)
 }
 
-function onSearchQueryChange(options: ISearchQueryChange) {
+function onSearchQueryChange(options: ISearchQueryChangeOzon) {
   store.changeSearchQuery(options)
 }
 
