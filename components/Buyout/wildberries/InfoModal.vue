@@ -81,7 +81,7 @@ onKeyStroke('Escape', (e) => {
               Информация о выкупе № {{ info.place }}
             </div>
             <span
-              class="rounded-2xl py-0 px-2 text-md mb-2 max-h-9"
+              class="rounded-2xl py-0 px-2 text-md mb-2 max-h-7 text-[9-px]"
               :class="{
               'bg-success ':
                 (info.status === 'active' || info.status === 'work'),
@@ -217,7 +217,7 @@ onKeyStroke('Escape', (e) => {
               </div>
             </div>
           </div>
-          <div class="flex items-start flex-col -mt-3">
+          <div class="flex items-start flex-col -mt-1">
               <span class="text-lg font-bold mb-1">Пол:</span>
               <span class="text-sm">{{ getGender || 'Нет' }}</span>
             </div>
