@@ -89,6 +89,7 @@ watch(client, (newClient) => {
 }
 body {
   overflow: hidden;
+  font-family: 'Manrope', sans-serif;
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 }
 
@@ -175,4 +176,5 @@ input::-webkit-inner-spin-button {
 .description {
   @apply text-sm  font-light mt-1;
 }
+
 </style>

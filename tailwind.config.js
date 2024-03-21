@@ -1,18 +1,19 @@
 module.exports = {
+  darkMode: 'class',
   theme: {
     screens: {
-      'sm': '640px',
+      sm: '640px',
       // => @media (min-width: 640px) { ... }
 
-      'md': '768px',
+      md: '768px',
       // => @media (min-width: 768px) { ... }
 
-      'lg': '1024px',
+      lg: '1024px',
       // => @media (min-width: 1024px) { ... }
-      'navbar': {'min': '1024px', 'max': '1100px'},
-      'nbar100': {'min': '1100px', 'max': '1210px'},
+      navbar: { min: '1024px', max: '1100px' },
+      nbar100: { min: '1100px', max: '1210px' },
 
-      'xl': '1280px',
+      xl: '1280px',
       // => @media (min-width: 1280px) { ... }
 
       '2xl': '1536px',
@@ -48,10 +49,10 @@ module.exports = {
 
           '--custom': '#b2baff',
 
-          'info': '#a5b4fc',
-          'success': '#bbf7d0',
-          'warning': '#fef3c7',
-          'error': '#ff5724',
+          info: '#a5b4fc',
+          success: '#bbf7d0',
+          warning: '#fef3c7',
+          error: '#ff5724',
 
           '--rounded-box': '1rem',
           '--rounded-btn': '0.5rem',
@@ -71,10 +72,10 @@ module.exports = {
           primary: '#6366f1',
           'primary-content': '#ffffff',
           'primary-focus': '#6366f1',
-          
+
           'neutral-content': '#ffffff',
-          'warning': '#f59e0b',
-          'success': '#16a34a',
+          warning: '#f59e0b',
+          success: '#16a34a',
 
           '--custom': '#b2baff',
           '--btn-text-case': 'normalcase',

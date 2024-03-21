@@ -379,21 +379,10 @@ async function changeMP(e: any) {
     <div></div>
     <div class="flex justify-between mb-4 items-center mt-4">
       <div class="flex gap-2 lg:gap-3 flex-col sm:flex-row w-full sm:w-max">
-        <!-- <NuxtLink
-            v-for="filter in filters"
-            :to=" '/buyouts' + filter.params"
-            :external="false"
-            :class="{
-                'btn-active': route.query.status === filter.queryStatus,
-            }"
-            class="btn btn-ghost btn-sm normal-case font-medium"
-            >
-          {{ filter.title }}
-        </NuxtLink> -->
         <div class="flex gap-2">
           <NuxtLink
             to="/buyouts/create"
-            class="btn btn-primary btn-sm gap-2 font-medium normal-case "
+            class="btn btn-primary btn-sm gap-2 font-medium normal-case"
           >
             <Icon name="fluent:add-24-filled" size="12" />
             <span class="hidden lg:inline">Выкупы</span>
@@ -403,7 +392,7 @@ async function changeMP(e: any) {
               ref="codeInput"
               v-model="search.text"
               type="text"
-              class="input input-sm input-bordered w-full bg-base-300 bg-opacity-40 "
+              class="input input-sm input-bordered w-full bg-base-300 bg-opacity-40"
               placeholder="Поиск по товарам"
               @input="onSearchInput($event)"
             />
@@ -413,7 +402,7 @@ async function changeMP(e: any) {
             />
             <Icon
               v-else
-              class="absolute right-2  p-2 text-base-content text-opacity-50"
+              class="absolute right-2 p-2 text-base-content text-opacity-50"
               name="tabler:search"
               size="35"
               @click="codeInput.focus()"
@@ -479,15 +468,7 @@ async function changeMP(e: any) {
               ]"
               @change-value="selectFilterDate"
             />
-            <!-- <select
-              class="select select-bordered select-sm max-w-[131px] sm:hidden"
-              @change="selectFilterDate"
-            >
-              <option value="all">За все время</option>
-              <option value="today">Сегодня</option>
-              <option value="3days">3 дня</option>
-              <option value="7days">Неделя</option>
-            </select> -->
+
             <div class="flex gap-3 items-center sm:hidden">
               <CustomSelect
                 :tabs="[
@@ -497,15 +478,6 @@ async function changeMP(e: any) {
                 ]"
                 @change-value="updateSearchType"
               />
-
-              <!-- <select
-                v-model="search.type"
-                class="select select-bordered select-sm max-w-[98px]"
-              >
-                <option value="article">Артикул</option>
-                <option value="uuid">ID выкупа</option>
-                <option value="name">Имя товара</option>
-              </select> -->
             </div>
           </div>
         </div>
@@ -562,6 +534,12 @@ async function changeMP(e: any) {
               ]"
               @change-value="updateSearchType"
             />
+            <CustomSelect
+              class="lg:flex"
+              :class="'min-w-[120px]'"
+              :tabs="MPTabs"
+              @change-value="changeMP"
+            />
 
             <!-- <select
               v-model="search.type"
@@ -576,7 +554,7 @@ async function changeMP(e: any) {
                 ref="codeInput"
                 v-model="search.text"
                 type="text"
-                class="input input-sm bg-base-300 bg-opacity-40 "
+                class="input input-sm bg-base-300 bg-opacity-40"
                 placeholder="Поиск по товарам"
                 @input="onSearchInput($event)"
               />

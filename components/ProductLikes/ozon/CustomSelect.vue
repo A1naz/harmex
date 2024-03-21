@@ -88,12 +88,14 @@ defineExpose({
     @click.stop
   >
     <div
-      class="font-normal text-xs normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
+      class="font-normal text-xs normal-case btn-primary py-6 bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
       :class="customClass"
     >
-      <span :class="{ 'text-base': rangesConfig.length > 0 }">{{
-        statusText.charAt(0).toUpperCase() + statusText.slice(1)
-      }}</span>
+      <span
+        class="text-[15px]"
+        :class="{ 'text-base': rangesConfig.length > 0 }"
+        >{{ statusText.charAt(0).toUpperCase() + statusText.slice(1) }}</span
+      >
       <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
       <Icon v-else name="formkit:down" size="18" />
     </div>
@@ -107,7 +109,7 @@ defineExpose({
         :key="filter"
       >
         <button
-          class="btn btn-ghost btn-sm normal-case font-normal w-full py-0 text-base whitespace-normal leading-none hover:bg-primary hover:bg-opacity-20"
+          class="btn btn-ghost normal-case text-[15px] font-normal w-full py-0 text-base whitespace-normal leading-none hover:bg-primary hover:bg-opacity-20"
           @click="updateText(filter)"
         >
           {{ filter }}
@@ -115,7 +117,7 @@ defineExpose({
       </li>
       <li v-if="tabs.length > 0" v-for="filter in tabs" :key="filter.title">
         <button
-          class="btn btn-ghost btn-xs text-md normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20"
+          class="btn btn-ghost rounded-xl text-[15px] normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20"
           @click="updateValue(filter)"
         >
           {{ filter.title }}

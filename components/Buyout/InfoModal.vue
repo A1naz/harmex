@@ -67,7 +67,7 @@ onKeyStroke('Escape', (e) => {
               Информация о выкупе № {{ info.place }}
             </div>
             <span
-              class="rounded-2xl py-1 px-2 max-h-9"
+              class="rounded-2xl py-1 px-2 max-h-9 text-[9px]"
               :class="{
                 'text-green-600 bg-green-200 ':
                   (info.status === 'active' || info.status === 'work') &&
