@@ -11,8 +11,9 @@ const currentPath = ref(useRoute().path)
 watchEffect(() => {
   currentPath.value = route.path
 })
+
 const active = computed(() => {
-  return currentPath.value.includes(props.href)
+  return currentPath.value.split('/')[0].includes(props.href.split('/')[0])
 })
 
 const mpStore = useMPStore()
@@ -39,25 +40,20 @@ const mpHref = computed(() => {
     return props.href
   }
 })
-const theme = useColorMode()
 </script>
 
 <template>
   <li v-if="props.href != '/autoanswer'">
     <NuxtLink :to="mpHref" class="mx-4 rounded-lg">
-      <Icon
-        :name="icon"
-        size="24"
-      />
+      <Icon :name="icon" size="24" />
       <span
         :class="{
           'opacity-100': !active,
+          active: active,
         }"
-        class=""
         >{{ title }}</span
       >
     </NuxtLink>
-
   </li>
 </template>
 

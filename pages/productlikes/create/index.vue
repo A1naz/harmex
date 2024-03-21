@@ -16,7 +16,7 @@ const mps = [
   },
   {
     title: 'Ozon',
-    value: 'ozon',
+    value: 'create/ozon',
     category: 'товары и отели',
   },
   {

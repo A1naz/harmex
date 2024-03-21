@@ -321,6 +321,15 @@ const startTimer = () => {
     }
   }, 1000)
 }
+
+async function selectCreatePage(e: any) {
+  const target = e
+  if (target.value == '/likes/create/ozon') {
+    return
+  } else {
+    return navigateTo(target.value)
+  }
+}
 </script>
 
 <template>
@@ -344,7 +353,21 @@ const startTimer = () => {
       class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4"
     >
       <div class="flex justify-between">
-        <div class="font-medium text-lg">Лайк на отзывы OZON</div>
+        <ProductLikesOzonCustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            {
+              title: 'Лайк на отзыв/комментарий',
+              value: '/likes/create/ozon',
+            },
+            {
+              title: 'Лайк на товар/бренд',
+              value: '/productlikes/create/ozon',
+            },
+          ]"
+          @change-value="selectCreatePage"
+        />
         <NuxtLink
           to="/likes"
           class="text-gray-500 hover:text-gray-700 self-end mb-2"

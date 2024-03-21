@@ -289,7 +289,7 @@ const statusText = computed(() => {
             :key="index"
             :title="item.title"
             :icon="item.icon"
-            :href="item.path"
+            :href="item.path.includes('productlikes') ? '/likes' : item.path"
           />
         </section>
 

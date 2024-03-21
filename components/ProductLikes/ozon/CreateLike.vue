@@ -5,7 +5,7 @@ const props = defineProps({
   show: { type: Boolean, required: true },
 })
 
-const emit = defineEmits(['closeModal','create'])
+const emit = defineEmits(['closeModal', 'create'])
 const product_likes = ref([]) as any
 const amount = ref(0)
 const loadingUrl = ref(false)
@@ -26,17 +26,7 @@ async function getProductLikes() {
     method: 'GET',
   })
   if (data.value) product_likes.value = data.value
-  //   if (data.value) {
-  //     product_likes.value = data.value.map(product => {
-  //         if (product.url) {
-  //             const articleId = product.url.match(/\d+/);
-  //             if (articleId) {
-  //                 return { ...product, article: articleId[0] };
-  //             }
-  //         }
-  //         return product;
-  //     });
-  // }
+
   if (error.value)
     notify({
       type: 'error',
@@ -44,7 +34,7 @@ async function getProductLikes() {
       text: error.value.message,
     })
 }
-await getProductLikes()
+
 async function create() {
   const { data, error } = await useFetch('/api/ozon/productlikes/create', {
     method: 'POST',
@@ -64,9 +54,10 @@ async function create() {
   if (data.value) {
     notify({ type: 'success', title: 'Упешно' })
     emit('create')
-    getProductLikes()
+    return navigateTo('/productlikes/ozon')
+    // getProductLikes()
   }
-  
+
   removeProduct()
 }
 async function sendUrl() {
@@ -135,165 +126,190 @@ async function deleteLike() {
   }
 }
 
-
+async function selectCreatePage(e: any) {
+  const target = e
+  if (target.value == '/productlikes/ozon?modalShow=true') {
+    return
+  } else {
+    return navigateTo(target.value)
+  }
+}
 </script>
 
 <template>
+  <div
+    v-if="props.show === true"
+    @click="$emit('closeModal')"
+    class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
+  >
     <div
-      v-if="props.show === true"
-      @click="$emit('closeModal')"
-      class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
+      class="flex flex-col bg-base-100 rounded-lg w-full max-w-[650px] lg:max-w-[810px] gap-5 p-4"
+      @click.stop
     >
-      <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-[650px] lg:max-w-[810px] gap-5 p-4" @click.stop>
-        <div class="flex justify-between">
-          <div class="font-medium text-lg">Лайки на товар/бренд</div>
-          <button class="text-gray-500 hover:text-gray-700 self-end mb-2" @click="$emit('closeModal')">
-            <Icon name="material-symbols:close-rounded" size="24" />
-          </button>
-        </div>
-        <div class=" bg-base-100 rounded-lg">
-            <div class="flex flex-wrap items-center gap-6 mb-2">
-            <div class="relative">
-              <div>Вставьте ссылку:</div>
-              <div class="input-group w-64 min-h-min md:min-h-[48px] mt-2 w-ful">
-                <input
-                  v-model="url"
-                  :class="{
-                    'input-error': urlError,
-                    'input-success': productData,
-                  }"
-                  :disabled="productData"
-                  tabindex="0"
-                  class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
-                  placeholder="Введите ссылку"
-                  type="text"
-                  @input="changeUrl"
-                />
-                <button
-                  :class="{
-                    'btn-disabled': !productData,
-                  }"
-                  class="btn btn-sm btn-ghost btn-circle bg-base-200 min-h-min md:min-h-[48px]"
-                  @click="removeProduct"
-                >
-                  <span
-                    v-show="loadingUrl"
-                    class="loading loading-spinner loading-xs p-2"
-                  />
-
-                  <!-- Insert a backspace svg -->
-                  <div v-if="!loadingUrl">
-                    <IconCSS
-                      v-if="productData"
-                      class="w-6 h-6"
-                      name="fluent:backspace-24-regular"
-                    />
-                  </div>
-                </button>
-              </div>
-            </div>
-            <div>
-              <div>Количество:</div>
-              <div
-                class="relative flex items-center justify-center ml-auto mt-2"
-              >
-                <button
-                  :disabled="amount <= 0"
-                  class="absolute left-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
-                  @click="amount -= 10"
-                >
-                  <IconCSS size="16" name="ic:round-minus" />
-                </button>
-                <div
-                  class="input-sm rounded-lg w-24 text-center bg-base-200 min-h-min md:min-h-[48px] md:pt-2.5 text-lg"
-                >
-                  {{ amount }}
-                </div>
-                <button
-                  :disabled="amount >= 1000"
-                  :class="{
-                    'btn-disabled': !productData,
-                  }"
-                  class="absolute right-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
-                  @click="amount += 10"
-                >
-                  <IconCSS size="16" name="ic:round-plus" />
-                </button>
-              </div>
-            </div>
-            <div>
-              <div>Период выполнения:</div>
-              <select
-                :disabled="!productData"
-                class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
-                @change="selectPeriod"
-              >
-                <option value="3h">3 часа</option>
-                <option value="12h">12 часов</option>
-                <option value="1day">1 день</option>
-                <option value="3days">3 дня</option>
-                <option value="7days">7 дней</option>
-                <option value="14days">14 дней</option>
-              </select>
-            </div>
-            <div
-              v-if="productData && productData.type === 'brand'"
-              class="productinfo"
-            >
-              <div>Информация о бренде:</div>
-              <div class="flex gap-4 mt-2 items-start">
-                <nuxt-img
-                  class="rounded-lg object-contain h-8"
-                  :src="productData.image"
-                />
-                <div class="name truncate">
-                  {{ productData.name }}
-                </div>
-              </div>
-            </div>
-            <div class="w-full ml-auto self-end justify-end lg:w-40">
+      <div class="flex justify-between">
+        <ProductLikesOzonCustomSelect
+          class="hidden lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            {
+              title: 'Лайк на товар/бренд',
+              value: '/productlikes/create/ozon',
+            },
+            {
+              title: 'Лайк на отзыв/комментарий',
+              value: '/likes/create/ozon',
+            },
+          ]"
+          @change-value="selectCreatePage"
+        />
+        <button
+          class="text-gray-500 hover:text-gray-700 self-end mb-2"
+          @click="$emit('closeModal')"
+        >
+          <Icon name="material-symbols:close-rounded" size="24" />
+        </button>
+      </div>
+      <div class="bg-base-100 rounded-lg">
+        <div class="flex flex-wrap items-center gap-6 mb-2">
+          <div class="relative">
+            <div>Вставьте ссылку:</div>
+            <div class="input-group w-64 min-h-min md:min-h-[48px] mt-2 w-ful">
+              <input
+                v-model="url"
+                :class="{
+                  'input-error': urlError,
+                  'input-success': productData,
+                }"
+                :disabled="productData"
+                tabindex="0"
+                class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
+                placeholder="Введите ссылку"
+                type="text"
+                @input="changeUrl"
+              />
               <button
                 :class="{
-                  'btn-disabled': !productData || amount <= 0,
+                  'btn-disabled': !productData,
                 }"
-                class="btn w-full btn-primary"
-                @click="create"
+                class="btn btn-sm btn-ghost btn-circle bg-base-200 min-h-min md:min-h-[48px]"
+                @click="removeProduct"
               >
-                Добавить
+                <span
+                  v-show="loadingUrl"
+                  class="loading loading-spinner loading-xs p-2"
+                />
+
+                <!-- Insert a backspace svg -->
+                <div v-if="!loadingUrl">
+                  <IconCSS
+                    v-if="productData"
+                    class="w-6 h-6"
+                    name="fluent:backspace-24-regular"
+                  />
+                </div>
               </button>
             </div>
           </div>
+          <div>
+            <div>Количество:</div>
+            <div class="relative flex items-center justify-center ml-auto mt-2">
+              <button
+                :disabled="amount <= 0"
+                class="absolute left-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
+                @click="amount -= 10"
+              >
+                <IconCSS size="16" name="ic:round-minus" />
+              </button>
+              <div
+                class="input-sm rounded-lg w-24 text-center bg-base-200 min-h-min md:min-h-[48px] md:pt-2.5 text-lg"
+              >
+                {{ amount }}
+              </div>
+              <button
+                :disabled="amount >= 1000"
+                :class="{
+                  'btn-disabled': !productData,
+                }"
+                class="absolute right-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
+                @click="amount += 10"
+              >
+                <IconCSS size="16" name="ic:round-plus" />
+              </button>
+            </div>
+          </div>
+          <div>
+            <div>Период выполнения:</div>
+            <select
+              :disabled="!productData"
+              class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
+              @change="selectPeriod"
+            >
+              <option value="3h">3 часа</option>
+              <option value="12h">12 часов</option>
+              <option value="1day">1 день</option>
+              <option value="3days">3 дня</option>
+              <option value="7days">7 дней</option>
+              <option value="14days">14 дней</option>
+            </select>
+          </div>
           <div
-            v-if="productData && productData.type === 'product'"
-            class="productinfo mt-4"
+            v-if="productData && productData.type === 'brand'"
+            class="productinfo"
           >
-            <div>Информация о товаре:</div>
+            <div>Информация о бренде:</div>
             <div class="flex gap-4 mt-2 items-start">
               <nuxt-img
-                width="32"
-                class="rounded-lg object-contain w-8"
+                class="rounded-lg object-contain h-8"
                 :src="productData.image"
               />
-              <div class="article">
-                <a
-                  :href="`https://www.ozon.ru/product/${productData.article}`"
-                  target="_blank"
-                  class="text-sm text-primary link link-hover"
-                >
-                  {{ productData.article }}
-                </a>
-              </div>
               <div class="name truncate">
                 {{ productData.name }}
               </div>
-              <div class="price">
-                {{ productData.priceText }}
-              </div>
+            </div>
+          </div>
+          <div class="w-full ml-auto self-end justify-end lg:w-40">
+            <button
+              :class="{
+                'btn-disabled': !productData || amount <= 0,
+              }"
+              class="btn w-full btn-primary"
+              @click="create"
+            >
+              Добавить
+            </button>
+          </div>
+        </div>
+        <div
+          v-if="productData && productData.type === 'product'"
+          class="productinfo mt-4"
+        >
+          <div>Информация о товаре:</div>
+          <div class="flex gap-4 mt-2 items-start">
+            <nuxt-img
+              width="32"
+              class="rounded-lg object-contain w-8"
+              :src="productData.image"
+            />
+            <div class="article">
+              <a
+                :href="`https://www.ozon.ru/product/${productData.article}`"
+                target="_blank"
+                class="text-sm text-primary link link-hover"
+              >
+                {{ productData.article }}
+              </a>
+            </div>
+            <div class="name truncate">
+              {{ productData.name }}
+            </div>
+            <div class="price">
+              {{ productData.priceText }}
             </div>
           </div>
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
 
 <style scoped></style>
