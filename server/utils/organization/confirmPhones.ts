@@ -40,7 +40,6 @@ export async function confirmViaZvonokApi(
     )
   })
   
-  console.log(data);
   if (!data) {
     throw createError({
       statusCode: 404,
