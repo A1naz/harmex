@@ -40,7 +40,20 @@ const periods = [
   { title: 'Отменено', value: 'canceled' },
 ];
 
+const loading = ref(false)
+const limit = ref(5)
+const skip = ref(0)
+const end = ref(false)
+const target = ref(null)
+const targetIsVisible = ref(false)
+const { stop } = useIntersectionObserver(
+  target,
+  ([{ isIntersecting }], observerElement) => {
+    targetIsVisible.value = isIntersecting
+  }
+)
 async function getLast() {
+  lastElements.value = []
   const { data, error }: any = await useFetch(`/api${routePath === '/stats' ? routePath : apiRoute}/statsDelivery`, {
     method: 'GET',
     params: {
@@ -50,17 +63,16 @@ async function getLast() {
     },
     watch: false,
   })
-
   if (data.value) {
-    lastElements.value = data.value.lastElements
-    filteredElements.value = lastElements.value.map((element: any) => {
-    return {
-      ...element, 
-      purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
-      receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
-      receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
-    };
-});
+//     lastElements.value = [...lastElements.value, ...(data.value.lastElements! as any)]
+//     filteredElements.value = lastElements.value.map((element: any) => {
+//     return {
+//       ...element, 
+//       purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
+//       receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
+//       receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
+//     };
+// });
     purchaseDelivery.value = data.value.purchase
     inTransit.value = data.value.inTransit
     readyToPickup.value = data.value.ready
@@ -71,7 +83,49 @@ async function getLast() {
   deliveryDataLoading.value = false
   deliveryStatsLoading.value = false 
 }
+async function getLastContinue() {
+  const { data, error }: any = await useFetch(`/api${routePath === '/stats' ? routePath : apiRoute}/statsDelivery`, {
+    method: 'GET',
+    params: {
+      // type: route.query.type,
+      period: deliveryPeriod.value,
+      type: deliveryQuery.value,
+      limit: limit.value,
+      skip: skip.value,
+    },
+    watch: false,
+  })
+  if ((data.value as any)?.length === 0) {
+    loading.value = false
+    end.value = true
+    return
+  }
+  if (data.value) {
+    
+    lastElements.value = [...lastElements.value, ...(data.value.lastElements! as any)]
+    filteredElements.value = lastElements.value.map((element: any) => {
+    return {
+      ...element, 
+      purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
+      receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
+      receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
+    };
+});
+    
+  }
+  skip.value += limit.value
+  loading.value = false
+  
+  deliveryDataLoading.value = false
+  deliveryStatsLoading.value = false 
+}
 await getLast()
+await getLastContinue()
+
+watch(targetIsVisible, async (isVisible) => {
+  if (!end.value && isVisible && lastElements.value.length >= limit.value)
+    await getLastContinue()
+})
 
 const deliveryStats = computed(() => [
   {
@@ -116,8 +170,10 @@ function changeDeliveryPeriod(e: any) {
   deliveryDataLoading.value = true
   deliveryStatsLoading.value = true
   deliveryPeriod.value = e.value
+  skip.value = 0
   router.push(`${routePath}?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${e.value}`)
   getLast()
+  getLastContinue()
 }
 
 const filterElementsDebounced = useDebounceFn(filterElements, 1000)
@@ -174,7 +230,7 @@ function copyId(id: any){
           placeholder="Артикул"
           @input="search()"
         />
-        <button class="btn btn-sm join-item bg-base-300 bg-opacity-40 border-none cursor-default hover:bg-base-300 hover:bg-opacity-40" @click="search()">
+        <button class="btn btn-sm join-item bg-base-300 bg-opacity-40 border-none hover:bg-base-300 hover:bg-opacity-40" @click="search()">
            <span
               v-if="searchLoading"
               class="loading loading-spinner loading-xs"
@@ -204,8 +260,8 @@ function copyId(id: any){
         />
       </div>
     </div>
-    <div v-if="!deliveryDataLoading" class='px-3 sm:px-6'>
-      <table  class="table border-collapse border border-primary border-opacity-5">
+    <div v-if="!deliveryDataLoading" class='px-3 sm:px-6 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-base-200'>
+      <table class="table border-collapse border border-primary border-opacity-5">
           <thead>
             <tr class="bg-primary bg-opacity-5">
               <th class="text-center">Артикул</th>
@@ -247,7 +303,7 @@ function copyId(id: any){
             </tr>
         </tbody>
         </table>
-       
+        <div ref="target" class="flex justify-center items-center h-4 bg-base-content" />
     </div>
     <span v-else class="loading loading-dots loading-lg text-primary mx-auto p-6"></span>
     <div class="grid grid-cols-2 sm:grid-cols-6 gap-3 w-full px-1 py-3 sm:px-6 sm:pb-5">
@@ -262,7 +318,7 @@ function copyId(id: any){
 <style scoped>
 .copy-message {
   @apply fixed top-0 right-0 m-4 bg-lime-100 rounded-md px-3 py-1;
-  transition: opacity 1s ease; /* Плавное изменение прозрачности в течение 1 секунды */
+  transition: opacity 0.5s ease; /* Плавное изменение прозрачности в течение 1 секунды */
   opacity: 100; /* По умолчанию элемент видим */
 }
 

@@ -102,38 +102,38 @@ const deliveryStatsLoading = ref(false)
 // await getDataHeader()
 
 
-async function getLast() {
-  console.log(deliveryQuery.value)
-  const { data, error }: any = await useFetch('/api/stats/statsDelivery', {
-    method: 'GET',
-    params: {
-      // type: route.query.type,
-      period: deliveryPeriod.value,
-      type: deliveryQuery.value,
-    },
-    watch: false,
-  })
+// async function getLast() {
+//   console.log(deliveryQuery.value)
+//   const { data, error }: any = await useFetch('/api/stats/statsDelivery', {
+//     method: 'GET',
+//     params: {
+//       // type: route.query.type,
+//       period: deliveryPeriod.value,
+//       type: deliveryQuery.value,
+//     },
+//     watch: false,
+//   })
 
-  if (data.value) {
-    lastElements.value = data.value.lastElements
-    filteredElements.value = lastElements.value.map((element: any) => {
-    return {
-      ...element, 
-      purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
-      receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
-      receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
-    };
-});
-    purchaseDelivery.value = data.value.purchase
-    inTransit.value = data.value.inTransit
-    readyToPickup.value = data.value.ready
-    received.value = data.value.received
-    cancelled.value = data.value.cancelled
-    reviews.value = data.value.reviews
-  }
-  deliveryDataLoading.value = false
-  deliveryStatsLoading.value = false 
-}
+//   if (data.value) {
+//     lastElements.value = data.value.lastElements
+//     filteredElements.value = lastElements.value.map((element: any) => {
+//     return {
+//       ...element, 
+//       purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
+//       receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
+//       receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
+//     };
+// });
+//     purchaseDelivery.value = data.value.purchase
+//     inTransit.value = data.value.inTransit
+//     readyToPickup.value = data.value.ready
+//     received.value = data.value.received
+//     cancelled.value = data.value.cancelled
+//     reviews.value = data.value.reviews
+//   }
+//   deliveryDataLoading.value = false
+//   deliveryStatsLoading.value = false 
+// }
 
 async function countBuyouts() {
   const { data, error }: any = await useFetch('/api/stats/buyoutsCount', {
@@ -176,7 +176,7 @@ await getSecondLevelReferrals()
 
 await coutDeliveries()
 // await getData()
-await getLast()
+// await getLast()
 await countBuyouts()
 
 
@@ -383,13 +383,13 @@ const deliveryType = [
 //   getDataHeader()
 // }
 
-function changeDeliveryPeriod(e: any) {
-  deliveryDataLoading.value = true
-  deliveryStatsLoading.value = true
-  deliveryPeriod.value = e.value
-  router.push(`${routePath}?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${e.value}`)
-  getLast()
-}
+// function changeDeliveryPeriod(e: any) {
+//   deliveryDataLoading.value = true
+//   deliveryStatsLoading.value = true
+//   deliveryPeriod.value = e.value
+//   router.push(`${routePath}?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${e.value}`)
+//   getLast()
+// }
 
 // function changePeriod(e: any) {
 //   navigateTo(`${routePath}?type=${route.query.type}&period=${e.value}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`, {
@@ -403,25 +403,25 @@ function changeDeliveryPeriod(e: any) {
 //     external: true,
 //   })
 // }
-function changeDelivery(e: any) {
-  deliveryQuery.value = e.value
-  deliveryDataLoading.value = true  
-  deliveryStatsLoading.value = true
-  getLast();
-}
+// function changeDelivery(e: any) {
+//   deliveryQuery.value = e.value
+//   deliveryDataLoading.value = true  
+//   deliveryStatsLoading.value = true
+//   getLast();
+// }
 
-function selectText() {
-  const index = periods.findIndex(period => route.query.period ? period.value === route.query.period : period.value === 'today');
-  return periods[index].title 
-}
+// function selectText() {
+//   const index = periods.findIndex(period => route.query.period ? period.value === route.query.period : period.value === 'today');
+//   return periods[index].title 
+// }
 // function selectHeaderText() {
 //   const index = periods.findIndex(period => route.query.headerPeriod ? period.value === route.query.headerPeriod : period.value === 'today');
 //   return periods[index].title 
 // }
-function selectDeliveryText() {
-  const index = periods.findIndex(period => route.query.deliveryPeriod ? period.value === route.query.deliveryPeriod : period.value === 'today');
-  return periods[index].title 
-}
+// function selectDeliveryText() {
+//   const index = periods.findIndex(period => route.query.deliveryPeriod ? period.value === route.query.deliveryPeriod : period.value === 'today');
+//   return periods[index].title 
+// }
 
 // function selectServiceText() {
 //   const index = services.value.findIndex((service:any) => route.query.type ? service.value === route.query.type : service.value === 'all');

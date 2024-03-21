@@ -108,7 +108,7 @@ defineExpose({
         :key="filter"
       >
         <button
-          class="btn btn-ghost btn-sm normal-case font-normal w-full py-0 text-base whitespace-normal leading-none hover:bg-primary hover:bg-opacity-20"
+          class="btn btn-ghost btn-sm h-[2rem] normal-case font-normal w-full py-0 text-base whitespace-normal leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start"
           @click="updateText(filter)"
         >
           {{ filter }}
@@ -116,7 +116,7 @@ defineExpose({
       </li>
       <li v-if="tabs.length > 0" v-for="filter in tabs" :key="filter.title">
         <button
-          class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20"
+          class="btn btn-ghost btn-xs h-[2rem] text-xs text-left normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start"
           @click="updateValue(filter)"
         >
           {{ filter.title }}
@@ -126,7 +126,7 @@ defineExpose({
         <NuxtLink
           :to="filter.slot + filter.query"
           :external="false"
-          class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20"
+          class="btn btn-ghost btn-xs h-[2rem] text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start"
         >
           <span>
             {{ filter.title }}

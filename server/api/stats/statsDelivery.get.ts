@@ -5,7 +5,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { period, type } = getQuery(event)
+  const { period, type, skip, limit  } = getQuery(event)
 
   const currentDate = new Date() // Текущая дата
   let filter: any = {} // Начинаем с пустого фильтраD
@@ -69,11 +69,91 @@ export default eventHandler(async (event) => {
       break
     }
 
-  const deliveries = await Delivery.find({ user, updatedAt: filter.dataoperation, })
+  const lastElements: any[] = []
+
+  if(limit && skip){
+    const deliveries = await Delivery.find({ user, updatedAt: filter.dataoperation }).limit(limit as number).skip(skip as number)
+    
+    deliveries.forEach((item: any) => {
+      const sentToAssembly = item.statusdelivery.find((item: any) => item.status === 'Отправлен на сборку');
+      const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
+      const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получено');
+      const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
   
+      if (status === 'В пути') {
+        
+        if(type === 'inTransit'){
+          lastElements.push({
+            article: item.article,
+            pvz: item.point,
+            status: status,
+            purchaseDate: sentToAssembly?.date || '',
+            id: item.uuidbuyout,
+            receiptDate: receiptDate?.date || '',
+            receiveDate: receiveDate?.date || '',
+          })
+        }
+      } else if (status === 'Готов к выдаче') {
+         
+          if(type === 'ready'){
+            lastElements.push({
+              article: item.article,
+              pvz: item.point,
+              status: status,
+              purchaseDate: sentToAssembly?.date || '',
+              id: item.uuidbuyout,
+              receiptDate: receiptDate?.date || '',
+              receiveDate: receiveDate?.date || '',
+            })
+          }
+      } else if (status === 'Получено') {
+          
+          if(item.reviewed === false) reviews++;
+          if(type === 'picked'){
+            lastElements.push({
+              article: item.article,
+              pvz: item.point,
+              status: status,
+              purchaseDate: sentToAssembly?.date || '',
+              id: item.uuidbuyout,
+              receiptDate: receiptDate?.date || '',
+              receiveDate: receiveDate?.date || '',
+            })
+          }
+      } else if (item.status === 'canceled') {
+         
+          if(type === 'canceled'){
+            lastElements.push({
+              article: item.article,
+              pvz: item.point,
+              status: status,
+              purchaseDate: sentToAssembly?.date || '',
+              id: item.uuidbuyout,
+              receiptDate: receiptDate?.date || '',
+              receiveDate: receiveDate?.date || '',
+            })
+          }
+      } 
+  
+      if (type === 'all') {
+          lastElements.push({
+            article: item.article,
+            pvz: item.point,
+            status: status,
+            purchaseDate: sentToAssembly?.date || '',
+            id: item.uuidbuyout,
+            receiptDate: receiptDate?.date || '',
+            receiveDate: receiveDate?.date || '',
+          })
+        }
+    })
+    return { lastElements}
+  }
+  // if (!deliveries) return []
+  const deliveries = await Delivery.find({ user, updatedAt: filter.dataoperation })
   const purchase = deliveries.length
   
-  const lastElements: any[] = []
+  
   let inTransit = 0;
   let ready = 0;
   let received = 0;
@@ -156,5 +236,5 @@ export default eventHandler(async (event) => {
     
   })
 
-  return {lastElements, purchase , inTransit, ready, received, cancelled , reviews}
+  return {purchase , inTransit, ready, received, cancelled , reviews}
 })

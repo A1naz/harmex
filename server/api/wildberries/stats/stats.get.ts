@@ -386,6 +386,7 @@ export default eventHandler(async (event) => {
 
   const penaltyDeliveriesPayments = await paymenthistory.find({
     user,
+    mp: 'wildberries',
     dataoperation: filter.dataoperation,
     typeoperations: 'Расход',
     type: 'deliveries',
