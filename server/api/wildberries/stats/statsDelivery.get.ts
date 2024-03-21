@@ -1,4 +1,4 @@
-﻿import { Delivery } from '~/server/lib/models/Delivery'
+﻿import { Delivery } from '~/server/lib/models/wildberries/Delivery'
 
 export default eventHandler(async (event) => {
 

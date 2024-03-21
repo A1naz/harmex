@@ -1,4 +1,4 @@
-﻿import { Delivery } from '~/server/lib/models/Delivery'
+﻿import { Delivery } from '~/server/lib/models/ozon/Delivery'
 
 export default eventHandler(async (event) => {
 

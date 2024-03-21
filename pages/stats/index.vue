@@ -17,9 +17,10 @@ const secondLevelReferrals = ref(0)
 const lastElements = ref<any>([])
 const deliveries = ref<any>([])
 const periodFromRoute = route.query.period
+const routePath = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path;
 
 if (!route.query.type || !route.query.period || !route.query.headerPeriod || !route.query.deliveryPeriod) {
-  navigateTo('/stats?type=all&period=today&headerPeriod=today&deliveryPeriod=today', {
+  navigateTo(`${routePath}?type=all&period=today&headerPeriod=today&deliveryPeriod=today`, {
     external: true,
   })
 }
@@ -39,18 +40,20 @@ const deliveriesCount = ref<any>({
 })
 
 
-const totalSumm = ref(0)
-const totalExpense = ref(0)
-const totalDeals = ref(0)
-const comissions = ref(0)
+// const totalSumm = ref(0)
+// const totalExpense = ref(0)
+// const totalDeals = ref(0)
+// const comissions = ref(0)
+
 const purchaseDelivery = ref(0)
 const inTransit = ref(0)
 const readyToPickup = ref(0)
 const received = ref(0)
 const cancelled = ref(0)
+const reviews = ref(0)
 
-const headerPeriod = ref(route.query.headerPeriod)
-const headerDataLoading = ref(false)
+// const headerPeriod = ref(route.query.headerPeriod)
+// const headerDataLoading = ref(false)
 
 const deliveryPeriod = ref(route.query.deliveryPeriod)
 const deliveryDataLoading = ref(false)
@@ -62,41 +65,41 @@ const deliveryStatsLoading = ref(false)
 
 
 
-async function getData() {
-  const { data, error }: any = await useFetch('/api/stats/stats', {
-    method: 'GET',
-    params: {
-      type: route.query.type,
-      period: route.query.period,
-    },
-    watch: false,
-  })
-  if (data.value) {
-    chartDataValue.value = data.value.data
-    chartLabels.value = data.value.labels
-    services.value = data.value.services
-  }
-}
+// async function getData() {
+//   const { data, error }: any = await useFetch('/api/stats/stats', {
+//     method: 'GET',
+//     params: {
+//       type: route.query.type,
+//       period: route.query.period,
+//     },
+//     watch: false,
+//   })
+//   if (data.value) {
+//     chartDataValue.value = data.value.data
+//     chartLabels.value = data.value.labels
+//     services.value = data.value.services
+//   }
+// }
 
 
-async function getDataHeader() {
-  const { data, error }: any = await useFetch('/api/stats/statsHeader', {
-    method: 'GET',
-    params: {
-      // type: route.query.type,
-      period: headerPeriod.value,
-    },
-    watch: false,
-  })
-  if (data.value) {
-    totalSumm.value = data.value.totalSumm
-    totalExpense.value = data.value.totalExpense
-    totalDeals.value = data.value.totalDeals
-    comissions.value = data.value.comissions
-  }
-  headerDataLoading.value = false
-}
-await getDataHeader()
+// async function getDataHeader() {
+//   const { data, error }: any = await useFetch('/api/stats/statsHeader', {
+//     method: 'GET',
+//     params: {
+//       // type: route.query.type,
+//       period: headerPeriod.value,
+//     },
+//     watch: false,
+//   })
+//   if (data.value) {
+//     totalSumm.value = data.value.totalSumm
+//     totalExpense.value = data.value.totalExpense
+//     totalDeals.value = data.value.totalDeals
+//     comissions.value = data.value.comissions
+//   }
+//   headerDataLoading.value = false
+// }
+// await getDataHeader()
 
 
 async function getLast() {
@@ -114,19 +117,19 @@ async function getLast() {
   if (data.value) {
     lastElements.value = data.value.lastElements
     filteredElements.value = lastElements.value.map((element: any) => {
-  
-  return {
-    ...element, 
-    purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
-    receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
-    receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
-  };
+    return {
+      ...element, 
+      purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
+      receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
+      receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
+    };
 });
     purchaseDelivery.value = data.value.purchase
     inTransit.value = data.value.inTransit
     readyToPickup.value = data.value.ready
     received.value = data.value.received
     cancelled.value = data.value.cancelled
+    reviews.value = data.value.reviews
   }
   deliveryDataLoading.value = false
   deliveryStatsLoading.value = false 
@@ -172,7 +175,7 @@ await getPatnerWithdraws()
 await getSecondLevelReferrals()
 
 await coutDeliveries()
-await getData()
+// await getData()
 await getLast()
 await countBuyouts()
 
@@ -238,13 +241,13 @@ const chartOptions = ref({
 })
 
 function selectPeriod(event: any) {
-  navigateTo(`/stats?type=${route.query.type}&period=${event.target.value}`, {
+  navigateTo(`${routePath}?type=${route.query.type}&period=${event.target.value}`, {
     external: true,
   })
 }
 
 function selectService(event: any) {
-  navigateTo(`/stats?type=${event.target.value}&period=${route.query.period}`, {
+  navigateTo(`${routePath}?type=${event.target.value}&period=${route.query.period}`, {
     external: true,
   })
 }
@@ -345,14 +348,14 @@ const charttDelivOptions = ref({
   },
 })
 
-const MPTabs =  store.client.username == 'test' ? [
-  { title: 'Все', value: '' },
-  { title: 'Ozon', value: 'ozon' },
-  { title: 'Wildberries', value: 'wildberries' },
-] : [
-  { title: 'Все', value: '' },
-  { title: 'Wildberries', value: 'wildberries' },
-]
+// const MPTabs =  store.client.username == 'test' ? [
+//   { title: 'Все', value: '' },
+//   { title: 'Ozon', value: 'ozon' },
+//   { title: 'Wildberries', value: 'wildberries' },
+// ] : [
+//   { title: 'Все', value: '' },
+//   { title: 'Wildberries', value: 'wildberries' },
+// ]
 
 const periods = [
       { title: 'Сегодня', value: 'today' },
@@ -368,38 +371,38 @@ const deliveryType = [
   { title: 'Получено', value: 'picked' },
   { title: 'Отменено', value: 'canceled' },
 ];
-async function changeMP(e: any) {
-  return navigateTo(
-    '/stats/' + e.value + `?type=all&period=${route.query.period}`
-  )
-}5
-function changeHeaderPeriod(e: any) {
-  headerDataLoading.value = true
-  headerPeriod.value = e.value
-  router.push(`/stats?type=${route.query.type}&period=${route.query.period}&headerPeriod=${e.value}&deliveryPeriod=${route.query.deliveryPeriod}`)
-  getDataHeader()
-}
+// async function changeMP(e: any) {
+//   return navigateTo(
+//     `${routePath}/` + e.value + `?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`
+//   )
+// }
+// function changeHeaderPeriod(e: any) {
+//   headerDataLoading.value = true
+//   headerPeriod.value = e.value
+//   router.push(`${routePath}?type=${route.query.type}&period=${route.query.period}&headerPeriod=${e.value}&deliveryPeriod=${route.query.deliveryPeriod}`)
+//   getDataHeader()
+// }
 
 function changeDeliveryPeriod(e: any) {
   deliveryDataLoading.value = true
   deliveryStatsLoading.value = true
   deliveryPeriod.value = e.value
-  router.push(`/stats?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${e.value}`)
+  router.push(`${routePath}?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${e.value}`)
   getLast()
 }
 
-function changePeriod(e: any) {
-  navigateTo(`/stats?type=${route.query.type}&period=${e.value}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`, {
-    external: true,
-  });
-}
-function changeService(e: any) {
-  selectedService.value = e
+// function changePeriod(e: any) {
+//   navigateTo(`${routePath}?type=${route.query.type}&period=${e.value}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`, {
+//     external: true,
+//   });
+// }
+// function changeService(e: any) {
+//   selectedService.value = e
 
-  navigateTo(`/stats?type=${e.value}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`, {
-    external: true,
-  })
-}
+//   navigateTo(`${routePath}?type=${e.value}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`, {
+//     external: true,
+//   })
+// }
 function changeDelivery(e: any) {
   deliveryQuery.value = e.value
   deliveryDataLoading.value = true  
@@ -408,54 +411,28 @@ function changeDelivery(e: any) {
 }
 
 function selectText() {
-  const index = periods.findIndex(period => period.value === route.query.period);
-  return periods[index].title
+  const index = periods.findIndex(period => route.query.period ? period.value === route.query.period : period.value === 'today');
+  return periods[index].title 
 }
-function selectHeaderText() {
-  const index = periods.findIndex(period => period.value === route.query.headerPeriod);
-  return periods[index].title
-}
+// function selectHeaderText() {
+//   const index = periods.findIndex(period => route.query.headerPeriod ? period.value === route.query.headerPeriod : period.value === 'today');
+//   return periods[index].title 
+// }
 function selectDeliveryText() {
-  const index = periods.findIndex(period => period.value === route.query.deliveryPeriod);
-  return periods[index].title
+  const index = periods.findIndex(period => route.query.deliveryPeriod ? period.value === route.query.deliveryPeriod : period.value === 'today');
+  return periods[index].title 
 }
 
-function selectServiceText() {
-  const index = services.value.findIndex((service:any) => service.value === route.query.type);
-  return services.value[index].title
-}
+// function selectServiceText() {
+//   const index = services.value.findIndex((service:any) => route.query.type ? service.value === route.query.type : service.value === 'all');
+//   return services.value[index].title
+// }
 
 onMounted(() => {
       
 })
 
-const stats = computed(() => [
-  {
-    icon: 'coins',
-    title: 'Пополнено',
-    value: currency.format(totalSumm.value) || 0,
-  },
-  {
-    icon: 'hand',
-    title: 'Расходы',
-    value: currency.format(totalExpense.value) || 0,
-  },
-  {
-    icon: 'mbox',
-    title: 'Остаток',
-    value: (totalSumm.value-totalExpense.value)<0 ?( 0+' ₽') : currency.format(totalSumm.value-totalExpense.value) || totalSumm.value-totalExpense.value,
-  },
-  {
-    icon: 'box',
-    title: 'Заказано услуг',
-    value: totalDeals.value,
-  },
-  {
-    icon: 'crystal',
-    title: 'Партнерские вознаграждения',
-    value: currency.format(comissions.value) || 0,
-  },
-])
+
 const deliveryStats = computed(() => [
   {
     title: 'Выкуплено',
@@ -463,7 +440,7 @@ const deliveryStats = computed(() => [
   },
   {
     title: 'Доступных отзывов',
-    value: 0,
+    value: reviews.value,
   },
   {
     title: 'В пути',
@@ -485,6 +462,7 @@ const deliveryStats = computed(() => [
 
 const filterElementsDebounced = useDebounceFn(filterElements, 1000)
 function filterElements() {
+  
   filteredElements.value = lastElements.value.map((element: any) => {
   return {
       ...element, 
@@ -495,6 +473,7 @@ function filterElements() {
   });
   if(searchQuery.value === '') {
     searchLoading.value = false
+    deliveryDataLoading.value = false
     return
   }
   filteredElements.value = filteredElements.value.filter((element: any) =>
@@ -502,16 +481,24 @@ function filterElements() {
       String(value).toLowerCase().includes(searchQuery.value.toLowerCase())
     )
   );
+  deliveryDataLoading.value = false
   searchLoading.value = false
 }
 function search(){
   searchLoading.value = true
+  deliveryDataLoading.value = true
   filterElementsDebounced()
 }
 </script>
 <template>
-  <div class="bg-base-100 rounded-lg drop-shadow-sm w-full p-6 pr-0 flex flex-col gap-5 mt-4">
+  <StatsHeaderStats />
+
+  <StatsMainStats />
+
+  <StatsDeliveryStats />
+  <!-- <div class="bg-base-100 rounded-lg drop-shadow-sm w-full p-3 sm:p-6 pr-0 flex flex-col gap-5 mt-4">
     <div class="flex justify-between pr-6">
+      
       <h2 class="font-semibold text-xl">Сатистика</h2>
       <div class="flex gap-2">
         <CustomSelect
@@ -529,8 +516,8 @@ function search(){
         />
       </div>
     </div>
-    <div class="overflow-x-auto"> <!-- Обертка для горизонтальной прокрутки -->
-    <div class="flex gap-3.5 md:pr-6">
+    <div class="overflow-x-auto"> 
+    <div class="flex gap-3.5 sm::pr-6">
       <div v-for="item in stats" class="flex flex-col gap-2 w-[20%] min-w-[200px] md:min-w-0 rounded-lg bg-neutral-focus px-3.5 py-3">
         <nuxt-img
           class="w-6 h-6"
@@ -547,9 +534,10 @@ function search(){
       </div>
     </div>
   </div>
-</div>
-  <div  class="bg-base-100 rounded-lg drop-shadow-sm w-full flex flex-col gap-5 mt-4 ">
-    <div class="flex gap-2 self-end p-6">
+  </div> -->
+  <!-- <div  class="bg-base-100 rounded-lg drop-shadow-sm w-full flex flex-col gap-5 mt-4 ">
+    <div class="flex gap-2 sm:self-end p-3 sm:p-6">
+      
       <CustomSelect
         class="lg:flex"
         :class="'sm:min-w-[120px]'"
@@ -570,6 +558,7 @@ function search(){
     >
       <div id="forBar" class="w-11/12 md:w-1/2 h-full my-auto">
         <div class="opacity-0 -mb-5">По дням</div>
+        
           <Bar
             id="chartId"
             :data="chartData"
@@ -619,9 +608,9 @@ function search(){
         </div>
       </div>
     </div>
-  </div>
-  <div  class="bg-base-100 rounded-lg drop-shadow-sm w-full  flex flex-col gap-5 mt-4 ">
-    <div class="flex gap-2 flex-col sm:flex-row justify-between px-6 pt-6">
+  </div> -->
+  <!-- <div  class="bg-base-100 rounded-lg drop-shadow-sm w-full  flex flex-col gap-5 mt-4 ">
+    <div class="flex gap-2 flex-col sm:flex-row justify-between px-3 sm:px-6 pt-6">
       <div class="join">
         <input 
           type="text" 
@@ -660,9 +649,9 @@ function search(){
         />
       </div>
     </div>
-    <div v-if="!deliveryDataLoading" class='px-6'>
+    <div v-if="!deliveryDataLoading" class='px-3 sm:px-6'>
       <table  class="table border-collapse border border-primary border-opacity-5">
-          <!-- head -->
+         
           <thead>
             <tr class="bg-primary bg-opacity-5">
               <th class="text-center">Артикул</th>
@@ -676,22 +665,22 @@ function search(){
           </thead>
           <tbody v-if="filteredElements.length">
             <tr v-for="element in filteredElements">
-              <td class="border-r border-primary border-opacity-5 text-center text-primary">{{ element.article }}</td>
-              <td class="border-r border-primary border-opacity-5 overflow-x-auto text-center truncate max-w-xs">
+              <td class="border-r border-primary border-opacity-5 text-center text-primary p-5 px-1">{{ element.article }}</td>
+              <td class="border-r border-primary border-opacity-5 overflow-x-auto text-center truncate max-w-[200px] xl:max-w-xs p-5 px-1">
                 {{ element.pvz }}
               </td>
               <td 
-                class="border-r border-primary border-opacity-5 text-center text-yellow-50"
+                class="border-r border-primary border-opacity-5 text-center text-yellow-50 p-5 px-1"
                 :class="{'text-green-600': element.status === 'Получено' || element.status === 'Готов к выдаче', 'text-red-700': element.status === 'Отменен', 'text-yellow-500': element.status === 'В пути'}"
               >{{ (element.status === 'Готов к выдаче' || element.status === 'Получено') ? 'Доставлен' : element.status }}</td>
-              <td class="border-r border-primary border-opacity-5 text-center">
+              <td class="border-r border-primary border-opacity-5 text-center p-5px-1">
                 <div class="bg-primary rounded-md bg-opacity-10 w-fit px-5 py-0.5 text-center mx-auto">{{ element.purchaseDate }}</div>
               </td>
-              <td class="border-r border-primary border-opacity-5 text-center">
+              <td class="border-r border-primary border-opacity-5 text-center p-5 px-1">
                 <div class="bg-base-content rounded-md bg-opacity-5 w-fit px-5 py-0.5 text-center mx-auto truncate max-w-[100px] cursor-pointer">{{ '#' + element.id }}</div>
               </td>
-              <td class="border-r border-primary border-opacity-5 text-center"><div class="bg-primary rounded-md bg-opacity-5 w-fit px-5 py-0.5 text-center mx-auto">{{ element.receiptDate }}</div></td>
-              <td class="border-r border-primary border-opacity-5 text-center">
+              <td class="border-r border-primary border-opacity-5 text-center p-5 px-1"><div class="bg-primary rounded-md bg-opacity-5 w-fit px-5 py-0.5 text-center mx-auto">{{ element.receiptDate }}</div></td>
+              <td class="border-r border-primary border-opacity-5 text-center p-5 px-1">
                 <div class="  rounded-md w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-green-400 bg-opacity-70': element.receiveDate !== '-'}">{{ element.receiveDate  }}</div>
               </td>
             </tr>
@@ -710,18 +699,18 @@ function search(){
     <div class="grid grid-cols-2 sm:grid-cols-6 gap-3 w-full px-1 py-3 sm:px-6 sm:pb-5">
       <div v-for="item in deliveryStats" class="flex flex-col gap-2 p-3  rounded-lg bg-primary bg-opacity-5">
         <h2 class="font-semibold">{{ item.title }}</h2>
-        <span v-if="!deliveryStatsLoading" class="text-lg font-bold text-primary">{{ item.value }}</span>
+        <span v-if="!deliveryStatsLoading" class="text-2xl font-bold text-primary ">{{ item.value }}</span>
         <span v-else class="loading loading-spinner loading-md text-primary"></span>
       </div>
     </div>
-    <!-- <div class="flex gap-2.5">
+    <div class="flex gap-2.5">
       <div v-for="item in deliveryStats" class="flex flex-col gap-2 p-3 w-1/5 rounded-lg bg-primary bg-opacity-5">
         <h2 class="font-semibold">{{ item.title }}</h2>
         <span v-if="!deliveryStatsLoading" class="text-lg font-bold text-primary">{{ item.value }}</span>
         <span v-else class="loading loading-spinner loading-md text-primary"></span>
       </div>
-    </div> -->
-  </div>
+    </div>
+  </div> -->
   <!-- <div class="page-header"> -->
     <!-- <div class="flex items-center gap-2 mt-4">
       <h1 class="text-2xl font-bold">Аналитика</h1>
@@ -1041,7 +1030,7 @@ function search(){
       </div>
     </div> -->
   <!-- </div> -->
-  <div class="h-24"></div>
+  <div class="h-10"></div>
 </template>
 
 <style scoped></style>
