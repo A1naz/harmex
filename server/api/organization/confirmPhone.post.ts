@@ -93,12 +93,28 @@ export default eventHandler(async (event) => {
         status: 'ok',
       }
     } catch (e) {
-      console.log(e)
+      data = await confirmViaHiCall(hiCallKey, phoneNumber)
+
+      if (!data || !data.code) {
+        return {
+          status: 'error',
+          message: 'Не удалось отправить код',
+        }
+      }
+
+      const newConfirm = new ConfirmPhone({
+        phone: phoneNumber,
+        code: data.code,
+        date: new Date(),
+      })
+
+      await newConfirm.save()
 
       return {
-        status: 'error',
-        message: 'Не удалось отправить код',
+        status: 'ok',
       }
+
+      console.log(e)
     }
   }
 })

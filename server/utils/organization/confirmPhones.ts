@@ -22,6 +22,7 @@ export async function confirmViaZvonokApi(
   phoneNumber: string
 ) {
 
+  
   const data: any = await new Promise((resolve, reject) => {
     request.get(
       {
@@ -37,9 +38,9 @@ export async function confirmViaZvonokApi(
         }
       }
     )
-    console.log(data);
   })
-
+  
+  console.log(data);
   if (!data) {
     throw createError({
       statusCode: 404,
