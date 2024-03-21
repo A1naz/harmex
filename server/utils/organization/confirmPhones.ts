@@ -40,6 +40,9 @@ export async function confirmViaZvonokApi(
     )
   })
   
+  console.log(data);
+  
+  
   if (!data) {
     throw createError({
       statusCode: 404,
@@ -47,8 +50,10 @@ export async function confirmViaZvonokApi(
     })
   }
 
+
+
   return {
-    status: 'ok',
+    status: data.status,
     code: data.data.pincode,
   }
 }
