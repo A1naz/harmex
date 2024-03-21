@@ -81,7 +81,7 @@ onKeyStroke('Escape', (e) => {
               Информация о выкупе № {{ info.place }}
             </div>
             <span
-              class="rounded-2xl py-0 px-2 text-md mb-2 max-h-7 text-[9-px]"
+              class="rounded-2xl py-0 px-2 text-md mb-2 max-h-7 "
               :class="{
               'bg-success ':
                 (info.status === 'active' || info.status === 'work'),
