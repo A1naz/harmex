@@ -115,7 +115,7 @@ defineExpose({
       </li>
       <li v-if="tabs.length > 0" v-for="filter in tabs" :key="filter.title">
         <button
-          class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20"
+          class="btn btn-ghost btn-xs text-md normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20"
           @click="updateValue(filter)"
         >
           {{ filter.title }}

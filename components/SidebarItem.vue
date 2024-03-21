@@ -39,13 +39,13 @@ const mpHref = computed(() => {
     return props.href
   }
 })
+const theme = useColorMode()
 </script>
 
 <template>
   <li v-if="props.href != '/autoanswer'">
     <NuxtLink :to="mpHref" class="mx-4 rounded-lg">
-      <IconCSS
-        :color="active ? 'white' : 'black'"
+      <Icon
         :name="icon"
         size="24"
       />
