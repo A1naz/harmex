@@ -77,7 +77,7 @@ export default eventHandler(async (event) => {
         phoneNumber
       )
 
-      if (!data || !data.code) {
+      if (!data || !data.code || data.status === 'error') {
         data = await confirmViaHiCall(hiCallKey, phoneNumber)
       }
 
