@@ -88,7 +88,7 @@ defineExpose({
     @click.stop
   >
     <div
-      class="font-normal text-xs normal-case btn-primary py-6 bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
+      class="font-normal w-[250px] text-xs normal-case btn-primary py-6 bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
       :class="customClass"
     >
       <span

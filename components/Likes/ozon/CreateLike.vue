@@ -354,7 +354,7 @@ async function selectCreatePage(e: any) {
     >
       <div class="flex justify-between">
         <ProductLikesOzonCustomSelect
-          class="hidden lg:flex"
+          class="lg:flex"
           :class="'sm:min-w-[120px]'"
           :tabs="[
             {
@@ -370,7 +370,7 @@ async function selectCreatePage(e: any) {
         />
         <NuxtLink
           to="/likes"
-          class="text-gray-500 hover:text-gray-700 self-end mb-2"
+          class="text-gray-500 hover:text-gray-700 self-end mb-5"
         >
           <Icon name="material-symbols:close-rounded" size="24" />
         </NuxtLink>
@@ -422,7 +422,7 @@ async function selectCreatePage(e: any) {
             <button
               class="btn w-full btn-primary"
               @click="getProductReviews"
-              :disabled="btnDisabled"
+              :disabled="btnDisabled || !article"
             >
               Добавить
             </button>
