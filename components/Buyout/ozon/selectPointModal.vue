@@ -27,6 +27,7 @@ const addressText = ref('sadsd')
 const lastAddress = ref({
   lt: 0,
   lg: 0,
+  id: '',
 })
 function handleSelect(address: string) {
   if (
@@ -57,11 +58,18 @@ function handleSelect(address: string) {
       address,
       lt: lastAddress.value.lt,
       lg: lastAddress.value.lg,
+      id: lastAddress.value.id,
     })
   }
 
   localStorage.setItem('ozonPointStore', JSON.stringify(arr))
-  emit('callback', address, lastAddress.value.lt, lastAddress.value.lg)
+  emit(
+    'callback',
+    address,
+    lastAddress.value.lt,
+    lastAddress.value.lg,
+    lastAddress.value.id
+  )
   closeModal()
 }
 
@@ -73,11 +81,19 @@ function handleDelete(address: any) {
     1
   )
   localStorage.setItem('ozonPointStore', JSON.stringify(arr))
-  emit('callback', address.address, lastAddress.value.lt, lastAddress.value.lg)
+  emit(
+    'callback',
+    address.address,
+    lastAddress.value.lt,
+    lastAddress.value.lg,
+    lastAddress.value.id
+  )
   lastPoints.value = JSON.parse(localStorage.getItem('ozonPointStore') || '[]')
 }
 
-const lastPoints = ref(JSON.parse(localStorage.getItem('ozonPointStore') || '[]'))
+const lastPoints = ref(
+  JSON.parse(localStorage.getItem('ozonPointStore') || '[]')
+)
 
 const presetCluster = 'slands#blueClusterIcons'
 
@@ -164,6 +180,7 @@ onMounted(async () => {
               lt: point.lt,
               lg: point.lg,
               a: 'Загрузка...',
+              id: point.id,
             },
           },
           options: {
@@ -189,8 +206,12 @@ onMounted(async () => {
       const objectId = e.get('objectId')
       const obj = objectManager.objects.getById(objectId)
 
-      await getAddressText(obj.properties.data.lt, obj.properties.data.lg)
-
+      await getAddressText(
+        obj.properties.data.lt,
+        obj.properties.data.lg,
+        obj.properties.data.id
+      )
+      
       obj.properties.data.a = addressText.value
 
       const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
@@ -239,7 +260,6 @@ onMounted(async () => {
     loading.value = false
   } catch (e) {
     loading.value = false
-    // eslint-disable-next-line no-console
     console.log(e)
     error.value = 'Не удалось загрузить карту'
   }
@@ -250,20 +270,21 @@ onKeyStroke('Escape', (e) => {
   emit('close')
 })
 
-async function getAddressText(lt: number, lg: number) {
+async function getAddressText(lt: number, lg: number, id: string) {
   addressText.value = 'Загрузка...'
-  const { data, error }: any = await useFetch(
-    `/api/ozon/buyout/addressText`, {
-      method: 'GET',
-      params: {
-        lt,
-        lg,
-      }
-    }
-  )
+
+  // @ts-ignore
+  const { data, error }: any = await useFetch(`/api/ozon/buyout/addressText`, {
+    method: 'GET',
+    params: {
+      lt,
+      lg,
+    },
+  })
   if (data.value) {
+    
     addressText.value = data.value
-    lastAddress.value = { lt, lg }
+    lastAddress.value = { lt, lg, id }
     return addressText.value
   } else {
     addressText.value = 'Нет данных'
@@ -281,6 +302,7 @@ async function getAddressText(lt: number, lg: number) {
     }"
   >
     <div v-if="state" class="modal-box w-11/12 max-w-4xl">
+      {{lastAddress}}
       <div class="">
         <a
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -322,10 +344,10 @@ async function getAddressText(lt: number, lg: number) {
               >
                 <button
                   :key="index"
-                  class="btn pvz text-xs rounded-none rounded-l-md p-2 flex w-10/12 text-left "
+                  class="btn pvz text-xs rounded-none rounded-l-md p-2 flex w-10/12 text-left"
                   @click="
                     ;[
-                      (lastAddress = { lt: item.lt, lg: item.lg }),
+                      (lastAddress = { lt: item.lt, lg: item.lg, id: item.id }),
                       handleSelect(item.address),
                     ]
                   "

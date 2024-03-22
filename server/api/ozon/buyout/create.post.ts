@@ -25,6 +25,7 @@ interface Item {
     lat: number
     lon: number
   }
+  pointId: string
   discount: string
 }
 export default eventHandler(async (event) => {
@@ -93,6 +94,7 @@ export default eventHandler(async (event) => {
       pointCoordinates: product.pointCoordinates,
       point_city: city,
       point_state: state,
+      pointId: product.pointId,
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,
