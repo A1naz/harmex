@@ -272,14 +272,6 @@ const charttDelivOptions = ref({
   },
 })
 
-// const MPTabs =  store.client.username == 'test' ? [
-//   { title: 'Все', value: '' },
-//   { title: 'Ozon', value: 'ozon' },
-//   { title: 'Wildberries', value: 'wildberries' },
-// ] : [
-//   { title: 'Все', value: '' },
-//   { title: 'Wildberries', value: 'wildberries' },
-// ]
 
 const periods = [
       { title: 'Сегодня', value: 'today' },
@@ -295,62 +287,7 @@ const deliveryType = [
   { title: 'Получено', value: 'picked' },
   { title: 'Отменено', value: 'canceled' },
 ];
-// async function changeMP(e: any) {
-//   return navigateTo(
-//     `${routePath}/` + e.value + `?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`
-//   )
-// }
-// function changeHeaderPeriod(e: any) {
-//   headerDataLoading.value = true
-//   headerPeriod.value = e.value
-//   router.push(`${routePath}?type=${route.query.type}&period=${route.query.period}&headerPeriod=${e.value}&deliveryPeriod=${route.query.deliveryPeriod}`)
-//   getDataHeader()
-// }
 
-// function changeDeliveryPeriod(e: any) {
-//   deliveryDataLoading.value = true
-//   deliveryStatsLoading.value = true
-//   deliveryPeriod.value = e.value
-//   router.push(`${routePath}?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${e.value}`)
-//   getLast()
-// }
-
-// function changePeriod(e: any) {
-//   navigateTo(`${routePath}?type=${route.query.type}&period=${e.value}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`, {
-//     external: true,
-//   });
-// }
-// function changeService(e: any) {
-//   selectedService.value = e
-
-//   navigateTo(`${routePath}?type=${e.value}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`, {
-//     external: true,
-//   })
-// }
-// function changeDelivery(e: any) {
-//   deliveryQuery.value = e.value
-//   deliveryDataLoading.value = true  
-//   deliveryStatsLoading.value = true
-//   getLast();
-// }
-
-// function selectText() {
-//   const index = periods.findIndex(period => route.query.period ? period.value === route.query.period : period.value === 'today');
-//   return periods[index].title 
-// }
-// function selectHeaderText() {
-//   const index = periods.findIndex(period => route.query.headerPeriod ? period.value === route.query.headerPeriod : period.value === 'today');
-//   return periods[index].title 
-// }
-// function selectDeliveryText() {
-//   const index = periods.findIndex(period => route.query.deliveryPeriod ? period.value === route.query.deliveryPeriod : period.value === 'today');
-//   return periods[index].title 
-// }
-
-// function selectServiceText() {
-//   const index = services.value.findIndex((service:any) => route.query.type ? service.value === route.query.type : service.value === 'all');
-//   return services.value[index].title
-// }
 
 onMounted(() => {
       

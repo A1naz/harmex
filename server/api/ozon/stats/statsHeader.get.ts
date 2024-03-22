@@ -125,7 +125,6 @@ export default eventHandler(async (event) => {
   const totalCommissions = comissions.reduce((count, comission) => count + comission.summ, 0);
 
   const totalDeals = expense.length
-  // console.log('totalSumm:', totalSumm, 'totalExpense:', totalExpense, 'totalDeals:', totalDeals, 'comissions:', totalCommissions)
 
   return { totalSumm: totalSumm, totalExpense: totalExpense, totalDeals: totalDeals, comissions: totalCommissions }
 })
