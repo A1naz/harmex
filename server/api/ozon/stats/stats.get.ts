@@ -342,18 +342,18 @@ export default eventHandler(async (event) => {
       expenses: 0,
       quantity: 0,
     },
-    {
-      value: 'likes',
-      title: 'Лайки на отзывы',
-      expenses: 0,
-      quantity: 0,
-    },
-    {
-      value: 'productlikes',
-      title: 'Лайки на товар/бренд',
-      expenses: 0,
-      quantity: 0,
-    },
+    // {
+    //   value: 'likes',
+    //   title: 'Лайки на отзывы',
+    //   expenses: 0,
+    //   quantity: 0,
+    // },
+    // {
+    //   value: 'productlikes',
+    //   title: 'Лайки на товар/бренд',
+    //   expenses: 0,
+    //   quantity: 0,
+    // },
     {
       value: 'questions',
       title: 'Вопросы',
@@ -366,16 +366,26 @@ export default eventHandler(async (event) => {
       expenses: 0,
       quantity: 0,
     },
-    {
-      value: 'autoanswer',
-      title: 'Автоответчик',
-      expenses: 0,
-      quantity: 0,
-    },
+    // {
+    //   value: 'autoanswer',
+    //   title: 'Автоответчик',
+    //   expenses: 0,
+    //   quantity: 0,
+    // },
   ]
 
+  const likesItem = {
+    value: 'likes',
+    title: 'Лайки',
+    expenses: 0,
+    quantity: 0,
+  };
+
   typeSumMap.forEach((value, key) => {
-    services.forEach((item) => {
+    if (key === 'likes' || key === 'productlikes') {
+      likesItem.expenses += value;
+      likesItem.quantity += typeSumMap.get(key + ' quantity');
+    } else services.forEach((item) => {
       if (item.value == key) {
         item.expenses = value
         item.quantity = typeSumMap.get(key + ' quantity')
@@ -384,6 +394,29 @@ export default eventHandler(async (event) => {
       }
     })
   })
+  const penalty = {
+    value: 'panalty',
+    title: 'Штрафы',
+    expenses: 0,
+    quantity: 0,
+  };
+
+  const penaltyDeliveriesPayments = await paymenthistory.find({
+    user,
+    mp: 'ozon',
+    dataoperation: filter.dataoperation,
+    typeoperations: 'Расход',
+    type: 'deliveries',
+    comment: { $regex: 'Штраф', $options: 'i' },
+  })
+
+  penaltyDeliveriesPayments.forEach((item) => {
+    penalty.expenses += +item.summ
+    penalty.quantity += 1
+    // console.log('penalty: ', item)
+  })
+  services.splice(4, 0, likesItem);
+  services.push(penalty);
 
   return { data: format.data, labels: format.labels, services }
 })

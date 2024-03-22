@@ -64,7 +64,7 @@ export default eventHandler(async (event) => {
     middleName: user.middleName ? user.middleName : '',
     phoneNumber: user.phoneNumber ? user.phoneNumber : '',
   }
-
+  
   return {
     client,
     status: 'ok',

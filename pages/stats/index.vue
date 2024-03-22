@@ -11,13 +11,16 @@ const store = useMainStore()
 
 const currency = useCurrency()
 const route = useRoute()
+const router = useRouter()
 const { width } = useWindowSize()
 const secondLevelReferrals = ref(0)
 const lastElements = ref<any>([])
+const deliveries = ref<any>([])
 const periodFromRoute = route.query.period
+const routePath = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path;
 
-if (!route.query.type || !route.query.period) {
-  navigateTo('/stats?type=all&period=today', {
+if (!route.query.type || !route.query.period || !route.query.headerPeriod || !route.query.deliveryPeriod) {
+  navigateTo(`${routePath}?type=all&period=today&headerPeriod=today&deliveryPeriod=today`, {
     external: true,
   })
 }
@@ -35,31 +38,102 @@ const deliveriesCount = ref<any>({
   complited: 0,
   penalty: 0,
 })
-async function getData() {
-  const { data, error }: any = await useFetch('/api/stats/stats', {
-    method: 'GET',
-    params: {
-      type: route.query.type,
-      period: route.query.period,
-    },
-    watch: false,
-  })
-  if (data.value) {
-    chartDataValue.value = data.value.data
-    chartLabels.value = data.value.labels
-    services.value = data.value.services
-  }
-}
 
-async function getLast() {
-  const { data, error }: any = await useFetch('/api/stats/last10', {
-    method: 'GET',
-  })
 
-  if (data.value) {
-    lastElements.value = data.value
-  }
-}
+// const totalSumm = ref(0)
+// const totalExpense = ref(0)
+// const totalDeals = ref(0)
+// const comissions = ref(0)
+
+const purchaseDelivery = ref(0)
+const inTransit = ref(0)
+const readyToPickup = ref(0)
+const received = ref(0)
+const cancelled = ref(0)
+const reviews = ref(0)
+
+// const headerPeriod = ref(route.query.headerPeriod)
+// const headerDataLoading = ref(false)
+
+const deliveryPeriod = ref(route.query.deliveryPeriod)
+const deliveryDataLoading = ref(false)
+const searchQuery = ref('')
+const searchLoading = ref(false)
+const filteredElements = ref<any>([])
+const deliveryQuery = ref('all')
+const deliveryStatsLoading = ref(false)
+
+
+
+// async function getData() {
+//   const { data, error }: any = await useFetch('/api/stats/stats', {
+//     method: 'GET',
+//     params: {
+//       type: route.query.type,
+//       period: route.query.period,
+//     },
+//     watch: false,
+//   })
+//   if (data.value) {
+//     chartDataValue.value = data.value.data
+//     chartLabels.value = data.value.labels
+//     services.value = data.value.services
+//   }
+// }
+
+
+// async function getDataHeader() {
+//   const { data, error }: any = await useFetch('/api/stats/statsHeader', {
+//     method: 'GET',
+//     params: {
+//       // type: route.query.type,
+//       period: headerPeriod.value,
+//     },
+//     watch: false,
+//   })
+//   if (data.value) {
+//     totalSumm.value = data.value.totalSumm
+//     totalExpense.value = data.value.totalExpense
+//     totalDeals.value = data.value.totalDeals
+//     comissions.value = data.value.comissions
+//   }
+//   headerDataLoading.value = false
+// }
+// await getDataHeader()
+
+
+// async function getLast() {
+//   console.log(deliveryQuery.value)
+//   const { data, error }: any = await useFetch('/api/stats/statsDelivery', {
+//     method: 'GET',
+//     params: {
+//       // type: route.query.type,
+//       period: deliveryPeriod.value,
+//       type: deliveryQuery.value,
+//     },
+//     watch: false,
+//   })
+
+//   if (data.value) {
+//     lastElements.value = data.value.lastElements
+//     filteredElements.value = lastElements.value.map((element: any) => {
+//     return {
+//       ...element, 
+//       purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
+//       receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
+//       receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
+//     };
+// });
+//     purchaseDelivery.value = data.value.purchase
+//     inTransit.value = data.value.inTransit
+//     readyToPickup.value = data.value.ready
+//     received.value = data.value.received
+//     cancelled.value = data.value.cancelled
+//     reviews.value = data.value.reviews
+//   }
+//   deliveryDataLoading.value = false
+//   deliveryStatsLoading.value = false 
+// }
 
 async function countBuyouts() {
   const { data, error }: any = await useFetch('/api/stats/buyoutsCount', {
@@ -101,8 +175,8 @@ await getPatnerWithdraws()
 await getSecondLevelReferrals()
 
 await coutDeliveries()
-await getData()
-await getLast()
+// await getData()
+// await getLast()
 await countBuyouts()
 
 
@@ -167,17 +241,17 @@ const chartOptions = ref({
 })
 
 function selectPeriod(event: any) {
-  navigateTo(`/stats?type=${route.query.type}&period=${event.target.value}`, {
+  navigateTo(`${routePath}?type=${route.query.type}&period=${event.target.value}`, {
     external: true,
   })
 }
 
 function selectService(event: any) {
-  navigateTo(`/stats?type=${event.target.value}&period=${route.query.period}`, {
+  navigateTo(`${routePath}?type=${event.target.value}&period=${route.query.period}`, {
     external: true,
   })
 }
-
+  
 // DELIVERIES by CITY
 interface DelisDataChart {
   data: number[]
@@ -274,27 +348,374 @@ const charttDelivOptions = ref({
   },
 })
 
-const MPTabs =  store.client.username == 'test' ? [
-  { title: 'Все', value: '' },
-  { title: 'Ozon', value: 'ozon' },
-  { title: 'Wildberries', value: 'wildberries' },
-] : [
-  { title: 'Все', value: '' },
-  { title: 'Wildberries', value: 'wildberries' },
-]
+// const MPTabs =  store.client.username == 'test' ? [
+//   { title: 'Все', value: '' },
+//   { title: 'Ozon', value: 'ozon' },
+//   { title: 'Wildberries', value: 'wildberries' },
+// ] : [
+//   { title: 'Все', value: '' },
+//   { title: 'Wildberries', value: 'wildberries' },
+// ]
 
-async function changeMP(e: any) {
-  return navigateTo(
-    '/stats/' + e.value + `?type=all&period=${route.query.period}`
-  )
+const periods = [
+      { title: 'Сегодня', value: 'today' },
+      { title: 'Вчера', value: 'yesterday' },
+      { title: 'Неделя', value: 'week' },
+      { title: 'Этот месяц', value: 'month' },
+      { title: 'Прошлый месяц', value: 'lastMonth' },
+    ];
+const deliveryType = [
+  { title: 'Все', value: 'all' },
+  { title: 'В пути', value: 'inTransit' },
+  { title: 'Готовы к выдаче', value: 'ready' },
+  { title: 'Получено', value: 'picked' },
+  { title: 'Отменено', value: 'canceled' },
+];
+// async function changeMP(e: any) {
+//   return navigateTo(
+//     `${routePath}/` + e.value + `?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`
+//   )
+// }
+// function changeHeaderPeriod(e: any) {
+//   headerDataLoading.value = true
+//   headerPeriod.value = e.value
+//   router.push(`${routePath}?type=${route.query.type}&period=${route.query.period}&headerPeriod=${e.value}&deliveryPeriod=${route.query.deliveryPeriod}`)
+//   getDataHeader()
+// }
+
+// function changeDeliveryPeriod(e: any) {
+//   deliveryDataLoading.value = true
+//   deliveryStatsLoading.value = true
+//   deliveryPeriod.value = e.value
+//   router.push(`${routePath}?type=${route.query.type}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${e.value}`)
+//   getLast()
+// }
+
+// function changePeriod(e: any) {
+//   navigateTo(`${routePath}?type=${route.query.type}&period=${e.value}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`, {
+//     external: true,
+//   });
+// }
+// function changeService(e: any) {
+//   selectedService.value = e
+
+//   navigateTo(`${routePath}?type=${e.value}&period=${route.query.period}&headerPeriod=${route.query.headerPeriod}&deliveryPeriod=${route.query.deliveryPeriod}`, {
+//     external: true,
+//   })
+// }
+// function changeDelivery(e: any) {
+//   deliveryQuery.value = e.value
+//   deliveryDataLoading.value = true  
+//   deliveryStatsLoading.value = true
+//   getLast();
+// }
+
+// function selectText() {
+//   const index = periods.findIndex(period => route.query.period ? period.value === route.query.period : period.value === 'today');
+//   return periods[index].title 
+// }
+// function selectHeaderText() {
+//   const index = periods.findIndex(period => route.query.headerPeriod ? period.value === route.query.headerPeriod : period.value === 'today');
+//   return periods[index].title 
+// }
+// function selectDeliveryText() {
+//   const index = periods.findIndex(period => route.query.deliveryPeriod ? period.value === route.query.deliveryPeriod : period.value === 'today');
+//   return periods[index].title 
+// }
+
+// function selectServiceText() {
+//   const index = services.value.findIndex((service:any) => route.query.type ? service.value === route.query.type : service.value === 'all');
+//   return services.value[index].title
+// }
+
+onMounted(() => {
+      
+})
+
+
+const deliveryStats = computed(() => [
+  {
+    title: 'Выкуплено',
+    value: purchaseDelivery.value,
+  },
+  {
+    title: 'Доступных отзывов',
+    value: reviews.value,
+  },
+  {
+    title: 'В пути',
+    value: inTransit.value,
+  },
+  {
+    title: 'Готовы к выдаче',
+    value: readyToPickup.value,
+  },
+  {
+    title: 'Получено',
+    value: received.value,
+  },
+  {
+    title: 'Отменено',
+    value: cancelled.value,
+  }
+])
+
+const filterElementsDebounced = useDebounceFn(filterElements, 1000)
+function filterElements() {
+  
+  filteredElements.value = lastElements.value.map((element: any) => {
+  return {
+      ...element, 
+      purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
+      receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
+      receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
+    };
+  });
+  if(searchQuery.value === '') {
+    searchLoading.value = false
+    deliveryDataLoading.value = false
+    return
+  }
+  filteredElements.value = filteredElements.value.filter((element: any) =>
+    Object.values(element).some(value =>
+      String(value).toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+  );
+  deliveryDataLoading.value = false
+  searchLoading.value = false
+}
+function search(){
+  searchLoading.value = true
+  deliveryDataLoading.value = true
+  filterElementsDebounced()
 }
 </script>
 <template>
-  <div class="page-header">
-    <div class="flex items-center gap-2 mt-4">
-      <!-- <h1 class="text-2xl font-bold">Аналитика</h1> -->
-      <!-- <InfoButton @openModal="openInfoModal" /> -->
+  <StatsHeaderStats />
+
+  <StatsMainStats />
+
+  <StatsDeliveryStats />
+  <!-- <div class="bg-base-100 rounded-lg drop-shadow-sm w-full p-3 sm:p-6 pr-0 flex flex-col gap-5 mt-4">
+    <div class="flex justify-between pr-6">
+      
+      <h2 class="font-semibold text-xl">Сатистика</h2>
+      <div class="flex gap-2">
+        <CustomSelect
+          class="lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="MPTabs"
+          @change-value="changeMP"
+        />
+        <CustomSelect
+          class="lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :status-text="selectHeaderText()"
+          :tabs="periods"
+          @change-value="changeHeaderPeriod"
+        />
+      </div>
     </div>
+    <div class="overflow-x-auto"> 
+    <div class="flex gap-3.5 sm::pr-6">
+      <div v-for="item in stats" class="flex flex-col gap-2 w-[20%] min-w-[200px] md:min-w-0 rounded-lg bg-neutral-focus px-3.5 py-3">
+        <nuxt-img
+          class="w-6 h-6"
+          :src="`/icons/figma/stats/${item.icon}.svg`"
+          alt="stats1"
+        />
+        <span class="text-neutral-content text-opacity-70">
+          {{ item.title }}
+        </span>
+        <span v-if="!headerDataLoading" class="text-neutral-content text-2xl">
+          {{ item.value }}
+        </span>
+        <span v-else class="loading loading-spinner loading-md text-primary"></span>
+      </div>
+    </div>
+  </div>
+  </div> -->
+  <!-- <div  class="bg-base-100 rounded-lg drop-shadow-sm w-full flex flex-col gap-5 mt-4 ">
+    <div class="flex gap-2 sm:self-end p-3 sm:p-6">
+      
+      <CustomSelect
+        class="lg:flex"
+        :class="'sm:min-w-[120px]'"
+        :status-text="selectServiceText()"
+        :tabs="services"
+        @change-value="changeService"
+      />
+      <CustomSelect
+        class="lg:flex"
+        :class="'sm:min-w-[120px]'"
+        :status-text="selectText()"
+        :tabs="periods"
+        @change-value="(e: any) => changePeriod(e)"
+      />
+    </div>
+    <div
+      class="flex flex-col lg:flex-row gap-2 sm:gap-10 w-full bg-base-100 rounded-lg px-1 py-3"
+    >
+      <div id="forBar" class="w-11/12 md:w-1/2 h-full my-auto">
+        <div class="opacity-0 -mb-5">По дням</div>
+        
+          <Bar
+            id="chartId"
+            :data="chartData"
+            :options="chartOptions"
+            ref="chartBar"
+          />
+      </div>
+      <div class="lg:w-1/2 flex">
+        <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 w-full">
+          <div
+            v-for="(service, index) in services"
+            class="flex flex-col bg-primary bg-opacity-5 rounded-lg gap-2"
+          >
+            <div class="card-body flex flex-col justify-center p-5 navbar:p-2">
+              <h2 class="font-bold text-xs text-center">
+                {{ service.title }}
+              </h2>
+              <div class="flex flex-col">
+                  <h2 class="text-2xl  text-primary font-bold text-center mb-2">
+                    {{ service.quantity }}
+                  </h2>
+                  <h2
+                    class="text-center text-sm"
+                    :class="{'opacity-0': service.value == 'deliveries'}"
+                  >
+                    {{ currency.format(service.expenses) }}
+                  </h2>
+              </div>
+              <h2 class="text-center">
+                  {{
+                    periodFromRoute === 'today'
+                      ? 'за сегодня'
+                      : periodFromRoute == 'yesterday'
+                      ? 'за вчера'
+                      : periodFromRoute === 'week'
+                      ? 'за неделю'
+                      : periodFromRoute == 'month'
+                      ? 'за этот месяц'
+                      : periodFromRoute === 'lastMonth'
+                      ? 'за прошлый месяц'
+                      : 'за год'
+                  }}
+                </h2>
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <!-- <div  class="bg-base-100 rounded-lg drop-shadow-sm w-full  flex flex-col gap-5 mt-4 ">
+    <div class="flex gap-2 flex-col sm:flex-row justify-between px-3 sm:px-6 pt-6">
+      <div class="join">
+        <input 
+          type="text" 
+          v-model="searchQuery" 
+          class="input bg-base-300 bg-opacity-40 input-sm w-full max-w-[200px] join-item border-none" 
+          placeholder="Артикул"
+          @input="search()"
+        />
+        <button class="btn btn-sm join-item bg-base-300 bg-opacity-40 border-none cursor-default hover:bg-base-300 hover:bg-opacity-40" @click="search()">
+           <span
+              v-if="searchLoading"
+              class="loading loading-spinner loading-xs"
+            />
+            <Icon
+              v-else
+              class="text-base-content text-opacity-50"
+              name="tabler:search"
+              size="20"
+            />
+        </button>
+      </div>
+      
+      <div class="flex gap-2">
+        <CustomSelect
+          class="lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="deliveryType"
+          @change-value="changeDelivery"
+        />
+        <CustomSelect
+          class="lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :status-text="selectDeliveryText()"
+          :tabs="periods"
+          @change-value="changeDeliveryPeriod"
+        />
+      </div>
+    </div>
+    <div v-if="!deliveryDataLoading" class='px-3 sm:px-6'>
+      <table  class="table border-collapse border border-primary border-opacity-5">
+         
+          <thead>
+            <tr class="bg-primary bg-opacity-5">
+              <th class="text-center">Артикул</th>
+              <th class="text-center">ПВЗ</th>
+              <th class="text-center">Статус</th>
+              <th class="text-center">Когда был выкуплен</th>
+              <th class="text-center">ID выкупа</th>
+              <th class="text-center">Дата прихода на ПВЗ</th>
+              <th class="text-center">Дата забора</th>
+            </tr>
+          </thead>
+          <tbody v-if="filteredElements.length">
+            <tr v-for="element in filteredElements">
+              <td class="border-r border-primary border-opacity-5 text-center text-primary p-5 px-1">{{ element.article }}</td>
+              <td class="border-r border-primary border-opacity-5 overflow-x-auto text-center truncate max-w-[200px] xl:max-w-xs p-5 px-1">
+                {{ element.pvz }}
+              </td>
+              <td 
+                class="border-r border-primary border-opacity-5 text-center text-yellow-50 p-5 px-1"
+                :class="{'text-green-600': element.status === 'Получено' || element.status === 'Готов к выдаче', 'text-red-700': element.status === 'Отменен', 'text-yellow-500': element.status === 'В пути'}"
+              >{{ (element.status === 'Готов к выдаче' || element.status === 'Получено') ? 'Доставлен' : element.status }}</td>
+              <td class="border-r border-primary border-opacity-5 text-center p-5px-1">
+                <div class="bg-primary rounded-md bg-opacity-10 w-fit px-5 py-0.5 text-center mx-auto">{{ element.purchaseDate }}</div>
+              </td>
+              <td class="border-r border-primary border-opacity-5 text-center p-5 px-1">
+                <div class="bg-base-content rounded-md bg-opacity-5 w-fit px-5 py-0.5 text-center mx-auto truncate max-w-[100px] cursor-pointer">{{ '#' + element.id }}</div>
+              </td>
+              <td class="border-r border-primary border-opacity-5 text-center p-5 px-1"><div class="bg-primary rounded-md bg-opacity-5 w-fit px-5 py-0.5 text-center mx-auto">{{ element.receiptDate }}</div></td>
+              <td class="border-r border-primary border-opacity-5 text-center p-5 px-1">
+                <div class="  rounded-md w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-green-400 bg-opacity-70': element.receiveDate !== '-'}">{{ element.receiveDate  }}</div>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr>
+                <td colspan="7">
+                    <div class="col-span-7 w-full text-center mx-auto text-2xl font-bold my-2">Здесь ничего нет</div>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+       
+    </div>
+    <span v-else class="loading loading-dots loading-lg text-primary mx-auto p-6"></span>
+    <div class="grid grid-cols-2 sm:grid-cols-6 gap-3 w-full px-1 py-3 sm:px-6 sm:pb-5">
+      <div v-for="item in deliveryStats" class="flex flex-col gap-2 p-3  rounded-lg bg-primary bg-opacity-5">
+        <h2 class="font-semibold">{{ item.title }}</h2>
+        <span v-if="!deliveryStatsLoading" class="text-2xl font-bold text-primary ">{{ item.value }}</span>
+        <span v-else class="loading loading-spinner loading-md text-primary"></span>
+      </div>
+    </div>
+    <div class="flex gap-2.5">
+      <div v-for="item in deliveryStats" class="flex flex-col gap-2 p-3 w-1/5 rounded-lg bg-primary bg-opacity-5">
+        <h2 class="font-semibold">{{ item.title }}</h2>
+        <span v-if="!deliveryStatsLoading" class="text-lg font-bold text-primary">{{ item.value }}</span>
+        <span v-else class="loading loading-spinner loading-md text-primary"></span>
+      </div>
+    </div>
+  </div> -->
+  <!-- <div class="page-header"> -->
+    <!-- <div class="flex items-center gap-2 mt-4">
+      <h1 class="text-2xl font-bold">Аналитика</h1>
+      <InfoButton @openModal="openInfoModal" />
+    </div> -->
     <!-- <p class="description">
         На каждый полученный артикул можно оставить отзыв. Оплачивается отдельно
         от выкупа согласно вашему тарифу.
@@ -303,8 +724,8 @@ async function changeMP(e: any) {
         Стоимость одного отзыва - <span class="font-bold">35 руб.</span>
         Все услуги оказываются по Московскому времени.
       </p> -->
-  </div>
-  <div class="flex justify-between mb-4 items-center mt-1">
+  <!-- </div> -->
+  <!-- <div class="flex justify-between mb-4 items-center mt-1 mt-60">
     <div class="hidden lg:block">
       <NuxtLink
         @click="selectedService = service"
@@ -318,8 +739,8 @@ async function changeMP(e: any) {
       >
         {{ service.title }}
       </NuxtLink>
-    </div>
-    <div class="flex">
+    </div> -->
+    <!-- <div class="flex">
       <CustomSelect
         class="lg:flex"
         :class="'sm:min-w-[120px]'"
@@ -352,9 +773,9 @@ async function changeMP(e: any) {
           Прошлый месяц
         </option>
       </select>
-    </div>
+    </div> -->
 
-    <select
+    <!-- <select
       class="select select-bordered select-sm lg:hidden"
       @change="selectService($event)"
     >
@@ -367,9 +788,9 @@ async function changeMP(e: any) {
       </option>
     </select>
   </div>
-  <div>
-    <div class="flex gap-5 flex-wrap">
-      <!-- <div class="card w-60 bg-base-100 shadow-2xl">
+  <div> -->
+    <!-- <div class="flex gap-5 flex-wrap">
+      <div class="card w-60 bg-base-100 shadow-2xl">
         <div class="card-body">
           <h2 class="text-md font-bold text-start">
             {{ selectedService.title }}
@@ -380,7 +801,7 @@ async function changeMP(e: any) {
           <h2 class="mt-1">{{ currency.format(selectedService.expenses) }}</h2>
           <h2>за неделю</h2>
         </div>
-      </div> -->
+      </div>
       <div class="flex flex-col md:flex md:flex-row md:flex-wrap">
         <div id="forBar" class="w-11/12 md:w-1/2 mt-10 h-full">
           <div>По дням</div>
@@ -457,29 +878,35 @@ async function changeMP(e: any) {
           </div>
         </div>
       </div>
-    </div>
-    <div class="flex flex-col-reverse md:flex-row mt-4 md:mt-10 md:ml-5">
+    </div> -->
+    <!-- <div class="flex flex-col-reverse md:flex-row mt-4 md:mt-10 md:ml-5">
       <div
         class="overflow-x-auto shadow-xl flex-row md:flex-col -ml-3 md:w-1/2"
       >
         <table class="table">
-          <!-- head -->
+         
           <thead>
             <tr>
               <th>Последние артикулы</th>
-              <th>Последние ключи</th>
-              <th>Последние ПВЗ</th>
+              <th>ПВЗ</th>
+              <th>Статус</th>
+              <th>Когда был выкуплен</th>
+              <th>ID выкупа</th>
+              <th>Дата прихода на ПВЗ</th>
+              <th>Дата забора</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="element in lastElements">
-              <td style="width: 3%">{{ element.article }}</td>
-              <td style="width: 10%" class="overflow-x-auto">
-                {{ element.searchQuery }}
-              </td>
-              <td style="width: 10%" class="overflow-x-auto">
+              <td >{{ element.article }}</td>
+              <td class="overflow-x-auto">
                 {{ element.pvz }}
               </td>
+              <td >{{ element.status }}</td>
+              <td >{{ defaultDateShort(element.purchaseDate) }}</td>
+              <td >{{ element.id }}</td>
+              <td >{{ defaultDateShort(element.receiptDate) }}</td>
+              <td >{{ defaultDateShort(element.receiveDate) || '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -601,9 +1028,9 @@ async function changeMP(e: any) {
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="h-24"></div>
+    </div> -->
+  <!-- </div> -->
+  <div class="h-10"></div>
 </template>
 
 <style scoped></style>

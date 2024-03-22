@@ -9,17 +9,17 @@ definePageMeta({
 
 const currency = useCurrency()
 const route = useRoute()
+const routePath = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path;
 const { width } = useWindowSize()
 const secondLevelReferrals = ref(0)
 const lastElements = ref<any>([])
 const periodFromRoute = route.query.period
 
-if (!route.query.type || !route.query.period) {
-  navigateTo('/stats/wildberries?type=all&period=today', {
+if (!route.query.type || !route.query.period || !route.query.headerPeriod || !route.query.deliveryPeriod) {
+  navigateTo(`${routePath}?type=all&period=today&headerPeriod=today&deliveryPeriod=today`, {
     external: true,
   })
 }
-
 let chartDataValue = ref<any>([])
 const services = ref<any>([])
 let chartLabels = ref<any>([])
@@ -289,21 +289,26 @@ async function changeMP(e: any) {
 }
 </script>
 <template>
-  <div class="page-header">
+  <StatsHeaderStats />
+
+<StatsMainStats />
+
+<StatsDeliveryStats />
+  <!-- <div class="page-header">
     <div class="flex items-center gap-2 mt-4">
-      <!-- <h1 class="text-2xl font-bold">Аналитика</h1> -->
-      <!-- <InfoButton @openModal="openInfoModal" /> -->
+      <h1 class="text-2xl font-bold">Аналитика</h1>
+      <InfoButton @openModal="openInfoModal" />
     </div>
-    <!-- <p class="description">
+    <p class="description">
         На каждый полученный артикул можно оставить отзыв. Оплачивается отдельно
         от выкупа согласно вашему тарифу.
       </p>
       <p class="text-xs font-light mt-1 lg:text-sm">
         Стоимость одного отзыва - <span class="font-bold">35 руб.</span>
         Все услуги оказываются по Московскому времени.
-      </p> -->
-  </div>
-  <div class="flex justify-between mb-4 items-center mt-1">
+      </p>
+  </div> -->
+  <!-- <div class="flex justify-between mb-4 items-center mt-1">
     <div class="hidden lg:block">
       <NuxtLink
         @click="selectedService = service"
@@ -365,10 +370,10 @@ async function changeMP(e: any) {
         {{ service.title }}
       </option>
     </select>
-  </div>
-  <div>
+  </div> -->
+  <!-- <div>
     <div class="flex gap-5 flex-wrap">
-      <!-- <div class="card w-60 bg-base-100 shadow-2xl">
+      <div class="card w-60 bg-base-100 shadow-2xl">
         <div class="card-body">
           <h2 class="text-md font-bold text-start">
             {{ selectedService.title }}
@@ -379,7 +384,7 @@ async function changeMP(e: any) {
           <h2 class="mt-1">{{ currency.format(selectedService.expenses) }}</h2>
           <h2>за неделю</h2>
         </div>
-      </div> -->
+      </div>
       <div class="flex flex-col md:flex md:flex-row md:flex-wrap">
         <div id="forBar" class="w-11/12 md:w-1/2 mt-10 h-full">
           <div>По дням</div>
@@ -462,7 +467,7 @@ async function changeMP(e: any) {
         class="overflow-x-auto shadow-xl flex-row md:flex-col -ml-3 md:w-1/2"
       >
         <table class="table">
-          <!-- head -->
+         
           <thead>
             <tr>
               <th>Последние артикулы</th>
@@ -601,7 +606,7 @@ async function changeMP(e: any) {
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div class="h-24"></div>
 </template>
 

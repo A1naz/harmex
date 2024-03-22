@@ -49,18 +49,11 @@ const handleBodyClick = (event: MouseEvent) => {
   }
 }
 
-const statusText = ref<String>(
-  reactiveStatusText.value
-    ? reactiveStatusText.value
-    : props.category
-    ? 'Выберите категорию'
-    : props.rangesConfig[0] || props.tabs[0]?.title || props.links[0]?.title
-)
+const statusText = ref<String>(reactiveStatusText.value ? reactiveStatusText.value : props.category ? 'Выберите категорию' : props.rangesConfig[0] || props.tabs[0]?.title || props.links[0]?.title);
 
-function updateText(filter: string) {
-  statusText.value = filter
-
-  emit('changeText', filter)
+function updateText(filter: string){
+    statusText.value = filter;
+    emit('changeText', filter)
 }
 
 function updateValue(filter: any) {
@@ -82,58 +75,39 @@ defineExpose({
 </script>
 
 <template>
-  <div
-    class="dropdown group relative"
-    @click="dropdownOpened = !dropdownOpened"
-    @click.stop
-  >
-    <div
-      class="font-normal text-xs normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
-      :class="customClass"
-    >
-      <span :class="{ 'text-base': rangesConfig.length > 0 }">{{
-        statusText.charAt(0).toUpperCase() + statusText.slice(1)
-      }}</span>
-      <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
-      <Icon v-else name="formkit:down" size="18" />
-    </div>
-    <ul
-      v-if="dropdownOpened"
-      class="absolute shadow-md z-[1] bg-base-100 rounded-lg mt-2 w-full flex flex-col gap-y-0.5"
-    >
-      <li
-        v-if="rangesConfig.length > 0"
-        v-for="filter in rangesConfig"
-        :key="filter"
-      >
-        <button
-          class="btn btn-ghost btn-sm normal-case font-normal w-full py-0 text-base whitespace-normal leading-none hover:bg-primary hover:bg-opacity-20"
-          @click="updateText(filter)"
-        >
-          {{ filter }}
-        </button>
-      </li>
-      <li v-if="tabs.length > 0" v-for="filter in tabs" :key="filter.title">
-        <button
-          class="btn btn-ghost btn-xs text-md normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20"
-          @click="updateValue(filter)"
-        >
-          {{ filter.title }}
-        </button>
-      </li>
-      <li v-for="filter in links" @click="updateText(filter.title)">
-        <NuxtLink
-          :to="filter.slot + filter.query"
-          :external="false"
-          class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20"
-        >
-          <span>
-            {{ filter.title }}
-          </span>
-        </NuxtLink>
-      </li>
-    </ul>
-  </div>
+    <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
+            <div
+                class="font-normal text-xs normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
+                :class="customClass"
+                >
+                <span :class="{ 'text-base': rangesConfig.length > 0}">{{ statusText }}</span>
+                <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
+                <Icon v-else name="formkit:down" size="18" />
+            </div>
+            <ul v-if="dropdownOpened" class="absolute shadow-md z-[1] bg-base-100 rounded-lg mt-2 w-full flex flex-col gap-y-0.5" >
+              <li v-if="rangesConfig.length > 0" v-for="filter in rangesConfig" :key="filter">
+                <button class="btn btn-ghost btn-sm normal-case font-normal w-full py-0 text-base whitespace-normal leading-none hover:bg-primary hover:bg-opacity-20 " @click="updateText(filter)" >
+                  {{ filter }}
+                </button>
+              </li>
+              <li v-if="tabs.length > 0 " v-for="filter in tabs" :key="filter.title">
+                <button class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20" @click="updateValue(filter)" >
+                  {{ filter.title }}
+                </button>
+              </li>
+              <li v-for="filter in links" @click="updateText(filter.title)"> 
+                  <NuxtLink 
+                    :to="filter.slot + filter.query"
+                    :external="false"
+                    class="btn btn-ghost btn-xs text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 "
+                  >
+                    <span>
+                    {{ filter.title }}
+                    </span>
+                  </NuxtLink>
+              </li>
+            </ul>
+        </div>
 </template>
 
 <style scoped></style>
