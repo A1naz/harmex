@@ -119,8 +119,8 @@ function removeProduct(index: number) {
   store.removeProduct(index)
 }
 
-function handleAddress(address: string, lt: number, lg: number) {
-  store.handleAddress(address, lt, lg)
+function handleAddress(address: string, lt: number, lg: number, id: string) {
+  store.handleAddress(address, lt, lg, id)
 }
 function openInfoModal(type: string) {
   infoType.value = type

@@ -20,8 +20,9 @@ export default eventHandler(async (event) => {
     const points: any = await PVZ.find()
 
     const collection = points.map((point: any) => {
+      
       return {
-        id: point.id,
+        id: point.pointId,
         lt: point.coordinates.lat,
         lg: point.coordinates.lon,
       }

@@ -6,14 +6,8 @@ const props = defineProps<{
 }>()
 const route = useRoute()
 
-const currentPath = ref(useRoute().path)
-
-watchEffect(() => {
-  currentPath.value = route.path
-})
-
 const active = computed(() => {
-  return currentPath.value.split('/')[0].includes(props.href.split('/')[0])
+  return route.path.includes(props.href.split('/')[1])
 })
 
 const mpStore = useMPStore()
@@ -40,19 +34,42 @@ const mpHref = computed(() => {
     return props.href
   }
 })
+
+const theme = useColorMode()
+
+const color = computed(() =>
+  theme.preference == 'light' ? '#296dff' : '#6466f1'
+)
+
+onMounted(() => {
+  theme.preference == 'light' ? (theme.value = 'light') : (theme.value = 'dark')
+})
 </script>
 
 <template>
   <li v-if="props.href != '/autoanswer'">
-    <NuxtLink :to="mpHref" class="mx-4 rounded-lg">
-      <Icon :name="icon" size="24" />
-      <span
-        :class="{
-          'opacity-100': !active,
-          active: active,
-        }"
-        >{{ title }}</span
-      >
+    <NuxtLink class="mx-4 rounded-lg" :to="mpHref">
+      <div v-if="!active" class="flex">
+        <Icon :name="icon" size="24" />
+        <span
+          class="ml-2 mt-[2px]"
+          :class="{
+            'opacity-100': !active,
+          }"
+          >{{ title }}</span
+        >
+      </div>
+      <div v-else class="flex">
+        <div class="hidden dark:block">
+          <Icon :name="icon" color="#6466f1" size="24" />
+        </div>
+        <div class="dark:hidden">
+          <Icon :name="icon" class="dark:hidden" color="#296dff" size="24" />
+        </div>
+        <span class="text-primary :hover:text-base-100 ml-2 mt-[2px]">{{
+          title
+        }}</span>
+      </div>
     </NuxtLink>
   </li>
 </template>

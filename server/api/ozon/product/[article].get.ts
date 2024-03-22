@@ -14,7 +14,6 @@ export default eventHandler(async (event) => {
 
   const params = event.context.params as any
   const article = params.article
-  console.log(`https://www.ozon.ru/product/${article}/`)
 
   //@ts-ignore
   const data: any = await $fetch('http://95.163.249.133:4141', {

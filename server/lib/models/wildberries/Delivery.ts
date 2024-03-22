@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import { wildberriesConnection } from '~/server/connections/wildberries'
 
 const DeliverySchema = new Schema({
-  article: { type: Number, required: true, text: true },
+  article: { type: String, required: true, text: true },
   pricebuy: { type: Number, required: true },
   point: { type: String, required: true },
   point_city: { type: String, required: false },

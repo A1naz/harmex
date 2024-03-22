@@ -19,7 +19,6 @@ export default eventHandler(async (event) => {
     'questions',
     'productlikes',
     'carts',
-    'autoanswers',
   ]
 
   switch (period) {
@@ -310,10 +309,10 @@ export default eventHandler(async (event) => {
       quantity: 0,
     },
     {
-        value: 'deliveries',
-        title: 'Доставки',
-        expenses: 0,
-        quantity: 0,
+      value: 'deliveries',
+      title: 'Доставки',
+      expenses: 0,
+      quantity: 0,
     },
     {
       value: 'reviews',
@@ -321,18 +320,18 @@ export default eventHandler(async (event) => {
       expenses: 0,
       quantity: 0,
     },
-    {
-      value: 'likes',
-      title: 'Лайки на отзывы',
-      expenses: 0,
-      quantity: 0,
-    },
-    {
-      value: 'productlikes',
-      title: 'Лайки на товар/бренд',
-      expenses: 0,
-      quantity: 0,
-    },
+    // {
+    //   value: 'likes',
+    //   title: 'Лайки на отзывы',
+    //   expenses: 0,
+    //   quantity: 0,
+    // },
+    // {
+    //   value: 'productlikes',
+    //   title: 'Лайки на товар/бренд',
+    //   expenses: 0,
+    //   quantity: 0,
+    // },
     {
       value: 'questions',
       title: 'Вопросы',
@@ -345,24 +344,56 @@ export default eventHandler(async (event) => {
       expenses: 0,
       quantity: 0,
     },
-    {
-      value: 'autoanswer',
-      title: 'Автоответчик',
-      expenses: 0,
-      quantity: 0,
-    },
   ]
 
+  const likesItem = {
+    value: 'likes',
+    title: 'Лайки',
+    expenses: 0,
+    quantity: 0,
+  };
+
+  
+
   typeSumMap.forEach((value, key) => {
-    services.forEach((item) => {
-      if (item.value == key) {
-        item.expenses = value
-        item.quantity = typeSumMap.get(key + ' quantity')
-        services[0].quantity += item.quantity
-        services[0].expenses = services[0].expenses + item.expenses
-      }
-    })
+    if (key === 'likes' || key === 'productlikes') {
+      likesItem.expenses += value;
+      likesItem.quantity += typeSumMap.get(key + ' quantity');
+    } else {
+      services.forEach((item) => {
+        if (item.value === key) {
+          item.expenses = value;
+          item.quantity = typeSumMap.get(key + ' quantity');
+          services[0].quantity += item.quantity;
+          services[0].expenses += item.expenses;
+        }
+      });
+    }
   })
 
-  return { data: format.data, labels: format.labels, services }
+  const penalty = {
+    value: 'panalty',
+    title: 'Штрафы',
+    expenses: 0,
+    quantity: 0,
+  };
+
+  const penaltyDeliveriesPayments = await paymenthistory.find({
+    user,
+    dataoperation: filter.dataoperation,
+    typeoperations: 'Расход',
+    type: 'deliveries',
+    comment: { $regex: 'Штраф', $options: 'i' },
+  })
+
+  penaltyDeliveriesPayments.forEach((item) => {
+    penalty.expenses += +item.summ
+    penalty.quantity += 1
+  })
+  services.splice(4, 0, likesItem);
+  services.push(penalty);
+
+
+
+  return { data: format.data, labels: format.labels, services, }
 })
