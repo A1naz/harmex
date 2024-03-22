@@ -19,7 +19,9 @@ export interface Item {
   searchQuery: SearchQuery[]
   adress: string
   pointCoordinates: { lat: number; lon: number }
+  pointId: string
   dateRange: [Date | null, Date | null]
   selectedSize: number | string
   rules: Rule[]
+  purchaseSoon: boolean
 }
