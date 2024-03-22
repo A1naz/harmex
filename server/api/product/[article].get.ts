@@ -14,8 +14,6 @@ export default eventHandler(async (event) => {
 
   const { article } = getQuery(event)
 
-  console.log(`https://www.ozon.ru/product/${article}/`)
-
   //@ts-ignore
   const data = await $fetch({
     method: 'POST',

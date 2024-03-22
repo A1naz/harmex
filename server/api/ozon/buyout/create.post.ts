@@ -83,9 +83,11 @@ export default eventHandler(async (event) => {
     }
 
     let city, state
-      ;({ city, state } = await getCityByGeo(product.pointCoordinates.lat.toString(),  product.pointCoordinates.lon.toString()))
+    ;({ city, state } = await getCityByGeo(
+      product.pointCoordinates.lat.toString(),
+      product.pointCoordinates.lon.toString()
+    ))
 
-    
     const buyout = new Buyout({
       article: product.article,
       // searchQuery: searchQueries.join(', '),
@@ -94,7 +96,7 @@ export default eventHandler(async (event) => {
       pointCoordinates: product.pointCoordinates,
       point_city: city,
       point_state: state,
-      pointId: product.pointId,
+      pointId: Number(product.pointId),
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,
