@@ -120,7 +120,6 @@ function removeProduct(index: number) {
 }
 
 function handleAddress(address: string, lt: number, lg: number, id: string) {
-  console.log(address, lt, lg, id)
   store.handleAddress(address, lt, lg, id)
 }
 function openInfoModal(type: string) {
