@@ -135,7 +135,7 @@ export default eventHandler(async (event) => {
     
     
     }
-  // console.log(type, deliveries.length)
+
     deliveriesOzon.forEach((item: any) => {
       const sentToAssembly = item.statusdelivery[0];
       const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
@@ -153,7 +153,6 @@ export default eventHandler(async (event) => {
             receiveDate: receiveDate?.date || '',
             mp:'ozon',
           })
-          console.log(lastElements)
     })
 
     deliveriesWildberries.forEach((item: any) => {

@@ -106,7 +106,7 @@ export default eventHandler(async (event) => {
     
     
     }
-  // console.log(type, deliveries.length)
+
     deliveries.forEach((item: any) => {
       const sentToAssembly = item.statusdelivery[0];
       const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');

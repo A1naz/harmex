@@ -1,4 +1,4 @@
-﻿﻿import { Delivery } from '~/server/lib/models/ozon/Delivery'
+﻿import { Delivery } from '~/server/lib/models/ozon/Delivery'
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 
 export default eventHandler(async (event) => {
@@ -413,7 +413,6 @@ export default eventHandler(async (event) => {
   penaltyDeliveriesPayments.forEach((item) => {
     penalty.expenses += +item.summ
     penalty.quantity += 1
-    // console.log('penalty: ', item)
   })
   services.splice(4, 0, likesItem);
   services.push(penalty);

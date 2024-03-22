@@ -107,7 +107,7 @@ export default eventHandler(async (event) => {
   //     },
   //   ])
   // const totalDeals = dealsCount.reduce((total, deal) => total + deal.count, 0);
-  //   console.log('totalDeals', totalDeals)
+
   const comissions = await PartnerPaymentHistory.aggregate([
     { $match: {
       user: user._id,
