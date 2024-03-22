@@ -1,12 +1,15 @@
 ﻿import { Delivery } from '~/server/lib/models/Delivery'
+import { Delivery as OzonDelivery } from '~/server/lib/models/ozon/Delivery';
+import { Delivery as WildberriesDelivery } from '~/server/lib/models/wildberries/Delivery';
 
 export default eventHandler(async (event) => {
 
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { period, type, skip, limit  } = getQuery(event)
+  const { period, type, skip, limit, searchQuery } = getQuery(event)
 
+  const search = searchQuery?.toString()
   const currentDate = new Date() // Текущая дата
   let filter: any = {} // Начинаем с пустого фильтраD
 
@@ -72,17 +75,74 @@ export default eventHandler(async (event) => {
   const lastElements: any[] = []
 
   if(limit && skip){
-    const deliveries = await Delivery.find({ user, updatedAt: filter.dataoperation }).limit(limit as number).skip(skip as number)
+    let deliveriesOzon = []
+    let deliveriesWildberries = []
+  if(type=='all'){
+    deliveriesOzon = await OzonDelivery.find({ 
+      user, 
+      updatedAt: filter.dataoperation,
+      $or: [
+          { article: { $regex: search, $options: 'i' } },
+          { point: { $regex: search, $options: 'i' } },
+          { uuidbuyout: { $regex: search, $options: 'i' } }
+      ],
+    })
+    .limit(limit as number)
+    .skip(skip as number);
+
+    deliveriesWildberries = await WildberriesDelivery.find({ 
+      user, 
+      updatedAt: filter.dataoperation,
+      $or: [
+          { article: { $regex: search, $options: 'i' } },
+          { point: { $regex: search, $options: 'i' } },
+          { uuidbuyout: { $regex: search, $options: 'i' } }
+      ],
+    })
+    .limit(limit as number)
+    .skip(skip as number);
+    }else{
+      deliveriesOzon = await OzonDelivery.find({ 
+        user, 
+        updatedAt: filter.dataoperation,
+        $or: [
+            { article: { $regex: search, $options: 'i' } },
+            { point: { $regex: search, $options: 'i' } },
+            { uuidbuyout: { $regex: search, $options: 'i' } }
+        ],
+        $expr: {
+            $eq: [
+                { $arrayElemAt: ["$statusdelivery.status", -1] }, 
+                type
+            ]
+        }
+    }) 
+      deliveriesWildberries = await WildberriesDelivery.find({ 
+        user, 
+        updatedAt: filter.dataoperation,
+        $or: [
+            { article: { $regex: search, $options: 'i' } },
+            { point: { $regex: search, $options: 'i' } },
+            { uuidbuyout: { $regex: search, $options: 'i' } }
+        ],
+        $expr: {
+            $eq: [
+                { $arrayElemAt: ["$statusdelivery.status", -1] }, 
+                type
+            ]
+        }
+    })    
     
-    deliveries.forEach((item: any) => {
-      const sentToAssembly = item.statusdelivery.find((item: any) => item.status === 'Отправлен на сборку');
+    
+    }
+  // console.log(type, deliveries.length)
+    deliveriesOzon.forEach((item: any) => {
+      const sentToAssembly = item.statusdelivery[0];
       const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
       const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получено');
       const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
   
-      if (status === 'В пути') {
-        
-        if(type === 'inTransit'){
+      
           lastElements.push({
             article: item.article,
             pvz: item.point,
@@ -91,51 +151,18 @@ export default eventHandler(async (event) => {
             id: item.uuidbuyout,
             receiptDate: receiptDate?.date || '',
             receiveDate: receiveDate?.date || '',
+            mp:'ozon',
           })
-        }
-      } else if (status === 'Готов к выдаче') {
-         
-          if(type === 'ready'){
-            lastElements.push({
-              article: item.article,
-              pvz: item.point,
-              status: status,
-              purchaseDate: sentToAssembly?.date || '',
-              id: item.uuidbuyout,
-              receiptDate: receiptDate?.date || '',
-              receiveDate: receiveDate?.date || '',
-            })
-          }
-      } else if (status === 'Получено') {
-          
-          if(item.reviewed === false) reviews++;
-          if(type === 'picked'){
-            lastElements.push({
-              article: item.article,
-              pvz: item.point,
-              status: status,
-              purchaseDate: sentToAssembly?.date || '',
-              id: item.uuidbuyout,
-              receiptDate: receiptDate?.date || '',
-              receiveDate: receiveDate?.date || '',
-            })
-          }
-      } else if (item.status === 'canceled') {
-         
-          if(type === 'canceled'){
-            lastElements.push({
-              article: item.article,
-              pvz: item.point,
-              status: status,
-              purchaseDate: sentToAssembly?.date || '',
-              id: item.uuidbuyout,
-              receiptDate: receiptDate?.date || '',
-              receiveDate: receiveDate?.date || '',
-            })
-          }
-      } 
+          console.log(lastElements)
+    })
+
+    deliveriesWildberries.forEach((item: any) => {
+      const sentToAssembly = item.statusdelivery[0];
+      const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
+      const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получено');
+      const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
   
-      if (type === 'all') {
+      
           lastElements.push({
             article: item.article,
             pvz: item.point,
@@ -144,14 +171,16 @@ export default eventHandler(async (event) => {
             id: item.uuidbuyout,
             receiptDate: receiptDate?.date || '',
             receiveDate: receiveDate?.date || '',
+            mp:'wildberries',
           })
-        }
+        
     })
     return { lastElements}
   }
   // if (!deliveries) return []
-  const deliveries = await Delivery.find({ user, updatedAt: filter.dataoperation })
-  const purchase = deliveries.length
+  const deliveriesOzon = await OzonDelivery.find({ user, updatedAt: filter.dataoperation })
+  const deliveriesWildberries = await WildberriesDelivery.find({ user, updatedAt: filter.dataoperation })
+  const purchase = deliveriesOzon.length + deliveriesWildberries.length
   
   
   let inTransit = 0;
@@ -160,79 +189,38 @@ export default eventHandler(async (event) => {
   let cancelled = 0;
   let reviews = 0
 
-  deliveries.forEach((item: any) => {
-    const sentToAssembly = item.statusdelivery.find((item: any) => item.status === 'Отправлен на сборку');
-    const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
-    const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получено');
+  deliveriesOzon.forEach((item: any) => {
     const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
-
     if (status === 'В пути') {
       inTransit++;
-      if(type === 'inTransit'){
-        lastElements.push({
-          article: item.article,
-          pvz: item.point,
-          status: status,
-          purchaseDate: sentToAssembly?.date || '',
-          id: item.uuidbuyout,
-          receiptDate: receiptDate?.date || '',
-          receiveDate: receiveDate?.date || '',
-        })
-      }
     } else if (status === 'Готов к выдаче') {
         ready++;
-        if(type === 'ready'){
-          lastElements.push({
-            article: item.article,
-            pvz: item.point,
-            status: status,
-            purchaseDate: sentToAssembly?.date || '',
-            id: item.uuidbuyout,
-            receiptDate: receiptDate?.date || '',
-            receiveDate: receiveDate?.date || '',
-          })
-        }
+       
     } else if (status === 'Получено') {
         received++;
         if(item.reviewed === false) reviews++;
-        if(type === 'picked'){
-          lastElements.push({
-            article: item.article,
-            pvz: item.point,
-            status: status,
-            purchaseDate: sentToAssembly?.date || '',
-            id: item.uuidbuyout,
-            receiptDate: receiptDate?.date || '',
-            receiveDate: receiveDate?.date || '',
-          })
-        }
+        
     } else if (item.status === 'canceled') {
         cancelled++;
-        if(type === 'canceled'){
-          lastElements.push({
-            article: item.article,
-            pvz: item.point,
-            status: status,
-            purchaseDate: sentToAssembly?.date || '',
-            id: item.uuidbuyout,
-            receiptDate: receiptDate?.date || '',
-            receiveDate: receiveDate?.date || '',
-          })
-        }
+        
     } 
-
-    if (type === 'all') {
-        lastElements.push({
-          article: item.article,
-          pvz: item.point,
-          status: status,
-          purchaseDate: sentToAssembly?.date || '',
-          id: item.uuidbuyout,
-          receiptDate: receiptDate?.date || '',
-          receiveDate: receiveDate?.date || '',
-        })
-      }
-  
+    
+  })
+  deliveriesWildberries.forEach((item: any) => {
+    const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
+    if (status === 'В пути') {
+      inTransit++;
+    } else if (status === 'Готов к выдаче') {
+        ready++;
+       
+    } else if (status === 'Получено') {
+        received++;
+        if(item.reviewed === false) reviews++;
+        
+    } else if (item.status === 'canceled') {
+        cancelled++;
+        
+    } 
     
   })
 

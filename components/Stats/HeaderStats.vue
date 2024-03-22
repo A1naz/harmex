@@ -90,7 +90,7 @@ function changeHeaderPeriod(e: any) {
 }
 function selectMpText() {
   const parts = routePath.split('/');
-  return parts.length > 2 ? parts[2] : "Все"
+  return parts.length > 2 ? parts[2].charAt(0).toUpperCase() + parts[2].slice(1) : "Все";
 }
 </script>
 
@@ -119,14 +119,14 @@ function selectMpText() {
     <div class="flex gap-3.5 sm::pr-6">
       <div v-for="item in stats" class="flex flex-col gap-3 w-[20%] min-w-[200px] md:min-w-0 rounded-lg bg-neutral-focus px-3.5 py-3 ">
         <nuxt-img
-          class="w-6 h-6"
+          class="w-6 h-6 3xl:w-8 3xl:h-8"
           :src="`/icons/figma/stats/${item.icon}.svg`"
           alt="stats1"
         />
-        <span class="text-neutral-content text-sm text-opacity-70">
+        <span class="text-neutral-content text-sm text-opacity-70 3xl:text-xl">
           {{ item.title }}
         </span>
-        <span v-if="!headerDataLoading" class="text-neutral-content text-2xl mt-auto">
+        <span v-if="!headerDataLoading" class="text-neutral-content text-2xl mt-auto 3xl:text-3xl">
           {{ item.value }}
         </span>
         <span v-else class="loading loading-spinner loading-md text-primary"></span>

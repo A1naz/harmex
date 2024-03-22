@@ -159,7 +159,7 @@ function changePeriod(e: any) {
             class="flex flex-col bg-primary bg-opacity-5 rounded-lg gap-2"
           >
             <div class="card-body flex flex-col justify-center p-5 navbar:p-2">
-              <h2 class="font-bold text-xs text-center">
+              <h2 class="font-bold text-xs text-center 3xl:text-xl">
                 {{ service.title }}
               </h2>
               <div class="flex flex-col">
@@ -167,13 +167,13 @@ function changePeriod(e: any) {
                     {{ service.quantity }}
                   </h2>
                   <h2
-                    class="text-center text-sm"
+                    class="text-center text-sm 3xl:text-lg"
                     :class="{'opacity-0': service.value == 'deliveries'}"
                   >
                     {{ service.expenses+' ₽' }}
                   </h2>
               </div>
-              <h2 class="text-center">
+              <h2 class="text-center 3xl:text-lg">
                   {{
                     periodFromRoute === 'today'
                       ? 'за сегодня'

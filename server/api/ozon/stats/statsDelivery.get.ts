@@ -5,7 +5,9 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { period, type } = getQuery(event)
+  const { period, type, skip, limit, searchQuery } = getQuery(event)
+
+  const search = searchQuery?.toString()
 
   const currentDate = new Date() // Текущая дата
   let filter: any = {} // Начинаем с пустого фильтраD
@@ -69,11 +71,70 @@ export default eventHandler(async (event) => {
       break
     }
 
+
+    const lastElements: any[] = []
+
+    if(limit && skip){
+      let deliveries = []
+    if(type=='all'){
+      deliveries = await Delivery.find({ 
+        user, 
+        updatedAt: filter.dataoperation,
+        $or: [
+            { article: { $regex: search, $options: 'i' } },
+            { point: { $regex: search, $options: 'i' } },
+            { uuidbuyout: { $regex: search, $options: 'i' } }
+        ],
+      })
+      .limit(limit as number)
+      .skip(skip as number);
+      }else{
+        deliveries = await Delivery.find({ 
+          user, 
+          updatedAt: filter.dataoperation,
+          $or: [
+              { article: { $regex: search, $options: 'i' } },
+              { point: { $regex: search, $options: 'i' } },
+              { uuidbuyout: { $regex: search, $options: 'i' } }
+          ],
+          $expr: {
+              $eq: [
+                  { $arrayElemAt: ["$statusdelivery.status", -1] }, 
+                  type
+              ]
+          }
+      })    
+      
+      
+      }
+    // console.log(type, deliveries.length)
+      deliveries.forEach((item: any) => {
+        const sentToAssembly = item.statusdelivery[0];
+        const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
+        const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получено');
+        const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
+    
+        
+            lastElements.push({
+              article: item.article,
+              pvz: item.point,
+              status: status,
+              purchaseDate: sentToAssembly?.date || '',
+              id: item.uuidbuyout,
+              receiptDate: receiptDate?.date || '',
+              receiveDate: receiveDate?.date || '',
+              mp:'ozon',
+            })
+          
+      })
+      return { lastElements}
+    }
+
   const deliveries = await Delivery.find({ user, updatedAt: filter.dataoperation, })
   
   const purchase = deliveries.length
   
-  const lastElements: any[] = []
+  
   let inTransit = 0;
   let ready = 0;
   let received = 0;
@@ -81,77 +142,22 @@ export default eventHandler(async (event) => {
   let reviews = 0
 
   deliveries.forEach((item: any) => {
-    const sentToAssembly = item.statusdelivery.find((item: any) => item.status === 'Отправлен на сборку');
-    const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
-    const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получено');
     const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
 
     if (status === 'В пути') {
       inTransit++;
-      if(type === 'inTransit'){
-        lastElements.push({
-          article: item.article,
-          pvz: item.point,
-          status: status,
-          purchaseDate: sentToAssembly?.date || '',
-          id: item.uuidbuyout,
-          receiptDate: receiptDate?.date || '',
-          receiveDate: receiveDate?.date || '',
-        })
-      }
+      
     } else if (status === 'Готов к выдаче') {
         ready++;
-        if(type === 'ready'){
-          lastElements.push({
-            article: item.article,
-            pvz: item.point,
-            status: status,
-            purchaseDate: sentToAssembly?.date || '',
-            id: item.uuidbuyout,
-            receiptDate: receiptDate?.date || '',
-            receiveDate: receiveDate?.date || '',
-          })
-        }
+        
     } else if (status === 'Получено') {
         received++;
         if(item.reviewed === false) reviews++;
-        if(type === 'picked'){
-          lastElements.push({
-            article: item.article,
-            pvz: item.point,
-            status: status,
-            purchaseDate: sentToAssembly?.date || '',
-            id: item.uuidbuyout,
-            receiptDate: receiptDate?.date || '',
-            receiveDate: receiveDate?.date || '',
-          })
-        }
+        
     } else if (item.status === 'canceled') {
         cancelled++;
-        if(type === 'canceled'){
-          lastElements.push({
-            article: item.article,
-            pvz: item.point,
-            status: status,
-            purchaseDate: sentToAssembly?.date || '',
-            id: item.uuidbuyout,
-            receiptDate: receiptDate?.date || '',
-            receiveDate: receiveDate?.date || '',
-          })
-        }
+        
     } 
-
-    if (type === 'all') {
-        lastElements.push({
-          article: item.article,
-          pvz: item.point,
-          status: status,
-          purchaseDate: sentToAssembly?.date || '',
-          id: item.uuidbuyout,
-          receiptDate: receiptDate?.date || '',
-          receiveDate: receiveDate?.date || '',
-        })
-      }
   
     
   })

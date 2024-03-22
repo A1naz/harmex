@@ -33,15 +33,15 @@ const periods = [
     ];
 
     const deliveryType = [
-  { title: 'Все', value: 'all' },
-  { title: 'В пути', value: 'inTransit' },
-  { title: 'Готовы к выдаче', value: 'ready' },
-  { title: 'Получено', value: 'picked' },
-  { title: 'Отменено', value: 'canceled' },
+  { title: 'Все', value: 'all', bd: 'all' },
+  { title: 'В пути', value: 'inTransit', bd: 'В пути' },
+  { title: 'Готовы к выдаче', value: 'ready', bd: 'Готов к выдаче' },
+  { title: 'Получено', value: 'picked', bd: 'Получено' },
+  { title: 'Отменено', value: 'canceled', bd: 'Отменено' },
 ];
 
 const loading = ref(false)
-const limit = ref(5)
+const limit = ref(50)
 const skip = ref(0)
 const end = ref(false)
 const target = ref(null)
@@ -89,9 +89,10 @@ async function getLastContinue() {
     params: {
       // type: route.query.type,
       period: deliveryPeriod.value,
-      type: deliveryQuery.value,
+      type:  deliveryType.find(type => type.value === deliveryQuery.value)?.bd,
       limit: limit.value,
       skip: skip.value,
+      searchQuery: searchQuery.value,
     },
     watch: false,
   })
@@ -101,17 +102,7 @@ async function getLastContinue() {
     return
   }
   if (data.value) {
-    
     lastElements.value = [...lastElements.value, ...(data.value.lastElements! as any)]
-    filteredElements.value = lastElements.value.map((element: any) => {
-    return {
-      ...element, 
-      purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
-      receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
-      receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
-    };
-});
-    
   }
   skip.value += limit.value
   loading.value = false
@@ -159,11 +150,13 @@ function selectDeliveryText() {
   return periods[index].title 
 }
 
-function changeDelivery(e: any) {
+async function changeDelivery(e: any) {
   deliveryQuery.value = e.value
   deliveryDataLoading.value = true  
   deliveryStatsLoading.value = true
-  getLast();
+  skip.value = 0
+  lastElements.value = []
+  await getLastContinue()
 }
 
 function changeDeliveryPeriod(e: any) {
@@ -177,26 +170,29 @@ function changeDeliveryPeriod(e: any) {
 }
 
 const filterElementsDebounced = useDebounceFn(filterElements, 1000)
-function filterElements() {
-  
-  filteredElements.value = lastElements.value.map((element: any) => {
-  return {
-      ...element, 
-      purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
-      receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
-      receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
-    };
-  });
-  if(searchQuery.value === '') {
-    searchLoading.value = false
-    deliveryDataLoading.value = false
-    return
-  }
-  filteredElements.value = filteredElements.value.filter((element: any) =>
-    Object.values(element).some(value =>
-      String(value).toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  );
+async function filterElements() {
+  // filteredElements.value = lastElements.value.map((element: any) => {
+  // return {
+  //     ...element, 
+  //     purchaseDate: element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-',
+  //     receiptDate: element.receiptDate ? defaultDateShort(element.receiptDate) : '-',
+  //     receiveDate: element.receiveDate ? defaultDateShort(element.receiveDate) : '-',
+  //   };
+  // });
+  // if(searchQuery.value === '') {
+  //   searchLoading.value = false
+  //   deliveryDataLoading.value = false
+  //   getLastContinue()
+  //   return
+  // }
+  // filteredElements.value = filteredElements.value.filter((element: any) =>
+  //   Object.values(element).some(value =>
+  //     String(value).toLowerCase().includes(searchQuery.value.toLowerCase())
+  //   )
+  // );
+  skip.value = 0
+  lastElements.value = []
+  await getLastContinue()
   deliveryDataLoading.value = false
   searchLoading.value = false
 }
@@ -207,17 +203,26 @@ function search(){
 }
 
 function copyId(id: any){
-  navigator.clipboard.writeText('#' + id)
+  navigator.clipboard.writeText(id)
   currentId.value = id
   isCopied.value = true
   setTimeout(() => {
     isCopied.value = false
   }, 2000) 
 }
+function articleNavigate(currentArticle: any, mp: any) {
+  const link = mp === 'ozon' ? `https://www.ozon.ru/product/${currentArticle}` : `https://www.wildberries.ru/catalog/${currentArticle}/detail.aspx`  
+  navigateTo(link, {
+  open: {
+    target: '_blank',
+  }})
+ 
+
+}
 </script>
 
 <template>
-   <div v-bind:class="{ 'copy-message': true, 'hide': !isCopied }" class="copy-message fixed top-0 right-0 m-4 bg-[#D1FEB6] mr-7  rounded-md px-3 py-1 text-black">
+   <div v-bind:class="{ 'copy-message': true, 'hide': !isCopied }" class="copy-message z-[999] fixed top-0 right-0 m-4 bg-[#D1FEB6] mr-7  rounded-md px-3 py-1 text-black">
     #{{ currentId }} скопирован
   </div>
   <div  class="bg-base-100 rounded-lg drop-shadow-sm w-full  flex flex-col gap-5 mt-4 ">
@@ -260,9 +265,9 @@ function copyId(id: any){
         />
       </div>
     </div>
-    <div v-if="!deliveryDataLoading" class='px-3 sm:px-6 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-base-200'>
+    <div v-if="!deliveryDataLoading" class='px-3 sm:px-6 max-h-[700px] overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-base-200 overflow-x-hidden'>
       <table class="table border-collapse border border-primary border-opacity-5">
-          <thead>
+          <thead class="">
             <tr class="bg-primary bg-opacity-5">
               <th class="text-center">Артикул</th>
               <th class="text-center">ПВЗ</th>
@@ -273,9 +278,9 @@ function copyId(id: any){
               <th class="text-center">Дата забора</th>
             </tr>
           </thead>
-          <tbody v-if="filteredElements.length">
-            <tr v-for="element in filteredElements">
-              <td class="border-r border-primary border-opacity-5 text-center text-primary p-5 px-1">{{ element.article }}</td>
+          <tbody v-if="lastElements.length">
+            <tr v-for="element in lastElements">
+              <td class="border-r border-primary border-opacity-5 text-center text-primary p-5 px-1" ><span class="link link-hover" @click="articleNavigate(element.article, element.mp)">{{ element.article }}</span></td>
               <td class="border-r border-primary border-opacity-5 overflow-x-auto text-center truncate max-w-[200px] xl:max-w-xs p-5 px-1">
                 {{ element.pvz }}
               </td>
@@ -284,14 +289,14 @@ function copyId(id: any){
                 :class="{'text-green-600': element.status === 'Получено' || element.status === 'Готов к выдаче', 'text-red-700': element.status === 'Отменен', 'text-yellow-500': element.status === 'В пути'}"
               >{{ (element.status === 'Готов к выдаче' || element.status === 'Получено') ? 'Доставлен' : element.status }}</td>
               <td class="border-r border-primary border-opacity-5 text-center p-5px-1">
-                <div class=" rounded-md  w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-primary bg-opacity-5': element.purchaseDate !== '-'}">{{ element.purchaseDate }}</div>
+                <div class=" rounded-md  w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-primary bg-opacity-5': element.purchaseDate}">{{ element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-'}}</div>
               </td>
               <td class="border-r border-primary border-opacity-5 text-center p-5 px-1">
                 <div class="bg-base-content rounded-md bg-opacity-5 w-fit px-5 py-0.5 text-center mx-auto truncate max-w-[100px] cursor-pointer" @click="copyId(element.id)">{{ '#' + element.id }}</div>
               </td>
-              <td class="border-r border-primary border-opacity-5 text-center p-5 px-1"><div class="rounded-md  w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-primary bg-opacity-5': element.receiptDate !== '-'}">{{ element.receiptDate }}</div></td>
+              <td class="border-r border-primary border-opacity-5 text-center p-5 px-1"><div class="rounded-md  w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-primary bg-opacity-5': element.receiptDate}">{{element.receiptDate ? defaultDateShort(element.receiptDate) : '-' }}</div></td>
               <td class="border-r border-primary border-opacity-5 text-center p-5 px-1">
-                <div class="  rounded-md w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-green-400 bg-opacity-70': element.receiveDate !== '-'}">{{ element.receiveDate  }}</div>
+                <div class="  rounded-md w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-green-400 bg-opacity-70': element.receiveDate}">{{ element.receiveDate ? defaultDateShort(element.receiveDate) : '-'  }}</div>
               </td>
             </tr>
           </tbody>
@@ -303,13 +308,13 @@ function copyId(id: any){
             </tr>
         </tbody>
         </table>
-        <div ref="target" class="flex justify-center items-center h-4 bg-base-content" />
+        <div ref="target" class="flex justify-center items-center h-4" />
     </div>
     <span v-else class="loading loading-dots loading-lg text-primary mx-auto p-6"></span>
     <div class="grid grid-cols-2 sm:grid-cols-6 gap-3 w-full px-1 py-3 sm:px-6 sm:pb-5">
       <div v-for="item in deliveryStats" class="flex flex-col gap-2 p-3  rounded-lg bg-primary bg-opacity-5">
-        <h2 class="font-semibold text-sm">{{ item.title }}</h2>
-        <span v-if="!deliveryStatsLoading" class="text-xl font-bold text-primary mt-auto">{{ item.value }}</span>
+        <h2 class="font-semibold text-sm 3xl:text-xl">{{ item.title }}</h2>
+        <span v-if="!deliveryStatsLoading" class="text-xl font-bold text-primary mt-auto 3xl:text-2xl">{{ item.value }}</span>
         <span v-else class="loading loading-spinner loading-md text-primary"></span>
       </div>
     </div>
