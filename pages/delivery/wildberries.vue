@@ -184,7 +184,8 @@ const filters = [
     {title: 'Активные', optionValue: 'active', params: '?status=active', queryStatus: 'active'},    
     {title: 'Завершенные', optionValue: 'completed', params: '?status=completed', queryStatus: 'completed'},
     {title: 'В пути', optionValue: 'onTheWay', params: '?status=onTheWay', queryStatus: 'onTheWay'},
-    {title: 'Готовы к выдаче', optionValue: 'pickupReady', params: '?status=pickupReady', queryStatus: 'pickupReady'},   
+    {title: 'Готовы к выдаче', optionValue: 'pickupReady', params: '?status=pickupReady', queryStatus: 'pickupReady'},  
+    {title: 'Отмененные', optionValue: 'canceled', params: '?status=canceled', queryStatus: 'canceled'}, 
 ]
 
 const customLinks = filters.map(filter => ({

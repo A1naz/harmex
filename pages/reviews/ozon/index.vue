@@ -35,13 +35,13 @@ const { stop } = useIntersectionObserver(
 )
 
 const tabs = [
-  { value: 'available', name: 'Доступные' },
   { value: 'published', name: 'Опубликованные' },
+  { value: 'available', name: 'Доступные' },
   { value: 'work', name: 'В работе' },
   { value: 'canceled', name: 'Отмененные' },
-  { value: 'deleting', name: 'На удалении' },
+  // { value: 'deleting', name: 'На удалении' },
   { value: 'deleted', name: 'Удаленные' },
-  { value: 'nofunds', name: 'Недостаточно средств' },
+  // { value: 'nofunds', name: 'Недостаточно средств' },
 ]
 
 const searchOptions = ref([
@@ -85,12 +85,12 @@ const fetchData = async () => {
   isFetch.value = false
 }
 
-function changeTab(tab: string) {
+function changeTab(tab: any) {
   reviews.value = []
   skip.value = 0
   end.value = false
-  currentTab.value = tab
-  router.push(`/reviews/ozon?status=${tab}`)
+  currentTab.value = tab.value
+  router.push(`/reviews/ozon?status=${tab.value}`)
   fetchData()
 }
 
@@ -216,6 +216,17 @@ async function changeMP(e: any) {
       (route.query?.status ? '?status=' + route.query.status : '')
   )
 }
+function selectText() {
+  const index = tabs.findIndex((item) =>route.query?.status ?  item.value == route.query?.status : item.value == 'available' )
+  if (index == -1) {
+    return 'Доступные'
+  } 
+  return tabs[index].name
+}
+const customLinks = tabs.map(filter => ({
+  title: filter.name,
+  value: filter.value
+}));
 </script>
 
 <template>
@@ -263,33 +274,13 @@ async function changeMP(e: any) {
         />
       </div>
       <div class="flex gap-2 flex-wrap lg:hidden">
-        <div class="dropdown">
-          <div
-            tabindex="0"
-            role="button"
-            class="font-medium normal-case btn btn-primary bg-opacity-20 border-none text-base-content btn-sm w-[150px]"
-          >
-            <span>{{ statusText }}</span>
-          </div>
-          <ul
-            tabindex="0"
-            class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[150px]"
-          >
-            <li>
-              <Button
-                class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                v-for="tab in tabs"
-                :class="[
-                  'btn btn-ghost btn-sm normal-case font-medium',
-                  { 'btn-active': tab.value === currentTab },
-                ]"
-                @click="changeTab(tab.value)"
-              >
-                {{ tab.name }}
-              </Button>
-            </li>
-          </ul>
-        </div>
+        <CustomSelect
+          class="lg:hidden"
+          :class="'navbar:min-w-[120px]'"
+          :tabs="customLinks"
+          :status-text="selectText()"
+          @change-value="changeTab"
+        />
         <select v-model="searchType" class="select select-bordered select-sm">
           <option
             v-for="option in searchOptions"
@@ -317,33 +308,13 @@ async function changeMP(e: any) {
           :tabs="MPTabs"
           @change-value="changeMP"
         />
-        <div class="dropdown">
-          <div
-            tabindex="0"
-            role="button"
-            class="font-medium normal-case btn btn-primary bg-opacity-20 border-none text-base-content btn-sm w-[150px]"
-          >
-            <span>{{ statusText }}</span>
-          </div>
-          <ul
-            tabindex="0"
-            class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[150px]"
-          >
-            <li>
-              <Button
-                class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                v-for="tab in tabs"
-                :class="[
-                  'btn btn-ghost btn-sm normal-case font-medium',
-                  { 'btn-active': tab.value === currentTab },
-                ]"
-                @click="changeTab(tab.value)"
-              >
-                {{ tab.name }}
-              </Button>
-            </li>
-          </ul>
-        </div>
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'navbar:min-w-[120px]'"
+          :tabs="customLinks"
+          :status-text="selectText()"
+          @change-value="changeTab"
+        />
         <!-- <NuxtLink
           to="/reviews/drafts"
           class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"

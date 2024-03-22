@@ -10,6 +10,8 @@ import MailService from '~~/server/lib/mailService.js'
 export default eventHandler(async (event) => {
 
   const session = (await getServerSession(event)) as any
+
+  const user = await User.findOne({ uuid: session.uuid })
   const { email, username, firstName, lastName, allowedPathes, password, tariff, post } = await readBody(event)
 
   if (!email || !password){
@@ -19,12 +21,12 @@ export default eventHandler(async (event) => {
     })
 }
 
-  if (!validator.isEmail(email)){
-    throw createError({
-        statusCode: 400,
-        message: 'Некорректный email.',
-    })
-}
+  // if (!validator.isEmail(email)){
+  //   throw createError({
+  //       statusCode: 400,
+  //       message: 'Некорректный email.',
+  //   })
+  // }
 
   if (password.length < 6 || password.length > 36){
     throw createError({
@@ -51,28 +53,30 @@ if (findUsername){
 
   const hash = bcrypt.hashSync(password, 7)
 
-  const user = new User({
-    email,
+  const userNew = new User({
+    
     firstName,
     lastName,
     username,
+    orgInn: user.orgInn,
     acesses: allowedPathes,
     uuidCompany: session.uuid,
     password: hash,
     roles: [UserRoles.staff],
     uuid: uuid(),
-    tariff: tariff,
+    // tariff: tariff,
+    phoneNumber: email,
     post
   })
 
-  await user.save()
+  await userNew.save()
   const url = useRuntimeConfig().PUBLIC_SITE_URL
-  const link = `${url}/api/auth/activate?uuid=${user.uuid}`
-  try {
-    await MailService.sendActivationMail(user.email, link)
-  } catch (error) {
-    return { status: 'error', error: 'Ошибка отправки письма.' }
-  }
+  const link = `${url}/api/auth/activate?uuid=${userNew.uuid}`
+  // try {
+  //   await MailService.sendActivationMail(user.email, link)
+  // } catch (error) {
+  //   return { status: 'error', error: 'Ошибка отправки письма.' }
+  // }
 
   // await userLog(event,
   //   {

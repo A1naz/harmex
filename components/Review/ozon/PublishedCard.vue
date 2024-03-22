@@ -60,7 +60,7 @@ function removeReview() {
       <div>
         {{ defaultDate(info.date) }}
       </div>
-      <div class="flex justify-between item gap-2 mb-2">
+      <div class="flex justify-between item gap-2 mb-2 flex-wrap">
         
         <h2 v-if="info.draftName" class="card-title">{{ info.draftName }}</h2>
         <h2 v-else class="card-title">Отзыв</h2>
@@ -84,7 +84,7 @@ function removeReview() {
           <button
             v-if="info.status === 'published'"
             @click="emit('removeReview', info.id)"
-            class="btn btn-sm btn-error ml-1"
+            class="btn btn-sm bg-error text-base-content bg-opacity-50 hover:text-base-100 hover:bg-red-500 hover:bg-opacity-100 ml-1"
           >
             Удалить
           </button>

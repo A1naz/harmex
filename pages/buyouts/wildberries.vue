@@ -221,7 +221,7 @@ const filters = [
     queryStatus: 'archived',
   },
   {
-    title: 'Пауза',
+    title: 'На паузе',
     optionValue: 'paused',
     params: '?status=paused',
     queryStatus: 'paused',
@@ -233,10 +233,22 @@ const filters = [
     queryStatus: 'completed',
   },
   {
-    title: 'Выкуплены по рекламе',
+    title: 'Выкуп с рекламы',
     optionValue: 'completedByAds',
     params: '?status=completedByAds',
     queryStatus: 'completedByAds',
+  },
+  {
+    title: 'Ожидает скидку',
+    optionValue: 'discountAwaiting',
+    params: '?status=discountAwaiting',
+    queryStatus: 'discountAwaiting',
+  },
+  {
+    title: 'Выкуп по скидке',
+    optionValue: 'completedByDiscount',
+    params: '?status=completedByDiscount',
+    queryStatus: 'completedByDiscount',
   },
 ]
 
@@ -348,6 +360,11 @@ async function changeMP(e: any) {
       (route.query?.status ? '?status=' + route.query.status : '')
   )
 }
+const customLinks = filters.map(filter => ({
+  title: filter.title,
+  slot: '/buyouts/wildberries',
+  query: filter.params
+}));
 </script>
 
 <template>
@@ -381,7 +398,7 @@ async function changeMP(e: any) {
 
     <div></div>
     <div class="flex justify-between mb-4 items-center mt-4">
-      <div class="flex gap-2 lg:gap-3 flex-col sm:flex-row w-full sm:w-max">
+      <div class="flex gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-max">
         <!-- <NuxtLink
             v-for="filter in filters"
             :to=" '/buyouts' + filter.params"
@@ -424,20 +441,27 @@ async function changeMP(e: any) {
           </div>
         </div>
 
-        <CustomSelect
-          class="hidden lg:flex"
-          :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
-          @change-value="changeMP"
-        />
+        
         <div clas="flex gap-2">
+          
           <div
             class="search flex items-center gap-1 lg:gap-3"
             :class="{
               'flex-wrap': width < 335,
             }"
           >
-            <div
+            <CustomSelect
+              class=""
+              :class="'lg:min-w-[120px]'"
+              :tabs="MPTabs"
+              @change-value="changeMP"
+            />
+            <CustomSelect
+              class=""
+              :class="'navbar:min-w-[120px]'"
+              :links="customLinks"
+            />
+            <!-- <div
               class="dropdown group relative"
               @click="dropdownOpened = !dropdownOpened"
               @click.stop
@@ -459,10 +483,10 @@ async function changeMP(e: any) {
                     :to="'/buyouts/wildberries' + filter.params"
                     :external="false"
                     :class="{
-                      'bg-primary bg-opacity-20':
+                      'bg-primary bg-opacity-20 ':
                         route.query.status === filter.queryStatus,
                     }"
-                    class="btn btn-ghost btn-xs normal-case font-normal w-full hover:bg-primary hover:bg-opacity-20"
+                    class="btn btn-ghost btn-xs normal-case font-normal w-full hover:bg-primary hover:bg-opacity-20 justify-start text-xs align-start"
                   >
                     <span>
                       {{ filter.title }}
@@ -470,10 +494,10 @@ async function changeMP(e: any) {
                   </NuxtLink>
                 </li>
               </ul>
-            </div>
+            </div> -->
 
             <CustomSelect
-              class="sm:hidden"
+              class="lg:hidden"
               :tabs="[
                 { title: 'За все время', value: 'all' },
                 { title: 'Сегодня', value: 'today' },
@@ -483,7 +507,7 @@ async function changeMP(e: any) {
               @change-value="selectFilterDate"
             />
             <!-- <select
-              class="select select-bordered select-sm max-w-[131px] sm:hidden"
+              class="select select-bordered select-sm max-w-[131px] lg:hidden"
               @change="selectFilterDate"
             >
               <option value="all">За все время</option>
@@ -491,7 +515,7 @@ async function changeMP(e: any) {
               <option value="3days">3 дня</option>
               <option value="7days">Неделя</option>
             </select> -->
-            <div class="flex gap-3 items-center sm:hidden">
+            <div class="flex gap-3 items-center lg:hidden">
               <CustomSelect
                 :tabs="[
                   { title: 'Артикул', value: 'article' },
@@ -535,7 +559,7 @@ async function changeMP(e: any) {
         {{ filter.title }}
         </option>
       </select> -->
-      <div class="items-center flex-wrap self-start hidden sm:flex">
+      <div class="items-center flex-wrap self-start hidden lg:flex">
         <div class="search flex items-center flex-wrap gap-3">
           <CustomSelect
             :tabs="[
