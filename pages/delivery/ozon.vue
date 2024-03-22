@@ -184,6 +184,7 @@ const filters = [
     {title: 'Завершенные', optionValue: 'completed', params: '?status=completed', queryStatus: 'completed'},
     {title: 'В пути', optionValue: 'onTheWay', params: '?status=onTheWay', queryStatus: 'onTheWay'},
     {title: 'Готовы к выдаче', optionValue: 'pickupReady', params: '?status=pickupReady', queryStatus: 'pickupReady'},
+    {title: 'Отмененные', optionValue: 'canceled', params: '?status=canceled', queryStatus: 'canceled'},
 ]
 const statusText = computed(() => {
   return filters.find((el: any) => el.queryStatus === route.query.status)?.title

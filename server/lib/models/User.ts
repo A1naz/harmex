@@ -41,7 +41,7 @@ const UserSchema = new Schema<IUserSchema>({
   acesses: [{ type: String, required: false }],
 
   roles: [{ type: String, ref: 'Role' }],
-  tariff: { type: Tariff.schema, required: true },
+  tariff: { type: Tariff.schema},
   MPTariffs: [
     {
       mp: { type: String },

@@ -19,20 +19,20 @@ const multiselectStyle = {
   root: ({ props }: any) => ({
     class: [
       {
-        'bg-base-200 border-gray-400': colorMode.value == 'light',
-        'bg-gray-primary-content border-gray-600': colorMode.value == 'dark',
+        'bg-[#F4F4F4] dark:bg-[#181920] border-none ': colorMode.value == 'light',
+        'bg-[#F4F4F4] dark:bg-[#181920] border-0': colorMode.value == 'dark',
       },
       'inline-flex cursor-pointer select-none',
       ' border transition-colors duration-200 ease-in-out rounded-md',
       'w-full',
       {
-        'opacity-60 select-none pointer-events-none cursor-default':
+        'opacity-100 select-none pointer-events-none cursor-default':
           props?.disabled,
       },
     ],
   }),
   labelContainer: {
-    class: 'overflow-hidden flex flex-auto cursor-pointer',
+    class: 'overflow-hidden flex flex-auto cursor-pointer bg-[#F4F4F4] dark:bg-[#181920] border-none rounded-lg h-12',
   },
   label: ({ props }: any) => ({
     class: [
@@ -53,10 +53,10 @@ const multiselectStyle = {
   token: {
     class: [
       {
-        'bg-primary text-primary bg-opacity-40': colorMode.value == 'light',
+        'bg-primary text-primary bg-opacity-40 ': colorMode.value == 'light',
         'bg-gray-700 text-white/80': colorMode.value == 'dark',
       },
-      'py-1 px-2 mr-2 rounded-full',
+      'py-1.5 px-5 mr-2 rounded-full',
       'cursor-default inline-flex items-center',
     ],
   },
@@ -70,7 +70,7 @@ const multiselectStyle = {
         'text-white/70': colorMode.value == 'dark',
       },
       'flex items-center justify-center shrink-0',
-      'bg-transparent w-12 rounded-tr-lg rounded-br-lg',
+      'bg-[#F4F4F4] dark:bg-[#181920] border-none w-12 rounded-tr-lg rounded-br-lg',
     ],
   },
   panel: {
@@ -79,7 +79,7 @@ const multiselectStyle = {
         'bg-white text-gray-700': colorMode.value == 'light',
         'bg-gray-900 text-white/80': colorMode.value == 'dark',
       },
-      'border-0 rounded-md shadow-lg',
+      'border-0 rounded-md shadow-lg border-none',
     ],
   },
   header: {
@@ -249,14 +249,14 @@ const multiselectStyle = {
 
 <template>
   <div id="teamEditModal" :class="{ 'modal-open': state }" class="modal">
-    <div v-if="state" class="modal-box max-w-2xl">
+    <div v-if="state" class="modal-box max-w-2xl py-5 px-7">
       <div class="">
         <a
-          class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          class="btn btn-sm btn-circle btn-ghost absolute right-5 top-5 text-lg"
           @click="$emit('close')"
           >✕</a
         >
-        <div class="text-xl font-bold">
+        <div class="text-lg font-bold mb-5">
           {{ titleModal }}
         </div>
 
@@ -265,7 +265,7 @@ const multiselectStyle = {
         </div>
         <div class="flex flex-col gap-2 mt-2 justify-center">
           <div v-for="(conf, index) in config">
-            <label :for="conf.type"> {{ conf.header }} </label><br />
+            <label :for="conf.type" > {{ conf.header }} </label><br />
             <MultiSelect
               v-if="conf.type == FieldsType.multiOptions && conf.options"
               :key="'multi' + index"
@@ -275,7 +275,7 @@ const multiselectStyle = {
               display="chip"
               :pt="multiselectStyle"
             />
-            <select v-else-if="conf.type == FieldsType.select" class="select select-bordered w-full bg-base-200" v-model="modelValue[conf.field]">
+            <select v-else-if="conf.type == FieldsType.select" class="select border-none bg-[#F4F4F4] dark:bg-[#181920] w-full" v-model="modelValue[conf.field]">
               <option v-for="(opt, index) in conf.options" :key="index" :value="opt.value">
                 {{ opt.text }}
               </option>
@@ -294,7 +294,7 @@ const multiselectStyle = {
               v-model="modelValue[conf.field]"
               :placeholder="conf.header"
               :type="conf.type"
-              class="input input-bordered w-full bg-base-200"
+              class="input border-none w-full bg-[#F4F4F4] dark:bg-[#181920]"
             />
           </div>
         </div>
@@ -305,12 +305,12 @@ const multiselectStyle = {
 
         <div class="flex my-4 justify-between">
           <Button
-            class="btn btn-sm btn-neutral m-1 sm:px-10"
+            class="btn btn-sm btn-neutral m-1 sm:px-10 opacity-0"
             label="Отменить"
-            @click="$emit('close')"
+            
           ></Button>
           <Button
-            class="btn btn-sm btn-primary m-1 sm:px-10"
+            class="btn btn-sm btn-primary m-1 sm:px-10 w-1/3 h-[2.5rem]"
             label="Сохранить"
             :loading="btnSaveLoading"
             @click="$emit('save')"
