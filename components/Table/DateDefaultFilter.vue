@@ -9,11 +9,12 @@ const currentRange = ref(initRange)
 
 const props = withDefaults(defineProps<Props>(), {
     rangesConfig: ()=> [
-        { header: 'Все время', value: initRange },
+        { header: 'За все время', value: initRange },
         { header: 'Сегодня', value: 1 },
+        { header: 'Вчера', value: 2 },
         { header: '3 дня', value: 3 },
-        { header: '7 дней', value: 7 },
-        { header: 'Месяц', value: 30 },
+        { header: 'Неделя', value: 7 },
+        
     ]
 })
 
@@ -87,9 +88,9 @@ onUnmounted(() => {
         /> -->
         <div class="dropdown group relative" @click="dropdownOpened = !dropdownOpened" @click.stop>
             <div
-                class=" font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
+                class=" font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[94px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap text-xs"
               >
-                <span>{{ statusText }}</span>
+                <span class="ml-1 text-left ">{{ statusText }}</span>
                 <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
                 <Icon v-else name="formkit:down" size="18" />
             </div>
@@ -100,7 +101,7 @@ onUnmounted(() => {
                     <Button             
                         v-for="filter in rangesConfig"
                         :class="[
-                            'btn btn-ghost btn-sm normal-case font-normal w-full my-0.5 hover:bg-primary hover:bg-opacity-20',
+                            'btn btn-ghost btn-sm normal-case font-normal w-full my-0.5 hover:bg-primary hover:bg-opacity-20 justify-start text-xs',
                             { 'bg-primary bg-opacity-20': filter.value == currentRange }
                         ]"
                         @click="changeRange(filter)"

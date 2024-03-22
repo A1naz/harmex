@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email,
+        email: user.phoneNumber,
         uuid: user.uuid,
         uuidCompany: user.uuidCompany,
         acesses: user.acesses,

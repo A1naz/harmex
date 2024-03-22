@@ -47,18 +47,18 @@ const configModalBase: ConfigModal[] = [
   { field: 'username', header: 'Ник', type: FieldsType.text },
   { field: 'firstName', header: 'Имя', type: FieldsType.text },
   { field: 'lastName', header: 'Фамилия', type: FieldsType.text },
-  { field: 'email', header: 'E-Mail', type: FieldsType.text },
-  {
-    field: 'post',
-    header: 'Должность',
-    type: FieldsType.select,
-    options: selectOptions,
-  },
+  { field: 'email', header: 'Номер телефона', type: FieldsType.text },
   {
     field: 'allowedPathes',
     header: 'Разрешения',
     type: FieldsType.multiOptions,
     options: multiOptions,
+  },
+  {
+    field: 'post',
+    header: 'Должность',
+    type: FieldsType.select,
+    options: selectOptions,
   },
 ]
 const configModalEdit: ConfigModal[] = [
@@ -72,7 +72,7 @@ const configModalCreate: ConfigModal[] = [
 
 function openEditModal(isCreate: boolean, uuid?: string, index?: number) {
   titleModal.value = isCreate
-    ? 'Создать сотрудника'
+    ? 'Добавить сотрудника'
     : 'Редактирование сотрудника'
   editModalConfig.value = isCreate ? configModalCreate : configModalEdit
   selectedUser.value = isCreate
@@ -241,11 +241,11 @@ const getPostName = (post: string) => {
       </p> -->
     </div>
 
-    <Tabs :tabs="tabs" class="flex flex-col">
-      <template v-slot:main>
+    <!-- <Tabs :tabs="tabs" class="flex flex-col">
+      <template v-slot:main> -->
         <div class="flex justify-start mb-4 mt-2 items-center">
           <Button
-            class="btn btn-sm btn-primary m-1"
+            class="btn btn-sm bg-[#B2BAFF] h-[2.5rem] hover:bg-primary hover:bg-opacity-80 text-base-content border-none m-1 dark:bg-[#5557C2] dark:bg-opacity-100"
             @click="openEditModal(true)"
           >
             <Icon name="fluent:add-24-filled" size="24" />
@@ -455,11 +455,11 @@ const getPostName = (post: string) => {
           </ul>
         </div>
         <Hero v-else />
-      </template>
-      <template v-slot:staffactions>
+      <!-- </template> -->
+      <!-- <template v-slot:staffactions>
         <Table endpoint="/team/staffactions" :config="listConfigAcrions" />
       </template>
-    </Tabs>
+    </Tabs> -->
 
     <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
 

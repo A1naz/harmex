@@ -49,11 +49,20 @@ const handleBodyClick = (event: MouseEvent) => {
   }
 }
 
-const statusText = ref<String>(reactiveStatusText.value ? reactiveStatusText.value : props.category ? 'Выберите категорию' : props.rangesConfig[0] || props.tabs[0]?.title || props.links[0]?.title);
+const statusText = ref<String>(
+  props.statusText ? props.statusText : (
+  reactiveStatusText.value
+    ? reactiveStatusText.value
+    : props.category
+    ? 'Выберите категорию'
+    : props.rangesConfig[0] || props.tabs[0]?.title || props.links[0]?.title
+  )
+)
 
-function updateText(filter: string){
-    statusText.value = filter;
-    emit('changeText', filter)
+function updateText(filter: string) {
+  statusText.value = filter
+
+  emit('changeText', filter)
 }
 
 function updateValue(filter: any) {

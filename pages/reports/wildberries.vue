@@ -217,7 +217,7 @@ function changeFilter(e: any) {
         <div class="flex gap-2 md:mt-0 items-center">
           <CustomSelect
             :class="'bg-base-300 '"
-            :tabs="[{ title: 'ID', value: 'uuid' }]"
+            :tabs="[{ title: 'Основание/ID', value: 'uuid' }]"
             @change-value="updateSearchType"
           />
           <!-- <select v-model="search.type" disabled class="select select-bordered select-sm">
@@ -246,6 +246,14 @@ function changeFilter(e: any) {
               @click="codeInput.focus()"
             />
           </div>
+          <div class="bg-primary bg-opacity-10 px-2 py-1 rounded-lg cursor-not-allowed">
+            XLS
+          </div>
+          <!-- <ExportXls 
+                api="/api/paymenthistory/export"
+                fileName="Финансовый отчет услуг MARKETMONSTR.xlsx"
+                :isVisible="reports.length ? true : false"
+            /> -->
         </div>
       </div>
     </div>
