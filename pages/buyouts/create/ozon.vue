@@ -27,7 +27,7 @@ let isUserWarned: any = ref(false)
 onMounted(() => {
   isUserWarned.value =
     localStorage.getItem('isUserWarned') === 'true' ? true : false
-    if(products.value.length === 0) modalShow.value = true
+  if (products.value.length === 0) modalShow.value = true
 })
 
 const isWarningChecked = ref(false)
@@ -62,6 +62,7 @@ const loading = ref(false)
 
 async function addProduct() {
   if (!article.value) return
+  startTimer()
   loading.value = true
   const string = article.value.toString().trim()
   if (string.includes(',')) {
@@ -346,18 +347,49 @@ function deleteTemplate(uuid: any) {
 function closeTemplateModalFN() {
   closeTemplateSelectModal.value?.click()
 }
-function openDiscount(productIndex : number) {
+function openDiscount(productIndex: number) {
   currentProductIndex.value = productIndex
   discountModal.value = true
 }
-function modalAddProduct(changedArticle: any){
+function modalAddProduct(changedArticle: any) {
   article.value = changedArticle
   addProduct()
+}
+
+const timer = ref(40)
+const timerRunning = ref(false)
+const timerFinished = ref(false)
+let interval: any
+
+const startTimer = () => {
+  timer.value = 40
+  timerRunning.value = true
+  interval = setInterval(() => {
+    if (timer.value > 0) {
+      timer.value--
+    } else {
+      clearInterval(interval)
+      timerRunning.value = false
+      timerFinished.value = true
+    }
+  }, 1000)
 }
 </script>
 
 <template>
   <div>
+    <div
+      v-if="loading"
+      style="background-color: rgb(37, 37, 42); opacity: 80%; z-index: 9999"
+      class="fixed z-[50] top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center"
+    >
+      <span class="text-white text-2xl text-center">
+        До получения продукта осталось приблизительно {{ timer }} сек.
+      </span>
+      <div class="ease-linear rounded-full mb-4">
+        <Icon name="mdi:loading" class="h-20 w-20 animate-spin text-white" />
+      </div>
+    </div>
     <!-- <h1 class="text-2xl font-bold mt-4">Добавить выкупы</h1>
     <p class="text-xs text-gray-500 font-light mt-1 lg:text-sm">
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
@@ -376,12 +408,11 @@ function modalAddProduct(changedArticle: any){
             @keydown.enter="addProduct"
           />
           <Icon
-              
-              class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
-              name="tabler:search"
-              size="35"
-              @click="codeInput.focus()"
-            />
+            class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
+          />
         </div>
         <div class="flex gap-2.5">
           <button
@@ -594,7 +625,7 @@ function modalAddProduct(changedArticle: any){
       </div>
     </div>
 
-    <div v-if="ruleModal" >
+    <div v-if="ruleModal">
       <input id="ruleModal" type="checkbox" class="modal-toggle" />
       <label
         for="ruleModal"
@@ -645,13 +676,14 @@ function modalAddProduct(changedArticle: any){
               </div>
               <input
                 :disabled="
-                  !!store.createProducts[selectedRuleProductIndex].rules.find(
-                    (item) =>
-                      item.category === rule.category && item.id !== rule.id
-                  ) ||
-                  !!store.createProducts[selectedRuleProductIndex].rules.find(
-                    (item) => item.id === rule?.relies
-                  )
+                  // !!store.createProducts[selectedRuleProductIndex].rules.find(
+                  //   (item) =>
+                  //     item.category === rule.category && item.id !== rule.id
+                  // ) ||
+                  // !!store.createProducts[selectedRuleProductIndex].rules.find(
+                  //   (item) => item.id === rule?.relies
+                  // )
+                  true
                 "
                 type="checkbox"
                 class="checkbox checkbox-primary border-base-content"
@@ -866,7 +898,9 @@ function modalAddProduct(changedArticle: any){
         Вы уверенны что хотите удалить все товары?
       </h3>
       <div class="modal-action flex justify-around">
-        <label for="removeAllModelCreateProducts" class="btn btn-sm h-[2.5rem] w-[40%] btn-ghost px-6"
+        <label
+          for="removeAllModelCreateProducts"
+          class="btn btn-sm h-[2.5rem] w-[40%] btn-ghost px-6"
           >Отмена</label
         >
         <label
@@ -881,12 +915,12 @@ function modalAddProduct(changedArticle: any){
   <BuyoutOzonDiscountModal
     :show="discountModal"
     :index="currentProductIndex"
-    @close-modal="discountModal = false" 
+    @close-modal="discountModal = false"
   />
   <BuyoutOzonCreateModal
     :show="modalShow"
     :add-product="modalAddProduct"
-    @close-modal="modalShow = false" 
+    @close-modal="modalShow = false"
   />
 </template>
 

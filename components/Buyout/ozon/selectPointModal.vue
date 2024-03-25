@@ -302,7 +302,6 @@ async function getAddressText(lt: number, lg: number, id: string) {
     }"
   >
     <div v-if="state" class="modal-box w-11/12 max-w-4xl">
-      {{lastAddress}}
       <div class="">
         <a
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
