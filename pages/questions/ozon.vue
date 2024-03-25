@@ -25,11 +25,8 @@ const route = useRoute()
 const router = useRouter()
 const MPTabs =
   store.client.username == 'test'
-    ? [
-        { title: 'Ozon', value: 'ozon' },
-        { title: 'Wildberries', value: 'wildberries' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+    ? mpStore.testMP
+    : mpStore.MP
 async function getQuestions() {
   modalShow.value = false
   const { data, error } = await useFetch('/api/ozon/questions/get', {

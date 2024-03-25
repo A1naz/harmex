@@ -1,7 +1,6 @@
 import ExcelJS from 'exceljs'
-import { paymenthistory } from '~~/server/lib/models/Paymenthistory'
-import { Report } from '~~/server/lib/models/wildberries/Report'
-import { Buyout } from '~~/server/lib/models/wildberries/Buyout'
+import { Report } from '~/server/lib/models/ozon/Report'
+import { Buyout } from '~/server/lib/models/ozon/Buyout'
 import { DocuemntEnum } from '~/data/enums'
 import axios from 'axios';
 
@@ -120,10 +119,6 @@ for (const item of format) {
   sheet.getRow(format.indexOf(item) + 2).height = 200; 
 }
 
-
-
-
-
     const buffer = await workbook.xlsx.writeBuffer()
 
     await userLog(event, {
@@ -134,3 +129,4 @@ for (const item of format) {
 
     return buffer
 })
+

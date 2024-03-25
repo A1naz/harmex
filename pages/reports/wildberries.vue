@@ -246,11 +246,11 @@ function changeFilter(e: any) {
               @click="codeInput.focus()"
             />
           </div>
-          <ExportXls 
+          <!-- <ExportXls 
                 api="/api/wildberries/reports/export"
                 fileName="Отчет по выкупам MARKETMONSTR.xlsx"
                 :isVisible="reports.length ? true : false"
-            />
+            /> -->
         </div>
       </div>
     </div>
