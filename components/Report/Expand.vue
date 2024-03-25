@@ -54,7 +54,7 @@ watch(() => props.state, (newState) => {
             <div class="mt-2 lg:m-0 text-xs font-normal text-base-content bg-primary bg-opacity-20 rounded-md px-5 py-0.5">
               Дата выкупа: {{ $dayjs(info.date).format('D MMMM HH:mm') }}
             </div>
-            <div class="bg-base-300 rounded-md font-normal my-auto p-0.5 text-xs px-2 text-base-content">
+            <div v-if="selectedMP" class="bg-base-300 rounded-md font-normal my-auto p-0.5 text-xs px-2 text-base-content">
               {{ selectedMP.charAt(0).toUpperCase() + selectedMP.slice(1) }}
             </div>
           </div>

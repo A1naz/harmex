@@ -80,11 +80,12 @@ async function exportToXLS() {
                 @select="exportToXLS"
                 >
                 <Button 
-                    type="button" 
-                    label="XLS" 
-                    class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content" 
-                    :loading="btnLoading" 
-                    />
+                    type="button"                   
+                    class="btn btn-sm px-3 btn-primary bg-opacity-20 border-none text-base-content" 
+                >
+                <span v-if="!btnLoading">XLS</span>
+                <span v-else class="loading loading-spinner loading-xs text-primary"></span>
+                </Button>
             </DateRangePicker>
         </ClientOnly>
     </div>
