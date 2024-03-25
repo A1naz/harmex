@@ -72,6 +72,6 @@ export default eventHandler(async (event) => {
       },
     })
   }
-  console.log('format', format)
+  
   return format
 })

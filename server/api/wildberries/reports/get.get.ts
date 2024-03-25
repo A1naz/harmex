@@ -57,18 +57,19 @@ export default eventHandler(async (event) => {
     }
   }
   else { history = await Report.find({ user }).sort({ _id: -1 }).skip(skip as number).limit(limit as number) }
+  const buyoutsId = history.map(item => item.buyout);
+  const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
+
   for await (const item of history) {
-    const buyout = await Buyout.findOne({ _id: item.buyout })
-    if (!buyout)
-      continue
+    const buyout = buyouts.find(buyout => buyout._id.valueOf() === item.buyout.valueOf());
     format.push({
       date: item.date,
       card: item.card,
       screenshots: item.screenshots,
       buyout: {
-        place: buyout.place,
-        uuid: buyout.uuid,
-        image: buyout.product.image,
+        place: buyout?.place,
+        uuid: buyout?.uuid,
+        image: buyout?.product.image,
       },
     })
   }

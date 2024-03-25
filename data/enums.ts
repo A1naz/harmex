@@ -42,4 +42,5 @@ export enum DocuemntEnum {
     Question = 'question',
     Review ='review',
     User ='user',
+    Report = 'report',
 }
