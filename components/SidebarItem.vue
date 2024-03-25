@@ -61,10 +61,21 @@ onMounted(() => {
       </div>
       <div v-else class="flex">
         <div class="hidden dark:block">
-          <Icon :name="icon" color="#6466f1" size="24" />
+          <Icon
+            :name="icon"
+            :class="{ 'active:': active }"
+            color="#6466f1"
+            size="24"
+          />
         </div>
         <div class="dark:hidden">
-          <Icon :name="icon" class="dark:hidden" color="#296dff" size="24" />
+          <Icon
+            :name="icon"
+            class="dark:hidden"
+            :class="{ 'active:': active }"
+            color="#296dff"
+            size="24"
+          />
         </div>
         <span class="text-primary :hover:text-base-100 ml-2 mt-[2px]">{{
           title

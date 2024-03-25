@@ -4,7 +4,7 @@
     height="21"
     viewBox="0 0 20 21"
     xmlns="http://www.w3.org/2000/svg"
-    class="icon dark:fill-white"
+    class="icon dark:fill-white focus: fill-primary"
   >
     <path
       fill-rule="evenodd"
@@ -15,7 +15,11 @@
 </template>
 <style scoped>
 .icon {
-  transition-duration: 0.3s;
+  transition-duration: 0.5s;
   transition-timing-function: linear;
+}
+
+.router-link-active {
+  @apply text-primary bg-opacity-90 active:bg-transparent active:fill-primary active:text-primary focus:bg-transparent focus:text-primary hover:bg-primary hover:text-primary;
 }
 </style>
