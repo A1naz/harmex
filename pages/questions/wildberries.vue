@@ -23,10 +23,6 @@ const urlError = ref(false)
 const modalShow = ref<boolean>(false)
 const route = useRoute()
 const router = useRouter()
-const MPTabs = [
-  { title: 'Wildberries', value: 'wildberries' },
-  { title: 'Ozon', value: 'ozon' },
-]
 
 async function getQuestions() {
   modalShow.value = false
@@ -202,7 +198,8 @@ function changeFilter(e: any) {
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Wildberries'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -242,7 +239,8 @@ function changeFilter(e: any) {
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Wildberries'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect

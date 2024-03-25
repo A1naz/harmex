@@ -14,13 +14,11 @@ const logModal = ref(false)
 const selectedBuyout = ref({})
 const selectedIndex = ref(-1)
 const storeMain = useMainStore()
+const mpStore = useMPStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 const loading = ref(false)
-const MPTabs = [
-  { title: 'Ozon', value: 'ozon' },
-  { title: 'Wildberries', value: 'wildberries' },
-]
+
 
 const dateFilter = ref('all')
 const autoTarget = ref(true)
@@ -434,7 +432,8 @@ const customLinks = filters.map((filter) => ({
             <CustomSelect
               class=""
               :class="'lg:min-w-[120px]'"
-              :tabs="MPTabs"
+              :status-text="'Ozon'"
+              :tabs="mpStore.MPTabs"
               @change-value="changeMP"
             />
             <CustomSelect

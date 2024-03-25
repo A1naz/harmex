@@ -24,11 +24,6 @@ const search = ref<any>({
   type: 'article',
 })
 
-const MPTabs = [
-  { title: 'Wildberries', value: 'wildberries' },
-  { title: 'Ozon', value: 'ozon' },
-]
-
 function selectStatus(e: Event) {
   const target = e.target as HTMLSelectElement
   router.push({
@@ -310,7 +305,8 @@ function changeFilter(e: any) {
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Wildberries'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -370,7 +366,8 @@ function changeFilter(e: any) {
           <CustomSelect
             class="hidden lg:flex"
             :class="'sm:min-w-[120px]'"
-            :tabs="MPTabs"
+            :status-text="'Wildberries'"
+            :tabs="mpStore.MPTabs"
             @change-value="changeFilter"
           />
           <CustomSelect

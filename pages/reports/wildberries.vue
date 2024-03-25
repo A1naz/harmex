@@ -18,10 +18,6 @@ const loading = ref(false)
 const router = useRouter()
 const route = useRoute()
 const status = computed(() => route.query?.status || 'all')
-const MPTabs = [
-  { title: 'Wildberries', value: 'wildberries' },
-  { title: 'Ozon', value: 'ozon' },
-]
 
 const search = reactive({
   text: '',
@@ -175,9 +171,10 @@ function changeFilter(e: any) {
     <div class="flex lg:justify-between mb-8 mt-2 lg:mt-6 gap-2">
       <div class="flex justify-between md:justify-normal gap-2">
         <CustomSelect
-          class="hidden lg:flex"
+          class=""
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Wildberries'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect

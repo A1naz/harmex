@@ -23,10 +23,7 @@ const urlError = ref(false)
 const modalShow = ref<boolean>(false)
 const route = useRoute()
 const router = useRouter()
-const MPTabs = [
-  { title: 'Ozon', value: 'ozon' },
-  { title: 'Wildberries', value: 'wildberries' },
-]
+
 
 async function getQuestions() {
   modalShow.value = false
@@ -199,7 +196,8 @@ function changeFilter(e: any) {
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Ozon'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -239,7 +237,8 @@ function changeFilter(e: any) {
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Ozon'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -305,7 +304,7 @@ function changeFilter(e: any) {
 
     <div v-if="questions.length" class="mt-4 rounded-lg">
       <ClientOnly>
-        <table v-if="width > 1024" class="table table-sm">
+        <table  class="table table-sm">
           <thead>
             <tr class="bg-primary bg-opacity-5">
               <!-- <th class="text-center">№</th> -->
@@ -430,7 +429,7 @@ function changeFilter(e: any) {
             </tr>
           </tbody>
         </table>
-        <div v-else class="cards grid grid-cols-1 gap-4 lg:hidden">
+        <!-- <div v-else class="cards grid grid-cols-1 gap-4 lg:hidden">
           <div
             v-for="(item, index) in questions"
             :key="index"
@@ -499,7 +498,7 @@ function changeFilter(e: any) {
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </ClientOnly>
     </div>
     <Hero v-else />

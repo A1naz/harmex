@@ -24,10 +24,7 @@ const search = reactive({
   error: false,
   type: 'article',
 })
-const MPTabs = [
-  { title: 'Ozon', value: 'ozon' },
-  { title: 'Wildberries', value: 'wildberries' },
-]
+
 function selectStatus(e: Event) {
   const target = e.target as HTMLSelectElement
   router.push({
@@ -312,7 +309,8 @@ const customLinks = filters.map((filter) => ({
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Ozon'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -372,7 +370,8 @@ const customLinks = filters.map((filter) => ({
           <CustomSelect
             class="hidden lg:flex"
             :class="'sm:min-w-[120px]'"
-            :tabs="MPTabs"
+            :status-text="'Ozon'"
+            :tabs="mpStore.MPTabs"
             @change-value="changeFilter"
           />
           <CustomSelect

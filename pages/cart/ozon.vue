@@ -29,11 +29,7 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
-const MPTabs =
-     [
-        { title: 'Ozon', value: 'ozon' },
-        { title: 'Wildberries', value: 'wildberries' },
-      ]
+
 
 
 async function getCarts() {
@@ -199,7 +195,8 @@ onMounted(() => {
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Ozon'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -238,7 +235,8 @@ onMounted(() => {
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Ozon'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect

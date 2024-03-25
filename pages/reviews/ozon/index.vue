@@ -14,14 +14,12 @@ const route = useRoute()
 const end = ref(false)
 
 const store = useMainStore()
+const mpStore = useMPStore()
 const router = useRouter()
 
 const status = ref(route.query?.status ?? 'available')
 
-const MPTabs =  [
-        { title: 'Ozon', value: 'ozon' },
-        { title: 'Wildberries', value: 'wildberries' },
-      ]
+
 
 const target = ref(null)
 const targetIsVisible = ref(false)
@@ -274,6 +272,13 @@ const customLinks = tabs.map(filter => ({
       <div class="flex gap-2 flex-wrap lg:hidden">
         <CustomSelect
           class="lg:hidden"
+          :class="'sm:min-w-[120px]'"
+          :status-text="'Ozon'"
+          :tabs="mpStore.MPTabs"
+          @change-value="changeMP"
+        />
+        <CustomSelect
+          class="lg:hidden"
           :class="'navbar:min-w-[120px]'"
           :tabs="customLinks"
           :status-text="selectText()"
@@ -303,7 +308,8 @@ const customLinks = tabs.map(filter => ({
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Ozon'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeMP"
         />
         <CustomSelect

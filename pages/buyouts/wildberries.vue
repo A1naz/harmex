@@ -17,6 +17,7 @@ const storeMain = useMainStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 const loading = ref(false)
+const mpStore = useMPStore()
 
 const MPTabs = [
   { title: 'Wildberries', value: 'wildberries' },
@@ -448,7 +449,8 @@ const customLinks = filters.map((filter) => ({
             <CustomSelect
               class=""
               :class="'lg:min-w-[120px]'"
-              :tabs="MPTabs"
+              :status-text="'Wildberries'"
+              :tabs="mpStore.MPTabs"
               @change-value="changeMP"
             />
             <CustomSelect
