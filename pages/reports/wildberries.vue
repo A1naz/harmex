@@ -18,13 +18,11 @@ const loading = ref(false)
 const router = useRouter()
 const route = useRoute()
 const status = computed(() => route.query?.status || 'all')
-const MPTabs =
-  store.client.username == 'test'
-    ? [
-        { title: 'Wildberries', value: 'wildberries' },
-        { title: 'Ozon', value: 'ozon' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+const MPTabs = [
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+]
+
 const search = reactive({
   text: '',
   loading: false,
@@ -246,7 +244,9 @@ function changeFilter(e: any) {
               @click="codeInput.focus()"
             />
           </div>
-          <div class="bg-primary bg-opacity-10 px-2 py-1 rounded-lg cursor-not-allowed">
+          <div
+            class="bg-primary bg-opacity-10 px-2 py-1 rounded-lg cursor-not-allowed"
+          >
             XLS
           </div>
           <!-- <ExportXls 

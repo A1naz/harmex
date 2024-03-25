@@ -18,12 +18,10 @@ const router = useRouter()
 
 const status = ref(route.query?.status ?? 'available')
 
-const MPTabs = store.client.username == 'test'
-    ? [
+const MPTabs =  [
         { title: 'Ozon', value: 'ozon' },
         { title: 'Wildberries', value: 'wildberries' },
       ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
 
 const target = ref(null)
 const targetIsVisible = ref(false)

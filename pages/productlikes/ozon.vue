@@ -119,19 +119,17 @@ function removeProduct() {
   amount.value = 0
 }
 
-const MPTabs = store.client.username == 'test'
-    ? [
-        { title: 'Ozon', value: 'ozon' },
-        { title: 'Wildberries', value: 'wildberries' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+const MPTabs = [
+  { title: 'Ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
+]
 
 onMounted(() => {
   if (route.query.modalShow) {
-    modalShow.value = route.query.modalShow === 'true';
-    const query = { ...route.query };
-        delete query.modalShow;
-        router.push({ query });
+    modalShow.value = route.query.modalShow === 'true'
+    const query = { ...route.query }
+    delete query.modalShow
+    router.push({ query })
   }
 })
 
@@ -230,7 +228,6 @@ const updateSearchType = (filter: any) => {
 </script>
 
 <template>
-  
   <div>
     <!-- <h1 class="text-2xl font-bold mt-4">Лайки на товар/бренд</h1> -->
     <!-- <p class="text-xs font-light mt-4 lg:text-sm">
@@ -275,7 +272,7 @@ const updateSearchType = (filter: any) => {
           :links="[{ title: 'Отзывы', slot: '/likes', query: '' }]"
           @change-value="selectFilterDate"
         />
-        
+
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
           <input
             ref="codeInput"
@@ -355,7 +352,7 @@ const updateSearchType = (filter: any) => {
       </div>
     </div>
     <div v-if="product_likes.length" class="mt-6">
-      <div v-if="loading" class="flex justify-center ">
+      <div v-if="loading" class="flex justify-center">
         <div>
           <span class="loading loading-dots loading-lg text-primary"></span>
         </div>
@@ -447,7 +444,9 @@ const updateSearchType = (filter: any) => {
               <div
                 :class="{
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'nofunds' || item.status === 'deleted' || item.status === 'canceled',
+                    item.status === 'nofunds' ||
+                    item.status === 'deleted' ||
+                    item.status === 'canceled',
                   'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
@@ -479,7 +478,6 @@ const updateSearchType = (filter: any) => {
           <div ref="target" class="flex justify-center items-center h-4" />
         </tbody>
       </table>
-
     </div>
 
     <Hero v-else />

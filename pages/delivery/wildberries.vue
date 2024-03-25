@@ -24,13 +24,10 @@ const search = ref<any>({
   type: 'article',
 })
 
-const MPTabs = store.client.username == 'test'
-    ? [
-        { title: 'Wildberries', value: 'wildberries' },
-        { title: 'Ozon', value: 'ozon' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
-
+const MPTabs = [
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+]
 
 function selectStatus(e: Event) {
   const target = e.target as HTMLSelectElement
@@ -64,7 +61,7 @@ const { stop } = useIntersectionObserver(
   target,
   ([{ isIntersecting }], observerElement) => {
     targetIsVisible.value = isIntersecting
-  },
+  }
 )
 const skip = ref(50)
 const end = ref(false)
@@ -126,8 +123,7 @@ async function findDeliveries(value: string, type: string) {
       type,
     },
   })
-  if (data.value)
-    deliveries.value = data.value
+  if (data.value) deliveries.value = data.value
 
   search.value.loading = false
 }
@@ -147,8 +143,7 @@ function openInfoModal() {
 
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && deliveries.value.length >= 50) {
-    if (end.value)
-      return
+    if (end.value) return
     const { data, error } = await useFetch('/api/wildberries/delivery/get', {
       method: 'GET',
       query: {
@@ -161,43 +156,76 @@ watch(targetIsVisible, async (isVisible) => {
       end.value = true
       return
     }
-    deliveries.value = [...deliveries.value, ...data.value! as any]
+    deliveries.value = [...deliveries.value, ...(data.value! as any)]
     skip.value += 50
   }
 })
 
-watch(() => status.value, async (newRoute) => {
-  skip.value = 50
-  end.value = false
-  const { data } = await useFetch('/api/wildberries/delivery/get', {
-    method: 'GET',
-    query: {
-      status: status.value ?? 'all',
-      limit: 50,
-    },
-  })
-  deliveries.value = data.value
-}, { deep: true, immediate: true })
+watch(
+  () => status.value,
+  async (newRoute) => {
+    skip.value = 50
+    end.value = false
+    const { data } = await useFetch('/api/wildberries/delivery/get', {
+      method: 'GET',
+      query: {
+        status: status.value ?? 'all',
+        limit: 50,
+      },
+    })
+    deliveries.value = data.value
+  },
+  { deep: true, immediate: true }
+)
 
 const filters = [
-    {title: 'Все доставки', optionValue: 'all', params: '', queryStatus: undefined},
-    {title: 'Активные', optionValue: 'active', params: '?status=active', queryStatus: 'active'},    
-    {title: 'Завершенные', optionValue: 'completed', params: '?status=completed', queryStatus: 'completed'},
-    {title: 'В пути', optionValue: 'onTheWay', params: '?status=onTheWay', queryStatus: 'onTheWay'},
-    {title: 'Готовы к выдаче', optionValue: 'pickupReady', params: '?status=pickupReady', queryStatus: 'pickupReady'},  
-    {title: 'Отмененные', optionValue: 'canceled', params: '?status=canceled', queryStatus: 'canceled'}, 
+  {
+    title: 'Все доставки',
+    optionValue: 'all',
+    params: '',
+    queryStatus: undefined,
+  },
+  {
+    title: 'Активные',
+    optionValue: 'active',
+    params: '?status=active',
+    queryStatus: 'active',
+  },
+  {
+    title: 'Завершенные',
+    optionValue: 'completed',
+    params: '?status=completed',
+    queryStatus: 'completed',
+  },
+  {
+    title: 'В пути',
+    optionValue: 'onTheWay',
+    params: '?status=onTheWay',
+    queryStatus: 'onTheWay',
+  },
+  {
+    title: 'Готовы к выдаче',
+    optionValue: 'pickupReady',
+    params: '?status=pickupReady',
+    queryStatus: 'pickupReady',
+  },
+  {
+    title: 'Отмененные',
+    optionValue: 'canceled',
+    params: '?status=canceled',
+    queryStatus: 'canceled',
+  },
 ]
 
-const customLinks = filters.map(filter => ({
+const customLinks = filters.map((filter) => ({
   title: filter.title,
-  slot: '/delivery/wildberries', 
-  query: filter.params 
-}));
+  slot: '/delivery/wildberries',
+  query: filter.params,
+}))
 
 const updateSearchType = (filter: any) => {
-  search.value.type = filter.value;
+  search.value.type = filter.value
 }
-
 
 function changeFilter(e: any) {
   mpStore.selectedMP = e.value
@@ -207,8 +235,6 @@ function changeFilter(e: any) {
       (route.query?.status ? '?status=' + route.query.status : '')
   )
 }
-
-
 </script>
 
 <template>

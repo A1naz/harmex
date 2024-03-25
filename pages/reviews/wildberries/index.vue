@@ -18,12 +18,10 @@ const router = useRouter()
 
 const status = ref(route.query?.status ?? 'available')
 
-const MPTabs = store.client.username == 'test'
-    ? [
-      { title: 'Wildberries', value: 'wildberries' },
-      { title: 'Ozon', value: 'ozon' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+const MPTabs = [
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+]
 
 const target = ref(null)
 const targetIsVisible = ref(false)
@@ -99,13 +97,16 @@ function changeTab(tab: any) {
 }
 
 function selectText() {
-  const index = tabs.findIndex((item) =>route.query?.status ?  item.value == route.query?.status : item.value == 'available' )
+  const index = tabs.findIndex((item) =>
+    route.query?.status
+      ? item.value == route.query?.status
+      : item.value == 'available'
+  )
   if (index == -1) {
     return 'Доступные'
-  } 
+  }
   return tabs[index].name
 }
-
 
 function onSearchInput(val: any) {
   reviews.value = []
@@ -148,7 +149,7 @@ function closeModal() {
 }
 function goToPublished() {
   closeModal()
-  navigateTo('/reviews/wildberries?status=available', {external: true})
+  navigateTo('/reviews/wildberries?status=available', { external: true })
 }
 
 const uuidForRemove = ref('')
@@ -228,10 +229,10 @@ async function changeMP(e: any) {
       (route.query?.status ? '?status=' + route.query.status : '')
   )
 }
-const customLinks = tabs.map(filter => ({
+const customLinks = tabs.map((filter) => ({
   title: filter.name,
-  value: filter.value
-}));
+  value: filter.value,
+}))
 </script>
 
 <template>
@@ -278,7 +279,7 @@ const customLinks = tabs.map(filter => ({
           @change="onSearchInput"
         />
       </div>
-      
+
       <div class="flex gap-2 flex-wrap lg:hidden">
         <CustomSelect
           class=""
@@ -441,7 +442,10 @@ const customLinks = tabs.map(filter => ({
         class="flex justify-center items-center h-4 mb-10"
       />
     </div>
-    <div v-else-if="isFetch" class="w-full mt-5 flex justify-center items-center">
+    <div
+      v-else-if="isFetch"
+      class="w-full mt-5 flex justify-center items-center"
+    >
       <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
     <Hero v-else />

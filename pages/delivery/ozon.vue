@@ -24,12 +24,10 @@ const search = reactive({
   error: false,
   type: 'article',
 })
-const MPTabs = store.client.username == 'test'
-    ? [
-        { title: 'Ozon', value: 'ozon' },
-        { title: 'Wildberries', value: 'wildberries' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+const MPTabs = [
+  { title: 'Ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
+]
 function selectStatus(e: Event) {
   const target = e.target as HTMLSelectElement
   router.push({
@@ -62,7 +60,7 @@ const { stop } = useIntersectionObserver(
   target,
   ([{ isIntersecting }], observerElement) => {
     targetIsVisible.value = isIntersecting
-  },
+  }
 )
 const skip = ref(50)
 const end = ref(false)
@@ -124,8 +122,7 @@ async function findDeliveries(value: string, type: string) {
       type,
     },
   })
-  if (data.value)
-    deliveries.value = data.value
+  if (data.value) deliveries.value = data.value
 
   search.loading = false
 }
@@ -141,13 +138,12 @@ async function onSearchInput(event: Event) {
 
 const isInfoModal = ref<boolean>(false)
 function toggleInfoModal() {
-    isInfoModal.value = !isInfoModal.value
+  isInfoModal.value = !isInfoModal.value
 }
 
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && deliveries.value.length >= 50) {
-    if (end.value)
-      return
+    if (end.value) return
     const { data, error } = await useFetch('/api/ozon/delivery/get', {
       method: 'GET',
       query: {
@@ -160,38 +156,72 @@ watch(targetIsVisible, async (isVisible) => {
       end.value = true
       return
     }
-    deliveries.value = [...deliveries.value, ...data.value! as any]
+    deliveries.value = [...deliveries.value, ...(data.value! as any)]
     skip.value += 50
   }
 })
 
-watch(() => status.value, async (newRoute) => {
-  skip.value = 50
-  end.value = false
-  const { data } = await useFetch('/api/ozon/delivery/get', {
-    method: 'GET',
-    query: {
-      status: status.value ?? 'all',
-      limit: 50,
-    },
-  })
-  deliveries.value = data.value
-}, { deep: true, immediate: true })
+watch(
+  () => status.value,
+  async (newRoute) => {
+    skip.value = 50
+    end.value = false
+    const { data } = await useFetch('/api/ozon/delivery/get', {
+      method: 'GET',
+      query: {
+        status: status.value ?? 'all',
+        limit: 50,
+      },
+    })
+    deliveries.value = data.value
+  },
+  { deep: true, immediate: true }
+)
 
 const filters = [
-    {title: 'Все доставки', optionValue: 'all', params: '', queryStatus: undefined},
-    {title: 'Активные', optionValue: 'active', params: '?status=active', queryStatus: 'active'},
-    {title: 'Завершенные', optionValue: 'completed', params: '?status=completed', queryStatus: 'completed'},
-    {title: 'В пути', optionValue: 'onTheWay', params: '?status=onTheWay', queryStatus: 'onTheWay'},
-    {title: 'Готовы к выдаче', optionValue: 'pickupReady', params: '?status=pickupReady', queryStatus: 'pickupReady'},
-    {title: 'Отмененные', optionValue: 'canceled', params: '?status=canceled', queryStatus: 'canceled'},
+  {
+    title: 'Все доставки',
+    optionValue: 'all',
+    params: '',
+    queryStatus: undefined,
+  },
+  {
+    title: 'Активные',
+    optionValue: 'active',
+    params: '?status=active',
+    queryStatus: 'active',
+  },
+  {
+    title: 'Завершенные',
+    optionValue: 'completed',
+    params: '?status=completed',
+    queryStatus: 'completed',
+  },
+  {
+    title: 'В пути',
+    optionValue: 'onTheWay',
+    params: '?status=onTheWay',
+    queryStatus: 'onTheWay',
+  },
+  {
+    title: 'Готовы к выдаче',
+    optionValue: 'pickupReady',
+    params: '?status=pickupReady',
+    queryStatus: 'pickupReady',
+  },
+  {
+    title: 'Отмененные',
+    optionValue: 'canceled',
+    params: '?status=canceled',
+    queryStatus: 'canceled',
+  },
 ]
 const statusText = computed(() => {
   return filters.find((el: any) => el.queryStatus === route.query.status)?.title
 })
 
 const updateSearchType = (filter: any) => {
-  search.type = filter.value;
+  search.type = filter.value
 }
 
 function changeFilter(e: any) {
@@ -203,11 +233,11 @@ function changeFilter(e: any) {
   )
 }
 
-const customLinks = filters.map(filter => ({
+const customLinks = filters.map((filter) => ({
   title: filter.title,
   slot: '/delivery/ozon',
-  query: filter.params
-}));
+  query: filter.params,
+}))
 </script>
 <template>
   <div>

@@ -23,13 +23,11 @@ const urlError = ref(false)
 const modalShow = ref<boolean>(false)
 const route = useRoute()
 const router = useRouter()
-const MPTabs =
-  store.client.username == 'test'
-    ? [
-        { title: 'Ozon', value: 'ozon' },
-        { title: 'Wildberries', value: 'wildberries' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+const MPTabs = [
+  { title: 'Ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
+]
+
 async function getQuestions() {
   modalShow.value = false
   const { data, error } = await useFetch('/api/ozon/questions/get', {
@@ -316,7 +314,7 @@ function changeFilter(e: any) {
               <th class="text-center">Маркетплейс</th>
               <th class="text-center">Пол</th>
               <th class="text-center">Вопрос</th>
-              
+
               <th class="text-center">Статус</th>
               <th class="text-center">Дата создания</th>
               <th class="text-center">Дата публикации</th>
@@ -501,7 +499,7 @@ function changeFilter(e: any) {
               </div>
             </div>
           </div>
-        </div> 
+        </div>
       </ClientOnly>
     </div>
     <Hero v-else />

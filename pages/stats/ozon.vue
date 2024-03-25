@@ -13,12 +13,22 @@ const { width } = useWindowSize()
 const secondLevelReferrals = ref(0)
 const lastElements = ref<any>([])
 const periodFromRoute = route.query.period
-const routePath = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path;
+const routePath = route.path.endsWith('/')
+  ? route.path.slice(0, -1)
+  : route.path
 
-if (!route.query.type || !route.query.period || !route.query.headerPeriod || !route.query.deliveryPeriod) {
-  navigateTo(`${routePath}?type=all&period=today&headerPeriod=today&deliveryPeriod=today`, {
-    external: true,
-  })
+if (
+  !route.query.type ||
+  !route.query.period ||
+  !route.query.headerPeriod ||
+  !route.query.deliveryPeriod
+) {
+  navigateTo(
+    `${routePath}?type=all&period=today&headerPeriod=today&deliveryPeriod=today`,
+    {
+      external: true,
+    }
+  )
 }
 
 let chartDataValue = ref<any>([])
@@ -70,9 +80,12 @@ async function countBuyouts() {
 }
 
 async function coutDeliveries() {
-  const { data, error }: any = await useFetch('/api/ozon/stats/deliveriesCount', {
-    method: 'GET',
-  })
+  const { data, error }: any = await useFetch(
+    '/api/ozon/stats/deliveriesCount',
+    {
+      method: 'GET',
+    }
+  )
   if (data.value) {
     deliveriesCount.value = data.value
   }
@@ -167,9 +180,12 @@ const chartOptions = ref({
 })
 
 function selectPeriod(event: any) {
-  navigateTo(`/stats/ozon?type=${route.query.type}&period=${event.target.value}`, {
-    external: true,
-  })
+  navigateTo(
+    `/stats/ozon?type=${route.query.type}&period=${event.target.value}`,
+    {
+      external: true,
+    }
+  )
 }
 
 function selectService(event: any) {
@@ -274,11 +290,8 @@ const charttDelivOptions = ref({
   },
 })
 
-const MPTabs =  store.client.username == 'test' ? [
+const MPTabs = [
   { title: 'Ozon', value: 'ozon' },
-  { title: 'Wildberries', value: 'wildberries' },
-  { title: 'Все', value: '' },
-] : [
   { title: 'Wildberries', value: 'wildberries' },
   { title: 'Все', value: '' },
 ]

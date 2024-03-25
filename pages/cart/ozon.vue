@@ -30,12 +30,11 @@ const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
 const MPTabs =
-  store.client.username == 'test'
-    ? [
+     [
         { title: 'Ozon', value: 'ozon' },
         { title: 'Wildberries', value: 'wildberries' },
       ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+
 
 async function getCarts() {
   modalShow.value = false

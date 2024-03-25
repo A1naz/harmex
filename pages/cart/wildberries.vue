@@ -29,13 +29,10 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
-const MPTabs =
-  store.client.username == 'test'
-    ? [
-        { title: 'Wildberries', value: 'wildberries' },
-        { title: 'Ozon', value: 'ozon' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+const MPTabs = [
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+]
 
 async function getCarts() {
   modalShow.value = false

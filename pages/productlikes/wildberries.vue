@@ -123,12 +123,10 @@ function removeProduct() {
   url.value = ''
   amount.value = 0
 }
-const MPTabs = store.client.username == 'test'
-    ? [
-        { title: 'Wildberries', value: 'wildberries' },
-        { title: 'Ozon', value: 'ozon' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+const MPTabs = [
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+]
 
 onMounted(() => {
   if (route.query.modalShow) {
@@ -298,7 +296,6 @@ const updateSearchType = (filter: any) => {
         </div>
       </div>
       <div class="flex gap-2 lg:gap-5">
-
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
@@ -481,7 +478,6 @@ const updateSearchType = (filter: any) => {
           <div ref="target" class="flex justify-center items-center h-4" />
         </tbody>
       </table>
-
     </div>
 
     <Hero v-else />

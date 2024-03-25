@@ -17,13 +17,10 @@ const storeMain = useMainStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 const loading = ref(false)
-const MPTabs =
-  storeMain.client.username == 'test'
-    ? [
-        { title: 'Ozon', value: 'ozon' },
-        { title: 'Wildberries', value: 'wildberries' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+const MPTabs = [
+  { title: 'Ozon', value: 'ozon' },
+  { title: 'Wildberries', value: 'wildberries' },
+]
 
 const dateFilter = ref('all')
 const autoTarget = ref(true)
@@ -357,11 +354,11 @@ async function changeMP(e: any) {
       (route.query?.status ? '?status=' + route.query.status : '')
   )
 }
-const customLinks = filters.map(filter => ({
+const customLinks = filters.map((filter) => ({
   title: filter.title,
   slot: '/buyouts/wildberries',
-  query: filter.params
-}));
+  query: filter.params,
+}))
 </script>
 
 <template>
@@ -426,7 +423,6 @@ const customLinks = filters.map(filter => ({
             />
           </div>
         </div>
-        
 
         <div clas="flex gap-2 flex-wrap">
           <div
@@ -435,17 +431,17 @@ const customLinks = filters.map(filter => ({
               'flex-wrap': width < 335,
             }"
           >
-          <CustomSelect
-            class=""
-            :class="'lg:min-w-[120px]'"
-            :tabs="MPTabs"
-            @change-value="changeMP"
-          />
-          <CustomSelect
-            class=""
-            :class="'navbar:min-w-[120px]'"
-            :links="customLinks"
-          />
+            <CustomSelect
+              class=""
+              :class="'lg:min-w-[120px]'"
+              :tabs="MPTabs"
+              @change-value="changeMP"
+            />
+            <CustomSelect
+              class=""
+              :class="'navbar:min-w-[120px]'"
+              :links="customLinks"
+            />
             <!-- <div
               class="dropdown group relative"
               @click="dropdownOpened = !dropdownOpened"
@@ -557,7 +553,6 @@ const customLinks = filters.map(filter => ({
               ]"
               @change-value="updateSearchType"
             />
-           
 
             <!-- <select
               v-model="search.type"
