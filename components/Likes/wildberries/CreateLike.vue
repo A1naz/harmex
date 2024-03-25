@@ -33,16 +33,19 @@ async function getProductReviews() {
   btnDisabled.value = true
   changedReviews.value = []
   savedArticle.value = article.value
-  const { data, error }: any = await useFetch('/api/wildberries/likes/productReviews', {
-    method: 'GET',
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-    query: {
-      article: savedArticle.value,
-      limit: limit.value * page.value,
-      page: page.value,
-      sortBy: sortBy.value ?? 'date',
-    },
-  })
+  const { data, error }: any = await useFetch(
+    '/api/wildberries/likes/productReviews',
+    {
+      method: 'GET',
+      headers: useRequestHeaders(['cookie']) as HeadersInit,
+      query: {
+        article: savedArticle.value,
+        limit: limit.value * page.value,
+        page: page.value,
+        sortBy: sortBy.value ?? 'date',
+      },
+    }
+  )
   loading.value = false
   btnDisabled.value = false
   if (error.value) {
@@ -80,15 +83,18 @@ async function getProductReviews() {
 
 async function increaseReviews() {
   limit.value += 50
-  const { data, error }: any = await useFetch('/api/wildberries/likes/productReviews', {
-    method: 'GET',
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-    query: {
-      article: savedArticle.value,
-      limit: limit.value,
-      sortBy: sortBy.value ?? 'date',
-    },
-  })
+  const { data, error }: any = await useFetch(
+    '/api/wildberries/likes/productReviews',
+    {
+      method: 'GET',
+      headers: useRequestHeaders(['cookie']) as HeadersInit,
+      query: {
+        article: savedArticle.value,
+        limit: limit.value,
+        sortBy: sortBy.value ?? 'date',
+      },
+    }
+  )
   if (error.value) {
     notify({
       title: 'Что-то пошло не так',
@@ -296,6 +302,15 @@ const period = ref('3h')
 function selectPeriod(event: any) {
   period.value = event.target.value
 }
+
+async function selectCreatePage(e: any) {
+  const target = e
+  if (target.value == '/likes/create/wildberries') {
+    return
+  } else {
+    return navigateTo(target.value)
+  }
+}
 </script>
 
 <template>
@@ -307,7 +322,21 @@ function selectPeriod(event: any) {
       class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4"
     >
       <div class="flex justify-between">
-        <div class="font-medium text-lg">Лайк на отзывы Wildberries</div>
+        <ProductLikesWildberriesCustomSelect
+          class="lg:flex"
+          :class="'sm:min-w-[120px]'"
+          :tabs="[
+            {
+              title: 'Лайки на товар/бренд',
+              value: '/productlikes/create/wildberries',
+            },
+            {
+              title: 'Лайки на отзывы',
+              value: '/likes/create/wildberries',
+            },
+          ]"
+          @change-value="selectCreatePage"
+        />
         <NuxtLink
           to="/likes"
           class="text-gray-500 hover:text-gray-700 self-end mb-2"
@@ -359,7 +388,11 @@ function selectPeriod(event: any) {
             </select>
           </div>
           <div class="w-full ml-auto self-end justify-end lg:w-40">
-            <button class="btn w-full btn-primary" @click="getProductReviews" :disabled="btnDisabled">
+            <button
+              class="btn w-full btn-primary"
+              @click="getProductReviews"
+              :disabled="btnDisabled"
+            >
               Добавить
             </button>
           </div>

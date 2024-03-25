@@ -11,7 +11,7 @@ definePageMeta({
 const mps = [
   {
     title: 'Wildberries',
-    value: 'wildberries',
+    value: 'create/wildberries',
     category: 'товары',
   },
   {
