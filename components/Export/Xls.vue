@@ -74,18 +74,27 @@ async function exportToXLS() {
     <div v-if="isVisible" >
         <ClientOnly>
             <DateRangePicker 
+                v-if="!btnLoading"
                 v-model="expDatesVModel" 
                 :save-button="saveButton" 
                 :start-date="new Date()" 
                 @select="exportToXLS"
                 >
                 <Button 
-                    type="button" 
-                    label="XLS" 
-                    class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content" 
-                    :loading="btnLoading" 
-                    />
+                    type="button"                   
+                    class="btn btn-sm px-3 btn-primary bg-opacity-20 border-none text-base-content" 
+                >
+                <span v-if="!btnLoading">XLS</span>
+                </Button>
             </DateRangePicker>
+                <Button 
+                    v-else
+                    disabled
+                        type="button"                   
+                        class="btn btn-sm px-3 btn-primary bg-opacity-20 border-none text-base-content" 
+                    >
+                    <span class="loading loading-spinner loading-xs text-primary">XLS</span>
+                </Button>
         </ClientOnly>
     </div>
 </template>

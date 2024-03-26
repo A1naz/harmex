@@ -247,8 +247,8 @@ function changeFilter(e: any) {
             XLS
           </div>
           <!-- <ExportXls 
-                api="/api/paymenthistory/export"
-                fileName="Финансовый отчет услуг MARKETMONSTR.xlsx"
+                api="/api/wildberries/reports/export"
+                fileName="Отчет по выкупам MARKETMONSTR.xlsx"
                 :isVisible="reports.length ? true : false"
             /> -->
         </div>
