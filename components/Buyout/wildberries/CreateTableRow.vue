@@ -124,13 +124,15 @@ const productQuantityModel = computed({
         <div class="text-sm font-normal truncate text-center">
           {{ product.name }}
         </div>
-        <a
-          :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
-          target="_blank"
-          class="text-sm text-primary link link-hover text-center"
-        >
-          {{ product.article }}
-        </a>
+        <div class="text-center">
+          <a
+            :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
+            target="_blank"
+            class="text-sm text-primary link link-hover text-center"
+          >
+            {{ product.article }}
+          </a>
+        </div>
       </div>
     </td>
     <td class="border-r border-base text-center">
@@ -180,10 +182,10 @@ const productQuantityModel = computed({
         <div v-else class="text-sm text-center ml-2">Нет</div>
       </div>
     </td>
-    <td class="border-r border-base ">
-      <div class="w-20 2xl:w-full ">
+    <td class="border-r border-base">
+      <div class="w-20 2xl:w-full">
         <select
-          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none "
+          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
           @change="onSexChange"
         >
           <option value="none">Нет</option>

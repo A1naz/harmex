@@ -4,8 +4,7 @@ import { findImage, findProductCard } from '@/server/lib/helpers'
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+  if (!session) return sendRedirect(event, '/auth', 302)
 
   const query = getQuery(event)
   const buyout = await Buyout.findOne({ uuid: query.uuid })
@@ -15,39 +14,38 @@ export default eventHandler(async (event) => {
       message: 'Выкуп не найден',
     })
   }
-  const url = findProductCard(buyout.article)
+  const url = `https://card.wb.ru/cards/detail?appType=0&curr=rub&nm=${buyout.article}`
   const article = buyout?.article
-  const data: any = await $fetch(
-    url,
-    {
-      method: 'GET',
-    },
-  )
+  const dataWB: any = await $fetch(url, {
+    method: 'GET',
+  })
 
   const rawData: any = await $fetch(
-  `https://card.wb.ru/cards/detail?spp=0&regions=80,64,38,4,115,83,33,68,70,69,30,86,40,1,66,31,48,110,22&pricemarginCoeff=1.0&reg=0&appType=1&emp=0&locale=ru&lang=ru&curr=rub&couponsGeo=2,12,7,3,6,21&dest=12358353&nm=${article}`,
-  {
-    method: 'GET',
-  },
+    `https://card.wb.ru/cards/detail?spp=0&regions=80,64,38,4,115,83,33,68,70,69,30,86,40,1,66,31,48,110,22&pricemarginCoeff=1.0&reg=0&appType=1&emp=0&locale=ru&lang=ru&curr=rub&couponsGeo=2,12,7,3,6,21&dest=12358289&nm=${article}`,
+    {
+      method: 'GET',
+    }
   )
 
+  const productInfo = dataWB.data.products[0]
   const priceData = rawData
 
   let sizes = []
 
   if (priceData?.data?.products[0]?.sizes)
-    sizes = priceData?.data?.products[0]?.sizes.filter((item: any) => item.stocks.length).map((item: any) => item.origName)
+    sizes = priceData?.data?.products[0]?.sizes
+      .filter((item: any) => item.stocks.length)
+      .map((item: any) => item.origName)
   else
-    sizes = data?.sizes_table?.values.map((size: any) => size.tech_size)
+    sizes = productInfo?.sizes_table?.values.map((size: any) => size.tech_size)
 
   const product = priceData?.data?.products.find(
-    (item: any) => item.id === Number(article),
+    (item: any) => item.id === Number(article)
   )
   const priceRaw = product?.salePriceU.toString()
   let instock = false
   product.sizes.forEach((size: any) => {
-    if (size.stocks.length > 0)
-      instock = true
+    if (size.stocks.length > 0) instock = true
   })
 
   if (!priceRaw || !sizes) {
@@ -70,11 +68,12 @@ export default eventHandler(async (event) => {
     maximumFractionDigits: 0,
   })
   const priceText = currency.format(price)
-  const image = findImage(data.nm_id)
+  const image = findImage(article)
+
   return {
     image,
-    article: (data.nm_id as number) || (buyout.article as number),
-    name: `${data.selling.brand_name} / ${data.imt_name}` || '',
+    article: (productInfo.nm_id as number) || (buyout.article as number),
+    name: `${productInfo.brand} / ${productInfo.name}` || '',
     sizes: (sizes as number[] | string[]) || [],
     price: (price as number) || 0,
     priceText: (priceText as string) || '',
