@@ -193,10 +193,10 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
     }
-    // if (!item.searchQuery[0].value) {
-    //   valid = false
-    //   errorMsg = 'Не у всех товаров указан поисковый запрос'
-    // }
+    if (!item.searchQuery[0].value) {
+      valid = false
+      errorMsg = 'Не у всех товаров указан поисковый запрос'
+    }
     if (!item.selectedSize) item.selectedSize = 'none'
   })
   if (!valid) {
@@ -548,12 +548,15 @@ const startTimer = () => {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <!-- <th @click="openInfoModal('search')">
-                <div class="flex justify-between w-full gap-1 items-center">
-                  <span> Поисковые запросы </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+              <th
+                @click="openInfoModal('search')"
+                class="font-normal text-base-content"
+              >
+                <div class="flex justify-center items-center gap-1">
+                  <span>Поисковые запросы</span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                 </div>
-              </th> -->
+              </th>
               <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">

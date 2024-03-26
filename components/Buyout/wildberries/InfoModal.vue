@@ -61,9 +61,9 @@ onKeyStroke('Escape', (e) => {
           >
           <div class="flex gap-2 mb-1">
             <span class="text-sm text-gray-500"
-            >Создан: {{ defaultDate(info.createdAt) }}</span
-          >
-          <div
+              >Создан: {{ defaultDate(info.createdAt) }}</span
+            >
+            <div
               :class="{
                 'opacity-0':
                   info.status !== 'active' &&
@@ -83,20 +83,20 @@ onKeyStroke('Escape', (e) => {
             <span
               class="rounded-2xl py-0 px-2 text-md mb-2 max-h-7 text-[9-px] whitespace-nowrap"
               :class="{
-              'bg-success ':
-                (info.status === 'active' || info.status === 'work'),
-              'text-base-content bg-green-600 ':
-                (info.status === 'active' || info.status === 'work') &&
-                theme.value === 'dark',
-              'text-base-content bg-red-700':
-                (info.status === 'completed' || info.status === 'nofunds') &&
-                theme.value === 'dark',
-              'text-base-content bg-red-200':
-                (info.status === 'completed' || info.status === 'nofunds') &&
-                theme.value === 'light',
-              'text-base-content bg-yellow-300':
-                (info.status === 'archived' || info.status === 'paused') 
-            }"
+                'bg-success ':
+                  info.status === 'active' || info.status === 'work',
+                'text-base-content bg-green-600 ':
+                  (info.status === 'active' || info.status === 'work') &&
+                  theme.value === 'dark',
+                'text-base-content bg-red-700':
+                  (info.status === 'completed' || info.status === 'nofunds') &&
+                  theme.value === 'dark',
+                'text-base-content bg-red-200':
+                  (info.status === 'completed' || info.status === 'nofunds') &&
+                  theme.value === 'light',
+                'text-base-content bg-yellow-300':
+                  info.status === 'archived' || info.status === 'paused',
+              }"
               >{{ getStatus }}</span
             >
           </div>
@@ -128,8 +128,6 @@ onKeyStroke('Escape', (e) => {
                     {{ info.article }}
                   </a>
                 </div>
-
-                
               </div>
               <div>
                 <span class="text-sm text-gray-500 mr-2 my-auto">Цена: </span>
@@ -143,7 +141,9 @@ onKeyStroke('Escape', (e) => {
                 >
               </div>
               <div>
-                <span class="text-sm text-gray-500 mr-2 my-auto">Количество: </span>
+                <span class="text-sm text-gray-500 mr-2 my-auto"
+                  >Количество:
+                </span>
                 <span
                   class="rounded-md py-0 px-2 text-sm"
                   :class="{
@@ -167,11 +167,11 @@ onKeyStroke('Escape', (e) => {
                 >
               </div>
               <div>
-                  <span class="text-sm text-gray-500 mr-2">Размер: </span>
-                  <span class="bg-base-200 rounded-md py-0 px-2 text-sm">{{
-                    info.sizeparam === 'none' ? 'Не указан' : info.sizeparam
-                  }}</span>
-                </div>
+                <span class="text-sm text-gray-500 mr-2">Размер: </span>
+                <span class="bg-base-200 rounded-md py-0 px-2 text-sm">{{
+                  info.sizeparam === 'none' ? 'Не указан' : info.sizeparam
+                }}</span>
+              </div>
               <div class="flex gap-2">
                 <span class="text-sm text-gray-500 my-auto">Категория: </span>
                 <div class="bg-base-300 rounded-md py-0 px-2 text-sm">
@@ -187,10 +187,9 @@ onKeyStroke('Escape', (e) => {
 
         <div
           class="flex flex-col gap-2 mt-2 justify-center p-5 bg-primary bg-opacity-10"
-          
         >
           <div class="flex justify-between"></div>
-          
+
           <div
             class="flex items-start justify-between flex-col md:flex-row gap-2"
           >
@@ -208,19 +207,21 @@ onKeyStroke('Escape', (e) => {
                 }"
                 class="rounded-lg p-2"
               >
-                <span class="text-sm flex flex-col justify-start ">
+                <span class="text-sm flex flex-col justify-start">
                   <div class="text-sm">
                     {{ `С ${defaultDate(info.dateStart)}` }}
                   </div>
-                  <div class="text-sm">{{ `По ${defaultDate(info.dateEnd)}` }}</div>
+                  <div class="text-sm">
+                    {{ `По ${defaultDate(info.dateEnd)}` }}
+                  </div>
                 </span>
               </div>
             </div>
           </div>
           <div class="flex items-start flex-col -mt-1">
-              <span class="text-lg font-bold mb-1">Пол:</span>
-              <span class="text-sm">{{ getGender || 'Нет' }}</span>
-            </div>
+            <span class="text-lg font-bold mb-1">Пол:</span>
+            <span class="text-sm">{{ getGender || 'Нет' }}</span>
+          </div>
           <div class="flex items-start flex-col">
             <span class="text-lg font-bold mb-1">Адрес:</span>
             <a
@@ -234,9 +235,12 @@ onKeyStroke('Escape', (e) => {
           <div class="flex items-start flex-col">
             <span class="text-lg font-bold mb-1">Правила:</span>
             <span class="text-sm">{{
-            (info.purchaseSoon ? '1' : '') + ((info.rules.length && info.purchaseSoon) ? ', ' : '') +
-            (info.rules && info.rules.length ? '' : '') +
-            ((!info.rules.length && !info.purchaseSoon) ? 'Не выбраны' : info.rules.map((rule: any) => rule+1).join(', '))
+              (info.purchaseSoon ? '1' : '') +
+              (info.rules.length && info.purchaseSoon ? ', ' : '') +
+              (info.rules && info.rules.length ? '' : '') +
+              (!info.rules.length && !info.purchaseSoon
+                ? 'Не выбраны'
+                : info.rules.map((rule: any) => rule + 1).join(', '))
             }}</span>
           </div>
         </div>

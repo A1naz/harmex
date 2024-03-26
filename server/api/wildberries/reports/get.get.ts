@@ -62,14 +62,17 @@ export default eventHandler(async (event) => {
 
   for await (const item of history) {
     const buyout = buyouts.find(buyout => buyout._id.valueOf() === item.buyout.valueOf());
+
+    console.log(buyout);
+    
     format.push({
       date: item.date,
       card: item.card,
       screenshots: item.screenshots,
       buyout: {
-        place: buyout?.place,
-        uuid: buyout?.uuid,
-        image: buyout?.product.image,
+        place: buyout?.place || 0,
+        uuid: buyout?.uuid || '000000',
+        image: buyout?.product.image || 'undefined',
       },
     })
   }

@@ -9,15 +9,15 @@ interface Props {
 const props = defineProps<Props>()
 
 const emit = defineEmits(['update', 'add', 'remove'])
-const store = useWildberriesBuyoutStore()
+const store = useOzonBuyoutStore()
 async function findSearchQuery(value: string) {
-  // const { data, error } = await useFetch('/api/product/getSearchPosition', {
-  //   query: {
-  //     article: props.article,
-  //     query: value,
-  //   },
-  // })
-  // return data.value
+  const { data, error } = await useFetch('/api/product/getSearchPosition', {
+    query: {
+      article: props.article,
+      query: value,
+    },
+  })
+  return data.value
 }
 const findSearchQueryDebounced = useDebounceFn(findSearchQuery, 1000)
 
@@ -90,10 +90,10 @@ async function onInput(event: Event, index: number) {
       </ul>
     </div>
 
-    <span
+    <!-- <span
       v-if="query.loading"
       class="absolute right-8 loading loading-spinner loading-xs p-2"
-    />
+    /> -->
     <div
       v-if="index === 0"
       class="absolute right-0 btn btn-ghost btn-sm btn-square"

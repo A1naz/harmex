@@ -194,23 +194,16 @@ onKeyStroke('Escape', (e) => {
         <div class="divider" /> -->
 
         <div
-          class="flex flex-col gap-2 mt-2 justify-center p-5"
-          :class="{
-            'bg-gray-700': theme.value === 'dark',
-            'bg-indigo-100': theme.value === 'light',
-          }"
+          class="flex flex-col gap-2 mt-2 justify-center p-5 bg-primary bg-opacity-10"
         >
           <div class="flex justify-between"></div>
-          <!-- <div class="flex justify-between items-center flex-wrap">
-            <span class="text-gray-500 text-sm">Поисковый запрос:</span>
-            <span class="text-sm">{{ info.searchQuery }}</span>
-          </div> -->
+
           <div
             class="flex items-start justify-between flex-col md:flex-row gap-2"
           >
             <div class="flex items-start flex-col">
-              <span class="text-lg font-bold mb-1">Пол:</span>
-              <span class="text-sm">{{ getGender || 'Нет' }}</span>
+              <span class="text-md font-bold mb-1">Поисковый запрос:</span>
+              <span class="text-sm">{{ info.searchQuery }}</span>
             </div>
 
             <div class="flex justify-between flex-col self-start md:self-end">
@@ -233,7 +226,10 @@ onKeyStroke('Escape', (e) => {
               </div>
             </div>
           </div>
-
+          <div class="flex items-start flex-col -mt-1">
+            <span class="text-lg font-bold mb-1">Пол:</span>
+            <span class="text-sm">{{ getGender || 'Нет' }}</span>
+          </div>
           <div class="flex items-start flex-col">
             <span class="text-lg font-bold mb-1">Адрес:</span>
             <a

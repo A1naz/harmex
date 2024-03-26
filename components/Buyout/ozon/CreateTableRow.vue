@@ -265,8 +265,23 @@ const productQuantityModel = computed({
 
       </div>
     </td>
+
+    <td class="border-r border-base">
+      <div class="w-full flex flex-col gap-2">
+        <BuyoutOzonCreateSearchQueries
+          :product-index="props.index"
+          :article="product.article"
+          :queries="product.searchQuery"
+          @update="productSearchQueryUpdate"
+          @add="addSearchQuery"
+          @remove="removeSearchQuery"
+        />
+      </div>
+    </td>
+
     <td class="w-[80px] border-r border-base">
       <button
+      disabled
         class="w-8 btn btn-ghost btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary"
         @click="props.openDiscount(index)"
       >
