@@ -27,7 +27,7 @@ let isUserWarned: any = ref(false)
 onMounted(() => {
   isUserWarned.value =
     localStorage.getItem('isUserWarned') === 'true' ? true : false
-  if (products.value.length === 0) modalShow.value = true
+  if (products.value.length === 0 && !route.query.uuid) modalShow.value = true
 })
 
 const isWarningChecked = ref(false)
@@ -261,7 +261,9 @@ async function getPickpoints() {
       method: 'GET',
     })
     pickpoints.value = (data as any).points
-    loading.value = false
+    if (!timerRunning.value) {
+      loading.value = false
+    }
   } catch (e: any) {
     notify({
       title: 'Что-то пошло не так',
@@ -282,6 +284,7 @@ async function pointModalOpen(index: number) {
 onMounted(async () => {
   getPickpoints()
   if (route.query.uuid) {
+    startTimer()
     loading.value = true
     await store.cloneBuyout(route.query.uuid.toString())
     loading.value = false
@@ -364,6 +367,7 @@ let interval: any
 const startTimer = () => {
   timer.value = 40
   timerRunning.value = true
+
   interval = setInterval(() => {
     if (timer.value > 0) {
       timer.value--
