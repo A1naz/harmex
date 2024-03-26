@@ -29,7 +29,7 @@ let isUserWarned: any = ref(false)
 onMounted(() => {
   isUserWarned.value =
     localStorage.getItem('isUserWarned') === 'true' ? true : false
-  if(products.value.length === 0) modalShow.value = true
+  if (products.value.length === 0 && !route.query.uuid) modalShow.value = true
 })
 
 const isWarningChecked = ref(false)
@@ -258,7 +258,6 @@ async function getPickpoints() {
       method: 'GET',
     })
     pickpoints.value = (data as any).points
-    loading.value = false
   } catch (e: any) {
     notify({
       title: 'Что-то пошло не так',
@@ -302,14 +301,17 @@ const isCreatingTemplatesDisabled = ref(false)
 async function createTemplate() {
   isCreatingTemplatesDisabled.value = true
 
-  const { data, error } = await useFetch('/api/wildberries/buyout/createBuyoutTemplate', {
-    method: 'POST',
-    query: {
-      title: templateTitle,
-    },
-    body: products.value,
-    watch: false,
-  })
+  const { data, error } = await useFetch(
+    '/api/wildberries/buyout/createBuyoutTemplate',
+    {
+      method: 'POST',
+      query: {
+        title: templateTitle,
+      },
+      body: products.value,
+      watch: false,
+    }
+  )
 
   if (data.value) {
     store.createProducts = []
@@ -325,7 +327,9 @@ async function createTemplate() {
 
 async function getTemplates() {
   loadingTemplates.value = true
-  const { data, error }: any = await useFetch('/api/wildberries/buyout/templates')
+  const { data, error }: any = await useFetch(
+    '/api/wildberries/buyout/templates'
+  )
   if (data.value) {
     templates.value = data.value.templates
   }
@@ -341,7 +345,7 @@ function deleteTemplate(uuid: any) {
 function closeTemplateModalFN() {
   closeTemplateSelectModal.value?.click()
 }
-function modalAddProduct(changedArticle: any){
+function modalAddProduct(changedArticle: any) {
   article.value = changedArticle
   addProduct()
 }
@@ -354,7 +358,7 @@ function modalAddProduct(changedArticle: any){
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
       данные.
     </p> -->
-    <div class="flex flex-col  md:flex-row md:justify-between">
+    <div class="flex flex-col md:flex-row md:justify-between">
       <div class="mt-6 md:flex items-center gap-2.5 w-full">
         <div
           class="relative flex justify-end items-center flex-grow-0 md:w-80 gap-2.5 w-full"
@@ -367,15 +371,17 @@ function modalAddProduct(changedArticle: any){
             @keydown.enter="addProduct"
           />
           <Icon
-              
-              class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
-              name="tabler:search"
-              size="35"
-              @click="codeInput.focus()"
-            />
+            class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
+            name="tabler:search"
+            size="35"
+            @click="codeInput.focus()"
+          />
         </div>
         <div class="flex gap-2.5">
-          <button class="btn btn-primary bg-opacity-20 btn-sm normal-case border-none text-base-content font-normal hover:bg-primary hover:text-base-100" @click="addProduct">
+          <button
+            class="btn btn-primary bg-opacity-20 btn-sm normal-case border-none text-base-content font-normal hover:bg-primary hover:text-base-100"
+            @click="addProduct"
+          >
             Добавить
           </button>
           <label
@@ -391,15 +397,14 @@ function modalAddProduct(changedArticle: any){
             >Удалить все</label
           >
         </div>
-        
       </div>
       <div class="flex self-end">
         <label
-            v-if="store.createProducts.length > 0"
-            class="btn btn-sm text-red-400 bg-base-200 normal-case self-end hidden md:flex"
-            for="removeAllModelCreateProducts"
-            >Удалить все</label
-          >
+          v-if="store.createProducts.length > 0"
+          class="btn btn-sm text-red-400 bg-base-200 normal-case self-end hidden md:flex"
+          for="removeAllModelCreateProducts"
+          >Удалить все</label
+        >
         <!-- <label
         v-if="store.createProducts.length > 0"
         class="btn btn-sm btn-error bg-red-400 normal-case mt-6 mr-2 hidden md:flex"
@@ -409,18 +414,17 @@ function modalAddProduct(changedArticle: any){
       </div>
     </div>
     <div class="flex gap-2 mt-4">
-        <div class="text-sm">
-          <span class="text-gray-500">Товаров: </span>
-          <span >{{ totalQuantity }} шт.</span>
-        </div>
-        <div class="text-sm">
-          <span class="text-gray-500">Сумма: </span>
-          <span >{{ currency.format(totalSum) }}</span>
-        </div>
+      <div class="text-sm">
+        <span class="text-gray-500">Товаров: </span>
+        <span>{{ totalQuantity }} шт.</span>
       </div>
+      <div class="text-sm">
+        <span class="text-gray-500">Сумма: </span>
+        <span>{{ currency.format(totalSum) }}</span>
+      </div>
+    </div>
 
     <ClientOnly>
-
       <div
         v-if="width < 1600"
         class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-4"
@@ -441,14 +445,20 @@ function modalAddProduct(changedArticle: any){
       >
         <table class="table table-xs w-full mt-4">
           <thead class="relative mb-2 text-sm text-base-content">
-            <tr class="bg-primary bg-opacity-10 ">
+            <tr class="bg-primary bg-opacity-10">
               <!-- <th class="hidden 3xl:block">№</th> -->
-              <th class="w-12 text-center p-2 font-normal" @click="openInfoModal('picture')">
+              <th
+                class="w-12 text-center p-2 font-normal"
+                @click="openInfoModal('picture')"
+              >
                 <!-- <IconCSS name="material-symbols:image-outline" size="20" /> -->
                 Фото
               </th>
               <th class="w-36 3xl:w-48 text-center font-normal">Название</th>
-              <th @click="openInfoModal('price')" class="text-center font-normal" >
+              <th
+                @click="openInfoModal('price')"
+                class="text-center font-normal"
+              >
                 <div class="flex w-full items-center justify-center">
                   <span> Цена </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
@@ -457,7 +467,7 @@ function modalAddProduct(changedArticle: any){
               <th @click="openInfoModal('quantity')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center text-center"> -->
                 <div class="text-center">
-                  <span > Кол-во </span>
+                  <span> Кол-во </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
@@ -475,7 +485,7 @@ function modalAddProduct(changedArticle: any){
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              
+
               <th @click="openInfoModal('rules')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
@@ -490,7 +500,7 @@ function modalAddProduct(changedArticle: any){
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              
+
               <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
@@ -498,13 +508,16 @@ function modalAddProduct(changedArticle: any){
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <th @click="openInfoModal('search')" class="font-normal text-base-content">
+              <th
+                @click="openInfoModal('search')"
+                class="font-normal text-base-content"
+              >
                 <div class="flex justify-center items-center gap-1">
                   <span>Поисковые запросы</span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                 </div>
               </th>
-              
+
               <th class="text-base-content" />
             </tr>
             <progress
@@ -536,7 +549,7 @@ function modalAddProduct(changedArticle: any){
     </ClientOnly>
     <div
       v-show="products.length"
-      class="mt-6 md:flex justify-start lg:justify-end "
+      class="mt-6 md:flex justify-start lg:justify-end"
     >
       <div class="m-5">
         <!-- <label
@@ -585,12 +598,19 @@ function modalAddProduct(changedArticle: any){
             Выберите нужные правила для этого выкупа
           </h3>
           <div v-for="rule of defaultRules" :key="rule.id" class="">
-            <div v-if="rule.id === 1" class="label cursor-pointer flex gap-4 items-start justify-between">
+            <div
+              v-if="rule.id === 1"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
+            >
               <span class="label-text"
                 >{{ 1 }}. {{ 'Выкупить товар(-ы) прямо сейчас ' }}</span
               >
               <div class="flex gap-4">
-                <div class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4">0р.</div>
+                <div
+                  class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
+                >
+                  0р.
+                </div>
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].purchaseSoon"
@@ -598,12 +618,17 @@ function modalAddProduct(changedArticle: any){
                 />
               </div>
             </div>
-            <div class="label cursor-pointer flex gap-4 items-start justify-around">
-              
+            <div
+              class="label cursor-pointer flex gap-4 items-start justify-around"
+            >
               <span class="label-text"
                 >{{ rule.id + 1 }}. {{ rule.description }}</span
               >
-              <div class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4">0р.</div>
+              <div
+                class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
+              >
+                0р.
+              </div>
               <input
                 :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
@@ -626,7 +651,6 @@ function modalAddProduct(changedArticle: any){
                 "
               />
             </div>
-            
           </div>
         </label>
       </label>
@@ -845,7 +869,7 @@ function modalAddProduct(changedArticle: any){
   <BuyoutWildberriesCreateModal
     :show="modalShow"
     :add-product="modalAddProduct"
-    @close-modal="modalShow = false" 
+    @close-modal="modalShow = false"
   />
 </template>
 

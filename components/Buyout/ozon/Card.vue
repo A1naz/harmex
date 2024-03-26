@@ -147,6 +147,8 @@ const getStatus = computed(() => {
       return 'Пауза'
     case 'nofunds':
       return 'Недостаточно средств'
+    case 'discountAwaiting':
+      return 'Ожидание скидки'
   }
 })
 </script>
@@ -268,7 +270,9 @@ const getStatus = computed(() => {
                 (info.status === 'completed' || info.status === 'nofunds') &&
                 theme.value === 'light',
               'text-base-content bg-yellow-300':
-                info.status === 'archived' || info.status === 'paused',
+                info.status === 'archived' ||
+                info.status === 'paused' ||
+                info.status === 'discountAwaiting',
             }"
           >
             {{ getStatus }}

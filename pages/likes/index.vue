@@ -12,17 +12,11 @@ const mpStore = useMPStore()
 const review_likes = ref<any>([])
 const MPSelect = ref()
 const loading = ref(true)
-const selectedMP = ref<any>(mpStore.selectedMP || 'wildberries')
+const selectedMP = ref<any>(((mpStore.selectedMP).charAt(0).toUpperCase() + (mpStore.selectedMP).slice(1)) || 'Wildberries')
 const { width, height } = useWindowSize()
 // const { data, error } = await useFetch(`/api/${selectedMP.value}/likes/get`)
 // review_likes.value = data.value
 
-const MPTabs =  store.client.username == 'test'
-    ? [
-        { title: 'Ozon', value: 'ozon' },
-        { title: 'Wildberries', value: 'wildberries' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
 
 onMounted(() => {
   setText()
@@ -158,9 +152,9 @@ async function selectMP(value: any) {
           ref="MPSelect"
           class="hidden lg:flex"
           :class="'navbar:min-w-[120px]'"
-          :tabs="MPTabs"
-          @change-value="selectMP"
-          :statusText="selectedMP"
+          :status-text="selectedMP"
+          :tabs="mpStore.MPTabs"
+          @change-value="selectMP"     
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -200,7 +194,8 @@ async function selectMP(value: any) {
           ref="MPSelect"
           class="lg:hidden"
           :class="'navbar:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="selectedMP"
+          :tabs="mpStore.MPTabs"
           @change-value="selectMP"
         />
         <CustomSelect

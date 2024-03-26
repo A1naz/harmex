@@ -220,18 +220,14 @@ const productQuantityModel = computed({
     </td>
 
     <td class="border-r border-base w-xs max-w-[100px]">
-
       <div class="flex items-center mt-2 w-xs">
         <div class="w-full">
-
-
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"
             :start-date="startDate"
           />
           <div v-else class="text-center">Выкуп в ближайшее время</div>
-
         </div>
       </div>
     </td>
@@ -262,11 +258,25 @@ const productQuantityModel = computed({
           <span v-show="loading" class="loading loading-spinner" />
           <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
         </button>
-
       </div>
     </td>
+
+    <td class="border-r border-base">
+      <div class="w-full flex flex-col gap-2">
+        <BuyoutOzonCreateSearchQueries
+          :product-index="props.index"
+          :article="product.article"
+          :queries="product.searchQuery"
+          @update="productSearchQueryUpdate"
+          @add="addSearchQuery"
+          @remove="removeSearchQuery"
+        />
+      </div>
+    </td>
+
     <td class="w-[80px] border-r border-base">
       <button
+        disabled
         class="w-8 btn btn-ghost btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary"
         @click="props.openDiscount(index)"
       >

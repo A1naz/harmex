@@ -9,16 +9,26 @@ definePageMeta({
 
 const currency = useCurrency()
 const route = useRoute()
-const routePath = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path;
+const routePath = route.path.endsWith('/')
+  ? route.path.slice(0, -1)
+  : route.path
 const { width } = useWindowSize()
 const secondLevelReferrals = ref(0)
 const lastElements = ref<any>([])
 const periodFromRoute = route.query.period
 
-if (!route.query.type || !route.query.period || !route.query.headerPeriod || !route.query.deliveryPeriod) {
-  navigateTo(`${routePath}?type=all&period=today&headerPeriod=today&deliveryPeriod=today`, {
-    external: true,
-  })
+if (
+  !route.query.type ||
+  !route.query.period ||
+  !route.query.headerPeriod ||
+  !route.query.deliveryPeriod
+) {
+  navigateTo(
+    `${routePath}?type=all&period=today&headerPeriod=today&deliveryPeriod=today`,
+    {
+      external: true,
+    }
+  )
 }
 let chartDataValue = ref<any>([])
 const services = ref<any>([])
@@ -60,18 +70,24 @@ async function getLast() {
 }
 
 async function countBuyouts() {
-  const { data, error }: any = await useFetch('/api/wildberries/stats/buyoutsCount', {
-    method: 'GET',
-  })
+  const { data, error }: any = await useFetch(
+    '/api/wildberries/stats/buyoutsCount',
+    {
+      method: 'GET',
+    }
+  )
   if (data.value) {
     buyoutsCount.value = data.value
   }
 }
 
 async function coutDeliveries() {
-  const { data, error }: any = await useFetch('/api/wildberries/stats/deliveriesCount', {
-    method: 'GET',
-  })
+  const { data, error }: any = await useFetch(
+    '/api/wildberries/stats/deliveriesCount',
+    {
+      method: 'GET',
+    }
+  )
   if (data.value) {
     deliveriesCount.value = data.value
   }
@@ -87,9 +103,12 @@ async function getSecondLevelReferrals() {
   }
 }
 async function getPatnerWithdraws() {
-  const { data }: any = await useFetch('/api/wildberries/stats/getPartnerWithdraws', {
-    method: 'GET',
-  })
+  const { data }: any = await useFetch(
+    '/api/wildberries/stats/getPartnerWithdraws',
+    {
+      method: 'GET',
+    }
+  )
   if (data.value) {
     withdrawsCount.value = data.value.withdrawsCount
   }
@@ -166,9 +185,12 @@ const chartOptions = ref({
 })
 
 function selectPeriod(event: any) {
-  navigateTo(`/stats/wildberries?type=${route.query.type}&period=${event.target.value}`, {
-    external: true,
-  })
+  navigateTo(
+    `/stats/wildberries?type=${route.query.type}&period=${event.target.value}`,
+    {
+      external: true,
+    }
+  )
 }
 
 function selectService(event: any) {
@@ -273,12 +295,9 @@ const charttDelivOptions = ref({
   },
 })
 
-const MPTabs =  store.client.username == 'test' ? [
+const MPTabs = [
   { title: 'Wildberries', value: 'wildberries' },
   { title: 'Ozon', value: 'ozon' },
-  { title: 'Все', value: '' },
-] : [
-  { title: 'Wildberries', value: 'wildberries' },
   { title: 'Все', value: '' },
 ]
 
@@ -291,9 +310,9 @@ async function changeMP(e: any) {
 <template>
   <StatsHeaderStats />
 
-<StatsMainStats />
+  <StatsMainStats />
 
-<StatsDeliveryStats />
+  <StatsDeliveryStats />
 
   <div class="h-24"></div>
 </template>

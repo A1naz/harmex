@@ -17,14 +17,12 @@ const storeMain = useMainStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 const loading = ref(false)
+const mpStore = useMPStore()
 
-const MPTabs =
-  storeMain.client.username == 'test'
-    ? [
-        { title: 'Wildberries', value: 'wildberries' },
-        { title: 'Ozon', value: 'ozon' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+const MPTabs = [
+  { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Ozon', value: 'ozon' },
+]
 
 const dateFilter = ref('all')
 const autoTarget = ref(true)
@@ -360,11 +358,11 @@ async function changeMP(e: any) {
       (route.query?.status ? '?status=' + route.query.status : '')
   )
 }
-const customLinks = filters.map(filter => ({
+const customLinks = filters.map((filter) => ({
   title: filter.title,
   slot: '/buyouts/wildberries',
-  query: filter.params
-}));
+  query: filter.params,
+}))
 </script>
 
 <template>
@@ -441,9 +439,7 @@ const customLinks = filters.map(filter => ({
           </div>
         </div>
 
-        
         <div clas="flex gap-2">
-          
           <div
             class="search flex items-center gap-1 lg:gap-3"
             :class="{
@@ -452,8 +448,9 @@ const customLinks = filters.map(filter => ({
           >
             <CustomSelect
               class=""
-              :class="'w-[100px] lg:min-w-[120px]'"
-              :tabs="MPTabs"
+              :class="'lg:min-w-[120px]'"
+              :status-text="'Wildberries'"
+              :tabs="mpStore.MPTabs"
               @change-value="changeMP"
             />
             <CustomSelect

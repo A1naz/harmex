@@ -13,7 +13,6 @@ const props = defineProps({
     default: {},
   },
 })
-const awaiting = ref(store.client.username !== 'test')
 const theme = useColorMode()
 </script>
 
@@ -30,7 +29,7 @@ const theme = useColorMode()
       </div>
       <div class="flex justify-center mb-2">
         <button
-          :disabled="info?.awaiting || (awaiting && info?.value === 'ozon')"
+          :disabled="info?.awaiting"
           class="btn btn-primary w-full rounded-xl text-[19px] font-normal ml-4 border-none hover:bg-primary bg-base-300 hover:text-base-100 text-neutral dark:bg-primary dark:text-gray-100"
           @click="
             navigateTo({

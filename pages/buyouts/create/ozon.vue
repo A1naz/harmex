@@ -27,7 +27,7 @@ let isUserWarned: any = ref(false)
 onMounted(() => {
   isUserWarned.value =
     localStorage.getItem('isUserWarned') === 'true' ? true : false
-  if (products.value.length === 0) modalShow.value = true
+  if (products.value.length === 0 && !route.query.uuid) modalShow.value = true
 })
 
 const isWarningChecked = ref(false)
@@ -193,10 +193,10 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
     }
-    // if (!item.searchQuery[0].value) {
-    //   valid = false
-    //   errorMsg = 'Не у всех товаров указан поисковый запрос'
-    // }
+    if (!item.searchQuery[0].value) {
+      valid = false
+      errorMsg = 'Не у всех товаров указан поисковый запрос'
+    }
     if (!item.selectedSize) item.selectedSize = 'none'
   })
   if (!valid) {
@@ -261,7 +261,9 @@ async function getPickpoints() {
       method: 'GET',
     })
     pickpoints.value = (data as any).points
-    loading.value = false
+    if (!timerRunning.value) {
+      loading.value = false
+    }
   } catch (e: any) {
     notify({
       title: 'Что-то пошло не так',
@@ -282,6 +284,7 @@ async function pointModalOpen(index: number) {
 onMounted(async () => {
   getPickpoints()
   if (route.query.uuid) {
+    startTimer()
     loading.value = true
     await store.cloneBuyout(route.query.uuid.toString())
     loading.value = false
@@ -364,6 +367,7 @@ let interval: any
 const startTimer = () => {
   timer.value = 40
   timerRunning.value = true
+
   interval = setInterval(() => {
     if (timer.value > 0) {
       timer.value--
@@ -548,12 +552,15 @@ const startTimer = () => {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <!-- <th @click="openInfoModal('search')">
-                <div class="flex justify-between w-full gap-1 items-center">
-                  <span> Поисковые запросы </span>
-                  <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+              <th
+                @click="openInfoModal('search')"
+                class="font-normal text-base-content"
+              >
+                <div class="flex justify-center items-center gap-1">
+                  <span>Поисковые запросы</span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                 </div>
-              </th> -->
+              </th>
               <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
