@@ -15,6 +15,8 @@ const router = useRouter()
 const store = useMainStore()
 const deliveries = ref([]) as any
 const autoTarget = ref(true)
+const codeInput = ref()
+const codeInputMob = ref()
 const status = computed(() => route.query?.status || 'all')
 const loading = ref(false)
 const search = ref<any>({
@@ -265,19 +267,28 @@ function changeFilter(e: any) {
             </ul>
           </div>
         </div>
-        <div class="relative flex items-center flex-grow-0 w-full">
+        <div class="flex w-full">
           <input
+            ref="codeInputMob"
             v-model="search.text"
             type="text"
-            class="input input-sm bg-base-300 bg-opacity-40 text-gray-500 w-full"
+            class="input input-sm bg-base-300 bg-opacity-40 rounded-r-none w-full"
             placeholder="Поиск"
             @input="onSearchInput($event)"
           />
-
-          <span
-            v-if="search.loading"
-            class="absolute right-2 loading loading-spinner loading-xs p-2"
-          />
+          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="codeInputMob.focus()">
+            <span
+                v-if="search.loading"
+                class="loading loading-spinner loading-xs "
+              />
+            <Icon
+              v-else
+              class="text-gray-500 "
+              name="tabler:search"
+              size="20"
+            />
+             
+          </div>
         </div>
       </div>
       <div class="flex gap-2 mt-2 lg:hidden">
@@ -433,19 +444,28 @@ function changeFilter(e: any) {
                 ID выкупа
               </option>
             </select> -->
-              <div class="relative flex items-center flex-grow-0 w-full">
-                <input
-                  v-model="search.text"
-                  type="text"
-                  class="input input-sm bg-base-300 bg-opacity-40 text-gray-500"
-                  placeholder="Поиск"
-                  @input="onSearchInput($event)"
-                />
+            <div class="flex w-full">
+              <input
+              ref="codeInput"
+                v-model="search.text"
+                type="text"
+                class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none "
+                placeholder="Поиск"
+                @input="onSearchInput($event)"
+              />
+              <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="codeInput.focus()">
                 <span
-                  v-if="search.loading"
-                  class="absolute right-2 loading loading-spinner loading-xs p-2"
-                />
-              </div>
+                    v-if="search.loading"
+                    class="loading loading-spinner loading-xs "
+                  />
+                <Icon
+                  v-else
+                  class="text-gray-500 "
+                  name="tabler:search"
+                  size="20"
+              />
+          </div>
+        </div>
             </div>
           </div>
           <div v-if="deliveries.length" class="export">

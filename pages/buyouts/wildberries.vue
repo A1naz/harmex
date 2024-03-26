@@ -423,7 +423,7 @@ const customLinks = filters.map(filter => ({
               ref="codeInput"
               v-model="search.text"
               type="text"
-              class="input input-sm input-bordered w-full"
+              class="input input-sm border-none bg-base-300 bg-opacity-40 w-full"
               placeholder="Поиск по товарам"
               @input="onSearchInput($event)"
             />
@@ -452,13 +452,13 @@ const customLinks = filters.map(filter => ({
           >
             <CustomSelect
               class=""
-              :class="'lg:min-w-[120px]'"
+              :class="'w-[100px] lg:min-w-[120px]'"
               :tabs="MPTabs"
               @change-value="changeMP"
             />
             <CustomSelect
               class=""
-              :class="'navbar:min-w-[120px]'"
+              :class="'min-w-[95px]'"
               :links="customLinks"
             />
             <!-- <div
@@ -497,10 +497,12 @@ const customLinks = filters.map(filter => ({
             </div> -->
 
             <CustomSelect
+            :class="'bg-base-300'"
               class="lg:hidden"
               :tabs="[
                 { title: 'За все время', value: 'all' },
                 { title: 'Сегодня', value: 'today' },
+                { title: 'Вчера', value: '2days' },
                 { title: '3 дня', value: '3days' },
                 { title: 'Неделя', value: '7days' },
               ]"
@@ -517,6 +519,7 @@ const customLinks = filters.map(filter => ({
             </select> -->
             <div class="flex gap-3 items-center lg:hidden">
               <CustomSelect
+                :class="'max-w-[80px] bg-base-300'"
                 :tabs="[
                   { title: 'Артикул', value: 'article' },
                   { title: 'ID выкупа', value: 'uuid' },
@@ -562,9 +565,11 @@ const customLinks = filters.map(filter => ({
       <div class="items-center flex-wrap self-start hidden lg:flex">
         <div class="search flex items-center flex-wrap gap-3">
           <CustomSelect
+          :class="'bg-base-300'"
             :tabs="[
               { title: 'За все время', value: 'all' },
               { title: 'Сегодня', value: 'today' },
+              { title: 'Вчера', value: '2days' },
               { title: '3 дня', value: '3days' },
               { title: 'Неделя', value: '7days' },
             ]"
@@ -581,6 +586,7 @@ const customLinks = filters.map(filter => ({
           </select> -->
           <div class="flex items-center justify-between gap-3">
             <CustomSelect
+            :class="'bg-base-300'"
               class="min-w-[100px]"
               :tabs="[
                 { title: 'Артикул', value: 'article' },
@@ -603,7 +609,7 @@ const customLinks = filters.map(filter => ({
                 ref="codeInput"
                 v-model="search.text"
                 type="text"
-                class="input input-sm input-bordered"
+                class="input input-sm border-none bg-base-300 bg-opacity-40"
                 placeholder="Поиск по товарам"
                 @input="onSearchInput($event)"
               />

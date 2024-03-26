@@ -89,6 +89,9 @@ export default eventHandler(async (event) => {
     case 'today':
       buyouts = buyouts.filter(item => new Date(item.createdAt) > today)
       break
+    case '2days':
+      buyouts = buyouts.filter(item => new Date(item.createdAt) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 2))
+      break
     case '3days':
       buyouts = buyouts.filter(item => new Date(item.createdAt) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 3))
       break

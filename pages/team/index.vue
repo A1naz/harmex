@@ -356,7 +356,7 @@ const getPostName = (post: string) => {
                       {{ item.firstName + " " + item.lastName }}
                     </div>
                     <div class="flex flex-col text-sm">
-                      <span>Email:</span>
+                      <span>Номер телефона:</span>
                       <span>{{ item.email }}</span>
                     </div>
                     <div class="flex flex-col">

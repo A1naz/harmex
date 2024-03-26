@@ -137,20 +137,23 @@ function getHistoryType(type: string) {
     case 'buyouts service':
       result = 'Оплата выкупа'
       break
-    case 'review':
+    case 'reviews':
       result = 'Отзыв'
       break
-    case 'likeReview':
-      result = 'Лайк'
+    case 'likes':
+      result = 'Лайк на отзыв'
       break
-    case 'likeProduct':
+    case 'productlikes':
       result = 'Лайк на товар / бренд'
       break
-    case 'cart':
+    case 'carts':
       result = 'Добавление в корзину'
       break
-    case 'questionProduct':
+    case 'questions':
       result = 'Вопрос'
+      break
+    case 'deliveries':
+      result = 'Доставки'
       break
   }
   return result
@@ -218,8 +221,12 @@ const updateSearchType = (filter: any) => {
           :tabs="[
             { title: 'Все', value: 'all' },
             { title: 'Выкупы', value: 'buyouts' },
+            { title: 'Доставки', value: 'deliveries' },
             { title: 'Отзывы', value: 'reviews' },
+            { title: 'Лайки на отзывы', value: 'likes' },
+            { title: 'Лайки на товар/бренд', value: 'productlikes' },
             { title: 'Вопросы', value: 'questions' },
+            { title: 'Корзина', value: 'carts' },
           ]"
           @change-value="selectType"
         />
@@ -308,6 +315,20 @@ const updateSearchType = (filter: any) => {
                         'border-none'
                     ] },
                 }"/>
+         <Column field="mp" sortable header="Категория" class="border-r border-base-200"  :pt="{
+                    bodyCell:  { class: [
+                        'bg-base-100'
+                    ] },
+                    headerCell:  { class: [
+                        'border-none'
+                    ] },
+                }">
+          <template #body="{ data }">
+            <div class="">
+              {{ data.mp ? data.mp.replace(/\b(\w)/, char => char.toUpperCase()) : 'Wildberries' }}
+            </div>
+          </template>
+        </Column>
         <Column field="type" sortable header="Услуга" class="border-r border-base-200"  :pt="{
                     bodyCell:  { class: [
                         'bg-base-100'

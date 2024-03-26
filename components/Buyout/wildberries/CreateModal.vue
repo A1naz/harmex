@@ -94,14 +94,14 @@ onKeyStroke('Escape', (e) => {
         <div class="flex gap-2 justify-end">
           <button
             id="btnid"
-            class="btn btn-sm h-[2.5rem] w-1/4 btn-primary  border-none bg-opacity-0 text-base-content mt-2"
+            class="btn btn-sm h-[2.5rem] w-1/4 btn-primary hover:bg-[#6675FF] hover:dark:bg-[#6467F2] hover:text-base-100  border-none bg-opacity-0 text-base-content mt-2"
             @click="$emit('closeModal')"
           >
             Отмена
           </button>
           <button
             id="btnid"
-            class="btn btn-sm h-[2.5rem] w-1/4 btn-primary  border-none bg-opacity-10 text-base-content mt-2"
+            class="btn btn-sm h-[2.5rem] w-1/4 btn-primary hover:bg-[#6675FF] hover:dark:bg-[#6467F2] hover:text-base-100  border-none bg-opacity-10 text-base-content mt-2"
             @click="addProduct"
           >
             Добавить

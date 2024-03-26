@@ -339,12 +339,12 @@ const getStatus = computed(() => {
         <div class="modal-action flex justify-around">
           <label
             :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-            class="btn px-6"
+            class="btn btn-sm btn-ghost w-[45%] h-[2.5rem] px-6"
             >Отмена</label
           >
           <label
             :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-            class="btn btn-primary px-6"
+            class="btn btn-sm btn-primary bg-opacity-20 w-[45%] h-[2.5rem] border-none text-base-content px-6"
             @click="deleteBuyOut"
             >Удалить</label
           >
