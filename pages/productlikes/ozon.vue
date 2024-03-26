@@ -119,10 +119,6 @@ function removeProduct() {
   amount.value = 0
 }
 
-const MPTabs = [
-  { title: 'Ozon', value: 'ozon' },
-  { title: 'Wildberries', value: 'wildberries' },
-]
 
 onMounted(() => {
   if (route.query.modalShow) {
@@ -133,12 +129,7 @@ onMounted(() => {
   }
 })
 
-async function setText() {
-  // loading.value = true
-  MPSelect.value?.updateText(
-    MPTabs.find((t) => t.value === selectedMP.value)?.title
-  )
-}
+
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
@@ -258,7 +249,8 @@ const updateSearchType = (filter: any) => {
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Ozon'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -299,7 +291,8 @@ const updateSearchType = (filter: any) => {
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Ozon'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
