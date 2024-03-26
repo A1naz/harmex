@@ -318,14 +318,36 @@ const productQuantityModel = computed({
           </button>
         </div>
       </div>
+
+      <div>
+        <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
+        <div class="w-[60%] flex flex-col gap-2">
+          <BuyoutOzonCreateSearchQueries
+            :product-index="props.index"
+            :article="product.article"
+            :queries="product.searchQuery"
+            @update="productSearchQueryUpdate"
+            @add="addSearchQuery"
+            @remove="removeSearchQuery"
+          />
+        </div>
+      </div>
+
       <div class="flex">
         <span class="text-md text-gray-500 mr-3 my-auto">Скидка: </span>
         <button
+        disabled
           class="w-8 btn btn-ghost btn-sm btn-square text-base-content font-normal hover:text-primary"
           @click="props.openDiscount(index)"
         >
-        {{ !product.discount ? "%" : product.discount === 0 ? "%" : (product.discount+'%') }}
-      </button>
+          {{
+            !product.discount
+              ? '%'
+              : product.discount === 0
+              ? '%'
+              : product.discount + '%'
+          }}
+        </button>
       </div>
       <!-- <div class="flex justify-between items-center">
         <span>Даты выкупов: </span>
