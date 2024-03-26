@@ -177,7 +177,7 @@ async function selectCreatePage(e: any) {
               value: '/productlikes/create/wildberries',
             },
             {
-              title: 'Лайки на отзыв/комментарий',
+              title: 'Лайки на отзыв',
               value: '/likes/create/wildberries',
             },
           ]"
