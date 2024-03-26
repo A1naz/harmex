@@ -333,7 +333,7 @@ const updateSearchType = (filter: any) => {
           <template #body="{ data }">
             <div class="">
               <a
-              :href="`https://www.ozon.ru/product/${data.article}`" target="_blank"
+              :href="`https://www.wildberries.ru/catalog/${data.article}/detail.aspx`" target="_blank"
                 class="text-sm text-primary link link-hover"
               >
                 {{ data.article }}

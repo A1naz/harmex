@@ -18,13 +18,7 @@ const loading = ref(false)
 const router = useRouter()
 const route = useRoute()
 const status = computed(() => route.query?.status || 'all')
-const MPTabs =
-  store.client.username == 'test'
-    ? [
-        { title: 'Wildberries', value: 'wildberries' },
-        { title: 'Ozon', value: 'ozon' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+
 const search = reactive({
   text: '',
   loading: false,
@@ -177,9 +171,10 @@ function changeFilter(e: any) {
     <div class="flex lg:justify-between mb-8 mt-2 lg:mt-6 gap-2">
       <div class="flex justify-between md:justify-normal gap-2">
         <CustomSelect
-          class="hidden lg:flex"
+          class=""
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Wildberries'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -245,6 +240,11 @@ function changeFilter(e: any) {
               size="35"
               @click="codeInput.focus()"
             />
+          </div>
+          <div
+            class="bg-primary bg-opacity-10 px-2 py-1 rounded-lg cursor-not-allowed"
+          >
+            XLS
           </div>
           <!-- <ExportXls 
                 api="/api/wildberries/reports/export"

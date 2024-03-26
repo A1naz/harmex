@@ -123,12 +123,7 @@ function removeProduct() {
   url.value = ''
   amount.value = 0
 }
-const MPTabs = store.client.username == 'test'
-    ? [
-        { title: 'Wildberries', value: 'wildberries' },
-        { title: 'Ozon', value: 'ozon' },
-      ]
-    : [{ title: 'Wildberries', value: 'wildberries' }]
+
 
 onMounted(() => {
   if (route.query.modalShow) {
@@ -138,13 +133,6 @@ onMounted(() => {
     router.push({ query })
   }
 })
-
-async function setText() {
-  // loading.value = true
-  MPSelect.value?.updateText(
-    MPTabs.find((t) => t.value === selectedMP.value)?.title
-  )
-}
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
@@ -260,7 +248,8 @@ const updateSearchType = (filter: any) => {
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
-          :tabs="MPTabs"
+          :status-text="'Wildberries'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -298,11 +287,11 @@ const updateSearchType = (filter: any) => {
         </div>
       </div>
       <div class="flex gap-2 lg:gap-5">
-
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
-          :tabs="MPTabs"
+          :status-text="'Wildberries'"
+          :tabs="mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -481,7 +470,6 @@ const updateSearchType = (filter: any) => {
           <div ref="target" class="flex justify-center items-center h-4" />
         </tbody>
       </table>
-
     </div>
 
     <Hero v-else />
