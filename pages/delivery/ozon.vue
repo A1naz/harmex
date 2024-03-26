@@ -17,6 +17,8 @@ const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const deliveries = ref([]) as any
 const autoTarget = ref(true)
 const loading = ref(true)
+const codeInput = ref()
+const codeInputMob = ref()
 const status = computed(() => route.query?.status || 'all')
 const search = reactive({
   text: '',
@@ -128,6 +130,13 @@ const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000)
 
 async function onSearchInput(event: Event) {
   const newValue = (event.target as HTMLInputElement).value
+  autoTarget.value = false
+  search.loading = true
+  findDeliveriesDebounced(search.text, search.type)
+}
+
+async function onSearchInputButton(event: any) {
+  const newValue = event.value
   autoTarget.value = false
   search.loading = true
   findDeliveriesDebounced(search.text, search.type)
@@ -290,20 +299,31 @@ const customLinks = filters.map((filter) => ({
             </ul>
           </div>
         </div>
-        <div class="relative flex items-center flex-grow-0 w-full">
+        <div class="flex w-full">
           <input
+            ref="codeInputMob"
             v-model="search.text"
             type="text"
-            class="input input-sm bg-base-300 bg-opacity-40 text-gray-500 w-full"
+            class="input input-sm bg-base-300 bg-opacity-40 rounded-r-none w-full"
             placeholder="Поиск"
             @input="onSearchInput($event)"
           />
-
-          <span
-            v-if="search.loading"
-            class="absolute right-2 loading loading-spinner loading-xs p-2"
-          />
+          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="codeInputMob.focus()">
+            <span
+                v-if="search.loading"
+                class="loading loading-spinner loading-xs "
+              />
+            <Icon
+              v-else
+              class="text-gray-500 "
+              name="tabler:search"
+              size="20"
+            />
+             
+          </div>
         </div>
+        
+      
       </div>
       <div class="flex gap-2 mt-2 lg:hidden">
         <CustomSelect
@@ -460,20 +480,29 @@ const customLinks = filters.map((filter) => ({
                 ID выкупа
               </option>
             </select> -->
-              <div class="relative flex items-center flex-grow-0 w-full">
-                <input
-                  v-model="search.text"
-                  type="text"
-                  class="input input-sm bg-base-300 bg-opacity-40 text-gray-500"
-                  placeholder="Поиск"
-                  @input="onSearchInput($event)"
-                />
-
+            <div class="flex w-full">
+              <input
+              ref="codeInput"
+                v-model="search.text"
+                type="text"
+                class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none "
+                placeholder="Поиск"
+                @input="onSearchInput($event)"
+              />
+              <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="codeInput.focus()">
                 <span
-                  v-if="search.loading"
-                  class="absolute right-2 loading loading-spinner loading-xs p-2"
-                />
-              </div>
+                    v-if="search.loading"
+                    class="loading loading-spinner loading-xs "
+                  />
+                <Icon
+                  v-else
+                  class="text-gray-500 "
+                  name="tabler:search"
+                  size="20"
+              />
+          </div>
+        </div>
+              
             </div>
           </div>
           <div v-if="deliveries.length" class="export">

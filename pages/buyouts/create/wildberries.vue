@@ -854,12 +854,12 @@ function modalAddProduct(changedArticle: any) {
       <div class="modal-action flex justify-around">
         <label
           for="removeAllModelCreateProducts"
-          class="btn btn-sm h-[2.5rem] w-[40%] btn-ghost px-6"
+          class="btn btn-sm h-[2.5rem] w-[45%] btn-ghost hover:bg-[#6675FF] hover:dark:bg-[#6467F2] hover:text-base-100 px-6"
           >Отмена</label
         >
         <label
           for="removeAllModelCreateProducts"
-          class="btn btn-sm btn-primary h-[2.5rem] w-[40%] px-6"
+          class="btn btn-sm btn-primary h-[2.5rem] border-none text-base-content bg-opacity-20 w-[45%] hover:bg-[#6675FF] hover:dark:bg-[#6467F2] hover:text-base-100 px-6"
           @click="store.createProducts = []"
           >Удалить</label
         >

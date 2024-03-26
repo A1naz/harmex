@@ -47,6 +47,7 @@ const searchOptions = ref([
 const skip = ref<number>(0)
 const limit = ref<number>(25)
 const search = ref<any>({ type: 'article', text: '' })
+const loading = ref(false)
 
 const searchType = ref<SelectOptions>(SelectOptions.article)
 const searchText = ref('')
@@ -80,6 +81,7 @@ const fetchData = async () => {
     if (response.length < limit.value) end.value = true
   }
   isFetch.value = false
+  loading.value = false
 }
 
 function changeTab(tab: any) {
@@ -105,6 +107,10 @@ function selectText() {
 }
 
 function onSearchInput(val: any) {
+  if (searchText.value !== '' && searchText.value.trim() === '') {
+    return
+  }
+  loading.value= true
   reviews.value = []
   skip.value = 0
   end.value = false
@@ -267,13 +273,28 @@ const customLinks = tabs.map((filter) => ({
           fileName="MARKETMONSTR Доступные отзывы"
           :isVisible="true"
         />
-        <input
-          v-model="searchText"
-          type="text"
-          class="input input-sm input-bordered w-full"
-          placeholder="Поиск"
-          @change="onSearchInput"
-        />
+        <div class="flex w-full">
+          <input
+            v-model="searchText"
+            type="text"
+            class="input input-sm bg-base-300 bg-opacity-40 rounded-r-none w-full"
+            placeholder="Поиск"
+            @change="onSearchInput"
+          />
+          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
+            <span
+                v-if="loading"
+                class="loading loading-spinner loading-xs "
+              />
+            <Icon
+            v-else
+              class="text-gray-500 "
+              name="tabler:search"
+              size="20"
+            />
+             
+          </div>
+        </div>
       </div>
 
       <div class="flex gap-2 flex-wrap lg:hidden">
@@ -291,7 +312,7 @@ const customLinks = tabs.map((filter) => ({
           :status-text="selectText()"
           @change-value="changeTab"
         />
-        <select v-model="searchType" class="select select-bordered select-sm">
+        <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
           <option
             v-for="option in searchOptions"
             :value="option.value"
@@ -361,7 +382,7 @@ const customLinks = tabs.map((filter) => ({
         > -->
       </div>
       <div class="gap-2 items-center hidden lg:flex">
-        <select v-model="searchType" class="select select-bordered select-sm">
+        <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
           <option
             v-for="option in searchOptions"
             :value="option.value"
@@ -375,22 +396,33 @@ const customLinks = tabs.map((filter) => ({
             {{ option.name }}
           </option>
         </select>
-        <div class="w-full">
+        <div class="flex w-full">
           <input
             v-model="searchText"
             type="text"
-            class="input input-sm input-bordered"
+            class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none "
             placeholder="Поиск"
             @change="onSearchInput"
           />
-          <!-- <span
-                v-if="search.loading"
-                class="absolute right-2 loading loading-spinner loading-xs p-2"
-                /> -->
+          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
+            <span
+                v-if="loading"
+                class="loading loading-spinner loading-xs "
+              />
+            <Icon
+            v-else
+              class="text-gray-500 "
+              name="tabler:search"
+              size="20"
+            />
+             
+          </div>
+          
         </div>
+
         <div class="flex gap-1 items-center">
           <ExportXls
-            api="/api/review/wildberries/export"
+            api="/api/wildberries/review/export"
             fileName="MARKETMONSTR Доступные отзывы"
             :isVisible="true"
           />

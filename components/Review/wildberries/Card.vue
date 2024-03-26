@@ -44,7 +44,7 @@ function openBuyout() {
         
         <a
           class=""
-          :href="`https://www.ozon.ru/product/${info.article}`"
+          :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
           target="_blank"
         >
           <div class="dropdown dropdown-hover ">
@@ -59,7 +59,7 @@ function openBuyout() {
             </label>
             <ul
               tabindex="0"
-              class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52"
+              class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-10"
             >
               <nuxt-img
                 class="rounded-lg"
@@ -75,7 +75,7 @@ function openBuyout() {
             <div class="flex gap-2.5">
               <span> {{ productname }} </span>
               <a
-                :href="`https://www.ozon.ru/product/${article}`"
+                :href="`https://www.wildberries.ru/catalog/${article}/detail.aspx`"
                 target="_blank"
                 class="text-sm mt-1.5 text-primary link link-hover"
               >
@@ -97,11 +97,11 @@ function openBuyout() {
         <div class="flex justify-between flex-wrap gap-2 items-center mt-1">
         <div class="flex gap-4 text-sm">
           <div class="text-gray-500">Пол: 
-            <span class="rounded-lg bg-red-400 bg-opacity-60 p-1 text-base-content py-0.5 ml-1">{{ sex }}</span>
+            <span class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F]  px-1 text-base-content py-0.5 ml-1">{{ sex }}</span>
             
           </div>
           <div class="text-gray-500">Размер: 
-            <span class="rounded-lg bg-red-400 bg-opacity-60 p-1 text-base-content py-0.5 ml-1">{{ size === 'none' ? 'Нет' : size }}</span>
+            <span class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F] px-1 text-base-content py-0.5 ml-1">{{ size === 'none' ? 'Нет' : size }}</span>
           </div>
         </div>
 

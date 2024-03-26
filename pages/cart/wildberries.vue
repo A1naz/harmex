@@ -11,6 +11,7 @@ const mpStore = useMPStore()
 const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const route = useRoute()
 const router = useRouter()
+const { $dayjs } = useNuxtApp()
 const cartForm = reactive({
   amount: 0,
   period: '3h',

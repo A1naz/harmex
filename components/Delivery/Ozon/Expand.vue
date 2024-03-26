@@ -65,7 +65,7 @@ function daysToPenalty(statusdelivery: any[]) {
                             Доставка
                         </span>
                         <div v-if="info.currentstatus === 'Готов к выдаче' && info.statusdelivery.length > 1 " 
-                        class="text-s link bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"                            @click="emit('openPenaltyModal')"
+                        class="text-s link bg-[#FF6666] dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"                            @click="emit('openPenaltyModal')"
                         style="min-width: fit-content;"
                             >
                             <IconCSS name="ph:warning-circle-light" size="25" />

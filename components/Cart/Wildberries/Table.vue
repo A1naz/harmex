@@ -19,6 +19,7 @@ const removeCart = (index: number) => {
             <!-- <th class="text-center">№</th> -->
             <th class="text-center">Фото</th>
             <th class="text-center">Артикул</th>
+            <th class="text-center">Маркетплейс</th>
             <th class="text-center">Размер</th>
             <th class="text-center">Количество</th>
             <th class="text-center">Ключевой запрос</th>
@@ -75,6 +76,9 @@ const removeCart = (index: number) => {
               >
                 {{ item.article }}
               </a>
+            </td>
+            <td class="text-center border-r border-primary border-opacity-5">
+              Wildberries
             </td>
             <td
               class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
