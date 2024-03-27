@@ -8,14 +8,17 @@ export default eventHandler(async (event) => {
   const { skip, limit, type, dateFilter, mp } = getQuery(event)
 
   let history = []
-  if ((!type || type === 'all') && (!mp || mp === 'all'))
-    history = await paymenthistory.find({ user }).sort({ _id: -1 }).skip(skip as number).limit(limit as number)
-  else if ((type && type !== 'all') && (!mp || mp === 'all'))
-    history = await paymenthistory.find({ user, type }).sort({ _id: -1 }).skip(skip as number).limit(limit as number)
-  else if ((mp && mp !== 'all') && (!type || type === 'all'))
-    history = await paymenthistory.find({ user, mp }).sort({ _id: -1 }).skip(skip as number).limit(limit as number)
-  else if ((type && type !== 'all') && (mp && mp !== 'all'))
-    history = await paymenthistory.find({ user, type, mp }).sort({ _id: -1 }).skip(skip as number).limit(limit as number)
+  const query = { user };
+
+
+  if (type && type !== 'all') {
+      query.type = type;
+  }
+  if (mp && mp !== 'all') {
+      query.mp = mp;
+  }
+
+  history = await paymenthistory.find(query).sort({ _id: -1 }).skip(skip as number).limit(limit as number);
     const today = new Date(Date.now())
   today.setHours(0, 0, 0, 0)
   switch (dateFilter) {

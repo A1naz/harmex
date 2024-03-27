@@ -293,14 +293,14 @@ const customLinks = tabs.map(filter => ({
       <div class="flex gap-2 flex-wrap lg:hidden">
         <CustomSelect
           class="lg:hidden"
-          :class="'sm:min-w-[120px]'"
+          :class="'sm:min-w-[140px]'"
           :status-text="'Ozon'"
           :tabs="mpStore.MPTabs"
           @change-value="changeMP"
         />
         <CustomSelect
           class="lg:hidden"
-          :class="'navbar:min-w-[120px]'"
+          :class="'navbar:min-w-[140px] w-[140px] '"
           :tabs="customLinks"
           :status-text="selectText()"
           @change-value="changeTab"
@@ -335,7 +335,7 @@ const customLinks = tabs.map(filter => ({
         />
         <CustomSelect
           class="hidden lg:flex"
-          :class="'navbar:min-w-[120px]'"
+          :class="'navbar:min-w-[140px] w-[140px]'"
           :tabs="customLinks"
           :status-text="selectText()"
           @change-value="changeTab"
