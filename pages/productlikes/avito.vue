@@ -377,7 +377,7 @@ const updateSearchType = (filter: any) => {
               class="text-center border-r border-primary border-opacity-5 mx-auto"
             >
               <div
-                style="width: 40px; height: 40px; border-radius: 4px"
+                style="width: 28px; height: 36px; border-radius: 4px"
                 class="mx-auto"
               >
                 <div class="dropdown dropdown-hover">

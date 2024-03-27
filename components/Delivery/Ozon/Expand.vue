@@ -52,7 +52,7 @@ function daysToPenalty(statusdelivery: any[]) {
     >
         <div class="flex gap-4">
             <nuxt-img
-                fit="contain" :src="info?.productimage" width="36"
+                fit="contain" :src="info?.productimage" width="50" 
                 loading="lazy"
                 class="rounded-lg transition-opacity ease-in-out duration-200 hidden lg:block"
                 />

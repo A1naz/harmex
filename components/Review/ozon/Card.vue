@@ -50,7 +50,7 @@ function openBuyout() {
           <div class="dropdown dropdown-hover ">
             <label tabindex="0">
               <nuxt-img
-                width="36"
+                width="50"
                 class="rounded-lg"
                 loading="lazy"
                 fit="fill"

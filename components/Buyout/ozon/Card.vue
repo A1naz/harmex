@@ -294,10 +294,10 @@ const getStatus = computed(() => {
       </div>
 
       <div class="flex gap-4">
-        <div class="flex-none" style="width: 100px; height: 150px">
+        <div class="flex-none my-auto" style="width: 120px; height: 120px">
           <nuxt-img
             class="rounded-xl h-full"
-            width="100"
+            width="150"
             height="150"
             format="webp"
             loading="lazy"
@@ -315,7 +315,7 @@ const getStatus = computed(() => {
           </div>
           <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Цена: </span>
+              <span class="text-sm text-gray-500 my-auto">fdsfsd: </span>
               <div class="rounded-md py-0 px-2 bg-success text-sm">
                 {{ info.product?.priceText }}
               </div>

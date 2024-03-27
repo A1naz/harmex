@@ -36,7 +36,7 @@ watch(() => props.state, (newState) => {
     <div class="collapse-title relative text-xl font-medium">
       <div class="flex gap-4">
         <nuxt-img
-          fit="fill" :src="info.buyout.image" width="36"
+          fit="fill" :src="info.buyout.image" width="50"
           loading="lazy"
           class="rounded-lg transition-opacity ease-in-out duration-200 hidden lg:block"
         />

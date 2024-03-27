@@ -62,8 +62,6 @@ export default eventHandler(async (event) => {
 
   for await (const item of history) {
     const buyout = buyouts.find(buyout => buyout._id.valueOf() === item.buyout.valueOf());
-
-    console.log(buyout);
     
     format.push({
       date: item.date,

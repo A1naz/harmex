@@ -77,9 +77,9 @@ export default eventHandler(async (event) => {
       card: item.card,
       screenshots: item.screenshots,
       buyout: {
-        place: buyout?.place,
-        uuid: buyout?.uuid,
-        image: buyout?.product.image,
+        place: buyout?.place || 0,
+        uuid: buyout?.uuid || '000000',
+        image: buyout?.product.image || 'undefined',
       },
     })
   }
