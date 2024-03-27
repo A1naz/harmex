@@ -249,7 +249,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -291,7 +291,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
           :status-text="'Wildberries'"
-          :tabs="mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect

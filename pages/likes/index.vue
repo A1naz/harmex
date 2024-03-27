@@ -135,6 +135,7 @@ async function selectMP(value: any) {
   mpStore.setSelectedMP(value.value)
   getLikes()
 }
+console.log(selectedMP.value)
 </script>
 
 <template>
@@ -274,14 +275,15 @@ async function selectMP(value: any) {
             <td
               class="text-center border-r border-primary border-opacity-5 mx-auto"
             >
-              <div
-                style="width: 28px; height: 36px; border-radius: 4px"
+            <div
+                :style="`width: ${selectedMP === 'Ozon' ? '40px' : '28px'}; height: ${selectedMP === 'Ozon' ? '40px' : '36px'}; border-radius: 4px;`"
                 class="mx-auto"
-              >
+            >
+            
                 <div class="dropdown dropdown-hover">
                   <label tabindex="0">
                     <nuxt-img
-                      class="rounded-lg z-0"
+                      class="rounded-lg z-0 w-full"
                       alt=""
                       loading="lazy"
                       fit="fill"

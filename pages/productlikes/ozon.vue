@@ -250,7 +250,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -292,7 +292,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -377,7 +377,7 @@ const updateSearchType = (filter: any) => {
               class="text-center border-r border-primary border-opacity-5 mx-auto"
             >
               <div
-                style="width: 28px; height: 36px; border-radius: 4px"
+                style="width: 40px; height: 40px; border-radius: 4px"
                 class="mx-auto"
               >
                 <div class="dropdown dropdown-hover">

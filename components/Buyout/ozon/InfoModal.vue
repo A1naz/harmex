@@ -108,10 +108,10 @@ onKeyStroke('Escape', (e) => {
           <div class="text-xs text-gray-500">#{{ info.uuid }}</div>
 
           <div class="flex gap-3 mt-2 justify-center items-center">
-            <div class="flex-none" style="width: 100px; height: 150px">
+            <div class="flex-none" style="width: 150px; height: 150px">
               <nuxt-img
                 class="rounded-xl h-full"
-                width="100"
+                width="150"
                 height="150"
                 :src="info?.product?.image || '/logo/logocolor.svg'"
                 loading="lazy"
