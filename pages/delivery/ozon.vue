@@ -19,6 +19,7 @@ const autoTarget = ref(true)
 const loading = ref(true)
 const codeInput = ref()
 const codeInputMob = ref()
+const loadingExport = ref(false)
 const status = computed(() => route.query?.status || 'all')
 const search = reactive({
   text: '',
@@ -78,17 +79,20 @@ async function getDeliveries() {
 getDeliveries()
 
 async function exportReadyXLS() {
+  loadingExport.value = true
   const { data } = await useFetch('/api/ozon/delivery/exportReady', {
     responseType: 'blob',
   })
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Готовы к выдаче.xlsx')
+  fileLink.setAttribute('download', 'Готовы к выдаче Ozon.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
+  loadingExport.value = false
 }
 async function exportXLS() {
+  loadingExport.value = true
   const { data, error } = await useFetch('/api/ozon/delivery/export', {
     responseType: 'blob',
   })
@@ -98,14 +102,16 @@ async function exportXLS() {
       title: 'Что-то пошло не так',
       text: 'Не удалось экспортировать данные',
     })
+    loadingExport.value = false
     return
   }
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Общая таблица.xlsx')
+  fileLink.setAttribute('download', 'Общая таблица Ozon.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
+  loadingExport.value = false
 }
 
 async function findDeliveries(value: string, type: string) {
@@ -278,11 +284,15 @@ const customLinks = filters.map((filter) => ({
     <div class="">
       <div class="flex lg:hidden mt-2">
         <div v-if="deliveries.length" class="export">
-          <div class="dropdown">
+          <button v-if="loadingExport" disabled  class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2">
+              <span  class="loading loading-spinner loading-sm text-primary"></span>
+          </button>
+          <div v-else class="dropdown">
             <label
               tabindex="0"
               class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
-              >XLS</label
+              >XLS
+              </label
             >
             <ul
               tabindex="0"
@@ -506,7 +516,10 @@ const customLinks = filters.map((filter) => ({
             </div>
           </div>
           <div v-if="deliveries.length" class="export">
-            <div class="dropdown dropdown-end z-10">
+            <button v-if="loadingExport" disabled  class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2">
+              <span  class="loading loading-spinner loading-sm text-primary"></span>
+            </button>
+            <div v-else class="dropdown dropdown-end z-10">
               <label
                 tabindex="0"
                 class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content m-1"

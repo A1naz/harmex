@@ -8,9 +8,11 @@ export default eventHandler(async (event) => {
 
   const all = await Delivery.find({ user }).sort({ _id: -1 })
 
+  const buyoutsId = all.map(item => item.idbuyout);
+  const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
   const format = await Promise.all(
     all.map(async (delivery) => {
-      const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
+      const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf());
       if (!buyout)
         return null
       const place = all.findIndex(
@@ -58,3 +60,4 @@ export default eventHandler(async (event) => {
   })
   return points
 })
+

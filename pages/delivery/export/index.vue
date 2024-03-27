@@ -35,7 +35,7 @@ async function exportToFile() {
   progress.value = 0
   const options = {
     margin: 0,
-    filename: 'Готовы к выдаче.pdf',
+    filename: `Готовы к выдаче ${mpStore.selectedMP.charAt(0).toUpperCase() + mpStore.selectedMP.slice(1)}.pdf`,
     html2canvas: {
       scale: 1.5,
       letterRendering: true,
@@ -89,12 +89,16 @@ const { data, error } = await useFetch(`/api/${mpStore.selectedMP || 'wildberrie
   headers: useRequestHeaders(['cookie']) as HeadersInit,
 })
 
+console.log(data.value)
 onMounted(async () => {
   deliveries.value = data.value
   const response = await $fetch('/Roboto-Regular.ttf', {
     responseType: 'arrayBuffer',
   }) as ArrayBuffer
   font.value = response
+  setTimeout(() => {
+    deliveries.value = data.value;
+  }, 1000);
 })
 </script>
 
