@@ -17,6 +17,7 @@ const deliveries = ref([]) as any
 const autoTarget = ref(true)
 const codeInput = ref()
 const codeInputMob = ref()
+const loadingExport = ref(false)
 const status = computed(() => route.query?.status || 'all')
 const loading = ref(false)
 const search = ref<any>({
@@ -77,17 +78,20 @@ async function getDeliveries() {
 getDeliveries()
 
 async function exportReadyXLS() {
+  loadingExport.value = true
   const { data } = await useFetch('/api/wildberries/delivery/exportReady', {
     responseType: 'blob',
   })
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Готовы к выдаче.xlsx')
+  fileLink.setAttribute('download', 'Готовы к выдаче Wildberries.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
+  loadingExport.value = false
 }
 async function exportXLS() {
+  loadingExport.value = true
   const { data, error } = await useFetch('/api/wildberries/delivery/export', {
     responseType: 'blob',
   })
@@ -97,14 +101,16 @@ async function exportXLS() {
       title: 'Что-то пошло не так',
       text: 'Не удалось экспортировать данные',
     })
+    loadingExport.value = false
     return
   }
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Общая таблица.xlsx')
+  fileLink.setAttribute('download', 'Общая таблица Wildberries.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
+  loadingExport.value = false
 }
 
 async function findDeliveries(value: string, type: string) {
@@ -267,7 +273,10 @@ function changeFilter(e: any) {
     <div class="">
       <div class="flex lg:hidden mt-2">
         <div v-if="deliveries.length" class="export">
-          <div class="dropdown">
+          <button v-if="loadingExport" disabled  class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2">
+              <span  class="loading loading-spinner loading-sm text-primary"></span>
+          </button>
+          <div v-else class="dropdown">
             <label
               tabindex="0"
               class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
@@ -492,7 +501,10 @@ function changeFilter(e: any) {
             </div>
           </div>
           <div v-if="deliveries.length" class="export">
-            <div class="dropdown dropdown-end z-10">
+            <button v-if="loadingExport" disabled  class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2">
+              <span  class="loading loading-spinner loading-sm text-primary"></span>
+            </button>
+            <div v-else class="dropdown dropdown-end z-10">
               <label
                 tabindex="0"
                 class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content m-1"

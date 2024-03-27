@@ -20,9 +20,12 @@ export default eventHandler(async (event) => {
         message: 'Нет доставок для экспорта',
       })
     }
-    const format = await Promise.all(
+    const buyoutsId = deliveries.map(item => item.idbuyout);
+    const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
+    
+    const format = await Promise.all(  
       deliveries.map(async (delivery, index) => {
-        const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
+        const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf());
         if (!buyout)
           return undefined
 

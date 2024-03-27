@@ -15,9 +15,12 @@ async function getReady(user: Document) {
     const currentstatus = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно'
     return currentstatus === 'Готов к выдаче' || currentstatus === 'Готов к получению'
   })
+  const buyoutsId = filtered.map(item => item.idbuyout);
+  const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
+
   const format = await Promise.all(
     filtered.map(async (delivery, index) => {
-      const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
+      const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf());
 
       if (!buyout)
         return undefined
