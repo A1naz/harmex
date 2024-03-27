@@ -307,7 +307,7 @@ const customLinks = tabs.map((filter) => ({
         />
         <CustomSelect
           class=""
-          :class="'navbar:min-w-[120px]'"
+          :class="'navbar:min-w-[140px] w-[140px]'"
           :tabs="customLinks"
           :status-text="selectText()"
           @change-value="changeTab"
@@ -343,7 +343,7 @@ const customLinks = tabs.map((filter) => ({
         />
         <CustomSelect
           class="hidden lg:flex"
-          :class="'navbar:min-w-[120px]'"
+          :class="'navbar:min-w-[140px] w-[140px]'"
           :tabs="customLinks"
           :status-text="selectText()"
           @change-value="changeTab"

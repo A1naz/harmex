@@ -7,6 +7,18 @@ export default eventHandler(async (event) => {
 
   const { type, string } = getQuery(event)
 
+  // const query: { user: any; mp?: string; $text?: any } = { user };
+
+  // if (mp && mp !== 'all') {
+  //     query.mp = mp;
+  // }
+  // if (type === 'uuid') {
+  //   const uuid = string?.toString().replaceAll('#', '')
+  //   query.$text = { $search: string };
+  // } 
+
+  // history = await paymenthistory.find(query).sort({ _id: -1 });
+
   let history = []
   if (type === 'uuid') {
     const uuid = string?.toString().replaceAll('#', '')

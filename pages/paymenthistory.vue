@@ -20,7 +20,9 @@ const skip = ref(50)
 const dateFilter = ref('all')
 const end = ref(false)
 const store = useMainStore()
+const mpStore = useMPStore()
 const filterType = ref('all')
+const mp = ref('all')
 const PrimeVue = usePrimeVue()
 const { width, height } = useWindowSize()
 const route = useRoute()
@@ -39,6 +41,7 @@ async function getPaymentHistory() {
     method: 'GET',
     query: {
       type: filterType.value,
+      mp: mp.value,
       skip: 0,
       limit: 50,
     },
@@ -59,6 +62,22 @@ async function selectType(e: any) {
     method: 'GET',
     query: {
       type: filterType.value,
+      mp: mp.value,
+      limit: 50,
+    },
+  })
+  history.value = data.value
+}
+async function selectMp(e: any) {
+  const target = e
+  mp.value = target.value
+  skip.value = 50
+  end.value = false
+  const { data } = await useFetch('/api/paymenthistory/get', {
+    method: 'GET',
+    query: {
+      type: filterType.value,
+      mp: mp.value,
       limit: 50,
     },
   })
@@ -75,6 +94,7 @@ async function findPaymentHistory(value: string, type: string) {
     query: {
       string: value,
       type,
+      mp: mp.value,
     },
   })
   if (data.value)
@@ -115,6 +135,7 @@ watch(targetIsVisible, async (isVisible) => {
       query: {
         dateFilter: dateFilter.value,
         type: filterType.value,
+        mp: mp.value,
         limit: 50,
         skip: skip.value,
       },
@@ -161,12 +182,14 @@ function getHistoryType(type: string) {
 const router = useRouter()
 
 function openBuyout(data: any) {
-    const uuid = data.basisoperation.slice(data.basisoperation.indexOf('#') + 1, data.basisoperation.length)
-  router.push(`/buyouts?uuid=${uuid}`)
+  const uuid = data.basisoperation.slice(data.basisoperation.indexOf('#') + 1, data.basisoperation.length)
+  const mp = (!data.mp || data.mp === 'wildberries') ? `wildberries` : 'ozon'
+  router.push(`/buyouts/${mp}?uuid=${uuid}`)
 }
 function openReview(data: any) {
     const idReview = data.basisoperation.slice(data.basisoperation.indexOf(' ') + 1, data.basisoperation.length)
-    router.push(`/reviews?status=published&idReview=${idReview}`)
+    const mp = (!data.mp || data.mp === 'wildberries') ? `wildberries` : 'ozon'
+    router.push(`/reviews/${mp}?status=published&idReview=${idReview}`)
 }
 
 const updateSearchType = (filter: any) => {
@@ -216,6 +239,11 @@ const updateSearchType = (filter: any) => {
             Вопросы
           </option>
         </select> -->
+        <CustomSelect
+          :class="'sm:min-w-[120px]'"
+          :tabs="mpStore.MPTabsAll"
+          @change-value="selectMp"
+        />
         <CustomSelect
           :class="'bg-base-300 sm:min-w-[120px]'"
           :tabs="[
@@ -354,7 +382,8 @@ const updateSearchType = (filter: any) => {
           <template #body="{ data }">
             <div class="">
               <a
-              :href="`https://www.wildberries.ru/catalog/${data.article}/detail.aspx`" target="_blank"
+              :href="(!data.mp || data.mp === 'wildberries') ? `https://www.wildberries.ru/catalog/${data.article}/detail.aspx` : `https://www.ozon.ru/product/${data.article}`"
+              target="_blank"
                 class="text-sm text-primary link link-hover"
               >
                 {{ data.article }}
