@@ -13,7 +13,7 @@ export default eventHandler(async (event) => {
       $match: {
         user: new ObjectId(user._id),
         reviewed: false,
-        'statusdelivery.status': 'Получено',
+        'statusdelivery.status': 'Получен',
         status: 'completed',
       },
     },
@@ -73,7 +73,7 @@ export default eventHandler(async (event) => {
     },
     { $project: { _id: 0 } },
   ]
-
+  
   const limitA = limit ? parseInt(limit.toString(), 10) : 100
   const skipA = skip ? parseInt(skip.toString(), 10) : 0
   const searchParse = search ? JSON.parse(search?.toString()) : undefined
