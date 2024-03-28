@@ -315,7 +315,7 @@ const getStatus = computed(() => {
           </div>
           <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">fdsfsd: </span>
+              <span class="text-sm text-gray-500 my-auto">Сумма: </span>
               <div class="rounded-md py-0 px-2 bg-success text-sm">
                 {{ info.product?.priceText }}
               </div>
@@ -339,7 +339,7 @@ const getStatus = computed(() => {
               <div
                 class="rounded-md py-0 px-2 bg-primary bg-opacity-20 text-sm"
               >
-                {{ info.discount + '%' || '%' }}
+                {{ info.discountPrice + '/' + info.discountRequestPrice }}
               </div>
             </div>
             <div class="flex gap-2">

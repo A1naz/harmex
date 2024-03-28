@@ -113,7 +113,11 @@ export default eventHandler(async (event) => {
         image: product.image,
       },
       uuid: uuid(),
-      discount: product.discount || false,
+      discount:
+        product.discountPrice == product.price &&
+        product.discountRequestPrice == product.price
+          ? false
+          : true,
       discountPrice: product.discountPrice,
       discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
