@@ -44,6 +44,7 @@ const route = useRoute()
 const article = ref<string>()
 const discountModal = ref(false)
 const currentProductIndex = ref(0)
+const currentProductPrice = ref(0)
 const modalShow = ref(false)
 const codeInput = ref()
 
@@ -195,7 +196,12 @@ async function openChecksModal() {
     }
     if (!item.searchQuery[0].value) {
       valid = false
+      console.log(item)
       errorMsg = 'Не у всех товаров указан поисковый запрос'
+    }
+    if(!item.discountPrice || !item.discountRequestPrice) {
+      valid = false
+      errorMsg = 'Не у всех товаров указана скидка'
     }
     if (!item.selectedSize) item.selectedSize = 'none'
   })
@@ -350,8 +356,9 @@ function deleteTemplate(uuid: any) {
 function closeTemplateModalFN() {
   closeTemplateSelectModal.value?.click()
 }
-function openDiscount(productIndex: number) {
+function openDiscount(productIndex: number, price: number) {
   currentProductIndex.value = productIndex
+  currentProductPrice.value = price
   discountModal.value = true
 }
 function modalAddProduct(changedArticle: any) {
@@ -922,6 +929,7 @@ const startTimer = () => {
   <BuyoutOzonDiscountModal
     :show="discountModal"
     :index="currentProductIndex"
+    :price="currentProductPrice"
     @close-modal="discountModal = false"
   />
   <BuyoutOzonCreateModal

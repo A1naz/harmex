@@ -107,6 +107,8 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
           priceText: product.priceText,
           rules: [],
           pointCoordinates: { lat: 0, lon: 0 },
+          discountRequestPrice: product.price,
+          discountPrice: product.price,
         })
       )
     },
@@ -153,6 +155,12 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
     },
     changeDiscount(value: number, index: number) {
       this.createProducts[index].discount = value
+    },
+    changeDiscountPrice(value: number, index: number) {
+      this.createProducts[index].discountPrice = value
+    },
+    changeDiscountRequestPrice(value: number, index: number) {
+      this.createProducts[index].discountRequestPrice = value
     },
     changeSize(value: string | number, index: number) {
       this.createProducts[index].selectedSize = value

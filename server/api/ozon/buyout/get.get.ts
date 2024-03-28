@@ -119,6 +119,8 @@ export default eventHandler(async (event) => {
       createdAt: buyout.createdAt,
       product: buyout.product,
       discount: buyout.discount,
+      discountPrice: buyout.discountPrice,
+      discountRequestPrice: buyout.discountRequestPrice,
       purchaseSoon: buyout.purchaseSoon,
     }
   })

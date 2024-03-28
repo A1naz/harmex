@@ -179,7 +179,7 @@ onKeyStroke('Escape', (e) => {
               <div>
                 <span class="text-sm text-gray-500 mr-2">Скидка: </span>
                 <span class="bg-base-200 rounded-md py-0 px-2 text-sm">{{
-                  !info.discount ? '%' : info.discount + '%'
+                  info.discountPrice + '/' + info.discountRequestPrice
                 }}</span>
               </div>
               <div class="flex gap-2">

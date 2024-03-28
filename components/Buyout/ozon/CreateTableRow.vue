@@ -276,9 +276,8 @@ const productQuantityModel = computed({
 
     <td class="w-[80px] border-r border-base">
       <button
-        disabled
         class="w-8 btn btn-ghost btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary"
-        @click="props.openDiscount(index)"
+        @click="props.openDiscount(index, product.price)"
       >
         {{
           !product.discount
