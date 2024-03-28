@@ -35,8 +35,8 @@ const periods = [
     const deliveryType = [
   { title: 'Все', value: 'all', bd: 'all' },
   { title: 'В пути', value: 'inTransit', bd: 'В пути' },
-  { title: 'Готовы к выдаче', value: 'ready', bd: 'Готов к выдаче' },
-  { title: 'Получено', value: 'picked', bd: 'Получено' },
+  { title: 'Готовы к выдаче', value: 'ready', bd: routePath === '/stats/ozon' ? 'Ожидает получения до' :  'Готов к выдаче' },
+  { title: 'Получено', value: 'picked', bd: routePath === '/stats/ozon' ? 'Получен' :  'Получено' },
   { title: 'Отменено', value: 'canceled', bd: 'Отменено' },
 ];
 
@@ -286,8 +286,8 @@ function articleNavigate(currentArticle: any, mp: any) {
               </td>
               <td 
                 class="border-r border-primary border-opacity-5 text-center  p-5 px-1"
-                :class="{'text-green-600': element.status === 'Получено' || element.status === 'Готов к выдаче', 'text-red-700': element.status === 'Отменен', 'text-yellow-500': element.status === 'В пути'}"
-              >{{ (element.status === 'Готов к выдаче' || element.status === 'Получено') ? 'Доставлен' : element.status }}</td>
+                :class="{'text-green-600': element.status === 'Получено' || element.status.includes('Получен') || element.status.includes('Ожидает получения до'), 'text-red-700': element.status === 'Отменен', 'text-yellow-500': element.status === 'В пути'}"
+              >{{ (element.status === 'Готов к выдаче' || element.status.includes('Получен') || element.status.includes('Ожидает получения до') ) ? 'Доставлен' : element.status }}</td>
               <td class="border-r border-primary border-opacity-5 text-center p-5px-1">
                 <div class=" rounded-md  w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-primary bg-opacity-5': element.purchaseDate}">{{ element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-'}}</div>
               </td>

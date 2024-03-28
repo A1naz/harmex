@@ -6,6 +6,7 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const { period, type, skip, limit, searchQuery } = getQuery(event)
+  console.log('type', type)
 
   const search = searchQuery?.toString()
 
@@ -88,7 +89,43 @@ export default eventHandler(async (event) => {
       })
       .limit(limit as number)
       .skip(skip as number);
-      }else{
+      }else if(type=='В пути'){
+        const type2 = 'Передается в доставку'
+        deliveries = await Delivery.find({ 
+          user, 
+          updatedAt: filter.dataoperation,
+          $or: [
+              { article: { $regex: search, $options: 'i' } },
+              { point: { $regex: search, $options: 'i' } },
+              { uuidbuyout: { $regex: search, $options: 'i' } }
+          ],
+          $expr: {
+              $or: [
+                  { $eq: [ { $arrayElemAt: ["$statusdelivery.status", -1] }, type ] },
+                  { $eq: [ { $arrayElemAt: ["$statusdelivery.status", -1] }, type2 ] }
+              ]
+          }
+      });
+      }else if(type=='Ожидает получения до'){
+        deliveries = await Delivery.find({ 
+          user, 
+          updatedAt: filter.dataoperation,
+          $or: [
+              { article: { $regex: search, $options: 'i' } },
+              { point: { $regex: search, $options: 'i' } },
+              { uuidbuyout: { $regex: search, $options: 'i' } }
+          ],
+          $expr: {
+              $regexMatch: {
+                  input: { $arrayElemAt: ["$statusdelivery.status", -1] },
+                  regex: type,
+                  options: "i" 
+              }
+          }
+      });
+      
+      }else
+      {
         deliveries = await Delivery.find({ 
           user, 
           updatedAt: filter.dataoperation,
@@ -110,16 +147,16 @@ export default eventHandler(async (event) => {
 
       deliveries.forEach((item: any) => {
         const sentToAssembly = item.statusdelivery[0];
-        const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
-        const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получено');
+        const receiptDate = item.statusdelivery.find((item: any) => item.status.includes("Ожидает получения до"));
+        const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получен');
         const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
-    
+        
         
             lastElements.push({
               article: item.article,
               pvz: item.point,
-              status: status,
-              purchaseDate: sentToAssembly?.date || '',
+              status: status === 'Передается в доставку' ? 'В пути' : status,
+              purchaseDate: sentToAssembly?.date  || '',
               id: item.uuidbuyout,
               receiptDate: receiptDate?.date || '',
               receiveDate: receiveDate?.date || '',
@@ -143,14 +180,12 @@ export default eventHandler(async (event) => {
 
   deliveries.forEach((item: any) => {
     const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
-
-    if (status === 'В пути') {
+    if (status === 'В пути' || status === 'Передается в доставку') {
       inTransit++;
-      
-    } else if (status === 'Готов к выдаче') {
+    } else if (status.includes("Ожидает получения до")) {
         ready++;
         
-    } else if (status === 'Получено') {
+    } else if (status === 'Получен') {
         received++;
         if(item.reviewed === false) reviews++;
         
