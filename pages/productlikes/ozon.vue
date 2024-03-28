@@ -184,8 +184,8 @@ async function selectFilterDate(e: any) {
 }
 
 async function changeFilter(e: any) {
-  mpStore.selectedMP = e.value
-  router.push(`/productlikes`)
+  e.value === 'avito' ? router.push(`/productlikes/avito`) : mpStore.selectedMP = e.value
+  if(e.value !== 'avito') router.push(`/productlikes`)
 }
 
 async function findBuyouts(value: string, type: string) {
@@ -356,25 +356,25 @@ const updateSearchType = (filter: any) => {
         <thead>
           <tr class="bg-primary bg-opacity-5">
             <!-- <th class="text-center">№</th> -->
-            <th class="text-center">Фото</th>
+            <th class="text-center rounded-tl-2xl">Фото</th>
             <th class="text-center">Название</th>
             <th class="text-center">Ссылка</th>
             <th class="text-center">Тип</th>
             <th class="text-center">Количество</th>
             <th class="text-center">Статус</th>
             <th class="text-center">Дата создания</th>
-            <th class="text-center">Дата завершения</th>
+            <th class="text-center rounded-tr-2xl">Дата завершения</th>
           </tr>
         </thead>
         <tbody>
           <tr
-            class="bg-base-200"
+            class="bg-base-200 border-b-0 border-primary"
             v-for="(item, index) in product_likes"
             :key="index"
           >
             <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
             <td
-              class="text-center border-r border-primary border-opacity-5 mx-auto"
+              class="text-center border-r border-primary border-opacity-5 mx-auto bg-base-100" :class="{'rounded-bl-2xl': index === product_likes.length - 1}"
             >
               <div
                 style="width: 40px; height: 40px; border-radius: 4px"
@@ -405,14 +405,14 @@ const updateSearchType = (filter: any) => {
               </div>
             </td>
             <td
-              class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
+              class="text-center border-r border-primary border-opacity-5 text-base-content truncate bg-base-100"
             >
               <span class="whitespace-normal break-words max-w-[150px]">{{
                 item.name
               }}</span>
             </td>
             <td
-              class="text-center border-r border-primary border-opacity-5 text-primary overflow-x-auto max-w-xs truncate"
+              class="text-center border-r border-primary border-opacity-5 text-primary overflow-x-auto max-w-xs truncate bg-base-100"
             >
               <a
                 :href="item.url"
@@ -422,18 +422,18 @@ const updateSearchType = (filter: any) => {
                 <span class="max-w-[150px] truncate">{{ item.url }}</span>
               </a>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center border-r border-primary border-opacity-5 bg-base-100">
               <div class="flex flex-col">
                 {{ item.type === 'brand' ? 'Лайк на бренд' : 'Лайк на товар' }}
               </div>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center border-r border-primary border-opacity-5 bg-base-100">
               <div class="flex flex-col">
                 {{ item.amount }}
               </div>
             </td>
 
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center border-r border-primary border-opacity-5 bg-base-100">
               <div
                 :class="{
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
@@ -452,14 +452,14 @@ const updateSearchType = (filter: any) => {
                 {{ getStatus(item.status) }}
               </div>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center border-r border-primary border-opacity-5 bg-base-100">
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
                 {{ defaultDateShort(item.createdDate) }}
               </div>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center border-r border-primary border-opacity-5 bg-base-100 " :class="{'rounded-br-2xl': index === product_likes.length - 1}">
               <div
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"

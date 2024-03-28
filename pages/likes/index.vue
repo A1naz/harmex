@@ -135,7 +135,6 @@ async function selectMP(value: any) {
   mpStore.setSelectedMP(value.value)
   getLikes()
 }
-console.log(selectedMP.value)
 </script>
 
 <template>
@@ -256,24 +255,24 @@ console.log(selectedMP.value)
         <thead>
           <tr class="bg-primary bg-opacity-5">
             <!-- <th class="text-center">№</th> -->
-            <th class="text-center">Фото</th>
+            <th class="text-center rounded-tl-2xl">Фото</th>
             <th class="text-center">Артикул</th>
             <th class="text-center">Количество</th>
             <th class="text-center">Статус</th>
             <th class="text-center">Дата создания</th>
             <th class="text-center">Дата завершения</th>
-            <th class="text-center">Сроки выполнения</th>
+            <th class="text-center rounded-tr-2xl">Сроки выполнения</th>
           </tr>
         </thead>
         <tbody>
           <tr
-            class="bg-base-200"
+            class="bg-base-100 border-b-0"
             v-for="(item, index) in review_likes"
             :key="index"
           >
             <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
             <td
-              class="text-center border-r border-primary border-opacity-5 mx-auto"
+              class="text-center border-r border-primary border-opacity-5 mx-auto" :class="{'rounded-bl-2xl': index === review_likes.length - 1}"
             >
             <div
                 :style="`width: ${selectedMP === 'Ozon' ? '40px' : '28px'}; height: ${selectedMP === 'Ozon' ? '40px' : '36px'}; border-radius: 4px;`"
@@ -347,7 +346,7 @@ console.log(selectedMP.value)
               </div>
             </td>
             <td
-              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5"
+              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5" :class="{'rounded-br-2xl': index === review_likes.length - 1}"
             >
               <div
                 v-if="item.period"

@@ -33,7 +33,7 @@ const search = reactive({
 const codeInput = ref()
 async function getProductLikes() {
   modalShow.value = false
-  const { data, error } = await useFetch(`/api/wildberries/productlikes/get`, {
+  const { data, error } = await useFetch(`/api/avito/productlikes/get`, {
     method: 'GET',
   })
   if (data.value) product_likes.value = data.value
@@ -58,7 +58,7 @@ async function getProductLikes() {
 await getProductLikes()
 async function create() {
   const { data, error } = await useFetch(
-    `/api/wildberries/productlikes/create`,
+    `/api/avito/productlikes/create`,
     {
       method: 'POST',
       body: {
@@ -84,7 +84,7 @@ async function create() {
 }
 async function sendUrl() {
   const { data, error } = await useFetch(
-    `/api/wildberries/productlikes/extract`,
+    `/api/avito/productlikes/extract`,
     {
       method: 'POST',
       body: {
@@ -143,7 +143,7 @@ function openRemoveReviewModal(id: any, name: any) {
 
 async function deleteLike() {
   const { data, error } = await useFetch(
-    `/api/wildberries/productlikes/delete`,
+    `/api/avito/productlikes/delete`,
     {
       method: 'DELETE',
       body: {
@@ -178,7 +178,7 @@ const closeModal = (event: MouseEvent) => {
 async function selectFilterDate(e: any) {
   loading.value = true
   const target = e
-  const { data } = await useFetch(`/api/wildberries/productlikes/get`, {
+  const { data } = await useFetch(`/api/avito/productlikes/get`, {
     method: 'GET',
     query: {
       dateFilter: target.value,
@@ -190,8 +190,8 @@ async function selectFilterDate(e: any) {
 }
 
 async function changeFilter(e: any) {
-  e.value === 'avito' ? router.push(`/productlikes/avito`) : mpStore.selectedMP = e.value
-  if(e.value !== 'avito') router.push(`/productlikes`)
+  mpStore.selectedMP = e.value
+  router.push(`/productlikes`)
 }
 
 async function findBuyouts(value: string, type: string) {
@@ -201,7 +201,7 @@ async function findBuyouts(value: string, type: string) {
     return
   }
   const { data, error } = await useFetch(
-    `/api/wildberries/productlikes/search`,
+    `/api/avito/productlikes/search`,
     {
       query: {
         string: value,
@@ -229,7 +229,7 @@ const updateSearchType = (filter: any) => {
 
 <template>
   <div>
-    <ProductLikesWildberriesCreateLike
+    <ProductLikesAvitoCreateLike
       :show="modalShow"
       @close-modal="modalShow = false"
       @create="getProductLikes()"
@@ -248,7 +248,7 @@ const updateSearchType = (filter: any) => {
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
-          :status-text="'Wildberries'"
+          :status-text="'Avito'"
           :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeFilter"
         />
@@ -290,7 +290,7 @@ const updateSearchType = (filter: any) => {
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
-          :status-text="'Wildberries'"
+          :status-text="'Avito'"
           :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeFilter"
         />
