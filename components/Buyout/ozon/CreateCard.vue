@@ -338,7 +338,7 @@ const productQuantityModel = computed({
         <button
         disabled
           class="w-8 btn btn-ghost btn-sm btn-square text-base-content font-normal hover:text-primary"
-          @click="props.openDiscount(index)"
+          @click="props.openDiscount(index, product.price)"
         >
           {{
             !product.discount

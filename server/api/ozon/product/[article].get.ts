@@ -39,6 +39,8 @@ export default eventHandler(async (event) => {
       sizes: data.sizes.length ? data.sizes : ['0'],
       price: data.price || 0,
       priceText: data.price ? data.price + ' ₽' : '',
+      discountRequestPrice: data.price || 0,
+      discountPrice: data.price || 0,
     },
   }
 })

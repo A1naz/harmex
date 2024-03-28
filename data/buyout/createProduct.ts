@@ -8,7 +8,6 @@ export interface SearchQuery {
 }
 export interface Item {
   image: string
-  discount: number
   name: string
   article: number
   price: number
@@ -24,4 +23,7 @@ export interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  discount: boolean
+  discountPrice: number
+  discountRequestPrice: number
 }

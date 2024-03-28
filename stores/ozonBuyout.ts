@@ -154,6 +154,12 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
     changeDiscount(value: number, index: number) {
       this.createProducts[index].discount = value
     },
+    changeDiscountPrice(value: number, index: number) {
+      this.createProducts[index].discountPrice = value
+    },
+    changeDiscountRequestPrice(value: number, index: number) {
+      this.createProducts[index].discountRequestPrice = value
+    },
     changeSize(value: string | number, index: number) {
       this.createProducts[index].selectedSize = value
     },

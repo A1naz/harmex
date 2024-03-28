@@ -26,7 +26,9 @@ interface Item {
     lon: number
   }
   pointId: string
-  discount: string
+  discount: boolean
+  discountRequestPrice: number
+  discountPrice: number
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -111,7 +113,9 @@ export default eventHandler(async (event) => {
         image: product.image,
       },
       uuid: uuid(),
-      discount: product.discount || '0',
+      discount: product.discount || false,
+      discountPrice: product.discountPrice,
+      discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
     })
