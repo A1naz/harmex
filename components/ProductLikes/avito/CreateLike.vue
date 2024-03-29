@@ -47,18 +47,15 @@ async function getProductLikes() {
 }
 await getProductLikes()
 async function create() {
-  const { data, error } = await useFetch(
-    '/api/avito/productlikes/create',
-    {
-      method: 'POST',
-      body: {
-        url: url.value,
-        amount: amount.value,
-        period: period.value,
-        productData: productData.value,
-      },
-    }
-  )
+  const { data, error } = await useFetch('/api/avito/productlikes/create', {
+    method: 'POST',
+    body: {
+      url: url.value,
+      amount: amount.value,
+      period: period.value,
+      productData: productData.value,
+    },
+  })
   if (error.value)
     return notify({
       type: 'error',
@@ -70,26 +67,24 @@ async function create() {
     emit('create')
     return navigateTo('/productlikes/avito')
   }
-
-
 }
 async function sendUrl() {
-  // const { data, error } = await useFetch(
-  //   '/api/wildberries/productlikes/extract',
-  //   {
-  //     method: 'POST',
-  //     body: {
-  //       url: url.value,
-  //     },
-  //   }
-  // )
-  urlError.value = true
-  const data = { "type": "product", "image": "https://basket-12.wb.ru/vol1685/part168556/168556096/images/big/1.webp", "article": 168556096, "name": "Smartx / Беспроводная клавиатура с мышью для компьютера ноутбука", "price": "872", "priceText": "872 ₽" }
-  if (data) {
-    productData.value = data
+  //@ts-ignore
+  const { data, error }: any = await useFetch(
+    '/api/avito/productlikes/extract',
+    {
+      method: 'POST',
+      body: {
+        url: url.value,
+      },
+    }
+  )
+
+  if (data.value) {
+    productData.value = data.value
     urlError.value = false
   }
-  // if (error.value) urlError.value = true
+  if (error.value) urlError.value = true
 
   loadingUrl.value = false
 }
@@ -125,15 +120,12 @@ function openRemoveReviewModal(id: any, name: any) {
 }
 
 async function deleteLike() {
-  const { data, error } = await useFetch(
-    '/api/avito/productlikes/delete',
-    {
-      method: 'DELETE',
-      body: {
-        id: idForRemove.value,
-      },
-    }
-  )
+  const { data, error } = await useFetch('/api/avito/productlikes/delete', {
+    method: 'DELETE',
+    body: {
+      id: idForRemove.value,
+    },
+  })
 
   if (data.value) {
     getProductLikes()

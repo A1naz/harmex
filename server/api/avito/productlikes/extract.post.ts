@@ -44,6 +44,7 @@ export default eventHandler(async (event) => {
   }
   const type = url.includes('ozon.ru/brand') ? 'brand' : 'product'
 
+  console.log(url)
   if (type === 'product') {
     const article = extractArticulFromOzonLink(url)
 
@@ -51,8 +52,8 @@ export default eventHandler(async (event) => {
     const data: any = await $fetch('http://95.163.249.133:4141', {
       method: 'POST',
       body: {
-        type: 'ozonProduct',
-        url: `https://www.ozon.ru/product/${article}/`,
+        type: 'avitoProduct',
+        url: url.replaceAll(' ', ''),
       },
     })
 
@@ -62,6 +63,9 @@ export default eventHandler(async (event) => {
         message: 'Товар не найден',
       })
     }
+
+    console.log(data);
+    
 
     if (!data) {
       throw createError({
@@ -73,7 +77,7 @@ export default eventHandler(async (event) => {
     return {
       type: 'product',
       image: data.image || '',
-      article: article,
+      article: Number(data.article) || 0,
       name: data.name || '',
       price: data.price || 0,
       priceText: data.price + ' ₽' || '0 ₽',
