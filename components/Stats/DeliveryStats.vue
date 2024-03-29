@@ -265,7 +265,7 @@ function articleNavigate(currentArticle: any, mp: any) {
         />
       </div>
     </div>
-    <div v-if="!deliveryDataLoading" class='px-3 sm:px-6 max-h-[700px] overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-base-200 overflow-x-hidden'>
+    <div v-if="!deliveryDataLoading" class='px-3 sm:px-6 max-h-[700px] overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-base-200'>
       <table class="table border-collapse border border-primary border-opacity-5">
           <thead class="">
             <tr class="bg-primary bg-opacity-5">
@@ -286,7 +286,7 @@ function articleNavigate(currentArticle: any, mp: any) {
               </td>
               <td 
                 class="border-r border-primary border-opacity-5 text-center  p-5 px-1"
-                :class="{'text-green-600': element.status === 'Получено' || element.status.includes('Получен') || element.status.includes('Ожидает получения до'), 'text-red-700': element.status === 'Отменен', 'text-yellow-500': element.status === 'В пути'}"
+                :class="{'text-green-600': element.status === 'Готов к выдаче' || element.status.includes('Получен') || element.status.includes('Ожидает получения до'), 'text-red-700': element.status === 'Отменен', 'text-yellow-500': element.status === 'В пути'}"
               >{{ (element.status === 'Готов к выдаче' || element.status.includes('Получен') || element.status.includes('Ожидает получения до') ) ? 'Доставлен' : element.status }}</td>
               <td class="border-r border-primary border-opacity-5 text-center p-5px-1">
                 <div class=" rounded-md  w-fit px-5 py-0.5 text-center mx-auto" :class="{'bg-primary bg-opacity-5': element.purchaseDate}">{{ element.purchaseDate ? defaultDateShort(element.purchaseDate) : '-'}}</div>
