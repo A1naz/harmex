@@ -20,13 +20,12 @@ export default eventHandler(async (event) => {
       message: 'Выкуп не найден',
     })
   }
-  found.status = 'active'
-  await found.save()
 
   const cached = fs.readFileSync('pvz/wildberriesPoints.json', 'utf8')
   const parsed = JSON.parse(cached)
 
   const isPVZExist = parsed.points.findIndex((el: any) => el.a == found.point)
+   
 
   if (isPVZExist == -1) {
     throw createError({
@@ -34,6 +33,9 @@ export default eventHandler(async (event) => {
       message: 'ПВЗ недоступно',
     })
   }
+
+  found.status = 'active'
+  await found.save()
 
   await userLog(event, {
     documentType: DocuemntEnum.Buyout,
