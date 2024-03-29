@@ -340,7 +340,7 @@ const customLinks = filters.map((filter) => ({
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -401,7 +401,7 @@ const customLinks = filters.map((filter) => ({
             class="hidden lg:flex"
             :class="'sm:min-w-[120px]'"
             :status-text="'Ozon'"
-            :tabs="mpStore.MPTabs"
+            :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
             @change-value="changeFilter"
           />
           <CustomSelect
