@@ -336,11 +336,10 @@ const productQuantityModel = computed({
       <div class="flex">
         <span class="text-md text-gray-500 mr-3 my-auto">Скидка: </span>
         <button
-          disabled
-          class="w-8 btn btn-ghost btn-sm btn-square text-base-content font-normal hover:text-primary"
+          class="w-fit px-2 btn btn-ghost btn-sm btn-square text-base-content font-normal hover:text-primary"
           @click="props.openDiscount(index, product.price)"
         >
-          {{ product.discountPrice + '/' + product.discountRequestPrice }}
+          {{ (!product.discountPrice || !product.discountRequestPrice) ? '%' : (product.discountPrice + '/' + product.discountRequestPrice) }}
         </button>
       </div>
       <!-- <div class="flex justify-between items-center">
