@@ -62,7 +62,7 @@ export default eventHandler(async (event) => {
       })
       .skip(skip as number)
       .limit(limit as number)
-  }if (status === 'discountAwaiting') {
+  }else if (status === 'discountAwaiting') {
     buyouts = await Buyout.find({ user, status: 'discountAwaiting' })
       .sort({
         createdAt: -1,

@@ -354,7 +354,7 @@ async function changeMP(e: any) {
 }
 const customLinks = filters.map((filter) => ({
   title: filter.title,
-  slot: '/buyouts/wildberries',
+  slot: '/buyouts/ozon',
   query: filter.params,
 }))
 </script>
