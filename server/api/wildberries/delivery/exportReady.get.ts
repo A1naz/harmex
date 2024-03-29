@@ -39,7 +39,11 @@ async function getReady(user: Document) {
         )
 
         if (!buyout) return undefined
-        const foundLog = logs.find(item => item.buyout.valueOf() === buyout._id.valueOf() && item.text.includes('Выкуп выполнен'));
+        const foundLog = logs.find(
+          (item) =>
+            item.buyout.valueOf() === buyout._id.valueOf() &&
+            item.text.includes('Выкуп выполнен')
+        )
         const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt)
         const place = index + 1
         const finishDateHours = finishDate.getHours()
@@ -184,8 +188,23 @@ export default eventHandler(async (event) => {
     // add qr codes to sheet
 
     for (const item of ready) {
-      if (!item?.receiptcodeqr || item?.receiptcodeqr?.length < 40) {
+      if (
+        !item?.receiptcodeqr ||
+        item?.receiptcodeqr?.length < 40 ||
+        item?.receiptcodeqr === 'undefined'
+      ) {
         continue
+      }
+
+      if (
+        item.receiptcodeqr.includes(
+          'data:image/png;base64,data:image/png;base64,'
+        )
+      ) {
+        item.receiptcodeqr = item.receiptcodeqr.replace(
+          'data:image/png;base64,',
+          ''
+        )
       }
 
       const image = workbook.addImage({
