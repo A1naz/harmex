@@ -239,7 +239,9 @@ const productQuantityModel = computed({
           v-if="product.adress"
           class="text-xs h-10 w-full break-all text-center"
         >
+          <span v-show="loading" class="loading loading-spinner" />
           <p
+            v-if="!loading"
             @click="$emit('pointModalOpen', index)"
             class="break-all whitespace-normal cursor-pointer text-primary"
           >
