@@ -29,6 +29,8 @@ const inputs: any = {
 
 const form = reactive({
   text: '',
+  positive: '',
+  negative: '',
   rating: 5,
   date: now.value,
   photos: [
@@ -113,11 +115,10 @@ async function uploadToS3(event: Event, index: number) {
     })
   }
   if (data.value)
-  form.photos[index] = {
+    form.photos[index] = {
       url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
       public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
     }
-    
 
   setTimeout(() => {
     loadingIndex.value = null
@@ -164,6 +165,7 @@ async function publishReview() {
       })
     }
   }
+  //@ts-ignore
   const { data, error } = await useFetch('/api/ozon/review/publish', {
     method: 'POST',
     body: {
@@ -283,14 +285,27 @@ onMounted(() => {
         </option>
       </select>
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
         <div class="w-full">
-          <div class="pb-2 font-medium">Отзыв о товаре</div>
+          <div class="pb-1 font-medium">Отзыв о товаре</div>
 
           <textarea
             v-model="form.text"
             class="textarea w-full textarea-md bg-base-200"
             placeholder="Например, хороший телефон"
+          />
+          <div class="pb-1 font-medium">Достоинства</div>
+          <textarea
+            v-model="form.positive"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, хорошая камера"
+          />
+          <div class="pb-1 font-medium">Недостатки</div>
+
+          <textarea
+            v-model="form.negative"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, плохая батарея"
           />
 
           <div v-if="review.drafts" class="text-xs">

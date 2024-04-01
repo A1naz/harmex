@@ -8,9 +8,16 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { buyoutuuid, deliveryid, rating, text, photos, date } = await readBody(
-    event
-  )
+  const {
+    buyoutuuid,
+    deliveryid,
+    rating,
+    text,
+    photos,
+    date,
+    positive,
+    negative,
+  } = await readBody(event)
 
   if (text) {
     if (text.length < 10 || text.length > 1000) {
@@ -46,7 +53,7 @@ export default eventHandler(async (event) => {
       ''
     )
   )
-    
+
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
@@ -58,9 +65,13 @@ export default eventHandler(async (event) => {
     images,
     status: 'waiting',
     recipientphone: delivery.recipientphone,
+    positive,
+    negative,
   })
+
   const res = await review.save()
   delivery.reviewed = true
+
   const saved = await delivery.save()
 
   await userLog(event, {

@@ -178,6 +178,22 @@ function removeReview() {
             {{ info.text }}
           </div>
         </div>
+        <div class="w-full">
+          <div class="font-bold">Достоинства</div>
+          <div
+            class="w-full bg-base-100 h-auto overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-100 scrollbar-thin"
+          >
+            {{ info.positive }}
+          </div>
+        </div>
+        <div class="w-full">
+          <div class="font-bold">Недостатки</div>
+          <div
+            class="w-full bg-base-100 h-auto overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-100 scrollbar-thin"
+          >
+            {{ info.negative }}
+          </div>
+        </div>
         <!-- <div>
           <div class="font-bold">Дата отзыва</div>
           <div class="relative w-full rounded-lg">

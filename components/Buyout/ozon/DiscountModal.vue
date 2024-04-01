@@ -17,9 +17,16 @@ const props = defineProps({
 const store = useOzonBuyoutStore()
 
 function checkPercent() {
-  if (store.createProducts[props.index].discountPrice < props.price * 0.3) {
+  if (store.createProducts[props.index].discountPrice < props.price * 0.65) {
     store.createProducts[props.index].discountPrice = Math.ceil(
-      props.price * 0.3
+      props.price * 0.65
+    )
+  } else if (
+    store.createProducts[props.index].discountPrice >
+    props.price * 0.8
+  ) {
+    store.createProducts[props.index].discountPrice = Math.floor(
+      props.price * 0.8
     )
   }
 }
