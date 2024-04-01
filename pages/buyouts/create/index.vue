@@ -22,7 +22,7 @@ const mps = [
     title: 'Avito',
     value: 'avito',
     category: 'товары и отели',
-    awaiting: true,
+    awaiting: store.client.username == 'test' ? false : true,
   },
   {
     title: 'Flowwow',
