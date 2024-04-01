@@ -44,7 +44,6 @@ export default eventHandler(async (event) => {
   }
   const type = url.includes('ozon.ru/brand') ? 'brand' : 'product'
 
-  console.log(url)
   if (type === 'product') {
     const article = extractArticulFromOzonLink(url)
 

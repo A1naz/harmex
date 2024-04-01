@@ -1,9 +1,9 @@
 import ExcelJS from 'exceljs'
 
 import type { Document } from 'mongoose'
-import { Delivery } from '~/server/lib/models/ozon/Delivery'
-import { Buyout } from '~/server/lib/models/ozon/Buyout'
-import { Buyoutlog } from '~/server/lib/models/ozon/Buyoutlog'
+import { Delivery } from '~~/server/lib/models/ozon/Delivery'
+import { Buyout } from '~~/server/lib/models/ozon/Buyout'
+import { Buyoutlog } from '~~/server/lib/models/ozon/Buyoutlog'
 import { DocuemntEnum } from '~/data/enums'
 
 const keys = Object.keys as <T>(
@@ -18,14 +18,12 @@ const keys = Object.keys as <T>(
 
 async function getReady(user: Document) {
   const deliveries = await Delivery.find({ user }).sort({ _id: -1 })
+  
   const filtered = deliveries.filter((item) => {
     const currentstatus = item.statusdelivery?.length
       ? item.statusdelivery[item.statusdelivery.length - 1].status
       : 'Неизвестно'
-    return (
-      currentstatus === 'Готов к выдаче' ||
-      currentstatus === 'Готов к получению'
-    )
+    return currentstatus.includes('Ожидает получения')
   })
   const buyoutsId = filtered.map((item) => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
@@ -39,7 +37,11 @@ async function getReady(user: Document) {
         )
 
         if (!buyout) return undefined
-        const foundLog = logs.find(item => item.buyout.valueOf() === buyout._id.valueOf() && item.text.includes('Выкуп выполнен'));
+        const foundLog = logs.find(
+          (item) =>
+            item.buyout.valueOf() === buyout._id.valueOf() &&
+            item.text.includes('Выкуп выполнен')
+        )
         const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt)
         const place = index + 1
         const finishDateHours = finishDate.getHours()
@@ -60,10 +62,8 @@ async function getReady(user: Document) {
           : new Date()
         const deliveryDate = delivery.statusdelivery?.length
           ? new Date(
-              delivery.statusdelivery?.find(
-                (item) =>
-                  item.status === 'Готов к выдаче' ||
-                  item.status === 'Готов к получению'
+              delivery.statusdelivery?.find((item) =>
+                item.status.includes('Ожидает получения')
               )?.date
             )
           : new Date()
@@ -118,7 +118,12 @@ export default eventHandler(async (event) => {
 
     sheet.columns = [
       { header: 'Номер', key: 'place', font: { bold: true } },
-      { header: 'QR код', key: 'receiptcode', width: 16, font: { bold: true } },
+      {
+        header: 'Штрих-код',
+        key: 'receiptcode',
+        width: 48,
+        font: { bold: true },
+      },
       {
         header: 'Статус',
         key: 'currentstatus',
@@ -184,8 +189,23 @@ export default eventHandler(async (event) => {
     // add qr codes to sheet
 
     for (const item of ready) {
-      if (!item?.receiptcodeqr || item?.receiptcodeqr?.length < 40) {
+      if (
+        !item?.receiptcodeqr ||
+        item?.receiptcodeqr?.length < 40 ||
+        item?.receiptcodeqr === 'undefined'
+      ) {
         continue
+      }
+
+      if (
+        item.receiptcodeqr.includes(
+          'data:image/png;base64,data:image/png;base64,'
+        )
+      ) {
+        item.receiptcodeqr = item.receiptcodeqr.replace(
+          'data:image/png;base64,',
+          ''
+        )
       }
 
       const image = workbook.addImage({
@@ -193,8 +213,8 @@ export default eventHandler(async (event) => {
         extension: 'png',
       })
       sheet.addImage(image, {
-        tl: { col: 1, row: item!.place },
-        ext: { width: 100, height: 100 },
+        tl: { col: 1.3, row: item!.place + 0.8 },
+        ext: { width: 280, height: 78 },
       })
       sheet.getRow(item!.place + 1).height = 100
     }
