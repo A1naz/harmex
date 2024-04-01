@@ -86,7 +86,6 @@ const fetchData = async () => {
 
 function changeTab(tab: any) {
   reviews.value = []
-  console.log('tab', tab)
   skip.value = 0
   end.value = false
   currentTab.value = tab.value
