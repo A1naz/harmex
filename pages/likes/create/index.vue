@@ -5,6 +5,8 @@ definePageMeta({
   title: 'Добавить лайки',
 })
 
+const store = useMainStore()
+
 const mps = [
   {
     title: 'Wildberries',
@@ -20,7 +22,7 @@ const mps = [
     title: 'Avito',
     value: 'avito',
     category: 'товары и отели',
-    awaiting: true,
+    awaiting: store.client.username == 'test' ? false : true,
   },
   {
     title: 'Flowwow',

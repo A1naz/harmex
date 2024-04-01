@@ -23,7 +23,7 @@ const search = reactive({
 })
 const codeInput = ref()
 async function getProductLikes() {
-  const { data, error } = await useFetch('/api/wildberries/productlikes/get', {
+  const { data, error } = await useFetch('/api/avito/productlikes/get', {
     method: 'GET',
   })
   if (data.value) product_likes.value = data.value
@@ -47,18 +47,15 @@ async function getProductLikes() {
 }
 await getProductLikes()
 async function create() {
-  const { data, error } = await useFetch(
-    '/api/wildberries/productlikes/create',
-    {
-      method: 'POST',
-      body: {
-        url: url.value,
-        amount: amount.value,
-        period: period.value,
-        productData: productData.value,
-      },
-    }
-  )
+  const { data, error } = await useFetch('/api/avito/productlikes/create', {
+    method: 'POST',
+    body: {
+      url: url.value,
+      amount: amount.value,
+      period: period.value,
+      productData: productData.value,
+    },
+  })
   if (error.value)
     return notify({
       type: 'error',
@@ -68,14 +65,13 @@ async function create() {
   if (data.value) {
     notify({ type: 'success', title: 'Успешно' })
     emit('create')
-    return navigateTo('/productlikes/wildberries')
+    return navigateTo('/productlikes/avito')
   }
-
-
 }
 async function sendUrl() {
-  const { data, error } = await useFetch(
-    '/api/wildberries/productlikes/extract',
+  //@ts-ignore
+  const { data, error }: any = await useFetch(
+    '/api/avito/productlikes/extract',
     {
       method: 'POST',
       body: {
@@ -83,13 +79,12 @@ async function sendUrl() {
       },
     }
   )
-  urlError.value = true
 
   if (data.value) {
     productData.value = data.value
     urlError.value = false
   }
-  // if (error.value) urlError.value = true
+  if (error.value) urlError.value = true
 
   loadingUrl.value = false
 }
@@ -125,15 +120,12 @@ function openRemoveReviewModal(id: any, name: any) {
 }
 
 async function deleteLike() {
-  const { data, error } = await useFetch(
-    '/api/wildberries/productlikes/delete',
-    {
-      method: 'DELETE',
-      body: {
-        id: idForRemove.value,
-      },
-    }
-  )
+  const { data, error } = await useFetch('/api/avito/productlikes/delete', {
+    method: 'DELETE',
+    body: {
+      id: idForRemove.value,
+    },
+  })
 
   if (data.value) {
     getProductLikes()
@@ -149,7 +141,7 @@ async function deleteLike() {
 
 async function selectCreatePage(e: any) {
   const target = e
-  if (target.value == '/productlikes/wildberries?modalShow=true') {
+  if (target.value == '/productlikes/avito?modalShow=true') {
     return
   } else {
     return navigateTo(target.value)
@@ -168,24 +160,24 @@ async function selectCreatePage(e: any) {
       @click.stop
     >
       <div class="flex justify-between">
-        <ProductLikesWildberriesCustomSelect
+        <ProductLikesAvitoCustomSelect
           class="lg:flex"
           :class="'sm:min-w-[120px]'"
           :tabs="[
             {
               title: 'Лайки на товар/бренд',
-              value: '/productlikes/create/wildberries',
+              value: '/productlikes/create/avito',
             },
-            {
-              title: 'Лайки на отзыв',
-              value: '/likes/create/wildberries',
-            },
+            // {
+            //   title: 'Лайки на отзыв',
+            //   value: '/likes/create/avito',
+            // },
           ]"
           @change-value="selectCreatePage"
         />
         <button
           class="text-gray-500 hover:text-gray-700 self-end mb-5"
-          @click="navigateTo('/productlikes/wildberries')"
+          @click="navigateTo('/productlikes/avito')"
         >
           <Icon name="material-symbols:close-rounded" size="24" />
         </button>

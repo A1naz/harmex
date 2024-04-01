@@ -5,7 +5,7 @@ import { SelectOptionsReviews as SelectOptions } from '@/data/enums'
 definePageMeta({
   layout: 'app',
   auth: true,
-  title: 'Отзывы Ozon',
+  title: 'Отзывы Avito',
 })
 
 const { getData } = useApi()
@@ -63,7 +63,7 @@ const isFetch = ref(true)
 const reviews = ref<any>([])
 const fetchData = async () => {
   isFetch.value = true
-  const response = await $fetch(`/api/ozon/review/${endpoint.value}`, {
+  const response = await $fetch(`/api/avito/review/${endpoint.value}`, {
     method: 'GET',
     params: {
       skip: skip.value,
@@ -88,7 +88,7 @@ function changeTab(tab: any) {
   skip.value = 0
   end.value = false
   currentTab.value = tab.value
-  router.push(`/reviews/ozon?status=${tab.value}`)
+  router.push(`/reviews/avito?status=${tab.value}`)
   fetchData()
 }
 
@@ -137,7 +137,7 @@ function closeModal() {
 }
 function goToPublished() {
   closeModal()
-  navigateTo('/reviews/ozon?status=available', {external: true})
+  navigateTo('/reviews/avito?status=available', {external: true})
  
 }
 
@@ -149,7 +149,7 @@ function openRemoveReviewModal(uuid: any) {
 }
 
 async function removeReview() {
-  const { data, error } = await useFetch('/api/ozon/review/delete', {
+  const { data, error } = await useFetch('/api/avito/review/delete', {
     method: 'POST',
     query: {
       id: uuidForRemove.value,
@@ -198,7 +198,7 @@ onMounted(() => {
     currentTab.value = route.query.status.toString()
   } else {
     currentTab.value = 'available'
-    router.push('/reviews/ozon?status=available')
+    router.push('/reviews/avito?status=available')
   }
   fetchData()
 })
@@ -263,7 +263,7 @@ const customLinks = tabs.map(filter => ({
     <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-2">
       <div class="flex w-full gap-2 lg:hidden">
         <ExportXls
-          api="/api/ozon/review/export"
+          api="/api/avito/review/export"
           fileName="MARKETMONSTR Доступные отзывы"
           :isVisible="true"
         />
@@ -294,7 +294,7 @@ const customLinks = tabs.map(filter => ({
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[140px]'"
-          :status-text="'Ozon'"
+          :status-text="'Avito'"
           :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeMP"
         />
@@ -329,7 +329,7 @@ const customLinks = tabs.map(filter => ({
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
-          :status-text="'Ozon'"
+          :status-text="'Avito'"
           :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeMP"
         />
@@ -386,7 +386,7 @@ const customLinks = tabs.map(filter => ({
         </div>
         <div class="flex gap-1 items-center">
           <ExportXls
-            api="/api/ozon/review/export"
+            api="/api/avito/review/export"
             fileName="MARKETMONSTR Доступные отзывы"
             :isVisible="true"
           />
@@ -414,7 +414,7 @@ const customLinks = tabs.map(filter => ({
         v-if="currentTab === 'available'"
         class="cards grid grid-cols-1 gap-4"
       >
-        <ReviewOzonCard
+        <ReviewAvitoCard
           v-for="(review, index) of reviews"
           :key="index"
           :index="index"
@@ -426,7 +426,7 @@ const customLinks = tabs.map(filter => ({
         v-else
         class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
       >
-        <ReviewOzonPublishedCard
+        <ReviewAvitoPublishedCard
           @remove-review="openRemoveReviewModal"
           v-for="(review, index) of reviews"
           :key="index"
@@ -447,7 +447,7 @@ const customLinks = tabs.map(filter => ({
     </div>
     <Hero v-else />
 
-    <ReviewOzonModal
+    <ReviewAvitoModal
       v-if="modalOpen"
       :review="selectedArticle"
       :deliveryid="selectedDelivery"

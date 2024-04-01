@@ -1,11 +1,11 @@
 <script setup lang="tsx">
-
-
 definePageMeta({
   layout: 'app',
   auth: true,
   title: 'Добавить лайки на товар/бренд',
 })
+
+const store = useMainStore()
 
 
 const mps = [
@@ -21,9 +21,9 @@ const mps = [
   },
   {
     title: 'Avito',
-    value: 'avito',
+    value: 'create/avito',
     category: 'товары и отели',
-    awaiting: true,
+    awaiting: store.client.username == 'test' ? false : true,
   },
   {
     title: 'Flowwow',

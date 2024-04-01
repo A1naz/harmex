@@ -62,7 +62,7 @@ async function create() {
       text: error.value.message,
     })
   if (data.value) {
-    notify({ type: 'success', title: 'Упешно' })
+    notify({ type: 'success', title: 'Успешно' })
     emit('create')
     getProductLikes()
   }
