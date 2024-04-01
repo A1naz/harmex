@@ -248,7 +248,7 @@ function changeFilter(e: any) {
 
 const customLinks = filters.map((filter) => ({
   title: filter.title,
-  slot: '/delivery/ozon',
+  slot: '/delivery/avito',
   query: filter.params,
 }))
 </script>

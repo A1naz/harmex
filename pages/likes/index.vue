@@ -9,6 +9,7 @@ definePageMeta({
 })
 const store = useMainStore()
 const mpStore = useMPStore()
+const router = useRouter()
 const review_likes = ref<any>([])
 const MPSelect = ref()
 const loading = ref(true)
@@ -131,9 +132,14 @@ const updateSearchType = (filter: any) => {
 }
 
 async function selectMP(value: any) {
-  selectedMP.value = value.value
-  mpStore.setSelectedMP(value.value)
-  getLikes()
+  if(value.value == 'avito'){
+    router.push(`/productlikes/avito`)
+  }else{
+    selectedMP.value = value.value
+    mpStore.setSelectedMP(value.value)
+    getLikes()
+  }
+  
 }
 </script>
 
@@ -153,7 +159,7 @@ async function selectMP(value: any) {
           class="hidden lg:flex"
           :class="'navbar:min-w-[120px]'"
           :status-text="selectedMP"
-          :tabs="mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="selectMP"     
         />
         <CustomSelect
@@ -195,7 +201,7 @@ async function selectMP(value: any) {
           class="lg:hidden"
           :class="'navbar:min-w-[120px]'"
           :status-text="selectedMP"
-          :tabs="mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="selectMP"
         />
         <CustomSelect

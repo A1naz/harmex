@@ -127,7 +127,7 @@ function daysToPenalty(statusdelivery: any[]) {
                     Артикул
                 </div> -->
                 <a
-                    :href="`https://www.ozon.ru/product/${info.article}`" target="_blank"
+                    :href="`https://www.avito.ru/${info.article}`" target="_blank"
                         class=" text-primary link link-hover text-sm"
                         >
                         {{ info.article }}
