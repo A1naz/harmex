@@ -124,7 +124,6 @@ function removeProduct() {
   amount.value = 0
 }
 
-
 onMounted(() => {
   if (route.query.modalShow) {
     modalShow.value = route.query.modalShow === 'true'
@@ -190,8 +189,10 @@ async function selectFilterDate(e: any) {
 }
 
 async function changeFilter(e: any) {
-  e.value === 'avito' ? router.push(`/productlikes/avito`) : mpStore.selectedMP = e.value
-  if(e.value !== 'avito') router.push(`/productlikes`)
+  e.value === 'avito'
+    ? router.push(`/productlikes/avito`)
+    : (mpStore.selectedMP = e.value)
+  if (e.value !== 'avito') router.push(`/productlikes`)
 }
 
 async function findBuyouts(value: string, type: string) {
@@ -249,7 +250,11 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="mpStore.MPTabs"
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.MPTabsTest
+              : mpStore.MPTabs
+          "
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -291,7 +296,11 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
           :status-text="'Wildberries'"
-          :tabs="mpStore.MPTabs"
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.MPTabsTest
+              : mpStore.MPTabs
+          "
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -373,7 +382,8 @@ const updateSearchType = (filter: any) => {
             :key="index"
           >
             <td
-              class="text-center border-r border-primary border-opacity-5 mx-auto" :class="{'rounded-bl-2xl': index === product_likes.length - 1}"
+              class="text-center border-r border-primary border-opacity-5 mx-auto"
+              :class="{ 'rounded-bl-2xl': index === product_likes.length - 1 }"
             >
               <div
                 style="width: 28px; height: 36px; border-radius: 4px"
@@ -458,7 +468,10 @@ const updateSearchType = (filter: any) => {
                 {{ defaultDateShort(item.createdDate) }}
               </div>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5" :class="{'rounded-br-2xl': index === product_likes.length - 1}">
+            <td
+              class="text-center border-r border-primary border-opacity-5"
+              :class="{ 'rounded-br-2xl': index === product_likes.length - 1 }"
+            >
               <div
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"

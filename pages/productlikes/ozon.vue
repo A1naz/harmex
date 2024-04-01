@@ -119,7 +119,6 @@ function removeProduct() {
   amount.value = 0
 }
 
-
 onMounted(() => {
   if (route.query.modalShow) {
     modalShow.value = route.query.modalShow === 'true'
@@ -128,8 +127,6 @@ onMounted(() => {
     router.push({ query })
   }
 })
-
-
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
@@ -184,8 +181,10 @@ async function selectFilterDate(e: any) {
 }
 
 async function changeFilter(e: any) {
-  e.value === 'avito' ? router.push(`/productlikes/avito`) : mpStore.selectedMP = e.value
-  if(e.value !== 'avito') router.push(`/productlikes`)
+  e.value === 'avito'
+    ? router.push(`/productlikes/avito`)
+    : (mpStore.selectedMP = e.value)
+  if (e.value !== 'avito') router.push(`/productlikes`)
 }
 
 async function findBuyouts(value: string, type: string) {
@@ -250,7 +249,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -292,7 +291,11 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="mpStore.MPTabs"
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.MPTabsTest
+              : mpStore.MPTabs
+          "
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -374,7 +377,8 @@ const updateSearchType = (filter: any) => {
           >
             <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
             <td
-              class="text-center border-r border-primary border-opacity-5 mx-auto bg-base-100" :class="{'rounded-bl-2xl': index === product_likes.length - 1}"
+              class="text-center border-r border-primary border-opacity-5 mx-auto bg-base-100"
+              :class="{ 'rounded-bl-2xl': index === product_likes.length - 1 }"
             >
               <div
                 style="width: 40px; height: 40px; border-radius: 4px"
@@ -422,18 +426,24 @@ const updateSearchType = (filter: any) => {
                 <span class="max-w-[150px] truncate">{{ item.url }}</span>
               </a>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5 bg-base-100">
+            <td
+              class="text-center border-r border-primary border-opacity-5 bg-base-100"
+            >
               <div class="flex flex-col">
                 {{ item.type === 'brand' ? 'Лайк на бренд' : 'Лайк на товар' }}
               </div>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5 bg-base-100">
+            <td
+              class="text-center border-r border-primary border-opacity-5 bg-base-100"
+            >
               <div class="flex flex-col">
                 {{ item.amount }}
               </div>
             </td>
 
-            <td class="text-center border-r border-primary border-opacity-5 bg-base-100">
+            <td
+              class="text-center border-r border-primary border-opacity-5 bg-base-100"
+            >
               <div
                 :class="{
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
@@ -452,14 +462,19 @@ const updateSearchType = (filter: any) => {
                 {{ getStatus(item.status) }}
               </div>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5 bg-base-100">
+            <td
+              class="text-center border-r border-primary border-opacity-5 bg-base-100"
+            >
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
                 {{ defaultDateShort(item.createdDate) }}
               </div>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5 bg-base-100 " :class="{'rounded-br-2xl': index === product_likes.length - 1}">
+            <td
+              class="text-center border-r border-primary border-opacity-5 bg-base-100"
+              :class="{ 'rounded-br-2xl': index === product_likes.length - 1 }"
+            >
               <div
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
