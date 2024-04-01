@@ -233,6 +233,7 @@ const productQuantityModel = computed({
               }}
             </div>
             <button
+            disabled
               class="border-base-100"
               @click="$emit('ruleModalOpen', index)"
             >
@@ -292,17 +293,20 @@ const productQuantityModel = computed({
             class="text-xs h-10 w-full truncate max-w-[80px]"
           >
             <span v-show="loading" class="loading loading-spinner" />
+            <!-- @click="$emit('pointModalOpen', index)" -->
             <p
               v-if="!loading"
-              @click="$emit('pointModalOpen', index)"
+              
               class="truncate cursor-pointer text-primary"
             >
               {{ product.adress }}
             </p>
           </div>
+          <!-- :disabled="loading" -->
           <button
+          disabled
             v-if="!product.adress"
-            :disabled="loading"
+            
             :class="{
               'btn-outline': product.adress,
             }"

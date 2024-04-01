@@ -21,10 +21,10 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
-  pointCoordinates: {
-    lat: number
-    lon: number
-  }
+  // pointCoordinates: {
+  //   lat: number
+  //   lon: number
+  // }
   pointId: string
   discount: boolean
   discountRequestPrice: number
@@ -84,20 +84,25 @@ export default eventHandler(async (event) => {
       product.dateRange = [date1, date2]
     }
 
-    let city, state
-    ;({ city, state } = await getCityByGeo(
-      product.pointCoordinates.lat.toString(),
-      product.pointCoordinates.lon.toString()
-    ))
+    // let city, state
+    // ;({ city, state } = await getCityByGeo(
+    //   product.pointCoordinates.lat.toString(),
+    //   product.pointCoordinates.lon.toString()
+    // ))
 
     const buyout = new Buyout({
       article: product.article,
       searchQuery: searchQueries.join(', '),
-      point: product.adress,
-      pointCoordinates: product.pointCoordinates,
-      point_city: city,
-      point_state: state,
-      pointId: Number(product.pointId),
+      // point: product.adress,
+      // pointCoordinates: product.pointCoordinates,
+      // point_city: city,
+      // point_state: state,
+      // pointId: Number(product.pointId),
+      point: '',
+      pointCoordinates: '',
+      point_city: '',
+      point_state: '',
+      pointId: 0,
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,

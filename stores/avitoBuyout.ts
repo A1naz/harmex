@@ -110,7 +110,7 @@ export const useAvitoBuyoutStore = defineStore('avitoBuyout', {
           pointCoordinates: { lat: 0, lon: 0 },
         })
       )
-      this.changeRule(true, this.createProducts.length - 1, 5)
+      // this.changeRule(true, this.createProducts.length - 1, 5)
     },
     removeSearchQuery(index: number, place: number) {
       this.createProducts[index].searchQuery.splice(place, 1)

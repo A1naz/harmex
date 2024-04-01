@@ -182,10 +182,10 @@ async function openChecksModal() {
   let valid = true
   let errorMsg = ''
   products.value.forEach((item) => {
-    if (!item.adress) {
-      valid = false
-      errorMsg = 'Не у всех товаров указан адрес доставки'
-    }
+    // if (!item.adress) {
+    //   valid = false
+    //   errorMsg = 'Не у всех товаров указан адрес доставки'
+    // }
     if (!item.dateRange[0] || !item.dateRange[1]) {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'

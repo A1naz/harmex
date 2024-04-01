@@ -16,20 +16,20 @@ export default eventHandler(async (event) => {
   const article = params.article
 
   //@ts-ignore
-  const data: any = await $fetch('http://95.163.249.133:4141', {
-    method: 'POST',
-    body: {
-      type: 'ozonProduct',
-      url: `https://www.ozon.ru/product/${article}/`,
-    },
-  })
+  // const data: any = await $fetch('http://95.163.249.133:4141', {
+  //   method: 'POST',
+  //   body: {
+  //     type: 'ozonProduct',
+  //     url: `https://www.ozon.ru/product/${article}/`,
+  //   },
+  // })
 
-  if (!data) {
-    return createError({
-      statusCode: 400,
-      message: 'Товар не найден',
-    })
-  }
+  // if (!data) {
+  //   return createError({
+  //     statusCode: 400,
+  //     message: 'Товар не найден',
+  //   })
+  // }
 
   return {
     // product: {
@@ -45,7 +45,7 @@ export default eventHandler(async (event) => {
       article: "3808121318",
       name: "Золотые часы женские бу",
       sizes: ['0'],
-      description: "Часы Noblia Woman SZ2172-11A Аналоговые женские кварцевые Аналоговые 03 ATM Водостойкие Сталь с покрытием из желтого золота Белый 26 5 Кожа Коричневый Prezzo: ?",
+      description: "Часы NobliapWoman SZ2172-11A Аналоговые женские кварцевые Аналоговые 03 ATM Водостойкие Сталь с покрытием из желтого золота Белый 26 5 Кожа Коричневый Prezzo: ?",
       price: 17000,
       priceText: '17000 ₽',
   }
