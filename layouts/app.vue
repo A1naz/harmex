@@ -73,7 +73,10 @@ function toggleInfoModal() {
 const statusText = computed(() => {
   if (route.path.startsWith('/profile')) {
     return 'Профиль';
-  } else {
+  } else if (route.path.startsWith('/productlikes')) {
+    return 'Лайки'
+  }else
+  {
     return (
       storeMain.client.mmenuItems
         .flatMap((section) => section.items)

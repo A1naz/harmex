@@ -40,7 +40,7 @@ async function create() {
   if (error.value)
     return notify({ type: 'error', title: 'Что-то пошло не так', text: error.value.message })
   if (data.value) {
-    notify({ type: 'success', title: 'Упешно' })
+    notify({ type: 'success', title: 'Успешно' })
     removeProduct()
     publishDate.value = now.value
     emit('create')

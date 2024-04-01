@@ -7,20 +7,22 @@ definePageMeta({
   auth: true,
   title: 'Доставки',
 })
-
-const mpStore = useMPStore()
 const openAll = ref(false)
 const route = useRoute()
 const router = useRouter()
 const store = useMainStore()
+const mpStore = useMPStore()
+mpStore.selectedMP = 'wildberries'
+const MPSelect = ref()
+const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const deliveries = ref([]) as any
 const autoTarget = ref(true)
+const loading = ref(true)
 const codeInput = ref()
 const codeInputMob = ref()
 const loadingExport = ref(false)
 const status = computed(() => route.query?.status || 'all')
-const loading = ref(false)
-const search = ref<any>({
+const search = reactive({
   text: '',
   loading: false,
   error: false,
@@ -65,7 +67,7 @@ const skip = ref(50)
 const end = ref(false)
 async function getDeliveries() {
   loading.value = true
-  const { data, error } = await useFetch('/api/wildberries/delivery/get', {
+  const { data, error } = await useFetch('/api/avito/delivery/get', {
     method: 'GET',
     query: {
       status: status.value ?? 'all',
@@ -79,20 +81,20 @@ getDeliveries()
 
 async function exportReadyXLS() {
   loadingExport.value = true
-  const { data } = await useFetch('/api/wildberries/delivery/exportReady', {
+  const { data } = await useFetch('/api/avito/delivery/exportReady', {
     responseType: 'blob',
   })
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Готовы к выдаче Wildberries.xlsx')
+  fileLink.setAttribute('download', 'Готовы к выдаче Ozon.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
   loadingExport.value = false
 }
 async function exportXLS() {
   loadingExport.value = true
-  const { data, error } = await useFetch('/api/wildberries/delivery/export', {
+  const { data, error } = await useFetch('/api/avito/delivery/export', {
     responseType: 'blob',
   })
   if (error.value) {
@@ -107,7 +109,7 @@ async function exportXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Общая таблица Wildberries.xlsx')
+  fileLink.setAttribute('download', 'Общая таблица Ozon.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
   loadingExport.value = false
@@ -117,10 +119,10 @@ async function findDeliveries(value: string, type: string) {
   if (!value) {
     autoTarget.value = true
     await getDeliveries()
-    search.value.loading = false
+    search.loading = false
     return
   }
-  const { data, error } = await useFetch('/api/wildberries/delivery/search', {
+  const { data, error } = await useFetch('/api/avito/delivery/search', {
     query: {
       string: value,
       type,
@@ -128,7 +130,7 @@ async function findDeliveries(value: string, type: string) {
   })
   if (data.value) deliveries.value = data.value
 
-  search.value.loading = false
+  search.loading = false
 }
 
 const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000)
@@ -136,23 +138,31 @@ const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000)
 async function onSearchInput(event: Event) {
   const newValue = (event.target as HTMLInputElement).value
   autoTarget.value = false
-  search.value.loading = true
-  findDeliveriesDebounced(search.value.text, search.value.type)
+  search.loading = true
+  findDeliveriesDebounced(search.text, search.type)
 }
 
-function openInfoModal() {
-  // store.infoModal = true
+async function onSearchInputButton(event: any) {
+  const newValue = event.value
+  autoTarget.value = false
+  search.loading = true
+  findDeliveriesDebounced(search.text, search.type)
+}
+
+const isInfoModal = ref<boolean>(false)
+function toggleInfoModal() {
+  isInfoModal.value = !isInfoModal.value
 }
 
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && deliveries.value.length >= 50) {
     if (end.value) return
-    const { data, error } = await useFetch('/api/wildberries/delivery/get', {
+    const { data, error } = await useFetch('/api/avito/delivery/get', {
       method: 'GET',
       query: {
         status: route.query?.status || 'all',
         limit: 50,
-        skip: skip.value,
+        skip: skip.value ? skip.value : 0,
       },
     })
     if ((data.value as any)?.length === 0) {
@@ -169,7 +179,7 @@ watch(
   async (newRoute) => {
     skip.value = 50
     end.value = false
-    const { data } = await useFetch('/api/wildberries/delivery/get', {
+    const { data } = await useFetch('/api/avito/delivery/get', {
       method: 'GET',
       query: {
         status: status.value ?? 'all',
@@ -219,15 +229,12 @@ const filters = [
     queryStatus: 'canceled',
   },
 ]
-
-const customLinks = filters.map((filter) => ({
-  title: filter.title,
-  slot: '/delivery/wildberries',
-  query: filter.params,
-}))
+const statusText = computed(() => {
+  return filters.find((el: any) => el.queryStatus === route.query.status)?.title
+})
 
 const updateSearchType = (filter: any) => {
-  search.value.type = filter.value
+  search.type = filter.value
 }
 
 function changeFilter(e: any) {
@@ -238,8 +245,13 @@ function changeFilter(e: any) {
       (route.query?.status ? '?status=' + route.query.status : '')
   )
 }
-</script>
 
+const customLinks = filters.map((filter) => ({
+  title: filter.title,
+  slot: '/delivery/avito',
+  query: filter.params,
+}))
+</script>
 <template>
   <div>
     <!-- <div class="flex items-center gap-2 mt-4">
@@ -280,7 +292,8 @@ function changeFilter(e: any) {
             <label
               tabindex="0"
               class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
-              >XLS</label
+              >XLS
+              </label
             >
             <ul
               tabindex="0"
@@ -320,12 +333,14 @@ function changeFilter(e: any) {
              
           </div>
         </div>
+        
+      
       </div>
       <div class="flex gap-2 mt-2 lg:hidden">
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
-          :status-text="'Wildberries'"
+          :status-text="'Avito'"
           :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="changeFilter"
         />
@@ -386,7 +401,7 @@ function changeFilter(e: any) {
           <CustomSelect
             class="hidden lg:flex"
             :class="'sm:min-w-[120px]'"
-            :status-text="'Wildberries'"
+            :status-text="'Avito'"
             :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
             @change-value="changeFilter"
           />
@@ -498,6 +513,7 @@ function changeFilter(e: any) {
               />
           </div>
         </div>
+              
             </div>
           </div>
           <div v-if="deliveries.length" class="export">
@@ -560,7 +576,7 @@ function changeFilter(e: any) {
             :key="index"
             class="overflow-visible z-0"
           >
-            <DeliveryWildberriesExpand
+            <DeliveryAvitoExpand
               :state="openAll"
               :info="delivery"
               @open-modal="openModal"
@@ -577,7 +593,7 @@ function changeFilter(e: any) {
             :key="index"
             class="overflow-visible z-0"
           >
-            <DeliveryWildberriesExpand
+            <DeliveryAvitoExpand
               :state="openAll"
               :info="delivery"
               @open-modal="openModal"
