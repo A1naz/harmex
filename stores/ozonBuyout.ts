@@ -108,7 +108,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
           rules: [],
           pointCoordinates: { lat: 0, lon: 0 },
           discountRequestPrice: product.price,
-          discountPrice: product.price,
+          discountPrice: Math.ceil(product.price * 0.65),
         })
       )
     },
