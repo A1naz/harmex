@@ -1,6 +1,7 @@
 ﻿import { Delivery } from '~/server/lib/models/Delivery'
 import { Delivery as OzonDelivery } from '~/server/lib/models/ozon/Delivery';
 import { Delivery as WildberriesDelivery } from '~/server/lib/models/wildberries/Delivery';
+import { Delivery as AvitoDelivery } from '~/server/lib/models/avito/Delivery';
 
 export default eventHandler(async (event) => {
 
@@ -77,6 +78,7 @@ export default eventHandler(async (event) => {
   if(limit && skip){
     let deliveriesOzon = []
     let deliveriesWildberries = []
+    let deliveriesAvito = []
   if(type=='all'){
     deliveriesOzon = await OzonDelivery.find({ 
       user, 
@@ -91,6 +93,18 @@ export default eventHandler(async (event) => {
     .skip(skip as number);
 
     deliveriesWildberries = await WildberriesDelivery.find({ 
+      user, 
+      updatedAt: filter.dataoperation,
+      $or: [
+          { article: { $regex: search, $options: 'i' } },
+          { point: { $regex: search, $options: 'i' } },
+          { uuidbuyout: { $regex: search, $options: 'i' } }
+      ],
+    })
+    .limit(limit as number)
+    .skip(skip as number);
+
+    deliveriesAvito = await AvitoDelivery.find({ 
       user, 
       updatedAt: filter.dataoperation,
       $or: [
@@ -189,28 +203,44 @@ export default eventHandler(async (event) => {
                 type
             ]
         }
-      })    
+      })
+          
+      deliveriesAvito = await AvitoDelivery.find({ 
+        user, 
+        updatedAt: filter.dataoperation,
+        $or: [
+            { article: { $regex: search, $options: 'i' } },
+            { point: { $regex: search, $options: 'i' } },
+            { uuidbuyout: { $regex: search, $options: 'i' } }
+        ],
+        $expr: {
+            $eq: [
+                { $arrayElemAt: ["$statusdelivery.status", -1] }, 
+                type
+            ]
+        }
+      })
     
     
     }
 
     deliveriesOzon.forEach((item: any) => {
       const sentToAssembly = item.statusdelivery[0];
-        const receiptDate = item.statusdelivery.find((item: any) => item.status.includes("Ожидает получения до"));
-        const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получен');
-        const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
-        
-        
-            lastElements.push({
-              article: item.article,
-              pvz: item.point,
-              status: status === 'Передается в доставку' ? 'В пути' : status,
-              purchaseDate: sentToAssembly?.date  || '',
-              id: item.uuidbuyout,
-              receiptDate: receiptDate?.date || '',
-              receiveDate: receiveDate?.date || '',
-              mp:'ozon',
-            })
+      const receiptDate = item.statusdelivery.find((item: any) => item.status.includes("Ожидает получения до"));
+      const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получен');
+      const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
+      
+      
+          lastElements.push({
+            article: item.article,
+            pvz: item.point,
+            status: status === 'Передается в доставку' ? 'В пути' : status,
+            purchaseDate: sentToAssembly?.date  || '',
+            id: item.uuidbuyout,
+            receiptDate: receiptDate?.date || '',
+            receiveDate: receiveDate?.date || '',
+            mp:'ozon',
+          })
     })
 
     deliveriesWildberries.forEach((item: any) => {
@@ -232,11 +262,32 @@ export default eventHandler(async (event) => {
           })
         
     })
+
+    deliveriesAvito.forEach((item: any) => {
+      const sentToAssembly = item.statusdelivery[0];
+      const receiptDate = item.statusdelivery.find((item: any) => item.status === 'Готов к выдаче');
+      const receiveDate = item.statusdelivery.find((item: any) => item.status === 'Получено');
+      const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
+  
+      
+          lastElements.push({
+            article: item.article,
+            pvz: item.point,
+            status: status,
+            purchaseDate: sentToAssembly?.date || '',
+            id: item.uuidbuyout,
+            receiptDate: receiptDate?.date || '',
+            receiveDate: receiveDate?.date || '',
+            mp:'avito',
+          })
+        
+    })
     return { lastElements}
   }
   // if (!deliveries) return []
   const deliveriesOzon = await OzonDelivery.find({ user, updatedAt: filter.dataoperation })
   const deliveriesWildberries = await WildberriesDelivery.find({ user, updatedAt: filter.dataoperation })
+  const deliveriesAvito = await AvitoDelivery.find({ user, updatedAt: filter.dataoperation })
   const purchase = deliveriesOzon.length + deliveriesWildberries.length
   
   
@@ -279,6 +330,21 @@ export default eventHandler(async (event) => {
         
     } 
     
+  })
+
+  deliveriesAvito.forEach((item: any) => {
+    const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
+    if (status === 'В пути') {
+      inTransit++;
+    } else if (status === 'Готов к выдаче') {
+        ready++; 
+    } else if (status === 'Получено') {
+        received++;
+        if(item.reviewed === false) reviews++;
+        
+    } else if (item.status === 'canceled') {
+        cancelled++;  
+    } 
   })
 
   return {purchase , inTransit, ready, received, cancelled , reviews}

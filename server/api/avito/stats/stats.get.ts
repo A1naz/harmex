@@ -1,4 +1,4 @@
-﻿﻿import { Delivery } from '~/server/lib/models/Delivery'
+﻿﻿import { Delivery } from '~/server/lib/models/avito/Delivery'
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 
 export default eventHandler(async (event) => {
@@ -19,6 +19,7 @@ export default eventHandler(async (event) => {
     'questions',
     'productlikes',
     'carts',
+    'autoanswers',
   ]
 
   switch (period) {
@@ -106,6 +107,7 @@ export default eventHandler(async (event) => {
   }else if(type == 'likes'){
     history = await paymenthistory.find({
       user,
+      mp: 'avito',
       dataoperation: {
           ...filter.dataoperation
       },
@@ -115,20 +117,24 @@ export default eventHandler(async (event) => {
       ],
   })
   
-  } 
-  else {
+  }
+   else {
     history = await paymenthistory.find({
         user,
+        mp: 'avito',
         ...filter,
       })
   }
+
   const penaltyDeliveriesPayments = await paymenthistory.find({
     user,
+    mp: 'avito',
     dataoperation: filter.dataoperation,
     typeoperations: 'Расход',
     type: 'deliveries',
     comment: { $regex: 'Штраф', $options: 'i' },
   })
+
   
   const format: any = []
 
@@ -170,9 +176,10 @@ export default eventHandler(async (event) => {
                 dataoperation: '$updatedAt'
             }}
         ])
-      } else if (type == 'likes'){
+      }else if (type == 'likes'){
         newHistory = await paymenthistory.find({
           user,
+          mp: 'avito',
           $or: [
               { type: filter.type },
               { type: 'productlikes' }
@@ -182,10 +189,11 @@ export default eventHandler(async (event) => {
               $lt: currentDate,
           },
         })
-      }else 
-      {
+      }
+       else {
         newHistory = await paymenthistory.find({
             user,
+            mp: 'avito',
             type: filter.type,
             dataoperation: {
                 $gte: oneWeekAgo,
@@ -281,6 +289,7 @@ export default eventHandler(async (event) => {
 
   let paymentsForSumm: any = await paymenthistory.find({
     user,
+    mp: 'avito',
     dataoperation: filter.dataoperation,
     type: {
       $in: types.filter( a=> a !== 'deliveries'),
@@ -342,10 +351,10 @@ export default eventHandler(async (event) => {
       quantity: 0,
     },
     {
-      value: 'deliveries',
-      title: 'Доставки',
-      expenses: 0,
-      quantity: 0,
+        value: 'deliveries',
+        title: 'Доставки',
+        expenses: 0,
+        quantity: 0,
     },
     {
       value: 'reviews',
@@ -377,6 +386,12 @@ export default eventHandler(async (event) => {
       expenses: 0,
       quantity: 0,
     },
+    // {
+    //   value: 'autoanswer',
+    //   title: 'Автоответчик',
+    //   expenses: 0,
+    //   quantity: 0,
+    // },
   ]
 
   const likesItem = {
@@ -386,24 +401,20 @@ export default eventHandler(async (event) => {
     quantity: 0,
   };
 
-  
-
   typeSumMap.forEach((value, key) => {
     if (key === 'likes' || key === 'productlikes') {
       likesItem.expenses += value;
       likesItem.quantity += typeSumMap.get(key + ' quantity');
       services[0].quantity += typeSumMap.get(key + ' quantity');
       services[0].expenses += value
-    } else {
-      services.forEach((item) => {
-        if (item.value === key) {
-          item.expenses = value;
-          item.quantity = typeSumMap.get(key + ' quantity');
-          services[0].quantity += item.quantity;
-          services[0].expenses += item.expenses;
-        }
-      });
-    }
+    } else services.forEach((item) => {
+      if (item.value == key) {
+        item.expenses = value
+        item.quantity = typeSumMap.get(key + ' quantity')
+        services[0].quantity += item.quantity
+        services[0].expenses = services[0].expenses + item.expenses
+      }
+    })
   })
 
   const penalty = {
@@ -414,7 +425,6 @@ export default eventHandler(async (event) => {
   };
 
   
-
   penaltyDeliveriesPayments.forEach((item) => {
     penalty.expenses += +item.summ
     penalty.quantity += 1
@@ -424,5 +434,5 @@ export default eventHandler(async (event) => {
   services.splice(4, 0, likesItem);
   services.push(penalty);
 
-  return { data: format.data, labels: format.labels, services, }
+  return { data: format.data, labels: format.labels, services }
 })

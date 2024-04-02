@@ -104,6 +104,19 @@ export default eventHandler(async (event) => {
         }},
 
     ])
+  }else if(type == 'likes'){
+    history = await paymenthistory.find({
+      user,
+      mp: 'wildberries',
+      dataoperation: {
+          ...filter.dataoperation
+      },
+      $or: [
+          { type: filter.type },
+          { type: 'productlikes' }
+      ],
+  })
+  
   } else {
     history = await paymenthistory.find({
         user,
@@ -112,6 +125,15 @@ export default eventHandler(async (event) => {
       })
   }
   
+  const penaltyDeliveriesPayments = await paymenthistory.find({
+    user,
+    mp: 'wildberries',
+    dataoperation: filter.dataoperation,
+    typeoperations: 'Расход',
+    type: 'deliveries',
+    comment: { $regex: 'Штраф', $options: 'i' },
+  })
+
   const format: any = []
 
   if (period == 'week' || period == 'today' || period == 'yesterday') {
@@ -152,7 +174,21 @@ export default eventHandler(async (event) => {
                 dataoperation: '$updatedAt'
             }}
         ])
-      } else {
+      }else if (type == 'likes'){
+        newHistory = await paymenthistory.find({
+          user,
+          mp: 'wildberries',
+          $or: [
+              { type: filter.type },
+              { type: 'productlikes' }
+          ],
+          dataoperation: {
+              $gte: oneWeekAgo,
+              $lt: currentDate,
+          },
+        })
+      } 
+      else {
         newHistory = await paymenthistory.find({
             user,
             mp: 'wildberries',
@@ -167,7 +203,7 @@ export default eventHandler(async (event) => {
     trueCurDate.setDate(trueCurDate.getDate() + 1)
     trueCurDate.setHours(3, 0, 0, 0)
 
-    for (const payment of newHistory) {
+    for (const payment of type == 'penalty' ? penaltyDeliveriesPayments : newHistory) {
       const recordDate: any = new Date(payment.dataoperation)
 
       if (recordDate >= oneWeekAgo && recordDate <= trueCurDate) {
@@ -229,7 +265,7 @@ export default eventHandler(async (event) => {
     const sumByDayArray = new Array(numberOfDaysInMonth).fill(0)
     currentMonth.setHours(3)
 
-    for (const payment of history) {
+    for (const payment of type == 'penalty' ? penaltyDeliveriesPayments : history) {
       const recordDate: any = new Date(payment.dataoperation)
 
       const daysAgo = Math.floor(
@@ -367,6 +403,8 @@ export default eventHandler(async (event) => {
     if (key === 'likes' || key === 'productlikes') {
       likesItem.expenses += value;
       likesItem.quantity += typeSumMap.get(key + ' quantity');
+      services[0].quantity += typeSumMap.get(key + ' quantity');
+      services[0].expenses += value
     } else services.forEach((item) => {
       if (item.value == key) {
         item.expenses = value
@@ -378,24 +416,17 @@ export default eventHandler(async (event) => {
   })
 
   const penalty = {
-    value: 'panalty',
+    value: 'penalty',
     title: 'Штрафы',
     expenses: 0,
     quantity: 0,
   };
 
-  const penaltyDeliveriesPayments = await paymenthistory.find({
-    user,
-    mp: 'wildberries',
-    dataoperation: filter.dataoperation,
-    typeoperations: 'Расход',
-    type: 'deliveries',
-    comment: { $regex: 'Штраф', $options: 'i' },
-  })
-
   penaltyDeliveriesPayments.forEach((item) => {
     penalty.expenses += +item.summ
     penalty.quantity += 1
+    services[0].quantity += 1
+    services[0].expenses += +item.summ
   })
   services.splice(4, 0, likesItem);
   services.push(penalty);
