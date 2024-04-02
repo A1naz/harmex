@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid'
 import type { Rule } from '@/data/buyout/rules'
 import { Buyout } from '@/server/lib/models/avito/Buyout'
-import getPickpoints from '~/server/utils/ozon/getAvitoPoints'
+import getPickpoints from '@/server/utils/avito/getAvitoPoints'
 import { userLog } from '~/server/utils/userLog'
 import { DocuemntEnum } from '~/data/enums'
 
@@ -21,14 +21,6 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
-  // pointCoordinates: {
-  //   lat: number
-  //   lon: number
-  // }
-  pointId: string
-  discount: boolean
-  discountRequestPrice: number
-  discountPrice: number
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -51,7 +43,7 @@ export default eventHandler(async (event) => {
 
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
-
+  
   const { points } = getPickpoints()
 
   const products: Item[] = body
@@ -77,32 +69,34 @@ export default eventHandler(async (event) => {
         date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
         date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
       } else {
+
         date1.setHours(date1.getHours() + 3)
         date2.setHours(date2.getHours() + 3)
+        
       }
 
       product.dateRange = [date1, date2]
     }
 
+    const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
+
     // let city, state
-    // ;({ city, state } = await getCityByGeo(
-    //   product.pointCoordinates.lat.toString(),
-    //   product.pointCoordinates.lon.toString()
-    // ))
+    // if (foundPoint.city && foundPoint.state) {
+    //   city = foundPoint.city
+    //   state = foundPoint.state
+    // } else {
+    //   ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
+    // }
 
     const buyout = new Buyout({
       article: product.article,
       searchQuery: searchQueries.join(', '),
       // point: product.adress,
-      // pointCoordinates: product.pointCoordinates,
       // point_city: city,
       // point_state: state,
-      // pointId: Number(product.pointId),
       point: '',
-      pointCoordinates: '',
       point_city: '',
       point_state: '',
-      pointId: 0,
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,
@@ -118,13 +112,6 @@ export default eventHandler(async (event) => {
         image: product.image,
       },
       uuid: uuid(),
-      discount:
-        product.discountPrice == product.price &&
-        product.discountRequestPrice == product.price
-          ? false
-          : true,
-      discountPrice: product.discountPrice,
-      discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
     })
