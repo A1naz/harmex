@@ -11,17 +11,15 @@ const props = defineProps({
   <div
     class="buyout-card max-w-[270px] md:max-w-[285px] card shadow-xl bg-base-100"
   >
-    <div class="card-body flex flex-col justify-center md:justify-start max-h-[312px] p-3">
+    <div
+      class="card-body flex flex-col justify-center md:justify-start max-h-[312px] p-3"
+    >
       <div class="flex flex-col justify-between mt-2">
         <span class="text-xs">Даты выкупов: </span>
         <div class="text-xs">
-          <span>
-            {{ defaultDate(product.dateRange[0]) }}</span
-          >
+          <span> {{ defaultDate(product.dateRange[0]) }}</span>
           -
-          <span>
-            {{ defaultDate(product.dateRange[1]) }}</span
-          >
+          <span> {{ defaultDate(product.dateRange[1]) }}</span>
         </div>
       </div>
       <div class="flex justify-between">
@@ -37,15 +35,16 @@ const props = defineProps({
       </div>
       <div class="flex justify-between">
         <div class="w-full flex flex-col items-start">
-          <div v-if="product.rules.length > 0" class="flex flex-col gap-1 w-full">
+          <div
+            v-if="product.rules.length > 0"
+            class="flex flex-col gap-1 w-full"
+          >
             <span class="text-xs">Правила: </span>
             <div class="text-xs">
-              {{ 
-                (product.purchaseSoon ? '1, ' : '') +
-            (product.rules && product.rules.length ? '' : '') +
-            (product.rules
-              ? product.rules.map((rule: any) => rule.id + 1).join(', ')
-              : '')  
+              {{
+                product.rules.length
+                  ? product.rules.map((rule: any) => rule.id).join(', ')
+                  : ''
               }}
             </div>
           </div>
@@ -83,7 +82,9 @@ const props = defineProps({
           </div>
           <div>
             <span class="text-sm text-gray-500 mr-2">Цена: </span>
-            <span class="rounded-md py-0 px-2 bg-success text-sm">{{ product.priceText }}</span>
+            <span class="rounded-md py-0 px-2 bg-success text-sm">{{
+              product.priceText
+            }}</span>
           </div>
           <div class="flex">
             <span class="text-sm text-gray-500 my-auto mr-2">Количество: </span>
@@ -94,7 +95,10 @@ const props = defineProps({
           <div class="flex">
             <span class="text-sm text-gray-500 my-auto mr-2">Размер: </span>
             <div class="flex items-center m-1">
-              <div v-if="product.sizes" class="rounded-md py-0 px-2 bg-success text-sm">
+              <div
+                v-if="product.sizes"
+                class="rounded-md py-0 px-2 bg-success text-sm"
+              >
                 {{ product.sizes[0] }}
               </div>
               <div v-else class="text-sm text-center ml-2">Нет</div>

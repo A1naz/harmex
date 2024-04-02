@@ -8,18 +8,28 @@ import { UserRoles } from '@/data/enums'
 import MailService from '~~/server/lib/mailService.js'
 
 export default eventHandler(async (event) => {
-
   const session = (await getServerSession(event)) as any
 
   const user = await User.findOne({ uuid: session.uuid })
-  const { email, username, firstName, lastName, allowedPathes, password, tariff, post } = await readBody(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
-  if (!email || !password){
+  const {
+    email,
+    username,
+    firstName,
+    lastName,
+    allowedPathes,
+    password,
+    tariff,
+    post,
+  } = await readBody(event)
+
+  if (!email || !password) {
     throw createError({
-        statusCode: 400,
-        message: 'Пропущен email или password',
+      statusCode: 400,
+      message: 'Пропущен email или password',
     })
-}
+  }
 
   // if (!validator.isEmail(email)){
   //   throw createError({
@@ -28,37 +38,36 @@ export default eventHandler(async (event) => {
   //   })
   // }
 
-  if (password.length < 6 || password.length > 36){
+  if (password.length < 6 || password.length > 36) {
     throw createError({
-        statusCode: 400,
-        message: 'Пароль должен быть от 6 до 36 символов.',
+      statusCode: 400,
+      message: 'Пароль должен быть от 6 до 36 символов.',
     })
-}
+  }
 
   const candidate = await User.findOne({ email })
-  if (candidate){
+  if (candidate) {
     throw createError({
-        statusCode: 400,
-        message: 'Пользователь с таким email уже существует.',
+      statusCode: 400,
+      message: 'Пользователь с таким email уже существует.',
     })
-}
+  }
 
-const findUsername = await User.findOne({ username })
-if (findUsername){
-  throw createError({
+  const findUsername = await User.findOne({ username })
+  if (findUsername) {
+    throw createError({
       statusCode: 400,
       message: 'Пользователь с таким username уже существует.',
-  })
-}
+    })
+  }
 
   const hash = bcrypt.hashSync(password, 7)
 
   const userNew = new User({
-    
     firstName,
     lastName,
     username,
-    orgInn: user.orgInn,
+    orgInn: uuid(),
     acesses: allowedPathes,
     uuidCompany: session.uuid,
     password: hash,
@@ -67,7 +76,7 @@ if (findUsername){
     // tariff: tariff,
     MPTariffs: user.MPTariffs,
     phoneNumber: email,
-    post
+    post,
   })
 
   await userNew.save()

@@ -233,11 +233,9 @@ const productQuantityModel = computed({
           <div class="w-full flex items-center justify-center gap-2">
             <div class="text-sm">
               {{
-                (product.purchaseSoon ? '1, ' : '') +
-                (product.rules && product.rules.length ? '' : '') +
-                (product.rules
-                  ? product.rules.map((rule: Rule) => rule.id + 1).join(', ')
-                  : '')
+                product.rules.length
+                  ? product.rules.map((rule: Rule) => rule.id).join(', ')
+                  : ''
               }}
             </div>
             <button
@@ -299,7 +297,7 @@ const productQuantityModel = computed({
           >
             <span v-show="loading" class="loading loading-spinner" />
             <p
-            v-if="!loading"
+              v-if="!loading"
               @click="$emit('pointModalOpen', index)"
               class="truncate cursor-pointer text-primary"
             >
@@ -341,7 +339,11 @@ const productQuantityModel = computed({
           class="w-fit px-2 btn btn-ghost btn-sm btn-square text-base-content font-normal hover:text-primary"
           @click="props.openDiscount(index, product.price)"
         >
-          {{ (!product.discountPrice || !product.discountRequestPrice) ? '%' : (product.discountPrice + '/' + product.discountRequestPrice) }}
+          {{
+            !product.discountPrice || !product.discountRequestPrice
+              ? '%'
+              : product.discountPrice + '/' + product.discountRequestPrice
+          }}
         </button>
       </div>
       <!-- <div class="flex justify-between items-center">
