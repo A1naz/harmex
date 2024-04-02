@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const query = getQuery(event)
-  const { refUrl } = query
+  const { refUrl }: any = query
   
   const qrCode = await new Promise((resolve, reject) => {
     qrcode.toDataURL(refUrl, (err, data) => {
