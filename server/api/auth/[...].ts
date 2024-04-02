@@ -144,7 +144,7 @@ export default NuxtAuthHandler({
       async authorize(credentials: any) {
         const { email, password, code } = credentials
         if (!email || !password) return null
-        
+                
         const user =
           (await User.findOne({
             phoneNumber:email.replace(/[\(\)\-\s]/g, '')

@@ -118,7 +118,7 @@ export default eventHandler(async (event) => {
     }else{
       if(type=='В пути'){
         console.log(type);
-        const type2 = 'Передается в доставку'
+        const type2 = 'Передаётся в доставку'
         deliveriesOzon = await OzonDelivery.find({ 
           user, 
           updatedAt: filter.dataoperation,
@@ -299,7 +299,7 @@ export default eventHandler(async (event) => {
 
   deliveriesOzon.forEach((item: any) => {
     const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
-    if (status === 'В пути' || status === 'Передается в доставку') {
+    if (status === 'В пути' || status === 'Передаётся в доставку') {
       inTransit++;
     } else if (status.includes("Ожидает получения до")) {
         ready++;

@@ -450,7 +450,7 @@ const customLinks = filters.map((filter) => ({
               class=""
               :class="'lg:min-w-[120px]'"
               :status-text="'Wildberries'"
-              :tabs="mpStore.MPTabs"
+              :tabs="storeMain.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
               @change-value="changeMP"
             />
             <CustomSelect

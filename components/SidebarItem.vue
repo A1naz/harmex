@@ -12,6 +12,18 @@ const active = computed(() => {
 
 const mpStore = useMPStore()
 const mpHref = computed(() => {
+  if(mpStore.selectedMP == 'avito') {
+    if (
+      props.href == '/productlikes' ||
+      props.href == '/likes'
+    ) {return '/productlikes/avito'}
+   else if (props.href == '/reports') 
+   {return '/reports/wildberries'}
+   else if (props.href == '/questions')
+   {return '/questions/wildberries'}
+   else if (props.href == '/cart') 
+   {return '/cart/wildberries'}
+  }
   if (
     props.href == '/productlikes' ||
     props.href == '/buyouts' ||
