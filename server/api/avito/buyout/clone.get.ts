@@ -22,8 +22,8 @@ export default eventHandler(async (event) => {
   const data: any = await $fetch('http://95.163.249.133:4141', {
     method: 'POST',
     body: {
-      type: 'ozonProduct',
-      url: `https://www.ozon.ru/product/${article}/`,
+      type: 'avitoProduct',
+      url: `https://www.avito.ru/${article}`,
     },
   })
 

@@ -269,14 +269,14 @@ async function getPickpoints() {
 }
 
 async function pointModalOpen(index: number) {
-  // if (!pickpoints.value) loading.value = true
+  if (!pickpoints.value) loading.value = true
 
   store.selectedItem = index
   modalOpen.value = true
 }
 
 onMounted(async () => {
-  // getPickpoints()
+  getPickpoints()
   if (route.query.uuid) {
     loading.value = true
     await store.cloneBuyout(route.query.uuid.toString())
