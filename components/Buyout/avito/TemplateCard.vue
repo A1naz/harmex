@@ -91,7 +91,7 @@ const props = defineProps({
               {{ product.quantity }}
             </span>
           </div>
-          <div class="flex">
+          <!-- <div class="flex">
             <span class="text-sm text-gray-500 my-auto mr-2">Размер: </span>
             <div class="flex items-center m-1">
               <div v-if="product.sizes" class="rounded-md py-0 px-2 bg-success text-sm">
@@ -99,7 +99,7 @@ const props = defineProps({
               </div>
               <div v-else class="text-sm text-center ml-2">Нет</div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

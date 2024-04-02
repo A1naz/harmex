@@ -32,7 +32,7 @@ function handleSelect(address: string) {
     })
   }
 
-  let pointStore = localStorage.getItem('wildberriesPointStore')
+  let pointStore = localStorage.getItem('avitoPointStore')
   if (!pointStore) pointStore = ''
 
   const arr = pointStore.trim().split('--').reverse()
@@ -40,23 +40,23 @@ function handleSelect(address: string) {
   if (arr.length > 20) arr.shift()
   arr.push(address)
   const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('wildberriesPointStore', unique.join('--'))
+  localStorage.setItem('avitoPointStore', unique.join('--'))
   emit('callback', address)
   closeModal()
 }
 
 function handleDelete(address: string) {
-  let pointStore = localStorage.getItem('wildberriesPointStore')
+  let pointStore = localStorage.getItem('avitoPointStore')
   if (!pointStore) pointStore = ''
   const arr = pointStore.trim().split('--').reverse()
   arr.splice(arr.indexOf(address), 1)
   const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('wildberriesPointStore', unique.join('--'))
+  localStorage.setItem('avitoPointStore', unique.join('--'))
   emit('callback', address)
   lastPoints.value = unique
 }
 
-const lastPoints = ref(localStorage.getItem('wildberriesPointStore')?.split('--'))
+const lastPoints = ref(localStorage.getItem('avitoPointStore')?.split('--'))
 const presetCluster = 'islands#violetClusterIcons'
 
 const originalBounds = ref([
@@ -168,7 +168,7 @@ onMounted(async () => {
       const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
         `<div class="card rounded-lg">
           <div>
-            <div class="text-lg font-semibold">Пункт выдачи Wildberries</div>
+            <div class="text-lg font-semibold">Пункт выдачи</div>
             <div class="text-sm">${obj.properties.data.a}</div>
             <div class="text-sm">${obj.properties.data.w}</div>
             <a class="selectPoint mt-4 flex justify-center btn btn-primary hover:bg-primary">Выбрать</a>

@@ -176,7 +176,7 @@ const productQuantityModel = computed({
             </div>
           </span>
         </div>
-        <div class="flex flex-col">
+        <!-- <div class="flex flex-col">
           <span class="text-md text-gray-500">Размер: </span>
           <div class="flex items-center m-1">
             <select
@@ -195,7 +195,7 @@ const productQuantityModel = computed({
             </select>
             <div v-else class="text-sm text-center ml-2">Нет</div>
           </div>
-        </div>
+        </div> -->
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-1">Пол: </span>
           <select

@@ -269,14 +269,14 @@ async function getPickpoints() {
 }
 
 async function pointModalOpen(index: number) {
-  if (!pickpoints.value) loading.value = true
+  // if (!pickpoints.value) loading.value = true
 
   store.selectedItem = index
   modalOpen.value = true
 }
 
 onMounted(async () => {
-  getPickpoints()
+  // getPickpoints()
   if (route.query.uuid) {
     loading.value = true
     await store.cloneBuyout(route.query.uuid.toString())
@@ -429,10 +429,11 @@ function modalAddProduct(changedArticle: any) {
         v-if="width < 1600"
         class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-4"
       >
+      <!-- :loading="!pickpoints?.length" -->
         <BuyoutAvitoCreateCard
           v-for="(product, index) in products"
           :key="index"
-          :loading="!pickpoints?.length"
+          :loading="false"
           :product="product"
           :index="index"
           @point-modal-open="pointModalOpen"
@@ -471,13 +472,11 @@ function modalAddProduct(changedArticle: any) {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <th @click="openInfoModal('size')" class="font-normal">
-                <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+              <!-- <th @click="openInfoModal('size')" class="font-normal">
                 <div class="text-center">
-                  <span> Размер </span>
-                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                  <span> Размер </span>                 
                 </div>
-              </th>
+              </th> -->
               <th @click="openInfoModal('sex')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
@@ -527,12 +526,13 @@ function modalAddProduct(changedArticle: any) {
           </thead>
 
           <tbody>
+            <!-- :loading="!pickpoints?.length" -->
             <BuyoutAvitoCreateTableRow
               v-for="(product, index) in products"
               :key="index"
               :product="product"
               :index="index"
-              :loading="!pickpoints?.length"
+              :loading="false"
               @rule-modal-open="ruleModalOpen"
               @point-modal-open="pointModalOpen"
             />

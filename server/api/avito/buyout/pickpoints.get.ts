@@ -6,14 +6,14 @@ export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
 
   if (!session) return sendRedirect(event, '/auth', 302)
-  if (fs.existsSync('pvz/ozonPoints.json')) {
-    const cached = fs.readFileSync('pvz/ozonPoints.json', 'utf8')
+  if (fs.existsSync('pvz/avitoPoints.json')) {
+    const cached = fs.readFileSync('pvz/avitoPoints.json', 'utf8')
     const parsed = JSON.parse(cached)
  
     const now = new Date()
     const diff = now.getTime() - new Date(parsed.updated).getTime()
     if (diff < 1000 * 60 * 60) {
-      return sendStream(event, fs.createReadStream('pvz/ozonPoints.json'))
+      return sendStream(event, fs.createReadStream('pvz/avitoPoints.json'))
     }
   }
    
@@ -32,7 +32,7 @@ export default eventHandler(async (event) => {
       updated: new Date(),
       points: collection,
     }
-    fs.writeFileSync('pvz/ozonPoints.json', JSON.stringify(cache))
-    return sendStream(event, fs.createReadStream('pvz/ozonPoints.json'))
+    fs.writeFileSync('pvz/avitoPoints.json', JSON.stringify(cache))
+    return sendStream(event, fs.createReadStream('pvz/avitoPoints.json'))
   
 })
