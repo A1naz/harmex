@@ -6,7 +6,6 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const { period, type, skip, limit, searchQuery } = getQuery(event)
-  console.log('type', type)
 
   const search = searchQuery?.toString()
 
@@ -90,7 +89,7 @@ export default eventHandler(async (event) => {
       .limit(limit as number)
       .skip(skip as number);
       }else if(type=='В пути'){
-        const type2 = 'Передается в доставку'
+        const type2 = 'Передаётся в доставку'
         deliveries = await Delivery.find({ 
           user, 
           updatedAt: filter.dataoperation,
@@ -155,7 +154,7 @@ export default eventHandler(async (event) => {
             lastElements.push({
               article: item.article,
               pvz: item.point,
-              status: status === 'Передается в доставку' ? 'В пути' : status,
+              status: status === 'Передаётся в доставку' ? 'В пути' : status,
               purchaseDate: sentToAssembly?.date  || '',
               id: item.uuidbuyout,
               receiptDate: receiptDate?.date || '',
@@ -180,7 +179,7 @@ export default eventHandler(async (event) => {
 
   deliveries.forEach((item: any) => {
     const status = item.statusdelivery?.length ? item.statusdelivery[item.statusdelivery.length - 1].status : 'Неизвестно';
-    if (status === 'В пути' || status === 'Передается в доставку') {
+    if (status === 'В пути' || status === 'Передаётся в доставку') {
       inTransit++;
     } else if (status.includes("Ожидает получения до")) {
         ready++;

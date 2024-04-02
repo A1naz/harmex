@@ -12,7 +12,6 @@ const route = useRoute()
 const router = useRouter()
 const store = useMainStore()
 const mpStore = useMPStore()
-mpStore.selectedMP = 'wildberries'
 const MPSelect = ref()
 const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const deliveries = ref([]) as any

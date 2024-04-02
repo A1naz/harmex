@@ -14,11 +14,10 @@ const logModal = ref(false)
 const selectedBuyout = ref({})
 const selectedIndex = ref(-1)
 const storeMain = useMainStore()
-const mpStore = useMPStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 const loading = ref(false)
-
+const mpStore = useMPStore()
 
 const dateFilter = ref('all')
 const autoTarget = ref(true)
@@ -52,7 +51,7 @@ const skip = ref(50)
 const end = ref(false)
 async function getBuyouts() {
   loading.value = true
-  const { data } = await useFetch(() => '/api/ozon/buyout/get', {
+  const { data } = await useFetch(() => '/api/avito/buyout/get', {
     method: 'GET',
     query: {
       status: status.value ?? 'all',
@@ -125,7 +124,7 @@ async function selectFilterDate(e: any) {
   dateFilter.value = target.value
   skip.value = 50
   end.value = false
-  const { data } = await useFetch('/api/ozon/buyout/get', {
+  const { data } = await useFetch('/api/avito/buyout/get', {
     method: 'GET',
     query: {
       status: status.value || 'all',
@@ -143,7 +142,7 @@ async function findBuyouts(value: string, type: string) {
     getBuyouts()
     return
   }
-  const { data, error } = await useFetch('/api/ozon/buyout/search', {
+  const { data, error } = await useFetch('/api/avito/buyout/search', {
     query: {
       string: value,
       type,
@@ -215,7 +214,7 @@ const filters = [
     queryStatus: 'archived',
   },
   {
-    title: 'Пауза',
+    title: 'На паузе',
     optionValue: 'paused',
     params: '?status=paused',
     queryStatus: 'paused',
@@ -227,7 +226,7 @@ const filters = [
     queryStatus: 'completed',
   },
   {
-    title: 'Выкуплены по рекламе',
+    title: 'Выкуп с рекламы',
     optionValue: 'completedByAds',
     params: '?status=completedByAds',
     queryStatus: 'completedByAds',
@@ -249,7 +248,7 @@ const filters = [
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && buyouts.value.length >= 50) {
     if (end.value) return
-    const { data } = await useFetch('/api/ozon/buyout/get', {
+    const { data } = await useFetch('/api/avito/buyout/get', {
       method: 'GET',
       query: {
         status: route.query?.status || 'all',
@@ -272,7 +271,7 @@ watch(
   async () => {
     skip.value = 50
     end.value = false
-    const { data } = await useFetch('/api/ozon/buyout/get', {
+    const { data } = await useFetch('/api/avito/buyout/get', {
       method: 'GET',
       query: {
         status: status.value || 'all',
@@ -296,11 +295,14 @@ onMounted(async () => {
       if (index !== -1) {
         openModal(index)
       } else {
-        const { data, error } = await useFetch('/api/ozon/buyout/getOne', {
-          method: 'GET',
-          query: { uuid },
-          watch: false,
-        })
+        const { data, error } = await useFetch(
+          '/api/avito/buyout/getOne',
+          {
+            method: 'GET',
+            query: { uuid },
+            watch: false,
+          }
+        )
         if (data.value) {
           buyouts.value = [data.value, ...buyouts.value]
           openModal(0)
@@ -344,7 +346,6 @@ const codeInput = ref()
 const updateSearchType = (filter: any) => {
   search.type = filter.value
 }
-
 async function changeMP(e: any) {
   return navigateTo(
     '/buyouts/' +
@@ -354,7 +355,7 @@ async function changeMP(e: any) {
 }
 const customLinks = filters.map((filter) => ({
   title: filter.title,
-  slot: '/buyouts/ozon',
+  slot: '/buyouts/avito',
   query: filter.params,
 }))
 </script>
@@ -391,6 +392,17 @@ const customLinks = filters.map((filter) => ({
     <div></div>
     <div class="flex justify-between mb-4 items-center mt-4">
       <div class="flex gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-max">
+        <!-- <NuxtLink
+            v-for="filter in filters"
+            :to=" '/buyouts' + filter.params"
+            :external="false"
+            :class="{
+                'btn-active': route.query.status === filter.queryStatus,
+            }"
+            class="btn btn-ghost btn-sm normal-case font-medium"
+            >
+          {{ filter.title }}
+        </NuxtLink> -->
         <div class="flex gap-2">
           <NuxtLink
             to="/buyouts/create"
@@ -404,7 +416,7 @@ const customLinks = filters.map((filter) => ({
               ref="codeInput"
               v-model="search.text"
               type="text"
-              class="input input-sm border-none w-full bg-base-300 bg-opacity-40"
+              class="input input-sm border-none bg-base-300 bg-opacity-40 w-full"
               placeholder="Поиск по товарам"
               @input="onSearchInput($event)"
             />
@@ -414,15 +426,15 @@ const customLinks = filters.map((filter) => ({
             />
             <Icon
               v-else
-              class="absolute right-2 p-2 text-base-content text-opacity-50"
+              class="absolute right-2 p-2"
               name="tabler:search"
-              size="35"
+              size="30"
               @click="codeInput.focus()"
             />
           </div>
         </div>
 
-        <div clas="flex gap-2 flex-wrap">
+        <div clas="flex gap-2">
           <div
             class="search flex items-center gap-1 lg:gap-3"
             :class="{
@@ -432,13 +444,13 @@ const customLinks = filters.map((filter) => ({
             <CustomSelect
               class=""
               :class="'lg:min-w-[120px]'"
-              :status-text="'Ozon'"
+              :status-text="'Avito'"
               :tabs="storeMain.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
               @change-value="changeMP"
             />
             <CustomSelect
               class=""
-              :class="'navbar:min-w-[120px]'"
+              :class="'min-w-[95px]'"
               :links="customLinks"
             />
             <!-- <div
@@ -460,13 +472,13 @@ const customLinks = filters.map((filter) => ({
                 <li>
                   <NuxtLink
                     v-for="filter in filters"
-                    :to="'/buyouts/ozon' + filter.params"
+                    :to="'/buyouts/wildberries' + filter.params"
                     :external="false"
                     :class="{
-                      'bg-primary bg-opacity-20':
+                      'bg-primary bg-opacity-20 ':
                         route.query.status === filter.queryStatus,
                     }"
-                    class="btn btn-ghost btn-xs normal-case font-normal w-full hover:bg-primary hover:bg-opacity-20"
+                    class="btn btn-ghost btn-xs normal-case font-normal w-full hover:bg-primary hover:bg-opacity-20 justify-start text-xs align-start"
                   >
                     <span>
                       {{ filter.title }}
@@ -488,10 +500,18 @@ const customLinks = filters.map((filter) => ({
               ]"
               @change-value="selectFilterDate"
             />
-
+            <!-- <select
+              class="select select-bordered select-sm max-w-[131px] lg:hidden"
+              @change="selectFilterDate"
+            >
+              <option value="all">За все время</option>
+              <option value="today">Сегодня</option>
+              <option value="3days">3 дня</option>
+              <option value="7days">Неделя</option>
+            </select> -->
             <div class="flex gap-3 items-center lg:hidden">
               <CustomSelect
-              :class="'bg-base-300'"
+                :class="'max-w-[80px] bg-base-300'"
                 :tabs="[
                   { title: 'Артикул', value: 'article' },
                   { title: 'ID выкупа', value: 'uuid' },
@@ -499,6 +519,15 @@ const customLinks = filters.map((filter) => ({
                 ]"
                 @change-value="updateSearchType"
               />
+
+              <!-- <select
+                v-model="search.type"
+                class="select select-bordered select-sm max-w-[98px]"
+              >
+                <option value="article">Артикул</option>
+                <option value="uuid">ID выкупа</option>
+                <option value="name">Имя товара</option>
+              </select> -->
             </div>
           </div>
         </div>
@@ -572,7 +601,7 @@ const customLinks = filters.map((filter) => ({
                 ref="codeInput"
                 v-model="search.text"
                 type="text"
-                class="input input-sm bg-base-300 bg-opacity-40"
+                class="input input-sm border-none bg-base-300 bg-opacity-40"
                 placeholder="Поиск по товарам"
                 @input="onSearchInput($event)"
               />
@@ -582,9 +611,9 @@ const customLinks = filters.map((filter) => ({
               />
               <Icon
                 v-else
-                class="absolute right-2 p-2 text-base-content text-opacity-50"
+                class="absolute right-2 p-2"
                 name="tabler:search"
-                size="35"
+                size="30"
                 @click="codeInput.focus()"
               />
             </div>
@@ -645,7 +674,7 @@ const customLinks = filters.map((filter) => ({
           group
           class="cards grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 h-full"
         >
-          <BuyoutOzonCard
+          <BuyoutAvitoCard
             v-for="(buyout, index) of buyouts"
             :key="buyout.uuid"
             :index="index"
@@ -666,14 +695,14 @@ const customLinks = filters.map((filter) => ({
     <div v-else class="w-full mt-5 flex justify-center items-center">
       <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
-    <BuyoutOzonLogModal
+    <BuyoutAvitoLogModal
       v-if="logModal"
       :info="selectedBuyout"
       :index="selectedIndex"
       :state="logModal"
       @close="logModal = false"
     />
-    <BuyoutOzonInfoModal
+    <BuyoutAvitoInfoModal
       v-if="modal"
       :info="selectedBuyout"
       :state="modal"

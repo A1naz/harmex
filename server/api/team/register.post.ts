@@ -65,6 +65,7 @@ if (findUsername){
     roles: [UserRoles.staff],
     uuid: uuid(),
     // tariff: tariff,
+    MPTariffs: user.MPTariffs,
     phoneNumber: email,
     post
   })
