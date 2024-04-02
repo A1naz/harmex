@@ -662,7 +662,7 @@ const startTimer = () => {
               class="label cursor-pointer flex gap-4 items-start justify-between"
             >
               <span class="label-text"
-                >{{ 1 }}. {{ 'Выкупить товар(-ы) прямо сейчас ' }}</span
+                >{{ 'Выкупить товар(-ы) прямо сейчас ' }}</span
               >
               <div class="flex gap-4">
                 <div
@@ -681,7 +681,7 @@ const startTimer = () => {
               class="label cursor-pointer flex gap-4 items-start justify-around"
             >
               <span class="label-text"
-                >{{ rule.id + 1 }}. {{ rule.description }}</span
+                >{{ rule.id }}. {{ rule.description }}</span
               >
               <div
                 class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"

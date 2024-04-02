@@ -225,15 +225,13 @@ const productQuantityModel = computed({
           <div class="w-full flex items-center justify-center gap-2">
             <div class="text-sm">
               {{
-                (product.purchaseSoon ? '1, ' : '') +
-                (product.rules && product.rules.length ? '' : '') +
-                (product.rules
-                  ? product.rules.map((rule: Rule) => rule.id + 1).join(', ')
-                  : '')
+                product.rules.length
+                  ? product.rules.map((rule: Rule) => rule.id).join(', ')
+                  : ''
               }}
             </div>
             <button
-            disabled
+              disabled
               class="border-base-100"
               @click="$emit('ruleModalOpen', index)"
             >
@@ -281,9 +279,7 @@ const productQuantityModel = computed({
                   : 'Выбрать'
               }}
             </button> -->
-            <div v-else class="text-center text-xs">
-                Ближайшее время
-              </div>
+            <div v-else class="text-center text-xs">Ближайшее время</div>
           </div>
         </div>
         <div class="flex flex-col">
@@ -294,19 +290,14 @@ const productQuantityModel = computed({
           >
             <span v-show="loading" class="loading loading-spinner" />
             <!-- @click="$emit('pointModalOpen', index)" -->
-            <p
-              v-if="!loading"
-              
-              class="truncate cursor-pointer text-primary"
-            >
+            <p v-if="!loading" class="truncate cursor-pointer text-primary">
               {{ product.adress }}
             </p>
           </div>
           <!-- :disabled="loading" -->
           <button
-          disabled
+            disabled
             v-if="!product.adress"
-            
             :class="{
               'btn-outline': product.adress,
             }"
@@ -331,7 +322,6 @@ const productQuantityModel = computed({
           />
         </div>
       </div>
-      
     </div>
   </div>
 </template>

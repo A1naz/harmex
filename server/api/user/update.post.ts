@@ -19,10 +19,10 @@ export default eventHandler(async (event) => {
     })
   }
 
-  if (!username || !/^[a-zA-Z0-9_]{4,14}$/.test(username)) {
+  if (!username || !/^[a-zA-Z0-9_]{4,32}$/.test(username)) {
     throw createError({
       statusCode: 400,
-      message: 'Имя пользователя должно быть длиной от 4 до 14 символов и без символов, кроме "_"',
+      message: 'Имя пользователя должно быть длиной от 4 до 32 символов и без символов, кроме "_"',
     })
   }
   const user = await User.findOne({ uuid: session.uuid })

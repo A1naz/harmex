@@ -198,11 +198,9 @@ const productQuantityModel = computed({
       <div class="w-full flex items-center justify-center gap-2">
         <div class="my-auto">
           {{
-            (product.purchaseSoon ? '1, ' : '') +
-            (product.rules && product.rules.length ? '' : '') +
-            (product.rules
-              ? product.rules.map((rule: Rule) => rule.id + 1).join(', ')
-              : '')
+            product.rules.length
+              ? product.rules.map((rule: Rule) => rule.id).join(', ')
+              : ''
           }}
         </div>
         <button
@@ -283,7 +281,6 @@ const productQuantityModel = computed({
           <!-- @click="$emit('pointModalOpen', index)" -->
           <p
             v-if="!loading"
-            
             class="break-all whitespace-normal cursor-pointer text-primary"
           >
             {{ product.adress }}
@@ -291,9 +288,8 @@ const productQuantityModel = computed({
         </div>
         <!-- :disabled="loading" -->
         <button
-        disabled
+          disabled
           v-if="!product.adress"
-          
           :class="{
             'btn-outline': product.adress,
           }"

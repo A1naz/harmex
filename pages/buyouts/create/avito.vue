@@ -327,9 +327,7 @@ async function createTemplate() {
 
 async function getTemplates() {
   loadingTemplates.value = true
-  const { data, error }: any = await useFetch(
-    '/api/avito/buyout/templates'
-  )
+  const { data, error }: any = await useFetch('/api/avito/buyout/templates')
   if (data.value) {
     templates.value = data.value.templates
   }
@@ -429,7 +427,7 @@ function modalAddProduct(changedArticle: any) {
         v-if="width < 1600"
         class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-4"
       >
-      <!-- :loading="!pickpoints?.length" -->
+        <!-- :loading="!pickpoints?.length" -->
         <BuyoutAvitoCreateCard
           v-for="(product, index) in products"
           :key="index"
@@ -602,9 +600,9 @@ function modalAddProduct(changedArticle: any) {
               v-if="rule.id === 1"
               class="label cursor-pointer flex gap-4 items-start justify-between"
             >
-              <span class="label-text"
-                >{{ 1 }}. {{ 'Выкупить товар(-ы) прямо сейчас ' }}</span
-              >
+              <span class="label-text">{{
+                'Выкупить товар(-ы) прямо сейчас '
+              }}</span>
               <div class="flex gap-4">
                 <div
                   class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
@@ -622,7 +620,7 @@ function modalAddProduct(changedArticle: any) {
               class="label cursor-pointer flex gap-4 items-start justify-around"
             >
               <span class="label-text"
-                >{{ rule.id + 1 }}. {{ rule.description }}</span
+                >{{ rule.id }}. {{ rule.description }}</span
               >
               <div
                 class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
