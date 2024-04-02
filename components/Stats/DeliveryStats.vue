@@ -211,7 +211,11 @@ function copyId(id: any){
   }, 2000) 
 }
 function articleNavigate(currentArticle: any, mp: any) {
-  const link = mp === 'ozon' ? `https://www.ozon.ru/product/${currentArticle}` : `https://www.wildberries.ru/catalog/${currentArticle}/detail.aspx`  
+  const link = mp === 'ozon' ? 
+  `https://www.ozon.ru/product/${currentArticle}` : 
+   mp === 'avito' ? 
+    `https://www.avito.ru/${currentArticle}` : 
+    `https://www.wildberries.ru/catalog/${currentArticle}/detail.aspx`;
   navigateTo(link, {
   open: {
     target: '_blank',

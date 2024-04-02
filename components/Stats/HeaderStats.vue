@@ -20,6 +20,7 @@ const MPTabs = [
   { title: 'Все', value: '' },
   { title: 'Ozon', value: 'ozon' },
   { title: 'Wildberries', value: 'wildberries' },
+  { title: 'Avito', value: 'avito' },
 ]
 const periods = [
   { title: 'Сегодня', value: 'today' },
