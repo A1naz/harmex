@@ -60,6 +60,7 @@ const loading = ref(false)
 
 async function addProduct() {
   if (!article.value) return
+  startTimer()
   loading.value = true
   const string = article.value.toString().trim()
   if (string.includes(',')) {
@@ -278,6 +279,7 @@ async function pointModalOpen(index: number) {
 onMounted(async () => {
   getPickpoints()
   if (route.query.uuid) {
+    startTimer()
     loading.value = true
     await store.cloneBuyout(route.query.uuid.toString())
     loading.value = false
@@ -347,10 +349,42 @@ function modalAddProduct(changedArticle: any) {
   article.value = changedArticle
   addProduct()
 }
+
+const timer = ref(40)
+const timerRunning = ref(false)
+const timerFinished = ref(false)
+let interval: any
+
+const startTimer = () => {
+  timer.value = 40
+  timerRunning.value = true
+
+  interval = setInterval(() => {
+    if (timer.value > 0) {
+      timer.value--
+    } else {
+      clearInterval(interval)
+      timerRunning.value = false
+      timerFinished.value = true
+    }
+  }, 1000)
+}
 </script>
 
 <template>
   <div>
+    <div
+      v-if="loading"
+      style="background-color: rgb(37, 37, 42); opacity: 80%; z-index: 9999"
+      class="fixed z-[50] top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center"
+    >
+      <span class="text-white text-2xl text-center">
+        До получения продукта осталось приблизительно {{ timer }} сек.
+      </span>
+      <div class="ease-linear rounded-full mb-4">
+        <Icon name="mdi:loading" class="h-20 w-20 animate-spin text-white" />
+      </div>
+    </div>
     <!-- <h1 class="text-2xl font-bold mt-4">Добавить выкупы</h1>
     <p class="text-xs text-gray-500 font-light mt-1 lg:text-sm">
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
