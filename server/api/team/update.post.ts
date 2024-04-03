@@ -21,7 +21,7 @@ export default eventHandler(async (event) => {
     phoneNumber: email.replace(/[\(\)\-\s]/g, ''),
   })
 
-  if (checkNumber) {
+  if (checkNumber && checkNumber.uuid !== uuid) {
     throw createError({
       statusCode: 400,
       message: 'Пользователь с таким номером телефона уже существует.',
