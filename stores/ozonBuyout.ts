@@ -85,10 +85,17 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
 
       const product = (data.value as any).product as unknown as Item
 
+      const curDate = new Date()
       const startDate = new Date()
       const endDate = new Date()
-      startDate.setHours(9, 0)
-      endDate.setHours(20, 0)
+
+      const userOffsetMinutes = new Date().getTimezoneOffset()
+      const userTimezoneOffsetHours = -userOffsetMinutes / 60
+
+      startDate.setHours(curDate.getHours() - userTimezoneOffsetHours + 4)
+      endDate.setHours(curDate.getHours() - userTimezoneOffsetHours + 10)
+      startDate.setMinutes(0)
+      endDate.setMinutes(0)
 
       this.createProducts.push(
         //@ts-ignore

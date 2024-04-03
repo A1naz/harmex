@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import { PVZ } from '~/server/lib/models/ozon/PVZ'
 
 // async function getRandomProxy(): Promise<string> {
 //   const allProxies: any = await ProxySearchQuery.find()
@@ -19,6 +20,7 @@ export async function removeExtraPickpoints() {
   }
   fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
 
+  //@ts-ignore
   const data: any = await $fetch(
     'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
     {
@@ -106,6 +108,28 @@ export async function createPickpointsFile() {
     updated: new Date(),
     points: collection,
   }
+
+  console.log('creating wildberriesPoints.json')
   fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
   return
+}
+
+export async function createOzonPickpointsFile() {
+  const points: any = await PVZ.find()
+
+  const collection = points.map((point: any) => {
+    return {
+      id: point.pointId,
+      lt: point.coordinates.lat,
+      lg: point.coordinates.lon,
+    }
+  })
+
+  const cache = {
+    updated: new Date(),
+    points: collection,
+  }
+  
+  console.log('creating ozonPoints.json')
+  fs.writeFileSync('pvz/ozonPoints.json', JSON.stringify(cache))
 }
