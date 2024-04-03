@@ -91,6 +91,13 @@ onMounted(async () => {
   }
 })
 
+const passwordShow = ref(false)
+const inputType = ref(passwordShow.value ? 'text' : 'password')
+const togglePassword = () => {
+  passwordShow.value = !passwordShow.value
+  inputType.value = passwordShow.value ? 'text' : 'password'
+}
+
 const rules = computed(() => {
   return {
     email: {
@@ -137,15 +144,31 @@ const v$ = useVuelidate(rules, formData)
           <div class="flex flex-col gap-1">
             <label>Пароль </label>
             <div class="flex flex-col gap-0.5">
-              <input
-                id="password"
-                v-model="formData.password"
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                required="true"
-                class="input"
-              />
+              <div class="w-full flex">
+                <input
+                  id="password"
+                  v-model="formData.password"
+                  :type="inputType"
+                  name="password"
+                  placeholder="••••••••"
+                  required="true"
+                  class="input w-full"
+                />
+                <button type="button" class="hover:text-primary w-1/12" @click="togglePassword">
+                  <IconCSS
+                    v-if="passwordShow"
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:hide-outline"
+                  />
+                  <IconCSS
+                    v-else
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:show-outline"
+                  />
+                </button>
+              </div>
               <NuxtLink class="text-primary my-1" href="/resetPassword">
                 Забыли пароль?
               </NuxtLink>
