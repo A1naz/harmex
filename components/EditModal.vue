@@ -287,15 +287,25 @@ const multiselectStyle = {
                     v-model="modelValue[conf.field]" 
                     class="input input-bordered w-full h-[10vh]"
                     ></textarea> -->
-
+            
             <input
-              v-else
+              v-else-if="conf.field !== 'email'"
               :key="index"
               v-model="modelValue[conf.field]"
               :placeholder="conf.header"
               :type="conf.type"
               class="input border-none w-full bg-[#F4F4F4] dark:bg-[#181920]"
             />
+            <input
+              v-else-if="conf.field == 'email'"
+              v-model="modelValue[conf.field]"
+              :type="conf.type"
+              class="input border-none w-full bg-[#F4F4F4] dark:bg-[#181920]"
+              v-maska
+              data-maska="+7 (###) ###-##-##"
+              placeholder="+7 (___) ___-__-__"
+              required="true"
+              />
           </div>
         </div>
 

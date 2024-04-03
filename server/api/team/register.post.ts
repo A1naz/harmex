@@ -44,12 +44,22 @@ export default eventHandler(async (event) => {
       message: 'Пароль должен быть от 6 до 36 символов.',
     })
   }
-
-  const candidate = await User.findOne({ email })
-  if (candidate) {
+  
+  if (email.replace(/[\(\)\-\s]/g, '').length < 12) {
     throw createError({
       statusCode: 400,
-      message: 'Пользователь с таким email уже существует.',
+      message: 'Введите корректный номер телефона',
+    })
+  }
+
+  const checkNumber = await User.findOne({
+    phoneNumber: email.replace(/[\(\)\-\s]/g, ''),
+  })
+
+  if (checkNumber) {
+    throw createError({
+      statusCode: 400,
+      message: 'Пользователь с таким номером телефона уже существует.',
     })
   }
 
@@ -75,7 +85,7 @@ export default eventHandler(async (event) => {
     uuid: uuid(),
     // tariff: tariff,
     MPTariffs: user.MPTariffs,
-    phoneNumber: email,
+    phoneNumber: email.replace(/[\(\)\-\s]/g, ''),
     post,
   })
 
