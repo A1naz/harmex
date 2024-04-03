@@ -122,6 +122,7 @@ export default eventHandler(async (event) => {
       discountPrice: buyout.discountPrice,
       discountRequestPrice: buyout.discountRequestPrice,
       purchaseSoon: buyout.purchaseSoon,
+      FIO: buyout.FIO,
     }
   })
   return format
