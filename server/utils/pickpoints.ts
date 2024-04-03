@@ -129,7 +129,12 @@ export async function createOzonPickpointsFile() {
     updated: new Date(),
     points: collection,
   }
-  
+
   console.log('creating ozonPoints.json')
   fs.writeFileSync('pvz/ozonPoints.json', JSON.stringify(cache))
+}
+
+export async function createAllPickpoints() {
+  createPickpointsFile()
+  createOzonPickpointsFile()
 }
