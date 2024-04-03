@@ -47,6 +47,7 @@ const BuyoutSchema = new Schema({
   discount: { type: Boolean, required: false, default: false },
   discountRequestPrice: { type: Number, required: false, default: 0 },
   discountPrice: { type: Number, required: false, default: 0 },
+  FIO: { type: String, required: false, default: '' },
   data5: { type: {}, default: '' },
   data6: { type: {}, default: '' },
   data7: { type: {}, default: '' },

@@ -50,6 +50,7 @@ export default eventHandler(async (event) => {
           uuid: `#${buyout.uuid}`,
           pricebuy: delivery.pricebuy,
           updatedAt: delivery.updatedAt,
+          fio: buyout.FIO,
         }
       }),
     )
@@ -70,6 +71,7 @@ export default eventHandler(async (event) => {
       { header: 'Телефон получателя', key: 'recipientphone', width: 16, font: { bold: true } },
       { header: 'Дата обновления', key: 'updatedAt', width: 16, font: { bold: true } },
       { header: 'ID Выкупа', key: 'uuid', width: 32, font: { bold: true } },
+      { header: 'ФИО', key: 'fio', width: 32, font: { bold: true } },
     ]
     sheet.addRows(ready)
 

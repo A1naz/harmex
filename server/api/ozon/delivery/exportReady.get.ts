@@ -37,6 +37,7 @@ async function getReady(user: Document) {
         )
 
         if (!buyout) return undefined
+
         const foundLog = logs.find(
           (item) =>
             item.buyout.valueOf() === buyout._id.valueOf() &&
@@ -95,6 +96,7 @@ async function getReady(user: Document) {
           finishDate,
           finishTime,
           updatedAt: new Date(delivery.updatedAt),
+          fio: buyout.FIO,
         }
       })
       .filter((item) => item !== undefined)
@@ -181,6 +183,12 @@ export default eventHandler(async (event) => {
         header: 'Дата обновления',
         key: 'updatedAt',
         width: 16,
+        font: { bold: true },
+      },
+      {
+        header: 'ФИО',
+        key: 'fio',
+        width: 32,
         font: { bold: true },
       },
     ]

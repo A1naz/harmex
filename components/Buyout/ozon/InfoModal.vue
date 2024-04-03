@@ -186,6 +186,10 @@ onKeyStroke('Escape', (e) => {
                 <span class="text-sm text-gray-500 my-auto">Категория: </span>
                 <div class="bg-base-300 rounded-md py-0 px-2 text-sm">Ozon</div>
               </div>
+              <div v-if="info.FIO" class="flex gap-2">
+                <span class="text-sm text-gray-500 my-auto">ФИО: </span>
+                <div class="rounded-md py-0 px-2 text-sm">{{ info.FIO }}</div>
+              </div>
             </div>
           </div>
         </div>
