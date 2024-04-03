@@ -10,10 +10,21 @@ export default eventHandler(async (event) => {
 
   const { uuid, email, username, firstName, lastName, newPassword, allowedPathes, post } = body
 
-  if (!validator.isEmail(email)) {
+  if (email.replace(/[\(\)\-\s]/g, '').length < 12) {
     throw createError({
       statusCode: 400,
-      message: 'Введите корректный email',
+      message: 'Введите корректный номер телефона',
+    })
+  }
+
+  const checkNumber = await User.findOne({
+    phoneNumber: email.replace(/[\(\)\-\s]/g, ''),
+  })
+
+  if (checkNumber) {
+    throw createError({
+      statusCode: 400,
+      message: 'Пользователь с таким номером телефона уже существует.',
     })
   }
 
@@ -31,16 +42,16 @@ export default eventHandler(async (event) => {
   })
 }
 
-  let emailUpdated = false
-  if (email !== user.email) {
-    user.newEmail = email
-    const url = useRuntimeConfig().PUBLIC_SITE_URL
-    await MailService.sendNewEmailActivationMail(
-      email,
-      `${url}/api/auth/activate?uuid=${user.uuid}`
-    )
-    emailUpdated = true
-  }
+  // let emailUpdated = false
+  // if (email !== user.email) {
+  //   user.newEmail = email
+  //   const url = useRuntimeConfig().PUBLIC_SITE_URL
+  //   await MailService.sendNewEmailActivationMail(
+  //     email,
+  //     `${url}/api/auth/activate?uuid=${user.uuid}`
+  //   )
+  //   emailUpdated = true
+  // }
 
   if(newPassword){
     const hash = bcrypt.hashSync(newPassword, 7)
@@ -52,6 +63,7 @@ export default eventHandler(async (event) => {
   user.lastName = lastName
   user.acesses = allowedPathes
   user.post = post
+  user.phoneNumber = email.replace(/[\(\)\-\s]/g, '')
 
   await user.save()
 
