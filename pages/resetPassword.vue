@@ -127,6 +127,16 @@ async function confirmCode() {
     })
   }
 }
+
+const passwordInputType = ref('password')
+const passwordConfirmInputType = ref('password')
+
+const togglePassword = () => {
+  passwordInputType.value = (passwordInputType.value === 'password') ? 'text' : 'password';
+}
+const toggleConfirmPassword = () => {
+  passwordConfirmInputType.value = (passwordConfirmInputType.value === 'password') ? 'text' : 'password';
+}
 </script>
 
 <template>
@@ -197,14 +207,36 @@ async function confirmCode() {
           </div>
           <div>
             <label for="password" class="block mb-2 text-sm font-medium  ">Новый пароль</label>
-            <input
-              id="password" v-model="formData.password" type="password" name="password"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+            
+            <div class="flex join">
+              <input
+              id="password" v-model="formData.password" :type="passwordInputType" name="password"
+              class="input join-item input-sm xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
               :class="{
                 'input-error': v$.password.$error,
               }" placeholder="••••••••"
               :disabled="!isNumberConfirmed"
             >
+              <button
+              :disabled="!isNumberConfirmed"
+                type="button" 
+                class="hover:text-primary w-1/12 disabled:text-black join-item disabled:bg-[#181920] rounded-r-lg" 
+                @click="togglePassword"
+              >
+                  <IconCSS
+                    v-if="passwordInputType !== 'password'"
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:hide-outline"
+                  />
+                  <IconCSS
+                    v-else
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:show-outline"
+                  />
+              </button>
+            </div>
             <div
               v-for="error of v$.password.$errors"
               :key="error.$uid" class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
@@ -216,14 +248,36 @@ async function confirmCode() {
           </div>
           <div class="pb-4">
             <label for="confirm-password" class="block mb-2 text-sm font-medium  ">Подтвердите пароль</label>
-            <input
+            
+            <div class="flex join">
+              <input
               id="confirm-password" v-model="formData.confirmPassword"
-              type="password"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" :class="{
+              :type="passwordConfirmInputType"
+              class="input join-item input-sm xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-r-none" :class="{
                 'input-error': v$.confirmPassword.$error,
               }" name="confirm-password" placeholder="••••••••"
               :disabled="!isNumberConfirmed"
             >
+              <button 
+                :disabled="!isNumberConfirmed"
+                type="button" 
+                class="hover:text-primary w-1/12 disabled:text-black join-item disabled:bg-[#181920] rounded-r-lg" 
+                @click="toggleConfirmPassword"
+              >
+                  <IconCSS
+                    v-if="passwordConfirmInputType !== 'password'"
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:hide-outline"
+                  />
+                  <IconCSS
+                    v-else
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:show-outline"
+                  />
+              </button>
+            </div>
             <div
               v-if="v$.confirmPassword.$errors"
               class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"

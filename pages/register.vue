@@ -46,6 +46,8 @@ const formData = reactive({
   checked: false,
   referral,
 })
+const passwordInputType = ref('password')
+const passwordConfirmInputType = ref('password')
 
 const referralFromLocal: any = ref('')
 async function linkFollow() {
@@ -296,6 +298,14 @@ const resend = () => {
   timerFinished.value = false
   startTimer()
 }
+
+const togglePassword = () => {
+  passwordInputType.value = (passwordInputType.value === 'password') ? 'text' : 'password';
+}
+const toggleConfirmPassword = () => {
+  passwordConfirmInputType.value = (passwordConfirmInputType.value === 'password') ? 'text' : 'password';
+}
+
 </script>
 
 <template>
@@ -533,20 +543,43 @@ const resend = () => {
               class="block ml-1 mb-2 my-1text-sm font-medium"
               >Пароль
             </label>
-            <input
-              :disabled="!isInnConfirmed"
-              id="password"
-              v-model="formData.password"
-              type="password"
-              name="password"
-              placeholder="••••••••"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              :class="{
-                'input-error': v$.password.$error,
-              }"
-              required="true"
-              @change="v$.password.$touch"
-            />
+            <div class="flex relative">
+              <input  
+              :disabled="!isInnConfirmed" 
+                id="password"
+                v-model="formData.password"
+                :type="passwordInputType"
+                name="password"
+                placeholder="••••••••"
+                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+
+                :class="{
+                  'input-error': v$.password.$error,
+                }"
+                required="true"
+                @change="v$.password.$touch"
+              />
+              <button
+              :disabled="!isInnConfirmed" 
+                type="button" 
+                class="absolute right-0 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black" 
+                @click="togglePassword"
+              >
+                  <IconCSS
+                    v-if="passwordInputType === 'password'"
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:hide-outline"
+                  />
+                  <IconCSS
+                    v-else
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:show-outline"
+                  />
+              </button>
+            </div>
+            
             <div
               class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
             >
@@ -559,20 +592,41 @@ const resend = () => {
               class="block ml-1 mb-2 my-1 text-sm font-medium"
               >Пароль еще раз
             </label>
-            <input
-              :disabled="!isInnConfirmed"
-              id="confirm-password"
-              v-model="formData.confirmPassword"
-              type="password"
-              name="confirm-password"
-              placeholder="••••••••"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              :class="{
-                'input-error': v$.confirmPassword.$error,
-              }"
-              required="true"
-              @change="v$.confirmPassword.$touch"
-            />
+            <div class="flex relative">
+              <input
+                :disabled="!isInnConfirmed"
+                id="confirm-password"
+                v-model="formData.confirmPassword"
+                :type="passwordConfirmInputType"
+                name="confirm-password"
+                placeholder="••••••••"
+                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                :class="{
+                  'input-error': v$.confirmPassword.$error,
+                }"
+                required="true"
+                @change="v$.confirmPassword.$touch"
+              />
+              <button 
+                :disabled="!isInnConfirmed"
+                type="button" 
+                class="absolute right-0 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
+                @click="toggleConfirmPassword"
+              >
+                  <IconCSS
+                    v-if="passwordConfirmInputType === 'password'"
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:hide-outline"
+                  />
+                  <IconCSS
+                    v-else
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:show-outline"
+                  />
+              </button>
+            </div>
             <div
               v-if="v$.confirmPassword.$errors"
               class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
