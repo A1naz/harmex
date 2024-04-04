@@ -17,7 +17,11 @@ export const useMPStore = defineStore('mp', {
         { title: 'Ozon', value: 'ozon' },
         { title: 'Wildberries', value: 'wildberries' },
         ],
-        
+        likesOzon: [
+            { title: 'Лайк на отзыв/комментарий', value: '/likes/create/ozon' },
+            { title: 'Лайк на товар/бренд', value: '/productlikes/create/ozon' },
+            { title: 'Лайк на вопрос', value: '/questionLikes/create/ozon' },
+        ]
     }),
     persist: {
         storage: persistedState.localStorage,

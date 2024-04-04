@@ -51,7 +51,7 @@ async function getLikes() {
   loading.value = true
 
   const { data, error } = await useFetch(
-    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`
+    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/questionlikes/get`
   )
   if (data.value) {
     review_likes.value = data.value
@@ -68,7 +68,7 @@ function openRemoveReviewModal(id: any) {
 }
 
 async function deleteLike() {
-  const { data, error } = await useFetch('/api/likes/delete', {
+  const { data, error } = await useFetch('/api/questionlikes/delete', {
     method: 'DELETE',
     body: {
       id: idForRemove.value,
@@ -89,7 +89,7 @@ async function deleteLike() {
 
 async function selectFilterDate(e: any) {
   const target = e
-  const { data } = await useFetch(`/api/${selectedMP.value}/likes/get`, {
+  const { data } = await useFetch(`/api/${selectedMP.value}/questionlikes/get`, {
     method: 'GET',
     query: {
       dateFilter: target.value,
@@ -106,7 +106,7 @@ async function findBuyouts(value: string, type: string) {
     return
   }
   const { data, error } = await useFetch(
-    `/api/${selectedMP.value}/likes/search`,
+    `/api/${selectedMP.value}/questionlikes/search`,
     {
       query: {
         string: value,
@@ -148,7 +148,7 @@ async function selectMP(value: any) {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
       <div class="flex gap-1 navbar:gap-2 lg:gap-3">
         <NuxtLink
-          :to="`/likes/create`"
+          :to="`/questionlikes/create`"
           class="btn btn-primary font-normal btn-sm"
         >
           <Icon name="fluent:add-24-filled" size="24" />
@@ -170,7 +170,8 @@ async function selectMP(value: any) {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
           ]"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
+          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' }]"
+          :status-text="'Вопрос'"
           @change-value="selectFilterDate"
         />
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
@@ -345,7 +346,7 @@ async function selectMP(value: any) {
               </div>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
-              <div
+              <div  v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
                 {{ defaultDateShort(item.endedDate) }}
@@ -358,7 +359,7 @@ async function selectMP(value: any) {
                 v-if="item.period"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                <div>{{ defaultDateShort(item.period) }}</div>
+                <div>{{ item.period }}</div>
               </div>
               <div v-else>Нет</div>
             </td>
