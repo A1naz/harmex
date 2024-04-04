@@ -54,7 +54,7 @@ export default eventHandler(async (event) => {
   const body = await readBody(event)
   const query = getQuery(event)
   const { userTimezoneOffsetHours } = query
-  const { points } = getPickpoints()
+  const { points } = await getPickpoints()
   // const allProxies: any = await ProxySearchQuery.find()
   // const proxies: string[] = allProxies[0].proxies
 
