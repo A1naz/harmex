@@ -340,9 +340,10 @@ const productQuantityModel = computed({
           @click="props.openDiscount(index, product.price)"
         >
           {{
-            !product.discountPrice || !product.discountRequestPrice
-              ? '%'
-              : product.discountPrice + '/' + product.discountRequestPrice
+            // !product.discountPrice || !product.discountRequestPrice
+            //   ? '%'
+            //   : product.discountPrice + '/' + product.discountRequestPrice
+            product.discountPrice == product.price ? '%' : product.discountPrice + ' ₽'
           }}
         </button>
       </div>
