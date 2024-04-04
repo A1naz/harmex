@@ -17,11 +17,12 @@ const props = defineProps({
 const store = useOzonBuyoutStore()
 
 function checkPercent() {
-  if (store.createProducts[props.index].discountPrice < props.price * 0.65) {
-    store.createProducts[props.index].discountPrice = Math.ceil(
-      props.price * 0.65
-    )
-  } else if (
+  // if (store.createProducts[props.index].discountPrice < props.price * 0.65) {
+  //   store.createProducts[props.index].discountPrice = Math.ceil(
+  //     props.price * 0.65
+  //   )
+  // } 
+   if (
     store.createProducts[props.index].discountPrice >
     props.price * 0.8
   ) {
@@ -66,7 +67,7 @@ onKeyStroke('Escape', (e) => {
       </div>
       <div class="bg-base-100 rounded-lg">
         <div class="w-full flex flex-col items-start">
-          <span class="text-left">Цена по скидке:</span>
+          <span class="text-left">Выкупать при:</span>
           <input
             type="number"
             @blur="checkPercent"
@@ -74,14 +75,14 @@ onKeyStroke('Escape', (e) => {
             class="input input-sm lg:input-md w-full bg-base-300 bg-opacity-30 placeholder:text-base-content placeholder:text-opacity-50 text-gray-600 mt-2"
             placeholder="Цена товара по запрошенной скидке"
           />
-          <span class="mt-2">Выкупать при:</span>
+          <!-- <span class="mt-2">Выкупать при:</span>
           <input
             @blur="checkZero"
             v-model="store.createProducts[index].discountRequestPrice"
             type="number"
             class="input input-sm lg:input-md w-full bg-base-300 bg-opacity-30 placeholder:text-base-content placeholder:text-opacity-50 text-gray-600 mt-2"
             placeholder="Цена за которую будет выкуплен товар"
-          />
+          /> -->
         </div>
         <div class="flex justify-center mt-2">
           <button
