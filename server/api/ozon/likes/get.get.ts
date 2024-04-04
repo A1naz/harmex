@@ -52,8 +52,7 @@ export default eventHandler(async (event) => {
       total: review.total,
       createdDate: review.createdDate,
       endedDate: review.endedDate,
-      dateStart: review.dateStart,
-      dateEnd: review.dateEnd
+      period: review.period,
     }
   })
   return format

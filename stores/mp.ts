@@ -17,6 +17,12 @@ export const useMPStore = defineStore('mp', {
       { title: 'Ozon', value: 'ozon' },
       { title: 'Wildberries', value: 'wildberries' },
     ],
+    MPTabsAllTest: [
+      { title: 'Все', value: 'all' },
+      { title: 'Ozon', value: 'ozon' },
+      { title: 'Wildberries', value: 'wildberries' },
+      { title: 'Avito', value: 'avito' },
+    ],
   }),
   persist: {
     storage: persistedState.localStorage,

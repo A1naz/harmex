@@ -14,10 +14,11 @@ const modalInfo = reactive({
   code: 0,
 })
 const autoTarget = ref(true)
-const loading = ref(false)
 const router = useRouter()
 const route = useRoute()
 const status = computed(() => route.query?.status || 'all')
+const loading = ref(false)
+
 
 const search = reactive({
   text: '',
@@ -43,7 +44,7 @@ const skip = ref(20)
 const end = ref(false)
 async function getReports() {
   loading.value = true
-  const { data, error } = await useFetch('/api/wildberries/reports/get', {
+  const { data, error } = await useFetch('/api/avito/reports/get', {
     method: 'GET',
     query: {
       skip: 0,
@@ -64,7 +65,7 @@ async function findReports(value: string, type: string) {
     search.loading = false
     return
   }
-  const { data, error } = await useFetch('/api/wildberries/reports/search', {
+  const { data, error } = await useFetch('/api/avito/reports/search', {
     query: {
       string: value,
       type,
@@ -85,7 +86,7 @@ async function onSearchInput(event: Event) {
 function selectStatus(e: any) {
   const target = e
   router.push({
-    path: '/reports/wildberries',
+    path: '/reports/ozon',
     query: {
       status: target.value,
     },
@@ -95,7 +96,7 @@ function selectStatus(e: any) {
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && reports.value.length >= 20) {
     if (end.value) return
-    const { data, error } = await useFetch('/api/wildberries/reports/get', {
+    const { data, error } = await useFetch('/api/avito/reports/get', {
       method: 'GET',
       query: {
         limit: 20,
@@ -117,7 +118,7 @@ watch(
   async (newRoute) => {
     skip.value = 20
     end.value = false
-    const { data } = await useFetch('/api/wildberries/reports/get', {
+    const { data } = await useFetch('/api/avito/reports/get', {
       method: 'GET',
       query: {
         status: status.value ?? 'all',
@@ -173,7 +174,7 @@ function changeFilter(e: any) {
         <CustomSelect
           class=""
           :class="'sm:min-w-[120px]'"
-          :status-text="'Wildberries'"
+          :status-text="'Avito'"
           :tabs="mpStore.MPTabsTest"
           @change-value="changeFilter"
         />
@@ -246,11 +247,6 @@ function changeFilter(e: any) {
           >
             XLS
           </div>
-          <!-- <ExportXls 
-                api="/api/wildberries/reports/export"
-                fileName="Отчет по выкупам MARKETMONSTR.xlsx"
-                :isVisible="reports.length ? true : false"
-            /> -->
         </div>
       </div>
     </div>
