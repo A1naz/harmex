@@ -196,7 +196,6 @@ async function openChecksModal() {
     }
     if (!item.searchQuery[0].value) {
       valid = false
-      console.log(item)
       errorMsg = 'Не у всех товаров указан поисковый запрос'
     }
     if(!item.discountPrice || !item.discountRequestPrice) {
