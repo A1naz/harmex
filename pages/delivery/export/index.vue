@@ -89,7 +89,6 @@ const { data, error } = await useFetch(`/api/${mpStore.selectedMP || 'wildberrie
   headers: useRequestHeaders(['cookie']) as HeadersInit,
 })
 
-console.log(data.value)
 onMounted(async () => {
   deliveries.value = data.value
   const response = await $fetch('/Roboto-Regular.ttf', {

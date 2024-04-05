@@ -21,7 +21,6 @@ export default eventHandler(async (event) => {
       message: 'Passwords do not match',
     })
   }
-  console.log(email.replace(/[\(\)\-\s]/g, ''));
   
   const found = await User.findOne({ phoneNumber: email.replace(/[\(\)\-\s]/g, '') })
   
