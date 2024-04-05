@@ -21,6 +21,13 @@ export default eventHandler(async (event) => {
       })
     }
   }
+  if(rating <4){
+    throw createError({
+      statusCode: 400,
+      message:
+        'В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд',
+    })
+  }
   const buyout = await Buyout.findOne({ uuid: buyoutuuid })
   if (!buyout) {
     return createError({
