@@ -48,7 +48,7 @@ export default eventHandler(async (event) => {
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
 
-  const { points } = getPickpoints()
+  const { points } = await getPickpoints()
 
   const products: Item[] = body
   if (products.length > 10) {
