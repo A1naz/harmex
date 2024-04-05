@@ -128,6 +128,7 @@ export default eventHandler(async (event) => {
     //   }
     // }
 
+ 
     const foundPoint = points.find((p: { a: string }) => p.a === item.adress)
 
     if (!foundPoint) {
