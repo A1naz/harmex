@@ -203,7 +203,7 @@ const productQuantityModel = computed({
       <div class="w-full flex items-center justify-center gap-2">
         <div class="my-auto">
           {{
-             product.rules.length
+            product.rules.length
               ? product.rules.map((rule: Rule) => rule.id).join(', ')
               : ''
           }}
@@ -235,7 +235,7 @@ const productQuantityModel = computed({
       >
         <div
           v-if="product.adress"
-          class="text-xs h-10 w-full break-all text-center"
+          class="text-xs max-h-18 w-full break-all text-center"
         >
           <span v-show="loading" class="loading loading-spinner" />
           <p
@@ -258,6 +258,19 @@ const productQuantityModel = computed({
           <span v-show="loading" class="loading loading-spinner" />
           <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
         </button>
+        <!-- <button
+          v-if="product.adress"
+          :disabled="loading"
+          :class="{
+            'btn-outline': product.adress,
+          }"
+          class="btn btn-primary btn-sm normal-case w-full"
+          @click="$emit('pointModalOpen', index)"
+        >
+          <span v-show="loading" class="loading loading-spinner" />
+          <span v-if="!loading">Изменить </span>
+          
+        </button> -->
       </div>
     </td>
 

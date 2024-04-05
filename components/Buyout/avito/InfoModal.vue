@@ -226,7 +226,7 @@ onKeyStroke('Escape', (e) => {
             <span class="text-lg font-bold mb-1">Адрес:</span>
             <a
               target="_blank"
-              class="text-sm link link-hover truncate max-w-[90%]"
+              class="text-sm link link-hover truncate max-w-[90%] whitespace-normal"
               :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
             >
               {{ info.point }}
