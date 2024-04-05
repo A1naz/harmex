@@ -86,7 +86,7 @@ async function exportReadyXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Готовы к выдаче Ozon.xlsx')
+  fileLink.setAttribute('download', 'Готовы к выдаче Avito.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
   loadingExport.value = false
@@ -108,7 +108,7 @@ async function exportXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Общая таблица Ozon.xlsx')
+  fileLink.setAttribute('download', 'Общая таблица Avito.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
   loadingExport.value = false

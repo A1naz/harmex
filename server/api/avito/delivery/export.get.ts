@@ -1,6 +1,7 @@
 import ExcelJS from 'exceljs'
 import { Delivery } from '~/server/lib/models/avito/Delivery'
 import { Buyout } from '~/server/lib/models/avito/Buyout'
+import { Buyoutlog } from '~~/server/lib/models/wildberries/Buyoutlog'
 import { DocuemntEnum } from '~/data/enums'
 
 const keys = Object.keys as <T>(obj: T) =>
@@ -22,7 +23,8 @@ export default eventHandler(async (event) => {
     }
     const buyoutsId = deliveries.map(item => item.idbuyout);
     const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
-    
+    const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
+
     const format = await Promise.all(  
       deliveries.map(async (delivery, index) => {
         const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf());
@@ -32,27 +34,49 @@ export default eventHandler(async (event) => {
         const phone = delivery.recipientphone
         const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
         const currentstatus = delivery.statusdelivery?.length ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status : 'Неизвестно'
+        
+        const statusDelivery = delivery.statusdelivery; 
+
+        const arrivedDate = statusDelivery.find(item => item.status === 'Готов к выдаче');
+        const receivedDate = statusDelivery.find(item => item.status === 'Получено');
+
+        const foundLog = logs.find(
+          (item) =>
+            item.buyout.valueOf() === buyout._id.valueOf() &&
+            item.text.includes('Выкуп выполнен')
+        )
+        const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt)
+        const place = index + 1
+        const finishDateHours = finishDate.getHours()
+        const finishDateMinutes = finishDate.getMinutes()
+        const finishTime = `${finishDateHours
+          .toString()
+          .padStart(2, '0')}:${finishDateMinutes.toString().padStart(2, '0')}`
 
         return {
-          index,
-          place: index + 1,
-          point: delivery.point,
-          recipient: delivery.recipient,
-          recipientphone: replaced,
           receiptcodeqr: delivery.receiptcodeqr
             ? delivery.receiptcodeqr
             : undefined,
           receiptcode: delivery.receiptcode ? delivery.receiptcode : '',
           currentstatus,
-          article: delivery.article.toString(),
-          size: buyout.sizeparam,
+          article: delivery.article,
+          size: buyout.sizeparam == "0" ? "Нет" : buyout.sizeparam,
           productname: buyout.product.name,
+          finishDate,
+          finishTime,
           uuid: `#${buyout.uuid}`,
+          seachquery: buyout.searchQuery,
+          point: delivery.point,
+          recipient: delivery.recipient,
+          recipientphone: replaced,
           pricebuy: delivery.pricebuy,
-          updatedAt: delivery.updatedAt,
+          arrivedDate: arrivedDate ? new Date(arrivedDate.date) : "-",
+          receivedDate: receivedDate ? new Date(receivedDate.date) : "-",
+          place: index + 1,
         }
       }),
     )
+  
 
     const workbook = new ExcelJS.Workbook()
     const ready = format.filter(item => item)
@@ -61,17 +85,75 @@ export default eventHandler(async (event) => {
     })
 
     sheet.columns = [
-      { header: 'Номер', key: 'place', font: { bold: true } },
-      { header: 'Код получения', key: 'receiptcode', width: 16, font: { bold: true } },
-      { header: 'Статус', key: 'currentstatus', width: 24, font: { bold: true } },
-      { header: 'Адрес пункта выдачи', key: 'point', width: 64, font: { bold: true } },
-      { header: 'Товар', key: 'productname', width: 48, font: { bold: true } },
-      { header: 'Получатель', key: 'recipient', width: 16, font: { bold: true } },
-      { header: 'Телефон получателя', key: 'recipientphone', width: 16, font: { bold: true } },
-      { header: 'Дата обновления', key: 'updatedAt', width: 16, font: { bold: true } },
-      { header: 'ID Выкупа', key: 'uuid', width: 32, font: { bold: true } },
+      { header: 'QR-код', key: 'receiptcode', width: 16, font: { bold: true } },
+      { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
+      { header: 'Размер', key: 'size', width: 16, font: { bold: true } },
+      { header: 'Название товара', key: 'productname', width: 48, font: { bold: true } },
+    {
+      header: 'Дата создания заказа',
+      key: 'finishDate',
+      width: 16,
+      font: { bold: true },
+    },
+    {
+      header: 'Время создания заказа',
+      key: 'finishTime',
+      width: 16,
+      font: { bold: true },
+    },
+    {
+      header: 'Дата прибытия',
+      key: 'arrivedDate',
+      width: 16,
+      font: { bold: true },
+    },
+    {
+      header: 'Дата получения',
+      key: 'receivedDate',
+      width: 16,
+      font: { bold: true },
+    },
+    { header: 'Статус', key: 'currentstatus', width: 24, font: { bold: true } },
+    { header: 'Сумма заказа', key: 'pricebuy', width: 16, font: { bold: true } },
+    { header: 'ID Выкупа', key: 'uuid', width: 40, font: { bold: true } },
+    { header: 'Поисковый запрос', key: 'seachquery', width: 32, font: { bold: true } },
+    { header: 'Адрес пункта выдачи', key: 'point', width: 64, font: { bold: true } },
+    { header: 'Имя', key: 'recipient', width: 16, font: { bold: true } },
+    { header: 'Телефон', key: 'recipientphone', width: 16, font: { bold: true } },
+    { header: 'Код выдачи', key: 'receiptcode', width: 16, font: { bold: true } },
     ]
     sheet.addRows(ready)
+
+    for (const item of ready) {
+      if (
+        !item?.receiptcodeqr ||
+        item?.receiptcodeqr?.length < 40 ||
+        item?.receiptcodeqr === 'undefined'
+      ) {
+        continue
+      }
+
+      if (
+        item.receiptcodeqr.includes(
+          'data:image/png;base64,data:image/png;base64,'
+        )
+      ) {
+        item.receiptcodeqr = item.receiptcodeqr.replace(
+          'data:image/png;base64,',
+          ''
+        )
+      }
+
+      const image = workbook.addImage({
+        base64: item?.receiptcodeqr,
+        extension: 'png',
+      })
+      sheet.addImage(image, {
+        tl: { col: 0, row: item!.place },
+        ext: { width: 100, height: 100 },
+      })
+      sheet.getRow(item!.place + 1).height = 100
+    }
 
     const idCol = sheet.getColumn('uuid')
 
@@ -81,7 +163,7 @@ export default eventHandler(async (event) => {
         hyperlink: `${runtimeConfig.PUBLIC_SITE_URL}/buyouts?uuid=${cell.value?.toString()}`,
       }
     })
-    // export table
+
     const buffer = await workbook.xlsx.writeBuffer()
 
     await userLog(event,
