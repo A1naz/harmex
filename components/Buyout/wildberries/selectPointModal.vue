@@ -273,13 +273,13 @@ onKeyStroke('Escape', (e) => {
               >
                 <button
                   :key="index"
-                  class="btn pvz text-xs rounded-none rounded-l-md p-2 flex w-10/12 text-left "
+                  class="btn pvz text-xs rounded-none h-16 rounded-l-md p-2 flex w-10/12 text-left "
                   @click="handleSelect(item)"
                 >
                   {{ item }}
                 </button>
                 <button
-                  class="btn btn-square rounded-none rounded-r-md"
+                  class="btn btn-square rounded-none rounded-r-md h-16"
                   @click="handleDelete(item)"
                 >
                   <svg

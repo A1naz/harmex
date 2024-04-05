@@ -198,7 +198,7 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указан поисковый запрос'
     }
-    if(!item.discountPrice || !item.discountRequestPrice) {
+    if (!item.discountPrice || !item.discountRequestPrice) {
       valid = false
       errorMsg = 'Не у всех товаров указана скидка'
     }
@@ -660,9 +660,9 @@ const startTimer = () => {
               v-if="rule.id === 1"
               class="label cursor-pointer flex gap-4 items-start justify-between"
             >
-              <span class="label-text"
-                >{{ 'Выкупить товар(-ы) прямо сейчас ' }}</span
-              >
+              <span class="label-text">{{
+                'Выкупить товар(-ы) прямо сейчас '
+              }}</span>
               <div class="flex gap-4">
                 <div
                   class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
@@ -728,8 +728,7 @@ const startTimer = () => {
           </p>
           <p v-if="infoType === 'quantity'">
             <span class="font-bold"> Количество </span>
-            - Указывайте желаемое количество выкупов, но не более 3 штук на 1
-            ПВЗ в сутки
+            - Указывайте желаемое количество выкупов, но не более 1 выкупа на 1 ПВЗ в сутки
           </p>
           <p v-if="infoType === 'size'">
             <span class="font-bold"> Размер </span>

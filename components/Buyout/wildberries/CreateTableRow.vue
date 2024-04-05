@@ -212,38 +212,9 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td class="border-r border-base">
-      <!-- <label class="label cursor-pointer -ml-1 text-sm -mb-1">
-        Выкупить в ближайшее время
-        <input
-          type="checkbox"
-          v-model="product.purchaseSoon"
-          class="checkbox checkbox-primary"
-        />
-      </label> -->
       <div class="flex items-center mt-2">
         <div class="w-full">
-          <!-- <div
-            v-if="!product.purchaseSoon"  
-            v-show="product.dateRange[1] && product.dateRange[0]"
-            class="mx-auto w-fit text-sm flex justify-center items-center bg-primary bg-opacity-10 rounded-md p-1 mb-2 gap-1 px-5"
           >
-             <div class="flex flex-col">
-              <div>{{ `${$dayjs(product.dateRange[0]).format('YY.MM.DD')}` }}</div>
-              <div class="self-end">{{ `${$dayjs(product.dateRange[0]).format('HH:mm')}` }}</div>
-            </div>
-            <div class="flex flex-col">
-              <div>-</div>
-              <div class="self-end">-</div>
-            </div>
-            <div class="flex flex-col">
-              <div>{{ `${$dayjs(product.dateRange[1]).format('YY.MM.DD')}` }}</div>
-              <div class="self-start">{{ `${$dayjs(product.dateRange[1]).format('HH:mm')}` }}</div>
-            </div>
-
-          </div>
-          <div>
-            
-          </div> -->
 
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
@@ -251,20 +222,6 @@ const productQuantityModel = computed({
             :start-date="startDate"
           />
           <div v-else class="text-center">Выкуп в ближайшее время</div>
-          <!-- <button
-            v-else
-            disabled
-            :class="{
-              'btn-outline': product.dateRange[0] && product.dateRange[1],
-            }"
-            class="btn btn-primary btn-sm normal-case w-full"
-          >
-            {{
-              product.dateRange[0] && product.dateRange[1]
-                ? 'Изменить'
-                : 'Выбрать'
-            }}
-          </button> -->
         </div>
       </div>
     </td>
@@ -274,7 +231,7 @@ const productQuantityModel = computed({
       >
         <div
           v-if="product.adress"
-          class="text-xs h-10 w-full break-all text-center"
+          class="text-xs max-h-18 w-full break-all text-center"
         >
           <span v-show="loading" class="loading loading-spinner" />
           <p
