@@ -21,14 +21,13 @@ function checkPercent() {
   //   store.createProducts[props.index].discountPrice = Math.ceil(
   //     props.price * 0.65
   //   )
-  // } 
-   if (
-    store.createProducts[props.index].discountPrice >
-    props.price * 0.8
-  ) {
+  // }
+  if (store.createProducts[props.index].discountPrice > props.price * 0.8) {
     store.createProducts[props.index].discountPrice = Math.floor(
       props.price * 0.8
     )
+  } else if (store.createProducts[props.index].discountPrice < 1) {
+    store.createProducts[props.index].discountPrice = 1
   }
 }
 
