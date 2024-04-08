@@ -260,7 +260,7 @@ const updateSearchType = (filter: any) => {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
           ]"
-          :links="[{ title: 'Отзывы', slot: '/likes', query: '' }]"
+          :links="[{ title: 'Отзывы', slot: '/likes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
           @change-value="selectFilterDate"
         />
 

@@ -8,7 +8,6 @@ const props = defineProps({
 const emit = defineEmits(['closeModal'])
 
 const isPageBtnsDisabled = ref(false)
-const mpStore = useMPStore()
 const limit = ref(50)
 const page = ref(1)
 const feedbacksCount = ref(0)
@@ -16,6 +15,7 @@ const { notify } = useNotification()
 const changedReviews = ref<any>([])
 const isCreateButtonDisabled = ref(false)
 
+const mpStore = useMPStore()
 const route = useRoute()
 const router = useRouter()
 const reviews = ref<any>([])
@@ -36,7 +36,7 @@ async function getProductReviews() {
   changedReviews.value = []
   savedArticle.value = article.value
   const { data, error }: any = await useFetch(
-    '/api/ozon/likes/productReviews',
+    '/api/ozon/questionlikes/productReviews',
     {
       method: 'GET',
       headers: useRequestHeaders(['cookie']) as HeadersInit,
@@ -86,7 +86,7 @@ async function getProductReviews() {
 async function increaseReviews() {
   limit.value += 50
   const { data, error }: any = await useFetch(
-    '/api/ozon/likes/productReviews',
+    '/api/ozon/questionlikes/productReviews',
     {
       method: 'GET',
       headers: useRequestHeaders(['cookie']) as HeadersInit,
@@ -225,7 +225,7 @@ async function save() {
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
 
-  const { data, error } = await useFetch('/api/ozon/likes/create', {
+  const { data, error } = await useFetch('/api/ozon/questionlikes/create', {
     method: 'POST',
     body: {
       article: savedArticle.value,
@@ -250,7 +250,7 @@ async function save() {
       type: 'success',
       title: 'Успешно',
     })
-    return router.push('/likes')
+    return router.push('/questionlikes')
   }
 }
 
@@ -325,7 +325,7 @@ const startTimer = () => {
 
 async function selectCreatePage(e: any) {
   const target = e
-  if (target.value == '/likes/create/ozon') {
+  if (target.value == '/questionlikes/create/ozon') {
     return
   } else {
     return navigateTo(target.value)
@@ -358,11 +358,11 @@ async function selectCreatePage(e: any) {
           class="lg:flex"
           :class="'sm:min-w-[120px]'"
           :tabs="mpStore.likesOzon"
-          :status-text="'Лайк на отзыв/комментарий'"
+          :status-text="'Лайк на вопрос'"
           @change-value="selectCreatePage"
         />
         <NuxtLink
-          to="/likes"
+          to="/questionlikes"
           class="text-gray-500 hover:text-gray-700 self-end mb-5"
         >
           <Icon name="material-symbols:close-rounded" size="24" />

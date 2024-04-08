@@ -8,7 +8,6 @@ const props = defineProps({
 const emit = defineEmits(['closeModal'])
 
 const isPageBtnsDisabled = ref(false)
-const mpStore = useMPStore()
 const limit = ref(50)
 const page = ref(1)
 const feedbacksCount = ref(0)
@@ -22,36 +21,26 @@ const reviews = ref<any>([])
 const article = ref('')
 const savedArticle = ref('')
 const loading = ref(false)
-const btnDisabled = ref(false)
-const urlError = ref(false)
-const urlSuccess = ref(false)
 const selectSortBy = ref('')
 const sortBy = computed(() => route.query?.sortBy || 'date')
 
 async function getProductReviews() {
-  startTimer()
   reviews.value = []
   loading.value = true
-  btnDisabled.value = true
   changedReviews.value = []
   savedArticle.value = article.value
-  const { data, error }: any = await useFetch(
-    '/api/ozon/likes/productReviews',
-    {
-      method: 'GET',
-      headers: useRequestHeaders(['cookie']) as HeadersInit,
-      query: {
-        article: savedArticle.value,
-        limit: limit.value * page.value,
-        page: page.value,
-        sortBy: sortBy.value ?? 'date',
-      },
-    }
-  )
+  const { data, error }: any = await useFetch('/api/likes/productReviews', {
+    method: 'GET',
+    headers: useRequestHeaders(['cookie']) as HeadersInit,
+    query: {
+      article: savedArticle.value,
+      limit: limit.value * page.value,
+      page: page.value,
+      sortBy: sortBy.value ?? 'date',
+    },
+  })
   loading.value = false
-  btnDisabled.value = false
   if (error.value) {
-    urlError.value = true
     notify({
       title: 'Что-то пошло не так',
       text: error.value.data.message,
@@ -60,12 +49,10 @@ async function getProductReviews() {
     return
   }
   if (data.value?.feedbacks.length < 1) {
-    urlError.value = true
     notify({
       title: 'Отзывы не найдены',
     })
   }
-  urlSuccess.value = true
   const initial = (data.value.feedbacks as any).map((review: any) => {
     review.addLikes = 0
     review.addDislikes = 0
@@ -85,18 +72,15 @@ async function getProductReviews() {
 
 async function increaseReviews() {
   limit.value += 50
-  const { data, error }: any = await useFetch(
-    '/api/ozon/likes/productReviews',
-    {
-      method: 'GET',
-      headers: useRequestHeaders(['cookie']) as HeadersInit,
-      query: {
-        article: savedArticle.value,
-        limit: limit.value,
-        sortBy: sortBy.value ?? 'date',
-      },
-    }
-  )
+  const { data, error }: any = await useFetch('/api/likes/productReviews', {
+    method: 'GET',
+    headers: useRequestHeaders(['cookie']) as HeadersInit,
+    query: {
+      article: savedArticle.value,
+      limit: limit.value,
+      sortBy: sortBy.value ?? 'date',
+    },
+  })
   if (error.value) {
     notify({
       title: 'Что-то пошло не так',
@@ -225,7 +209,7 @@ async function save() {
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
 
-  const { data, error } = await useFetch('/api/ozon/likes/create', {
+  const { data, error } = await useFetch('/api/likes/create', {
     method: 'POST',
     body: {
       article: savedArticle.value,
@@ -304,48 +288,9 @@ const period = ref('3h')
 function selectPeriod(event: any) {
   period.value = event.target.value
 }
-
-const timer = ref(25)
-const timerRunning = ref(false)
-const timerFinished = ref(false)
-let interval: any
-
-const startTimer = () => {
-  timerRunning.value = true
-  interval = setInterval(() => {
-    if (timer.value > 0) {
-      timer.value--
-    } else {
-      clearInterval(interval)
-      timerRunning.value = false
-      timerFinished.value = true
-    }
-  }, 1000)
-}
-
-async function selectCreatePage(e: any) {
-  const target = e
-  if (target.value == '/likes/create/ozon') {
-    return
-  } else {
-    return navigateTo(target.value)
-  }
-}
 </script>
 
 <template>
-  <div
-    v-if="loading"
-    style="background-color: rgb(37, 37, 42); opacity: 80%; z-index: 9999"
-    class="fixed z-[50] top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center"
-  >
-    <span class="text-white text-2xl text-center">
-      До получения отзывов осталось приблизительно {{ timer }} сек.
-    </span>
-    <div class="ease-linear rounded-full mb-4">
-      <Icon name="mdi:loading" class="h-20 w-20 animate-spin text-white" />
-    </div>
-  </div>
   <div
     v-if="props.show === true"
     class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
@@ -354,16 +299,10 @@ async function selectCreatePage(e: any) {
       class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4"
     >
       <div class="flex justify-between">
-        <ProductLikesOzonCustomSelect
-          class="lg:flex"
-          :class="'sm:min-w-[120px]'"
-          :tabs="mpStore.likesOzon"
-          :status-text="'Лайк на отзыв/комментарий'"
-          @change-value="selectCreatePage"
-        />
+        <div class="font-medium text-lg">Лайк на отзывы</div>
         <NuxtLink
           to="/likes"
-          class="text-gray-500 hover:text-gray-700 self-end mb-5"
+          class="text-gray-500 hover:text-gray-700 self-end mb-2"
         >
           <Icon name="material-symbols:close-rounded" size="24" />
         </NuxtLink>
@@ -372,22 +311,18 @@ async function selectCreatePage(e: any) {
         <div class="flex flex-wrap items-center gap-6 mb-2">
           <div class="relative">
             <div>Вставьте артикул:</div>
-            <div class="relative w-64 min-h-min md:min-h-[48px] mt-2">
+            <div class="w-64 min-h-min md:min-h-[48px] mt-2">
               <input
                 v-model="article"
                 :class="{
-                  'input-error': urlError,
-                  'input-success': urlSuccess,
+                  'input-error': !reviews,
+                  'input-success': reviews.length > 0,
                 }"
                 tabindex="0"
                 class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
                 placeholder="Введите артикул"
-                type="number"
+                type="text"
                 @keydown.enter="getProductReviews"
-              />
-              <span
-                v-if="loading === true"
-                class="absolute right-2 top-2 md:top-4 loading loading-dots loading-xs p-2 my-auto"
               />
               <!-- <button
                 class="btn btn-ghost normal-case"
@@ -400,7 +335,7 @@ async function selectCreatePage(e: any) {
           <div>
             <div>Период выполнения:</div>
             <select
-              class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px] bg-base-200"
+              class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
               @change="selectPeriod"
             >
               <option value="3h">3 часа</option>
@@ -412,11 +347,7 @@ async function selectCreatePage(e: any) {
             </select>
           </div>
           <div class="w-full ml-auto self-end justify-end lg:w-40">
-            <button
-              class="btn w-full btn-primary"
-              @click="getProductReviews"
-              :disabled="btnDisabled || !article"
-            >
+            <button class="btn w-full btn-primary" @click="getProductReviews">
               Добавить
             </button>
           </div>

@@ -61,7 +61,9 @@ export default eventHandler(async (event) => {
         statusCode: 400,
         message: 'Товар не найден',
       })
-    }  
+    }
+
+    
 
     if (!data) {
       throw createError({

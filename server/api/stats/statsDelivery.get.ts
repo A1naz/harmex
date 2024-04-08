@@ -135,7 +135,6 @@ export default eventHandler(async (event) => {
           }
       });
       }else if(type=='Готов к выдаче'){
-
         const type2 = 'Ожидает получения до'
         deliveriesOzon = await OzonDelivery.find({ 
           user, 
@@ -154,7 +153,6 @@ export default eventHandler(async (event) => {
           }
       });
       }else if(type=='Получено'){
-
         const type2 = 'Получен'
         deliveriesOzon = await OzonDelivery.find({ 
           user, 

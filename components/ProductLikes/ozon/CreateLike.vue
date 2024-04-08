@@ -5,6 +5,7 @@ const props = defineProps({
   show: { type: Boolean, required: true },
 })
 
+const mpStore = useMPStore()
 const emit = defineEmits(['closeModal', 'create'])
 const product_likes = ref([]) as any
 const amount = ref(0)
@@ -148,16 +149,8 @@ async function selectCreatePage(e: any) {
         <ProductLikesOzonCustomSelect
           class="lg:flex"
           :class="'sm:min-w-[120px]'"
-          :tabs="[
-            {
-              title: 'Лайк на товар/бренд',
-              value: '/productlikes/create/ozon',
-            },
-            {
-              title: 'Лайк на отзыв/комментарий',
-              value: '/likes/create/ozon',
-            },
-          ]"
+          :tabs="mpStore.likesOzon"
+          :status-text="'Лайк на товар/бренд'"
           @change-value="selectCreatePage"
         />
         <button

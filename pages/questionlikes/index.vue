@@ -13,13 +13,11 @@ const router = useRouter()
 const review_likes = ref<any>([])
 const MPSelect = ref()
 const loading = ref(true)
-const selectedMP = ref<any>(
-  mpStore.selectedMP.charAt(0).toUpperCase() + mpStore.selectedMP.slice(1) ||
-    'Wildberries'
-)
+const selectedMP = ref<any>(((mpStore.selectedMP).charAt(0).toUpperCase() + (mpStore.selectedMP).slice(1)) || 'Wildberries')
 const { width, height } = useWindowSize()
 // const { data, error } = await useFetch(`/api/${selectedMP.value}/likes/get`)
 // review_likes.value = data.value
+
 
 onMounted(() => {
   setText()
@@ -51,9 +49,13 @@ function getStatus(status: string) {
 
 async function getLikes() {
   loading.value = true
-
+  if(mpStore.selectedMP !== 'ozon'){
+    review_likes.value = []
+    loading.value = false
+    return
+  }
   const { data, error } = await useFetch(
-    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`
+    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/questionlikes/get`
   )
   if (data.value) {
     review_likes.value = data.value
@@ -70,7 +72,7 @@ function openRemoveReviewModal(id: any) {
 }
 
 async function deleteLike() {
-  const { data, error } = await useFetch('/api/likes/delete', {
+  const { data, error } = await useFetch('/api/questionlikes/delete', {
     method: 'DELETE',
     body: {
       id: idForRemove.value,
@@ -91,7 +93,12 @@ async function deleteLike() {
 
 async function selectFilterDate(e: any) {
   const target = e
-  const { data } = await useFetch(`/api/${mpStore.selectedMP}/likes/get`, {
+  if(mpStore.selectedMP !== 'ozon'){
+    review_likes.value = []
+    loading.value = false
+    return
+  }
+  const { data } = await useFetch(`/api/${mpStore.selectedMP}/questionlikes/get`, {
     method: 'GET',
     query: {
       dateFilter: target.value,
@@ -102,13 +109,18 @@ async function selectFilterDate(e: any) {
 }
 
 async function findBuyouts(value: string, type: string) {
+  if(mpStore.selectedMP !== 'ozon'){
+    review_likes.value = []
+    search.loading = false
+    return
+  }
   if (!value) {
     search.loading = false
     getLikes()
     return
   }
   const { data, error } = await useFetch(
-    `/api/${mpStore.selectedMP}/likes/search`,
+    `/api/${mpStore.selectedMP}/questionlikes/search`,
     {
       query: {
         string: value,
@@ -134,13 +146,9 @@ const updateSearchType = (filter: any) => {
 }
 
 async function selectMP(value: any) {
-  if (value.value == 'avito') {
-    router.push(`/productlikes/avito`)
-  } else {
     selectedMP.value = value.value
     mpStore.setSelectedMP(value.value)
     getLikes()
-  }
 }
 </script>
 
@@ -149,7 +157,7 @@ async function selectMP(value: any) {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
       <div class="flex gap-1 navbar:gap-2 lg:gap-3">
         <NuxtLink
-          :to="`/likes/create`"
+          :to="`/questionlikes/create`"
           class="btn btn-primary font-normal btn-sm"
         >
           <Icon name="fluent:add-24-filled" size="24" />
@@ -160,12 +168,8 @@ async function selectMP(value: any) {
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="
-            store.client.username == 'test'
-              ? mpStore.MPTabsTest
-              : mpStore.MPTabs
-          "
-          @change-value="selectMP"
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          @change-value="selectMP"     
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -175,7 +179,7 @@ async function selectMP(value: any) {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
           ]"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
+          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' }]"
           @change-value="selectFilterDate"
         />
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
@@ -206,11 +210,7 @@ async function selectMP(value: any) {
           class="lg:hidden"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="
-            store.client.username == 'test'
-              ? mpStore.MPTabsTest
-              : mpStore.MPTabs
-          "
+          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="selectMP"
         />
         <CustomSelect
@@ -287,17 +287,13 @@ async function selectMP(value: any) {
           >
             <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
             <td
-              class="text-center border-r border-primary border-opacity-5 mx-auto"
-              :class="{ 'rounded-bl-2xl': index === review_likes.length - 1 }"
+              class="text-center border-r border-primary border-opacity-5 mx-auto" :class="{'rounded-bl-2xl': index === review_likes.length - 1}"
             >
-              <div
-                :style="`width: ${
-                  selectedMP === 'Ozon' ? '40px' : '28px'
-                }; height: ${
-                  selectedMP === 'Ozon' ? '40px' : '36px'
-                }; border-radius: 4px;`"
+            <div
+                :style="`width: ${selectedMP === 'Ozon' ? '40px' : '28px'}; height: ${selectedMP === 'Ozon' ? '40px' : '36px'}; border-radius: 4px;`"
                 class="mx-auto"
-              >
+            >
+            
                 <div class="dropdown dropdown-hover">
                   <label tabindex="0">
                     <nuxt-img
@@ -358,16 +354,14 @@ async function selectMP(value: any) {
               </div>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
-              <div
-                v-if="item.endedDate"
+              <div  v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
                 {{ defaultDateShort(item.endedDate) }}
               </div>
             </td>
             <td
-              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5"
-              :class="{ 'rounded-br-2xl': index === review_likes.length - 1 }"
+              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5" :class="{'rounded-br-2xl': index === review_likes.length - 1}"
             >
               <div
                 v-if="item.period"

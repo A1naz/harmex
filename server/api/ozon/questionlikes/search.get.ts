@@ -1,4 +1,4 @@
-import { Like } from '~/server/lib/models/ozon/Like'
+import { QuestionLike } from '~/server/lib/models/ozon/QuestionLikes'
 
 export default eventHandler(async (event) => {
     
@@ -7,10 +7,10 @@ export default eventHandler(async (event) => {
 
   const { string, type } = getQuery(event)
 
-  const all = await Like.find({ user })
+  const all = await QuestionLike.find({ user })
   let buyouts
  if (type === 'article') {
-    buyouts = await Like.find({
+    buyouts = await QuestionLike.find({
       user,
       $or: [
         { article: { $regex: string, $options: 'i' } },
@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
     })
   }
   else {
-    buyouts = await Like.find({ user })
+    buyouts = await QuestionLike.find({ user })
       .sort({ createdAt: -1 })
       .skip(0)
       .limit(50)
