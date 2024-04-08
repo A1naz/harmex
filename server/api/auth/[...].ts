@@ -154,14 +154,14 @@ export default NuxtAuthHandler({
         if (!user) {
           throw new Error('User not found')
         }
-        if (runtimeConfig.env === 'developer') return user
+        // if (runtimeConfig.env === 'developer') return user
         if (!user.password) throw new Error('Password not set')
 
         const isValid = await bcrypt.compare(password, user.password)
 
         if (!isValid) throw new Error('Invalid password')
 
-        // if (!user.emailConfirmed) throw new Error('Email is not confirmed')
+        if (!user.emailConfirmed) throw new Error('Email is not confirmed')
         // if (user.tg2fa && user.telegramUserId && !code) throw new Error('2fa')
         if (user.isBanned) {
           throw new Error('Account is banned')

@@ -136,7 +136,7 @@ async function submitForm() {
       alertText.value = 'Пользователь зарегистрирован.'
       useTimeoutFn(() => {
         alert.value = false
-        navigateTo('/auth')
+        navigateTo('/auth?confirmed=false')
       }, 3000)
     }
     loading.value = false

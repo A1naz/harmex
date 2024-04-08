@@ -2,22 +2,8 @@ import nodemailer from 'nodemailer'
 
 const config = useRuntimeConfig()
 const { smtpHost, smtpPort, smtpUser, smtpPass, privateKey } = config
-const alias = 'support@topvtop.pro'
-const dkimKey = `-----BEGIN RSA PRIVATE KEY-----
-MIICXQIBAAKBgQCdu4HtswyNnv/YnDSoWLQSjWALOVzzGtQIxZhG6Ke7TO77/ywi
-gEjxR6JIPDQb/AQ9cfoRtZad4WL2dHfu82KtMgzhc0CO1vY5bdEWveY/X0HGuGzG
-sZj1oUeVMe4AY9CA9FyBa/tHsRp0DPlyZBFerEhKgUFDuBvM7shMbrF3bQIDAQAB
-AoGASxREvTs733FugNGhsvw+ApKuw8jzOHhtsxsy55W4uUveea61eFqt3cNmOJIH
-j8Z+0iydhq5z2gS9kWhQ6jmJnv3D/S9L8CCtuAPLQVwirMlA9BUOOR78N16ed+kP
-a0uu5DJFDQZbrPpfZ7fI/EmfD2Fi2wGzS9CHEwXSwXQym4ECQQDQlOzzt8cXbQCL
-aC7H+1YrGAI23Bu2Hmnd9yXp+elXIfBcjCTVjrY68ej/4wetX48lMUabYptjwb2E
-KmLxVSQNAkEAwZc/JELf0iIR2bE8hlnJ8i1iRmCzJWLgKuWyhTQjbqYc+JtcrsZq
-9N70ixuvTmuvw91pNcox1HSN5zmtIbXo4QJAOuEPUm0aYl5+vNuX+RPV6yxH07ym
-he5n7CSMK1RErjgCZd2ZuD8k6dbH8xPfYu2KtvEGAW8AdlSGbvyYGY/zMQJBALRZ
-MMuZOWZLsxF42gfXkhj5SrqBz6Mer/OGtX7+iZvFSOwZ4Ig59N5W7r7Bddm63K29
-kQw5Z56jTqeAxdfH3kECQQCjCN6JxlOSzyuNUcrOek+QMYeKbvopznUnSdD/qk1m
-2WYMGlLcIaWuQ5OqzCxfYHkCBnGaD/Mr6tCDKnseVYAs
------END RSA PRIVATE KEY-----`
+const alias = smtpUser
+const dkimKey = `-----BEGIN RSA PRIVATE KEY-----MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQChf8ef6j1jSFf2SW9BeOfupbROnSWglCbnhyhZmOIrKFAPHaTNwnXP6VKJ4vwpMG/KJrzt44qs2/PepOt99xDU4prAMV8JfqWUzXxFQH1uq+Mlg4O2bHN7eINh7JgbL8fEsv5VRswPGhNHzHn3zJ3ndEu07QPf+kL2lPwpqXqLzwIDAQAB-----END RSA PRIVATE KEY-----`
 class MailService {
   transporter: nodemailer.Transporter
   constructor() {
@@ -31,7 +17,7 @@ class MailService {
         pass: smtpPass,
       },
       dkim: {
-        domainName: 'topvtop.pro',
+        domainName: 'marketmonstr.pro',
         keySelector: 's1',
         privateKey: dkimKey,
       },
@@ -74,7 +60,7 @@ class MailService {
 
                 Все свои вопросы можете задавать тут
                 
-                <a href="https://t.me/+Y9WKYbGsMeM3ZDli">Поддержка</a>
+                <a href="https://t.me/Marketmonstr_bot">Поддержка</a>
 
 
 
@@ -125,7 +111,7 @@ class MailService {
 
                 Все свои вопросы можете задавать тут
                 
-                <a href="https://t.me/+Y9WKYbGsMeM3ZDli">Поддержка</a>
+                <a href="https://t.me/Marketmonstr_bot">Поддержка</a>
 
 
 
