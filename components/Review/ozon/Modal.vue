@@ -235,6 +235,14 @@ watch(
 onMounted(() => {
   clearForm()
 })
+function ratingAlert(){
+  notify({
+      title: 'Что-то пошло не так',
+      text: 'В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд',
+      type: 'error',
+      duration: 3000,
+  })
+}
 </script>
 
 <template>
@@ -329,22 +337,22 @@ onMounted(() => {
             <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
             <div class="rating absolute left-0 top-3 gap-2">
               <input
-                type="radio"
+                type="button"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 1"
+                @click="ratingAlert"
               />
               <input
-                type="radio"
+                type="button"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 2"
+                @click="ratingAlert"
               />
               <input
-                type="radio"
+                type="button"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 3"
+                @click="ratingAlert"
               />
               <input
                 type="radio"

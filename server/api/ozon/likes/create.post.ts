@@ -20,7 +20,6 @@ export default eventHandler(async (event) => {
     dislikes += review.dislikes
   })
 
-
   if (!article || (!reviews && !comments)) {
     throw createError({
       statusCode: 400,
@@ -51,9 +50,12 @@ export default eventHandler(async (event) => {
     createdDate: new Date(),
   })
 
-  
+  throw createError({
+    statusCode: 400,
+    message: 'no article or reviews',
+  })
   const res = await created.save()
-  
+
   await userLog(event, {
     documentType: DocuemntEnum.Like,
     documentId: res._id,

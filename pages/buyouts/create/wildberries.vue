@@ -669,8 +669,7 @@ function modalAddProduct(changedArticle: any) {
           </p>
           <p v-if="infoType === 'quantity'">
             <span class="font-bold"> Количество </span>
-            - Указывайте желаемое количество выкупов, но не более 3 штук на 1
-            ПВЗ в сутки
+            - Указывайте желаемое количество выкупов, но не более 1 выкупа на 1 ПВЗ в сутки
           </p>
           <p v-if="infoType === 'size'">
             <span class="font-bold"> Размер </span>

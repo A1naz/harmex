@@ -339,7 +339,11 @@ const getStatus = computed(() => {
               <div
                 class="rounded-md py-0 px-2 bg-primary bg-opacity-20 text-sm"
               >
-                {{ info.discountPrice + '/' + info.discountRequestPrice }}
+                {{
+                  info.discountPrice == info.product?.price
+                    ? 'нет'
+                    : info.discountPrice + ' ₽'
+                }}
               </div>
             </div>
             <div class="flex gap-2">

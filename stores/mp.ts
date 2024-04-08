@@ -26,9 +26,5 @@ export const useMPStore = defineStore('mp', {
     persist: {
         storage: persistedState.localStorage,
     },
-    actions: {
-        setSelectedMP(selectedMP: string) {
-            this.selectedMP= selectedMP
-        }
-    }
+  },
 })

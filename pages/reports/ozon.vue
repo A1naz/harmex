@@ -175,7 +175,7 @@ function changeFilter(e: any) {
           class=""
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="mpStore.MPTabs"
+          :tabs="mpStore.MPTabsTest"
           @change-value="changeFilter"
         />
         <CustomSelect

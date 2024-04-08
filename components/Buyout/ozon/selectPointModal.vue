@@ -211,7 +211,7 @@ onMounted(async () => {
         obj.properties.data.lg,
         obj.properties.data.id
       )
-      
+
       obj.properties.data.a = addressText.value
 
       const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
@@ -282,7 +282,6 @@ async function getAddressText(lt: number, lg: number, id: string) {
     },
   })
   if (data.value) {
-    
     addressText.value = data.value
     lastAddress.value = { lt, lg, id }
     return addressText.value
@@ -343,7 +342,7 @@ async function getAddressText(lt: number, lg: number, id: string) {
               >
                 <button
                   :key="index"
-                  class="btn pvz text-xs rounded-none rounded-l-md p-2 flex w-10/12 text-left"
+                  class="btn pvz text-xs rounded-none h-16 rounded-l-md p-2 flex w-10/12 text-left"
                   @click="
                     ;[
                       (lastAddress = { lt: item.lt, lg: item.lg, id: item.id }),
@@ -354,7 +353,7 @@ async function getAddressText(lt: number, lg: number, id: string) {
                   {{ item.address }}
                 </button>
                 <button
-                  class="btn btn-square rounded-none rounded-r-md"
+                  class="btn btn-square rounded-none rounded-r-md h-16"
                   @click="handleDelete(item)"
                 >
                   <svg

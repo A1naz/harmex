@@ -37,6 +37,7 @@ const search = reactive({
 })
 async function getPaymentHistory() {
   loading.value = true
+  //@ts-ignore
   const { data, error } = await useFetch('/api/paymenthistory/get', {
     method: 'GET',
     query: {
@@ -182,14 +183,14 @@ function getHistoryType(type: string) {
 const router = useRouter()
 
 function openBuyout(data: any) {
+  
   const uuid = data.basisoperation.slice(data.basisoperation.indexOf('#') + 1, data.basisoperation.length)
-  const mp = (!data.mp || data.mp === 'wildberries') ? `wildberries` : 'ozon'
-  router.push(`/buyouts/${mp}?uuid=${uuid}`)
+  router.push(`/buyouts/${data.mp ? data.mp : 'wildberries'}?uuid=${uuid}`)
 }
 function openReview(data: any) {
     const idReview = data.basisoperation.slice(data.basisoperation.indexOf(' ') + 1, data.basisoperation.length)
-    const mp = (!data.mp || data.mp === 'wildberries') ? `wildberries` : 'ozon'
-    router.push(`/reviews/${mp}?status=published&idReview=${idReview}`)
+
+    router.push(`/reviews/${data.mp ? data.mp : 'wildberries'}?status=published&idReview=${idReview}`)
 }
 
 const updateSearchType = (filter: any) => {
@@ -241,7 +242,7 @@ const updateSearchType = (filter: any) => {
         </select> -->
         <CustomSelect
           :class="'sm:min-w-[120px]'"
-          :tabs="mpStore.MPTabsAll"
+          :tabs="mpStore.MPTabsAllTest"
           @change-value="selectMp"
         />
         <CustomSelect

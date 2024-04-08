@@ -6,7 +6,10 @@ import { createAllPickpoints } from '~/server/utils/pickpoints'
 export default async (_nitroApp: Nitro) => {
   const config = useRuntimeConfig()
   try {
-    createAllPickpoints()
+    if (config.env !== 'developer') {
+
+      createAllPickpoints()
+    }
 
     await mongoose.connect(config.MONGODB_URI)
     // eslint-disable-next-line no-console

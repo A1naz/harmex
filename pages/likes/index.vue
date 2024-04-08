@@ -13,11 +13,13 @@ const router = useRouter()
 const review_likes = ref<any>([])
 const MPSelect = ref()
 const loading = ref(true)
-const selectedMP = ref<any>(((mpStore.selectedMP).charAt(0).toUpperCase() + (mpStore.selectedMP).slice(1)) || 'Wildberries')
+const selectedMP = ref<any>(
+  mpStore.selectedMP.charAt(0).toUpperCase() + mpStore.selectedMP.slice(1) ||
+    'Wildberries'
+)
 const { width, height } = useWindowSize()
 // const { data, error } = await useFetch(`/api/${selectedMP.value}/likes/get`)
 // review_likes.value = data.value
-
 
 onMounted(() => {
   setText()
@@ -132,14 +134,13 @@ const updateSearchType = (filter: any) => {
 }
 
 async function selectMP(value: any) {
-  if(value.value == 'avito'){
+  if (value.value == 'avito') {
     router.push(`/productlikes/avito`)
-  }else{
+  } else {
     selectedMP.value = value.value
     mpStore.setSelectedMP(value.value)
     getLikes()
   }
-  
 }
 </script>
 
@@ -159,8 +160,12 @@ async function selectMP(value: any) {
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
-          @change-value="selectMP"     
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.MPTabsTest
+              : mpStore.MPTabs
+          "
+          @change-value="selectMP"
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -201,7 +206,11 @@ async function selectMP(value: any) {
           class="lg:hidden"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.MPTabsTest
+              : mpStore.MPTabs
+          "
           @change-value="selectMP"
         />
         <CustomSelect
@@ -278,13 +287,17 @@ async function selectMP(value: any) {
           >
             <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
             <td
-              class="text-center border-r border-primary border-opacity-5 mx-auto" :class="{'rounded-bl-2xl': index === review_likes.length - 1}"
+              class="text-center border-r border-primary border-opacity-5 mx-auto"
+              :class="{ 'rounded-bl-2xl': index === review_likes.length - 1 }"
             >
-            <div
-                :style="`width: ${selectedMP === 'Ozon' ? '40px' : '28px'}; height: ${selectedMP === 'Ozon' ? '40px' : '36px'}; border-radius: 4px;`"
+              <div
+                :style="`width: ${
+                  selectedMP === 'Ozon' ? '40px' : '28px'
+                }; height: ${
+                  selectedMP === 'Ozon' ? '40px' : '36px'
+                }; border-radius: 4px;`"
                 class="mx-auto"
-            >
-            
+              >
                 <div class="dropdown dropdown-hover">
                   <label tabindex="0">
                     <nuxt-img
@@ -346,19 +359,21 @@ async function selectMP(value: any) {
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
               <div
+                v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
                 {{ defaultDateShort(item.endedDate) }}
               </div>
             </td>
             <td
-              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5" :class="{'rounded-br-2xl': index === review_likes.length - 1}"
+              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5"
+              :class="{ 'rounded-br-2xl': index === review_likes.length - 1 }"
             >
               <div
                 v-if="item.period"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                <div>{{ defaultDateShort(item.period) }}</div>
+                <div>{{ item.period }}</div>
               </div>
               <div v-else>Нет</div>
             </td>

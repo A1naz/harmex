@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const tariffs = await getTariffs(user.MPTariffs)
- 
+
   if (!user.partner || !user.partner.secondLevelPercent) {
     user.partner = {
       refCount: 0,
@@ -36,7 +36,9 @@ export default eventHandler(async (event) => {
     const admin = await User.findOne({ uuid: user.uuidCompany })
     if (!admin) return sendRedirect(event, '/auth', 302)
     user.tariff = admin.tariff
+  user.balance = admin.balance
   }
+
 
   const client: Client = {
     email: user.email ? user.email : '',
@@ -64,7 +66,7 @@ export default eventHandler(async (event) => {
     middleName: user.middleName ? user.middleName : '',
     phoneNumber: user.phoneNumber ? user.phoneNumber : '',
   }
-  
+
   return {
     client,
     status: 'ok',

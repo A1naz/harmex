@@ -52,7 +52,7 @@ export default eventHandler(async (event) => {
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
 
-  const { points } = getPickpoints()
+  // const { points } = await getPickpoints()
 
   const products: Item[] = body
   if (products.length > 10) {
@@ -113,13 +113,9 @@ export default eventHandler(async (event) => {
         image: product.image,
       },
       uuid: uuid(),
-      discount:
-        product.discountPrice == product.price &&
-        product.discountRequestPrice == product.price
-          ? false
-          : true,
+      discount: product.discountPrice !== product.price ? true : false,
       discountPrice: product.discountPrice,
-      discountRequestPrice: product.discountRequestPrice,
+      // discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
     })
