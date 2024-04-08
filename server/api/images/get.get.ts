@@ -4,6 +4,7 @@ const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const { path }: any = getQuery(event)
+  console.log(path)
 
   const bucket = 'ozonmpportal'
   AWS.config.update({
@@ -14,7 +15,7 @@ export default eventHandler(async (event) => {
 
   const params: AWS.S3.GetObjectRequest = {
     Bucket: 'ozonmpportal',
-    Key: path,
+    Key: path.replace('ozonmpportal/', ''),
   }
 
   const getImage = (params: AWS.S3.GetObjectRequest) => {
