@@ -383,7 +383,7 @@ const updateSearchType = (filter: any) => {
           <template #body="{ data }">
             <div class="">
               <a
-              :href="(!data.mp || data.mp === 'wildberries') ? `https://www.wildberries.ru/catalog/${data.article}/detail.aspx` : `https://www.ozon.ru/product/${data.article}`"
+              :href="(!data.mp || data.mp === 'wildberries') ? `https://www.wildberries.ru/catalog/${data.article}/detail.aspx` : (data.mp === 'avito' ? `https://www.avito.ru/${data.article}` : `https://www.ozon.ru/product/${data.article}`)"
               target="_blank"
                 class="text-sm text-primary link link-hover"
               >
@@ -460,6 +460,9 @@ const updateSearchType = (filter: any) => {
                   {{ item.typeoperations === 'Приход' ? '+' : '-' }}
                   {{ currency.format(item.summ) }}
                 </div>
+                <div class="bg-base-300 rounded-md text-sm font-normal my-auto p-0.5 mt-1 px-2">
+                    {{ item.mp ? item.mp.replace(/\b(\w)/, char => char.toUpperCase()) : 'Wildberries' }}
+                </div>
               </div>
               <div class="date text-xs text-gray-500 dark:text-gray-400">
                 {{ defaultDate(item.dataoperation) }}
@@ -470,7 +473,7 @@ const updateSearchType = (filter: any) => {
             <div class="flex flex-col">
               <dd class="font-semibold text-sm">
                 <a
-                :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
+                :href="(!item.mp || item.mp === 'wildberries') ? `https://www.wildberries.ru/catalog/${item.article}/detail.aspx` : (item.mp === 'avito' ? `https://www.avito.ru/${item.article}` : `https://www.ozon.ru/product/${item.article}`)"
                 class="text-sm text-primary link link-hover"
               >
                 {{ item.article }}

@@ -304,7 +304,7 @@ async function selectCreatePage(e: any) {
             />
             <div class="article">
               <a
-                :href="`https://www.ozon.ru/product/${productData.article}`"
+                :href="`https://www.avito.ru/${productData.article}`"
                 target="_blank"
                 class="text-sm text-primary link link-hover"
               >

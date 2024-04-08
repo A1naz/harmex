@@ -261,7 +261,7 @@ function removeProduct() {
               />
               <div class="article">
                 <a
-                :href="`https://www.ozon.ru/product/${productData.article}`"
+                :href="`https://www.wildberries.ru/catalog/${productData.article}/detail.aspx`"
                   target="_blank"
                   class="text-primary link link-hover"
                 >

@@ -179,7 +179,7 @@ function removeProduct() {
               <nuxt-img width="32" class="rounded-lg object-contain w-8" :src="productData.image" />
               <div class="article">
                 <a
-                :href="`https://www.ozon.ru/product/${productData.article}`" target="_blank"
+                :href="`https://www.wildberries.ru/catalog/${productData.article}/detail.aspx`"
                   class="text-sm text-primary link link-hover"
                 >
                   {{ productData.article }}

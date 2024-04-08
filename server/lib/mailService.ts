@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 
 const config = useRuntimeConfig()
 const { smtpHost, smtpPort, smtpUser, smtpPass, privateKey } = config
-const alias = 'support@topvtop.pro'
+const alias = smtpUser
 const dkimKey = `-----BEGIN RSA PRIVATE KEY-----
 MIICXQIBAAKBgQCdu4HtswyNnv/YnDSoWLQSjWALOVzzGtQIxZhG6Ke7TO77/ywi
 gEjxR6JIPDQb/AQ9cfoRtZad4WL2dHfu82KtMgzhc0CO1vY5bdEWveY/X0HGuGzG
@@ -125,7 +125,7 @@ class MailService {
 
                 Все свои вопросы можете задавать тут
                 
-                <a href="https://t.me/+Y9WKYbGsMeM3ZDli">Поддержка</a>
+                <a href="https://t.me/Marketmonstr_bot">Поддержка</a>
 
 
 
