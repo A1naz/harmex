@@ -118,7 +118,7 @@ function removeReview() {
               {{ info.name }}
             </div>
             <a
-              :href="`https://www.ozon.ru/product/${info.article}`"
+              :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
               target="_blank"
               class="text-sm text-primary link link-hover"
             >

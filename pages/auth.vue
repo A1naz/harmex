@@ -89,6 +89,15 @@ onMounted(async () => {
       alert.value = false
     }, 3000)
   }
+  if (params?.confirmed) {
+    alertText.value = 'Письмо для подтверждения было отправлено на указанный email. (Проверьте папку Спам)'
+    setTimeout(() => {
+      alert.value = true
+    }, 0)
+    setTimeout(() => {
+      alert.value = false
+    }, 3000)
+  }
 })
 
 const passwordShow = ref(false)
