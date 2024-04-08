@@ -89,7 +89,7 @@ async function deleteLike() {
 
 async function selectFilterDate(e: any) {
   const target = e
-  const { data } = await useFetch(`/api/${selectedMP.value}/likes/get`, {
+  const { data } = await useFetch(`/api/${mpStore.selectedMP}/likes/get`, {
     method: 'GET',
     query: {
       dateFilter: target.value,
@@ -106,7 +106,7 @@ async function findBuyouts(value: string, type: string) {
     return
   }
   const { data, error } = await useFetch(
-    `/api/${selectedMP.value}/likes/search`,
+    `/api/${mpStore.selectedMP}/likes/search`,
     {
       query: {
         string: value,
@@ -157,7 +157,7 @@ async function selectMP(value: any) {
         <CustomSelect
           ref="MPSelect"
           class="hidden lg:flex"
-          :class="'navbar:min-w-[120px]'"
+          :class="'min-w-[105px]'"
           :status-text="selectedMP"
           :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="selectMP"     
@@ -199,7 +199,7 @@ async function selectMP(value: any) {
         <CustomSelect
           ref="MPSelect"
           class="lg:hidden"
-          :class="'navbar:min-w-[120px]'"
+          :class="'min-w-[105px]'"
           :status-text="selectedMP"
           :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="selectMP"

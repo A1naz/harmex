@@ -18,6 +18,7 @@ export default eventHandler(async (event) => {
   reviews.forEach((review: any) => {
     likes += review.likes
     dislikes += review.dislikes
+    review.type = 'main';
   })
 
 
@@ -32,11 +33,7 @@ export default eventHandler(async (event) => {
   comments.forEach((comment: any) => {
     likes += comment.likes
     dislikes += comment.dislikes
-    // reviews.push({
-    //   id: comment.id,
-    //   likes: comment.likes,
-    //   dislikes: comment.dislikes,
-    // })
+    comment.type = 'comment';
   })
 
   const created = new QuestionLike({
@@ -46,8 +43,7 @@ export default eventHandler(async (event) => {
     period,
     likes,
     dislikes,
-    questions: reviews,
-    answers: comments,
+    questions: [...reviews, ...comments],
     total: likes + dislikes,
     image: 'null',
     createdDate: new Date(),

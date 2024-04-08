@@ -63,7 +63,6 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
       class="flex border gap-4 border-base-200 bg-base-100 rounded-lg p-4 w-full min-h-[200px]"
     >
       <div class="flex flex-col px-6 gap-2 h-full w-full">
-        
         <div class="flex gap-1.5 justify-between">
           <div class="flex gap-1.5">
             <div class="photo">
@@ -76,28 +75,32 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
               </div>
             </div>
             <div class="userinfo my-auto">
-              <div class="name font-bold mb-2">
+              <div class="name font-bold ">
                 {{ info.question.author }}
+              </div>
+              <div class="date text-gray-500 text-xs w-full">
+                {{ info.question.createdAt }}
               </div>
             </div>
           </div>
-          <div class="flex justify-between">
-            <div class="date text-gray-500 text-sm w-full">
-              {{ info.question.createdAt}}
-            </div>
-          </div>
+          
         </div>
         <div class="flex text-primary">
-          <span> {{ article }}</span>
+          <a
+              :href="`https://www.ozon.ru/product/${article}`"
+              target="_blank"
+              class="text-primary link link-hover"
+            >
+              {{ article }}
+            </a>
         </div>
         <div v-if="info.question.text">
-          <span class="font-medium">Вопрос:</span>
+          <span class="font-medium">Вопрос</span>
           <p class="text text-sm max-h-28 overflow-auto rounded-lg pb-2">
             {{ info.question.text }}
           </p>
         </div>
-         <div class="flex flex-col gap-2.5 mt-auto">
-          <span class="text-gray-400">Вам помог этот отзыв?</span>
+        <div class="flex flex-col gap-2.5 mt-auto">
           <div clas="flex">
             <div class="likes flex gap-2 items-center">
               <span>Да</span>
@@ -124,7 +127,11 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
           </div>
         </div>
         <div>
-          <div class="flex flex-col pl-7 gap-3 h-full w-full">
+          <div
+            class="flex flex-col pl-7 gap-3 h-full w-full"
+            v-for="(answer, index) in info.answers"
+            :key="index"
+          >
             <div class="flex justify-between">
               <div class="flex gap-1 mt-5 -mb-2">
                 <div class="photo">
@@ -137,33 +144,34 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                   </div>
                 </div>
                 <div class="userinfo my-auto">
-                  <div class="name font-bold mb-2">
-                    {{ info.answer.author }}
+                  <div class="name font-bold">
+                    {{ answer.author }}
+                  </div>
+                  <div class="date text-gray-500 text-xs">
+                    {{ answer.createdAt }}
                   </div>
                 </div>
               </div>
-              <div class="date text-gray-500 text-sm">{{ info.answer.createdAt }}</div>
+              
             </div>
-            <div>
-              <p class="text text-md overflow-auto rounded-lg">
-                {{ info.answer.text }}
+            <div class="">
+              <p class="text text-md overflow-auto rounded-lg mt-2">
+                {{ answer.text }}
               </p>
             </div>
             <div class="flex flex-col gap-2.5 mt-auto">
-              <span class="text-gray-400">Вам помог этот комментарий?</span>
+              <span class="text-gray-400">Вам помог этот ответ?</span>
               <div clas="flex">
                 <div class="likes flex gap-2 items-center">
                   <span>Да</span>
                   <div class="relative flex items-center">
                     <button
-                      :disabled="
-                        info.answer.likes + info.answer.addLikes <= info.answer.likes
-                      "
+                      :disabled="answer.likes + answer.addLikes <= answer.likes"
                       class="absolute left-0 btn btn-ghost btn-sm btn-square"
                       @click="
                         ;[
-                        info.answer.addLikes--,
-                          changeCommentLikes('likes', false, info.id),
+                          answer.addLikes--,
+                          changeCommentLikes('likes', false, answer.id),
                         ]
                       "
                     >
@@ -172,15 +180,15 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                     <div
                       class="input-sm rounded-lg w-24 text-center bg-base-200"
                     >
-                      {{ info.answer.likes + info.answer.addLikes }}
+                      {{ answer.likes + answer.addLikes }}
                     </div>
                     <button
-                      :disabled="info.answer.likes + info.answer.addLikes >= 15"
+                      :disabled="answer.likes + answer.addLikes >= 15"
                       class="absolute right-0 btn btn-ghost btn-sm btn-square"
                       @click="
                         ;[
-                        info.answer.addLikes++,
-                          changeCommentLikes('likes', true, info.id),
+                          answer.addLikes++,
+                          changeCommentLikes('likes', true, answer.id),
                         ]
                       "
                     >
@@ -192,14 +200,14 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                     <div class="relative flex items-center ml-auto">
                       <button
                         :disabled="
-                          info.answer.dislikes + info.answer.addDislikes <=
-                          info.answer.dislikes
+                          answer.dislikes + answer.addDislikes <=
+                          answer.dislikes
                         "
                         class="absolute left-0 btn btn-ghost btn-sm btn-square"
                         @click="
                           ;[
-                          info.answer.addDislikes--,
-                            changeCommentLikes('dislikes', false, info.id),
+                            answer.addDislikes--,
+                            changeCommentLikes('dislikes', false, answer.id),
                           ]
                         "
                       >
@@ -208,15 +216,15 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                       <div
                         class="input-sm rounded-lg w-24 text-center bg-base-200"
                       >
-                        {{ info.answer.dislikes + info.answer.addDislikes }}
+                        {{ answer.dislikes + answer.addDislikes }}
                       </div>
                       <button
-                        :disabled="info.answer.dislikes + info.answer.addDislikes >= 15"
+                        :disabled="answer.dislikes + answer.addDislikes >= 15"
                         class="absolute right-0 btn btn-ghost btn-sm btn-square"
                         @click="
                           ;[
-                          info.answer.addDislikes++,
-                            changeCommentLikes('dislikes', true, info.id),
+                            answer.addDislikes++,
+                            changeCommentLikes('dislikes', true, answer.id),
                           ]
                         "
                       >
@@ -234,7 +242,7 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
             class="flex flex-col pl-7 gap-3 h-full w-full"
             v-if="!info.answer"
           >
-          {{comment}}
+            {{ comment }}
             <div class="flex gap-1 mt-5 -mb-2">
               <div class="photo">
                 <div class="w-12 h-12 photo-container">
@@ -256,88 +264,9 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                 {{ comment.text }}
               </p>
             </div>
-            <!-- <div class="flex flex-col gap-2.5 mt-auto">
-              <span class="text-gray-400">Вам помог этот комментарий?</span>
-              <div clas="flex">
-                <div class="likes flex gap-2 items-center">
-                  <span>Да</span>
-                  <div class="relative flex items-center">
-                    <button
-                      :disabled="
-                        comment.likes + comment.addLikes <= comment.likes
-                      "
-                      class="absolute left-0 btn btn-ghost btn-sm btn-square"
-                      @click="
-                        ;[
-                          comment.addLikes--,
-                          changeCommentLikes('likes', false, comment.id),
-                        ]
-                      "
-                    >
-                      <IconCSS size="16" name="ic:round-minus" />
-                    </button>
-                    <div
-                      class="input-sm rounded-lg w-24 text-center bg-base-200"
-                    >
-                      {{ comment.likes + comment.addLikes }}
-                    </div>
-                    <button
-                      :disabled="comment.likes + comment.addLikes >= 15"
-                      class="absolute right-0 btn btn-ghost btn-sm btn-square"
-                      @click="
-                        ;[
-                          comment.addLikes++,
-                          changeCommentLikes('likes', true, comment.id),
-                        ]
-                      "
-                    >
-                      <IconCSS size="16" name="ic:round-plus" />
-                    </button>
-                  </div>
-                  <div class="dislikes flex gap-2 items-center">
-                    <span>Нет</span>
-                    <div class="relative flex items-center ml-auto">
-                      <button
-                        :disabled="
-                          comment.dislikes + comment.addDislikes <=
-                          comment.dislikes
-                        "
-                        class="absolute left-0 btn btn-ghost btn-sm btn-square"
-                        @click="
-                          ;[
-                            comment.addDislikes--,
-                            changeCommentLikes('dislikes', false, comment.id),
-                          ]
-                        "
-                      >
-                        <IconCSS size="16" name="ic:round-minus" />
-                      </button>
-                      <div
-                        class="input-sm rounded-lg w-24 text-center bg-base-200"
-                      >
-                        {{ comment.dislikes + comment.addDislikes }}
-                      </div>
-                      <button
-                        :disabled="comment.dislikes + comment.addDislikes >= 15"
-                        class="absolute right-0 btn btn-ghost btn-sm btn-square"
-                        @click="
-                          ;[
-                            comment.addDislikes++,
-                            changeCommentLikes('dislikes', true, comment.id),
-                          ]
-                        "
-                      >
-                        <IconCSS size="16" name="ic:round-plus" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
           </div>
-          
         </div>
-      </div> 
+      </div>
     </div>
   </div>
 </template>

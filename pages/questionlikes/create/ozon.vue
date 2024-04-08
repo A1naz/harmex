@@ -352,14 +352,12 @@ function changeCommentLikes(
     if (type === 'likes') {
       changedComments.value.push({
         id: commentId,
-        reviewId,
         likes: 1,
         dislikes: 0,
       })
     } else {
       changedComments.value.push({
         id: commentId,
-        reviewId,
         likes: 0,
         dislikes: 1,
       })
@@ -403,7 +401,7 @@ const changedCommentsLikes = computed(() => getAddedCommentsLikes())
   <div>
     <!-- <h1 class="text-2xl font-bold mt-4">Добавить лайки</h1> -->
     <p class="font-light text-gray-500 mt-4 lg:text-sm">
-      В целях безопасности все отзывы, на которых более 30 лайков или дизлайков,
+      В целях безопасности все вопросы, на которых более 30 лайков или дизлайков,
       не выводятся в списке.
     </p>
     <p class="text-xs text-gray-500 font-light mt-1 lg:text-sm">

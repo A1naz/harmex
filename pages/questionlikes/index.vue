@@ -49,7 +49,11 @@ function getStatus(status: string) {
 
 async function getLikes() {
   loading.value = true
-
+  if(mpStore.selectedMP !== 'ozon'){
+    review_likes.value = []
+    loading.value = false
+    return
+  }
   const { data, error } = await useFetch(
     `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/questionlikes/get`
   )
@@ -89,7 +93,12 @@ async function deleteLike() {
 
 async function selectFilterDate(e: any) {
   const target = e
-  const { data } = await useFetch(`/api/${selectedMP.value}/questionlikes/get`, {
+  if(mpStore.selectedMP !== 'ozon'){
+    review_likes.value = []
+    loading.value = false
+    return
+  }
+  const { data } = await useFetch(`/api/${mpStore.selectedMP}/questionlikes/get`, {
     method: 'GET',
     query: {
       dateFilter: target.value,
@@ -100,13 +109,18 @@ async function selectFilterDate(e: any) {
 }
 
 async function findBuyouts(value: string, type: string) {
+  if(mpStore.selectedMP !== 'ozon'){
+    review_likes.value = []
+    search.loading = false
+    return
+  }
   if (!value) {
     search.loading = false
     getLikes()
     return
   }
   const { data, error } = await useFetch(
-    `/api/${selectedMP.value}/questionlikes/search`,
+    `/api/${mpStore.selectedMP}/questionlikes/search`,
     {
       query: {
         string: value,
@@ -132,14 +146,9 @@ const updateSearchType = (filter: any) => {
 }
 
 async function selectMP(value: any) {
-  if(value.value == 'avito'){
-    router.push(`/productlikes/avito`)
-  }else{
     selectedMP.value = value.value
     mpStore.setSelectedMP(value.value)
     getLikes()
-  }
-  
 }
 </script>
 
@@ -157,7 +166,7 @@ async function selectMP(value: any) {
         <CustomSelect
           ref="MPSelect"
           class="hidden lg:flex"
-          :class="'navbar:min-w-[120px]'"
+          :class="'min-w-[105px]'"
           :status-text="selectedMP"
           :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="selectMP"     
@@ -171,7 +180,6 @@ async function selectMP(value: any) {
             { title: 'Завершенные', value: 'completed' },
           ]"
           :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' }]"
-          :status-text="'Вопрос'"
           @change-value="selectFilterDate"
         />
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
@@ -200,7 +208,7 @@ async function selectMP(value: any) {
         <CustomSelect
           ref="MPSelect"
           class="lg:hidden"
-          :class="'navbar:min-w-[120px]'"
+          :class="'min-w-[105px]'"
           :status-text="selectedMP"
           :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
           @change-value="selectMP"

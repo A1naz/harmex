@@ -17,7 +17,6 @@ const QuestionLikesSchema = new Schema({
   endedDate: { type: Date, default: null },
   progress: { type: Number },
   questions: { type: Array },
-  answers: { type: Array },
   dateStart: { type: Date },
   dateEnd: { type: Date },
   period: { type: String },

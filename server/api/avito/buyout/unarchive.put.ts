@@ -23,8 +23,6 @@ export default eventHandler(async (event) => {
 
   const cached = fs.readFileSync('pvz/avitoPoints.json', 'utf8')
   const parsed = JSON.parse(cached)
-
-  console.log(found.pointId);
   
 
   const isPVZExist = parsed.points.findIndex((el: any) => el.id == found.pointId)

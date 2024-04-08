@@ -63,7 +63,6 @@ export default eventHandler(async (event) => {
       })
     }
 
-    console.log(data);
     
 
     if (!data) {

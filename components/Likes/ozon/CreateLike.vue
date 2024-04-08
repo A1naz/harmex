@@ -8,6 +8,7 @@ const props = defineProps({
 const emit = defineEmits(['closeModal'])
 
 const isPageBtnsDisabled = ref(false)
+const mpStore = useMPStore()
 const limit = ref(50)
 const page = ref(1)
 const feedbacksCount = ref(0)

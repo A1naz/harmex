@@ -7,7 +7,7 @@ export default eventHandler(async (event) => {
 
   const { string, type } = getQuery(event)
 
-  const all = await  await Like.find({ user })
+  const all = await Like.find({ user })
   let buyouts
  if (type === 'article') {
     buyouts = await Like.find({
