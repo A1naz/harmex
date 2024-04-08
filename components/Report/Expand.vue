@@ -61,11 +61,11 @@ watch(
             >
           </div>
           <div class="flex flex-wrap gap-2 items-center mt-1">
-            <div
+            <!-- <div
               class="mt-2 lg:m-0 text-xs font-normal text-base-content bg-primary bg-opacity-20 rounded-md px-5 py-0.5"
             >
               Дата выкупа: {{ $dayjs(info.date).format('D MMMM HH:mm') }}
-            </div>
+            </div> -->
             <div
               v-if="selectedMP"
               class="bg-base-300 rounded-md font-normal my-auto p-0.5 text-xs px-2 text-base-content"
@@ -87,7 +87,7 @@ watch(
                 fit="contain"
                 alt="screenshot"
                 :src="
-                  image.includes('yandex')
+                  image.includes('yandex') || image.includes('data:image')
                     ? image
                     : config.public.DOMAIN_API_IMAGES_URL + image
                 "
