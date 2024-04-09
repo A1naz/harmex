@@ -50,10 +50,6 @@ export default eventHandler(async (event) => {
     createdDate: new Date(),
   })
 
-  throw createError({
-    statusCode: 400,
-    message: 'no article or reviews',
-  })
   const res = await created.save()
 
   await userLog(event, {
