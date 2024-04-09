@@ -85,7 +85,7 @@ export default eventHandler(async (event) => {
     })
 
     sheet.columns = [
-      { header: 'QR-код', key: 'receiptcode', width: 16, font: { bold: true } },
+      { header: 'Штрих-код', key: 'receiptcode', width: 48, font: { bold: true } },
       { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
       { header: 'Размер', key: 'size', width: 16, font: { bold: true } },
       { header: 'Название товара', key: 'productname', width: 48, font: { bold: true } },
@@ -150,8 +150,8 @@ export default eventHandler(async (event) => {
         extension: 'png',
       })
       sheet.addImage(image, {
-        tl: { col: 0, row: item!.place },
-        ext: { width: 100, height: 100 },
+        tl: { col: 0.3, row: item!.place + 0.8 },
+        ext: { width: 280, height: 78 },
       })
       sheet.getRow(item!.place + 1).height = 100
     }
