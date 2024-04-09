@@ -29,6 +29,12 @@ export const useMPStore = defineStore('mp', {
       { title: 'Лайк на вопрос', value: '/questionLikes/create/ozon' },
     ],
   }),
+
+  actions: {
+    setSelectedMP(mp: String) {
+      this.selectedMP = mp
+    },
+  },
   persist: {
     storage: persistedState.localStorage,
   },
