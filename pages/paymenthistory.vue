@@ -354,7 +354,8 @@ const updateSearchType = (filter: any) => {
                 }">
           <template #body="{ data }">
             <div class="">
-              {{ data.mp ? data.mp.replace(/\b(\w)/, char => char.toUpperCase()) : 'Wildberries' }}
+              {{ data.typeoperations === 'Приход' ? ' ' :
+                data.mp ? data.mp.replace(/\b(\w)/, char => char.toUpperCase()) : 'Wildberries' }}
             </div>
           </template>
         </Column>
