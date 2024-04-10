@@ -327,13 +327,13 @@ async function selectCreatePage(e: any) {
           :class="'sm:min-w-[120px]'"
           :tabs="[
             {
-              title: 'Лайки на товар/бренд',
-              value: '/productlikes/create/wildberries',
-            },
-            {
               title: 'Лайки на отзывы',
               value: '/likes/create/wildberries',
             },
+            {
+              title: 'Лайки на товар/бренд',
+              value: '/productlikes/create/wildberries',
+            },           
           ]"
           @change-value="selectCreatePage"
         />

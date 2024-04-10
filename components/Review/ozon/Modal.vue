@@ -16,6 +16,7 @@ const headers = useRequestHeaders(['cookie']) as HeadersInit
 const closeButton = ref<HTMLElement>()
 const { notify } = useNotification()
 const { upload, getPublicUrl, remove } = useS3Object()
+const creatingReview = ref(false)
 const now = useNow()
 const { restrictUrl } = useValidation()
 
@@ -155,6 +156,7 @@ async function clearForm() {
 }
 
 async function publishReview() {
+  creatingReview.value = true
   const photos = form.photos
   for await (const photo of photos) {
     try {
@@ -182,6 +184,7 @@ async function publishReview() {
       type: 'error',
       duration: 3000,
     })
+    creatingReview.value = false
     return
   }
   notify({
@@ -190,6 +193,7 @@ async function publishReview() {
     type: 'success',
     duration: 3000,
   })
+  creatingReview.value = false
   emit('close')
   emit('publish')
 }
@@ -495,7 +499,7 @@ function ratingAlert(){
           <button
             for="review-modal"
             class="btn btn-primary btn-sm bg-opacity-20 border-none text-base-content"
-            :disabled="!textValidation"
+            :disabled="!textValidation || creatingReview"
             @click="publishReview"
           >
             Отправить

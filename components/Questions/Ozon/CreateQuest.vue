@@ -18,6 +18,7 @@ const sex = ref('male')
 const productData = ref<any>(null)
 const anonim = ref(false)
 const urlError = ref(false)
+const creating = ref(false)
 async function getQuestions() {
   const { data, error } = await useFetch('/api/ozon/questions/get', { method: 'GET' })
   if (data.value)
@@ -27,6 +28,7 @@ async function getQuestions() {
 }
 await getQuestions()
 async function create() {
+  creating.value = true
   
   const { data, error } = await useFetch('/api/ozon/questions/create', {
     method: 'POST',
@@ -40,11 +42,20 @@ async function create() {
     },
   })
   if (error.value)
-    return notify({ type: 'error', title: 'Что-то пошло не так', text: error.value.message })
+    {notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+    creating.value = false
+    return }
+    // notify({ type: 'error', title: 'Что-то пошло не так', text: error.value.message })
   if (data.value) {
     notify({ type: 'success', title: 'Успешно' })
     removeProduct()
     publishDate.value = now.value
+    creating.value = false
     emit('create')
   }
 }
@@ -155,7 +166,7 @@ function removeProduct() {
                 <div>Вопрос к товару:</div>
               <textarea v-model="questionText" rows="1" class="textarea w-full py-0 h-4 mt-2 bg-base-200 text-gray-500" />
               <label class="label py-0">
-                <span class="label-text-alt">От до 10 до 1000 символов</span></label>
+                <span class="label-text-alt">От 10 до 1000 символов</span></label>
             </div>
             <div class="flex gap-2">
             <input
@@ -176,6 +187,7 @@ function removeProduct() {
               Отмена
             </button>
             <button
+              :disabled="creating"
               :class="{
                 'btn-disabled': !productData || !questionText,
               }" class="btn w-full  lg:max-w-[calc(25%)] btn-primary"

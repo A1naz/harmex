@@ -13,6 +13,7 @@ const url = ref('')
 const urlError = ref(false)
 const urlSuccess = ref('')
 const period = ref('3h')
+const creatingLike = ref(false)
 const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const search = reactive({
@@ -47,6 +48,7 @@ async function getProductLikes() {
 }
 await getProductLikes()
 async function create() {
+  creatingLike.value = true
   const { data, error } = await useFetch('/api/avito/productlikes/create', {
     method: 'POST',
     body: {
@@ -56,13 +58,15 @@ async function create() {
       productData: productData.value,
     },
   })
-  if (error.value)
+  if (error.value){
+    creatingLike.value = false
     return notify({
       type: 'error',
       title: 'Что-то пошло не так',
       text: error.value.message,
-    })
+    })}
   if (data.value) {
+    creatingLike.value = false
     notify({ type: 'success', title: 'Успешно' })
     emit('create')
     return navigateTo('/productlikes/avito')
