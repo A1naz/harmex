@@ -15,6 +15,7 @@ const loadingUrl = ref(false)
 const questionText = ref('')
 const article = ref('')
 const sex = ref('male')
+const creating = ref(false)
 const productData = ref<any>(null)
 const urlError = ref(false)
 async function getQuestions() {
@@ -26,7 +27,7 @@ async function getQuestions() {
 }
 await getQuestions()
 async function create() {
-  
+  creating.value = true
   const { data, error } = await useFetch('/api/wildberries/questions/create', {
     method: 'POST',
     body: {
@@ -38,11 +39,21 @@ async function create() {
     },
   })
   if (error.value)
-    return notify({ type: 'error', title: 'Что-то пошло не так', text: error.value.message })
+  {
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+    creating.value = false
+    return 
+  }
   if (data.value) {
     notify({ type: 'success', title: 'Успешно' })
     removeProduct()
     publishDate.value = now.value
+    creating.value = false
     emit('create')
   }
 }
@@ -164,6 +175,7 @@ function removeProduct() {
               Отмена
             </button>
             <button
+            :disabled="creating"
               :class="{
                 'btn-disabled': !productData || !questionText,
               }" class="btn w-full  lg:max-w-[calc(25%)] btn-primary"
