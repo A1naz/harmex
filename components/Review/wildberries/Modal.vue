@@ -18,6 +18,7 @@ const { notify } = useNotification()
 const { upload, getPublicUrl, remove } = useS3Object()
 const now = useNow()
 const { restrictUrl } = useValidation()
+const creatingReview = ref(false)
 
 const inputs: any = {
   file1: ref(),
@@ -156,6 +157,7 @@ async function clearForm() {
 }
 
 async function publishReview() {
+  creatingReview.value = true
   const photos = form.photos
   for await (const photo of photos) {
     try {
@@ -182,6 +184,7 @@ async function publishReview() {
       type: 'error',
       duration: 3000,
     })
+    creatingReview.value = false
     return
   }
   notify({
@@ -190,6 +193,7 @@ async function publishReview() {
     type: 'success',
     duration: 3000,
   })
+  creatingReview.value = false
   emit('close')
   emit('publish')
 }
@@ -482,7 +486,7 @@ function ratingAlert(){
           <button
             for="review-modal"
             class="btn btn-primary btn-sm bg-opacity-20 border-none text-base-content"
-            :disabled="!textValidation"
+            :disabled="!textValidation || creatingReview"
             @click="publishReview"
           >
             Отправить

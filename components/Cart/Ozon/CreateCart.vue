@@ -16,6 +16,7 @@ const period = ref('3h')
 const query = ref('')
 const article = ref('')
 const size = ref('none')
+const creatingCart = ref(false)
 
 const productData = ref<any>(null)
 const urlError = ref(false)
@@ -31,6 +32,7 @@ async function getCarts() {
 }
 await getCarts()
 async function create() {
+  creatingCart.value = true
   const { data, error } = await useFetch('/api/ozon/cart/create', {
     method: 'POST',
     body: {
@@ -43,13 +45,15 @@ async function create() {
     },
     watch: false,
   })
-  if (error.value)
+  if (error.value){
+    creatingCart.value = false
     return notify({
       type: 'error',
       title: 'Что-то пошло не так',
       text: error.value.message,
-    })
+    })}
   if (data.value) {
+    creatingCart.value = false
     notify({ type: 'success', title: 'Успешно' })
     removeProduct()
     emit('create')
@@ -241,6 +245,7 @@ function removeProduct() {
               </div>
           </div>
             <button
+            :disabled="creatingCart"
               :class="{
                 'btn-disabled': !productData || !query,
               }"

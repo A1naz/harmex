@@ -164,7 +164,7 @@ function removeProduct() {
                 <div>Вопрос к товару:</div>
               <textarea v-model="questionText" rows="1" class="textarea w-full py-0 h-4 mt-2 bg-base-200 text-gray-500" />
               <label class="label py-0">
-                <span class="label-text-alt">От до 10 до 1000 символов</span></label>
+                <span class="label-text-alt">От 10 до 1000 символов</span></label>
             </div>
           </div>
           <div class="flex justify-end gap-2">

@@ -15,6 +15,7 @@ const period = ref('3h')
 const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
+const creatingLike = ref(false)
 const search = reactive({
   text: '',
   loading: false,
@@ -37,6 +38,7 @@ async function getProductLikes() {
 }
 
 async function create() {
+  creatingLike.value = true
   const { data, error } = await useFetch('/api/ozon/productlikes/create', {
     method: 'POST',
     body: {
@@ -46,13 +48,15 @@ async function create() {
       productData: productData.value,
     },
   })
-  if (error.value)
+  if (error.value){
+    creatingLike.value = false
     return notify({
       type: 'error',
       title: 'Что-то пошло не так',
       text: error.value.message,
-    })
+    })}
   if (data.value) {
+    creatingLike.value = false
     notify({ type: 'success', title: 'Успешно' })
     emit('create')
     return navigateTo('/productlikes/ozon')
@@ -260,6 +264,7 @@ async function selectCreatePage(e: any) {
           </div>
           <div class="w-full ml-auto self-end justify-end lg:w-40">
             <button
+              :disabled="creatingLike"
               :class="{
                 'btn-disabled': !productData || amount <= 0,
               }"
