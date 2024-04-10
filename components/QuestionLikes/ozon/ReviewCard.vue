@@ -62,11 +62,17 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
       v-if="info.question.likes <= 30"
       class="flex border gap-4 border-base-200 bg-base-100 rounded-lg p-4 w-full min-h-[200px]"
     >
+      
       <div class="flex flex-col px-6 gap-2 h-full w-full">
+        <div
+        class="bg-base-300 rounded-md text-sm font-normal my-auto p-0.5 mt-1 mb-4 px-2 w-fit"
+        >
+          Ozon
+        </div>
         <div class="flex gap-1.5 justify-between">
           <div class="flex gap-1.5">
-            <div class="photo">
-              <div class="w-12 h-12 photo-container">
+            <div class="photo ">
+              <div class="w-12 h-12 photo-container ">
                 <Icon
                   name="mdi:account"
                   size="40"

@@ -63,18 +63,12 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
       class="flex border gap-4 border-base-200 bg-base-100 rounded-lg p-4 w-full min-h-[200px]"
     >
       <div class="flex flex-col px-6 gap-2 h-full w-full">
-        <div class="flex justify-between">
-          <div class="date text-gray-500 text-sm w-full">
-            {{ $dayjs(info.date).format('DD.MM.YYYY') }}
-          </div>
-          <div class="relative w-full rounded-lg max-w-[85px] sm:max-w-[100px]">
-            <Rating
-              class="text-yellow-400 gap-1 sm:gap-2"
-              :cancel="false"
-              :model-value="info.rating"
-            />
-          </div>
+        <div
+        class="bg-base-300 rounded-md text-sm font-normal my-auto p-0.5 mt-1 mb-4 px-2 w-fit"
+        >
+          Ozon
         </div>
+       
         <div class="flex gap-1.5">
           <div class="photo">
             <div class="w-12 h-12 photo-container">
@@ -85,9 +79,21 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
               />
             </div>
           </div>
-          <div class="userinfo my-auto">
-            <div class="name font-bold mb-2">
+          <div class="userinfo my-auto flex flex-col">
+            <div class="name font-bold">
               {{ info.user.name }}
+            </div>
+            <div class="flex justify-between gap-4">
+              <div class="relative w-full rounded-lg max-w-[85px] sm:max-w-[100px]">
+                <Rating
+                  class="text-yellow-400 gap-1 sm:gap-2 mt-0.5"
+                  :cancel="false"
+                  :model-value="info.rating"
+                />
+              </div>
+               <div class="date text-gray-500 text-sm w-full my-auto">
+                {{ $dayjs(info.date).format('DD.MM.YYYY') }}
+              </div>
             </div>
           </div>
         </div>
