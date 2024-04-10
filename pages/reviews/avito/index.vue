@@ -485,19 +485,19 @@ const customLinks = tabs.map(filter => ({
     <!-- Put this part before </body> tag -->
     <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
     <div class="modal">
-      <div class="modal-box max-w-xs">
-        <h3 class="font-bold text-lg">Вы уверены?</h3>
-        <p class="py-4">Стоимость услуги 100 рублей!</p>
-        <div class="modal-action flex justify-between">
+      <div class="modal-box max-w-xs py-6 px-3">
+        <h3 class="font-bold text-lg">Вы уверенны что хотите удалить  отзыв?</h3>
+        <p class="py-2.5">Стоимость услуги 100 рублей!</p>
+        <div class="flex justify-between">
           <label
             for="reviewRemoveModal"
-            class="btn btn-primary"
+            class="btn btn-ghost w-1/2"
             ref="reviewRemoveModalClose"
             >Отмена</label
           >
           <label
             for="reviewRemoveModal"
-            class="btn btn-error"
+            class="btn btn-[#EBEDFF] w-1/2"
             @click="removeReview"
             >Удалить</label
           >

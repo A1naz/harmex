@@ -57,63 +57,54 @@ function removeReview() {
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
     >
-      <div>
-        {{ defaultDate(info.date) }}
+    <div class="flex justify-between">
+        <span class="text-sm my-auto">{{ defaultDate(info.date) }}</span>
+        <button
+            v-if="info.status === 'published'"
+            @click="emit('removeReview', info.id)"
+            class="btn btn-sm btn-ghost btn-circle hover:text-primary"
+          >
+            
+            <Icon name="heroicons-outline:trash" size="30" class=""/>
+          </button>
       </div>
-      <div class="flex justify-between item gap-2 mb-2 flex-wrap">
-        
-        <h2 v-if="info.draftName" class="card-title">{{ info.draftName }}</h2>
-        <h2 v-else class="card-title">Отзыв</h2>
-        <div>
-          <span
+      <span
             :class="{
               'bg-success bg-opacity-50 text-green-500':
                 info.status === 'working' || info.status === 'published',
-              'bg-warning bg-opacity-50 text-amber-500':
+              'bg-[#F8C68A] text-[#D67500]':
                 info.status === 'waiting' ||
                 info.status === 'created' ||
                 info.status === 'nofunds',
-              'bg-error bg-opacity-50 text-red-500':
+              'bg-[#FF685E] text-[#9C0A00]':
                 info.status === 'canceled' ||
                 info.status === 'deleted' ||
                 info.status === 'deleting',
             }"
-            class="text-black p-1.5 px-4 rounded-lg text-center"
+            class="text-black p-1.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
             >{{ getStatus }}
-          </span>
-          <button
-            v-if="info.status === 'published'"
-            @click="emit('removeReview', info.id)"
-            class="btn btn-sm bg-error text-base-content bg-opacity-50 hover:text-base-100 hover:bg-red-500 hover:bg-opacity-100 ml-1"
+      </span>
+      <div class="flex justify-between item gap-2 mb-2 flex-wrap">
+        
+        <h2 v-if="info.draftName" class="card-title">{{ info.draftName }}</h2>
+        <div v-else class="flex gap-3">
+          <h2  class="card-title text-2xl font-bold">Отзыв</h2>
+          <div
+            class="bg-base-300 rounded-md text-md font-normal my-auto p-0.5 mt-1 px-2"
           >
-            Удалить
-          </button>
-          <!-- <div
-            class="dropdown dropdown-bottom dropdown-end"
-            v-if="info.status === 'published'"
-          >
-            <label tabindex="0" class="btn ml-1 -mr-3 -mt-3 p-1">
-              <Icon name="ph:dots-three-outline-vertical-fill" size="18" />
-            </label>
-            <ul
-              tabindex="0"
-              class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-            >
-              <li>
-              </li>
-            </ul>
-          </div> -->
+            Avito
+          </div>
         </div>
       </div>
-
+      <label
+        class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
+        @click="openBuyout"
+        >#{{ info.buyoutuuid }}</label
+      >
       <div class="flex flex-col gap-4">
         <div class="flex flex-col">
           <div class="relative w-full rounded-lg">
-            <label
-              class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
-              @click="openBuyout"
-              >#{{ info.buyoutuuid }}</label
-            >
+           
             <div class="truncate">
               {{ info.name }}
             </div>
@@ -187,8 +178,6 @@ function removeReview() {
           </div>
         </div> -->
         <div>
-          <div class="font-bold pb-2">Фото</div>
-
           <div
             class="flex gap-2 items-center overflow-x-auto flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]"
           >
