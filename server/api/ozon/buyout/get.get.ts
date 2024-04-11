@@ -123,6 +123,7 @@ export default eventHandler(async (event) => {
       discountRequestPrice: buyout.discountRequestPrice,
       purchaseSoon: buyout.purchaseSoon,
       FIO: buyout.FIO,
+      discountRequestTime: buyout.discountRequestTime,
     }
   })
   return format
