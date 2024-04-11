@@ -15,6 +15,7 @@ export default async (_nitroApp: Nitro) => {
     // eslint-disable-next-line no-console
     console.log('Connected to MongoDB')
     serverPingCycle()
+
   } catch (error) {
     console.error(error)
   }
