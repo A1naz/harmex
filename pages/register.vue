@@ -648,10 +648,10 @@ const toggleConfirmPassword = () => {
               @click="formData.checked = !formData.checked"
             >
               Регистрируясь вы принимаете
-              <a target="_blank" class="text-primary"
+              <a target="_blank" href="/user_agreement.pdf" class="text-primary"
                 >Пользовательское соглашение</a
               >, и подтверждаете, что ознакомлены с
-              <a target="_blank" class="text-primary"
+              <a target="_blank" href="/conf_policy.pdf" class="text-primary"
                 >Политикой конфиденциальности</a
               >.
             </p>
