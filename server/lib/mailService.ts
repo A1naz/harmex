@@ -160,7 +160,7 @@ class MailService {
     const result = this.transporter.sendMail({
       from: alias,
       to,
-      subject: '[TOPVTOP] Запрос на смену пароля',
+      subject: '[MARKETMONSTR] Запрос на смену пароля',
       text: '',
       html: `
                 <div>
@@ -171,10 +171,10 @@ class MailService {
                     <a href="${link}"><h2>https://app.marketmonstr.pro/auth</h2></a>
 
                     <p>
-                    Решайте любые задачи в TOPVTOP
+                    Решайте любые задачи в MARKETMONSTR
                     </p>
                     <p>
-                    С уважением, служба заботы TOPVTOP      
+                    С уважением, служба заботы MARKETMONSTR      
                     </p>    
                 </div>
             `,
