@@ -246,6 +246,19 @@ function ratingAlert(){
       duration: 3000,
   })
 }
+function convertToMoscowTime(dateString: any): Date {
+    const date = new Date(dateString);
+    
+    const utcOffset = date.getTimezoneOffset() / 60;
+    
+    date.setHours(date.getHours() + utcOffset);
+
+    const moscowOffset = 3;
+
+    date.setHours(date.getHours() + moscowOffset);
+
+    return date;
+}
 </script>
 
 <template>
@@ -373,7 +386,7 @@ function ratingAlert(){
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : defaultDate(form.date)
+                  : $dayjs(convertToMoscowTime(form.date)).format('DD.MM.YYYY HH:mm')
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">

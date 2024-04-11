@@ -8,7 +8,6 @@ export default eventHandler(async (event) => {
 
   const { productData, article, publishDate, gender, questionText } = await readBody(event)
   const { image } = productData
-
   if (questionText.length < 10 || questionText.length > 1000) {
     throw createError({
       statusCode: 400,
