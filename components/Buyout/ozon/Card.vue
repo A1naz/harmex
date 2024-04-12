@@ -355,14 +355,20 @@ const getStatus = computed(() => {
               <div class="rounded-md py-0 px-2 text-sm">{{ info.FIO }}</div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Дата запроса скидки: </span>
+              <span class="text-sm text-gray-500 my-auto"
+                >Дата запроса скидки:
+              </span>
               <div class="rounded-md py-0 px-2 text-sm">
                 {{
-                    info.discountRequestTime
-                      ? info.discountRequestTime.split('T')[0].replaceAll('-', '.') +
-                        ' ' +
-                        info.discountRequestTime.split('T')[1].slice(0, 5)
-                      : ''
+                  info.discountRequestTime
+                    ? moscowDate(info.discountRequestTime)
+                        .split('T')[0]
+                        .replaceAll('-', '.') +
+                      ' ' +
+                      moscowDate(info.discountRequestTime)
+                        .split('T')[1]
+                        .slice(0, 5)
+                    : ''
                 }}
               </div>
             </div>
