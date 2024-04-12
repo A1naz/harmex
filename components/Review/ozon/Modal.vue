@@ -23,7 +23,6 @@ const creatingReview = ref(false)
 const now = useNow()
 const { restrictUrl } = useValidation()
 
-const videoLoading = ref(false)
 const inputs: any = {
   file1: ref(),
   file2: ref(),
@@ -130,12 +129,27 @@ async function uploadToS3(event: Event, index: number) {
     loadingIndex.value = null
   }, 1500)
 }
+
+const uploadProgress = ref('')
+const isUploading = ref(false)
+const fileHash = ref<any>('')
+const filetype = ref('')
+const newFileId = ref('')
+
 async function clearForm() {
   form.date = new Date()
   form.text = ''
   form.rating = 5
 
   loadingIndex.value = null
+  isUploading.value = false
+  uploadProgress.value = ''
+  fileHash.value = ''
+  filetype.value = ''
+  newFileId.value = ''
+  form.video = ''
+
+
   form.photos = [
     {
       url: '',
@@ -156,7 +170,7 @@ async function clearForm() {
     {
       url: '',
       public: '',
-    },
+    },   
   ]
 }
 
@@ -291,11 +305,7 @@ async function calculateHash(file: any) {
   })
 }
 
-const uploadProgress = ref('')
-const isUploading = ref(false)
-const fileHash = ref('')
-const filetype = ref('')
-const newFileId = ref('')
+
 
 async function renameFile() {
   axios
@@ -321,11 +331,13 @@ async function renameFile() {
 const handleFileChange = async (e: any) => {
   const file = e.target.files[0]
   const hash = await calculateHash(file)
-  console.log(hash)
+  console.log(file)
 
+  isUploading.value = true
   fileHash.value = hash
   filetype.value = file.type
-  
+  form.video = file.name
+
   const upload: any = new Upload(file, {
     endpoint: 'https://videos.ozonmp.ru/uploads',
     // urlStorage: urlStorage.data,
@@ -337,7 +349,7 @@ const handleFileChange = async (e: any) => {
     },
     chunkSize: 5 * 1024 * 1024,
     onProgress: (bytesUploaded, bytesTotal) => {
-      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
+      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(0)
       uploadProgress.value = percentage
       isUploading.value = true
     },
@@ -375,18 +387,17 @@ async function test() {
 }
 
 function convertToMoscowTime(dateString: any): Date {
-  const date = new Date(dateString);
-    
-    const utcOffset = date.getTimezoneOffset() / 60;
-    
-    date.setHours(date.getHours() + utcOffset);
+  const date = new Date(dateString)
 
-    const moscowOffset = 3;
+  const utcOffset = date.getTimezoneOffset() / 60
 
-    date.setHours(date.getHours() + moscowOffset);
+  date.setHours(date.getHours() + utcOffset)
 
-    return date;
+  const moscowOffset = 3
 
+  date.setHours(date.getHours() + moscowOffset)
+
+  return date
 }
 </script>
 
@@ -399,7 +410,7 @@ function convertToMoscowTime(dateString: any): Date {
     }"
     class="modal overflow-x-hidden"
   >
-    <div class="modal-box z-50">
+    <div class="modal-box z-50 max-w-xl sm:w-xs w-xl">
       <label
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
@@ -515,7 +526,9 @@ function convertToMoscowTime(dateString: any): Date {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : $dayjs(convertToMoscowTime(form.date)).format('DD.MM.YYYY HH:mm')
+                  : $dayjs(convertToMoscowTime(form.date)).format(
+                      'DD.MM.YYYY HH:mm'
+                    )
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
@@ -609,29 +622,37 @@ function convertToMoscowTime(dateString: any): Date {
         </div>
         <div class="flex flex-col">
           <label class="">
-            <div class="flex justify-between">
-              <div>
+            <div class="flex justify-between h-16 cursor-pointer">
+              <div class="max-w-[240px]">
                 <span class="font-medium">Добавить видео (+25 рублей)</span>
                 <input
                   type="file"
+                  class="w-[200px] sm:w-[400px] cursor-pointer"
                   accept="video/*"
                   @change="handleFileChange($event)"
                   :class="{ hidden: !form.video }"
                 />
               </div>
-              <button class="btn btn-primary" @click="test">sdsd</button>
-              <input
-                v-if="!videoLoading"
-                type="checkbox"
-                class="checkbox checkbox-primary border-base-content"
-                style="pointer-events: none"
-                :checked="form.video !== ''"
-              />
-              <Icon
-                v-else="videoLoading"
-                name="mdi:loading"
-                class="h-8 w-8 animate-spin"
-              />
+              <div>
+                <input
+                  v-if="!isUploading"
+                  type="checkbox"
+                  class="checkbox checkbox-primary border-base-content mt-3"
+                  style="pointer-events: none"
+                  :checked="form.video !== ''"
+                />
+
+                <div
+                  v-else
+                  class="radial-progress text-primary"
+                  :style="{
+                    '--value': uploadProgress,
+                  }"
+                  role="progressbar"
+                >
+                  {{ uploadProgress }}%
+                </div>
+              </div>
             </div>
           </label>
         </div>
@@ -655,7 +676,7 @@ function convertToMoscowTime(dateString: any): Date {
           <button
             for="review-modal"
             class="btn btn-primary btn-sm bg-opacity-20 border-none text-base-content"
-            :disabled="!textValidation"
+            :disabled="!textValidation || isUploading"
             @click="publishReview"
           >
             Отправить
