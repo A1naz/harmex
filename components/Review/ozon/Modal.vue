@@ -6,6 +6,7 @@ import axios from 'axios'
 import CryptoJS from 'crypto-js'
 
 const config = useRuntimeConfig()
+const store = useMainStore()
 
 const props = defineProps({
   review: {} as any,
@@ -299,8 +300,8 @@ const newFileId = ref('')
 
 async function renameFile() {
   axios
-    .post('http://localhost:5400/api/renameFile', {
-      fileName: newFileId,
+    .post('https://videos.ozonmp.ru/api/renameFile', {
+      fileName: newFileId.value,
       type: filetype.value.replace('video/', ''),
     })
     .then((response) => {
@@ -321,11 +322,13 @@ async function renameFile() {
 const handleFileChange = async (e: any) => {
   const file = e.target.files[0]
   const hash = await calculateHash(file)
+  console.log(hash)
+
   fileHash.value = hash
   filetype.value = file.type
   // const urlStorage = await axios.post('http://localhost/api/getUrlStorage')
   const upload: any = new Upload(file, {
-    endpoint: 'http://localhost:5400/uploads',
+    endpoint: 'https://videos.ozonmp.ru/uploads',
     // urlStorage: urlStorage.data,
     retryDelays: [0, 1000, 3000, 5000],
     metadata: {
@@ -363,6 +366,13 @@ const handleFileChange = async (e: any) => {
 
 async function check(hash: any) {
   await renameFile()
+}
+
+async function test() {
+  const res = await useFetch('https://videos.ozonmp.ru/', {
+    method: 'GET',
+  })
+  console.log(res)
 }
 </script>
 
@@ -585,7 +595,7 @@ async function check(hash: any) {
         </div>
         <div class="flex flex-col">
           <label class="">
-            <div class="flex justify-between">
+            <div class="flex justify-between" v-if="store.client.username == 'test'">
               <div>
                 <span class="font-medium">Добавить видео (+25 рублей)</span>
                 <input
@@ -595,7 +605,7 @@ async function check(hash: any) {
                   :class="{ hidden: !form.video }"
                 />
               </div>
-              <button class="btn btn-primary">sdsd</button>
+              <button class="btn btn-primary" @click="test">sdsd</button>
               <input
                 v-if="!videoLoading"
                 type="checkbox"
