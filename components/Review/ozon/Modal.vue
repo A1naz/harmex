@@ -4,9 +4,10 @@ import { UseImage } from '@vueuse/components'
 import { Upload } from 'tus-js-client'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
+import { isUnparsedNode } from 'typescript'
 
 const config = useRuntimeConfig()
-
+const store = useMainStore()
 const props = defineProps({
   review: {} as any,
   state: { type: Boolean, required: true },
@@ -23,7 +24,6 @@ const creatingReview = ref(false)
 const now = useNow()
 const { restrictUrl } = useValidation()
 
-const videoLoading = ref(false)
 const inputs: any = {
   file1: ref(),
   file2: ref(),
@@ -86,6 +86,65 @@ const selectedDeliv = ref({
 
 const loadingIndex = ref(null) as Ref<number | null>
 
+async function checkVideo(file: any) {
+  return new Promise((resolve) => {
+    const videoElement = document.createElement('video')
+    videoElement.src = URL.createObjectURL(file)
+
+    if (file.size > 500 * 1024 * 1024) {
+      // Если размер файла превышает 500 МБ
+      notify({
+        title: 'Ошибка',
+        text: 'Максимальный размер видео должен быть 500 МБ',
+      })
+      resolve(false)
+      return
+    }
+
+    videoElement.onloadedmetadata = () => {
+      if (videoElement.duration > 600) {
+        form.video = ''
+        isUploading.value = false
+        notify({
+          title: 'Ошибка',
+          text: 'Видео слишком длинное. Максимальная длительность: 10 минут',
+          type: 'error',
+          duration: 3000,
+        })
+        resolve(false)
+      } else if (
+        videoElement.videoWidth < 480 ||
+        videoElement.videoHeight < 480
+      ) {
+        form.video = ''
+        isUploading.value = false
+        notify({
+          title: 'Ошибка',
+          text: 'Минимальный размер видео должен быть 480x480',
+          type: 'error',
+          duration: 3000,
+        })
+        resolve(false)
+      } else if (
+        videoElement.videoWidth > 4100 ||
+        videoElement.videoHeight > 4100
+      ) {
+        form.video = ''
+        isUploading.value = false
+        notify({
+          title: 'Ошибка',
+          text: 'Максимальный размер видео должен быть 4100x4100',
+          type: 'error',
+          duration: 3000,
+        })
+        resolve(false)
+      } else {
+        resolve(true)
+      }
+    }
+  })
+}
+
 async function uploadToS3(event: Event, index: number) {
   loadingIndex.value = index
   const fileList = (event.target! as HTMLInputElement).files
@@ -130,12 +189,27 @@ async function uploadToS3(event: Event, index: number) {
     loadingIndex.value = null
   }, 1500)
 }
+
+const uploadProgress = ref('')
+const isUploading = ref(false)
+const fileHash = ref<any>('')
+const filetype = ref('')
+const newFileId = ref('')
+
 async function clearForm() {
   form.date = new Date()
   form.text = ''
   form.rating = 5
 
   loadingIndex.value = null
+  isUploading.value = false
+  uploadProgress.value = ''
+  fileHash.value = ''
+  filetype.value = ''
+  newFileId.value = ''
+  form.video = ''
+  filetype.value = ''
+
   form.photos = [
     {
       url: '',
@@ -177,6 +251,11 @@ async function publishReview() {
     method: 'POST',
     body: {
       ...form,
+      videoKey:
+        'reviewVideos/' +
+        newFileId.value +
+        '.' +
+        filetype.value.replace('video/', ''),
       deliveryid: selectedDeliv.value.deliveryid,
       buyoutuuid: selectedDeliv.value.uuid,
     },
@@ -201,6 +280,7 @@ async function publishReview() {
   creatingReview.value = false
   emit('close')
   emit('publish')
+  location.reload()
 }
 
 async function removePhoto(index: number) {
@@ -291,12 +371,6 @@ async function calculateHash(file: any) {
   })
 }
 
-const uploadProgress = ref('')
-const isUploading = ref(false)
-const fileHash = ref('')
-const filetype = ref('')
-const newFileId = ref('')
-
 async function renameFile() {
   axios
     .post('https://videos.ozonmp.ru/api/renameFile', {
@@ -319,13 +393,34 @@ async function renameFile() {
     })
 }
 const handleFileChange = async (e: any) => {
-  const file = e.target.files[0]
-  const hash = await calculateHash(file)
-  console.log(hash)
+  if (isUploading.value) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: 'Дождитесь окончания загрузки',
+    })
+    return
+  }
 
+  const file = e.target.files[0]
+
+  if (!file || !file.type.includes('video')) {
+    form.video = ''
+    return
+  }
+
+  const isVideoEnabled = await checkVideo(file)
+  if (!isVideoEnabled) {
+    form.video = ''
+    return
+  }
+
+  const hash = await calculateHash(file)
+
+  isUploading.value = true
   fileHash.value = hash
   filetype.value = file.type
-  
+  form.video = file.name
+
   const upload: any = new Upload(file, {
     endpoint: 'https://videos.ozonmp.ru/uploads',
     // urlStorage: urlStorage.data,
@@ -337,12 +432,11 @@ const handleFileChange = async (e: any) => {
     },
     chunkSize: 5 * 1024 * 1024,
     onProgress: (bytesUploaded, bytesTotal) => {
-      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
+      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(0)
       uploadProgress.value = percentage
       isUploading.value = true
     },
     onError: (error) => {
-      console.log('Ошибка из-за: ' + error)
       isUploading.value = false
     },
     onSuccess: async () => {
@@ -371,22 +465,20 @@ async function test() {
   const res = await useFetch('https://videos.ozonmp.ru/', {
     method: 'GET',
   })
-  console.log(res)
 }
 
 function convertToMoscowTime(dateString: any): Date {
-  const date = new Date(dateString);
-    
-    const utcOffset = date.getTimezoneOffset() / 60;
-    
-    date.setHours(date.getHours() + utcOffset);
+  const date = new Date(dateString)
 
-    const moscowOffset = 3;
+  const utcOffset = date.getTimezoneOffset() / 60
 
-    date.setHours(date.getHours() + moscowOffset);
+  date.setHours(date.getHours() + utcOffset)
 
-    return date;
+  const moscowOffset = 3
 
+  date.setHours(date.getHours() + moscowOffset)
+
+  return date
 }
 </script>
 
@@ -399,7 +491,7 @@ function convertToMoscowTime(dateString: any): Date {
     }"
     class="modal overflow-x-hidden"
   >
-    <div class="modal-box z-50">
+    <div class="modal-box z-50 max-w-xl sm:w-xs w-xl">
       <label
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
@@ -515,7 +607,9 @@ function convertToMoscowTime(dateString: any): Date {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : $dayjs(convertToMoscowTime(form.date)).format('DD.MM.YYYY HH:mm')
+                  : $dayjs(convertToMoscowTime(form.date)).format(
+                      'DD.MM.YYYY HH:mm'
+                    )
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
@@ -609,29 +703,41 @@ function convertToMoscowTime(dateString: any): Date {
         </div>
         <div class="flex flex-col">
           <label class="">
-            <div class="flex justify-between">
-              <div>
+            <div
+              class="flex justify-between h-16 cursor-pointer"
+              v-if="store.client.username == 'test'"
+            >
+              <div class="max-w-[240px]">
                 <span class="font-medium">Добавить видео (+25 рублей)</span>
                 <input
+                  :disabled="isUploading || form.video !== ''"
                   type="file"
+                  class="w-[200px] sm:w-[400px] cursor-pointer"
                   accept="video/*"
                   @change="handleFileChange($event)"
                   :class="{ hidden: !form.video }"
                 />
               </div>
-              <button class="btn btn-primary" @click="test">sdsd</button>
-              <input
-                v-if="!videoLoading"
-                type="checkbox"
-                class="checkbox checkbox-primary border-base-content"
-                style="pointer-events: none"
-                :checked="form.video !== ''"
-              />
-              <Icon
-                v-else="videoLoading"
-                name="mdi:loading"
-                class="h-8 w-8 animate-spin"
-              />
+              <div>
+                <input
+                  v-if="!isUploading"
+                  type="checkbox"
+                  class="checkbox checkbox-primary border-base-content"
+                  style="pointer-events: none"
+                  :checked="form.video !== ''"
+                />
+
+                <div
+                  v-else
+                  class="radial-progress text-primary"
+                  :style="{
+                    '--value': uploadProgress,
+                  }"
+                  role="progressbar"
+                >
+                  {{ uploadProgress }}%
+                </div>
+              </div>
             </div>
           </label>
         </div>
@@ -639,6 +745,7 @@ function convertToMoscowTime(dateString: any): Date {
       <div class="modal-action justify-between">
         <div>
           <button
+            :disabled="isUploading"
             class="btn btn-sm btn-ghost btn-outline border-none text-error"
             @click="clearForm"
           >
@@ -655,7 +762,7 @@ function convertToMoscowTime(dateString: any): Date {
           <button
             for="review-modal"
             class="btn btn-primary btn-sm bg-opacity-20 border-none text-base-content"
-            :disabled="!textValidation"
+            :disabled="!textValidation || isUploading"
             @click="publishReview"
           >
             Отправить

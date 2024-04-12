@@ -9,9 +9,16 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { buyoutuuid, deliveryid, rating, text, photos, date } = await readBody(
-    event
-  )
+  const {
+    buyoutuuid,
+    deliveryid,
+    rating,
+    text,
+    photos,
+    date,
+    videoKey,
+    video,
+  } = await readBody(event)
 
   if (text) {
     if (text.length < 10 || text.length > 1000) {
@@ -22,7 +29,7 @@ export default eventHandler(async (event) => {
       })
     }
   }
-  if(rating <4){
+  if (rating < 4) {
     throw createError({
       statusCode: 400,
       message:
@@ -31,7 +38,7 @@ export default eventHandler(async (event) => {
   }
 
   const buyout = await Buyout.findOne({ uuid: buyoutuuid })
-  
+
   if (!buyout) {
     return createError({
       statusCode: 400,
@@ -56,7 +63,7 @@ export default eventHandler(async (event) => {
       ''
     )
   )
-    
+
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
@@ -68,6 +75,10 @@ export default eventHandler(async (event) => {
     images,
     status: 'waiting',
     recipientphone: delivery.recipientphone,
+    videoKey: videoKey !== 'reviewVideos/.' ? videoKey : '',
+    originalVideoName: video,
+    isVideoEnabled: video !== '',
+    createdAt: Date.now(),
   })
   const res = await review.save()
   delivery.reviewed = true
