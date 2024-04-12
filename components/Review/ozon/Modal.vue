@@ -6,7 +6,6 @@ import axios from 'axios'
 import CryptoJS from 'crypto-js'
 
 const config = useRuntimeConfig()
-const store = useMainStore()
 
 const props = defineProps({
   review: {} as any,
@@ -300,7 +299,7 @@ const newFileId = ref('')
 
 async function renameFile() {
   axios
-    .post('https://videos.ozonmp.ru/api/renameFile', {
+    .post('http://uplolad.captain.localhost:5400/api/renameFile', {
       fileName: newFileId.value,
       type: filetype.value.replace('video/', ''),
     })
@@ -328,7 +327,7 @@ const handleFileChange = async (e: any) => {
   filetype.value = file.type
   // const urlStorage = await axios.post('http://localhost/api/getUrlStorage')
   const upload: any = new Upload(file, {
-    endpoint: 'https://videos.ozonmp.ru/uploads',
+    endpoint: 'http://uplolad.captain.localhost:5400/uploads',
     // urlStorage: urlStorage.data,
     retryDelays: [0, 1000, 3000, 5000],
     metadata: {
@@ -369,10 +368,24 @@ async function check(hash: any) {
 }
 
 async function test() {
-  const res = await useFetch('https://videos.ozonmp.ru/', {
+  const res = await useFetch('https://upload.marketmonstr.pro/', {
     method: 'GET',
   })
   console.log(res)
+}
+
+function convertToMoscowTime(dateString: any): Date {
+  const date = new Date(dateString)
+
+  const utcOffset = date.getTimezoneOffset() / 60
+
+  date.setHours(date.getHours() + utcOffset)
+
+  const moscowOffset = 3
+
+  date.setHours(date.getHours() + moscowOffset)
+
+  return date
 }
 </script>
 
@@ -501,7 +514,9 @@ async function test() {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : defaultDate(form.date)
+                  : $dayjs(convertToMoscowTime(form.date)).format(
+                      'DD.MM.YYYY HH:mm'
+                    )
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
@@ -595,7 +610,7 @@ async function test() {
         </div>
         <div class="flex flex-col">
           <label class="">
-            <div class="flex justify-between" v-if="store.client.username == 'test'">
+            <div class="flex justify-between">
               <div>
                 <span class="font-medium">Добавить видео (+25 рублей)</span>
                 <input
