@@ -299,7 +299,7 @@ const newFileId = ref('')
 
 async function renameFile() {
   axios
-    .post('http://uplolad.captain.localhost:5400/api/renameFile', {
+    .post('https://videos.ozonmp.ru/api/renameFile', {
       fileName: newFileId.value,
       type: filetype.value.replace('video/', ''),
     })
@@ -325,9 +325,9 @@ const handleFileChange = async (e: any) => {
 
   fileHash.value = hash
   filetype.value = file.type
-  // const urlStorage = await axios.post('http://localhost/api/getUrlStorage')
+  
   const upload: any = new Upload(file, {
-    endpoint: 'http://uplolad.captain.localhost:5400/uploads',
+    endpoint: 'https://videos.ozonmp.ru/uploads',
     // urlStorage: urlStorage.data,
     retryDelays: [0, 1000, 3000, 5000],
     metadata: {
@@ -368,7 +368,7 @@ async function check(hash: any) {
 }
 
 async function test() {
-  const res = await useFetch('https://upload.marketmonstr.pro/', {
+  const res = await useFetch('https://videos.ozonmp.ru/', {
     method: 'GET',
   })
   console.log(res)
