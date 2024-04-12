@@ -14,7 +14,11 @@ const ReviewSchema = new Schema({
   recipientphone: { type: String, required: true },
   positive: { type: String, required: false },
   negative: { type: String, required: false },
-})
+  videoKey: { type: String, required: false },
+  originalVideoName: { type: String, required: false },
+  isVideoEnabled: { type: Boolean, required: false },
+  createdAt: { type: Date, required: false, default: Date.now },
+},)
 
 export const Review = OzonConnection.model('Review', ReviewSchema)
 

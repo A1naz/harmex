@@ -17,6 +17,8 @@ export default eventHandler(async (event) => {
     date,
     positive,
     negative,
+    videoKey,
+    video,
   } = await readBody(event)
 
   if (text) {
@@ -28,7 +30,7 @@ export default eventHandler(async (event) => {
       })
     }
   }
-  if(rating <4){
+  if (rating < 4) {
     throw createError({
       statusCode: 400,
       message:
@@ -68,12 +70,16 @@ export default eventHandler(async (event) => {
     text,
     date,
     user,
-    delivery,
+    delivery: '5b7b1e2e9e5a4f0b8f8f8f8f',
     images,
     status: 'waiting',
-    recipientphone: delivery.recipientphone,
+    recipientphone: 'delivery.recipientphone',
     positive,
     negative,
+    videoKey: videoKey !== 'reviewVideos/.' ? videoKey : '',
+    originalVideoName: video,
+    isVideoEnabled: video !== '',
+    createdAt: Date.now(),
   })
 
   const res = await review.save()
