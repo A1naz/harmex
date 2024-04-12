@@ -53,7 +53,7 @@ onKeyStroke('Escape', (e) => {
 
 <template>
   <div id="buyoutInfoModal" :class="{ 'modal-open': state }" class="modal">
-    <div v-if="state" class="modal-box max-w-md max-h-[90%] p-0">
+    <div v-if="state" class="modal-box max-w-[500px] max-h-[90%] p-0">
       <div class="">
         <div class="p-5">
           <a
@@ -188,9 +188,27 @@ onKeyStroke('Escape', (e) => {
                 <span class="text-sm text-gray-500 my-auto">Категория: </span>
                 <div class="bg-base-300 rounded-md py-0 px-2 text-sm">Ozon</div>
               </div>
-              <div v-if="info.FIO" class="flex gap-2">
+              <div v-if="info.FIO" class="flex flex-wrap gap-2">
                 <span class="text-sm text-gray-500 my-auto">ФИО: </span>
-                <div class="rounded-md py-0 px-2 text-sm">{{ info.FIO }}</div>
+                <div class="rounded-md py-0 text-sm">{{ info.FIO }}</div>
+              </div>
+              <div v-if="info.discountRequestTime" class="flex flex-wrap gap-2">
+                <span class="text-sm text-gray-500 my-auto"
+                  >Дата запроса скидки:
+                </span>
+                <div class="rounded-md py-0 text-sm">
+                  {{
+                    info.discountRequestTime
+                      ? moscowDate(info.discountRequestTime)
+                          .split('T')[0]
+                          .replaceAll('-', '.') +
+                        ' ' +
+                        moscowDate(info.discountRequestTime)
+                          .split('T')[1]
+                          .slice(0, 5)
+                      : ''
+                  }}
+                </div>
               </div>
             </div>
           </div>
