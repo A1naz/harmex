@@ -38,21 +38,21 @@ const disabledMinusDislikes = computed(() => {
   return props.addDislikes <= 0
 })
 function addLike() {
-  emit('addLike', props.info.id)
+  emit('addLike', props.info.id, props.info.productArticle)
 }
-function removeLike() {
-  emit('removeLike', props.info.id)
+function removeLike() {  
+  emit('removeLike', props.info.id, props.info.productArticle)
 }
 
 function addDislike() {
-  emit('addDislike', props.info.id)
+  emit('addDislike', props.info.id, props.info.productArticle)
 }
 function removeDislike() {
-  emit('removeDislike', props.info.id)
+  emit('removeDislike', props.info.id, props.info.productArticle)
 }
 
 function changeCommentLikes(type: string, add: boolean, commentId: string) {
-  emit('changeCommentLikes', props.info.id, commentId, add, type)
+  emit('changeCommentLikes', props.info.id, commentId, add, type, props.info.productArticle)
 }
 </script>
 
