@@ -108,7 +108,7 @@ function openBuyout() {
         <div class="flex-col justify-center gap-2 hidden lg:flex">
           <label
             for="review-modal"
-            class="btn btn-sm  btn-primary bg-opacity-20 border-none text-base-content"
+            class="btn btn-sm btn-disabled btn-primary bg-opacity-20 border-none text-base-content"
             @click="$emit('openModal', buyoutuuId, deliveryId)"
             >
             <!-- Оставить отзыв (доступно: {{ countAllAvailable }}) -->
