@@ -28,6 +28,7 @@ export default eventHandler(async (event) => {
     },
   })
 
+
   if (!data || data.status === 'error') {
     return {
       feedbacks: [],
@@ -41,7 +42,6 @@ export default eventHandler(async (event) => {
       comment.addDislikes = 0
     })
   })
-
 
   return {
     feedbacks: data,

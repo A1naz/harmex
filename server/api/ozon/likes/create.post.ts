@@ -34,6 +34,7 @@ export default eventHandler(async (event) => {
     reviews.push({
       id: comment.id,
       likes: comment.likes,
+      productArticle: comment.productArticle,
       dislikes: comment.dislikes,
     })
   })
@@ -51,7 +52,7 @@ export default eventHandler(async (event) => {
   })
 
   const res = await created.save()
-
+  
   await userLog(event, {
     documentType: DocuemntEnum.Like,
     documentId: res._id,

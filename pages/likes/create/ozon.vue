@@ -107,7 +107,7 @@ async function increaseReviews() {
   sortReviews()
 }
 
-function addLike(id: string) {
+function addLike(id: string, productArticle: number) {
   reviews.value.map((review: any) => {
     if (review.id === id) review.addLikes++
     return review
@@ -120,6 +120,7 @@ function addLike(id: string) {
       }))
     : changedReviews.value.push({
         id,
+        productArticle,
         likes: 1,
         dislikes: 0,
       })
@@ -153,7 +154,7 @@ function removeLike(id: string) {
     }
   }
 }
-function addDislike(id: string) {
+function addDislike(id: string, productArticle: number) {
   reviews.value.map((review: any) => {
     if (review.id === id) review.addDislikes++
     return review
@@ -166,6 +167,7 @@ function addDislike(id: string) {
       }))
     : changedReviews.value.push({
         id,
+        productArticle,
         likes: 0,
         dislikes: 1,
       })
@@ -335,12 +337,12 @@ function handleArticleChanged(
   sortReviews()
 }
 
-
 function changeCommentLikes(
   reviewId: string,
   commentId: string,
   add: boolean,
-  type: string
+  type: string,
+  productArticle: number
 ) {
   const adding = add ? 1 : -1
 
@@ -353,6 +355,7 @@ function changeCommentLikes(
       changedComments.value.push({
         id: commentId,
         reviewId,
+        productArticle,        
         likes: 1,
         dislikes: 0,
       })
@@ -360,6 +363,7 @@ function changeCommentLikes(
       changedComments.value.push({
         id: commentId,
         reviewId,
+        productArticle,
         likes: 0,
         dislikes: 1,
       })
