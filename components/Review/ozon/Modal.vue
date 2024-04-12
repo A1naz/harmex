@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useNotification } from '@kyvg/vue3-notification'
 import { UseImage } from '@vueuse/components'
+import { Upload } from 'tus-js-client'
+import axios from 'axios'
+import CryptoJS from 'crypto-js'
 
 const config = useRuntimeConfig()
 
@@ -20,6 +23,7 @@ const creatingReview = ref(false)
 const now = useNow()
 const { restrictUrl } = useValidation()
 
+const videoLoading = ref(false)
 const inputs: any = {
   file1: ref(),
   file2: ref(),
@@ -56,6 +60,7 @@ const form = reactive({
       public: '',
     },
   ],
+  video: '',
 })
 
 const textValidation = computed(() => {
@@ -239,16 +244,138 @@ watch(
 onMounted(() => {
   clearForm()
 })
-function ratingAlert(){
+function ratingAlert() {
   notify({
-      title: 'Что-то пошло не так',
-      text: 'В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд',
-      type: 'error',
-      duration: 3000,
+    title: 'Что-то пошло не так',
+    text: 'В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд',
+    type: 'error',
+    duration: 3000,
   })
 }
+
+async function calculateHash(file: any) {
+  return new Promise((resolve, reject) => {
+    const chunkSize = 5 * 1024 * 1024
+    const chunks = Math.ceil(file.size / chunkSize)
+    let currentChunk = 0
+    const hash = CryptoJS.algo.SHA256.create()
+
+    const fileReader = new FileReader()
+
+    fileReader.onload = function (e: any) {
+      // @ts-ignore
+      const wordArray = CryptoJS.lib.WordArray.create(e.target.result)
+      hash.update(wordArray)
+      currentChunk++
+
+      if (currentChunk < chunks) {
+        loadNextChunk()
+      } else {
+        const hashValue = hash.finalize().toString(CryptoJS.enc.Hex)
+        resolve(hashValue)
+      }
+    }
+
+    fileReader.onerror = function (e) {
+      reject(e)
+    }
+
+    function loadNextChunk() {
+      const start = currentChunk * chunkSize
+      const end = Math.min(start + chunkSize, file.size)
+      const chunk = file.slice(start, end)
+      fileReader.readAsArrayBuffer(chunk)
+    }
+
+    loadNextChunk()
+  })
+}
+
+const uploadProgress = ref('')
+const isUploading = ref(false)
+const fileHash = ref('')
+const filetype = ref('')
+const newFileId = ref('')
+
+async function renameFile() {
+  axios
+    .post('http://uplolad.captain.localhost:5400/api/renameFile', {
+      fileName: newFileId.value,
+      type: filetype.value.replace('video/', ''),
+    })
+    .then((response) => {
+      if (response.data.status === 'success') {
+        notify({
+          title: 'Успешно',
+          text: 'Файл загружен',
+        })
+      } else {
+        notify({
+          title: 'Что-то пошло не так',
+          text: 'Не удалось загрузить файл',
+        })
+      }
+      isUploading.value = false
+    })
+}
+const handleFileChange = async (e: any) => {
+  const file = e.target.files[0]
+  const hash = await calculateHash(file)
+  console.log(hash)
+
+  fileHash.value = hash
+  filetype.value = file.type
+  // const urlStorage = await axios.post('http://localhost/api/getUrlStorage')
+  const upload: any = new Upload(file, {
+    endpoint: 'http://uplolad.captain.localhost:5400/uploads',
+    // urlStorage: urlStorage.data,
+    retryDelays: [0, 1000, 3000, 5000],
+    metadata: {
+      filename: file.name,
+      filetype: file.type,
+      filehash: hash,
+    },
+    chunkSize: 5 * 1024 * 1024,
+    onProgress: (bytesUploaded, bytesTotal) => {
+      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
+      uploadProgress.value = percentage
+      isUploading.value = true
+    },
+    onError: (error) => {
+      console.log('Ошибка из-за: ' + error)
+      isUploading.value = false
+    },
+    onSuccess: async () => {
+      newFileId.value = upload.url.split('/')[upload.url.split('/').length - 1]
+
+      setTimeout(async () => {
+        await renameFile()
+      }, 1000)
+    },
+  })
+
+  // await axios.post('http://localhost/api/getUrlStorage', {fileHash: hash}).then((previousUploads) => {
+  //     if (previousUploads.data.length > 0) {
+  //       upload.resumeFromPreviousUpload(previousUploads.data[0])
+  //     }
+
+  //   })
+  upload.start()
+}
+
+async function check(hash: any) {
+  await renameFile()
+}
+
+async function test() {
+  const res = await useFetch('https://upload.marketmonstr.pro/', {
+    method: 'GET',
+  })
+  console.log(res)
+}
+
 function convertToMoscowTime(dateString: any): Date {
-    const date = new Date(dateString);
+  const date = new Date(dateString);
     
     const utcOffset = date.getTimezoneOffset() / 60;
     
@@ -259,6 +386,7 @@ function convertToMoscowTime(dateString: any): Date {
     date.setHours(date.getHours() + moscowOffset);
 
     return date;
+
 }
 </script>
 
@@ -310,27 +438,14 @@ function convertToMoscowTime(dateString: any): Date {
         </option>
       </select>
 
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-1 font-medium">Отзыв о товаре</div>
+          <div class="pb-2 font-medium">Отзыв о товаре</div>
 
           <textarea
             v-model="form.text"
             class="textarea w-full textarea-md bg-base-200"
             placeholder="Например, хороший телефон"
-          />
-          <div class="pb-1 font-medium">Достоинства</div>
-          <textarea
-            v-model="form.positive"
-            class="textarea w-full textarea-md bg-base-200"
-            placeholder="Например, хорошая камера"
-          />
-          <div class="pb-1 font-medium">Недостатки</div>
-
-          <textarea
-            v-model="form.negative"
-            class="textarea w-full textarea-md bg-base-200"
-            placeholder="Например, плохая батарея"
           />
 
           <div v-if="review.drafts" class="text-xs">
@@ -492,6 +607,34 @@ function convertToMoscowTime(dateString: any): Date {
             </div>
           </ClientOnly>
         </div>
+        <div class="flex flex-col">
+          <label class="">
+            <div class="flex justify-between">
+              <div>
+                <span class="font-medium">Добавить видео (+25 рублей)</span>
+                <input
+                  type="file"
+                  accept="video/*"
+                  @change="handleFileChange($event)"
+                  :class="{ hidden: !form.video }"
+                />
+              </div>
+              <button class="btn btn-primary" @click="test">sdsd</button>
+              <input
+                v-if="!videoLoading"
+                type="checkbox"
+                class="checkbox checkbox-primary border-base-content"
+                style="pointer-events: none"
+                :checked="form.video !== ''"
+              />
+              <Icon
+                v-else="videoLoading"
+                name="mdi:loading"
+                class="h-8 w-8 animate-spin"
+              />
+            </div>
+          </label>
+        </div>
       </div>
       <div class="modal-action justify-between">
         <div>
@@ -512,7 +655,7 @@ function convertToMoscowTime(dateString: any): Date {
           <button
             for="review-modal"
             class="btn btn-primary btn-sm bg-opacity-20 border-none text-base-content"
-            :disabled="!textValidation || creatingReview"
+            :disabled="!textValidation"
             @click="publishReview"
           >
             Отправить
