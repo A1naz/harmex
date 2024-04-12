@@ -375,17 +375,18 @@ async function test() {
 }
 
 function convertToMoscowTime(dateString: any): Date {
-  const date = new Date(dateString)
+  const date = new Date(dateString);
+    
+    const utcOffset = date.getTimezoneOffset() / 60;
+    
+    date.setHours(date.getHours() + utcOffset);
 
-  const utcOffset = date.getTimezoneOffset() / 60
+    const moscowOffset = 3;
 
-  date.setHours(date.getHours() + utcOffset)
+    date.setHours(date.getHours() + moscowOffset);
 
-  const moscowOffset = 3
+    return date;
 
-  date.setHours(date.getHours() + moscowOffset)
-
-  return date
 }
 </script>
 
@@ -514,9 +515,7 @@ function convertToMoscowTime(dateString: any): Date {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : $dayjs(convertToMoscowTime(form.date)).format(
-                      'DD.MM.YYYY HH:mm'
-                    )
+                  : $dayjs(convertToMoscowTime(form.date)).format('DD.MM.YYYY HH:mm')
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
