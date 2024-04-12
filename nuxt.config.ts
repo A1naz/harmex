@@ -13,6 +13,12 @@ export default defineNuxtConfig({
         'Сервис самовыкупов MARKETMONSTR - Максимизируйте продвижение на МП',
       link: [{ rel: 'icon', href: '/favicon.png' }],
       meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        {
+          'http-equiv': 'Content-Security-Policy',
+          content: 'upgrade-insecure-requests',
+        },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: description },
         {
@@ -203,7 +209,6 @@ export default defineNuxtConfig({
     HI_CALL_KEY: process.env.HI_CALL_KEY,
     ZVONOK_PUBLIC_KEY: process.env.ZVONOK_PUBLIC_KEY,
     ZVONOK_CAMPAIGN_ID: process.env.ZVONOK_CAMPAIGN_ID,
-
   },
 
   security: {
