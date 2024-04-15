@@ -21,6 +21,7 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  searchQueryRegion: any[]
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -43,7 +44,7 @@ export default eventHandler(async (event) => {
 
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
-  
+
   const { points } = await getPickpoints()
 
   const products: Item[] = body
@@ -53,6 +54,7 @@ export default eventHandler(async (event) => {
   for await (const product of products) {
     const rules = product.rules.map((rule) => rule.id)
     const searchQueries = product.searchQuery.map((item: any) => item.value)
+    const searchQuerieRegions = product.searchQueryRegion.map((item: any) => item.value)
 
     if (userTimezoneOffsetHours && userOffsetMinutes) {
       const date1 = product.purchaseSoon
@@ -69,10 +71,8 @@ export default eventHandler(async (event) => {
         date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
         date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
       } else {
-
         date1.setHours(date1.getHours() + 3)
         date2.setHours(date2.getHours() + 3)
-        
       }
 
       product.dateRange = [date1, date2]
@@ -91,6 +91,7 @@ export default eventHandler(async (event) => {
     const buyout = new Buyout({
       article: product.article,
       searchQuery: searchQueries.join(', '),
+      searchQueryRegion: searchQuerieRegions.join(', '),
       // point: product.adress,
       // point_city: city,
       // point_state: state,

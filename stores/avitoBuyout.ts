@@ -108,6 +108,7 @@ export const useAvitoBuyoutStore = defineStore('avitoBuyout', {
           dateRange: [startDate, endDate],
           adress: '',
           searchQuery: [{ value: '', loading: false, error: false }],
+          searchQueryRegion: [{ value: '', loading: false, error: false }],
           selectedSize: product.sizes[0] ?? 'none',
           priceText: product.priceText,
           rules: [],
@@ -148,6 +149,19 @@ export const useAvitoBuyoutStore = defineStore('avitoBuyout', {
     ) {
       const query =
         this.createProducts[options.productIndex].searchQuery[
+          options.queryIndex
+        ]
+      query.value = options.value
+      query.error = error
+      query.loading = loading
+    },
+    changeSearchQueryRegion(
+      options: ISearchQueryChange,
+      error = false,
+      loading = false
+    ) {
+      const query =
+        this.createProducts[options.productIndex].searchQueryRegion[
           options.queryIndex
         ]
       query.value = options.value

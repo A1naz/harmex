@@ -327,6 +327,18 @@ const productQuantityModel = computed({
         />
       </div>
     </td>
+    <td class="border-r border-base">
+      <div class="w-full flex flex-col gap-2">
+        <BuyoutAvitoCreateSearchQueriesRegion
+          :product-index="props.index"
+          :article="product.article"
+          :regions="product.searchQueryRegion"
+          @update="productSearchQueryUpdate"
+          @add="addSearchQuery"
+          @remove="removeSearchQuery"
+        />
+      </div>
+    </td>
     <td class="border-r border-base w-[90px]">
       <div class="flex justify-end">
         <div

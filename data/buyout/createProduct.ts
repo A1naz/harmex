@@ -26,4 +26,5 @@ export interface Item {
   discount: boolean
   discountPrice: number
   discountRequestPrice: number
+  searchQueryRegion: SearchQuery[]
 }

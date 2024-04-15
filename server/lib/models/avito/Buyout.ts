@@ -11,6 +11,7 @@ const ProductSchema = new Schema({
 })
 const BuyoutSchema = new Schema({
   searchQuery: { type: String, text: true, default: '' },
+  searchQueryRegion: { type: String, text: true, default: '' },
   sizeparam: { type: String, required: true, text: true },
   quantity: { type: Number, required: true, text: true, max: 50 },
   gender: { type: String, required: true, text: true },
