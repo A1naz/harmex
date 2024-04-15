@@ -4,6 +4,7 @@ import { Buyout } from '@/server/lib/models/ozon/Buyout'
 import getPickpoints from '~/server/utils/ozon/getOzonPoints'
 import { userLog } from '~/server/utils/userLog'
 import { DocuemntEnum } from '~/data/enums'
+import { getDisctrict } from '~/server/utils/getDisctrict'
 
 interface Item {
   image: string
@@ -90,6 +91,8 @@ export default eventHandler(async (event) => {
       product.pointCoordinates.lon.toString()
     ))
 
+    const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
+
     const buyout = new Buyout({
       article: product.article,
       searchQuery: searchQueries.join(', '),
@@ -118,6 +121,8 @@ export default eventHandler(async (event) => {
       // discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
+      pointRegion,
+      pointDistrict,
     })
 
     await buyout.save()

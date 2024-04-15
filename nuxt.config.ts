@@ -209,6 +209,8 @@ export default defineNuxtConfig({
     HI_CALL_KEY: process.env.HI_CALL_KEY,
     ZVONOK_PUBLIC_KEY: process.env.ZVONOK_PUBLIC_KEY,
     ZVONOK_CAMPAIGN_ID: process.env.ZVONOK_CAMPAIGN_ID,
+    DADATA_TOKEN: process.env.DADATA_TOKEN,
+    DADATA_SECRET: process.env.DADATA_SECRET,
   },
 
   security: {

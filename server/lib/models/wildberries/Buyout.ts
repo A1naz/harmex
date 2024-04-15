@@ -19,6 +19,8 @@ const BuyoutSchema = new Schema({
   pointCoordinates: { type: Object, required: false },
   point_city: { type: String, required: false },
   point_state: { type: String, required: false },
+  pointDistrict: { type: String, required: false },
+  pointRegion: { type: String, required: false },
   dateStart: { type: Date, required: true },
   dateEnd: { type: Date, required: true },
   product: { type: ProductSchema, required: true },

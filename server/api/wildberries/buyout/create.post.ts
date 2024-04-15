@@ -4,6 +4,7 @@ import { Buyout } from '@/server/lib/models/wildberries/Buyout'
 import getPickpoints from '@/server/utils/wildberries/getPoints'
 import { userLog } from '~/server/utils/userLog'
 import { DocuemntEnum } from '~/data/enums'
+import { getDisctrict } from '~/server/utils/getDisctrict'
 
 interface Item {
   image: string
@@ -43,7 +44,7 @@ export default eventHandler(async (event) => {
 
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
-  
+
   const { points } = await getPickpoints()
 
   const products: Item[] = body
@@ -69,10 +70,8 @@ export default eventHandler(async (event) => {
         date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
         date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
       } else {
-
         date1.setHours(date1.getHours() + 3)
         date2.setHours(date2.getHours() + 3)
-        
       }
 
       product.dateRange = [date1, date2]
@@ -87,6 +86,8 @@ export default eventHandler(async (event) => {
     } else {
       ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
     }
+
+    const {pointRegion, pointDistrict} = await getDisctrict(product.adress)
 
     const buyout = new Buyout({
       article: product.article,
@@ -111,6 +112,8 @@ export default eventHandler(async (event) => {
       uuid: uuid(),
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
+      pointRegion,
+      pointDistrict,
     })
 
     await buyout.save()
