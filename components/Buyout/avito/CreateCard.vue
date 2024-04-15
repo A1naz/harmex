@@ -322,6 +322,19 @@ const productQuantityModel = computed({
           />
         </div>
       </div>
+      <div>
+        <div class="text-md text-gray-500 mb-1">Регион поиска:</div>
+        <div class="w-[60%] flex flex-col gap-2">
+          <BuyoutAvitoCreateSearchQueriesRegion
+            :product-index="props.index"
+            :article="product.article"
+            :regions="product.searchQueryRegion"
+            @update="productSearchQueryUpdate"
+            @add="addSearchQuery"
+            @remove="removeSearchQuery"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>

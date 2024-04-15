@@ -548,6 +548,15 @@ const startTimer = () => {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                 </div>
               </th>
+              <th
+                @click="openInfoModal('searchRegion')"
+                class="font-normal text-base-content"
+              >
+                <div class="flex justify-center items-center gap-1">
+                  <span>Регион поиска</span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+                </div>
+              </th>
 
               <th class="text-base-content" />
             </tr>
