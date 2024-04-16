@@ -86,6 +86,7 @@ export default eventHandler(async (event) => {
     // tariff: tariff,
     MPTariffs: user.MPTariffs,
     phoneNumber: email.replace(/[\(\)\-\s]/g, ''),
+    emailConfirmed: true,
     post,
   })
 
