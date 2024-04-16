@@ -113,12 +113,20 @@ async function uploadToS3(event: Event, index: number) {
       duration: 3000,
     })
   }
-  if (data.value)
-  form.photos[index] = {
+  if (data.value) {
+    //@ts-ignore
+    await useFetch('/api/images/openForPublic', {
+      method: 'GET',
+      params: {
+        path: 'reviewImages/' + data.value[0].key,
+      },
+    })
+    
+    form.photos[index] = {
       url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
       public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
     }
-    
+  }
 
   setTimeout(() => {
     loadingIndex.value = null
@@ -238,26 +246,26 @@ onMounted(() => {
   clearForm()
 })
 
-function ratingAlert(){
+function ratingAlert() {
   notify({
-      title: 'Что-то пошло не так',
-      text: 'В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд',
-      type: 'error',
-      duration: 3000,
+    title: 'Что-то пошло не так',
+    text: 'В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд',
+    type: 'error',
+    duration: 3000,
   })
 }
 function convertToMoscowTime(dateString: any): Date {
-    const date = new Date(dateString);
-    
-    const utcOffset = date.getTimezoneOffset() / 60;
-    
-    date.setHours(date.getHours() + utcOffset);
+  const date = new Date(dateString)
 
-    const moscowOffset = 3;
+  const utcOffset = date.getTimezoneOffset() / 60
 
-    date.setHours(date.getHours() + moscowOffset);
+  date.setHours(date.getHours() + utcOffset)
 
-    return date;
+  const moscowOffset = 3
+
+  date.setHours(date.getHours() + moscowOffset)
+
+  return date
 }
 </script>
 
@@ -386,7 +394,9 @@ function convertToMoscowTime(dateString: any): Date {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : $dayjs(convertToMoscowTime(form.date)).format('DD.MM.YYYY HH:mm')
+                  : $dayjs(convertToMoscowTime(form.date)).format(
+                      'DD.MM.YYYY HH:mm'
+                    )
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">

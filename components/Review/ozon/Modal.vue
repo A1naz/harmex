@@ -179,11 +179,20 @@ async function uploadToS3(event: Event, index: number) {
       duration: 3000,
     })
   }
-  if (data.value)
+  if (data.value) {
+    //@ts-ignore
+    await useFetch('/api/images/openForPublic', {
+      method: 'GET',
+      params: {
+        path: 'reviewImages/' + data.value[0].key,
+      },
+    })
+    
     form.photos[index] = {
       url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
       public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
     }
+  }
 
   setTimeout(() => {
     loadingIndex.value = null

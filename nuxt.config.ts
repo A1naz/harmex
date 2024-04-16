@@ -133,7 +133,7 @@ export default defineNuxtConfig({
       endpoint: 'https://hb.vkcs.cloud/reviewImages/',
       region: 'ru-msk',
     },
-    publicBucketUrl: `${process.env.PUBLIC_SITE_URL}/images/get/`,
+    publicBucketUrl: `https://ozonmpportal.hb.vkcs.cloud/reviewImages/`,
     bucket: 'ozonmpportal',
     image: {
       compression: {

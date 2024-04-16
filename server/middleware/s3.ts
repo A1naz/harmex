@@ -14,5 +14,6 @@ export default eventHandler(async (event) => {
       read: true,
       update: true,
     },
+    publicRead: true,
   })
 })
