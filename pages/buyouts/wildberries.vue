@@ -352,6 +352,7 @@ const updateSearchType = (filter: any) => {
   search.type = filter.value
 }
 async function changeMP(e: any) {
+  mpStore.selectedMP = e.value
   return navigateTo(
     '/buyouts/' +
       e.value +

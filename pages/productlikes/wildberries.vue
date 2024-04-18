@@ -189,10 +189,8 @@ async function selectFilterDate(e: any) {
 }
 
 async function changeFilter(e: any) {
-  e.value === 'avito'
-    ? router.push(`/productlikes/avito`)
-    : (mpStore.selectedMP = e.value)
-  if (e.value !== 'avito') router.push(`/productlikes`)
+  mpStore.selectedMP = e.value
+  router.push(`/productlikes`)
 }
 
 async function findBuyouts(value: string, type: string) {

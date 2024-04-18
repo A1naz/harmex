@@ -212,6 +212,7 @@ const statusText = computed(() => {
 })
 
 async function changeMP(e: any) {
+  mpStore.selectedMP = e.value
   return navigateTo(
     '/reviews/' +
       e.value +

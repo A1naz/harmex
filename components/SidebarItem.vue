@@ -17,8 +17,6 @@ const mpHref = computed(() => {
       props.href == '/productlikes' ||
       props.href == '/likes'
     ) {return '/productlikes/avito'}
-   else if (props.href == '/reports') 
-   {return '/reports/wildberries'}
    else if (props.href == '/questions')
    {return '/questions/wildberries'}
    else if (props.href == '/cart') 
