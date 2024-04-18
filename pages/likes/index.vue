@@ -134,13 +134,9 @@ const updateSearchType = (filter: any) => {
 }
 
 async function selectMP(value: any) {
-  if (value.value == 'avito') {
-    router.push(`/productlikes/avito`)
-  } else {
-    selectedMP.value = value.value
-    mpStore.setSelectedMP(value.value)
-    getLikes()
-  }
+  selectedMP.value = value.value
+  mpStore.setSelectedMP(value.value)
+  getLikes()
 }
 </script>
 

@@ -44,7 +44,7 @@ const getStatus = computed(() => {
 })
 
 function openBuyout() {
-  router.push(`/buyouts?uuid=${props.info.buyoutuuid}`)
+  router.push(`/buyouts/avito?uuid=${props.info.buyoutuuid}`)
 }
 
 function removeReview() {
