@@ -16,6 +16,19 @@ export default eventHandler(async (event) => {
       message: 'Введите корректный номер телефона',
     })
   }
+  if(allowedPathes == '') {
+    throw createError({
+      statusCode: 400,
+      message: 'Выберите разрешения для сохранения данных сотрудника',
+    })
+  }
+
+  if(post == '') {
+    throw createError({
+      statusCode: 400,
+      message: 'Выберите должность для сохранения данных сотрудника',
+    })
+  }
 
   const checkNumber = await User.findOne({
     phoneNumber: email.replace(/[\(\)\-\s]/g, ''),
