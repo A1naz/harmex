@@ -93,14 +93,14 @@ const saveUser = async () => {
     lastName: selectedUser.value.lastName,
     email: selectedUser.value.email,
     newPassword: selectedUser.value.newPassword,
-    allowedPathes:
-      selectedUser.value.allowedPathes.length == multiOptions.length
+    allowedPathes: selectedUser.value.allowedPathes ?
+      (selectedUser.value.allowedPathes.length == multiOptions.length
         ? [MenuEnums.fullAccess]
         : selectedUser.value.allowedPathes.map((path: any) => {
             return path.value
-          }),
+          })) : '',
     tariff: store.client.tariff,
-    post: selectedUser.value.post,
+    post: selectedUser.value.post ? selectedUser.value.post : '',
   }
 
   if (selectedUser.value.uuid) {

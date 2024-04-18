@@ -31,6 +31,19 @@ export default eventHandler(async (event) => {
     })
   }
 
+  if(allowedPathes == '') {
+    throw createError({
+      statusCode: 400,
+      message: 'Выдайте разрешения для регистрации сотрудника',
+    })
+  }
+
+  if(post == '') {
+    throw createError({
+      statusCode: 400,
+      message: 'Выберите должность для регистрации сотрудника',
+    })
+  }
   // if (!validator.isEmail(email)){
   //   throw createError({
   //       statusCode: 400,
