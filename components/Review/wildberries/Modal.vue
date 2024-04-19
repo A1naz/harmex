@@ -769,7 +769,7 @@ function convertToMoscowTime(dateString: any): Date {
           <button
             for="review-modal"
             class="btn btn-primary btn-sm bg-opacity-20 border-none text-base-content"
-            :disabled="!textValidation || isUploading"
+            :disabled="!textValidation || isUploading || creatingReview"
             @click="publishReview"
           >
             Отправить
