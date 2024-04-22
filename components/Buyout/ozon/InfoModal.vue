@@ -31,6 +31,8 @@ const getStatus = computed(() => {
       return 'Пауза'
     case 'discountAwaiting':
       return 'Ожидание скидки'
+    case 'discountGiven':
+      return 'Скидка предоставлена'
   }
 })
 
@@ -86,7 +88,9 @@ onKeyStroke('Escape', (e) => {
               class="rounded-2xl py-0 px-2 text-md mb-2 max-h-7 whitespace-nowrap"
               :class="{
                 'bg-success ':
-                  info.status === 'active' || info.status === 'work',
+                  info.status === 'active' ||
+                  info.status === 'work' ||
+                  info.status === 'discountGiven',
                 'text-base-content bg-green-600 ':
                   (info.status === 'active' || info.status === 'work') &&
                   theme.value === 'dark',

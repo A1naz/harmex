@@ -497,13 +497,7 @@ const startTimer = () => {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <th @click="openInfoModal('quantity')" class="font-normal">
-                <!-- <div class="flex justify-between w-full gap-1 items-center text-center"> -->
-                <div class="text-center">
-                  <span> Кол-во </span>
-                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
-                </div>
-              </th>
+  
               <!-- <th @click="openInfoModal('size')" class="font-normal">
                 <div class="text-center">
                   <span> Размер </span>                 

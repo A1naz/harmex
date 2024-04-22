@@ -62,14 +62,24 @@ export default eventHandler(async (event) => {
       })
       .skip(skip as number)
       .limit(limit as number)
-  }else if (status === 'discountAwaiting') {
+  }
+  else if (status === 'discountAwaiting') {
     buyouts = await Buyout.find({ user, status: 'discountAwaiting' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }else if (status === 'completedByDiscount') {
+  }
+  else if (status === 'discountGiven') {
+    buyouts = await Buyout.find({ user, status: 'discountGiven' })
+      .sort({
+        createdAt: -1,
+      })
+      .skip(skip as number)
+      .limit(limit as number)
+  }
+  else if (status === 'completedByDiscount') {
     buyouts = await Buyout.find({ user, status: 'completedByDiscount' })
       .sort({
         createdAt: -1,

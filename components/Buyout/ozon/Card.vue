@@ -149,6 +149,8 @@ const getStatus = computed(() => {
       return 'Недостаточно средств'
     case 'discountAwaiting':
       return 'Ожидание скидки'
+    case 'discountGiven':
+      return 'Скидка предоставлена'
   }
 })
 </script>
@@ -259,7 +261,10 @@ const getStatus = computed(() => {
           <div
             class="mt-2 rounded-2xl py-0 px-2 text-md"
             :class="{
-              'bg-success ': info.status === 'active' || info.status === 'work',
+              'bg-success ':
+                info.status === 'active' ||
+                info.status === 'work' ||
+                info.status === 'discountGiven',
               'text-base-content bg-green-600 ':
                 (info.status === 'active' || info.status === 'work') &&
                 theme.value === 'dark',
