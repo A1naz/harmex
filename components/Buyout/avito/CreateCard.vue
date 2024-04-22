@@ -152,7 +152,7 @@ const productQuantityModel = computed({
           <span class="text-md text-gray-500 mb-2">Цена: </span>
           <span class="text-sm font-bold">{{ product.priceText }}</span>
         </div>
-        <div class="flex flex-col">
+        <!-- <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-1">Кол-во: </span>
           <span class="relative flex items-center flex-grow-0 w-15">
             <div
@@ -175,7 +175,7 @@ const productQuantityModel = computed({
               <IconCSS size="16" name="ic:round-plus" />
             </div>
           </span>
-        </div>
+        </div> -->
         <!-- <div class="flex flex-col">
           <span class="text-md text-gray-500">Размер: </span>
           <div class="flex items-center m-1">

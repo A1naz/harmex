@@ -464,13 +464,7 @@ function modalAddProduct(changedArticle: any) {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-              <th @click="openInfoModal('quantity')" class="font-normal">
-                <!-- <div class="flex justify-between w-full gap-1 items-center text-center"> -->
-                <div class="text-center">
-                  <span> Кол-во </span>
-                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
-                </div>
-              </th>
+      
               <th @click="openInfoModal('size')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
@@ -667,10 +661,7 @@ function modalAddProduct(changedArticle: any) {
             <span class="font-bold"> Цена </span>
             - Цена товара указана без СПП
           </p>
-          <p v-if="infoType === 'quantity'">
-            <span class="font-bold"> Количество </span>
-            - Указывайте желаемое количество выкупов, но не более 1 выкупа на 1 ПВЗ в сутки
-          </p>
+
           <p v-if="infoType === 'size'">
             <span class="font-bold"> Размер </span>
             - Выберите желаемый размер товара

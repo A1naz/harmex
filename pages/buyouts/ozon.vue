@@ -239,6 +239,12 @@ const filters = [
     queryStatus: 'discountAwaiting',
   },
   {
+    title: 'Скидка предоставлена',
+    optionValue: 'discountGiven',
+    params: '?status=discountGiven',
+    queryStatus: 'discountGiven',
+  },
+  {
     title: 'Выкуп по скидке',
     optionValue: 'completedByDiscount',
     params: '?status=completedByDiscount',
@@ -598,7 +604,7 @@ const customLinks = filters.map((filter) => ({
       </div>
       <div v-else class="px-2 py-4 mb-2" />
       <div>
-        <TransitionSlide
+        <div
           group
           class="cards grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 h-full"
         >
@@ -614,7 +620,7 @@ const customLinks = filters.map((filter) => ({
             @unpause="unpauseBuyout"
             @open-log-modal="openLogModal"
           />
-        </TransitionSlide>
+        </div>
       </div>
       <div ref="target" class="p-2 w-full col-span-1 h-40 md:h-10" />
     </div>
