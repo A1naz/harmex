@@ -1,83 +1,79 @@
 import { Buyout } from '@/server/lib/models/avito/Buyout'
 
 export default eventHandler(async (event) => {
-
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
   const { status, limit, skip, dateFilter } = getQuery(event)
 
-//   const all = await Buyout.find({ user })
+  //   const all = await Buyout.find({ user })
   let buyouts
   if (status === 'all') {
     buyouts = await Buyout.find({ user, status: { $ne: 'completed' } })
       .sort({ createdAt: -1 })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else if (status === 'active') {
+  } else if (status === 'active') {
     buyouts = await Buyout.find({ user, status: 'active' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else if (status === 'completed') {
+  } else if (status === 'completed') {
     buyouts = await Buyout.find({ user, status: 'completed' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else if (status === 'completedByAds') {
-    buyouts = await Buyout.find({ user, status: 'completed', rules: { $in: [ 8, 9 ] } })
-     .sort({
-       createdAt: -1,
-     })
-     .skip(skip as number)
-     .limit(limit as number)
- }
-  else if (status === 'canceled') {
+  } else if (status === 'completedByAds') {
+    buyouts = await Buyout.find({
+      user,
+      status: 'completed',
+      rules: { $in: [8, 9] },
+    })
+      .sort({
+        createdAt: -1,
+      })
+      .skip(skip as number)
+      .limit(limit as number)
+  } else if (status === 'canceled') {
     buyouts = await Buyout.find({ user, status: 'canceled' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else if (status === 'paused') {
+  } else if (status === 'paused') {
     buyouts = await Buyout.find({ user, status: 'paused' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else if (status === 'archived') {
+  } else if (status === 'archived') {
     buyouts = await Buyout.find({ user, status: 'archived' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }else if (status === 'discountAwaiting') {
+  } else if (status === 'discountAwaiting') {
     buyouts = await Buyout.find({ user, status: 'discountAwaiting' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }else if (status === 'completedByDiscount') {
+  } else if (status === 'completedByDiscount') {
     buyouts = await Buyout.find({ user, status: 'completedByDiscount' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }
-  else {
+  } else {
     buyouts = await Buyout.find({ user })
       .sort({ createdAt: -1 })
       .skip(skip as number)
@@ -87,22 +83,34 @@ export default eventHandler(async (event) => {
   today.setHours(0, 0, 0, 0)
   switch (dateFilter) {
     case 'today':
-      buyouts = buyouts.filter(item => new Date(item.createdAt) > today)
+      buyouts = buyouts.filter((item) => new Date(item.createdAt) > today)
       break
     case '2days':
-      buyouts = buyouts.filter(item => new Date(item.createdAt) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 2))
+      buyouts = buyouts.filter(
+        (item) =>
+          new Date(item.createdAt) >
+          new Date(Date.now() - 1000 * 60 * 60 * 24 * 2)
+      )
       break
     case '3days':
-      buyouts = buyouts.filter(item => new Date(item.createdAt) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 3))
+      buyouts = buyouts.filter(
+        (item) =>
+          new Date(item.createdAt) >
+          new Date(Date.now() - 1000 * 60 * 60 * 24 * 3)
+      )
       break
     case '7days':
-      buyouts = buyouts.filter(item => new Date(item.createdAt) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 7))
+      buyouts = buyouts.filter(
+        (item) =>
+          new Date(item.createdAt) >
+          new Date(Date.now() - 1000 * 60 * 60 * 24 * 7)
+      )
       break
   }
   const format = buyouts.map((buyout) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
     return {
-    //   place: buyout.place ? buyout.place : place + 1,
+      //   place: buyout.place ? buyout.place : place + 1,
       place: buyout.place,
       uuid: buyout.uuid,
       article: buyout.article,
