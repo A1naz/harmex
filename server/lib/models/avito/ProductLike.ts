@@ -3,7 +3,7 @@ import { AvitoConnection } from '~/server/connections/avito'
 
 const ProductLikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  status: { type: String, default: 'created' },
+  status: { type: String, default: 'work' },
   image: { type: String },
   type: { type: String },
   url: { type: String },

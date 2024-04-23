@@ -252,12 +252,13 @@ const updateSearchType = (filter: any) => {
           :tabs="[
             { title: 'Все', value: 'all' },
             { title: 'Выкупы', value: 'buyouts' },
-            { title: 'Доставки', value: 'deliveries' },
-            { title: 'Отзывы', value: 'reviews' },
-            { title: 'Лайки на отзывы', value: 'likes' },
-            { title: 'Лайки на товар/бренд', value: 'productlikes' },
-            { title: 'Вопросы', value: 'questions' },
-            { title: 'Корзина', value: 'carts' },
+            { title: 'Отзывы', value: 'review' },
+            { title: 'Лайки на отзывы', value: 'likeReview' },
+            { title: 'Лайки на товар/бренд', value: 'likeProduct' },
+            { title: 'Вопросы', value: 'questionProduct' },
+            { title: 'Корзина', value: 'cart' },
+            { title: 'Удаление отзыва', value: 'reviewRemoving' },
+            { title: 'Штраф', value: 'deliveryStorage' },
           ]"
           @change-value="selectType"
         />

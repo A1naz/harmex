@@ -17,6 +17,8 @@ export default eventHandler(async (event) => {
   if (mp && mp !== 'all') {
       query.mp = mp;
   }
+  console.log(type);
+  
 
   history = await paymenthistory.find(query).sort({ _id: -1 }).skip(skip as number).limit(limit as number);
     const today = new Date(Date.now())

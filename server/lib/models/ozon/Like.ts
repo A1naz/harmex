@@ -6,7 +6,7 @@ const LikeSchema = new Schema({
   article: { type: String, required: true },
   status: {
     type: String,
-    default: 'created',
+    default: 'work',
     enum: ['created', 'work', 'completed', 'nofunds', 'deleting', 'deleted'],
   },
   image: { type: String },
