@@ -451,6 +451,7 @@ const customLinks = filters.map((filter) => ({
             />
             <CustomSelect
               class=""
+              :status-text="statusText"
               :class="'min-w-[95px]'"
               :links="customLinks"
             />

@@ -439,6 +439,7 @@ const customLinks = filters.map((filter) => ({
             />
             <CustomSelect
               class=""
+              :status-text="statusText"
               :class="'navbar:min-w-[120px]'"
               :links="customLinks"
             />
