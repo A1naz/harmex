@@ -483,6 +483,7 @@ if (error.value) {
             />
             <CustomSelect
               class=""
+              :status-text="statusText"
               :class="'navbar:min-w-[120px]'"
               :links="customLinks"
             />
