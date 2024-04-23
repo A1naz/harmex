@@ -21,6 +21,7 @@ const emit = defineEmits([
   'unarchive',
   'unpause',
   'openLogModal',
+  'removeBuyout',
 ])
 const currency = useCurrency()
 const router = useRouter()
@@ -213,16 +214,14 @@ const getStatus = computed(() => {
             </a>
           </li>
 
-          <li v-if="info.status !== 'work'">
-            <a :for="`removeAllModelCreateProducts:${props.info.uuid}`">
+          <li v-if="info.status !== 'work'" class="cursor-pointer">
+            <a @click="$emit('removeBuyout', index)">
               <img
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/delete.svg"
                 alt="settings"
               />
-              <label :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-                >Удалить</label
-              >
+              <label class="cursor-pointer">Удалить</label>
             </a>
           </li>
         </ul>
@@ -386,31 +385,6 @@ const getStatus = computed(() => {
       >
         Открыть
       </button>
-    </div>
-    <input
-      type="checkbox"
-      :id="`removeAllModelCreateProducts:${props.info.uuid}`"
-      class="modal-toggle"
-    />
-    <div class="modal backdrop-filter backdrop-blur-sm">
-      <div class="modal-box max-w-xs">
-        <h3 class="font-bold text-md">
-          Вы уверенны что хотите удалить выкуп № {{ info.place }} ?
-        </h3>
-        <div class="modal-action flex justify-around">
-          <label
-            :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-            class="btn btn-sm btn-ghost w-[45%] h-[2.5rem] px-6"
-            >Отмена</label
-          >
-          <label
-            :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-            class="btn btn-sm btn-primary bg-opacity-20 w-[45%] h-[2.5rem] border-none text-base-content px-6"
-            @click="deleteBuyOut"
-            >Удалить</label
-          >
-        </div>
-      </div>
     </div>
   </div>
 </template>
