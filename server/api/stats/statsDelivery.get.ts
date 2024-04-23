@@ -169,8 +169,24 @@ export default eventHandler(async (event) => {
               ]
           }
         }) 
-      }
-      else{
+      }else if(type=='Отменено'){
+        deliveriesOzon = await OzonDelivery.find({ 
+          user, 
+          updatedAt: filter.dataoperation,
+          $or: [
+              { article: { $regex: search, $options: 'i' } },
+              { point: { $regex: search, $options: 'i' } },
+              { uuidbuyout: { $regex: search, $options: 'i' } }
+          ],
+          $expr: {
+              $eq: [
+                  { $arrayElemAt: ["$statusdelivery.status", -1] }, 
+                  'Отменён',
+              ]
+          }
+        })  
+      
+      }else{
         deliveriesOzon = await OzonDelivery.find({ 
           user, 
           updatedAt: filter.dataoperation,
@@ -187,21 +203,39 @@ export default eventHandler(async (event) => {
           }
         }) 
       }
-      deliveriesWildberries = await WildberriesDelivery.find({ 
-        user, 
-        updatedAt: filter.dataoperation,
-        $or: [
-            { article: { $regex: search, $options: 'i' } },
-            { point: { $regex: search, $options: 'i' } },
-            { uuidbuyout: { $regex: search, $options: 'i' } }
-        ],
-        $expr: {
-            $eq: [
-                { $arrayElemAt: ["$statusdelivery.status", -1] }, 
-                type
-            ]
-        }
-      })
+      if(type=='Отменено'){
+        deliveriesWildberries = await WildberriesDelivery.find({ 
+          user, 
+          updatedAt: filter.dataoperation,
+          $or: [
+              { article: { $regex: search, $options: 'i' } },
+              { point: { $regex: search, $options: 'i' } },
+              { uuidbuyout: { $regex: search, $options: 'i' } }
+          ],
+          $expr: {
+              $eq: [
+                  { $arrayElemAt: ["$statusdelivery.status", -1] }, 
+                  'Возврат средств',
+              ]
+          }
+        })
+      }else 
+        deliveriesWildberries = await WildberriesDelivery.find({ 
+          user, 
+          updatedAt: filter.dataoperation,
+          $or: [
+              { article: { $regex: search, $options: 'i' } },
+              { point: { $regex: search, $options: 'i' } },
+              { uuidbuyout: { $regex: search, $options: 'i' } }
+          ],
+          $expr: {
+              $eq: [
+                  { $arrayElemAt: ["$statusdelivery.status", -1] }, 
+                  type
+              ]
+          }
+        })
+        
           
       deliveriesAvito = await AvitoDelivery.find({ 
         user, 
@@ -306,9 +340,8 @@ export default eventHandler(async (event) => {
         received++;
         if(item.reviewed === false) reviews++;
         
-    } else if (item.status === 'canceled') {
+    } else if (status === 'Отменён') {
         cancelled++;
-        
     } 
     
   })
@@ -323,9 +356,8 @@ export default eventHandler(async (event) => {
         received++;
         if(item.reviewed === false) reviews++;
         
-    } else if (item.status === 'canceled') {
-        cancelled++;
-        
+    } else if (status === 'Возврат средств') {
+      cancelled++;
     } 
     
   })

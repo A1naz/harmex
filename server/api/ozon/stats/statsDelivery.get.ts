@@ -123,6 +123,23 @@ export default eventHandler(async (event) => {
           }
       });
       
+      }else if(type=='Отменено'){
+        deliveries = await Delivery.find({ 
+          user, 
+          updatedAt: filter.dataoperation,
+          $or: [
+              { article: { $regex: search, $options: 'i' } },
+              { point: { $regex: search, $options: 'i' } },
+              { uuidbuyout: { $regex: search, $options: 'i' } }
+          ],
+          $expr: {
+              $eq: [
+                  { $arrayElemAt: ["$statusdelivery.status", -1] }, 
+                  'Отменён',
+              ]
+          }
+        })  
+      
       }else
       {
         deliveries = await Delivery.find({ 
@@ -139,7 +156,7 @@ export default eventHandler(async (event) => {
                   type
               ]
           }
-      })    
+        })    
       
       
       }
@@ -188,9 +205,8 @@ export default eventHandler(async (event) => {
         received++;
         if(item.reviewed === false) reviews++;
         
-    } else if (item.status === 'canceled') {
+    } else if (status === 'Отменён') {
         cancelled++;
-        
     } 
   
     
