@@ -5,6 +5,8 @@ definePageMeta({
   title: 'Выкупы',
 })
 
+import { notify } from '@kyvg/vue3-notification'
+const removeModal = ref(false)
 const { width } = useWindowSize()
 const route = useRoute()
 const router = useRouter()
@@ -66,9 +68,7 @@ async function getBuyouts() {
 
 // await getBuyouts()
 
-function removeBuyout(uuid: string) {
-  buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid)
-}
+
 function archiveBuyout(uuid: string) {
   buyouts.value = buyouts.value.map((buyout: any) => {
     if (buyout.uuid === uuid) buyout.status = 'archived'
@@ -359,6 +359,47 @@ const customLinks = filters.map((filter) => ({
   slot: '/buyouts/avito',
   query: filter.params,
 }))
+
+
+
+function openRemoveModal(index: number) {
+  console.log(index)
+  selectedIndex.value = index
+  selectedPlace.value = buyouts.value.length - index
+  selectedBuyout.value = buyouts.value[index]
+  removeModal.value = true
+}
+
+async function removeBuyout() {
+
+const { data, error }: any = await useFetch(
+  '/api/avito/buyout/delete',
+  {
+    method: 'DELETE',
+    body: {
+      uuid: selectedBuyout.value.uuid,
+    },
+    headers: useRequestHeaders(['cookie']) as HeadersInit,
+  }
+)
+if (error.value) {
+  notify({
+    title: 'Что-то пошло не так',
+    text: error.value?.data?.message,
+    type: 'error',
+    duration: 3000,
+  })
+} else {
+  removeModal.value = false
+  notify({
+    title: 'Успешно',
+    text: 'Выкуп успешно удален',
+    type: 'success',
+    duration: 3000,
+  })
+  buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== selectedBuyout.value.uuid)
+}
+}
 </script>
 
 <template>
@@ -683,7 +724,7 @@ const customLinks = filters.map((filter) => ({
             @unarchive="unarchiveBuyout"
             @archive="archiveBuyout"
             @open-modal="openModal"
-            @remove="removeBuyout"
+            @removeBuyout="openRemoveModal"
             @unpause="unpauseBuyout"
             @open-log-modal="openLogModal"
           />
@@ -709,6 +750,14 @@ const customLinks = filters.map((filter) => ({
       :state="modal"
       :index="selectedIndex"
       @close="modal = false"
+    />
+    <BuyoutRemoveModal
+      v-if="removeModal"
+      :info="selectedBuyout"
+      @remove="removeBuyout"
+      :state="removeModal"
+      :index="selectedIndex"
+      @close="removeModal = false"
     />
   </div>
 </template>

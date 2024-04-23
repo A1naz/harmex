@@ -5,13 +5,15 @@ definePageMeta({
   title: 'Выкупы',
 })
 
+import { notify } from '@kyvg/vue3-notification'
 const { width } = useWindowSize()
 const route = useRoute()
 const router = useRouter()
 const buyouts = ref([]) as any
 const modal = ref(false)
 const logModal = ref(false)
-const selectedBuyout = ref({})
+const removeModal = ref(false)
+const selectedBuyout = ref<any>({})
 const selectedIndex = ref(-1)
 const storeMain = useMainStore()
 const selectedPlace = ref(-1)
@@ -37,6 +39,13 @@ function openModal(index: number) {
   selectedPlace.value = buyouts.value.length - index
   selectedBuyout.value = buyouts.value[index]
   modal.value = true
+}
+function openRemoveModal(index: number) {
+  console.log(index)
+  selectedIndex.value = index
+  selectedPlace.value = buyouts.value.length - index
+  selectedBuyout.value = buyouts.value[index]
+  removeModal.value = true
 }
 function openLogModal(index: number) {
   selectedIndex.value = index
@@ -71,8 +80,35 @@ async function getBuyouts() {
 
 // await getBuyouts()
 
-function removeBuyout(uuid: string) {
-  buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid)
+async function removeBuyout() {
+
+  const { data, error }: any = await useFetch(
+    '/api/wildberries/buyout/delete',
+    {
+      method: 'DELETE',
+      body: {
+        uuid: selectedBuyout.value.uuid,
+      },
+      headers: useRequestHeaders(['cookie']) as HeadersInit,
+    }
+  )
+  if (error.value) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+  } else {
+    removeModal.value = false
+    notify({
+      title: 'Успешно',
+      text: 'Выкуп успешно удален',
+      type: 'success',
+      duration: 3000,
+    })
+    buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== selectedBuyout.value.uuid)
+  }
 }
 function archiveBuyout(uuid: string) {
   buyouts.value = buyouts.value.map((buyout: any) => {
@@ -368,47 +404,8 @@ const customLinks = filters.map((filter) => ({
 
 <template>
   <div>
-    <!-- <InfoModal
-      :isModal="isInfoModal"
-      title="Выкупы"
-      ytSrc="https://www.youtube.com/embed/YNFKOAgRAuU?si=bwAzeSLOmprr3NFe"
-      @changeVisibility="toggleInfoModal"
-    >
-      <div class="flex flex-col gap-2">
-        <p>
-          Здесь формируются и оплачиваются выкупы на OZON. Для добавления
-          нажмите на кнопку "Добавить выкупы".
-        </p>
-        <p>
-          Стоимость одного выкупа -
-          <span class="font-bold"
-            >{{ storeMain.tariffString('buyouts') }}.</span
-          >
-          Все услуги оказываются по Московскому времени.
-        </p>
-        <p
-          v-if="route.query.status === 'archived'"
-          class="text-xs font-light mt-1 lg:text-sm"
-        >
-          Выкупы в архиве удаляются через 10 дней.
-        </p>
-      </div>
-    </InfoModal> -->
-
-    <div></div>
     <div class="flex justify-between mb-4 items-center mt-4">
       <div class="flex gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-max">
-        <!-- <NuxtLink
-            v-for="filter in filters"
-            :to=" '/buyouts' + filter.params"
-            :external="false"
-            :class="{
-                'btn-active': route.query.status === filter.queryStatus,
-            }"
-            class="btn btn-ghost btn-sm normal-case font-medium"
-            >
-          {{ filter.title }}
-        </NuxtLink> -->
         <div class="flex gap-2">
           <NuxtLink
             to="/buyouts/create"
@@ -451,7 +448,11 @@ const customLinks = filters.map((filter) => ({
               class=""
               :class="'lg:min-w-[120px]'"
               :status-text="'Wildberries'"
-              :tabs="storeMain.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+              :tabs="
+                storeMain.client.username == 'test'
+                  ? mpStore.MPTabsTest
+                  : mpStore.MPTabs
+              "
               @change-value="changeMP"
             />
             <CustomSelect
@@ -459,43 +460,9 @@ const customLinks = filters.map((filter) => ({
               :class="'min-w-[95px]'"
               :links="customLinks"
             />
-            <!-- <div
-              class="dropdown group relative"
-              @click="dropdownOpened = !dropdownOpened"
-              @click.stop
-            >
-              <div
-                class="font-normal normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[120px] lg:w-[120px] flex items-center justify-between px-2 flex-nowrap"
-              >
-                <span>{{ statusText }}</span>
-                <Icon v-if="dropdownOpened" name="formkit:up" size="18" />
-                <Icon v-else name="formkit:down" size="18" />
-              </div>
-              <ul
-                class="absolute shadow z-[1] bg-base-100 p-1 rounded-lg max-w-[200px] mt-2"
-                v-if="dropdownOpened"
-              >
-                <li>
-                  <NuxtLink
-                    v-for="filter in filters"
-                    :to="'/buyouts/wildberries' + filter.params"
-                    :external="false"
-                    :class="{
-                      'bg-primary bg-opacity-20 ':
-                        route.query.status === filter.queryStatus,
-                    }"
-                    class="btn btn-ghost btn-xs normal-case font-normal w-full hover:bg-primary hover:bg-opacity-20 justify-start text-xs align-start"
-                  >
-                    <span>
-                      {{ filter.title }}
-                    </span>
-                  </NuxtLink>
-                </li>
-              </ul>
-            </div> -->
 
             <CustomSelect
-            :class="'bg-base-300'"
+              :class="'bg-base-300'"
               class="lg:hidden"
               :tabs="[
                 { title: 'За все время', value: 'all' },
@@ -506,15 +473,7 @@ const customLinks = filters.map((filter) => ({
               ]"
               @change-value="selectFilterDate"
             />
-            <!-- <select
-              class="select select-bordered select-sm max-w-[131px] lg:hidden"
-              @change="selectFilterDate"
-            >
-              <option value="all">За все время</option>
-              <option value="today">Сегодня</option>
-              <option value="3days">3 дня</option>
-              <option value="7days">Неделя</option>
-            </select> -->
+
             <div class="flex gap-3 items-center lg:hidden">
               <CustomSelect
                 :class="'max-w-[80px] bg-base-300'"
@@ -525,45 +484,15 @@ const customLinks = filters.map((filter) => ({
                 ]"
                 @change-value="updateSearchType"
               />
-
-              <!-- <select
-                v-model="search.type"
-                class="select select-bordered select-sm max-w-[98px]"
-              >
-                <option value="article">Артикул</option>
-                <option value="uuid">ID выкупа</option>
-                <option value="name">Имя товара</option>
-              </select> -->
             </div>
           </div>
         </div>
-
-        <!-- <select class="select select-bordered select-sm" @change="selectStatus">
-          <option
-            v-for="filter in filters"
-            :value="filter.optionValue"
-            :selected="route.query.status === filter.queryStatus"
-          >
-            {{ filter.title }}
-          </option>
-        </select> -->
       </div>
-      <!-- <select
-        class="select select-bordered select-sm lg:hidden"
-        @change="selectStatus"
-      >
-      <option 
-        v-for="filter in filters"
-        :value="filter.optionValue" 
-        :selected="route.query.status === filter.queryStatus"
-        >
-        {{ filter.title }}
-        </option>
-      </select> -->
+
       <div class="items-center flex-wrap self-start hidden lg:flex">
         <div class="search flex items-center flex-wrap gap-3">
           <CustomSelect
-          :class="'bg-base-300'"
+            :class="'bg-base-300'"
             :tabs="[
               { title: 'За все время', value: 'all' },
               { title: 'Сегодня', value: 'today' },
@@ -573,18 +502,10 @@ const customLinks = filters.map((filter) => ({
             ]"
             @change-value="selectFilterDate"
           />
-          <!-- <select
-            class="select select-bordered select-sm"
-            @change="selectFilterDate"
-          >
-            <option value="all">За все время</option>
-            <option value="today">Сегодня</option>
-            <option value="3days">3 дня</option>
-            <option value="7days">Неделя</option>
-          </select> -->
+
           <div class="flex items-center justify-between gap-3">
             <CustomSelect
-            :class="'bg-base-300'"
+              :class="'bg-base-300'"
               class="min-w-[100px]"
               :tabs="[
                 { title: 'Артикул', value: 'article' },
@@ -594,14 +515,6 @@ const customLinks = filters.map((filter) => ({
               @change-value="updateSearchType"
             />
 
-            <!-- <select
-              v-model="search.type"
-              class="select select-bordered select-sm"
-            >
-              <option value="article">Артикул</option>
-              <option value="uuid">ID выкупа</option>
-              <option value="name">Имя товара</option>
-            </select> -->
             <div class="relative justify-end flex-grow-0 w-full hidden lg:flex">
               <input
                 ref="codeInput"
@@ -625,19 +538,6 @@ const customLinks = filters.map((filter) => ({
             </div>
           </div>
         </div>
-        <!-- <a
-          href="info/Информационная таблица по выкупам.xlsx"
-          class="btn btn-sm btn-primary hidden lg:flex lg:items-center"
-        >
-          Скачать шаблон
-        </a> -->
-        <!-- <NuxtLink
-          to="/buyouts/create"
-          class="btn btn-primary btn-sm gap-2 font-medium normal-case self-end"
-        >
-          <Icon name="fluent:add-24-filled" size="24" />
-          Добавить выкупы
-        </NuxtLink> -->
       </div>
     </div>
 
@@ -675,24 +575,23 @@ const customLinks = filters.map((filter) => ({
         </p>
       </div>
       <div v-else class="px-2 py-4 mb-2" />
-      <div>
-        <TransitionSlide
-          group
-          class="cards grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 h-full"
-        >
+      <div
+        group
+        class="cards grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 h-full"
+      >
+        <div v-for="(buyout, index) of buyouts">
           <BuyoutWildberriesCard
-            v-for="(buyout, index) of buyouts"
-            :key="buyout.uuid"
+            :key="Date.now() + index"
             :index="index"
             :info="buyout"
             @unarchive="unarchiveBuyout"
             @archive="archiveBuyout"
             @open-modal="openModal"
-            @remove="removeBuyout"
+            @removeBuyout="openRemoveModal"
             @unpause="unpauseBuyout"
             @open-log-modal="openLogModal"
           />
-        </TransitionSlide>
+        </div>
       </div>
       <div ref="target" class="p-2 w-full col-span-1 h-40 md:h-10" />
     </div>
@@ -714,6 +613,14 @@ const customLinks = filters.map((filter) => ({
       :state="modal"
       :index="selectedIndex"
       @close="modal = false"
+    />
+    <BuyoutRemoveModal
+      v-if="removeModal"
+      :info="selectedBuyout"
+      @remove="removeBuyout"
+      :state="removeModal"
+      :index="selectedIndex"
+      @close="removeModal = false"
     />
   </div>
 </template>

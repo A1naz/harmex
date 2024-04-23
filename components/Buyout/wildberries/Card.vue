@@ -21,6 +21,7 @@ const emit = defineEmits([
   'unarchive',
   'unpause',
   'openLogModal',
+  'removeBuyout',
 ])
 const currency = useCurrency()
 const router = useRouter()
@@ -166,13 +167,21 @@ const getStatus = computed(() => {
         >
           <li>
             <a @click="$emit('openLogModal', index)">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/info.svg" alt="settings" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/info.svg"
+                alt="settings"
+              />
               О выкупе
             </a>
           </li>
           <li>
             <a @click="cloneBuyout">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/copy.svg" alt="settings" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/copy.svg"
+                alt="settings"
+              />
               Дублировать
             </a>
           </li>
@@ -184,21 +193,31 @@ const getStatus = computed(() => {
             "
           >
             <a v-if="info.status !== 'archived'" @click="archiveBuyout">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/archive.svg" alt="settings" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/archive.svg"
+                alt="settings"
+              />
               Архивировать
             </a>
             <a v-else @click="unarchiveBuyout">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/archive.svg" alt="settings" />
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/archive.svg"
+                alt="settings"
+              />
               Убрать из архива
             </a>
           </li>
 
-          <li v-if="info.status !== 'work'">
-            <a :for="`removeAllModelCreateProducts:${props.info.uuid}`">
-              <img class="w-5 h-5" src="/icons/figma/buyouts/delete.svg" alt="settings" />
-              <label :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-                >Удалить</label
-              >
+          <li v-if="info.status !== 'work'" class="cursor-pointer">
+            <a @click="$emit('removeBuyout', index)">
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/delete.svg"
+                alt="settings"
+              />
+              <label class="cursor-pointer">Удалить</label>
             </a>
           </li>
         </ul>
@@ -237,8 +256,7 @@ const getStatus = computed(() => {
           <div
             class="mt-2 rounded-2xl py-0 px-2 text-md"
             :class="{
-              'bg-success ':
-                (info.status === 'active' || info.status === 'work'),
+              'bg-success ': info.status === 'active' || info.status === 'work',
               'text-base-content bg-green-600 ':
                 (info.status === 'active' || info.status === 'work') &&
                 theme.value === 'dark',
@@ -249,7 +267,7 @@ const getStatus = computed(() => {
                 (info.status === 'completed' || info.status === 'nofunds') &&
                 theme.value === 'light',
               'text-base-content bg-yellow-300':
-                (info.status === 'archived' || info.status === 'paused') 
+                info.status === 'archived' || info.status === 'paused',
             }"
           >
             {{ getStatus }}
@@ -260,7 +278,7 @@ const getStatus = computed(() => {
             target="_blank"
             class="text-base text-primary link link-hover mt-0"
             :class="{
-              'mt-2' : width > 364
+              'mt-2': width > 364,
             }"
           >
             {{ info.article }}
@@ -305,7 +323,9 @@ const getStatus = computed(() => {
             </div>
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto">Сумма: </span>
-              <div class="rounded-md py-0 px-2 bg-primary bg-opacity-50 text-sm">
+              <div
+                class="rounded-md py-0 px-2 bg-primary bg-opacity-50 text-sm"
+              >
                 {{ currency.format(info.quantity * info.product?.price) }}
               </div>
             </div>
@@ -315,7 +335,6 @@ const getStatus = computed(() => {
                 Wildberries
               </div>
             </div>
-            
           </div>
         </div>
       </div>
@@ -325,31 +344,6 @@ const getStatus = computed(() => {
       >
         Открыть
       </button>
-    </div>
-    <input
-      type="checkbox"
-      :id="`removeAllModelCreateProducts:${props.info.uuid}`"
-      class="modal-toggle"
-    />
-    <div class="modal backdrop-filter backdrop-blur-sm">
-      <div class="modal-box max-w-xs">
-        <h3 class="font-bold text-md">
-          Вы уверенны что хотите удалить выкуп № {{ info.place }} ?
-        </h3>
-        <div class="modal-action flex justify-around">
-          <label
-            :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-            class="btn btn-sm btn-ghost w-[45%] h-[2.5rem] px-6"
-            >Отмена</label
-          >
-          <label
-            :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-            class="btn btn-sm btn-primary bg-opacity-20 w-[45%] h-[2.5rem] border-none text-base-content px-6"
-            @click="deleteBuyOut"
-            >Удалить</label
-          >
-        </div>
-      </div>
     </div>
   </div>
 </template>
