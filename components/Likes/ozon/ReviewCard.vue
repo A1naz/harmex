@@ -98,7 +98,13 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
           </div>
         </div>
         <div class="flex text-primary">
-          <span> {{ article }}</span>
+          <a
+            :href="`https://www.ozon.ru/product/${article}`"
+            target="_blank"
+            class="text-primary link link-hover"
+          >
+            {{ article }}
+          </a>
         </div>
         <div v-if="info.text">
           <span class="font-medium">Отзыв:</span>

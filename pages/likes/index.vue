@@ -321,7 +321,13 @@ async function selectMP(value: any) {
             <td
               class="text-center border-r border-primary border-opacity-5 text-primary"
             >
+            <a
+              :href="(mpStore.selectedMP === 'wildberries') ? `https://www.wildberries.ru/catalog/${item.article}/detail.aspx` : (mpStore.selectedMP === 'avito' ? `https://www.avito.ru/${item.article}` : `https://www.ozon.ru/product/${item.article}`)"
+              target="_blank"
+              class="text-primary link link-hover"
+            >
               {{ item.article }}
+            </a>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
               <div class="flex flex-col">
