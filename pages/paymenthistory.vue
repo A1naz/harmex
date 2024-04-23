@@ -159,24 +159,26 @@ function getHistoryType(type: string) {
     case 'buyouts service':
       result = 'Оплата выкупа'
       break
-    case 'reviews':
+    case 'review':
       result = 'Отзыв'
       break
-    case 'likes':
+    case 'likeReview':
       result = 'Лайк на отзыв'
       break
-    case 'productlikes':
+    case 'likeProduct':
       result = 'Лайк на товар / бренд'
       break
-    case 'carts':
+    case 'cart':
       result = 'Добавление в корзину'
       break
-    case 'questions':
+    case 'questionProduct':
       result = 'Вопрос'
       break
-    case 'deliveries':
-      result = 'Доставки'
+    case 'deliveryStorage':
+      result = 'Штраф'
       break
+      case 'reviewRemoving':
+        result = 'Удаление отзыва'
   }
   return result
 }
