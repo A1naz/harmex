@@ -84,7 +84,13 @@ function removeDislike() {
         </div>
       </div>
       <div class="flex text-primary">
-        <span> {{ article }}</span>
+        <a
+          :href="`https://www.wildberries.ru/catalog/${article}/detail.aspx`"
+          target="_blank"
+          class="text-primary link link-hover"
+        >
+          {{ article }}
+        </a>
       </div>
       <div>
         <span class="font-medium">Отзыв:</span>
