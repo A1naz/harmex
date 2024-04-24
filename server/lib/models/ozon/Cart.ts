@@ -17,10 +17,10 @@ const CartSchema = new Schema({
   uuid: {type: String, default: uuid()},
 })
 
-CartSchema.pre('save', function (next) {
-  // Добавляем 3 часа к полю "date"
-  this.createdDate.setHours(this.createdDate.getHours() + 3);
-  next();
-});
+// CartSchema.pre('save', function (next) {
+//   // Добавляем 3 часа к полю "date"
+//   this.createdDate.setHours(this.createdDate.getHours() + 3);
+//   next();
+// });
 
 export const Cart = OzonConnection.model('Cart', CartSchema)

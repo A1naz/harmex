@@ -13,10 +13,10 @@ const ReviewDraftSchema = new Schema({
     createdAt: { type: Date, default: new Date(Date.now()) },
 })
 
-ReviewDraftSchema.pre('save', function (next) {
-    // Добавляем 3 часа к полю "date"
-    this.createdAt.setHours(this.createdAt.getHours() + 3)
-    next()
-  })
+// ReviewDraftSchema.pre('save', function (next) {
+//     // Добавляем 3 часа к полю "date"
+//     this.createdAt.setHours(this.createdAt.getHours() + 3)
+//     next()
+//   })
 
 export const ReviewDraft = AvitoConnection.model<IReviewDraftSchema>('ReviewDrafts', ReviewDraftSchema)
