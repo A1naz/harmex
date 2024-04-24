@@ -332,6 +332,7 @@ function changeFilter(e: any) {
         <CustomSelect
           class="lg:hidden"
           :class="'navbar:min-w-[120px]'"
+          :status-text="statusText"
           :links="customLinks"
         />
         <!-- <div class="dropdown  ">
@@ -393,6 +394,7 @@ function changeFilter(e: any) {
           <CustomSelect
             class="hidden lg:flex"
             :class="'navbar:min-w-[120px]'"
+            :status-text="statusText"
             :links="customLinks"
           />
           <!-- <div class="dropdown hidden lg:block">
