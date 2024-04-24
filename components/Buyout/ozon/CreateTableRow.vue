@@ -144,7 +144,7 @@ const productQuantityModel = computed({
         {{ product.priceText }}
       </div>
     </td>
-    <td class="border-r border-base">
+    <!-- <td class="border-r border-base">
       <div class="relative flex items-center flex-grow-0 w-full">
         <div
           class="absolute left-0 btn btn-ghost btn-sm btn-square"
@@ -166,7 +166,7 @@ const productQuantityModel = computed({
           <IconCSS size="16" name="ic:round-plus" />
         </div>
       </div>
-    </td>
+    </td> -->
     <td class="border-r border-base">
       <div class="w-20 2xl:w-full flex items-center">
         <select
