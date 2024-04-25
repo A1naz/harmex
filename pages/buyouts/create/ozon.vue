@@ -384,6 +384,10 @@ const startTimer = () => {
     }
   }, 1000)
 }
+
+function removeDiscount(index: number) {
+  store.createProducts[index].discountPrice = store.createProducts[index].price
+}
 </script>
 
 <template>
@@ -485,6 +489,7 @@ const startTimer = () => {
           :open-discount="openDiscount"
           @point-modal-open="pointModalOpen"
           @rule-modal-open="ruleModalOpen"
+          @remove-discount="removeDiscount"
         />
       </div>
       <div
@@ -586,6 +591,7 @@ const startTimer = () => {
               :loading="!pickpoints?.length"
               @rule-modal-open="ruleModalOpen"
               @point-modal-open="pointModalOpen"
+              @remove-discount="removeDiscount"
             />
           </tbody>
         </table>
