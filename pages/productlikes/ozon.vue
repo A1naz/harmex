@@ -113,6 +113,29 @@ function getStatus(status: string) {
   else if (status === 'nofunds') return 'Недостаточно средств'
   else if (status === 'canceled') return 'Отменен'
 }
+
+async function resumeStatus(item: any) {
+  const { data, error } = await useFetch(`/api/ozon/productlikes/resume`, {
+    method: 'POST',
+    body: {
+      item: item,
+    },
+    watch: false,
+  })
+  if (error.value){
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+    return
+  }
+  if (data.value) {
+    notify({ type: 'success', title: 'Успешно' })
+    getProductLikes()
+  }
+}
 function removeProduct() {
   productData.value = null
   url.value = ''
@@ -257,6 +280,7 @@ const updateSearchType = (filter: any) => {
             { title: 'Все лайки', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           :links="[{ title: 'Отзывы', slot: '/likes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
           @change-value="selectFilterDate"
@@ -298,11 +322,12 @@ const updateSearchType = (filter: any) => {
         />
         <CustomSelect
           class="lg:hidden"
-          :class="'sm:min-w-[120px]'"
+          :class="'min-w-[95px]'"
           :tabs="[
             { title: 'Все лайки', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           :links="[{ title: 'Отзывы', slot: '/likes', query: '' }]"
           @change-value="selectFilterDate"
@@ -439,13 +464,12 @@ const updateSearchType = (filter: any) => {
               </div>
             </td>
 
-            <td
-              class="text-center border-r border-primary border-opacity-5 bg-base-100"
-            >
+            <td class="text-center border-r border-primary border-opacity-5 bg-base-100">
               <div
                 :class="{
+                  'text-red-500 rounded-full py-1 px-2  text-center':
+                    item.status === 'nofunds',
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'nofunds' ||
                     item.status === 'deleted' ||
                     item.status === 'canceled',
                   'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
@@ -459,6 +483,9 @@ const updateSearchType = (filter: any) => {
               >
                 {{ getStatus(item.status) }}
               </div>
+              <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
+                Возобновить  
+              </button>
             </td>
             <td
               class="text-center border-r border-primary border-opacity-5 bg-base-100"

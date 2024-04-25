@@ -112,6 +112,30 @@ function getStatus(status: string) {
   else if (status === 'nofunds') return 'Недостаточно средств'
   else return status
 }
+
+async function resumeStatus(item: any) {
+  const { data, error } = await useFetch('/api/wildberries/cart/resume', {
+    method: 'POST',
+    body: {
+      item: item,
+    },
+    watch: false,
+  })
+  if (error.value){
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+    return
+  }
+  if (data.value) {
+    notify({ type: 'success', title: 'Успешно' })
+    getCarts()
+  }
+}
+
 function removeProduct() {
   productData.value = null
   article.value = ''
@@ -209,6 +233,7 @@ onMounted(() => {
             { title: 'Все корзины', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -249,6 +274,7 @@ onMounted(() => {
             { title: 'Все корзины', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -305,7 +331,7 @@ onMounted(() => {
 
     <div v-if="carts.length" class="mt-4">
       <div>
-        <CartWildberriesTable :get-status="getStatus" :carts="carts" />
+        <CartWildberriesTable :get-status="getStatus" :resume-status="resumeStatus" :carts="carts" />
       </div>
       <!-- <div>
         <CartWildberriesCards :carts="carts" :get-status="getStatus" />

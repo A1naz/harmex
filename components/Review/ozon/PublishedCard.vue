@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UseImage } from '@vueuse/components'
+import { notify } from '@kyvg/vue3-notification'
 const router = useRouter()
 const config = useRuntimeConfig()
 
@@ -50,6 +51,28 @@ function openBuyout() {
 function removeReview() {
   emit('removeReview', props.info.id)
 }
+async function resumeStatus(item: any) {
+  const { data, error } = await useFetch(`/api/ozon/review/resume`, {
+    method: 'POST',
+    body: {
+      item: item,
+    },
+    watch: false,
+  })
+  if (error.value){
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+    return
+  }
+  if (data.value) {
+    notify({ type: 'success', title: 'Успешно' })
+    location.reload()
+  }
+}
 </script>
 
 <template>
@@ -68,13 +91,15 @@ function removeReview() {
             <Icon name="heroicons-outline:trash" size="30" class=""/>
           </button>
       </div>
-      <span
+      <div class="flex gap-1">
+        <span
             :class="{
               'bg-success bg-opacity-50 text-green-500':
                 info.status === 'working' || info.status === 'published',
               'bg-[#F8C68A] text-[#D67500]':
                 info.status === 'waiting' ||
-                info.status === 'created' ||
+                info.status === 'created',
+                'bg-[#F8C68A]  text-red-500':
                 info.status === 'nofunds',
               'bg-[#FF685E] text-[#9C0A00]':
                 info.status === 'canceled' ||
@@ -83,7 +108,11 @@ function removeReview() {
             }"
             class="text-black p-1.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
             >{{ getStatus }}
-      </span>
+        </span>
+        <button v-if="info.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square my-2.5 text-base-content hover:text-primary w-fit p-1.5 px-4 rounded-full border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(info)">
+          Возобновить  
+        </button>
+      </div>
       <div class="flex justify-between item gap-2 mb-2 flex-wrap">
         
         <h2 v-if="info.draftName" class="card-title">{{ info.draftName }}</h2>
@@ -98,7 +127,7 @@ function removeReview() {
       
       </div>
       <label
-        class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate z-10"
+        class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate "
         @click="openBuyout"
         >#{{ info.buyoutuuid }}</label
       >

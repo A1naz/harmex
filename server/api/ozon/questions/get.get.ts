@@ -36,6 +36,14 @@ export default eventHandler(async (event) => {
         ],
       })
       break
+    case 'nofunds':
+      filter = await Question.find({
+        user,
+        $or: [
+          { status: { $regex: dateFilter, $options: 'i' } },
+        ],
+      })
+      break
     case 'created':
       filter = await Question.find({
         user,
@@ -59,6 +67,7 @@ export default eventHandler(async (event) => {
 
   const format = (filter ? filter : questions).map((question, index) => {
     return {
+      id: question._id,
       place: index + 1,
       status: question.status,
       article: question.article,

@@ -21,6 +21,14 @@ export default eventHandler(async (event) => {
         ],
       })
       break
+    case 'nofunds':
+      filter = await QuestionLike.find({
+        user,
+        $or: [
+          { status: { $regex: dateFilter, $options: 'i' } },
+        ],
+      })
+      break
     case 'work':
       filter = await QuestionLike.find({
         user,

@@ -35,7 +35,7 @@ const tabs = [
   { value: 'canceled', name: 'Отмененные' },
   // { value: 'deleting', name: 'На удалении' },
   { value: 'deleted', name: 'Удаленные' },
-  // { value: 'nofunds', name: 'Недостаточно средств' },
+  { value: 'nofunds', name: 'Недостаточно средств' },
 ]
 
 const searchOptions = ref([
@@ -469,6 +469,7 @@ const customLinks = tabs.map((filter) => ({
           :index="index"
           :info="review"
           @open-image="openPhoto"
+          @get-review="fetchData()"
         />
       </div>
 

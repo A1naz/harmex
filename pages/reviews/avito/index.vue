@@ -37,7 +37,7 @@ const tabs = [
   { value: 'canceled', name: 'Отмененные' },
   // { value: 'deleting', name: 'На удалении' },
   { value: 'deleted', name: 'Удаленные' },
-  // { value: 'nofunds', name: 'Недостаточно средств' },
+  { value: 'nofunds', name: 'Недостаточно средств' },
 ]
 
 const searchOptions = ref([
@@ -61,7 +61,7 @@ const endpoint = computed(() =>
 
 const isFetch = ref(true)
 const reviews = ref<any>([])
-const fetchData = async () => {
+const fetchData = async () => {  
   isFetch.value = true
   const response = await $fetch(`/api/avito/review/${endpoint.value}`, {
     method: 'GET',
@@ -434,6 +434,7 @@ const customLinks = tabs.map(filter => ({
           :index="index"
           :info="review"
           @open-image="openPhoto"
+          @get-review="fetchData"
         />
       </div>
 
