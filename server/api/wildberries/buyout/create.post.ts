@@ -22,6 +22,7 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  key: boolean
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -112,6 +113,7 @@ export default eventHandler(async (event) => {
       uuid: uuid(),
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
+      key: product.key || false,
       pointRegion,
       pointDistrict,
     })

@@ -23,6 +23,7 @@ export interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  key: boolean
   discount: boolean
   discountPrice: number
   discountRequestPrice: number
