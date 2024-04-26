@@ -14,11 +14,6 @@ export default eventHandler(async (event) => {
   const templateTitle = title.length > 0 ? title : `Шаблон #${templateUuid}`
   const body = await readBody(event)
   const products: any = body
-
-  throw createError({
-    statusCode: 400,
-    message: 'Такой шаблон уже создан',
-  })
   
   await BuyoutTemplate.create({
     uuid: templateUuid,
