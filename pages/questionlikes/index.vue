@@ -12,6 +12,7 @@ const mpStore = useMPStore()
 const router = useRouter()
 const review_likes = ref<any>([])
 const MPSelect = ref()
+const sortPage = ref('all')
 const loading = ref(true)
 const selectedMP = ref<any>(((mpStore.selectedMP).charAt(0).toUpperCase() + (mpStore.selectedMP).slice(1)) || 'Wildberries')
 const { width, height } = useWindowSize()
@@ -65,8 +66,13 @@ async function resumeStatus(item: any) {
     return
   }
   if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    getLikes()
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Лайк на вопрос успешно возвращен в работу',
+      duration: 3000,
+    })
+    selectFilterDate({ value: sortPage.value })
   }
 }
 
@@ -128,6 +134,7 @@ async function selectFilterDate(e: any) {
     },
     watch: false,
   })
+  sortPage.value = target.value
   review_likes.value = data.value
 }
 

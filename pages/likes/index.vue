@@ -11,6 +11,7 @@ const store = useMainStore()
 const mpStore = useMPStore()
 const router = useRouter()
 const review_likes = ref<any>([])
+const sortPage = ref('all')
 const MPSelect = ref()
 const loading = ref(true)
 const selectedMP = ref<any>(
@@ -67,8 +68,13 @@ async function resumeStatus(item: any) {
     return
   }
   if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    getLikes()
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Лайк на отзыв успешно возвращен в работу',
+      duration: 3000,
+    })
+    selectFilterDate({ value: sortPage.value })
   }
 }
 
@@ -126,6 +132,7 @@ async function selectFilterDate(e: any) {
     },
     watch: false,
   })
+  sortPage.value = target.value
   review_likes.value = data.value
 }
 

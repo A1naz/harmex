@@ -16,6 +16,7 @@ const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const product_likes = ref([]) as any
 const amount = ref(0)
 const loadingUrl = ref(false)
+const sortPage = ref('all')
 const loading = ref(false)
 const url = ref('')
 const period = ref('3h')
@@ -137,8 +138,13 @@ async function resumeStatus(item: any) {
     return
   }
   if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    getProductLikes()
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Лайк на товар/бренд успешно возвращен в работу',
+      duration: 3000,
+    })
+    selectFilterDate({ value: sortPage.value })
   }
 }
 function removeProduct() {
@@ -207,6 +213,7 @@ async function selectFilterDate(e: any) {
     },
     watch: false,
   })
+  sortPage.value = target.value
   product_likes.value = data.value
   loading.value = false
 }

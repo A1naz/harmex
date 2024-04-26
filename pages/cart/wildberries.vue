@@ -11,6 +11,7 @@ const mpStore = useMPStore()
 const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const route = useRoute()
 const router = useRouter()
+const sortPage = ref('all')
 const { $dayjs } = useNuxtApp()
 const cartForm = reactive({
   amount: 0,
@@ -121,7 +122,7 @@ async function resumeStatus(item: any) {
     },
     watch: false,
   })
-  if (error.value){
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -131,8 +132,13 @@ async function resumeStatus(item: any) {
     return
   }
   if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    getCarts()
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Корзина успешно возвращена в работу',
+      duration: 3000,
+    })
+    selectFilterDate({ value: sortPage.value })
   }
 }
 
@@ -159,6 +165,7 @@ async function selectFilterDate(e: any) {
     },
     watch: false,
   })
+  sortPage.value = target.value
   carts.value = data.value
 }
 

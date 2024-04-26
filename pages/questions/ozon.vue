@@ -12,6 +12,7 @@ const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const questions = ref([]) as any
 const amount = ref(0)
 const now = useNow()
+const sortPage = ref('all')
 const publishDate = ref(now.value)
 const loadingUrl = ref(false)
 const questionText = ref('')
@@ -115,8 +116,13 @@ async function resumeStatus(item: any) {
     return
   }
   if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    getQuestions()
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Вопрос успешно возвращен в работу',
+      duration: 3000,
+    })
+    selectFilterDate({ value: sortPage.value })
   }
 }
 
@@ -151,6 +157,7 @@ async function selectFilterDate(e: any) {
     },
     watch: false,
   })
+  sortPage.value = target.value
   questions.value = data.value
 }
 

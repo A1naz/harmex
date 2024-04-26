@@ -21,6 +21,7 @@ const emit = defineEmits([
   'openImage',
   'removeReview',
   'getReview',
+  'resumeStatus',
 ])
 const { $dayjs } = useNuxtApp()
 onMounted(() => {})
@@ -53,26 +54,7 @@ function removeReview() {
   emit('removeReview', props.info.id)
 }
 async function resumeStatus(item: any) {
-  const { data, error } = await useFetch(`/api/avito/review/resume`, {
-    method: 'POST',
-    body: {
-      item: item,
-    },
-    watch: false,
-  })
-  if (error.value){
-    notify({
-      title: 'Что-то пошло не так',
-      text: error.value?.data?.message,
-      type: 'error',
-      duration: 3000,
-    })
-    return
-  }
-  if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    location.reload()
-  }
+  emit('resumeStatus', item)
 }
 </script>
 

@@ -16,6 +16,7 @@ const product_likes = ref([]) as any
 const amount = ref(0)
 const loadingUrl = ref(false)
 const loading = ref(false)
+const sortPage = ref('all')
 const url = ref('')
 const period = ref('3h')
 const { width, height } = useWindowSize()
@@ -132,8 +133,13 @@ async function resumeStatus(item: any) {
     return
   }
   if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    getProductLikes()
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Лайк на товар/бренд  успешно возвращен в работу',
+      duration: 3000,
+    })
+    selectFilterDate({ value: sortPage.value })
   }
 }
 function removeProduct() {
@@ -199,6 +205,7 @@ async function selectFilterDate(e: any) {
     },
     watch: false,
   })
+  sortPage.value = target.value
   product_likes.value = data.value
   loading.value = false
 }
