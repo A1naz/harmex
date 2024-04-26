@@ -69,6 +69,7 @@ export interface IUserLogs extends Entity {
     description: string,
     documentType: DocuemntEnum,
     documentId: string,
+    mp: string,
     createdAt?: Date
 }
 export interface UserOperation extends Pick<

@@ -10,7 +10,8 @@ const UserLogsSchema = new Schema<IUserLogsSchema>({
     uuidCompany: { type: String, required: false },
     description: { type: String, required: true },
     documentType: { type: String, required: true },
-    documentId: { type: String, required: true },
+    documentId: { type: String, required: false },
+    mp: { type: String, required: false },
     createdAt: { type: Date, default: ()=>{ 
         const nowDate = new Date()
         nowDate.setHours(nowDate.getHours() + 3)

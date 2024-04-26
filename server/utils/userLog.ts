@@ -20,20 +20,28 @@ const operationDescriptions: {[key in DocuemntEnum]: string} = {
 }
 
 const OperationActions = new Map<string, string>([
+    [ 'GET', 'Создан документ' ],
     [ 'POST', 'Создан документ' ],
     [ 'PUT', 'Изменен документ' ],
     [ 'DELETE', 'Удален документ' ],
  ])
 
-export const userLog = async (event: any, operation: UserOperation): Promise<void> => {
+const marketplace = [
+    'wildberries',
+    'ozon',
+    'avito',
+]
 
+export const userLog = async (event: any, operation: UserOperation): Promise<void> => {
     try{
+        const mp = marketplace.includes(getRequestURL(event).pathname.split('/')[2]) ? getRequestURL(event).pathname.split('/')[2] : ''
         const session = (await getServerSession(event)) as any
         const user = await User.findOne({ uuid: session.uuid })
         let description = OperationActions.get(event.method) + ' - ' +  operationDescriptions[operation.documentType] 
         if (operation.comment) description += ` (${operation.comment})`
 
         if (user) {
+            console.log(event.method, OperationActions.get(event.method))
             const userLog = new UserLogs<IUserLogs>({
                 userId: user._id,
                 userNick: user?.username ?? "",
@@ -42,7 +50,9 @@ export const userLog = async (event: any, operation: UserOperation): Promise<voi
                 description: description,
                 documentType: operation.documentType,
                 documentId: operation.documentId,
+                mp: mp,
             })
+            console.log(userLog)
             await userLog.save()
         }
 

@@ -1,6 +1,8 @@
 ﻿import { User } from '~/server/lib/models/User'
 import { BuyoutTemplate } from '~/server/lib/models/avito/BuyoutTemplate'
 import { getServerSession } from '#auth'
+import { DocuemntEnum } from '~/data/enums'
+
 
 export default eventHandler(async (event) => {
 

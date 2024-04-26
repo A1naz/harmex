@@ -1,6 +1,7 @@
 ﻿import { User } from '~/server/lib/models/User'
 import { BuyoutTemplate } from '~/server/lib/models/ozon/BuyoutTemplate'
 import { getServerSession } from '#auth'
+import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
 
@@ -11,6 +12,7 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
   
   const query = getQuery(event)
+  
   const uuid = query.uuid
   await BuyoutTemplate.deleteOne({ uuid })
 
