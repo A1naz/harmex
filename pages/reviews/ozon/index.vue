@@ -37,7 +37,7 @@ const tabs = [
   { value: 'canceled', name: 'Отмененные' },
   // { value: 'deleting', name: 'На удалении' },
   { value: 'deleted', name: 'Удаленные' },
-  // { value: 'nofunds', name: 'Недостаточно средств' },
+  { value: 'nofunds', name: 'Недостаточно средств' },
 ]
 
 const searchOptions = ref([
@@ -230,6 +230,37 @@ const customLinks = tabs.map(filter => ({
   title: filter.name,
   value: filter.value
 }));
+
+async function resumeStatus(item: any) {
+  const { data, error } = await useFetch(`/api/ozon/review/resume`, {
+    method: 'POST',
+    body: {
+      item: item,
+    },
+    watch: false,
+  })
+  if (error.value){
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+    return
+  }
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Отзыв успешно возвращен в работу',
+      duration: 3000,
+    })
+    reviews.value = []
+    skip.value = 0
+    end.value = false
+    fetchData()
+  }
+}
 </script>
 
 <template>
@@ -434,6 +465,8 @@ const customLinks = tabs.map(filter => ({
           :index="index"
           :info="review"
           @open-image="openPhoto"
+          @resume-status="resumeStatus"
+          @get-review="fetchData()"
         />
       </div>
 

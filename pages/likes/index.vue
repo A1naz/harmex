@@ -11,6 +11,7 @@ const store = useMainStore()
 const mpStore = useMPStore()
 const router = useRouter()
 const review_likes = ref<any>([])
+const sortPage = ref('all')
 const MPSelect = ref()
 const loading = ref(true)
 const selectedMP = ref<any>(
@@ -49,8 +50,41 @@ function getStatus(status: string) {
   else if (status === 'canceled') return 'Отменен'
 }
 
+async function resumeStatus(item: any) {
+  const { data, error } = await useFetch(`/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/resume`, {
+    method: 'POST',
+    body: {
+      item: item,
+    },
+    watch: false,
+  })
+  if (error.value){
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+    return
+  }
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Лайк на отзыв успешно возвращен в работу',
+      duration: 3000,
+    })
+    selectFilterDate({ value: sortPage.value })
+  }
+}
+
 async function getLikes() {
   loading.value = true
+  if(mpStore.selectedMP == 'avito'){
+    review_likes.value = []
+    loading.value = false
+    return
+  }
 
   const { data, error } = await useFetch(
     `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`
@@ -98,9 +132,8 @@ async function selectFilterDate(e: any) {
     },
     watch: false,
   })
-  if (data.value) {
-    review_likes.value = data.value
-  }
+  sortPage.value = target.value
+  review_likes.value = data.value
 }
 
 async function findBuyouts(value: string, type: string) {
@@ -172,6 +205,7 @@ async function selectMP(value: any) {
             { title: 'Все лайки', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           :links="[
             { title: 'Товар/бренд', slot: '/productlikes', query: '' },
@@ -216,11 +250,12 @@ async function selectMP(value: any) {
         />
         <CustomSelect
           class="lg:hidden"
-          :class="'navbar:min-w-[120px]'"
+          :class="'min-w-[95px]'"
           :tabs="[
             { title: 'Все лайки', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           :links="[
             { title: 'Товар/бренд', slot: '/productlikes', query: '' },
@@ -353,7 +388,7 @@ async function selectMP(value: any) {
             <td class="text-center border-r border-primary border-opacity-5">
               <div
                 :class="{
-                  'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                  'text-red-500 rounded-full py-1 px-2  text-center':
                     item.status === 'nofunds',
                   'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
@@ -365,6 +400,9 @@ async function selectMP(value: any) {
               >
                 {{ getStatus(item.status) }}
               </div>
+              <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
+                Возобновить  
+              </button>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
               <div

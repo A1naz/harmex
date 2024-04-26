@@ -243,6 +243,12 @@ const filters = [
     params: '?status=completedByDiscount',
     queryStatus: 'completedByDiscount',
   },
+  {
+    title: 'Недостаточно средств',
+    optionValue: 'nofunds',
+    params: '?status=nofunds',
+    queryStatus: 'nofunds',
+  },
 ]
 
 watch(targetIsVisible, async (isVisible) => {

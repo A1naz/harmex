@@ -2,6 +2,7 @@
 interface IProps {
   carts: any[]
   getStatus: (status: string) => string
+  resumeStatus: (item: any) => any
 }
 const props = defineProps<IProps>()
 const { $dayjs } = useNuxtApp()
@@ -97,14 +98,14 @@ const removeCart = (index: number) => {
               </div>
             </td>
 
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center  border-r border-primary border-opacity-5">
               <div
                 :class="{
-                  'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                  ' text-red-500 rounded-full py-1 px-2  text-center':
                     item.status === 'nofunds',
                   'text-error rounded-full py-1 px-2  text-center':
                   item.status === 'spam',
-                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                  'bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
                     item.status === 'work',
@@ -113,7 +114,11 @@ const removeCart = (index: number) => {
                 }"
               >
                 {{ getStatus(item.status) }}
+               
               </div>
+              <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
+                Возобновить  
+              </button>
             </td>
             <td class="text-center border-r border-primary border-opacity-5 max-w-[100px]">
               <div

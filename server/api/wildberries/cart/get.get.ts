@@ -38,6 +38,14 @@ export default eventHandler(async (event) => {
         ],
       })
       break
+    case 'nofunds':
+    filter = await Cart.find({
+      user,
+      $or: [
+        { status: { $regex: dateFilter, $options: 'i' } },
+      ],
+    })
+    break
     case 'work':
       filter = await Cart.find({
         user,

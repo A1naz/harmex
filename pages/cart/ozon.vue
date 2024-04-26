@@ -11,6 +11,7 @@ const mpStore = useMPStore()
 const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const route = useRoute()
 const router = useRouter()
+const sortPage = ref('all')
 const cartForm = reactive({
   amount: 0,
   period: '3h',
@@ -29,8 +30,6 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
-
-
 
 async function getCarts() {
   modalShow.value = false
@@ -109,6 +108,33 @@ function getStatus(status: string) {
   else if (status === 'nofunds') return 'Недостаточно средств'
   else return status
 }
+async function resumeStatus(item: any) {
+  const { data, error } = await useFetch('/api/ozon/cart/resume', {
+    method: 'POST',
+    body: {
+      item: item,
+    },
+    watch: false,
+  })
+  if (error.value) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+    return
+  }
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Корзина успешно возвращена в работу',
+      duration: 3000,
+    })
+    selectFilterDate({ value: sortPage.value })
+  }
+}
 function removeProduct() {
   productData.value = null
   article.value = ''
@@ -132,6 +158,7 @@ async function selectFilterDate(e: any) {
     },
     watch: false,
   })
+  sortPage.value = target.value
   carts.value = data.value
 }
 
@@ -206,6 +233,7 @@ onMounted(() => {
             { title: 'Все корзины', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -246,6 +274,7 @@ onMounted(() => {
             { title: 'Все корзины', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -302,7 +331,11 @@ onMounted(() => {
 
     <div v-if="carts.length" class="mt-4">
       <div>
-        <CartOzonTable :get-status="getStatus" :carts="carts" />
+        <CartOzonTable
+          :get-status="getStatus"
+          :resume-status="resumeStatus"
+          :carts="carts"
+        />
       </div>
       <!-- <div>
         <CartOzonCards :carts="carts" :get-status="getStatus" />
