@@ -93,6 +93,7 @@ function selectSize(event: any) {
 function getStatus(status: string) {
   if (status === 'created') return 'Создан'
   else if (status === 'work') return 'В работе'
+  else if (status === 'busy') return 'В работе'
   else if (status === 'completed') return 'Завершен'
   else if (status === 'nofunds') return 'Недостаточно средств'
   else return status

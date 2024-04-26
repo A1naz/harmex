@@ -144,13 +144,12 @@ export default NuxtAuthHandler({
       async authorize(credentials: any) {
         const { email, password, code } = credentials
         if (!email || !password) return null
-                
+
         const user =
           (await User.findOne({
-            phoneNumber:email.replace(/[\(\)\-\s]/g, '')
+            phoneNumber: email.replace(/[\(\)\-\s]/g, ''),
           })) || (await User.findOne({ username: email }))
 
-          
         if (!user) {
           throw new Error('User not found')
         }
@@ -181,7 +180,6 @@ export default NuxtAuthHandler({
       },
 
       async authorize(credentials: any, event: any) {
-
         const { code, uuid } = credentials
 
         const user = await User.findOne({
@@ -204,7 +202,6 @@ export default NuxtAuthHandler({
     }),
   ],
 })
-
 
 //general auth
 // import CredentialsProvider from 'next-auth/providers/credentials'
@@ -355,12 +352,12 @@ export default NuxtAuthHandler({
 
 //       async authorize(credentials: any, event: any) {
 //         let cookie = event.headers.cookie
-       
+
 //         if (runtimeConfig.env === 'developer') {
 //           const testUser = await User.findOne({
 //             uuid: 'c5fdc5d6-a8b0-4986-a829-e721f8e54deb',
 //           })
-          
+
 //           if (testUser) {
 //             return testUser
 //           }

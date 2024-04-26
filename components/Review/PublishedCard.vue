@@ -30,6 +30,8 @@ const getStatus = computed(() => {
       return 'В очереди'
     case 'working':
       return 'В работе'
+    case 'busy':
+      return 'В работе'
     case 'published':
       return 'Опубликован'
     case 'canceled':
@@ -68,7 +70,7 @@ function removeReview() {
           <span
             :class="{
               'bg-success bg-opacity-50 text-green-500':
-                info.status === 'working' || info.status === 'published',
+                info.status === 'working' || info.status === 'published' || info.status === 'busy',
               'bg-warning bg-opacity-50 text-amber-500':
                 info.status === 'waiting' ||
                 info.status === 'created' ||

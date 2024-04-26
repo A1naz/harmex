@@ -115,6 +115,7 @@ function selectPeriod(event: any) {
 function getStatus(status: string) {
   if (status === 'created') return 'Создан'
   else if (status === 'work') return 'В работе'
+  else if (status === 'busy') return 'В работе'
   else if (status === 'completed') return 'Завершен'
   else if (status === 'nofunds') return 'Недостаточно средств'
   else if (status === 'canceled') return 'Отменен'
@@ -475,7 +476,7 @@ const updateSearchType = (filter: any) => {
                   'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
-                    item.status === 'work',
+                    item.status === 'work' || item.status === 'busy',
                   'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
                     item.status === 'completed',
                 }"

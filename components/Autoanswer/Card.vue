@@ -64,8 +64,8 @@ const getStatus = computed(() => {
       <div class="card-actions justify-between items-center mt-2">
         <span
           :class="{
-            'bg-primary': info.status === 'work',
-            'text-primary-content': info.status === 'work',
+            'bg-primary': info.status === 'work' || info.status === 'busy',
+            'text-primary-content': info.status === 'work' || info.status === 'busy',
 
             'bg-warning': info.status === 'created',
             'bg-error': info.status === 'error',

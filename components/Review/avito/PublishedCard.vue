@@ -33,6 +33,8 @@ const getStatus = computed(() => {
       return 'В очереди'
     case 'working':
       return 'В работе'
+      case 'busy':
+      return 'В работе'
     case 'published':
       return 'Опубликован'
     case 'canceled':
@@ -78,7 +80,7 @@ async function resumeStatus(item: any) {
         <span
             :class="{
               'bg-success bg-opacity-50 text-green-500':
-                info.status === 'working' || info.status === 'published',
+                info.status === 'working' || info.status === 'published' || info.status === 'busy',
               'bg-[#F8C68A] text-[#D67500]':
                 info.status === 'waiting' ||
                 info.status === 'created',

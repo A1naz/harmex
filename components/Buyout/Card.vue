@@ -139,6 +139,8 @@ const getStatus = computed(() => {
       return 'Активный'
     case 'work':
       return 'В работе'
+    case 'busy':
+      return 'В работе'
     case 'completed':
       return 'Завершен'
     case 'archived':
@@ -212,6 +214,7 @@ const getStatus = computed(() => {
                   info.status !== 'active' &&
                   info.status !== 'paused' &&
                   info.status !== 'work' &&
+                  info.status !== 'busy' &&
                   info.status !== 'archived',
               }"
               class="text-xs rounded-2xl px-2 bg-base-200"
@@ -234,9 +237,9 @@ const getStatus = computed(() => {
             class="mt-2 rounded-2xl py-1 px-2"
             :class="{
               'bg-success ':
-                (info.status === 'active' || info.status === 'work'),
+                (info.status === 'active' || info.status === 'work'|| info.status === 'busy'),
               'text-green-200 bg-green-600 ':
-                (info.status === 'active' || info.status === 'work') &&
+                (info.status === 'active' || info.status === 'work' || info.status === 'busy') &&
                 theme.value === 'dark',
               'text-red-200 bg-red-700':
                 (info.status === 'completed' || info.status === 'nofunds') &&

@@ -23,6 +23,8 @@ const getStatus = computed(() => {
       return 'Активный'
     case 'work':
       return 'В работе'
+    case 'busy':
+      return 'В работе'
     case 'completed':
       return 'Завершен'
     case 'archived':
@@ -70,10 +72,10 @@ onKeyStroke('Escape', (e) => {
               class="rounded-2xl py-1 px-2 max-h-9 text-[9px]"
               :class="{
                 'text-green-600 bg-green-200 ':
-                  (info.status === 'active' || info.status === 'work') &&
+                  (info.status === 'active' || info.status === 'work' || info.status === 'busy') &&
                   theme.value === 'light',
                 'text-green-200 bg-green-600 ':
-                  (info.status === 'active' || info.status === 'work') &&
+                  (info.status === 'active' || info.status === 'work' || info.status === 'busy') &&
                   theme.value === 'dark',
                 'text-red-200 bg-red-700':
                   (info.status === 'completed' || info.status === 'nofunds') &&

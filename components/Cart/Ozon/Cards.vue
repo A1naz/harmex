@@ -35,7 +35,7 @@ const props = defineProps<IProps>()
                   'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-1.5 text-center':
                     item.status === 'created',
                   'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2 text-center':
-                    item.status === 'work',
+                    item.status === 'work' || item.status === 'busy',
                   'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
                     item.status === 'completed',
               }"
