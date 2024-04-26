@@ -671,6 +671,26 @@ const startTimer = () => {
               </div>
             </div>
             <div
+              v-if="rule.id === 1"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
+            >
+              <span class="label-text"
+                >{{ 'Выкуп под ключ ' }}</span
+              >
+              <div class="flex gap-4">
+                <div
+                  class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
+                >
+                  0р.
+                </div>
+                <input
+                  type="checkbox"
+                  v-model="products[selectedRuleProductIndex].key"
+                  class="checkbox checkbox-primary border-base-content"
+                />
+              </div>
+            </div>
+            <div
               class="label cursor-pointer flex gap-4 items-start justify-around"
             >
               <span class="label-text"

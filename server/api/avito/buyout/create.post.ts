@@ -21,6 +21,7 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  key: boolean
   searchQueryRegion: any[]
 }
 export default eventHandler(async (event) => {
@@ -115,6 +116,7 @@ export default eventHandler(async (event) => {
       uuid: uuid(),
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
+      key: product.key || false,
     })
 
     await buyout.save()

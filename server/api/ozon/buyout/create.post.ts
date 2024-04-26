@@ -22,6 +22,7 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  key: boolean
   pointCoordinates: {
     lat: number
     lon: number
@@ -121,6 +122,7 @@ export default eventHandler(async (event) => {
       // discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
+      key: product.key || false,
       pointRegion,
       pointDistrict,
     })
