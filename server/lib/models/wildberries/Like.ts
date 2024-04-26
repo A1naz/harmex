@@ -22,11 +22,11 @@ const LikeSchema = new Schema({
   period: { type: String },
 })
 
-LikeSchema.pre('save', function (next) {
-  // Добавляем 3 часа к полю "date"
-  this.createdDate.setHours(this.createdDate.getHours() + 3)
-  next()
-})
+// LikeSchema.pre('save', function (next) {
+//   // Добавляем 3 часа к полю "date"
+//   this.createdDate.setHours(this.createdDate.getHours() + 3)
+//   next()
+// })
 
 export const Like = wildberriesConnection.model('Like', LikeSchema)
 

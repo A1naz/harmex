@@ -12,6 +12,7 @@ const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const questions = ref([]) as any
 const amount = ref(0)
 const now = useNow()
+const sortPage = ref('all')
 const publishDate = ref(now.value)
 const loadingUrl = ref(false)
 const questionText = ref('')
@@ -96,6 +97,35 @@ function getStatus(status: string) {
     return 'Определен как спам'
   }
 }
+
+async function resumeStatus(item: any) {
+  const { data, error } = await useFetch('/api/ozon/questions/resume', {
+    method: 'POST',
+    body: {
+      item: item,
+    },
+    watch: false,
+  })
+  if (error.value){
+    notify({
+      title: 'Что-то пошло не так',
+      text: error.value?.data?.message,
+      type: 'error',
+      duration: 3000,
+    })
+    return
+  }
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Вопрос успешно возвращен в работу',
+      duration: 3000,
+    })
+    selectFilterDate({ value: sortPage.value })
+  }
+}
+
 function removeProduct() {
   productData.value = null
   article.value = ''
@@ -127,6 +157,7 @@ async function selectFilterDate(e: any) {
     },
     watch: false,
   })
+  sortPage.value = target.value
   questions.value = data.value
 }
 
@@ -207,6 +238,7 @@ function changeFilter(e: any) {
             { title: 'Все вопросы', value: 'all' },
             { title: 'Активные', value: 'created' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -248,6 +280,7 @@ function changeFilter(e: any) {
             { title: 'Все вопросы', value: 'all' },
             { title: 'Активные', value: 'created' },
             { title: 'Завершенные', value: 'completed' },
+            { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -396,7 +429,7 @@ function changeFilter(e: any) {
               <td class="text-center border-r border-primary border-opacity-5">
                 <div
                   :class="{
-                    'bg-error text-base-content rounded-full py-1 px-2  text-center':
+                    'text-red-500 rounded-full py-1 px-2  text-center':
                       item.status === 'nofunds',
                     'text-error rounded-full py-1 px-2  text-center':
                       item.status === 'spam',
@@ -410,6 +443,9 @@ function changeFilter(e: any) {
                 >
                   {{ getStatus(item.status) }}
                 </div>
+                <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
+                  Возобновить  
+                </button>
               </td>
               <td class="text-center border-r border-primary border-opacity-5">
                 <div

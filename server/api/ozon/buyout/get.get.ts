@@ -86,6 +86,13 @@ export default eventHandler(async (event) => {
       })
       .skip(skip as number)
       .limit(limit as number)
+  }else if (status === 'nofunds') {
+    buyouts = await Buyout.find({ user, status: 'nofunds' })
+      .sort({
+        createdAt: -1,
+      })
+      .skip(skip as number)
+      .limit(limit as number)
   }
   else {
     buyouts = await Buyout.find({ user })

@@ -16,7 +16,6 @@ export default eventHandler(async (event) => {
     })
   }
 
-  
   const article = buyout?.article
   const data: any = await $fetch('http://95.163.249.133:4141', {
     method: 'POST',
