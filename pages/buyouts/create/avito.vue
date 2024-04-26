@@ -653,7 +653,7 @@ const startTimer = () => {
                 />
               </div>
             </div>
-            <div
+            <!-- <div
               v-if="rule.id === 1"
               class="label cursor-pointer flex gap-4 items-start justify-between"
             >
@@ -672,7 +672,7 @@ const startTimer = () => {
                   class="checkbox checkbox-primary border-base-content"
                 />
               </div>
-            </div>
+            </div> -->
             <div
               class="label cursor-pointer flex gap-4 items-start justify-around"
             >
