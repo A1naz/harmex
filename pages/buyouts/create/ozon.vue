@@ -198,10 +198,10 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Не у всех товаров указан поисковый запрос'
     }
-    if (!item.discountPrice || !item.discountRequestPrice) {
-      valid = false
-      errorMsg = 'Не у всех товаров указана скидка'
-    }
+    //if (!item.discountPrice || !item.discountRequestPrice) {
+    //valid = false
+    // errorMsg = 'Не у всех товаров указана скидка'
+    //}
     if (!item.selectedSize) item.selectedSize = 'none'
   })
   if (!valid) {
@@ -722,7 +722,8 @@ const startTimer = () => {
           </p>
           <p v-if="infoType === 'quantity'">
             <span class="font-bold"> Количество </span>
-            - Указывайте желаемое количество выкупов, но не более 1 выкупа на 1 ПВЗ в сутки
+            - Указывайте желаемое количество выкупов, но не более 1 выкупа на 1
+            ПВЗ в сутки
           </p>
           <p v-if="infoType === 'size'">
             <span class="font-bold"> Размер </span>

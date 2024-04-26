@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
   const templateTitle = title.length > 0 ? title : `Шаблон #${templateUuid}`
   const body = await readBody(event)
   const products: any = body
-
+  
   await BuyoutTemplate.create({
     uuid: templateUuid,
     user: user._id,

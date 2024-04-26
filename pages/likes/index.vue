@@ -207,7 +207,10 @@ async function selectMP(value: any) {
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
+          :links="[
+            { title: 'Товар/бренд', slot: '/productlikes', query: '' },
+            { title: 'Вопрос', slot: '/questionlikes', query: '' },
+          ]"
           @change-value="selectFilterDate"
         />
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
@@ -254,7 +257,10 @@ async function selectMP(value: any) {
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
+          :links="[
+            { title: 'Товар/бренд', slot: '/productlikes', query: '' },
+            { title: 'Вопрос', slot: '/questionlikes', query: '' },
+          ]"
           @change-value="selectFilterDate"
         />
 
@@ -358,13 +364,19 @@ async function selectMP(value: any) {
             <td
               class="text-center border-r border-primary border-opacity-5 text-primary"
             >
-            <a
-              :href="(mpStore.selectedMP === 'wildberries') ? `https://www.wildberries.ru/catalog/${item.article}/detail.aspx` : (mpStore.selectedMP === 'avito' ? `https://www.avito.ru/${item.article}` : `https://www.ozon.ru/product/${item.article}`)"
-              target="_blank"
-              class="text-primary link link-hover"
-            >
-              {{ item.article }}
-            </a>
+              <a
+                :href="
+                  mpStore.selectedMP === 'wildberries'
+                    ? `https://www.wildberries.ru/catalog/${item.article}/detail.aspx`
+                    : mpStore.selectedMP === 'avito'
+                    ? `https://www.avito.ru/${item.article}`
+                    : `https://www.ozon.ru/product/${item.article}`
+                "
+                target="_blank"
+                class="text-primary link link-hover"
+              >
+                {{ item.article }}
+              </a>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
               <div class="flex flex-col">
