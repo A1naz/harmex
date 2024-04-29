@@ -20,6 +20,7 @@ export default eventHandler(async (event) => {
     {
         documentType: DocuemntEnum.User,
         documentId: user.uuid,
+        comment: `${user.username}`
     })
 
   return {
