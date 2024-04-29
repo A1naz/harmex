@@ -78,6 +78,7 @@ export default eventHandler(async (event) => {
       query: cart.query,
       createdDate: cart.createdDate,
       endedDate: cart.endedDate || null,
+      uuid: cart.uuid,
     }
   })
   return format

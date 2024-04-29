@@ -1,5 +1,6 @@
 import { Like } from '~~/server/lib/models/wildberries/Like'
 import { findImage } from '~~/server/lib/helpers'
+import { v4 as uuid } from 'uuid'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
@@ -36,6 +37,7 @@ export default eventHandler(async (event) => {
     total: likes + dislikes,
     image,
     createdDate: new Date(),
+    uuid: uuid(),
   })
   if (dates) {
     if (userTimezoneOffsetHours && userOffsetMinutes) {
@@ -55,7 +57,7 @@ export default eventHandler(async (event) => {
   await userLog(event,
     {
         documentType: DocuemntEnum.Like,
-        documentId: res._id,
+        documentId: res.uuid,
     })
 
   return {

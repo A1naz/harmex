@@ -1,6 +1,7 @@
 // import { ProductLike } from '~/server/lib/models/ozon/ProductLike'
 import { ProductLike } from '~/server/lib/models/avito/ProductLike'
 import { DocuemntEnum } from '~/data/enums'
+import { v4 as uuid } from 'uuid'
 
 export default eventHandler(async (event) => {
 
@@ -24,6 +25,7 @@ export default eventHandler(async (event) => {
     image,
     name,
     createdDate: new Date(),
+    uuid: uuid(),
   })
   const res = await created.save()
 

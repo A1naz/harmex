@@ -1,4 +1,5 @@
 import { Cart } from '~~/server/lib/models/wildberries/Cart'
+import { v4 as uuid } from 'uuid'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
@@ -26,13 +27,14 @@ export default eventHandler(async (event) => {
     image,
     name,
     createdDate: new Date(),
+    uuid: uuid(),
   })
   const res = await created.save()
 
   await userLog(event,
     {
         documentType: DocuemntEnum.Cart,
-        documentId: res._id.toString(),
+        documentId: res.uuid,
     })
 
   return {

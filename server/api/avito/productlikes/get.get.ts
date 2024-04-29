@@ -63,6 +63,7 @@ export default eventHandler(async (event) => {
       image: like.image,
       createdDate: like.createdDate,
       endedDate: like.endedDate || null,
+      uuid: like.uuid
     }
   })
   return format

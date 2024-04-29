@@ -1,6 +1,7 @@
 import { QuestionLike } from '~/server/lib/models/ozon/QuestionLikes'
 import { findImage } from '~~/server/lib/helpers'
 import { DocuemntEnum } from '~/data/enums'
+import { v4 as uuid } from 'uuid'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -47,6 +48,7 @@ export default eventHandler(async (event) => {
     total: likes + dislikes,
     image: 'null',
     createdDate: new Date(),
+    uuid: uuid(),
   })
 
   

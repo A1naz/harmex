@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
 
   const { item } = await readBody(event)
  
-  const cart = await Cart.findOne({ user, _id: item.id })
+  const cart = await Cart.findOne({ user, uuid: item.uuid })
   if (!cart) {
     throw createError({
       statusCode: 400,
@@ -17,6 +17,12 @@ export default eventHandler(async (event) => {
   }
   cart.status = 'created';
   const res = await cart.save();
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Cart,
+        documentId: item.uuid,
+        comment: 'Возобновлен документ'
+    })
   return {
     status: 'ok',
   }

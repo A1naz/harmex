@@ -2,6 +2,7 @@ import { Delivery } from '@/server/lib/models/avito/Delivery'
 import { Buyout } from '@/server/lib/models/avito/Buyout'
 import { Review } from '@/server/lib/models/avito/Review'
 import { DocuemntEnum } from '~/data/enums'
+import { v4 as uuid } from 'uuid'
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
@@ -65,6 +66,7 @@ export default eventHandler(async (event) => {
     images,
     status: 'waiting',
     recipientphone: delivery.recipientphone,
+    uuid: uuid(),
   })
   const res = await review.save()
   delivery.reviewed = true

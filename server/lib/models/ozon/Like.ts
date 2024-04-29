@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { OzonConnection } from '~/server/connections/ozon'
+import { v4 as uuid } from 'uuid'
 
 const LikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -20,6 +21,7 @@ const LikeSchema = new Schema({
   dateStart: { type: Date },
   dateEnd: { type: Date },
   period: { type: String },
+  uuid: { type: String, default: uuid() },
 })
 
 // LikeSchema.pre('save', function (next) {

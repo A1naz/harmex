@@ -1,4 +1,5 @@
 import { Question } from '~/server/lib/models/ozon/Question'
+import { v4 as uuid } from 'uuid'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
@@ -25,13 +26,14 @@ export default eventHandler(async (event) => {
     text: questionText,
     image,
     anonim: anonim,
+    uuid: uuid(),
   })
   const res = await created.save()
 
   await userLog(event,
     {
         documentType: DocuemntEnum.Question,
-        documentId: res._id,
+        documentId: res.uuid,
     })
 
   return {

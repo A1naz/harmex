@@ -16,6 +16,12 @@ export default eventHandler(async (event) => {
   }
   review.status = 'waiting';
   const res = await review.save();
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Review,
+        documentId: item.uuid,
+        comment: 'Возобновлен документ'
+    })
   return {
     status: 'ok',
   }
