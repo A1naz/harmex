@@ -53,7 +53,7 @@ export default eventHandler(async (event) => {
   const res = await created.save()
   
   await userLog(event, {
-    documentType: DocuemntEnum.Like,
+    documentType: DocuemntEnum.QuestionLikes,
     documentId: res._id,
   })
 
