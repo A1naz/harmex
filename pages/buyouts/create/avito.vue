@@ -360,12 +360,13 @@ const startTimer = () => {
   timerRunning.value = true
 
   interval = setInterval(() => {
-    if (timer.value > 0) {
+    if (timer.value > 0 && loading.value) {
       timer.value--
     } else {
       clearInterval(interval)
       timerRunning.value = false
       timerFinished.value = true
+      timer.value = 40
     }
   }, 1000)
 }
