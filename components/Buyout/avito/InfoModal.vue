@@ -63,7 +63,11 @@ onKeyStroke('Escape', (e) => {
           >
           <div class="flex gap-2 mb-1">
             <span class="text-sm text-gray-500"
-              >Создан: {{ defaultDate(info.createdAt) }}</span
+              >Создан: {{ 
+                $dayjs(info.createdAt).locale('ru').format(
+                  'D MMMM YYYY HH:mm'
+                ) }}
+            </span
             >
             <div
               :class="{
@@ -214,12 +218,21 @@ onKeyStroke('Escape', (e) => {
                 }"
                 class="rounded-lg p-2"
               >
-                <span class="text-sm flex flex-col justify-start">
+              <span class="text-sm flex flex-col justify-start">
                   <div class="text-sm">
-                    {{ `С ${defaultDate(info.dateStart)}` }}
+                    {{ `С ${
+                      $dayjs(info.dateStart).locale('ru').format(
+                        'D MMMM YYYY HH:mm'
+                      ) 
+                    }` }}
+                    
                   </div>
                   <div class="text-sm">
-                    {{ `По ${defaultDate(info.dateEnd)}` }}
+                    {{ `По ${
+                      $dayjs(info.dateEnd).locale('ru').format(
+                        'D MMMM YYYY HH:mm'
+                      ) 
+                    }` }}
                   </div>
                 </span>
               </div>

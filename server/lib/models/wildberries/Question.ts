@@ -14,10 +14,10 @@ const QuestionSchema = new Schema({
   uuid: { type: String, default: uuid() },
 })
 
-QuestionSchema.pre('save', function (next) {
-  // Добавляем 3 часа к полю "date"
-  this.createdDate.setHours(this.createdDate.getHours() + 3)
-  next()
-})
+// QuestionSchema.pre('save', function (next) {
+//   // Добавляем 3 часа к полю "date"
+//   this.createdDate.setHours(this.createdDate.getHours() + 3)
+//   next()
+// })
 
 export const Question = wildberriesConnection.model('Question', QuestionSchema)

@@ -29,6 +29,7 @@ export default eventHandler(async (event) => {
     createdDate: new Date(),
     uuid: uuid(),
   })
+  
   const res = await created.save()
 
   await userLog(event,

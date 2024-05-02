@@ -10,7 +10,6 @@ export default eventHandler(async (event) => {
 
   const params = getQuery(event)
   const { userTimezoneOffsetHours, userOffsetMinutes } = params
-
   const body = await readBody(event)
   const article = body.article
   const reviews: any[] = body.reviews
@@ -53,7 +52,6 @@ export default eventHandler(async (event) => {
     }
   }
   const res = await created.save()
-
   await userLog(event,
     {
         documentType: DocuemntEnum.Like,

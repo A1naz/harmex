@@ -452,7 +452,12 @@ function changeFilter(e: any) {
                 <div
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
-                  {{ defaultDateShort(item.createdDate) }}
+                  <!-- {{ defaultDateShort(item.createdDate) }} -->
+                  {{ 
+                    $dayjs(item.createdDate).format(
+                      'DD.MM.YYYY'
+                    ) 
+                  }}
                 </div>
               </td>
               <td class="text-center border-opacity-5">
@@ -460,7 +465,12 @@ function changeFilter(e: any) {
                   v-if="item.publishDate"
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
-                  {{ defaultDateShort(item.publishDate) }}
+                  <!-- {{ defaultDateShort(item.publishDate) }} -->
+                  {{ 
+                    $dayjs(item.publishDate).format(
+                      'DD.MM.YYYY'
+                    ) 
+                  }}
                 </div>
               </td>
             </tr>
