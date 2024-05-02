@@ -22,7 +22,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
+const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen', 'removeDiscount'])
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
@@ -217,7 +217,7 @@ const productQuantityModel = computed({
       </div>
     </td>
 
-    <td class="border-r border-base w-xs max-w-[100px]">
+    <td class="border-r border-base w-xs max-w-[100px] px-0.5">
       <div class="flex items-center mt-2 w-xs">
         <div class="w-full">
           <BuyoutDateRangePicker
@@ -288,18 +288,26 @@ const productQuantityModel = computed({
     </td>
 
     <td class="w-[80px] border-r border-base">
-      <button
-        class="w-8 btn btn-ghost btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary"
-        @click="props.openDiscount(index, product.price)"
-      >
-        {{
-          !product.discount
-            ? '%'
-            : product.discount === 0
-            ? '%'
-            : product.discount + '%'
-        }}
-      </button>
+      <div class="flex ">
+          <button
+            class="w-fit btn btn-ghost border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            @click="props.openDiscount(index, product.price)"
+            :class="{
+              'rounded-r-none': product.discountPrice && product.discountPrice !== product.price
+            }"
+          >
+            {{
+              product.discountPrice && product.discountPrice !== product.price ? product.discountPrice+' ₽' : 'Указать скидку'
+            }}
+          </button>
+          <button
+            v-if="product.discountPrice && product.discountPrice !== product.price"
+            class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1  btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            @click="$emit('removeDiscount', index)"
+          >
+            <Icon name="ep:close-bold" size="12" />
+          </button>
+        </div>
     </td>
     <td class="border-r border-base w-[90px]">
       <div class="flex justify-end">
