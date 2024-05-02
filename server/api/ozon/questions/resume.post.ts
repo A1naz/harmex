@@ -7,7 +7,7 @@ export default eventHandler(async (event) => {
     if (!user) return sendRedirect(event, '/auth', 302)
 
   const { item } = await readBody(event)
-  const question = await Question.findOne({ user, _id: item.id })
+  const question = await Question.findOne({ user, uuid: item.uuid })
   if (!question) {
     throw createError({
       statusCode: 400,
@@ -16,6 +16,12 @@ export default eventHandler(async (event) => {
   }
   question.status = 'created';
   const res = await question.save();
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.Question,
+        documentId: item.uuid,
+        comment: 'Возобновлен документ'
+    })
   return {
     status: 'ok',
   }

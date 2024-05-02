@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { wildberriesConnection } from '~/server/connections/wildberries'
+import { v4 as uuid } from 'uuid'
 
 const ReviewSchema = new Schema({
   article: { type: Number, required: true },
@@ -29,6 +30,7 @@ const ReviewSchema = new Schema({
   originalVideoName: { type: String, required: false },
   isVideoEnabled: { type: Boolean, required: false },
   createdAt: { type: Date, required: false, default: Date.now },
+  uuid: { type: String, default: uuid() },
 })
 
 export const Review = wildberriesConnection.model('Review', ReviewSchema)

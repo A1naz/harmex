@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { OzonConnection } from '~/server/connections/ozon'
+import { v4 as uuid } from 'uuid'
 
 const ProductLikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -13,6 +14,7 @@ const ProductLikeSchema = new Schema({
   endedDate: { type: Date, default: null },
   progress: { type: Number, default: 0 },
   amount: { type: Number, required: true },
+  uuid: { type: String, default: uuid() },
 })
 
 // ProductLikeSchema.pre('save', function (next) {

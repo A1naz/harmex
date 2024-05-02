@@ -65,6 +65,7 @@ onKeyStroke('Escape', (e) => {
       </div>
 
       <div class="overflow-x-auto overflow-y-auto">
+        
         <!-- <table class="table table-sm">
           <thead>
             <tr class="bg-primary bg-opacity-5">

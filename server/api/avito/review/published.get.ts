@@ -55,6 +55,7 @@ export default eventHandler(async (event) => {
                 images: review.images,
                 date: review.date,
                 status: review.status,
+                uuid: review.uuid,
             }
 
             const delivery = await Delivery.findOne({ _id: review.delivery })
