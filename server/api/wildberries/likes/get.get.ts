@@ -1,9 +1,8 @@
 import { Like } from '~~/server/lib/models/wildberries/Like'
 
 export default eventHandler(async (event) => {
-
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
   const { dateFilter } = getQuery(event)
 
@@ -17,35 +16,37 @@ export default eventHandler(async (event) => {
     case 'completed':
       filter = await Like.find({
         user,
-        $or: [
-          { status: { $regex: dateFilter, $options: 'i' } },
-        ],
+        $or: [{ status: { $regex: dateFilter, $options: 'i' } }],
       })
       break
     case 'nofunds':
-    filter = await Like.find({
-      user,
-      $or: [
-        { status: { $regex: dateFilter, $options: 'i' } },
-      ],
-    })
-    break
+      filter = await Like.find({
+        user,
+        $or: [{ status: { $regex: dateFilter, $options: 'i' } }],
+      })
+      break
     case 'work':
       filter = await Like.find({
         user,
-        $or: [
-          { status: { $regex: dateFilter, $options: 'i' } },
-        ],
+        $or: [{ status: { $regex: dateFilter, $options: 'i' } }],
       })
       break
     case 'today':
-      filter = likes.filter(item => new Date(item.createdDate) > today)
+      filter = likes.filter((item) => new Date(item.createdDate) > today)
       break
     case '3days':
-      filter = likes.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 3))
+      filter = likes.filter(
+        (item) =>
+          new Date(item.createdDate) >
+          new Date(Date.now() - 1000 * 60 * 60 * 24 * 3)
+      )
       break
     case '7days':
-      filter = likes.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 7))
+      filter = likes.filter(
+        (item) =>
+          new Date(item.createdDate) >
+          new Date(Date.now() - 1000 * 60 * 60 * 24 * 7)
+      )
       break
   }
 
@@ -64,6 +65,7 @@ export default eventHandler(async (event) => {
       dateStart: review.dateStart,
       dateEnd: review.dateEnd,
       uuid: review.uuid,
+      period: review.period,
     }
   })
   return format

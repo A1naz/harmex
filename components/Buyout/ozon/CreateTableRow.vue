@@ -290,7 +290,7 @@ const productQuantityModel = computed({
     <td class="w-[80px] border-r border-base">
       <div class="flex ">
           <button
-            class="w-fit btn btn-ghost border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
             @click="props.openDiscount(index, product.price)"
             :class="{
               'rounded-r-none': product.discountPrice && product.discountPrice !== product.price
