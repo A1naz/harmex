@@ -76,6 +76,7 @@ export default eventHandler(async (event) => {
       createdDate: question.createdDate,
       text: question.text,
       publishDate: question.publishDate,
+      uuid: question.uuid,
     }
   })
   return format

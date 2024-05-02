@@ -14,7 +14,7 @@ const UserLogsSchema = new Schema<IUserLogsSchema>({
     mp: { type: String, required: false },
     createdAt: { type: Date, default: ()=>{ 
         const nowDate = new Date()
-        nowDate.setHours(nowDate.getHours() + 3)
+        // nowDate.setHours(nowDate.getHours() + 3)
         return nowDate
     } }
 })

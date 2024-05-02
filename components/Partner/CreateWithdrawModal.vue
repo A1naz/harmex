@@ -27,6 +27,7 @@ const form = reactive({
   inn: '',
   withdrawType: 'account',
 })
+const card = ref(false)
 async function createWithdraw() {
   if(!form.amount || form.amount <= 0) {
     errorAmount.value = 'Сумма не введена или меньше нуля'
@@ -40,18 +41,26 @@ async function createWithdraw() {
   if(!form.fio) {
     errorFio.value = 'ФИО не введено '
   } else errorFio.value = ''
-  if(!form.inn) {
+  if(!form.inn && form.withdrawType === 'card') {
     errorInn.value = 'ИНН не введен'
   } else errorInn.value = ''
   if (form.withdrawType === 'card') {
     if (!form.amount || !form.card || !form.fio) return
   }
 
+  
+  if(form.withdrawType === 'organization') {
+    form.withdrawType = 'card'
+    card.value = true
+  }
   const { data, error } = await useFetch('/api/partner/createWithdraw', {
     method: 'POST',
     body: form,
   })
-
+  if(card.value) {
+    card.value = false
+    form.withdrawType = 'organization'
+  }
   if (error.value)
     notify({
       type: 'error',
@@ -77,6 +86,7 @@ async function createWithdraw() {
       })
     }
   }
+  
 }
 const now = useNow()
 onKeyStroke('Escape', (e) => {
@@ -168,7 +178,7 @@ const isCardFormDisabled = computed(() => {
             />
             <span class="text-red-500 self-start">{{ errorAmount }}</span>
           </div>
-          <div v-if="form.withdrawType !== 'account' && form.withdrawType !== 'card' ">
+          <div v-if="form.withdrawType !== 'account' && form.withdrawType !== 'card' || card ">
             <label class="label p-1">
               <span class="label-text text-gray-500 font-semibold">Наименование ИП/ООО</span>
             </label>
@@ -182,7 +192,7 @@ const isCardFormDisabled = computed(() => {
             />
             <span class="text-red-500 self-start">{{ errorOrgName  }}</span>
           </div>
-          <div v-if="form.withdrawType !== 'account' && form.withdrawType !== 'organization' ">
+          <div v-if="form.withdrawType !== 'account' && form.withdrawType !== 'organization' && !card">
             <label class="label p-1">
               <span class="label-text text-gray-500 font-semibold">ИНН</span>
             </label>

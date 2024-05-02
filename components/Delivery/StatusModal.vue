@@ -37,7 +37,11 @@ onKeyStroke('Escape', (e) => {
                   {{ status.status }}
                 </div>
                 <div class="text-sm">
-                  {{ defaultDate(status.date) }}
+                  {{ 
+                    $dayjs(status.date).locale('ru').format(
+                      'D MMMM YYYY HH:mm'
+                    ) 
+                  }}
                 </div>
               </div>
             </li>

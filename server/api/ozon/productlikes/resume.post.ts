@@ -16,6 +16,12 @@ export default eventHandler(async (event) => {
   }
   productLike.status = 'work';
   const res = await productLike.save();
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.ProductsLike,
+        documentId: item.uuid ,
+        comment: 'Возобновлен документ'
+    })
   return {
     status: 'ok',
   }

@@ -2,6 +2,8 @@ import { Delivery } from '@/server/lib/models/ozon/Delivery'
 import { Buyout } from '@/server/lib/models/ozon/Buyout'
 import { Review } from '@/server/lib/models/ozon/Review'
 import { DocuemntEnum } from '~/data/enums'
+import { v4 as uuid } from 'uuid'
+
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
@@ -80,6 +82,7 @@ export default eventHandler(async (event) => {
     originalVideoName: video,
     isVideoEnabled: video !== '',
     createdAt: Date.now(),
+    uuid: uuid(),
   })
 
   const res = await review.save()

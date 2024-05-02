@@ -8,20 +8,29 @@ function getHistoryType(type: string) {
     case 'buyouts':
       result = 'Выкуп'
       break
-    case 'reviews':
+    case 'review':
       result = 'Отзыв'
       break
-    case 'likes':
-      result = 'Лайк'
+    case 'likeProduct':
+      result = 'Лайк на продукт'
+      break
+    case 'likeReview':
+      result = 'Лайк на отзывы'
       break
     case 'productlikes':
       result = 'Лайк на товар / бренд'
       break
-    case 'carts':
+    case 'cart':
       result = 'Добавление в корзину'
       break
-    case 'questions':
+    case 'questionProduct':
       result = 'Вопрос'
+      break
+    case 'deliveryStorage':
+      result = 'Штраф'
+      break
+    case 'reviewRemoving':
+      result = 'Удаление отзыва'
       break
   }
   return result
@@ -30,7 +39,6 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
   const { mp } = getQuery(event)
-  console.log(mp)
 
   const { exportDates } = await readBody(event)
 
@@ -38,7 +46,7 @@ export default eventHandler(async (event) => {
   const endDate = new Date(exportDates[1])
   const history = await paymenthistory
     .find({
-      mp: mp === 'all' ? { $exists: true } : mp,
+      mp: mp === 'all' ? { $ne: false } : mp,
       user,
       dataoperation: {
         $gt: startDate,
@@ -46,6 +54,9 @@ export default eventHandler(async (event) => {
       },
     })
     .sort({ _id: -1 })
+
+  console.log(history.length)
+
   const workbook = new ExcelJS.Workbook()
   const sheet = workbook.addWorksheet('История платежей', {
     headerFooter: { firstHeader: `Всего записей: ${history.length}` },
@@ -71,7 +82,7 @@ export default eventHandler(async (event) => {
       font: { bold: true },
     },
     { header: 'МП', key: 'mp', width: 16, font: { bold: true } },
-    { header: 'Услуга', key: 'type', width: 16, font: { bold: true } },
+    { header: 'Услуга', key: 'type', width: 32, font: { bold: true } },
     { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
     {
       header: 'Основание операции',

@@ -233,7 +233,10 @@ const getStatus = computed(() => {
         <div class="flex justify-between gap-1 items-center">
           <div class="flex gap-x-3 flex-wrap">
             <span class="text-xs text-gray-500 py-1"
-              >Создан: {{ defaultDate(info.createdAt) }}
+              >Создан: {{ 
+                $dayjs(info.createdAt).locale('ru').format(
+                  'D MMMM YYYY HH:mm'
+                ) }}
             </span>
             <div
               :class="{

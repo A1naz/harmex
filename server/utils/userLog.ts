@@ -42,7 +42,7 @@ export const userLog = async (event: any, operation: UserOperation): Promise<voi
         if (operation.comment) description += ` (${operation.comment})`
 
         if (user) {
-            console.log(event.method, OperationActions.get(event.method))
+            // console.log(event.method, OperationActions.get(event.method))
             const userLog = new UserLogs<IUserLogs>({
                 userId: user._id,
                 userNick: user?.username ?? "",
@@ -53,7 +53,7 @@ export const userLog = async (event: any, operation: UserOperation): Promise<voi
                 documentId: operation.documentId,
                 mp: mp,
             })
-            console.log(userLog)
+            // console.log(userLog)
             await userLog.save()
         }
 

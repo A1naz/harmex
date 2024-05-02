@@ -3,6 +3,7 @@ import { Buyout } from '@/server/lib/models/wildberries/Buyout'
 import { Review } from '@/server/lib/models/wildberries/Review'
 import { DocuemntEnum } from '~/data/enums'
 import { log } from 'console'
+import { v4 as uuid } from 'uuid'
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
@@ -79,6 +80,7 @@ export default eventHandler(async (event) => {
     originalVideoName: video,
     isVideoEnabled: video !== '',
     createdAt: Date.now(),
+    uuid: uuid(),
   })
   const res = await review.save()
   delivery.reviewed = true

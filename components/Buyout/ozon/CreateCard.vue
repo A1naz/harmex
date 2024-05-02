@@ -32,7 +32,7 @@ function copyBuyout() {
   store.createProducts.push(JSON.parse(item))
 }
 
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
+const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen', 'removeDiscount'])
 const store = useOzonBuyoutStore()
 const startDate = ref(new Date(Date.now()))
 
@@ -335,17 +335,26 @@ const productQuantityModel = computed({
 
       <div class="flex">
         <span class="text-md text-gray-500 mr-3 my-auto">Скидка: </span>
-        <button
-          class="w-fit px-2 btn btn-ghost btn-sm btn-square text-base-content font-normal hover:text-primary"
-          @click="props.openDiscount(index, product.price)"
-        >
-          {{
-            // !product.discountPrice || !product.discountRequestPrice
-            //   ? '%'
-            //   : product.discountPrice + '/' + product.discountRequestPrice
-            product.discountPrice == product.price ? '%' : product.discountPrice + ' ₽'
-          }}
-        </button>
+        <div class="flex ">
+          <button
+            class="w-fit btn btn-ghost border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            @click="props.openDiscount(index, product.price)"
+            :class="{
+              'rounded-r-none': product.discountPrice && product.discountPrice !== product.price
+            }"
+          >
+            {{
+              product.discountPrice && product.discountPrice !== product.price ? product.discountPrice+' ₽' : 'Указать скидку'
+            }}
+          </button>
+          <button
+            v-if="product.discountPrice && product.discountPrice !== product.price"
+            class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1  btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            @click="$emit('removeDiscount', index)"
+          >
+            <Icon name="ep:close-bold" size="12" />
+          </button>
+        </div>
       </div>
       <!-- <div class="flex justify-between items-center">
         <span>Даты выкупов: </span>

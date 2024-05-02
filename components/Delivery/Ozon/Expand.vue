@@ -109,7 +109,10 @@ function daysToPenalty(statusdelivery: any[]) {
             </div>
 
             <div class="mt-2 lg:m-0 text-xs text-primary font-normal">
-              Обновлено {{ defaultDate(info.updatedAt) }}
+              Обновлено {{ 
+                $dayjs(info.updatedAt).locale('ru').format(
+                  'D MMMM YYYY HH:mm'
+                ) }}
             </div>
           </div>
         </div>

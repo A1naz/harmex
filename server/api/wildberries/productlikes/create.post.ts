@@ -1,5 +1,6 @@
 import { ProductLike } from '~~/server/lib/models/wildberries/ProductLike'
 import { DocuemntEnum } from '~/data/enums'
+import { v4 as uuid } from 'uuid'
 
 export default eventHandler(async (event) => {
 
@@ -23,13 +24,14 @@ export default eventHandler(async (event) => {
     image,
     name,
     createdDate: new Date(),
+    uuid: uuid(),
   })
   const res = await created.save()
 
   await userLog(event,
     {
         documentType: DocuemntEnum.ProductsLike,
-        documentId: res._id,
+        documentId: res.uuid,
     })
 
   return {
