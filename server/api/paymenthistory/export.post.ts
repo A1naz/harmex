@@ -39,7 +39,6 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
   const { mp } = getQuery(event)
-  console.log(mp)
 
   const { exportDates } = await readBody(event)
 

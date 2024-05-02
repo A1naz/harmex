@@ -108,7 +108,7 @@ export default eventHandler(async (event) => {
       font: { bold: true },
     },
     {
-      header: 'Дата получения',
+      header: 'Дата забора',
       key: 'receivedDate',
       width: 16,
       font: { bold: true },
