@@ -6,7 +6,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { amount, card, fio, withdrawType } = await readBody(event)
+  const { amount, card, fio, inn, orgName, withdrawType } = await readBody(event)
 
   if (withdrawType === 'card') {
     if (!amount || !card || !fio) {
@@ -40,6 +40,8 @@ export default eventHandler(async (event) => {
     details: {
       card,
       fio,
+      ...(inn && { inn }), 
+      ...(orgName && { orgName }), 
     },
   })
 

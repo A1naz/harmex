@@ -241,11 +241,11 @@ function changeFilter(e: any) {
               @click="codeInput.focus()"
             />
           </div>
-          <div
+          <!-- <div
             class="bg-primary bg-opacity-10 px-2 py-1 rounded-lg cursor-not-allowed"
           >
             XLS
-          </div>
+          </div> -->
           <!-- <ExportXls 
                 api="/api/wildberries/reports/export"
                 fileName="Отчет по выкупам MARKETMONSTR.xlsx"

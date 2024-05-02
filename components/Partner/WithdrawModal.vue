@@ -64,7 +64,7 @@ onKeyStroke('Escape', (e) => {
         </button>
       </div>
 
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto overflow-y-auto">
         <!-- <table class="table table-sm">
           <thead>
             <tr class="bg-primary bg-opacity-5">
@@ -129,7 +129,7 @@ onKeyStroke('Escape', (e) => {
             }"
           >
             <template #body="{ data }">
-              <span class="">{{ currency.format(data.amount) + ' ₽' }}</span>
+              <span class="">{{ currency.format(data.amount) }}</span>
             </template>
           </Column>
 

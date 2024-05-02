@@ -4,6 +4,7 @@ import validator from 'validator'
 import { getServerSession } from '#auth'
 import { User } from '~~/server/lib/models/User'
 import { UserRoles } from '@/data/enums'
+import { DocuemntEnum } from '~/data/enums'
 
 import MailService from '~~/server/lib/mailService.js'
 
@@ -112,12 +113,12 @@ export default eventHandler(async (event) => {
   //   return { status: 'error', error: 'Ошибка отправки письма.' }
   // }
 
-  // await userLog(event,
-  //   {
-  //       documentType: DocuemntEnum.User,
-  //       documentId: user.uuid,
-  //       comment: `Создание пользователя ${email}`
-  //   })
+  await userLog(event,
+    {
+        documentType: DocuemntEnum.User,
+        documentId: user.uuid,
+        comment: `Создание пользователя ${username}`
+    })
 
   return { status: 'ok', error: null }
 })

@@ -43,34 +43,40 @@ async function createWithdraw() {
   if(!form.inn) {
     errorInn.value = 'ИНН не введен'
   } else errorInn.value = ''
-  // if (form.withdrawType === 'card') {
-  //   if (!form.amount || !form.card || !form.fio) return
-  // }
+  if (form.withdrawType === 'card') {
+    if (!form.amount || !form.card || !form.fio) return
+  }
 
-  // const { data, error } = await useFetch('/api/partner/createWithdraw', {
-  //   method: 'POST',
-  //   body: form,
-  // })
+  const { data, error } = await useFetch('/api/partner/createWithdraw', {
+    method: 'POST',
+    body: form,
+  })
 
-  // if (error.value)
-  //   notify({
-  //     type: 'error',
-  //     title: 'Что-то пошло не так',
-  //     text: error.value?.message,
-  //   })
+  if (error.value)
+    notify({
+      type: 'error',
+      title: 'Что-то пошло не так',
+      text: error.value?.message,
+    })
 
-  // if (data.value) {
-  //   if (data.value.status === 'ok') {
-  //     notify({ type: 'success', title: 'Вывод успешно создан' })
-  //     emit('create')
-  //   } else {
-  //     notify({
-  //       type: 'error',
-  //       title: 'Что-то пошло не так',
-  //       text: data.value.message,
-  //     })
-  //   }
-  // }
+  if (data.value) {
+    if (data.value.status === 'ok') {
+      notify({ type: 'success', title: 'Вывод успешно создан' })     
+      emit('create')
+      form.amount = 0;
+      form.card = '';
+      form.fio = '';
+      form.orgName = '';
+      form.inn = '';
+      form.withdrawType = 'account';
+    } else {
+      notify({
+        type: 'error',
+        title: 'Что-то пошло не так',
+        text: data.value.message,
+      })
+    }
+  }
 }
 const now = useNow()
 onKeyStroke('Escape', (e) => {

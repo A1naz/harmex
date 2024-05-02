@@ -84,7 +84,7 @@ export default eventHandler(async (event) => {
     {
         documentType: DocuemntEnum.User,
         documentId: user.uuid,
-        comment: `Изменение данных пользователя ${email}`
+        comment: `Изменение данных пользователя ${username}`
     })
 
   return {
