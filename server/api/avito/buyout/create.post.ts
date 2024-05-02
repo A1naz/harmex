@@ -66,14 +66,22 @@ export default eventHandler(async (event) => {
         : new Date(product.dateRange[1])
 
       if (!product.purchaseSoon) {
-        date1.setHours(date1.getHours() + Number(userTimezoneOffsetHours))
-        date1.setMinutes(date1.getMinutes() + Number(userOffsetMinutes))
+        date1.setHours(date1.getHours() 
+        // + Number(userTimezoneOffsetHours)
+        )
+        date1.setMinutes(date1.getMinutes() 
+        // + Number(userOffsetMinutes)
+        )
 
-        date2.setHours(date2.getHours() + Number(userTimezoneOffsetHours))
-        date2.setMinutes(date2.getMinutes() + Number(userOffsetMinutes))
+        date2.setHours(date2.getHours()
+        //  + Number(userTimezoneOffsetHours)
+        )
+        date2.setMinutes(date2.getMinutes()
+        //  + Number(userOffsetMinutes)
+        )
       } else {
-        date1.setHours(date1.getHours() + 3)
-        date2.setHours(date2.getHours() + 3)
+        date1.setHours(date1.getHours())
+        date2.setHours(date2.getHours())
       }
 
       product.dateRange = [date1, date2]

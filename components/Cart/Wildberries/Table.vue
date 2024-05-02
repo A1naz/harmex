@@ -124,7 +124,11 @@ const removeCart = (index: number) => {
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ defaultDate(item.createdDate) }}
+                {{ 
+                  $dayjs(item.createdDate).locale('ru').format(
+                    'D MMMM YYYY HH:mm'
+                  )
+                }}
               </div>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
@@ -132,7 +136,11 @@ const removeCart = (index: number) => {
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-              {{ defaultDate(item.endedDate) }}
+              {{ 
+                $dayjs(item.endedDate).locale('ru').format(
+                  'D MMMM YYYY HH:mm'
+                ) 
+              }}
               </div>
               <div v-else>
                 Нет

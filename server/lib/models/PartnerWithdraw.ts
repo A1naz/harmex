@@ -11,10 +11,10 @@ const PartnerWithdrawModel = new Schema({
   details: { type: Object },
 })
 
-PartnerWithdrawModel.pre('save', function (next) {
-  // Добавляем 3 часа к полю "date"
-  this.date.setHours(this.date.getHours() + 3);
-  next();
-});
+// PartnerWithdrawModel.pre('save', function (next) {
+//   // Добавляем 3 часа к полю "date"
+//   this.date.setHours(this.date.getHours() + 3);
+//   next();
+// });
 
 export const PartnerWithdraw = model('PartnerWithdraw', PartnerWithdrawModel)

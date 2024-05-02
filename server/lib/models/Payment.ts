@@ -17,11 +17,11 @@ const PaymentSchema = new Schema({
   type: { type: Number, required: true },
 })
 
-PaymentSchema.pre('save', function (next) {
-  // Добавляем 3 часа к полю "date"
-  this.date.setHours(this.date.getHours() + 3)
-  next()
-})
+// PaymentSchema.pre('save', function (next) {
+//   // Добавляем 3 часа к полю "date"
+//   this.date.setHours(this.date.getHours() + 3)
+//   next()
+// })
 
 
 export const Payment = model('Payment', PaymentSchema)
