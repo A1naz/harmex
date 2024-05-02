@@ -167,7 +167,7 @@ function convertToMoscowTime(dateString: any): Date {
                     <div class="relative w-full  lg:p-2 rounded-lg mt-2 bg-base-200 text-gray-500">
                         <div class="absolute left-3 top-1.5 lg:left-14 lg:top-3.5 text-sm">
                         {{ publishDate <= now ? 'Опубликовать сейчас'
-                            : $dayjs(convertToMoscowTime(publishDate)).format('DD.MM.YYYY HH:mm') }}
+                            : $dayjs(publishDate).format('DD.MM.YYYY HH:mm') }}
                         </div>
                         <div class="w-60 lg:opacity-0 cursor-pointer ml-auto" style="z-index: 9999999">
                         <DatePicker timezone="Europe/Moscow" v-model="publishDate" class="w-40" />

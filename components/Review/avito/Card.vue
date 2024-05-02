@@ -91,7 +91,10 @@ function openBuyout() {
           </div>
           <div class="flex justify-between flex-wrap gap-2 items-center mt-2 mb-2">
             <div class="lg:m-0 text-xs bg-primary bg-opacity-20 border-none text-base-content rounded-md px-4 py-1.5">
-              Обновлено {{ defaultDate(updatedAt) }}
+              Обновлено 
+              {{ $dayjs(updatedAt).locale('ru').format(
+                        'D MMMM YYYY HH:mm'
+                        ) }}
             </div>
           </div>
         <div class="flex justify-between flex-wrap gap-2 items-center mt-1">

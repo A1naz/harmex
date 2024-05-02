@@ -27,6 +27,7 @@ export default eventHandler(async (event) => {
     name,
     createdDate: new Date(),
   })
+  
   const res = await created.save()
 
   await userLog(event,

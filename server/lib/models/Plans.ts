@@ -10,10 +10,10 @@ const PlanSchema = new Schema({
     tariff: { type: Tariff.schema, required: true }
 })
 
-PlanSchema.pre('save', function (next) {
-    // Добавляем 3 часа к полю "date"
-    this.createdAt.setHours(this.createdAt.getHours() + 3);
-    next();
-  });
+// PlanSchema.pre('save', function (next) {
+//     // Добавляем 3 часа к полю "date"
+//     this.createdAt.setHours(this.createdAt.getHours() + 3);
+//     next();
+//   });
 
 export const Plans = model<IPlansSchema>('Plans', PlanSchema)

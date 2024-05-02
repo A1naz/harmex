@@ -614,7 +614,7 @@ function convertToMoscowTime(dateString: any): Date {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : $dayjs(convertToMoscowTime(form.date)).format(
+                  : $dayjs(form.date).format(
                       'DD.MM.YYYY HH:mm'
                     )
               }}

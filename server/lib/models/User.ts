@@ -76,10 +76,10 @@ const UserSchema = new Schema<IUserSchema>({
   },
 })
 
-UserSchema.pre('save', function (next) {
-  // Добавляем 3 часа к полю "date"
-  this.registrationDate.setHours(this.registrationDate.getHours() + 3)
-  next()
-})
+// UserSchema.pre('save', function (next) {
+//   // Добавляем 3 часа к полю "date"
+//   this.registrationDate.setHours(this.registrationDate.getHours() + 3)
+//   next()
+// })
 
 export const User = model<IUserSchema>('User', UserSchema)

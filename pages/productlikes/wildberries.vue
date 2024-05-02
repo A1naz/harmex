@@ -500,7 +500,10 @@ const updateSearchType = (filter: any) => {
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ defaultDateShort(item.createdDate) }}
+                
+                {{ $dayjs(item.createdDate).format(
+                      'DD.MM.YYYY'
+                    ) }}
               </div>
             </td>
             <td
@@ -511,7 +514,9 @@ const updateSearchType = (filter: any) => {
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ defaultDateShort(item.endedDate) }}
+                {{ $dayjs(item.endedDate).format(
+                      'DD.MM.YYYY'
+                    ) }}
               </div>
             </td>
           </tr>

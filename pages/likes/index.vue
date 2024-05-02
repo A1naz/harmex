@@ -409,7 +409,9 @@ async function selectMP(value: any) {
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ defaultDateShort(item.createdDate) }}
+                {{ $dayjs(item.createdDate).format(
+                      'DD.MM.YYYY'
+                    ) }}
               </div>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
@@ -417,7 +419,9 @@ async function selectMP(value: any) {
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ defaultDateShort(item.endedDate) }}
+                {{ $dayjs(item.endedDate).format(
+                      'DD.MM.YYYY'
+                    ) }}
               </div>
             </td>
             <td

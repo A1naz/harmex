@@ -40,7 +40,6 @@ function handleDate(modelData: any) {
       :min-date="startDate"
       :prevent-min-max-navigation="true"
       :dark="colorMode.value === 'dark'"
-      :timezone="'Europe/Moscow'"
       cancel-text=""
       select-text="Сохранить"
       @update:model-value="handleDate"
