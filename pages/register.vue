@@ -283,12 +283,13 @@ const startTimer = () => {
   timerRunning.value = true
   timerVisible.value = true
   interval = setInterval(() => {
-    if (timer.value > 0) {
+    if (timer.value > 0 ) {
       timer.value--
     } else {
       clearInterval(interval)
       timerRunning.value = false
       timerFinished.value = true
+      timer.value = 60
     }
   }, 1000)
 }
