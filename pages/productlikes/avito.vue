@@ -412,15 +412,17 @@ const updateSearchType = (filter: any) => {
                 style="width: 28px; height: 36px; border-radius: 4px"
                 class="mx-auto"
               >
-                <div class="dropdown dropdown-hover">
+              <div v-if="item.image !== ''" class="dropdown dropdown-hover">
                   <label tabindex="0">
-                    <nuxt-img
-                      class="rounded-lg z-0"
-                      alt=""
-                      loading="lazy"
-                      fit="fill"
-                      :src="item.image"
-                    />
+                    
+                      <nuxt-img
+                        class="rounded-lg z-0"
+                        alt=""
+                        loading="lazy"
+                        fit="fill"
+                        :src="item.image"
+                      />
+                    
                   </label>
                   <ul
                     tabindex="0"
@@ -434,6 +436,7 @@ const updateSearchType = (filter: any) => {
                     />
                   </ul>
                 </div>
+                <div v-else class="text-center">no image</div>
               </div>
             </td>
             <td
