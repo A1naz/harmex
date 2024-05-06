@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const store = useMainStore()
+const config = useRuntimeConfig()
 const props = defineProps({
   info: {
     type: Object,
@@ -13,13 +13,20 @@ const props = defineProps({
     default: {},
   },
 })
-const theme = useColorMode()
 </script>
 
 <template>
   <div class="card xl:w-[265px] bg-base-100 shadow-xl">
     <figure>
-      <nuxt-img class="px-4 pt-4" :src="`/img/mp/${(info?.value.includes('create') ? (info?.value).slice((info?.value).indexOf('create')) : (info?.value))}.png`" alt="Shoes" />
+      <NuxtImg
+        lazy
+        class="px-4 pt-4"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/mp/${info?.value.replace(
+          'create/',
+          ''
+        )}.png`"
+        alt="Shoes"
+      />
     </figure>
     <div class="card-body -my-6 pl-4">
       <h2 class="card-title text-primary">{{ info?.title }}</h2>
@@ -29,7 +36,7 @@ const theme = useColorMode()
       </div>
       <div class="flex justify-center mb-2">
         <button
-        v-if="info?.other"
+          v-if="info?.other"
           :disabled="info?.awaiting"
           class="btn btn-primary w-full rounded-xl text-[19px] font-normal ml-4 border-none hover:bg-primary bg-base-300 hover:text-base-100 text-neutral dark:bg-primary dark:text-gray-100"
           @click="
