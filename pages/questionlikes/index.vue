@@ -179,7 +179,11 @@ const updateSearchType = (filter: any) => {
 async function selectMP(value: any) {
     selectedMP.value = value.value
     mpStore.setSelectedMP(value.value)
-    getLikes()
+    if(value.value === 'ozon'){
+        getLikes()
+    }else{
+      navigateTo('/productlikes/'+value.value)
+    }
 }
 
 const links = computed(() => {

@@ -28,6 +28,20 @@ export const useMPStore = defineStore('mp', {
       { title: 'Лайк на товар/бренд', value: '/productlikes/create/ozon' },
       { title: 'Лайк на вопрос', value: '/questionLikes/create/ozon' },
     ],
+    page: [
+      {
+        mp: 'ozon',
+        tabs: ['productLikes', 'likes'],
+      },
+      {
+        mp: 'wildberries',
+        tabs: ['productLikes', 'likes'],
+      },
+      {
+        mp: 'avito',
+        tabs: ['buyouts', 'delivery',],
+      },
+    ]
   }),
 
   actions: {
