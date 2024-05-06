@@ -17,19 +17,19 @@ export default eventHandler(async (event) => {
       filter = await Like.find({
         user,
         $or: [{ status: { $regex: dateFilter, $options: 'i' } }],
-      })
+      }).sort({ _id: -1 })
       break
     case 'nofunds':
       filter = await Like.find({
         user,
         $or: [{ status: { $regex: dateFilter, $options: 'i' } }],
-      })
+      }).sort({ _id: -1 })
       break
     case 'work':
       filter = await Like.find({
         user,
         $or: [{ status: { $regex: dateFilter, $options: 'i' } }],
-      })
+      }).sort({ _id: -1 })
       break
     case 'today':
       filter = likes.filter((item) => new Date(item.createdDate) > today)
