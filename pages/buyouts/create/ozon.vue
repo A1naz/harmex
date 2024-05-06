@@ -381,7 +381,6 @@ const startTimer = () => {
       clearInterval(interval)
       timerRunning.value = false
       timerFinished.value = true
-      timer.value = 40
     }
   }, 1000)
 }
