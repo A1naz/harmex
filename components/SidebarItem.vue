@@ -38,8 +38,8 @@ const mpHref = computed(() => {
       : props.href + '/wildberries?status=available'
   } else if (props.href == '/delivery') {
     return mpStore.selectedMP
-      ? props.href + '/' + mpStore.selectedMP + '?status=all'
-      : props.href + '/wildberries?status=all'
+      ? props.href + '/' + mpStore.selectedMP + ''
+      : props.href + '/wildberries'
   } else {
     return props.href
   }

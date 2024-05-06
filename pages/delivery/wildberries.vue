@@ -365,7 +365,7 @@ function changeFilter(e: any) {
               </ul>
             </div> -->
         <CustomSelect
-          :class="'bg-base-300'"
+          :class="'bg-[#f4f4f4]'"
           :tabs="[
             { title: 'Артикул', value: 'article' },
             { title: 'ID выкупа', value: 'uuid' },
@@ -463,7 +463,7 @@ function changeFilter(e: any) {
             <div />
             <div class="flex gap-4 items-center">
               <CustomSelect
-                :class="'bg-base-300'"
+                :class="'bg-[#f4f4f4]'"
                 :tabs="[
                   { title: 'Артикул', value: 'article' },
                   { title: 'ID выкупа', value: 'uuid' },
@@ -530,7 +530,7 @@ function changeFilter(e: any) {
         </div>
       </div>
     </div>
-
+    {{ deliveries + 'fsdfsdfsd' }}
     <!-- <div v-if="deliveries?.length" class="" >
       <TransitionSlide group tag="ul" class="flex md:hidden flex-col gap-3">
         <li v-for="(delivery, index) of deliveries" :key="index" class="overflow-visible z-0">

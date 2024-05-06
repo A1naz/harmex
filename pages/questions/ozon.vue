@@ -287,7 +287,7 @@ function changeFilter(e: any) {
         />
 
         <CustomSelect
-          :class="'bg-base-300 sm:min-w-[120px]'"
+          :class="'bg-[#f4f4f4] sm:min-w-[120px]'"
           :tabs="[
             { title: 'За все время', value: 'all' },
             { title: 'Сегодня', value: 'today' },
@@ -298,7 +298,7 @@ function changeFilter(e: any) {
         />
 
         <CustomSelect
-          :class="'bg-base-300'"
+          :class="'bg-[#f4f4f4]'"
           :tabs="[{ title: 'Артикул', value: 'article' }]"
           @change-value="updateSearchType"
         />

@@ -469,7 +469,7 @@ const customLinks = filters.map((filter) => ({
             />
 
             <CustomSelect
-              :class="'bg-base-300'"
+              :class="'bg-[#f4f4f4]'"
               class="lg:hidden"
               :tabs="[
                 { title: 'За все время', value: 'all' },
@@ -483,7 +483,7 @@ const customLinks = filters.map((filter) => ({
 
             <div class="flex gap-3 items-center lg:hidden">
               <CustomSelect
-                :class="'max-w-[80px] bg-base-300'"
+                :class="'max-w-[80px] bg-[#f4f4f4]'"
                 :tabs="[
                   { title: 'Артикул', value: 'article' },
                   { title: 'ID выкупа', value: 'uuid' },
@@ -499,7 +499,7 @@ const customLinks = filters.map((filter) => ({
       <div class="items-center flex-wrap self-start hidden lg:flex">
         <div class="search flex items-center flex-wrap gap-3">
           <CustomSelect
-            :class="'bg-base-300'"
+            :class="'bg-[#f4f4f4]'"
             :tabs="[
               { title: 'За все время', value: 'all' },
               { title: 'Сегодня', value: 'today' },
@@ -512,7 +512,7 @@ const customLinks = filters.map((filter) => ({
 
           <div class="flex items-center justify-between gap-3">
             <CustomSelect
-              :class="'bg-base-300'"
+              :class="'bg-[#f4f4f4]'"
               class="min-w-[100px]"
               :tabs="[
                 { title: 'Артикул', value: 'article' },

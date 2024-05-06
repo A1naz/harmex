@@ -174,6 +174,18 @@ async function selectMP(value: any) {
   mpStore.setSelectedMP(value.value)
   getLikes()
 }
+const links = computed(() => {
+  const links = ref([
+    { title: 'Товар/бренд', slot: '/productlikes', query: '' },
+  ])
+  if(mpStore.selectedMP !== 'avito'){
+    links.value.push({ title: 'Отзывы', slot: '/likes', query: '' })
+  }
+  if(mpStore.selectedMP === 'ozon'){
+    links.value.push({ title: 'Вопрос', slot: '/questionlikes', query: '' })
+  }
+  return links.value
+})
 </script>
 
 <template>
@@ -188,6 +200,13 @@ async function selectMP(value: any) {
           <span class="hidden lg:flex">Лайки</span>
         </NuxtLink>
         <CustomSelect
+          v-if="width < 1024"
+          class="lg:hidden"
+          :class="'-mr-2'"
+          :status-text="'Отзывы'"
+          :links="links"
+        />
+        <CustomSelect
           ref="MPSelect"
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
@@ -199,26 +218,31 @@ async function selectMP(value: any) {
           "
           @change-value="selectMP"
         />
+
         <CustomSelect
           class="hidden lg:flex"
-          :class="'navbar:min-w-[120px]'"
+          :class="'min-w-[95px] navbar:min-w-[20px]'"
+          :status-text="'Отзывы'"
+          :links="links"
+        />
+
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'min-w-[100px] navbar:min-w-[20px]'"
           :tabs="[
             { title: 'Все лайки', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
-          :links="[
-            { title: 'Товар/бренд', slot: '/productlikes', query: '' },
-            { title: 'Вопрос', slot: '/questionlikes', query: '' },
-          ]"
           @change-value="selectFilterDate"
         />
+        
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
           <input
             type="text"
             class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
-            placeholder="Поиск по лайкам"
+            placeholder="Поиск"
             ref="codeInput"
             v-model="search.text"
             @input="onSearchInput($event)"
@@ -236,7 +260,7 @@ async function selectMP(value: any) {
           />
         </div>
       </div>
-      <div class="flex gap-2 lg:gap-3">
+      <div class="flex gap-1 lg:gap-3">
         <CustomSelect
           ref="MPSelect"
           class="lg:hidden"
@@ -258,15 +282,11 @@ async function selectMP(value: any) {
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
-          :links="[
-            { title: 'Товар/бренд', slot: '/productlikes', query: '' },
-            { title: 'Вопрос', slot: '/questionlikes', query: '' },
-          ]"
           @change-value="selectFilterDate"
         />
 
         <CustomSelect
-          :class="'bg-base-300 sm:min-w-[120px]'"
+          :class="'bg-[#f4f4f4] sm:min-w-[120px] navbar:min-w-[100px]'"
           :tabs="[
             { title: 'За все время', value: 'all' },
             { title: 'Сегодня', value: 'today' },
@@ -277,7 +297,7 @@ async function selectMP(value: any) {
         />
 
         <CustomSelect
-          :class="'bg-base-300'"
+          :class="'bg-[#f4f4f4]'"
           :tabs="[{ title: 'Артикул', value: 'article' }]"
           @change-value="updateSearchType"
         />
@@ -388,6 +408,7 @@ async function selectMP(value: any) {
 
             <td class="text-center border-r border-primary border-opacity-5">
               <div
+                class="whitespace-nowrap"
                 :class="{
                   'text-red-500 rounded-full py-1 px-2  text-center':
                     item.status === 'nofunds',
