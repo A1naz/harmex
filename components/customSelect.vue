@@ -120,7 +120,7 @@ defineExpose({
         <button
           class="btn btn-ghost btn-xs h-[2rem] text-xs text-left normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start"
           :class="{
-            'bg-primary bg-opacity-20 ':
+            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 ':
             filter.title == statusText,
           }"  
           @click="updateValue(filter)"
@@ -134,11 +134,11 @@ defineExpose({
           :external="false"
           class="btn btn-ghost btn-xs h-[2rem] text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start text-left"
           :class="{
-            'bg-primary bg-opacity-20 ':
+            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 ':
             filter.slot == route.path && !route.path.startsWith('/delivery') && !route.path.startsWith('/buyouts'),
-            'bg-primary bg-opacity-20 darl:':
+            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 darl:':
             filter.query.split('=')[1] == route.query.status && (route.path.startsWith('/delivery') || route.path.startsWith('/buyouts')),
-            'bg-primary bg-opacity-20 darl':
+            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 darl':
             route.path.startsWith(filter.slot) && route.path.startsWith('/productlikes'),
           }"
         >
