@@ -172,6 +172,10 @@ const updateSearchType = (filter: any) => {
 async function selectMP(value: any) {
   selectedMP.value = value.value
   mpStore.setSelectedMP(value.value)
+  if(value.value === 'avito'){
+    navigateTo('/productlikes/avito')
+    return
+  }
   getLikes()
 }
 const links = computed(() => {
