@@ -262,9 +262,22 @@ const getStatus = computed(() => {
         </div>
 
         <div class="flex gap-3 flex-wrap">
-          <h2 class="card-title mt-2">Выкуп №{{ info.place }}</h2>
-          <div
-            class="mt-2 rounded-2xl py-0 px-2 text-md"
+          <h2 class="card-title mt-2" >Выкуп №{{ info.place }}</h2>
+         
+
+          <a
+            :href="`https://www.ozon.ru/product/${info.article}`"
+            target="_blank"
+            class="text-base text-primary link link-hover mt-0 flex items-center"
+            :class="{
+              'mt-2': width > 364,
+            }"
+          >
+            {{ info.article }}
+          </a>
+        </div>
+        <div
+            class="mt-2 rounded-2xl py-0 px-2 text-md flex items-center w-fit"
             :class="{
               'bg-success ':
                 info.status === 'active' ||
@@ -291,22 +304,10 @@ const getStatus = computed(() => {
             {{ getStatus }}
           </div>
 
-          <a
-            :href="`https://www.ozon.ru/product/${info.article}`"
-            target="_blank"
-            class="text-base text-primary link link-hover mt-0"
-            :class="{
-              'mt-2': width > 364,
-            }"
-          >
-            {{ info.article }}
-          </a>
-        </div>
-
         <div class="flex justify-between mt-2"></div>
       </div>
 
-      <div class="flex gap-4">
+      <div class="flex gap-4 justify-center items-center">
         <div class="flex-none my-auto" style="width: 120px; height: 120px">
           <nuxt-img
             class="rounded-xl h-full"
@@ -363,33 +364,34 @@ const getStatus = computed(() => {
               <span class="text-sm text-gray-500 my-auto">Категория: </span>
               <div class="bg-base-300 rounded-md py-0 px-2 text-sm">Ozon</div>
             </div>
-            <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">ФИО: </span>
-              <div class="rounded-md py-0 px-2 text-sm">{{ info.FIO }}</div>
-            </div>
-            <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto"
-                >Дата запроса скидки:
-              </span>
-              <div class="rounded-md py-0 px-2 text-sm">
-                {{
-                  info.discountRequestTime
-                    ? moscowDate(info.discountRequestTime)
-                        .split('T')[0]
-                        .replaceAll('-', '.') +
-                      ' ' +
-                      moscowDate(info.discountRequestTime)
-                        .split('T')[1]
-                        .slice(0, 5)
-                    : ''
-                }}
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
+      <div class="flex gap-2 ">
+        <span class="text-sm text-gray-500 my-auto">ФИО: </span>
+        <div class="rounded-md py-0 px-2 text-sm">{{ info.FIO ? info.FIO : '-' }}</div>
+      </div>
+      <div class="flex gap-2">
+        <span class="text-sm text-gray-500 my-auto"
+          >Дата запроса скидки:
+        </span>
+        <div class="rounded-md py-0 px-2 text-sm">
+          {{
+            info.discountRequestTime
+              ? moscowDate(info.discountRequestTime)
+                  .split('T')[0]
+                  .replaceAll('-', '.') +
+                ' ' +
+                moscowDate(info.discountRequestTime)
+                  .split('T')[1]
+                  .slice(0, 5)
+              : '-'
+          }}
+        </div>
+      </div>
       <button
-        class="btn mt-2 text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 btn-primary"
+        class="btn text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 btn-primary mt-auto"
         @click="$emit('openModal', index)"
       >
         Открыть
