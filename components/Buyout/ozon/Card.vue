@@ -307,7 +307,7 @@ const getStatus = computed(() => {
         <div class="flex justify-between mt-2"></div>
       </div>
 
-      <div class="flex gap-4 justify-center items-center">
+      <div class="flex gap-4 ">
         <div class="flex-none my-auto" style="width: 120px; height: 120px">
           <nuxt-img
             class="rounded-xl h-full"
