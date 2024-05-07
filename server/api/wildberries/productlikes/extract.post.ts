@@ -15,12 +15,11 @@ function isValidUrl(urlString: string) {
   return !!urlPattern.test(urlString)
 }
 export default eventHandler(async (event) => {
+  const session = (await getServerSession(event)) as any
+  if (!session) return sendRedirect(event, '/auth', 302)
 
-    const session = (await getServerSession(event)) as any
-    if (!session) return sendRedirect(event, '/auth', 302)
-
-    const user = await User.findOne({ uuid: session.uuid })
-    if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await User.findOne({ uuid: session.uuid })
+  if (!user) return sendRedirect(event, '/auth', 302)
 
   const { url } = await readBody(event)
   if (!isValidUrl(url)) {
@@ -31,21 +30,26 @@ export default eventHandler(async (event) => {
   }
 
   let trueUrl = url
-  
+
   const index = trueUrl.indexOf('detail.aspx')
-   if (index !== -1) {
+  if (index !== -1) {
     trueUrl = trueUrl.substring(0, index + 'detail.aspx'.length)
   }
   const splitted = trueUrl.split('/')
   if (splitted.at(-1) === 'detail.aspx') {
     const article = splitted[splitted.length - 2]
-    const url = findProductCard(article)
+    const url = `https://card.wb.ru/cards/detail?appType=0&curr=rub&nm=${article}`
     const data: any = await $fetch(url, {
       method: 'GET',
+    }).catch((e) => {
+      if (e.status === 404) {
+        throw createError({
+          message: 'Не найдена информация по данному артикулу.',
+        })
+      }
     })
-
     const rawData: any = await $fetch(
-      `https://card.wb.ru/cards/detail?spp=0&regions=80,64,38,4,115,83,33,68,70,69,30,86,40,1,66,31,48,110,22&pricemarginCoeff=1.0&reg=0&appType=1&emp=0&locale=ru&lang=ru&curr=rub&couponsGeo=2,12,7,3,6,21&dest=12358353&nm=${article}`,
+      `https://card.wb.ru/cards/detail?spp=0&regions=80,64,38,4,115,83,33,68,70,69,30,86,40,1,66,31,48,110,22&pricemarginCoeff=1.0&reg=0&appType=1&emp=0&locale=ru&lang=ru&curr=rub&couponsGeo=2,12,7,3,6,21&dest=12358289&nm=${article}`,
       {
         method: 'GET',
       }
@@ -78,21 +82,24 @@ export default eventHandler(async (event) => {
     })
     const priceText = currency.format(price)
     const image = findImage(Number(article))
+    
     return {
       type: 'product',
       image,
       article: (data.nm_id as number) || (article as number),
-      name: `${data.selling.brand_name} / ${data.imt_name}` || '',
+      name: `${data.data.products[0].brand} / ${data.data.products[0].brand}` || '',
       price: (price as number) || 0,
       priceText: (priceText as string) || '',
     }
   } else if (splitted.at(-2) === 'brands') {
     const brand = splitted.at(-1)
-    console.log(brand)
+console.log(brand);
+
     const data: { name: string; id: number; siteId: number } = await $fetch(
       `https://static.wbstatic.net/data/brands/${brand}.json`,
       { method: 'GET' }
     )
+    
     const image = `https://images.wbstatic.net/brands/small/${data.id}.jpg`
     return {
       type: 'brand',
