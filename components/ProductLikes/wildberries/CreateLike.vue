@@ -279,7 +279,7 @@ async function selectCreatePage(e: any) {
           </div>
           <div
             v-if="productData && productData.type === 'brand'"
-            class="productinfo"
+            class="productinfo min-w-[200px]"
           >
             <div>Информация о бренде:</div>
             <div class="flex gap-4 mt-2 items-start">

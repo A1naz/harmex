@@ -311,6 +311,7 @@ const timerFinished = ref(false)
 let interval: any
 
 const startTimer = () => {
+  timer.value = 25
   timerRunning.value = true
   interval = setInterval(() => {
     if (timer.value > 0 && loading.value) { 
@@ -319,7 +320,6 @@ const startTimer = () => {
       clearInterval(interval)
       timerRunning.value = false
       timerFinished.value = true
-      timer.value = 25
     }
   }, 1000)
 }
