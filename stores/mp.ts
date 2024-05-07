@@ -55,7 +55,7 @@ export const useMPStore = defineStore('mp', {
     setSelectedMP(mp: String) {
       this.selectedMP = mp
     },
-    changeMp(mp: string, tab: string) {
+    changeMp(mp: string, tab: string, query?: string) {
       let pageFound = false;
       this.pages.forEach((page) => {
         if (page.value === mp) {
@@ -72,11 +72,12 @@ export const useMPStore = defineStore('mp', {
               }
             })
           }else{
-            page.tabs.forEach((pageTab) => {
+            page.tabs.forEach((pageTab) => {            
               if (pageTab === tab) {
+                console.log('fdsfsdfsd')
                 this.selectedMP = mp
                 pageFound = true;
-                navigateTo('/' + tab + '/' + mp)
+                navigateTo('/' + tab + '/' + mp + (query ? query : ''))
               }
             })
           }
@@ -104,6 +105,12 @@ export const useMPStore = defineStore('mp', {
         })
       }
     },
+    sortMp(tab: string, test?: boolean) {
+      const filteredPages = test !== undefined 
+      ? this.pages.filter(page => !page.test && page.tabs.includes(tab)) 
+      : this.pages.filter(page => page.tabs.includes(tab))
+      return filteredPages;
+    }
   },
   persist: {
     storage: persistedState.localStorage,

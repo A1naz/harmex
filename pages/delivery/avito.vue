@@ -237,12 +237,7 @@ const updateSearchType = (filter: any) => {
 }
 
 function changeFilter(e: any) {
-  mpStore.selectedMP = e.value
-  return navigateTo(
-    '/delivery/' +
-      e.value +
-      (route.query?.status ? '?status=' + route.query.status : '')
-  )
+  mpStore.changeMp(e.value, 'delivery', route.query?.status ? '?status=' + route.query.status : '')
 }
 
 const customLinks = filters.map((filter) => ({
@@ -340,7 +335,7 @@ const customLinks = filters.map((filter) => ({
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
           :status-text="'Avito'"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.sortMp('delivery') : mpStore.sortMp('delivery', true)"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -402,7 +397,7 @@ const customLinks = filters.map((filter) => ({
             class="hidden lg:flex"
             :class="'sm:min-w-[120px]'"
             :status-text="'Avito'"
-            :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+            :tabs="store.client.username == 'test'? mpStore.sortMp('delivery') : mpStore.sortMp('delivery', true)"
             @change-value="changeFilter"
           />
           <CustomSelect

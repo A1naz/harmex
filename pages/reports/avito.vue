@@ -135,8 +135,7 @@ const updateSearchType = (filter: any) => {
 }
 const codeInput = ref()
 function changeFilter(e: any) {
-  mpStore.selectedMP = e.value
-  return navigateTo('/reports/' + e.value)
+  mpStore.changeMp(e.value, 'reports')
 }
 </script>
 
@@ -175,7 +174,7 @@ function changeFilter(e: any) {
           class=""
           :class="'sm:min-w-[120px]'"
           :status-text="'Avito'"
-          :tabs="mpStore.MPTabsTest"
+          :tabs="mpStore.sortMp('reports')"
           @change-value="changeFilter"
         />
         <CustomSelect
