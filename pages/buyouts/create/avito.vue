@@ -362,9 +362,7 @@ const startTimer = () => {
   interval = setInterval(() => {
     if (timer.value > 0 && loading.value) {
       timer.value--
-    } else if(loading.value) {
-      timer.value = 40
-    }else {
+    } else {
       clearInterval(interval)
       timerRunning.value = false
       timerFinished.value = true
