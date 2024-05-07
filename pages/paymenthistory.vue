@@ -248,7 +248,7 @@ const updateSearchType = (filter: any) => {
           @change-value="selectMp"
         />
         <CustomSelect
-          :class="'bg-base-300 sm:min-w-[120px]'"
+          :class="'bg-[#f4f4f4] sm:min-w-[120px]'"
           :tabs="[
             { title: 'Все', value: 'all' },
             { title: 'Выкупы', value: 'buyouts' },
@@ -263,7 +263,7 @@ const updateSearchType = (filter: any) => {
           @change-value="selectType"
         />
         <CustomSelect
-        :class="'bg-base-300 sm:min-w-[120px]'"
+        :class="'bg-[#f4f4f4] sm:min-w-[120px]'"
           :tabs="[
             { title: 'За все время', value: 'all' },
             { title: 'Сегодня', value: 'today' },
@@ -291,7 +291,7 @@ const updateSearchType = (filter: any) => {
 
       <div class="flex gap-1 items-center">
         <CustomSelect
-          :class="'bg-base-300 sm:min-w-[150px]'"
+          :class="'bg-[#f4f4f4] sm:min-w-[150px]'"
           :tabs="[{ title: 'Основание / ID', value: 'uuid' }]"
           @change-value="updateSearchType"
         />

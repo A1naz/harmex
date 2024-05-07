@@ -5,7 +5,7 @@ import { useNotification } from '@kyvg/vue3-notification'
 definePageMeta({
   layout: 'app',
   auth: true,
-  title: 'Лайки на отзывы',
+  title: 'Лайки на вопросы',
 })
 const store = useMainStore()
 const mpStore = useMPStore()
@@ -177,10 +177,23 @@ const updateSearchType = (filter: any) => {
 }
 
 async function selectMP(value: any) {
-    selectedMP.value = value.value
-    mpStore.setSelectedMP(value.value)
+    mpStore.changeMp(value.value, 'questionlikes')
+    selectedMP.value = mpStore.selectedMP
     getLikes()
 }
+
+const links = computed(() => {
+  const links = ref([
+    { title: 'Товар/бренд', slot: '/productlikes', query: '' },
+  ])
+  if(mpStore.selectedMP !== 'avito'){
+    links.value.push({ title: 'Отзывы', slot: '/likes', query: '' })
+  }
+  if(mpStore.selectedMP === 'ozon'){
+    links.value.push({ title: 'Вопрос', slot: '/questionlikes', query: '' })
+  }
+  return links.value
+})
 </script>
 
 <template>
@@ -195,12 +208,25 @@ async function selectMP(value: any) {
           <span class="hidden lg:flex">Лайки</span>
         </NuxtLink>
         <CustomSelect
+          v-if="width < 1024"
+          class="lg:hidden"
+          :class="'-mr-2'"
+          :status-text="'Вопрос'"
+          :links="links"
+        />
+        <CustomSelect
           ref="MPSelect"
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="selectMP"     
+        />
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'min-w-[95px] navbar:min-w-[20px]'"
+          :status-text="'Вопрос'"
+          :links="links"
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -211,7 +237,6 @@ async function selectMP(value: any) {
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' }]"
           @change-value="selectFilterDate"
         />
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
@@ -242,7 +267,7 @@ async function selectMP(value: any) {
           class="lg:hidden"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="selectMP"
         />
         <CustomSelect
@@ -254,12 +279,11 @@ async function selectMP(value: any) {
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
           @change-value="selectFilterDate"
         />
 
         <CustomSelect
-          :class="'bg-base-300 sm:min-w-[120px]'"
+          :class="'bg-[#f4f4f4] sm:min-w-[120px]'"
           :tabs="[
             { title: 'За все время', value: 'all' },
             { title: 'Сегодня', value: 'today' },
@@ -270,7 +294,7 @@ async function selectMP(value: any) {
         />
 
         <CustomSelect
-          :class="'bg-base-300'"
+          :class="'bg-[#f4f4f4]'"
           :tabs="[{ title: 'Артикул', value: 'article' }]"
           @change-value="updateSearchType"
         />
@@ -371,6 +395,7 @@ async function selectMP(value: any) {
 
             <td class="text-center border-r border-primary border-opacity-5">
               <div
+                class="whitespace-nowrap"
                 :class="{
                   'text-red-500 rounded-full py-1 px-2  text-center':
                     item.status === 'nofunds',

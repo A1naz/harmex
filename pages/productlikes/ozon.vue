@@ -212,8 +212,7 @@ async function selectFilterDate(e: any) {
 }
 
 async function changeFilter(e: any) {
-  mpStore.selectedMP = e.value
-  router.push(`/productlikes`)
+  mpStore.changeMp(e.value, 'productlikes')
 }
 
 async function findBuyouts(value: string, type: string) {
@@ -275,11 +274,24 @@ const updateSearchType = (filter: any) => {
           <span class="hidden lg:flex">Лайки</span>
         </button>
         <CustomSelect
+          v-if="width < 1024"
+          class="lg:hidden"
+          :class="'-mr-2'"
+          :status-text="'Товар/бренд'"
+          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
+        />
+        <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="changeFilter"
+        />
+        <CustomSelect
+          class="hidden lg:flex"
+          :class="'min-w-[95px] navbar:min-w-[20px]'"
+          :status-text="'Товар/бренд'"
+          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -290,7 +302,6 @@ const updateSearchType = (filter: any) => {
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
-          :links="[{ title: 'Отзывы', slot: '/likes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
           @change-value="selectFilterDate"
         />
 
@@ -321,13 +332,10 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="
-            store.client.username == 'test'
-              ? mpStore.MPTabsTest
-              : mpStore.MPTabs
-          "
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="changeFilter"
         />
+
         <CustomSelect
           class="lg:hidden"
           :class="'min-w-[95px]'"
@@ -337,11 +345,10 @@ const updateSearchType = (filter: any) => {
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
           ]"
-          :links="[{ title: 'Отзывы', slot: '/likes', query: '' }]"
           @change-value="selectFilterDate"
         />
         <CustomSelect
-          :class="'bg-base-300 sm:min-w-[120px]'"
+          :class="'bg-[#f4f4f4] sm:min-w-[120px]'"
           :tabs="[
             { title: 'За все время', value: 'all' },
             { title: 'Сегодня', value: 'today' },
@@ -351,7 +358,7 @@ const updateSearchType = (filter: any) => {
           @change-value="selectFilterDate"
         />
         <CustomSelect
-          :class="'bg-base-300'"
+          :class="'bg-[#f4f4f4] '"
           :tabs="[{ title: 'Название', value: 'name' }]"
           @change-value="updateSearchType"
         />

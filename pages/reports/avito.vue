@@ -179,7 +179,7 @@ function changeFilter(e: any) {
           @change-value="changeFilter"
         />
         <CustomSelect
-          :class="'bg-base-300 sm:min-w-[120px]'"
+          :class="'bg-[#f4f4f4] sm:min-w-[120px]'"
           :tabs="[
             { title: 'Все отчеты', value: 'all' },
             { title: 'Сегодня', value: 'today' },
@@ -212,7 +212,7 @@ function changeFilter(e: any) {
       >
         <div class="flex gap-2 md:mt-0 items-center">
           <CustomSelect
-            :class="'bg-base-300 '"
+            :class="'bg-[#f4f4f4] '"
             :tabs="[{ title: 'Основание/ID', value: 'uuid' }]"
             @change-value="updateSearchType"
           />

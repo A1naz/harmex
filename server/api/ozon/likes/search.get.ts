@@ -7,7 +7,7 @@ export default eventHandler(async (event) => {
 
   const { string, type } = getQuery(event)
 
-  const all = await Like.find({ user })
+  const all = await Like.find({ user }).sort({ _id: -1 })
   let buyouts
  if (type === 'article') {
     buyouts = await Like.find({
@@ -15,11 +15,11 @@ export default eventHandler(async (event) => {
       $or: [
         { article: { $regex: string, $options: 'i' } },
       ],
-    })
+    }).sort({ _id: -1 })
   }
   else {
     buyouts = await Like.find({ user })
-      .sort({ createdAt: -1 })
+      .sort({ _id: -1 })
       .skip(0)
       .limit(50)
   }

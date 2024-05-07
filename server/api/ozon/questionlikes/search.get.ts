@@ -15,11 +15,11 @@ export default eventHandler(async (event) => {
       $or: [
         { article: { $regex: string, $options: 'i' } },
       ],
-    })
+    }).sort({ _id: -1 })
   }
   else {
     buyouts = await QuestionLike.find({ user })
-      .sort({ createdAt: -1 })
+      .sort({ _id: -1 })
       .skip(0)
       .limit(50)
   }

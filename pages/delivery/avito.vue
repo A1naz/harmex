@@ -379,7 +379,7 @@ const customLinks = filters.map((filter) => ({
               </ul>
             </div> -->
         <CustomSelect
-          :class="'bg-base-300'"
+          :class="'bg-[#f4f4f4]'"
           :tabs="[
             { title: 'Артикул', value: 'article' },
             { title: 'ID выкупа', value: 'uuid' },
@@ -477,7 +477,7 @@ const customLinks = filters.map((filter) => ({
             <div />
             <div class="flex gap-4 items-center">
               <CustomSelect
-                :class="'bg-base-300'"
+                :class="'bg-[#f4f4f4]'"
                 :tabs="[
                   { title: 'Артикул', value: 'article' },
                   { title: 'ID выкупа', value: 'uuid' },

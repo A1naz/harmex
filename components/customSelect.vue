@@ -90,7 +90,7 @@ defineExpose({
     @click.stop
   >
     <div
-      class="font-normal text-xs normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
+      class="font-normal text-xs normal-case btn-primary bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
       :class="customClass"
     >
       <span :class="{ 'text-base': rangesConfig.length > 0 }">{{
@@ -115,9 +115,14 @@ defineExpose({
           {{ filter }}
         </button>
       </li>
-      <li v-if="tabs.length > 0" v-for="filter in tabs" :key="filter.title">
+      <li v-if="tabs.length > 0" v-for="filter in tabs" :key="filter.title"
+      >
         <button
           class="btn btn-ghost btn-xs h-[2rem] text-xs text-left normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start"
+          :class="{
+            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 ':
+            filter.title == statusText,
+          }"  
           @click="updateValue(filter)"
         >
           {{ filter.title }}
@@ -128,6 +133,14 @@ defineExpose({
           :to="filter.slot + filter.query"
           :external="false"
           class="btn btn-ghost btn-xs h-[2rem] text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start text-left"
+          :class="{
+            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 ':
+            filter.slot == route.path && !route.path.startsWith('/delivery') && !route.path.startsWith('/buyouts'),
+            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 darl:':
+            filter.query.split('=')[1] == route.query.status && (route.path.startsWith('/delivery') || route.path.startsWith('/buyouts')),
+            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 darl':
+            route.path.startsWith(filter.slot) && route.path.startsWith('/productlikes'),
+          }"
         >
           <span>
             {{ filter.title }}

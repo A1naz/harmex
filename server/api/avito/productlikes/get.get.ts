@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
 
   const { dateFilter } = getQuery(event)
 
-  const likes = await ProductLike.find({ user })
+  const likes = await ProductLike.find({ user }).sort({ _id: -1 })
 
   let filter
   if(dateFilter === 'all' || dateFilter === undefined) {
@@ -23,7 +23,7 @@ export default eventHandler(async (event) => {
         $or: [
           { status: { $regex: dateFilter, $options: 'i' } },
         ],
-      })
+      }).sort({ _id: -1 })
       break
     case 'nofunds':
       filter = await ProductLike.find({
@@ -31,7 +31,7 @@ export default eventHandler(async (event) => {
         $or: [
           { status: { $regex: dateFilter, $options: 'i' } },
         ],
-      })
+      }).sort({ _id: -1 })
       break
     case 'work':
       filter = await ProductLike.find({
@@ -39,7 +39,7 @@ export default eventHandler(async (event) => {
         $or: [
           { status: { $regex: dateFilter, $options: 'i' } },
         ],
-      })
+      }).sort({ _id: -1 })
       break
     case 'today':
       filter = likes.filter(item => new Date(item.createdDate) > today)

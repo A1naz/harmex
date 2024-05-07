@@ -496,7 +496,7 @@ if (error.value) {
   
 
             <CustomSelect
-            :class="'bg-base-300'"
+            :class="'bg-[#f4f4f4]'"
               class="lg:hidden"
               :tabs="[
                 { title: 'За все время', value: 'all' },
@@ -510,7 +510,7 @@ if (error.value) {
 
             <div class="flex gap-3 items-center lg:hidden">
               <CustomSelect
-              :class="'bg-base-300'"
+              :class="'bg-[#f4f4f4]'"
                 :tabs="[
                   { title: 'Артикул', value: 'article' },
                   { title: 'ID выкупа', value: 'uuid' },
@@ -536,7 +536,7 @@ if (error.value) {
       <div class="items-center flex-wrap self-start hidden lg:flex">
         <div class="search flex items-center flex-wrap gap-3">
           <CustomSelect
-          :class="'bg-base-300'"
+          :class="'bg-[#f4f4f4]'"
             :tabs="[
               { title: 'За все время', value: 'all' },
               { title: 'Сегодня', value: 'today' },
@@ -557,7 +557,7 @@ if (error.value) {
           </select> -->
           <div class="flex items-center justify-between gap-3">
             <CustomSelect
-            :class="'bg-base-300'"
+            :class="'bg-[#f4f4f4]'"
               class="min-w-[100px]"
               :tabs="[
                 { title: 'Артикул', value: 'article' },
