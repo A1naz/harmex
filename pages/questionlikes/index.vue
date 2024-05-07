@@ -177,13 +177,9 @@ const updateSearchType = (filter: any) => {
 }
 
 async function selectMP(value: any) {
-    selectedMP.value = value.value
-    mpStore.setSelectedMP(value.value)
-    if(value.value === 'ozon'){
-        getLikes()
-    }else{
-      navigateTo('/productlikes/'+value.value)
-    }
+    mpStore.changeMp(value.value, 'questionlikes')
+    selectedMP.value = mpStore.selectedMP
+    getLikes()
 }
 
 const links = computed(() => {
@@ -223,7 +219,7 @@ const links = computed(() => {
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="selectMP"     
         />
         <CustomSelect
@@ -271,7 +267,7 @@ const links = computed(() => {
           class="lg:hidden"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="selectMP"
         />
         <CustomSelect

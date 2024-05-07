@@ -170,12 +170,8 @@ const updateSearchType = (filter: any) => {
 }
 
 async function selectMP(value: any) {
-  selectedMP.value = value.value
-  mpStore.setSelectedMP(value.value)
-  if(value.value === 'avito'){
-    navigateTo('/productlikes/avito')
-    return
-  }
+  mpStore.changeMp(value.value, 'likes')
+  selectedMP.value = mpStore.selectedMP
   getLikes()
 }
 const links = computed(() => {
@@ -215,11 +211,7 @@ const links = computed(() => {
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="
-            store.client.username == 'test'
-              ? mpStore.MPTabsTest
-              : mpStore.MPTabs
-          "
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="selectMP"
         />
 
@@ -270,11 +262,7 @@ const links = computed(() => {
           class="lg:hidden"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="
-            store.client.username == 'test'
-              ? mpStore.MPTabsTest
-              : mpStore.MPTabs
-          "
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="selectMP"
         />
         <CustomSelect

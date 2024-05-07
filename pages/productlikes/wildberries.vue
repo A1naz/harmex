@@ -220,8 +220,7 @@ async function selectFilterDate(e: any) {
 }
 
 async function changeFilter(e: any) {
-  mpStore.selectedMP = e.value
-  router.push(`/productlikes`)
+  mpStore.changeMp(e.value, 'productlikes')
 }
 
 async function findBuyouts(value: string, type: string) {
@@ -286,11 +285,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="
-            store.client.username == 'test'
-              ? mpStore.MPTabsTest
-              : mpStore.MPTabs
-          "
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -338,11 +333,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
           :status-text="'Wildberries'"
-          :tabs="
-            store.client.username == 'test'
-              ? mpStore.MPTabsTest
-              : mpStore.MPTabs
-          "
+          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
           @change-value="changeFilter"
         />
 
