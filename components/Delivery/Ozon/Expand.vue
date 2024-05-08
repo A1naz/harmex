@@ -47,12 +47,11 @@ function daysToPenalty(statusdelivery: any[]) {
 
 <template>
   <div
-    class="collapse collapse-arrow border bg-base-200 rounded-box z-0 overflow-hidden border-primary border-opacity-10"
+    class="collapse collapse-arrow border bg-base-200 rounded-box z-0 overflow-hidden border-[#eff0ff] dark:border-primary dark:border-opacity-10 "
   >
     <input v-model="opened" type="checkbox" />
 
-    <div
-      class="collapse-title relative text-xl font-medium bg-primary bg-opacity-10"
+    <div class="collapse-title relative text-xl font-medium bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 "
     >
       <div class="flex gap-4">
         <nuxt-img
@@ -95,14 +94,14 @@ function daysToPenalty(statusdelivery: any[]) {
           <div class="flex justify-between flex-wrap gap-1 items-center">
             <div class="flex gap-2">
               <button
-                class="text-xs font-normal btn btn-xs btn-primary bg-opacity-20 border-none text-base-content rounded-md z-10 mt-1 px-3"
+                class="text-xs font-normal btn btn-xs btn-primary bg-[#d3d6ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content rounded-md z-10 mt-1 px-3"
                 @click="emit('openStatusModal', info.statusdelivery)"
               >
-                <span class=" "> Статус:</span>
+                <span class="font-semibold"> Статус:</span>
                 <span>{{ info.currentstatus }} </span>
               </button>
               <div
-                class="bg-base-300 rounded-md text-sm font-normal my-auto p-0.5 mt-1 px-2"
+                class="dark:bg-base-300 bg-[#d8d8d8] rounded-md text-sm font-normal my-auto p-0.5 mt-1 px-2"
               >
                 Ozon
               </div>
@@ -119,7 +118,7 @@ function daysToPenalty(statusdelivery: any[]) {
       </div>
     </div>
 
-    <div class="collapse-content bg-primary bg-opacity-10">
+    <div class="collapse-content bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10">
       <div class="product flex flex-col gap-4 lg:gap-8 flex-wrap">
         <div class="flex flex-col">
           <div>
@@ -159,7 +158,7 @@ function daysToPenalty(statusdelivery: any[]) {
               <span>Размер: </span>
 
               <span
-                class="ml-2 rounded-md bg-base-300 bg-opacity-30 p-1 text-base-content"
+                class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content"
                 >{{ info.size === 'none' ? 'Не указан' : info.size }}</span
               >
             </div>
@@ -167,11 +166,15 @@ function daysToPenalty(statusdelivery: any[]) {
 
           <div class="flex">
             <div class="text-sm text-gray-500">
-              <span>Размер: </span>
+              <span>Скидка: </span>
 
               <span
-                class="ml-2 rounded-md bg-base-300 bg-opacity-30 p-1 text-base-content"
-                >{{ '%' }}</span
+                class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content"
+                >{{
+                  info.discountPrice == info.product?.price
+                    ? '%'
+                    : info.discountPrice + ' ₽'
+                }}</span
               >
             </div>
           </div>

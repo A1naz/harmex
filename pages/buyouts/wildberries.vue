@@ -425,7 +425,7 @@ const customLinks = filters.map((filter) => ({
               ref="codeInput"
               v-model="search.text"
               type="text"
-              class="input input-sm border-none bg-base-300 bg-opacity-40 w-full"
+              class="input input-sm border-none bg-[#ececed] dark:bg-base-300 dark:bg-opacity-40 w-full"
               placeholder="Поиск по товарам"
               @input="onSearchInput($event)"
             />
@@ -435,9 +435,9 @@ const customLinks = filters.map((filter) => ({
             />
             <Icon
               v-else
-              class="absolute right-2 p-2"
+              class="absolute right-2 p-2 text-[#8f8e93]"
               name="tabler:search"
-              size="30"
+              size="35"
               @click="codeInput.focus()"
             />
           </div>
@@ -527,7 +527,7 @@ const customLinks = filters.map((filter) => ({
                 ref="codeInput"
                 v-model="search.text"
                 type="text"
-                class="input input-sm border-none bg-base-300 bg-opacity-40"
+                class="input input-sm border-none bg-[#ececed] dark:bg-base-300 dark:bg-opacity-40"
                 placeholder="Поиск по товарам"
                 @input="onSearchInput($event)"
               />
@@ -537,9 +537,9 @@ const customLinks = filters.map((filter) => ({
               />
               <Icon
                 v-else
-                class="absolute right-2 p-2"
+                class="absolute right-2 p-2 text-[#8f8e93]"
                 name="tabler:search"
-                size="30"
+                size="35"
                 @click="codeInput.focus()"
               />
             </div>

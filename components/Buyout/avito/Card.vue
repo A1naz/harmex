@@ -260,7 +260,7 @@ const getStatus = computed(() => {
         <div class="flex gap-3 flex-wrap">
           <h2 class="card-title mt-2">Выкуп №{{ info.place }}</h2>
           <div
-            class="mt-2 rounded-2xl py-0 px-2 text-md"
+            class="mt-2 rounded-2xl py-1.5 px-2 text-md flex items-center w-fit text-sm"
             :class="{
               'bg-success ':
                 info.status === 'active' ||

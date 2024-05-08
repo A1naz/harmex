@@ -277,7 +277,7 @@ const getStatus = computed(() => {
           </a>
         </div>
         <div
-            class="mt-2 rounded-2xl py-0 px-2 text-md flex items-center w-fit"
+            class="mt-2 rounded-2xl py-1.5 px-2 text-md flex items-center w-fit text-sm"
             :class="{
               'bg-success ':
                 info.status === 'active' ||

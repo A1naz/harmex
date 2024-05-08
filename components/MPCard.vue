@@ -37,7 +37,7 @@ const props = defineProps({
         <button
           v-if="info?.other"
           :disabled="info?.awaiting"
-          class="btn btn-primary w-full rounded-xl text-[19px] font-normal ml-4 border-none hover:bg-primary bg-base-300 hover:text-base-100 text-neutral dark:bg-primary dark:text-gray-100"
+          class="btn btn-primary w-full rounded-xl text-[19px] font-normal ml-4 border-none hover:dark:bg-primary bg-base-300 hover:text-base-100 text-neutral "
           @click="
             navigateTo({
               path: info?.value,
@@ -45,12 +45,13 @@ const props = defineProps({
             })
           "
         >
-          {{ info?.awaiting ? 'Ожидается' : 'Добавить' }}
+          {{ info?.awaiting ? 'Ожидается' : 'Открыть' }}
         </button>
         <button
           v-else
           :disabled="info?.awaiting"
-          class="btn btn-primary w-full rounded-xl text-[19px] font-normal ml-4 border-none hover:bg-primary bg-base-300 hover:text-base-100 text-neutral dark:bg-primary dark:text-gray-100"
+          class="btn btn-primary w-full rounded-xl text-[19px] font-normal ml-4 border-none hover:bg-[#6788f3] hover:dark:bg-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 hover:text-base-100 text-base-content"
+          :class="{ 'bg-base-300': info?.awaiting }" 
           @click="
             navigateTo({
               path: `${page}/${info?.value}`,
@@ -58,7 +59,7 @@ const props = defineProps({
             })
           "
         >
-          {{ info?.awaiting ? 'Ожидается' : 'Добавить' }}
+          {{ info?.awaiting ? 'Ожидается' : 'Открыть' }}
         </button>
       </div>
     </div>

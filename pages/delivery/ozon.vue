@@ -524,7 +524,7 @@ const customLinks = filters.map((filter) => ({
             <div v-else class="dropdown dropdown-end z-10">
               <label
                 tabindex="0"
-                class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content m-1"
+                class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content m-1"
                 >XLS</label
               >
               <ul

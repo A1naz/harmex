@@ -101,7 +101,7 @@ onKeyStroke('Escape', (e) => {
           </button>
           <button
             id="btnid"
-            class="btn btn-sm h-[2.5rem] w-1/4 btn-primary hover:bg-[#6675FF] hover:dark:bg-[#6467F2] hover:text-base-100  border-none bg-opacity-10 text-base-content mt-2"
+            class="btn btn-sm h-[2.5rem] w-1/4 btn-primary bg-[#d8dcff] dark:bg-primary dark:bg-opacity-10 hover:bg-[#6675FF] hover:dark:bg-[#6467F2] hover:text-base-100  border-none text-base-content mt-2"
             @click="addProduct"
           >
             Добавить

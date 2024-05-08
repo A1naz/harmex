@@ -455,7 +455,7 @@ if (error.value) {
               ref="codeInput"
               v-model="search.text"
               type="text"
-              class="input input-sm border-none w-full bg-base-300 bg-opacity-40"
+              class="input input-sm border-none w-full bg-[#ececed] dark:bg-base-300 dark:bg-opacity-40"
               placeholder="Поиск по товарам"
               @input="onSearchInput($event)"
             />
@@ -580,7 +580,7 @@ if (error.value) {
                 ref="codeInput"
                 v-model="search.text"
                 type="text"
-                class="input input-sm bg-base-300 bg-opacity-40"
+                class="input input-sm bg-[#ececed] dark:bg-base-300 dark:bg-opacity-40"
                 placeholder="Поиск по товарам"
                 @input="onSearchInput($event)"
               />
