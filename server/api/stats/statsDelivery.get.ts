@@ -213,11 +213,11 @@ export default eventHandler(async (event) => {
               { uuidbuyout: { $regex: search, $options: 'i' } }
           ],
           $expr: {
-              $eq: [
-                  { $arrayElemAt: ["$statusdelivery.status", -1] }, 
-                  'Возврат средств',
-              ]
-          }
+            $in: [
+              { $arrayElemAt: ['$statusdelivery.status', -1] },
+              [ 'Возврат', 'Отмена магазином', 'Возврат средств'],        
+            ],
+          },
         })
       }else 
         deliveriesWildberries = await WildberriesDelivery.find({ 
@@ -356,7 +356,7 @@ export default eventHandler(async (event) => {
         received++;
         if(item.reviewed === false) reviews++;
         
-    } else if (status === 'Возврат средств') {
+    } else if (status === 'Возврат средств' || status === 'Отмена магазином' || status === 'Возврат') {
       cancelled++;
     } 
     
