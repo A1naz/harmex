@@ -335,14 +335,14 @@ const getPostName = (post: string) => {
                   tabindex="0"
                   class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
                 >
-                  <li>
-                    <a @click="openEditModal(false, item.uuid, index)">
-                      <Icon name="fluent:send-logging-24-filled" />Изменить
+                  <li class="hover:bg-[#d4d8ff] dark:hover:bg-primary dark:hover:bg-opacity-10 rounded-lg">
+                    <a  @click="openEditModal(false, item.uuid, index)" >
+                      <Icon name="tabler:user-edit" size="20"/>Изменить
                     </a>
                   </li>
-                  <li>
-                    <a @click="openConfirmModal(item.uuid, index)">
-                      <Icon name="fluent:delete-24-filled" />Удалить
+                  <li class="hover:bg-[#d4d8ff] dark:hover:bg-primary dark:hover:bg-opacity-10  rounded-lg">
+                    <a @click="openConfirmModal(item.uuid, index)">                  
+                      <Icon name="fluent:delete-24-regular" size="20"/>Удалить
                     </a>
                   </li>
                 </ul>

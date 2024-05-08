@@ -52,10 +52,7 @@ const multiselectStyle = {
   }),
   token: {
     class: [
-      {
-        'bg-primary text-primary bg-opacity-40 ': colorMode.value == 'light',
-        'bg-gray-700 text-white/80': colorMode.value == 'dark',
-      },
+      'bg-[#bcc3ff] dark:bg-primary text-primary dark:bg-opacity-40 ',
       'py-1.5 px-5 mr-2 rounded-full',
       'cursor-default inline-flex items-center',
     ],
@@ -320,7 +317,7 @@ const multiselectStyle = {
             
           ></Button>
           <Button
-            class="btn btn-sm btn-primary m-1 sm:px-10 w-1/3 h-[2.5rem]"
+            class="btn btn-sm btn-primary bg-[#b2baff] text-base-content border-none dark:bg-primary m-1 sm:px-10 w-1/3 h-[2.5rem]"
             label="Сохранить"
             :loading="btnSaveLoading"
             @click="$emit('save')"

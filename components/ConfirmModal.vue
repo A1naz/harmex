@@ -48,7 +48,7 @@ defineEmits(['click'])
                   @click="$emit('click', false)"
                   ></Button>
             <Button 
-                class="btn btn-sm btn-primary bg-opacity-10 text-base-content border-none w-[45%]" 
+                class="btn btn-sm btn-primary bg-[#ebedff] dark:bg-primary dark:bg-opacity-10 text-base-content border-none w-[45%]" 
                 label="Удалить"
                 :loading="btnSaveLoading"
                 @click="$emit('click', true)"
