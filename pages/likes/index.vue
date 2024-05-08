@@ -204,7 +204,7 @@ const links = computed(() => {
           class="lg:hidden"
           :class="'-mr-2'"
           :status-text="'Отзывы'"
-          :links="links"
+          :links="mpStore.sortLikes(mpStore.selectedMP.toString())"
         />
         <CustomSelect
           ref="MPSelect"
@@ -219,7 +219,7 @@ const links = computed(() => {
           class="hidden lg:flex"
           :class="'min-w-[95px] navbar:min-w-[20px]'"
           :status-text="'Отзывы'"
-          :links="links"
+          :links="mpStore.sortLikes(mpStore.selectedMP.toString())"
         />
 
         <CustomSelect

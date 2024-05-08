@@ -278,7 +278,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'-mr-2'"
           :status-text="'Товар/бренд'"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
+          :links="mpStore.sortLikes('ozon')"
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -291,7 +291,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'min-w-[95px] navbar:min-w-[20px]'"
           :status-text="'Товар/бренд'"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' },{ title: 'Вопрос', slot: '/questionlikes', query: '' }]"
+          :links="mpStore.sortLikes('ozon')"
         />
         <CustomSelect
           class="hidden lg:flex"

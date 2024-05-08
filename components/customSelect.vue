@@ -9,8 +9,9 @@ interface tabs {
 }
 interface links {
   title: string
-  slot: string
-  query: string
+  value?: string | undefined
+  slot?: string | undefined
+  query?: string | undefined
 }
 
 const props = defineProps({
@@ -130,16 +131,12 @@ defineExpose({
       </li>
       <li v-for="filter in links" @click="updateText(filter.title)">
         <NuxtLink
-          :to="filter.slot + filter.query"
+          :to="(filter.slot ? filter.slot : '/' + filter.value) + (filter.query ? filter.query : '')"
           :external="false"
           class="btn btn-ghost btn-xs h-[2rem] text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start text-left"
           :class="{
-            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 ':
-            filter.slot == route.path && !route.path.startsWith('/delivery') && !route.path.startsWith('/buyouts'),
-            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 darl:':
-            filter.query.split('=')[1] == route.query.status && (route.path.startsWith('/delivery') || route.path.startsWith('/buyouts')),
-            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 darl':
-            route.path.startsWith(filter.slot) && route.path.startsWith('/productlikes'),
+            'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20':
+            filter.title == statusText,
           }"
         >
           <span>

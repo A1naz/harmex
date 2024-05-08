@@ -33,20 +33,47 @@ export const useMPStore = defineStore('mp', {
         title: 'Wildberries',
         value: 'wildberries',
         tabs: ['buyouts', 'delivery','productlikes','reports','reviews','stats','cart','likes','questions'],
-        likes: ['likes', 'productlikes'], 
+        likes: [
+          {
+            title: 'Отзывы',
+            value: 'likes',
+          },
+          {
+            title: 'Товар/бренд',
+            value: 'productlikes',
+          }
+        ],
       },
       {
         title: 'Ozon',
         value: 'ozon',
         tabs: ['buyouts', 'delivery','reports','reviews','stats','cart','questions'],
-        likes: ['likes', 'productlikes', 'questionlikes'],  
+        likes: [
+          {
+            title: 'Отзывы',
+            value: 'likes',
+          },
+          {
+            title: 'Товар/бренд',
+            value: 'productlikes',
+          },
+          {
+            title: 'Вопрос',
+            value: 'questionlikes',
+          }
+        ],
       },
       {
         title: 'Avito',
         value: 'avito',
         test: true,
         tabs: ['buyouts', 'delivery','productlikes','reports','reviews','stats'],
-        likes: ['productlikes'], 
+        likes: [
+          {
+            title: 'Товар/бренд',
+            value: 'productlikes',
+          }
+        ],
       },
     ]
   }),
@@ -61,7 +88,7 @@ export const useMPStore = defineStore('mp', {
         if (page.value === mp) {
           if(tab.includes('likes')) {
             page.likes.forEach((pageTab) => {
-              if (pageTab === tab) {
+              if (pageTab.value === tab) {
                 this.selectedMP = mp
                 if (tab === 'questionlikes' || tab === 'likes') {
                   pageFound = true;
@@ -74,7 +101,6 @@ export const useMPStore = defineStore('mp', {
           }else{
             page.tabs.forEach((pageTab) => {            
               if (pageTab === tab) {
-                console.log('fdsfsdfsd')
                 this.selectedMP = mp
                 pageFound = true;
                 navigateTo('/' + tab + '/' + mp + (query ? query : ''))
@@ -91,11 +117,11 @@ export const useMPStore = defineStore('mp', {
              if(page.likes.length > 0){
               if (tab === 'questionlikes' || tab === 'likes') {
                 this.selectedMP = mp
-                navigateTo('/' + page.likes[0])
+                navigateTo('/' + page.likes[0].value)
                 return;
               }
               this.selectedMP = mp
-              navigateTo('/' + page.likes[0] + '/' + mp)
+              navigateTo('/' + page.likes[0].value + '/' + mp)
              }
             }else{
               this.selectedMP = mp
@@ -110,6 +136,9 @@ export const useMPStore = defineStore('mp', {
       ? this.pages.filter(page => !page.test && page.tabs.includes(tab)) 
       : this.pages.filter(page => page.tabs.includes(tab))
       return filteredPages;
+    },
+    sortLikes(mp: string){
+      return this.pages.find(page => page.value === mp)?.likes
     }
   },
   persist: {

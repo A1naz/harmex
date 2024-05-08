@@ -280,7 +280,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'-mr-2'"
           :status-text="'Товар/бренд'"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' }]"
+          :links="mpStore.sortLikes('avito')"
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -293,7 +293,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'min-w-[95px] navbar:min-w-[20px]'"
           :status-text="'Товар/бренд'"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' }]"
+          :links="mpStore.sortLikes('avito')"
         />
         <CustomSelect
           class="hidden lg:flex"
