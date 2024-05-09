@@ -81,7 +81,7 @@ async function deleteTemplate() {
         <nuxt-link to="/buyouts/create/avito">
           <label
             @click="selectTemplate"
-            class="btn btn-sm btn-primary truncate mr-1 bg-opacity-20 border-none text-base-content"
+            class="btn btn-sm btn-ghost truncate mr-1 hover:bg-[#b2baff] hover:dark:bg-primary hover:dark:bg-opacity-20 border-none text-base-content"
             >Добавить</label
           >
         </nuxt-link>

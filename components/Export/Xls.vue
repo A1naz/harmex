@@ -82,7 +82,7 @@ async function exportToXLS() {
                 >
                 <Button 
                     type="button"                   
-                    class="btn btn-sm px-3 btn-primary bg-opacity-20 border-none text-base-content" 
+                    class="btn btn-sm px-3 btn-primary dark:bg-primary bg-[#eff0ff] dark:bg-opacity-20 border-none text-base-content" 
                 >
                 <span v-if="!btnLoading">XLS</span>
                 </Button>
@@ -91,7 +91,7 @@ async function exportToXLS() {
                     v-else
                     disabled
                         type="button"                   
-                        class="btn btn-sm px-3 btn-primary bg-opacity-20 border-none text-base-content" 
+                        class="btn btn-sm px-3 btn-primary dark:bg-primary bg-[#eff0ff] dark:bg-opacity-20 border-none text-base-content" 
                     >
                     <span class="loading loading-spinner loading-xs text-primary">XLS</span>
                 </Button>

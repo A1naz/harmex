@@ -247,7 +247,7 @@ const getStatus = computed(() => {
                   info.status !== 'busy' &&
                   info.status !== 'archived',
               }"
-              class="text-xs rounded-2xl px-2 bg-base-200 py-1"
+              class="text-xs rounded-2xl px-2 bg-[#f9f9f9] dark:bg-base-200 py-1"
             >
               Выкуплено {{ info.completed }} шт.
             </div>
@@ -277,24 +277,15 @@ const getStatus = computed(() => {
           </a>
         </div>
         <div
-            class="mt-2 rounded-2xl py-0 px-2 text-md flex items-center w-fit"
+            class="mt-2 rounded-2xl py-1.5 px-2 text-md flex items-center w-fit text-sm"
             :class="{
-              'bg-success ':
+              ' bg-[#b5ffbc] dark:bg-success':
                 info.status === 'active' ||
                 info.status === 'work' ||
                 info.status === 'busy' ||
                 info.status === 'discountGiven',
-              'text-base-content bg-green-600 ':
-                (info.status === 'active' ||
-                  info.status === 'work' ||
-                  info.status === 'busy') &&
-                theme.value === 'dark',
-              'text-base-content bg-red-700':
-                (info.status === 'completed' || info.status === 'nofunds') &&
-                theme.value === 'dark',
-              'text-base-content bg-red-200':
-                (info.status === 'completed' || info.status === 'nofunds') &&
-                theme.value === 'light',
+              'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                info.status === 'completed' || info.status === 'nofunds',
               'text-base-content bg-yellow-300':
                 info.status === 'archived' ||
                 info.status === 'paused' ||
@@ -330,7 +321,7 @@ const getStatus = computed(() => {
           <div class="flex flex-col gap-4">
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto">Сумма: </span>
-              <div class="rounded-md py-0 px-2 bg-success text-sm">
+              <div class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm">
                 {{ info.product?.priceText }}
               </div>
             </div>
@@ -343,7 +334,7 @@ const getStatus = computed(() => {
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto">Сумма: </span>
               <div
-                class="rounded-md py-0 px-2 bg-primary bg-opacity-50 text-sm"
+                class="rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm"
               >
                 {{ currency.format(info.quantity * info.product?.price) }}
               </div>
@@ -391,7 +382,7 @@ const getStatus = computed(() => {
         </div>
       </div>
       <button
-        class="btn text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 btn-primary mt-auto"
+        class="btn text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 dark:bg-primary dark:bg-opacity-50 dark:border-none btn-primary mt-auto"
         @click="$emit('openModal', index)"
       >
         Открыть

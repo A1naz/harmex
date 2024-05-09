@@ -36,7 +36,7 @@ watch(
 
 <template>
   <div
-    class="collapse collapse-arrow bg-primary bg-opacity-10 rounded-box z-0"
+    class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0"
     :class="{ 'text-primary': opened }"
   >
     <input v-model="opened" type="checkbox" />

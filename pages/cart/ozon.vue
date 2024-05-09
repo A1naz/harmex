@@ -215,7 +215,7 @@ onMounted(() => {
       <div class="flex gap-1 lg:gap-4">
         <button
           @click="navigateTo(`/cart/create/`)"
-          class="btn btn-primary font-normal btn-sm"
+          class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
           <Icon name="fluent:add-24-filled" size="17" />
           <span class="hidden lg:flex">Корзина</span>

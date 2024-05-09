@@ -412,9 +412,9 @@ async function selectCreatePage(e: any) {
               <option value="14days">14 дней</option>
             </select>
           </div>
-          <div class="w-full ml-auto self-end justify-end lg:w-40">
+          <div class="w-full ml-auto self-end justify-end lg:w-40 ">
             <button
-              class="btn w-full btn-primary"
+              class="btn w-full btn-primary text-base-content dark:bg-primary bg-[#b2baff] border-none"
               @click="getProductReviews"
               :disabled="btnDisabled || !article"
             >

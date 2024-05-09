@@ -193,7 +193,7 @@ async function getQr() {
   <div class="w-full flex flex-col lg:flex-row gap-2.5 mb-4">
     <div class="w-full flex justify-between gap-1 lg:hidden">
       <button
-        class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
+        class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
         @click="withdrawModal = true"
       >
         Вывод с баланса
@@ -269,13 +269,13 @@ async function getQr() {
     <div class="flex flex-col gap-5 w-full lg:max-w-[65%]">
       <div class="w-full justify-between gap-1 hidden lg:flex">
         <button
-          class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
+          class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-[#eff0ff] hover:bg-[#6788f3] dark:bg-primary dark:bg-opacity-10 dark:hover:bg-primary dark:hover:bg-opacity-100 hover:text-base-100 dark:hover:text-base-content"
           @click="withdrawModal = true"
         >
           Вывод с баланса
         </button>
         <button
-          class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
+          class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-[#eff0ff] hover:bg-[#6788f3] dark:bg-primary dark:bg-opacity-10 dark:hover:bg-primary dark:hover:bg-opacity-100 hover:text-base-100 dark:hover:text-base-content"
           @click="paymentHistoryModal = true"
         >
           История баланса
@@ -283,7 +283,7 @@ async function getQr() {
         <NuxtLink
           :to="'/partner?tab=referals'"
           :external="false"
-          class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-primary bg-opacity-10 hover:bg-primary hover:bg-opacity-100 hover:text-base-100"
+          class="btn btn-sm lg:btn-md w-full max-w-[30%] normal-case font-normal border-none bg-[#eff0ff] hover:bg-[#6788f3] dark:bg-primary dark:bg-opacity-10 dark:hover:bg-primary dark:hover:bg-opacity-100 hover:text-base-100 dark:hover:text-base-content"
         >
           <span>
             {{ 'Моя генеалогия' }}
@@ -368,13 +368,13 @@ async function getQr() {
             >
               <div class="join-item bg-base-200 rounded-lg w-full flex gap-1">
                 <button
-                  class="w-full text-primary text-opacity-50 hover:text-opacity-100 m-3"
+                  class="w-full text-primary hover:text-opacity-100 m-3 flex justify-center items-center gap-1.5"
                   @click="getQr()"
                 >
-                  <IconCSS name="ooui:qr-code" size="30" />
-                  <!-- <img class="px-4 pt-4" :src="`/img/mp/avito.png`" alt="Shoes" /> -->
-                  <!-- <img class="w-8 h-8" src="/icons/figma/partner/qrIcon.svg" alt="qr" /> -->
-                  <span class="white-space-nowrap">QR-код</span>
+                  <!-- <IconCSS name="ooui:qr-code" size="30" /> -->
+
+                  <img class="w-8 h-8" src="/icons/figma/partner/qrIcon.svg" alt="qr" />
+                  <span class="white-space-nowrap text-sm textr-[#718ff4]">QR-код</span>
                 </button>
               </div>
             </div>
@@ -441,7 +441,7 @@ async function getQr() {
       <div class="grid grid-cols-2 gap-3 w-full">
         <div
           v-for="(item, index) in stats"
-          class="flex flex-col bg-primary bg-opacity-5 rounded-lg p-5 navbar:p-2 gap-3"
+          class="flex flex-col bg-[#e5ebf2] dark:bg-primary dark:bg-opacity-5 rounded-lg p-5 navbar:p-2 gap-3"
         >
           <nuxt-img
             v-if="index < 2"

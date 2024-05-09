@@ -454,7 +454,7 @@ if (error.value) {
         <div class="flex gap-2">
           <NuxtLink
             to="/buyouts/create"
-            class="btn btn-primary btn-sm gap-2 font-medium normal-case"
+            class="btn btn-primary btn-sm bg-[#6675ff] dark:bg-primary border-none gap-2 font-medium normal-case"
           >
             <Icon name="fluent:add-24-filled" size="12" />
             <span class="hidden lg:inline">Выкупы</span>
@@ -464,7 +464,7 @@ if (error.value) {
               ref="codeInput"
               v-model="search.text"
               type="text"
-              class="input input-sm border-none bg-base-300 bg-opacity-40 w-full"
+              class="input input-sm border-none w-full bg-[#ececed] dark:bg-base-300 dark:bg-opacity-40"
               placeholder="Поиск по товарам"
               @input="onSearchInput($event)"
             />
@@ -472,13 +472,13 @@ if (error.value) {
               v-if="search.loading"
               class="absolute right-2 loading loading-spinner loading-xs p-2"
             />
-            <Icon
-              v-else
-              class="absolute right-2 p-2"
-              name="tabler:search"
-              size="30"
-              @click="codeInput.focus()"
-            />
+             <Icon
+                v-else
+                class="absolute right-2 p-2 text-[#8f8e93]"
+                name="tabler:search"
+                size="35"
+                @click="codeInput.focus()"
+              />
           </div>
         </div>
 
@@ -650,7 +650,7 @@ if (error.value) {
                 ref="codeInput"
                 v-model="search.text"
                 type="text"
-                class="input input-sm border-none bg-base-300 bg-opacity-40"
+                class="input input-sm border-none bg-[#ececed] dark:bg-base-300 dark:bg-opacity-40"
                 placeholder="Поиск по товарам"
                 @input="onSearchInput($event)"
               />
@@ -660,9 +660,9 @@ if (error.value) {
               />
               <Icon
                 v-else
-                class="absolute right-2 p-2"
+                class="absolute right-2 p-2 text-[#8f8e93]"
                 name="tabler:search"
-                size="30"
+                size="35"
                 @click="codeInput.focus()"
               />
             </div>

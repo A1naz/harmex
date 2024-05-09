@@ -203,7 +203,7 @@ function convertToMoscowTime(dateString: any): Date {
               :disabled="creating"
               :class="{
                 'btn-disabled': !productData || !questionText,
-              }" class="btn w-full  lg:max-w-[calc(25%)] btn-primary"
+              }" class="btn w-full  lg:max-w-[calc(25%)] btn-primary dark:bg-primary bg-[#b2baff] hover:bg-[#6675FF] border-none text-base-content"
               @click="create"
             >
               Добавить

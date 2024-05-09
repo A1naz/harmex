@@ -430,7 +430,7 @@ function removeDiscount(index: number) {
         </div>
         <div class="flex gap-2.5">
           <button
-            class="btn btn-primary btn-sm normal-case border-none text-base-content font-normal hover:bg-primary hover:text-base-100 bg-opacity-20"
+            class="btn btn-primary btn-sm normal-case border-none text-base-content font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
             @click="addProduct"
           >
             Добавить
@@ -438,7 +438,7 @@ function removeDiscount(index: number) {
           <label
             for="template-select-modal"
             @click="getTemplates"
-            class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-primary hover:text-base-100"
+            class="btn btn-sm btn-primary normal-case bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
             >Шаблоны</label
           >
           <label
@@ -498,7 +498,7 @@ function removeDiscount(index: number) {
       >
         <table class="table table-xs w-full mt-4">
           <thead class="relative mb-2 text-sm text-base-content">
-            <tr class="bg-primary bg-opacity-10">
+            <tr class="bg-[#f1f2ff] dark:bg-primary dark:bg-opacity-10">
               <!-- <th class="hidden 3xl:block">№</th> -->
               <th
                 class="w-12 text-center p-2 font-normal"
@@ -509,7 +509,7 @@ function removeDiscount(index: number) {
               </th>
               <th class="w-36 3xl:w-48 text-center font-normal">Название</th>
               <th @click="openInfoModal('price')" class="font-normal">
-                <div class="flex justify-between w-full gap-1 items-center">
+                <div class="flex justify-center w-full gap-1 items-center">
                   <span> Цена </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
@@ -616,14 +616,14 @@ function removeDiscount(index: number) {
           >Удалить все</label
         > -->
         <label
-          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal hover:bg-primary hover:text-base-100"
+          class="btn btn-sm btn-primary normal-case border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
           for="template-modal"
         >
           Шаблон
         </label>
 
         <button
-          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-1 ml-2 font-normal hover:bg-primary hover:text-base-100"
+          class="btn btn-sm btn-primary normal-case border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >
@@ -866,7 +866,7 @@ function removeDiscount(index: number) {
           >
 
           <button
-            class="btn btn-primary w-[30%]"
+            class="btn btn-primary bg-[#bcc3ff] hover:bg-[#6675ff] dark:bg-opacity-20 dark:hover:bg-opacity-100 border-none text-base-content hover:text-base-content dark:bg-primary w-[30%]"
             :disabled="isCreatingTemplatesDisabled"
             @click="createTemplate"
           >

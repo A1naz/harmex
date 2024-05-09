@@ -52,7 +52,7 @@ function handleDate(modelData: any) {
               'btn-sm': size === 'small',
               'btn-md': size === 'medium',
             }"
-            class="btn btn-primary normal-case w-30 bg-opacity-20 border-none text-base-content"
+            class="btn btn-primary normal-case w-30 bg-[#b2baff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
           >
             {{ date ? 'Изменить' : 'Выбрать' }}
           </button>

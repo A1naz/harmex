@@ -321,7 +321,7 @@ const updateSearchType = (filter: any) => {
       <DataTable sort-field="dataoperation" :sort-order="-1" class="hidden lg:block" :value="history" removable-sort 
       :pt="{
                     headerRow:  { class: [
-                        'bg-primary bg-opacity-10 border-none text-base-content rounded-t-3xl text-center '
+                        'bg-[#f1f2ff] dark:bg-primary dark:bg-opacity-10 border-none text-base-content rounded-t-3xl text-center '
                     ] },
 
                 }"

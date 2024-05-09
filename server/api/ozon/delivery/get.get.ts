@@ -103,6 +103,7 @@ export default eventHandler(async (event) => {
         recipient: delivery.recipient,
         recipientphone: replaced,
         updatedAt: delivery.updatedAt,
+        discountPrice: buyout.discountPrice,
       }
     })
   )

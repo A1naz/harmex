@@ -301,7 +301,7 @@ const productQuantityModel = computed({
             :class="{
               'btn-outline': product.adress,
             }"
-            class="btn btn-sm normal-case rounded-full p-1"
+            class="btn btn-sm normal-case rounded-full p-1 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10 w-fit mx-auto"
             @click="$emit('pointModalOpen', index)"
           >
             <span v-show="loading" class="loading loading-spinner" />

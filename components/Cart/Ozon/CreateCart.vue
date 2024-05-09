@@ -250,7 +250,7 @@ function removeProduct() {
               :class="{
                 'btn-disabled': !productData || !query,
               }"
-              class="btn justify-start mt-3 w-full btn-primary"
+              class="btn justify-start mt-3 w-full btn-primary dark:bg-primary bg-[#b2baff] hover:bg-[#6675FF] border-none text-base-content"
               @click="create"
             >
             <span class="mx-auto"> Добавить</span>

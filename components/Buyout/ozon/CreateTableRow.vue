@@ -252,7 +252,7 @@ const productQuantityModel = computed({
           :class="{
             'btn-outline': product.adress,
           }"
-          class="btn btn-sm normal-case rounded-full p-1"
+          class="btn btn-sm normal-case rounded-full p-1 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10"
           @click="$emit('pointModalOpen', index)"
         >
           <span v-show="loading" class="loading loading-spinner" />
@@ -312,13 +312,13 @@ const productQuantityModel = computed({
     <td class="border-r border-base w-[90px]">
       <div class="flex justify-end">
         <div
-          class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary"
+          class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="deleteBuyOut"
         >
           <IconCSS name="material-symbols:close" size="20" />
         </div>
         <div
-          class="w-8 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary"
+          class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="copyBuyout"
         >
           <IconCSS name="fluent:copy-20-filled" size="20" />
