@@ -193,8 +193,8 @@ const links = computed(() => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
       <div class="flex gap-1 navbar:gap-2 lg:gap-3">
         <NuxtLink
-          :to="`/likes/create`"
-          class="btn btn-primary font-normal btn-sm"
+          :to="`/likes/create`" 
+          class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
           <Icon name="fluent:add-24-filled" size="24" />
           <span class="hidden lg:flex">Лайки</span>

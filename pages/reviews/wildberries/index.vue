@@ -558,7 +558,7 @@ async function resumeStatus(item: any) {
     <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
     <div class="modal">
       <div class="modal-box max-w-xs py-6 px-3">
-        <h3 class="font-bold text-lg">Вы уверенны что хотите удалить  отзыв?</h3>
+        <h3 class="font-bold text-xl">Вы уверенны что хотите удалить  отзыв?</h3>
         <p class="py-2.5">Стоимость услуги 100 рублей!</p>
         <div class="flex justify-between">
           <label
@@ -569,7 +569,7 @@ async function resumeStatus(item: any) {
           >
           <label
             for="reviewRemoveModal"
-            class="btn btn-[#EBEDFF] w-1/2"
+            class="btn btn-[#ebedff] hover:bg-[#b2baff] w-1/2"
             @click="removeReview"
             >Удалить</label
           >

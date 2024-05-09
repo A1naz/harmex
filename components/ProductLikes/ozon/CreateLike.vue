@@ -148,7 +148,7 @@ async function selectCreatePage(e: any) {
     class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
   >
     <div
-      class="flex flex-col bg-base-100 rounded-lg w-full max-w-[650px] lg:max-w-[810px] gap-5 p-4"
+      class="flex flex-col bg-base-100 rounded-lg w-full max-w-sm gap-5 p-4"
     >
       <div class="flex justify-between">
         <ProductLikesOzonCustomSelect
@@ -167,9 +167,9 @@ async function selectCreatePage(e: any) {
       </div>
       <div class="bg-base-100 rounded-lg">
         <div class="flex flex-wrap items-center gap-6 mb-2">
-          <div class="relative">
+          <div class="relative w-full">
             <div>Вставьте ссылку:</div>
-            <div class="input-group w-64 min-h-min md:min-h-[48px] mt-2 w-ful">
+            <div class="input-group w-full min-h-min md:min-h-[48px] mt-2">
               <input
                 v-model="url"
                 :class="{
@@ -263,13 +263,13 @@ async function selectCreatePage(e: any) {
               </div>
             </div>
           </div>
-          <div class="w-full ml-auto self-end justify-end lg:w-40">
+          <div class="w-full ml-auto self-end justify-end">
             <button
               :disabled="creatingLike"
               :class="{
                 'btn-disabled': !productData || amount <= 0,
               }"
-              class="btn w-full btn-primary"
+              class="btn w-full btn-primary dark:bg-primary bg-[#b2baff] border-none text-base-content"
               @click="create"
             >
               Добавить
