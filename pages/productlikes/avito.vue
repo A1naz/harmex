@@ -9,6 +9,7 @@ definePageMeta({
 
 const store = useMainStore()
 const mpStore = useMPStore()
+const mpChange = useMPChange()
 const router = useRouter()
 const route = useRoute()
 const MPSelect = ref()
@@ -286,7 +287,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Avito'"
-          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -334,7 +335,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
           :status-text="'Avito'"
-          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
           @change-value="changeFilter"
         />
         <CustomSelect

@@ -266,7 +266,7 @@ export default eventHandler(async (event) => {
           lastElements.push({
             article: item.article,
             pvz: item.point,
-            status: status === 'Передается в доставку' ? 'В пути' : status,
+            status: status === 'Передаётся в доставку' ? 'В пути' : status,
             purchaseDate: sentToAssembly?.date  || '',
             id: item.uuidbuyout,
             receiptDate: receiptDate?.date || '',
