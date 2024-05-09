@@ -415,7 +415,7 @@ const customLinks = filters.map((filter) => ({
         <div class="flex gap-2">
           <NuxtLink
             to="/buyouts/create"
-            class="btn btn-primary btn-sm gap-2 font-medium normal-case"
+            class="btn btn-primary bg-[#6675ff] dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
           >
             <Icon name="fluent:add-24-filled" size="12" />
             <span class="hidden lg:inline">Выкупы</span>

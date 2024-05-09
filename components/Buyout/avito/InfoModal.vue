@@ -90,21 +90,12 @@ onKeyStroke('Escape', (e) => {
             <span
               class="rounded-2xl py-0 px-2 text-md mb-2 max-h-7 text-[9-px] whitespace-nowrap"
               :class="{
-                'bg-success ':
+                'bg-[#b5ffbc] dark:bg-green-600  ':
                   info.status === 'active' ||
                   info.status === 'work' ||
                   info.status === 'busy',
-                'text-base-content bg-green-600 ':
-                  (info.status === 'active' ||
-                    info.status === 'work' ||
-                    info.status === 'busy') &&
-                  theme.value === 'dark',
-                'text-base-content bg-red-700':
-                  (info.status === 'completed' || info.status === 'nofunds') &&
-                  theme.value === 'dark',
-                'text-base-content bg-red-200':
-                  (info.status === 'completed' || info.status === 'nofunds') &&
-                  theme.value === 'light',
+                'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                  info.status === 'completed' || info.status === 'nofunds',
                 'text-base-content bg-yellow-300':
                   info.status === 'archived' || info.status === 'paused',
               }"
@@ -114,7 +105,7 @@ onKeyStroke('Escape', (e) => {
 
           <div class="text-xs text-gray-500">#{{ info.uuid }}</div>
 
-          <div class="flex gap-3 mt-2 justify-center items-center">
+          <div class="flex gap-3 mt-2 items-center">
             <div class="flex-none" style="width: 100px; height: 150px">
               <nuxt-img
                 class="rounded-xl h-full"
@@ -143,11 +134,7 @@ onKeyStroke('Escape', (e) => {
               <div>
                 <span class="text-sm text-gray-500 mr-2 my-auto">Цена: </span>
                 <span
-                  class="rounded-md py-0 px-2 text-sm"
-                  :class="{
-                    'bg-green-600': theme.value === 'dark',
-                    'bg-green-200': theme.value === 'light',
-                  }"
+                  class="rounded-md py-0 px-2 text-sm bg-[#b5ffbc] dark:bg-green-600"
                   >{{ info.product?.priceText }}</span
                 >
               </div>
@@ -197,7 +184,7 @@ onKeyStroke('Escape', (e) => {
         <div class="divider" /> -->
 
         <div
-          class="flex flex-col gap-2 mt-2 justify-center p-5 bg-primary bg-opacity-10"
+          class="flex flex-col gap-2 mt-2 justify-center p-5 bg-[#f2f4ff] dark:bg-primary dark:bg-opacity-10"
         >
           <div class="flex justify-between"></div>
 

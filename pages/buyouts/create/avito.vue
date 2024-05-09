@@ -411,7 +411,7 @@ const startTimer = () => {
         </div>
         <div class="flex gap-2.5">
           <button
-            class="btn btn-primary bg-opacity-20 btn-sm normal-case border-none text-base-content font-normal hover:bg-primary hover:text-base-100"
+            class="btn btn-primary bg-opacity-20 btn-sm normal-case border-none text-base-content font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
             @click="addProduct"
           >
             Добавить
@@ -419,7 +419,7 @@ const startTimer = () => {
           <label
             for="template-select-modal"
             @click="getTemplates"
-            class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-primary hover:text-base-100"
+            class="btn btn-sm btn-primary normal-case bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
             >Шаблоны</label
           >
           <label
@@ -478,7 +478,7 @@ const startTimer = () => {
       >
         <table class="table table-xs w-full mt-4">
           <thead class="relative mb-2 text-sm text-base-content">
-            <tr class="bg-primary bg-opacity-10">
+            <tr class="bg-[#f1f2ff] dark:bg-primary dark:bg-opacity-10">
               <!-- <th class="hidden 3xl:block">№</th> -->
               <th
                 class="w-12 text-center p-2 font-normal"
@@ -594,14 +594,14 @@ const startTimer = () => {
           >Удалить все</label
         > -->
         <label
-          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal hover:bg-primary hover:text-base-100"
+          class="btn btn-sm btn-primary normal-case  border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
           for="template-modal"
         >
           Шаблон
         </label>
 
         <button
-          class="btn btn-sm btn-primary normal-case bg-opacity-20 border-none text-base-content mt-1 ml-2 font-normal hover:bg-primary hover:text-base-100"
+          class="btn btn-sm btn-primary normal-case  border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >
