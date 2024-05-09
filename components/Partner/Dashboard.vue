@@ -368,13 +368,13 @@ async function getQr() {
             >
               <div class="join-item bg-base-200 rounded-lg w-full flex gap-1">
                 <button
-                  class="w-full text-primary text-opacity-50 hover:text-opacity-100 m-3"
+                  class="w-full text-primary hover:text-opacity-100 m-3 flex justify-center items-center gap-1.5"
                   @click="getQr()"
                 >
-                  <IconCSS name="ooui:qr-code" size="30" />
-                  <!-- <img class="px-4 pt-4" :src="`/img/mp/avito.png`" alt="Shoes" /> -->
-                  <!-- <img class="w-8 h-8" src="/icons/figma/partner/qrIcon.svg" alt="qr" /> -->
-                  <span class="white-space-nowrap">QR-код</span>
+                  <!-- <IconCSS name="ooui:qr-code" size="30" /> -->
+
+                  <img class="w-8 h-8" src="/icons/figma/partner/qrIcon.svg" alt="qr" />
+                  <span class="white-space-nowrap text-sm textr-[#718ff4]">QR-код</span>
                 </button>
               </div>
             </div>

@@ -81,7 +81,7 @@ onKeyStroke('Escape', (e) => {
         <button
           v-if="!load"
           id="btnid"
-          class="btn btn-primary w-full border-none bg-opacity-20 text-base-content mt-2"
+          class="btn btn-primary w-full border-none bg-[#b2baff] dark:bg-primary dark:bg-opacity-20 text-base-content mt-2"
           @click="copyImageToClipboard(src)"
         >
           Копировать
