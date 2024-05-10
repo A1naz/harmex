@@ -106,20 +106,42 @@ export const useMPChange = defineStore('mpChange', {
     },
     changeTab(mp: string, tabslash: string, query?: string) {
       const tab = tabslash.split('/')[1]
-      // console.log(mp, tab, query)
+      const mpStore = useMPStore();
       let pageFound = false;
       if(tab.includes('likes')) {
         const mpPage = this.pages.find((page) => page.value === mp)?.likes.find((page) => page.value === tab)
-        
+        if(!mpPage){
+          // if(this.pages.find((page) => page.value === mp)?.likes.length > 0){
+          //   {
+              const alternativePage = this.pages.find((page) => page.value === mp)?.likes[0].value
+              if(!alternativePage){
+                const alternativeTab = this.pages[0].likes[0].value
+                if (alternativeTab === 'questionlikes' || alternativeTab === 'likes') {
+                  return ('/' + alternativeTab);
+                }
+                return ('/' + alternativeTab + '/' + mp)
+              }
+              if (alternativePage === 'questionlikes' || alternativePage === 'likes') {
+                return ('/' + alternativePage);
+              }
+              return ('/' + alternativePage + '/' + mp)
+            // }
+          // }else
+          // {
+          //   mpStore.selectedMP = this.pages[0].value
+          //   return ('/' + this.pages[0].likes[0].value)
+          // }
+        }
+        if (tab === 'questionlikes' || tab === 'likes') {
+          return ('/' + tab);
+        }
+        return ('/' + tab + '/' + mp)
       }else{
         const mpPage = this.pages.find((page) => page.value === mp)?.tabs.find((page) => page === tab) 
         if(!mpPage){
-          console.log(tab)
           const alternativeMp = this.pages.find(page => page.tabs.includes(tab))
-          console.log(alternativeMp)
           return ('/' + (alternativeMp ? tab+ '/' + alternativeMp.value : tab) )
         }
-        console.log(mpPage)
         return ('/' + tab + '/' + mp)
       }
     }
