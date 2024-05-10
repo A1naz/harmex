@@ -21,7 +21,7 @@ const templates = ref<any>([])
 definePageMeta({
   layout: 'app',
   auth: true,
-  title: 'Добавить выкупы',
+  title: 'Добавить выкупы Ozon',
 })
 let isUserWarned: any = ref(false)
 onMounted(() => {
