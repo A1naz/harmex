@@ -104,5 +104,25 @@ export const useMPChange = defineStore('mpChange', {
         })
       }
     },
+    changeTab(mp: string, tabslash: string, query?: string) {
+      const tab = tabslash.split('/')[1]
+      // console.log(mp, tab, query)
+      let pageFound = false;
+      if(tab.includes('likes')) {
+        const mpPage = this.pages.find((page) => page.value === mp)?.likes.find((page) => page.value === tab)
+        
+      }else{
+        const mpPage = this.pages.find((page) => page.value === mp)?.tabs.find((page) => page === tab) 
+        if(!mpPage){
+          console.log(tab)
+          const alternativeMp = this.pages.find(page => page.tabs.includes(tab))
+          console.log(alternativeMp)
+          return ('/' + (alternativeMp ? tab+ '/' + alternativeMp.value : tab) )
+        }
+        console.log(mpPage)
+        return ('/' + tab + '/' + mp)
+      }
+    }
+    
   },
 })

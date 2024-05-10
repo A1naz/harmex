@@ -5,6 +5,7 @@ const props = defineProps<{
   href: string
 }>()
 const route = useRoute()
+const changeMP = useMPChange()
 
 const active = computed(() => {
   return route.path.includes(props.href.split('/')[1])
@@ -12,37 +13,40 @@ const active = computed(() => {
 
 const mpStore = useMPStore()
 const mpHref = computed(() => {
-  if(mpStore.selectedMP == 'avito') {
-    if (
-      props.href == '/productlikes' ||
-      props.href == '/likes'
-    ) {return '/productlikes/avito'}
-   else if (props.href == '/questions')
-   {return '/questions/wildberries'}
-   else if (props.href == '/cart') 
-   {return '/cart/wildberries'}
-  }
-  if (
-    props.href == '/productlikes' ||
-    props.href == '/buyouts' ||
-    props.href == '/questions' ||
-    props.href == '/cart' ||
-    props.href == '/reports'
-  ) {
-    return mpStore.selectedMP
-      ? props.href + '/' + mpStore.selectedMP
-      : props.href + '/wildberries'
-  } else if (props.href == '/reviews') {
-    return mpStore.selectedMP
-      ? props.href + '/' + mpStore.selectedMP + '?status=available'
-      : props.href + '/wildberries?status=available'
-  } else if (props.href == '/delivery') {
-    return mpStore.selectedMP
-      ? props.href + '/' + mpStore.selectedMP + ''
-      : props.href + '/wildberries'
-  } else {
-    return props.href
-  }
+  
+  // console.log(changeMP.changeTab(mpStore.selectedMP.toString(), props.href))
+  return changeMP.changeTab(mpStore.selectedMP.toString(), props.href)
+  // if(mpStore.selectedMP == 'avito') {
+  //   if (
+  //     props.href == '/productlikes' ||
+  //     props.href == '/likes'
+  //   ) {return '/productlikes/avito'}
+  //  else if (props.href == '/questions')
+  //  {return '/questions/wildberries'}
+  //  else if (props.href == '/cart') 
+  //  {return '/cart/wildberries'}
+  // }
+  // if (
+  //   props.href == '/productlikes' ||
+  //   props.href == '/buyouts' ||
+  //   props.href == '/questions' ||
+  //   props.href == '/cart' ||
+  //   props.href == '/reports'
+  // ) {
+  //   return mpStore.selectedMP
+  //     ? props.href + '/' + mpStore.selectedMP
+  //     : props.href + '/wildberries'
+  // } else if (props.href == '/reviews') {
+  //   return mpStore.selectedMP
+  //     ? props.href + '/' + mpStore.selectedMP + '?status=available'
+  //     : props.href + '/wildberries?status=available'
+  // } else if (props.href == '/delivery') {
+  //   return mpStore.selectedMP
+  //     ? props.href + '/' + mpStore.selectedMP + ''
+  //     : props.href + '/wildberries'
+  // } else {
+  //   return props.href
+  // }
 })
 
 const theme = useColorMode()
