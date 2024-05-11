@@ -153,6 +153,5 @@ export default eventHandler(async (event) => {
     })
   }
 
-  throw createError('ok')
   return { status: 'ok' }
 })
