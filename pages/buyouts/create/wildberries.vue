@@ -23,7 +23,7 @@ const codeInput = ref()
 definePageMeta({
   layout: 'app',
   auth: true,
-  title: 'Добавить выкупы',
+  title: 'Добавить выкупы Wildberries',
 })
 let isUserWarned: any = ref(false)
 onMounted(() => {

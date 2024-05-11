@@ -12,7 +12,7 @@ export default eventHandler(async (event) => {
     {
       $match: {
         user: new ObjectId(user._id),
-        reviewed: false,
+        reviewed: {$ne: true},
         'statusdelivery.status': 'Получен',
         status: 'completed',
       },
@@ -114,9 +114,11 @@ export default eventHandler(async (event) => {
   ])
   const sex = (genders: string[]): string => {
     for (const gen of genders) {
-      let foundGen = genderMap.get(gen.toLowerCase())
-      if (foundGen) return foundGen
-    }
+      if (gen !== null) {
+          let foundGen = genderMap.get(gen.toLowerCase());
+          if (foundGen) return foundGen;
+      } 
+  }
     return 'Нет'
   }
   const formated = readyForReview.map((r) => {
