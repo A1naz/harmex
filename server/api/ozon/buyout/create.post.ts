@@ -73,18 +73,22 @@ export default eventHandler(async (event) => {
         : new Date(product.dateRange[1])
 
       if (!product.purchaseSoon) {
-        date1.setHours(date1.getHours()
-        //  + Number(userTimezoneOffsetHours)
+        date1.setHours(
+          date1.getHours()
+          //  + Number(userTimezoneOffsetHours)
         )
-        date1.setMinutes(date1.getMinutes()
-        //  + Number(userOffsetMinutes)
+        date1.setMinutes(
+          date1.getMinutes()
+          //  + Number(userOffsetMinutes)
         )
 
-        date2.setHours(date2.getHours()
-        //  + Number(userTimezoneOffsetHours)
+        date2.setHours(
+          date2.getHours()
+          //  + Number(userTimezoneOffsetHours)
         )
-        date2.setMinutes(date2.getMinutes() 
-        // + Number(userOffsetMinutes)
+        date2.setMinutes(
+          date2.getMinutes()
+          // + Number(userOffsetMinutes)
         )
       } else {
         date1.setHours(date1.getHours())
@@ -101,6 +105,9 @@ export default eventHandler(async (event) => {
     ))
 
     const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
+
+    
+    console.log(product.discountPrice)
 
     const buyout = new Buyout({
       article: product.article,
@@ -125,7 +132,10 @@ export default eventHandler(async (event) => {
         image: product.image,
       },
       uuid: uuid(),
-      discount: product.discountPrice !== product.price ? true : false,
+      discount:
+        product.discountPrice !== product.price && product.discountPrice !== 0
+          ? true
+          : false,
       discountPrice: product.discountPrice,
       // discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
@@ -143,5 +153,6 @@ export default eventHandler(async (event) => {
     })
   }
 
+  throw createError('ok')
   return { status: 'ok' }
 })
