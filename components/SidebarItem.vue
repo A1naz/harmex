@@ -13,8 +13,6 @@ const active = computed(() => {
 
 const mpStore = useMPStore()
 const mpHref = computed(() => {
-  
-  // console.log(changeMP.changeTab(mpStore.selectedMP.toString(), props.href))
   return changeMP.changeTab(mpStore.selectedMP.toString(), props.href)
   // if(mpStore.selectedMP == 'avito') {
   //   if (
