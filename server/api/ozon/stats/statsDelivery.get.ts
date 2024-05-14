@@ -114,15 +114,10 @@ export default eventHandler(async (event) => {
               { point: { $regex: search, $options: 'i' } },
               { uuidbuyout: { $regex: search, $options: 'i' } }
           ],
-          $expr: {
-              $regexMatch: {
-                  input: { $arrayElemAt: ["$statusdelivery.status", -1] },
-                  regex: type,
-                  options: "i" 
-              }
-          }
-      });
-      
+        });
+        deliveries = deliveries.filter(delivery => {
+          return delivery.statusdelivery[delivery.statusdelivery.length - 1].status.includes(type);
+        });
       }else if(type=='Отменено'){
         deliveries = await Delivery.find({ 
           user, 

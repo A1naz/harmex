@@ -16,7 +16,7 @@ export default eventHandler(async (event) => {
       .skip(skip as number)
       .limit(limit as number)
   } else if (status === 'active') {
-    deliveries = await Delivery.find({ user, status: 'active' })
+    deliveries = await Delivery.find({ user, status: 'work' })
       .sort({
         _id: -1,
       })
@@ -30,48 +30,52 @@ export default eventHandler(async (event) => {
       .skip(skip as number)
       .limit(limit as number)
   } else if (status === 'canceled') {
-    deliveries = await Delivery.find({ user, status: 'canceled' })
-      .sort({
+    deliveries = await Delivery.find({ 
+      user,
+      $expr: {
+          $eq: [
+              { $arrayElemAt: ["$statusdelivery.status", -1] }, 
+              'Отменён',
+          ]
+      }
+    }).sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
   } else if (status === 'onTheWay') {
-    const response = await Delivery.find({ user, status: 'active' }).sort({
+    deliveries = await Delivery.find({ 
+      user, 
+      $expr: {
+          $or: [
+              { $eq: [ { $arrayElemAt: ["$statusdelivery.status", -1] }, 'В пути' ] },
+              { $eq: [ { $arrayElemAt: ["$statusdelivery.status", -1] }, 'Передаётся в доставку' ] }
+          ]
+      }
+    }).sort({
       _id: -1,
     })
-    const substrings = ['Ожидается', 'пути', 'задерживается']
-    deliveries = response
-      .filter((delivery) => {
-        return delivery.statusdelivery[
-          delivery.statusdelivery.length - 1
-        ].status
-          .split(' ')
-          .some((word: string) => substrings.includes(word))
-      })
-      .splice((skip as number) ? (skip as number) : 0, limit as number)
+    .skip(skip as number)
+    .limit(limit as number)
   } else if (status === 'pickupReady') {
-    const response = await Delivery.find({ user, status: 'active' }).sort({
+    const response = await Delivery.find({ user, status: {$ne : 'completed'} }).sort({
       _id: -1,
     })
-
-    deliveries = response
-      .filter(
-        (delivery, index) =>
-          delivery.statusdelivery[delivery.statusdelivery.length - 1].status ==
-          'Готов к выдаче'
-      )
-      .splice(skip as number, limit as number)
+    deliveries = response.filter(delivery => {
+      return delivery.statusdelivery[delivery.statusdelivery.length - 1].status.includes('Ожидает получения');
+    }).splice(skip as number, limit as number)
   } else {
     return {
       error: 'Неизвестный статус',
     }
   }
+
+  const buyouts = await Buyout.find({ _id: { $in: deliveries.map((item) => item.idbuyout) } })
   const format = await Promise.all(
     deliveries.map(async (delivery) => {
-      const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
+      const buyout = buyouts.find((item) => item._id.valueOf() === delivery.idbuyout.valueOf())
+      
       if (!buyout) return null
-
       // const place = all.findIndex(
       //   item => item._id.toString() === delivery._id.toString(),
       // )
