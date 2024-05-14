@@ -144,14 +144,10 @@ export default eventHandler(async (event) => {
               { point: { $regex: search, $options: 'i' } },
               { uuidbuyout: { $regex: search, $options: 'i' } }
           ],
-          $expr: {
-              $regexMatch: {
-                  input: { $arrayElemAt: ["$statusdelivery.status", -1] },
-                  regex: type2,
-                  options: "i" 
-              }
-          }
-      });
+        });
+        deliveriesOzon = deliveriesOzon.filter(delivery => {
+          return delivery.statusdelivery[delivery.statusdelivery.length - 1].status.includes(type2);
+        });
       }else if(type=='Получено'){
         const type2 = 'Получен'
         deliveriesOzon = await OzonDelivery.find({ 
@@ -266,7 +262,7 @@ export default eventHandler(async (event) => {
           lastElements.push({
             article: item.article,
             pvz: item.point,
-            status: status === 'Передается в доставку' ? 'В пути' : status,
+            status: status === 'Передаётся в доставку' ? 'В пути' : status,
             purchaseDate: sentToAssembly?.date  || '',
             id: item.uuidbuyout,
             receiptDate: receiptDate?.date || '',
