@@ -140,7 +140,7 @@ export default eventHandler(async (event) => {
       // discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
-      key: product.key || false,
+      ff: product.key || false,
       pointRegion,
       pointDistrict,
     })
