@@ -149,54 +149,69 @@ async function uploadToS3(event: Event, index: number) {
   const fileList = (event.target! as HTMLInputElement).files
   const files = Array.from(fileList!)
   if (!files) return
+  const img = new Image();
+  img.src = URL.createObjectURL(files[0]);
 
-  if (
-    files[0] &&
-    files[0].name &&
-    files[0].name.toLowerCase().endsWith('.webp')
-  ) {
-    notify({
-      title: 'Что-то пошло не так',
-      text: 'Нельзя загружать вебпикчи',
-      type: 'error',
-      duration: 3000,
-    })
+  img.onload = async function() {
+    if (img.width < 337 || img.height < 450) {
+      notify({
+        title: 'Ошибка',
+        text: 'Размер изображения должен быть не менее 337px по ширине и 450px по высоте',
+        type: 'error',
+        duration: 3000,
+      });
 
-    loadingIndex.value = null
-    return
-  }
-
-  const { data, error } = await upload({
-    files,
-    url: null,
-  })
-  if (error.value) {
-    notify({
-      title: 'Что-то пошло не так',
-      text: 'Не удалось загрузить фото',
-      type: 'error',
-      duration: 3000,
-    })
-  }
-  if (data.value) {
-    //@ts-ignore
-    await useFetch('/api/images/openForPublic', {
-      method: 'GET',
-      params: {
-        path: 'reviewImages/' + data.value[0].key,
-      },
-    })
-    form.photos[index] = {
-      url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
-      public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
+      loadingIndex.value = null;
+      return;
     }
+  
+    if (
+      files[0] &&
+      files[0].name &&
+      files[0].name.toLowerCase().endsWith('.webp')
+    ) {
+      notify({
+        title: 'Что-то пошло не так',
+        text: 'Нельзя загружать вебпикчи',
+        type: 'error',
+        duration: 3000,
+      })
+
+      loadingIndex.value = null
+      return
+    }
+
+    const { data, error } = await upload({
+      files,
+      url: null,
+    })
+    if (error.value) {
+      notify({
+        title: 'Что-то пошло не так',
+        text: 'Не удалось загрузить фото',
+        type: 'error',
+        duration: 3000,
+      })
+    }
+    if (data.value) {
+      //@ts-ignore
+      await useFetch('/api/images/openForPublic', {
+        method: 'GET',
+        params: {
+          path: 'reviewImages/' + data.value[0].key,
+        },
+      })
+      form.photos[index] = {
+        url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
+        public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
+      }
+    }
+
+    setTimeout(() => {
+      loadingIndex.value = null
+    }, 1500)
   }
-
-  setTimeout(() => {
-    loadingIndex.value = null
-  }, 1500)
 }
-
 const uploadProgress = ref('')
 const isUploading = ref(false)
 const fileHash = ref<any>('')
