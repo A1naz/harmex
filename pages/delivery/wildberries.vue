@@ -331,7 +331,7 @@ function changeFilter(e: any) {
         />
         <CustomSelect
           class="lg:hidden"
-          :class="'navbar:min-w-[120px]'"
+          :class="'min-w-[100px]'"
           :status-text="statusText"
           :links="customLinks"
         />
@@ -393,7 +393,7 @@ function changeFilter(e: any) {
           />
           <CustomSelect
             class="hidden lg:flex"
-            :class="'navbar:min-w-[120px]'"
+            :class="'min-w-[100px]'"
             :status-text="statusText"
             :links="customLinks"
           />

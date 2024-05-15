@@ -124,7 +124,7 @@ export default eventHandler(async (event) => {
       uuid: uuid(),
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
-      key: product.key || false,
+      ff: product.key || false,
     })
 
     await buyout.save()

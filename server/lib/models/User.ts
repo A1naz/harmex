@@ -63,6 +63,7 @@ const UserSchema = new Schema<IUserSchema>({
   registrationDate: { type: Date, default: Date.now },
   post: { type: 'String' },
   newPassword: { type: String },
+  ffEnabled: { type: Boolean, default: false },
   partner: {
     type: partnerSchema,
     ref: 'Partner',

@@ -208,7 +208,7 @@ function daysToPenalty(statusdelivery: any[]) {
               "
             >
               <Icon name="material-symbols:qr-code" size="24" />
-              <span class="hidden lg:block">QR-код</span>
+              <span class="hidden lg:block">Штрих-код</span>
             </label>
           </div>
         </div>
@@ -222,7 +222,7 @@ function daysToPenalty(statusdelivery: any[]) {
           >
             {{ info.point }}
           </a>
-          {{ info.receiptcodeqr ? info.receiptcodeqr.substr(-15) : '' }}
+          
         </div>
       </div>
     </div>

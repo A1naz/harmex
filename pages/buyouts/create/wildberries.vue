@@ -13,6 +13,7 @@ const isCreateButtonDisabled = ref(false)
 const { width, height } = useWindowSize()
 const { notify } = useNotification()
 
+const mainStore = useMainStore()
 const loadingTemplates = ref(false)
 const openAll = ref(false)
 const templateTitle = ref('')
@@ -379,7 +380,7 @@ function modalAddProduct(changedArticle: any) {
         </div>
         <div class="flex gap-2.5">
           <button
-            class="btn btn-primary bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100 btn-sm normal-case border-none text-base-content font-normal "
+            class="btn btn-primary bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100 btn-sm normal-case border-none text-base-content font-normal"
             @click="addProduct"
           >
             Добавить
@@ -464,7 +465,7 @@ function modalAddProduct(changedArticle: any) {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-      
+
               <th @click="openInfoModal('size')" class="font-normal">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
@@ -560,7 +561,7 @@ function modalAddProduct(changedArticle: any) {
         </label>
 
         <button
-          class="btn btn-sm btn-primary normal-case  border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+          class="btn btn-sm btn-primary normal-case border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >
@@ -596,9 +597,9 @@ function modalAddProduct(changedArticle: any) {
               v-if="rule.id === 1"
               class="label cursor-pointer flex gap-4 items-start justify-between"
             >
-              <span class="label-text"
-                >{{ 'Выкупить товар(-ы) прямо сейчас ' }}</span
-              >
+              <span class="label-text">{{
+                'Выкупить товар(-ы) прямо сейчас '
+              }}</span>
               <div class="flex gap-4">
                 <div
                   class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
@@ -612,13 +613,11 @@ function modalAddProduct(changedArticle: any) {
                 />
               </div>
             </div>
-            <!-- <div
-              v-if="rule.id === 1"
+            <div
+              v-if="rule.id === 1 && mainStore.client.username == 'test'"
               class="label cursor-pointer flex gap-4 items-start justify-between"
             >
-              <span class="label-text"
-                >{{ 'Выкуп под ключ ' }}</span
-              >
+              <span class="label-text">{{ 'Выкуп под ключ ' }}</span>
               <div class="flex gap-4">
                 <div
                   class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
@@ -631,7 +630,7 @@ function modalAddProduct(changedArticle: any) {
                   class="checkbox checkbox-primary border-base-content"
                 />
               </div>
-            </div> -->
+            </div>
             <div
               class="label cursor-pointer flex gap-4 items-start justify-around"
             >

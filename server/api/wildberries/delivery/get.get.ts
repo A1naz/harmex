@@ -67,9 +67,10 @@ export default eventHandler(async (event) => {
       error: 'Неизвестный статус',
     }
   }
+  const buyouts = await Buyout.find({ _id: { $in: deliveries.map((item) => item.idbuyout) } })
   const format = await Promise.all(
     deliveries.map(async (delivery) => {
-      const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
+      const buyout = buyouts.find((item) => item._id.valueOf() === delivery.idbuyout.valueOf())
       if (!buyout) return null
 
       // const place = all.findIndex(

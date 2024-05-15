@@ -88,7 +88,12 @@ export default eventHandler(async (event) => {
       ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
     }
 
-    const {pointRegion, pointDistrict} = await getDisctrict(product.adress)
+    const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
+
+    if (product.key && !user.ffEnabled) {
+      user.ffEnabled = true
+      await user.save()
+    }
 
     const buyout = new Buyout({
       article: product.article,
@@ -113,7 +118,7 @@ export default eventHandler(async (event) => {
       uuid: uuid(),
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
-      key: product.key || false,
+      ff: product.key || false,
       pointRegion,
       pointDistrict,
     })
