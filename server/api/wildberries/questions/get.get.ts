@@ -5,67 +5,52 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-    const { dateFilter,string, type } = getQuery(event)
-  const questions = await Question.find({ user }).sort({ _id: -1 })
-
-  let filter = questions
-
-  if (type === 'article') {
-    filter = await Question.find({
-      user,
-      $or: [
-        { article: { $regex: string, $options: 'i' } },
-      ],
-    })
-  }
-  else {
-    filter = await Question.find({ user })
-      .sort({ createdAt: -1 })
-      .skip(0)
-      .limit(50)
-  }
-
-  const today = new Date(Date.now())
-  today.setHours(0, 0, 0, 0)
-  switch (dateFilter) {
-    case 'completed':
-      filter = await Question.find({
-        user,
-        $or: [
-          { status: { $regex: dateFilter, $options: 'i' } },
-        ],
-      })
-      break
-    case 'nofunds':
-        filter = await Question.find({
-          user,
-          $or: [
-            { status: { $regex: dateFilter, $options: 'i' } },
-          ],
-        })
-        break
-    case 'created':
-      filter = await Question.find({
-        user,
-        $or: [
-          { status: { $regex: dateFilter, $options: 'i' } },
-        ],
-      })
-      break
-    case 'today':
-      filter = questions.filter(item => new Date(item.createdDate) > today)
-      break
-    case '3days':
-      filter = questions.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 3))
-      break
-    case '7days':
-      filter = questions.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 7))
-      break
-  }
-
+      const { dateFilter, statusQuery, string, type, skip = 0, limit = 50 } = getQuery(event)
   
+      let questions = []
+    
+      let searchQuery: { status?: any, $or?: any, createdDate?: any } = {};
+      if (type === 'article') {
+        searchQuery = {
+          $or: [{ article: { $regex: string, $options: 'i' } }],
+        }
+      }
+    
+      switch (statusQuery) {
+        case 'completed':
+        case 'nofunds':
+        case 'created':
+          searchQuery.status = { $regex: statusQuery, $options: 'i' }
+          break
+      }
+    
+      switch (dateFilter) {
+        case 'today':
+          searchQuery.createdDate = {
+            $gte: new Date().setHours(0, 0, 0, 0),
+            $lt: new Date().setHours(23, 59, 59, 999)
+          };
+          break;
+        case '3days':
+          searchQuery.createdDate = {
+            $gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
+            $lt: new Date().setHours(23, 59, 59, 999)
+          };
+          break;
+        case '7days':
+          searchQuery.createdDate = {
+            $gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+            $lt: new Date().setHours(23, 59, 59, 999)
+          };
+          break;
+      }
+     
+      questions = await Question.find({
+        user,
+        ...searchQuery,
+      }).skip(skip as number).limit(limit as number)
 
-  const format = (filter ? filter : questions).map((question, index) => {
+  const format = questions.map((question, index) => {
     return {
       id: question._id,
       place: index + 1,
