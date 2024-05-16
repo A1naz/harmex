@@ -12,6 +12,7 @@ const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const route = useRoute()
 const router = useRouter()
 const sortPage = ref('all')
+const sortPageDate = ref('')
 const cartForm = reactive({
   amount: 0,
   period: '3h',
@@ -19,6 +20,13 @@ const cartForm = reactive({
   article: '',
   size: 'none',
 })
+const search = reactive({
+  text: '',
+  loading: false,
+  error: false,
+  type: 'article',
+})
+const codeInput = ref()
 const carts = ref([]) as any
 const amount = ref(0)
 const loadingUrl = ref(false)
@@ -31,19 +39,57 @@ const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
 
+const loading = ref(false)
+const limit = ref(50)
+const skip = ref(0)
+const end = ref(false)
+const target = ref(null)
+const targetIsVisible = ref(false)
+const { stop } = useIntersectionObserver(
+  target,
+  ([{ isIntersecting }], observerElement) => {
+    targetIsVisible.value = isIntersecting
+  }
+)
+watch(targetIsVisible, async (isVisible) => {
+  if (!end.value && isVisible && carts.value.length >= limit.value){
+    await getCarts()
+  }
+})
+
 async function getCarts() {
   modalShow.value = false
+  
   const { data, error } = await useFetch('/api/ozon/cart/get', {
     method: 'GET',
+    query: {
+      statusQuery: sortPage.value,
+      dateFilter: sortPageDate.value,
+      string: search.text,
+      type: search.type,
+      limit: limit.value,
+      skip: skip.value,
+    },
     watch: false,
   })
-  if (data.value) carts.value = data.value
+  if ((data.value as any)?.length === 0) {
+    loading.value = false
+    end.value = true
+    return
+  }
+  if (data.value) {
+    carts.value = [...carts.value, ...(data.value! as any)]
+    loading.value = false
+  }
+  
   if (error.value)
     notify({
       type: 'error',
-      title: 'Не удалось получить лайки',
+      title: 'Не удалось получить корзины',
       text: error.value.message,
     })
+  skip.value += limit.value
+  loading.value = false
 }
 await getCarts()
 async function create() {
@@ -142,41 +188,30 @@ function removeProduct() {
   amount.value = 0
 }
 
-const search = reactive({
-  text: '',
-  loading: false,
-  error: false,
-  type: 'article',
-})
-const codeInput = ref()
-
-async function selectFilterDate(e: any) {
-  const target = e
-  const { data } = await useFetch('/api/ozon/cart/get', {
-    method: 'GET',
-    query: {
-      dateFilter: target.value,
-    },
-    watch: false,
-  })
-  sortPage.value = target.value
-  carts.value = data.value
+async function selectFilterDate(e: any, date?: boolean) {
+  if (date) {
+    sortPageDate.value = e.value
+  }else{
+    sortPage.value = e.value
+  }
+  loading.value = true
+  carts.value = []
+  skip.value = 0
+  end.value = false
+  await getCarts()
 }
 
 async function findBuyouts(value: string, type: string) {
+  carts.value = []
+  skip.value = 0
+  end.value = false
   if (!value) {
     search.loading = false
     await getCarts()
     return
   }
-  const { data, error } = await useFetch('/api/ozon/cart/get', {
-    query: {
-      string: value,
-      type,
-    },
-    watch: false,
-  })
-  if (data.value) carts.value = data.value
+  loading.value = true
+  await getCarts()
 
   search.loading = false
 }
@@ -287,7 +322,7 @@ onMounted(() => {
             { title: '3 дня', value: '3days' },
             { title: 'Неделя', value: '7days' },
           ]"
-          @change-value="selectFilterDate"
+          @change-value="selectFilterDate($event, true)"
         />
 
         <CustomSelect
@@ -329,20 +364,24 @@ onMounted(() => {
       </div>
     </div> -->
 
-    <div v-if="carts.length" class="mt-4">
+    <div v-if="carts.length && !loading" class="mt-4">
       <div>
         <CartOzonTable
           :get-status="getStatus"
           :resume-status="resumeStatus"
           :carts="carts"
         />
+        <div v-if="!loading" ref="target" class="flex justify-center items-center h-4" />
       </div>
       <!-- <div>
         <CartOzonCards :carts="carts" :get-status="getStatus" />
       </div> -->
     </div>
-    <div v-else>
+    <div v-else-if="!loading">
       <Hero />
+    </div>
+    <div v-if="loading" class="w-full mt-5 flex justify-center items-center h-80">
+      <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
   </div>
   <CartOzonCreateCart

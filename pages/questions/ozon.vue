@@ -13,6 +13,7 @@ const questions = ref([]) as any
 const amount = ref(0)
 const now = useNow()
 const sortPage = ref('all')
+const sortPageDate = ref('')
 const publishDate = ref(now.value)
 const loadingUrl = ref(false)
 const questionText = ref('')
@@ -25,19 +26,64 @@ const modalShow = ref<boolean>(false)
 const route = useRoute()
 const router = useRouter()
 
+const search = reactive({
+  text: '',
+  loading: false,
+  error: false,
+  type: 'article',
+})
+const codeInput = ref()
+
+const loading = ref(false)
+const limit = ref(50)
+const skip = ref(0)
+const end = ref(false)
+const target = ref(null)
+const targetIsVisible = ref(false)
+const { stop } = useIntersectionObserver(
+  target,
+  ([{ isIntersecting }], observerElement) => {
+    targetIsVisible.value = isIntersecting
+  }
+)
+watch(targetIsVisible, async (isVisible) => {
+  if (!end.value && isVisible && questions.value.length >= limit.value){
+    await getQuestions()
+  }
+})
 
 async function getQuestions() {
   modalShow.value = false
+  
   const { data, error } = await useFetch('/api/ozon/questions/get', {
     method: 'GET',
+    query: {
+      statusQuery: sortPage.value,
+      dateFilter: sortPageDate.value,
+      string: search.text,
+      type: search.type,
+      limit: limit.value,
+      skip: skip.value,
+    },
   })
-  if (data.value) questions.value = data.value
+ if ((data.value as any)?.length === 0) {
+    loading.value = false
+    end.value = true
+    return
+  }
+  if (data.value) {
+    questions.value = [...questions.value, ...(data.value! as any)]
+    loading.value = false
+  }
+  
   if (error.value)
     notify({
       type: 'error',
-      title: 'Не удалось получить лайки',
+      title: 'Не удалось получить вопросы',
       text: error.value.message,
     })
+  skip.value += limit.value
+  loading.value = false
 }
 await getQuestions()
 async function create() {
@@ -141,41 +187,32 @@ onMounted(() => {
   }
 })
 
-const search = reactive({
-  text: '',
-  loading: false,
-  error: false,
-  type: 'article',
-})
-const codeInput = ref()
 
-async function selectFilterDate(e: any) {
-  const target = e
-  const { data } = await useFetch('/api/ozon/questions/get', {
-    method: 'GET',
-    query: {
-      dateFilter: target.value,
-    },
-    watch: false,
-  })
-  sortPage.value = target.value
-  questions.value = data.value
+
+async function selectFilterDate(e: any, date?: boolean) {
+  if (date) {
+    sortPageDate.value = e.value
+  }else{
+    sortPage.value = e.value
+  }
+  loading.value = true
+  questions.value = []
+  skip.value = 0
+  end.value = false
+  await getQuestions()
 }
 
 async function findBuyouts(value: string, type: string) {
+  questions.value = []
+  skip.value = 0
+  end.value = false
   if (!value) {
     search.loading = false
     await getQuestions()
     return
   }
-  const { data, error } = await useFetch('/api/ozon/questions/get', {
-    query: {
-      string: value,
-      type,
-    },
-    watch: false,
-  })
-  if (data.value) questions.value = data.value
+  loading.value = true
+  await getQuestions()
 
   search.loading = false
 }
@@ -293,7 +330,7 @@ function changeFilter(e: any) {
             { title: '3 дня', value: '3days' },
             { title: 'Неделя', value: '7days' },
           ]"
-          @change-value="selectFilterDate"
+          @change-value="selectFilterDate($event,true)"
         />
 
         <CustomSelect
@@ -335,7 +372,7 @@ function changeFilter(e: any) {
       </div>
     </div> -->
 
-    <div v-if="questions.length" class="mt-4 rounded-lg">
+    <div v-if="questions.length && !loading" class="mt-4 rounded-lg">
       <ClientOnly>
         <table  class="table table-sm">
           <thead>
@@ -475,6 +512,7 @@ function changeFilter(e: any) {
             </tr>
           </tbody>
         </table>
+        <div v-if="!loading" ref="target" class="flex justify-center items-center h-4" />
         <!-- <div v-else class="cards grid grid-cols-1 gap-4 lg:hidden">
           <div
             v-for="(item, index) in questions"
@@ -547,7 +585,12 @@ function changeFilter(e: any) {
         </div> -->
       </ClientOnly>
     </div>
-    <Hero v-else />
+    <div v-else-if="!loading">
+      <Hero />
+    </div>
+    <div v-if="loading" class="w-full mt-5 flex justify-center items-center h-80">
+      <span class="loading loading-dots loading-lg text-primary"></span>
+    </div>
   </div>
 </template>
 
