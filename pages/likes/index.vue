@@ -492,6 +492,7 @@ const links = computed(() => {
           <div ref="target" class="flex justify-center items-center h-4" />
         </tbody>
       </table>
+      <div ref="target" class="flex justify-center items-center h-4" />
     </div>
 
     <Hero v-else-if="!loading" />

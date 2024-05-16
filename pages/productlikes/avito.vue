@@ -18,6 +18,7 @@ const product_likes = ref([]) as any
 const amount = ref(0)
 const loadingUrl = ref(false)
 const sortPage = ref('all')
+const sortPageDate = ref('')
 const loading = ref(false)
 const url = ref('')
 const period = ref('3h')
@@ -33,23 +34,54 @@ const search = reactive({
   type: 'name',
 })
 const codeInput = ref()
+
+const limit = ref(50)
+const skip = ref(0)
+const end = ref(false)
+const target = ref(null)
+const targetIsVisible = ref(false)
+const { stop } = useIntersectionObserver(
+  target,
+  ([{ isIntersecting }], observerElement) => {
+    targetIsVisible.value = isIntersecting
+  }
+)
+watch(targetIsVisible, async (isVisible) => {
+  if (!end.value && isVisible && product_likes.value.length >= limit.value){
+    await getProductLikes()
+  }
+})
 async function getProductLikes() {
   modalShow.value = false
   const { data, error } = await useFetch(`/api/avito/productlikes/get`, {
     method: 'GET',
+    query: {
+      statusQuery: sortPage.value,
+      dateFilter: sortPageDate.value,
+      string: search.text,
+      type: search.type,
+      limit: limit.value,
+      skip: skip.value,
+    },
   })
-  if (data.value) product_likes.value = data.value
-  //   if (data.value) {
-  //     product_likes.value = data.value.map(product => {
-  //         if (product.url) {
-  //             const articleId = product.url.match(/\d+/);
-  //             if (articleId) {
-  //                 return { ...product, article: articleId[0] };
-  //             }
-  //         }
-  //         return product;
-  //     });
-  // }
+  if ((data.value as any)?.length === 0) {
+    loading.value = false
+    end.value = true
+    return
+  }
+  if (data.value) {
+    product_likes.value = [...product_likes.value, ...(data.value! as any)]
+    loading.value = false
+  }
+  
+  if (error.value)
+    notify({
+      type: 'error',
+      title: 'Не удалось получить лайки',
+      text: error.value.message,
+    })
+  skip.value += limit.value
+  loading.value = false
   if (error.value)
     notify({
       type: 'error',
@@ -206,19 +238,17 @@ const closeModal = (event: MouseEvent) => {
   }
 }
 
-async function selectFilterDate(e: any) {
+async function selectFilterDate(e: any, date?: boolean) {
+  if (date) {
+    sortPageDate.value = e.value
+  }else{
+    sortPage.value = e.value
+  }
   loading.value = true
-  const target = e
-  const { data } = await useFetch(`/api/avito/productlikes/get`, {
-    method: 'GET',
-    query: {
-      dateFilter: target.value,
-    },
-    watch: false,
-  })
-  sortPage.value = target.value
-  product_likes.value = data.value
-  loading.value = false
+  product_likes.value = []
+  skip.value = 0
+  end.value = false
+  await getProductLikes()
 }
 
 async function changeFilter(e: any) {
@@ -226,22 +256,16 @@ async function changeFilter(e: any) {
 }
 
 async function findBuyouts(value: string, type: string) {
+  product_likes.value = []
+  skip.value = 0
+  end.value = false
   if (!value) {
     search.loading = false
-    getProductLikes()
+    await getProductLikes()
     return
   }
-  const { data, error } = await useFetch(
-    `/api/avito/productlikes/search`,
-    {
-      query: {
-        string: value,
-        type,
-      },
-      watch: false,
-    }
-  )
-  if (data.value) product_likes.value = data.value
+  loading.value = true
+  await getProductLikes()
 
   search.loading = false
 }
@@ -357,7 +381,7 @@ const updateSearchType = (filter: any) => {
             { title: '3 дня', value: '3days' },
             { title: 'Неделя', value: '7days' },
           ]"
-          @change-value="selectFilterDate"
+          @change-value="selectFilterDate($event, true)"
         />
         <CustomSelect
           :class="'bg-[#f4f4f4]'"
