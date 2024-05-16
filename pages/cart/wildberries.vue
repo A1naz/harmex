@@ -201,8 +201,7 @@ const updateSearchType = (filter: any) => {
 }
 
 function changeFilter(e: any) {
-  mpStore.selectedMP = e.value
-  return navigateTo('/cart/' + e.value)
+  mpStore.changeMp(e.value, 'cart')
 }
 
 onMounted(() => {
@@ -231,7 +230,7 @@ onMounted(() => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="mpStore.MPTabs"
+          :tabs="mpStore.sortMp('cart')"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -272,7 +271,7 @@ onMounted(() => {
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="mpStore.MPTabs"
+          :tabs="mpStore.sortMp('cart')"
           @change-value="changeFilter"
         />
         <CustomSelect

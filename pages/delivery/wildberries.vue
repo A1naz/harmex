@@ -226,17 +226,16 @@ const customLinks = filters.map((filter) => ({
   query: filter.params,
 }))
 
+const statusText = computed(() => {
+  return filters.find((el: any) => el.queryStatus === route.query.status)?.title
+})
+
 const updateSearchType = (filter: any) => {
   search.value.type = filter.value
 }
 
 function changeFilter(e: any) {
-  mpStore.selectedMP = e.value
-  return navigateTo(
-    '/delivery/' +
-      e.value +
-      (route.query?.status ? '?status=' + route.query.status : '')
-  )
+  mpStore.changeMp(e.value, 'delivery', route.query?.status ? '?status=' + route.query.status : '')
 }
 </script>
 
@@ -325,8 +324,8 @@ function changeFilter(e: any) {
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
-          :status-text="'Wildberries'"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :status-text="'Wildberries'"    
+          :tabs="store.client.username == 'test'? mpStore.sortMp('delivery') : mpStore.sortMp('delivery', true)"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -365,7 +364,7 @@ function changeFilter(e: any) {
               </ul>
             </div> -->
         <CustomSelect
-          :class="'bg-base-300'"
+          :class="'bg-[#f4f4f4]'"
           :tabs="[
             { title: 'Артикул', value: 'article' },
             { title: 'ID выкупа', value: 'uuid' },
@@ -388,7 +387,7 @@ function changeFilter(e: any) {
             class="hidden lg:flex"
             :class="'sm:min-w-[120px]'"
             :status-text="'Wildberries'"
-            :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+            :tabs="store.client.username == 'test'? mpStore.sortMp('delivery') : mpStore.sortMp('delivery', true)"
             @change-value="changeFilter"
           />
           <CustomSelect
@@ -463,7 +462,7 @@ function changeFilter(e: any) {
             <div />
             <div class="flex gap-4 items-center">
               <CustomSelect
-                :class="'bg-base-300'"
+                :class="'bg-[#f4f4f4]'"
                 :tabs="[
                   { title: 'Артикул', value: 'article' },
                   { title: 'ID выкупа', value: 'uuid' },

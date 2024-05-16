@@ -357,12 +357,7 @@ const updateSearchType = (filter: any) => {
 }
 
 async function changeMP(e: any) {
-  mpStore.selectedMP = e.value
-  return navigateTo(
-    '/buyouts/' +
-      e.value +
-      (route.query?.status ? '?status=' + route.query.status : '')
-  )
+  mpStore.changeMp(e.value, 'buyouts', route.query?.status ? '?status=' + route.query.status : '')
 }
 const customLinks = filters.map((filter) => ({
   title: filter.title,
@@ -484,7 +479,7 @@ if (error.value) {
               class=""
               :class="'lg:min-w-[120px]'"
               :status-text="'Ozon'"
-              :tabs="storeMain.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+              :tabs="storeMain.client.username == 'test'? mpStore.sortMp('buyouts') : mpStore.sortMp('buyouts', true)"
               @change-value="changeMP"
             />
             <CustomSelect

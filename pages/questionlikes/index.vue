@@ -9,6 +9,7 @@ definePageMeta({
 })
 const store = useMainStore()
 const mpStore = useMPStore()
+const mpChange = useMPChange()
 const router = useRouter()
 const review_likes = ref<any>([])
 const MPSelect = ref()
@@ -212,21 +213,21 @@ const links = computed(() => {
           class="lg:hidden"
           :class="'-mr-2'"
           :status-text="'Вопрос'"
-          :links="links"
+          :links="mpStore.sortLikes(mpStore.selectedMP.toString())"
         />
         <CustomSelect
           ref="MPSelect"
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
           @change-value="selectMP"     
         />
         <CustomSelect
           class="hidden lg:flex"
           :class="'min-w-[95px] navbar:min-w-[20px]'"
           :status-text="'Вопрос'"
-          :links="links"
+          :links="mpStore.sortLikes(mpStore.selectedMP.toString())"
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -267,7 +268,7 @@ const links = computed(() => {
           class="lg:hidden"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
           @change-value="selectMP"
         />
         <CustomSelect

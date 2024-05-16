@@ -193,8 +193,7 @@ const updateSearchType = (filter: any) => {
 }
 
 function changeFilter(e: any) {
-  mpStore.selectedMP = e.value
-  return navigateTo('/questions/' + e.value)
+  mpStore.changeMp(e.value, 'questions')
 }
 </script>
 
@@ -229,7 +228,7 @@ function changeFilter(e: any) {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="mpStore.MPTabs"
+          :tabs="mpStore.sortMp('questions')"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -269,9 +268,9 @@ function changeFilter(e: any) {
       <div class="flex gap-2 lg:gap-5">
         <CustomSelect
           class="lg:hidden"
-          :class="'sm:min-w-[120px]'"
+          :class="'min-w-[80px] sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="mpStore.MPTabs"
+          :tabs="mpStore.sortMp('questions')"
           @change-value="changeFilter"
         />
         <CustomSelect

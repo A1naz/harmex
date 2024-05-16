@@ -224,12 +224,7 @@ const statusText = computed(() => {
 })
 
 async function changeMP(e: any) {
-  mpStore.selectedMP = e.value
-  return navigateTo(
-    '/reviews/' +
-      e.value +
-      (route.query?.status ? '?status=' + route.query.status : '')
-  )
+  mpStore.changeMp(e.value, 'reviews', route.query?.status ? '?status=' + route.query.status : '')
 }
 const customLinks = tabs.map((filter) => ({
   title: filter.name,
@@ -333,7 +328,7 @@ async function resumeStatus(item: any) {
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.sortMp('reviews') : mpStore.sortMp('reviews', true)"
           @change-value="changeMP"
         />
         <CustomSelect
@@ -369,7 +364,7 @@ async function resumeStatus(item: any) {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="store.client.username == 'test'? mpStore.MPTabsTest : mpStore.MPTabs"
+          :tabs="store.client.username == 'test'? mpStore.sortMp('reviews') : mpStore.sortMp('reviews', true)"
           @change-value="changeMP"
         />
         <CustomSelect

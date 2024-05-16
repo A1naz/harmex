@@ -9,6 +9,7 @@ definePageMeta({
 
 const store = useMainStore()
 const mpStore = useMPStore()
+const mpChange = useMPChange()
 const router = useRouter()
 const route = useRoute()
 const MPSelect = ref()
@@ -279,20 +280,20 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'-mr-2'"
           :status-text="'Товар/бренд'"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' }]"
+          :links="mpStore.sortLikes('wildberries')"
         />
         <CustomSelect
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
           @change-value="changeFilter"
         />
         <CustomSelect
           class="hidden lg:flex"
           :class="'min-w-[95px] navbar:min-w-[20px]'"
           :status-text="'Товар/бренд'"
-          :links="[{ title: 'Товар/бренд', slot: '/productlikes', query: '' },{ title: 'Отзывы', slot: '/likes', query: '' }]"
+          :links="mpStore.sortLikes('wildberries')"
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -333,7 +334,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
           :status-text="'Wildberries'"
-          :tabs="store.client.username == 'test'? mpStore.pages : mpStore.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
           @change-value="changeFilter"
         />
 
