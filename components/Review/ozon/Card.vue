@@ -33,9 +33,7 @@ function openBuyout() {
 </script>
 
 <template>
-  <div
-    class="rounded-lg bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 border-none text-base-content"
-  >
+  <div class="rounded-lg bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 border-none text-base-content">
     <div class="p-4 relative text-xl font-medium flex flex-col gap-2">
       <label
         class="text-[0.6rem] self-start link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate lg:hidden"
@@ -116,10 +114,27 @@ function openBuyout() {
                 >
               </div>
             </div>
-            <div class="flex-col justify-center gap-2 hidden lg:flex">
+
+            <div
+              class="flex-col justify-center gap-2 hidden lg:flex"
+              v-if="store.client.username !== 'test'"
+            >
               <label
                 for="review-modal"
-                class="btn btn-sm btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content"
+                class="btn btn-md text-lg btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none text-base-content"
+                @click="$emit('openModal', buyoutuuId, deliveryId)"
+              >
+                <!-- Оставить отзыв (доступно: {{ countAllAvailable }}) -->
+                На данный момент недоступно
+              </label>
+              <!-- <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
+            Скоро будет доступно еще {{ countSoonAvailable }}
+          </div> -->
+            </div>
+            <div class="flex-col justify-center gap-2 hidden lg:flex" v-else>
+              <label
+                for="review-modal"
+                class="btn btn-sm btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content "
                 @click="$emit('openModal', buyoutuuId, deliveryId)"
               >
                 Оставить отзыв (доступно: {{ countAllAvailable }})
@@ -137,7 +152,7 @@ function openBuyout() {
       <div class="flex flex-col justify-center gap-2 lg:hidden">
         <label
           for="review-modal"
-          class="btn btn-sm btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content"
+          class="btn btn-sm btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content "
           @click="$emit('openModal', buyoutuuId, deliveryId)"
         >
           Оставить отзыв (доступно: {{ countAllAvailable }})
