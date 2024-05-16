@@ -12,6 +12,7 @@ const mpStore = useMPStore()
 const router = useRouter()
 const review_likes = ref<any>([])
 const sortPage = ref('all')
+const sortPageDate = ref('')
 const MPSelect = ref()
 const loading = ref(true)
 const selectedMP = ref<any>(
@@ -21,6 +22,23 @@ const selectedMP = ref<any>(
 const { width, height } = useWindowSize()
 // const { data, error } = await useFetch(`/api/${selectedMP.value}/likes/get`)
 // review_likes.value = data.value
+
+const limit = ref(50)
+const skip = ref(0)
+const end = ref(false)
+const target = ref(null)
+const targetIsVisible = ref(false)
+const { stop } = useIntersectionObserver(
+  target,
+  ([{ isIntersecting }], observerElement) => {
+    targetIsVisible.value = isIntersecting
+  }
+)
+watch(targetIsVisible, async (isVisible) => {
+  if (!end.value && isVisible && review_likes.value.length >= limit.value){
+    await getLikes()
+  }
+})
 
 onMounted(() => {
   setText()
@@ -80,7 +98,7 @@ async function resumeStatus(item: any) {
 }
 
 async function getLikes() {
-  loading.value = true
+  // loading.value = true
   if(mpStore.selectedMP == 'avito'){
     review_likes.value = []
     loading.value = false
@@ -88,11 +106,34 @@ async function getLikes() {
   }
 
   const { data, error } = await useFetch(
-    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`
-  )
-  if (data.value) {
-    review_likes.value = data.value
+    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`, {
+    method: 'GET',
+    query: {
+      statusQuery: sortPage.value,
+      dateFilter: sortPageDate.value,
+      string: search.text,
+      type: search.type,
+      limit: limit.value,
+      skip: skip.value,
+    },
+  })
+ if ((data.value as any)?.length === 0) {
+    loading.value = false
+    end.value = true
+    return
   }
+  if (data.value) {
+    review_likes.value = [...review_likes.value, ...(data.value! as any)]
+    loading.value = false
+  }
+  
+  if (error.value)
+    notify({
+      type: 'error',
+      title: 'Не удалось получить лайки',
+      text: error.value.message,
+    })
+  skip.value += limit.value
   loading.value = false
 }
 
@@ -124,36 +165,30 @@ async function deleteLike() {
   }
 }
 
-async function selectFilterDate(e: any) {
-  const target = e
-  const { data } = await useFetch(`/api/${mpStore.selectedMP}/likes/get`, {
-    method: 'GET',
-    query: {
-      dateFilter: target.value,
-    },
-    watch: false,
-  })
-  sortPage.value = target.value
-  review_likes.value = data.value
+async function selectFilterDate(e: any, date?: boolean) {
+  if (date) {
+    sortPageDate.value = e.value
+  }else{
+    sortPage.value = e.value
+  }
+  loading.value = true
+  review_likes.value = []
+  skip.value = 0
+  end.value = false
+  await getLikes()
 }
 
 async function findBuyouts(value: string, type: string) {
+  review_likes.value = []
+  skip.value = 0
+  end.value = false
   if (!value) {
     search.loading = false
-    getLikes()
+    await getLikes()
     return
   }
-  const { data, error } = await useFetch(
-    `/api/${mpStore.selectedMP}/likes/search`,
-    {
-      query: {
-        string: value,
-        type,
-      },
-      watch: false,
-    }
-  )
-  if (data.value) review_likes.value = data.value
+  loading.value = true
+  await getLikes()
 
   search.loading = false
 }
@@ -170,6 +205,9 @@ const updateSearchType = (filter: any) => {
 }
 
 async function selectMP(value: any) {
+  review_likes.value = []
+  skip.value = 0
+  end.value = false
   mpStore.changeMp(value.value, 'likes')
   selectedMP.value = mpStore.selectedMP
   getLikes()
@@ -285,7 +323,7 @@ const links = computed(() => {
             { title: '3 дня', value: '3days' },
             { title: 'Неделя', value: '7days' },
           ]"
-          @change-value="selectFilterDate"
+          @change-value="selectFilterDate($event, true)"
         />
 
         <CustomSelect

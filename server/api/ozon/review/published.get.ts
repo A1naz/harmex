@@ -44,6 +44,7 @@ export default eventHandler(async (event) => {
             .limit((limit as number) || 0)
     }
 
+    const deliveries = await Delivery.find({ _id: { $in: reviews.map((rev: any) => rev.delivery) } })
     let format = await Promise.all(
         reviews.map(async (review: any) => {
             const format: any = {
@@ -59,8 +60,8 @@ export default eventHandler(async (event) => {
                 status: review.status,
                 uuid: review.uuid,
             }
-
-            const delivery = await Delivery.findOne({ _id: review.delivery })
+            
+            const delivery = deliveries.find((delivery: any) => delivery._id.valueOf() == review.delivery.valueOf())
             if (delivery) {
                 format['buyoutuuid'] = delivery.uuidbuyout
             }
