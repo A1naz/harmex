@@ -13,7 +13,9 @@ export default eventHandler(async (event) => {
       $match: {
         user: new ObjectId(user._id),
         reviewed: false,
-        'statusdelivery.status': 'Получено',
+        'statusdelivery.status': {
+          $regex: 'Получен',
+        },
         status: 'completed',
       },
     },
