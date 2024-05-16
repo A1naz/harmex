@@ -6,51 +6,54 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { dateFilter } = getQuery(event)
+      const { dateFilter, statusQuery, string, type, skip = 0, limit = 50 } = getQuery(event)
 
-  const likes = await ProductLike.find({ user }).sort({ _id: -1 })
-  let filter
-  if(dateFilter === 'all' || dateFilter === undefined) {
-    filter = likes 
+  let likes = []
+
+  let searchQuery: { status?: any, $or?: any, createdDate?: any } = {};
+  if (type === 'name') {
+    searchQuery = {
+      $or: [{ name: { $regex: string, $options: 'i' } }],
+    }
   }
-  const today = new Date(Date.now())
-  today.setHours(0, 0, 0, 0)
-  switch (dateFilter) {
+
+  switch (statusQuery) {
     case 'completed':
-      filter = await ProductLike.find({
-        user,
-        $or: [
-          { status: { $regex: dateFilter, $options: 'i' } },
-        ],
-      }).sort({ _id: -1 })
-      break
     case 'nofunds':
-    filter = await ProductLike.find({
-      user,
-      $or: [
-        { status: { $regex: dateFilter, $options: 'i' } },
-      ],
-    }).sort({ _id: -1 })
-    break
     case 'work':
-      filter = await ProductLike.find({
-        user,
-        $or: [
-          { status: { $regex: dateFilter, $options: 'i' } },
-        ],
-      }).sort({ _id: -1 })
-      break
-    case 'today':
-      filter = likes.filter(item => new Date(item.createdDate) > today)
-      break
-    case '3days':
-      filter = likes.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 3))
-      break
-    case '7days':
-      filter = likes.filter(item => new Date(item.createdDate) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 7))
+      searchQuery.status = { $regex: statusQuery, $options: 'i' }
       break
   }
-  const format = (filter ? filter : likes).map((like, index) => {
+
+  switch (dateFilter) {
+    case 'today':
+      searchQuery.createdDate = {
+        $gte: new Date().setHours(0, 0, 0, 0),
+        $lt: new Date().setHours(23, 59, 59, 999)
+      };
+      break;
+    case '3days':
+      searchQuery.createdDate = {
+        $gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
+        $lt: new Date().setHours(23, 59, 59, 999)
+      };
+      break;
+    case '7days':
+      searchQuery.createdDate = {
+        $gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+        $lt: new Date().setHours(23, 59, 59, 999)
+      };
+      break;
+  }
+ 
+  likes = await ProductLike.find({
+    user,
+    ...searchQuery,
+  }).sort({ _id: -1 })
+  .skip(skip as number)
+  .limit(limit as number)
+
+  const format = likes.map((like, index) => {
     return {
       id: like._id,
       place: index + 1,
