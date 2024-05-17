@@ -117,7 +117,7 @@ function openBuyout() {
               </div>
             </div>
 
-            <div
+            <!-- <div
               class="flex-col justify-center gap-2 hidden lg:flex"
               v-if="store.client.username !== 'test'"
             >
@@ -129,8 +129,8 @@ function openBuyout() {
               >
                 На данный момент недоступно
               </label>
-            </div>
-            <div class="flex-col justify-center gap-2 hidden lg:flex" v-else>
+            </div> -->
+            <div class="flex-col justify-center gap-2 hidden lg:flex">
               <label
                 for="review-modal"
                 class="btn btn-sm btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content"
