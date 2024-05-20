@@ -33,6 +33,13 @@ export default eventHandler(async (event) => {
       .map((item: any) => item.origName)
   else sizes = data?.sizes_table?.values.map((size: any) => size.tech_size)
 
+   if (!sizes || sizes.length === 0) {
+    throw createError({
+      statusCode: 400,
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+    })
+  }
+
   fs.writeFileSync('sizes.json', JSON.stringify(sizes))
   const product = priceData?.data?.products.find(
     (item: any) => item.id === Number(params.article)
@@ -42,7 +49,7 @@ export default eventHandler(async (event) => {
   if (!product) {
     throw createError({
       statusCode: 400,
-      message: 'Не удалось получить данные о товаре',
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
     })
   }
   product.sizes.forEach((size: any) => {
@@ -51,7 +58,7 @@ export default eventHandler(async (event) => {
   if (!priceRaw || !sizes) {
     throw createError({
       statusCode: 400,
-      message: 'Не удалось получить данные о товаре',
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
     })
   }
   if (!instock) {

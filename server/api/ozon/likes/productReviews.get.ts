@@ -26,6 +26,11 @@ export default eventHandler(async (event) => {
       url: `https://www.ozon.ru/product/${article}/`,
       count: elPerPage,
     },
+  }).catch((e) => {
+    throw createError({
+      statusCode: 404,
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+    })
   })
 
 
