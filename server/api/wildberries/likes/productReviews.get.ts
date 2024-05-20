@@ -19,6 +19,12 @@ export default eventHandler(async (event) => {
   const data: any = await $fetch(urlToCard, {
     method: 'GET',
   })
+  .catch((e) => {
+    throw createError({
+      statusCode: 404,
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+    })
+  })
   const imt_id = data?.imt_id
   if (!imt_id) {
     throw createError({

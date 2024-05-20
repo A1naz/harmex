@@ -22,6 +22,11 @@ export default eventHandler(async (event) => {
       type: 'avitoProduct',
       url: `https://www.avito.ru/${article}`,
     },
+  }).catch((e) => {
+    throw createError({
+      statusCode: 404,
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+    })
   })
 
   if (!data) {
