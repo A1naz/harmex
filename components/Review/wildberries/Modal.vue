@@ -302,7 +302,6 @@ async function publishReview() {
   creatingReview.value = false
   emit('close')
   emit('publish')
-  location.reload()
 }
 
 async function removePhoto(index: number) {

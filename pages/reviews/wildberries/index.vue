@@ -150,7 +150,10 @@ function closeModal() {
 }
 function goToPublished() {
   closeModal()
-  navigateTo('/reviews/wildberries?status=available', { external: true })
+  reviews.value = []
+  skip.value = 0
+  end.value = false
+  fetchData()
 }
 
 const uuidForRemove = ref('')

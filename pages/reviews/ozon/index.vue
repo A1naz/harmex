@@ -137,8 +137,10 @@ function closeModal() {
 }
 function goToPublished() {
   closeModal()
-  navigateTo('/reviews/ozon?status=available', {external: true})
- 
+  reviews.value = []
+  skip.value = 0
+  end.value = false
+  fetchData()
 }
 
 const uuidForRemove = ref('')
