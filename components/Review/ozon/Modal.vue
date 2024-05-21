@@ -187,7 +187,7 @@ async function uploadToS3(event: Event, index: number) {
         path: 'reviewImages/' + data.value[0].key,
       },
     })
-    
+
     form.photos[index] = {
       url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
       public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
@@ -541,15 +541,27 @@ function convertToMoscowTime(dateString: any): Date {
 
       <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-2 font-medium">Отзыв о товаре</div>
+          <div class="pb-2 font-medium">Достоинства:</div>
 
+          <textarea
+            v-model="form.positive"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Напишите свое мнение"
+          />
+          <div class="pb-2 font-medium">Недостатки:</div>
+          <textarea
+            v-model="form.negative"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Напишите свое мнение"
+          />
+          <div class="pb-2 font-medium">Комментарий:</div>
           <textarea
             v-model="form.text"
             class="textarea w-full textarea-md bg-base-200"
-            placeholder="Например, хороший телефон"
+            placeholder="Оставьте тут своё мнение"
           />
 
-          <div v-if="review.drafts" class="text-xs">
+          <!-- <div v-if="review.drafts" class="text-xs">
             черновики:
             <button
               v-for="draft in review.drafts"
@@ -559,7 +571,7 @@ function convertToMoscowTime(dateString: any): Date {
               <p v-if="draft.draftName">{{ draft.draftName }}</p>
               <i v-else> {{ '<без названия>' }} </i>
             </button>
-          </div>
+          </div> -->
 
           <div class="text-error">{{ textValidError }}</div>
         </div>
@@ -616,9 +628,7 @@ function convertToMoscowTime(dateString: any): Date {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : $dayjs(form.date).format(
-                      'DD.MM.YYYY HH:mm'
-                    )
+                  : $dayjs(form.date).format('DD.MM.YYYY HH:mm')
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
