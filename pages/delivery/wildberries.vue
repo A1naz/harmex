@@ -44,10 +44,12 @@ const modal = ref(false)
 const statusModal = ref(false)
 const penaltyModal = ref(false)
 const currentStatusdDelivery = ref<any[]>([])
-function openModal(code: number, src: string) {
+const currentDelivery = ref<any>()
+function openModal(code: number, src: string, info: any) {
   modalInfo.src = src
   modalInfo.code = code
   modal.value = true
+  currentDelivery.value = info
 }
 function openStatusModal(statusdelivery: any[]) {
   currentStatusdDelivery.value = statusdelivery
@@ -592,10 +594,11 @@ function changeFilter(e: any) {
           class="flex justify-center items-center h-40 md:h-10"
         />
       </TransitionSlide>
-      <DeliveryQrModal
+      <DeliveryWildberriesQrModal
         v-if="modal"
         :code="modalInfo.code"
         :src="modalInfo.src"
+        :info="currentDelivery"
       />
     </div>
     <Hero v-else-if="!loading" />

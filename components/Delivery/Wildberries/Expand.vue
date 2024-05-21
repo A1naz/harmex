@@ -8,6 +8,9 @@ const props = defineProps({
   state: {
     type: Boolean,
   },
+  index: {
+    type: Number,
+  }
 })
 const emit = defineEmits(['openModal', 'openStatusModal', 'openPenaltyModal'])
 const currency = useCurrency()
@@ -198,7 +201,7 @@ function daysToPenalty(statusdelivery: any[]) {
                 
                 <div v-if="info.receiptcodeqr" class="flex justify-end">
                 <label
-                    for="qr-modal" class="btn btn-primary btn-xs flex bg-opacity-20 border-opacity-5 text-primary rounded-md gap-2" @click="emit('openModal', parseInt(info.receiptcode), info.receiptcodeqr)"
+                    for="qr-modal" class="btn btn-primary btn-xs flex bg-opacity-20 border-opacity-5 text-primary rounded-md gap-2" @click="emit('openModal', parseInt(info.receiptcode), info.receiptcodeqr, info)"
                     >
                     <Icon name="material-symbols:qr-code" size="24" /> <span class="hidden lg:block">QR-код</span>
                 </label>
