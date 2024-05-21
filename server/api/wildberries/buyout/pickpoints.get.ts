@@ -1,7 +1,5 @@
 import fs from 'node:fs'
 import { getServerSession } from '#auth'
-import { ProxySearchQuery } from '~/server/lib/models/ProxySearchQuery'
-import { HttpsProxyAgent } from 'https-proxy-agent'
 import {
   removeExtraPickpoints,
   createPickpointsFile,

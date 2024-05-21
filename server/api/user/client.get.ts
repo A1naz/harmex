@@ -36,9 +36,8 @@ export default eventHandler(async (event) => {
     const admin = await User.findOne({ uuid: user.uuidCompany })
     if (!admin) return sendRedirect(event, '/auth', 302)
     user.tariff = admin.tariff
-  user.balance = admin.balance
+    user.balance = admin.balance
   }
-
 
   const client: Client = {
     email: user.email ? user.email : '',
@@ -65,6 +64,7 @@ export default eventHandler(async (event) => {
     orgInn: user.orgInn ? user.orgInn : '',
     middleName: user.middleName ? user.middleName : '',
     phoneNumber: user.phoneNumber ? user.phoneNumber : '',
+    ffEnabled: user.ffEnabled ? true : false,
   }
 
   return {
