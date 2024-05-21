@@ -34,7 +34,7 @@ async function getReady(user: Document) {
       const currentstatus = delivery.statusdelivery?.length ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status : 'Неизвестно'
       const statusupdated = delivery.statusdelivery?.length ? new Date(delivery.statusdelivery[delivery.statusdelivery.length - 1].date) : new Date()
       const deliveryDate = delivery.statusdelivery?.length ? new Date(delivery.statusdelivery?.find(item => item.status === 'Готов к выдаче' || item.status === 'Готов к получению')?.date) : new Date()
-      const expireDate = new Date(deliveryDate.getTime() + 1000 * 60 * 60 * 24 * 7)
+      const expireDate = new Date(deliveryDate.getTime() + 1000 * 60 * 60 * 24 * 14)
       return {
         index,
         place,
