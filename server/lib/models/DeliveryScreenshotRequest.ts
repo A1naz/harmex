@@ -8,7 +8,7 @@ const DeliveryScreenshotRequestSchema = new Schema({
   account: { type: String, required: true },
   status: { type: String, default: 'created' },
   article: { type: Number, requred: true },
-  screenshots: { type: String, required: false },
+  screenshot: { type: String, required: false },
   mp: { type: String, required: true },
 })
 

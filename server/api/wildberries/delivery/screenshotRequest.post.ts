@@ -20,25 +20,36 @@ export default eventHandler(async (event) => {
 
   const uuidRequest = uuid()
 
-  let foundRequest: any = await DeliveryScreenshotRequest.findOne({ uuid: uuidRequest })
+  let foundRequest: any = await DeliveryScreenshotRequest.findOne({
+    uuid: uuidRequest,
+  })
 
   await DeliveryScreenshotRequest.create({
     uuid: uuidRequest,
     uuidbuyout: deliveryUuid,
     requireDate: new Date(),
-    screenshots: '',
+    screenshot: '',
     account,
     article,
     mp,
     status: 'created',
   })
 
-
+  let cycleCount = 0
   while (true) {
-    foundRequest = await DeliveryScreenshotRequest.findOne({ uuid: uuidRequest })
-    
+    if (cycleCount > 70) {
+      throw createError({
+        statusCode: 404,
+        message: 'Не удалось получить скриншот',
+      })
+    }
+
+    foundRequest = await DeliveryScreenshotRequest.findOne({
+      uuid: uuidRequest,
+    })
+
     if (foundRequest && foundRequest.status === 'accepted') {
-      return foundRequest.screenshots
+      return foundRequest.screenshot
     }
     if (foundRequest && foundRequest.status === 'rejected') {
       throw createError({
@@ -46,6 +57,7 @@ export default eventHandler(async (event) => {
         message: 'Не удалось получить скриншот',
       })
     }
-    await new Promise(resolve => setTimeout(resolve, 10000))
+
+    await new Promise((resolve) => setTimeout(resolve, 10000))
   }
 })
