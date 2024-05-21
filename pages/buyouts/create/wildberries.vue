@@ -139,15 +139,19 @@ const totalQuantity = computed(() => {
 })
 
 const pickpoints = shallowRef()
+const ffPickpoints = shallowRef()
 const modalOpen = ref(false)
+const modalOpenFF = ref(false)
 function closeModal() {
   modalOpen.value = false
+  modalOpenFF.value = false
 }
 
 async function openChecksModal() {
   const productCountsByAddress: any = {}
 
   if (!isUserWarned.value) {
+    //@ts-ignore
     const { data, error }: any = await useFetch(
       '/api/wildberries/buyout/checkPVZRestrictions',
       {
@@ -268,16 +272,38 @@ async function getPickpoints() {
     })
   }
 }
+async function getFFPickpoints() {
+  try {
+    // @ts-ignore
+    const data = await $fetch('/api/wildberries/ff/userPickpoints', {
+      method: 'GET',
+    })
+    ffPickpoints.value = (data as any).points
+  } catch (e: any) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: e?.message,
+      type: 'error',
+      duration: 3000,
+    })
+  }
+}
 
 async function pointModalOpen(index: number) {
   if (!pickpoints.value) loading.value = true
 
   store.selectedItem = index
-  modalOpen.value = true
+
+  if (products.value[index].key) {
+    modalOpenFF.value = true
+  } else {
+    modalOpen.value = true
+  }
 }
 
 onMounted(async () => {
   getPickpoints()
+  getFFPickpoints()
   if (route.query.uuid) {
     loading.value = true
     await store.cloneBuyout(route.query.uuid.toString())
@@ -541,6 +567,13 @@ function modalAddProduct(changedArticle: any) {
         @callback="handleAddress"
         @close="closeModal"
       />
+      <BuyoutWildberriesSelectFFPointModal
+        v-if="modalOpenFF"
+        :state="modalOpenFF"
+        :pickpoints="ffPickpoints"
+        @callback="handleAddress"
+        @close="closeModal"
+      />
     </ClientOnly>
     <div
       v-show="products.length"
@@ -614,7 +647,7 @@ function modalAddProduct(changedArticle: any) {
               </div>
             </div>
             <div
-              v-if="rule.id === 1 && mainStore.client.username == 'test'"
+              v-if="rule.id === 1 && mainStore.client.ffEnabled"
               class="label cursor-pointer flex gap-4 items-start justify-between"
             >
               <span class="label-text">{{ 'Выкуп под ключ ' }}</span>
@@ -627,6 +660,7 @@ function modalAddProduct(changedArticle: any) {
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].key"
+                  @click="products[selectedRuleProductIndex].adress = ''"
                   class="checkbox checkbox-primary border-base-content"
                 />
               </div>
