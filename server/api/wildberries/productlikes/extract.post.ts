@@ -93,7 +93,6 @@ export default eventHandler(async (event) => {
     }
   } else if (splitted.at(-2) === 'brands') {
     const brand = splitted.at(-1)
-console.log(brand);
 
     const data: { name: string; id: number; siteId: number } = await $fetch(
       `https://static.wbstatic.net/data/brands/${brand}.json`,

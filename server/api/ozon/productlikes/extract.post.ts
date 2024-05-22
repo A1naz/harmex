@@ -42,6 +42,13 @@ export default eventHandler(async (event) => {
       message: 'invalid url',
     })
   }
+  if(url.includes('ozon.ru/seller')){
+    return createError({
+      statusCode: 400,
+      message: 'Не удалось получить данные о товаре/бренде',
+    })
+  }
+  
   const type = url.includes('ozon.ru/brand') ? 'brand' : 'product'
 
   if (type === 'product') {
