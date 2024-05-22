@@ -76,8 +76,8 @@ export default eventHandler(async (event) => {
   })
   const priceText = currency.format(price)
   const image = findImage(params.article)
-
-  const productInfo = data.data.products[0]
+  
+  const productInfo = rawData.data.products[0]
 
 
   return {
