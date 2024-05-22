@@ -109,6 +109,7 @@ export default eventHandler(async (event) => {
     name,
     middleName,
     phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
+    emailConfirmed: true,
   })
   await user.save()
   const url = useRuntimeConfig().PUBLIC_SITE_URL
