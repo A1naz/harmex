@@ -36,9 +36,9 @@ async function createRequest(){
     watch: false,
   })
   if (data.value) {
-    if(deliveryClosedUuid.value !== '' && deliveryClosedUuid.value !== props.info.uuid){
-      btnDisabled.value = false
-      return
+    if (deliveryClosedUuid.value !== '' && deliveryClosedUuid.value !== props.info.uuid) {
+      btnDisabled.value = false;
+      return;
     }
     notify({
       type: 'success',
@@ -92,7 +92,6 @@ watch(modalCheckbox, (newVal) => {
           :src="`${newSrc !== '' ? newSrc : src}`"
           @click.stop
         />
-        <!-- {{ src  }} -->
       </div>
       <button :disabled="btnDisabled" class="btn btn-sm btn-primary mt-2 bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content w-full h-[2.5rem]" @click="createRequest">
         <span v-if="!btnDisabled">Запросить QR</span>
