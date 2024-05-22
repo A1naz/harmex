@@ -7,7 +7,7 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const { skip, limit, search } = getQuery(event)
-
+  
   const pipeLine: any[] = [
     {
       $match: {
@@ -74,6 +74,7 @@ export default eventHandler(async (event) => {
       },
     },
     { $project: { _id: 0 } },
+    { $sort: { countAvailable: -1 } },
   ]
 
   const limitA = limit ? parseInt(limit.toString(), 10) : 100
@@ -93,7 +94,7 @@ export default eventHandler(async (event) => {
 
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
-
+  console.log(readyForReview[0].article)
   const soonForReview = await Delivery.aggregate([
     {
       $match: {
