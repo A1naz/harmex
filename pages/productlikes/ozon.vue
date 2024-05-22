@@ -475,7 +475,7 @@ const updateSearchType = (filter: any) => {
               class="text-center border-r border-primary border-opacity-5 text-base-content truncate bg-base-100"
             >
               <span class="whitespace-normal break-words max-w-[150px]">{{
-                item.name
+                item.name.trim() ? item.name : 'неизвестно'
               }}</span>
             </td>
             <td
