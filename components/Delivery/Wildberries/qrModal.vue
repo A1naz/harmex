@@ -19,6 +19,7 @@ const src = toRef(props, 'src')
 const code = toRef(props, 'code')
 const newSrc = ref('')
 const btnDisabled = ref(false)
+const deliveryClosedUuid = ref('')
 async function createRequest(){
   btnDisabled.value = true
   notify({
@@ -35,6 +36,10 @@ async function createRequest(){
     watch: false,
   })
   if (data.value) {
+    if (deliveryClosedUuid.value !== '' && deliveryClosedUuid.value !== props.info.uuid) {
+      btnDisabled.value = false;
+      return;
+    }
     notify({
       type: 'success',
       title: 'Скриншот получен',
@@ -60,6 +65,10 @@ const modalCheckbox = ref(false)
 watch(modalCheckbox, (newVal) => {
   if (!newVal) {
     newSrc.value = ''
+    deliveryClosedUuid.value = props.info.uuid
+  }
+  if(newVal && deliveryClosedUuid.value !== props.info.uuid) {
+    btnDisabled.value = false
   }
 })
 </script>
@@ -83,7 +92,6 @@ watch(modalCheckbox, (newVal) => {
           :src="`${newSrc !== '' ? newSrc : src}`"
           @click.stop
         />
-        <!-- {{ src  }} -->
       </div>
       <button :disabled="btnDisabled" class="btn btn-sm btn-primary mt-2 bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content w-full h-[2.5rem]" @click="createRequest">
         <span v-if="!btnDisabled">Запросить QR</span>
