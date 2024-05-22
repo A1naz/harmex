@@ -79,7 +79,6 @@ export default eventHandler(async (event) => {
   
   const productInfo = rawData.data.products[0]
 
-
   return {
     product: {
       image,

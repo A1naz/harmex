@@ -7,9 +7,6 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const pvzs: any = await FFPVZ.findOne({ user })
-
-  console.log(user._id);
-  console.log(pvzs.pvzs);
   
   if (!pvzs || !pvzs.pvzs || !pvzs.pvzs.length) {
     return {
