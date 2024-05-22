@@ -86,8 +86,8 @@ export default eventHandler(async (event) => {
     return {
       type: 'product',
       image,
-      article: (data.nm_id as number) || (article as number),
-      name: `${data.data.products[0].brand} / ${data.data.products[0].brand}` || '',
+      article:  (article as number),
+      name: `${rawData.data.products[0].brand} / ${rawData.data.products[0].brand}` || '',
       price: (price as number) || 0,
       priceText: (priceText as string) || '',
     }
