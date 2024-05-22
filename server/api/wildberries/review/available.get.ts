@@ -88,8 +88,8 @@ export default eventHandler(async (event) => {
     }
   }
 
-  // if (skipA > 0) pipeLine.push({ $skip: skipA })
-  // if (limitA > 0) pipeLine.push({ $limit: limitA })
+  if (skipA > 0) pipeLine.push({ $skip: skipA })
+  if (limitA > 0) pipeLine.push({ $limit: limitA })
 
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
@@ -121,21 +121,19 @@ export default eventHandler(async (event) => {
     }
     return 'Нет'
   }
-  const formated = readyForReview
-    .map((r) => {
-      const countSoon = soonForReview.filter((sfr) => sfr._id == r.article)
-      return {
-        ...r,
-        countSoon: countSoon.length > 0 ? countSoon[0].count : 0,
-        delivs: r.delivs.map((d: any) => {
-          return {
-            ...d,
-            sex: (d.gender = sex(d.gender)),
-          }
-        }),
-      }
-    })
-    .sort((a, b) => b.countAvailable - a.countAvailable)
+  const formated = readyForReview.map((r) => {
+    const countSoon = soonForReview.filter((sfr) => sfr._id == r.article)
+    return {
+      ...r,
+      countSoon: countSoon.length > 0 ? countSoon[0].count : 0,
+      delivs: r.delivs.map((d: any) => {
+        return {
+          ...d,
+          sex: (d.gender = sex(d.gender)),
+        }
+      }),
+    }
+  })
 
   return formated
 })
