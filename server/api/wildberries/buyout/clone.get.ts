@@ -27,7 +27,7 @@ export default eventHandler(async (event) => {
     }
   )
 
-  const productInfo = dataWB.data.products[0]
+  const productInfo = rawData.data.products[0]
   const priceData = rawData
 
   let sizes = []
@@ -72,7 +72,7 @@ export default eventHandler(async (event) => {
 
   return {
     image,
-    article: (productInfo.nm_id as number) || (buyout.article as number),
+    article: (buyout.article as number),
     name: `${productInfo.brand} / ${productInfo.name}` || '',
     sizes: (sizes as number[] | string[]) || [],
     price: (price as number) || 0,
