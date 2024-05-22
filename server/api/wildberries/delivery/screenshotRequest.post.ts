@@ -21,8 +21,13 @@ export default eventHandler(async (event) => {
   const uuidRequest = uuid()
 
   let foundRequest: any = await DeliveryScreenshotRequest.findOne({
-    uuid: uuidRequest,
-  })
+    account: user.phoneNumber,
+  }).sort({ _id: -1 })
+
+  if (foundRequest && foundRequest.status === 'created') {
+    foundRequest.status = 'rejected'
+    await foundRequest.save()
+  }
 
   await DeliveryScreenshotRequest.create({
     uuid: uuidRequest,
@@ -38,7 +43,6 @@ export default eventHandler(async (event) => {
   let cycleCount = 0
   while (true) {
     cycleCount++
-    console.log('cycleCount', cycleCount);
     
     if (cycleCount > 590) {
       throw createError({

@@ -19,6 +19,7 @@ const src = toRef(props, 'src')
 const code = toRef(props, 'code')
 const newSrc = ref('')
 const btnDisabled = ref(false)
+const deliveryClosedUuid = ref('')
 async function createRequest(){
   btnDisabled.value = true
   notify({
@@ -35,6 +36,10 @@ async function createRequest(){
     watch: false,
   })
   if (data.value) {
+    if(deliveryClosedUuid.value !== '' && deliveryClosedUuid.value !== props.info.uuid){
+      btnDisabled.value = false
+      return
+    }
     notify({
       type: 'success',
       title: 'Скриншот получен',
@@ -60,6 +65,10 @@ const modalCheckbox = ref(false)
 watch(modalCheckbox, (newVal) => {
   if (!newVal) {
     newSrc.value = ''
+    deliveryClosedUuid.value = props.info.uuid
+  }
+  if(newVal && deliveryClosedUuid.value !== props.info.uuid) {
+    btnDisabled.value = false
   }
 })
 </script>
