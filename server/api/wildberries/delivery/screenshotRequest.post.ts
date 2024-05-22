@@ -2,6 +2,7 @@ import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
 import { Buyout } from '~~/server/lib/models/wildberries/Buyout'
 import { DeliveryScreenshotRequest } from '~~/server/lib/models/DeliveryScreenshotRequest'
 import { v4 as uuid } from 'uuid'
+const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -21,8 +22,13 @@ export default eventHandler(async (event) => {
   const uuidRequest = uuid()
 
   let foundRequest: any = await DeliveryScreenshotRequest.findOne({
-    uuid: uuidRequest,
-  })
+    account: user.phoneNumber,
+  }).sort({ _id: -1 })
+
+  if (foundRequest && foundRequest.status === 'created') {
+    foundRequest.status = 'rejected'
+    await foundRequest.save()
+  }
 
   await DeliveryScreenshotRequest.create({
     uuid: uuidRequest,
@@ -38,7 +44,6 @@ export default eventHandler(async (event) => {
   let cycleCount = 0
   while (true) {
     cycleCount++
-    console.log('cycleCount', cycleCount);
     
     if (cycleCount > 590) {
       throw createError({
@@ -52,7 +57,7 @@ export default eventHandler(async (event) => {
     })
 
     if (foundRequest && foundRequest.status === 'accepted') {
-      return foundRequest.screenshot
+      return config.public.DOMAIN_API_IMAGES_URL +foundRequest.screenshot
     }
     if (foundRequest && foundRequest.status === 'rejected') {
       throw createError({
