@@ -37,7 +37,10 @@ export default eventHandler(async (event) => {
 
   let cycleCount = 0
   while (true) {
-    if (cycleCount > 70) {
+    cycleCount++
+    console.log('cycleCount', cycleCount);
+    
+    if (cycleCount > 590) {
       throw createError({
         statusCode: 404,
         message: 'Не удалось получить скриншот',
