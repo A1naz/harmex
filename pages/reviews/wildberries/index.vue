@@ -77,8 +77,15 @@ const fetchData = async () => {
     }
   )
   if (response) {
-    reviews.value = [...reviews.value, ...response]
-    if (response.length < limit.value) end.value = true
+    if(endpoint.value == 'available') {
+      reviews.value = [...reviews.value, ...response.data]
+      if (!response.continueLoading) {
+        end.value = true
+      }
+    }else{
+      reviews.value = [...reviews.value, ...response]
+      if (response.length < limit.value) end.value = true
+    }
   }
   isFetch.value = false
   loading.value = false

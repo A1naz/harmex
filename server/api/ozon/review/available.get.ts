@@ -72,6 +72,7 @@ export default eventHandler(async (event) => {
       },
     },
     { $project: { _id: 0 } },
+    { $sort: { countAvailable: -1, lastUpdated: -1 } },
   ]
   
   const limitA = limit ? parseInt(limit.toString(), 10) : 100
