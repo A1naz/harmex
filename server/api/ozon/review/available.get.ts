@@ -72,10 +72,10 @@ export default eventHandler(async (event) => {
       },
     },
     { $project: { _id: 0 } },
-    { $sort: { countAvailable: -1, lastUpdated: -1 } },
+    { $sort: { countAvailable: -1} },
   ]
   
-  const limitA = limit ? parseInt(limit.toString(), 10) : 100
+  const limitA = limit ? parseInt(limit.toString(), 10) : 1000
   const skipA = skip ? parseInt(skip.toString(), 10) : 0
   const searchParse = search ? JSON.parse(search?.toString()) : undefined
 
@@ -87,8 +87,8 @@ export default eventHandler(async (event) => {
     }
   }
 
-  if (skipA > 0) pipeLine.push({ $skip: skipA })
-  if (limitA > 0) pipeLine.push({ $limit: limitA })
+  // if (skipA > 0) pipeLine.push({ $skip: skipA })
+  // if (limitA > 0) pipeLine.push({ $limit: limitA })
 
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
@@ -122,15 +122,15 @@ export default eventHandler(async (event) => {
   }
     return 'Нет'
   }
-  const formated = readyForReview.map((r) => {
-    const countSoon = soonForReview.filter((sfr) => sfr._id == r.article)
+  const formated = readyForReview.map((deliveryForReview: any) => {
+    const countSoon = soonForReview.filter((sfr) => sfr._id == deliveryForReview.article)
     return {
-      ...r,
+      ...deliveryForReview,
       countSoon: countSoon.length > 0 ? countSoon[0].count : 0,
-      delivs: r.delivs.map((d: any) => {
+      delivs: deliveryForReview.delivs.map((delivery: any) => {
         return {
-          ...d,
-          sex: (d.gender = sex(d.gender)),
+          ...delivery,
+          sex: (delivery.gender = sex(delivery.gender)),
         }
       }),
     }

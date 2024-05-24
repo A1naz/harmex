@@ -47,7 +47,7 @@ const searchOptions = ref([
 ])
 
 const skip = ref<number>(0)
-const limit = ref<number>(25)
+const limit = computed(() => (currentTab.value == 'available' ? 1000 : 50))
 const search = ref<any>({ type: 'article', text: '' })
 const loading = ref(false)
 
