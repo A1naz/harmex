@@ -13,7 +13,12 @@ export default eventHandler(async (event) => {
   const skipA = skip ? parseInt(skip.toString(), 10) : 0
   const searchParse = search ? JSON.parse(search?.toString()) : undefined
 
-
+  // if (Object.values(searchParse)[0] !== '') {
+  //   if (Object.keys(searchParse)[0] == SelectOptionsReviews.idReview) {
+  //     searchParse = { _id: new ObjectId(searchParse[SelectOptionsReviews.idReview]) }
+  //   }
+  // }
+ 
   const deliveriesForReview = await Delivery.find({
     user,
     reviewed: { $ne: true },
@@ -21,8 +26,7 @@ export default eventHandler(async (event) => {
     'statusdelivery.status': { $regex: 'Получен' },
   })
   .sort({ _id: -1 })
-  .skip(skipA as number)
-  .limit(limitA as number);
+  .limit(100);
   
   const buyoutsId = deliveriesForReview.map((item) => item.idbuyout);
   
@@ -65,9 +69,6 @@ export default eventHandler(async (event) => {
     })
   );
 
-  console.log(format.length === limitA, format.length,limitA);
-  return {
-    data: format.sort((a, b) => b.countAvailable - a.countAvailable),
-    continueLoading: deliveriesForReview.length === limitA 
-  };
+  // console.log(format.length === limitA, format.length,limitA);
+  return format.sort((a, b) => b.countAvailable - a.countAvailable)
 })
