@@ -45,7 +45,7 @@ const searchOptions = ref([
 ])
 
 const skip = ref<number>(0)
-const limit = ref<number>(100)
+const limit = computed(() => (currentTab.value == 'available' ? 1000 : 50))
 const search = ref<any>({ type: 'article', text: '' })
 const loading = ref(false)
 
@@ -109,7 +109,7 @@ function onSearchInput(val: any) {
   if (searchText.value !== '' && searchText.value.trim() === '') {
     return
   }
-  loading.value= true
+  loading.value = true
   reviews.value = []
   skip.value = 0
   end.value = false
@@ -227,7 +227,11 @@ const statusText = computed(() => {
 })
 
 async function changeMP(e: any) {
-  mpStore.changeMp(e.value, 'reviews', route.query?.status ? '?status=' + route.query.status : '')
+  mpStore.changeMp(
+    e.value,
+    'reviews',
+    route.query?.status ? '?status=' + route.query.status : ''
+  )
 }
 const customLinks = tabs.map((filter) => ({
   title: filter.name,
@@ -242,7 +246,7 @@ async function resumeStatus(item: any) {
     },
     watch: false,
   })
-  if (error.value){
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -310,18 +314,12 @@ async function resumeStatus(item: any) {
             placeholder="Поиск"
             @change="onSearchInput"
           />
-          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
-            <span
-                v-if="loading"
-                class="loading loading-spinner loading-xs "
-              />
-            <Icon
-            v-else
-              class="text-gray-500 "
-              name="tabler:search"
-              size="20"
-            />
-             
+          <div
+            class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
+            @click="onSearchInput"
+          >
+            <span v-if="loading" class="loading loading-spinner loading-xs" />
+            <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
           </div>
         </div>
       </div>
@@ -331,7 +329,11 @@ async function resumeStatus(item: any) {
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="store.client.username == 'test'? mpStore.sortMp('reviews') : mpStore.sortMp('reviews', true)"
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.sortMp('reviews')
+              : mpStore.sortMp('reviews', true)
+          "
           @change-value="changeMP"
         />
         <CustomSelect
@@ -341,7 +343,10 @@ async function resumeStatus(item: any) {
           :status-text="selectText()"
           @change-value="changeTab"
         />
-        <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
+        <select
+          v-model="searchType"
+          class="select bg-base-300 bg-opacity-20 select-sm"
+        >
           <option
             v-for="option in searchOptions"
             :value="option.value"
@@ -367,7 +372,11 @@ async function resumeStatus(item: any) {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="store.client.username == 'test'? mpStore.sortMp('reviews') : mpStore.sortMp('reviews', true)"
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.sortMp('reviews')
+              : mpStore.sortMp('reviews', true)
+          "
           @change-value="changeMP"
         />
         <CustomSelect
@@ -411,7 +420,10 @@ async function resumeStatus(item: any) {
         > -->
       </div>
       <div class="gap-2 items-center hidden lg:flex">
-        <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
+        <select
+          v-model="searchType"
+          class="select bg-base-300 bg-opacity-20 select-sm"
+        >
           <option
             v-for="option in searchOptions"
             :value="option.value"
@@ -429,24 +441,17 @@ async function resumeStatus(item: any) {
           <input
             v-model="searchText"
             type="text"
-            class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none "
+            class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none"
             placeholder="Поиск"
             @change="onSearchInput"
           />
-          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
-            <span
-                v-if="loading"
-                class="loading loading-spinner loading-xs "
-              />
-            <Icon
-            v-else
-              class="text-gray-500 "
-              name="tabler:search"
-              size="20"
-            />
-             
+          <div
+            class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
+            @click="onSearchInput"
+          >
+            <span v-if="loading" class="loading loading-spinner loading-xs" />
+            <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
           </div>
-          
         </div>
 
         <div class="flex gap-1 items-center">
@@ -556,7 +561,7 @@ async function resumeStatus(item: any) {
     <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
     <div class="modal">
       <div class="modal-box max-w-xs py-6 px-3">
-        <h3 class="font-bold text-xl">Вы уверенны что хотите удалить  отзыв?</h3>
+        <h3 class="font-bold text-xl">Вы уверенны что хотите удалить отзыв?</h3>
         <p class="py-2.5">Стоимость услуги 100 рублей!</p>
         <div class="flex justify-between">
           <label

@@ -1,5 +1,4 @@
 import { Delivery } from '@/server/lib/models/wildberries/Delivery'
-import { Buyout } from '~~/server/lib/models/wildberries/Buyout'
 import { ObjectId } from 'mongodb'
 import { SelectOptionsReviews } from '@/data/enums'
 
@@ -9,66 +8,136 @@ export default eventHandler(async (event) => {
 
   const { skip, limit, search } = getQuery(event)
 
-  const limitA = limit ? parseInt(limit.toString(), 10) : 100
+  const pipeLine: any[] = [
+    {
+      $match: {
+        user: new ObjectId(user._id),
+        reviewed: { $ne: true },
+        'statusdelivery.status': {
+          $regex: 'Получен',
+        },
+        status: 'completed',
+      },
+    },
+    { $sort: { _id: -1 } },
+    {
+      $project: {
+        _id: 1,
+        article: 1,
+        updatedAt: 1,
+        pricebuy: 1,
+        idbuyout: 1,
+        uuidbuyout: 1,
+        data8: 1, // gender
+      },
+    },
+    {
+      $lookup: {
+        from: 'buyouts',
+        localField: 'idbuyout',
+        foreignField: '_id',
+        as: 'buyout',
+      },
+    },
+    {
+      $unwind: {
+        path: '$buyout',
+      },
+    },
+    {
+      $addFields: {
+        size: '$buyout.sizeparam',
+        productname: '$buyout.product.name',
+        productimage: '$buyout.product.image',
+        gender: ['$data8', '$buyout.gender'],
+        sizeparam: '$buyout.sizeparam',
+      },
+    },
+    {
+      $group: {
+        _id: '$article',
+        article: { $last: '$article' },
+        lastUpdated: { $last: '$updatedAt' },
+        countAvailable: { $sum: 1 },
+        productimage: { $addToSet: '$productimage' },
+        productname: { $addToSet: '$productname' },
+        delivs: {
+          $push: {
+            delivId: '$_id',
+            pricebuy: '$pricebuy',
+            updatedAt: '$updatedAt',
+            buyoutId: '$uuidbuyout',
+            gender: '$gender',
+            sizeparam: '$sizeparam',
+          },
+        },
+      },
+    },
+    { $project: { _id: 0 } },
+    { $sort: { lastUpdated: -1 } },
+    { $sort: { countAvailable: -1 } },
+  ]
+
+  const limitA = limit ? parseInt(limit.toString(), 10) : 1000
   const skipA = skip ? parseInt(skip.toString(), 10) : 0
   const searchParse = search ? JSON.parse(search?.toString()) : undefined
 
-  // if (Object.values(searchParse)[0] !== '') {
-  //   if (Object.keys(searchParse)[0] == SelectOptionsReviews.idReview) {
-  //     searchParse = { _id: new ObjectId(searchParse[SelectOptionsReviews.idReview]) }
-  //   }
-  // }
- 
-  const deliveriesForReview = await Delivery.find({
-    user,
-    reviewed: { $ne: true },
-    status: 'completed',
-    'statusdelivery.status': { $regex: 'Получен' },
-  })
-  .sort({ _id: -1 })
-  .limit(100);
-  
-  const buyoutsId = deliveriesForReview.map((item) => item.idbuyout);
-  
-  const buyouts = await Buyout.find({ _id: { $in: buyoutsId } });
+  if (Object.values(searchParse)[0] !== '') {
+    if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
+      pipeLine.splice(3, 0, { $match: { ...searchParse } }) // after $project
+    } else {
+      pipeLine.splice(1, 0, { $match: { ...searchParse } }) // after $match
+    }
+  }
 
-  const format: any = [];
-  
-  await Promise.all(
-    deliveriesForReview.map(async (delivery) => {
-      const buyout = buyouts.find((item) => item._id.valueOf() === delivery.idbuyout.valueOf());
-      
-      if (buyout) {
-        const existingArticle = format.find((item: any) => item.article === delivery.article);
-  
-        const formattedDelivery = {
-          delivId: delivery._id,
-          pricebuy: buyout.product.price,
-          updatedAt: delivery.updatedAt,
-          buyoutId: delivery.idbuyout,
-          gender: buyout.gender,
-          sizeparam: buyout.sizeparam,
-          sex: buyout.gender,
-        };
-  
-        if (existingArticle) {
-          existingArticle.delivs.push(formattedDelivery);
-          existingArticle.countAvailable += 1; 
-        } else {
-          format.push({
-            article: delivery.article,
-            lastUpdated: delivery.updatedAt,
-            countAvailable: 1,
-            productimage: [buyout.product.image],
-            productname: [buyout.product.name],
-            delivs: [formattedDelivery],
-            countSoon: 0,
-          });
+  // if (skipA > 0) pipeLine.push({ $skip: skipA })
+  // if (limitA > 0) pipeLine.push({ $limit: limitA })
+
+  console.log(pipeLine)
+
+  const readyForReview = await Delivery.aggregate(pipeLine)
+  if (!readyForReview) return []
+
+  const soonForReview = await Delivery.aggregate([
+    {
+      $match: {
+        user: new ObjectId(user._id),
+        status: 'active',
+        reviewed: false,
+      },
+    },
+    {
+      $group: {
+        _id: '$article',
+        count: { $sum: 1 },
+      },
+    },
+  ])
+
+  const genderMap = new Map<string, string>([
+    ['female', 'Женский'],
+    ['male', 'Мужской'],
+  ])
+  const sex = (genders: string[]): string => {
+    for (const gen of genders) {
+      let foundGen = genderMap.get(gen.toLowerCase())
+      if (foundGen) return foundGen
+    }
+    return 'Нет'
+  }
+  const formated = readyForReview.map((r) => {
+    const countSoon = soonForReview.filter((sfr) => sfr._id == r.article)
+    return {
+      ...r,
+      countSoon: countSoon.length > 0 ? countSoon[0].count : 0,
+      delivs: r.delivs.map((d: any) => {
+        return {
+          ...d,
+          sex: (d.gender = sex(d.gender)),
         }
-      }
-    })
-  );
+      }),
+    }
+  })
 
-  // console.log(format.length === limitA, format.length,limitA);
-  return format.sort((a, b) => b.countAvailable - a.countAvailable)
+  return formated
 })
