@@ -29,8 +29,6 @@ export default eventHandler(async (event) => {
       }
     }
   }).filter((item: any) => item !== undefined)
-
-  console.log(format.length);
   
   return {
     status: 'ok',
