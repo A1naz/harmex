@@ -19,17 +19,23 @@ export default eventHandler(async (event) => {
   const minDate = new Date(new Date().setHours(trueDate.getHours() - 6))
   const maxDate = new Date(new Date().setHours(trueDate.getHours() + 6))
 
-  const format = pvzs.pvzs.map((item: any) => {
-    if (new Date(item.date) >= minDate && new Date(item.date) <= maxDate) {
-      return {
-        id: item.id,
-        a: item.address,
-        lt: item.lt,
-        lg: item.lg,
+  console.log('trueDate', trueDate)
+  console.log('minDate', minDate)
+  console.log('maxDate', maxDate)
+
+  const format = pvzs.pvzs
+    .map((item: any) => {
+      if (new Date(item.date) >= minDate && new Date(item.date) <= maxDate) {
+        return {
+          id: item.id,
+          a: item.address,
+          lt: item.lt,
+          lg: item.lg,
+        }
       }
-    }
-  }).filter((item: any) => item !== undefined)
-  
+    })
+    .filter((item: any) => item !== undefined)
+
   return {
     status: 'ok',
     points: format,
