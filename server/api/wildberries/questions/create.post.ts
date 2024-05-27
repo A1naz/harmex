@@ -15,6 +15,7 @@ export default eventHandler(async (event) => {
       message: 'Текст вопроса должен быть длиннее 10 символов и короче 1000',
     })
   }
+  
   const date = new Date(publishDate) < new Date() ? new Date() : publishDate
   const created = new Question({
     user,
