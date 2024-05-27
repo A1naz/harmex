@@ -16,8 +16,8 @@ export default eventHandler(async (event) => {
   }
 
   const trueDate = new Date(new Date().setHours(0, 0, 0, 0))
-  const minDate = new Date(new Date().setHours(trueDate.getHours() - 6))
-  const maxDate = new Date(new Date().setHours(trueDate.getHours() + 6))
+  const minDate = new Date(new Date(trueDate).setHours(trueDate.getHours() - 6))
+  const maxDate = new Date(new Date(trueDate).setHours(trueDate.getHours() + 6))
 
   console.log('trueDate', trueDate)
   console.log('minDate', minDate)
@@ -31,6 +31,7 @@ export default eventHandler(async (event) => {
           a: item.address,
           lt: item.lt,
           lg: item.lg,
+          w: item.w,
         }
       }
     })
