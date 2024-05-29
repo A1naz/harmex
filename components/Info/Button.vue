@@ -21,6 +21,13 @@ const route = useRoute()
     </button>
     <NuxtLink
       
+      to="/tariffs"
+      class="relative bg-base-100 btn btn-xs btn-circle border-none"
+    >
+      <IconCSS name="pepicons-pop:dollar-circle-filled" size="24" />
+    </NuxtLink>
+    <NuxtLink
+      
       to="/profile"
       class="relative bg-base-100 btn btn-xs btn-circle border-none"
     >

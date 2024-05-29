@@ -73,6 +73,8 @@ function toggleInfoModal() {
 const statusText = computed(() => {
   if (route.path.startsWith('/profile')) {
     return 'Профиль';
+  }else if (route.path.startsWith('/tariffs')) {
+    return 'Тарифы';
   } else if (route.path.startsWith('/productlikes')) {
     return 'Лайки'
   }else
