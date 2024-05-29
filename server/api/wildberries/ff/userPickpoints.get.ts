@@ -10,8 +10,6 @@ export default eventHandler(async (event) => {
 
   const pvzs: any = await FFPVZ.findOne({ user })
 
-  console.log('pvzs', pvzs)
-
   if (!pvzs || !pvzs.pvzs || !pvzs.pvzs.length) {
     return {
       status: 'ok',
@@ -23,10 +21,6 @@ export default eventHandler(async (event) => {
   const minDate = new Date(new Date(trueDate).setHours(trueDate.getHours() - 6))
   const maxDate = new Date(new Date(trueDate).setHours(trueDate.getHours() + 6))
   const rmDate = new Date(new Date().setHours(trueDate.getHours() - 24))
-  console.log('trueDate', trueDate)
-  console.log('rmDate', rmDate)
-  console.log('minDate', minDate)
-  console.log('maxDate', maxDate)
 
   pvzs.pvzs = pvzs.pvzs.filter((item: any) => new Date(item.date) > rmDate)
 
