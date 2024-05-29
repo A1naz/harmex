@@ -20,6 +20,8 @@ const templateTitle = ref('')
 const templates = ref<any>([])
 const modalShow = ref(false)
 const codeInput = ref()
+const refreshKey = ref(1)
+const lastItemDateRange = ref<any>([])
 
 definePageMeta({
   layout: 'app',
@@ -186,7 +188,7 @@ async function openChecksModal() {
 
   let valid = true
   let errorMsg = ''
-  products.value.forEach((item) => {
+  products.value.forEach((item: any) => {
     if (!item.adress) {
       valid = false
       errorMsg = 'Не у всех товаров указан адрес доставки'
@@ -200,7 +202,17 @@ async function openChecksModal() {
       errorMsg = 'Не у всех товаров указан поисковый запрос'
     }
     if (!item.selectedSize) item.selectedSize = 'none'
+
+    const minDate = new Date(item.dateRange[0])
+    const maxDate = new Date(item.dateRange[1])
+    const minDay = minDate.getDate()
+    const maxDay = maxDate.getDate()
+    if (minDay != maxDay) {
+      valid = false
+      errorMsg = 'Выберите точную дату для выкупа под ключ ' + item.article
+    }
   })
+
   if (!valid) {
     notify({
       title: 'Что-то пошло не так',
@@ -272,11 +284,14 @@ async function getPickpoints() {
     })
   }
 }
-async function getFFPickpoints() {
+async function getFFPickpoints(date: Date = new Date()) {
   try {
     // @ts-ignore
     const data = await $fetch('/api/wildberries/ff/userPickpoints', {
       method: 'GET',
+      query: {
+        date: new Date(date).toISOString(),
+      },
     })
     ffPickpoints.value = (data as any).points
   } catch (e: any) {
@@ -295,6 +310,14 @@ async function pointModalOpen(index: number) {
   store.selectedItem = index
 
   if (products.value[index].key) {
+    if (
+      products.value[index].dateRange[0] != lastItemDateRange.value[0] ||
+      products.value[index].dateRange[1] != lastItemDateRange.value[1]
+    ) {
+      lastItemDateRange.value = products.value[index].dateRange
+      await getFFPickpoints(products.value[index].dateRange[0] || new Date())
+    }
+
     modalOpenFF.value = true
   } else {
     modalOpen.value = true
@@ -303,7 +326,6 @@ async function pointModalOpen(index: number) {
 
 onMounted(async () => {
   getPickpoints()
-  getFFPickpoints()
   if (route.query.uuid) {
     loading.value = true
     await store.cloneBuyout(route.query.uuid.toString())
@@ -375,6 +397,10 @@ function closeTemplateModalFN() {
 function modalAddProduct(changedArticle: any) {
   article.value = changedArticle
   addProduct()
+}
+
+function refreshElements() {
+  refreshKey.value == 1 ? (refreshKey.value = 0) : (refreshKey.value = 1)
 }
 </script>
 
@@ -458,7 +484,7 @@ function modalAddProduct(changedArticle: any) {
       >
         <BuyoutWildberriesCreateCard
           v-for="(product, index) in products"
-          :key="index"
+          :key="index + '_' + refreshKey"
           :loading="!pickpoints?.length"
           :product="product"
           :index="index"
@@ -550,7 +576,7 @@ function modalAddProduct(changedArticle: any) {
           <tbody>
             <BuyoutWildberriesCreateTableRow
               v-for="(product, index) in products"
-              :key="index"
+              :key="index + '_' + refreshKey"
               :product="product"
               :index="index"
               :loading="!pickpoints?.length"
@@ -660,7 +686,16 @@ function modalAddProduct(changedArticle: any) {
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].key"
-                  @click="products[selectedRuleProductIndex].adress = ''"
+                  @click="
+                    ;[
+                      refreshElements(),
+                      (products[selectedRuleProductIndex].adress = ''),
+                      (products[selectedRuleProductIndex].dateRange = [
+                        new Date(),
+                        new Date(),
+                      ]),
+                    ]
+                  "
                   class="checkbox checkbox-primary border-base-content"
                 />
               </div>
