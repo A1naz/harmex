@@ -8,63 +8,63 @@ definePageMeta({
 const tariffsValue = ref(true)
 const tariffStats = ref([
   {
-    icon: 'mdi:account',
+    icon: 'ph:wallet-fill',
     title: 'Выкупы',
     value: 20,
   },
   {
-    icon: 'mdi:account',
-    title: 'Выкупы ',
+    icon: 'bxs:message-detail',
+    title: 'Отзывы ',
+    value: 20,
+  },
+  {
+    icon: 'solar:heart-outline',
+    title: 'Лайки',
+    value: 20,
+  },
+  {
+    icon: 'fa-solid:question-circle',
+    title: 'Вопросы',
+    value: 20,
+  },
+  {
+    icon: 'solar:cart-large-minimalistic-bold',
+    title: 'Корзина',
     value: 20,
   },
   {
     icon: 'mdi:account',
-    title: 'Выкупы',
+    title: 'Автоответы на отзывы',
+    value: 20,
+  },
+  {
+    icon: 'fa-regular:hand-pointer',
+    title: 'Клики по карточке',
+    value: 20,
+  },
+  {
+    icon: 'clarity:eye-show-line',
+    title: 'Выкупить в ближайшее время',
+    value: 20,
+  },
+  {
+    icon: 'solar:cart-large-minimalistic-bold',
+    title: 'Конкурентов в корзине',
     value: 20,
   },
   {
     icon: 'mdi:account',
-    title: 'Выкупы',
+    title: 'Изучение карточки 60 секунд',
     value: 20,
   },
   {
     icon: 'mdi:account',
-    title: 'Выкупы',
+    title: 'Выкупы с рекламы',
     value: 20,
   },
   {
     icon: 'mdi:account',
-    title: 'Выкупы',
-    value: 20,
-  },
-  {
-    icon: 'mdi:account',
-    title: 'Выкупы',
-    value: 20,
-  },
-  {
-    icon: 'mdi:account',
-    title: 'Выкупы',
-    value: 20,
-  },
-  {
-    icon: 'mdi:account',
-    title: 'Выкупы',
-    value: 20,
-  },
-  {
-    icon: 'mdi:account',
-    title: 'Выкупы',
-    value: 20,
-  },
-  {
-    icon: 'mdi:account',
-    title: 'Выкупы',
-    value: 20,
-  },
-  {
-    icon: 'mdi:account',
-    title: 'Выкупы',
+    title: 'Выкупы с сортировки',
     value: 20,
   },
 ])
@@ -357,7 +357,7 @@ const liValues = [
             >
             <span
               v-if="tariff.title == 'VIP'"
-              class="rounded-lg bg-[#2effa9] text-base-content py-1 px-2 ml-2"
+              class="rounded-lg bg-[#2effa9] dark:text-base-100 text-base-content py-1 px-2 ml-2"
               >Рекомендуем</span
             >
           </div>
@@ -522,19 +522,22 @@ const liValues = [
         
       </div>
       <div class="w-full my-4">
-          <p class="text-lg font-bold">
-            Выберите логистическую услугу
-          </p>
-          <CustomSelect :class="'w-[470px] bg-base-100'" :status-text="'Выберите услугу'" :tabs="[{title: 'Выкупо под ключ', value: 'key'}, {title: 'Выкупо с забором', value: 'pickup'}]" />
+        <p class="text-lg font-bold">
+          Выберите логистическую услугу
+        </p>
+        <CustomSelect :class="'w-[500px] bg-base-100'" :status-text="'Выберите услугу'" :tabs="[{title: 'Выкупо под ключ', value: 'key'}, {title: 'Выкупо с забором', value: 'pickup'}]" />
         </div>
-        <div class="w-full -my-4">
+        <div class="w-full -my-2">
           <p class="text-lg font-bold">
             Введите кол-во товаров
           </p>
           <input type="number" class="input input-sm border-none input-bordered w-full bg-base-100" />
+          <p class="text-xs font-light">
+            Логистика доступна для клиентов от 50 ед в неделю и/или 200 ед/мес
+          </p>
         </div>
 
-        <button class="btn btn-primary btn-sm mt-4 w-full bg-[#6788f3] hover:dark:bg-primary hover:bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 hover:text-base-content text-base-content border-none">Купить</button>
+        <button class="btn btn-primary btn-sm h-[2.5rem] mt-10 w-full bg-[#6788f3] text-base-100 border-none">Купить</button>
     </div>
     <div class="h-28" />
   </div>
