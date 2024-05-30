@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { wildberriesConnection } from '~/server/connections/wildberries'
+import { FlowwowConnection } from '~/server/connections/flowwow'
 import { v4 as uuid } from 'uuid'
 import { User } from '../User'
 
@@ -50,5 +50,5 @@ const BuyoutSchema = new Schema({
 })
 
 
-export const Buyout = wildberriesConnection.model('Buyout', BuyoutSchema)
+export const Buyout = FlowwowConnection.model('Buyout', BuyoutSchema)
 

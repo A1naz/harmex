@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useMPChange } from './mpChange';
+import { useMPChange } from './mpChange'
 
 export const useMPStore = defineStore('mp', {
   state: () => ({
@@ -12,6 +12,7 @@ export const useMPStore = defineStore('mp', {
       { title: 'Ozon', value: 'ozon' },
       { title: 'Wildberries', value: 'wildberries' },
       { title: 'Avito', value: 'avito' },
+      { title: 'Flowwow', value: 'flowwow' },
     ],
     MPTabsAll: [
       { title: 'Все', value: 'all' },
@@ -23,6 +24,7 @@ export const useMPStore = defineStore('mp', {
       { title: 'Ozon', value: 'ozon' },
       { title: 'Wildberries', value: 'wildberries' },
       { title: 'Avito', value: 'avito' },
+      { title: 'Flowwow', value: 'flowwow' },
     ],
     likesOzon: [
       { title: 'Лайк на отзыв/комментарий', value: '/likes/create/ozon' },
@@ -36,20 +38,23 @@ export const useMPStore = defineStore('mp', {
       this.selectedMP = mp
     },
     changeMp(mp: string, tab: string, query?: string) {
-      const mpChange = useMPChange();
+      const mpChange = useMPChange()
       mpChange.changeMp(mp, tab, query)
     },
     sortMp(tab: string, test?: boolean) {
-      const mpChange = useMPChange();
-      const filteredPages = test !== undefined 
-      ? mpChange.pages.filter(page => !page.test && page.tabs.includes(tab)) 
-      : mpChange.pages.filter(page => page.tabs.includes(tab))
-      return filteredPages;
+      const mpChange = useMPChange()
+      const filteredPages =
+        test !== undefined
+          ? mpChange.pages.filter(
+              (page) => !page.test && page.tabs.includes(tab)
+            )
+          : mpChange.pages.filter((page) => page.tabs.includes(tab))
+      return filteredPages
     },
-    sortLikes(mp: string){
-      const mpChange = useMPChange();
-      return mpChange.pages.find(page => page.value === mp)?.likes
-    }
+    sortLikes(mp: string) {
+      const mpChange = useMPChange()
+      return mpChange.pages.find((page) => page.value === mp)?.likes
+    },
   },
   persist: {
     storage: persistedState.localStorage,
