@@ -185,6 +185,7 @@ export default defineNuxtConfig({
     WB_DB_URI: process.env.WB_DB_URI,
     AVITO_DB_URI: process.env.AVITO_DB_URI,
     OZON_DB_URI: process.env.OZON_DB_URI,
+    FLOWWOW_DB_URI: process.env.FLOWWOW_DB_URI,
     SECRET: process.env.SECRET,
     smtpHost: process.env.smtpHost,
     smtpPort: process.env.smtpPort,
