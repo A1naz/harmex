@@ -1,9 +1,10 @@
 import { v4 as uuid } from 'uuid'
 import type { Rule } from '@/data/buyout/rules'
-import { Buyout } from '@/server/lib/models/Buyout'
-import getPickpoints from '~/server/lib/getPoints'
+import { Buyout } from '@/server/lib/models/flowwow/Buyout'
+// import getPickpoints from '@/server/utils/wildberries/getPoints'
 import { userLog } from '~/server/utils/userLog'
 import { DocuemntEnum } from '~/data/enums'
+import { getDisctrict } from '~/server/utils/getDisctrict'
 
 interface Item {
   image: string
@@ -21,10 +22,7 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
-  pointCoordinates: {
-    lat: number
-    lon: number
-  }
+  key: boolean
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -40,6 +38,7 @@ export default eventHandler(async (event) => {
     status: { $in: ['active', 'work', 'created'] },
   })
   const sum = activeBuyouts.reduce((acc, item) => {
+    //@ts-ignore
     const price =
       parseInt(item.product.price) * (item.quantity - item.completed)
     return acc + price
@@ -48,7 +47,7 @@ export default eventHandler(async (event) => {
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
 
-  const { points } = await getPickpoints()
+  // const { points } = await getPickpoints()
 
   const products: Item[] = body
   if (products.length > 10) {
@@ -80,18 +79,29 @@ export default eventHandler(async (event) => {
       product.dateRange = [date1, date2]
     }
 
-    // let city, state
-      // ;({ city, state } = await getCityByGeo(product.pointCoordinates.lat.toString(),  product.pointCoordinates.lon.toString()))
+    // const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
 
-    
+    // let city, state
+    // if (foundPoint.city && foundPoint.state) {
+    //   city = foundPoint.city
+    //   state = foundPoint.state
+    // } else {
+    //   ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
+    // }
+
+    // const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
+
+    if (product.key && !user.ffEnabled) {
+      user.ffEnabled = true
+      await user.save()
+    }
+
     const buyout = new Buyout({
       article: product.article,
-      // searchQuery: searchQueries.join(', '),
-      searchQuery: '',
+      searchQuery: searchQueries.join(', '),
       point: 'product.adress',
-      pointCoordinates: product.pointCoordinates,
       point_city: 'Москва',
-      point_state: 'Москва',
+      point_state: 'Московская область',
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,
@@ -108,6 +118,10 @@ export default eventHandler(async (event) => {
       },
       uuid: uuid(),
       place: last ? last.place + 1 : 1,
+      purchaseSoon: product.purchaseSoon,
+      ff: product.key || false,
+      pointRegion: 'Московская область',
+      pointDistrict: 'Московская область',
     })
 
     await buyout.save()
