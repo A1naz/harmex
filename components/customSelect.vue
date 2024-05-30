@@ -29,6 +29,7 @@ const props = defineProps({
   },
   links: { type: Array as PropType<links[]>, default: () => [] },
   class: { type: String },
+  dropdownContainer: { type: String },
   statusText: { type: String },
   // modelValue: {
 
@@ -86,12 +87,13 @@ defineExpose({
 
 <template>
   <div
-    class="dropdown group relative"
+    class="dropdown group relative "
     @click="dropdownOpened = !dropdownOpened"
     @click.stop
+    :class="dropdownContainer"
   >
     <div
-      class="font-normal text-xs normal-case btn-primary bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
+      class="font-normal text-xs normal-case btn-primary w-full bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content btn btn-sm flex items-center justify-between px-2 flex-nowrap"
       :class="customClass"
     >
       <span :class="{ 'text-base': rangesConfig.length > 0 }">{{
