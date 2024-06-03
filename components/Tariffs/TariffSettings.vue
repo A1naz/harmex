@@ -17,7 +17,7 @@ const props = defineProps({
     required: true,
   },
   tariffs: {
-    type: Array as any,
+    type: Object as any,
     required: true,
   },
   firstTariff: {
@@ -42,13 +42,28 @@ function setFirstTariff(value: string) {
 function setSecondTariff(value: string) {
   emit('setSecondTariff', value)
 }
+
+const currentTariff = computed(() => {
+  return props.tariffs[props.form.mp]
+})
+const currentType = computed(() => {
+  return props.tariffs[props.form.mp][props.form.title]
+})
+const currentData = computed(() => {
+  return props.tariffs[props.form.mp][props.form.title].type.filter(
+    (type: any) => type.value === props.form.type
+  )
+})
 </script>
 
 <template>
+
   <div
     class="flex flex-col gap-y-4 px-1.5 py-4 bg-gradient-to-r from-[#e9f7ff] to-[#96afff] dark:from-[#172038] dark:to-[#1b1f38] rounded-lg"
   >
     <div class="flex justify-between">
+
+
       <div class="flex w-full space-x-4">
         <CustomSelect
           :dropdownContainer="'w-full md:hidden'"
@@ -77,106 +92,54 @@ function setSecondTariff(value: string) {
       </div>
     </div>
 
+
+
     <div class="flex justify-between">
       <button
+        v-for="tariffTitle in currentTariff"
+        :key="tariffTitle.value"
         class="btn border-none w-[32%] text-lg"
         @click="
-          form.title == 'Запуск' ? (form.title = '') : (form.title = 'Запуск')
+          form.title === tariffTitle.value ? (form.value = '') : (form.title = tariffTitle.value)
         "
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
-            form.title == 'Запуск',
-          'bg-base-100 text-base-content': form.title != 'Запуск',
+            form.title === tariffTitle.value,
+          'bg-base-100 text-base-content': form.title !== tariffTitle.value,
         }"
       >
-        Запуск
-      </button>
-      <button
-        class="btn border-none w-[32%] text-lg"
-        @click="
-          form.title == 'Рост' ? (form.title = '') : (form.title = 'Рост')
-        "
-        :class="{
-          'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
-            form.title == 'Рост',
-          'bg-base-100 text-base-content': form.title != 'Рост',
-        }"
-      >
-        Рост
-      </button>
-      <button
-        class="btn border-none w-[32%] text-lg"
-        @click="
-          form.title == 'Поддержка'
-            ? (form.title = '')
-            : (form.title = 'Поддержка')
-        "
-        :class="{
-          'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
-            form.title == 'Поддержка',
-          'bg-base-100 text-base-content': form.title != 'Поддержка',
-        }"
-      >
-        Поддержка
+        {{ tariffTitle.title }}
       </button>
     </div>
+
+
     <div class="flex justify-between">
       <button
+        v-for="tarrifType in currentType.type"
         class="btn border-none w-[49%] text-lg"
         @click="
-          form.type == 'Базовый' ? (form.type = '') : (form.type = 'Базовый')
+          (form.type = tarrifType.value)
         "
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
-            form.type == 'Базовый',
-          'bg-base-100 text-base-content': form.type != 'Базовый',
+            form.type == tarrifType.value,
+          'bg-base-100 text-base-content': form.type != tarrifType.value,
         }"
       >
-        Базовый
-      </button>
-      <button
-        class="btn border-none w-[49%] text-lg"
-        @click="
-          form.type == 'Под ключ'
-            ? (form.type = '')
-            : (form.type = 'Под ключ')
-        "
-        :class="{
-          'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
-            form.type == 'Под ключ',
-          'bg-base-100 text-base-content': form.type != 'Под ключ',
-        }"
-      >
-        Под ключ
+        {{ tarrifType.title }}
       </button>
     </div>
+
+
     <div class="flex justify-between">
       <button
-        class="btn border-none w-[24%] whitespace-nowrap pt-1 md:pt-0 md:text-lg"
-        @click="
-          form.dateRange == 'everyMonth'
-            ? (form.dateRange = '')
-            : (form.dateRange = 'everyMonth')
+        class="btn border-none w-[32%] whitespace-nowrap pt-1 md:pt-0 md:text-lg relative"
+        @click="(form.dateRange = '3months')
         "
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
-            form.dateRange == 'everyMonth',
-          'bg-base-100 text-base-content': form.dateRange != 'everyMonth',
-        }"
-      >
-        Ежемесячно
-      </button>
-      <button
-        class="btn border-none w-[24%] whitespace-nowrap pt-1 md:pt-0 md:text-lg relative"
-        @click="
-          form.dateRange == '3month'
-            ? (form.dateRange = '')
-            : (form.dateRange = '3month')
-        "
-        :class="{
-          'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
-            form.dateRange == '3month',
-          'bg-base-100 text-base-content': form.dateRange != '3month',
+            form.dateRange == '3months',
+          'bg-base-100 text-base-content': form.dateRange != '3months',
         }"
       >
         3 месяца
@@ -186,18 +149,14 @@ function setSecondTariff(value: string) {
           Рассрочка
         </span>
       </button>
-
       <button
-        class="btn border-none w-[24%] whitespace-nowrap pt-1 md:pt-0 md:text-lg relative"
-        @click="
-          form.dateRange == '6month'
-            ? (form.dateRange = '')
-            : (form.dateRange = '6month')
+        class="btn border-none w-[32%] whitespace-nowrap pt-1 md:pt-0 md:text-lg relative"
+        @click="(form.dateRange = '6months')
         "
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
-            form.dateRange == '6month',
-          'bg-base-100 text-base-content': form.dateRange != '6month',
+            form.dateRange == '6months',
+          'bg-base-100 text-base-content': form.dateRange != '6months',
         }"
       >
         6 месяцев
@@ -208,16 +167,13 @@ function setSecondTariff(value: string) {
         </span>
       </button>
       <button
-        class="btn border-none w-[24%] text-xs whitespace-nowrap pt-1 md:pt-0 md:text-lg relative"
-        @click="
-          form.dateRange == '12month'
-            ? (form.dateRange = '')
-            : (form.dateRange = '12month')
+        class="btn border-none w-[32%] text-xs whitespace-nowrap pt-1 md:pt-0 md:text-lg relative"
+        @click="(form.dateRange = '12months')
         "
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
-            form.dateRange == '12month',
-          'bg-base-100 text-base-content': form.dateRange != '12month',
+            form.dateRange == '12months',
+          'bg-base-100 text-base-content': form.dateRange != '12months',
         }"
       >
         12 месяцев
@@ -228,11 +184,13 @@ function setSecondTariff(value: string) {
         </span>
       </button>
     </div>
+
+
     <div class="flex w-full justify-end mt-6">
       <div class="md:hidden w-full flex flex-col gap-5">
         <div class="flex w-full gap-5">     
           <CustomSelect
-            :tabs="tariffs.map((tariff:any) => ({
+            :tabs="currentData[0].tariffs.map((tariff:any) => ({
               title: tariff.title,
               value: tariff.title 
             }))"
@@ -242,7 +200,7 @@ function setSecondTariff(value: string) {
             @change-value="(value) => setFirstTariff(value)"
           />
           <CustomSelect
-            :tabs="tariffs.map((tariff:any) => ({
+            :tabs="currentData[0].tariffs.map((tariff:any) => ({
               title: tariff.title,
               value: tariff.title 
             }))"
@@ -261,21 +219,20 @@ function setSecondTariff(value: string) {
             }"
           >
             <div class="flex flex-nowrap gap-1 items-center">
-              <span class="mr-2">{{ tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].title }}</span>
+              <span class="mr-2">{{ currentData[0].tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].title }}</span>
               <span
-                v-if="tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].title == 'PRO'"
+                v-if="currentData[0].tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].title == 'PRO'"
                 class="rounded-lg bg-base-content text-base-100 py-1 px-2  text-xs"
                 >Популярно</span
               >
               <span
-                v-if="tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].title == 'VIP'"
+                v-if="currentData[0].tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].title == 'VIP'"
                 class="rounded-lg bg-[#2effa9] dark:text-base-100 text-base-content py-1 px-2 text-xs"
                 >Рекомендуем</span
               >
             </div>
-            <p class="text-lg font-bold mt-auto">{{ tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].price + ' ₽' }}</p>
+            <p class="text-lg font-bold mt-auto">{{ currentData[0].tariffs.find((tariff:any) => tariff.title === firstTariff).prices[parseInt(form.dateRange.replace('months', ''))] + ' ₽'}}</p>
             <button
-              :disabled="tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].disabled"
               class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100Ф bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
             >
               Купить
@@ -289,21 +246,20 @@ function setSecondTariff(value: string) {
             }"
           >
             <div class="flex flex-nowrap gap-1 items-center">
-              <span class="mr-2">{{ tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].title }}</span>
+              <span class="mr-2">{{ currentData[0].tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].title }}</span>
               <span
-                v-if="tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].title == 'PRO'"
+                v-if="currentData[0].tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].title == 'PRO'"
                 class="rounded-lg bg-base-content text-base-100 py-1 px-2 text-xs"
                 >Популярно</span
               >
               <span
-                v-if="tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].title == 'VIP'"
+                v-if="currentData[0].tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].title == 'VIP'"
                 class="rounded-lg bg-[#2effa9] dark:text-base-100 text-base-content py-1 px-2 text-xs"
                 >Рекомендуем</span
               >
             </div>
-            <p class="text-lg font-bold mt-auto">{{ tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].price + ' ₽' }}</p>
+            <p class="text-lg font-bold mt-auto">{{ currentData[0].tariffs.find((tariff:any) => tariff.title === secondTariff).prices[parseInt(form.dateRange.replace('months', ''))] + ' ₽'}}</p>
             <button
-              :disabled="tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].disabled"
               class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100Ф bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
             >
               Купить
@@ -311,36 +267,26 @@ function setSecondTariff(value: string) {
           </div>
         </div>
       </div>
-      <div
-        v-for="tariff in tariffs"
-        class="hidden md:flex flex-col px-5 pt-5 py-1 w-[20%] rounded-lg"
-        :class="{
-          ' border-4 border-[#25ba7b] border-b-0 rounded-b-none mr-2.5':
-            tariff.title == 'VIP',
-        }"
+      <div v-for="tariff in currentData[0].tariffs" 
+          class="hidden md:flex flex-col px-5 pt-5 py-1 w-[20%] rounded-lg"
+          :class="{
+            'border-4 border-[#25ba7b] border-b-0 rounded-b-none mr-2.5': tariff.title === 'VIP'
+          }"
       >
         <div class="flex flex-wrap gap-1 items-center">
           <span class="mr-2">{{ tariff.title }}</span>
-          <span
-            v-if="tariff.title == 'PRO'"
-            class="rounded-lg bg-base-content text-base-100 py-1 px-2"
-            >Популярно</span
-          >
-          <span
-            v-if="tariff.title == 'VIP'"
-            class="rounded-lg bg-[#2effa9] dark:text-base-100 text-base-content py-1 px-2"
-            >Рекомендуем</span
-          >
+          <span v-if="tariff.title === 'PRO'" class="rounded-lg bg-base-content text-base-100 py-1 px-2">Популярно</span>
+          <span v-if="tariff.title === 'VIP'" class="rounded-lg bg-[#2effa9] dark:text-base-100 text-base-content py-1 px-2">Рекомендуем</span>
         </div>
-        <p class="text-lg font-bold mt-auto">{{ tariff.price + ' ₽' }}</p>
-        <button
-          :disabled="tariff.disabled"
-          class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100Ф bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
+        <p class="text-lg font-bold mt-auto">{{ tariff.prices[form.dateRange.replace('months', '')] + ' ₽' }}</p>
+        <button :disabled="tariff.disabled"
+                class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
         >
           Купить
         </button>
       </div>
-    </div>
+
+    </div> 
   </div>
 </template>
 

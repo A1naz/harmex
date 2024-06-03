@@ -69,28 +69,507 @@ const tariffStats = ref([
   },
 ])
 
-const tariffs = ref([
-  {
-    title: 'DEMO',
-    price: 7500,
-    disabled: false,
+const tariffs = ref({
+  wildberries: {
+  startup: {
+    title: 'Запуск',
+    value: 'startup',
+    type: [
+      {
+        title: 'Базовый',
+        value: 'base',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 40000,
+              '6': 80000,
+              '12': 140000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 80000,
+              '6': 155000,
+              '12': 280000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 160000,
+              '6': 310000,
+              '12': 555000,
+            }
+          },
+        ],
+      },
+      {
+        title: 'Под ключ',
+        value: 'key',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 55000,
+              '6': 100000,
+              '12': 185000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 105000,
+              '6': 200000,
+              '12': 370000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 210000,
+              '6': 400000,
+              '12': 740000,
+            }
+          },
+        ],
+      },
+    ],
   },
-  {
-    title: 'START',
-    price: 0,
-    disabled: true,
+  growth: {
+    title: 'Рост',
+    value: 'growth',
+    type: [
+      {
+        title: 'Базовый',
+        value: 'base',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 135000,
+              '6': 385000,
+              '12': 690000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 405000,
+              '6': 770000,
+              '12': 1380000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 805000,
+              '6': 1550000,
+              '12': 2300000,
+            }
+          },
+        ],
+      },
+      {
+        title: 'Под ключ',
+        value: 'key',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 155000,
+              '6': 460000,
+              '12': 920000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 460000,
+              '6': 920000,
+              '12': 1840000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 920000,
+              '6': 1840000,
+              '12': 3100000,
+            }
+          },
+        ],
+      },
+    ],
   },
-  {
-    title: 'PRO',
-    price: 0,
-    disabled: true,
+  support: {
+    title: 'Поддержка',
+    value: 'support',
+    type: [
+      {
+        title: 'Базовый',
+        value: 'base',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 405000,
+              '6': 770000,
+              '12': 1380000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 805000,
+              '6': 1540000,
+              '12': 2340000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 1610000,
+              '6': 2600000,
+              '12': 3525000,
+            }
+          },
+        ],
+      },
+      {
+        title: 'Под ключ',
+        value: 'key',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 520000,
+              '6': 977000,
+              '12': 1840000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 1035000,
+              '6': 1960000,
+              '12': 3120000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 2070000,
+              '6': 3280000,
+              '12': 4700000,
+            }
+          },
+        ],
+      },
+    ],
   },
-  {
-    title: 'VIP',
-    price: 0,
-    disabled: true,
+},
+
+ozon: {
+  startup: {
+    title: 'Запуск',
+    value: 'startup',
+    type: [
+      {
+        title: 'Базовый',
+        value: 'base',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 46000,
+              '6': 90000,
+              '12': 160000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 92000,
+              '6': 175000,
+              '12': 315000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 184000,
+              '6': 350000,
+              '12': 627000,
+            }
+          },
+        ],
+      },
+      {
+        title: 'Под ключ',
+        value: 'key',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 60000,
+              '6': 112000,
+              '12': 21000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 120000,
+              '6': 222000,
+              '12': 420000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 240000,
+              '6': 444000,
+              '12': 840000,
+            }
+          },
+        ],
+      },
+    ],
   },
-])
+  growth: {
+    title: 'Рост',
+    value: 'growth',
+    type: [
+      {
+        title: 'Базовый',
+        value: 'base',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 155000,
+              '6': 440000,
+              '12': 780000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 455000,
+              '6': 871000,
+              '12': 1560000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 910000,
+              '6': 1742000,
+              '12': 2600000,
+            }
+          },
+        ],
+      },
+      {
+        title: 'Под ключ',
+        value: 'key',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 195000,
+              '6': 555000,
+              '12': 1040000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 585000,
+              '6': 1105000,
+              '12': 2080000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 1170000,
+              '6': 2210000,
+              '12': 4465000,
+            }
+          },
+        ],
+      },
+    ],
+  },
+  support: {
+    title: 'Поддержка',
+    value: 'support',
+    type: [
+      {
+        title: 'Базовый',
+        value: 'base',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 455000,
+              '6': 871000,
+              '12': 1560000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 910000,
+              '6': 1741000,
+              '12': 2640000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 182000,
+              '6': 2921000,
+              '12': 3975000,
+            }
+          },
+        ],
+      },
+      {
+        title: 'Под ключ',
+        value: 'key',
+        tariffs: [
+          {
+            title: 'DEMO',
+            prices: {
+              '3': 0,
+              '6': 0,
+              '12': 0,
+            }
+          },
+          {
+            title: 'START',
+            prices: {
+              '3': 585000,
+              '6': 1105000,
+              '12': 2080000,
+            }
+          },
+          {
+            title: 'PRO',
+            prices: {
+              '3': 1170000,
+              '6': 2210000,
+              '12': 3540000,
+            }
+          },
+          {
+            title: 'VIP',
+            prices: {
+              '3': 2440000,
+              '6': 3706000,
+              '12': 5300000,
+            }
+          },
+        ],
+      },
+    ],
+  },
+},
+
+
+})
 
 const images = [
   'wildberries.svg',
@@ -222,10 +701,10 @@ const liValues = [
 const productCount = ref(0)
 const logicService = ref('')
 const form = reactive({
-  mp: '',
-  title: '',
-  type: '',
-  dateRange: '',
+  mp: 'wildberries',
+  title: 'startup',
+  type: 'base',
+  dateRange: '3months',
 })
 
 const changeMp = useMPChange()
@@ -248,6 +727,7 @@ watch(width, () => {
 const firstTariff = ref('DEMO')
 
 const secondTariff = ref('START')
+
 </script>
 
 <template>
@@ -279,209 +759,14 @@ const secondTariff = ref('START')
       @set-second-tariff="(value) => (secondTariff = value.value)"
     />
 
-    <div class="flex flex-col mt-5">
-      <div class="collapse collapse-arrow bg-base-100 rounded-box z-0">
-        <input v-model="ratingList" type="checkbox" />
-        <div class="collapse-title relative text-xl font-medium">
-          <div class="flex gap-4 text-lg font-bold">Повышение рейтинга</div>
-        </div>
-        <div class="collapse-content pb-0">
-          <div
-            v-for="tariff in ratingValue"
-            class="flex flex-col md:hidden px-5 pt-5 py-1 rounded-lg w-full"
-          >
-            <span class="text-sm font-bold mb-1">{{ tariff.title }}</span>
-            <div class="flex w-full">
-              <div
-                class="flex w-1/2 border-b border-[#e5e7e8] dark:border-[#1a1817]"
-              >
-                <Icon
-                  v-if="tariff[firstTariff.toLowerCase()] === 0"
-                  name="mingcute:close-line"
-                  size="25"
-                  class="text-[#f9654b]"
-                />
-                <span v-else>{{ tariff[firstTariff.toLowerCase()] }}</span>
-              </div>
-              <div
-                class="flex w-1/2 border-b border-[#e5e7e8] dark:border-[#1a1817]"
-              >
-                <Icon
-                  v-if="tariff[secondTariff.toLowerCase()] === 0"
-                  name="mingcute:close-line"
-                  size="25"
-                  class="text-[#f9654b]"
-                />
-                <span v-else>{{ tariff[secondTariff.toLowerCase()] }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto hidden md:flex">
-            <table
-              class="table table-zebra border-b border-[#e5e7e8] dark:border-[#1a1817]"
-            >
-              <tbody>
-                <tr></tr>
-                <tr v-for="(value, index) in ratingValue" :key="index">
-                  <th
-                    class="w-1/5 border-r border-[#e5e7e8] dark:border-[#1a1817]"
-                  >
-                    {{ value.title }}
-                  </th>
-                  <td
-                    class="w-1/5 text-center border-r border-[#e5e7e8] dark:border-[#1a1817]"
-                  >
-                    {{ value.demo }}
-                  </td>
-                  <td
-                    class="w-1/5 text-center border-r border-[#e5e7e8] dark:border-[#1a1817]"
-                  >
-                    <div class="flex w-full justify-center">
-                      <Icon
-                        v-if="value.start === 0"
-                        name="mingcute:close-line"
-                        size="25"
-                        class="w-10 text-[#f9654b]"
-                      />
-                      <span v-else>
-                        {{ value.start }}
-                      </span>
-                    </div>
-                  </td>
-                  <td class="w-1/5 text-center border-r-4 border-[#25ba7b]">
-                    <div class="flex w-full justify-center">
-                      <Icon
-                        v-if="value.pro === 0"
-                        name="mingcute:close-line"
-                        size="25"
-                        class="w-8 text-[#f9654b]"
-                      />
-                      <span v-else>
-                        {{ value.pro }}
-                      </span>
-                    </div>
-                  </td>
-                  <td class="w-1/5 text-center border-r-4 border-[#25ba7b]">
-                    <div class="flex w-full justify-center">
-                      <Icon
-                        v-if="value.vip === 0"
-                        name="mingcute:close-line"
-                        size="25"
-                        class="text-[#f9654b]"
-                      />
-                      <span v-else>
-                        {{ value.vip }}
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="collapse collapse-arrow bg-base-100 rounded-box z-0">
-        <input v-model="factorsList" type="checkbox" />
-        <div class="collapse-title relative text-xl font-medium">
-          <div class="flex gap-4 text-lg font-bold">Поведенческие факторы</div>
-        </div>
-        <div class="collapse-content pb-0">
-          <div
-            v-for="tariff in factorsValue"
-            class="flex flex-col md:hidden px-5 pt-5 py-1 rounded-lg w-full"
-          >
-            <span class="text-sm font-bold mb-1">{{ tariff.title }}</span>
-            <div class="flex w-full">
-              <div
-                class="flex w-1/2 border-b border-[#e5e7e8] dark:border-[#1a1817]"
-              >
-                <Icon
-                  v-if="tariff[firstTariff.toLowerCase()] === 0"
-                  name="mingcute:close-line"
-                  size="25"
-                  class="text-[#f9654b]"
-                />
-                <span v-else>{{ tariff[firstTariff.toLowerCase()] }}</span>
-              </div>
-              <div
-                class="flex w-1/2 border-b border-[#e5e7e8] dark:border-[#1a1817]"
-              >
-                <Icon
-                  v-if="tariff[secondTariff.toLowerCase()] === 0"
-                  name="mingcute:close-line"
-                  size="25"
-                  class="text-[#f9654b]"
-                />
-                <span v-else>{{ tariff[secondTariff.toLowerCase()] }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="overflow-x-auto hidden md:flex">
-            <table
-              class="table table-zebra border-b border-[#e5e7e8] dark:border-[#1a1817]"
-            >
-              <tbody>
-                <tr></tr>
-                <tr v-for="(value, index) in factorsValue" :key="index">
-                  <th
-                    class="w-1/5 border-r border-[#e5e7e8] dark:border-[#1a1817]"
-                  >
-                    {{ value.title }}
-                  </th>
-                  <td
-                    class="w-1/5 text-center border-r border-[#e5e7e8] dark:border-[#1a1817]"
-                  >
-                    {{ value.demo }}
-                  </td>
-                  <td
-                    class="w-1/5 text-center border-r border-[#e5e7e8] dark:border-[#1a1817]"
-                  >
-                    <div class="flex w-full justify-center">
-                      <Icon
-                        v-if="value.start === 0"
-                        name="mingcute:close-line"
-                        size="25"
-                        class="text-[#f9654b]"
-                      />
-                      <span v-else>
-                        {{ value.start }}
-                      </span>
-                    </div>
-                  </td>
-                  <td class="w-1/5 text-center border-r-4 border-[#25ba7b]">
-                    <div class="flex w-full justify-center">
-                      <Icon
-                        v-if="value.pro === 0"
-                        name="mingcute:close-line"
-                        size="25"
-                        class="text-[#f9654b]"
-                      />
-                      <span v-else>
-                        {{ value.pro }}
-                      </span>
-                    </div>
-                  </td>
-                  <td class="w-1/5 text-center border-r-4 border-[#25ba7b]">
-                    <div class="flex w-full justify-center">
-                      <Icon
-                        v-if="value.vip === 0"
-                        name="mingcute:close-line"
-                        size="25"
-                        class="text-[#f9654b]"
-                      />
-                      <span v-else>
-                        {{ value.vip }}
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+    <TariffsTarriffsInfo
+      :rating-list="ratingList"
+      :factors-list="factorsList"
+      :rating-value="ratingValue"
+      :factors-value="factorsValue"
+      :first-tariff="firstTariff"
+      :second-tariff="secondTariff"
+    />
 
     <div class="h-2" />
   </div>
