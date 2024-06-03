@@ -139,7 +139,6 @@ export const useMPChange = defineStore('mpChange', {
       const tab = tabslash.split('/')[1]
       const mpStore = useMPStore()
       let pageFound = false
-      console.log(mp, tab)
 
       if (tab.includes('likes') && mp !== 'flowwow') {
         const mpPage = this.pages

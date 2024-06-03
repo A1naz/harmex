@@ -49,9 +49,7 @@ export function findImage(input: string) {
   } else {
     host = '//basket-15.wbbasket.ru'
   }
-  console.log(`https:${host}/vol${vol}/part${part}/${nm}/images/big/1.webp`);
   
-
   return `https:${host}/vol${vol}/part${part}/${nm}/images/big/1.webp`
 }
 
