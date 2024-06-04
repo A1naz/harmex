@@ -90,7 +90,7 @@ const currentData = computed(() => {
     </div>
 
 
-
+    
      <div class="flex justify-between">
       <button
         v-for="tariffTitle in currentTariff"
@@ -182,7 +182,10 @@ const currentData = computed(() => {
       </button>
     </div>
 
+
     <div class="flex w-full justify-end mt-6">
+
+      <!-- mobile -->
       <div class="md:hidden w-full flex flex-col gap-5">
         <div class="flex w-full gap-5">     
           <CustomSelect
@@ -229,7 +232,8 @@ const currentData = computed(() => {
             </div>
             <p class="text-lg font-bold mt-auto">{{ currentData.tariffs.find((tariff:any) => tariff.title === firstTariff).prices[parseInt(form.dateRange.replace('months', ''))] + ' ₽'}}</p>
             <button
-              class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100Ф bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
+              :disabled="firstTariff=='DEMO'"
+              class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
             >
               Купить
             </button>
@@ -256,13 +260,16 @@ const currentData = computed(() => {
             </div>
             <p class="text-lg font-bold mt-auto">{{ currentData.tariffs.find((tariff:any) => tariff.title === secondTariff).prices[parseInt(form.dateRange.replace('months', ''))] + ' ₽'}}</p>
             <button
-              class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100Ф bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
+              :disabled="secondTariff=='DEMO'"
+              class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
             >
               Купить
             </button>
           </div>
         </div>
       </div>
+
+      <!-- desktop -->
       <div v-for="tariff in currentData.tariffs" 
           class="hidden md:flex flex-col px-5 pt-5 py-1 w-[20%] rounded-lg"
           :class="{
@@ -275,8 +282,9 @@ const currentData = computed(() => {
           <span v-if="tariff.title === 'VIP'" class="rounded-lg bg-[#2effa9] dark:text-base-100 text-base-content py-1 px-2">Рекомендуем</span>
         </div>
         <p class="text-lg font-bold mt-auto">{{ tariff.prices[form.dateRange.replace('months', '')] + ' ₽' }}</p>
-        <button :disabled="tariff.disabled"
-                class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
+        <button
+          :disabled="tariff.title=='DEMO'"
+          class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
         >
           Купить
         </button>

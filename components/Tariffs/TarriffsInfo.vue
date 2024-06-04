@@ -1,10 +1,6 @@
 <script setup lang="ts">
 const props = defineProps({
-  ratingValue: {
-    type: Object as any,
-    required: true,
-  },
-  factorsValue: {
+  value: {
     type: Object as any,
     required: true,
   },
@@ -43,11 +39,50 @@ const ratingValue = computed(() => {
   }))
 
   function findRating(tariff: any, title: any) {
-    const tariffData = props.ratingValue.tariffs.find(
+    const tariffData = props.value.tariffs.find(
       (data: any) => data.title === tariff
     )
     if (tariffData) {
       const item = tariffData.ratingIncrease.find(
+        (item: any) => item.title === title
+      )
+      if (item) {
+        return item[props.form.dateRange.replace('months', '')]
+      }
+    }
+    return 0
+  }
+
+  return ratings
+})
+
+const factorsValue = computed(() => {
+  const titles = [
+    'Клики по карточке, шт.',
+    'Выкуп в ближайшее время, шт.',
+    'Добавление конкурентов в корзину, шт.',
+    'Изучение карточки 60 секунд, шт.',
+    'Выкупить с рекламы, шт.',
+    'Выкупить с сортировки, шт.',
+  ]
+  if(props.form.type == 'key'){
+    titles.push('Логистика (доп оплата)', 'Базовая стратегия, SKU')
+  }
+
+  const ratings = titles.map((title) => ({
+    title: title,
+    demo: findRating('DEMO', title),
+    start: findRating('START', title),
+    pro: findRating('PRO', title),
+    vip: findRating('VIP', title),
+  }))
+
+  function findRating(tariff: any, title: any) {
+    const tariffData = props.value.tariffs.find(
+      (data: any) => data.title === tariff
+    )
+    if (tariffData) {
+      const item = tariffData.factors.find(
         (item: any) => item.title === title
       )
       if (item) {

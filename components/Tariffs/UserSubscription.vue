@@ -17,9 +17,9 @@ const props = defineProps({
       class="px-3 py-2 bg-[#ebf0ff] dark:bg-primary dark:bg-opacity-10 mx-4 my-3 rounded-lg flex flex-col gap-3"
     >
 
-      <div v-if="!tariffsValue" class="flex flex-col gap-3">
-        <p class="text-xs font-light">У вас нет активной подписки</p>
-        <p class="text-xs font-normal">
+      <div v-if="!tariffsValue" class="flex flex-col gap-3 p-2 ">
+        <p class="text-sm font-normal">У вас нет активной подписки</p>
+        <p class="text-sm font-semibold">
           Выберите желаемый маркетплейс и подключите подходящий для вас пакет
           услуг.
         </p>
