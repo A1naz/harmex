@@ -24,7 +24,7 @@ const route = useRoute()
       to="/tariffs"
       class="relative bg-base-100 btn btn-xs btn-circle border-none"
     >
-      <IconCSS name="pepicons-pop:dollar-circle-filled" size="24" />
+      <IconCSS name="pepicons-pop:dollar-circle-filled" size="20" />
     </NuxtLink>
     <NuxtLink
       
