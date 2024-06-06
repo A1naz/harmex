@@ -49,7 +49,7 @@ export const useMPStore = defineStore('mp', {
               (page) => !page.test && page.tabs.includes(tab)
             )
           : mpChange.pages.filter((page) => page.tabs.includes(tab))
-      return filteredPages
+      return tab.includes('likes') ? filteredPages.filter(page => Array.isArray(page.likes) && page.likes.length > 0) : filteredPages
     },
     sortLikes(mp: string) {
       const mpChange = useMPChange()
