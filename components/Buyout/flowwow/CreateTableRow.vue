@@ -245,12 +245,16 @@ const productQuantityModel = computed({
           <div>
             
           </div> -->
-
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"
             :start-date="startDate"
           />
+          <!-- <BuyoutFlowwowDatePicker
+            v-if="!product.purchaseSoon"
+            v-model="productDateRangeModel"
+            :start-date="startDate"
+          /> -->
           <div v-else class="text-center">Выкуп в ближайшее время</div>
           <!-- <button
             v-else
