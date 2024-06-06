@@ -42,6 +42,9 @@ watch(targetIsVisible, async (isVisible) => {
 })
 
 onMounted(() => {
+  if(!mpChange.pages.find(el => el.value == mpStore.selectedMp)?.likes || !mpChange.pages.find(el => el.value == mpStore.selectedMp)?.likes?.find(el => el.value == 'likes')) {
+    mpStore.setSelectedMP('wildberries')
+  }
   setText()
 })
 
@@ -100,6 +103,7 @@ async function resumeStatus(item: any) {
 
 async function getLikes() {
   // loading.value = true
+
   if(mpStore.selectedMP == 'avito'){
     review_likes.value = []
     loading.value = false
