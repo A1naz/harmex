@@ -527,6 +527,11 @@ const startTimer = () => {
               </th>
 
               <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
+                <div class="text-center">
+                  <span> Дата доставки </span>
+                </div>
+              </th>
+              <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
                 <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                 <div class="text-center">
                   <span> Адрес </span>

@@ -273,6 +273,23 @@ const productQuantityModel = computed({
         </div>
       </div>
     </td>
+    <td class="border-r border-base">
+      <!-- <label class="label cursor-pointer -ml-1 text-sm -mb-1">
+        Выкупить в ближайшее время
+        <input
+          type="checkbox"
+          v-model="product.purchaseSoon"
+          class="checkbox checkbox-primary"
+        />
+      </label> -->
+      <div class="flex items-center mt-2">
+        <div class="w-full">
+          <BuyoutFlowwowDatePicker
+            :model-value="startDate"
+          />
+        </div>
+      </div>
+    </td>
     <td class="break-all max-w-[300px] border-r border-base">
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden justify-center"

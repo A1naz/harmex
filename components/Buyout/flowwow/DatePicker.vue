@@ -16,6 +16,8 @@ const colorMode = useColorMode()
 const { width } = useWindowSize()
 const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
 const date = ref(props.modelValue)
+
+
 type UpdateMonthYear = (month: number, year: number) => void
 
 function updateMonth(
@@ -28,37 +30,40 @@ function updateMonth(
 function handleDate(modelData: any) {
   date.value = modelData
   console.log(modelData)
-  emit('update:modelValue', modelData)
+  console.log(timeDelivery.value)
 }
 type updateTime = (time: number[], hours: boolean) => void
 const hoursArray = computed(() => {
   const arr = []
   for (let i = 0; i < 24; i++) {
     const hour = i < 10 ? `0${i}` : i
-    arr.push({ text: `${hour}:00-${hour}:30`, value: `${hour}:00` })
-    arr.push({ text: `${hour}:30-${i + 1 < 10 ? `0${i + 1}` : i + 1}:00`, value: `${hour}:30` })
+    arr.push({ text: `${hour}:00-${hour}:30`, value: `${hour}:00-${hour}:30` })
+    arr.push({ text: `${hour}:30-${i + 1 < 10 ? `0${i + 1}` : i + 1}:00`, value: `${hour}:30-${i + 1 < 10 ? `0${i + 1}` : i + 1}:00` })
   }
   return arr
 })
 
-const getInitialTimeValue = (time:any) => {
-  const hours = time.hours < 10 ? `0${time.hours}` : time.hours;
-  const minutes = time.minutes < 30 ? "00" : "30";
-  return `${hours}:${minutes}`;
-};
-function handleTime(
-  index: number,
-  value: number,
-  hours = true,
-  updateTime: updateTime,
-  time: any
-) {
-  if (index === 0) {
-    updateTime([value, time.hours[1]], true)
-  } else {
-    updateTime([time.hours[0], value], true)
+const getInitialTimeValue = (timeHours:any , timeMinutes:any) => {
+  const hours = timeHours < 10 ? `0${timeHours}` : timeHours;
+  const minutes = timeMinutes < 30 ? "00" : "30";
+
+  let nextHours = timeHours;
+  let nextMinutes = timeMinutes < 30 ? 30 : 0;
+
+  if (timeMinutes >= 30) {
+    nextHours = timeHours + 1;
+    if (nextHours === 24) nextHours = 0; 
   }
-}
+
+  const nextHoursStr = nextHours < 10 ? `0${nextHours}` : nextHours;
+  const nextMinutesStr = nextMinutes === 0 ? "00" : "30";
+
+  return `${hours}:${minutes} - ${nextHoursStr}:${nextMinutesStr}`;
+};
+const timeDelivery = ref('')
+timeDelivery.value = getInitialTimeValue(`${$dayjs(date.value).format('HH')}`, `${$dayjs(date.value).format('mm')}`);
+
+
 </script>
 
 <template>
@@ -74,7 +79,6 @@ function handleTime(
       select-text="Сохранить"
       @update:model-value="handleDate"
     >
-
       <template #trigger>
         <div class="flex w-full justify-end">
           <button
@@ -90,14 +94,7 @@ function handleTime(
       </template>
       <template #action-row="{ internalModelValue, selectDate }">
         <div class="action-row flex flex-col justify-center gap-2 w-full">
-          <div class="flex flex-col w-full">
-            <div class="flex justify-between">
-              <span>Выбрано:</span>
-              <span>
-                {{ $dayjs(internalModelValue).format('DD.MM.YYYY HH:mm') }}</span
-              >
-            </div>
-          </div>
+          {{ timeDelivery }}
           <button
             class="btn btn-primary btn-sm block normal-case"
             @click="selectDate"
@@ -108,14 +105,13 @@ function handleTime(
       </template>
       <template #time-picker="{ time, updateTime }">
         <div class="custom-time-picker-component">
-          <span class="text-center px-2">Укажите часы</span>
+          <span class="text-center px-2">Укажите время</span>
+
           <div class="flex items-center gap-2 px-2 pt-1">
             <select
               class="select select-sm w-full"
-              :value="getInitialTimeValue(time)"
-              @change="
-                handleTime(0, +$event.target.value, true, updateTime, time)
-              "
+              value="00:00"
+              v-model="timeDelivery"
             >
               <option v-for="h in hoursArray" :key="h.value" :value="h.value">
                 {{ h.text }}
