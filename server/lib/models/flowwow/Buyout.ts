@@ -32,6 +32,8 @@ const BuyoutSchema = new Schema({
   place: { type: Number, required: true },
   purchaseSoon: { type: Boolean, required: false, default: false },
   ff: { type: Boolean, required: false, default: false },
+  deliveryPeriodTime: { type: String, required: false, default: '' },
+  deliveryPeriodDate: { type: String, required: false, default: '' },
   completed: { type: Number, required: false, default: 0 },
   data5: { type: {}, default: '' },
   data6: { type: {}, default: '' },

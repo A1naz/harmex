@@ -1,22 +1,29 @@
 <script setup lang="ts">
-
+import { useNotification } from '@kyvg/vue3-notification'
 const props = defineProps({
   modelValue: {
     required: true,
     type: Date,
+  },
+  timeDelivery: {
+    required: true,
+    type: String,
   },
   size: {
     type: String,
     default: 'small',
   },
 })
+const { notify } = useNotification()
 const { $dayjs } = useNuxtApp()
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['saveDate'])
 const colorMode = useColorMode()
 const { width } = useWindowSize()
 const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
 const date = ref(props.modelValue)
 
+const currentDate = $dayjs().toDate()
+const endOfWeek = $dayjs().add(7, 'day').toDate()
 
 type UpdateMonthYear = (month: number, year: number) => void
 
@@ -27,43 +34,85 @@ function updateMonth(
 ) {
   updateMonthYear(+(event.target as HTMLSelectElement).value, year)
 }
+
 function handleDate(modelData: any) {
   date.value = modelData
-  console.log(modelData)
-  console.log(timeDelivery.value)
+  const formattedCurrentDate = $dayjs(currentDate).format('YYYY-MM-DD');
+  const formattedModelDate = $dayjs(modelData).format('YYYY-MM-DD');
+
+  if (formattedCurrentDate === formattedModelDate) {
+    const [startTime, endTime] = timeDelivery.value.split('-');
+    const currentTime = currentDate.toLocaleTimeString('en-US', { hour12: false }).slice(0, 5);
+
+    const currentTimeParts = currentTime.split(':').map(Number);
+    const startTimeParts = endTime.split(':').map(Number);
+
+    const currentDateTime = new Date();
+    currentDateTime.setHours(currentTimeParts[0], currentTimeParts[1], 0, 0);
+
+    const startDateTime = new Date();
+    startDateTime.setHours(startTimeParts[0], startTimeParts[1], 0, 0);
+
+    if (currentDateTime > startDateTime) {
+      timeDelivery.value = ``;
+      notify({
+        text: 'Время доставки не может быть в прошедшем времени',
+        type: 'error',
+      })
+      return
+    } 
+  }
+
+  emit(
+    'saveDate',
+    `${$dayjs(date.value).format('DD.MM.YYYY')}`,
+    timeDelivery.value
+  )
 }
 type updateTime = (time: number[], hours: boolean) => void
 const hoursArray = computed(() => {
   const arr = []
   for (let i = 0; i < 24; i++) {
     const hour = i < 10 ? `0${i}` : i
-    arr.push({ text: `${hour}:00-${hour}:30`, value: `${hour}:00-${hour}:30` })
-    arr.push({ text: `${hour}:30-${i + 1 < 10 ? `0${i + 1}` : i + 1}:00`, value: `${hour}:30-${i + 1 < 10 ? `0${i + 1}` : i + 1}:00` })
+    arr.push({ title: `${hour}:00-${hour}:30`, value: `${hour}:00-${hour}:30` })
+    arr.push({
+      title: `${hour}:30-${i + 1 < 10 ? `0${i + 1}` : i + 1}:00`,
+      value: `${hour}:30-${i + 1 < 10 ? `0${i + 1}` : i + 1}:00`,
+    })
   }
   return arr
 })
 
-const getInitialTimeValue = (timeHours:any , timeMinutes:any) => {
-  const hours = timeHours < 10 ? `0${timeHours}` : timeHours;
-  const minutes = timeMinutes < 30 ? "00" : "30";
+const getInitialTimeValue = (timeHours: any, timeMinutes: any) => {
+  const hours = timeHours < 10 ? `0${timeHours}` : timeHours
+  const minutes = timeMinutes < 30 ? '00' : '30'
 
-  let nextHours = timeHours;
-  let nextMinutes = timeMinutes < 30 ? 30 : 0;
+  let nextHours = timeHours
+  let nextMinutes = timeMinutes < 30 ? 30 : 0
 
   if (timeMinutes >= 30) {
-    nextHours = timeHours + 1;
-    if (nextHours === 24) nextHours = 0; 
+    nextHours = parseInt(timeHours) + 1
+    if (nextHours === 24) nextHours = 0
   }
 
-  const nextHoursStr = nextHours < 10 ? `0${nextHours}` : nextHours;
-  const nextMinutesStr = nextMinutes === 0 ? "00" : "30";
+  const nextHoursStr = nextHours < 10 ? `0${nextHours}` : nextHours
+  const nextMinutesStr = nextMinutes === 0 ? '00' : '30'
 
-  return `${hours}:${minutes} - ${nextHoursStr}:${nextMinutesStr}`;
-};
-const timeDelivery = ref('')
-timeDelivery.value = getInitialTimeValue(`${$dayjs(date.value).format('HH')}`, `${$dayjs(date.value).format('mm')}`);
+  return `${hours}:${minutes}-${nextHoursStr}:${nextMinutesStr}`
+}
 
+const timeDelivery = ref(
+  props.timeDelivery && props.timeDelivery !== ''
+    ? props.timeDelivery
+    : getInitialTimeValue(
+        `${$dayjs(date.value).format('HH')}`,
+        `${$dayjs(date.value).format('mm')}`
+      )
+)
 
+function setTimeDelivery(data:any){
+  timeDelivery.value = data.value
+}
 </script>
 
 <template>
@@ -72,7 +121,7 @@ timeDelivery.value = getInitialTimeValue(`${$dayjs(date.value).format('HH')}`, `
       v-model="date"
       :teleport-center="width < 1280"
       :teleport="true"
-      :min-date="startDate"
+      :min-date="currentDate"
       :prevent-min-max-navigation="true"
       :dark="colorMode.value === 'dark'"
       cancel-text=""
@@ -80,8 +129,17 @@ timeDelivery.value = getInitialTimeValue(`${$dayjs(date.value).format('HH')}`, `
       @update:model-value="handleDate"
     >
       <template #trigger>
-        <div class="flex w-full justify-end">
+        <div class="flex flex-col w-full justify-end">
+          <div
+            v-if="props.timeDelivery && props.timeDelivery !== '' && timeDelivery !== ''"
+            class="flex justify-center items-center text-center"
+          >
+            {{ `${$dayjs(date).format('DD.MM.YYYY')}` }}
+            <br />
+            {{ timeDelivery }}
+          </div>
           <button
+            v-else
             :class="{
               'btn-sm': size === 'small',
               'btn-md': size === 'medium',
@@ -94,7 +152,6 @@ timeDelivery.value = getInitialTimeValue(`${$dayjs(date.value).format('HH')}`, `
       </template>
       <template #action-row="{ internalModelValue, selectDate }">
         <div class="action-row flex flex-col justify-center gap-2 w-full">
-          {{ timeDelivery }}
           <button
             class="btn btn-primary btn-sm block normal-case"
             @click="selectDate"
@@ -106,18 +163,10 @@ timeDelivery.value = getInitialTimeValue(`${$dayjs(date.value).format('HH')}`, `
       <template #time-picker="{ time, updateTime }">
         <div class="custom-time-picker-component">
           <span class="text-center px-2">Укажите время</span>
-
           <div class="flex items-center gap-2 px-2 pt-1">
-            <select
-              class="select select-sm w-full"
-              value="00:00"
-              v-model="timeDelivery"
-            >
-              <option v-for="h in hoursArray" :key="h.value" :value="h.value">
-                {{ h.text }}
-              </option>
-            </select>
+            <CustomSelect @change-value="setTimeDelivery" :dropdownContainer="'w-full'" :class="'w-full'" :tabs="hoursArray" :status-text="timeDelivery" />
           </div>
+          
         </div>
       </template>
       <template

@@ -79,6 +79,11 @@ const productQuantityModel = computed({
     store.changeQuantity(newValue, props.index)
   },
 })
+
+function setDeliveryDate(date: String, time: String) {
+  store.createProducts[props.index].deliveryPeriodDate = date
+  store.createProducts[props.index].deliveryPeriodTime = time
+}
 </script>
 
 <template>
@@ -286,6 +291,8 @@ const productQuantityModel = computed({
         <div class="w-full">
           <BuyoutFlowwowDatePicker
             :model-value="startDate"
+            @save-date="setDeliveryDate"
+            :time-delivery="store.createProducts[index].deliveryPeriodTime"
           />
         </div>
       </div>
