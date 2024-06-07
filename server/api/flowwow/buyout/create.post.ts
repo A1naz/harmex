@@ -23,6 +23,8 @@ interface Item {
   rules: Rule[]
   purchaseSoon: boolean
   key: boolean
+  deliveryPeriodTime: string
+  deliveryPeriodDate: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -122,6 +124,8 @@ export default eventHandler(async (event) => {
       ff: product.key || false,
       pointRegion: 'Московская область',
       pointDistrict: 'Московская область',
+      deliveryPeriodTime: product.deliveryPeriodTime,
+      deliveryPeriodDate: product.deliveryPeriodDate,
     })
 
     await buyout.save()

@@ -75,6 +75,11 @@ const productQuantityModel = computed({
     store.changeQuantity(newValue, props.index)
   },
 })
+function setDeliveryDate(date: String, time: String) {
+  store.createProducts[props.index].deliveryPeriodDate = date
+  store.createProducts[props.index].deliveryPeriodTime = time
+  console.log(store.createProducts[props.index].deliveryPeriodDate)
+}
 </script>
 
 <template>
@@ -282,6 +287,7 @@ const productQuantityModel = computed({
             <div v-else class="text-center text-xs">Ближайшее время</div>
           </div>
         </div>
+        
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-2">Адрес: </span>
           <div
@@ -309,6 +315,16 @@ const productQuantityModel = computed({
           </button>
         </div>
       </div>
+      <div class="flex gap-5">
+          <span class="text-md text-gray-500 mb-2">Дата доставок: </span>
+          <div class="text-xs flex justify-start">
+            <BuyoutFlowwowDatePicker
+              :model-value="startDate"
+              @save-date="setDeliveryDate"
+              :time-delivery="store.createProducts[index].deliveryPeriodTime"
+            />
+          </div>
+        </div>
       <div>
         <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
         <div class="w-[60%] flex flex-col gap-2">
@@ -322,6 +338,7 @@ const productQuantityModel = computed({
           />
         </div>
       </div>
+      
       <div>
         <div class="text-md text-gray-500 mb-1">Регион поиска:</div>
         <div class="w-[60%] flex flex-col gap-2">
