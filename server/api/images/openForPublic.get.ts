@@ -4,7 +4,6 @@ const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const { path }: any = getQuery(event)
-  console.log(path)
 
   const bucket = 'ozonmpportal'
   AWS.config.update({
@@ -39,8 +38,6 @@ export default eventHandler(async (event) => {
         console.error('Ошибка при установке ACL для объекта:', aclErr)
         return
       }
-
-      console.log('ACL успешно установлен для объекта:', aclData)
     })
   })
 

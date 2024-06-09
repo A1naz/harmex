@@ -55,8 +55,6 @@ export default eventHandler(async (event) => {
     })
     .sort({ _id: -1 })
 
-  console.log(history.length)
-
   const workbook = new ExcelJS.Workbook()
   const sheet = workbook.addWorksheet('История платежей', {
     headerFooter: { firstHeader: `Всего записей: ${history.length}` },

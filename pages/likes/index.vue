@@ -16,6 +16,10 @@ const sortPage = ref('all')
 const sortPageDate = ref('')
 const MPSelect = ref()
 const loading = ref(true)
+const logModal = ref(false)
+const selectedLike = ref({
+  uuid: '',
+})
 const selectedMP = ref<any>(
   mpStore.selectedMP.charAt(0).toUpperCase() + mpStore.selectedMP.slice(1) ||
     'Wildberries'
@@ -36,7 +40,7 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && review_likes.value.length >= limit.value){
+  if (!end.value && isVisible && review_likes.value.length >= limit.value) {
     await getLikes()
   }
 })
@@ -71,14 +75,19 @@ function getStatus(status: string) {
 }
 
 async function resumeStatus(item: any) {
-  const { data, error } = await useFetch(`/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/resume`, {
-    method: 'POST',
-    body: {
-      item: item,
-    },
-    watch: false,
-  })
-  if (error.value){
+  const { data, error } = await useFetch(
+    `/api/${
+      mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'
+    }/likes/resume`,
+    {
+      method: 'POST',
+      body: {
+        item: item,
+      },
+      watch: false,
+    }
+  )
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -100,25 +109,27 @@ async function resumeStatus(item: any) {
 
 async function getLikes() {
   // loading.value = true
-  if(mpStore.selectedMP == 'avito'){
+  if (mpStore.selectedMP == 'avito') {
     review_likes.value = []
     loading.value = false
     return
   }
 
   const { data, error } = await useFetch(
-    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`, {
-    method: 'GET',
-    query: {
-      statusQuery: sortPage.value,
-      dateFilter: sortPageDate.value,
-      string: search.text,
-      type: search.type,
-      limit: limit.value,
-      skip: skip.value,
-    },
-  })
- if ((data.value as any)?.length === 0) {
+    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`,
+    {
+      method: 'GET',
+      query: {
+        statusQuery: sortPage.value,
+        dateFilter: sortPageDate.value,
+        string: search.text,
+        type: search.type,
+        limit: limit.value,
+        skip: skip.value,
+      },
+    }
+  )
+  if ((data.value as any)?.length === 0) {
     loading.value = false
     end.value = true
     return
@@ -127,7 +138,7 @@ async function getLikes() {
     review_likes.value = [...review_likes.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -169,7 +180,7 @@ async function deleteLike() {
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -217,10 +228,10 @@ const links = computed(() => {
   const links = ref([
     { title: 'Товар/бренд', slot: '/productlikes', query: '' },
   ])
-  if(mpStore.selectedMP !== 'avito'){
+  if (mpStore.selectedMP !== 'avito') {
     links.value.push({ title: 'Отзывы', slot: '/likes', query: '' })
   }
-  if(mpStore.selectedMP === 'ozon'){
+  if (mpStore.selectedMP === 'ozon') {
     links.value.push({ title: 'Вопрос', slot: '/questionlikes', query: '' })
   }
   return links.value
@@ -232,7 +243,7 @@ const links = computed(() => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
       <div class="flex gap-1 navbar:gap-2 lg:gap-3">
         <NuxtLink
-          :to="`/likes/create`" 
+          :to="`/likes/create`"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
           <Icon name="fluent:add-24-filled" size="24" />
@@ -272,7 +283,7 @@ const links = computed(() => {
           ]"
           @change-value="selectFilterDate"
         />
-        
+
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
           <input
             type="text"
@@ -367,7 +378,8 @@ const links = computed(() => {
             <th class="text-center">Статус</th>
             <th class="text-center">Дата создания</th>
             <th class="text-center">Дата завершения</th>
-            <th class="text-center rounded-tr-2xl">Сроки выполнения</th>
+            <th class="text-center">Сроки выполнения</th>
+            <th class="text-center rounded-tr-2xl">Инфо</th>
           </tr>
         </thead>
         <tbody>
@@ -453,17 +465,19 @@ const links = computed(() => {
               >
                 {{ getStatus(item.status) }}
               </div>
-              <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
-                Возобновить  
+              <button
+                v-if="item.status === 'nofunds'"
+                class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20"
+                @click="resumeStatus(item)"
+              >
+                Возобновить
               </button>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ $dayjs(item.createdDate).format(
-                      'DD.MM.YYYY'
-                    ) }}
+                {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
               </div>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
@@ -471,22 +485,47 @@ const links = computed(() => {
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ $dayjs(item.endedDate).format(
-                      'DD.MM.YYYY'
-                    ) }}
+                {{ $dayjs(item.endedDate).format('DD.MM.YYYY') }}
               </div>
+            </td>
+            <td
+              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5"
+            >
+              <div v-if="item.period">
+                <div>{{ item.period }}</div>
+              </div>
+              <div v-else>Нет</div>
             </td>
             <td
               class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5"
               :class="{ 'rounded-br-2xl': index === review_likes.length - 1 }"
             >
-              <div
-                v-if="item.period"
-                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
-              >
-                <div>{{ item.period }}</div>
+              <div class="rounded-lg p-0.5 text-center">
+                <button
+                  @click=";[(selectedLike = item), (logModal = true)]"
+                  class="btn btn-primary btn-sm btn-square mb-2"
+                >
+                  <svg
+                    data-v-f136eeaa=""
+                    data-v-a5d236d9=""
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    aria-hidden="true"
+                    role="img"
+                    class="icon"
+                    width="20px"
+                    height="20px"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
               </div>
-              <div v-else>Нет</div>
             </td>
           </tr>
           <div ref="target" class="flex justify-center items-center h-4" />
@@ -521,6 +560,8 @@ const links = computed(() => {
       </div>
     </div>
   </div>
+  <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
+  {{ selectedLike }}
 </template>
 
 <style>

@@ -364,7 +364,6 @@ const customLinks = filters.map((filter) => ({
 
 
 function openRemoveModal(index: number) {
-  console.log(index)
   selectedIndex.value = index
   selectedPlace.value = buyouts.value.length - index
   selectedBuyout.value = buyouts.value[index]
