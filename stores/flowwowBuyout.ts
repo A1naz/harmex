@@ -108,6 +108,8 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
           sex: 'Нет',
           sizes: product?.sizes,
           dateRange: [startDate, endDate],
+          deliveryPeriodDate: '',
+          deliveryPeriodTime: '',
           adress: '',
           searchQuery: [{ value: '', loading: false, error: false }],
           selectedSize: product.sizes[0] ?? 'none',

@@ -79,6 +79,11 @@ const productQuantityModel = computed({
     store.changeQuantity(newValue, props.index)
   },
 })
+
+function setDeliveryDate(date: String, time: String) {
+  store.createProducts[props.index].deliveryPeriodDate = date
+  store.createProducts[props.index].deliveryPeriodTime = time
+}
 </script>
 
 <template>
@@ -245,12 +250,16 @@ const productQuantityModel = computed({
           <div>
             
           </div> -->
-
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"
             :start-date="startDate"
           />
+          <!-- <BuyoutFlowwowDatePicker
+            v-if="!product.purchaseSoon"
+            v-model="productDateRangeModel"
+            :start-date="startDate"
+          /> -->
           <div v-else class="text-center">Выкуп в ближайшее время</div>
           <!-- <button
             v-else
@@ -266,6 +275,25 @@ const productQuantityModel = computed({
                 : 'Выбрать'
             }}
           </button> -->
+        </div>
+      </div>
+    </td>
+    <td class="border-r border-base">
+      <!-- <label class="label cursor-pointer -ml-1 text-sm -mb-1">
+        Выкупить в ближайшее время
+        <input
+          type="checkbox"
+          v-model="product.purchaseSoon"
+          class="checkbox checkbox-primary"
+        />
+      </label> -->
+      <div class="flex items-center mt-2">
+        <div class="w-full">
+          <BuyoutFlowwowDatePicker
+            :model-value="startDate"
+            @save-date="setDeliveryDate"
+            :time-delivery="store.createProducts[index].deliveryPeriodTime"
+          />
         </div>
       </div>
     </td>

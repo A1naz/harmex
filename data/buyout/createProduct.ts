@@ -28,4 +28,6 @@ export interface Item {
   discountPrice: number
   discountRequestPrice: number
   searchQueryRegion: SearchQuery[]
+  deliveryPeriodTime: string
+  deliveryPeriodDate: string
 }
