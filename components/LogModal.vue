@@ -13,11 +13,13 @@ const props = defineProps({
     required: true,
   },
 })
+const loading = ref(false)
 const emit = defineEmits(['close'])
 const currency = useCurrency()
 const store = useMainStore()
 const logs = ref<any[]>([])
 async function getLogs() {
+  loading.value = true
   //@ts-ignore
   const { data, error } = await useFetch(`/api/${props.mp}/tasks/getLogs`, {
     method: 'GET',
@@ -26,6 +28,7 @@ async function getLogs() {
     },
   })
   if (data.value) logs.value = data.value
+  loading.value = false
 }
 watch(
   () => props.info.uuid,
@@ -47,7 +50,7 @@ onKeyStroke('Escape', (e) => {
       'modal-open': state,
     }"
     class="modal cursor-pointer"
-    @click="  emit('close')"
+    @click="emit('close')"
   >
     <div @click.stop v-if="state" class="modal-box max-w-2xl cursor-auto">
       <div class="">
@@ -75,6 +78,9 @@ onKeyStroke('Escape', (e) => {
               {{ defaultDate(log.date) }}
             </div>
           </div>
+        </div>
+        <div v-else-if="loading" class="hero">
+          <span class="loading loading-dots loading-lg text-primary"></span>
         </div>
         <Hero v-else />
       </div>

@@ -1,6 +1,6 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
-import { TaskLog } from '@/server/lib/models/wildberries/TaskLog'
+import { TaskLog } from '@/server/lib/models/flowwow/TaskLog'
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
