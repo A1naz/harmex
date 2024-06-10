@@ -42,13 +42,13 @@ export default eventHandler(async (event) => {
       message: 'invalid url',
     })
   }
-  if(url.includes('ozon.ru/seller')){
+  if (url.includes('ozon.ru/seller')) {
     return createError({
       statusCode: 400,
       message: 'Не удалось получить данные о товаре/бренде',
     })
   }
-  
+
   const type = url.includes('ozon.ru/brand') ? 'brand' : 'product'
 
   if (type === 'product') {
@@ -86,11 +86,27 @@ export default eventHandler(async (event) => {
       priceText: data.price + ' ₽' || '0 ₽',
     }
   } else if (type === 'brand') {
+
+    const data: any = await $fetch('http://95.163.249.133:4141', {
+      method: 'POST',
+      body: {
+        type: 'ozonBrand',
+        url,
+      },
+    })
+
+    if (!data) {
+      return createError({
+        statusCode: 400,
+        message: 'Бренд не найден',
+      })
+    }
+
     return {
       type: 'brand',
-      name: 'неизвестно',
-      id: 'неизвестно',
-      image: 'неизвестно',
+      name: data.name || '',
+      id: data.id || 0,
+      image: data.image || '',
     }
   }
 })

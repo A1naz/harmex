@@ -691,8 +691,9 @@ function refreshElements() {
                       refreshElements(),
                       (products[selectedRuleProductIndex].adress = ''),
                       (products[selectedRuleProductIndex].dateRange = [
-                        new Date(),
-                        new Date(),
+                        new Date().setHours(new Date().getHours() + 3),
+
+                        new Date().setHours(new Date().getHours() + 3),
                       ]),
                     ]
                   "
