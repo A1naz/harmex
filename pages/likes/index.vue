@@ -36,7 +36,7 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && review_likes.value.length >= limit.value){
+  if (!end.value && isVisible && review_likes.value.length >= limit.value) {
     await getLikes()
   }
 })
@@ -69,14 +69,19 @@ function getStatus(status: string) {
 }
 
 async function resumeStatus(item: any) {
-  const { data, error } = await useFetch(`/api/${likesIsExist.value ? likesIsExist.value : 'wildberries'}/likes/resume`, {
-    method: 'POST',
-    body: {
-      item: item,
-    },
-    watch: false,
-  })
-  if (error.value){
+  const { data, error } = await useFetch(
+    `/api/${
+      likesIsExist.value ? likesIsExist.value : 'wildberries'
+    }/likes/resume`,
+    {
+      method: 'POST',
+      body: {
+        item: item,
+      },
+      watch: false,
+    }
+  )
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -96,38 +101,42 @@ async function resumeStatus(item: any) {
   }
 }
 
-import { computed } from 'vue';
-
 const likesIsExist = computed(() => {
-  const page = mpChange.pages.find(el => el.value === mpStore.selectedMP.toString());
-  const likesReview = page?.likes?.find(el => el.value === 'likes');
+  const page = mpChange.pages.find(
+    (el) => el.value === mpStore.selectedMP.toString()
+  )
+  const likesReview = page?.likes?.find((el) => el.value === 'likes')
 
   if (page && likesReview) {
-    return page.value;
-  } else{
-    const mpWithLikes = mpChange.pages.find(el => el.likes?.some(like => like.value === 'likes'));
-    return mpWithLikes?.value;
+    return page.value
+  } else {
+    const mpWithLikes = mpChange.pages.find((el) =>
+      el.likes?.some((like) => like.value === 'likes')
+    )
+    return mpWithLikes?.value
   }
-});
+})
 
 function firstLetterUppercase(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 async function getLikes() {
   const { data, error } = await useFetch(
-    `/api/${likesIsExist.value ? likesIsExist.value : 'wildberries'}/likes/get`, {
-    method: 'GET',
-    query: {
-      statusQuery: sortPage.value,
-      dateFilter: sortPageDate.value,
-      string: search.text,
-      type: search.type,
-      limit: limit.value,
-      skip: skip.value,
-    },
-  })
- if ((data.value as any)?.length === 0) {
+    `/api/${likesIsExist.value ? likesIsExist.value : 'wildberries'}/likes/get`,
+    {
+      method: 'GET',
+      query: {
+        statusQuery: sortPage.value,
+        dateFilter: sortPageDate.value,
+        string: search.text,
+        type: search.type,
+        limit: limit.value,
+        skip: skip.value,
+      },
+    }
+  )
+  if ((data.value as any)?.length === 0) {
     loading.value = false
     end.value = true
     return
@@ -136,7 +145,7 @@ async function getLikes() {
     review_likes.value = [...review_likes.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -146,7 +155,6 @@ async function getLikes() {
   skip.value += limit.value
   loading.value = false
 }
-
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
@@ -179,7 +187,7 @@ async function deleteLike() {
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -227,10 +235,10 @@ const links = computed(() => {
   const links = ref([
     { title: 'Товар/бренд', slot: '/productlikes', query: '' },
   ])
-  if(mpStore.selectedMP !== 'avito'){
+  if (mpStore.selectedMP !== 'avito') {
     links.value.push({ title: 'Отзывы', slot: '/likes', query: '' })
   }
-  if(mpStore.selectedMP === 'ozon'){
+  if (mpStore.selectedMP === 'ozon') {
     links.value.push({ title: 'Вопрос', slot: '/questionlikes', query: '' })
   }
   return links.value
@@ -242,7 +250,7 @@ const links = computed(() => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
       <div class="flex gap-1 navbar:gap-2 lg:gap-3">
         <NuxtLink
-          :to="`/likes/create`" 
+          :to="`/likes/create`"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
           <Icon name="fluent:add-24-filled" size="24" />
@@ -282,7 +290,7 @@ const links = computed(() => {
           ]"
           @change-value="selectFilterDate"
         />
-        
+
         <div class="relative justify-end flex-grow-0 w-full lg:hidden">
           <input
             type="text"
@@ -463,17 +471,19 @@ const links = computed(() => {
               >
                 {{ getStatus(item.status) }}
               </div>
-              <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
-                Возобновить  
+              <button
+                v-if="item.status === 'nofunds'"
+                class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20"
+                @click="resumeStatus(item)"
+              >
+                Возобновить
               </button>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ $dayjs(item.createdDate).format(
-                      'DD.MM.YYYY'
-                    ) }}
+                {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
               </div>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
@@ -481,9 +491,7 @@ const links = computed(() => {
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ $dayjs(item.endedDate).format(
-                      'DD.MM.YYYY'
-                    ) }}
+                {{ $dayjs(item.endedDate).format('DD.MM.YYYY') }}
               </div>
             </td>
             <td
