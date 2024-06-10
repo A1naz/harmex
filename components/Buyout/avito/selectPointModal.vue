@@ -16,8 +16,13 @@ const props = defineProps({
   },
 })
 
+const map = ref(null) // ссылка на карту
+
+const marker = ref()
+const name = ref('Custom')
 const loading = ref(false)
-const addressText = ref('')
+const addressText = ref('Москва, улица Петровка, 5')
+const coordinates = ref([55.761438764655615, 37.617691166568456])
 const emit = defineEmits(['callback', 'close'])
 const error = ref('')
 const store = useMainStore()
@@ -26,9 +31,8 @@ function closeModal() {
   emit('close')
 }
 
-const coordinates = ref([55, 33])
 const onClick = (e: any) => {
-  console.log(e)
+  const objectId = e.get()
   coordinates.value = e.get('coords')
   getAddressText(e.get('coords')[0], e.get('coords')[1], '1')
 }
@@ -53,6 +57,13 @@ async function getAddressText(lt: number, lg: number, id: string) {
     addressText.value = data.value
   }
 }
+
+const onClickMarker = (e: any) => {
+  const objectId = e.get()
+  coordinates.value = e.get('coords')
+
+  emit('callback', coordinates.value, name.value)
+}
 </script>
 
 <template>
@@ -71,7 +82,10 @@ async function getAddressText(lt: number, lg: number, id: string) {
           >✕</a
         >
         <div class="title mb-2">Выберите ПВЗ</div>
-        Координаты: {{ coordinates }} , Адрес: {{ addressText }}
+
+        <div class="flex justify-center">
+          <!-- <div class="ml-2">Адрес: {{ addressText }}</div> -->
+        </div>
         <div
           v-if="loading"
           class="loading flex justify-center items-center h-full"
@@ -85,13 +99,34 @@ async function getAddressText(lt: number, lg: number, id: string) {
           {{ error }}
         </div>
         <YandexMap
+          ref="map"
           :coordinates="coordinates"
+          :controls="['searchControl', 'fullscreenControl']"
           @click="onClick"
-          :noPlacemark="true"
+          :detailed-controls="{
+            searchControl: {
+              noPlacemark: true,
+            },
+          }"
         >
-          <YandexMarker :coordinates="coordinates" :marker-id="123" />
+          <YandexMarker
+            ref="marker"
+            :options="{
+              iconImageSize: [50, 50],
+              iconOffset: [0, 0],
+              iconShadow: true,
+            }"
+            :coordinates="coordinates"
+            :marker-id="1"
+          >
+            <template #component>
+              <BuyoutAvitoCustomBalloon v-model="addressText" />
+            </template>
+          </YandexMarker>
         </YandexMap>
       </div>
+      <button class="btn btn-primary my-2 w-full">Выбрать Адрес</button>
+
     </div>
     <div class="modal-backdrop cursor-pointer" @click="closeModal"></div>
   </div>
@@ -106,7 +141,7 @@ async function getAddressText(lt: number, lg: number, id: string) {
 }
 
 .yandex-balloon {
-  height: 200px;
+  height: 160px;
   width: 300px;
 }
 

@@ -296,7 +296,7 @@ const productQuantityModel = computed({
           </div>
           <!-- :disabled="loading" -->
           <button
-            disabled
+            
             v-if="!product.adress"
             :class="{
               'btn-outline': product.adress,
