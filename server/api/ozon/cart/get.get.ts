@@ -4,11 +4,11 @@ import { Cart } from '~/server/lib/models/ozon/Cart'
 
 export default eventHandler(async (event) => {
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
-    
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
+
   const { dateFilter, statusQuery, string, type, skip = 0, limit = 50 } = getQuery(event)
-  
+
   let carts = []
   let searchQuery: { status?: any, $or?: any, createdDate?: any } = {};
   if (type === 'article') {
@@ -44,11 +44,11 @@ export default eventHandler(async (event) => {
       };
       break;
   }
- 
+
   carts = await Cart.find({
     user,
     ...searchQuery,
-  }).skip(skip as number).limit(limit as number)
+  }).sort({ _id: -1 }).skip(skip as number).limit(limit as number)
 
 
   const format = carts.map((cart, index) => {

@@ -14,7 +14,7 @@ const ProductLikeSchema = new Schema({
   endedDate: { type: Date, default: null },
   progress: { type: Number, default: 0 },
   amount: { type: Number, required: true },
-  uuid: { type: String, default: uuid() },
+  uuid: { type: String },
 })
 
 // ProductLikeSchema.pre('save', function (next) {

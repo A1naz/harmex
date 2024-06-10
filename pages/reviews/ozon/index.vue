@@ -18,6 +18,10 @@ const mpStore = useMPStore()
 const router = useRouter()
 
 const status = ref(route.query?.status ?? 'available')
+const logModal = ref(false)
+const selectedReview = ref({
+  uuid: '',
+})
 
 
 
@@ -464,6 +468,7 @@ async function resumeStatus(item: any) {
           @open-image="openPhoto"
           @resume-status="resumeStatus"
           @get-review="fetchData()"
+          @log-modal="(item:any) => [(selectedReview = item), (logModal = true)]"
         />
       </div>
 
@@ -536,6 +541,7 @@ async function resumeStatus(item: any) {
       </div>
     </div>
   </div>
+  <LogModal :info="selectedReview" :state="logModal" @close="logModal = false" />
 </template>
 
 <style scoped></style>
