@@ -281,6 +281,7 @@ function changeFilter(e: any) {
             { title: 'Активные', value: 'created' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -323,6 +324,8 @@ function changeFilter(e: any) {
             { title: 'Активные', value: 'created' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
+
           ]"
           @change-value="selectFilterDate"
         />

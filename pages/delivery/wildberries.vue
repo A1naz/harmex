@@ -220,6 +220,12 @@ const filters = [
     params: '?status=canceled',
     queryStatus: 'canceled',
   },
+  {
+    title: 'В архиве',
+    optionValue: 'archived',
+    params: '?status=archived',
+    queryStatus: 'archived',
+  },
 ]
 
 const customLinks = filters.map((filter) => ({
@@ -237,7 +243,11 @@ const updateSearchType = (filter: any) => {
 }
 
 function changeFilter(e: any) {
-  mpStore.changeMp(e.value, 'delivery', route.query?.status ? '?status=' + route.query.status : '')
+  mpStore.changeMp(
+    e.value,
+    'delivery',
+    route.query?.status ? '?status=' + route.query.status : ''
+  )
 }
 </script>
 
@@ -274,8 +284,14 @@ function changeFilter(e: any) {
     <div class="">
       <div class="flex lg:hidden mt-2">
         <div v-if="deliveries.length" class="export">
-          <button v-if="loadingExport" disabled  class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2">
-              <span  class="loading loading-spinner loading-sm text-primary"></span>
+          <button
+            v-if="loadingExport"
+            disabled
+            class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
+          >
+            <span
+              class="loading loading-spinner loading-sm text-primary"
+            ></span>
           </button>
           <div v-else class="dropdown">
             <label
@@ -307,18 +323,15 @@ function changeFilter(e: any) {
             placeholder="Поиск"
             @input="onSearchInput($event)"
           />
-          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="codeInputMob.focus()">
+          <div
+            class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
+            @click="codeInputMob.focus()"
+          >
             <span
-                v-if="search.loading"
-                class="loading loading-spinner loading-xs "
-              />
-            <Icon
-              v-else
-              class="text-gray-500 "
-              name="tabler:search"
-              size="20"
+              v-if="search.loading"
+              class="loading loading-spinner loading-xs"
             />
-             
+            <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
           </div>
         </div>
       </div>
@@ -326,8 +339,12 @@ function changeFilter(e: any) {
         <CustomSelect
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
-          :status-text="'Wildberries'"    
-          :tabs="store.client.username == 'test'? mpStore.sortMp('delivery') : mpStore.sortMp('delivery', true)"
+          :status-text="'Wildberries'"
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.sortMp('delivery')
+              : mpStore.sortMp('delivery', true)
+          "
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -389,7 +406,11 @@ function changeFilter(e: any) {
             class="hidden lg:flex"
             :class="'sm:min-w-[120px]'"
             :status-text="'Wildberries'"
-            :tabs="store.client.username == 'test'? mpStore.sortMp('delivery') : mpStore.sortMp('delivery', true)"
+            :tabs="
+              store.client.username == 'test'
+                ? mpStore.sortMp('delivery')
+                : mpStore.sortMp('delivery', true)
+            "
             @change-value="changeFilter"
           />
           <CustomSelect
@@ -479,33 +500,42 @@ function changeFilter(e: any) {
                 ID выкупа
               </option>
             </select> -->
-            <div class="flex w-full">
-              <input
-              ref="codeInput"
-                v-model="search.text"
-                type="text"
-                class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none "
-                placeholder="Поиск"
-                @input="onSearchInput($event)"
-              />
-              <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="codeInput.focus()">
-                <span
+              <div class="flex w-full">
+                <input
+                  ref="codeInput"
+                  v-model="search.text"
+                  type="text"
+                  class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none"
+                  placeholder="Поиск"
+                  @input="onSearchInput($event)"
+                />
+                <div
+                  class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
+                  @click="codeInput.focus()"
+                >
+                  <span
                     v-if="search.loading"
-                    class="loading loading-spinner loading-xs "
+                    class="loading loading-spinner loading-xs"
                   />
-                <Icon
-                  v-else
-                  class="text-gray-500 "
-                  name="tabler:search"
-                  size="20"
-              />
-          </div>
-        </div>
+                  <Icon
+                    v-else
+                    class="text-gray-500"
+                    name="tabler:search"
+                    size="20"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div v-if="deliveries.length" class="export">
-            <button v-if="loadingExport" disabled  class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2">
-              <span  class="loading loading-spinner loading-sm text-primary"></span>
+            <button
+              v-if="loadingExport"
+              disabled
+              class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
+            >
+              <span
+                class="loading loading-spinner loading-sm text-primary"
+              ></span>
             </button>
             <div v-else class="dropdown dropdown-end z-10">
               <label

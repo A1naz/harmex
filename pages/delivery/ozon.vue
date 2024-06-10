@@ -227,6 +227,12 @@ const filters = [
     params: '?status=canceled',
     queryStatus: 'canceled',
   },
+  {
+    title: 'В архиве',
+    optionValue: 'archived',
+    params: '?status=archived',
+    queryStatus: 'archived',
+  },
 ]
 const statusText = computed(() => {
   return filters.find((el: any) => el.queryStatus === route.query.status)?.title

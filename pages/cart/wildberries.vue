@@ -158,6 +158,7 @@ function getStatus(status: string) {
   else if (status === 'work') return 'В работе'
   else if (status === 'busy') return 'В работе'
   else if (status === 'completed') return 'Завершен'
+  else if (status === 'archived') return 'В архиве'
   else if (status === 'nofunds') return 'Недостаточно средств'
   else return status
 }
@@ -277,6 +278,7 @@ onMounted(() => {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -318,6 +320,7 @@ onMounted(() => {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />

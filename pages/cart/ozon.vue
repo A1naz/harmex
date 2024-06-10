@@ -56,14 +56,14 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && carts.value.length >= limit.value){
+  if (!end.value && isVisible && carts.value.length >= limit.value) {
     await getCarts()
   }
 })
 
 async function getCarts() {
   modalShow.value = false
-  
+
   const { data, error } = await useFetch('/api/ozon/cart/get', {
     method: 'GET',
     query: {
@@ -85,7 +85,7 @@ async function getCarts() {
     carts.value = [...carts.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -155,6 +155,7 @@ function getStatus(status: string) {
   if (status === 'created') return 'Создан'
   else if (status === 'work') return 'В работе'
   else if (status === 'busy') return 'В работе'
+  else if (status === 'archived') return 'В архиве'
   else if (status === 'completed') return 'Завершен'
   else if (status === 'nofunds') return 'Недостаточно средств'
   else return status
@@ -195,7 +196,7 @@ function removeProduct() {
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -273,6 +274,7 @@ onMounted(() => {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -314,6 +316,7 @@ onMounted(() => {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -376,7 +379,11 @@ onMounted(() => {
           :carts="carts"
           @log-modal="(item:any) => [(selectedCart = item), (logModal = true)]"
         />
-        <div v-if="!loading" ref="target" class="flex justify-center items-center h-4" />
+        <div
+          v-if="!loading"
+          ref="target"
+          class="flex justify-center items-center h-4"
+        />
       </div>
       <!-- <div>
         <CartOzonCards :carts="carts" :get-status="getStatus" />
@@ -385,7 +392,10 @@ onMounted(() => {
     <div v-else-if="!loading">
       <Hero />
     </div>
-    <div v-if="loading" class="w-full mt-5 flex justify-center items-center h-80">
+    <div
+      v-if="loading"
+      class="w-full mt-5 flex justify-center items-center h-80"
+    >
       <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
   </div>
