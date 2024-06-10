@@ -22,6 +22,7 @@ const emit = defineEmits([
   'removeReview',
   'getReview',
   'resumeStatus',
+  'logModal',
 ])
 const { $dayjs } = useNuxtApp()
 onMounted(() => {})
@@ -67,7 +68,32 @@ async function resumeStatus(item: any) {
     >
     <div class="flex justify-between">
         <span class="text-sm my-auto">{{ defaultDate(info.date) }}</span>
-        <button
+        <div class="flex gap-1">
+          <button
+            @click="emit('logModal', info)"
+            class="btn btn-sm btn-ghost btn-circle hover:text-primary"
+          >
+          <svg
+            data-v-f136eeaa=""
+            data-v-a5d236d9=""
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            aria-hidden="true"
+            role="img"
+            class="icon"
+            width="20px"
+            height="20px"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              fill-rule="evenodd"
+              d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          </button>
+          <button
             v-if="info.status === 'published'"
             @click="emit('removeReview', info.id)"
             class="btn btn-sm btn-ghost btn-circle hover:text-primary"
@@ -75,6 +101,7 @@ async function resumeStatus(item: any) {
             
             <Icon name="heroicons-outline:trash" size="30" class=""/>
           </button>
+        </div>
       </div>
       <div class="flex gap-1">
         <span

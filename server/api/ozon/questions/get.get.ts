@@ -48,7 +48,7 @@ export default eventHandler(async (event) => {
   questions = await Question.find({
     user,
     ...searchQuery,
-  }).skip(skip as number).limit(limit as number)
+  }).sort({ _id: -1 }).skip(skip as number).limit(limit as number)
 
   const format = questions.map((question, index) => {
     return {

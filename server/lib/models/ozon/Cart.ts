@@ -14,7 +14,7 @@ const CartSchema = new Schema({
   size: { type: String, required: true },
   createdDate: { type: Date, default: new Date() },
   endedDate: { type: Date },
-  uuid: {type: String, default: uuid()},
+  uuid: {type: String},
 })
 
 // CartSchema.pre('save', function (next) {

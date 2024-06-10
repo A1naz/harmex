@@ -39,6 +39,10 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
+const logModal = ref(false)
+const selectedCart = ref({
+  uuid: '',
+})
 
 const loading = ref(false)
 const limit = ref(50)
@@ -53,7 +57,7 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && carts.value.length >= limit.value){
+  if (!end.value && isVisible && carts.value.length >= limit.value) {
     await getCarts()
   }
 })
@@ -80,7 +84,7 @@ async function getCarts() {
     carts.value = [...carts.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -195,7 +199,7 @@ function removeProduct() {
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -370,7 +374,12 @@ onMounted(() => {
 
     <div v-if="carts.length && !loading" class="mt-4">
       <div>
-        <CartWildberriesTable :get-status="getStatus" :resume-status="resumeStatus" :carts="carts" />
+        <CartWildberriesTable
+          :get-status="getStatus"
+          :resume-status="resumeStatus"
+          :carts="carts"
+          @log-modal="(item:any) => [(selectedCart = item), (logModal = true)]"
+        />
         <div ref="target" class="flex justify-center items-center h-4" />
       </div>
       <!-- <div>
@@ -380,7 +389,10 @@ onMounted(() => {
     <div v-else-if="!loading">
       <Hero />
     </div>
-    <div v-if="loading" class="w-full mt-5 flex justify-center items-center h-80">
+    <div
+      v-if="loading"
+      class="w-full mt-5 flex justify-center items-center h-80"
+    >
       <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
   </div>
@@ -389,6 +401,7 @@ onMounted(() => {
     @close-modal="modalShow = false"
     @create="getCarts()"
   />
+  <LogModal :info="selectedCart" :state="logModal" @close="logModal = false" />
 </template>
 
 <style scoped></style>

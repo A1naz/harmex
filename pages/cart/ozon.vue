@@ -38,6 +38,10 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
+const logModal = ref(false)
+const selectedCart = ref({
+  uuid: '',
+})
 
 const loading = ref(false)
 const limit = ref(50)
@@ -370,6 +374,7 @@ onMounted(() => {
           :get-status="getStatus"
           :resume-status="resumeStatus"
           :carts="carts"
+          @log-modal="(item:any) => [(selectedCart = item), (logModal = true)]"
         />
         <div v-if="!loading" ref="target" class="flex justify-center items-center h-4" />
       </div>
@@ -389,6 +394,7 @@ onMounted(() => {
     @close-modal="modalShow = false"
     @create="getCarts()"
   />
+  <LogModal :info="selectedCart" :state="logModal" @close="logModal = false" />
 </template>
 
 <style scoped></style>

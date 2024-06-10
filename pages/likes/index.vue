@@ -390,7 +390,7 @@ const links = computed(() => {
             <th class="text-center">Дата создания</th>
             <th class="text-center">Дата завершения</th>
             <th class="text-center">Сроки выполнения</th>
-            <th class="text-center rounded-tr-2xl">Инфо</th>
+            <th class="text-center rounded-tr-2xl ">Инфо</th>
           </tr>
         </thead>
         <tbody>
@@ -508,7 +508,7 @@ const links = computed(() => {
               <div v-else>Нет</div>
             </td>
             <td
-              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5"
+              class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
               :class="{ 'rounded-br-2xl': index === review_likes.length - 1 }"
             >
               <div class="rounded-lg p-0.5 text-center">
@@ -572,7 +572,6 @@ const links = computed(() => {
     </div>
   </div>
   <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
-  {{ selectedLike }}
 </template>
 
 <style>

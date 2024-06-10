@@ -12,7 +12,7 @@ const QuestionSchema = new Schema({
   createdDate: { type: Date, default: new Date(Date.now()) },
   publishDate: { type: Date, required: true },
   anonim: {type: Boolean, default: false},
-  uuid: { type: String, default: uuid() },
+  uuid: { type: String},
 })
 
 // QuestionSchema.pre('save', function (next) {
