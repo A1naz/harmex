@@ -322,7 +322,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Wildberries'"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -370,7 +370,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
           :status-text="'Wildberries'"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="changeFilter"
         />
 

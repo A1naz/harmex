@@ -60,6 +60,7 @@ onMounted(() => {
 
 <template>
   <li v-if="props.href != '/autoanswer'">
+
     <NuxtLink class="mx-4 rounded-lg" :to="mpHref">
       <div v-if="!active" class="flex">
         <Icon :name="icon" size="24" />

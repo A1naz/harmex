@@ -247,7 +247,7 @@ const links = computed(() => {
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="selectMP"     
         />
         <CustomSelect
@@ -295,7 +295,7 @@ const links = computed(() => {
           class="lg:hidden"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="selectMP"
         />
         <CustomSelect

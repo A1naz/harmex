@@ -44,11 +44,9 @@ watch(targetIsVisible, async (isVisible) => {
     await getLikes()
   }
 })
-
 onMounted(() => {
   setText()
 })
-
 async function setText() {
   loading.value = true
   MPSelect.value?.updateText(mpStore.selectedMP || 'wildberries')
@@ -77,7 +75,7 @@ function getStatus(status: string) {
 async function resumeStatus(item: any) {
   const { data, error } = await useFetch(
     `/api/${
-      mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'
+      likesIsExist.value ? likesIsExist.value : 'wildberries'
     }/likes/resume`,
     {
       method: 'POST',
@@ -107,16 +105,29 @@ async function resumeStatus(item: any) {
   }
 }
 
-async function getLikes() {
-  // loading.value = true
-  if (mpStore.selectedMP == 'avito') {
-    review_likes.value = []
-    loading.value = false
-    return
-  }
+const likesIsExist = computed(() => {
+  const page = mpChange.pages.find(
+    (el) => el.value === mpStore.selectedMP.toString()
+  )
+  const likesReview = page?.likes?.find((el) => el.value === 'likes')
 
+  if (page && likesReview) {
+    return page.value
+  } else {
+    const mpWithLikes = mpChange.pages.find((el) =>
+      el.likes?.some((like) => like.value === 'likes')
+    )
+    return mpWithLikes?.value
+  }
+})
+
+function firstLetterUppercase(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+async function getLikes() {
   const { data, error } = await useFetch(
-    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/likes/get`,
+    `/api/${likesIsExist.value ? likesIsExist.value : 'wildberries'}/likes/get`,
     {
       method: 'GET',
       query: {
@@ -260,8 +271,8 @@ const links = computed(() => {
           ref="MPSelect"
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
-          :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :status-text="firstLetterUppercase(likesIsExist)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="selectMP"
         />
 
@@ -311,8 +322,8 @@ const links = computed(() => {
           ref="MPSelect"
           class="lg:hidden"
           :class="'min-w-[105px]'"
-          :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :status-text="firstLetterUppercase(likesIsExist || 'wildberries')"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="selectMP"
         />
         <CustomSelect
