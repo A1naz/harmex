@@ -83,9 +83,6 @@ const productQuantityModel = computed({
 
 <template>
   <tr class="bg-base-100">
-    <!-- <td class="hidden 3xl:block text-center mt-9">
-      {{ index + 1 }}
-    </td> -->
     <td class="border-r border-base">
       <div
         style="
@@ -140,48 +137,7 @@ const productQuantityModel = computed({
         {{ product.priceText }}
       </div>
     </td>
-    <!-- <td class="border-r border-base">
-      <div class="relative flex items-center flex-grow-0 w-full">
-        <div
-          class="absolute left-0 btn btn-ghost btn-sm btn-square"
-          @click="productQuantityModel--"
-        >
-          <IconCSS size="16" name="ic:round-minus" />
-        </div>
-        <input
-          v-model="productQuantityModel"
-          type="number"
-          min="1"
-          max="1000"
-          class="input input-sm w-full text-center bg-base-300 bg-opacity-40"
-        />
-        <div
-          class="absolute right-0 btn btn-ghost btn-sm btn-square"
-          @click="productQuantityModel++"
-        >
-          <IconCSS size="16" name="ic:round-plus" />
-        </div>
-      </div>
-    </td> -->
-    <!-- <td class="border-r border-base">
-      <div class="w-20 2xl:w-full flex items-center">
-        <select
-          v-if="product.sizes.length"
-          class="select select-sm w-full bg-base-300 bg-opacity-40"
-          @change="onSizeChange"
-        >
-          <option
-            v-for="size in product.sizes"
-            :key="size"
-            :selected="product.selectedSize === size"
-            :value="size"
-          >
-            {{ size }}
-          </option>
-        </select>
-        <div v-else class="text-sm text-center ml-2">Нет</div>
-      </div>
-    </td> -->
+
     <td class="border-r border-base">
       <div class="w-20 2xl:w-full">
         <select
@@ -213,38 +169,9 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td class="border-r border-base">
-      <!-- <label class="label cursor-pointer -ml-1 text-sm -mb-1">
-        Выкупить в ближайшее время
-        <input
-          type="checkbox"
-          v-model="product.purchaseSoon"
-          class="checkbox checkbox-primary"
-        />
-      </label> -->
+ 
       <div class="flex items-center mt-2">
         <div class="w-full">
-          <!-- <div
-            v-if="!product.purchaseSoon"  
-            v-show="product.dateRange[1] && product.dateRange[0]"
-            class="mx-auto w-fit text-sm flex justify-center items-center bg-primary bg-opacity-10 rounded-md p-1 mb-2 gap-1 px-5"
-          >
-             <div class="flex flex-col">
-              <div>{{ `${$dayjs(product.dateRange[0]).format('YY.MM.DD')}` }}</div>
-              <div class="self-end">{{ `${$dayjs(product.dateRange[0]).format('HH:mm')}` }}</div>
-            </div>
-            <div class="flex flex-col">
-              <div>-</div>
-              <div class="self-end">-</div>
-            </div>
-            <div class="flex flex-col">
-              <div>{{ `${$dayjs(product.dateRange[1]).format('YY.MM.DD')}` }}</div>
-              <div class="self-start">{{ `${$dayjs(product.dateRange[1]).format('HH:mm')}` }}</div>
-            </div>
-
-          </div>
-          <div>
-            
-          </div> -->
 
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
@@ -252,20 +179,7 @@ const productQuantityModel = computed({
             :start-date="startDate"
           />
           <div v-else class="text-center">Выкуп в ближайшее время</div>
-          <!-- <button
-            v-else
-            disabled
-            :class="{
-              'btn-outline': product.dateRange[0] && product.dateRange[1],
-            }"
-            class="btn btn-primary btn-sm normal-case w-full"
-          >
-            {{
-              product.dateRange[0] && product.dateRange[1]
-                ? 'Изменить'
-                : 'Выбрать'
-            }}
-          </button> -->
+    
         </div>
       </div>
     </td>
@@ -278,7 +192,7 @@ const productQuantityModel = computed({
           class="text-xs h-10 w-full break-all text-center"
         >
           <span v-show="loading" class="loading loading-spinner" />
-          <!-- @click="$emit('pointModalOpen', index)" -->
+          @click="$emit('pointModalOpen', index)"
           <p
             v-if="!loading"
             class="break-all whitespace-normal cursor-pointer text-primary"
@@ -288,7 +202,7 @@ const productQuantityModel = computed({
         </div>
         <!-- :disabled="loading" -->
         <button
-          disabled
+         
           v-if="!product.adress"
           :class="{
             'btn-outline': product.adress,
@@ -299,19 +213,7 @@ const productQuantityModel = computed({
           <span v-show="loading" class="loading loading-spinner" />
           <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
         </button>
-        <!-- <button
-          v-if="product.adress"
-          :disabled="loading"
-          :class="{
-            'btn-outline': product.adress,
-          }"
-          class="btn btn-primary btn-sm normal-case w-full"
-          @click="$emit('pointModalOpen', index)"
-        >
-          <span v-show="loading" class="loading loading-spinner" />
-          <span v-if="!loading">Изменить </span>
-          
-        </button> -->
+
       </div>
     </td>
 
