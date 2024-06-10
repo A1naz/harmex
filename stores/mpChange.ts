@@ -147,8 +147,8 @@ export const useMPChange = defineStore('mpChange', {
 
         const isLikesExist = this.pages.find((page) => page.value === mp)?.likes
         if (!isLikesExist || isLikesExist.length === 0 || !isLikesExist.length) {
-          const mpWithLikes = this.pages.find(page => page.likes?.some(like => like.value === 'productlikes'))
-          return `/productlikes/${mpWithLikes?.value || 'wildberries'}`
+          const mpWithLikes = this.pages.find(page => page.likes?.some(like => like.value === 'likes'))
+          return `/likes`
         }
 
         const currentTab = isLikesExist.find((page) => page.value === tab)
