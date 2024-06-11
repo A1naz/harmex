@@ -19,6 +19,13 @@ const route = useRoute()
       <IconCSS size="18" class="h-8 w-8" name="fontisto:bell-alt" />
       
     </button>
+
+    <NuxtLink
+      to="/guide"
+      class="relative bg-base-100 btn btn-xs btn-circle border-none"
+    >
+      <IconCSS name="fa-solid:question-circle" size="20" />
+    </NuxtLink>
     <NuxtLink
       
       to="/profile"
