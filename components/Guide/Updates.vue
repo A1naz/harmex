@@ -5,8 +5,8 @@ const route = useRoute()
 </script>
 
 <template>
-  <div class="flex">
-    component1
+  <div class="flex justify-center items-center w-full text-lg font-bold">
+    В разработке...
   </div>
 </template>
 

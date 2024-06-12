@@ -1,28 +1,91 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import Button from '~/components/Info/Button.vue'
-
 definePageMeta({
   layout: 'app',
   auth: true,
   title: 'Справочник',
-})
+});
 
-const mpChange = useMPChange()
-const mainStore = useMainStore()
+const mpChange = useMPChange();
+const mainStore = useMainStore();
 const mpList =
   mainStore.client?.username === 'test'
     ? mpChange.pages.map((page) => page.value)
-    : mpChange.pages.filter((page) => !page.test).map((page) => page.value)
-const isCollapsed = ref(false)
+    : mpChange.pages.filter((page) => !page.test).map((page) => page.value);
+const isCollapsed = ref(false);
+const dinamicComponent = ref();
 
 const toggleCollapse = () => {
-  isCollapsed.value = !isCollapsed.value
-}
+  isCollapsed.value = !isCollapsed.value;
+};
 
 function toUpperCaseFirstLetter(string: string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+const setComponent = (componentName: string) => {
+  dinamicComponent.value.setComponent(componentName);
+};
+
+const navbarData = ref([
+  {
+    title: 'Рекомендуемые',
+    value: 'recommended',
+    tabs: [
+      {
+        title: 'С чего начать',
+        value: 'start'
+      },
+      {
+        title: 'Обновления',
+        value: 'updates'
+      },
+      {
+        title: 'Популярные вопросы',
+        value: 'popularQuestions'
+      },
+      {
+        title: 'Партнерская программа',
+        value: 'partner'
+      },
+    ]
+  },
+  {
+    title: 'Справочная база',
+    value: 'guide',
+    tabs: [
+      {
+        title: 'Наша терминология',
+        value: 'terminology'
+      },
+      {
+        title: 'Рабочее пространство',
+        value: 'workspace'
+      },
+      {
+        title: 'Личный кабинет',
+        value: 'profile'
+      }
+    ]
+  },
+  {
+    title: 'Функции платформы',
+    value: 'functions',
+    tabs: [
+      {
+        title: 'Выкупы под ключ',
+        value: 'ff'
+      },
+      {
+        title: 'Выкупы+забор',
+        value: 'buyoutsPickup'
+      },
+      {
+        title: 'Забор',
+        value: 'pickup'
+      }
+    ]
+  },
+])
 </script>
 
 <template>
@@ -48,94 +111,36 @@ function toUpperCaseFirstLetter(string: string) {
     <div class="flex gap-5 h-full w-full">
       <div
         :class="{ collapsed: isCollapsed, expanded: !isCollapsed }"
-        class="transition-width w-[30%] duration-300 bg-base-100 rounded-lg flex h-[100%] overflow-hidden flex-col gap-4"
+        class="transition-width w-[25%] duration-300 bg-base-100 rounded-lg flex h-[100%] overflow-hidden flex-col gap-4"
       >
         <button
           @click="toggleCollapse"
           class="btn btn-ghost btn-sm w-[50px] flex ml-auto"
+          :class="{ 'p-0 justify-center items-center w-[30px] ml-0': isCollapsed }"
         >
           <Icon v-if="!isCollapsed" name="ep:d-arrow-left" size="15" />
           <Icon v-else name="ep:d-arrow-right" size="15" />
         </button>
-
-        <div class="flex flex-col gap-1">
+        <div v-for="tabs in navbarData" class="flex flex-col gap-1">
           <h4
             v-if="!isCollapsed"
-            class="px-2 text-sm text-[#6e6e73] font-semibold"
+            class="px-2 text-sm text-[#6e6e73] font-semibold truncate"
           >
-          Справочная база
+            {{ tabs.title }}
           </h4>
           <button
+            v-for="tab in tabs.tabs"
             class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
+            @click="setComponent(`Guide${toUpperCaseFirstLetter(tab.value)}`)"
           >
-            <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${'ff'}.svg`" />
+            <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${tab.value}.svg`" />
             <span
               v-if="!isCollapsed"
-              class="text-xs text-base-content font-semibold"
-              >Наша терминология</span
-            >
-          </button>
-          <button
-            class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
-          >
-            <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${'buyoutPickup'}.svg`" />
-            <span
-              v-if="!isCollapsed"
-              class="text-xs text-base-content font-semibold whitespace-nowrap"
-              >Рабочее пространство</span
-            >
-          </button>
-          <button
-            class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
-          >
-            <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${'pickup'}.svg`" />
-            <span
-              v-if="!isCollapsed"
-              class="text-xs text-base-content font-semibold"
-              >Личный кабинет</span
+              class="text-xs text-base-content font-semibold truncate"
+              >{{ tab.title }}</span
             >
           </button>
         </div>
-
-        <div class="flex flex-col gap-1">
-          <h4
-            v-if="!isCollapsed"
-            class="px-2 text-sm text-[#6e6e73] font-semibold"
-          >
-          Функции платформы
-          </h4>
-          <button
-            class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
-          >
-            <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${'ff'}.svg`" />
-            <span
-              v-if="!isCollapsed"
-              class="text-xs text-base-content font-semibold"
-              >Выкупы под ключ</span
-            >
-          </button>
-          <button
-            class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
-          >
-            <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${'buyoutPickup'}.svg`" />
-            <span
-              v-if="!isCollapsed"
-              class="text-xs text-base-content font-semibold"
-              >Выкупы+забор</span
-            >
-          </button>
-          <button
-            class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
-          >
-            <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${'pickup'}.svg`" />
-            <span
-              v-if="!isCollapsed"
-              class="text-xs text-base-content font-semibold"
-              >Забор</span
-            >
-          </button>
-        </div>
-
 
         <div class="flex flex-col gap-1">
           <h4
@@ -146,12 +151,14 @@ function toUpperCaseFirstLetter(string: string) {
           </h4>
           <button
             v-for="page in mpList"
+            :key="page"
             class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
+            @click="setComponent(page)"
           >
             <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${page}.svg`" />
             <span
               v-if="!isCollapsed"
-              class="text-xs text-base-content font-semibold"
+              class="text-xs text-base-content font-semibold truncate"
               >{{ toUpperCaseFirstLetter(page) }}</span
             >
           </button>
@@ -159,9 +166,7 @@ function toUpperCaseFirstLetter(string: string) {
       </div>
 
       <div class="bg-base-100 rounded-lg flex w-full">
-
-        <!-- <GuideButton1 />
-        <GuideButton2 /> -->
+        <GuideDinamicComponent ref="dinamicComponent" :componentName="resolveComponent" />
       </div>
     </div>
   </div>
@@ -173,10 +178,10 @@ function toUpperCaseFirstLetter(string: string) {
 }
 
 .collapsed {
-  width: 4%;
+  width: 40px;
 }
 
 .expanded {
-  max-width: 30%;
+  max-width: 25%;
 }
 </style>
