@@ -169,17 +169,14 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td class="border-r border-base">
- 
       <div class="flex items-center mt-2">
         <div class="w-full">
-
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"
             :start-date="startDate"
           />
           <div v-else class="text-center">Выкуп в ближайшее время</div>
-    
         </div>
       </div>
     </td>
@@ -192,9 +189,10 @@ const productQuantityModel = computed({
           class="text-xs h-10 w-full break-all text-center"
         >
           <span v-show="loading" class="loading loading-spinner" />
-          @click="$emit('pointModalOpen', index)"
+
           <p
             v-if="!loading"
+            @click="$emit('pointModalOpen', index)"
             class="break-all whitespace-normal cursor-pointer text-primary"
           >
             {{ product.adress }}
@@ -202,7 +200,6 @@ const productQuantityModel = computed({
         </div>
         <!-- :disabled="loading" -->
         <button
-         
           v-if="!product.adress"
           :class="{
             'btn-outline': product.adress,
@@ -213,10 +210,22 @@ const productQuantityModel = computed({
           <span v-show="loading" class="loading loading-spinner" />
           <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
         </button>
-
       </div>
     </td>
 
+    <td class="border-r border-base">
+      <div class="w-full flex flex-col gap-2">
+        <label
+          ><input
+      
+            v-model="product.appartmentNumber"
+            type="text"
+            placeholder="№ квартиры"
+            class="input bg-base-200 input-sm w-full rounded-xl"
+          />
+        </label>
+      </div>
+    </td>
     <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
         <BuyoutAvitoCreateSearchQueries

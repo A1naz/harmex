@@ -58,11 +58,9 @@ async function getAddressText(lt: number, lg: number, id: string) {
   }
 }
 
-const onClickMarker = (e: any) => {
-  const objectId = e.get()
-  coordinates.value = e.get('coords')
+const handleAddress = (address: string, lt: number, lg: number) => {
 
-  emit('callback', coordinates.value, name.value)
+  emit('callback', address, lt, lg)
 }
 </script>
 
@@ -120,13 +118,16 @@ const onClickMarker = (e: any) => {
             :marker-id="1"
           >
             <template #component>
-              <BuyoutAvitoCustomBalloon v-model="addressText" />
+              <BuyoutAvitoCustomBalloon
+                v-model="addressText"
+                @callback="handleAddress"
+                :coordinates="coordinates"
+              />
             </template>
           </YandexMarker>
         </YandexMap>
       </div>
-      <button class="btn btn-primary my-2 w-full">Выбрать Адрес</button>
-
+      <button :disabled="addressText == 'Загрузка...'" class="btn btn-primary my-2 w-full" @click="handleAddress(addressText, coordinates[0], coordinates[1])">Выбрать Адрес</button>
     </div>
     <div class="modal-backdrop cursor-pointer" @click="closeModal"></div>
   </div>

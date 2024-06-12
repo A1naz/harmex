@@ -23,6 +23,8 @@ interface Item {
   purchaseSoon: boolean
   key: boolean
   searchQueryRegion: any[]
+  pointCoordinates: any[]
+  appartmentNumber: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -55,7 +57,9 @@ export default eventHandler(async (event) => {
   for await (const product of products) {
     const rules = product.rules.map((rule) => rule.id)
     const searchQueries = product.searchQuery.map((item: any) => item.value)
-    const searchQuerieRegions = product.searchQueryRegion.map((item: any) => item.value)
+    const searchQuerieRegions = product.searchQueryRegion.map(
+      (item: any) => item.value
+    )
 
     if (userTimezoneOffsetHours && userOffsetMinutes) {
       const date1 = product.purchaseSoon
@@ -66,18 +70,22 @@ export default eventHandler(async (event) => {
         : new Date(product.dateRange[1])
 
       if (!product.purchaseSoon) {
-        date1.setHours(date1.getHours() 
-        // + Number(userTimezoneOffsetHours)
+        date1.setHours(
+          date1.getHours()
+          // + Number(userTimezoneOffsetHours)
         )
-        date1.setMinutes(date1.getMinutes() 
-        // + Number(userOffsetMinutes)
+        date1.setMinutes(
+          date1.getMinutes()
+          // + Number(userOffsetMinutes)
         )
 
-        date2.setHours(date2.getHours()
-        //  + Number(userTimezoneOffsetHours)
+        date2.setHours(
+          date2.getHours()
+          //  + Number(userTimezoneOffsetHours)
         )
-        date2.setMinutes(date2.getMinutes()
-        //  + Number(userOffsetMinutes)
+        date2.setMinutes(
+          date2.getMinutes()
+          //  + Number(userOffsetMinutes)
         )
       } else {
         date1.setHours(date1.getHours())
@@ -104,7 +112,7 @@ export default eventHandler(async (event) => {
       // point: product.adress,
       // point_city: city,
       // point_state: state,
-      point: '',
+      point: product.adress,
       point_city: '',
       point_state: '',
       dateStart: product.dateRange[0],
@@ -125,6 +133,8 @@ export default eventHandler(async (event) => {
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
       ff: product.key || false,
+      pointCoordinates: product.pointCoordinates,
+      appartmentNumber: product.appartmentNumber,
     })
 
     await buyout.save()
