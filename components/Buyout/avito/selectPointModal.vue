@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { loadYmap } from 'vue-yandex-maps'
+import { YandexMap, YandexMarker } from 'vue-yandex-maps'
 import { notify } from '@kyvg/vue3-notification'
 
 const { height } = useWindowSize()
@@ -15,213 +15,54 @@ const props = defineProps({
     required: true,
   },
 })
+
+const map = ref(null) // ссылка на карту
+
+const marker = ref()
+const name = ref('Custom')
+const loading = ref(false)
+const addressText = ref('Москва, улица Петровка, 5')
+const coordinates = ref([55.761438764655615, 37.617691166568456])
 const emit = defineEmits(['callback', 'close'])
+const error = ref('')
 const store = useMainStore()
 
 function closeModal() {
   emit('close')
 }
-const loading = ref(false)
-const map = ref()
-function handleSelect(address: string) {
-  if (props.pickpoints.findIndex((item: any) => item.a === address) === -1) {
-    return notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: 'Этот пункт выдачи не найден',
-    })
-  }
 
-  let pointStore = localStorage.getItem('avitoPointStore')
-  if (!pointStore) pointStore = ''
-
-  const arr = pointStore.trim().split('--').reverse()
-  if (arr[0] === '') arr.shift()
-  if (arr.length > 20) arr.shift()
-  arr.push(address)
-  const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('avitoPointStore', unique.join('--'))
-  emit('callback', address)
-  closeModal()
+const onClick = (e: any) => {
+  const objectId = e.get()
+  coordinates.value = e.get('coords')
+  getAddressText(e.get('coords')[0], e.get('coords')[1], '1')
 }
-
-function handleDelete(address: string) {
-  let pointStore = localStorage.getItem('avitoPointStore')
-  if (!pointStore) pointStore = ''
-  const arr = pointStore.trim().split('--').reverse()
-  arr.splice(arr.indexOf(address), 1)
-  const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('avitoPointStore', unique.join('--'))
-  emit('callback', address)
-  lastPoints.value = unique
-}
-
-const lastPoints = ref(localStorage.getItem('avitoPointStore')?.split('--'))
-const presetCluster = 'islands#violetClusterIcons'
-
-const originalBounds = ref([
-  [55.72435065000997, 37.421310551334145],
-  [55.79133523378151, 37.83844769733026],
-])
-
-const settings = {
-  apiKey: config.public.YANDEX_MAPS_API_KEY || '', // Индивидуальный ключ API
-  lang: 'ru_RU', // Используемый язык
-  coordorder: 'latlong', // Порядок задания географических координат
-  debug: false, // Режим отладки
-  version: '2.1', // Версия Я.Карт
-}
-const error = ref()
-
-onMounted(async () => {
-  try {
-    loading.value = true
-    await loadYmap(settings)
-    await ymaps.ready
-    const myMap = new ymaps.Map('ymap', {
-      center: [55.76, 37.64],
-      zoom: 7,
-      controls: [],
-    })
-    map.value = myMap
-    const searchControl = new ymaps.control.SearchControl({
-      options: {
-        provider: 'yandex#map',
-        noPlacemark: true,
-      },
-    })
-    searchControl.events.add('resultselect', (event: any) => {
-      if (!event.get('skip') && searchControl.getResultsCount()) {
-        const geoObjectsArray = searchControl.getResultsArray()
-        geoObjectsArray.forEach((marker: any) => {
-          marker.options.set({
-            hasBalloon: false,
-            preset: 'islands#violetDotIconWithCaption',
-            iconOffset: [0, -25],
-          })
-          marker.properties.set({
-            iconCaption: marker.properties._data.name,
-          })
-        })
-      }
-    })
-    myMap.controls.add(searchControl)
-    myMap.setBounds(originalBounds.value)
-    const objectManager = new ymaps.ObjectManager({
-      // Включаем кластеризацию.
-      clusterize: true,
-      // Опции кластеров задаются с префиксом 'cluster'.
-      clusterHasBalloon: false,
-      // Опции геообъектов задаются с префиксом 'geoObject'.
-      geoObjectOpenBalloonOnClick: false,
-    })
-
-    // Опции можно задавать напрямую в дочерние коллекции.
-    objectManager.clusters.options.set({
-      preset: presetCluster,
-      hintContentLayout:
-        ymaps.templateLayoutFactory.createClass('Группа объектов'),
-    })
-    const iconLayout = ymaps.templateLayoutFactory.createClass(
-      '<div>$[properties.iconContent]</div>'
-    )
-    const collection = {
-      type: 'FeatureCollection',
-      features: props.pickpoints.map((point: any, index: number) => {
-        return {
-          type: 'Feature',
-          id: index,
-          geometry: {
-            type: 'Point',
-            coordinates: [point.lt, point.lg],
-            radius: 1000,
-          },
-          properties: {
-            iconContent: 'WB',
-            data: {
-              a: point.a,
-              w: point.w,
-            },
-          },
-          options: {
-            iconColor: '#8d297f',
-            iconLayout: 'default#image',
-            iconImageHref: '/img/pin-map.svg',
-            iconimageoffset: [-5, -38],
-            iconImageSize: [32, 32],
-            iconOffset: [0, 0],
-            iconShadow: true,
-          },
-        }
-      }),
-    }
-
-    objectManager.add(collection)
-
-    // Добавляем коллекцию на карту.
-    myMap.geoObjects.add(objectManager)
-
-    objectManager.objects.events.add('click', (e: any) => {
-      const objectId = e.get('objectId')
-      const obj = objectManager.objects.getById(objectId)
-
-      const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
-        `<div class="card rounded-lg">
-          <div>
-            <div class="text-lg font-semibold">Пункт выдачи</div>
-            <div class="text-sm">${obj.properties.data.a}</div>
-            <div class="text-sm">${obj.properties.data.w}</div>
-            <a class="selectPoint mt-4 flex justify-center btn btn-primary hover:bg-primary">Выбрать</a>
-          </div>
-        </div>
-      `,
-        {
-          // First, we call the "build" method of the parent class.
-          build() {
-            myBalloonContentLayout.superclass.build.call(this)
-            this._element
-              .querySelector('.selectPoint')
-              .addEventListener('click', this.select)
-          },
-          clear() {
-            this._element
-              .querySelector('.selectPoint')
-              .removeEventListener('click', this.select)
-            myBalloonContentLayout.superclass.clear.call(this)
-          },
-          select: () => {
-            handleSelect(obj.properties.data.a)
-          },
-        }
-      )
-      // set this layout as a custom balloon content layout
-      objectManager.objects.setObjectOptions(objectId, {
-        balloonContentLayout: myBalloonContentLayout,
-        balloonPanelMaxMapArea: 0,
-      })
-      objectManager.objects.balloon.open(objectId)
-    })
-    // создаем кастомный балун
-    objectManager.objects.events.add('balloonopen', (e: any) => {
-      const objectId = e.get('objectId')
-      const geoObject = objectManager.objects.getById(objectId)
-    })
-    loading.value = false
-  } catch (e) {
-    loading.value = false
-    // eslint-disable-next-line no-console
-    console.log(e)
-    error.value = 'Не удалось загрузить карту'
-  }
-})
 
 onKeyStroke('Escape', (e) => {
   e.preventDefault()
   emit('close')
 })
+
+async function getAddressText(lt: number, lg: number, id: string) {
+  addressText.value = 'Загрузка...'
+
+  // @ts-ignore
+  const { data, error }: any = await useFetch(`/api/ozon/buyout/addressText`, {
+    method: 'GET',
+    params: {
+      lt,
+      lg,
+    },
+  })
+  if (data.value) {
+    addressText.value = data.value
+  }
+}
+
+const handleAddress = (address: string, lt: number, lg: number) => {
+
+  emit('callback', address, lt, lg)
+}
 </script>
-
-
 
 <template>
   <div
@@ -239,6 +80,10 @@ onKeyStroke('Escape', (e) => {
           >✕</a
         >
         <div class="title mb-2">Выберите ПВЗ</div>
+
+        <div class="flex justify-center">
+          <!-- <div class="ml-2">Адрес: {{ addressText }}</div> -->
+        </div>
         <div
           v-if="loading"
           class="loading flex justify-center items-center h-full"
@@ -251,57 +96,38 @@ onKeyStroke('Escape', (e) => {
         >
           {{ error }}
         </div>
-        <div
-          v-if="!error"
-          class="flex-row md:flex md:flex-row gap-4 min-h-112 md:h-full"
+        <YandexMap
+          ref="map"
+          :coordinates="coordinates"
+          :controls="['searchControl', 'fullscreenControl']"
+          @click="onClick"
+          :detailed-controls="{
+            searchControl: {
+              noPlacemark: true,
+            },
+          }"
         >
-          <div class="w-full h-full">
-            <div id="ymap" class="yandex-container rounded-lg" />
-          </div>
-          <div class="last md:h-full rounded-lg p-2 max-w-xs">
-            <h2 class="font-bold">Последние использованные ПВЗ</h2>
-            <div
-              class="flex flex-col gap-2 mt-2 overflow-y-auto overflow-x-hidden"
-              :style="`height: ${height - height / 3.3}px`"
-            >
-              <div
-                v-if="
-                  lastPoints && lastPoints.length > 0 && lastPoints[0] !== ''
-                "
-                v-for="(item, index) of lastPoints"
-                class="w-full flex flex-row pr-1"
-              >
-                <button
-                  :key="index"
-                  class="btn pvz text-xs rounded-none rounded-l-md p-2 flex w-10/12 text-left "
-                  @click="handleSelect(item)"
-                >
-                  {{ item }}
-                </button>
-                <button
-                  class="btn btn-square rounded-none rounded-r-md"
-                  @click="handleDelete(item)"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+          <YandexMarker
+            ref="marker"
+            :options="{
+              iconImageSize: [50, 50],
+              iconOffset: [0, 0],
+              iconShadow: true,
+            }"
+            :coordinates="coordinates"
+            :marker-id="1"
+          >
+            <template #component>
+              <BuyoutAvitoCustomBalloon
+                v-model="addressText"
+                @callback="handleAddress"
+                :coordinates="coordinates"
+              />
+            </template>
+          </YandexMarker>
+        </YandexMap>
       </div>
+      <button :disabled="addressText == 'Загрузка...'" class="btn btn-primary my-2 w-full" @click="handleAddress(addressText, coordinates[0], coordinates[1])">Выбрать Адрес</button>
     </div>
     <div class="modal-backdrop cursor-pointer" @click="closeModal"></div>
   </div>
@@ -316,7 +142,7 @@ onKeyStroke('Escape', (e) => {
 }
 
 .yandex-balloon {
-  height: 200px;
+  height: 160px;
   width: 300px;
 }
 

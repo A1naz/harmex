@@ -63,12 +63,11 @@ onKeyStroke('Escape', (e) => {
           >
           <div class="flex gap-2 mb-1">
             <span class="text-sm text-gray-500"
-              >Создан: {{ 
-                $dayjs(info.createdAt).locale('ru').format(
-                  'D MMMM YYYY HH:mm'
-                ) }}
-            </span
-            >
+              >Создан:
+              {{
+                $dayjs(info.createdAt).locale('ru').format('D MMMM YYYY HH:mm')
+              }}
+            </span>
             <div
               :class="{
                 'opacity-0':
@@ -205,21 +204,20 @@ onKeyStroke('Escape', (e) => {
                 }"
                 class="rounded-lg p-2"
               >
-              <span class="text-sm flex flex-col justify-start">
+                <span class="text-sm flex flex-col justify-start">
                   <div class="text-sm">
-                    {{ `С ${
-                      $dayjs(info.dateStart).locale('ru').format(
-                        'D MMMM YYYY HH:mm'
-                      ) 
-                    }` }}
-                    
+                    {{
+                      `С ${$dayjs(info.dateStart)
+                        .locale('ru')
+                        .format('D MMMM YYYY HH:mm')}`
+                    }}
                   </div>
                   <div class="text-sm">
-                    {{ `По ${
-                      $dayjs(info.dateEnd).locale('ru').format(
-                        'D MMMM YYYY HH:mm'
-                      ) 
-                    }` }}
+                    {{
+                      `По ${$dayjs(info.dateEnd)
+                        .locale('ru')
+                        .format('D MMMM YYYY HH:mm')}`
+                    }}
                   </div>
                 </span>
               </div>
@@ -237,6 +235,7 @@ onKeyStroke('Escape', (e) => {
               :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
             >
               {{ info.point }}
+              {{ info.appartmentNumber ? ', кв. ' + info.appartmentNumber : '' }}
             </a>
           </div>
           <div class="flex items-start flex-col">

@@ -290,13 +290,16 @@ const productQuantityModel = computed({
           >
             <span v-show="loading" class="loading loading-spinner" />
             <!-- @click="$emit('pointModalOpen', index)" -->
-            <p v-if="!loading" class="truncate cursor-pointer text-primary">
+            <p
+              v-if="!loading"
+              @click="$emit('pointModalOpen', index)"
+              class="truncate cursor-pointer text-primary"
+            >
               {{ product.adress }}
             </p>
           </div>
           <!-- :disabled="loading" -->
           <button
-            disabled
             v-if="!product.adress"
             :class="{
               'btn-outline': product.adress,
@@ -309,6 +312,35 @@ const productQuantityModel = computed({
           </button>
         </div>
       </div>
+      <div class="flex w-full ">
+        <div class="w-[70%]">
+          <div class="text-md text-gray-500 mb-1">№ Квартиры:</div>
+          <div class="w-full flex flex-col gap-2">
+            <label
+              ><input
+                v-model="product.appartmentNumber"
+                type="text"
+                placeholder="№ квартиры"
+                class="input bg-base-200 input-sm w-full rounded-xl"
+              />
+            </label>
+          </div>
+        </div>
+        <div class="w-full ml-2">
+          <div class="text-md text-gray-500 mb-1">Регион поиска:</div>
+          <div class="w-full flex flex-col gap-2">
+            <BuyoutAvitoCreateSearchQueriesRegion
+              :product-index="props.index"
+              :article="product.article"
+              :regions="product.searchQueryRegion"
+              @update="productSearchQueryUpdate"
+              @add="addSearchQuery"
+              @remove="removeSearchQuery"
+            />
+          </div>
+        </div>
+      </div>
+
       <div>
         <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
         <div class="w-[60%] flex flex-col gap-2">
@@ -316,19 +348,6 @@ const productQuantityModel = computed({
             :product-index="props.index"
             :article="product.article"
             :queries="product.searchQuery"
-            @update="productSearchQueryUpdate"
-            @add="addSearchQuery"
-            @remove="removeSearchQuery"
-          />
-        </div>
-      </div>
-      <div>
-        <div class="text-md text-gray-500 mb-1">Регион поиска:</div>
-        <div class="w-[60%] flex flex-col gap-2">
-          <BuyoutAvitoCreateSearchQueriesRegion
-            :product-index="props.index"
-            :article="product.article"
-            :regions="product.searchQueryRegion"
             @update="productSearchQueryUpdate"
             @add="addSearchQuery"
             @remove="removeSearchQuery"
