@@ -13,7 +13,7 @@ export default eventHandler(async (event) => {
       $match: {
         user: new ObjectId(user._id),
         reviewed: false,
-        'statusdelivery.status': 'Получено',
+        'statusdelivery.status': 'Продавец указал, что заказ доставлен',
         status: 'completed',
       },
     },
