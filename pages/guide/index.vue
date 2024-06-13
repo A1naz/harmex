@@ -13,6 +13,7 @@ const mpList =
     : mpChange.pages.filter((page) => !page.test).map((page) => page.value);
 const isCollapsed = ref(false);
 const dinamicComponent = ref();
+const searchQuery = ref('');
 
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value;
@@ -85,7 +86,24 @@ const navbarData = ref([
       }
     ]
   },
-])
+]);
+
+const filteredNavbarData = computed(() => {
+  if (!searchQuery.value) return navbarData.value;
+  return navbarData.value.map(category => ({
+    ...category,
+    tabs: category.tabs.filter(tab => 
+      tab.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    ),
+  })).filter(category => category.tabs.length > 0);
+});
+
+const filteredMPList = computed(() => {
+  if (!searchQuery.value) return mpList;
+  return mpList.filter(page => 
+    page.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 </script>
 
 <template>
@@ -96,6 +114,7 @@ const navbarData = ref([
         class="join w-[30%] border-base-300 border-2 rounded-lg flex items-center justify-center h-full"
       >
         <button
+          style="pointer-events: none;"
           class="join-item w-[10%] flex justify-center items-center btn btn-ghost btn-sm p-0 h-[40px] rounded-none"
         >
           <Icon name="guidance:search" size="16" />
@@ -103,6 +122,7 @@ const navbarData = ref([
         <input
           type="text"
           placeholder="Поиск"
+          v-model="searchQuery"
           class="join-item input input-sm input-bordered sm:text-sm rounded-lg w-[90%] border-none border-l-none h-full p-2.5"
         />
       </div>
@@ -121,7 +141,7 @@ const navbarData = ref([
           <Icon v-if="!isCollapsed" name="ep:d-arrow-left" size="15" />
           <Icon v-else name="ep:d-arrow-right" size="15" />
         </button>
-        <div v-for="tabs in navbarData" class="flex flex-col gap-1">
+        <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
           <h4
             v-if="!isCollapsed"
             class="px-2 text-sm text-[#6e6e73] font-semibold truncate"
@@ -144,13 +164,13 @@ const navbarData = ref([
 
         <div class="flex flex-col gap-1">
           <h4
-            v-if="!isCollapsed"
+            v-if="!isCollapsed && filteredMPList.length"
             class="px-2 text-sm text-[#6e6e73] font-semibold"
           >
             Самовыкупы
           </h4>
           <button
-            v-for="page in mpList"
+            v-for="page in filteredMPList"
             :key="page"
             class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
             @click="setComponent(`Guide${toUpperCaseFirstLetter(page)}`)"
