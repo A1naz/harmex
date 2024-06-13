@@ -89,7 +89,7 @@ const handleAddress = (address: string, lt: number, lg: number) => {
           @click="closeModal"
           >✕</a
         >
-        <div class="title mb-2">Выберите ПВЗ</div>
+        <div class="title mb-2">Выберите адрес</div>
 
         <div class="flex justify-center">
           <!-- <div class="ml-2">Адрес: {{ addressText }}</div> -->
