@@ -3,12 +3,20 @@ import GuideUpdates from '~/components/Guide/Updates.vue';
 import GuideStart from '~/components/Guide/Start.vue';
 import GuidePopularQuestions from '~/components/Guide/PopularQuestions.vue';
 import GuidePartner from '~/components/Guide/Partner.vue';
+import GuideWildberries from '~/components/Guide/Wildberries.vue';
+import GuideOzon from '~/components/Guide/Ozon.vue';
+import GuideAvito from '~/components/Guide/Avito.vue';
+import GuideFlowwow from '~/components/Guide/Flowwow.vue';
 
 const components = [
   GuideStart,
   GuideUpdates,
   GuidePopularQuestions,
-  GuidePartner
+  GuidePartner,
+  GuideWildberries,
+  GuideOzon,
+  GuideAvito,
+  GuideFlowwow,
 ];
 
 const currentComponent = ref<string>('GuideStart'); 

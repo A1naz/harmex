@@ -21,7 +21,7 @@ const liDeliveryPickupData = [
   'Нажмите кнопку Экспорт;',
   'Выберите удобный для вас формат выгрузки данных;',
   'Скачайте файл;',
- ' Откройте файл;',
+  ' Откройте файл;',
   'Забирайте товары с ПВЗ.',
 ]
 
@@ -92,6 +92,10 @@ const liDdsData = [
           платформы (справа внизу иконка Сообщения) и/или свяжитесь с вашим
           персональным Аккаунт-менеджером (далее - АМ);
         </li>
+        <nuxt-img
+          class="py-5 rounded-lg"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/1.png`"
+        />
         <li class="my-1 flex">
           <span class="pr-5 text-xl font-bold">-</span>
           <div class="flex flex-col">
@@ -115,246 +119,347 @@ const liDdsData = [
           </div>
         </li>
         <li class="my-1">
-          <span class="pr-5 text-xl font-bold">-</span> Согласуйте дату/время встречи для консультации;
-
+          <span class="pr-5 text-xl font-bold">-</span> Согласуйте дату/время
+          встречи для консультации;
         </li>
         <li class="my-1">
-          <span class="pr-5 text-xl font-bold">-</span> Получите альтернативное видение нашей Экспертизы;
-
+          <span class="pr-5 text-xl font-bold">-</span> Получите альтернативное
+          видение нашей Экспертизы;
         </li>
         <li class="my-1">
-          <span class="pr-5 text-xl font-bold">-</span> Утвердите медиаплан на ближайшие 3 месяца;
-
+          <span class="pr-5 text-xl font-bold">-</span> Утвердите медиаплан на
+          ближайшие 3 месяца;
         </li>
         <li class="my-1">
-          <span class="pr-5 text-xl font-bold">-</span> Подпишите необходимые договора для запуска услуги (логистика, блогеры и прочее);
+          <span class="pr-5 text-xl font-bold">-</span> Подпишите необходимые
+          договора для запуска услуги (логистика, блогеры и прочее);
         </li>
         <li class="my-1">
-          <span class="pr-5 text-xl font-bold">-</span> Оплатите счета за услуги;
+          <span class="pr-5 text-xl font-bold">-</span> Оплатите счета за
+          услуги;
         </li>
         <li class="my-1">
-          <span class="pr-5 text-xl font-bold">-</span> Добавьте наших Тех.специалистов в команду на платформе;
-        </li>
-        <li class="my-1">
-          <span class="pr-5 text-xl font-bold">-</span> Отслеживайте процесс оказания услуги в кабинете.
+          <span class="pr-5 text-xl font-bold">-</span> Добавьте наших
+          Тех.специалистов в команду на платформе;
         </li>
       </ul>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/2.png`"
+      />
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7"> Выкуп осуществляется с СПП или без СПП на WB? </h2>
+      <h2 class="text-lg font-bold px-7">
+        Выкуп осуществляется с СПП или без СПП на WB?
+      </h2>
       <p class="-py-7">
-        Наш финансовый распределитель рассчитывает сумму пополнения баланса БЕЗ скидки постоянного покупателя (далее - СПП), но выкуп происходит с СПП.
+        Наш финансовый распределитель рассчитывает сумму пополнения баланса БЕЗ
+        скидки постоянного покупателя (далее - СПП), но выкуп происходит с СПП.
       </p>
       <p class="-py-7">
-        Если в вашем бюджете есть рамки от и до, то рекомендуем пополнять баланс на выделенную сумму + последний выкуп без СПП.
+        Если в вашем бюджете есть рамки от и до, то рекомендуем пополнять баланс
+        на выделенную сумму + последний выкуп без СПП.
       </p>
       <p class="-py-7">
-        Пример:<br>
-        Выделили бюджет 80 000 рублей на покупку 100 товаров используя Тайного покупателя «Выкуп».
+        Пример:<br />
+        Выделили бюджет 80 000 рублей на покупку 100 товаров используя Тайного
+        покупателя «Выкуп».
       </p>
       <p class="-py-7">
         Стоимость товара с СПП на Wildberries 800 руб/ед, а без СПП 950 руб/ед.
       </p>
       <p class="-py-7">
-        Соответственно пополнение бюджета идет 80 000 руб + 150 руб (последний выкуп с расчетом без СПП).
+        Соответственно пополнение бюджета идет 80 000 руб + 150 руб (последний
+        выкуп с расчетом без СПП).
       </p>
       <p class="-py-7">
-        Теперь бюджет на выкуп самих товаров ГОТОВ, осталось еще прибавить к этой сумме стоимость за УСЛУГУ выкупа.
+        Теперь бюджет на выкуп самих товаров ГОТОВ, осталось еще прибавить к
+        этой сумме стоимость за УСЛУГУ выкупа.
       </p>
       <p class="-py-7">
-        Уточните у вашего Аккаунт-менеджера или рассчитайте стоимость за услугу выкупа, которые вы платите за использование портала, самостоятельно и сложите в общую сумму для пополнения.
+        Уточните у вашего Аккаунт-менеджера или рассчитайте стоимость за услугу
+        выкупа, которые вы платите за использование портала, самостоятельно и
+        сложите в общую сумму для пополнения.
       </p>
       <p class="-py-7">
-        Формула: бюджет + последний выкуп без СПП + оплата за услугу = общий баланс.
+        Формула: бюджет + последний выкуп без СПП + оплата за услугу = общий
+        баланс.
       </p>
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7"> Выкуп уходит в Архив, что делать? </h2>
+      <h2 class="text-lg font-bold px-7">Выкуп уходит в Архив, что делать?</h2>
       <p class="-py-7">
-        Чтобы узнать причину перехода выкупа в Архив, выполните простые рекомендации:
+        Чтобы узнать причину перехода выкупа в Архив, выполните простые
+        рекомендации:
       </p>
       <ul class="px-7">
         <li v-for="(li, index) in liArchiveQuestData" class="my-1">
-          <span class="pr-3 text-md">{{index+1}}.</span> 
+          <span class="pr-3 text-md">{{ index + 1 }}.</span>
           {{ li }}
         </li>
       </ul>
-      <p class="-py-7">
-        Частые причины попадания в Архив:
-      </p>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        width="600"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/3.png`"
+      />
+      <nuxt-img
+        class="p-5 rounded-lg"
+        width="600"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/4.png`"
+      />
+      <p class="-py-7">Частые причины попадания в Архив:</p>
       <ul class="px-7">
         <li v-for="(li, index) in liArchiveReasonsData" class="my-1">
-          <span class="pr-3 text-md">{{index+1}}.</span> 
+          <span class="pr-3 text-md">{{ index + 1 }}.</span>
           {{ li }}
         </li>
       </ul>
       <p class="-py-7">
-        В ситуации с неопределенностью напишите в поддержку и/или вашему персональному менеджеру для решения задачи
+        В ситуации с неопределенностью напишите в поддержку и/или вашему
+        персональному менеджеру для решения задачи
       </p>
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7">  Выкуп на Паузе, что делать? </h2>
+      <h2 class="text-lg font-bold px-7">Выкуп на Паузе, что делать?</h2>
       <p class="-py-7">
-        Чтобы убрать выкуп с Паузы, нажмите кнопку Возобновить.<br>
-        Данная ситуация возникает, когда запланировано выкупов больше, чем есть финансов на балансе БЕЗ СПП.
+        Чтобы убрать выкуп с Паузы, нажмите кнопку Возобновить.<br />
+        Данная ситуация возникает, когда запланировано выкупов больше, чем есть
+        финансов на балансе БЕЗ СПП.
       </p>
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7">  Не можем забрать товар на ПВЗ, что делать? </h2>
+      <h2 class="text-lg font-bold px-7">
+        Не можем забрать товар на ПВЗ, что делать?
+      </h2>
       <p class="-py-7">
         Чтобы забрать товар с ПВЗ, выполните простые рекомендации:
       </p>
       <ul class="px-7">
         <li v-for="li in liDeliveryPickupData" class="my-1">
-          <span class="pr-3 text-md">-</span> 
+          <span class="pr-3 text-md">-</span>
           {{ li }}
         </li>
       </ul>
-      <p class="-py-7">
-        Ошибки при заборе товаров:
-      </p>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/5.png`"
+      />
+      <p class="-py-7">Ошибки при заборе товаров:</p>
       <ul class="px-7">
         <li v-for="(li, index) in liDeliveryPuckupError" class="my-1">
-          <span class="pr-3 text-md">{{index+1}}.</span> 
+          <span class="pr-3 text-md">{{ index + 1 }}.</span>
           {{ li }}
         </li>
       </ul>
       <p class="italic underline">Обратите внимание!</p>
-      <p>Бывают ситуации, когда непонятно ЧТО-КАК-ГДЕ-ПОЧЕМУ с товаром. <br>
-      В данной ситуации, напишите в службу заборы и пришлите ID выкупа для анализа ситуации (…).<br>
-      После чего, вы получите развернутый ответ по вашему товару и его статусе в течение 5-10 минут.</p>
+      <p>
+        Бывают ситуации, когда непонятно ЧТО-КАК-ГДЕ-ПОЧЕМУ с товаром. <br />
+        В данной ситуации, напишите в службу заборы и пришлите ID выкупа для
+        анализа ситуации (…).<br />
+        После чего, вы получите развернутый ответ по вашему товару и его статусе
+        в течение 5-10 минут.
+      </p>
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7">  Отказались от товара на ПВЗ, что делать?</h2>
+      <h2 class="text-lg font-bold px-7">
+        Отказались от товара на ПВЗ, что делать?
+      </h2>
       <p class="-py-7">
         Чтобы вернуть свои средства за товар, выполните простые рекомендации:
       </p>
       <ul class="px-7">
         <li class="my-1">
-          <span class="pr-3 text-md">-</span> 
+          <span class="pr-3 text-md">-</span>
           Напишите в службу заборы;
         </li>
         <li class="my-1">
-          <span class="pr-3 text-md">-</span> 
+          <span class="pr-3 text-md">-</span>
           Пришлите ID выкупа (…) и свой логин;
         </li>
         <li class="my-1">
-          <span class="pr-3 text-md">-</span> 
+          <span class="pr-3 text-md">-</span>
           Отслеживайте возврат суммы в меню Финансы.
         </li>
       </ul>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/1.png`"
+      />
       <p>
-        Примерные сроки от 4 до 14 дней на возврат финансов, установлено маркетплейсом.<br>
-        Отказаться от товаров на ПВЗ, вы можете не более 5 ед в месяц, т.к. это ручная работа и долгий процесс.
+        Примерные сроки от 4 до 14 дней на возврат финансов, установлено
+        маркетплейсом.<br />
+        Отказаться от товаров на ПВЗ, вы можете не более 5 ед в месяц, т.к. это
+        ручная работа и долгий процесс.
       </p>
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7">  Выкуп в статусе Завершен, что дальше?</h2>
+      <h2 class="text-lg font-bold px-7">
+        Выкуп в статусе Завершен, что дальше?
+      </h2>
       <p class="-py-7">
-        Как только ваш выкуп будет осуществлен, вы сможете отследить последующий прогресс и данные в таких меню как:
+        Как только ваш выкуп будет осуществлен, вы сможете отследить последующий
+        прогресс и данные в таких меню как:
       </p>
       <ul class="px-7">
         <li class="my-1">
           меню Доставка - процесс доставки до ПВЗ и данные для забора;
         </li>
+        <nuxt-img
+          class="p-5 rounded-lg"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/5.png`"
+        />
         <li class="my-1">
           меню Отзывы - публикация отзыва после забранного товара с ПВЗ;
         </li>
+        <nuxt-img
+          class="p-5 rounded-lg"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/6.png`"
+        />
         <li class="my-1">
-          меню Финансы - все финансовые операции в кабинете (точное время выкупа, сумма, услуга и прочее);
+          меню Финансы - все финансовые операции в кабинете (точное время
+          выкупа, сумма, услуга и прочее);
         </li>
+        <nuxt-img
+          class="p-5 rounded-lg"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/7.png`"
+        />
         <li class="my-1">
-          меню Отчеты - наглядный процесс выкупа вашего товара от Поиска до Оплаты.
+          меню Отчеты - наглядный процесс выкупа вашего товара от Поиска до
+          Оплаты.
         </li>
+        <nuxt-img
+          class="p-5 rounded-lg"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/8.png`"
+        />
       </ul>
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7">  Не хотим больше выкупать, что делать?</h2>
+      <h2 class="text-lg font-bold px-7">
+        Не хотим больше выкупать, что делать?
+      </h2>
       <p class="-py-7">
         Чтобы вернуть свои финансы, выполните простые рекомендации:
       </p>
       <ul class="px-7">
         <li class="my-1">
-          <span class="pr-3 text-md">-</span> 
+          <span class="pr-3 text-md">-</span>
           Напишите в службу заботы;
         </li>
         <li class="my-1">
-          <span class="pr-3 text-md">-</span> 
+          <span class="pr-3 text-md">-</span>
           Согласуйте дату/время/сумму для возврата финансов;
         </li>
         <li class="my-1">
-          <span class="pr-3 text-md">-</span> 
+          <span class="pr-3 text-md">-</span>
           Утвердите подачу заявки на возврат;
         </li>
         <li class="my-1">
-          <span class="pr-3 text-md">-</span> 
+          <span class="pr-3 text-md">-</span>
           Ожидайте возврат финансов в течение 30 дней со дня подачи заявки.
         </li>
       </ul>
       <p class="-py-7">
-        Данная процедура требует тщательного анализа, проверок и согласований, благодарим за понимание.
+        Данная процедура требует тщательного анализа, проверок и согласований,
+        благодарим за понимание.
       </p>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/1.png`"
+      />
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7"> Как порекомендовать платформу?</h2>
+      <h2 class="text-lg font-bold px-7">Как порекомендовать платформу?</h2>
       <p class="-py-7">
-        Когда вы ощутили истинное удовольствие от работы с нашей платформы, порекомендуйте нас вашему кругу знакомых
+        Когда вы ощутили истинное удовольствие от работы с нашей платформы,
+        порекомендуйте нас вашему кругу знакомых
       </p>
       <p>
-        Мы предоставляем вам возможность получать:<br>
-        С ваших рекомендаций - 5%<br>
-        С рекомендаций ваших людей - 2%<br>
-        Перейдите в меню Партнерка, выберите желаемый способ рекомендации (ссылка, Qr-код и/или промокод)<br>
+        Мы предоставляем вам возможность получать:<br />
+        С ваших рекомендаций - 5%<br />
+        С рекомендаций ваших людей - 2%<br />
+        Перейдите в меню Партнерка, выберите желаемый способ рекомендации
+        (ссылка, Qr-код и/или промокод)<br />
       </p>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/1.png`"
+      />
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7"> Как запустить выкупы с рекламы?</h2>
+      <h2 class="text-lg font-bold px-7">Как запустить выкупы с рекламы?</h2>
       <p class="-py-7">
         Чтобы запустить выкупы с рекламы, выполните простые рекомендации:
       </p>
       <ul class="px-7">
         <li v-for="(li, index) in liBuyoutRulesData" class="my-1">
-          <span class="pr-3 text-md">{{index+1}}.</span> 
+          <span class="pr-3 text-md">{{ index + 1 }}.</span>
           {{ li }}
         </li>
       </ul>
-      <p>
-        В ситуациях, когда выкупы уходят в Архив, используйте правило 9
-      </p>
+      <p>В ситуациях, когда выкупы уходят в Архив, используйте правило 9</p>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/9.png`"
+      />
+      <nuxt-img
+        class="p-5 rounded-lg"
+        width="900"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/10.png`"
+      />
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7"> Отзывы уходят в Отмену, что делать?</h2>
+      <h2 class="text-lg font-bold px-7">
+        Отзывы уходят в Отмену, что делать?
+      </h2>
       <p class="-py-7">
-        Средняя частота публикаций отзывов на платформе 91,1% в сутки.<br>
-        Чтобы ваши отзывы проходили модерацию маркетплейса, выполните простые рекомендации:
+        Средняя частота публикаций отзывов на платформе 91,1% в сутки.<br />
+        Чтобы ваши отзывы проходили модерацию маркетплейса, выполните простые
+        рекомендации:
       </p>
       <ul class="px-7">
         <li v-for="(li, index) in liReviewData" class="my-1">
-          <span class="pr-3 text-md">{{index+1}}.</span> 
+          <span class="pr-3 text-md">{{ index + 1 }}.</span>
           {{ li }}
         </li>
       </ul>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/6.png`"
+      />
+      <nuxt-img
+        class="p-5 rounded-lg"
+        width="600"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/11.png`"
+      />
+      <nuxt-img
+        class="p-5 rounded-lg"
+        width="600"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/12.png`"
+      />
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
-      <h2 class="text-lg font-bold px-7">Нужны ДДС / Хэшы покупок товаров, что делать?</h2>
+      <h2 class="text-lg font-bold px-7">
+        Нужны ДДС / Хэшы покупок товаров, что делать?
+      </h2>
       <p class="-py-7">
-        Данный формат выгрузки данных по оплаченным товарам, не доступен.<br>
+        Данный формат выгрузки данных по оплаченным товарам, не доступен.<br />
         Вы можете изучить все финансовые операции внутри нашей платформы:
       </p>
       <ul class="px-7">
         <li v-for="(li, index) in liDdsData" class="my-1">
-          <span class="pr-3 text-md">{{index+1}}.</span> 
+          <span class="pr-3 text-md">{{ index + 1 }}.</span>
           {{ li }}
         </li>
       </ul>

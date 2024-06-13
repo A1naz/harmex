@@ -153,7 +153,7 @@ const navbarData = ref([
             v-for="page in mpList"
             :key="page"
             class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
-            @click="setComponent(page)"
+            @click="setComponent(`Guide${toUpperCaseFirstLetter(page)}`)"
           >
             <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${page}.svg`" />
             <span
