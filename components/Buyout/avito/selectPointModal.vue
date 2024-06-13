@@ -5,6 +5,14 @@ import { notify } from '@kyvg/vue3-notification'
 const { height } = useWindowSize()
 const config = useRuntimeConfig()
 
+const settings = {
+  apiKey: config.public.YANDEX_MAPS_API_KEY || '', // Индивидуальный ключ API
+  lang: 'ru_RU', // Используемый язык
+  coordorder: 'latlong', // Порядок задания географических координат
+  debug: false, // Режим отладки
+  version: '2.1', // Версия Я.Карт
+}
+
 const props = defineProps({
   pickpoints: {
     type: Array,
@@ -58,6 +66,8 @@ async function getAddressText(lt: number, lg: number, id: string) {
   }
 }
 
+
+
 const handleAddress = (address: string, lt: number, lg: number) => {
 
   emit('callback', address, lt, lg)
@@ -98,6 +108,7 @@ const handleAddress = (address: string, lt: number, lg: number) => {
         </div>
         <YandexMap
           ref="map"
+          :settings="settings"
           :coordinates="coordinates"
           :controls="['searchControl', 'fullscreenControl']"
           @click="onClick"
