@@ -152,6 +152,30 @@ class MailService {
     return result
   }
 
+  async sendConsultation(name: string, email: string, phone: string) {
+    const result = this.transporter.sendMail({
+      from: alias,
+      to: 'support@marketmonstr.pro',
+      subject: '[MARKETMONSTR] Получить консультацию',
+      text: '',
+      html: `
+                <div>
+                    <p>
+                    Имя пользователя: ${name}
+                    </p>
+                    <p>
+                    Номер телефона: ${phone}
+                    </p>
+                    <p>
+                    Электронная почта: ${email}
+                    </p>
+                
+                </div>
+            `,
+    })
+    return result
+  }
+
   async sendChangePasswordMail(
     to: string | undefined,
     link: string,
