@@ -12,9 +12,7 @@ const { width } = useWindowSize()
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const store = useMainStore()
-const refUrl = computed(
-  () => `${runtimeConfig.public.siteUrl}/register?ref=${client.uuid}`
-)
+const refUrl = computed(() => `https://marketmonstr.pro/?ref=${client.uuid}`)
 
 const loading = ref(false)
 const client = store.client
