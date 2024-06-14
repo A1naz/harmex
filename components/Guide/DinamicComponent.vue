@@ -8,6 +8,8 @@ import GuideOzon from '~/components/Guide/Ozon.vue';
 import GuideAvito from '~/components/Guide/Avito.vue';
 import GuideFlowwow from '~/components/Guide/Flowwow.vue';
 
+const emit = defineEmits(['setPage'])
+
 const components = [
   GuideStart,
   GuideUpdates,
@@ -21,6 +23,7 @@ const components = [
 
 const currentComponent = ref<string>('GuideStart'); 
 const setComponent = (componentName: string) => {
+  emit('setPage', componentName)
   currentComponent.value = componentName;
 };
 
@@ -46,14 +49,15 @@ function changePage(type: string){
 }
 
 defineExpose({
-  setComponent
+  setComponent,
+  currentComponent
 })
 
 </script>
 
 <template>
   <div class="bg-base-100 rounded-lg flex flex-col gap-4 w-full overflow-y-auto">
-    <div class="flex justify-between px-7 pt-5">
+    <div class="flex justify-between px-2 pt-2 lg:px-7 lg:pt-5">
       <button class="btn btn-sm bg-base-100 drop-shadow-sm" @click="changePage('back')">
         <Icon name="mdi:arrow-left" class="w-6 h-6" />
       </button>

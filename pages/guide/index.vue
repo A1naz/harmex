@@ -3,29 +3,57 @@ definePageMeta({
   layout: 'app',
   auth: true,
   title: 'Справочник',
-});
+})
 
-const mpChange = useMPChange();
-const mainStore = useMainStore();
+const mpChange = useMPChange()
+const mainStore = useMainStore()
 const mpList =
   mainStore.client?.username === 'test'
     ? mpChange.pages.map((page) => page.value)
-    : mpChange.pages.filter((page) => !page.test).map((page) => page.value);
-const isCollapsed = ref(false);
-const dinamicComponent = ref();
-const searchQuery = ref('');
+    : mpChange.pages.filter((page) => !page.test).map((page) => page.value)
+const isCollapsed = ref(false)
+const isMobileMenuVisible = ref(false) // добавленная переменная состояния для мобильного меню
+const dinamicComponent = ref()
+const searchQuery = ref('')
 
 const toggleCollapse = () => {
-  isCollapsed.value = !isCollapsed.value;
-};
+  isCollapsed.value = !isCollapsed.value
+}
+
+const toggleMobileMenu = () => {
+  isMobileMenuVisible.value = !isMobileMenuVisible.value // функция для переключения состояния мобильного меню
+}
 
 function toUpperCaseFirstLetter(string: string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+function toLowerCaseFirstLetter(string: string) {
+  return string.charAt(0).toLowerCase() + string.slice(1)
+}
+
+const page = ref('С чего начать')
+
+const setPage = (componentName: string) => {
+  const navbar = navbarData.value
+    .flatMap((category: any) => category.tabs)
+    .find(
+      (tab: any) =>
+        tab.value === toLowerCaseFirstLetter(componentName.replace('Guide', ''))
+    )?.title
+  const mps = toUpperCaseFirstLetter(
+    mpList.find(
+      (tab: any) =>
+        tab === toLowerCaseFirstLetter(componentName.replace('Guide', ''))
+    ) || ''
+  )
+  page.value = navbar || mps || ''
 }
 
 const setComponent = (componentName: string) => {
-  dinamicComponent.value.setComponent(componentName);
-};
+  setPage(componentName)
+  dinamicComponent.value.setComponent(componentName)
+}
 
 const navbarData = ref([
   {
@@ -34,21 +62,21 @@ const navbarData = ref([
     tabs: [
       {
         title: 'С чего начать',
-        value: 'start'
+        value: 'start',
       },
       {
         title: 'Обновления',
-        value: 'updates'
+        value: 'updates',
       },
       {
         title: 'Популярные вопросы',
-        value: 'popularQuestions'
+        value: 'popularQuestions',
       },
       {
         title: 'Партнерская программа',
-        value: 'partner'
+        value: 'partner',
       },
-    ]
+    ],
   },
   {
     title: 'Справочная база',
@@ -56,17 +84,17 @@ const navbarData = ref([
     tabs: [
       {
         title: 'Наша терминология',
-        value: 'terminology'
+        value: 'terminology',
       },
       {
         title: 'Рабочее пространство',
-        value: 'workspace'
+        value: 'workspace',
       },
       {
         title: 'Личный кабинет',
-        value: 'profile'
-      }
-    ]
+        value: 'profile',
+      },
+    ],
   },
   {
     title: 'Функции платформы',
@@ -74,69 +102,153 @@ const navbarData = ref([
     tabs: [
       {
         title: 'Выкупы под ключ',
-        value: 'ff'
+        value: 'ff',
       },
       {
         title: 'Выкупы+забор',
-        value: 'buyoutsPickup'
+        value: 'buyoutsPickup',
       },
       {
         title: 'Забор',
-        value: 'pickup'
-      }
-    ]
+        value: 'pickup',
+      },
+    ],
   },
-]);
+])
 
 const filteredNavbarData = computed(() => {
-  if (!searchQuery.value) return navbarData.value;
-  return navbarData.value.map(category => ({
-    ...category,
-    tabs: category.tabs.filter(tab => 
-      tab.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-    ),
-  })).filter(category => category.tabs.length > 0);
-});
+  if (!searchQuery.value) return navbarData.value
+  return navbarData.value
+    .map((category) => ({
+      ...category,
+      tabs: category.tabs.filter((tab) =>
+        tab.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+      ),
+    }))
+    .filter((category) => category.tabs.length > 0)
+})
 
 const filteredMPList = computed(() => {
-  if (!searchQuery.value) return mpList;
-  return mpList.filter(page => 
+  if (!searchQuery.value) return mpList
+  return mpList.filter((page) =>
     page.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
-});
+  )
+})
 </script>
 
 <template>
   <div class="flex flex-col gap-4 my-4 h-[90vh]">
-    <div class="rounded-lg bg-base-100 py-3.5 px-3 flex justify-between">
-      <h2 class="font-bold text-2xl flex my-auto">Справочный центр</h2>
-      <div
-        class="join w-[30%] border-base-300 border-2 rounded-lg flex items-center justify-center h-full"
+    <div
+      class="rounded-lg bg-base-100 py-3.5 px-3 flex justify-between flex-col lg:flex-row gap-4"
+    >
+      <h2
+        class="font-bold text-sm lg:text-2xl text-[#8f8e93] lg:text-base-content flex my-auto items-center gap-0.5 whitespace-nowrap"
       >
-        <button
-          style="pointer-events: none;"
-          class="join-item w-[10%] flex justify-center items-center btn btn-ghost btn-sm p-0 h-[40px] rounded-none"
+        Справочный центр
+        <span class="lg:hidden -p-2"
+          ><Icon name="ic:round-keyboard-arrow-right" size="25"
+        /></span>
+        <span class="lg:hidden text-sm flex items-center text-base-content">
+          {{ page }}</span
         >
-          <Icon name="guidance:search" size="16" />
+      </h2>
+      <div class="flex gap-1 w-full">
+        <button
+          @click="toggleMobileMenu"
+          class="lg:hidden btn btn-ghost btn-sm flex items-center my-auto"
+        >
+          <Icon name="mdi:menu" size="30" />
         </button>
-        <input
-          type="text"
-          placeholder="Поиск"
-          v-model="searchQuery"
-          class="join-item input input-sm input-bordered sm:text-sm rounded-lg w-[90%] border-none border-l-none h-full p-2.5"
-        />
+        <div
+          class="join lg:w-[30%] w-full border-base-300 border-2 rounded-lg flex items-center justify-center h-full"
+        >
+          <button
+            style="pointer-events: none"
+            class="join-item w-[10%] flex justify-center items-center btn btn-ghost btn-sm p-0 h-[40px] rounded-none"
+          >
+            <Icon name="guidance:search" size="16" />
+          </button>
+          <input
+            type="text"
+            placeholder="Поиск"
+            v-model="searchQuery"
+            class="join-item input input-sm input-bordered sm:text-sm rounded-lg w-[90%] border-none border-l-none h-full p-2.5"
+          />
+        </div>
       </div>
     </div>
 
     <div class="flex gap-5 h-full w-full">
       <div
+        v-if="isMobileMenuVisible"
+        class="fixed inset-0 z-50 flex justify-end"
+      >
+        <div
+          class="bg-base-100 w-[75%] h-full p-4 flex flex-col gap-2 animate-slide-right"
+        >
+          <button
+            @click="toggleMobileMenu"
+            class="btn btn-ghost btn-sm w-[50px] ml-auto absolute right-24 top-1"
+          >
+            <Icon name="mdi:close" size="24" />
+          </button>
+          <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
+            <h4 class="px-2 text-sm text-[#6e6e73] font-semibold">
+              {{ tabs.title }}
+            </h4>
+            <button
+              v-for="tab in tabs.tabs"
+              class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
+              @click="setComponent(`Guide${toUpperCaseFirstLetter(tab.value)}`)"
+            >
+              <nuxt-img
+                class="w-4 h-4"
+                :src="`/icons/figma/guide/${tab.value}.svg`"
+              />
+              <span class="text-xs text-base-content font-semibold truncate">{{
+                tab.title
+              }}</span>
+            </button>
+          </div>
+          <div class="flex flex-col gap-1">
+            <h4
+              v-if="filteredMPList.length"
+              class="px-2 text-sm text-[#6e6e73] font-semibold"
+            >
+              Самовыкупы
+            </h4>
+            <button
+              v-for="page in filteredMPList"
+              :key="page"
+              class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
+              @click="setComponent(`Guide${toUpperCaseFirstLetter(page)}`)"
+            >
+              <nuxt-img
+                class="w-4 h-4"
+                :src="`/icons/figma/guide/${page}.svg`"
+              />
+              <span class="text-xs text-base-content font-semibold truncate">{{
+                toUpperCaseFirstLetter(page)
+              }}</span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="bg-black bg-opacity-50 w-[25%]"
+          @click="toggleMobileMenu"
+        ></div>
+      </div>
+
+      <div
         :class="{ collapsed: isCollapsed, expanded: !isCollapsed }"
-        class="transition-width w-[25%] duration-300 bg-base-100 rounded-lg flex h-[100%] overflow-hidden flex-col gap-4"
+        class="transition-width w-[25%] duration-300 bg-base-100 rounded-lg h-[100%] overflow-hidden flex-col gap-4 hidden lg:flex"
       >
         <button
           @click="toggleCollapse"
           class="btn btn-ghost btn-sm w-[50px] flex ml-auto"
-          :class="{ 'p-0 justify-center items-center w-[30px] ml-0': isCollapsed }"
+          :class="{
+            'p-0 justify-center items-center w-[30px] ml-0': isCollapsed,
+          }"
         >
           <Icon v-if="!isCollapsed" name="ep:d-arrow-left" size="15" />
           <Icon v-else name="ep:d-arrow-right" size="15" />
@@ -153,7 +265,10 @@ const filteredMPList = computed(() => {
             class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
             @click="setComponent(`Guide${toUpperCaseFirstLetter(tab.value)}`)"
           >
-            <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${tab.value}.svg`" />
+            <nuxt-img
+              class="w-4 h-4"
+              :src="`/icons/figma/guide/${tab.value}.svg`"
+            />
             <span
               v-if="!isCollapsed"
               class="text-xs text-base-content font-semibold truncate"
@@ -186,7 +301,11 @@ const filteredMPList = computed(() => {
       </div>
 
       <div class="bg-base-100 rounded-lg flex w-full">
-        <GuideDinamicComponent ref="dinamicComponent" :componentName="resolveComponent" />
+        <GuideDinamicComponent
+          ref="dinamicComponent"
+          :componentName="resolveComponent"
+          @setPage="(componentName) => setPage(componentName)"
+        />
       </div>
     </div>
   </div>
@@ -194,14 +313,37 @@ const filteredMPList = computed(() => {
 
 <style scoped>
 .transition-width {
-  transition: width 0.3s;
+  transition: width 0.3s ease-out, max-width 0.3s ease-out;
 }
 
-.collapsed {
-  width: 40px;
+.animate-slide-left {
+  animation: slideLeft 0.3s ease-out;
 }
 
-.expanded {
-  max-width: 25%;
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+/* Дополнительные стили для анимации мобильного меню */
+.animate-slide-right {
+  animation: slideRight 0.3s ease-out;
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(0%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
 }
 </style>
