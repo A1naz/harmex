@@ -139,7 +139,7 @@ const filteredMPList = computed(() => {
 <template>
   <div class="flex flex-col gap-4 my-4 h-[90vh]">
     <div
-      class="rounded-lg bg-base-100 py-3.5 px-3 flex justify-between flex-col lg:flex-row gap-4"
+      class="rounded-lg bg-base-100 py-3.5 px-3 flex justify-between flex-col lg:flex-row gap-4 drop-shadow-sm"
     >
       <h2
         class="font-bold text-sm lg:text-2xl text-[#8f8e93] lg:text-base-content flex my-auto items-center gap-0.5 whitespace-nowrap"
@@ -152,7 +152,7 @@ const filteredMPList = computed(() => {
           {{ page }}</span
         >
       </h2>
-      <div class="flex gap-1 w-full">
+      <div class="flex gap-1 w-full justify-end">
         <button
           @click="toggleMobileMenu"
           class="lg:hidden btn btn-ghost btn-sm flex items-center my-auto"
@@ -178,15 +178,12 @@ const filteredMPList = computed(() => {
       </div>
     </div>
 
-    <div class="flex gap-5 h-full w-full">
+    <div class="flex gap-5 h-full w-full drop-shadow-sm">
       <div
         v-if="isMobileMenuVisible"
-        class="fixed inset-0 z-50 flex justify-end"
+        class="fixed inset-0 z-50 flex justify-end animate-slide-left"
       >
-        <div
-          class="bg-base-100 w-[75%] h-full p-4 flex flex-col gap-2 animate-slide-right"
-        >
-          
+        <div class="bg-base-100 w-[75%] h-full p-4 flex flex-col gap-2">
           <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
             <h4 class="px-2 text-sm text-[#6e6e73] font-semibold">
               {{ tabs.title }}
@@ -227,6 +224,16 @@ const filteredMPList = computed(() => {
               }}</span>
             </button>
           </div>
+          <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-3 w-full">
+          <a target="_blank" href="https://t.me/wb_soft_bot">
+            <div
+              class="join-item w-full btn btn-ghost gap-2 flex justify-start p-3 items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
+            >
+              <Icon class="text-primary" name="ri:telegram-2-line" size="24" />
+              <span> Telegram-бот </span>
+            </div>
+          </a>
+        </div>
         </div>
         <div
           class="bg-black bg-opacity-50 w-[25%]"
@@ -236,7 +243,7 @@ const filteredMPList = computed(() => {
 
       <div
         :class="{ collapsed: isCollapsed, expanded: !isCollapsed }"
-        class="transition-width w-[25%] duration-300 bg-base-100 rounded-lg h-[100%] overflow-hidden flex-col gap-4 hidden lg:flex"
+        class="transition-width w-[25%] duration-300 bg-base-100 rounded-lg h-[90%] overflow-hidden flex-col gap-4 hidden lg:flex"
       >
         <button
           @click="toggleCollapse"
@@ -293,9 +300,19 @@ const filteredMPList = computed(() => {
             >
           </button>
         </div>
+        <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-3 w-full">
+          <a target="_blank" href="https://t.me/wb_soft_bot">
+            <div
+              class="join-item w-full btn btn-ghost gap-2 flex justify-start p-3 items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
+            >
+              <Icon class="text-primary" name="ri:telegram-2-line" size="24" />
+              <span> Telegram-бот </span>
+            </div>
+          </a>
+        </div>
       </div>
 
-      <div class="bg-base-100 rounded-lg flex w-full">
+      <div class="bg-base-100 rounded-lg flex w-full h-[90%] drop-shadow-sm">
         <GuideDinamicComponent
           ref="dinamicComponent"
           :componentName="resolveComponent"
@@ -308,32 +325,32 @@ const filteredMPList = computed(() => {
 
 <style scoped>
 .transition-width {
+  transition: 0.25s;
+}
+
+.collapsed {
+  width: 40px;
+}
+
+.expanded {
+  max-width: 25%;
+}
+
+.bg-opacity-50 {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.transition-width {
   transition: width 0.3s ease-out, max-width 0.3s ease-out;
 }
 
 .animate-slide-left {
-  animation: slideLeft 0.3s ease-out;
+  animation: slideLeft 0.15s ease-out;
 }
 
 @keyframes slideLeft {
   from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0%);
-    opacity: 1;
-  }
-}
-
-/* Дополнительные стили для анимации мобильного меню */
-.animate-slide-right {
-  animation: slideRight 0.3s ease-out;
-}
-
-@keyframes slideRight {
-  from {
-    transform: translateX(0%);
+    transform: translateX(-100%);
     opacity: 0;
   }
   to {

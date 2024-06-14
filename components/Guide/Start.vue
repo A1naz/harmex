@@ -13,7 +13,7 @@ const liData = [
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 w-full overflow-y-auto">
+  <div class="flex flex-col gap-4 w-full overflow-y-auto pb-20">
     <div class="flex flex-col gap-4 text-xl font-bold px-7">С чего начать</div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-4">
@@ -21,6 +21,7 @@ const liData = [
       <p>
         В данном меню вы всегда будете находить нужную вам информацию, касающуюся
         бизнеса и разработок в Market Monstr.
+        
       </p>
       <p>Информация регулярно будет обновляться и расширяться.</p>
       <p>
@@ -32,7 +33,10 @@ const liData = [
         Службу заботы или вашему персональному Аккаунт менеджеру.
       </p>
       <p>
-        Кроме этого мы создали специальную анонимную анкету в которую вы также
+        Кроме этого мы создали специальную 
+        <a class="link link-hover text-primary underline" href="https://forms.gle/RVSct9BsCd3rCcfC7">анонимную анкету 
+        </a>  
+        в которую вы также
         можете писать свои вопросы, уточнения, ситуации и каждую неделю мы всё
         будем разбирать на наших общих встречах.
       </p>

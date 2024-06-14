@@ -102,6 +102,10 @@ const liDdsData = [
         рекомендаций, там же вы найдете отчётность по всем вознаграждениям и
         выводам (бухгалтерия)
       </p>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/1.png`"
+      />
       <p class="-py-7">
         Используя индивидуальную ссылку для рекомендации платформы Market
         Monstr, любой человек который перейдёт по ней, за ним в любом браузере
@@ -126,6 +130,14 @@ const liDdsData = [
         Всех своих партнеров вы сможете отслеживать в меню
         <span class="font-bold">Партнерская программа - Моя генеалогия</span>
       </p>
+      <nuxt-img
+        class="px-5 pt-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/2.png`"
+      />
+      <nuxt-img
+        class="px-5 pb-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/3.png`"
+      />
       <p class="-py-7">
         Используя свою партнерскую ссылку в личном кабинете вы можете
         рекомендовать платформу своим друзьям, знакомым, коллегам или партнерам
@@ -149,6 +161,11 @@ const liDdsData = [
         </li>
         <li>Всю отчетность отслеживать в меню Партнерская программа</li>
       </ol>
+      <nuxt-img
+        class="p-5 rounded-lg"
+                width="600"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/4.png`"
+      />
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
@@ -168,6 +185,11 @@ const liDdsData = [
         После оплаты, вы автоматически переходите в статус Партнер и вам
         открывается доступ к Партнерской программе и материалам для рекомендаций
       </p>
+      <nuxt-img
+        class="p-5 rounded-lg"
+
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/5.png`"
+      />
     </div>
 
     <div class="divider w-full my-0"></div>
@@ -210,6 +232,14 @@ const liDdsData = [
           свою почту
         </li>
       </ol>
+      <nuxt-img
+        class="px-5 pt-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/2.png`"
+      />
+      <nuxt-img
+        class="px-5 pb-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/6.png`"
+      />
     </div>
 
     <div class="divider w-full my-0"></div>
@@ -296,6 +326,10 @@ const liDdsData = [
         </li>
         <li>Используйте готовые материалы для рекомендаций</li>
       </ol>
+      <nuxt-img
+        class="p-5 rounded-lg"
+        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/1.png`"
+      />
     </div>
   </div>
 </template>

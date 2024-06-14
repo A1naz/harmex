@@ -142,11 +142,15 @@ const liDdsData = [
           <span class="pr-5 text-xl font-bold">-</span> Добавьте наших
           Тех.специалистов в команду на платформе;
         </li>
+        <nuxt-img
+          class="p-5 rounded-lg"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/2.png`"
+        />
+        <li class="my-1">
+          <span class="pr-5 text-xl font-bold">-</span> Отслеживайте процесс
+          оказания услуги в кабинете.
+        </li>
       </ul>
-      <nuxt-img
-        class="p-5 rounded-lg"
-        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/2.png`"
-      />
     </div>
     <div class="divider w-full my-0"></div>
     <div class="flex flex-col gap-3">
