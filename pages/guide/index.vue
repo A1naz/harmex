@@ -186,12 +186,7 @@ const filteredMPList = computed(() => {
         <div
           class="bg-base-100 w-[75%] h-full p-4 flex flex-col gap-2 animate-slide-right"
         >
-          <button
-            @click="toggleMobileMenu"
-            class="btn btn-ghost btn-sm w-[50px] ml-auto absolute right-24 top-1"
-          >
-            <Icon name="mdi:close" size="24" />
-          </button>
+          
           <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
             <h4 class="px-2 text-sm text-[#6e6e73] font-semibold">
               {{ tabs.title }}
