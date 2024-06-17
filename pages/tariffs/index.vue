@@ -128,11 +128,12 @@ async function getPrices() {
 }
 await getPrices()
 
+const modalOpen = ref(true)
 </script>
 
 <template>
   <div class="my-4 bg-base-100 rounded-lg flex flex-col">
-    <TariffsModal />
+    <TariffsModal :state="modalOpen" @close="modalOpen = false" />
     <TariffsUserSubscription
       :tariffs-value="tariffsValue"
       :tariff-stats="tariffStats"
