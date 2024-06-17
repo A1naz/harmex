@@ -225,15 +225,19 @@ const filteredMPList = computed(() => {
             </button>
           </div>
           <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-3 w-full">
-          <a target="_blank" href="https://t.me/wb_soft_bot">
-            <div
-              class="join-item w-full btn btn-ghost gap-2 flex justify-start p-3 items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
-            >
-              <Icon class="text-primary" name="ri:telegram-2-line" size="24" />
-              <span> Telegram-бот </span>
-            </div>
-          </a>
-        </div>
+            <a target="_blank" href="https://t.me/wb_soft_bot">
+              <div
+                class="join-item w-full btn btn-ghost gap-2 flex justify-start p-3 items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
+              >
+                <Icon
+                  class="text-primary"
+                  name="ri:telegram-2-line"
+                  size="24"
+                />
+                <span> Telegram-бот </span>
+              </div>
+            </a>
+          </div>
         </div>
         <div
           class="bg-black bg-opacity-50 w-[25%]"
@@ -253,6 +257,7 @@ const filteredMPList = computed(() => {
           }"
         >
           <Icon v-if="!isCollapsed" name="ep:d-arrow-left" size="15" />
+
           <Icon v-else name="ep:d-arrow-right" size="15" />
         </button>
         <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
@@ -262,6 +267,7 @@ const filteredMPList = computed(() => {
           >
             {{ tabs.title }}
           </h4>
+          <!-- <p v-if="isCollapsed" class="mt-5"></p> -->
           <button
             v-for="tab in tabs.tabs"
             class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
