@@ -132,6 +132,7 @@ await getPrices()
 
 <template>
   <div class="my-4 bg-base-100 rounded-lg flex flex-col">
+    <TariffsModal />
     <TariffsUserSubscription
       :tariffs-value="tariffsValue"
       :tariff-stats="tariffStats"
