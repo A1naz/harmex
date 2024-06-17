@@ -4,19 +4,14 @@ const liArchiveQuestData = []
 
 <template>
   <div class="flex flex-col gap-4 px-7 pb-20 w-full overflow-y-auto">
-    <div class="font-bold text-3xl mb-4">Ozon</div>
+    <div class="font-bold text-2xl mb-4">Ozon</div>
 
     <div
+      tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
     >
-      <input type="checkbox" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-2xl font-semibold">Подписка</div>
-        <div
-          class="flex justify-start items-center text-base text-white dark:bg-primary dark:bg-opacity-20 bg-[#5a81fd] w-fit px-1.5 py-0.5 rounded-lg mt-1"
-        >
-          Функции
-        </div>
+        <div class="flex gap-4 text-xl font-semibold">Подписка</div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -30,16 +25,11 @@ const liArchiveQuestData = []
       </div>
     </div>
     <div
+      tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
     >
-      <input type="checkbox" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-2xl font-semibold">Пополнение баланса</div>
-        <div
-          class="flex justify-start items-center text-base text-white dark:bg-primary dark:bg-opacity-20 bg-[#5a81fd] w-fit px-1.5 py-0.5 rounded-lg mt-1"
-        >
-          Функции
-        </div>
+        <div class="flex gap-4 text-xl font-semibold">Пополнение баланса</div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -65,17 +55,12 @@ const liArchiveQuestData = []
       </div>
     </div>
     <div
+      tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
     >
-      <input type="checkbox" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-2xl font-semibold">
+        <div class="flex gap-4 text-xl font-semibold">
           Выкуп (товара, скидка, отель)
-        </div>
-        <div
-          class="flex justify-start items-center text-base text-white dark:bg-primary dark:bg-opacity-20 bg-[#5a81fd] w-fit px-1.5 py-0.5 rounded-lg mt-1"
-        >
-          Функции
         </div>
       </div>
       <div class="collapse-content">
@@ -88,14 +73,15 @@ const liArchiveQuestData = []
             <li>Перейдите в меню Выкупы</li>
             <li>Нажмите кнопку Добавить выкуп и выберите маркетплейс OZON</li>
             <nuxt-img
-              class="py-5 rounded-lg"
+              class="py-5 rounded-lg flex justify-center mx-auto"
+              width="800"
               :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/wildberries/1.png`"
             />
             <li>Введите желаемый артикул (номер складского учёта товара)</li>
 
             <nuxt-img
-              class="py-5 rounded-lg"
-              width="1000"
+              class="py-5 rounded-lg flex justify-center mx-auto"
+              width="500"
               :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/wildberries/2.png`"
             />
             <li>
@@ -111,12 +97,14 @@ const liArchiveQuestData = []
               </ul>
             </li>
             <nuxt-img
-              class="py-5 rounded-lg"
+              class="py-5 rounded-lg flex justify-center mx-auto"
+              width="800"
               :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/wildberries/3.png`"
             />
             <li>Создайте выкуп</li>
             <nuxt-img
-              class="py-5 rounded-lg"
+              class="py-5 rounded-lg flex justify-center mx-auto"
+              width="800"
               :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/ozon/1.png`"
             />
           </ol>
@@ -182,16 +170,11 @@ const liArchiveQuestData = []
     </div>
 
     <div
+      tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
     >
-      <input type="checkbox" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-2xl font-semibold">Забор</div>
-        <div
-          class="flex justify-start items-center text-base text-white dark:bg-primary dark:bg-opacity-20 bg-[#5a81fd] w-fit px-1.5 py-0.5 rounded-lg mt-1"
-        >
-          Функции
-        </div>
+        <div class="flex gap-4 text-xl font-semibold">Забор</div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -209,7 +192,8 @@ const liArchiveQuestData = []
           </p>
 
           <nuxt-img
-            class="py-1 rounded-lg"
+            class="py-1 rounded-lg flex justify-center mx-auto"
+            width="800"
             :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/wildberries/5.png`"
           />
 
@@ -227,7 +211,6 @@ const liArchiveQuestData = []
             ваш ввести вас в заблуждение
           </p>
 
-          
           <p class="font-bold">Статусы по Доставкам:</p>
           <p>В пути - товар находится в пути на ПВЗ</p>
           <p>
@@ -244,36 +227,36 @@ const liArchiveQuestData = []
           </p>
 
           <p class="font-bold">Обращаем внимание!</p>
-          <p>Выкупленные товары, после прибытия на ПВЗ должны быть забраны в течение 7 дней (внутреннее правило платформы)</p>
+          <p>
+            Выкупленные товары, после прибытия на ПВЗ должны быть забраны в
+            течение 7 дней (внутреннее правило платформы)
+          </p>
           <div class="h-1" />
         </div>
       </div>
     </div>
 
     <div
+      tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
     >
-      <input type="checkbox" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-2xl font-semibold">Отзыв</div>
-        <div
-          class="flex justify-start items-center text-base text-white dark:bg-primary dark:bg-opacity-20 bg-[#5a81fd] w-fit px-1.5 py-0.5 rounded-lg mt-1"
-        >
-          Функции
-        </div>
+        <div class="flex gap-4 text-xl font-semibold">Отзыв</div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
           <p>
             Для публикации отзывов на полученные товары, используйте меню Отзывы
-
           </p>
           <nuxt-img
-            class="py-1 rounded-lg"
+            class="py-1 rounded-lg flex justify-center mx-auto"
+            width="800"
             :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/wildberries/6.png`"
           />
           <p>
-            В данном меню вы можете запланировать публикацию отзывов на недели и месяцы вперед для поддержания рейтинга и перекрытия негативных отзывов
+            В данном меню вы можете запланировать публикацию отзывов на недели и
+            месяцы вперед для поддержания рейтинга и перекрытия негативных
+            отзывов
           </p>
 
           <p>Чтобы опубликовать отзыв, выполните простые рекомендации:</p>
@@ -310,16 +293,11 @@ const liArchiveQuestData = []
     </div>
 
     <div
+      tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
     >
-      <input type="checkbox" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-2xl font-semibold">Лайки</div>
-        <div
-          class="flex justify-start items-center text-base text-white dark:bg-primary dark:bg-opacity-20 bg-[#5a81fd] w-fit px-1.5 py-0.5 rounded-lg mt-1"
-        >
-          Функции
-        </div>
+        <div class="flex gap-4 text-xl font-semibold">Лайки</div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -342,7 +320,8 @@ const liArchiveQuestData = []
             <li>Нажмите кнопку Отправить / Опубликовать</li>
           </ol>
           <nuxt-img
-            class="py-1 rounded-lg"
+            class="py-1 rounded-lg flex justify-center mx-auto"
+            width="800"
             :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/wildberries/8.png`"
           />
         </div>
@@ -350,16 +329,11 @@ const liArchiveQuestData = []
     </div>
 
     <div
+      tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
     >
-      <input type="checkbox" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-2xl font-semibold">Вопросы</div>
-        <div
-          class="flex justify-start items-center text-base text-white dark:bg-primary dark:bg-opacity-20 bg-[#5a81fd] w-fit px-1.5 py-0.5 rounded-lg mt-1"
-        >
-          Функции
-        </div>
+        <div class="flex gap-4 text-xl font-semibold">Вопросы</div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -378,7 +352,8 @@ const liArchiveQuestData = []
             <li>Нажмите кнопку Отправить / Опубликовать</li>
           </ol>
           <nuxt-img
-            class="py-1 rounded-lg"
+            class="py-1 rounded-lg flex justify-center mx-auto"
+            width="800"
             :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/wildberries/9.png`"
           />
         </div>
@@ -386,16 +361,11 @@ const liArchiveQuestData = []
     </div>
 
     <div
+      tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
     >
-      <input type="checkbox" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-2xl font-semibold">Корзина</div>
-        <div
-          class="flex justify-start items-center text-base text-white dark:bg-primary dark:bg-opacity-20 bg-[#5a81fd] w-fit px-1.5 py-0.5 rounded-lg mt-1"
-        >
-          Функции
-        </div>
+        <div class="flex gap-4 text-xl font-semibold">Корзина</div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -416,7 +386,8 @@ const liArchiveQuestData = []
             <li>Нажмите кнопку Отправить / Опубликовать</li>
           </ol>
           <nuxt-img
-            class="py-1 rounded-lg"
+            class="py-1 rounded-lg flex justify-center mx-auto"
+            width="800"
             :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/wildberries/10.png`"
           />
         </div>
