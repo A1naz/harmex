@@ -5,7 +5,6 @@ definePageMeta({
   title: 'Тарифы',
 })
 
-
 const tariffsValue = ref(false)
 const tariffStats = ref([
   {
@@ -128,12 +127,28 @@ async function getPrices() {
 }
 await getPrices()
 
-const modalOpen = ref(true)
+const modalOpen = ref(false)
+const currentTariff = ref({})
+const tarrifFullName = ref('')
+
+function openPurchaseWindow(tarrifName: string) {
+  tarrifFullName.value = `${tariffs.value[form.mp][form.title].title} ${tariffs.value[form.mp][form.title].type[form.type].title.toLowerCase()}`
+  currentTariff.value = tariffs.value[form.mp][form.title].type[
+    form.type
+  ].tariffs.find((tariff: any) => tariff.title === tarrifName)
+  modalOpen.value = true
+}
 </script>
 
 <template>
   <div class="my-4 bg-base-100 rounded-lg flex flex-col">
-    <TariffsModal :state="modalOpen" @close="modalOpen = false" />
+    <TariffsModal
+      :state="modalOpen"
+      :tariff="currentTariff"
+      :tarrifName="tarrifFullName"
+      :form="form"
+      @close="modalOpen = false"
+    />
     <TariffsUserSubscription
       :tariffs-value="tariffsValue"
       :tariff-stats="tariffStats"
@@ -158,6 +173,7 @@ const modalOpen = ref(true)
       @set-mp="setMp"
       @set-first-tariff="(value) => (firstTariff = value.value)"
       @set-second-tariff="(value) => (secondTariff = value.value)"
+      @open-modal="openPurchaseWindow"
     />
 
     <TariffsTarriffsInfo

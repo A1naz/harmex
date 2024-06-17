@@ -30,7 +30,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['setMp', 'setFirstTariff', 'setSecondTariff'])
+const emit = defineEmits(['setMp', 'setFirstTariff', 'setSecondTariff', 'openModal'])
 function setMp(value: string) {
   emit('setMp', value)
 }
@@ -234,6 +234,7 @@ const currentData = computed(() => {
             <button
               :disabled="firstTariff=='DEMO'"
               class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
+              @click="$emit('openModal', firstTariff)"
             >
               Купить
             </button>
@@ -262,6 +263,7 @@ const currentData = computed(() => {
             <button
               :disabled="secondTariff=='DEMO'"
               class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
+              @click="$emit('openModal', secondTariff)"
             >
               Купить
             </button>
@@ -285,6 +287,7 @@ const currentData = computed(() => {
         <button
           :disabled="tariff.title=='DEMO'"
           class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
+          @click="$emit('openModal', tariff.title)"
         >
           Купить
         </button>

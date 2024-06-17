@@ -124,7 +124,7 @@
          display: inline-block;
          width: 16px;
          height: 16px;
-         background-image: url('../img/arrow-head.svg');
+         // background-image: url('../img/arrow-head.svg');
          background-repeat: no-repeat;
          background-size: cover;
          background-position: center;
@@ -140,9 +140,9 @@
    &__row {
       display: flex;
 
-      &:nth-child(odd) {
-         background-color: #F6F7F8;
-      }
+      // &:nth-child(odd) {
+      //    background-color: #F6F7F8;
+      // }
    }
 
    &__col {
