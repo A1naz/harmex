@@ -181,7 +181,7 @@ const filteredMPList = computed(() => {
     <div class="flex gap-5 h-full w-full drop-shadow-sm">
       <div
         v-if="isMobileMenuVisible"
-        class="fixed inset-0 z-50 flex justify-end animate-slide-left"
+        class="fixed inset-0 z-50 flex justify-end "
       >
         <div class="bg-base-100 w-[75%] h-full p-4 flex flex-col gap-2">
           <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
@@ -224,10 +224,10 @@ const filteredMPList = computed(() => {
               }}</span>
             </button>
           </div>
-          <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-3 w-full">
+          <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-3 w-full rounded-lg">
             <a target="_blank" href="https://t.me/wb_soft_bot">
               <div
-                class="join-item w-full btn btn-ghost gap-2 flex justify-start p-3 items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
+                class="join-item w-full btn btn-ghost gap-2 flex justify-start items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
               >
                 <Icon
                   class="text-primary"
@@ -260,13 +260,14 @@ const filteredMPList = computed(() => {
 
           <Icon v-else name="ep:d-arrow-right" size="15" />
         </button>
-        <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
+        <div v-for="(tabs, index) in filteredNavbarData" class="flex flex-col gap-1">
           <h4
             v-if="!isCollapsed"
             class="px-2 text-sm text-[#6e6e73] font-semibold truncate"
           >
             {{ tabs.title }}
           </h4>
+          <div v-else class="divider my-0 mb-1 " :class="{ 'opacity-0 mb-1': index === 0 }"></div>
           <!-- <p v-if="isCollapsed" class="mt-5"></p> -->
           <button
             v-for="tab in tabs.tabs"
@@ -292,6 +293,7 @@ const filteredMPList = computed(() => {
           >
             Самовыкупы
           </h4>
+          <div v-else class="divider  my-0 mb-1"></div>
           <button
             v-for="page in filteredMPList"
             :key="page"
@@ -306,13 +308,13 @@ const filteredMPList = computed(() => {
             >
           </button>
         </div>
-        <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-3 w-full">
+        <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300  w-full" >
           <a target="_blank" href="https://t.me/wb_soft_bot">
             <div
-              class="join-item w-full btn btn-ghost gap-2 flex justify-start p-3 items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
+              class="join-item w-full btn btn-ghost gap-2 flex justify-start items-center normal-case hover:cursor-pointer rounded-lg p-2 m-0 mx-auto flex-nowrap"
             >
-              <Icon class="text-primary" name="ri:telegram-2-line" size="24" />
-              <span> Telegram-бот </span>
+              <Icon class="text-primary flex" name="ri:telegram-2-line" size="24" />
+              <span v-if="!isCollapsed" class="whitespace-nowrap font-semibold truncate"> Telegram-бот </span>
             </div>
           </a>
         </div>
