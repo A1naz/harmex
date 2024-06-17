@@ -181,10 +181,10 @@ const filteredMPList = computed(() => {
     <div class="flex gap-5 h-full w-full drop-shadow-sm">
       <div
         v-if="isMobileMenuVisible"
-        class="fixed inset-0 z-50 flex justify-end "
+        class="fixed inset-0 z-50 flex justify-end"
       >
-        <div class="bg-base-100 w-[75%] h-full p-4 flex flex-col gap-2">
-          <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
+        <div class="bg-base-100 w-[75%] h-full p-0 flex flex-col gap-2 rounded-lg ">
+          <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1 mx-4 mt-4 mb-4">
             <h4 class="px-2 text-sm text-[#6e6e73] font-semibold">
               {{ tabs.title }}
             </h4>
@@ -202,7 +202,7 @@ const filteredMPList = computed(() => {
               }}</span>
             </button>
           </div>
-          <div class="flex flex-col gap-1">
+          <div class="flex flex-col gap-1 mx-4">
             <h4
               v-if="filteredMPList.length"
               class="px-2 text-sm text-[#6e6e73] font-semibold"
@@ -224,8 +224,8 @@ const filteredMPList = computed(() => {
               }}</span>
             </button>
           </div>
-          <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-3 w-full rounded-lg">
-            <a target="_blank" href="https://t.me/wb_soft_bot">
+          <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-1 w-full ">
+            <a target="_blank" href="https://t.me/wb_soft_bot" class="w-full">
               <div
                 class="join-item w-full btn btn-ghost gap-2 flex justify-start items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
               >
@@ -240,7 +240,7 @@ const filteredMPList = computed(() => {
           </div>
         </div>
         <div
-          class="bg-black bg-opacity-50 w-[25%]"
+          class="bg-black bg-opacity-50 w-[25%] rounded-r-lg"
           @click="toggleMobileMenu"
         ></div>
       </div>
