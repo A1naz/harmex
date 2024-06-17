@@ -18,7 +18,7 @@ const emit = defineEmits(['close'])
 const currency = useCurrency()
 const store = useMainStore()
 const logs = ref<any[]>([])
-const { data, error } = await useFetch('/api/wildberries/buyout/getLogs', {
+const { data, error } = await useFetch('/api/wildberries/tasks/getLogs', {
   method: 'GET',
   query: {
     uuid: props.info.uuid,
