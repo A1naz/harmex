@@ -18,7 +18,7 @@ const emit = defineEmits(['close'])
 const currency = useCurrency()
 const store = useMainStore()
 const logs = ref<any[]>([])
-const { data, error } = await useFetch('/api/Flowwow/buyout/getLogs', {
+const { data, error } = await useFetch('/api/flowwow/tasks/getLogs', {
   method: 'GET',
   query: {
     uuid: props.info.uuid,

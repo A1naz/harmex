@@ -17,7 +17,7 @@ const emit = defineEmits(['close'])
 const currency = useCurrency()
 const store = useMainStore()
 const logs = ref<any[]>([])
-const { data, error } = await useFetch('/api/ozon/buyout/getLogs', {
+const { data, error } = await useFetch('/api/ozon/tasks/getLogs', {
   method: 'GET',
   query: {
     uuid: props.info.uuid,
