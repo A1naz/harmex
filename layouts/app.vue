@@ -109,7 +109,7 @@ const statusText = computed(() => {
       ref="drawerContent"
       @scroll="handleScroll"
       class="drawer-content w-full overflow-auto h-[100vh] scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin bg-base-200"
-      :class="{'lg:overflow-hidden': route.path === '/guide'}"
+      :class="{'overflow-hidden': route.path === '/guide'}"
     >
       <Transition name="bounce">
         <Icon
