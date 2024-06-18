@@ -127,27 +127,57 @@ async function getPrices() {
 }
 await getPrices()
 
-const modalOpen = ref(false)
+const modal = ref(false)
+const orderModal = ref(false)
+const orderModalType = ref('credit-tinkoff')
 const currentTariff = ref({})
-const tarrifFullName = ref('')
+const tariffFullName = ref('')
+const tariffPrice = ref('')
 
-function openPurchaseWindow(tarrifName: string) {
-  tarrifFullName.value = `${tariffs.value[form.mp][form.title].title} ${tariffs.value[form.mp][form.title].type[form.type].title.toLowerCase()}`
+function openPurchaseModal(tariffName: string) {
   currentTariff.value = tariffs.value[form.mp][form.title].type[
     form.type
-  ].tariffs.find((tariff: any) => tariff.title === tarrifName)
-  modalOpen.value = true
+  ].tariffs.find((tariff: any) => tariff.title === tariffName)
+
+  tariffFullName.value = `${ tariffs.value[form.mp][form.title].title } ${tariffs.value[form.mp][form.title].type[form.type].title.toLowerCase()} ,
+  ${
+    form.dateRange.replace('months', '') == '3'
+      ? '3 месяца'
+      : `${form.dateRange.replace('months', '')} месяцев`
+  }
+  , Тарифный план "${currentTariff.value.title}"`
+
+  tariffPrice.value = currentTariff.value.prices[form.dateRange.replace('months', '')]
+
+  modal.value = true
+}
+
+function openOrderModal(type: string) {
+  modal.value = false
+  orderModalType.value = type
+  orderModal.value = true
 }
 </script>
 
 <template>
   <div class="my-4 bg-base-100 rounded-lg flex flex-col">
+
     <TariffsModal
-      :state="modalOpen"
+      :state="modal"
       :tariff="currentTariff"
-      :tarrifName="tarrifFullName"
+      :tariffName="tariffFullName"
+      :tariffPrice="tariffPrice"
       :form="form"
-      @close="modalOpen = false"
+      @close="modal = false"
+      @continue="(type:string) => openOrderModal(type)"
+    />
+    <TariffsOrderModal
+      :state="orderModal"
+      :tariffName="tariffFullName"
+      :tariffPrice="tariffPrice"
+      :type="orderModalType"
+      @close="orderModal = false"
+      @change-type="(type: string) => orderModalType = type"
     />
     <TariffsUserSubscription
       :tariffs-value="tariffsValue"
@@ -173,10 +203,10 @@ function openPurchaseWindow(tarrifName: string) {
       @set-mp="setMp"
       @set-first-tariff="(value) => (firstTariff = value.value)"
       @set-second-tariff="(value) => (secondTariff = value.value)"
-      @open-modal="openPurchaseWindow"
+      @open-modal="openPurchaseModal"
     />
 
-    <TariffsTarriffsInfo
+    <TariffsTariffInfo
       :value="tariffs[form.mp][form.title].type[form.type]"
       :first-tariff="firstTariff"
       :second-tariff="secondTariff"
