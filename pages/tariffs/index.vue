@@ -129,7 +129,7 @@ await getPrices()
 
 const modal = ref(false)
 const orderModal = ref(false)
-const orderModalType = ref('credit-tinkoff')
+const orderModalType = ref('')
 const currentTariff = ref({})
 const tariffFullName = ref('')
 const tariffPrice = ref('')
@@ -168,6 +168,7 @@ function openOrderModal(type: string) {
       :tariffName="tariffFullName"
       :tariffPrice="tariffPrice"
       :form="form"
+      :currentType="orderModalType"
       @close="modal = false"
       @continue="(type:string) => openOrderModal(type)"
     />

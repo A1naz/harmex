@@ -105,7 +105,7 @@ onKeyStroke('Escape', (e) => {
           </div>
 
           <div
-            v-if="type === 'bank-pay'"
+            v-if="type === 'bank-pay1' || type === 'bank-pay2'"
             class="pay-popup payment-popup zoom-anim-dialog mfp-hide"
             id="bank-pay"
           >

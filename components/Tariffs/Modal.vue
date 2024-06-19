@@ -18,6 +18,10 @@ const props = defineProps({
     type: Object as any,
     required: true,
   },
+  currentType: {
+    type: String,
+    required: true,
+  },
   state: {
     type: Boolean,
     required: true,
@@ -70,10 +74,22 @@ function nextModal(type: string) {
   emit('continue', type)
 }
 
+function clearData(){
+  form.email = ''
+  form.name = ''
+  form.phoneNumber = ''
+}
+
+function closeModal(){
+  clearData()
+  emit('close')
+}
+
 onKeyStroke('Escape', (e) => {
   e.preventDefault()
   emit('close')
 })
+
 </script>
 
 <template>
@@ -83,14 +99,14 @@ onKeyStroke('Escape', (e) => {
       'modal-open': state,
     }"
     class="modal"
-    @click.self="$emit('close')"
+    @click.self="closeModal"
   >
     <div v-if="state" class="modal-box rounded-none max-w-fit">
       <div class="">
         <a
           style="padding: 5px"
           class="btn btn-sm p-1 btn-circle btn-ghost absolute right-2 top-2 w-fit"
-          @click="$emit('close')"
+          @click="closeModal"
           >✕</a
         >
         <div>
@@ -145,8 +161,9 @@ onKeyStroke('Escape', (e) => {
                   </div>
 
                   <div class="bank-list">
-                    <label class="type-payment" @click="orderType = 'bank-pay'">
+                    <label class="type-payment" @click="orderType = 'bank-pay1'">
                       <input
+                        :checked="orderType === 'bank-pay1'"
                         type="radio"
                         name="type-payment"
                         value="bank-pay"
@@ -163,8 +180,9 @@ onKeyStroke('Escape', (e) => {
                         </div>
                       </span>
                     </label>
-                    <label class="type-payment" @click="orderType = 'bank-pay'">
+                    <label class="type-payment" @click="orderType = 'bank-pay2'">
                       <input
+                        :checked="orderType === 'bank-pay2'"
                         type="radio"
                         name="type-payment"
                         value="bank-pay"
@@ -185,6 +203,7 @@ onKeyStroke('Escape', (e) => {
                     </label>
                     <label class="type-payment" @click="orderType = 'account-pay'" >
                       <input
+                        :checked="orderType === 'account-pay'"
                         type="radio"
                         name="type-payment"
                         value="account-pay"
@@ -205,6 +224,7 @@ onKeyStroke('Escape', (e) => {
                     </label>
                     <label class="type-payment" @click="orderType = 'credit-pay'">
                       <input
+                      :checked="orderType === 'credit-pay'"
                         type="radio"
                         name="type-payment"
                         value="credit-pay"
