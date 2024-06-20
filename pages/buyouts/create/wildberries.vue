@@ -660,11 +660,7 @@ function refreshElements() {
                 'Выкупить товар(-ы) прямо сейчас '
               }}</span>
               <div class="flex gap-4">
-                <div
-                  class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
-                >
-                  0р.
-                </div>
+
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].purchaseSoon"
@@ -678,11 +674,7 @@ function refreshElements() {
             >
               <span class="label-text">{{ 'Выкуп под ключ ' }}</span>
               <div class="flex gap-4">
-                <div
-                  class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
-                >
-                  0р.
-                </div>
+
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].key"
@@ -702,16 +694,11 @@ function refreshElements() {
               </div>
             </div>
             <div
-              class="label cursor-pointer flex gap-4 items-start justify-around"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
             >
               <span class="label-text"
                 >{{ rule.id }}. {{ rule.description }}</span
               >
-              <div
-                class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
-              >
-                0р.
-              </div>
               <input
                 :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
