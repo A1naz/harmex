@@ -10,6 +10,8 @@ export default eventHandler(async (event) => {
 
     const { skip, limit, tab, search } = getQuery(event)
 
+
+    
     let searchParse = search ? JSON.parse(search?.toString()) : {}
 
     if (Object.values(searchParse)[0] !== '') {
@@ -37,6 +39,7 @@ export default eventHandler(async (event) => {
             .skip((skip as number) || 0)
             .limit((limit as number) || 0)
     } else if (tab) {
+        
         query = Object.assign(query, { status: tab.toString() })
         reviews = await Review.find(query)
             .sort({ _id: -1 })
