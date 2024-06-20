@@ -103,6 +103,7 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
           image: product.image,
           name: product.name,
           article: product.article,
+          url: product.url,
           price: product.price,
           quantity: 1,
           sex: 'Нет',

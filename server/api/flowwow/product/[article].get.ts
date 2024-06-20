@@ -6,16 +6,14 @@ export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
   if (!session) return sendRedirect(event, '/auth', 302)
 
-  const { article } = getQuery(event)
-  console.log(article);
-  
+  const { article }: any = getQuery(event)
 
   //@ts-ignore
   const data: any = await $fetch('http://65.109.129.174:3211', {
     method: 'POST',
     body: {
       type: 'flowwowProduct',
-      url: article,
+      url: article.replaceAll(' ', ''),
     },
   }).catch((e) => {
     throw createError({
@@ -28,7 +26,8 @@ export default eventHandler(async (event) => {
   return {
     product: {
       image: data.image || '',
-      article: article,
+      article: data.article,
+      url: article,
       name: data.name || '',
       sizes: ['0'],
       price: data.price || 0,

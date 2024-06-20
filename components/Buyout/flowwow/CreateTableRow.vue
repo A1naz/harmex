@@ -131,7 +131,7 @@ function setDeliveryDate(date: String, time: String) {
         </div>
         <div class="text-center">
           <a
-            :href="product.article"
+            :href="product.url"
             target="_blank"
             class="text-sm text-primary link link-hover text-center"
           >

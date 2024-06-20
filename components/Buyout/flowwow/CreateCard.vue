@@ -128,7 +128,7 @@ function setDeliveryDate(date: String, time: String) {
                 {{ product.name }}
               </p>
               <a
-                :href="product.article"
+                :href="product.url"
                 target="_blank"
                 class="text-sm text-primary link link-hover"
               >

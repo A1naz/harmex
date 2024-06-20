@@ -14,7 +14,7 @@ const BuyoutSchema = new Schema({
   sizeparam: { type: String, required: true, text: true },
   quantity: { type: Number, required: true, text: true, max: 50 },
   gender: { type: String, required: true, text: true },
-  article: { type: String, required: true, text: true },
+  article: { type: Number, required: true, text: true },
   url: { type: String, required: false, text: true },
   point: { type: String, required: true, text: true },
   pointCoordinates: { type: Object, required: false },
