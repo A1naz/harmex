@@ -63,15 +63,11 @@ async function addProduct() {
   startTimer()
   loading.value = true
   const string = article.value.toString().trim()
-  if (string.includes(',')) {
-    const articles = string.split(',')
-    for (const item of articles) await store.addProduct(Number(item))
+
+  store.addProduct(article.value).finally(() => {
     loading.value = false
-  } else {
-    store.addProduct(Number(article.value)).finally(() => {
-      loading.value = false
-    })
-  }
+  })
+
   article.value = ''
 }
 
@@ -398,7 +394,7 @@ const startTimer = () => {
           <input
             ref="codeInput"
             v-model="article"
-            placeholder="Артикул"
+            placeholder="Ссылка на продукт"
             class="input input-sm w-full mb-2 md:mb-0 bg-base-300 border-base-300 bg-opacity-30 border-opacity-30"
             @keydown.enter="addProduct"
           />
@@ -497,7 +493,7 @@ const startTimer = () => {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-  
+
               <!-- <th @click="openInfoModal('size')" class="font-normal">
                 <div class="text-center">
                   <span> Размер </span>                 
@@ -547,15 +543,7 @@ const startTimer = () => {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                 </div>
               </th>
-              <th
-                @click="openInfoModal('searchRegion')"
-                class="font-normal text-base-content"
-              >
-                <div class="flex justify-center items-center gap-1">
-                  <span>Регион поиска</span>
-                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
-                </div>
-              </th>
+              <th></th>
 
               <th class="text-base-content" />
             </tr>
@@ -599,14 +587,14 @@ const startTimer = () => {
           >Удалить все</label
         > -->
         <label
-          class="btn btn-sm btn-primary normal-case  border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+          class="btn btn-sm btn-primary normal-case border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
           for="template-modal"
         >
           Шаблон
         </label>
 
         <button
-          class="btn btn-sm btn-primary normal-case  border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+          class="btn btn-sm btn-primary normal-case border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >
@@ -646,7 +634,6 @@ const startTimer = () => {
                 'Выкупить товар(-ы) прямо сейчас '
               }}</span>
               <div class="flex gap-4">
-
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].purchaseSoon"

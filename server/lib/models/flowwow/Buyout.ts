@@ -14,7 +14,8 @@ const BuyoutSchema = new Schema({
   sizeparam: { type: String, required: true, text: true },
   quantity: { type: Number, required: true, text: true, max: 50 },
   gender: { type: String, required: true, text: true },
-  article: { type: Number, required: true, text: true },
+  article: { type: String, required: true, text: true },
+  url: { type: String, required: false, text: true },
   point: { type: String, required: true, text: true },
   pointCoordinates: { type: Object, required: false },
   point_city: { type: String, required: false },
@@ -25,7 +26,20 @@ const BuyoutSchema = new Schema({
   dateEnd: { type: Date, required: true },
   product: { type: ProductSchema, required: true },
   rules: { type: Array, required: true },
-  status: { type: String, required: true, text: true, enum: ['completed', 'created', 'archived', 'active', 'work', 'paused', 'nofunds'] },
+  status: {
+    type: String,
+    required: true,
+    text: true,
+    enum: [
+      'completed',
+      'created',
+      'archived',
+      'active',
+      'work',
+      'paused',
+      'nofunds',
+    ],
+  },
   user: { type: Schema.Types.ObjectId, ref: User, required: true },
   uuid: { type: String, default: uuid() },
   createdAt: { type: Date, default: Date.now },
@@ -51,6 +65,4 @@ const BuyoutSchema = new Schema({
   data18: { type: {}, default: '' },
 })
 
-
 export const Buyout = FlowwowConnection.model('Buyout', BuyoutSchema)
-

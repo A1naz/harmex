@@ -61,7 +61,7 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
     clearProducts() {
       this.createProducts = []
     },
-    async addProduct(article: number) {
+    async addProduct(article: string) {
       if (this.createProducts.length >= 10) {
         notify({
           title: 'За раз можно создать максимум 10 выкупов',
@@ -70,12 +70,12 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
         return
       }
 
-      const { data, error } = await useFetch(
-        `/api/flowwow/product/${article}`,
-        {
-          method: 'GET',
-        }
-      )
+      const { data, error } = await useFetch(`/api/flowwow/product/get`, {
+        method: 'GET',
+        params: {
+          article,
+        },
+      })
       if (error.value) {
         notify({
           title: 'Ошибка',

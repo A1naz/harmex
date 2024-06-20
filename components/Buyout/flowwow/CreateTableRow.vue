@@ -131,7 +131,7 @@ function setDeliveryDate(date: String, time: String) {
         </div>
         <div class="text-center">
           <a
-            :href="`https://www.flowwow.ru/${product.article}`"
+            :href="product.article"
             target="_blank"
             class="text-sm text-primary link link-hover text-center"
           >

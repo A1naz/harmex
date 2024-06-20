@@ -9,7 +9,7 @@ import { getDisctrict } from '~/server/utils/getDisctrict'
 interface Item {
   image: string
   name: string
-  article: number
+  article: any
   price: number
   priceText: string
   quantity: number
@@ -100,6 +100,7 @@ export default eventHandler(async (event) => {
 
     const buyout = new Buyout({
       article: product.article,
+      url: product.article, 
       searchQuery: searchQueries.join(', '),
       point: 'product.adress',
       point_city: 'Москва',
@@ -128,6 +129,7 @@ export default eventHandler(async (event) => {
       deliveryPeriodDate: product.deliveryPeriodDate,
     })
 
+   
     await buyout.save()
 
     await userLog(event, {
@@ -135,6 +137,7 @@ export default eventHandler(async (event) => {
       documentId: buyout.uuid,
     })
   }
+
 
   return { status: 'ok' }
 })
