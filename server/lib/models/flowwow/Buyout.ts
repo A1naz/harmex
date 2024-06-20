@@ -13,6 +13,7 @@ const BuyoutSchema = new Schema({
   searchQuery: { type: String, text: true, default: '' },
   sizeparam: { type: String, required: true, text: true },
   quantity: { type: Number, required: true, text: true, max: 50 },
+  appartmentNumber: { type: String, required: false, default: '' },
   gender: { type: String, required: true, text: true },
   article: { type: Number, required: true, text: true },
   url: { type: String, required: false, text: true },

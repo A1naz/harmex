@@ -297,6 +297,18 @@ function setDeliveryDate(date: String, time: String) {
         </div>
       </div>
     </td>
+    <td class="border-r border-base">
+      <div class="w-full flex flex-col gap-2">
+        <label
+          ><input
+            v-model="product.appartmentNumber"
+            type="text"
+            placeholder="№ квартиры"
+            class="input bg-base-200 input-sm w-full rounded-xl"
+          />
+        </label>
+      </div>
+    </td>
     <td class="break-all max-w-[300px] border-r border-base">
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden justify-center"
@@ -306,8 +318,9 @@ function setDeliveryDate(date: String, time: String) {
           class="text-xs h-10 w-full break-all text-center"
         >
           <span v-show="loading" class="loading loading-spinner" />
-          <!-- @click="$emit('pointModalOpen', index)" -->
+
           <p
+            @click="$emit('pointModalOpen', index)"
             v-if="!loading"
             class="break-all whitespace-normal cursor-pointer text-primary"
           >
@@ -316,7 +329,6 @@ function setDeliveryDate(date: String, time: String) {
         </div>
         <!-- :disabled="loading" -->
         <button
-          disabled
           v-if="!product.adress"
           :class="{
             'btn-outline': product.adress,

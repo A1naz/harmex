@@ -115,6 +115,8 @@ function removeProduct(index: number) {
 }
 
 function handleAddress(address: string, lt: number, lg: number) {
+  modalOpen.value = false
+
   store.handleAddress(address, lt, lg)
 }
 function openInfoModal(type: string) {
@@ -525,6 +527,15 @@ const startTimer = () => {
               <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
                 <div class="text-center">
                   <span> Дата доставки </span>
+                </div>
+              </th>
+              <th
+                @click="openInfoModal('apartmentNumber')"
+                class="font-normal text-base-content w-32"
+              >
+                <div class="flex justify-center items-center gap-1">
+                  <span>№ Квартиры</span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                 </div>
               </th>
               <th class="min-w-40 font-normal" @click="openInfoModal('adress')">

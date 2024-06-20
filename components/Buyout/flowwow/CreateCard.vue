@@ -287,7 +287,7 @@ function setDeliveryDate(date: String, time: String) {
             <div v-else class="text-center text-xs">Ближайшее время</div>
           </div>
         </div>
-        
+
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-2">Адрес: </span>
           <div
@@ -295,14 +295,17 @@ function setDeliveryDate(date: String, time: String) {
             class="text-xs h-10 w-full truncate max-w-[80px]"
           >
             <span v-show="loading" class="loading loading-spinner" />
-            <!-- @click="$emit('pointModalOpen', index)" -->
-            <p v-if="!loading" class="truncate cursor-pointer text-primary">
+
+            <p
+              @click="$emit('pointModalOpen', index)"
+              v-if="!loading"
+              class="truncate cursor-pointer text-primary"
+            >
               {{ product.adress }}
             </p>
           </div>
           <!-- :disabled="loading" -->
           <button
-            disabled
             v-if="!product.adress"
             :class="{
               'btn-outline': product.adress,
@@ -316,15 +319,15 @@ function setDeliveryDate(date: String, time: String) {
         </div>
       </div>
       <div class="flex gap-5">
-          <span class="text-md text-gray-500 mb-2">Дата доставок: </span>
-          <div class="text-xs flex justify-start">
-            <BuyoutFlowwowDatePicker
-              :model-value="startDate"
-              @save-date="setDeliveryDate"
-              :time-delivery="store.createProducts[index].deliveryPeriodTime"
-            />
-          </div>
+        <span class="text-md text-gray-500 mb-2">Дата доставок: </span>
+        <div class="text-xs flex justify-start">
+          <BuyoutFlowwowDatePicker
+            :model-value="startDate"
+            @save-date="setDeliveryDate"
+            :time-delivery="store.createProducts[index].deliveryPeriodTime"
+          />
         </div>
+      </div>
       <div>
         <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
         <div class="w-[60%] flex flex-col gap-2">
@@ -338,9 +341,21 @@ function setDeliveryDate(date: String, time: String) {
           />
         </div>
       </div>
-      
+
       <div>
-        <div class="text-md text-gray-500 mb-1">Регион поиска:</div>
+        <div class="w-[60%]">
+          <div class="text-md text-gray-500 mb-1">№ Квартиры:</div>
+          <div class="w-full flex flex-col gap-2">
+            <label
+              ><input
+                v-model="product.appartmentNumber"
+                type="text"
+                placeholder="№ квартиры"
+                class="input bg-base-200 input-sm w-full rounded-xl"
+              />
+            </label>
+          </div>
+        </div>
         <div class="w-[60%] flex flex-col gap-2">
           <BuyoutAvitoCreateSearchQueriesRegion
             :product-index="props.index"
