@@ -198,8 +198,8 @@ const liDdsData = [
         </ol>
         <nuxt-img
           class="p-5 rounded-lg flex justify-center mx-auto"
-          width="500"
-          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/4.png`"
+          width="800"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/1.png`"
         />
       </div>
     </div>
@@ -228,8 +228,8 @@ const liDdsData = [
         </p>
         <nuxt-img
           class="p-5 rounded-lg flex justify-center mx-auto"
-          width="800"
-          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/5.png`"
+          width="500"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/4.png`"
         />
       </div>
     </div>
