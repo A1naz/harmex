@@ -79,7 +79,7 @@ export const useMPChange = defineStore('mpChange', {
         title: 'Flowwow',
         value: 'flowwow',
         test: true,
-        tabs: ['buyouts'],
+        tabs: ['buyouts', 'delivery', 'reviews'],
       },
     ],
   }),
