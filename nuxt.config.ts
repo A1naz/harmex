@@ -2,7 +2,7 @@
 
 const baseUrl = '/'
 const description =
-  'Уникальные самовыкупы для Маркет плейсов с MARKETMONSTR - Повысьте репутацию и продажи с нашим сервисом.'
+  'Повысьте репутацию и продажи на маркетплейсах с MarketMonstr.'
 
 export default defineNuxtConfig({
   app: {
