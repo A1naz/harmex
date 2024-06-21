@@ -218,7 +218,7 @@ onMounted(() => {
     currentTab.value = route.query.status.toString()
   } else {
     currentTab.value = 'available'
-    router.push('/reviews/Flowwow?status=available')
+    router.push('/reviews/flowwow?status=available')
   }
   fetchData()
 })
