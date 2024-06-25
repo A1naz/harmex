@@ -134,7 +134,6 @@ export default eventHandler(async (event) => {
 
     await buyout.save()
 
-    throw createError('Можно создать максимум 10 выкупов за раз')
     await userLog(event, {
       documentType: DocuemntEnum.Buyout,
       documentId: buyout.uuid,
