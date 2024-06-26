@@ -51,7 +51,7 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && questions.value.length >= limit.value){
+  if (!end.value && isVisible && questions.value.length >= limit.value) {
     await getQuestions()
   }
 })
@@ -70,7 +70,7 @@ async function getQuestions() {
       skip: skip.value,
     },
   })
- if ((data.value as any)?.length === 0) {
+  if ((data.value as any)?.length === 0) {
     loading.value = false
     end.value = true
     return
@@ -79,7 +79,7 @@ async function getQuestions() {
     questions.value = [...questions.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -144,6 +144,7 @@ function getStatus(status: string) {
   else if (status === 'busy') return 'В работе'
   else if (status === 'completed') return 'Завершен'
   else if (status === 'nofunds') return 'Недостаточно средств'
+  else if (status === 'archived') return 'Архивирован'
   else if (status === 'spam') {
     return 'Определен как спам'
   }
@@ -157,7 +158,7 @@ async function resumeStatus(item: any) {
     },
     watch: false,
   })
-  if (error.value){
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -191,12 +192,10 @@ onMounted(() => {
   }
 })
 
-
-
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -236,7 +235,6 @@ const updateSearchType = (filter: any) => {
 function changeFilter(e: any) {
   mpStore.changeMp(e.value, 'questions')
 }
-
 </script>
 
 <template>
@@ -325,7 +323,6 @@ function changeFilter(e: any) {
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
             { title: 'В архиве', value: 'archived' },
-
           ]"
           @change-value="selectFilterDate"
         />
@@ -338,7 +335,7 @@ function changeFilter(e: any) {
             { title: '3 дня', value: '3days' },
             { title: 'Неделя', value: '7days' },
           ]"
-          @change-value="selectFilterDate($event,true)"
+          @change-value="selectFilterDate($event, true)"
         />
 
         <CustomSelect
@@ -382,7 +379,7 @@ function changeFilter(e: any) {
 
     <div v-if="questions.length && !loading" class="mt-4 rounded-lg">
       <ClientOnly>
-        <table  class="table table-sm">
+        <table class="table table-sm">
           <thead>
             <tr class="bg-primary bg-opacity-5">
               <!-- <th class="text-center">№</th> -->
@@ -489,8 +486,12 @@ function changeFilter(e: any) {
                 >
                   {{ getStatus(item.status) }}
                 </div>
-                <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
-                  Возобновить  
+                <button
+                  v-if="item.status === 'nofunds'"
+                  class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20"
+                  @click="resumeStatus(item)"
+                >
+                  Возобновить
                 </button>
               </td>
               <td class="text-center border-r border-primary border-opacity-5">
@@ -498,11 +499,7 @@ function changeFilter(e: any) {
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
                   <!-- {{ defaultDateShort(item.createdDate) }} -->
-                  {{ 
-                    $dayjs(item.createdDate).format(
-                      'DD.MM.YYYY'
-                    ) 
-                  }}
+                  {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
                 </div>
               </td>
               <td class="text-center border-r border-primary border-opacity-5">
@@ -511,11 +508,7 @@ function changeFilter(e: any) {
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
                   <!-- {{ defaultDateShort(item.publishDate) }} -->
-                  {{ 
-                    $dayjs(item.publishDate).format(
-                      'DD.MM.YYYY'
-                    ) 
-                  }}
+                  {{ $dayjs(item.publishDate).format('DD.MM.YYYY') }}
                 </div>
               </td>
               <td
@@ -551,7 +544,11 @@ function changeFilter(e: any) {
             </tr>
           </tbody>
         </table>
-        <div v-if="!loading" ref="target" class="flex justify-center items-center h-4" />
+        <div
+          v-if="!loading"
+          ref="target"
+          class="flex justify-center items-center h-4"
+        />
         <!-- <div v-else class="cards grid grid-cols-1 gap-4 lg:hidden">
           <div
             v-for="(item, index) in questions"
@@ -627,7 +624,10 @@ function changeFilter(e: any) {
     <div v-else-if="!loading">
       <Hero />
     </div>
-    <div v-if="loading" class="w-full mt-5 flex justify-center items-center h-80">
+    <div
+      v-if="loading"
+      class="w-full mt-5 flex justify-center items-center h-80"
+    >
       <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
   </div>

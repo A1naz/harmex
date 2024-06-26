@@ -147,6 +147,7 @@ function getStatus(status: string) {
   else if (status === 'busy') return 'В работе'
   else if (status === 'completed') return 'Завершен'
   else if (status === 'nofunds') return 'Недостаточно средств'
+  else if (status === 'archived') return 'Архивирован'
   else if (status === 'spam') {
     return 'Определен как спам'
   }
@@ -467,7 +468,7 @@ function changeFilter(e: any) {
                 <div
                   :class="{
                     'text-red-500 rounded-full py-1 px-2  text-center':
-                      item.status === 'nofunds',
+                      item.status === 'nofunds' || item.status === 'archived',
                     'text-error rounded-full py-1 px-2  text-center':
                       item.status === 'spam',
                     'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
