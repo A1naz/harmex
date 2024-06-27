@@ -82,6 +82,7 @@ onUnmounted(() => {
 
 defineExpose({
   updateText,
+  updateValue,
 })
 </script>
 
