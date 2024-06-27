@@ -18,7 +18,7 @@ export interface Item {
   searchQuery: SearchQuery[]
   adress: string
   pointCoordinates: { lat: number; lon: number }
-  pointId: string
+  pointId: string | number
   dateRange: [Date | null, Date | null]
   selectedSize: number | string
   rules: Rule[]

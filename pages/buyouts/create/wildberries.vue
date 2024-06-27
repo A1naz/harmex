@@ -120,8 +120,8 @@ function removeProduct(index: number) {
   store.removeProduct(index)
 }
 
-function handleAddress(address: string, lt: number, lg: number) {
-  store.handleAddress(address, lt, lg)
+function handleAddress(address: any) {
+  store.handleAddress(address.a, address.lt, address.lg, address.id)
 }
 function openInfoModal(type: string) {
   infoType.value = type
@@ -660,7 +660,6 @@ function refreshElements() {
                 'Выкупить товар(-ы) прямо сейчас '
               }}</span>
               <div class="flex gap-4">
-
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].purchaseSoon"
@@ -674,7 +673,6 @@ function refreshElements() {
             >
               <span class="label-text">{{ 'Выкуп под ключ ' }}</span>
               <div class="flex gap-4">
-
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].key"

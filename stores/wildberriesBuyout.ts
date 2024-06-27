@@ -99,6 +99,7 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
       startDate.setMinutes(0)
       endDate.setMinutes(0)
 
+      //@ts-ignore
       this.createProducts.push(
         reactive({
           image: product.image,
@@ -184,9 +185,10 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
     removeProduct(index: number) {
       this.createProducts.splice(index, 1)
     },
-    handleAddress(address: string, lt: number, lg: number) {
+    handleAddress(address: string, lt: number, lg: number, id: number) {
       const index = this.selectedItem!
       this.createProducts[index].adress = address
+      this.createProducts[index].pointId = id
       this.createProducts[index].pointCoordinates = {
         lat: lt,
         lon: lg,
