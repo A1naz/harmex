@@ -12,6 +12,7 @@ const currency = useCurrency()
 const isCreateButtonDisabled = ref(false)
 const { width, height } = useWindowSize()
 const { notify } = useNotification()
+const { $dayjs } = useNuxtApp()
 
 const loadingTemplates = ref(false)
 const openAll = ref(false)
@@ -185,6 +186,41 @@ async function openChecksModal() {
     //   valid = false
     //   errorMsg = 'Не у всех товаров указан адрес доставки'
     // }
+    if (item.deliveryPeriodDate && item.deliveryPeriodTime) {
+      const selectedTimeRange = item.deliveryPeriodTime.split('-')
+      const [selectedStartHour, selectedStartMinute] = selectedTimeRange[0]
+        .split(':')
+        .map(Number)
+
+      const [day, month, year] = item.deliveryPeriodDate.split('.');
+
+      const dayNumber = parseInt(day, 10);
+      const monthNumber = parseInt(month, 10);
+      const yearNumber = parseInt(year, 10);
+
+      const date = new Date(yearNumber, monthNumber - 1, dayNumber);
+
+      const formattedYear = date.getFullYear().toString();
+      const formattedMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+      const formattedDay = date.getDate().toString();
+
+      const deliveryPeriodDate = `${formattedYear}.${formattedMonth}.${formattedDay}`;
+
+      const selectedStartDateTime = $dayjs(deliveryPeriodDate, 'DD.MM.YYYY').toDate()
+
+      selectedStartDateTime.setHours(selectedStartHour, selectedStartMinute, 0, 0)
+
+      const currentDate = new Date()
+
+      if (selectedStartDateTime < currentDate) {
+        valid = false
+        errorMsg = 'Время и дата доставки указаны в прошедшем времени'
+      }
+    } else {
+      valid = false
+      errorMsg = 'Не у всех товаров указаны дата и время доставки'
+      return
+    }
     if (!item.dateRange[0] || !item.dateRange[1]) {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
