@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '~~/server/lib/helpers'
+const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
@@ -14,6 +15,7 @@ export default eventHandler(async (event) => {
     body: {
       type: 'flowwowProduct',
       url: article.replaceAll(' ', ''),
+      token: config.PARSER_TOKEN
     },
   }).catch((e) => {
     throw createError({

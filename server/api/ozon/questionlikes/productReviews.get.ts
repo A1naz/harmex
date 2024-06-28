@@ -25,6 +25,7 @@ export default eventHandler(async (event) => {
       type: 'ozonQuestions',
       url: `https://www.ozon.ru/product/${article}/`,
       count: elPerPage,
+      token: config.PARSER_TOKEN,
     },
   })
 

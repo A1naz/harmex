@@ -1,6 +1,7 @@
 import { Buyout } from '@/server/lib/models/ozon/Buyout'
 import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '@/server/lib/helpers'
+const cofing = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
@@ -23,6 +24,7 @@ export default eventHandler(async (event) => {
     body: {
       type: 'ozonProduct',
       url: `https://www.ozon.ru/product/${article}/`,
+      token: config.PARSER_TOKEN,
     },
   })
 

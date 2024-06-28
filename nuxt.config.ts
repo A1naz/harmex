@@ -210,6 +210,7 @@ export default defineNuxtConfig({
     ZVONOK_CAMPAIGN_ID: process.env.ZVONOK_CAMPAIGN_ID,
     DADATA_TOKEN: process.env.DADATA_TOKEN,
     DADATA_SECRET: process.env.DADATA_SECRET,
+    PARSER_TOKEN: process.env.PARSER_TOKEN,
   },
 
   security: {

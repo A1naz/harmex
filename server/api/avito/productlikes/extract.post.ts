@@ -53,6 +53,7 @@ export default eventHandler(async (event) => {
       body: {
         type: 'avitoProduct',
         url: url.replaceAll(' ', ''),
+        token: config.PARSER_TOKEN,
       },
     })
 

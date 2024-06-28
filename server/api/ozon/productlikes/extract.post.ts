@@ -60,6 +60,7 @@ export default eventHandler(async (event) => {
       body: {
         type: 'ozonProduct',
         url: `https://www.ozon.ru/product/${article}/`,
+        token: config.PARSER_TOKEN,
       },
     })
 
@@ -92,6 +93,7 @@ export default eventHandler(async (event) => {
       body: {
         type: 'ozonBrand',
         url,
+        token: config.PARSER_TOKEN,
       },
     })
 

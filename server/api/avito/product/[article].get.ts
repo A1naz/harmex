@@ -21,6 +21,8 @@ export default eventHandler(async (event) => {
     body: {
       type: 'avitoProduct',
       url: `https://www.avito.ru/${article}`,
+      token: config.PARSER_TOKEN
+      
     },
   }).catch((e) => {
     throw createError({
