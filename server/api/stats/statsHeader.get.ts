@@ -1,6 +1,9 @@
 ﻿﻿import { Delivery } from '~/server/lib/models/Delivery'
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory'
+import { Delivery as OzonDelivery } from '~/server/lib/models/ozon/Delivery';
+import { Delivery as WildberriesDelivery } from '~/server/lib/models/wildberries/Delivery';
+import { Delivery as AvitoDelivery } from '~/server/lib/models/avito/Delivery';
 
 export default eventHandler(async (event) => {
   
@@ -123,7 +126,79 @@ export default eventHandler(async (event) => {
   ])
   const totalCommissions = comissions.reduce((count, comission) => count + comission.summ, 0);
 
-  const totalDeals = expense.length
+  filter.type = {
+    $in: [
+      'buyouts service',
+      'likeReview',
+      'deliveries',
+      'review',
+      'questionProduct',
+      'likeProduct',
+      'cart',
+      'autoanswers',
+    ],
+  }
+
+  let paymentsForSumm: any = await paymenthistory.find({
+    user,
+    dataoperation: filter.dataoperation,
+    type: filter.type,
+  })
+
+
+  const paymentsForDeliverySummWildberries = await WildberriesDelivery.aggregate([
+    { $match: {
+        user: user._id,
+        status: 'completed',
+        updatedAt: filter.dataoperation
+    }},
+    { $project: { 
+        _id: 1,
+    }},
+    { $addFields: {
+        type: 'deliveries',
+    }},
+])
+  const paymentsForDeliverySummOzon = await OzonDelivery.aggregate([
+    { $match: {
+        user: user._id,
+        status: 'completed',
+        updatedAt: filter.dataoperation
+    }},
+    { $project: { 
+        _id: 1,
+    }},
+    { $addFields: {
+        type: 'deliveries',
+    }},
+])
+  const paymentsForDeliverySummAvito = await AvitoDelivery.aggregate([
+    { $match: {
+        user: user._id,
+        status: 'completed',
+        updatedAt: filter.dataoperation
+    }},
+    { $project: { 
+        _id: 1,
+    }},
+    { $addFields: {
+        type: 'deliveries',
+    }},
+])
+  
+  const paymentsForDeliverySumm = [...paymentsForDeliverySummWildberries, ...paymentsForDeliverySummOzon, ...paymentsForDeliverySummAvito]
+  if (paymentsForDeliverySumm.length > 0) {
+    paymentsForSumm = [...paymentsForSumm, ...paymentsForDeliverySumm]
+  }
+
+  let quantity = 0
+
+  paymentsForSumm.forEach((payment: any) => {
+    quantity += 1
+  })
+
+
+  const totalDeals = quantity
 
   return { totalSumm: totalSumm, totalExpense: totalExpense, totalDeals: totalDeals, comissions: totalCommissions }
 })
