@@ -20,9 +20,10 @@ const emit = defineEmits(['saveDate'])
 const colorMode = useColorMode()
 const { width } = useWindowSize()
 const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
-const date = ref(props.modelValue)
+const date = ref($dayjs().add(1, 'day').toDate())
 
-const currentDate = $dayjs().toDate()
+const minDate = $dayjs().toDate()
+const currentDate = $dayjs().add(1, 'day').toDate()
 const endOfWeek = $dayjs().add(7, 'day').toDate()
 
 type UpdateMonthYear = (month: number, year: number) => void
@@ -37,15 +38,15 @@ function updateMonth(
 
 function handleDate(modelData: any) {
   date.value = modelData
-  const formattedCurrentDate = $dayjs(currentDate).format('YYYY-MM-DD');
+  const formattedCurrentDate = $dayjs(minDate).format('YYYY-MM-DD');
   const formattedModelDate = $dayjs(modelData).format('YYYY-MM-DD');
 
   if (formattedCurrentDate === formattedModelDate) {
     const [startTime, endTime] = timeDelivery.value.split('-');
-    const currentTime = currentDate.toLocaleTimeString('en-US', { hour12: false }).slice(0, 5);
+    const currentTime = minDate.toLocaleTimeString('en-US', { hour12: false }).slice(0, 5);
 
     const currentTimeParts = currentTime.split(':').map(Number);
-    const startTimeParts = endTime.split(':').map(Number);
+    const startTimeParts = startTime.split(':').map(Number);
 
     const currentDateTime = new Date();
     currentDateTime.setHours(currentTimeParts[0], currentTimeParts[1], 0, 0);
@@ -54,13 +55,22 @@ function handleDate(modelData: any) {
     startDateTime.setHours(startTimeParts[0], startTimeParts[1], 0, 0);
 
     if (currentDateTime > startDateTime) {
-      timeDelivery.value = ``;
+      const nextTimeInterval = getNextTimeInterval(
+      getInitialTimeValue(
+          `${$dayjs(minDate).format('HH')}`,
+          `${$dayjs(minDate).format('mm')}`
+        )
+      )
+      customSelect.value.updateValue({
+        title: nextTimeInterval,
+        value: nextTimeInterval,
+      })
       notify({
         text: 'Время доставки не может быть в прошедшем времени',
         type: 'error',
       })
       return
-    } 
+    }
   }
 
   emit(
@@ -101,6 +111,17 @@ const getInitialTimeValue = (timeHours: any, timeMinutes: any) => {
   return `${hours}:${minutes}-${nextHoursStr}:${nextMinutesStr}`
 }
 
+const getNextTimeInterval = (timeString: string) => {
+  const [start, end] = timeString.split('-')
+  const [startHours, startMinutes] = start.split(':').map(Number)
+  const [endHours, endMinutes] = end.split(':').map(Number)
+
+  const nextStartMinutes = (startMinutes + 30) % 60
+  const nextStartHours = (startHours + Math.floor((startMinutes + 30) / 60)) % 24
+
+  return getInitialTimeValue(nextStartHours, nextStartMinutes)
+}
+
 const timeDelivery = ref(
   props.timeDelivery && props.timeDelivery !== ''
     ? props.timeDelivery
@@ -110,8 +131,41 @@ const timeDelivery = ref(
       )
 )
 
-function setTimeDelivery(data:any){
+const customSelect = ref()
+
+function setTimeDelivery(data: any) {
+  // const selectedTimeRange = data.value.split('-')
+  // const [selectedStartHour, selectedStartMinute] = selectedTimeRange[0]
+  //   .split(':')
+  //   .map(Number)
+
+  // const selectedStartDateTime = new Date(date.value)
+  // selectedStartDateTime.setHours(selectedStartHour, selectedStartMinute, 0, 0)
+
+  // if (selectedStartDateTime < currentDate) {
+  //   notify({
+  //     text: 'Выбрано прошедшее время',
+  //     type: 'error',
+  //   })
+  //   const nextTimeInterval = getNextTimeInterval(
+  //     getInitialTimeValue(
+  //       `${$dayjs(currentDate).format('HH')}`,
+  //       `${$dayjs(currentDate).format('mm')}`
+  //     )
+  //   )
+  //   customSelect.value.updateValue({
+  //     title: nextTimeInterval,
+  //     value: nextTimeInterval,
+  //   })
+  //   return
+  // }
+
   timeDelivery.value = data.value
+  emit(
+    'saveDate',
+    `${$dayjs(date.value).format('DD.MM.YYYY')}`,
+    timeDelivery.value
+  )
 }
 </script>
 
@@ -121,7 +175,7 @@ function setTimeDelivery(data:any){
       v-model="date"
       :teleport-center="width < 1280"
       :teleport="true"
-      :min-date="currentDate"
+      :min-date="minDate"
       :prevent-min-max-navigation="true"
       :dark="colorMode.value === 'dark'"
       cancel-text=""
@@ -131,7 +185,11 @@ function setTimeDelivery(data:any){
       <template #trigger>
         <div class="flex flex-col w-full justify-end">
           <div
-            v-if="props.timeDelivery && props.timeDelivery !== '' && timeDelivery !== ''"
+            v-if="
+              props.timeDelivery &&
+              props.timeDelivery !== '' &&
+              timeDelivery !== ''
+            "
             class="flex justify-center items-center text-center"
           >
             {{ `${$dayjs(date).format('DD.MM.YYYY')}` }}
@@ -164,9 +222,15 @@ function setTimeDelivery(data:any){
         <div class="custom-time-picker-component">
           <span class="text-center px-2">Укажите время</span>
           <div class="flex items-center gap-2 px-2 pt-1">
-            <CustomSelect @change-value="setTimeDelivery" :dropdownContainer="'w-full'" :class="'w-full'" :tabs="hoursArray" :status-text="timeDelivery" />
+            <CustomSelect
+              ref="customSelect"
+              @change-value="setTimeDelivery"
+              :dropdownContainer="'w-full'"
+              :class="'w-full'"
+              :tabs="hoursArray"
+              :status-text="timeDelivery"
+            />
           </div>
-          
         </div>
       </template>
       <template
