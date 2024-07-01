@@ -8,6 +8,7 @@ export async function serverPingCycle() {
     return
   }
   try {
+    // @ts-ignore
     const data = await $fetch(
       'http://teamapi.ru/api/servers/pingService',
       {
