@@ -85,6 +85,9 @@ export default eventHandler(async (event) => {
     if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
       pipeLine.splice(3, 0, { $match: { ...searchParse } }) // after $project
     } else {
+      if (Object.keys(searchParse)[0] === 'article') {
+        searchParse.article = Number(searchParse.article);
+      }
       pipeLine.splice(1, 0, { $match: { ...searchParse } }) // after $match
     }
   }
