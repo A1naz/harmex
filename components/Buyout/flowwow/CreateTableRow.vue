@@ -80,9 +80,32 @@ const productQuantityModel = computed({
   },
 })
 
-function setDeliveryDate(date: String, time: String) {
+
+function convertToUTC(deliveryPeriodTime: string, userOffsetMinutes: number): string {
+    const [start, end] = deliveryPeriodTime.split('-').map(time => {
+        const [hours, minutes] = time.split(':').map(Number);
+        const localDate = new Date(1970, 0, 1, hours, minutes);
+        localDate.setMinutes(localDate.getMinutes() + userOffsetMinutes);
+        return localDate;
+    });
+
+    const formatTime = (date: Date): string => {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    };
+
+    return `${formatTime(start)}-${formatTime(end)}`;
+}
+
+function setDeliveryDate(date: string, time: string) {
   store.createProducts[props.index].deliveryPeriodDate = date
   store.createProducts[props.index].deliveryPeriodTime = time
+  const userOffsetMinutes = new Date().getTimezoneOffset()
+  const userTimezoneOffsetHours = -userOffsetMinutes / 60
+  const timeDelivery = convertToUTC(time, userOffsetMinutes)
+  store.createProducts[props.index].deliveryPeriodTime = timeDelivery
+  console.log(store.createProducts[props.index].deliveryPeriodTime)
 }
 </script>
 
