@@ -17,10 +17,13 @@ export default eventHandler(async (event) => {
       .sort({ _id: -1 })
   }
   else if (type === 'article') {
-    deliveries = await Delivery.find({ user, $text: { $search: string?.toString() } })
-      .sort({
-        _id: -1,
-      })
+    deliveries = await Delivery.find({ 
+      user, 
+      article: Number(string)
+    })
+    .sort({
+      _id: -1,
+    });
   }
   else {
     deliveries = await Delivery.find({ user })
