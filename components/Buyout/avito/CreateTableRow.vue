@@ -160,7 +160,7 @@ const productQuantityModel = computed({
           }}
         </div>
         <button
-          disabled
+       
           class="border-base-100 text-base-content text-opacity-40"
           @click="$emit('ruleModalOpen', index)"
         >

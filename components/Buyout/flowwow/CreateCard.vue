@@ -236,7 +236,6 @@ function setDeliveryDate(date: String, time: String) {
               }}
             </div>
             <button
-              disabled
               class="border-base-100"
               @click="$emit('ruleModalOpen', index)"
             >

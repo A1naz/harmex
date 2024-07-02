@@ -682,8 +682,7 @@ const startTimer = () => {
                 >{{ rule.id }}. {{ rule.description }}</span
               >
 
-              <input
-                :disabled="
+              <!-- :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) =>
                       item.category === rule.category && item.id !== rule.id
@@ -691,7 +690,9 @@ const startTimer = () => {
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) => item.id === rule?.relies
                   )
-                "
+                " -->
+              <input
+                disabled
                 type="checkbox"
                 class="checkbox checkbox-primary border-base-content"
                 :checked="

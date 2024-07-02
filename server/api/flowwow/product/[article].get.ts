@@ -27,7 +27,6 @@ export default eventHandler(async (event) => {
 
   return {
     product: {
-      slug: data.slug || '',
       image: data.image || '',
       article: data.article,
       url: article,

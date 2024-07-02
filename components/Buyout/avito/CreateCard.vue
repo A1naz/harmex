@@ -231,7 +231,6 @@ const productQuantityModel = computed({
               }}
             </div>
             <button
-              disabled
               class="border-base-100"
               @click="$emit('ruleModalOpen', index)"
             >
@@ -312,7 +311,7 @@ const productQuantityModel = computed({
           </button>
         </div>
       </div>
-      <div class="flex w-full ">
+      <div class="flex w-full">
         <div class="w-[70%]">
           <div class="text-md text-gray-500 mb-1">№ Квартиры:</div>
           <div class="w-full flex flex-col gap-2">

@@ -192,23 +192,31 @@ async function openChecksModal() {
         .split(':')
         .map(Number)
 
-      const [day, month, year] = item.deliveryPeriodDate.split('.');
+      const [day, month, year] = item.deliveryPeriodDate.split('.')
 
-      const dayNumber = parseInt(day, 10);
-      const monthNumber = parseInt(month, 10);
-      const yearNumber = parseInt(year, 10);
+      const dayNumber = parseInt(day, 10)
+      const monthNumber = parseInt(month, 10)
+      const yearNumber = parseInt(year, 10)
 
-      const date = new Date(yearNumber, monthNumber - 1, dayNumber);
+      const date = new Date(yearNumber, monthNumber - 1, dayNumber)
 
-      const formattedYear = date.getFullYear().toString();
-      const formattedMonth = (date.getMonth() + 1).toString().padStart(2, '0');
-      const formattedDay = date.getDate().toString();
+      const formattedYear = date.getFullYear().toString()
+      const formattedMonth = (date.getMonth() + 1).toString().padStart(2, '0')
+      const formattedDay = date.getDate().toString()
 
-      const deliveryPeriodDate = `${formattedYear}.${formattedMonth}.${formattedDay}`;
+      const deliveryPeriodDate = `${formattedYear}.${formattedMonth}.${formattedDay}`
 
-      const selectedStartDateTime = $dayjs(deliveryPeriodDate, 'DD.MM.YYYY').toDate()
+      const selectedStartDateTime = $dayjs(
+        deliveryPeriodDate,
+        'DD.MM.YYYY'
+      ).toDate()
 
-      selectedStartDateTime.setHours(selectedStartHour, selectedStartMinute, 0, 0)
+      selectedStartDateTime.setHours(
+        selectedStartHour,
+        selectedStartMinute,
+        0,
+        0
+      )
 
       const currentDate = new Date()
 
@@ -711,8 +719,7 @@ const startTimer = () => {
                 >{{ rule.id }}. {{ rule.description }}</span
               >
 
-              <input
-                :disabled="
+              <!-- :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) =>
                       item.category === rule.category && item.id !== rule.id
@@ -720,7 +727,9 @@ const startTimer = () => {
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) => item.id === rule?.relies
                   )
-                "
+                " -->
+              <input
+                disabled
                 type="checkbox"
                 class="checkbox checkbox-primary border-base-content"
                 :checked="
