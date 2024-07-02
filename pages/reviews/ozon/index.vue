@@ -296,6 +296,7 @@ async function resumeStatus(item: any) {
 
     <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-2">
       <div class="flex w-full gap-2 lg:hidden">
+
         <ExportXls
           api="/api/ozon/review/export"
           fileName="MARKETMONSTR Доступные отзывы"

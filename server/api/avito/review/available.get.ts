@@ -77,12 +77,13 @@ export default eventHandler(async (event) => {
 
   const limitA = limit ? parseInt(limit.toString(), 10) : 1000
   const skipA = skip ? parseInt(skip.toString(), 10) : 0
-  const searchParse = search ? JSON.parse(search?.toString()) : undefined
+  let searchParse = search ? JSON.parse(search?.toString()) : undefined
 
   if (Object.values(searchParse)[0] !== '') {
     if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
+      searchParse = { uuidbuyout: searchParse.uudidBuyout.replace('#', '') };
       pipeLine.splice(3, 0, { $match: { ...searchParse } }) // after $project
-    } else {
+    }  else {
       if (Object.keys(searchParse)[0] === 'article') {
         searchParse.article = Number(searchParse.article);
       }
