@@ -100,6 +100,7 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
 
       this.createProducts.push(
         reactive({
+          slug: product.slug,
           image: product.image,
           name: product.name,
           article: product.article,

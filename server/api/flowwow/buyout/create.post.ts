@@ -27,6 +27,7 @@ interface Item {
   deliveryPeriodDate: string
   url: string
   appartmentNumber: string
+  slug: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -103,6 +104,7 @@ export default eventHandler(async (event) => {
     const buyout = new Buyout({
       article: product.article,
       url: product.url,
+      slug: product.slug,
       appartmentNumber: product.appartmentNumber,
       searchQuery: searchQueries.join(', '),
       point: product.adress,

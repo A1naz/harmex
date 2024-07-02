@@ -15,6 +15,7 @@ const BuyoutSchema = new Schema({
   quantity: { type: Number, required: true, text: true, max: 50 },
   appartmentNumber: { type: String, required: false, default: '' },
   gender: { type: String, required: true, text: true },
+  slug: { type: String },
   article: { type: Number, required: true, text: true },
   url: { type: String, required: false, text: true },
   point: { type: String, required: true, text: true },
