@@ -57,7 +57,9 @@ export default eventHandler(async (event) => {
   for await (const product of products) {
     const rules = product.rules.map((rule) => rule.id)
     const searchQueries = product.searchQuery.map((item: any) => item.value)
-    const searchQuerieRegions = ['MSK']
+    const searchQuerieRegions = product.searchQueryRegion.map(
+      (item: any) => item.value
+    )
 
     if (userTimezoneOffsetHours && userOffsetMinutes) {
       const date1 = product.purchaseSoon
