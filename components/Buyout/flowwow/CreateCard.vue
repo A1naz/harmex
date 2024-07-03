@@ -231,7 +231,7 @@ function setDeliveryDate(date: String, time: String) {
             <div class="text-sm">
               {{
                 product.rules.length
-                  ? product.rules.map((rule: Rule) => rule.id).join(', ')
+                  ? product.rules.map((rule: any) => rule.id).join(', ')
                   : ''
               }}
             </div>
