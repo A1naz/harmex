@@ -15,7 +15,7 @@ export default eventHandler(async (event) => {
     body: {
       type: 'flowwowProduct',
       url: article.replaceAll(' ', ''),
-      token: config.PARSER_TOKEN
+      token: config.PARSER_TOKEN,
     },
   }).catch((e) => {
     throw createError({
@@ -27,6 +27,7 @@ export default eventHandler(async (event) => {
 
   return {
     product: {
+      slug: data.slug || '',
       image: data.image || '',
       article: data.article,
       url: article,
