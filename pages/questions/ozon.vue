@@ -253,7 +253,7 @@ function changeFilter(e: any) {
     <QuestionsOzonCreateQuest
       :show="modalShow"
       @close-modal="modalShow = false"
-      @create="getQuestions()"
+      @create="getQuestions"
     />
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">

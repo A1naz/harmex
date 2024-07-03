@@ -20,10 +20,9 @@ const emit = defineEmits(['saveDate'])
 const colorMode = useColorMode()
 const { width } = useWindowSize()
 const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
-const date = ref($dayjs().add(1, 'day').toDate())
+const date = ref($dayjs().toDate())
 
-const minDate = $dayjs().toDate()
-const currentDate = $dayjs().add(1, 'day').toDate()
+const currentDate = $dayjs().toDate()
 const endOfWeek = $dayjs().add(7, 'day').toDate()
 
 type UpdateMonthYear = (month: number, year: number) => void
@@ -38,40 +37,40 @@ function updateMonth(
 
 function handleDate(modelData: any) {
   date.value = modelData
-  const formattedCurrentDate = $dayjs(minDate).format('YYYY-MM-DD');
-  const formattedModelDate = $dayjs(modelData).format('YYYY-MM-DD');
+  // const formattedCurrentDate = $dayjs(currentDate).format('YYYY-MM-DD');
+  // const formattedModelDate = $dayjs(modelData).format('YYYY-MM-DD');
 
-  if (formattedCurrentDate === formattedModelDate) {
-    const [startTime, endTime] = timeDelivery.value.split('-');
-    const currentTime = minDate.toLocaleTimeString('en-US', { hour12: false }).slice(0, 5);
+  // if (formattedCurrentDate === formattedModelDate) {
+  //   const [startTime, endTime] = timeDelivery.value.split('-');
+  //   const currentTime = currentDate.toLocaleTimeString('en-US', { hour12: false }).slice(0, 5);
 
-    const currentTimeParts = currentTime.split(':').map(Number);
-    const startTimeParts = startTime.split(':').map(Number);
+  //   const currentTimeParts = currentTime.split(':').map(Number);
+  //   const startTimeParts = startTime.split(':').map(Number);
 
-    const currentDateTime = new Date();
-    currentDateTime.setHours(currentTimeParts[0], currentTimeParts[1], 0, 0);
+  //   const currentDateTime = new Date();
+  //   currentDateTime.setHours(currentTimeParts[0], currentTimeParts[1], 0, 0);
 
-    const startDateTime = new Date();
-    startDateTime.setHours(startTimeParts[0], startTimeParts[1], 0, 0);
+  //   const startDateTime = new Date();
+  //   startDateTime.setHours(startTimeParts[0], startTimeParts[1], 0, 0);
 
-    if (currentDateTime > startDateTime) {
-      const nextTimeInterval = getNextTimeInterval(
-      getInitialTimeValue(
-          `${$dayjs(minDate).format('HH')}`,
-          `${$dayjs(minDate).format('mm')}`
-        )
-      )
-      customSelect.value.updateValue({
-        title: nextTimeInterval,
-        value: nextTimeInterval,
-      })
-      notify({
-        text: 'Время доставки не может быть в прошедшем времени',
-        type: 'error',
-      })
-      return
-    }
-  }
+  //   if (currentDateTime > startDateTime) {
+  //     const nextTimeInterval = getNextTimeInterval(
+  //     getInitialTimeValue(
+  //         `${$dayjs(currentDate).format('HH')}`,
+  //         `${$dayjs(currentDate).format('mm')}`
+  //       )
+  //     )
+  //     customSelect.value.updateValue({
+  //       title: nextTimeInterval,
+  //       value: nextTimeInterval,
+  //     })
+  //     notify({
+  //       text: 'Время доставки не может быть в прошедшем времени',
+  //       type: 'error',
+  //     })
+  //     return
+  //   }
+  // }
 
   emit(
     'saveDate',
@@ -161,11 +160,11 @@ function setTimeDelivery(data: any) {
   // }
 
   timeDelivery.value = data.value
-  emit(
-    'saveDate',
-    `${$dayjs(date.value).format('DD.MM.YYYY')}`,
-    timeDelivery.value
-  )
+  // emit(
+  //   'saveDate',
+  //   `${$dayjs(date.value).format('DD.MM.YYYY')}`,
+  //   timeDelivery.value
+  // )
 }
 </script>
 
@@ -175,7 +174,7 @@ function setTimeDelivery(data: any) {
       v-model="date"
       :teleport-center="width < 1280"
       :teleport="true"
-      :min-date="minDate"
+      :min-date="currentDate"
       :prevent-min-max-navigation="true"
       :dark="colorMode.value === 'dark'"
       cancel-text=""
@@ -204,7 +203,7 @@ function setTimeDelivery(data: any) {
             }"
             class="btn btn-primary normal-case w-30 bg-[#b2baff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
           >
-            {{ date ? 'Изменить' : 'Выбрать' }}
+            {{ date ? 'Добавить' : 'Выбрать' }}
           </button>
         </div>
       </template>
