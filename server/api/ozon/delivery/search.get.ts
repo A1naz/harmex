@@ -7,7 +7,6 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const { type, string } = getQuery(event)
-
   const all = await Delivery.find({ user })
   let deliveries
 
