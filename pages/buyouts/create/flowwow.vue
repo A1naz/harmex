@@ -143,6 +143,38 @@ function closeModal() {
   modalOpen.value = false
 }
 
+// function convertToUTC(
+//   deliveryPeriodTime: string,
+//   userOffsetMinutes: number,
+//   deliveryPeriodDate: string,
+// ): string {
+//   let dateOffset = 0;
+
+//   const [start, end] = deliveryPeriodTime.split('-').map((time) => {
+//     const [hours, minutes] = time.split(':').map(Number)
+//     const localDate = new Date(1970, 0, 1, hours, minutes)
+//     localDate.setMinutes(localDate.getMinutes() + userOffsetMinutes)
+//     return localDate
+//   })
+
+//   const parsedDate = deliveryPeriodDate.split('.');
+//   const year = parseInt(parsedDate[2], 10);
+//   const month = parseInt(parsedDate[1], 10) - 1; // месяцы в Date начинаются с 0
+//   const day = parseInt(parsedDate[0], 10);
+//   const deliveryDate = new Date(year, month, day);
+
+//   const formatTime = (date: Date): string => {
+//     const hours = date.getHours().toString().padStart(2, '0')
+//     const minutes = date.getMinutes().toString().padStart(2, '0')
+//     return `${hours}:${minutes}`
+//   }
+
+//   // deliveryDate.setDate(deliveryDate.getDate() - 1);
+
+
+//   return `${formatTime(start)}-${formatTime(end)} ${deliveryDate.toLocaleDateString()}`;
+// }
+
 async function openChecksModal() {
   const productCountsByAddress: any = {}
 
@@ -181,50 +213,59 @@ async function openChecksModal() {
 
   let valid = true
   let errorMsg = ''
-  products.value.forEach((item) => {
+  products.value.forEach((item, index) => {
     // if (!item.adress) {
     //   valid = false
     //   errorMsg = 'Не у всех товаров указан адрес доставки'
     // }
-    if (item.deliveryPeriodDate && item.deliveryPeriodTime) {
-      const selectedTimeRange = item.deliveryPeriodTime.split('-')
-      const [selectedStartHour, selectedStartMinute] = selectedTimeRange[0]
-        .split(':')
-        .map(Number)
+    // if (item.deliveryPeriodDate && item.deliveryPeriodTime) {
+    //   const selectedTimeRange = item.deliveryPeriodTime.split('-')
+    //   const [selectedStartHour, selectedStartMinute] = selectedTimeRange[0]
+    //     .split(':')
+    //     .map(Number)
 
-      const [day, month, year] = item.deliveryPeriodDate.split('.')
+    //   const [day, month, year] = item.deliveryPeriodDate.split('.')
 
-      const dayNumber = parseInt(day, 10)
-      const monthNumber = parseInt(month, 10)
-      const yearNumber = parseInt(year, 10)
+    //   const dayNumber = parseInt(day, 10)
+    //   const monthNumber = parseInt(month, 10)
+    //   const yearNumber = parseInt(year, 10)
 
-      const date = new Date(yearNumber, monthNumber - 1, dayNumber)
+    //   const date = new Date(yearNumber, monthNumber - 1, dayNumber)
 
-      const formattedYear = date.getFullYear().toString()
-      const formattedMonth = (date.getMonth() + 1).toString().padStart(2, '0')
-      const formattedDay = date.getDate().toString()
+    //   const formattedYear = date.getFullYear().toString()
+    //   const formattedMonth = (date.getMonth() + 1).toString().padStart(2, '0')
+    //   const formattedDay = date.getDate().toString()
 
-      const deliveryPeriodDate = `${formattedYear}.${formattedMonth}.${formattedDay}`
+    //   const deliveryPeriodDate = `${formattedYear}.${formattedMonth}.${formattedDay}`
 
-      const selectedStartDateTime = $dayjs(
-        deliveryPeriodDate,
-        'DD.MM.YYYY'
-      ).toDate()
+    //   const selectedStartDateTime = $dayjs(
+    //     deliveryPeriodDate,
+    //     'DD.MM.YYYY'
+    //   ).toDate()
 
-      selectedStartDateTime.setHours(
-        selectedStartHour,
-        selectedStartMinute,
-        0,
-        0
-      )
+    //   selectedStartDateTime.setHours(
+    //     selectedStartHour,
+    //     selectedStartMinute,
+    //     0,
+    //     0
+    //   )
 
-      const currentDate = new Date()
+    //   const currentDate = new Date()
 
-      if (selectedStartDateTime < currentDate) {
-        valid = false
-        errorMsg = 'Время и дата доставки указаны в прошедшем времени'
-      }
-    } else {
+    //   if (selectedStartDateTime < currentDate) {
+    //     valid = false
+    //     errorMsg = 'Время и дата доставки указаны в прошедшем времени'
+    //   }
+
+    //   const userOffsetMinutes = new Date().getTimezoneOffset()
+    //   const userTimezoneOffsetHours = -userOffsetMinutes / 60
+    //   //console.log(convertToUTC(item.deliveryPeriodTime, userOffsetMinutes, item.deliveryPeriodDate))
+
+    //   // const timeDelivery = convertToUTC(item.deliveryPeriodTime, userOffsetMinutes)
+    //   // store.createProducts[index].deliveryPeriodTime = timeDelivery
+    //   // console.log('timeDelivery', store.createProducts[index].deliveryPeriodTime)
+    // } 
+    if(!item.deliveryPeriodDate || !item.deliveryPeriodTime) {
       valid = false
       errorMsg = 'Не у всех товаров указаны дата и время доставки'
       return
