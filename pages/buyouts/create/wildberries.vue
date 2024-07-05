@@ -207,7 +207,8 @@ async function openChecksModal() {
     const maxDate = new Date(item.dateRange[1])
     const minDay = minDate.getDate()
     const maxDay = maxDate.getDate()
-    if (minDay != maxDay) {
+
+    if (item.key && minDay != maxDay) {
       valid = false
       errorMsg = 'Выберите точную дату для выкупа под ключ ' + item.article
     }
