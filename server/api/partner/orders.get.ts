@@ -4,6 +4,39 @@ import { ObjectId } from 'mongodb';
 import { IResTable } from '~/data/types';
 import { Referral } from '~/server/lib/models/Referral';
 
+function getHistoryType(type: string) {
+    let result = ''
+    switch (type) {
+      case 'buyouts':
+        result = 'Выкуп'
+        break
+      case 'buyouts service':
+        result = 'Выкуп'
+        break
+      case 'review':
+        result = 'Отзыв'
+        break
+      case 'likeReview':
+        result = 'Лайк на отзыв'
+        break
+      case 'likeProduct':
+        result = 'Лайк на товар / бренд'
+        break
+      case 'cart':
+        result = 'Добавление в корзину'
+        break
+      case 'questionProduct':
+        result = 'Вопрос'
+        break
+      case 'deliveryStorage':
+        result = 'Штраф'
+        break
+        case 'reviewRemoving':
+          result = 'Удаление отзыва'
+    }
+    return result
+  }
+
 export default eventHandler(async (event) => {
 
     const user = await getAdminEntity(event)
@@ -84,7 +117,7 @@ export default eventHandler(async (event) => {
                     }}
             ])
             if(refHost[0]) {
-                inviter = "2-ой уровень " + refHost[0].inviter.username
+                inviter = refHost[0].inviter.username
             }
         }
 
@@ -93,7 +126,8 @@ export default eventHandler(async (event) => {
             refMp: ref.histInfo.mp || 'wildberries',
             refEmail: ref.refEmail,
             refLevel: inviter,
-            serviceType: ref.serviceType,
+            refLvl: ref.refLevel,
+            serviceType: getHistoryType(ref.serviceType),
             date: ref.date,
             serviceSum: ref.serviceSum,
             amount: ref.amount,
