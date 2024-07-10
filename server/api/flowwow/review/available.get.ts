@@ -121,10 +121,12 @@ export default eventHandler(async (event) => {
     ['male', 'Мужской'],
   ])
   const sex = (genders: string[]): string => {
-    for (const gen of genders) {
-      let foundGen = genderMap.get(gen.toLowerCase())
-      if (foundGen) return foundGen
-    }
+    // for (const gen of genders) {
+    //   console.log(gen);
+      
+    //   let foundGen = genderMap.get(gen.toLowerCase())
+    //   if (foundGen) return foundGen
+    // }
     return 'Нет'
   }
   const formated = readyForReview.map((deliveryForReview: any) => {
