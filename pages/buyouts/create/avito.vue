@@ -1,9 +1,18 @@
 <script setup lang="tsx">
+if (useMainStore().client.username !== 'test') {
+useMPStore().selectedMP = 'wildberries'
+useMPStore().selectedMP = 'wildberries'
+navigateTo('/buyouts/wildberries')
+}
+
+
 import { useNotification } from '@kyvg/vue3-notification'
 import { useWindowSize } from '@vueuse/core'
 import type { Rule } from '@/data/buyout/rules'
 import { rules } from '@/data/buyout/rules'
 import type { ISearchQueryChangeAvito } from '@/stores/avitoBuyout'
+
+
 
 const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
 const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>

@@ -1,4 +1,10 @@
 <script setup lang="tsx">
+if (useMainStore().client.username !== 'test') {
+useMPStore().selectedMP = 'wildberries'
+useMPStore().selectedMP = 'wildberries'
+navigateTo('/buyouts/wildberries')
+}
+
 import { useNotification } from '@kyvg/vue3-notification'
 import { useWindowSize } from '@vueuse/core'
 import type { Rule } from '@/data/buyout/rules'

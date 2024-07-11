@@ -17,6 +17,7 @@ const mps = [
     title: 'Ozon',
     value: 'ozon',
     category: 'товары и отели',
+    awaiting: store.client.username == 'test' ? false : true,
   },
   {
     title: 'Avito',

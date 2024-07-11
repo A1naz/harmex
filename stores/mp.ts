@@ -5,7 +5,6 @@ export const useMPStore = defineStore('mp', {
   state: () => ({
     selectedMP: 'wildberries' as String,
     MPTabs: [
-      { title: 'Ozon', value: 'ozon' },
       { title: 'Wildberries', value: 'wildberries' },
     ],
     MPTabsTest: [
@@ -16,7 +15,6 @@ export const useMPStore = defineStore('mp', {
     ],
     MPTabsAll: [
       { title: 'Все', value: 'all' },
-      { title: 'Ozon', value: 'ozon' },
       { title: 'Wildberries', value: 'wildberries' },
     ],
     MPTabsAllTest: [

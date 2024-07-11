@@ -32,6 +32,7 @@ export const useMPChange = defineStore('mpChange', {
       {
         title: 'Ozon',
         value: 'ozon',
+        test: true,
         tabs: [
           'buyouts',
           'delivery',
