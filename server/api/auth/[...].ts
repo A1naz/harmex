@@ -21,6 +21,8 @@ export default NuxtAuthHandler({
       const isSignIn = !!user
 
       if (isSignIn) {
+        console.log(token);
+        
         token.twoFaNeeded = (user as any)?.isTwoFaEnabled
           ? token.twoFaNeeded == false
             ? false
@@ -31,6 +33,7 @@ export default NuxtAuthHandler({
         token.username = user ? (user as any)?.username : ''
         token.balance = user ? (user as any)?.balance : 0
         token.isBanned = user ? (user as any)?.isBanned : false
+        token.newSession = true
       }
       return Promise.resolve(token)
     },
@@ -44,10 +47,9 @@ export default NuxtAuthHandler({
       if (found.isBanned == true) {
         return Promise.reject(new Error('User is banned'))
       }
-      if (found.terminateSession == true) {
-        found.terminateSession = false
-        await found.save()
-        return Promise.reject(new Error('Session terminated'))
+
+      if (found.username == 'test' && !token.newSession) {
+        return Promise.reject(new Error('User is banned'))
       }
 
       return Promise.resolve(session)
