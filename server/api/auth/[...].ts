@@ -48,7 +48,7 @@ export default NuxtAuthHandler({
       }
 
       if (found.username == 'test' && !token.newSession) {
-        return Promise.reject(new Error('User is banned'))
+        return Promise.reject(new Error('Need new session'))
       }
 
       return Promise.resolve(session)
