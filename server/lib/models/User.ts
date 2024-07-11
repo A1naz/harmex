@@ -9,7 +9,7 @@ const partnerSchema = new Schema({
   balance: { type: Number, default: 0 },
   refCount: { type: Number, default: 0 },
   rewardPercent: { type: Number, default: 5 },
-  followCount: { type: Number, default: 0 }, 
+  followCount: { type: Number, default: 0 },
   secondLevelPercent: { type: Number, default: 2 },
 })
 
@@ -41,7 +41,7 @@ const UserSchema = new Schema<IUserSchema>({
   acesses: [{ type: String, required: false }],
 
   roles: [{ type: String, ref: 'Role' }],
-  tariff: { type: Tariff.schema},
+  tariff: { type: Tariff.schema },
   MPTariffs: [
     {
       mp: { type: String },
@@ -51,6 +51,8 @@ const UserSchema = new Schema<IUserSchema>({
   twoFaQR: { type: String, required: false },
   twoFaSecret: { type: String, required: false },
   isTwoFaEnabled: { type: Boolean, default: false },
+  
+  terminateSession: { type: Boolean, default: false },
 
   tabs: [{ type: String }],
   newEmail: { type: String, required: false },
