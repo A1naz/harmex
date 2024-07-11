@@ -1,11 +1,4 @@
 <script setup lang="ts">
-if (useMainStore().client.username !== 'test') {
-useMPStore().selectedMP = 'wildberries'
-useMPStore().selectedMP = 'wildberries'
-navigateTo('/buyouts/wildberries')
-}
-
-
 import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({

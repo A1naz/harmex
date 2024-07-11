@@ -400,7 +400,6 @@ const customLinks = filters.map((filter) => ({
   slot: '/buyouts/wildberries',
   query: filter.params,
 }))
-
 </script>
 
 <template>

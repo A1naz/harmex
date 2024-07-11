@@ -1,19 +1,9 @@
 <script setup lang="ts">
-
-if (useMainStore().client.username !== 'test') {
-useMPStore().selectedMP = 'wildberries'
-useMPStore().selectedMP = 'wildberries'
-navigateTo('/buyouts/wildberries')
-}
-
-
 definePageMeta({
   layout: 'app',
   auth: true,
   title: 'Выкупы',
 })
-
-
 
 import { notify } from '@kyvg/vue3-notification'
 const removeModal = ref(false)
