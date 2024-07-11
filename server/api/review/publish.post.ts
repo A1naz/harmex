@@ -8,9 +8,18 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { buyoutuuid, deliveryid, rating, text, photos, date } = await readBody(
-    event
-  )
+  const {
+    buyoutuuid,
+    deliveryid,
+    serviceRating,
+    deliveryRating,
+    valuePerMoneyRating,
+    conformityRating,
+    text,
+    hiddenText,
+    photos,
+    date,
+  } = await readBody(event)
 
   if (text) {
     if (text.length < 10 || text.length > 1000) {
@@ -46,12 +55,16 @@ export default eventHandler(async (event) => {
       ''
     )
   )
-    
+
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
-    rating,
-    text,
+    serviceRating,
+    deliveryRating,
+    valuePerMoneyRating,
+    conformityRating,
+    publicComment: text,
+    hiddenComment: hiddenText ? true : false,
     date,
     user,
     delivery,
@@ -59,16 +72,18 @@ export default eventHandler(async (event) => {
     status: 'waiting',
     recipientphone: delivery.recipientphone,
   })
-  const res = await review.save()
-  delivery.reviewed = true
-  const saved = await delivery.save()
+  // const res = await review.save()
+  // delivery.reviewed = true
+  // await delivery.save()
+  console.log(review);
+  
+  return {
+    message: 'Отзыв успешно добавлен',
+  }
 
   await userLog(event, {
     documentType: DocuemntEnum.Review,
     documentId: res._id,
   })
 
-  return {
-    message: 'Отзыв успешно добавлен',
-  }
 })

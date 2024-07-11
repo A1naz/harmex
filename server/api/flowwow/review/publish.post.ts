@@ -2,7 +2,6 @@ import { Delivery } from '@/server/lib/models/flowwow/Delivery'
 import { Buyout } from '@/server/lib/models/flowwow/Buyout'
 import { Review } from '@/server/lib/models/flowwow/Review'
 import { DocuemntEnum } from '~/data/enums'
-import { log } from 'console'
 import { v4 as uuid } from 'uuid'
 const config = useRuntimeConfig()
 
@@ -13,33 +12,35 @@ export default eventHandler(async (event) => {
   const {
     buyoutuuid,
     deliveryid,
-    rating,
-    text,
-    photos,
+    serviceRating,
+    deliveryRating,
+    valuePerMoneyRating,
+    conformityRating,
+    publicComment,
+    hiddenComment,
     date,
-    videoKey,
-    video,
   } = await readBody(event)
 
-  if (text) {
-    if (text.length < 10 || text.length > 1000) {
+  if (publicComment) {
+    if (publicComment.length < 10 || publicComment.length > 1000) {
       throw createError({
         statusCode: 400,
         message:
-          'Текст отзыва должен быть длиннее 10 символов и не больше 1000',
+          'Публичный отзыв должен быть длиннее 10 символов и не больше 1000',
       })
     }
   }
-  if (rating < 4) {
-    throw createError({
-      statusCode: 400,
-      message:
-        'В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд',
-    })
+  if (hiddenComment) {
+    if (hiddenComment.length < 10 || hiddenComment.length > 1000) {
+      throw createError({
+        statusCode: 400,
+        message:
+          'Скрытый комментарий должен быть длиннее 10 символов и не больше 1000',
+      })
+    }
   }
 
   const buyout = await Buyout.findOne({ uuid: buyoutuuid })
-
   if (!buyout) {
     return createError({
       statusCode: 400,
@@ -49,7 +50,7 @@ export default eventHandler(async (event) => {
   const delivery = await Delivery.findOne({
     _id: deliveryid,
     idbuyout: buyout._id,
-    reviewed: false,
+    reviewed: { $ne: true },
   })
   if (!delivery) {
     return createError({
@@ -58,33 +59,32 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const images = photos.map((photo: any) =>
-    photo.public.replace(
-      config.public.DOMAIN_API_IMAGES_URL + 'reviewImages/',
-      ''
-    )
-  )
+  // const images = photos.map((photo: any) =>
+  //   photo.public.replace(
+  //     config.public.DOMAIN_API_IMAGES_URL + 'reviewImages/',
+  //     ''
+  //   )
+  // )
 
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
-    rating,
-    text,
+    serviceRating,
+    deliveryRating,
+    valuePerMoneyRating,
+    conformityRating,
+    publicComment,
+    hiddenComment,
     date,
     user,
     delivery,
-    images,
     status: 'waiting',
     recipientphone: delivery.recipientphone,
-    videoKey: videoKey !== 'reviewVideos/.' ? videoKey : '',
-    originalVideoName: video,
-    isVideoEnabled: video !== '',
-    createdAt: Date.now(),
     uuid: uuid(),
   })
   const res = await review.save()
   delivery.reviewed = true
-  const saved = await delivery.save()
+  await delivery.save()
 
   await userLog(event, {
     documentType: DocuemntEnum.Review,

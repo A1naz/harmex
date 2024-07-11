@@ -34,8 +34,12 @@ const inputs: any = {
 }
 
 const form = reactive({
-  text: '',
-  rating: 5,
+  publicComment: '',
+  hiddenComment: '',
+  valuePerMoneyRating: 5,
+  serviceRating: 5,
+  deliveryRating: 5,
+  conformityRating: 5,
   date: now.value,
   photos: [
     {
@@ -63,7 +67,7 @@ const form = reactive({
 })
 
 const textValidation = computed(() => {
-  return restrictUrl(form.text)
+  return restrictUrl(form.publicComment)
 })
 const textValidError = computed(() => {
   return textValidation.value
@@ -72,7 +76,7 @@ const textValidError = computed(() => {
 })
 
 function useDraft(draft: IReviewDraft) {
-  form.text = draft.text
+  form.publicComment = draft.publicComment
 }
 
 const defaultDelIndex = props.review.delivs.findIndex(
@@ -149,22 +153,22 @@ async function uploadToS3(event: Event, index: number) {
   const fileList = (event.target! as HTMLInputElement).files
   const files = Array.from(fileList!)
   if (!files) return
-  const img = new Image();
-  img.src = URL.createObjectURL(files[0]);
+  const img = new Image()
+  img.src = URL.createObjectURL(files[0])
 
-  img.onload = async function() {
+  img.onload = async function () {
     if (img.width < 337 || img.height < 450) {
       notify({
         title: 'Ошибка',
         text: 'Размер изображения должен быть не менее 337px по ширине и 450px по высоте',
         type: 'error',
         duration: 3000,
-      });
+      })
 
-      loadingIndex.value = null;
-      return;
+      loadingIndex.value = null
+      return
     }
-  
+
     if (
       files[0] &&
       files[0].name &&
@@ -220,8 +224,11 @@ const newFileId = ref('')
 
 async function clearForm() {
   form.date = new Date()
-  form.text = ''
-  form.rating = 5
+  form.publicComment = ''
+  form.valuePerMoneyRating = 5
+  form.serviceRating = 5
+  form.conformityRating = 5
+  form.deliveryRating = 5
 
   loadingIndex.value = null
   isUploading.value = false
@@ -553,31 +560,31 @@ function convertToMoscowTime(dateString: any): Date {
 
       <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-2 font-medium">Отзыв о товаре</div>
+          <div class="pb-2 font-medium">Скрытый комментарий</div>
 
           <textarea
-            v-model="form.text"
+            v-model="form.hiddenComment"
             class="textarea w-full textarea-md bg-base-200"
             placeholder="Например, хороший телефон"
           />
 
-          <div v-if="review.drafts" class="text-xs">
-            черновики:
-            <button
-              v-for="draft in review.drafts"
-              class="mx-1 text-primary hover:underline hover:cursor-pointer"
-              @click="useDraft(draft)"
-            >
-              <p v-if="draft.draftName">{{ draft.draftName }}</p>
-              <i v-else> {{ '<без названия>' }} </i>
-            </button>
-          </div>
+
+          <div class="text-error">{{ textValidError }}</div>
+        </div>
+        <div class="w-full">
+          <div class="pb-2 font-medium">Публичный отзыв</div>
+
+          <textarea
+            v-model="form.publicComment"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, хороший телефон"
+          />
 
           <div class="text-error">{{ textValidError }}</div>
         </div>
 
         <div>
-          <div class="font-medium">Рейтинг</div>
+          <div class="font-medium">Соответствие</div>
           <div class="relative w-full py-6 bg-base-100 rounded-lg">
             <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
             <div class="rating absolute left-0 top-3 gap-2">
@@ -603,14 +610,125 @@ function convertToMoscowTime(dateString: any): Date {
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 4"
+                @input="form.conformityRating = 4"
               />
               <input
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 checked
-                @input="form.rating = 5"
+                @input="form.conformityRating = 5"
+              />
+            </div>
+          </div>
+          <div class="font-medium">Цена/Качество</div>
+          <div class="relative w-full py-6 bg-base-100 rounded-lg">
+            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
+            <div class="rating absolute left-0 top-3 gap-2">
+              <input
+                type="button"
+                name="rating-3"
+                class="mask mask-star-2 bg-yellow-400"
+                @click="ratingAlert"
+              />
+              <input
+                type="button"
+                name="rating-3"
+                class="mask mask-star-2 bg-yellow-400"
+                @click="ratingAlert"
+              />
+              <input
+                type="button"
+                name="rating-3"
+                class="mask mask-star-2 bg-yellow-400"
+                @click="ratingAlert"
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                class="mask mask-star-2 bg-yellow-400"
+                @input="form.valuePerMoneyRating = 4"
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                class="mask mask-star-2 bg-yellow-400"
+                checked
+                @input="form.valuePerMoneyRating = 5"
+              />
+            </div>
+          </div>
+          <div class="font-medium">Сервис</div>
+          <div class="relative w-full py-6 bg-base-100 rounded-lg">
+            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
+            <div class="rating absolute left-0 top-3 gap-2">
+              <input
+                type="button"
+                name="rating-4"
+                class="mask mask-star-2 bg-yellow-400"
+                @click="ratingAlert"
+              />
+              <input
+                type="button"
+                name="rating-4"
+                class="mask mask-star-2 bg-yellow-400"
+                @click="ratingAlert"
+              />
+              <input
+                type="button"
+                name="rating-4"
+                class="mask mask-star-2 bg-yellow-400"
+                @click="ratingAlert"
+              />
+              <input
+                type="radio"
+                name="rating-4"
+                class="mask mask-star-2 bg-yellow-400"
+                @input="form.serviceRating = 4"
+              />
+              <input
+                type="radio"
+                name="rating-4"
+                class="mask mask-star-2 bg-yellow-400"
+                checked
+                @input="form.serviceRating = 5"
+              />
+            </div>
+          </div>
+          <div class="font-medium">Доставка</div>
+          <div class="relative w-full py-6 bg-base-100 rounded-lg">
+            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
+            <div class="rating absolute left-0 top-3 gap-2">
+              <input
+                type="button"
+                name="rating-5"
+                class="mask mask-star-2 bg-yellow-400"
+                @click="ratingAlert"
+              />
+              <input
+                type="button"
+                name="rating-5"
+                class="mask mask-star-2 bg-yellow-400"
+                @click="ratingAlert"
+              />
+              <input
+                type="button"
+                name="rating-5"
+                class="mask mask-star-2 bg-yellow-400"
+                @click="ratingAlert"
+              />
+              <input
+                type="radio"
+                name="rating-5"
+                class="mask mask-star-2 bg-yellow-400"
+                @input="form.deliveryRating = 4"
+              />
+              <input
+                type="radio"
+                name="rating-5"
+                class="mask mask-star-2 bg-yellow-400"
+                checked
+                @input="form.deliveryRating = 5"
               />
             </div>
           </div>
@@ -628,9 +746,7 @@ function convertToMoscowTime(dateString: any): Date {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : $dayjs(form.date).format(
-                      'DD.MM.YYYY HH:mm'
-                    )
+                  : $dayjs(form.date).format('DD.MM.YYYY HH:mm')
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
@@ -638,7 +754,7 @@ function convertToMoscowTime(dateString: any): Date {
             </div>
           </div>
         </div>
-        <div>
+        <!-- <div>
           <div class="font-medium">Фото</div>
           <p class="mb-2 text-sm font-light text-gray-500">
             Разрешены фото в формате PNG, JPG.
@@ -721,8 +837,8 @@ function convertToMoscowTime(dateString: any): Date {
               </div>
             </div>
           </ClientOnly>
-        </div>
-        <div class="flex flex-col">
+        </div> -->
+        <!-- <div class="flex flex-col">
           <label class="">
             <div
               class="flex justify-between h-16 cursor-pointer"
@@ -761,7 +877,7 @@ function convertToMoscowTime(dateString: any): Date {
               </div>
             </div>
           </label>
-        </div>
+        </div> -->
       </div>
       <div class="modal-action justify-between">
         <div>
