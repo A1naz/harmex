@@ -21,7 +21,6 @@ export default NuxtAuthHandler({
       const isSignIn = !!user
 
       if (isSignIn) {
-        console.log(token);
         
         token.twoFaNeeded = (user as any)?.isTwoFaEnabled
           ? token.twoFaNeeded == false
