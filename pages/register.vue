@@ -470,7 +470,7 @@ const toggleConfirmPassword = () => {
             />
           </div>
           <div>
-            <label for="email" class="block ml-1 mb-2 my-1 text-sm font-medium">
+            <!-- <label for="email" class="block ml-1 mb-2 my-1 text-sm font-medium">
               Фамилия
             </label>
             <input
@@ -508,7 +508,7 @@ const toggleConfirmPassword = () => {
               class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
               placeholder="Петрович"
               required="true"
-            />
+            /> -->
 
             <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
               Email

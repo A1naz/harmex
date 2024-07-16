@@ -22,15 +22,8 @@ export default eventHandler(async (event) => {
     orgName,
     orgOgrn,
     orgInn,
-    lastname,
-    name,
-    middleName,
     phoneNumber,
   } = body
-
-  if (!name || !lastname) {
-    return { status: 'error', error: 'Некорректное имя' }
-  }
 
   if (!email || !password)
     return { status: 'error', error: 'missing email or password' }
@@ -105,9 +98,9 @@ export default eventHandler(async (event) => {
     orgName,
     orgOgrn,
     orgInn,
-    lastname,
-    name,
-    middleName,
+    lastname: '',
+    name: '',
+    middleName: '',
     phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
     emailConfirmed: true,
   })

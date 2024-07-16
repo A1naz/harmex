@@ -31,7 +31,6 @@ export default eventHandler(async (event) => {
 
     confirm.date = new Date()
     await confirm.save()
-    
   } else {
     const newConfirm = new ConfirmInn({
       inn,
@@ -41,7 +40,7 @@ export default eventHandler(async (event) => {
 
     await newConfirm.save()
   }
-  
+
   // @ts-ignore
   const rawData: any = await $fetch(
     `https://app.marketmonstr.pro/api/organization/getData?inn=${inn}`
@@ -95,8 +94,5 @@ export default eventHandler(async (event) => {
     orgName,
     orgOgrn,
     orgInn,
-    name,
-    lastname,
-    middleName,
   }
 })
