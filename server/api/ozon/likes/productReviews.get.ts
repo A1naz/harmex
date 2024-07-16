@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const data: any = await $fetch('http://65.109.129.174:3211', {
+  const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     parseResponse: JSON.parse,
     body: {
@@ -30,10 +30,10 @@ export default eventHandler(async (event) => {
   }).catch((e) => {
     throw createError({
       statusCode: 404,
-      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+      message:
+        'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
     })
   })
-
 
   if (!data || data.status === 'error') {
     return {
