@@ -536,7 +536,7 @@ async function confirmCode() {
         </div>
       </div>
       <div class="flex flex-col gap-2.5 w-full mt-1">
-        <div class="w-full flex flex-col gap-2.5 xl:flex-row">
+        <!-- <div class="w-full flex flex-col gap-2.5 xl:flex-row">
           <input
             v-model="form.firstName"
             placeholder="Имя"
@@ -557,7 +557,7 @@ async function confirmCode() {
           >
             &nbsp
           </div>
-        </div>
+        </div> -->
 
         <div class="flex flex-col w-full gap-2.5 xl:flex-row">
           <input
