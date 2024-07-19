@@ -292,6 +292,7 @@ const updateSearchType = (filter: any) => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
+        disabled
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
           @click="navigateTo(`/productlikes/create/`)"
           @click.stop
@@ -413,12 +414,17 @@ const updateSearchType = (filter: any) => {
         </div>
       </div>
     </div>
+    <div class="text-red-500 ml-1 mt-2">
+      Функционал временно недоступен
+    </div>
     <div v-if="product_likes.length" class="mt-6">
       <div v-if="loading" class="flex justify-center">
         <div>
           <span class="loading loading-dots loading-lg text-primary"></span>
         </div>
       </div>
+
+      
       <table v-else class="table table-sm">
         <!-- head -->
 

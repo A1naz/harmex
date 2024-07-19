@@ -258,6 +258,7 @@ function changeFilter(e: any) {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
+        disabled
           @click="navigateTo(`/questions/create/`)"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
@@ -365,6 +366,9 @@ function changeFilter(e: any) {
           />
         </div>
       </div>
+    </div>
+    <div class="text-red-500 ml-1 mt-1">
+      Функционал временно недоступен
     </div>
     <!-- <div class="collapse collapse-plus bg-base-100 rounded-box mb-4 mt-6">
       <input type="checkbox" >

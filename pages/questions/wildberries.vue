@@ -51,7 +51,7 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && questions.value.length >= limit.value){
+  if (!end.value && isVisible && questions.value.length >= limit.value) {
     await getQuestions()
   }
 })
@@ -70,7 +70,7 @@ async function getQuestions() {
       skip: skip.value,
     },
   })
- if ((data.value as any)?.length === 0) {
+  if ((data.value as any)?.length === 0) {
     loading.value = false
     end.value = true
     return
@@ -79,7 +79,7 @@ async function getQuestions() {
     questions.value = [...questions.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -161,7 +161,7 @@ async function resumeStatus(item: any) {
     },
     watch: false,
   })
-  if (error.value){
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -195,12 +195,10 @@ onMounted(() => {
   }
 })
 
-
-
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -263,6 +261,7 @@ function changeFilter(e: any) {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
+        disabled
           @click="navigateTo(`/questions/create/`)"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
@@ -369,6 +368,9 @@ function changeFilter(e: any) {
           />
         </div>
       </div>
+    </div>
+    <div class="text-red-500 ml-1 mt-1">
+      Функционал временно недоступен
     </div>
     <!-- <div class="collapse collapse-plus bg-base-100 rounded-box mb-4 mt-6">
       <input type="checkbox" >
@@ -481,8 +483,12 @@ function changeFilter(e: any) {
                 >
                   {{ getStatus(item.status) }}
                 </div>
-                <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
-                  Возобновить  
+                <button
+                  v-if="item.status === 'nofunds'"
+                  class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20"
+                  @click="resumeStatus(item)"
+                >
+                  Возобновить
                 </button>
               </td>
               <td class="text-center border-r border-primary border-opacity-5">
@@ -490,11 +496,7 @@ function changeFilter(e: any) {
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
                   <!-- {{ defaultDateShort(item.createdDate) }} -->
-                  {{ 
-                    $dayjs(item.createdDate).format(
-                      'DD.MM.YYYY'
-                    ) 
-                  }}
+                  {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
                 </div>
               </td>
               <td class="text-center border-r border-primary border-opacity-5">
@@ -503,11 +505,7 @@ function changeFilter(e: any) {
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
                   <!-- {{ defaultDateShort(item.publishDate) }} -->
-                  {{ 
-                    $dayjs(item.publishDate).format(
-                      'DD.MM.YYYY'
-                    ) 
-                  }}
+                  {{ $dayjs(item.publishDate).format('DD.MM.YYYY') }}
                 </div>
               </td>
               <td
@@ -543,13 +541,20 @@ function changeFilter(e: any) {
             </tr>
           </tbody>
         </table>
-        <div v-if="!loading" ref="target" class="flex justify-center items-center h-4" />
+        <div
+          v-if="!loading"
+          ref="target"
+          class="flex justify-center items-center h-4"
+        />
       </ClientOnly>
     </div>
     <div v-else-if="!loading">
       <Hero />
     </div>
-    <div v-if="loading" class="w-full mt-5 flex justify-center items-center h-80">
+    <div
+      v-if="loading"
+      class="w-full mt-5 flex justify-center items-center h-80"
+    >
       <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
   </div>
