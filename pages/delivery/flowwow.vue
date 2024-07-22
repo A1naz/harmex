@@ -92,6 +92,34 @@ async function exportReadyXLS() {
   fileLink.click()
   loadingExport.value = false
 }
+async function exportReadyUntilPenaltyXLS() {
+  loadingExport.value = true
+  const { data, error } = await useFetch(
+    '/api/flowwow/delivery/exportReadyUntilPenalty',
+    {
+      responseType: 'blob',
+    }
+  )
+  if (error.value) {
+    notify({
+      type: 'error',
+      title: 'Что-то пошло не так',
+      text: 'Не удалось экспортировать данные',
+    })
+    loadingExport.value = false
+    return
+  }
+  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
+  const fileLink = document.createElement('a')
+  fileLink.href = fileURL
+  fileLink.setAttribute(
+    'download',
+    'Готовы к выдаче Wildberries до штрафа.xlsx'
+  )
+  document.body.appendChild(fileLink)
+  fileLink.click()
+  loadingExport.value = false
+}
 async function exportXLS() {
   loadingExport.value = true
   const { data, error } = await useFetch('/api/flowwow/delivery/export', {
@@ -311,6 +339,7 @@ function changeFilter(e: any) {
               <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
               <li><a @click="exportXLS">Общая таблица Excel</a></li>
+              <li><a @click="exportReadyUntilPenaltyXLS">До штрафа</a></li>
             </ul>
           </div>
         </div>
@@ -555,6 +584,7 @@ function changeFilter(e: any) {
                 <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
                 <li><a @click="exportXLS">Общая таблица Excel</a></li>
+                <li><a @click="exportReadyUntilPenaltyXLS">До штрафа</a></li>
               </ul>
             </div>
           </div>
