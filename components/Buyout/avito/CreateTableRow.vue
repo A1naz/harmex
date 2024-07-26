@@ -144,7 +144,7 @@ const productQuantityModel = computed({
           class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
           @change="onSexChange"
         >
-          <option value="none">Нет</option>
+          <option value="Нет">Нет</option>
           <option value="male">Муж</option>
           <option value="female">Жен</option>
         </select>

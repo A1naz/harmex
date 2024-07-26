@@ -202,7 +202,7 @@ const productQuantityModel = computed({
             class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
             @change="onSexChange"
           >
-            <option value="none">Нет</option>
+            <option value="Нет">Нет</option>
             <option value="male">Муж</option>
             <option value="female">Жен</option>
           </select>
@@ -214,7 +214,7 @@ const productQuantityModel = computed({
           class="select select-sm select-bordered w-32 appearance-none"
           @change="onSexChange"
         >
-          <option value="none">Нет</option>
+          <option value="Нет">Нет</option>
           <option value="male">Муж</option>
           <option value="female">Жен</option>
         </select>
