@@ -65,7 +65,7 @@ const navbarData = ref([
         value: 'start',
       },
       {
-        title: 'Обновления',
+        title: 'Обзор кабинета',
         value: 'updates',
       },
       {
@@ -78,42 +78,42 @@ const navbarData = ref([
       },
     ],
   },
-  {
-    title: 'Справочная база',
-    value: 'guide',
-    tabs: [
-      {
-        title: 'Наша терминология',
-        value: 'terminology',
-      },
-      {
-        title: 'Рабочее пространство',
-        value: 'workspace',
-      },
-      {
-        title: 'Личный кабинет',
-        value: 'profile',
-      },
-    ],
-  },
-  {
-    title: 'Функции платформы',
-    value: 'functions',
-    tabs: [
-      {
-        title: 'Выкупы под ключ',
-        value: 'ff',
-      },
-      {
-        title: 'Выкупы+забор',
-        value: 'buyoutsPickup',
-      },
-      {
-        title: 'Забор',
-        value: 'pickup',
-      },
-    ],
-  },
+  // {
+  //   title: 'Справочная база',
+  //   value: 'guide',
+  //   tabs: [
+  //     {
+  //       title: 'Наша терминология',
+  //       value: 'terminology',
+  //     },
+  //     {
+  //       title: 'Рабочее пространство',
+  //       value: 'workspace',
+  //     },
+  //     {
+  //       title: 'Личный кабинет',
+  //       value: 'profile',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'Функции платформы',
+  //   value: 'functions',
+  //   tabs: [
+  //     {
+  //       title: 'Выкупы под ключ',
+  //       value: 'ff',
+  //     },
+  //     {
+  //       title: 'Выкупы+забор',
+  //       value: 'buyoutsPickup',
+  //     },
+  //     {
+  //       title: 'Забор',
+  //       value: 'pickup',
+  //     },
+  //   ],
+  // },
 ])
 
 const filteredNavbarData = computed(() => {

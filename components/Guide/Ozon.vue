@@ -29,7 +29,11 @@ const closeOtherInputs = (input: string) => {
 <template>
   <div class="flex flex-col gap-4 px-7 pb-20 w-full overflow-y-auto">
     <div class="font-bold text-2xl mb-4">Ozon</div>
+     <div class="hero text-xl">
 
+       В разработке...
+      </div>
+<!-- 
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
@@ -432,7 +436,7 @@ const closeOtherInputs = (input: string) => {
           />
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
