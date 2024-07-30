@@ -10,13 +10,30 @@ const liData = [
   'Используйте для рекомендаций наши материалы или на основе них создавайте свои',
   'Тестируйте разные стратегии и анализируйте, что срабатывает лучше всего',
 ]
+
+const inputs = reactive<any>({
+  first: false,
+  second: false,
+})
+
+const closeOtherInputs = (input: string) => {
+  Object.keys(inputs).forEach((key: any) => {
+    if (key !== input) {
+      inputs[key] = false
+    }
+  })
+}
 </script>
 
 <template>
   <div class="flex flex-col gap-4 w-full overflow-y-auto pb-20 px-5">
     <div class="flex flex-col gap-4 text-xl font-bold px-2">С чего начать</div>
     <div class="divider w-full my-0"></div>
-    <div tabindex="0" class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none">
+    <div
+      @click="closeOtherInputs('first')"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+    >
+      <input type="checkbox" v-model="inputs.first" />
       <div class="collapse-title text-lg font-bold">Введение</div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -46,7 +63,11 @@ const liData = [
         </div>
       </div>
     </div>
-    <div tabindex="0" class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none">
+    <div
+      @click="closeOtherInputs('second')"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+    >
+      <input type="checkbox" v-model="inputs.second" />
       <div class="collapse-title text-lg font-bold">Рекомендации</div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -62,7 +83,6 @@ const liData = [
         </div>
       </div>
     </div>
-    
   </div>
 </template>
 

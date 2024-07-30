@@ -59,6 +59,30 @@ const liDdsData = [
   'Скачайте Excel-таблицу',
   'Изучите данные внутри Excel-таблицы',
 ]
+
+const inputs = reactive<any>({
+  first: false,
+  second: false,
+  third: false,
+  fourth: false,
+  fifth: false,
+  sixth: false,
+  seventh: false,
+  eighth: false,
+  ninth: false,
+  tenth: false,
+  eleventh: false,
+  twelfth: false,
+  thirteenth: false,
+})
+
+const closeOtherInputs = (input: string) => {
+  Object.keys(inputs).forEach((key: any) => {
+    if (key !== input) {
+      inputs[key] = false
+    }
+  })
+}
 </script>
 
 <template>
@@ -68,7 +92,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('first')"
     >
+      <input tabindex="0" type="checkbox" v-model="inputs.first" />
       <div class="collapse-title text-lg font-bold">
         Как заказать услугу Выкупы под ключ
       </div>
@@ -161,7 +187,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('third')"
     >
+      <input type="checkbox"  v-model="inputs.third"/>
       <div class="collapse-title text-lg font-bold">
         Выкуп осуществляется с СПП или без СПП на WB?
       </div>
@@ -207,7 +235,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('fourth')"
     >
+      <input type="checkbox"  v-model="inputs.fourth"/>
       <div class="collapse-title text-lg font-bold">
         Выкуп уходит в Архив, что делать?
       </div>
@@ -249,7 +279,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('fifth')"
     >
+      <input type="checkbox"  v-model="inputs.fifth"/>
       <div class="collapse-title text-lg font-bold">
         Выкуп на Паузе, что делать?
       </div>
@@ -265,7 +297,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('sixth')"
     >
+      <input type="checkbox"  v-model="inputs.sixth"/>
       <div class="collapse-title text-lg font-bold">
         Не можем забрать товар на ПВЗ, что делать?
       </div>
@@ -305,7 +339,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('seventh')"
     >
+      <input type="checkbox"  v-model="inputs.seventh"/>
       <div class="collapse-title text-lg font-bold">
         Отказались от товара на ПВЗ, что делать?
       </div>
@@ -344,7 +380,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('eighth')"
     >
+      <input type="checkbox"  v-model="inputs.eighth"/>
       <div class="collapse-title text-lg font-bold">
         Выкуп в статусе Завершен, что дальше?
       </div>
@@ -391,7 +429,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('ninth')"
     >
+      <input type="checkbox"  v-model="inputs.ninth"/>
       <div class="collapse-title text-lg font-bold">
         Не хотим больше выкупать, что делать?
       </div>
@@ -432,7 +472,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('tenth')"
     >
+      <input type="checkbox"  v-model="inputs.tenth"/>
       <div class="collapse-title text-lg font-bold">
         Как порекомендовать платформу?
       </div>
@@ -459,7 +501,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('eleventh')"
     >
+      <input type="checkbox"  v-model="inputs.eleventh"/>
       <div class="collapse-title text-lg font-bold">
         Как запустить выкупы с рекламы?
       </div>
@@ -486,64 +530,69 @@ const liDdsData = [
       </div>
     </div>
 
-
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('twelfth')"
     >
+      <input type="checkbox"  v-model="inputs.twelfth"/>
       <div class="collapse-title text-lg font-bold">
         Отзывы уходят в Отмену, что делать?
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
-        Средняя частота публикаций отзывов на платформе 91,1% в сутки.<br />
-        Чтобы ваши отзывы проходили модерацию маркетплейса, выполните простые
-        рекомендации:
-      </p>
-      <ul class="px-7">
-        <li v-for="(li, index) in liReviewData" class="my-1">
-          <span class="pr-3 text-md">{{ index + 1 }}.</span>
-          {{ li }}
-        </li>
-      </ul>
-      <nuxt-img
-        class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
-        width="800"
-        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/6.png`"
-      />
-      <nuxt-img
-        class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
-        width="400"
-        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/11.png`"
-      />
-      <nuxt-img
-        class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"  
-        width="600"
-        :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/12.png`"
-      />
+          Средняя частота публикаций отзывов на платформе 91,1% в сутки.<br />
+          Чтобы ваши отзывы проходили модерацию маркетплейса, выполните простые
+          рекомендации:
+        </p>
+        <ul class="px-7">
+          <li v-for="(li, index) in liReviewData" class="my-1">
+            <span class="pr-3 text-md">{{ index + 1 }}.</span>
+            {{ li }}
+          </li>
+        </ul>
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="800"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/6.png`"
+        />
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="400"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/11.png`"
+        />
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="600"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/12.png`"
+        />
       </div>
     </div>
 
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('thirteenth')"
     >
+      <input type="checkbox"  v-model="inputs.thirteenth"/>
       <div class="collapse-title text-lg font-bold">
         Нужны ДДС / Хэшы покупок товаров, что делать?
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
-        Данный формат выгрузки данных по оплаченным товарам, не доступен.<br />
-        Вы можете изучить все финансовые операции внутри нашей платформы:
-      </p>
-      <ul class="px-7">
-        <li v-for="(li, index) in liDdsData" class="my-1">
-          <span class="pr-3 text-md">{{ index + 1 }}.</span>
-          {{ li }}
-        </li>
-      </ul>
+          Данный формат выгрузки данных по оплаченным товарам, не доступен.<br />
+          Вы можете изучить все финансовые операции внутри нашей платформы:
+        </p>
+        <ul class="px-7">
+          <li v-for="(li, index) in liDdsData" class="my-1">
+            <span class="pr-3 text-md">{{ index + 1 }}.</span>
+            {{ li }}
+          </li>
+        </ul>
       </div>
     </div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
   </div>
 </template>
 

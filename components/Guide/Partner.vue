@@ -59,6 +59,30 @@ const liDdsData = [
   'Скачайте Excel-таблицу',
   'Изучите данные внутри Excel-таблицы',
 ]
+
+const inputs = reactive<any>({
+  first: false,
+  second: false,
+  third: false,
+  fourth: false,
+  fifth: false,
+  sixth: false,
+  seventh: false,
+  eighth: false,
+  ninth: false,
+  tenth: false,
+  eleventh: false,
+  twelfth: false,
+  thirteenth: false,
+})
+
+const closeOtherInputs = (input: string) => {
+  Object.keys(inputs).forEach((key: any) => {
+    if (key !== input) {
+      inputs[key] = false
+    }
+  })
+}
 </script>
 
 <template>
@@ -71,7 +95,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('first')"
     >
+      <input tabindex="0" type="checkbox" v-model="inputs.first" />
       <div class="collapse-title text-lg font-bold">
         Что такое партнерская программа?
       </div>
@@ -101,7 +127,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('second')"
     >
+      <input tabindex="0" type="checkbox" v-model="inputs.second" />
       <div class="collapse-title text-lg font-bold">
         Как работает партнерка?
       </div>
@@ -110,12 +138,12 @@ const liDdsData = [
           Получив доступ к партнерской программе у вас есть/будет личный кабинет
         </p>
         <p class="-py-7">
-          Постоянная ссылка на вход 
+          Постоянная ссылка на вход
           <a
-              class="link link-hover text-primary underline"
-              href="https://app.marketmonstr.pro/auth"
-              >https://app.marketmonstr.pro/auth
-            </a>
+            class="link link-hover text-primary underline"
+            href="https://app.marketmonstr.pro/auth"
+            >https://app.marketmonstr.pro/auth
+          </a>
         </p>
         <p class="-py-7">
           В меню Партнерская программа находится ваша индивидуальная ссылка для
@@ -177,9 +205,11 @@ const liDdsData = [
     </div>
 
     <div
+      @click="closeOtherInputs('third')"
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
     >
+      <input type="checkbox" v-model="inputs.third" />
       <div class="collapse-title text-lg font-bold">
         Где найти партнерскую ссылку?
       </div>
@@ -207,7 +237,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('fourth')"
     >
+      <input type="checkbox" v-model="inputs.fourth" />
       <div class="collapse-title text-lg font-bold">
         Сколько уровней в партнерке и какие условия?
       </div>
@@ -237,7 +269,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('fifth')"
     >
+      <input type="checkbox" v-model="inputs.fifth" />
       <div class="collapse-title text-lg font-bold">
         Как происходит оплата платформы?
       </div>
@@ -257,7 +291,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('sixth')"
     >
+      <input type="checkbox" v-model="inputs.sixth" />
       <div class="collapse-title text-lg font-bold">
         Как происходят выплаты вознаграждений?
       </div>
@@ -299,7 +335,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('seventh')"
     >
+      <input type="checkbox" v-model="inputs.seventh" />
       <div class="collapse-title text-lg font-bold">Зачем мне партнерка?</div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -324,7 +362,9 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('eighth')"
     >
+      <input type="checkbox" v-model="inputs.eighth" />
       <div class="collapse-title text-lg font-bold">Преимущества партнерки</div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">Партнерская программа Market Monstr позволит вам:</p>
@@ -346,7 +386,10 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+
+      @click="closeOtherInputs('ninth')"
     >
+      <input type="checkbox" v-model="inputs.ninth" />
       <div class="collapse-title text-lg font-bold">
         Отличия партнерки Market Monstr от других
       </div>
@@ -370,7 +413,10 @@ const liDdsData = [
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+
+      @click="closeOtherInputs('tenth')"
     >
+      <input type="checkbox" v-model="inputs.tenth" />
       <div class="collapse-title text-lg font-bold">
         Как рекомендовать продукт
       </div>

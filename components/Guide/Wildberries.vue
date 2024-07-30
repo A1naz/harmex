@@ -1,5 +1,24 @@
 <script setup lang="ts">
 const liArchiveQuestData = []
+
+const inputs = reactive<any>({
+  first: false,
+  second: false,
+  third: false,
+  fourth: false,
+  fifth: false,
+  sixth: false,
+  seventh: false,
+  eighth: false,
+})
+
+const closeOtherInputs = (input: string) => {
+  Object.keys(inputs).forEach((key: any) => {
+    if (key !== input) {
+      inputs[key] = false
+    }
+  })
+}
 </script>
 
 <template>
@@ -9,7 +28,10 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('first')"
     >
+      <input tabindex="0" type="checkbox" v-model="inputs.first" />
+
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Подписка</div>
       </div>
@@ -27,7 +49,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('second')"
     >
+      <input tabindex="0" type="checkbox" v-model="inputs.second" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Пополнение баланса</div>
       </div>
@@ -57,7 +81,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('third')"
     >
+      <input tabindex="0" type="checkbox" v-model="inputs.third" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Выкуп</div>
       </div>
@@ -155,9 +181,10 @@ const liArchiveQuestData = []
     </div>
 
     <div
-      tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('fourth')"
     >
+      <input type="checkbox" v-model="inputs.fourth" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Забор</div>
       </div>
@@ -218,7 +245,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('fifth')"
     >
+      <input type="checkbox" v-model="inputs.fifth" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Отзыв</div>
       </div>
@@ -279,7 +308,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('sixth')"
     >
+      <input type="checkbox" v-model="inputs.sixth" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Лайки</div>
       </div>
@@ -315,6 +346,7 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('seventh')"
     >
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Вопросы</div>
@@ -347,7 +379,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('eighth')"
     >
+      <input type="checkbox" v-model="inputs.eighth" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Корзина</div>
       </div>
