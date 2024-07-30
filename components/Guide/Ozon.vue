@@ -1,5 +1,29 @@
 <script setup lang="ts">
 const liArchiveQuestData = []
+
+const inputs = reactive<any>({
+  first: false,
+  second: false,
+  third: false,
+  fourth: false,
+  fifth: false,
+  sixth: false,
+  seventh: false,
+  eighth: false,
+  ninth: false,
+  tenth: false,
+  eleventh: false,
+  twelfth: false,
+  thirteenth: false,
+})
+
+const closeOtherInputs = (input: string) => {
+  Object.keys(inputs).forEach((key: any) => {
+    if (key !== input) {
+      inputs[key] = false
+    }
+  })
+}
 </script>
 
 <template>
@@ -9,7 +33,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('first')"
     >
+      <input tabindex="0" type="checkbox" v-model="inputs.first" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Подписка</div>
       </div>
@@ -27,7 +53,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+       @click="closeOtherInputs('second')"
     >
+      <input tabindex="0" type="checkbox" v-model="inputs.second" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Пополнение баланса</div>
       </div>
@@ -57,7 +85,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+       @click="closeOtherInputs('third')"
     >
+      <input tabindex="0" type="checkbox" v-model="inputs.third" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">
           Выкуп (товара, скидка, отель)
@@ -172,7 +202,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+       @click="closeOtherInputs('third')"
     >
+    <input tabindex="0" type="checkbox" v-model="inputs.third" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Забор</div>
       </div>
@@ -239,7 +271,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+       @click="closeOtherInputs('fourth')"
     >
+    <input tabindex="0" type="checkbox" v-model="inputs.fourth" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Отзыв</div>
       </div>
@@ -295,7 +329,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+       @click="closeOtherInputs('fifth')"
     >
+    <input tabindex="0" type="checkbox" v-model="inputs.fifth" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Лайки</div>
       </div>
@@ -331,7 +367,9 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+       @click="closeOtherInputs('sixth')"
     >
+    <input tabindex="0" type="checkbox" v-model="inputs.sixth" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Вопросы</div>
       </div>
@@ -363,9 +401,11 @@ const liArchiveQuestData = []
     <div
       tabindex="0"
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+       @click="closeOtherInputs('seventh')"
     >
+    <input tabindex="0" type="checkbox" v-model="inputs.seventh" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-xl font-semibold">Корзина</div>ывы
+        <div class="flex gap-4 text-xl font-semibold">Корзина</div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
