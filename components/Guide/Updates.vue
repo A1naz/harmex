@@ -351,6 +351,7 @@ const closeOtherInputs = (input: string) => {
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
       @click="closeOtherInputs('seventh')"
     >
+    <input type="checkbox" v-model="inputs.seventh" />
       <div class="collapse-title relative text-xl font-medium">
         <div class="flex gap-4 text-xl font-semibold">Как опубликовать вопрос</div>
       </div>
@@ -386,7 +387,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox" v-model="inputs.eighth" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-xl font-semibold">Как добавить в корзину товар</div>
+        <div class="flex gap-4 text-xl font-semibold">Как добавить товар в Корзину</div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">

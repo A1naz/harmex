@@ -191,7 +191,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.third"/>
       <div class="collapse-title text-lg font-bold">
-        Выкуп осуществляется с СПП или без СПП на WB?
+        Выкуп осуществляется с СПП или без СПП на WB
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -239,7 +239,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.fourth"/>
       <div class="collapse-title text-lg font-bold">
-        Выкуп уходит в Архив, что делать?
+        Выкуп уходит в Архив, что делать
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -283,7 +283,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.fifth"/>
       <div class="collapse-title text-lg font-bold">
-        Выкуп на Паузе, что делать?
+        Выкуп на Паузе, что делать
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -301,7 +301,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.sixth"/>
       <div class="collapse-title text-lg font-bold">
-        Не можем забрать товар на ПВЗ, что делать?
+        Не можем забрать товар на ПВЗ, что делать
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -343,7 +343,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.seventh"/>
       <div class="collapse-title text-lg font-bold">
-        Отказались от товара на ПВЗ, что делать?
+        Отказались от товара на ПВЗ, что делать
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -384,7 +384,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.eighth"/>
       <div class="collapse-title text-lg font-bold">
-        Выкуп в статусе Завершен, что дальше?
+        Выкуп в статусе Завершен, что дальше
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -433,7 +433,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.ninth"/>
       <div class="collapse-title text-lg font-bold">
-        Не хотим больше выкупать, что делать?
+        Не хотим больше выкупать, что делать
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -476,7 +476,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.tenth"/>
       <div class="collapse-title text-lg font-bold">
-        Как порекомендовать платформу?
+        Как порекомендовать платформу
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -505,7 +505,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.eleventh"/>
       <div class="collapse-title text-lg font-bold">
-        Как запустить выкупы с рекламы?
+        Как запустить выкупы с рекламы
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -537,7 +537,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.twelfth"/>
       <div class="collapse-title text-lg font-bold">
-        Отзывы уходят в Отмену, что делать?
+        Отзывы уходят в Отмену, что делать
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
@@ -576,7 +576,7 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox"  v-model="inputs.thirteenth"/>
       <div class="collapse-title text-lg font-bold">
-        Нужны ДДС / Хэшы покупок товаров, что делать?
+        Нужны ДДС / Хэшы покупок товаров, что делать
       </div>
       <div class="collapse-content flex flex-col gap-3">
         <p class="-py-7">
