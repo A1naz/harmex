@@ -16,13 +16,16 @@ export default eventHandler(async (event) => {
   const article = params.article
 
   //@ts-ignore
-  const data: any = await $fetch('http://95.163.249.133:4141', {
+  const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     body: {
       type: 'ozonProduct',
       url: `https://www.ozon.ru/product/${article}/`,
+      token: config.PARSER_TOKEN,
     },
   }).catch((e) => {
+    console.log(e);
+    
     throw createError({
       statusCode: 404,
       message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'

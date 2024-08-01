@@ -25,6 +25,10 @@ const urlError = ref(false)
 const modalShow = ref<boolean>(false)
 const route = useRoute()
 const router = useRouter()
+const logModal = ref(false)
+const selectedQuest = ref({
+  uuid: '',
+})
 
 const search = reactive({
   text: '',
@@ -47,13 +51,14 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && questions.value.length >= limit.value){
+  if (!end.value && isVisible && questions.value.length >= limit.value) {
     await getQuestions()
   }
 })
 
 async function getQuestions() {
   modalShow.value = false
+  //@ts-ignore
   const { data, error } = await useFetch('/api/wildberries/questions/get', {
     method: 'GET',
     query: {
@@ -65,7 +70,7 @@ async function getQuestions() {
       skip: skip.value,
     },
   })
- if ((data.value as any)?.length === 0) {
+  if ((data.value as any)?.length === 0) {
     loading.value = false
     end.value = true
     return
@@ -74,7 +79,7 @@ async function getQuestions() {
     questions.value = [...questions.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -142,6 +147,7 @@ function getStatus(status: string) {
   else if (status === 'busy') return 'В работе'
   else if (status === 'completed') return 'Завершен'
   else if (status === 'nofunds') return 'Недостаточно средств'
+  else if (status === 'archived') return 'Архивирован'
   else if (status === 'spam') {
     return 'Определен как спам'
   }
@@ -155,7 +161,7 @@ async function resumeStatus(item: any) {
     },
     watch: false,
   })
-  if (error.value){
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -189,12 +195,10 @@ onMounted(() => {
   }
 })
 
-
-
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -257,6 +261,7 @@ function changeFilter(e: any) {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
+        disabled
           @click="navigateTo(`/questions/create/`)"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
@@ -278,6 +283,7 @@ function changeFilter(e: any) {
             { title: 'Активные', value: 'created' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -319,7 +325,7 @@ function changeFilter(e: any) {
             { title: 'Все вопросы', value: 'all' },
             { title: 'Активные', value: 'created' },
             { title: 'Завершенные', value: 'completed' },
-            { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -363,6 +369,9 @@ function changeFilter(e: any) {
         </div>
       </div>
     </div>
+    <div class="text-red-500 ml-1 mt-1">
+      Функционал временно недоступен
+    </div>
     <!-- <div class="collapse collapse-plus bg-base-100 rounded-box mb-4 mt-6">
       <input type="checkbox" >
 
@@ -373,7 +382,6 @@ function changeFilter(e: any) {
         
       </div>
     </div> -->
-
     <div v-if="questions.length && !loading" class="mt-4 rounded-lg">
       <ClientOnly>
         <table class="table table-sm">
@@ -388,6 +396,7 @@ function changeFilter(e: any) {
               <th class="text-center">Статус</th>
               <th class="text-center">Дата создания</th>
               <th class="text-center">Дата публикации</th>
+              <th class="text-center">Инфо</th>
             </tr>
           </thead>
           <tbody class="rounded-b-lg">
@@ -461,7 +470,7 @@ function changeFilter(e: any) {
                 <div
                   :class="{
                     'text-red-500 rounded-full py-1 px-2  text-center':
-                      item.status === 'nofunds',
+                      item.status === 'nofunds' || item.status === 'archived',
                     'text-error rounded-full py-1 px-2  text-center':
                       item.status === 'spam',
                     'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
@@ -474,8 +483,12 @@ function changeFilter(e: any) {
                 >
                   {{ getStatus(item.status) }}
                 </div>
-                <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
-                  Возобновить  
+                <button
+                  v-if="item.status === 'nofunds'"
+                  class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20"
+                  @click="resumeStatus(item)"
+                >
+                  Возобновить
                 </button>
               </td>
               <td class="text-center border-r border-primary border-opacity-5">
@@ -483,40 +496,69 @@ function changeFilter(e: any) {
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
                   <!-- {{ defaultDateShort(item.createdDate) }} -->
-                  {{ 
-                    $dayjs(item.createdDate).format(
-                      'DD.MM.YYYY'
-                    ) 
-                  }}
+                  {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
                 </div>
               </td>
-              <td class="text-center border-opacity-5">
+              <td class="text-center border-r border-primary border-opacity-5">
                 <div
                   v-if="item.publishDate"
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
                   <!-- {{ defaultDateShort(item.publishDate) }} -->
-                  {{ 
-                    $dayjs(item.publishDate).format(
-                      'DD.MM.YYYY'
-                    ) 
-                  }}
+                  {{ $dayjs(item.publishDate).format('DD.MM.YYYY') }}
+                </div>
+              </td>
+              <td
+                class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
+              >
+                <div class="rounded-lg p-0.5 text-center">
+                  <button
+                    @click=";[(selectedQuest = item), (logModal = true)]"
+                    class="btn btn-primary btn-sm btn-square mb-2"
+                  >
+                    <svg
+                      data-v-f136eeaa=""
+                      data-v-a5d236d9=""
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      aria-hidden="true"
+                      role="img"
+                      class="icon"
+                      width="20px"
+                      height="20px"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </button>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
-        <div v-if="!loading" ref="target" class="flex justify-center items-center h-4" />
+        <div
+          v-if="!loading"
+          ref="target"
+          class="flex justify-center items-center h-4"
+        />
       </ClientOnly>
     </div>
     <div v-else-if="!loading">
       <Hero />
     </div>
-    <div v-if="loading" class="w-full mt-5 flex justify-center items-center h-80">
+    <div
+      v-if="loading"
+      class="w-full mt-5 flex justify-center items-center h-80"
+    >
       <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
-
   </div>
+  <LogModal :info="selectedQuest" :state="logModal" @close="logModal = false" />
 </template>
 
 <style scoped></style>

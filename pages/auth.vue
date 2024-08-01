@@ -65,7 +65,7 @@ async function login() {
   } else {
     localStorage.removeItem('referralCode')
     store.getClient()
-    return navigateTo('/buyouts', { external: true })
+    return navigateTo('/guide', { external: true })
   }
   loading.value = false
 }

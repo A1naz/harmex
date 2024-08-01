@@ -6,7 +6,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  console.log('userPVZS')
+  const { date }: any = getQuery(event)
 
   const pvzs: any = await FFPVZ.findOne({ user })
 
@@ -17,9 +17,9 @@ export default eventHandler(async (event) => {
     }
   }
 
-  const trueDate = new Date(new Date().setHours(0, 0, 0, 0))
-  const minDate = new Date(new Date().setHours(trueDate.getHours() - 6))
-  const maxDate = new Date(new Date().setHours(trueDate.getHours() + 6))
+  const trueDate = new Date(new Date(date).setHours(0, 0, 0, 0))
+  const minDate = new Date(new Date(trueDate).setHours(trueDate.getHours() - 6))
+  const maxDate = new Date(new Date(trueDate).setHours(trueDate.getHours() + 6))
   const rmDate = new Date(new Date().setHours(trueDate.getHours() - 24))
 
   pvzs.pvzs = pvzs.pvzs.filter((item: any) => new Date(item.date) > rmDate)

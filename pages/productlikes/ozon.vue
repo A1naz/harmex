@@ -25,6 +25,10 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
+const logModal = ref(false)
+const selectedLike = ref({
+  uuid: '',
+})
 
 const search = reactive({
   text: '',
@@ -288,6 +292,7 @@ const updateSearchType = (filter: any) => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
+        disabled
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
           @click="navigateTo(`/productlikes/create/`)"
           @click.stop
@@ -306,7 +311,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -323,6 +328,7 @@ const updateSearchType = (filter: any) => {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -354,7 +360,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px]'"
           :status-text="'Ozon'"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="changeFilter"
         />
 
@@ -366,6 +372,7 @@ const updateSearchType = (filter: any) => {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -407,12 +414,17 @@ const updateSearchType = (filter: any) => {
         </div>
       </div>
     </div>
+    <div class="text-red-500 ml-1 mt-2">
+      Функционал временно недоступен
+    </div>
     <div v-if="product_likes.length" class="mt-6">
       <div v-if="loading" class="flex justify-center">
         <div>
           <span class="loading loading-dots loading-lg text-primary"></span>
         </div>
       </div>
+
+      
       <table v-else class="table table-sm">
         <!-- head -->
 
@@ -426,7 +438,8 @@ const updateSearchType = (filter: any) => {
             <th class="text-center">Количество</th>
             <th class="text-center">Статус</th>
             <th class="text-center">Дата создания</th>
-            <th class="text-center rounded-tr-2xl">Дата завершения</th>
+            <th class="text-center">Дата завершения</th>
+            <th class="text-center rounded-tr-2xl ">Инфо</th>
           </tr>
         </thead>
         <tbody>
@@ -540,7 +553,6 @@ const updateSearchType = (filter: any) => {
             </td>
             <td
               class="text-center border-r border-primary border-opacity-5 bg-base-100"
-              :class="{ 'rounded-br-2xl': index === product_likes.length - 1 }"
             >
               <div
                 v-if="item.endedDate"
@@ -549,6 +561,37 @@ const updateSearchType = (filter: any) => {
               {{ $dayjs(item.endedDate).format(
                       'DD.MM.YYYY'
                     ) }}
+              </div>
+            </td>
+            <td
+              class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
+              :class="{ 'rounded-br-2xl': index === product_likes.length - 1 }"
+            >
+              <div class="rounded-lg p-0.5 text-center">
+                <button
+                  @click=";[(selectedLike = item), (logModal = true)]"
+                  class="btn btn-primary btn-sm btn-square mb-2"
+                >
+                  <svg
+                    data-v-f136eeaa=""
+                    data-v-a5d236d9=""
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    aria-hidden="true"
+                    role="img"
+                    class="icon"
+                    width="20px"
+                    height="20px"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
               </div>
             </td>
           </tr>
@@ -583,6 +626,7 @@ const updateSearchType = (filter: any) => {
       </div>
     </div>
   </div>
+  <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
 </template>
 
 <style scoped>

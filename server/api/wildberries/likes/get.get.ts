@@ -19,6 +19,7 @@ export default eventHandler(async (event) => {
     case 'completed':
     case 'nofunds':
     case 'work':
+    case 'archived':
       searchQuery.status = { $regex: statusQuery, $options: 'i' }
       break
   }

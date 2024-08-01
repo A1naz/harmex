@@ -2,7 +2,7 @@
 
 const baseUrl = '/'
 const description =
-  'Уникальные самовыкупы для Маркет плейсов с MARKETMONSTR - Повысьте репутацию и продажи с нашим сервисом.'
+  'Повысьте репутацию и продажи на маркетплейсах с MarketMonstr.'
 
 export default defineNuxtConfig({
   app: {
@@ -185,6 +185,7 @@ export default defineNuxtConfig({
     WB_DB_URI: process.env.WB_DB_URI,
     AVITO_DB_URI: process.env.AVITO_DB_URI,
     OZON_DB_URI: process.env.OZON_DB_URI,
+    FLOWWOW_DB_URI: process.env.FLOWWOW_DB_URI,
     SECRET: process.env.SECRET,
     smtpHost: process.env.smtpHost,
     smtpPort: process.env.smtpPort,
@@ -209,6 +210,7 @@ export default defineNuxtConfig({
     ZVONOK_CAMPAIGN_ID: process.env.ZVONOK_CAMPAIGN_ID,
     DADATA_TOKEN: process.env.DADATA_TOKEN,
     DADATA_SECRET: process.env.DADATA_SECRET,
+    PARSER_TOKEN: process.env.PARSER_TOKEN,
   },
 
   security: {

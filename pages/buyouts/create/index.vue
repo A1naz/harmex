@@ -28,7 +28,7 @@ const mps = [
     title: 'Flowwow',
     value: 'flowwow',
     category: 'товары',
-    awaiting: true,
+    awaiting: store.client.username == 'test' ? false : true,
   },
   {
     title: 'Магнит Маркет',

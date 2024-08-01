@@ -23,6 +23,11 @@ interface Item {
   rules: Rule[]
   purchaseSoon: boolean
   key: boolean
+  pointId: string | number
+  pointCoordinates: {
+    lat: number
+    lon: number
+  }
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -121,6 +126,8 @@ export default eventHandler(async (event) => {
       ff: product.key || false,
       pointRegion,
       pointDistrict,
+      pointId: product.pointId,
+      pointCoordinates: product.pointCoordinates,
     })
 
     await buyout.save()

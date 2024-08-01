@@ -45,8 +45,6 @@ const selectOptions = [
 
 const configModalBase: ConfigModal[] = [
   { field: 'username', header: 'Ник', type: FieldsType.text },
-  { field: 'firstName', header: 'Имя', type: FieldsType.text },
-  { field: 'lastName', header: 'Фамилия', type: FieldsType.text },
   { field: 'email', header: 'Номер телефона', type: FieldsType.text },
   {
     field: 'allowedPathes',
@@ -352,10 +350,10 @@ const getPostName = (post: string) => {
                     <div class="text-primary">
                       @{{ item.username }}
                     </div>
-                    <div class="text-lg">
+                    <!-- <div class="text-lg">
                       {{ item.firstName + " " + item.lastName }}
-                    </div>
-                    <div class="flex flex-col text-sm gap-2">
+                    </div> -->
+                    <div class="flex flex-col text-lg gap-2">
                       <span>Номер телефона:</span>
                       <span>{{'+' + item.email.slice(1, 2) + " (" + item.email.slice(2, 5) + ") " + item.email.slice(5, 8) + "-" + item.email.slice(8, 10) + "-" + item.email.slice(10, 12) }}</span>
 

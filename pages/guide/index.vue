@@ -65,7 +65,7 @@ const navbarData = ref([
         value: 'start',
       },
       {
-        title: 'Обновления',
+        title: 'Обзор кабинета',
         value: 'updates',
       },
       {
@@ -78,42 +78,42 @@ const navbarData = ref([
       },
     ],
   },
-  {
-    title: 'Справочная база',
-    value: 'guide',
-    tabs: [
-      {
-        title: 'Наша терминология',
-        value: 'terminology',
-      },
-      {
-        title: 'Рабочее пространство',
-        value: 'workspace',
-      },
-      {
-        title: 'Личный кабинет',
-        value: 'profile',
-      },
-    ],
-  },
-  {
-    title: 'Функции платформы',
-    value: 'functions',
-    tabs: [
-      {
-        title: 'Выкупы под ключ',
-        value: 'ff',
-      },
-      {
-        title: 'Выкупы+забор',
-        value: 'buyoutsPickup',
-      },
-      {
-        title: 'Забор',
-        value: 'pickup',
-      },
-    ],
-  },
+  // {
+  //   title: 'Справочная база',
+  //   value: 'guide',
+  //   tabs: [
+  //     {
+  //       title: 'Наша терминология',
+  //       value: 'terminology',
+  //     },
+  //     {
+  //       title: 'Рабочее пространство',
+  //       value: 'workspace',
+  //     },
+  //     {
+  //       title: 'Личный кабинет',
+  //       value: 'profile',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'Функции платформы',
+  //   value: 'functions',
+  //   tabs: [
+  //     {
+  //       title: 'Выкупы под ключ',
+  //       value: 'ff',
+  //     },
+  //     {
+  //       title: 'Выкупы+забор',
+  //       value: 'buyoutsPickup',
+  //     },
+  //     {
+  //       title: 'Забор',
+  //       value: 'pickup',
+  //     },
+  //   ],
+  // },
 ])
 
 const filteredNavbarData = computed(() => {
@@ -181,10 +181,15 @@ const filteredMPList = computed(() => {
     <div class="flex gap-5 h-full w-full drop-shadow-sm">
       <div
         v-if="isMobileMenuVisible"
-        class="fixed inset-0 z-50 flex justify-end animate-slide-left"
+        class="fixed inset-0 z-50 flex justify-end h-[90vh] overflow-hidden"
       >
-        <div class="bg-base-100 w-[75%] h-full p-4 flex flex-col gap-2">
-          <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
+        <div
+          class="bg-base-100 w-[75%] p-0 flex flex-col gap-2 rounded-lg h-[84%] overflow-y-auto"
+        >
+          <div
+            v-for="tabs in filteredNavbarData"
+            class="flex flex-col gap-1 mx-4 mt-4 mb-4"
+          >
             <h4 class="px-2 text-sm text-[#6e6e73] font-semibold">
               {{ tabs.title }}
             </h4>
@@ -197,12 +202,12 @@ const filteredMPList = computed(() => {
                 class="w-4 h-4"
                 :src="`/icons/figma/guide/${tab.value}.svg`"
               />
-              <span class="text-xs text-base-content font-semibold truncate">{{
+              <span class="text-sm text-base-content font-semibold truncate">{{
                 tab.title
               }}</span>
             </button>
           </div>
-          <div class="flex flex-col gap-1">
+          <div class="flex flex-col gap-1 mx-4">
             <h4
               v-if="filteredMPList.length"
               class="px-2 text-sm text-[#6e6e73] font-semibold"
@@ -219,31 +224,35 @@ const filteredMPList = computed(() => {
                 class="w-4 h-4"
                 :src="`/icons/figma/guide/${page}.svg`"
               />
-              <span class="text-xs text-base-content font-semibold truncate">{{
+              <span class="text-sm text-base-content font-semibold truncate">{{
                 toUpperCaseFirstLetter(page)
               }}</span>
             </button>
           </div>
-          <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-3 w-full">
-          <a target="_blank" href="https://t.me/wb_soft_bot">
-            <div
-              class="join-item w-full btn btn-ghost gap-2 flex justify-start p-3 items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
-            >
-              <Icon class="text-primary" name="ri:telegram-2-line" size="24" />
-              <span> Telegram-бот </span>
-            </div>
-          </a>
-        </div>
+          <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-1 w-full">
+            <a target="_blank" href="https://t.me/wb_soft_bot" class="w-full">
+              <div
+                class="join-item w-full btn btn-ghost gap-2 flex justify-start items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
+              >
+                <Icon
+                  class="text-primary"
+                  name="ri:telegram-2-line"
+                  size="24"
+                />
+                <span> Telegram-бот </span>
+              </div>
+            </a>
+          </div>
         </div>
         <div
-          class="bg-black bg-opacity-50 w-[25%]"
+          class="bg-black bg-opacity-50 bg-opacity-transition w-[25%] rounded-r-lg "
           @click="toggleMobileMenu"
         ></div>
       </div>
 
       <div
         :class="{ collapsed: isCollapsed, expanded: !isCollapsed }"
-        class="transition-width w-[25%] duration-300 bg-base-100 rounded-lg h-[90%] overflow-hidden flex-col gap-4 hidden lg:flex"
+        class="transition-width w-[25%] duration-300 bg-base-100 rounded-lg h-[100%] overflow-y-auto flex-col gap-4 hidden lg:flex"
       >
         <button
           @click="toggleCollapse"
@@ -253,15 +262,24 @@ const filteredMPList = computed(() => {
           }"
         >
           <Icon v-if="!isCollapsed" name="ep:d-arrow-left" size="15" />
+
           <Icon v-else name="ep:d-arrow-right" size="15" />
         </button>
-        <div v-for="tabs in filteredNavbarData" class="flex flex-col gap-1">
+        <div
+          v-for="(tabs, index) in filteredNavbarData"
+          class="flex flex-col gap-1"
+        >
           <h4
             v-if="!isCollapsed"
             class="px-2 text-sm text-[#6e6e73] font-semibold truncate"
           >
             {{ tabs.title }}
           </h4>
+          <div
+            v-else
+            class="divider my-0 mb-1"
+            :class="{ 'opacity-0 mb-1': index === 0 }"
+          ></div>
           <button
             v-for="tab in tabs.tabs"
             class="flex gap-2 px-2 btn btn-sm btn-ghost justify-start flex-nowrap"
@@ -271,14 +289,11 @@ const filteredMPList = computed(() => {
               class="w-4 h-4"
               :src="`/icons/figma/guide/${tab.value}.svg`"
             />
-            <span
-              v-if="!isCollapsed"
-              class="text-xs text-base-content font-semibold truncate"
-              >{{ tab.title }}</span
-            >
+            <span v-if="!isCollapsed" class="text-sm truncate">{{
+              tab.title
+            }}</span>
           </button>
         </div>
-
         <div class="flex flex-col gap-1">
           <h4
             v-if="!isCollapsed && filteredMPList.length"
@@ -286,6 +301,7 @@ const filteredMPList = computed(() => {
           >
             Самовыкупы
           </h4>
+          <div v-else class="divider my-0 mb-1"></div>
           <button
             v-for="page in filteredMPList"
             :key="page"
@@ -293,26 +309,33 @@ const filteredMPList = computed(() => {
             @click="setComponent(`Guide${toUpperCaseFirstLetter(page)}`)"
           >
             <nuxt-img class="w-4 h-4" :src="`/icons/figma/guide/${page}.svg`" />
-            <span
-              v-if="!isCollapsed"
-              class="text-xs text-base-content font-semibold truncate"
-              >{{ toUpperCaseFirstLetter(page) }}</span
-            >
+            <span v-if="!isCollapsed" class="text-sm truncate">{{
+              toUpperCaseFirstLetter(page)
+            }}</span>
           </button>
         </div>
-        <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 px-3 py-3 w-full">
+        <div class="mt-auto bg-[#f5f5f7] dark:bg-base-300 w-full">
           <a target="_blank" href="https://t.me/wb_soft_bot">
             <div
-              class="join-item w-full btn btn-ghost gap-2 flex justify-start p-3 items-center normal-case hover:cursor-pointer rounded-lg p-0 m-0"
+              class="join-item w-full btn btn-ghost gap-2 flex justify-start items-center normal-case hover:cursor-pointer rounded-lg p-2 m-0 mx-auto flex-nowrap"
             >
-              <Icon class="text-primary" name="ri:telegram-2-line" size="24" />
-              <span> Telegram-бот </span>
+              <Icon
+                class="text-primary flex"
+                name="ri:telegram-2-line"
+                size="24"
+              />
+              <span
+                v-if="!isCollapsed"
+                class="whitespace-nowrap font-semibold truncate"
+              >
+                Telegram-бот
+              </span>
             </div>
           </a>
         </div>
       </div>
 
-      <div class="bg-base-100 rounded-lg flex w-full h-[90%] drop-shadow-sm">
+      <div class="bg-base-100 rounded-lg flex w-full h-[100%] drop-shadow-sm">
         <GuideDinamicComponent
           ref="dinamicComponent"
           :componentName="resolveComponent"

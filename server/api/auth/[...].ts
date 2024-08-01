@@ -21,6 +21,7 @@ export default NuxtAuthHandler({
       const isSignIn = !!user
 
       if (isSignIn) {
+        
         token.twoFaNeeded = (user as any)?.isTwoFaEnabled
           ? token.twoFaNeeded == false
             ? false
@@ -31,6 +32,7 @@ export default NuxtAuthHandler({
         token.username = user ? (user as any)?.username : ''
         token.balance = user ? (user as any)?.balance : 0
         token.isBanned = user ? (user as any)?.isBanned : false
+        token.newSession = true
       }
       return Promise.resolve(token)
     },
@@ -43,6 +45,10 @@ export default NuxtAuthHandler({
       if (!found) return Promise.reject(new Error('User not found'))
       if (found.isBanned == true) {
         return Promise.reject(new Error('User is banned'))
+      }
+
+      if (found.username == 'test' && !token.newSession) {
+        return Promise.reject(new Error('Need new session'))
       }
 
       return Promise.resolve(session)
@@ -161,7 +167,7 @@ export default NuxtAuthHandler({
         if (!isValid) throw new Error('Invalid password')
 
         // if (!user.emailConfirmed) throw new Error('Email is not confirmed')
-          
+
         // if (user.tg2fa && user.telegramUserId && !code) throw new Error('2fa')
         if (user.isBanned) {
           throw new Error('Account is banned')

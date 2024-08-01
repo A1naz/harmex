@@ -7,7 +7,7 @@ export default eventHandler(async (event) => {
   const { status, limit, skip, dateFilter } = getQuery(event)
 
   //   const all = await Buyout.find({ user })
-  let buyouts
+  let buyouts: any
   if (status === 'all') {
     buyouts = await Buyout.find({ user, status: { $ne: 'completed' } })
       .sort({ createdAt: -1 })
@@ -114,7 +114,7 @@ export default eventHandler(async (event) => {
       )
       break
   }
-  const format = buyouts.map((buyout) => {
+  const format = buyouts.map((buyout: any) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
     return {
       //   place: buyout.place ? buyout.place : place + 1,
@@ -135,6 +135,7 @@ export default eventHandler(async (event) => {
       product: buyout.product,
       purchaseSoon: buyout.purchaseSoon,
       key: buyout.key,
+      appartmentNumber: buyout.appartmentNumber,
     }
   })
   return format

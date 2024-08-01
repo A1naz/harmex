@@ -123,7 +123,7 @@ function selectMpText() {
     class="bg-base-100 rounded-lg drop-shadow-sm w-full p-3 pr-0 sm:p-6 flex flex-col gap-5 mt-4"
   >
     <div class="flex justify-between pr-3 sm:pr-0">
-      <h2 class="font-semibold text-xl">Сатистика</h2>
+      <h2 class="font-semibold text-xl opacity-0">Статистика</h2>
       <div class="flex gap-2">
         <CustomSelect
           class="lg:flex"

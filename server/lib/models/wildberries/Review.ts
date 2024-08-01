@@ -30,7 +30,7 @@ const ReviewSchema = new Schema({
   originalVideoName: { type: String, required: false },
   isVideoEnabled: { type: Boolean, required: false },
   createdAt: { type: Date, required: false, default: Date.now },
-  uuid: { type: String, default: uuid() },
+  uuid: { type: String},
 })
 
 export const Review = wildberriesConnection.model('Review', ReviewSchema)

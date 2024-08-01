@@ -119,6 +119,8 @@ function removeProduct(index: number) {
 }
 
 function handleAddress(address: string, lt: number, lg: number) {
+  modalOpen.value = false
+
   store.handleAddress(address, lt, lg)
 }
 function openInfoModal(type: string) {
@@ -183,10 +185,11 @@ async function openChecksModal() {
   let valid = true
   let errorMsg = ''
   products.value.forEach((item) => {
-    // if (!item.adress) {
-    //   valid = false
-    //   errorMsg = 'Не у всех товаров указан адрес доставки'
-    // }
+    if (!item.adress) {
+      valid = false
+      errorMsg = 'Не у всех товаров указан адрес доставки'
+    }
+
     if (!item.dateRange[0] || !item.dateRange[1]) {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
@@ -497,7 +500,7 @@ const startTimer = () => {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                 </div>
               </th>
-  
+
               <!-- <th @click="openInfoModal('size')" class="font-normal">
                 <div class="text-center">
                   <span> Размер </span>                 
@@ -531,6 +534,15 @@ const startTimer = () => {
                 <div class="text-center">
                   <span> Адрес </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                </div>
+              </th>
+              <th
+                @click="openInfoModal('apartmentNumber')"
+                class="font-normal text-base-content w-32"
+              >
+                <div class="flex justify-center items-center gap-1">
+                  <span>№ Квартиры</span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                 </div>
               </th>
               <th
@@ -594,14 +606,14 @@ const startTimer = () => {
           >Удалить все</label
         > -->
         <label
-          class="btn btn-sm btn-primary normal-case  border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+          class="btn btn-sm btn-primary normal-case border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
           for="template-modal"
         >
           Шаблон
         </label>
 
         <button
-          class="btn btn-sm btn-primary normal-case  border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+          class="btn btn-sm btn-primary normal-case border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
           :disabled="disabledCreateButton"
           @click="openChecksModal"
         >
@@ -641,11 +653,6 @@ const startTimer = () => {
                 'Выкупить товар(-ы) прямо сейчас '
               }}</span>
               <div class="flex gap-4">
-                <div
-                  class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
-                >
-                  0р.
-                </div>
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].purchaseSoon"
@@ -661,11 +668,6 @@ const startTimer = () => {
                 >{{ 'Выкуп под ключ ' }}</span
               >
               <div class="flex gap-4">
-                <div
-                  class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
-                >
-                  0р.
-                </div>
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].key"
@@ -674,18 +676,13 @@ const startTimer = () => {
               </div>
             </div> -->
             <div
-              class="label cursor-pointer flex gap-4 items-start justify-around"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
             >
               <span class="label-text"
                 >{{ rule.id }}. {{ rule.description }}</span
               >
-              <div
-                class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
-              >
-                0р.
-              </div>
-              <input
-                :disabled="
+
+              <!-- :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) =>
                       item.category === rule.category && item.id !== rule.id
@@ -693,7 +690,9 @@ const startTimer = () => {
                   !!store.createProducts[selectedRuleProductIndex].rules.find(
                     (item) => item.id === rule?.relies
                   )
-                "
+                " -->
+              <input
+                disabled
                 type="checkbox"
                 class="checkbox checkbox-primary border-base-content"
                 :checked="

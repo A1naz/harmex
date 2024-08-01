@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import { AvitoConnection } from '~/server/connections/avito'
 
 const DeliverySchema = new Schema({
-  article: { type: String, required: true, text: true },
+  article: { type: Number, required: true },
   pricebuy: { type: Number, required: true },
   point: { type: String, required: true },
   point_city: { type: String, required: false },

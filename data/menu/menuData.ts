@@ -18,7 +18,7 @@ export const menuDataList: MenuDataList[] = [
     { section: 'additional', path: "/paymenthistory", title: "Финансы", icon: "fa-solid:coins" },
     { section: 'additional', path: "/reports", title: "Отчеты", icon: "lets-icons:file-dock-fill" },
     { section: 'additional', path: "/partner", title: "Партнерка", icon: "mdi:handshake" },
-    { section: 'additional', path: "/stats", title: "Аналитика", icon: "mdi:google-analytics" },
+    { section: 'additional', path: "/stats", title: "Статистика", icon: "mdi:google-analytics" },
     { section: 'additional', path: "/team", title: "Моя команда", icon: "fluent:people-team-16-filled" },
     // { section: 'bidder', path: "/campaigns", title: "Рекламные кампании", icon: "mdi:briefcase" },
 ]

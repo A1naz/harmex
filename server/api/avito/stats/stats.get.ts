@@ -13,12 +13,12 @@ export default eventHandler(async (event) => {
 
   const types = [
     'buyouts service',
-    'likes',
+    'likeReview',
     'deliveries',
-    'reviews',
-    'questions',
-    'productlikes',
-    'carts',
+    'review',
+    'questionProduct',
+    'likeProduct',
+    'cart',
     'autoanswers',
   ]
 
@@ -112,8 +112,8 @@ export default eventHandler(async (event) => {
           ...filter.dataoperation
       },
       $or: [
-          { type: filter.type },
-          { type: 'productlikes' }
+          { type: 'likeReview' },
+          { type: 'likeProduct' }
       ],
   })
   
@@ -181,8 +181,8 @@ export default eventHandler(async (event) => {
           user,
           mp: 'avito',
           $or: [
-              { type: filter.type },
-              { type: 'productlikes' }
+              { type: 'likeReview' },
+              { type: 'likeProduct' }
           ],
           dataoperation: {
               $gte: oneWeekAgo,
@@ -357,7 +357,7 @@ export default eventHandler(async (event) => {
         quantity: 0,
     },
     {
-      value: 'reviews',
+      value: 'review',
       title: 'Отзывы',
       expenses: 0,
       quantity: 0,
@@ -375,13 +375,13 @@ export default eventHandler(async (event) => {
     //   quantity: 0,
     // },
     {
-      value: 'questions',
+      value: 'questionProduct',
       title: 'Вопросы',
       expenses: 0,
       quantity: 0,
     },
     {
-      value: 'carts',
+      value: 'cart',
       title: 'Корзина',
       expenses: 0,
       quantity: 0,
@@ -402,7 +402,7 @@ export default eventHandler(async (event) => {
   };
 
   typeSumMap.forEach((value, key) => {
-    if (key === 'likes' || key === 'productlikes') {
+    if (key === 'likeReview' || key === 'likeProduct') {
       likesItem.expenses += value;
       likesItem.quantity += typeSumMap.get(key + ' quantity');
       services[0].quantity += typeSumMap.get(key + ' quantity');

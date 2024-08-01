@@ -1,6 +1,7 @@
 import { Buyout } from '@/server/lib/models/ozon/Buyout'
 import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '@/server/lib/helpers'
+const cofing = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
@@ -18,11 +19,12 @@ export default eventHandler(async (event) => {
 
   
   const article = buyout?.article
-  const data: any = await $fetch('http://95.163.249.133:4141', {
+  const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     body: {
       type: 'ozonProduct',
       url: `https://www.ozon.ru/product/${article}/`,
+      token: config.PARSER_TOKEN,
     },
   })
 

@@ -22,7 +22,7 @@ export default eventHandler(async (event) => {
       })
     }
   }
-  if(rating <4){
+  if (rating < 4) {
     throw createError({
       statusCode: 400,
       message:
@@ -36,10 +36,11 @@ export default eventHandler(async (event) => {
       message: 'Выкуп не найден',
     })
   }
+
   const delivery = await Delivery.findOne({
     _id: deliveryid,
     idbuyout: buyout._id,
-    reviewed: false,
+    reviewed: { $ne: true },
   })
   if (!delivery) {
     return createError({
@@ -54,7 +55,7 @@ export default eventHandler(async (event) => {
       ''
     )
   )
-    
+
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,

@@ -26,6 +26,10 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
+const logModal = ref(false)
+const selectedLike = ref({
+  uuid: '',
+})
 
 const search = reactive({
   text: '',
@@ -311,7 +315,7 @@ const updateSearchType = (filter: any) => {
           class="hidden lg:flex"
           :class="'sm:min-w-[120px]'"
           :status-text="'Avito'"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -327,7 +331,9 @@ const updateSearchType = (filter: any) => {
             { title: 'Все лайки', value: 'all' },
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
+            
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -359,7 +365,7 @@ const updateSearchType = (filter: any) => {
           class="lg:hidden"
           :class="'sm:min-w-[120px] text-xs'"
           :status-text="'Avito'"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="changeFilter"
         />
         <CustomSelect
@@ -431,7 +437,8 @@ const updateSearchType = (filter: any) => {
             <th class="text-center">Количество</th>
             <th class="text-center">Статус</th>
             <th class="text-center">Дата создания</th>
-            <th class="text-center rounded-tr-2xl">Дата завершения</th>
+            <th class="text-center">Дата завершения</th>
+            <th class="text-center rounded-tr-2xl ">Инфо</th>
           </tr>
         </thead>
         <tbody>
@@ -545,6 +552,37 @@ const updateSearchType = (filter: any) => {
                     ) }}
               </div>
             </td>
+            <td
+              class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
+              :class="{ 'rounded-br-2xl': index === product_likes.length - 1 }"
+            >
+              <div class="rounded-lg p-0.5 text-center">
+                <button
+                  @click=";[(selectedLike = item), (logModal = true)]"
+                  class="btn btn-primary btn-sm btn-square mb-2"
+                >
+                  <svg
+                    data-v-f136eeaa=""
+                    data-v-a5d236d9=""
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    aria-hidden="true"
+                    role="img"
+                    class="icon"
+                    width="20px"
+                    height="20px"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
           </tr>
           <div ref="target" class="flex justify-center items-center h-4" />
         </tbody>
@@ -577,6 +615,7 @@ const updateSearchType = (filter: any) => {
       </div>
     </div>
   </div>
+  <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
 </template>
 
 <style scoped>

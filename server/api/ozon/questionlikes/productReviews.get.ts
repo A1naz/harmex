@@ -19,12 +19,13 @@ export default eventHandler(async (event) => {
   }
 
   //@ts-ignore
-  const data: any = await $fetch('http://95.163.249.133:4141', {
+  const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     body: {
       type: 'ozonQuestions',
       url: `https://www.ozon.ru/product/${article}/`,
       count: elPerPage,
+      token: config.PARSER_TOKEN,
     },
   })
 

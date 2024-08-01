@@ -20,6 +20,8 @@ const templateTitle = ref('')
 const templates = ref<any>([])
 const modalShow = ref(false)
 const codeInput = ref()
+const refreshKey = ref(1)
+const lastItemDateRange = ref<any>([])
 
 definePageMeta({
   layout: 'app',
@@ -118,8 +120,8 @@ function removeProduct(index: number) {
   store.removeProduct(index)
 }
 
-function handleAddress(address: string, lt: number, lg: number) {
-  store.handleAddress(address, lt, lg)
+function handleAddress(address: any) {
+  store.handleAddress(address.a, address.lt, address.lg, address.id)
 }
 function openInfoModal(type: string) {
   infoType.value = type
@@ -186,7 +188,7 @@ async function openChecksModal() {
 
   let valid = true
   let errorMsg = ''
-  products.value.forEach((item) => {
+  products.value.forEach((item: any) => {
     if (!item.adress) {
       valid = false
       errorMsg = 'Не у всех товаров указан адрес доставки'
@@ -200,7 +202,18 @@ async function openChecksModal() {
       errorMsg = 'Не у всех товаров указан поисковый запрос'
     }
     if (!item.selectedSize) item.selectedSize = 'none'
+
+    const minDate = new Date(item.dateRange[0])
+    const maxDate = new Date(item.dateRange[1])
+    const minDay = minDate.getDate()
+    const maxDay = maxDate.getDate()
+
+    if (item.key && minDay != maxDay) {
+      valid = false
+      errorMsg = 'Выберите точную дату для выкупа под ключ ' + item.article
+    }
   })
+
   if (!valid) {
     notify({
       title: 'Что-то пошло не так',
@@ -272,11 +285,14 @@ async function getPickpoints() {
     })
   }
 }
-async function getFFPickpoints() {
+async function getFFPickpoints(date: Date = new Date()) {
   try {
     // @ts-ignore
     const data = await $fetch('/api/wildberries/ff/userPickpoints', {
       method: 'GET',
+      query: {
+        date: new Date(date).toISOString(),
+      },
     })
     ffPickpoints.value = (data as any).points
   } catch (e: any) {
@@ -295,6 +311,14 @@ async function pointModalOpen(index: number) {
   store.selectedItem = index
 
   if (products.value[index].key) {
+    if (
+      products.value[index].dateRange[0] != lastItemDateRange.value[0] ||
+      products.value[index].dateRange[1] != lastItemDateRange.value[1]
+    ) {
+      lastItemDateRange.value = products.value[index].dateRange
+      await getFFPickpoints(products.value[index].dateRange[0] || new Date())
+    }
+
     modalOpenFF.value = true
   } else {
     modalOpen.value = true
@@ -303,7 +327,6 @@ async function pointModalOpen(index: number) {
 
 onMounted(async () => {
   getPickpoints()
-  getFFPickpoints()
   if (route.query.uuid) {
     loading.value = true
     await store.cloneBuyout(route.query.uuid.toString())
@@ -375,6 +398,10 @@ function closeTemplateModalFN() {
 function modalAddProduct(changedArticle: any) {
   article.value = changedArticle
   addProduct()
+}
+
+function refreshElements() {
+  refreshKey.value == 1 ? (refreshKey.value = 0) : (refreshKey.value = 1)
 }
 </script>
 
@@ -458,7 +485,7 @@ function modalAddProduct(changedArticle: any) {
       >
         <BuyoutWildberriesCreateCard
           v-for="(product, index) in products"
-          :key="index"
+          :key="index + '_' + refreshKey"
           :loading="!pickpoints?.length"
           :product="product"
           :index="index"
@@ -550,7 +577,7 @@ function modalAddProduct(changedArticle: any) {
           <tbody>
             <BuyoutWildberriesCreateTableRow
               v-for="(product, index) in products"
-              :key="index"
+              :key="index + '_' + refreshKey"
               :product="product"
               :index="index"
               :loading="!pickpoints?.length"
@@ -634,11 +661,6 @@ function modalAddProduct(changedArticle: any) {
                 'Выкупить товар(-ы) прямо сейчас '
               }}</span>
               <div class="flex gap-4">
-                <div
-                  class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
-                >
-                  0р.
-                </div>
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].purchaseSoon"
@@ -652,30 +674,30 @@ function modalAddProduct(changedArticle: any) {
             >
               <span class="label-text">{{ 'Выкуп под ключ ' }}</span>
               <div class="flex gap-4">
-                <div
-                  class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
-                >
-                  0р.
-                </div>
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].key"
-                  @click="products[selectedRuleProductIndex].adress = ''"
+                  @click="
+                    ;[
+                      refreshElements(),
+                      (products[selectedRuleProductIndex].adress = ''),
+                      (products[selectedRuleProductIndex].dateRange = [
+                        new Date().setHours(new Date().getHours() + 3),
+
+                        new Date().setHours(new Date().getHours() + 3),
+                      ]),
+                    ]
+                  "
                   class="checkbox checkbox-primary border-base-content"
                 />
               </div>
             </div>
             <div
-              class="label cursor-pointer flex gap-4 items-start justify-around"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
             >
               <span class="label-text"
                 >{{ rule.id }}. {{ rule.description }}</span
               >
-              <div
-                class="bg-primary bg-opacity-5 text-primary cursor-default rounded-full px-4"
-              >
-                0р.
-              </div>
               <input
                 :disabled="
                   !!store.createProducts[selectedRuleProductIndex].rules.find(

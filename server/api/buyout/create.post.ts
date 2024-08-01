@@ -80,18 +80,18 @@ export default eventHandler(async (event) => {
       product.dateRange = [date1, date2]
     }
 
-    let city, state
-      ;({ city, state } = await getCityByGeo(product.pointCoordinates.lat.toString(),  product.pointCoordinates.lon.toString()))
+    // let city, state
+      // ;({ city, state } = await getCityByGeo(product.pointCoordinates.lat.toString(),  product.pointCoordinates.lon.toString()))
 
     
     const buyout = new Buyout({
       article: product.article,
       // searchQuery: searchQueries.join(', '),
       searchQuery: '',
-      point: product.adress,
+      point: 'product.adress',
       pointCoordinates: product.pointCoordinates,
-      point_city: city,
-      point_state: state,
+      point_city: 'Москва',
+      point_state: 'Москва',
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,

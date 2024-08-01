@@ -38,6 +38,10 @@ const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const urlError = ref(false)
 const modalShow = ref<boolean>(false)
+const logModal = ref(false)
+const selectedCart = ref({
+  uuid: '',
+})
 
 const loading = ref(false)
 const limit = ref(50)
@@ -52,14 +56,14 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && carts.value.length >= limit.value){
+  if (!end.value && isVisible && carts.value.length >= limit.value) {
     await getCarts()
   }
 })
 
 async function getCarts() {
   modalShow.value = false
-  
+
   const { data, error } = await useFetch('/api/ozon/cart/get', {
     method: 'GET',
     query: {
@@ -81,7 +85,7 @@ async function getCarts() {
     carts.value = [...carts.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -151,6 +155,7 @@ function getStatus(status: string) {
   if (status === 'created') return 'Создан'
   else if (status === 'work') return 'В работе'
   else if (status === 'busy') return 'В работе'
+  else if (status === 'archived') return 'В архиве'
   else if (status === 'completed') return 'Завершен'
   else if (status === 'nofunds') return 'Недостаточно средств'
   else return status
@@ -191,7 +196,7 @@ function removeProduct() {
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -248,6 +253,7 @@ onMounted(() => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
+        disabled
           @click="navigateTo(`/cart/create/`)"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
@@ -269,6 +275,7 @@ onMounted(() => {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -310,6 +317,7 @@ onMounted(() => {
             { title: 'Активные', value: 'work' },
             { title: 'Завершенные', value: 'completed' },
             { title: 'Недостаточно средств', value: 'nofunds' },
+            { title: 'В архиве', value: 'archived' },
           ]"
           @change-value="selectFilterDate"
         />
@@ -363,15 +371,22 @@ onMounted(() => {
         </div>
       </div>
     </div> -->
-
+    <div class="text-red-500 ml-1 mt-1">
+      Функционал временно недоступен
+    </div>
     <div v-if="carts.length && !loading" class="mt-4">
       <div>
         <CartOzonTable
           :get-status="getStatus"
           :resume-status="resumeStatus"
           :carts="carts"
+          @log-modal="(item:any) => [(selectedCart = item), (logModal = true)]"
         />
-        <div v-if="!loading" ref="target" class="flex justify-center items-center h-4" />
+        <div
+          v-if="!loading"
+          ref="target"
+          class="flex justify-center items-center h-4"
+        />
       </div>
       <!-- <div>
         <CartOzonCards :carts="carts" :get-status="getStatus" />
@@ -380,7 +395,10 @@ onMounted(() => {
     <div v-else-if="!loading">
       <Hero />
     </div>
-    <div v-if="loading" class="w-full mt-5 flex justify-center items-center h-80">
+    <div
+      v-if="loading"
+      class="w-full mt-5 flex justify-center items-center h-80"
+    >
       <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
   </div>
@@ -389,6 +407,7 @@ onMounted(() => {
     @close-modal="modalShow = false"
     @create="getCarts()"
   />
+  <LogModal :info="selectedCart" :state="logModal" @close="logModal = false" />
 </template>
 
 <style scoped></style>

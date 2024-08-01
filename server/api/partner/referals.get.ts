@@ -78,6 +78,7 @@ export default eventHandler(async (event) => {
       $match: {
         user: { $in: referIds },
         typeoperations: 'Приход',
+        // type: 'Оплата тарифа'
       },
     },
     {

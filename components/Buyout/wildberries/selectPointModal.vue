@@ -41,7 +41,7 @@ function handleSelect(address: string) {
   arr.push(address)
   const unique = [...new Set(arr)].reverse()
   localStorage.setItem('wildberriesPointStore', unique.join('--'))
-  emit('callback', address)
+  emit('callback', { a: address })
   closeModal()
 }
 
@@ -56,7 +56,9 @@ function handleDelete(address: string) {
   lastPoints.value = unique
 }
 
-const lastPoints = ref(localStorage.getItem('wildberriesPointStore')?.split('--'))
+const lastPoints = ref(
+  localStorage.getItem('wildberriesPointStore')?.split('--')
+)
 const presetCluster = 'islands#violetClusterIcons'
 
 const originalBounds = ref([
@@ -221,8 +223,6 @@ onKeyStroke('Escape', (e) => {
 })
 </script>
 
-
-
 <template>
   <div
     id="selectPointModal"
@@ -273,7 +273,7 @@ onKeyStroke('Escape', (e) => {
               >
                 <button
                   :key="index"
-                  class="btn pvz text-xs rounded-none h-16 rounded-l-md p-2 flex w-10/12 text-left "
+                  class="btn pvz text-xs rounded-none h-16 rounded-l-md p-2 flex w-10/12 text-left"
                   @click="handleSelect(item)"
                 >
                   {{ item }}

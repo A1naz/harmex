@@ -16,11 +16,13 @@ export default eventHandler(async (event) => {
   const article = params.article
 
   //@ts-ignore
-  const data: any = await $fetch('http://95.163.249.133:4141', {
+  const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     body: {
       type: 'avitoProduct',
       url: `https://www.avito.ru/${article}`,
+      token: config.PARSER_TOKEN
+      
     },
   }).catch((e) => {
     throw createError({

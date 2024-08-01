@@ -12,7 +12,7 @@ export default eventHandler(async (event) => {
     {
       $match: {
         user: new ObjectId(user._id),
-        reviewed: false,
+        reviewed: { $ne: true },
         'statusdelivery.status': 'Получено',
         status: 'completed',
       },
@@ -72,17 +72,21 @@ export default eventHandler(async (event) => {
       },
     },
     { $project: { _id: 0 } },
-    { $sort: { countAvailable: -1} },
+    { $sort: { countAvailable: -1 } },
   ]
 
   const limitA = limit ? parseInt(limit.toString(), 10) : 1000
   const skipA = skip ? parseInt(skip.toString(), 10) : 0
-  const searchParse = search ? JSON.parse(search?.toString()) : undefined
+  let searchParse = search ? JSON.parse(search?.toString()) : undefined
 
   if (Object.values(searchParse)[0] !== '') {
     if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
+      searchParse = { uuidbuyout: searchParse.uudidBuyout.replace('#', '') };
       pipeLine.splice(3, 0, { $match: { ...searchParse } }) // after $project
-    } else {
+    }  else {
+      if (Object.keys(searchParse)[0] === 'article') {
+        searchParse.article = Number(searchParse.article);
+      }
       pipeLine.splice(1, 0, { $match: { ...searchParse } }) // after $match
     }
   }
@@ -115,13 +119,17 @@ export default eventHandler(async (event) => {
   ])
   const sex = (genders: string[]): string => {
     for (const gen of genders) {
-      let foundGen = genderMap.get(gen.toLowerCase())
-      if (foundGen) return foundGen
+      if (gen !== null) {
+        let foundGen = genderMap.get(gen.toLowerCase())
+        if (foundGen) return foundGen
+      }
     }
     return 'Нет'
   }
   const formated = readyForReview.map((deliveryForReview: any) => {
-    const countSoon = soonForReview.filter((sfr) => sfr._id == deliveryForReview.article)
+    const countSoon = soonForReview.filter(
+      (sfr) => sfr._id == deliveryForReview.article
+    )
     return {
       ...deliveryForReview,
       countSoon: countSoon.length > 0 ? countSoon[0].count : 0,

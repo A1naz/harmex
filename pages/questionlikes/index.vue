@@ -16,7 +16,14 @@ const MPSelect = ref()
 const sortPage = ref('all')
 const sortPageDate = ref('')
 const loading = ref(true)
-const selectedMP = ref<any>(((mpStore.selectedMP).charAt(0).toUpperCase() + (mpStore.selectedMP).slice(1)) || 'Wildberries')
+const logModal = ref(false)
+const selectedLike = ref({
+  uuid: '',
+})
+const selectedMP = ref<any>(
+  mpStore.selectedMP.charAt(0).toUpperCase() + mpStore.selectedMP.slice(1) ||
+    'Wildberries'
+)
 const { width, height } = useWindowSize()
 // const { data, error } = await useFetch(`/api/${selectedMP.value}/likes/get`)
 // review_likes.value = data.value
@@ -33,7 +40,7 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && review_likes.value.length >= limit.value){
+  if (!end.value && isVisible && review_likes.value.length >= limit.value) {
     await getLikes()
   }
 })
@@ -68,14 +75,19 @@ function getStatus(status: string) {
 }
 
 async function resumeStatus(item: any) {
-  const { data, error } = await useFetch(`/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/questionlikes/resume`, {
-    method: 'POST',
-    body: {
-      item: item,
-    },
-    watch: false,
-  })
-  if (error.value){
+  const { data, error } = await useFetch(
+    `/api/${
+      mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'
+    }/questionlikes/resume`,
+    {
+      method: 'POST',
+      body: {
+        item: item,
+      },
+      watch: false,
+    }
+  )
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -97,24 +109,28 @@ async function resumeStatus(item: any) {
 
 async function getLikes() {
   loading.value = true
-  if(mpStore.selectedMP !== 'ozon'){
+  if (mpStore.selectedMP !== 'ozon') {
     review_likes.value = []
     loading.value = false
     return
   }
   const { data, error } = await useFetch(
-    `/api/${mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'}/questionlikes/get`, {
-    method: 'GET',
-    query: {
-      statusQuery: sortPage.value,
-      dateFilter: sortPageDate.value,
-      string: search.text,
-      type: search.type,
-      limit: limit.value,
-      skip: skip.value,
-    },
-  })
- if ((data.value as any)?.length === 0) {
+    `/api/${
+      mpStore.selectedMP ? mpStore.selectedMP : 'wildberries'
+    }/questionlikes/get`,
+    {
+      method: 'GET',
+      query: {
+        statusQuery: sortPage.value,
+        dateFilter: sortPageDate.value,
+        string: search.text,
+        type: search.type,
+        limit: limit.value,
+        skip: skip.value,
+      },
+    }
+  )
+  if ((data.value as any)?.length === 0) {
     loading.value = false
     end.value = true
     return
@@ -123,7 +139,7 @@ async function getLikes() {
     review_likes.value = [...review_likes.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -165,7 +181,7 @@ async function deleteLike() {
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -214,10 +230,10 @@ const links = computed(() => {
   const links = ref([
     { title: 'Товар/бренд', slot: '/productlikes', query: '' },
   ])
-  if(mpStore.selectedMP !== 'avito'){
+  if (mpStore.selectedMP !== 'avito') {
     links.value.push({ title: 'Отзывы', slot: '/likes', query: '' })
   }
-  if(mpStore.selectedMP === 'ozon'){
+  if (mpStore.selectedMP === 'ozon') {
     links.value.push({ title: 'Вопрос', slot: '/questionlikes', query: '' })
   }
   return links.value
@@ -229,6 +245,7 @@ const links = computed(() => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
       <div class="flex gap-1 navbar:gap-2 lg:gap-3">
         <NuxtLink
+          disabled
           :to="`/questionlikes/create`"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
@@ -247,8 +264,8 @@ const links = computed(() => {
           class="hidden lg:flex"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
-          @change-value="selectMP"     
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
+          @change-value="selectMP"
         />
         <CustomSelect
           class="hidden lg:flex"
@@ -295,7 +312,7 @@ const links = computed(() => {
           class="lg:hidden"
           :class="'min-w-[105px]'"
           :status-text="selectedMP"
-          :tabs="store.client.username == 'test'? mpChange.pages : mpChange.pages.filter((e: any) => !e.test)"
+          :tabs="store.client.username == 'test'? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
           @change-value="selectMP"
         />
         <CustomSelect
@@ -349,6 +366,8 @@ const links = computed(() => {
         </div>
       </div>
     </div>
+
+    <div class="text-red-500 ml-1 mt-2 mb-2">Функционал временно недоступен</div>
     <div v-if="review_likes.length && !loading">
       <table class="table table-sm">
         <!-- head -->
@@ -361,7 +380,8 @@ const links = computed(() => {
             <th class="text-center">Статус</th>
             <th class="text-center">Дата создания</th>
             <th class="text-center">Дата завершения</th>
-            <th class="text-center rounded-tr-2xl">Сроки выполнения</th>
+            <th class="text-center">Сроки выполнения</th>
+            <th class="text-center rounded-tr-2xl">Инфо</th>
           </tr>
         </thead>
         <tbody>
@@ -372,13 +392,17 @@ const links = computed(() => {
           >
             <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
             <td
-              class="text-center border-r border-primary border-opacity-5 mx-auto" :class="{'rounded-bl-2xl': index === review_likes.length - 1}"
+              class="text-center border-r border-primary border-opacity-5 mx-auto"
+              :class="{ 'rounded-bl-2xl': index === review_likes.length - 1 }"
             >
-            <div
-                :style="`width: ${selectedMP === 'Ozon' ? '40px' : '28px'}; height: ${selectedMP === 'Ozon' ? '40px' : '36px'}; border-radius: 4px;`"
+              <div
+                :style="`width: ${
+                  selectedMP === 'Ozon' ? '40px' : '28px'
+                }; height: ${
+                  selectedMP === 'Ozon' ? '40px' : '36px'
+                }; border-radius: 4px;`"
                 class="mx-auto"
-            >
-            
+              >
                 <div class="dropdown dropdown-hover">
                   <label tabindex="0">
                     <nuxt-img
@@ -406,13 +430,13 @@ const links = computed(() => {
             <td
               class="text-center border-r border-primary border-opacity-5 text-primary"
             >
-            <a
-              :href="`https://www.ozon.ru/product/${item.article}`"
-              target="_blank"
-              class="text-primary link link-hover"
-            >
-              {{ item.article }}
-            </a>
+              <a
+                :href="`https://www.ozon.ru/product/${item.article}`"
+                target="_blank"
+                class="text-primary link link-hover"
+              >
+                {{ item.article }}
+              </a>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
               <div class="flex flex-col">
@@ -437,17 +461,19 @@ const links = computed(() => {
               >
                 {{ getStatus(item.status) }}
               </div>
-              <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
-                Возобновить  
+              <button
+                v-if="item.status === 'nofunds'"
+                class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20"
+                @click="resumeStatus(item)"
+              >
+                Возобновить
               </button>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ $dayjs(item.createdDate).format(
-                      'DD.MM.YYYY'
-                    ) }}
+                {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
               </div>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
@@ -455,13 +481,11 @@ const links = computed(() => {
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ $dayjs(item.endedDate).format(
-                      'DD.MM.YYYY'
-                    ) }}
+                {{ $dayjs(item.endedDate).format('DD.MM.YYYY') }}
               </div>
             </td>
             <td
-              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5" :class="{'rounded-br-2xl': index === review_likes.length - 1}"
+              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5"
             >
               <div
                 v-if="item.period"
@@ -470,6 +494,37 @@ const links = computed(() => {
                 <div>{{ item.period }}</div>
               </div>
               <div v-else>Нет</div>
+            </td>
+            <td
+              class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
+              :class="{ 'rounded-br-2xl': index === review_likes.length - 1 }"
+            >
+              <div class="rounded-lg p-0.5 text-center">
+                <button
+                  @click=";[(selectedLike = item), (logModal = true)]"
+                  class="btn btn-primary btn-sm btn-square mb-2"
+                >
+                  <svg
+                    data-v-f136eeaa=""
+                    data-v-a5d236d9=""
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    aria-hidden="true"
+                    role="img"
+                    class="icon"
+                    width="20px"
+                    height="20px"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
             </td>
           </tr>
           <div ref="target" class="flex justify-center items-center h-4" />
@@ -503,6 +558,7 @@ const links = computed(() => {
       </div>
     </div>
   </div>
+  <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
 </template>
 
 <style>

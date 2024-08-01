@@ -60,6 +60,7 @@ export interface IUser extends Entity {
   MPTariffs: []
   newPassword: string
   ffEnabled: boolean
+  terminateSession: boolean
 }
 
 export interface IUserLogs extends Entity {

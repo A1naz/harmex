@@ -48,11 +48,12 @@ export default eventHandler(async (event) => {
     const article = extractArticulFromOzonLink(url)
 
     //@ts-ignore
-    const data: any = await $fetch('http://95.163.249.133:4141', {
+    const data: any = await $fetch('http://95.163.249.133:3000', {
       method: 'POST',
       body: {
         type: 'avitoProduct',
         url: url.replaceAll(' ', ''),
+        token: config.PARSER_TOKEN,
       },
     })
 

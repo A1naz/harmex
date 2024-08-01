@@ -244,7 +244,13 @@ const updateSearchType = (filter: any) => {
         </select> -->
         <CustomSelect
           :class="'sm:min-w-[120px]'"
-          :tabs="mpStore.MPTabsAllTest"
+          :tabs="[
+      { title: 'Все', value: 'all' },
+      { title: 'Ozon', value: 'ozon' },
+      { title: 'Wildberries', value: 'wildberries' },
+      { title: 'Avito', value: 'avito' },
+      { title: 'Flowwow', value: 'flowwow' },
+    ]"
           @change-value="selectMp"
         />
         <CustomSelect

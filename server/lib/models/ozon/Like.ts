@@ -21,7 +21,7 @@ const LikeSchema = new Schema({
   dateStart: { type: Date },
   dateEnd: { type: Date },
   period: { type: String },
-  uuid: { type: String, default: uuid() },
+  uuid: { type: String},
 })
 
 // LikeSchema.pre('save', function (next) {

@@ -1,5 +1,8 @@
 ﻿﻿import { Delivery } from '~/server/lib/models/Delivery'
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
+import { Delivery as OzonDelivery } from '~/server/lib/models/ozon/Delivery';
+import { Delivery as WildberriesDelivery } from '~/server/lib/models/wildberries/Delivery';
+import { Delivery as AvitoDelivery } from '~/server/lib/models/avito/Delivery';
 
 export default eventHandler(async (event) => {
   
@@ -13,12 +16,13 @@ export default eventHandler(async (event) => {
 
   const types = [
     'buyouts service',
-    'likes',
+    'likeReview',
     'deliveries',
-    'reviews',
-    'questions',
-    'productlikes',
-    'carts',
+    'review',
+    'questionProduct',
+    'likeProduct',
+    'cart',
+    'autoanswers',
   ]
 
   switch (period) {
@@ -90,19 +94,43 @@ export default eventHandler(async (event) => {
 
   let history: any
   if (type == 'deliveries') {
-    history = await Delivery.aggregate([
-        { $match: {
-            user: user._id,
-            status: 'completed'
-        }},
-        { $project: { 
-            updatedAt: 1,
-        }},
-        { $addFields: {
-            dataoperation: '$updatedAt'
-        }},
-
+    const historyWildberries = await WildberriesDelivery.aggregate([
+      { $match: {
+          user: user._id,
+          status: 'completed'
+      }},
+      { $project: { 
+          updatedAt: 1,
+      }},
+      { $addFields: {
+          dataoperation: '$updatedAt'
+      }},
     ])
+    const historyOzon = await OzonDelivery.aggregate([
+      { $match: {
+          user: user._id,
+          status: 'completed'
+      }},
+      { $project: { 
+          updatedAt: 1,
+      }},
+      { $addFields: {
+          dataoperation: '$updatedAt'
+      }},
+    ])
+    const historyAvito = await AvitoDelivery.aggregate([
+      { $match: {
+          user: user._id,
+          status: 'completed'
+      }},
+      { $project: { 
+          updatedAt: 1,
+      }},
+      { $addFields: {
+          dataoperation: '$updatedAt'
+      }},
+    ])
+    history = [...historyWildberries, ...historyOzon, ...historyAvito]
   }else if(type == 'likes'){
     history = await paymenthistory.find({
       user,
@@ -110,8 +138,8 @@ export default eventHandler(async (event) => {
           ...filter.dataoperation
       },
       $or: [
-          { type: filter.type },
-          { type: 'productlikes' }
+          { type: 'likeReview' },
+          { type: 'likeProduct' }
       ],
   })
   
@@ -154,28 +182,61 @@ export default eventHandler(async (event) => {
 
     let newHistory: any
     if (type == 'deliveries') {
-        newHistory = await Delivery.aggregate([
-            { $match: {
-                user: user._id,
-                status: 'completed',
-                updatedAt: {
-                    $gte: oneWeekAgo,
-                    $lt: currentDate
-                }
-            }},
-            { $project: { 
-                updatedAt: 1,
-            }},
-            { $addFields: {
-                dataoperation: '$updatedAt'
-            }}
-        ])
+      const newHistoryWildberries = await WildberriesDelivery.aggregate([
+        { $match: {
+            user: user._id,
+            status: 'completed',
+            updatedAt: {
+                $gte: oneWeekAgo,
+                $lt: currentDate
+            }
+        }},
+        { $project: { 
+            updatedAt: 1,
+        }},
+        { $addFields: {
+            dataoperation: '$updatedAt'
+        }}
+    ])
+      const newHistoryOzon = await OzonDelivery.aggregate([
+        { $match: {
+            user: user._id,
+            status: 'completed',
+            updatedAt: {
+                $gte: oneWeekAgo,
+                $lt: currentDate
+            }
+        }},
+        { $project: { 
+            updatedAt: 1,
+        }},
+        { $addFields: {
+            dataoperation: '$updatedAt'
+        }}
+    ])
+      const newHistoryAvito = await AvitoDelivery.aggregate([
+        { $match: {
+            user: user._id,
+            status: 'completed',
+            updatedAt: {
+                $gte: oneWeekAgo,
+                $lt: currentDate
+            }
+        }},
+        { $project: { 
+            updatedAt: 1,
+        }},
+        { $addFields: {
+            dataoperation: '$updatedAt'
+        }}
+    ])
+        newHistory = [...newHistoryWildberries, ...newHistoryOzon, ...newHistoryAvito]
       } else if (type == 'likes'){
         newHistory = await paymenthistory.find({
           user,
           $or: [
-              { type: filter.type },
-              { type: 'productlikes' }
+              { type: 'likeReview' },
+              { type: 'likeProduct' }
           ],
           dataoperation: {
               $gte: oneWeekAgo,
@@ -286,19 +347,47 @@ export default eventHandler(async (event) => {
       $in: types.filter( a=> a !== 'deliveries'),
     },
   })
-    const paymentsForDeliverySumm = await Delivery.aggregate([
-        { $match: {
-            user: user._id,
-            status: 'completed',
-            updatedAt: filter.dataoperation
-        }},
-        { $project: { 
-            _id: 1,
-        }},
-        { $addFields: {
-            type: 'deliveries',
-        }},
-    ])
+    const paymentsForDeliverySummWildberries = await WildberriesDelivery.aggregate([
+      { $match: {
+          user: user._id,
+          status: 'completed',
+          updatedAt: filter.dataoperation
+      }},
+      { $project: { 
+          _id: 1,
+      }},
+      { $addFields: {
+          type: 'deliveries',
+      }},
+  ])
+    const paymentsForDeliverySummOzon = await OzonDelivery.aggregate([
+      { $match: {
+          user: user._id,
+          status: 'completed',
+          updatedAt: filter.dataoperation
+      }},
+      { $project: { 
+          _id: 1,
+      }},
+      { $addFields: {
+          type: 'deliveries',
+      }},
+  ])
+    const paymentsForDeliverySummAvito = await AvitoDelivery.aggregate([
+      { $match: {
+          user: user._id,
+          status: 'completed',
+          updatedAt: filter.dataoperation
+      }},
+      { $project: { 
+          _id: 1,
+      }},
+      { $addFields: {
+          type: 'deliveries',
+      }},
+  ])
+    
+    const paymentsForDeliverySumm = [...paymentsForDeliverySummWildberries, ...paymentsForDeliverySummOzon, ...paymentsForDeliverySummAvito]
     if(paymentsForDeliverySumm.length > 0){
         paymentsForSumm = [...paymentsForSumm, ...paymentsForDeliverySumm]
     }
@@ -348,7 +437,7 @@ export default eventHandler(async (event) => {
       quantity: 0,
     },
     {
-      value: 'reviews',
+      value: 'review',
       title: 'Отзывы',
       expenses: 0,
       quantity: 0,
@@ -366,13 +455,13 @@ export default eventHandler(async (event) => {
     //   quantity: 0,
     // },
     {
-      value: 'questions',
+      value: 'questionProduct',
       title: 'Вопросы',
       expenses: 0,
       quantity: 0,
     },
     {
-      value: 'carts',
+      value: 'cart',
       title: 'Корзина',
       expenses: 0,
       quantity: 0,
@@ -389,7 +478,7 @@ export default eventHandler(async (event) => {
   
 
   typeSumMap.forEach((value, key) => {
-    if (key === 'likes' || key === 'productlikes') {
+    if (key === 'likeReview' || key === 'likeProduct') {
       likesItem.expenses += value;
       likesItem.quantity += typeSumMap.get(key + ' quantity');
       services[0].quantity += typeSumMap.get(key + ' quantity');

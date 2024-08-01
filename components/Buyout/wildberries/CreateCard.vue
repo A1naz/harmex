@@ -202,7 +202,7 @@ const productQuantityModel = computed({
             class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
             @change="onSexChange"
           >
-            <option value="none">Нет</option>
+            <option value="Нет">Нет</option>
             <option value="male">Муж</option>
             <option value="female">Жен</option>
           </select>
@@ -214,7 +214,7 @@ const productQuantityModel = computed({
           class="select select-sm select-bordered w-32 appearance-none"
           @change="onSexChange"
         >
-          <option value="none">Нет</option>
+          <option value="Нет">Нет</option>
           <option value="male">Муж</option>
           <option value="female">Жен</option>
         </select>
@@ -225,9 +225,9 @@ const productQuantityModel = computed({
           <div class="w-full flex items-center justify-center gap-2">
             <div class="text-sm">
               {{
-             product.rules.length
-              ? product.rules.map((rule: Rule) => rule.id).join(', ')
-              : ''
+                product.rules.length
+                  ? product.rules.map((rule: Rule) => rule.id).join(', ')
+                  : ''
               }}
             </div>
             <button
@@ -278,9 +278,7 @@ const productQuantityModel = computed({
                   : 'Выбрать'
               }}
             </button> -->
-            <div v-else class="text-center text-xs">
-                Ближайшее время
-              </div>
+            <div v-else class="text-center text-xs">Ближайшее время</div>
           </div>
         </div>
         <div class="flex flex-col">
@@ -325,7 +323,6 @@ const productQuantityModel = computed({
           />
         </div>
       </div>
-      
     </div>
   </div>
 </template>

@@ -6,6 +6,7 @@ interface IProps {
 }
 const props = defineProps<IProps>()
 const { $dayjs } = useNuxtApp()
+const emit = defineEmits(['logModal'])
 
 const removeCart = (index: number) => {
   
@@ -27,6 +28,7 @@ const removeCart = (index: number) => {
             <th class="text-center">Статус</th>
             <th class="text-center">Дата создания</th>
             <th class="text-center">Дата завершения</th>
+            <th class="text-center">Инфо</th>
             <!-- <th class="text-center"></th> -->
           </tr>
         </thead>
@@ -138,6 +140,36 @@ const removeCart = (index: number) => {
                 Нет
               </div>
             </td>
+            <td
+                class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
+              >
+                <div class="rounded-lg p-0.5 text-center">
+                  <button
+                    @click="$emit('logModal', item.id)"
+                    class="btn btn-primary btn-sm btn-square mb-2"
+                  >
+                    <svg
+                      data-v-f136eeaa=""
+                      data-v-a5d236d9=""
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      aria-hidden="true"
+                      role="img"
+                      class="icon"
+                      width="20px"
+                      height="20px"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
             <!-- <td class="text-center max-w-[60px]">
               <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="removeCart(item.id)">
                 <IconCSS name="material-symbols:close" size="15" />

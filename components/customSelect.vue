@@ -82,6 +82,7 @@ onUnmounted(() => {
 
 defineExpose({
   updateText,
+  updateValue,
 })
 </script>
 
@@ -104,7 +105,7 @@ defineExpose({
     </div>
     <ul
       v-if="dropdownOpened"
-      class="absolute shadow-md z-[1] bg-base-100 rounded-lg mt-2 w-full flex flex-col gap-y-0.5"
+      class="absolute shadow-md z-[1] bg-base-100 rounded-lg mt-2 w-full flex flex-col gap-y-0.5 max-h-[300px] overflow-y-auto overflow-x-hidden"
     >
       <li
         v-if="rangesConfig.length > 0"

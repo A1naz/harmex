@@ -22,14 +22,11 @@ async function getReady(user: Document) {
     const currentstatus = item.statusdelivery?.length
       ? item.statusdelivery[item.statusdelivery.length - 1].status
       : 'Неизвестно'
-    return (
-      currentstatus === 'Готов к выдаче' ||
-      currentstatus === 'Готов к получению'
-    )
+    return currentstatus.includes('заказ доставлен')
   })
   const buyoutsId = filtered.map((item) => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
- const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
+  const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
 
   const format = await Promise.all(
     filtered
@@ -39,7 +36,11 @@ async function getReady(user: Document) {
         )
 
         if (!buyout) return undefined
-        const foundLog = logs.find(item => item.buyout.valueOf() === buyout._id.valueOf() && item.text.includes('Выкуп выполнен'));
+        const foundLog = logs.find(
+          (item) =>
+            item.buyout.valueOf() === buyout._id.valueOf() &&
+            item.text.includes('Выкуп выполнен')
+        )
         const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt)
         const place = index + 1
         const finishDateHours = finishDate.getHours()
@@ -62,8 +63,7 @@ async function getReady(user: Document) {
           ? new Date(
               delivery.statusdelivery?.find(
                 (item) =>
-                  item.status === 'Готов к выдаче' ||
-                  item.status === 'Готов к получению'
+                  item.status.includes('заказ доставлен')
               )?.date
             )
           : new Date()

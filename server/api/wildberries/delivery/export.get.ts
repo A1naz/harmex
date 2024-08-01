@@ -88,6 +88,7 @@ export default eventHandler(async (event) => {
           arrivedDate: arrivedDate ? new Date(arrivedDate.date) : '-',
           receivedDate: receivedDate ? new Date(receivedDate.date) : '-',
           place: index + 1,
+          key: buyout.ff ? 'Выкуп под ключ' : 'Выкуп',
         }
       })
     )
@@ -162,6 +163,12 @@ export default eventHandler(async (event) => {
       {
         header: 'Код выдачи',
         key: 'receiptcode',
+        width: 16,
+        font: { bold: true },
+      },
+      {
+        header: 'Тип выкупа',
+        key: 'key',
         width: 16,
         font: { bold: true },
       },

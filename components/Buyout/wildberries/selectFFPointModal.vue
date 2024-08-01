@@ -23,8 +23,9 @@ function closeModal() {
 }
 const loading = ref(false)
 const map = ref()
-function handleSelect(address: string) {
-  if (props.pickpoints.findIndex((item: any) => item.a === address) === -1) {
+function handleSelect(address: any) {
+  
+  if (props.pickpoints.findIndex((item: any) => item.a === address.a) === -1) {
     return notify({
       type: 'error',
       title: 'Что-то пошло не так',
@@ -32,31 +33,31 @@ function handleSelect(address: string) {
     })
   }
 
-  let pointStore = localStorage.getItem('wildberriesFFPointStore')
-  if (!pointStore) pointStore = ''
+  // let pointStore = localStorage.getItem('wildberriesFFPointStore')
+  // if (!pointStore) pointStore = ''
 
-  const arr = pointStore.trim().split('--').reverse()
-  if (arr[0] === '') arr.shift()
-  if (arr.length > 20) arr.shift()
-  arr.push(address)
-  const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('wildberriesFFPointStore', unique.join('--'))
+  // const arr = pointStore.trim().split('--').reverse()
+  // if (arr[0] === '') arr.shift()
+  // if (arr.length > 20) arr.shift()
+  // arr.push(address)
+  // const unique = [...new Set(arr)].reverse()
+  // localStorage.setItem('wildberriesFFPointStore', unique.join('--'))
   emit('callback', address)
   closeModal()
 }
 
-function handleDelete(address: string) {
-  let pointStore = localStorage.getItem('wildberriesFFPointStore')
-  if (!pointStore) pointStore = ''
-  const arr = pointStore.trim().split('--').reverse()
-  arr.splice(arr.indexOf(address), 1)
-  const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('wildberriesFFPointStore', unique.join('--'))
-  emit('callback', address)
-  lastPoints.value = unique
-}
+// function handleDelete(address: string) {
+//   let pointStore = localStorage.getItem('wildberriesFFPointStore')
+//   if (!pointStore) pointStore = ''
+//   const arr = pointStore.trim().split('--').reverse()
+//   arr.splice(arr.indexOf(address), 1)
+//   const unique = [...new Set(arr)].reverse()
+//   localStorage.setItem('wildberriesFFPointStore', unique.join('--'))
+//   emit('callback', address)
+//   lastPoints.value = unique
+// }
 
-const lastPoints = ref(localStorage.getItem('wildberriesFFPointStore')?.split('--'))
+// const lastPoints = ref(localStorage.getItem('wildberriesFFPointStore')?.split('--'))
 const presetCluster = 'islands#violetClusterIcons'
 
 const originalBounds = ref([
@@ -139,8 +140,11 @@ onMounted(async () => {
           properties: {
             iconContent: 'WB',
             data: {
+              id:  point.id,
               a: point.a,
               w: point.w,
+              lg: point.lg,
+              lt: point.lt,
             },
           },
           options: {
@@ -190,7 +194,7 @@ onMounted(async () => {
             myBalloonContentLayout.superclass.clear.call(this)
           },
           select: () => {
-            handleSelect(obj.properties.data.a)
+            handleSelect(obj.properties.data)
           },
         }
       )
@@ -258,9 +262,9 @@ onKeyStroke('Escape', (e) => {
           <div class="w-full h-full">
             <div id="ymap" class="yandex-container rounded-lg" />
           </div>
-          <div class="last md:h-full rounded-lg p-2 max-w-xs">
-            <h2 class="font-bold">Последние использованные ПВЗ</h2>
-            <div
+          <div class="md:h-full rounded-lg p-2">
+            <!-- <h2 class="font-bold">Последние использованные ПВЗ</h2> -->
+            <!-- <div
               class="flex flex-col gap-2 mt-2 overflow-y-auto overflow-x-hidden"
               :style="`height: ${height - height / 3.3}px`"
             >
@@ -298,7 +302,7 @@ onKeyStroke('Escape', (e) => {
                   </svg>
                 </button>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
