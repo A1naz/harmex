@@ -1,0 +1,73 @@
+//Меньше 480 включительно
+//class="header-nav__title"
+
+@media (max-width: 480px){
+   
+}
+
+@mixin xxl {
+    @media (max-width: 1400px){
+        @content;
+    }
+}
+
+@mixin xl1360 {
+    @media (max-width: 1360px){
+        @content;
+    }
+}
+
+@mixin xl {
+   @media (max-width: 1170px){
+       @content;
+   }
+}
+
+@mixin lg {
+   @media (max-width: 991px){
+       @content;
+   }
+}
+
+@mixin md {
+   @media (max-width: 768px){
+       @content;
+   }
+}
+
+@mixin md600 {
+    @media (max-width: 600px){
+        @content;
+    }
+ }
+
+@mixin md600 {
+    @media (max-width: 600px){
+        @content;
+    }
+ }
+
+@mixin sm {
+   @media (max-width: 577px){
+       @content;
+   }
+}
+
+@mixin xs {
+   @media (max-width: 460px){
+       @content;
+   }
+}
+
+@mixin xs360 {
+    @media (max-width: 360px){
+        @content;
+    }
+ }
+
+// Пример
+/*
+@include _768 {
+   
+}
+*/
