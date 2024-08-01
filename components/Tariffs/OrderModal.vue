@@ -9,7 +9,8 @@ const props = defineProps({
   },
   tariffName: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
   },
   tariffPrice: {
     type: String,
@@ -18,10 +19,15 @@ const props = defineProps({
   type: {
     type: String,
     required: true,
-  }
+  },
+  qr: {
+    type: String,
+    default: '/icons/tarrifsImages/qr.png',
+  },
 })
 const emit = defineEmits(['close', 'changeType'])
-
+const store = useMainStore()
+import { notify } from '@kyvg/vue3-notification'
 
 // const extractValues = (items: any) => {
 //   return items.map((item: any) => {
@@ -38,6 +44,11 @@ const emit = defineEmits(['close', 'changeType'])
 // const ratingIncreaseValues = computed(() => {
 //   return extractValues(props.tariff.ratingIncrease)
 // })
+
+async function copyToClipboard(text: string) {
+  await navigator.clipboard.writeText(text)
+  notify({ text: 'Скопировано в буфер обмена', type: 'success' })
+}
 
 onKeyStroke('Escape', (e) => {
   e.preventDefault()
@@ -69,12 +80,12 @@ onKeyStroke('Escape', (e) => {
             id="success-popup"
           >
             <div class="success-popup__icon flex justify-center">
-              <nuxt-img  :src="`/icons/tarrifsImages/success.svg`" />
+              <nuxt-img :src="`/icons/tarrifsImages/success.svg`" />
             </div>
             <div class="success-popup__title">Платеж успешно обработан</div>
             <div class="success-popup__text">
-              Поздравляем, вы оплатили <b>«{{ tariffName }}».</b> <br />Наш менеджер свяжется с
-              вами в ближайшее время.
+              Поздравляем, вы оплатили <b>«{{ tariffName }}».</b> <br />Наш
+              менеджер свяжется с вами в ближайшее время.
             </div>
 
             <div class="success-popup__btns">
@@ -91,7 +102,7 @@ onKeyStroke('Escape', (e) => {
             id="error-popup"
           >
             <div class="error-popup__icon flex justify-center">
-              <nuxt-img  :src="`/icons/tarrifsImages/error.svg`" :alt="'icon'" />
+              <nuxt-img :src="`/icons/tarrifsImages/error.svg`" :alt="'icon'" />
             </div>
             <div class="error-popup__title">Ошибка оплаты</div>
             <div class="error-popup__text">
@@ -118,9 +129,9 @@ onKeyStroke('Escape', (e) => {
             <div class="requisites">
               <div class="requisites__item">
                 <div class="requisites__name">Получатель платежа:</div>
-                <div class="requisites__text">ООО «MarketMonstr»</div>
+                <div class="requisites__text">ООО "ФИНХАБ"</div>
               </div>
-              <div class="requisites__item">
+              <div class="requisites__item" v-if="tariffName">
                 <div class="requisites__name">Наименование товара/услуги:</div>
                 <div class="requisites__text">
                   {{ tariffName }}
@@ -128,7 +139,9 @@ onKeyStroke('Escape', (e) => {
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Получатель чека:</div>
-                <div class="requisites__text">8(999) 999-99-99</div>
+                <div class="requisites__text">
+                  {{ store.client.phoneNumber }}
+                </div>
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Метод оплаты:</div>
@@ -162,7 +175,7 @@ onKeyStroke('Escape', (e) => {
                 <div class="requisites__name">Получатель платежа:</div>
                 <div class="requisites__text">ООО «MarketMonstr»</div>
               </div>
-              <div class="requisites__item">
+              <div class="requisites__item" v-if="tariffName">
                 <div class="requisites__name">Наименование товара/услуги:</div>
                 <div class="requisites__text">
                   {{ tariffName }}
@@ -170,7 +183,9 @@ onKeyStroke('Escape', (e) => {
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Получатель чека:</div>
-                <div class="requisites__text">8(999) 999-99-99</div>
+                <div class="requisites__text">
+                  {{ store.client.phoneNumber }}
+                </div>
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Метод оплаты:</div>
@@ -190,7 +205,7 @@ onKeyStroke('Escape', (e) => {
                   <li>Произвести оплату.</li>
                 </ol>
                 <div class="qr__img">
-                  <nuxt-img  :src="`/icons/tarrifsImages/qr.jpg`" />
+                  <nuxt-img :src="qr" />
                 </div>
               </div>
             </div>
@@ -199,42 +214,57 @@ onKeyStroke('Escape', (e) => {
               <div class="pay-popup__subtitle">Реквизиты:</div>
               <div class="requisites__item">
                 <div class="requisites__name">ИНН:</div>
-                <div class="requisites__text">1215156989</div>
+                <div class="requisites__text">5007123410</div>
 
-                <div class="requisites__copy">
-                  <nuxt-img  :src="`/icons/tarrifsImages/copy.svg`" />
+                <div
+                  class="requisites__copy"
+                  @click="copyToClipboard('5007123410')"
+                >
+                  <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">КПП</div>
-                <div class="requisites__text">121501001</div>
+                <div class="requisites__text">500701001</div>
 
-                <div class="requisites__copy">
-                  <nuxt-img  :src="`/icons/tarrifsImages/copy.svg`" />
+                <div
+                  class="requisites__copy"
+                  @click="copyToClipboard('500701001')"
+                >
+                  <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">БИК</div>
-                <div class="requisites__text">042202826</div>
+                <div class="requisites__text">044525593</div>
 
-                <div class="requisites__copy">
-                  <nuxt-img  :src="`/icons/tarrifsImages/copy.svg`" />
+                <div
+                  class="requisites__copy"
+                  @click="copyToClipboard('044525593')"
+                >
+                  <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Р/С:</div>
-                <div class="requisites__text">30101810200000000824</div>
+                <div class="requisites__text">40702810701300038351</div>
 
-                <div class="requisites__copy">
-                  <nuxt-img  :src="`/icons/tarrifsImages/copy.svg`" />
+                <div
+                  class="requisites__copy"
+                  @click="copyToClipboard('40702810701300038351')"
+                >
+                  <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">К/С:</div>
-                <div class="requisites__text">30101810200000000824</div>
+                <div class="requisites__text">30101810200000000593</div>
 
-                <div class="requisites__copy">
-                  <nuxt-img  :src="`/icons/tarrifsImages/copy.svg`" />
+                <div
+                  class="requisites__copy"
+                  @click="copyToClipboard('30101810200000000593')"
+                >
+                  <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
               </div>
               <div class="requisites__item">
@@ -243,27 +273,42 @@ onKeyStroke('Escape', (e) => {
                   Банк ФИЛИАЛ "НИЖЕГОРОДСКИЙ" АО "АЛЬФА-БАНК"
                 </div>
 
-                <div class="requisites__copy">
-                  <nuxt-img  :src="`/icons/tarrifsImages/copy.svg`" />
+                <div
+                  class="requisites__copy"
+                  @click="
+                    copyToClipboard('Банк ФИЛИАЛ НИЖЕГОРОДСКИЙ АО АЛЬФА-БАНК')
+                  "
+                >
+                  <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Сумма:</div>
                 <div class="requisites__text">{{ tariffPrice }} ₽</div>
 
-                <div class="requisites__copy">
-                  <nuxt-img  :src="`/icons/tarrifsImages/copy.svg`" />
+                <div
+                  class="requisites__copy"
+                  @click="copyToClipboard(tariffPrice)"
+                >
+                  <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Назначение платежа: </div>
                 <div class="requisites__text">
                   Оплата по счету № 09499-21239964 от 14.05.2024, в пользу ИНН
-                  632412152788, #32400. НДС не облагается
+                  5007123410, #32400. НДС не облагается
                 </div>
 
-                <div class="requisites__copy">
-                  <nuxt-img  :src="`/icons/tarrifsImages/copy.svg`" />
+                <div
+                  class="requisites__copy"
+                  @click="
+                    copyToClipboard(
+                      'Оплата по счету 09499-21239964 от 14.05.2024, в пользу ИНН 5007123410, #32400. НДС не облагается'
+                    )
+                  "
+                >
+                  <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
               </div>
             </div>
@@ -288,9 +333,12 @@ onKeyStroke('Escape', (e) => {
             </div>
 
             <div class="credit-list">
-              <label @click="$emit('changeType', 'credit-sber')" class="credit-list__item btn-popup">
+              <label
+                @click="$emit('changeType', 'credit-sber')"
+                class="credit-list__item btn-popup"
+              >
                 <div class="credit-list__img">
-                  <nuxt-img  :src="`/icons/tarrifsImages/bank4.svg`" />
+                  <nuxt-img :src="`/icons/tarrifsImages/bank4.svg`" />
                 </div>
                 <div class="credit-list__discr">
                   <div class="credit-list__name">В рассрочку от СберБанка</div>
@@ -299,9 +347,12 @@ onKeyStroke('Escape', (e) => {
                   </div>
                 </div>
               </label>
-              <label @click="$emit('changeType', 'credit-tinkoff')" class="credit-list__item btn-popup">
+              <label
+                @click="$emit('changeType', 'credit-tinkoff')"
+                class="credit-list__item btn-popup"
+              >
                 <div class="credit-list__img">
-                  <nuxt-img  :src="`/icons/tarrifsImages/bank5.png`" />
+                  <nuxt-img :src="`/icons/tarrifsImages/bank5.png`" />
                 </div>
                 <div class="credit-list__discr">
                   <div class="credit-list__name">
@@ -312,9 +363,12 @@ onKeyStroke('Escape', (e) => {
                   </div>
                 </div>
               </label>
-              <label @click="$emit('changeType', 'credit-home')"  class="credit-list__item btn-popup">
+              <label
+                @click="$emit('changeType', 'credit-home')"
+                class="credit-list__item btn-popup"
+              >
                 <div class="credit-list__img">
-                  <nuxt-img  :src="`/icons/tarrifsImages/bank6.png`" />
+                  <nuxt-img :src="`/icons/tarrifsImages/bank6.png`" />
                 </div>
                 <div class="credit-list__discr">
                   <div class="credit-list__name">
@@ -341,7 +395,7 @@ onKeyStroke('Escape', (e) => {
             id="credit-bank1"
           >
             <div class="credit-popup__icon flex justify-center">
-              <nuxt-img  :src="`/icons/tarrifsImages/bank7.svg`" />
+              <nuxt-img :src="`/icons/tarrifsImages/bank7.svg`" />
             </div>
             <div class="credit-popup__title">В рассрочку от СберБанка</div>
             <div class="credit-popup__subtitle">
@@ -392,11 +446,9 @@ onKeyStroke('Escape', (e) => {
             id="credit-bank2"
           >
             <div class="credit-popup__icon flex justify-center">
-              <nuxt-img  :src="`/icons/tarrifsImages/bank8.png`" />
+              <nuxt-img :src="`/icons/tarrifsImages/bank8.png`" />
             </div>
-            <div class="credit-popup__title">
-              В рассрочку от Тинькофф Банка
-            </div>
+            <div class="credit-popup__title">В рассрочку от Тинькофф Банка</div>
             <div class="credit-popup__subtitle">
               Онлайн оформление за 5 минут, до 600 000 ₽ без переплаты
             </div>
@@ -445,7 +497,7 @@ onKeyStroke('Escape', (e) => {
             id="credit-bank3"
           >
             <div class="credit-popup__icon flex justify-center">
-              <nuxt-img  :src="`/icons/tarrifsImages/bank9.png`" />
+              <nuxt-img :src="`/icons/tarrifsImages/bank9.png`" />
             </div>
             <div class="credit-popup__title">В рассрочку от ХоумКредит</div>
             <div class="credit-popup__subtitle">
@@ -490,7 +542,11 @@ onKeyStroke('Escape', (e) => {
             <a href="#" class="btn btn--blue w-100 pay-popup__btn">Выбрать</a>
           </div>
 
-          <div v-if="type === 'balance'"  class="balance-pay zoom-anim-dialog mfp-hide" id="balance-pay">
+          <div
+            v-if="type === 'balance'"
+            class="balance-pay zoom-anim-dialog mfp-hide"
+            id="balance-pay"
+          >
             <div class="balance-pay__title">Введите сумму пополнения:</div>
             <!-- <select class="balance-pay__select">
               <option value="Wildberries">Wildberries</option>

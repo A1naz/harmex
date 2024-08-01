@@ -14,8 +14,8 @@ const props = defineProps({
       currency: 'RUB',
       currencyDisplay: 'symbol',
       valueRange: {
-        min: 100,
-        max: 100000,
+        min: 250,
+        max: 250000,
       },
       hideCurrencySymbolOnFocus: false,
       hideGroupingSeparatorOnFocus: false,

@@ -72,18 +72,15 @@ function toggleInfoModal() {
 
 const statusText = computed(() => {
   if (route.path.startsWith('/profile')) {
-    return 'Профиль';
-  }else if (route.path.startsWith('/tariffs')) {
-    return 'Тарифы';
+    return 'Профиль'
+  } else if (route.path.startsWith('/tariffs')) {
+    return 'Тарифы'
   } else if (route.path.startsWith('/productlikes')) {
     return 'Лайки'
-  }else
-  {
-    return (
-      storeMain.client.mmenuItems
-        .flatMap((section) => section.items)
-        .find((item) => route.path.startsWith(item.path))?.title 
-    );
+  } else {
+    return storeMain.client.mmenuItems
+      .flatMap((section) => section.items)
+      .find((item) => route.path.startsWith(item.path))?.title
   }
 })
 
@@ -111,7 +108,7 @@ const statusText = computed(() => {
       ref="drawerContent"
       @scroll="handleScroll"
       class="drawer-content w-full overflow-auto h-[100vh] scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin bg-base-200"
-      :class="{'overflow-hidden': route.path === '/guide'}"
+      :class="{ 'overflow-hidden': route.path === '/guide' }"
     >
       <Transition name="bounce">
         <Icon
@@ -245,14 +242,14 @@ const statusText = computed(() => {
                     class="tooltip before:w-[109px] before:content-[attr(data-tip)]"
                     data-tip="Пополнить баланс"
                   >
-                    <!-- <div v-if="storeMain.client.role !== UserRoles.staff">
+                    <div v-if="storeMain.client.role !== UserRoles.staff">
                       <label
                         for="payment-modal"
-                        class="btn btn-block relative btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold pb-2"
+                        class="btn btn-block relative btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold"
                       >
                         +
                       </label>
-                    </div> -->
+                    </div>
 
                     <!-- <NuxtLink
                       :external="true"
@@ -303,8 +300,8 @@ const statusText = computed(() => {
           <div class="w-full hover:cursor-default p-0 block mt-8 lg:mt-0">
             <div class="join flex justify-around w-full items-center p-0 m-0">
               <label class="join-item btn btn-ghost btn-square z-10"
-                  ><Icon class="w-6 h-6" name="mdi:support"
-                /></label>
+                ><Icon class="w-6 h-6" name="mdi:support"
+              /></label>
               <!-- <a target="_blank" href="#">
                 <label class="join-item btn btn-ghost btn-square z-10"
                   ><Icon class="w-6 h-6" name="mdi:support"
@@ -327,16 +324,13 @@ const statusText = computed(() => {
                 />
 
                 <!-- moon icon -->
-                <Icon
-                  class="swap-off fill-current w-6 h-6"
-                  name="ooui:moon"
-                />
+                <Icon class="swap-off fill-current w-6 h-6" name="ooui:moon" />
               </label>
               <div
                 class="join-item btn btn-ghost gap-2 flex justify-center items-center normal-case w-[20%] hover:cursor-pointer rounded-lg p-0 m-0"
                 @click="logout"
               >
-                <Icon name="ion:exit" size="24"/>
+                <Icon name="ion:exit" size="24" />
                 <!-- <span> Выйти </span> -->
               </div>
             </div>
