@@ -1,5 +1,6 @@
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
+import { v4 as uuid } from 'uuid'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -20,7 +21,6 @@ export default eventHandler(async (event) => {
       }
     })
   })
-  console.log(qrCode)
 
-  return { qrCode }
+  return { qrCode, uuid: uuid() }
 })

@@ -14,6 +14,7 @@ const loading = ref(false)
 const timer = ref(1200)
 const orderModal = ref(false)
 const qrCodeImg = ref('')
+const orderUuid = ref('')
 
 function cancelPayment() {
   url.value = ''
@@ -45,6 +46,7 @@ async function createPayment() {
 
   if (data.value) {
     qrCodeImg.value = data.value.qrCode
+    orderUuid.value = data.value.uuid
     loading.value = false
     closePaymentModal.value?.click()
     orderModal.value = true
@@ -128,6 +130,7 @@ async function createPayment() {
     :tariffPrice="paymentForm.paymentSum.toString()"
     :type="'account-pay'"
     :qr="qrCodeImg"
+    :orderUuid="orderUuid"
     @close="orderModal = false"
   />
 </template>

@@ -24,6 +24,10 @@ const props = defineProps({
     type: String,
     default: '/icons/tarrifsImages/qr.png',
   },
+  orderUuid: {
+    type: String,
+    default: '',
+  },
 })
 const emit = defineEmits(['close', 'changeType'])
 const store = useMainStore()
@@ -122,7 +126,7 @@ onKeyStroke('Escape', (e) => {
           >
             <div class="payment-popup__title">Оформление заказа</div>
             <div class="payment-popup__order">
-              Оплата заказа №21239964 (4715)
+              Оплата заказа {{ orderUuid }}
               <span class="payment-popup__sum">{{ tariffPrice }} ₽</span>
             </div>
 
@@ -166,7 +170,7 @@ onKeyStroke('Escape', (e) => {
           >
             <div class="payment-popup__title">Оформление заказа</div>
             <div class="payment-popup__order">
-              Оплата заказа №21239964 (4715)
+              Оплата заказа {{ orderUuid }}
               <span class="payment-popup__sum">{{ tariffPrice }} ₽</span>
             </div>
 
@@ -328,7 +332,7 @@ onKeyStroke('Escape', (e) => {
           >
             <div class="payment-popup__title">Оформление заказа</div>
             <div class="payment-popup__order">
-              Оплата заказа №21239964 (4715)
+              Оплата заказа {{ orderUuid }}
               <span class="payment-popup__sum">{{ tariffPrice }} ₽</span>
             </div>
 
@@ -427,7 +431,7 @@ onKeyStroke('Escape', (e) => {
             <div class="credit-info">
               <div class="credit-info__item">
                 <div class="credit-info__text">
-                  Оплата заказа №21239964 (4715)
+                  Оплата заказа {{ orderUuid }}
                 </div>
                 <div class="credit-info__sum">{{ tariffPrice }} ₽</div>
               </div>
@@ -478,7 +482,7 @@ onKeyStroke('Escape', (e) => {
             <div class="credit-info">
               <div class="credit-info__item">
                 <div class="credit-info__text">
-                  Оплата заказа №21239964 (4715)
+                  Оплата заказа {{ orderUuid }}
                 </div>
                 <div class="credit-info__sum">{{ tariffPrice }} ₽</div>
               </div>
@@ -529,7 +533,7 @@ onKeyStroke('Escape', (e) => {
             <div class="credit-info">
               <div class="credit-info__item">
                 <div class="credit-info__text">
-                  Оплата заказа №21239964 (4715)
+                  Оплата заказа {{ orderUuid }}
                 </div>
                 <div class="credit-info__sum">{{ tariffPrice }} ₽</div>
               </div>
