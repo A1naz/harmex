@@ -28,6 +28,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  paymentPurpose: {
+    type: String,
+    default: '',
+  },
 })
 const emit = defineEmits(['close', 'changeType'])
 const store = useMainStore()
@@ -300,8 +304,7 @@ onKeyStroke('Escape', (e) => {
               <div class="requisites__item">
                 <div class="requisites__name">Назначение платежа: </div>
                 <div class="requisites__text">
-                  Оплата по счету № 09499-21239964 от 14.05.2024, в пользу ИНН
-                  5007123410, #32400. НДС не облагается
+                  {{ paymentPurpose }}
                 </div>
 
                 <div

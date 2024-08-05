@@ -13,7 +13,7 @@ export default eventHandler(async (event) => {
   const paymentUuid = uuid()
   const purpose = `Оплата по счету ${paymentUuid} от ${purposeDate},  в пользу ИНН 5007123410, #32400. НДС не облагается`
 
-  const data = `ST00012|Name=ООО "ФИНХАБ"|PersonalAcc=40702810701300038351|BankName=АО "АЛЬФА-БАНК"|BIC=044525593|CorrespAcc=30101810200000000593|Purpose=Пополнение баланса|Sum=${
+  const data = `ST00012|Name=ООО "ФИНХАБ"|PersonalAcc=40702810701300038351|BankName=АО "АЛЬФА-БАНК"|BIC=044525593|CorrespAcc=30101810200000000593|Purpose=Оплата тарифа|Sum=${
     summ * 100
   }|PayeeINN=5007123410|KPP=500701001`
 
