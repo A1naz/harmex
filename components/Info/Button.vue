@@ -27,7 +27,7 @@ const route = useRoute()
       <IconCSS name="fa-solid:question-circle" size="20" />
     </NuxtLink>
     <NuxtLink
-      
+      disabled
       to="/tariffs"
       class="relative bg-base-100 btn btn-xs btn-circle border-none"
     >
