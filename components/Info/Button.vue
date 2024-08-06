@@ -17,7 +17,6 @@ const route = useRoute()
     </button> -->
     <button class="relative bg-base-100 btn btn-xs btn-circle border-none">
       <IconCSS size="18" class="h-8 w-8" name="fontisto:bell-alt" />
-      
     </button>
 
     <NuxtLink
@@ -27,13 +26,13 @@ const route = useRoute()
       <IconCSS name="fa-solid:question-circle" size="20" />
     </NuxtLink>
     <NuxtLink
+      :disabled="store.client.username !== 'test'"
       to="/tariffs"
       class="relative bg-base-100 btn btn-xs btn-circle border-none"
     >
       <IconCSS name="pepicons-pop:dollar-circle-filled" size="20" />
     </NuxtLink>
     <NuxtLink
-      
       to="/profile"
       class="relative bg-base-100 btn btn-xs btn-circle border-none"
     >
@@ -42,6 +41,4 @@ const route = useRoute()
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
