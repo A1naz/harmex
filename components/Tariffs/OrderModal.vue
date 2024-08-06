@@ -311,7 +311,7 @@ onKeyStroke('Escape', (e) => {
                   class="requisites__copy"
                   @click="
                     copyToClipboard(
-                      'Оплата по счету 09499-21239964 от 14.05.2024, в пользу ИНН 5007123410, #32400. НДС не облагается'
+                      paymentPurpose
                     )
                   "
                 >

@@ -5,7 +5,13 @@ definePageMeta({
   title: 'Тарифы',
 })
 
+import { notify } from '@kyvg/vue3-notification'
 const tariffsValue = ref(false)
+
+const qrCodeImg = ref('/icons/tarrifsImages/qr.png')
+const orderUuid = ref('')
+const paymentPurpose = ref('')
+
 const tariffStats = ref([
   {
     icon: 'ph:wallet-fill',
@@ -139,7 +145,9 @@ function openPurchaseModal(tariffName: string) {
     form.type
   ].tariffs.find((tariff: any) => tariff.title === tariffName)
 
-  tariffFullName.value = `${ tariffs.value[form.mp][form.title].title } ${tariffs.value[form.mp][form.title].type[form.type].title.toLowerCase()} ,
+  tariffFullName.value = `${
+    tariffs.value[form.mp][form.title].title
+  } ${tariffs.value[form.mp][form.title].type[form.type].title.toLowerCase()} ,
   ${
     form.dateRange.replace('months', '') == '3'
       ? '3 месяца'
@@ -147,12 +155,34 @@ function openPurchaseModal(tariffName: string) {
   }
   , Тарифный план "${currentTariff.value.title}"`
 
-  tariffPrice.value = currentTariff.value.prices[form.dateRange.replace('months', '')]
+  tariffPrice.value =
+    currentTariff.value.prices[form.dateRange.replace('months', '')]
 
   modal.value = true
 }
 
-function openOrderModal(type: string) {
+async function openOrderModal(type: string, options: any = {}) {
+  if (type == 'account-pay') {
+    //@ts-ignore
+    const { data, error }: any = await useFetch('/api/payment/getTariffsQr', {
+      method: 'GET',
+      query: {
+        summ: tariffPrice,
+      },
+    })
+
+    if (data.value) {
+      qrCodeImg.value = data.value.qrCode
+      orderUuid.value = data.value.uuid
+      paymentPurpose.value = data.value.purpose
+
+      orderModal.value = true
+    } else {
+      notify({ text: 'Произошла ошибка', type: 'error' })
+      return
+    }
+  }
+
   modal.value = false
   orderModalType.value = type
   orderModal.value = true
@@ -161,7 +191,6 @@ function openOrderModal(type: string) {
 
 <template>
   <div class="my-4 bg-base-100 rounded-lg flex flex-col">
-
     <TariffsModal
       :state="modal"
       :tariff="currentTariff"
@@ -170,7 +199,7 @@ function openOrderModal(type: string) {
       :form="form"
       :currentType="orderModalType"
       @close="modal = false"
-      @continue="(type:string) => openOrderModal(type)"
+      @continue="(type:string, options: any) => openOrderModal(type, options)"
     />
     <TariffsOrderModal
       :state="orderModal"
@@ -178,6 +207,9 @@ function openOrderModal(type: string) {
       :tariffPrice="tariffPrice"
       :type="orderModalType"
       @close="orderModal = false"
+      :qr="qrCodeImg"
+      :orderUuid="orderUuid"
+      :paymentPurpose="paymentPurpose"
       @change-type="(type: string) => orderModalType = type"
     />
     <TariffsUserSubscription

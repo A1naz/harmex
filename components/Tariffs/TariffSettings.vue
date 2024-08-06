@@ -69,6 +69,7 @@ const currentData = computed(() => {
           @change-value="(value) => setMp(value.value)"
         />
         <button
+        disabled
           v-for="(image, index) in images"
           :key="index"
           class="hidden md:flex flex-grow rounded-lg justify-center"

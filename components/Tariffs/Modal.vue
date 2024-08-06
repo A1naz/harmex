@@ -71,6 +71,7 @@ function nextModal(type: string) {
     })
     return
   }
+
   emit('continue', type)
 }
 

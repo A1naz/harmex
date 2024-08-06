@@ -11,9 +11,9 @@ export default eventHandler(async (event) => {
   const dates = new Date().toISOString().slice(0, 10).split('-')
   const purposeDate = `${dates[2]}.${dates[1]}.${dates[0]}`
   const paymentUuid = uuid()
-  const purpose = `Оплата по счету ${paymentUuid} от ${purposeDate},  в пользу ИНН 5007123410, #32400. НДС не облагается`
+  const purpose = `Пополнение баланса личного кабинета - "${user.username}", по агентскому договору "${user.uuid}" от ${purposeDate}г.`
 
-  const data = `ST00012|Name=ООО "ФИНХАБ"|PersonalAcc=40702810701300038351|BankName=АО "АЛЬФА-БАНК"|BIC=044525593|CorrespAcc=30101810200000000593|Purpose=Пополнение баланса|Sum=${
+  const data = `ST00012|Name=ООО "ФИНХАБ"|PersonalAcc=40702810701300038351|BankName=АО "АЛЬФА-БАНК"|BIC=044525593|CorrespAcc=30101810200000000593|Purpose=|Sum=${
     summ * 100
   }|PayeeINN=5007123410|KPP=500701001`
 
