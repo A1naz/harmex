@@ -23,7 +23,6 @@ const props = defineProps({
       useGrouping: true,
     }),
   },
-
 })
 const { inputRef: rubInput, setValue } = useCurrencyInput(props.options)
 
@@ -31,10 +30,14 @@ watch(
   () => props.modelValue,
   (value) => {
     setValue(value)
-  },
+  }
 )
 </script>
 
 <template>
-  <input ref="rubInput" class="input input-primary w-full text-lg font-bold" type="text">
+  <input
+    ref="rubInput"
+    class="input input-primary w-full text-lg font-bold"
+    type="text"
+  />
 </template>

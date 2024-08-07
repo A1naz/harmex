@@ -1,5 +1,7 @@
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
+import { PaymentIntend } from '@/server/lib/models/PaymentIntend'
+
 import { v4 as uuid } from 'uuid'
 
 export default eventHandler(async (event) => {
@@ -25,6 +27,15 @@ export default eventHandler(async (event) => {
         resolve(data)
       }
     })
+  })
+
+  await PaymentIntend.create({
+    user: user._id,
+    summ,
+    paymentUuid,
+    type: 'balance',
+    dataoperation: new Date(),
+    comment: purpose,
   })
 
   return {

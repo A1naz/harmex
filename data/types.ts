@@ -50,6 +50,7 @@ export interface IUser extends Entity {
   telegramUnlinkEmailSend: Date
   tg2fa: boolean
   balance: number
+  tariffBalance: number
   registrationDate: Date
   partner: Partner
   tariff: ITariff

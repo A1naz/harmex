@@ -51,7 +51,7 @@ const UserSchema = new Schema<IUserSchema>({
   twoFaQR: { type: String, required: false },
   twoFaSecret: { type: String, required: false },
   isTwoFaEnabled: { type: Boolean, default: false },
-  
+
   terminateSession: { type: Boolean, default: false },
 
   tabs: [{ type: String }],
@@ -62,6 +62,7 @@ const UserSchema = new Schema<IUserSchema>({
   telegramUnlinkEmailSend: { type: Date, required: false },
   tg2fa: { type: Boolean, required: false, default: false },
   balance: { type: Number, default: 0, required: true },
+  tariffBalance: { type: Number },
   registrationDate: { type: Date, default: Date.now },
   post: { type: 'String' },
   newPassword: { type: String },
