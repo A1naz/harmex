@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
-import { email } from '@vuelidate/validators';
+import { email } from '@vuelidate/validators'
 const props = defineProps({
   tariff: {
     type: Object as any,
@@ -28,7 +28,7 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['close', 'continue'])
-const orderType = ref('')
+const orderType = ref('account-pay')
 const form = reactive({
   email: '',
   name: '',
@@ -52,7 +52,7 @@ const ratingIncreaseValues = computed(() => {
 })
 
 function nextModal(type: string) {
-  if(type === '') {
+  if (type === '') {
     notify({
       title: 'Ошибка',
       text: 'Выберите способ оплаты',
@@ -61,8 +61,11 @@ function nextModal(type: string) {
     })
     return
   }
-  if(form.phoneNumber.replace(/[\(\)\-\s]/g, '').length < 12 || form.name === '' || form.email === '')
-  {
+  if (
+    form.phoneNumber.replace(/[\(\)\-\s]/g, '').length < 12 ||
+    form.name === '' ||
+    form.email === ''
+  ) {
     notify({
       title: 'Ошибка',
       text: 'Введите корректные данные',
@@ -75,13 +78,13 @@ function nextModal(type: string) {
   emit('continue', type)
 }
 
-function clearData(){
+function clearData() {
   form.email = ''
   form.name = ''
   form.phoneNumber = ''
 }
 
-function closeModal(){
+function closeModal() {
   clearData()
   emit('close')
 }
@@ -90,7 +93,6 @@ onKeyStroke('Escape', (e) => {
   e.preventDefault()
   emit('close')
 })
-
 </script>
 
 <template>
@@ -145,7 +147,7 @@ onKeyStroke('Escape', (e) => {
                     <div class="formgroup">
                       <div class="label">Номер телефона</div>
                       <input
-                      v-model="form.phoneNumber"
+                        v-model="form.phoneNumber"
                         type="tel"
                         name="tel"
                         placeholder="Выберите ваш номер телефона"
@@ -162,18 +164,21 @@ onKeyStroke('Escape', (e) => {
                   </div>
 
                   <div class="bank-list">
-                    <label class="type-payment" @click="orderType = 'bank-pay1'">
-                      <input
+                    <label class="type-payment">
+                      <!-- <input
                         :checked="orderType === 'bank-pay1'"
                         type="radio"
                         name="type-payment"
                         value="bank-pay"
-                      />
-                      <span class="type-payment__inner" >
+                      /> -->
+                      <span
+                        class="type-payment__inner"
+                        style="cursor: not-allowed"
+                      >
                         <span class="type-payment__img">
                           <nuxt-img :src="`/icons/tarrifsImages/bank1.png`" />
                         </span>
-                        <div class="type-payment__discr" >
+                        <div class="type-payment__discr">
                           <div class="type-payment__name">СБП</div>
                           <div class="type-payment__text">
                             Быстрый платеж через мобильное приложение.
@@ -181,14 +186,17 @@ onKeyStroke('Escape', (e) => {
                         </div>
                       </span>
                     </label>
-                    <label class="type-payment" @click="orderType = 'bank-pay2'">
-                      <input
+                    <label class="type-payment">
+                      <!-- <input
                         :checked="orderType === 'bank-pay2'"
                         type="radio"
                         name="type-payment"
                         value="bank-pay"
-                      />
-                      <span class="type-payment__inner" >
+                      /> -->
+                      <span
+                        class="type-payment__inner"
+                        style="cursor: not-allowed"
+                      >
                         <span class="type-payment__img">
                           <nuxt-img :src="`/icons/tarrifsImages/bank2.png`" />
                         </span>
@@ -202,14 +210,17 @@ onKeyStroke('Escape', (e) => {
                         </div>
                       </span>
                     </label>
-                    <label class="type-payment" @click="orderType = 'account-pay'" >
+                    <label
+                      class="type-payment"
+                      @click="orderType = 'account-pay'"
+                    >
                       <input
                         :checked="orderType === 'account-pay'"
                         type="radio"
                         name="type-payment"
                         value="account-pay"
                       />
-                      <span class="type-payment__inner" >
+                      <span class="type-payment__inner">
                         <span class="type-payment__img">
                           <nuxt-img :src="`/icons/tarrifsImages/bank3.png`" />
                         </span>
@@ -223,14 +234,17 @@ onKeyStroke('Escape', (e) => {
                         </div>
                       </span>
                     </label>
-                    <label class="type-payment" @click="orderType = 'credit-pay'">
-                      <input
-                      :checked="orderType === 'credit-pay'"
+                    <label class="type-payment">
+                      <!-- <input
+                        :checked="orderType === 'credit-pay'"
                         type="radio"
                         name="type-payment"
                         value="credit-pay"
-                      />
-                      <span class="type-payment__inner">
+                      /> -->
+                      <span
+                        class="type-payment__inner"
+                        style="cursor: not-allowed"
+                      >
                         <span class="type-payment__img">
                           <nuxt-img :src="`/icons/tarrifsImages/bank4.png`" />
                         </span>
@@ -256,9 +270,7 @@ onKeyStroke('Escape', (e) => {
                         {{ tariffName }}
                       </div>
                       <div class="payment-info__summ">
-                        {{
-                          tariffPrice
-                        }}
+                        {{ tariffPrice }}
                         ₽
                       </div>
                     </div>
@@ -334,17 +346,25 @@ onKeyStroke('Escape', (e) => {
                   <div class="payment-policy">
                     Ваши личные данные будут использоваться для обработки ваших
                     заказов и других целей, описанных в нашей
-                    <a href="#">политике конфидециальности</a>, продолжая вы
-                    соглашаетесь с условиями <a href="#">оферты</a>.
+                    <a href="/conf_policy.pdf" target="_blank">политике конфидециальности</a>, продолжая вы
+                    соглашаетесь с условиями <a href="/oferta.pdf" target="_blank">оферты</a>.
                   </div>
 
                   <div class="payment-total">
                     <div class="payment-total__price">
                       <span class="payment-total__text">Итог:</span>
-                      <span class="payment-total__summ">{{ tariffPrice }} ₽</span>
+                      <span class="payment-total__summ"
+                        >{{ tariffPrice }} ₽</span
+                      >
                     </div>
 
-                    <button class="btn btn--black" @click.prevent @click="nextModal(orderType)">Продолжить</button>
+                    <button
+                      class="btn btn--black"
+                      @click.prevent
+                      @click="nextModal(orderType)"
+                    >
+                      Продолжить
+                    </button>
                   </div>
                 </div>
               </form>

@@ -31,7 +31,7 @@ export default eventHandler(async (event) => {
 
   await PaymentIntend.create({
     user: user._id,
-    summ,
+    summ: Number(summ),
     paymentUuid,
     type: 'balance',
     dataoperation: new Date(),
