@@ -98,7 +98,7 @@ const factorsValue = computed(() => {
 
 <template>
 
-  <div class="flex flex-col mt-5">
+  <div class="md:w-[95%] w-full ml-[auto] mr-[auto] flex flex-col mt-5">
     <div class="collapse collapse-arrow bg-base-100 rounded-box z-0">
       <input v-model="ratingList" type="checkbox" />
       <div class="collapse-title relative text-xl font-medium">

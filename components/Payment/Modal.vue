@@ -16,6 +16,7 @@ const orderModal = ref(false)
 const qrCodeImg = ref('')
 const orderUuid = ref('')
 const paymentPurpose = ref('')
+const selectedType = ref('balance')
 
 function cancelPayment() {
   url.value = ''
@@ -58,6 +59,9 @@ async function createPayment() {
     return
   }
 }
+function setType(e: any) {
+  selectedType.value = e.value
+}
 </script>
 
 <template>
@@ -70,12 +74,17 @@ async function createPayment() {
         class="btn btn-sm btn-circle btn-ghost absolute right-1 top-1"
         @click="cancelPayment"
         >✕</label
-      >>
+      >
 
       <div>
         <div class="w-full flex flex-col gap-2 justify-center items-start">
           <div class="sum w-full">
             <h3 class="text-lg mb-2">Введите сумму пополнения</h3>
+            <select class="select select-bordered mb-2 w-full text-[15px]" v-model="selectedType">
+              <option disabled>Тип пополнения</option>
+              <option value="tariff" disabled>Тарифный баланс</option>
+              <option selected value="balance">Баланс на покупку товаров</option>
+            </select>
             <PaymentInput v-model="paymentForm.paymentSum" />
           </div>
           <div class="fastbuttons flex gap-0.5 w-full mt-2">

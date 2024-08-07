@@ -57,7 +57,7 @@ const currentData = computed(() => {
 <template>
 
   <div
-    class="flex flex-col gap-y-4 px-1.5 py-4 bg-gradient-to-r from-[#e9f7ff] to-[#96afff] dark:from-[#172038] dark:to-[#1b1f38] rounded-lg"
+    class="flex md:w-[95%] w-full ml-[auto] mr-[auto] flex-col gap-y-4 px-1.5 py-4 bg-gradient-to-r from-[#e9f7ff] to-[#96afff] dark:from-[#172038] dark:to-[#1b1f38] rounded-lg"
   >
     <div class="flex justify-between">
 

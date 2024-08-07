@@ -32,12 +32,12 @@ const route = useRoute()
     >
       <IconCSS name="pepicons-pop:dollar-circle-filled" size="20" />
     </NuxtLink>
-    <NuxtLink
+    <!-- <NuxtLink
       to="/profile"
       class="relative bg-base-100 btn btn-xs btn-circle border-none"
     >
       <IconCSS name="ic:sharp-account-circle" size="24" />
-    </NuxtLink>
+    </NuxtLink> -->
   </div>
 </template>
 

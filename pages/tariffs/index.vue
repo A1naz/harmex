@@ -249,7 +249,7 @@ async function openOrderModal(type: string, options: any = {}) {
     <div class="h-2" />
   </div>
 
-  <div class="flex flex-col justify-center items-center bg-base-100 mt-5 p-7">
+  <!-- <div class="flex flex-col justify-center items-center bg-base-100 mt-5 p-7">
     <p class="text-lg md:text-2xl font-bold">
       Выгодные предложения для продвижения бизнеса
     </p>
@@ -311,7 +311,7 @@ async function openOrderModal(type: string, options: any = {}) {
       </button>
     </div>
     <div class="h-28" />
-  </div>
+  </div> -->
 </template>
 
 <style scoped>
