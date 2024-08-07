@@ -189,12 +189,12 @@ onKeyStroke('Escape', (e) => {
                   {{ tariffName }}
                 </div>
               </div>
-              <div class="requisites__item">
+              <!-- <div class="requisites__item">
                 <div class="requisites__name">Получатель чека:</div>
                 <div class="requisites__text">
                   {{ store.client.phoneNumber }}
                 </div>
-              </div>
+              </div> -->
               <div class="requisites__item">
                 <div class="requisites__name">Метод оплаты:</div>
                 <div class="requisites__text">Перевод на расчётный счет</div>

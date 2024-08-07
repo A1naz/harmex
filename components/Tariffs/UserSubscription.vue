@@ -16,13 +16,13 @@ const props = defineProps({
     <div
       class="px-3 py-2 bg-[#ebf0ff] dark:bg-primary dark:bg-opacity-10 mx-4 my-3 rounded-lg flex flex-col gap-3"
     >
-
-      <div v-if="!tariffsValue" class="flex flex-col gap-3 p-2 ">
-        <p class="text-sm font-normal">У вас нет активной подписки</p>
-        <p class="text-sm font-semibold">
-          Выберите желаемый маркетплейс и подключите подходящий для вас пакет
-          услуг.
-        </p>
+      <div v-if="!tariffsValue" class="flex flex-col gap-3 p-2">
+        Стандартный план для пользователя платформы:
+        <span> Покупка товара - 150 руб. за 1 ед. </span>
+        <span> Публикация отзыва - 85 руб. за 1 ед. </span>
+        <span> Лайки, вопросы, добавление в корзину - 10 руб за 1 ед. </span>
+        Хотите получить более выгодные условия, активируйте подходящий для вас
+        тарифный план ↓
       </div>
 
       <div v-else class="flex flex-col gap-2 overflow-x-auto">
@@ -31,8 +31,10 @@ const props = defineProps({
           <p class="text-md text-[#558ff6] dark::text-primary">Basic</p>
           <span class="text-xs text-[#9a9aa0] font-thin"> 3 мес.</span>
         </span>
-        <div class=" lg:overflow-hidden overflow-x-auto">
-          <div class="min-w-max grid grid-cols-6 gap-y-3.5 gap-x-3 justify-between">
+        <div class="lg:overflow-hidden overflow-x-auto">
+          <div
+            class="min-w-max grid grid-cols-6 gap-y-3.5 gap-x-3 justify-between"
+          >
             <div
               v-for="tariff in tariffStats"
               class="flex flex-col px-5 py-1 bg-[#d6e0ff] dark:bg-primary dark:bg-opacity-5 rounded-lg"
@@ -44,7 +46,9 @@ const props = defineProps({
               <p class="text-xs mt-0.5 mb-2 text-[#6788f3] dark:text-primar">
                 {{ tariff.title }}
               </p>
-              <p class="text-xs md:text-lg font-bold mt-auto">{{ tariff.value }}</p>
+              <p class="text-xs md:text-lg font-bold mt-auto">
+                {{ tariff.value }}
+              </p>
             </div>
           </div>
         </div>
@@ -53,6 +57,4 @@ const props = defineProps({
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
