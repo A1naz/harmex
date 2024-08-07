@@ -80,11 +80,20 @@ function setType(e: any) {
         <div class="w-full flex flex-col gap-2 justify-center items-start">
           <div class="sum w-full">
             <h3 class="text-lg mb-2">Введите сумму пополнения</h3>
-            <select class="select select-bordered mb-2 w-full text-[15px]" v-model="selectedType">
+            <select
+              class="select select-bordered mb-2 w-full text-[15px]"
+              v-model="selectedType"
+            >
               <option disabled>Тип пополнения</option>
               <option value="tariff" disabled>Тарифный баланс</option>
-              <option selected value="balance">Баланс на покупку товаров</option>
+              <option selected value="balance">
+                Баланс на покупку товаров
+              </option>
             </select>
+            <div class="my-0.5 mx-2 text-[12px]">
+              P.S. Финансовые средства зачисляются на баланс от 3х минут до 72
+              часов
+            </div>
             <PaymentInput v-model="paymentForm.paymentSum" />
           </div>
           <div class="fastbuttons flex gap-0.5 w-full mt-2">

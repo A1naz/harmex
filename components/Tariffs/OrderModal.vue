@@ -137,7 +137,7 @@ onKeyStroke('Escape', (e) => {
             <div class="requisites">
               <div class="requisites__item">
                 <div class="requisites__name">Получатель платежа:</div>
-                <div class="requisites__text">ООО "ФИНХАБ"</div>
+                <div class="requisites__text">ИП Новиков Андрей Валерьевич</div>
               </div>
               <div class="requisites__item" v-if="tariffName">
                 <div class="requisites__name">Наименование товара/услуги:</div>
@@ -153,7 +153,7 @@ onKeyStroke('Escape', (e) => {
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Метод оплаты:</div>
-                <div class="requisites__text">Viza/MasterCard/Мир/SberPay</div>
+                <div class="requisites__text">Перевод на расчётный счет</div>
               </div>
             </div>
 
@@ -162,8 +162,8 @@ onKeyStroke('Escape', (e) => {
             <div class="pay-popup__policy">
               Ваши личные данные будут использоваться для обработки ваших
               заказов и других целей, описанных в нашей
-              <a href="#">политике конфидециальности</a>, продолжая вы
-              соглашаетесь с условиями <a href="#">оферты</a>.
+              <a href="/conf_policy.pdf" target="_blank">политике конфидециальности</a>, продолжая вы
+              соглашаетесь с условиями <a href="/oferta.pdf" target="_blank">оферты</a>.
             </div>
           </div>
 
@@ -181,7 +181,7 @@ onKeyStroke('Escape', (e) => {
             <div class="requisites">
               <div class="requisites__item">
                 <div class="requisites__name">Получатель платежа:</div>
-                <div class="requisites__text">ООО «MarketMonstr»</div>
+                <div class="requisites__text">ИП Новиков Андрей Валерьевич</div>
               </div>
               <div class="requisites__item" v-if="tariffName">
                 <div class="requisites__name">Наименование товара/услуги:</div>
@@ -197,7 +197,7 @@ onKeyStroke('Escape', (e) => {
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Метод оплаты:</div>
-                <div class="requisites__text">Viza/MasterCard/Мир/SberPay</div>
+                <div class="requisites__text">Перевод на расчётный счет</div>
               </div>
             </div>
 
@@ -222,16 +222,16 @@ onKeyStroke('Escape', (e) => {
               <div class="pay-popup__subtitle">Реквизиты:</div>
               <div class="requisites__item">
                 <div class="requisites__name">ИНН:</div>
-                <div class="requisites__text">5007123410</div>
+                <div class="requisites__text">713602742755</div>
 
                 <div
                   class="requisites__copy"
-                  @click="copyToClipboard('5007123410')"
+                  @click="copyToClipboard('713602742755')"
                 >
                   <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
               </div>
-              <div class="requisites__item">
+              <!-- <div class="requisites__item">
                 <div class="requisites__name">КПП</div>
                 <div class="requisites__text">500701001</div>
 
@@ -241,7 +241,7 @@ onKeyStroke('Escape', (e) => {
                 >
                   <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
-              </div>
+              </div> -->
               <div class="requisites__item">
                 <div class="requisites__name">БИК</div>
                 <div class="requisites__text">044525593</div>
@@ -255,11 +255,11 @@ onKeyStroke('Escape', (e) => {
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Р/С:</div>
-                <div class="requisites__text">40702810701300038351</div>
+                <div class="requisites__text">40802810401300014591</div>
 
                 <div
                   class="requisites__copy"
-                  @click="copyToClipboard('40702810701300038351')"
+                  @click="copyToClipboard('40802810401300014591')"
                 >
                   <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
@@ -278,13 +278,13 @@ onKeyStroke('Escape', (e) => {
               <div class="requisites__item">
                 <div class="requisites__name">Банк получателя:</div>
                 <div class="requisites__text">
-                  Банк ФИЛИАЛ "НИЖЕГОРОДСКИЙ" АО "АЛЬФА-БАНК"
+                АО "АЛЬФА-БАНК"
                 </div>
 
                 <div
                   class="requisites__copy"
                   @click="
-                    copyToClipboard('Банк ФИЛИАЛ НИЖЕГОРОДСКИЙ АО АЛЬФА-БАНК')
+                    copyToClipboard('АО АЛЬФА-БАНК')
                   "
                 >
                   <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
@@ -323,8 +323,8 @@ onKeyStroke('Escape', (e) => {
             <div class="pay-popup__policy">
               Ваши личные данные будут использоваться для обработки ваших
               заказов и других целей, описанных в нашей
-              <a href="#">политике конфидециальности</a>, продолжая вы
-              соглашаетесь с условиями <a href="#">оферты</a>.
+              <a href="/conf_policy.pdf" target="_blank">политике конфидециальности</a>, продолжая вы
+              соглашаетесь с условиями <a href="/oferta.pdf" target="_blank">оферты</a>.
             </div>
           </div>
 
@@ -391,8 +391,8 @@ onKeyStroke('Escape', (e) => {
             <div class="pay-popup__policy">
               Ваши личные данные будут использоваться для обработки ваших
               заказов и других целей, описанных в нашей
-              <a href="#">политике конфидециальности</a>, продолжая вы
-              соглашаетесь с условиями <a href="#">оферты</a>.
+              <a href="/conf_policy.pdf" target="_blank">политике конфидециальности</a>, продолжая вы
+              соглашаетесь с условиями <a href="/oferta.pdf" target="_blank">оферты</a>.
             </div>
           </div>
 
