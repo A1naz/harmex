@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { summ }: any = getQuery(event)
+  const { summ, faceType }: any = getQuery(event)
 
   const dates = new Date().toISOString().slice(0, 10).split('-')
   const purposeDate = `${dates[2]}.${dates[1]}.${dates[0]}`
@@ -36,6 +36,7 @@ export default eventHandler(async (event) => {
     type: 'balance',
     dataoperation: new Date(),
     comment: purpose,
+    faceType,
   })
 
   return {

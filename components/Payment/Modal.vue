@@ -17,6 +17,7 @@ const qrCodeImg = ref('')
 const orderUuid = ref('')
 const paymentPurpose = ref('')
 const selectedType = ref('balance')
+const faceType = ref('fizFace')
 
 function cancelPayment() {
   url.value = ''
@@ -43,6 +44,7 @@ async function createPayment() {
     method: 'GET',
     query: {
       summ: paymentForm.paymentSum,
+      faceType: faceType.value,
     },
   })
 
@@ -88,6 +90,16 @@ function setType(e: any) {
               <option value="tariff" disabled>Тарифный баланс</option>
               <option selected value="balance">
                 Баланс на покупку товаров
+              </option>
+            </select>
+            <select
+              class="select select-bordered mb-2 w-full text-[15px]"
+              v-model="faceType"
+            >
+              <option disabled>Тип переводящего лица</option>
+              <option value="fizFace" selected>Физическое лицо</option>
+              <option selected value="yurFace">
+                Юридическое лицо
               </option>
             </select>
             <div class="my-0.5 mx-2 text-[12px]">

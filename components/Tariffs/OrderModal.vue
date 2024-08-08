@@ -162,8 +162,10 @@ onKeyStroke('Escape', (e) => {
             <div class="pay-popup__policy">
               Ваши личные данные будут использоваться для обработки ваших
               заказов и других целей, описанных в нашей
-              <a href="/conf_policy.pdf" target="_blank">политике конфидециальности</a>, продолжая вы
-              соглашаетесь с условиями <a href="/oferta.pdf" target="_blank">оферты</a>.
+              <a href="/conf_policy.pdf" target="_blank"
+                >политике конфидециальности</a
+              >, продолжая вы соглашаетесь с условиями
+              <a href="/oferta.pdf" target="_blank">оферты</a>.
             </div>
           </div>
 
@@ -211,6 +213,13 @@ onKeyStroke('Escape', (e) => {
                   <li>Выбрать оплату по QR-коду.</li>
                   <li>Навести камеру телефона на QR-код счета.</li>
                   <li>Произвести оплату.</li>
+                  <li>
+                    Оплата будет зачислена автоматически в течение 3 часов.
+                  </li>
+                  <li>
+                    Если у Вас возникли проблемы с платежом, напишите в
+                    техническую поддержку портала.
+                  </li>
                 </ol>
                 <div class="qr__img">
                   <nuxt-img :src="qr" />
@@ -277,15 +286,11 @@ onKeyStroke('Escape', (e) => {
               </div>
               <div class="requisites__item">
                 <div class="requisites__name">Банк получателя:</div>
-                <div class="requisites__text">
-                АО "АЛЬФА-БАНК"
-                </div>
+                <div class="requisites__text">АО "АЛЬФА-БАНК"</div>
 
                 <div
                   class="requisites__copy"
-                  @click="
-                    copyToClipboard('АО АЛЬФА-БАНК')
-                  "
+                  @click="copyToClipboard('АО АЛЬФА-БАНК')"
                 >
                   <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
@@ -309,11 +314,7 @@ onKeyStroke('Escape', (e) => {
 
                 <div
                   class="requisites__copy"
-                  @click="
-                    copyToClipboard(
-                      paymentPurpose
-                    )
-                  "
+                  @click="copyToClipboard(paymentPurpose)"
                 >
                   <nuxt-img :src="`/icons/tarrifsImages/copy.svg`" />
                 </div>
@@ -323,8 +324,10 @@ onKeyStroke('Escape', (e) => {
             <div class="pay-popup__policy">
               Ваши личные данные будут использоваться для обработки ваших
               заказов и других целей, описанных в нашей
-              <a href="/conf_policy.pdf" target="_blank">политике конфидециальности</a>, продолжая вы
-              соглашаетесь с условиями <a href="/oferta.pdf" target="_blank">оферты</a>.
+              <a href="/conf_policy.pdf" target="_blank"
+                >политике конфидециальности</a
+              >, продолжая вы соглашаетесь с условиями
+              <a href="/oferta.pdf" target="_blank">оферты</a>.
             </div>
           </div>
 
@@ -391,8 +394,10 @@ onKeyStroke('Escape', (e) => {
             <div class="pay-popup__policy">
               Ваши личные данные будут использоваться для обработки ваших
               заказов и других целей, описанных в нашей
-              <a href="/conf_policy.pdf" target="_blank">политике конфидециальности</a>, продолжая вы
-              соглашаетесь с условиями <a href="/oferta.pdf" target="_blank">оферты</a>.
+              <a href="/conf_policy.pdf" target="_blank"
+                >политике конфидециальности</a
+              >, продолжая вы соглашаетесь с условиями
+              <a href="/oferta.pdf" target="_blank">оферты</a>.
             </div>
           </div>
 

@@ -8,6 +8,7 @@ const paymentIntendSchema = new Schema({
   dataoperation: { type: Date },
   comment: { type: String },
   refRewarded: { type: Boolean, default: false },
+  faceType: { type: String },
   mp: { type: String, default: 'wildberries' },
 })
 
