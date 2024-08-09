@@ -17,12 +17,12 @@ const props = defineProps({
       class="px-3 py-2 bg-[#ebf0ff] dark:bg-primary dark:bg-opacity-10 mx-4 my-3 rounded-lg flex flex-col gap-3"
     >
       <div v-if="!tariffsValue" class="flex flex-col gap-3 p-2">
-        Стандартный план для пользователя платформы:
+        Для всех начинающих пользователей Marketmonstr действует акция.
+        <span> Вы получаете доступ к стандартному тарифу по услугам:</span>
         <span> Покупка товара - 150 руб. за 1 ед. </span>
         <span> Публикация отзыва - 85 руб. за 1 ед. </span>
         <span> Лайки, вопросы, добавление в корзину - 10 руб за 1 ед. </span>
-        Хотите получить более выгодные условия, активируйте подходящий для вас
-        тарифный план ↓
+        Для тех, кто планирует увеличивать объемы индивидуальные условия по Подписке ниже.
       </div>
 
       <div v-else class="flex flex-col gap-2 overflow-x-auto">

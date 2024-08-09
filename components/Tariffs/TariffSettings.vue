@@ -30,7 +30,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['setMp', 'setFirstTariff', 'setSecondTariff', 'openModal'])
+const emit = defineEmits([
+  'setMp',
+  'setFirstTariff',
+  'setSecondTariff',
+  'openModal',
+])
 function setMp(value: string) {
   emit('setMp', value)
 }
@@ -55,12 +60,10 @@ const currentData = computed(() => {
 </script>
 
 <template>
-
   <div
     class="flex md:w-[95%] w-full ml-[auto] mr-[auto] flex-col gap-y-4 px-1.5 py-4 bg-gradient-to-r from-[#e9f7ff] to-[#96afff] dark:from-[#172038] dark:to-[#1b1f38] rounded-lg"
   >
     <div class="flex justify-between">
-
       <div class="flex w-full space-x-4">
         <CustomSelect
           :dropdownContainer="'w-full md:hidden'"
@@ -69,7 +72,7 @@ const currentData = computed(() => {
           @change-value="(value) => setMp(value.value)"
         />
         <button
-        disabled
+          disabled
           v-for="(image, index) in images"
           :key="index"
           class="hidden md:flex flex-grow rounded-lg justify-center"
@@ -90,16 +93,12 @@ const currentData = computed(() => {
       </div>
     </div>
 
-
-    
-     <div class="flex justify-between">
+    <div class="flex justify-between">
       <button
         v-for="tariffTitle in currentTariff"
         :key="tariffTitle.value"
         class="btn border-none w-[32%] text-lg"
-        @click="
-         (form.title = tariffTitle.value)
-        "
+        @click="form.title = tariffTitle.value"
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
             form.title === tariffTitle.value,
@@ -108,16 +107,13 @@ const currentData = computed(() => {
       >
         {{ tariffTitle.title }}
       </button>
-    </div> 
-
+    </div>
 
     <div class="flex justify-between">
       <button
         v-for="tarrifType in currentType.type"
         class="btn border-none w-[49%] text-lg"
-        @click="
-          (form.type = tarrifType.value)
-        "
+        @click="form.type = tarrifType.value"
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
             form.type == tarrifType.value,
@@ -128,12 +124,10 @@ const currentData = computed(() => {
       </button>
     </div>
 
-
     <div class="flex justify-between">
       <button
         class="btn border-none w-[32%] whitespace-nowrap pt-1 md:pt-0 md:text-lg relative"
-        @click="(form.dateRange = '3months')
-        "
+        @click="form.dateRange = '3months'"
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
             form.dateRange == '3months',
@@ -149,8 +143,7 @@ const currentData = computed(() => {
       </button>
       <button
         class="btn border-none w-[32%] whitespace-nowrap pt-1 md:pt-0 md:text-lg relative"
-        @click="(form.dateRange = '6months')
-        "
+        @click="form.dateRange = '6months'"
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
             form.dateRange == '6months',
@@ -166,8 +159,7 @@ const currentData = computed(() => {
       </button>
       <button
         class="btn border-none w-[32%] text-xs whitespace-nowrap pt-1 md:pt-0 md:text-lg relative"
-        @click="(form.dateRange = '12months')
-        "
+        @click="form.dateRange = '12months'"
         :class="{
           'bg-[#292930] dark:bg-[#5287e7] dark:hover:bg-base-100 text-base-100':
             form.dateRange == '12months',
@@ -183,12 +175,10 @@ const currentData = computed(() => {
       </button>
     </div>
 
-
     <div class="flex w-full justify-end mt-6">
-
       <!-- mobile -->
       <div class="md:hidden w-full flex flex-col gap-5">
-        <div class="flex w-full gap-5">     
+        <div class="flex w-full gap-5">
           <CustomSelect
             :tabs="currentData.tariffs.map((tariff:any) => ({
               title: tariff.title,
@@ -212,17 +202,20 @@ const currentData = computed(() => {
         </div>
         <div class="flex w-full gap-4">
           <div
-            class="flex flex-col px-5 pt-5 py-1  rounded-lg w-[49%]"
+            class="flex flex-col px-5 pt-5 py-1 rounded-lg w-[49%]"
             :class="{
-              ' border-4 border-[#25ba7b]':
-                firstTariff == 'VIP',
+              ' border-4 border-[#25ba7b]': firstTariff == 'VIP',
             }"
           >
             <div class="flex flex-nowrap gap-1 items-center">
-              <span class="mr-2">{{ currentData.tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].title }}</span>
+              <span class="mr-2">{{
+                currentData.tariffs.filter(
+                  (tariff: any) => tariff.title == firstTariff
+                )[0].title
+              }}</span>
               <span
                 v-if="currentData.tariffs.filter((tariff:any) => tariff.title == firstTariff)[0].title == 'PRO'"
-                class="rounded-lg bg-base-content text-base-100 py-1 px-2  text-xs"
+                class="rounded-lg bg-base-content text-base-100 py-1 px-2 text-xs"
                 >Популярно</span
               >
               <span
@@ -231,9 +224,15 @@ const currentData = computed(() => {
                 >Рекомендуем</span
               >
             </div>
-            <p class="text-lg font-bold mt-auto">{{ currentData.tariffs.find((tariff:any) => tariff.title === firstTariff).prices[parseInt(form.dateRange.replace('months', ''))] + ' ₽'}}</p>
+            <p class="text-lg font-bold mt-auto">
+              {{
+                currentData.tariffs.find(
+                  (tariff: any) => tariff.title === firstTariff
+                ).prices[parseInt(form.dateRange.replace('months', ''))] + ' ₽'
+              }}
+            </p>
             <button
-              :disabled="firstTariff=='DEMO'"
+              :disabled="firstTariff == 'DEMO'"
               class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
               @click="$emit('openModal', firstTariff)"
             >
@@ -241,14 +240,17 @@ const currentData = computed(() => {
             </button>
           </div>
           <div
-            class="flex flex-col px-5 pt-5 py-1  rounded-lg w-[49%]"
+            class="flex flex-col px-5 pt-5 py-1 rounded-lg w-[49%]"
             :class="{
-              ' border-4 border-[#25ba7b] mr-2.5':
-                secondTariff == 'VIP',
+              ' border-4 border-[#25ba7b] mr-2.5': secondTariff == 'VIP',
             }"
           >
             <div class="flex flex-nowrap gap-1 items-center">
-              <span class="mr-2">{{ currentData.tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].title }}</span>
+              <span class="mr-2">{{
+                currentData.tariffs.filter(
+                  (tariff: any) => tariff.title == secondTariff
+                )[0].title
+              }}</span>
               <span
                 v-if="currentData.tariffs.filter((tariff:any) => tariff.title == secondTariff)[0].title == 'PRO'"
                 class="rounded-lg bg-base-content text-base-100 py-1 px-2 text-xs"
@@ -260,9 +262,16 @@ const currentData = computed(() => {
                 >Рекомендуем</span
               >
             </div>
-            <p class="text-lg font-bold mt-auto">{{ currentData.tariffs.find((tariff:any) => tariff.title === secondTariff).prices[parseInt(form.dateRange.replace('months', ''))] + ' ₽'}}</p>
+            <p class="text-lg font-bold mt-auto">
+              {{
+                currentData.tariffs.find(
+                  (tariff: any) => tariff.title === secondTariff
+                ).prices[parseInt(form.dateRange.replace('months', ''))] + ' ₽'
+              }}
+            </p>
             <button
-              :disabled="secondTariff=='DEMO'"
+              v-if="secondTariff != 'DEMO'"
+              :disabled="secondTariff == 'DEMO'"
               class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
               @click="$emit('openModal', secondTariff)"
             >
@@ -273,31 +282,40 @@ const currentData = computed(() => {
       </div>
 
       <!-- desktop -->
-      <div v-for="tariff in currentData.tariffs" 
-          class="hidden md:flex flex-col px-5 pt-5 py-1 w-[20%] rounded-lg"
-          :class="{
-            'border-4 border-[#25ba7b] border-b-0 rounded-b-none mr-2.5': tariff.title === 'VIP'
-          }"
+      <div
+        v-for="tariff in currentData.tariffs"
+        class="hidden md:flex flex-col px-5 pt-5 py-1 w-[25%] rounded-lg"
+        :class="{
+          'border-4 border-[#25ba7b] border-b-0 rounded-b-none mr-2.5':
+            tariff.title === 'VIP',
+        }"
       >
         <div class="flex flex-wrap gap-1 items-center">
           <span class="mr-2">{{ tariff.title }}</span>
-          <span v-if="tariff.title === 'PRO'" class="rounded-lg bg-base-content text-base-100 py-1 px-2">Популярно</span>
-          <span v-if="tariff.title === 'VIP'" class="rounded-lg bg-[#2effa9] dark:text-base-100 text-base-content py-1 px-2">Рекомендуем</span>
+          <span
+            v-if="tariff.title === 'PRO'"
+            class="rounded-lg bg-base-content text-base-100 py-1 px-2"
+            >Популярно</span
+          >
+          <span
+            v-if="tariff.title === 'VIP'"
+            class="rounded-lg bg-[#2effa9] dark:text-base-100 text-base-content py-1 px-2"
+            >Рекомендуем</span
+          >
         </div>
-        <p class="text-lg font-bold mt-auto">{{ tariff.prices[form.dateRange.replace('months', '')] + ' ₽' }}</p>
+        <p class="text-lg font-bold mt-auto">
+          {{ tariff.prices[form.dateRange.replace('months', '')] + ' ₽' }}
+        </p>
         <button
-          :disabled="tariff.title=='DEMO'"
+          :disabled="tariff.title == 'DEMO'"
           class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
           @click="$emit('openModal', tariff.title)"
         >
           Купить
         </button>
       </div>
-
-    </div> 
-  </div> 
+    </div>
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

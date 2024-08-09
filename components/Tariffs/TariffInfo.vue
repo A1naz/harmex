@@ -32,7 +32,7 @@ const ratingValue = computed(() => {
 
   const ratings = titles.map((title) => ({
     title: title,
-    demo: findRating('DEMO', title),
+    // demo: findRating('DEMO', title),
     start: findRating('START', title),
     pro: findRating('PRO', title),
     vip: findRating('VIP', title),
@@ -71,7 +71,7 @@ const factorsValue = computed(() => {
 
   const ratings = titles.map((title) => ({
     title: title,
-    demo: findRating('DEMO', title),
+    // demo: findRating('DEMO', title),
     start: findRating('START', title),
     pro: findRating('PRO', title),
     vip: findRating('VIP', title),
@@ -148,7 +148,7 @@ const factorsValue = computed(() => {
                 >
                   {{ value.title }}
                 </th>
-                <td
+                <!-- <td
                   class="w-1/5 text-center border-r border-[#e5e7e8] dark:border-[#1a1817]"
                 >
                   <Icon
@@ -160,7 +160,7 @@ const factorsValue = computed(() => {
                   <span v-else>
                     {{ value.demo }}
                   </span>
-                </td>
+                </td> -->
                 <td
                   class="w-1/5 text-center border-r border-[#e5e7e8] dark:border-[#1a1817]"
                 >
@@ -256,7 +256,7 @@ const factorsValue = computed(() => {
                 >
                   {{ value.title }}
                 </th>
-                <td
+                <!-- <td
                   class="w-1/5 text-center border-r border-[#e5e7e8] dark:border-[#1a1817]"
                 >
                   <Icon
@@ -268,7 +268,7 @@ const factorsValue = computed(() => {
                   <span v-else>
                     {{ value.demo }}
                   </span>
-                </td>
+                </td> -->
                 <td
                   class="w-1/5 text-center border-r border-[#e5e7e8] dark:border-[#1a1817]"
                 >

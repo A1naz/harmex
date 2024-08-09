@@ -6,7 +6,7 @@ definePageMeta({
 })
 
 import { notify } from '@kyvg/vue3-notification'
-const tariffsValue = ref(false)
+const tariffsValue: any = ref(false)
 
 const qrCodeImg = ref('/icons/tarrifsImages/qr.png')
 const orderUuid = ref('')
@@ -75,7 +75,7 @@ const tariffStats = ref([
   },
 ])
 
-const tariffs = ref({})
+const tariffs: any = ref({})
 
 const images = [
   'wildberries.svg',
@@ -118,11 +118,12 @@ function setMp(mp: string) {
   form.mp = mp
 }
 
-const firstTariff = ref('DEMO')
+const firstTariff = ref('START')
 
-const secondTariff = ref('START')
+const secondTariff = ref('PRO')
 
 async function getPrices() {
+  // @ts-ignore
   const { data } = await useFetch('/api/prices/get', {
     method: 'GET',
   })
@@ -133,12 +134,12 @@ async function getPrices() {
 }
 await getPrices()
 
-const modal = ref(false)
-const orderModal = ref(false)
-const orderModalType = ref('')
-const currentTariff = ref({})
-const tariffFullName = ref('')
-const tariffPrice = ref('')
+const modal: any = ref(false)
+const orderModal: any = ref(false)
+const orderModalType: any = ref('')
+const currentTariff: any = ref({})
+const tariffFullName: any = ref('')
+const tariffPrice: any = ref('')
 
 function openPurchaseModal(tariffName: string) {
   currentTariff.value = tariffs.value[form.mp][form.title].type[
