@@ -27,15 +27,10 @@ export default eventHandler(async (event) => {
     })
   }
 
-  console.log(rs, bik);
-  
-
   user.bankInfo = { ...bankInfo, rs }
   user.rs = rs
   user.bik = bik
 
-  console.log(user.username);
-  
   await user.save()
 
   return {
