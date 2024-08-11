@@ -62,6 +62,9 @@ export interface IUser extends Entity {
   newPassword: string
   ffEnabled: boolean
   terminateSession: boolean
+  bik: string
+  RS: string
+  bankInfo: Object
 }
 
 export interface IUserLogs extends Entity {
