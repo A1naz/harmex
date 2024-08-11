@@ -65,8 +65,12 @@ export default eventHandler(async (event) => {
     middleName: user.middleName ? user.middleName : '',
     phoneNumber: user.phoneNumber ? user.phoneNumber : '',
     ffEnabled: user.ffEnabled ? true : false,
+    bik: user.bik,
+    rs: user.rs,
   }
 
+  console.log(client);
+  
   return {
     client,
     status: 'ok',

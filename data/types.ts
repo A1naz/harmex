@@ -63,7 +63,7 @@ export interface IUser extends Entity {
   ffEnabled: boolean
   terminateSession: boolean
   bik: string
-  RS: string
+  rs: string
   bankInfo: Object
 }
 

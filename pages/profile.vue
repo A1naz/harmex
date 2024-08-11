@@ -35,7 +35,7 @@ const form: any = reactive({
 
 const bankForm: any = reactive({
   bik: '',
-  RS: '',
+  rs: '',
 })
 
 const passwordForm = reactive({
@@ -86,7 +86,7 @@ onMounted(async () => {
   form.middleName = store.client.middleName
   form.phoneNumber = store.client.phoneNumber
   bankForm.Bik = store.client.bik
-  bankForm.RS = store.client.RS
+  bankForm.rs = store.client.rs
   if (store.client.apiKeys !== undefined) {
     apiKeys.value = store.client.apiKeys
   }
@@ -468,9 +468,9 @@ async function setBankInfo() {
 const isSetBankBtnDisabled = computed(() => {
   if (
     !bankForm.bik ||
-    !bankForm.RS ||
-    bankForm.RS.toString().length != 20 ||
-    (bankForm.bik === store.client.bik && bankForm.RS === store.client.RS)
+    !bankForm.rs ||
+    bankForm.rs.toString().length != 20 ||
+    (bankForm.bik === store.client.bik && bankForm.rs === store.client.rs)
   ) {
     return true
   } else return false
@@ -567,7 +567,7 @@ const isSetBankBtnDisabled = computed(() => {
               class="input input-bordered w-full"
             />
             <input
-              v-model="bankForm.RS"
+              v-model="bankForm.rs"
               type="number"
               placeholder="Расчётный счёт"
               class="input input-bordered w-full"

@@ -5,7 +5,7 @@ import { checkSignature } from '@/server/lib/telegram/mod'
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
   const runtimeConfig = useRuntimeConfig()
-  const { bik, RS } = await readBody(event)
+  const { bik, rs } = await readBody(event)
   if (!session) return sendRedirect(event, '/auth', 302)
 
   const user = await User.findOne({ uuid: session.uuid })
@@ -27,8 +27,15 @@ export default eventHandler(async (event) => {
     })
   }
 
-  user.bankInfo = { ...bankInfo, rs: RS }
+  console.log(rs, bik);
+  
 
+  user.bankInfo = { ...bankInfo, rs }
+  user.rs = rs
+  user.bik = bik
+
+  console.log(user.username);
+  
   await user.save()
 
   return {
