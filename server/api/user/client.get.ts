@@ -37,6 +37,7 @@ export default eventHandler(async (event) => {
     if (!admin) return sendRedirect(event, '/auth', 302)
     user.tariff = admin.tariff
     user.balance = admin.balance
+    user.ffEnabled = admin.ffEnabled
   }
 
   const client: Client = {
