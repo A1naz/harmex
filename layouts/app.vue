@@ -341,7 +341,7 @@ const statusText = computed(() => {
     <PaymentModal />
     <SwapAccountModal />
     <InfoFaqModal />
-
+    <StaticFirstGude :state="true" />
     <!-- <InfoModal
       :isModal="isInfoModal"
       title="Как пользоваться платформой MARKETMONSTR?"

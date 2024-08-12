@@ -68,8 +68,6 @@ export default eventHandler(async (event) => {
     bik: user.bik,
     rs: user.rs,
   }
-
-  console.log(client);
   
   return {
     client,

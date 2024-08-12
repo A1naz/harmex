@@ -12,6 +12,7 @@ const isChatBotEnabled = ref(false)
 
 const store = useMainStore()
 
+const confirmModal = ref(false)
 const twoFaQRModal = ref<any>(null)
 
 const isCodeSent = ref(false)
@@ -85,7 +86,7 @@ onMounted(async () => {
   form.orgInn = store.client.orgInn
   form.middleName = store.client.middleName
   form.phoneNumber = store.client.phoneNumber
-  bankForm.Bik = store.client.bik
+  bankForm.bik = store.client.bik
   bankForm.rs = store.client.rs
   if (store.client.apiKeys !== undefined) {
     apiKeys.value = store.client.apiKeys
@@ -457,6 +458,8 @@ async function setBankInfo() {
       type: 'success',
       title: 'Информация о банковской карте добавлена',
     })
+    store.client.bik = bankForm.bik
+    store.client.rs = bankForm.rs
   } else if (error.value) {
     notify({
       type: 'error',
@@ -470,7 +473,8 @@ const isSetBankBtnDisabled = computed(() => {
     !bankForm.bik ||
     !bankForm.rs ||
     bankForm.rs.toString().length != 20 ||
-    (bankForm.bik === store.client.bik && bankForm.rs === store.client.rs)
+    (bankForm.bik === store.client.bik && bankForm.rs === store.client.rs) ||
+    (store.client.bik && store.client.rs)
   ) {
     return true
   } else return false
@@ -578,7 +582,7 @@ const isSetBankBtnDisabled = computed(() => {
             <button
               :disabled="isSetBankBtnDisabled"
               class="btn btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-end"
-              @click="setBankInfo"
+              @click="confirmModal = true"
             >
               Сохранить
             </button>
@@ -959,6 +963,12 @@ const isSetBankBtnDisabled = computed(() => {
     </section>
   </div>
   <TwoFaQRModal ref="twoFaQRModal" />
+  <StaticConfirmModal
+    :confirmFunction="setBankInfo"
+    title="Вы уверены"
+    description="После этого действия вы сможете изменить банковские данные"
+    v-model:state="confirmModal"
+  />
   <div class="h-20"></div>
 </template>
 

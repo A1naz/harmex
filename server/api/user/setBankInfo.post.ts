@@ -27,6 +27,13 @@ export default eventHandler(async (event) => {
     })
   }
 
+  if (user.rs && user.bik) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Информация о банковской карте уже добавлена',
+    })
+  }
+
   user.bankInfo = { ...bankInfo, rs }
   user.rs = rs
   user.bik = bik
