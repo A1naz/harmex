@@ -11,8 +11,6 @@ export default eventHandler(async (event) => {
   const { date }: any = getQuery(event)
 
   let admin: any = null
-
-  console.log(user);
   
 
   if (user.roles[0] == UserRoles.staff) {
@@ -21,7 +19,6 @@ export default eventHandler(async (event) => {
   }
 
   const pvzs: any = await FFPVZ.findOne({ user: admin ? admin._id : user._id })
-  console.log(pvzs)
 
   if (!pvzs || !pvzs.pvzs || !pvzs.pvzs.length) {
     return {
