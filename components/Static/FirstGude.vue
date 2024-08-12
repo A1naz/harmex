@@ -1,22 +1,30 @@
 <script setup lang="ts">
-const route = useRoute()
+const isChecked = ref(false)
 
 defineProps({
   state: { type: Boolean, required: false, default: false },
 })
 
-defineEmits(['click', 'update:state'])
+const emit = defineEmits(['click', 'update:state'])
+
+const close = () => {
+  if (isChecked.value) {
+    localStorage.setItem('firstGuideModal', 'true')
+  }
+
+  emit('update:state', false)
+}
 </script>
 
 <template>
   <div
-    :class="{ 'modal-open': true }"
+    :class="{ 'modal-open': state }"
     class="modal cursor-pointer"
     @click="$emit('update:state', false)"
   >
     <div class="modal-box max-w-lg px-3 py-5 cursor-auto" @click.stop>
       <div class="text-xl font-semibold text-center mb-2">
-        Приветствуем в Marketmonstr!
+        {{ state }} Приветствуем в Marketmonstr!
       </div>
       <div class="text-lg mb-2 text-center">
         3-х секундный гайд по работе с платформы:
@@ -36,18 +44,20 @@ defineEmits(['click', 'update:state'])
           Marketmonstr
         </li>
       </ol>
-      <div class="form-control">
+      <div class="form-control w-[50%]">
         <label class="label cursor-pointer flex justify-start gap-5 ml-3">
           <span class="label-text">Больше не показывать</span>
           <input
+            v-model="isChecked"
             type="checkbox"
-            checked="true"
             class="checkbox checkbox-primary"
           />
         </label>
       </div>
       <div class="w-full flex justify-center">
-        <button class="btn btn-primary mt-2 w-[95%]">Продолжить</button>
+        <button class="btn btn-primary mt-2 w-[95%]" @click="close">
+          Продолжить
+        </button>
       </div>
     </div>
   </div>

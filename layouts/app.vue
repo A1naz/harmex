@@ -104,7 +104,7 @@ const statusText = computed(() => {
 onMounted(() => {
   if (status.value === 'authenticated') {
     firstGuideModal.value =
-      localStorage.getItem('firstGuideModal') === 'false' ? false : true
+      localStorage.getItem('firstGuideModal') === 'true' ? false : true
   }
 })
 </script>
@@ -350,7 +350,7 @@ onMounted(() => {
     <PaymentModal />
     <SwapAccountModal />
     <InfoFaqModal />
-    <StaticFirstGude :state="true" />
+    <StaticFirstGude v-model:state="firstGuideModal" />
     <!-- <InfoModal
       :isModal="isInfoModal"
       title="Как пользоваться платформой MARKETMONSTR?"
