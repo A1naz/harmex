@@ -7,8 +7,9 @@ const mpStore = useMPStore()
 
 const theme = ref('light')
 const route = useRoute()
-const { signOut } = useAuth()
+const { signOut, status } = useAuth()
 const currency = useCurrency()
+const firstGuideModal = ref(false)
 const lightMode = ref(colorMode.value === 'dark')
 function changeTheme() {
   if (colorMode.value === 'light') colorMode.preference = 'dark'
@@ -16,6 +17,7 @@ function changeTheme() {
 }
 
 async function deleteToken(uuid: string) {
+  //@ts-ignore
   const { data, error }: any = await useFetch('/api/token/deleteToken')
 }
 
@@ -98,6 +100,13 @@ const statusText = computed(() => {
 //     return section
 //   })
 // })
+
+onMounted(() => {
+  if (status.value === 'authenticated') {
+    firstGuideModal.value =
+      localStorage.getItem('firstGuideModal') === 'true' ? false : true
+  }
+})
 </script>
 
 <template>
@@ -341,7 +350,16 @@ const statusText = computed(() => {
     <PaymentModal />
     <SwapAccountModal />
     <InfoFaqModal />
-
+    <StaticFirstGude
+      v-model:state="firstGuideModal"
+      :faceType="
+        storeMain.client.fizFace
+          ? 'fizFace'
+          : storeMain.client.staff
+          ? 'staff'
+          : 'yurFace'
+      "
+    />
     <!-- <InfoModal
       :isModal="isInfoModal"
       title="Как пользоваться платформой MARKETMONSTR?"

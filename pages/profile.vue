@@ -12,6 +12,7 @@ const isChatBotEnabled = ref(false)
 
 const store = useMainStore()
 
+const confirmModal = ref(false)
 const twoFaQRModal = ref<any>(null)
 
 const isCodeSent = ref(false)
@@ -32,6 +33,12 @@ const form: any = reactive({
   middleName: '',
   phoneNumber: '',
 })
+
+const bankForm: any = reactive({
+  bik: '',
+  rs: '',
+})
+
 const passwordForm = reactive({
   oldPassword: '',
   newPassword: '',
@@ -79,9 +86,10 @@ onMounted(async () => {
   form.orgInn = store.client.orgInn
   form.middleName = store.client.middleName
   form.phoneNumber = store.client.phoneNumber
+  bankForm.bik = store.client.bik
+  bankForm.rs = store.client.rs
   if (store.client.apiKeys !== undefined) {
     apiKeys.value = store.client.apiKeys
-
   }
 })
 // if (!store.checkTelegramId())
@@ -107,6 +115,7 @@ const disabledChangePasswordButton = computed(() => {
 async function updatePassword() {
   if (passwordForm.oldPassword == '' && passwordForm.newPassword == '') return
 
+  //@ts-ignore
   const { data, error }: any = await useFetch('/api/user/updatePassword', {
     method: 'POST',
     body: passwordForm,
@@ -120,10 +129,9 @@ async function updatePassword() {
   } else {
     if (data.value.newPassword) {
       alert.message = 'Пароль успешно установлен'
-    } else
-      alert.message = 'Введите код подтверждения'
+    } else alert.message = 'Введите код подтверждения'
 
-      isCodeSent.value = true
+    isCodeSent.value = true
     alert.show = true
     alert.type = 'success'
   }
@@ -438,6 +446,39 @@ async function confirmCode() {
     })
   }
 }
+
+async function setBankInfo() {
+  const { data, error }: any = await useFetch('/api/user/setBankInfo', {
+    method: 'POST',
+    body: bankForm,
+    watch: false,
+  })
+  if (data.value) {
+    notify({
+      type: 'success',
+      title: 'Информация о банковской карте добавлена',
+    })
+    store.client.bik = bankForm.bik
+    store.client.rs = bankForm.rs
+  } else if (error.value) {
+    notify({
+      type: 'error',
+      title: error.value.data.message,
+    })
+  }
+}
+
+const isSetBankBtnDisabled = computed(() => {
+  if (
+    !bankForm.bik ||
+    !bankForm.rs ||
+    bankForm.rs.toString().length != 20 ||
+    (bankForm.bik === store.client.bik && bankForm.rs === store.client.rs) ||
+    (store.client.bik && store.client.rs)
+  ) {
+    return true
+  } else return false
+})
 </script>
 
 <template>
@@ -483,13 +524,11 @@ async function confirmCode() {
     </InfoModal> -->
     <!-- class="mt-6 profile-options flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start" -->
     <section
+      v-if="!store.client.fizFace"
       class="mt-4 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
     >
       <div class="self-start description-container xl:basis-1/3">
         <div class="heading">Данные организации</div>
-        <div class="text-xs text-gray-400 mt-2.5">
-          Данные организации заполняются при регистрации
-        </div>
       </div>
       <div class="flex flex-col gap-2.5 w-full mt-1">
         <div class="w-full flex flex-col gap-2.5 xl:flex-row">
@@ -522,6 +561,33 @@ async function confirmCode() {
             class="input input-bordered w-full"
             readonly
           />
+        </div>
+        <div class="text-xs text-gray-400 mt-2.5"></div>
+        <div class="flex flex-col w-full gap-2.5 xl:flex-row">
+          <div class="flex flex-col w-full gap-2.5 xl:flex-row">
+            <input
+              v-model="bankForm.bik"
+              type="text"
+              placeholder="БИК"
+              class="input input-bordered w-full"
+            />
+            <input
+              v-model="bankForm.rs"
+              type="number"
+              placeholder="Расчётный счёт"
+              class="input input-bordered w-full"
+            />
+          </div>
+
+          <div>
+            <button
+              :disabled="isSetBankBtnDisabled"
+              class="btn btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-end"
+              @click="confirmModal = true"
+            >
+              Сохранить
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -898,6 +964,12 @@ async function confirmCode() {
     </section>
   </div>
   <TwoFaQRModal ref="twoFaQRModal" />
+  <StaticConfirmModal
+    :confirmFunction="setBankInfo"
+    title="Вы уверены"
+    description="После этого действия вы сможете изменить банковские данные"
+    v-model:state="confirmModal"
+  />
   <div class="h-20"></div>
 </template>
 

@@ -98,9 +98,7 @@ function setType(e: any) {
             >
               <option disabled>Тип переводящего лица</option>
               <option value="fizFace" selected>Физическое лицо</option>
-              <option selected value="yurFace">
-                Юридическое лицо
-              </option>
+              <option selected value="yurFace">Юридическое лицо</option>
             </select>
             <div class="my-0.5 mx-2 text-[12px]">
               P.S. Финансовые средства зачисляются на баланс от 3х минут до 72
@@ -159,7 +157,9 @@ function setType(e: any) {
   </div>
   <TariffsOrderModal
     :state="orderModal"
-    :tariffPrice="paymentForm.paymentSum.toString()"
+    :tariffPrice="
+      paymentForm.paymentSum ? paymentForm.paymentSum.toString() : '1'
+    "
     :type="'account-pay'"
     :qr="qrCodeImg"
     :orderUuid="orderUuid"

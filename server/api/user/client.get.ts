@@ -37,7 +37,8 @@ export default eventHandler(async (event) => {
     if (!admin) return sendRedirect(event, '/auth', 302)
     user.tariff = admin.tariff
     user.balance = admin.balance
-    user.ffEnabled = admin.ffEnabled
+    user.fizFace = admin.fizFace
+    user.staff = true
   }
 
   const client: Client = {
@@ -66,6 +67,10 @@ export default eventHandler(async (event) => {
     middleName: user.middleName ? user.middleName : '',
     phoneNumber: user.phoneNumber ? user.phoneNumber : '',
     ffEnabled: user.ffEnabled ? true : false,
+    bik: user.bik,
+    rs: user.rs,
+    fizFace: user.fizFace ? true : false,
+    staff: user.staff,
   }
 
   return {

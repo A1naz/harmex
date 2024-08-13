@@ -17,9 +17,13 @@ const UserSchema = new Schema<IUserSchema>({
   orgKey: { type: String },
   orgName: { type: String },
   orgOgrn: { type: String },
-  orgInn: { type: String, required: true, unique: true },
+  orgInn: { type: String, required: false, unique: true },
   middleName: { type: String },
   phoneNumber: { type: String },
+
+  bankInfo: { type: Object, required: false },
+  rs: { type: String },
+  bik: { type: String },
 
   isBanned: { type: Boolean, default: false },
   username: { type: String, unique: true, required: true },
@@ -78,6 +82,7 @@ const UserSchema = new Schema<IUserSchema>({
       followCount: 0,
     },
   },
+  fizFace: { type: Boolean, default: false },
 })
 
 // UserSchema.pre('save', function (next) {
