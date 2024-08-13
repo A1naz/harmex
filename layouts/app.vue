@@ -350,7 +350,16 @@ onMounted(() => {
     <PaymentModal />
     <SwapAccountModal />
     <InfoFaqModal />
-    <StaticFirstGude v-model:state="firstGuideModal" />
+    <StaticFirstGude
+      v-model:state="firstGuideModal"
+      :faceType="
+        storeMain.client.fizFace
+          ? 'fizFace'
+          : storeMain.client.staff
+          ? 'staff'
+          : 'yurFace'
+      "
+    />
     <!-- <InfoModal
       :isModal="isInfoModal"
       title="Как пользоваться платформой MARKETMONSTR?"

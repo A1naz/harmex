@@ -29,7 +29,6 @@ const { inputRef: rubInput, setValue } = useCurrencyInput(props.options)
 watch(
   () => props.modelValue,
   (value) => {
-    console.log(value)
 
     if (value) {
       setValue(value)

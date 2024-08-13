@@ -524,6 +524,7 @@ const isSetBankBtnDisabled = computed(() => {
     </InfoModal> -->
     <!-- class="mt-6 profile-options flex flex-col justify-center items-center gap-6 xl:gap-32 xl:pr-12 xl:flex-row xl:justify-between xl:items-start" -->
     <section
+      v-if="!store.client.fizFace"
       class="mt-4 profile-options flex flex-col justify-center items-center gap-5 xl:pr-12 xl:justify-between xl:items-start"
     >
       <div class="self-start description-container xl:basis-1/3">

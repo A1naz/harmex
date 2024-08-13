@@ -65,6 +65,8 @@ export interface IUser extends Entity {
   bik: string
   rs: string
   bankInfo: Object
+  fizFace: boolean
+  staff: boolean
 }
 
 export interface IUserLogs extends Entity {

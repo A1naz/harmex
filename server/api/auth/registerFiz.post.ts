@@ -18,10 +18,6 @@ export default eventHandler(async (event) => {
     email,
     password,
     referral,
-    orgKey,
-    orgName,
-    orgOgrn,
-    orgInn,
     phoneNumber,
   } = body
 
@@ -65,16 +61,6 @@ export default eventHandler(async (event) => {
     }
   }
 
-  const checkInn = await User.findOne({
-    orgInn: { $regex: new RegExp(orgInn, 'i') },
-  })
-  if (checkInn) {
-    return {
-      status: 'error',
-      error: 'Пользователь с таким ИНН уже существует.',
-    }
-  }
-
   const hash = bcrypt.hashSync(password, 7)
 
   const plan = await Plans.findOne({ name: 'Standart' })
@@ -94,15 +80,12 @@ export default eventHandler(async (event) => {
     roles: ['user'],
     tariff: plan.tariff,
     uuid: uuid(),
-    orgKey,
-    orgName,
-    orgOgrn,
-    orgInn,
     lastname: '',
     name: '',
     middleName: '',
     phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
     emailConfirmed: true,
+    fizFace: true,
   })
   const url = useRuntimeConfig().PUBLIC_SITE_URL
   const link = `${url}/api/auth/activate?uuid=${user.uuid}`
@@ -111,8 +94,8 @@ export default eventHandler(async (event) => {
   } catch (error) {
     return { status: 'error', error: 'Ошибка отправки письма.' }
   }
-  
   await user.save()
+
   if (referral) {
     let inviter = await User.findOne({ uuid: referral })
     if (!inviter) {
