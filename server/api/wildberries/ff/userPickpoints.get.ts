@@ -1,6 +1,8 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
 import { FFPVZ } from '~/server/lib/models/wildberries/FFPVZS'
+import MenuBuilder from '~/server/utils/menuBuilder'
+import { UserRoles } from '~/data/enums'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -8,7 +10,15 @@ export default eventHandler(async (event) => {
 
   const { date }: any = getQuery(event)
 
-  const pvzs: any = await FFPVZ.findOne({ user })
+  let admin: any = null
+  
+
+  if (user.roles[0] == UserRoles.staff) {
+    const admin = await User.findOne({ uuid: user.uuidCompany })
+    if (!admin) return sendRedirect(event, '/auth', 302)
+  }
+
+  const pvzs: any = await FFPVZ.findOne({ user: admin ? admin._id : user._id })
 
   if (!pvzs || !pvzs.pvzs || !pvzs.pvzs.length) {
     return {

@@ -251,14 +251,14 @@ onMounted(() => {
                     class="tooltip before:w-[109px] before:content-[attr(data-tip)]"
                     data-tip="Пополнить баланс"
                   >
-                    <div>
+                    <!-- <div>
                       <label
                         for="payment-modal"
                         class="btn btn-block relative btn-sm btn-neutral btn-circle bg-neutral-focus hover:bg-neutral text-xl font-bold"
                       >
                         +
                       </label>
-                    </div>
+                    </div> -->
 
                     <!-- <NuxtLink
                       :external="true"
