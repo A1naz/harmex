@@ -81,6 +81,7 @@ export default eventHandler(async (event) => {
     roles: ['user'],
     tariff: plan.tariff,
     uuid: uuid(),
+    orgInn: uuid(),
     lastname: '',
     name: '',
     middleName: '',
