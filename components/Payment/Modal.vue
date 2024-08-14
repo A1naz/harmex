@@ -17,7 +17,7 @@ const qrCodeImg = ref('')
 const orderUuid = ref('')
 const paymentPurpose = ref('')
 const selectedType = ref('balance')
-const faceType = ref('fizFace')
+const faceType = ref('yurFace')
 
 function cancelPayment() {
   url.value = ''
@@ -97,7 +97,7 @@ function setType(e: any) {
               v-model="faceType"
             >
               <option disabled>Тип переводящего лица</option>
-              <option value="fizFace" selected>Физическое лицо</option>
+              <option value="fizFace" disabled>Физическое лицо</option>
               <option selected value="yurFace">Юридическое лицо</option>
             </select>
             <div class="my-0.5 mx-2 text-[12px]">
