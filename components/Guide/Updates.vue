@@ -3,7 +3,6 @@ const emit = defineEmits(['openModal'])
 const store = useMainStore()
 const route = useRoute()
 
-
 const inputs = reactive<any>({
   first: false,
   second: false,
@@ -22,7 +21,6 @@ const closeOtherInputs = (input: string) => {
     }
   })
 }
-
 </script>
 
 <template>
@@ -36,14 +34,16 @@ const closeOtherInputs = (input: string) => {
       <input tabindex="0" type="checkbox" v-model="inputs.first" />
 
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-xl font-semibold">Условия пользования платформой</div>
+        <div class="flex gap-4 text-xl font-semibold">
+          Условия пользования платформой
+        </div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
           <p>
-            Чтобы продлить тарифный план, выберите маркетплейс,
-            желаемые условия продления (направление, услугу, сроки) и оплатите
-            любым удобным для вас способом
+            Чтобы продлить тарифный план, выберите маркетплейс, желаемые условия
+            продления (направление, услугу, сроки) и оплатите любым удобным для
+            вас способом
           </p>
           <p>После оплаты, ваш тарифный план обновится в течение 10-30 минут</p>
         </div>
@@ -72,10 +72,26 @@ const closeOtherInputs = (input: string) => {
             <li>Выберите приемлемый для вас способ оплаты</li>
             <li>Переведите по указанным реквизитам</li>
           </ol>
+          <nuxt-img
+            src="https://ozonmpportal.hb.vkcs.cloud/faqImages/updates/payment.png"
+            class="py-5 rounded-lg flex justify-center mx-auto"
+            width="800"
+          >
+          </nuxt-img>
           <p>Ожидайте пополнения от 10 минут до 72 часов</p>
           <p>
             Пополнение происходит как только финансы поступают на наши расчетный
-            счет
+            счет. Перевод на расчетный счет организации вы можете произвести 3мя
+            способами:
+          </p>
+          <ol class="list-decimal pl-5">
+            <li>Оплата с расчетного счета вашей организации</li>
+            <li>Оплата с карты вашей организации</li>
+            <li>Оплата с карты физического лица</li>
+          </ol>
+          <p>
+            Обращаем внимание! Вы можете совершать быстрые пополнения используя
+            Qr-код
           </p>
         </div>
       </div>
@@ -87,13 +103,15 @@ const closeOtherInputs = (input: string) => {
     >
       <input tabindex="0" type="checkbox" v-model="inputs.third" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-xl font-semibold">Как создать самовыкуп</div>
+        <div class="flex gap-4 text-xl font-semibold">
+          Как создать самовыкуп
+        </div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
           <p>
-            Чтобы осуществить покупку товара на маркетплейсе,
-            выполните простые рекомендации:
+            Чтобы осуществить покупку товара на маркетплейсе, выполните простые
+            рекомендации:
           </p>
           <ol class="list-decimal pl-5">
             <li>Перейдите в меню Выкупы</li>
@@ -188,7 +206,9 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox" v-model="inputs.fourth" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-xl font-semibold">Как забрать товар с ПВЗ</div>
+        <div class="flex gap-4 text-xl font-semibold">
+          Как забрать товар с ПВЗ
+        </div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -251,7 +271,9 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox" v-model="inputs.fifth" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-xl font-semibold">Как опубликовать отзыв</div>
+        <div class="flex gap-4 text-xl font-semibold">
+          Как опубликовать отзыв
+        </div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -315,7 +337,9 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox" v-model="inputs.sixth" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-xl font-semibold">Как опубликовать лайки</div>
+        <div class="flex gap-4 text-xl font-semibold">
+          Как опубликовать лайки
+        </div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -351,9 +375,11 @@ const closeOtherInputs = (input: string) => {
       class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
       @click="closeOtherInputs('seventh')"
     >
-    <input type="checkbox" v-model="inputs.seventh" />
+      <input type="checkbox" v-model="inputs.seventh" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-xl font-semibold">Как опубликовать вопрос</div>
+        <div class="flex gap-4 text-xl font-semibold">
+          Как опубликовать вопрос
+        </div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
@@ -387,7 +413,9 @@ const closeOtherInputs = (input: string) => {
     >
       <input type="checkbox" v-model="inputs.eighth" />
       <div class="collapse-title relative text-xl font-medium">
-        <div class="flex gap-4 text-xl font-semibold">Как добавить товар в Корзину</div>
+        <div class="flex gap-4 text-xl font-semibold">
+          Как добавить товар в Корзину
+        </div>
       </div>
       <div class="collapse-content">
         <div class="flex flex-col gap-4">
