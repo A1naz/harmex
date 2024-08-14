@@ -74,9 +74,6 @@ export default eventHandler(async (event) => {
 
   const newUsername = await createUsername(email)
 
-  console.log(landing);
-  
-
   const user: IUser = new User({
     email,
     password: hash,
