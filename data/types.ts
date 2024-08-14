@@ -67,6 +67,7 @@ export interface IUser extends Entity {
   bankInfo: Object
   fizFace: boolean
   staff: boolean
+  landing: string
 }
 
 export interface IUserLogs extends Entity {

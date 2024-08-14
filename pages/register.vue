@@ -46,6 +46,7 @@ const formData = reactive({
   verificationCode: '',
   checked: false,
   referral,
+  landing: '',
 })
 const passwordInputType = ref('password')
 const passwordConfirmInputType = ref('password')
@@ -72,6 +73,11 @@ onMounted(async () => {
     localStorage.setItem('referralCode', route.query?.ref)
   }
   referralFromLocal.value = localStorage.getItem('referralCode')
+  const landingValue = localStorage.getItem('landing')
+
+  //@ts-ignore
+  if (landingValue) formData.landing = landingValue
+
   formData.referral = referralFromLocal.value
 })
 
@@ -139,6 +145,7 @@ async function submitForm() {
         }, 3000)
       } else {
         localStorage.removeItem('referralCode')
+        localStorage.removeItem('landing')
         alert.value = true
         alertType.value = 'success'
         alertText.value = 'Пользователь зарегистрирован.'
@@ -168,6 +175,7 @@ async function submitForm() {
         }, 3000)
       } else {
         localStorage.removeItem('referralCode')
+        localStorage.removeItem('landing')
         alert.value = true
         alertType.value = 'success'
         alertText.value = 'Пользователь зарегистрирован.'
@@ -361,9 +369,7 @@ const toggleConfirmPassword = () => {
     <section
       class="flex flex-col justify-center align-center w-full max-w-lg rounded-lg p-2 shadow-lg gap-3 mt-auto mx-auto"
     >
-      <h3 class="font-bold text-xl mt-5 text-center">
-        Создать аккаунт
-      </h3>
+      <h3 class="font-bold text-xl mt-5 text-center">Создать аккаунт</h3>
       <div class="w-full">
         <div class="top-nav btm-nav-xs w-full flex justify-between">
           <button

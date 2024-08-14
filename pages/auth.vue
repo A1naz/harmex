@@ -5,16 +5,6 @@ import { email, helpers, minLength, required } from '@vuelidate/validators'
 
 const store = useMainStore()
 
-onMounted(() => {
-  const isPageReloaded = localStorage.getItem('isPageReloaded')
-
-  if (!isPageReloaded) {
-    localStorage.setItem('isPageReloaded', 'true')
-
-    window.location.reload()
-  }
-})
-
 definePageMeta({
   colorMode: 'dark',
   auth: {
@@ -24,7 +14,7 @@ definePageMeta({
   title: 'Вход',
 })
 
-const router = useRouter()
+const route = useRoute()
 const { status, data, signIn, signOut } = useAuth()
 const name = useRuntimeConfig().public.NAME
 const alert = ref(false)
@@ -90,7 +80,8 @@ onMounted(async () => {
     }, 3000)
   }
   if (params?.confirmed) {
-    alertText.value = 'Письмо для подтверждения было отправлено на указанный email. (Проверьте папку Спам)'
+    alertText.value =
+      'Письмо для подтверждения было отправлено на указанный email. (Проверьте папку Спам)'
     setTimeout(() => {
       alert.value = true
     }, 0)
@@ -124,6 +115,19 @@ const rules = computed(() => {
 })
 
 const v$ = useVuelidate(rules, formData)
+
+onMounted(() => {
+  const isPageReloaded = localStorage.getItem('isPageReloaded')
+  if (route.query?.landing && typeof route.query?.landing === 'string') {
+    localStorage.setItem('landing', route.query?.landing)
+  }
+
+  if (!isPageReloaded) {
+    localStorage.setItem('isPageReloaded', 'true')
+
+    window.location.reload()
+  }
+})
 </script>
 
 <template>
@@ -163,7 +167,11 @@ const v$ = useVuelidate(rules, formData)
                   required="true"
                   class="input w-full"
                 />
-                <button type="button" class="hover:text-primary w-1/12" @click="togglePassword">
+                <button
+                  type="button"
+                  class="hover:text-primary w-1/12"
+                  @click="togglePassword"
+                >
                   <IconCSS
                     v-if="passwordShow"
                     class="w-20 h-20"

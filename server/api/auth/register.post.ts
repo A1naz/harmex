@@ -23,6 +23,7 @@ export default eventHandler(async (event) => {
     orgOgrn,
     orgInn,
     phoneNumber,
+    landing
   } = body
 
   if (!email || !password)
@@ -103,6 +104,7 @@ export default eventHandler(async (event) => {
     middleName: '',
     phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
     emailConfirmed: true,
+    landing
   })
   const url = useRuntimeConfig().PUBLIC_SITE_URL
   const link = `${url}/api/auth/activate?uuid=${user.uuid}`

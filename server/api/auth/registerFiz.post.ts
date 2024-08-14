@@ -19,6 +19,7 @@ export default eventHandler(async (event) => {
     password,
     referral,
     phoneNumber,
+    landing
   } = body
 
   if (!email || !password)
@@ -73,6 +74,9 @@ export default eventHandler(async (event) => {
 
   const newUsername = await createUsername(email)
 
+  console.log(landing);
+  
+
   const user: IUser = new User({
     email,
     password: hash,
@@ -86,6 +90,7 @@ export default eventHandler(async (event) => {
     phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
     emailConfirmed: true,
     fizFace: true,
+    landing,
   })
   const url = useRuntimeConfig().PUBLIC_SITE_URL
   const link = `${url}/api/auth/activate?uuid=${user.uuid}`
