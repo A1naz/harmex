@@ -39,6 +39,7 @@ export default eventHandler(async (event) => {
     user.balance = admin.balance
     user.fizFace = admin.fizFace
     user.staff = true
+    user.ffEnabled = admin.ffEnabled
   }
 
   const client: Client = {

@@ -435,7 +435,7 @@ const toggleConfirmPassword = () => {
             >
           </div>
           <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-            Код верификации с звонка
+            Код верфикации - озвученные цифры внутри звонка
           </label>
           <div class="join w-full">
             <input

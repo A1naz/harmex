@@ -634,6 +634,7 @@ const isSetBankBtnDisabled = computed(() => {
           />
           <input
             v-model="form.username"
+            readonly
             type="text"
             placeholder="Никнейм"
             class="input input-bordered w-full"
