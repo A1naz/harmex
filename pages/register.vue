@@ -463,7 +463,7 @@ const toggleConfirmPassword = () => {
               class="btn btn-sm xl:btn-md join-item rounded-r-full"
               @click="confirmCode"
             >
-              <IconCSS size="20" name="mdi:check" />
+              Подтвердить
             </button>
           </div>
 

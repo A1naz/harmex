@@ -1,6 +1,12 @@
 <script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core'
-import { email, helpers, minLength, required, sameAs } from '@vuelidate/validators'
+import {
+  email,
+  helpers,
+  minLength,
+  required,
+  sameAs,
+} from '@vuelidate/validators'
 import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({
@@ -28,16 +34,20 @@ const alert = reactive({
 })
 const rules = computed(() => {
   return {
-    email: {
-     
-    },
+    email: {},
     password: {
       required: helpers.withMessage('Введите пароль', required),
-      minLength: helpers.withMessage('Пароль должен быть длиннее 6 символов', minLength(6)),
+      minLength: helpers.withMessage(
+        'Пароль должен быть длиннее 6 символов',
+        minLength(6)
+      ),
     },
     confirmPassword: {
       required: helpers.withMessage('Подтвердите пароль', required),
-      sameAs: helpers.withMessage('Пароли не совпадают', sameAs(formData.password)),
+      sameAs: helpers.withMessage(
+        'Пароли не совпадают',
+        sameAs(formData.password)
+      ),
     },
   }
 })
@@ -57,15 +67,14 @@ async function submitForm() {
     useTimeoutFn(() => {
       alert.show = false
     }, 3000)
-  }
-  else {
+  } else {
     // alert.show = true
     // alert.type = 'success'
     // alert.message = 'Пароль успешно изменен'
     // useTimeoutFn(() => {
     //   alert.show = false
     // }, 3000)
-   router.push('/auth?passwordChanged=true')
+    router.push('/auth?passwordChanged=true')
   }
 }
 
@@ -76,8 +85,9 @@ async function sendConfirmCode() {
     })
     return
   }
+  //@ts-ignore
   const { data, error }: any = await useFetch(
-    '/api/organization/confirmPhone',
+    '/api/organization/confirmPhoneForReset',
     {
       method: 'POST',
       body: {
@@ -86,17 +96,19 @@ async function sendConfirmCode() {
     }
   )
 
-  if (data.value.status == 'ok') {
+  if (data && data.value && data.value.status == 'ok') {
     isCodeSent.value = true
     confirmationCodeInput.value.focus()
     notify({
       type: 'success',
       title: 'Код отправлен',
     })
-  } else {
+  } else if (error.value) {
+    console.log(error.value)
+
     notify({
       type: 'error',
-      title: data.value.message,
+      title: error.value.data.message,
     })
   }
 }
@@ -132,10 +144,12 @@ const passwordInputType = ref('password')
 const passwordConfirmInputType = ref('password')
 
 const togglePassword = () => {
-  passwordInputType.value = (passwordInputType.value === 'password') ? 'text' : 'password';
+  passwordInputType.value =
+    passwordInputType.value === 'password' ? 'text' : 'password'
 }
 const toggleConfirmPassword = () => {
-  passwordConfirmInputType.value = (passwordConfirmInputType.value === 'password') ? 'text' : 'password';
+  passwordConfirmInputType.value =
+    passwordConfirmInputType.value === 'password' ? 'text' : 'password'
 }
 </script>
 
@@ -144,26 +158,35 @@ const toggleConfirmPassword = () => {
     <Toast :type="alert.type" :active="alert.show">
       {{ alert.message }}
     </Toast>
-    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-      <div class="card w-full p-6 rounded-lg shadow-lg  md:mt-0 sm:max-w-md sm:p-8">
-        <h2 class="mb-1 text-xl font-bold leading-tight tracking-tight  md:text-2xl ">
+    <div
+      class="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0"
+    >
+      <div
+        class="card w-full p-6 rounded-lg shadow-lg md:mt-0 sm:max-w-md sm:p-8"
+      >
+        <h2
+          class="mb-1 text-xl font-bold leading-tight tracking-tight md:text-2xl"
+        >
           Смена пароля
         </h2>
         <form class="mt-4 space-y-4 lg:mt-5 md:space-y-5 relative" action="#">
-          <div >
-            <label for="email" class="block mb-2 text-sm font-medium  ">Номер телефона</label>
+          <div>
+            <label for="email" class="block mb-2 text-sm font-medium"
+              >Номер телефона</label
+            >
             <div class="join w-full">
-              
               <input
-                id="email" v-model="formData.email" name="email"
+                id="email"
+                v-model="formData.email"
+                name="email"
                 class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 :class="{
                   'input-error': v$.email.$error,
-                }" 
+                }"
                 v-maska
                 data-maska="+7 (###) ###-##-##"
                 placeholder="+7 (___) ___-__-__"
-              >
+              />
               <button
                 v-if="!isCodeSent"
                 class="btn btn-sm xl:btn-md join-item rounded-r-full"
@@ -174,13 +197,17 @@ const toggleConfirmPassword = () => {
             </div>
             <div
               v-for="error of v$.email.$errors"
-              :key="error.$uid" class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+              :key="error.$uid"
+              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
             >
               <div class="error-msg">
                 {{ error.$message }}
               </div>
             </div>
-            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium mt-5">
+            <label
+              for="email"
+              class="block mb-2 ml-1 my-1 text-sm font-medium mt-5"
+            >
               Код верификации с звонка
             </label>
             <div class="join w-full">
@@ -201,45 +228,52 @@ const toggleConfirmPassword = () => {
                 class="btn btn-sm xl:btn-md join-item rounded-r-full"
                 @click.prevent="confirmCode"
               >
-                <IconCSS  size="27" name="mdi:check" />
+                <IconCSS size="27" name="mdi:check" />
               </button>
             </div>
           </div>
           <div>
-            <label for="password" class="block mb-2 text-sm font-medium  ">Новый пароль</label>
-            
+            <label for="password" class="block mb-2 text-sm font-medium"
+              >Новый пароль</label
+            >
+
             <div class="flex join">
               <input
-              id="password" v-model="formData.password" :type="passwordInputType" name="password"
-              class="input join-item input-sm xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              :class="{
-                'input-error': v$.password.$error,
-              }" placeholder="••••••••"
-              :disabled="!isNumberConfirmed"
-            >
+                id="password"
+                v-model="formData.password"
+                :type="passwordInputType"
+                name="password"
+                class="input join-item input-sm xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                :class="{
+                  'input-error': v$.password.$error,
+                }"
+                placeholder="••••••••"
+                :disabled="!isNumberConfirmed"
+              />
               <button
-              :disabled="!isNumberConfirmed"
-                type="button" 
-                class="hover:text-primary w-1/12 disabled:text-black join-item disabled:bg-[#181920] rounded-r-lg" 
+                :disabled="!isNumberConfirmed"
+                type="button"
+                class="hover:text-primary w-1/12 disabled:text-black join-item disabled:bg-[#181920] rounded-r-lg"
                 @click="togglePassword"
               >
-                  <IconCSS
-                    v-if="passwordInputType !== 'password'"
-                    class="w-20 h-20"
-                    size="25"
-                    name="mdi:hide-outline"
-                  />
-                  <IconCSS
-                    v-else
-                    class="w-20 h-20"
-                    size="25"
-                    name="mdi:show-outline"
-                  />
+                <IconCSS
+                  v-if="passwordInputType !== 'password'"
+                  class="w-20 h-20"
+                  size="25"
+                  name="mdi:hide-outline"
+                />
+                <IconCSS
+                  v-else
+                  class="w-20 h-20"
+                  size="25"
+                  name="mdi:show-outline"
+                />
               </button>
             </div>
             <div
               v-for="error of v$.password.$errors"
-              :key="error.$uid" class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+              :key="error.$uid"
+              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
             >
               <div class="error-msg">
                 {{ error.$message }}
@@ -247,35 +281,41 @@ const toggleConfirmPassword = () => {
             </div>
           </div>
           <div class="pb-4">
-            <label for="confirm-password" class="block mb-2 text-sm font-medium  ">Подтвердите пароль</label>
-            
+            <label for="confirm-password" class="block mb-2 text-sm font-medium"
+              >Подтвердите пароль</label
+            >
+
             <div class="flex join">
               <input
-              id="confirm-password" v-model="formData.confirmPassword"
-              :type="passwordConfirmInputType"
-              class="input join-item input-sm xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-r-none" :class="{
-                'input-error': v$.confirmPassword.$error,
-              }" name="confirm-password" placeholder="••••••••"
-              :disabled="!isNumberConfirmed"
-            >
-              <button 
+                id="confirm-password"
+                v-model="formData.confirmPassword"
+                :type="passwordConfirmInputType"
+                class="input join-item input-sm xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-r-none"
+                :class="{
+                  'input-error': v$.confirmPassword.$error,
+                }"
+                name="confirm-password"
+                placeholder="••••••••"
                 :disabled="!isNumberConfirmed"
-                type="button" 
-                class="hover:text-primary w-1/12 disabled:text-black join-item disabled:bg-[#181920] rounded-r-lg" 
+              />
+              <button
+                :disabled="!isNumberConfirmed"
+                type="button"
+                class="hover:text-primary w-1/12 disabled:text-black join-item disabled:bg-[#181920] rounded-r-lg"
                 @click="toggleConfirmPassword"
               >
-                  <IconCSS
-                    v-if="passwordConfirmInputType !== 'password'"
-                    class="w-20 h-20"
-                    size="25"
-                    name="mdi:hide-outline"
-                  />
-                  <IconCSS
-                    v-else
-                    class="w-20 h-20"
-                    size="25"
-                    name="mdi:show-outline"
-                  />
+                <IconCSS
+                  v-if="passwordConfirmInputType !== 'password'"
+                  class="w-20 h-20"
+                  size="25"
+                  name="mdi:hide-outline"
+                />
+                <IconCSS
+                  v-else
+                  class="w-20 h-20"
+                  size="25"
+                  name="mdi:show-outline"
+                />
               </button>
             </div>
             <div
@@ -287,7 +327,12 @@ const toggleConfirmPassword = () => {
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary block w-full" @click.prevent="submitForm" :disabled="!isNumberConfirmed">
+          <button
+            type="submit"
+            class="btn btn-primary block w-full"
+            @click.prevent="submitForm"
+            :disabled="!isNumberConfirmed"
+          >
             Сменить пароль
           </button>
         </form>
