@@ -36,12 +36,6 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  if (!user.fizFace && !user.bik && !user.rs) {
-    throw createError(
-      'Необходимо заполнить банковские реквизиты в личном кабинете'
-    )
-  }
-  
   const body = await readBody(event)
   const last = await Buyout.findOne({ user }).sort({ _id: -1 })
   const params = getQuery(event)
@@ -112,6 +106,7 @@ export default eventHandler(async (event) => {
 
     const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
 
+    
     console.log(product.discountPrice)
 
     const buyout = new Buyout({

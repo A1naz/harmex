@@ -38,14 +38,8 @@ export default eventHandler(async (event) => {
     success: true,
     message: '',
   }
-
-  if (!user.fizFace && !user.bik && !user.rs) {
-    result.success = false
-    result.message =
-      'Необходимо заполнить банковские реквизиты в личном кабинете'
-  }
-
   for (const item of products) {
+
     const rules = item.rules.map((rule) => rule.id)
     let sort = 'popular'
 
@@ -108,10 +102,8 @@ export default eventHandler(async (event) => {
       // }
     }
 
-    const foundPoint = points.find(
-      (p: any) =>
-        p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon
-    )
+    
+    const foundPoint = points.find((p: any) => p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon)
     if (!foundPoint) {
       result.success = false
       result.message = `ПВЗ ${item.adress} не найдено`
