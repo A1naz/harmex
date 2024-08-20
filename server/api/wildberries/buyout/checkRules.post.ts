@@ -63,16 +63,10 @@ export default eventHandler(async (event) => {
     success: true,
     message: '',
   }
-
-  if (!user.fizFace && !user.bik && !user.rs) {
-    result.success = false
-    result.message = 'Необходимо заполнить банковские реквизиты в личном кабинете'
-  }
-
   for (const item of products) {
     const rules = item.rules.map((rule) => rule.id)
     let sort = 'popular'
-
+ 
     const curDate = new Date()
     curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))
     const firstDate = new Date(item.dateRange[0])
@@ -134,6 +128,7 @@ export default eventHandler(async (event) => {
     //   }
     // }
 
+ 
     const foundPoint = points.find((p: { a: string }) => p.a === item.adress)
 
     if (!foundPoint) {
