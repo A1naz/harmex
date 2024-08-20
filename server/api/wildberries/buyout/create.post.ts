@@ -33,11 +33,11 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  if (!user.fizFace && !user.bik && !user.rs) {
-    throw createError(
-      'Необходимо заполнить банковские реквизиты в личном кабинете'
-    )
-  }
+  // if (!user.fizFace && !user.bik && !user.rs) {
+  //   throw createError(
+  //     'Необходимо заполнить банковские реквизиты в меню Профиль'
+  //   )
+  // }
 
   const body = await readBody(event)
   const last = await Buyout.findOne({ user }).sort({ _id: -1 })

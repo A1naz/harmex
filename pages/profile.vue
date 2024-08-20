@@ -473,8 +473,7 @@ const isSetBankBtnDisabled = computed(() => {
     !bankForm.bik ||
     !bankForm.rs ||
     bankForm.rs.toString().length != 20 ||
-    (bankForm.bik === store.client.bik && bankForm.rs === store.client.rs) ||
-    (store.client.bik && store.client.rs)
+    (bankForm.bik === store.client.bik && bankForm.rs === store.client.rs)
   ) {
     return true
   } else return false
@@ -573,7 +572,9 @@ const isSetBankBtnDisabled = computed(() => {
             />
             <input
               v-model="bankForm.rs"
-              type="number"
+              type="text"
+              v-maska
+              data-maska="####################"
               placeholder="Расчётный счёт"
               class="input input-bordered w-full"
             />
@@ -968,7 +969,7 @@ const isSetBankBtnDisabled = computed(() => {
   <StaticConfirmModal
     :confirmFunction="setBankInfo"
     title="Вы уверены"
-    description="После этого действия вы сможете изменить банковские данные"
+    description="Вы уверены, что хотите изменить данные банковского счета?"
     v-model:state="confirmModal"
   />
   <div class="h-20"></div>

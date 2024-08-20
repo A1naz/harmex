@@ -27,10 +27,10 @@ export default eventHandler(async (event) => {
     })
   }
 
-  if (user.rs && user.bik) {
+  if (user.rs === rs && user.bik === bik) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Информация о банковской карте уже добавлена',
+      statusMessage: 'Банковские реквизиты не изменены',
     })
   }
 

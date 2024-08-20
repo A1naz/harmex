@@ -39,11 +39,10 @@ export default eventHandler(async (event) => {
     message: '',
   }
 
-  if (!user.fizFace && !user.bik && !user.rs) {
-    result.success = false
-    result.message =
-      'Необходимо заполнить банковские реквизиты в личном кабинете'
-  }
+  // if (!user.fizFace && !user.bik && !user.rs) {
+  //   result.success = false
+  //   result.message = 'Необходимо заполнить банковские реквизиты в меню'
+  // }
 
   for (const item of products) {
     const rules = item.rules.map((rule) => rule.id)
