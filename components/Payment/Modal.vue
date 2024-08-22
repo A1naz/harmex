@@ -92,14 +92,14 @@ function setType(e: any) {
                 Баланс на покупку товаров
               </option>
             </select>
-            <select
+            <!-- <select
               class="select select-bordered mb-2 w-full text-[15px]"
               v-model="faceType"
             >
               <option disabled>Тип переводящего лица</option>
               <option value="fizFace" disabled>Физическое лицо</option>
               <option selected value="yurFace">Юридическое лицо</option>
-            </select>
+            </select> -->
             <div class="my-0.5 mx-2 text-[12px]">
               P.S. Финансовые средства зачисляются на баланс от 3х минут до 72
               часов
