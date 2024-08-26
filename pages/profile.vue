@@ -7,6 +7,7 @@ definePageMeta({
   title: 'Профиль',
 })
 const warning = ref('')
+const config = useRuntimeConfig()
 
 const isChatBotEnabled = ref(false)
 
@@ -962,6 +963,92 @@ const isSetBankBtnDisabled = computed(() => {
             Сохранить
           </button>
         </div>
+      </div>
+    </section>
+    <section v-if="!store.client.staff">
+      <div class="overflow-x-auto w-full">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr class="hover">
+              <th></th>
+              <th>Документ</th>
+              <th>Открыть / Скачать</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="hover">
+              <th>1</th>
+              <td>Политика конфиденциальности</td>
+              <td>
+                <a
+                  class="text-primary underline cursor-pointer"
+                  target="_blank"
+                  href="https://app.marketmonstr.pro/conf_policy.pdf"
+                >
+                  Открыть
+                </a>
+              </td>
+            </tr>
+
+            <tr class="hover">
+              <th>2</th>
+              <td>Политика кукис</td>
+              <td>
+                <a
+                  class="text-primary underline cursor-pointer"
+                  target="_blank"
+                  href="https://app.marketmonstr.pro/cookies_policy.pdf"
+                >
+                  Открыть
+                </a>
+              </td>
+            </tr>
+            <tr class="hover">
+              <th>3</th>
+              <td>Обработка персональных данных</td>
+              <td>
+                <a
+                  class="text-primary underline cursor-pointer"
+                  target="_blank"
+                  href="https://app.marketmonstr.pro/oferta_dogovor.pdf"
+                >
+                  Открыть
+                </a>
+              </td>
+            </tr>
+            <tr class="hover">
+              <th>4</th>
+              <td>Согласие на рассылку</td>
+              <td>
+                <a
+                  class="text-primary underline cursor-pointer"
+                  target="_blank"
+                  href="https://app.marketmonstr.pro/advertisement.pdf"
+                >
+                  Открыть
+                </a>
+              </td>
+            </tr>
+            <tr class="hover">
+              <th>5</th>
+              <td>Пользовательское соглашение</td>
+              <td>
+                <a
+                  v-if="store.client.fizFace || store.client.bik"
+                  class="text-primary underline cursor-pointer"
+                  target="_blank"
+                  :href="`${config.public.siteUrl}/api/docs/get`"
+                  >Скачать 
+                  <Icon name="material-symbols:download" size="18" class="mb-0.5" />
+                </a>
+                <span class="text-error" v-else>
+                  Заполните банковские данные
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
   </div>

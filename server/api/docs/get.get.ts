@@ -1,47 +1,590 @@
 import { User } from '@/server/lib/models/User'
 import { getServerSession } from '#auth'
-import { Paragraph, patchDocument, PatchType } from 'docx'
+import {
+  Paragraph,
+  patchDocument,
+  PatchType,
+  AlignmentType,
+  TextRun,
+} from 'docx'
 import fs from 'node:fs'
 import path from 'node:path'
+import he from 'he'
 
 export default eventHandler(async (event) => {
-  const user: any = await User.findOne({
-    uuid: 'c5fdc5d6-a8b0-4986-a829-e721f8e54deb',
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
+
+  const name = new TextRun({
+    text: 'Name:',
+    font: 'Times New Roman',
+    size: 10,
   })
 
-  const doc = await patchDocument(
-    fs.readFileSync('server/docs/templates/oferta.docx'),
-    {
-      patches: {
-        orgNameForEditing: {
-          type: PatchType.DOCUMENT,
-          children: [new Paragraph({ text: user.orgName })],
+  let doc: any
+
+  if (user.fizFace) {
+    doc = await patchDocument(
+      fs.readFileSync('server/docs/templates/ofertaFiz.docx'),
+      {
+        patches: {
+          username: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.username,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          phoneNumber: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.phoneNumber,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          registrationDate: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.registrationDate
+                      .toISOString()
+                      .slice(0, 10)
+                      .replace(/-/g, '.'),
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          email: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.email,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
         },
-        OGRNForEditing: {
-          type: PatchType.DOCUMENT,
-          children: [new Paragraph({ text: user.orgOgrn })],
+      }
+    )
+  } else if (user.orgKey === 'ООО') {
+
+    if (!user.bik) throw createError({
+      statusCode: 400,
+      statusMessage:
+        'Не удалось получить информацию о банке, заполните БИК и Р/С',
+    })
+
+    doc = await patchDocument(
+      fs.readFileSync('server/docs/templates/ofertaOOO.docx'),
+      {
+        patches: {
+          ogrn: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.orgOgrn,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          inn: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.orgInn,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          address: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.bankInfo.address,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          bank: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: he.decode(user.bankInfo.name),
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          bik: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.bik,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          rs: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.rs,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          ks: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.bankInfo.ks,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          email: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.email,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          genDirector: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `${user.firstName} ${user.lastName} ${user.middleName}`,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          orgType: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `Генеральный директор`,
+                    font: 'Times New Roman',
+                    size: 20,
+                  }),
+                ],
+              }),
+            ],
+          },
+          fio: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `${user.lastName} ${user.firstName} ${user.middleName}`,
+                    font: 'Times New Roman',
+                    size: 20,
+                  }),
+                ],
+              }),
+            ],
+          },
+          initials: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `________________________ / ${user.firstName[0]}. ${user.middleName[0]}. ${user.lastName}`,
+                    font: 'Times New Roman',
+                    size: 21,
+                  }),
+                ],
+              }),
+            ],
+          },
+          fioFirst: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `${user.orgName}`,
+                    font: 'Times New Roman',
+                    size: 22,
+                    bold: true,
+                  }),
+                ],
+              }),
+            ],
+          },
         },
-        INNForEditing: {
-          type: PatchType.DOCUMENT,
-          children: [new Paragraph({ text: user.orgInn })],
+      }
+    )
+  } else if (user.orgKey === 'ИП') {
+
+
+    if (!user.bik) throw createError({
+      statusCode: 400,
+      statusMessage:
+        'Не удалось получить информацию о банке, заполните БИК и Р/С',
+    })
+
+    doc = await patchDocument(
+      fs.readFileSync('server/docs/templates/ofertaIP.docx'),
+      {
+        patches: {
+          ogrn: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.orgOgrn,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          inn: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.orgInn,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          address: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.bankInfo.address,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          bank: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: he.decode(user.bankInfo.name),
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          bik: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.bik,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          rs: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.rs,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          ks: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.bankInfo.ks,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          email: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: user.email,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          genDirector: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `${user.firstName} ${user.lastName} ${user.middleName}`,
+                    font: 'Times New Roman',
+                    size: 22,
+                  }),
+                ],
+              }),
+            ],
+          },
+          orgType: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `Индивидуальный предприниматель`,
+                    font: 'Times New Roman',
+                    size: 20,
+                  }),
+                ],
+              }),
+            ],
+          },
+          fio: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `${user.lastName} ${user.firstName} ${user.middleName}`,
+                    font: 'Times New Roman',
+                    size: 20,
+                  }),
+                ],
+              }),
+            ],
+          },
+          initials: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `________________________ / ${user.firstName[0]}. ${user.middleName[0]}. ${user.lastName}`,
+                    font: 'Times New Roman',
+                    size: 21,
+                  }),
+                ],
+              }),
+            ],
+          },
+          fioFirst: {
+            type: PatchType.DOCUMENT,
+            children: [
+              new Paragraph({
+                spacing: {
+                  line: 276, // Интервал между абзацами 1.15
+                },
+                children: [
+                  new TextRun({
+                    text: `${user.orgName}`,
+                    font: 'Times New Roman',
+                    size: 22,
+                    bold: true,
+                  }),
+                ],
+              }),
+            ],
+          },
         },
-        YurAddressForEditing: {
-          type: PatchType.DOCUMENT,
-          children: [
-            new Paragraph({
-              text: user.bankInfo
-                ? user.bankInfo.city + ',' + user.bankInfo.address
-                : '',
-            }),
-          ],
-        },
-        EmailForEditing: {
-          type: PatchType.DOCUMENT,
-          children: [new Paragraph({ text: user.email })],
-        },
-      },
-    }
-  )
+      }
+    )
+  }
+
   fs.writeFileSync('server/docs/signedOferta.docx', doc)
 
   const filePath = path.join('server', 'docs', 'signedOferta.docx')
