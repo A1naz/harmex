@@ -308,9 +308,15 @@ onMounted(() => {
         <div class="mt-auto">
           <div class="w-full hover:cursor-default p-0 block mt-8 lg:mt-0">
             <div class="join flex justify-around w-full items-center p-0 m-0">
-              <label class="join-item btn btn-ghost btn-square z-10"
+              <!-- <label class="join-item btn btn-ghost btn-square z-10"
                 ><Icon class="w-6 h-6" name="mdi:support"
-              /></label>
+              /></label> -->
+              <NuxtLink to="https://t.me/+h1oxDt0S8ug3NmU6" target="_blank">
+                <label class="join-item btn btn-ghost btn-square z-10"
+                  ><Icon class="w-6 h-6" name="bxl:telegram"
+                /></label>
+              </NuxtLink>
+
               <!-- <a target="_blank" href="#">
                 <label class="join-item btn btn-ghost btn-square z-10"
                   ><Icon class="w-6 h-6" name="mdi:support"

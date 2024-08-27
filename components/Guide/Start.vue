@@ -28,6 +28,16 @@ const closeOtherInputs = (input: string) => {
 <template>
   <div class="flex flex-col gap-4 w-full overflow-y-auto pb-20 px-5">
     <div class="flex flex-col gap-4 text-xl font-bold px-2">С чего начать</div>
+    <div>
+      <a
+        href="https://t.me/+h1oxDt0S8ug3NmU6"
+        target="_blank"
+        class="underline text-primary ml-2"
+      >
+        Наш телеграм канал
+        <Icon class="w-6 h-6" name="bxl:telegram" />
+      </a>
+    </div>
     <div class="divider w-full my-0"></div>
     <div
       @click="closeOtherInputs('first')"

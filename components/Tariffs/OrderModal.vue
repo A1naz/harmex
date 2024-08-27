@@ -220,6 +220,8 @@ onKeyStroke('Escape', (e) => {
                     Если у Вас возникли проблемы с платежом, напишите в
                     техническую поддержку портала.
                   </li>
+
+                  <span  class="text-xs -mb-2"> &nbsp; </span>
                   <div
                     class="font-bold text-error"
                     v-if="!store.client.fizFace"
@@ -227,7 +229,7 @@ onKeyStroke('Escape', (e) => {
                     Перевод только с бизнес-карты организации! Не с карты
                     физического лица
                   </div>
-                  <div v-else  class="font-bold text-error">
+                  <div v-else class="font-bold text-error">
                     Перевод осущесвляется с карты физического лица
                   </div>
                 </ol>

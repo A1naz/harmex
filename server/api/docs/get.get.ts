@@ -103,12 +103,17 @@ export default eventHandler(async (event) => {
       }
     )
   } else if (user.orgKey === 'ООО') {
-
-    if (!user.bik) throw createError({
-      statusCode: 400,
-      statusMessage:
-        'Не удалось получить информацию о банке, заполните БИК и Р/С',
-    })
+    if (!user.bik)
+      throw createError({
+        statusCode: 400,
+        statusMessage:
+          'Не удалось получить информацию о банке, заполните БИК и Р/С',
+      })
+    if (!user.firstName || !user.lastName || !user.middleName)
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Не удалось получить информацию о ФИО, заполните ФИО',
+      })
 
     doc = await patchDocument(
       fs.readFileSync('server/docs/templates/ofertaOOO.docx'),
@@ -343,13 +348,18 @@ export default eventHandler(async (event) => {
       }
     )
   } else if (user.orgKey === 'ИП') {
+    if (!user.bik)
+      throw createError({
+        statusCode: 400,
+        statusMessage:
+          'Не удалось получить информацию о банке, заполните БИК и Р/С',
+      })
 
-
-    if (!user.bik) throw createError({
-      statusCode: 400,
-      statusMessage:
-        'Не удалось получить информацию о банке, заполните БИК и Р/С',
-    })
+    if (!user.firstName || !user.lastName || !user.middleName)
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Не удалось получить информацию о ФИО, заполните ФИО',
+      })
 
     doc = await patchDocument(
       fs.readFileSync('server/docs/templates/ofertaIP.docx'),

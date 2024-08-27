@@ -604,7 +604,10 @@ const isSetBankBtnDisabled = computed(() => {
         </div>
       </div>
       <div class="flex flex-col gap-2.5 w-full mt-1">
-        <!-- <div class="w-full flex flex-col gap-2.5 xl:flex-row">
+        <div
+          class="w-full flex flex-col gap-2.5 xl:flex-row"
+          v-if="!store.client.fizFace && !store.client.staff"
+        >
           <input
             v-model="form.firstName"
             placeholder="Имя"
@@ -625,7 +628,7 @@ const isSetBankBtnDisabled = computed(() => {
           >
             &nbsp
           </div>
-        </div> -->
+        </div>
 
         <div class="flex flex-col w-full gap-2.5 xl:flex-row">
           <input
@@ -973,7 +976,7 @@ const isSetBankBtnDisabled = computed(() => {
             <tr class="hover">
               <th></th>
               <th>Документ</th>
-              <th>Открыть / Скачать</th>
+              <th>Подпись</th>
             </tr>
           </thead>
           <tbody>
@@ -1034,14 +1037,31 @@ const isSetBankBtnDisabled = computed(() => {
               <th>5</th>
               <td>Пользовательское соглашение</td>
               <td>
+                <span
+                  class="text-error"
+                  v-if="
+                    (!store.client.firstName ||
+                      !store.client.lastName ||
+                      !store.client.middleName) &&
+                    !store.client.fizFace &&
+                    !store.client.staff
+                  "
+                >
+                  Заполните ФИО
+                </span>
                 <a
-                  v-if="store.client.fizFace || store.client.bik"
+                  v-else-if="store.client.fizFace || store.client.bik"
                   class="text-primary underline cursor-pointer"
                   target="_blank"
                   :href="`${config.public.siteUrl}/api/docs/get`"
-                  >Скачать 
-                  <Icon name="material-symbols:download" size="18" class="mb-0.5" />
+                  >Скачать
+                  <Icon
+                    name="material-symbols:download"
+                    size="18"
+                    class="mb-0.5"
+                  />
                 </a>
+
                 <span class="text-error" v-else>
                   Заполните банковские данные
                 </span>

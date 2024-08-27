@@ -120,6 +120,16 @@ const close = () => {
         </p>
         <p>С уважением, команда Marketmonstr</p>
       </div>
+      <div class="mt-1">
+        <a
+          href="https://t.me/+h1oxDt0S8ug3NmU6"
+          target="_blank"
+          class="underline text-primary"
+        >
+          Наш телеграм канал
+          <Icon class="w-6 h-6" name="bxl:telegram" />
+        </a>
+      </div>
       <div v-if="faceType !== 'staff'">
         <nuxt-img
           src="https://ozonmpportal.hb.vkcs.cloud/guide/1.png"
@@ -133,6 +143,7 @@ const close = () => {
           class="rounded-lg transition-opacity ease-in-out duration-200 mt-2"
         />
       </div>
+      <div></div>
       <div class="form-control w-[50%] mt-3">
         <label class="label cursor-pointer flex justify-start gap-5 ml-3">
           <span class="label-text">Больше не показывать</span>
