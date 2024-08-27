@@ -232,7 +232,6 @@ const currentData = computed(() => {
               }}
             </p>
             <button
-              disabled
               class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
               @click="$emit('openModal', firstTariff)"
             >
@@ -270,7 +269,6 @@ const currentData = computed(() => {
               }}
             </p>
             <button
-              disabled
               class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
               @click="$emit('openModal', secondTariff)"
             >
@@ -306,7 +304,6 @@ const currentData = computed(() => {
           {{ tariff.prices[form.dateRange.replace('months', '')] + ' ₽' }}
         </p>
         <button
-          disabled
           class="btn dark:disabled:bg-[#999999] disabled:bg-[#999999] disabled:text-base-100 bg-base-content dark:bg-[#5287e7] dark:hover:bg-base-content border-none w-full text-base-100 text-lg"
           @click="$emit('openModal', tariff.title)"
         >
