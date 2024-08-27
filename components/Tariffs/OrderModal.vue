@@ -221,7 +221,7 @@ onKeyStroke('Escape', (e) => {
                     техническую поддержку портала.
                   </li>
 
-                  <span  class="text-xs -mb-2"> &nbsp; </span>
+                  <span class="text-xs -mb-2"> &nbsp; </span>
                   <div
                     class="font-bold text-error"
                     v-if="!store.client.fizFace"
@@ -235,7 +235,14 @@ onKeyStroke('Escape', (e) => {
                 </ol>
 
                 <div class="qr__img">
-                  <nuxt-img :src="qr" />
+                  <div>
+                    <nuxt-img :src="qr" />
+                  </div>
+                  <div>
+                    <span class="text-error"
+                      >Не изменяйте данные, иначе платеж не будет зачислен</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>
