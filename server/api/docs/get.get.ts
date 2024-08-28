@@ -10,16 +10,13 @@ import {
 import fs from 'node:fs'
 import path from 'node:path'
 import he from 'he'
+import checkAndRemove from './checkAndRemove'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const name = new TextRun({
-    text: 'Name:',
-    font: 'Times New Roman',
-    size: 10,
-  })
+  checkAndRemove('server/docs/signedOferta.docx')
 
   let doc: any
 
@@ -596,20 +593,36 @@ export default eventHandler(async (event) => {
   }
 
   fs.writeFileSync('server/docs/signedOferta.docx', doc)
+  const dirPath = path.join('server', 'docs')
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true })
+  }
 
-  const filePath = path.join('server', 'docs', 'signedOferta.docx')
+  fs.writeFileSync(path.join(dirPath, 'signedOferta.docx'), doc)
 
-  const fileStream = fs.createReadStream(filePath)
-  console.log('fileStream', fileStream)
+  console.log('createdFile')
+
+  const fileStream = fs.createReadStream(
+    path.join(dirPath, 'signedOferta.docx')
+  )
 
   event.res.setHeader(
     'Content-Type',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   )
+
   event.res.setHeader(
     'Content-Disposition',
     'attachment; filename="signedOferta.docx"'
   )
+
+  fileStream.on('close', async () => {
+    try {
+      fs.unlink(path.join(dirPath, 'signedOferta.docx'), () => {})
+    } catch (err) {
+      console.error('Ошибка при удалении файла:', err)
+    }
+  })
 
   return sendStream(event, fileStream)
 })

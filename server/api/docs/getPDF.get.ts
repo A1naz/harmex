@@ -1,5 +1,4 @@
 import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import {
   Paragraph,
   patchDocument,
@@ -13,11 +12,14 @@ import he from 'he'
 import ConvertAPI from 'convertapi'
 const convertapi = new ConvertAPI('secret_FETCalLBv3fvClRJ')
 import { readFile } from 'fs/promises'
+import checkAndRemove from './checkAndRemove'
 
 export default eventHandler(async (event) => {
-  const user = await User.findOne({ username: 'test' })
+  const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
+  checkAndRemove('server/docs/signedOfertaPDF.docx')
+  checkAndRemove('server/docs/signedOfertaPDF.pdf')
   let doc: any
 
   if (user.fizFace) {
@@ -598,19 +600,29 @@ export default eventHandler(async (event) => {
     convertapi
       .convert('pdf', { File: 'server/docs/signedOfertaPDF.docx' })
       .then(function (result: any) {
-        // get converted file url
-        console.log('Converted file url: ' + result.file.url)
-
-        // save to file
-        result.file.save('server/docs/signedOfertaPDF.pdf')
-        resolve(result.file.url)
+        result.file
+          .save('server/docs/signedOfertaPDF.pdf')
+          .then(() => {
+            resolve(result.file.url)
+          })
+          .catch(function (e: any) {
+            console.error(e.toString())
+            reject(
+              createError({
+                statusCode: 500,
+                message: 'Не удалось создать таблицу',
+              })
+            )
+          })
       })
       .catch(function (e: any) {
         console.error(e.toString())
-        throw createError({
-          statusCode: 500,
-          message: 'Не удалось создать таблицу',
-        })
+        reject(
+          createError({
+            statusCode: 500,
+            message: 'Не удалось создать таблицу',
+          })
+        )
       })
   })
 
@@ -623,5 +635,6 @@ export default eventHandler(async (event) => {
     'inline; filename="signedOferta.pdf"'
   )
 
-  return buffer
+  event.res.end(buffer)
+  return
 })

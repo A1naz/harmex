@@ -1049,19 +1049,28 @@ const isSetBankBtnDisabled = computed(() => {
                 >
                   Заполните ФИО
                 </span>
-                <a
-                  v-else-if="store.client.fizFace || store.client.bik"
-                  class="text-primary underline cursor-pointer"
-                  target="_blank"
-                  :href="`${config.public.siteUrl}/api/docs/get`"
-                  >Скачать
-                  <Icon
-                    name="material-symbols:download"
-                    size="18"
-                    class="mb-0.5"
-                  />
-                </a>
-
+                <div v-else-if="store.client.fizFace || store.client.bik">
+                 
+                  <a
+                    class="text-primary underline cursor-pointer"
+                    target="_blank"
+                    :href="`${config.public.siteUrl}/api/docs/getPDF`"
+                    >Открыть PDF
+                    <Icon name="ion:open-outline" size="18" class="mb-0.5" />
+                  </a>
+                  /
+                  <a
+                    class="text-primary underline cursor-pointer"
+                    target="_blank"
+                    :href="`${config.public.siteUrl}/api/docs/get`"
+                    >Скачать файл
+                    <Icon
+                      name="material-symbols:download"
+                      size="18"
+                      class="mb-0.5"
+                    /> </a
+                  >
+                </div>
                 <span class="text-error" v-else>
                   Заполните банковские данные
                 </span>
