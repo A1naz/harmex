@@ -66,9 +66,10 @@ watch(targetIsVisible, async (isVisible) => {
     :class="{
       'modal-open': state,
     }"
-    class="modal backdrop-filter backdrop-blur-sm"
+    class="modal backdrop-filter backdrop-blur-sm cursor-pointer"
+     @click="$emit('close')"
   >
-    <div class="modal-box w-10/12 max-w-2xl py-3 px-5">
+    <div class="modal-box w-10/12 max-w-2xl py-3 px-5 cursor-auto" @click.stop>
       <div class="flex w-full justify-between mb-3">
         <h3 class="text-lg">История баланса</h3>
         <label
@@ -80,28 +81,7 @@ watch(targetIsVisible, async (isVisible) => {
       </div>
 
       <div class="overflow-x-auto">
-        <!-- <table class="table table-sm">
 
-  <thead>
-    <tr class="bg-primary bg-opacity-5">
-      <th class="text-center rounded-tl-lg">№</th>
-      <th class="text-center">Дата</th>
-      <th class="text-center">Сумма</th>
-      <th class="text-center">Тип</th>
-      <th class="text-center border-r border-primary border-opacity-5 rounded-tr-lg">Описание</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="bg-base-100" v-for="(item, index) in history" :key="index">
-      <td class="text-center border-r border-primary border-opacity-5">{{ index+1 }}</td>
-      <td class="text-center border-r border-primary border-opacity-5">{{ $dayjs(item.date).format('D MMMM HH:mm') }}</td>
-      <td class="text-center border-r border-primary border-opacity-5">{{ item.amount }} руб.</td>
-      <td class="text-center border-r border-primary border-opacity-5">{{ item.type }}</td>
-      <td class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5">{{ item.description }}</td>
-    </tr>
-    <div ref="target" class="flex justify-center items-center h-4" />
-  </tbody>
-</table> -->
         <DataTable
           v-if="history.length"
           sort-field="dataoperation"

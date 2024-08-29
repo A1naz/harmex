@@ -41,9 +41,10 @@ onKeyStroke('Escape', (e) => {
     :class="{
       'modal-open': state,
     }"
-    class="modal backdrop-filter backdrop-blur-sm"
+    class="modal backdrop-filter backdrop-blur-sm cursor-pointer"
+    @click="$emit('close')"
   >
-    <div class="modal-box w-10/12 max-w-2xl py-3 px-5">
+    <div class="modal-box w-10/12 max-w-2xl py-3 px-5 cursor-auto" @click.stop>
       <div class="flex w-full justify-between">
         <h3 class="text-lg">Вывод средств</h3>
         <label

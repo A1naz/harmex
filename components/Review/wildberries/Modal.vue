@@ -149,22 +149,22 @@ async function uploadToS3(event: Event, index: number) {
   const fileList = (event.target! as HTMLInputElement).files
   const files = Array.from(fileList!)
   if (!files) return
-  const img = new Image();
-  img.src = URL.createObjectURL(files[0]);
+  const img = new Image()
+  img.src = URL.createObjectURL(files[0])
 
-  img.onload = async function() {
+  img.onload = async function () {
     if (img.width < 337 || img.height < 450) {
       notify({
         title: 'Ошибка',
         text: 'Размер изображения должен быть не менее 337px по ширине и 450px по высоте',
         type: 'error',
         duration: 3000,
-      });
+      })
 
-      loadingIndex.value = null;
-      return;
+      loadingIndex.value = null
+      return
     }
-  
+
     if (
       files[0] &&
       files[0].name &&
@@ -510,9 +510,10 @@ function convertToMoscowTime(dateString: any): Date {
     :class="{
       'modal-open': state,
     }"
-    class="modal overflow-x-hidden"
+    class="modal overflow-x-hidden cursor-pointer"
+    @click="$emit('close')"
   >
-    <div class="modal-box z-50 max-w-xl sm:w-xs w-xl">
+    <div class="modal-box z-50 max-w-xl sm:w-xs w-xl cursor-auto" @click.stop>
       <label
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
@@ -628,9 +629,7 @@ function convertToMoscowTime(dateString: any): Date {
               {{
                 form.date <= now
                   ? 'Опубликовать сейчас'
-                  : $dayjs(form.date).format(
-                      'DD.MM.YYYY HH:mm'
-                    )
+                  : $dayjs(form.date).format('DD.MM.YYYY HH:mm')
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">

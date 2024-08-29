@@ -517,9 +517,10 @@ function convertToMoscowTime(dateString: any): Date {
     :class="{
       'modal-open': state,
     }"
-    class="modal overflow-x-hidden"
+    class="modal overflow-x-hidden cursor-pointer"
+    @click="$emit('close')"
   >
-    <div class="modal-box z-50 max-w-xl sm:w-xs w-xl">
+    <div class="modal-box z-50 max-w-xl sm:w-xs w-xl cursor-auto" @click.stop>
       <label
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
@@ -567,7 +568,6 @@ function convertToMoscowTime(dateString: any): Date {
             class="textarea w-full textarea-md bg-base-200"
             placeholder="Например, хороший телефон"
           />
-
 
           <div class="text-error">{{ textValidError }}</div>
         </div>

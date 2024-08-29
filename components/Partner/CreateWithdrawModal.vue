@@ -17,7 +17,7 @@ const errorAmount = ref('')
 const errorOrgName = ref('')
 const errorInn = ref('')
 const errorCard = ref('')
-const errorFio= ref('')
+const errorFio = ref('')
 
 const form = reactive({
   amount: 0,
@@ -29,27 +29,26 @@ const form = reactive({
 })
 const card = ref(false)
 async function createWithdraw() {
-  if(!form.amount || form.amount <= 0) {
+  if (!form.amount || form.amount <= 0) {
     errorAmount.value = 'Сумма не введена или меньше нуля'
   } else errorAmount.value = ''
-  if(!form.orgName) {
+  if (!form.orgName) {
     errorOrgName.value = 'Наименование ИП/ООО не введен'
   } else errorOrgName.value = ''
-  if(!form.card) {
+  if (!form.card) {
     errorCard.value = 'Номер карты / расчетный счет не введен'
   } else errorCard.value = ''
-  if(!form.fio) {
+  if (!form.fio) {
     errorFio.value = 'ФИО не введено '
   } else errorFio.value = ''
-  if(!form.inn && form.withdrawType === 'card') {
+  if (!form.inn && form.withdrawType === 'card') {
     errorInn.value = 'ИНН не введен'
   } else errorInn.value = ''
   if (form.withdrawType === 'card') {
     if (!form.amount || !form.card || !form.fio) return
   }
 
-  
-  if(form.withdrawType === 'organization') {
+  if (form.withdrawType === 'organization') {
     form.withdrawType = 'card'
     card.value = true
   }
@@ -57,7 +56,7 @@ async function createWithdraw() {
     method: 'POST',
     body: form,
   })
-  if(card.value) {
+  if (card.value) {
     card.value = false
     form.withdrawType = 'organization'
   }
@@ -70,14 +69,14 @@ async function createWithdraw() {
 
   if (data.value) {
     if (data.value.status === 'ok') {
-      notify({ type: 'success', title: 'Вывод успешно создан' })     
+      notify({ type: 'success', title: 'Вывод успешно создан' })
       emit('create')
-      form.amount = 0;
-      form.card = '';
-      form.fio = '';
-      form.orgName = '';
-      form.inn = '';
-      form.withdrawType = 'account';
+      form.amount = 0
+      form.card = ''
+      form.fio = ''
+      form.orgName = ''
+      form.inn = ''
+      form.withdrawType = 'account'
     } else {
       notify({
         type: 'error',
@@ -86,7 +85,6 @@ async function createWithdraw() {
       })
     }
   }
-  
 }
 const now = useNow()
 onKeyStroke('Escape', (e) => {
@@ -107,9 +105,10 @@ const isCardFormDisabled = computed(() => {
     :class="{
       'modal-open': state,
     }"
-    class="modal backdrop-filter backdrop-blur-sm"
+    class="modal backdrop-filter backdrop-blur-sm cursor-pointer"
+    @click="$emit('close')"
   >
-    <div class="modal-box w-10/12 max-w-lg py-3 px-5">
+    <div class="modal-box w-10/12 max-w-lg py-3 px-5 cursor-auto" @click.stop>
       <label
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
@@ -123,19 +122,16 @@ const isCardFormDisabled = computed(() => {
           карту <span class="font-bold text-green-500">Сбербанка</span> или на
           баланс платфрмы
         </p>
-        <p class="ml-1 mt-3">
-          Вывести на:
-        </p>
+        <p class="ml-1 mt-3">Вывести на:</p>
         <div class="flex flex-col mt-1">
-          
           <div class="form-control">
             <label class="label justify-start cursor-pointer">
               <input
-              type="radio"
-              name="radio-10"
-              class="radio radio-base-content"
-              @change="form.withdrawType = 'account'"
-              checked
+                type="radio"
+                name="radio-10"
+                class="radio radio-base-content"
+                @change="form.withdrawType = 'account'"
+                checked
               />
               <span class="label-text ml-2">Баланс платформы</span>
             </label>
@@ -143,11 +139,10 @@ const isCardFormDisabled = computed(() => {
           <div class="form-control">
             <label class="label justify-start cursor-pointer">
               <input
-              type="radio"
-              name="radio-10"
-              class="radio radio-base-content"
-              @change="form.withdrawType = 'organization'"
-              
+                type="radio"
+                name="radio-10"
+                class="radio radio-base-content"
+                @change="form.withdrawType = 'organization'"
               />
               <span class="label-text ml-2">Счет организации</span>
             </label>
@@ -155,10 +150,10 @@ const isCardFormDisabled = computed(() => {
           <div class="form-control">
             <label class="label justify-start cursor-pointer">
               <input
-              type="radio"
-              name="radio-10"
-              class="radio radio-base-content"
-              @change="form.withdrawType = 'card'"
+                type="radio"
+                name="radio-10"
+                class="radio radio-base-content"
+                @change="form.withdrawType = 'card'"
               />
               <span class="label-text ml-2">Счет самозанятых</span>
             </label>
@@ -167,7 +162,9 @@ const isCardFormDisabled = computed(() => {
         <form class="my-2 flex flex-col gap-2" @submit.prevent="createWithdraw">
           <div class="flex flex-col">
             <label class="label p-1">
-              <span class="label-text text-gray-500 font-semibold">Сумма вывода</span>
+              <span class="label-text text-gray-500 font-semibold"
+                >Сумма вывода</span
+              >
             </label>
             <input
               v-model="form.amount"
@@ -178,21 +175,35 @@ const isCardFormDisabled = computed(() => {
             />
             <span class="text-red-500 self-start">{{ errorAmount }}</span>
           </div>
-          <div v-if="form.withdrawType !== 'account' && form.withdrawType !== 'card' || card ">
+          <div
+            v-if="
+              (form.withdrawType !== 'account' &&
+                form.withdrawType !== 'card') ||
+              card
+            "
+          >
             <label class="label p-1">
-              <span class="label-text text-gray-500 font-semibold">Наименование ИП/ООО</span>
+              <span class="label-text text-gray-500 font-semibold"
+                >Наименование ИП/ООО</span
+              >
             </label>
             <input
               :disabled="!isCardFormDisabled"
               v-model="form.orgName"
               type="text"
               placeholder="Иванов Иван Иванович "
-              class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
+              class="input bg-base-200 placeholder-gray-500 text-base-content w-full"
               :class="{ 'input-error': errorOrgName }"
             />
-            <span class="text-red-500 self-start">{{ errorOrgName  }}</span>
+            <span class="text-red-500 self-start">{{ errorOrgName }}</span>
           </div>
-          <div v-if="form.withdrawType !== 'account' && form.withdrawType !== 'organization' && !card">
+          <div
+            v-if="
+              form.withdrawType !== 'account' &&
+              form.withdrawType !== 'organization' &&
+              !card
+            "
+          >
             <label class="label p-1">
               <span class="label-text text-gray-500 font-semibold">ИНН</span>
             </label>
@@ -201,40 +212,48 @@ const isCardFormDisabled = computed(() => {
               v-model="form.inn"
               type="text"
               placeholder="2562542562542562 "
-              class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
+              class="input bg-base-200 placeholder-gray-500 text-base-content w-full"
               :class="{ 'input-error': errorInn }"
             />
-            <span class="text-red-500 self-start">{{ errorInn  }}</span>
+            <span class="text-red-500 self-start">{{ errorInn }}</span>
           </div>
           <div v-if="form.withdrawType !== 'account'">
             <label class="label p-1">
-              <span class="label-text text-gray-500 font-semibold">Номер карты / расчетный счет</span>
+              <span class="label-text text-gray-500 font-semibold"
+                >Номер карты / расчетный счет</span
+              >
             </label>
             <input
               :disabled="!isCardFormDisabled"
               v-model="form.card"
               type="text"
               placeholder="220077777777777"
-              class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
+              class="input bg-base-200 placeholder-gray-500 text-base-content w-full"
               :class="{ 'input-error': errorCard }"
             />
-            <span class="text-red-500 self-start">{{ errorCard  }}</span>
+            <span class="text-red-500 self-start">{{ errorCard }}</span>
           </div>
           <div v-if="form.withdrawType !== 'account'">
             <label class="label p-1">
-              <span class="label-text text-gray-500 font-semibold">ФИО получателя</span>
+              <span class="label-text text-gray-500 font-semibold"
+                >ФИО получателя</span
+              >
             </label>
             <input
               :disabled="!isCardFormDisabled"
               v-model="form.fio"
               type="text"
               placeholder="Иванов Иван Иванович "
-              class="input bg-base-200 placeholder-gray-500 text-base-content  w-full"
+              class="input bg-base-200 placeholder-gray-500 text-base-content w-full"
               :class="{ 'input-error': errorFio }"
             />
-            <span class="text-red-500 self-start">{{ errorFio  }}</span>
+            <span class="text-red-500 self-start">{{ errorFio }}</span>
           </div>
-          <button class="btn btn-primary bg-opacity-20 border-none text-base-content btn-block mt-2">Вывести</button>
+          <button
+            class="btn btn-primary bg-opacity-20 border-none text-base-content btn-block mt-2"
+          >
+            Вывести
+          </button>
         </form>
       </div>
     </div>
