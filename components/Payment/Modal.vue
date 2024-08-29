@@ -7,7 +7,7 @@ const paymentForm = reactive({
   paymentSum: 25000,
   paymentType: 'transfer' as 'transfer' | 'fast',
 })
-const closePaymentModal = ref(null) as Ref<HTMLLabelElement | null>
+const closePaymentModal: any = ref(null) as Ref<HTMLLabelElement | null>
 const { notify } = useNotification()
 const details = ref(null) as any
 const loading = ref(false)
@@ -67,9 +67,9 @@ function setType(e: any) {
 </script>
 
 <template>
-  <input id="payment-modal" type="checkbox" class="modal-toggle" />
-  <div class="modal">
-    <label class="modal-box">
+  <input id="payment-modal" type="checkbox" class="modal-toggle"/>
+  <div class="modal cursor-pointer" @click="[cancelPayment(), closePaymentModal.click()]" >
+    <label class="modal-box" @click.stop>
       <label
         ref="closePaymentModal"
         for="payment-modal"
