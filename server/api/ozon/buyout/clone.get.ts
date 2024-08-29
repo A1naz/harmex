@@ -1,7 +1,7 @@
 import { Buyout } from '@/server/lib/models/ozon/Buyout'
 import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '@/server/lib/helpers'
-const cofing = useRuntimeConfig()
+const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const session = (await getServerSession(event)) as any
@@ -26,6 +26,13 @@ export default eventHandler(async (event) => {
       url: `https://www.ozon.ru/product/${article}/`,
       token: config.PARSER_TOKEN,
     },
+  }).catch((e) => {
+    console.log(e);
+    
+    throw createError({
+      statusCode: 404,
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+    })
   })
 
   if (!data) {

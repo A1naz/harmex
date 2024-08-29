@@ -1051,14 +1051,14 @@ const isSetBankBtnDisabled = computed(() => {
                 </span>
                 <div v-else-if="store.client.fizFace || store.client.bik">
                  
-                  <a
+                  <!-- <a
                     class="text-primary underline cursor-pointer"
                     target="_blank"
                     :href="`${config.public.siteUrl}/api/docs/getPDF`"
                     >Открыть PDF
                     <Icon name="ion:open-outline" size="18" class="mb-0.5" />
                   </a>
-                  /
+                   -->
                   <a
                     class="text-primary underline cursor-pointer"
                     target="_blank"
