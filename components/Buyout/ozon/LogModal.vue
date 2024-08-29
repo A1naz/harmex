@@ -37,9 +37,10 @@ onKeyStroke('Escape', (e) => {
     :class="{
       'modal-open': state,
     }"
-    class="modal"
+    class="modal cursor-pointer"
+    @click="$emit('close')"
   >
-    <div v-if="state" class="modal-box max-w-2xl">
+    <div v-if="state" class="modal-box max-w-2xl cursor-auto" @click.stop>
       <div class="">
         <a
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"

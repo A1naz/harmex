@@ -52,9 +52,9 @@ onKeyStroke('Escape', (e) => {
 </script>
 
 <template>
-  <div id="buyoutInfoModal" :class="{ 'modal-open': state }" class="modal">
+  <div id="buyoutInfoModal" :class="{ 'modal-open': state }" class="modal cursor-pointer"  @click="$emit('close')">
     <div v-if="state" class="modal-box max-w-md max-h-[90%] p-0">
-      <div class="">
+      <div class="cursor-auto" @click.stop>
         <div class="p-5">
           <a
             class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"

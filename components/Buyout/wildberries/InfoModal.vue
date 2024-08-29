@@ -52,9 +52,14 @@ onKeyStroke('Escape', (e) => {
 </script>
 
 <template>
-  <div id="buyoutInfoModal" :class="{ 'modal-open': state }" class="modal">
+  <div
+    id="buyoutInfoModal"
+    :class="{ 'modal-open': state }"
+    class="modal cursor-pointer"
+    @click="$emit('close')"
+  >
     <div v-if="state" class="modal-box max-w-md max-h-[90%] p-0">
-      <div class="">
+      <div class="cursor-auto" @click.stop>
         <div class="p-5">
           <a
             class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -87,9 +92,13 @@ onKeyStroke('Escape', (e) => {
               class="rounded-2xl py-0 px-2 text-md mb-2 max-h-7 text-[9-px] whitespace-nowrap"
               :class="{
                 'bg-[#b5ffbc] dark:bg-green-600':
-                  info.status === 'active' || info.status === 'work' || info.status === 'busy',
+                  info.status === 'active' ||
+                  info.status === 'work' ||
+                  info.status === 'busy',
                 'text-base-content bg-[#b5ffbc] dark:bg-green-600 ':
-                  (info.status === 'active' || info.status === 'work'  || info.status === 'busy') &&
+                  (info.status === 'active' ||
+                    info.status === 'work' ||
+                    info.status === 'busy') &&
                   theme.value === 'dark',
                 'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
                   info.status === 'completed' || info.status === 'nofunds',
