@@ -639,10 +639,11 @@ function refreshElements() {
     <div v-if="ruleModal">
       <input id="ruleModal" type="checkbox" class="modal-toggle" />
       <label
+       @click="ruleModal = false"
         for="ruleModal"
-        class="modal modal-open modal-bottom sm:modal-middle"
+        class="modal modal-open modal-bottom sm:modal-middle cursor-pointer"
       >
-        <label for="" class="modal-box relative">
+        <label for="" class="modal-box relative" @click.stop>
           <label
             for="ruleModal"
             class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"

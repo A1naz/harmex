@@ -50,9 +50,10 @@ onMounted(async () => {
     :class="{
       'modal-open': state,
     }"
-    class="modal"
+    class="modal cursor-pointer"
+    @click.self="$emit('close')"
   >
-    <div class="modal-box max-w-lg" :class="{ 'max-w-sm': success }">
+    <div class="modal-box max-w-lg cursor-auto" :class="{ 'max-w-sm': success }">
       <h3 class="font-semibold text-lg mb-2">Проверяем выкупы по правилам</h3>
       <a
         class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"

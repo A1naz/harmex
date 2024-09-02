@@ -641,10 +641,11 @@ function removeDiscount(index: number) {
     <div v-if="ruleModal">
       <input id="ruleModal" type="checkbox" class="modal-toggle" />
       <label
+        @click="ruleModal = false"
         for="ruleModal"
-        class="modal modal-open modal-bottom sm:modal-middle"
+        class="modal modal-open modal-bottom sm:modal-middle cursor-pointer"
       >
-        <label for="" class="modal-box relative">
+        <label for="" class="modal-box relative" @click.stop>
           <label
             for="ruleModal"
             class="btn btn-sm btn-circle btn-ghost absolute right-6 top-2"
@@ -654,7 +655,7 @@ function removeDiscount(index: number) {
           <h3 class="font-bold text-lg mb-2">
             Выберите нужные правила для этого выкупа
           </h3>
-    
+
           <div v-for="rule of defaultRules" :key="rule.id" class="">
             <div
               v-if="rule.id === 1"
@@ -670,11 +671,10 @@ function removeDiscount(index: number) {
                   class="checkbox checkbox-primary border-base-content"
                 />
               </div>
-              
             </div>
             <span v-if="rule.id === 1" class="text-[#AA4A44] text-sm font-bold">
-            Функционал по добавлению правил временно недоступен
-          </span>
+              Функционал по добавлению правил временно недоступен
+            </span>
             <!-- <div
               v-if="rule.id === 1"
               class="label cursor-pointer flex gap-4 items-start justify-between"
