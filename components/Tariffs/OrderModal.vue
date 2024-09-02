@@ -230,7 +230,7 @@ onKeyStroke('Escape', (e) => {
                     Перевод только с бизнес-карты организации! Не с карты
                     физического лица
                   </div>
-                  <div v-else class="font-bold text-error">
+                  <div v-else class="text-[#AA4A44] font-bold">
                     Перевод осущесвляется с карты физического лица
                   </div>
                 </ol>
