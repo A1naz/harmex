@@ -223,7 +223,8 @@ onKeyStroke('Escape', (e) => {
 
                   <span class="text-xs -mb-2"> &nbsp; </span>
                   <div
-                    class="font-bold text-error"
+                    class="text-[#AA4A44] font-bold"
+                    style="font-size: 18px"
                     v-if="!store.client.fizFace"
                   >
                     Перевод только с бизнес-карты организации! Не с карты
@@ -239,7 +240,7 @@ onKeyStroke('Escape', (e) => {
                     <nuxt-img :src="qr" />
                   </div>
                   <div>
-                    <span class="text-error"
+                    <span class="text-[#AA4A44] font-bold" style="font-size: 18px"
                       >Не изменяйте данные, иначе платеж не будет зачислен</span
                     >
                   </div>
@@ -327,7 +328,7 @@ onKeyStroke('Escape', (e) => {
                 </div>
               </div>
               <div class="requisites__item">
-                <div class="requisites__name">Назначение платежа: </div>
+                <div class="requisites__name">Назначение платежа:</div>
                 <div class="requisites__text">
                   {{ paymentPurpose }}
                 </div>

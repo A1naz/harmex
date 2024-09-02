@@ -654,7 +654,7 @@ function removeDiscount(index: number) {
           <h3 class="font-bold text-lg mb-2">
             Выберите нужные правила для этого выкупа
           </h3>
-
+    
           <div v-for="rule of defaultRules" :key="rule.id" class="">
             <div
               v-if="rule.id === 1"
@@ -670,7 +670,11 @@ function removeDiscount(index: number) {
                   class="checkbox checkbox-primary border-base-content"
                 />
               </div>
+              
             </div>
+            <span v-if="rule.id === 1" class="text-[#AA4A44] text-sm font-bold">
+            Функционал по добавлению правил к выкупам временно недоступен
+          </span>
             <!-- <div
               v-if="rule.id === 1"
               class="label cursor-pointer flex gap-4 items-start justify-between"
