@@ -673,7 +673,7 @@ function removeDiscount(index: number) {
               
             </div>
             <span v-if="rule.id === 1" class="text-[#AA4A44] text-sm font-bold">
-            Функционал по добавлению правил к выкупам временно недоступен
+            Функционал по добавлению правил временно недоступен
           </span>
             <!-- <div
               v-if="rule.id === 1"
