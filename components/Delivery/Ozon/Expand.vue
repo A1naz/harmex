@@ -9,6 +9,7 @@ const props = defineProps({
     type: Boolean,
   },
 })
+import { notify } from '@kyvg/vue3-notification'
 const emit = defineEmits(['openModal', 'openStatusModal', 'openPenaltyModal'])
 const currency = useCurrency()
 const store = useMainStore()
@@ -43,15 +44,21 @@ function daysToPenalty(statusdelivery: any[]) {
     return `До штрафа осталось: ${days} д.`
   }
 }
+
+const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text)
+  notify({ text: 'Скопировано в буфер обмена', type: 'success' })
+}
 </script>
 
 <template>
   <div
-    class="collapse collapse-arrow border bg-base-200 rounded-box z-0 overflow-hidden border-[#eff0ff] dark:border-primary dark:border-opacity-10 "
+    class="collapse collapse-arrow border bg-base-200 rounded-box z-0 overflow-hidden border-[#eff0ff] dark:border-primary dark:border-opacity-10"
   >
     <input v-model="opened" type="checkbox" />
 
-    <div class="collapse-title relative text-xl font-medium bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 "
+    <div
+      class="collapse-title relative text-xl font-medium bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10"
     >
       <div class="flex gap-4">
         <nuxt-img
@@ -84,10 +91,20 @@ function daysToPenalty(statusdelivery: any[]) {
             </div>
 
             <label
-              class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs hover:text-primary break-all z-10"
+              class="text-[0.6rem] sm:text-[0.8rem] lg:text-xs break-all z-10"
               @click="openBuyout"
               style="white-space: nowrap"
-              >#{{ info.uuid }}
+            >
+              <span class="link link-hover hover:text-primary">
+                #{{ info.uuid }}
+              </span>
+              <IconCSS
+                @click.stop
+                class="hover:text-primary cursor-pointer ml-2"
+                name="solar:copy-bold"
+                size="25"
+                @click="copyToClipboard(info.uuid)"
+              />
             </label>
           </div>
 
@@ -108,17 +125,19 @@ function daysToPenalty(statusdelivery: any[]) {
             </div>
 
             <div class="mt-2 lg:m-0 text-xs text-primary font-normal">
-              Обновлено {{ 
-                $dayjs(info.updatedAt).locale('ru').format(
-                  'D MMMM YYYY HH:mm'
-                ) }}
+              Обновлено
+              {{
+                $dayjs(info.updatedAt).locale('ru').format('D MMMM YYYY HH:mm')
+              }}
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="collapse-content bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10">
+    <div
+      class="collapse-content bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10"
+    >
       <div class="product flex flex-col gap-4 lg:gap-8 flex-wrap">
         <div class="flex flex-col">
           <div>
@@ -222,7 +241,6 @@ function daysToPenalty(statusdelivery: any[]) {
           >
             {{ info.point }}
           </a>
-          
         </div>
       </div>
     </div>
