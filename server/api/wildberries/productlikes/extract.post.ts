@@ -94,7 +94,7 @@ export default eventHandler(async (event) => {
   } else if (splitted.at(-2) === 'brands') {
     const brand = splitted.at(-1)
 
-    
+    // https://www.wildberries.ru/webapi/spa/brands/metatags/vaccum-and-pack - новая ссылка, если перестанет работать
     //@ts-ignore
     const data: { name: string; id: number; siteId: number, hash: string } = await $fetch(
       `https://static-basket-01.wbbasket.ru/vol0/data/brands/${brand}.json`,
