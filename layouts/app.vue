@@ -295,14 +295,15 @@ onMounted(() => {
           <h3 class="opacity-60 text-md p-2 px-8 uppercase">
             {{ section.subTitle }}
           </h3>
-
-          <SidebarItem
-            v-for="(item, index) in section.items"
-            :key="index"
-            :title="item.title"
-            :icon="item.icon"
-            :href="item.path.includes('productlikes') ? '/likes' : item.path"
-          />
+          <div v-for="(item, index) in section.items">
+            <SidebarItem
+              v-if="!item.access || item.access == storeMain.client.username"
+              :key="index"
+              :title="item.title"
+              :icon="item.icon"
+              :href="item.path.includes('productlikes') ? '/likes' : item.path"
+            />
+          </div>
         </section>
 
         <div class="mt-auto">

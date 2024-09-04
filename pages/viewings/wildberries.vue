@@ -376,14 +376,14 @@ function changeFilter(e: any) {
             <tr class="bg-primary bg-opacity-5">
               <!-- <th class="text-center">№</th> -->
               <th class="text-center">Фото</th>
-              <th class="text-center">Артикул</th>
+              <th class="text-center">Товар</th>
               <th class="text-center">Маркетплейс</th>
               <th class="text-center">Кол-во</th>
               <th class="text-center">Ключевой запрос</th>
 
               <th class="text-center">Статус</th>
               <th class="text-center">Дата создания</th>
-              <th class="text-center">Дата публикации</th>
+              <th class="text-center">Дата завершения</th>
               <th class="text-center">Инфо</th>
             </tr>
           </thead>
@@ -403,7 +403,7 @@ function changeFilter(e: any) {
                   <div class="dropdown dropdown-hover">
                     <label tabindex="0">
                       <nuxt-img
-                        class="rounded-lg z-0"
+                        class="rounded-lg"
                         alt=""
                         loading="lazy"
                         fit="fill"
@@ -428,7 +428,7 @@ function changeFilter(e: any) {
                 class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
               >
                 <a
-                  :href="`https://www.wildberries.ru/product/${item.article}`"
+                  :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`"
                   target="_blank"
                   class="text-primary link link-hover text-sm"
                 >
@@ -498,7 +498,7 @@ function changeFilter(e: any) {
               <td
                 class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
               >
-                <div class="rounded-lg p-0.5 text-center">
+                <div class="rounded-lg p-0.5 my-2 text-center">
                   <button
                     @click=";[(selectedQuest = item), (logModal = true)]"
                     class="btn btn-primary btn-sm btn-square mb-2"
