@@ -94,12 +94,14 @@ export default eventHandler(async (event) => {
   } else if (splitted.at(-2) === 'brands') {
     const brand = splitted.at(-1)
 
-    const data: { name: string; id: number; siteId: number } = await $fetch(
-      `https://static.wbstatic.net/data/brands/${brand}.json`,
+    
+    //@ts-ignore
+    const data: { name: string; id: number; siteId: number, hash: string } = await $fetch(
+      `https://static-basket-01.wbbasket.ru/vol0/data/brands/${brand}.json`,
       { method: 'GET' }
     )
-    
-    const image = `https://images.wbstatic.net/brands/small/${data.id}.jpg`
+  
+    const image = `https://static-basket-01.wbbasket.ru/vol1/sellers/brands/${data.hash}.webp`
     return {
       type: 'brand',
       name: data.name,
