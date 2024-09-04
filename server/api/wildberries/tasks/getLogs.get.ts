@@ -11,7 +11,7 @@ export default eventHandler(async (event) => {
 
   const { uuid } = getQuery(event)
 
-  console.log(uuid)
+  if (!uuid) return []
 
   const all = await TaskLog.find({
     $or: [{ uuid: uuid }, { buyoutuuid: uuid }],

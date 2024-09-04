@@ -17,6 +17,7 @@ export const useMPChange = defineStore('mpChange', {
           'cart',
           'likes',
           'questions',
+          'viewings',
         ],
         likes: [
           {
@@ -40,6 +41,7 @@ export const useMPChange = defineStore('mpChange', {
           'stats',
           'cart',
           'questions',
+          'viewings',
         ],
         likes: [
           {
@@ -119,7 +121,9 @@ export const useMPChange = defineStore('mpChange', {
           if (page.value === mp) {
             if (tab.includes('likes')) {
               if (!page.likes) {
-                const mpWithLikes = this.pages.find(page => page.likes?.some(like => like.value === 'productlikes'))
+                const mpWithLikes = this.pages.find((page) =>
+                  page.likes?.some((like) => like.value === 'productlikes')
+                )
                 return `/productlikes/${mpWithLikes?.value || 'wildberries'}`
               }
               if (page.likes.length > 0) {
@@ -144,21 +148,29 @@ export const useMPChange = defineStore('mpChange', {
       const mpStore = useMPStore()
 
       if (tab.includes('likes')) {
-
         const isLikesExist = this.pages.find((page) => page.value === mp)?.likes
-        if (!isLikesExist || isLikesExist.length === 0 || !isLikesExist.length) {
-          const mpWithLikes = this.pages.find(page => page.likes?.some(like => like.value === 'likes'))
+        if (
+          !isLikesExist ||
+          isLikesExist.length === 0 ||
+          !isLikesExist.length
+        ) {
+          const mpWithLikes = this.pages.find((page) =>
+            page.likes?.some((like) => like.value === 'likes')
+          )
           return `/likes`
         }
 
         const currentTab = isLikesExist.find((page) => page.value === tab)
         if (!currentTab || !currentTab.value) {
           const likesPage = isLikesExist[0]
-          return likesPage.value.includes('product') ? `/${likesPage.value}/${mp}` : `/${likesPage.value}`
+          return likesPage.value.includes('product')
+            ? `/${likesPage.value}/${mp}`
+            : `/${likesPage.value}`
         }
 
-        return tab.includes('product') ? `/${tab}/${currentTab.value}` : `/${tab}`
-
+        return tab.includes('product')
+          ? `/${tab}/${currentTab.value}`
+          : `/${tab}`
       } else {
         const mpPage = this.pages
           .find((page) => page.value === mp)

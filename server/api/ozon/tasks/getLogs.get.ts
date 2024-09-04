@@ -11,6 +11,8 @@ export default eventHandler(async (event) => {
 
   const { uuid } = getQuery(event)
 
+  if (!uuid) return []
+
   const all = await TaskLog.find({
     $or: [{ uuid: uuid }, { buyoutuuid: uuid }],
   }).sort({ _id: -1 })
