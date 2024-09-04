@@ -254,7 +254,7 @@ const links = computed(() => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
       <div class="flex gap-1 navbar:gap-2 lg:gap-3">
         <NuxtLink
-          disabled
+          v-if="store.client.username == 'test'"
           :to="`/likes/create`"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
@@ -379,7 +379,10 @@ const links = computed(() => {
         </div>
       </div>
     </div>
-    <div class="text-red-500 ml-1 mt-1 mb-2">
+    <div
+      class="text-red-500 ml-1 mt-1 mb-2"
+      v-if="store.client.username !== 'test'"
+    >
       Функционал временно недоступен
     </div>
     <div v-if="review_likes.length && !loading">

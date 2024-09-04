@@ -292,7 +292,7 @@ const updateSearchType = (filter: any) => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
-        disabled
+          :disabled="store.client.username !== 'test'"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
           @click="navigateTo(`/productlikes/create/`)"
           @click.stop
@@ -414,7 +414,7 @@ const updateSearchType = (filter: any) => {
         </div>
       </div>
     </div>
-    <div class="text-red-500 ml-1 mt-2">
+    <div class="text-red-500 ml-1 mt-2" v-if="store.client.username !== 'test'">
       Функционал временно недоступен
     </div>
     <div v-if="product_likes.length" class="mt-6">

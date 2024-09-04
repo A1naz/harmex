@@ -51,7 +51,7 @@ const { stop } = useIntersectionObserver(
   }
 )
 watch(targetIsVisible, async (isVisible) => {
-  if (!end.value && isVisible && product_likes.value.length >= limit.value){
+  if (!end.value && isVisible && product_likes.value.length >= limit.value) {
     await getProductLikes()
   }
 })
@@ -69,7 +69,7 @@ async function getProductLikes() {
       skip: skip.value,
     },
   })
- if ((data.value as any)?.length === 0) {
+  if ((data.value as any)?.length === 0) {
     loading.value = false
     end.value = true
     return
@@ -78,7 +78,7 @@ async function getProductLikes() {
     product_likes.value = [...product_likes.value, ...(data.value! as any)]
     loading.value = false
   }
-  
+
   if (error.value)
     notify({
       type: 'error',
@@ -171,14 +171,17 @@ function getStatus(status: string) {
 }
 
 async function resumeStatus(item: any) {
-  const { data, error } = await useFetch(`/api/wildberries/productlikes/resume`, {
-    method: 'POST',
-    body: {
-      item: item,
-    },
-    watch: false,
-  })
-  if (error.value){
+  const { data, error } = await useFetch(
+    `/api/wildberries/productlikes/resume`,
+    {
+      method: 'POST',
+      body: {
+        item: item,
+      },
+      watch: false,
+    }
+  )
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -256,7 +259,7 @@ const closeModal = (event: MouseEvent) => {
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
-  }else{
+  } else {
     sortPage.value = e.value
   }
   loading.value = true
@@ -308,7 +311,7 @@ const updateSearchType = (filter: any) => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
-        disabled
+          :disabled="store.client.username !== 'test'"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
           @click="navigateTo(`/productlikes/create/`)"
           @click.stop
@@ -430,9 +433,7 @@ const updateSearchType = (filter: any) => {
         </div>
       </div>
     </div>
-    <div class="text-red-500 ml-1 mt-2">
-      Функционал временно недоступен
-    </div>
+    <div class="text-red-500 ml-1 mt-2" v-if="store.client.username !== 'test'">Функционал временно недоступен</div>
     <div v-if="product_likes.length" class="mt-6">
       <div v-if="loading" class="flex justify-center">
         <div>
@@ -453,7 +454,7 @@ const updateSearchType = (filter: any) => {
             <th class="text-center">Статус</th>
             <th class="text-center">Дата создания</th>
             <th class="text-center">Дата завершения</th>
-            <th class="text-center rounded-tr-2xl ">Инфо</th>
+            <th class="text-center rounded-tr-2xl">Инфо</th>
           </tr>
         </thead>
         <tbody>
@@ -529,8 +530,7 @@ const updateSearchType = (filter: any) => {
                   'text-red-500 rounded-full py-1 px-2  text-center':
                     item.status === 'nofunds',
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'deleted' ||
-                    item.status === 'canceled',
+                    item.status === 'deleted' || item.status === 'canceled',
                   'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
@@ -542,30 +542,27 @@ const updateSearchType = (filter: any) => {
               >
                 {{ getStatus(item.status) }}
               </div>
-              <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
-                Возобновить  
+              <button
+                v-if="item.status === 'nofunds'"
+                class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20"
+                @click="resumeStatus(item)"
+              >
+                Возобновить
               </button>
             </td>
             <td class="text-center border-r border-primary border-opacity-5">
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                
-                {{ $dayjs(item.createdDate).format(
-                      'DD.MM.YYYY'
-                    ) }}
+                {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
               </div>
             </td>
-            <td
-              class="text-center border-r border-primary border-opacity-5"
-            >
+            <td class="text-center border-r border-primary border-opacity-5">
               <div
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ $dayjs(item.endedDate).format(
-                      'DD.MM.YYYY'
-                    ) }}
+                {{ $dayjs(item.endedDate).format('DD.MM.YYYY') }}
               </div>
             </td>
             <td
