@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { OzonConnection } from '~/server/connections/ozon'
+import { PVZOzonConnection } from '~/server/connections/ozonPVZ'
 
 const PVZSchema = new Schema({
   pointId: { type: Number },
@@ -8,4 +8,4 @@ const PVZSchema = new Schema({
   status: { type: String },
 })
 
-export const PVZ = OzonConnection.model('pvz', PVZSchema, 'pvz')
+export const PVZ = PVZOzonConnection.model('pvz', PVZSchema, 'pvz')
