@@ -28,6 +28,7 @@ const props = defineProps({
     default: false,
   },
   links: { type: Array as PropType<links[]>, default: () => [] },
+  disabledTabs: { type: Array<String | Number>, default: () => [] },
   class: { type: String },
   dropdownContainer: { type: String },
   statusText: { type: String },
@@ -52,13 +53,13 @@ const handleBodyClick = (event: MouseEvent) => {
 }
 
 const statusText = ref<String>(
-  props.statusText ? props.statusText : (
-  reactiveStatusText.value
+  props.statusText
+    ? props.statusText
+    : reactiveStatusText.value
     ? reactiveStatusText.value
     : props.category
     ? 'Выберите категорию'
     : props.rangesConfig[0] || props.tabs[0]?.title || props.links[0]?.title
-  )
 )
 
 function updateText(filter: string) {
@@ -70,6 +71,13 @@ function updateText(filter: string) {
 function updateValue(filter: any) {
   statusText.value = filter.title
   emit('changeValue', filter)
+}
+
+function navigate(filter: any) {
+  navigateTo(
+    (filter.slot ? filter.slot : '/' + filter.value) +
+      (filter.query ? filter.query : '')
+  )
 }
 
 onMounted(() => {
@@ -88,7 +96,7 @@ defineExpose({
 
 <template>
   <div
-    class="dropdown group relative "
+    class="dropdown group relative"
     @click="dropdownOpened = !dropdownOpened"
     @click.stop
     :class="dropdownContainer"
@@ -119,37 +127,35 @@ defineExpose({
           {{ filter }}
         </button>
       </li>
-      <li v-if="tabs.length > 0" v-for="filter in tabs" :key="filter.title"
-      >
+      <li v-if="tabs.length > 0" v-for="filter in tabs" :key="filter.title">
         <button
           class="btn btn-ghost btn-xs h-[2rem] text-xs text-left normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start"
           :class="{
             'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 ':
-            filter.title == statusText,
-          }"  
+              filter.title == statusText,
+          }"
           @click="updateValue(filter)"
         >
           {{ filter.title }}
         </button>
       </li>
       <li v-for="filter in links" @click="updateText(filter.title)">
-        <NuxtLink
-          :to="(filter.slot ? filter.slot : '/' + filter.value) + (filter.query ? filter.query : '')"
-          :external="false"
+        <button
+          :disabled="filter.value == 'likes'"
+          @click="navigate(filter)"
           class="btn btn-ghost btn-xs h-[2rem] text-xs normal-case font-normal w-full leading-none hover:bg-primary hover:bg-opacity-20 items-center justify-start text-left"
           :class="{
             'bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20':
-            filter.title == statusText,
+              filter.title == statusText,
           }"
         >
           <span>
             {{ filter.title }}
           </span>
-        </NuxtLink>
+        </button>
       </li>
     </ul>
   </div>
 </template>
-
 
 <style scoped></style>

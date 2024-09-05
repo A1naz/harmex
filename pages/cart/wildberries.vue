@@ -257,7 +257,6 @@ onMounted(() => {
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button
-          :disabled="store.client.username !== 'test'"
           @click="navigateTo(`/cart/create/`)"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
@@ -376,9 +375,9 @@ onMounted(() => {
       </div>
     </div> -->
 
-    <div class="text-red-500 ml-1 mt-1" v-if="store.client.username !== 'test'">
+    <!-- <div class="text-red-500 ml-1 mt-1" v-if="store.client.username !== 'test'">
       Функционал временно недоступен
-    </div>
+    </div> -->
 
     <div v-if="carts.length && !loading" class="mt-4">
       <div>

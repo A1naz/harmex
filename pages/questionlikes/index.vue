@@ -244,8 +244,7 @@ const links = computed(() => {
   <div>
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
       <div class="flex gap-1 navbar:gap-2 lg:gap-3">
-        <NuxtLink
-          disabled
+        <NuxtLink 
           :to="`/questionlikes/create`"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
@@ -367,7 +366,7 @@ const links = computed(() => {
       </div>
     </div>
 
-    <div class="text-red-500 ml-1 mt-2 mb-2">Функционал временно недоступен</div>
+    <!-- <div class="text-red-500 ml-1 mt-2 mb-2">Функционал временно недоступен</div> -->
     <div v-if="review_likes.length && !loading">
       <table class="table table-sm">
         <!-- head -->

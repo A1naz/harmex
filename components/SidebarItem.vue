@@ -8,7 +8,7 @@ const route = useRoute()
 const changeMP = useMPChange()
 
 const active = computed(() => {
-  return route.path.includes(props.href.split('/')[1])
+  return route.path.includes(props.href.toLowerCase().split('/')[1])
 })
 
 const mpStore = useMPStore()
