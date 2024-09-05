@@ -59,10 +59,6 @@ export default eventHandler(async (event) => {
     .sort({ _id: -1 })
     .skip(skip as number)
     .limit(limit as number)
-
-    console.log(views.length);
-    console.log(searchQuery);
-    
     
   const format = views.map((view: any, index: any) => {
     return {

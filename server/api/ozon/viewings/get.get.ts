@@ -60,10 +60,6 @@ export default eventHandler(async (event) => {
     .skip(skip as number)
     .limit(limit as number)
 
-    console.log(views.length);
-    console.log(searchQuery);
-    
-    
   const format = views.map((view: any, index: any) => {
     return {
       id: view._id,
