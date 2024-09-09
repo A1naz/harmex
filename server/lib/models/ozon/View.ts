@@ -4,7 +4,7 @@ import { OzonConnection } from '~/server/connections/ozon'
 
 const ViewSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  status: { type: String, default: 'created' },
+  status: { type: String, default: 'work' },
   article: { type: String, required: true },
   searchText: { type: String, required: true },
   searchType: { type: String, required: true },
