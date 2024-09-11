@@ -205,14 +205,7 @@ const updateSearchType = (filter: any) => {
 
 <template>
   <div v-if="!loading">
-    <!-- <div class="flex flex-row items-center mt-4">
-      <h1 class="text-2xl font-bold ">
-        История платежей
-      </h1>
-    </div> -->
-    <!-- <p class="text-xs font-light mt-4 lg:text-sm mb-6">
-      Здесь можно увидеть движение вашего баланса
-    </p> -->
+
     <div class="flex lg:hidden gap-2 w-full mt-4">
       <ExportXls 
                 :api="'/api/paymenthistory/export?mp=' + mp"
@@ -231,20 +224,7 @@ const updateSearchType = (filter: any) => {
     </div>
     <div class="flex gap-2 mb-8 mt-2 lg:mt-4 items-center lg:justify-between flex-wrap ">
       <div class="flex items-center gap-2">
-        <!-- <select class="select select-bordered select-sm" @change="selectType">
-          <option value="all">
-            Все
-          </option>
-          <option value="buyouts">
-            Выкупы
-          </option>
-          <option value="reviews">
-            Отзывы
-          </option>
-          <option value="questions">
-            Вопросы
-          </option>
-        </select> -->
+
         <CustomSelect
           :class="'sm:min-w-[120px]'"
           :tabs="[
@@ -283,20 +263,6 @@ const updateSearchType = (filter: any) => {
           @change-value="selectFilterDate"
         />
         
-        <!-- <select class="select select-bordered select-sm" @change="selectFilterDate">
-          <option value="all">
-            За все время
-          </option>
-          <option value="today">
-            Сегодня
-          </option>
-          <option value="3days">
-            3 дня
-          </option>
-          <option value="7days">
-            Неделя
-          </option>
-        </select> -->
       </div>
 
       <div class="flex gap-1 items-center">
@@ -305,11 +271,6 @@ const updateSearchType = (filter: any) => {
           :tabs="[{ title: 'Основание / ID', value: 'uuid' }]"
           @change-value="updateSearchType"
         />
-        <!-- <select v-model="search.type" disabled class="select select-bordered select-sm bg-base-300">
-          <option value="uuid">
-            Основание / ID
-          </option>
-        </select> -->
         <div class="relative items-center flex-grow-0 w-full hidden lg:flex">
           <input v-model="search.text" type="text" class="input input-sm bg-base-300 bg-opacity-40 text-gray-500" placeholder="Поиск" @input="onSearchInput($event)">
 

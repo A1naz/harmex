@@ -10,10 +10,7 @@ const emit = defineEmits(['closeModal', 'create'])
 const viewings = ref([]) as any
 const amount = ref(10)
 const now = useNow()
-const dates = ref<Date[]>([
-  new Date(),
-  new Date(),
-])
+const dates = ref<Date[]>([new Date(), new Date()])
 const loading = ref(false)
 const searchText = ref('')
 const article = ref('')
@@ -22,6 +19,25 @@ const productData = ref<any>(null)
 const anonim = ref(false)
 const urlError = ref(false)
 const creating = ref(false)
+
+const timer = ref(25)
+const timerRunning = ref(false)
+const timerFinished = ref(false)
+let interval: any
+const startTimer = () => {
+  timer.value = 25
+  timerRunning.value = true
+  interval = setInterval(() => {
+    if (timer.value > 0 && creating.value) {
+      timer.value--
+    } else {
+      clearInterval(interval)
+      timerRunning.value = false
+      timerFinished.value = true
+    }
+  }, 1000)
+}
+
 async function getViewings() {
   // @ts-ignore
   const { data, error } = await useFetch('/api/ozon/viewings/get', {
@@ -38,10 +54,12 @@ async function getViewings() {
 await getViewings()
 async function create() {
   creating.value = true
+  startTimer()
 
   await getProductInfo()
   if (!productData.value) return
 
+  // @ts-ignore
   const { data, error } = await useFetch('/api/ozon/viewings/create', {
     method: 'POST',
     body: {
@@ -186,7 +204,7 @@ const isBtnDisabled = computed(() => {
         </div>
         <div class="flex justify-end gap-2">
           <button
-            :disabled="isBtnDisabled"
+            :disabled="isBtnDisabled || creating"
             class="btn w-full btn-primary dark:bg-primary bg-[#b2baff] hover:bg-[#6675FF] border-none text-base-content"
             @click="create"
           >
@@ -194,6 +212,18 @@ const isBtnDisabled = computed(() => {
           </button>
         </div>
       </div>
+    </div>
+  </div>
+  <div
+    v-if="creating"
+    style="background-color: rgb(37, 37, 42); opacity: 80%; z-index: 9999"
+    class="fixed z-[50] top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center"
+  >
+    <span class="text-white text-2xl text-center">
+      До получения продукта и создания осталось приблизительно {{ timer }} сек.
+    </span>
+    <div class="ease-linear rounded-full mb-4">
+      <Icon name="mdi:loading" class="h-20 w-20 animate-spin text-white" />
     </div>
   </div>
 </template>
