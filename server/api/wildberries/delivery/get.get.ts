@@ -16,7 +16,10 @@ export default eventHandler(async (event) => {
       .skip(skip as number)
       .limit(limit as number)
   } else if (status === 'active') {
-    deliveries = await Delivery.find({ user, status: 'active' })
+    deliveries = await Delivery.find({
+      user,
+      status: { $in: ['active', 'work'] },
+    })
       .sort({
         _id: -1,
       })
@@ -51,7 +54,15 @@ export default eventHandler(async (event) => {
       })
       .splice((skip as number) ? (skip as number) : 0, limit as number)
   } else if (status === 'pickupReady') {
-    const response = await Delivery.find({ user, status: 'active' }).sort({
+    const response = await Delivery.find({
+      user,
+      $expr: {
+        $in: [
+          { $arrayElemAt: ['$statusdelivery.status', -1] },
+          ['Готов к получению', 'Готов к выдаче', 'Ожидает получения'],
+        ],
+      },
+    }).sort({
       _id: -1,
     })
 
@@ -59,7 +70,9 @@ export default eventHandler(async (event) => {
       .filter(
         (delivery, index) =>
           delivery.statusdelivery[delivery.statusdelivery.length - 1].status ==
-          'Готов к выдаче'
+            'Готов к выдаче' ||
+          'Готов к получению' ||
+          'Ожидает получения'
       )
       .splice(skip as number, limit as number)
   } else {
@@ -67,10 +80,14 @@ export default eventHandler(async (event) => {
       error: 'Неизвестный статус',
     }
   }
-  const buyouts = await Buyout.find({ _id: { $in: deliveries.map((item) => item.idbuyout) } })
+  const buyouts = await Buyout.find({
+    _id: { $in: deliveries.map((item) => item.idbuyout) },
+  })
   const format = await Promise.all(
     deliveries.map(async (delivery) => {
-      const buyout = buyouts.find((item) => item._id.valueOf() === delivery.idbuyout.valueOf())
+      const buyout = buyouts.find(
+        (item) => item._id.valueOf() === delivery.idbuyout.valueOf()
+      )
       if (!buyout) return null
 
       // const place = all.findIndex(
