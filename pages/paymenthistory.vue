@@ -179,6 +179,9 @@ function getHistoryType(type: string) {
       break
       case 'reviewRemoving':
         result = 'Удаление отзыва'
+        break
+        case 'viewing':
+          result = 'Просмотр'
   }
   return result
 }
@@ -265,6 +268,7 @@ const updateSearchType = (filter: any) => {
             { title: 'Корзина', value: 'cart' },
             { title: 'Удаление отзыва', value: 'reviewRemoving' },
             { title: 'Штраф', value: 'deliveryStorage' },
+            { title: 'Просмотры', value: 'viewing' },
           ]"
           @change-value="selectType"
         />
