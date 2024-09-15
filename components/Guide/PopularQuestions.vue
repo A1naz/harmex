@@ -1,0 +1,606 @@
+<script setup lang="ts">
+const liArchiveQuestData = [
+  'Перейдите в меню Выкупы;',
+  'Найдите ваш выкуп используя Поиск;',
+  'Найдите нужный вам выкуп;',
+  'Нажмите 3 точки (правый верхний угол окна);',
+  'Выберите раздел Инфо о выкупе;',
+  'Изучите детали Архива вашего выкупа.',
+]
+const liArchiveReasonsData = [
+  'Поисковый ключ находится после 50-й страницы в поиске;',
+  'Платная доставка на ПВЗ в размере 200 руб/ед;',
+  'Закрытый ПВЗ;',
+  'Выкуп на Постамат;',
+  'Карточка не найдена в рекламе / сортировке;',
+  'Неверно введен поисковый запрос.',
+]
+
+const liDeliveryPickupData = [
+  'Перейдите в меню Доставка;',
+  'Нажмите кнопку Экспорт;',
+  'Выберите удобный для вас формат выгрузки данных;',
+  'Скачайте файл;',
+  ' Откройте файл;',
+  'Забирайте товары с ПВЗ.',
+]
+
+const liDeliveryPuckupError = [
+  'Сбой при считывании Qr-кода;',
+  'Плохое качество картинки и скана Qr-кода;',
+  'Смена адреса ПВЗ маркетплейсом;',
+  'Отмена магазином выкупа товара;',
+  'Не оплачен товар;',
+  'Забор совершается по данным с кабинета, а не выгрузки;',
+  'Просто человеческий фактор.',
+]
+const liBuyoutRulesData = [
+  'Определите поисковые ключи  для запуск рекламы и выкупа',
+  'Определите временной интервал запуска рекламы и выкупов',
+  'Подготовьте материалы и проверьте позиции поисковых запросов (ключевиков)',
+  'Запустите рекламную кампанию ',
+  'Выкупите ваши товары с указанием правила 1 (Выкупить в ближайшее время) и правило 8 или 9 (выкупы с рекламы в режиме реального времени)',
+  'Отслеживайте процесс выкупов',
+]
+
+const liReviewData = [
+  'Подготовьте материалы и поисковые ключи для создания текстов',
+  'Создайте текст с учетом человеческого фактора: ошибки, формулировки, манера общения, терминалогия, смыслы, эмодзи и прочее',
+  'Запланируйте публикацию отзывов в нужный для вас промежуток времени дня',
+  'Проверяйте тексты перед отправкой (не допускайте дубликатов текста)',
+  'Отслеживайте процесс публикации отзывов',
+]
+
+const liDdsData = [
+  'Перейдите в меню Финансы',
+  'Выберите нужную Сортировку',
+  'Нажмите кнопку',
+  'Выберите диапазон дат',
+  'Скачайте Excel-таблицу',
+  'Изучите данные внутри Excel-таблицы',
+]
+
+const inputs = reactive<any>({
+  first: false,
+  second: false,
+  third: false,
+  fourth: false,
+  fifth: false,
+  sixth: false,
+  seventh: false,
+  eighth: false,
+  ninth: false,
+  tenth: false,
+  eleventh: false,
+  twelfth: false,
+  thirteenth: false,
+})
+
+const closeOtherInputs = (input: string) => {
+  Object.keys(inputs).forEach((key: any) => {
+    if (key !== input) {
+      inputs[key] = false
+    }
+  })
+}
+</script>
+
+<template>
+  <div class="flex flex-col gap-4 w-full px-7">
+    <div class="flex flex-col gap-3 text-xl font-bold">Популярные вопросы</div>
+    <div class="divider w-full my-0"></div>
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('first')"
+    >
+      <input tabindex="0" type="checkbox" v-model="inputs.first" />
+      <div class="collapse-title text-lg font-bold">
+        Как заказать услугу Выкупы под ключ
+      </div>
+      <div class="collapse-content">
+        <p class="-py-7">
+          Чтобы заказать услугу Выкуп под ключ, выполните простые рекомендации:
+        </p>
+        <ul class="px-7">
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Перейдите в меню
+            Подписка
+          </li>
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Выберите желаемый
+            тарифный план
+          </li>
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Выберите и оплатите
+            услугу Под ключ
+          </li>
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Напишите в поддержку
+            платформы (справа внизу иконка Сообщения) и/или свяжитесь с вашим
+            персональным Аккаунт-менеджером (далее - АМ);
+          </li>
+          <nuxt-img
+            class="py-5 rounded-lg flex justify-center mx-auto"
+            width="700"
+            :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/1.png`"
+          />
+          <li class="my-1 flex">
+            <span class="pr-5 text-xl font-bold">-</span>
+            <div class="flex flex-col">
+              Пришлите вводные данные:
+              <div>
+                <span class="pr-2 text-xl font-bold">-</span>
+                <span>Артикул</span>
+              </div>
+              <div>
+                <span class="pr-2 text-xl font-bold">-</span>
+                <span>Бюджет</span>
+              </div>
+              <div>
+                <span class="pr-2 text-xl font-bold">-</span>
+                <span>Желаемое количество Выкупов</span>
+              </div>
+              <div>
+                <span class="pr-2 text-xl font-bold">-</span>
+                <span>Город на который хотите выкупать</span>
+              </div>
+            </div>
+          </li>
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Согласуйте дату/время
+            встречи для консультации;
+          </li>
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Получите
+            альтернативное видение нашей Экспертизы;
+          </li>
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Утвердите медиаплан на
+            ближайшие 3 месяца;
+          </li>
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Подпишите необходимые
+            договора для запуска услуги (логистика, блогеры и прочее);
+          </li>
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Оплатите счета за
+            услуги;
+          </li>
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Добавьте наших
+            Тех.специалистов в команду на платформе;
+          </li>
+          <nuxt-img
+            class="py-5 px-0 lg:px-5 rounded-lg mx-auto"
+            width="700"
+            :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/2.png`"
+          />
+          <li class="my-1">
+            <span class="pr-5 text-xl font-bold">-</span> Отслеживайте процесс
+            оказания услуги в кабинете.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('third')"
+    >
+      <input type="checkbox"  v-model="inputs.third"/>
+      <div class="collapse-title text-lg font-bold">
+        Выкуп осуществляется с СПП или без СПП на WB
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Наш финансовый распределитель рассчитывает сумму пополнения баланса
+          БЕЗ скидки постоянного покупателя (далее - СПП), но выкуп происходит с
+          СПП.
+        </p>
+        <p class="-py-7">
+          Если в вашем бюджете есть рамки от и до, то рекомендуем пополнять
+          баланс на выделенную сумму + последний выкуп без СПП.
+        </p>
+        <p class="-py-7">
+          Пример:<br />
+          Выделили бюджет 80 000 рублей на покупку 100 товаров используя Тайного
+          покупателя «Выкуп».
+        </p>
+        <p class="-py-7">
+          Стоимость товара с СПП на Wildberries 800 руб/ед, а без СПП 950
+          руб/ед.
+        </p>
+        <p class="-py-7">
+          Соответственно пополнение бюджета идет 80 000 руб + 150 руб (последний
+          выкуп с расчетом без СПП).
+        </p>
+        <p class="-py-7">
+          Теперь бюджет на выкуп самих товаров ГОТОВ, осталось еще прибавить к
+          этой сумме стоимость за УСЛУГУ выкупа.
+        </p>
+        <p class="-py-7">
+          Уточните у вашего Аккаунт-менеджера или рассчитайте стоимость за
+          услугу выкупа, которые вы платите за использование портала,
+          самостоятельно и сложите в общую сумму для пополнения.
+        </p>
+        <p class="-py-7">
+          Формула: бюджет + последний выкуп без СПП + оплата за услугу = общий
+          баланс.
+        </p>
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('fourth')"
+    >
+      <input type="checkbox"  v-model="inputs.fourth"/>
+      <div class="collapse-title text-lg font-bold">
+        Выкуп уходит в Архив, что делать
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Чтобы узнать причину перехода выкупа в Архив, выполните простые
+          рекомендации:
+        </p>
+        <ul class="px-7">
+          <li v-for="(li, index) in liArchiveQuestData" class="my-1">
+            <span class="pr-3 text-md">{{ index + 1 }}.</span>
+            {{ li }}
+          </li>
+        </ul>
+        <nuxt-img
+          class="py-5 rounded-lg flex justify-center mx-auto"
+          width="400"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/3.png`"
+        />
+        <nuxt-img
+          class="py-5 rounded-lg flex justify-center mx-auto"
+          width="400"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/4.png`"
+        />
+        <p class="-py-7">Частые причины попадания в Архив:</p>
+        <ul class="px-7">
+          <li v-for="(li, index) in liArchiveReasonsData" class="my-1">
+            <span class="pr-3 text-md">{{ index + 1 }}.</span>
+            {{ li }}
+          </li>
+        </ul>
+        <p class="-py-7">
+          В ситуации с неопределенностью напишите в поддержку и/или вашему
+          персональному менеджеру для решения задачи
+        </p>
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('fifth')"
+    >
+      <input type="checkbox"  v-model="inputs.fifth"/>
+      <div class="collapse-title text-lg font-bold">
+        Выкуп на Паузе, что делать
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Чтобы убрать выкуп с Паузы, нажмите кнопку Возобновить.<br />
+          Данная ситуация возникает, когда запланировано выкупов больше, чем
+          есть финансов на балансе БЕЗ СПП.
+        </p>
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('sixth')"
+    >
+      <input type="checkbox"  v-model="inputs.sixth"/>
+      <div class="collapse-title text-lg font-bold">
+        Не можем забрать товар на ПВЗ, что делать
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Чтобы забрать товар с ПВЗ, выполните простые рекомендации:
+        </p>
+        <ul class="px-7">
+          <li v-for="li in liDeliveryPickupData" class="my-1">
+            <span class="pr-3 text-md">-</span>
+            {{ li }}
+          </li>
+        </ul>
+        <nuxt-img
+          class="py-5 rounded-lg flex justify-center mx-auto"
+          width="800"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/5.png`"
+        />
+        <p class="-py-7">Ошибки при заборе товаров:</p>
+        <ul class="px-7">
+          <li v-for="(li, index) in liDeliveryPuckupError" class="my-1">
+            <span class="pr-3 text-md">{{ index + 1 }}.</span>
+            {{ li }}
+          </li>
+        </ul>
+        <p class="italic underline">Обратите внимание!</p>
+        <p>
+          Бывают ситуации, когда непонятно ЧТО-КАК-ГДЕ-ПОЧЕМУ с товаром. <br />
+          В данной ситуации, напишите в службу заборы и пришлите ID выкупа для
+          анализа ситуации (…).<br />
+          После чего, вы получите развернутый ответ по вашему товару и его
+          статусе в течение 5-10 минут.
+        </p>
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('seventh')"
+    >
+      <input type="checkbox"  v-model="inputs.seventh"/>
+      <div class="collapse-title text-lg font-bold">
+        Отказались от товара на ПВЗ, что делать
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Чтобы вернуть свои средства за товар, выполните простые рекомендации:
+        </p>
+        <ul class="px-7">
+          <li class="my-1">
+            <span class="pr-3 text-md">-</span>
+            Напишите в службу заборы;
+          </li>
+          <li class="my-1">
+            <span class="pr-3 text-md">-</span>
+            Пришлите ID выкупа (…) и свой логин;
+          </li>
+          <li class="my-1">
+            <span class="pr-3 text-md">-</span>
+            Отслеживайте возврат суммы в меню Финансы.
+          </li>
+        </ul>
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="600"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/1.png`"
+        />
+        <p>
+          Примерные сроки от 4 до 14 дней на возврат финансов, установлено
+          маркетплейсом.<br />
+          Отказаться от товаров на ПВЗ, вы можете не более 5 ед в месяц, т.к.
+          это ручная работа и долгий процесс.
+        </p>
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('eighth')"
+    >
+      <input type="checkbox"  v-model="inputs.eighth"/>
+      <div class="collapse-title text-lg font-bold">
+        Выкуп в статусе Завершен, что дальше
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Как только ваш выкуп будет осуществлен, вы сможете отследить
+          последующий прогресс и данные в таких меню как:
+        </p>
+        <ul class="px-7">
+          <li class="my-1">
+            меню Доставка - процесс доставки до ПВЗ и данные для забора;
+          </li>
+          <nuxt-img
+            class="py-5 px-0 lg:px-5 rounded-lg"
+            :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/5.png`"
+          />
+          <li class="my-1">
+            меню Отзывы - публикация отзыва после забранного товара с ПВЗ;
+          </li>
+          <nuxt-img
+            class="py-5 px-0 lg:px-5 rounded-lg"
+            :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/6.png`"
+          />
+          <li class="my-1">
+            меню Финансы - все финансовые операции в кабинете (точное время
+            выкупа, сумма, услуга и прочее);
+          </li>
+          <nuxt-img
+            class="py-5 px-0 lg:px-5 rounded-lg"
+            :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/7.png`"
+          />
+          <li class="my-1">
+            меню Отчеты - наглядный процесс выкупа вашего товара от Поиска до
+            Оплаты.
+          </li>
+          <nuxt-img
+            class="py-5 px-0 lg:px-5 rounded-lg"
+            :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/8.png`"
+          />
+        </ul>
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('ninth')"
+    >
+      <input type="checkbox"  v-model="inputs.ninth"/>
+      <div class="collapse-title text-lg font-bold">
+        Не хотим больше выкупать, что делать
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Чтобы вернуть свои финансы, выполните простые рекомендации:
+        </p>
+        <ul class="px-7">
+          <li class="my-1">
+            <span class="pr-3 text-md">-</span>
+            Напишите в службу заботы;
+          </li>
+          <li class="my-1">
+            <span class="pr-3 text-md">-</span>
+            Согласуйте дату/время/сумму для возврата финансов;
+          </li>
+          <li class="my-1">
+            <span class="pr-3 text-md">-</span>
+            Утвердите подачу заявки на возврат;
+          </li>
+          <li class="my-1">
+            <span class="pr-3 text-md">-</span>
+            Ожидайте возврат финансов в течение 30 дней со дня подачи заявки.
+          </li>
+        </ul>
+        <p class="-py-7">
+          Данная процедура требует тщательного анализа, проверок и согласований,
+          благодарим за понимание.
+        </p>
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="600"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/1.png`"
+        />
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('tenth')"
+    >
+      <input type="checkbox"  v-model="inputs.tenth"/>
+      <div class="collapse-title text-lg font-bold">
+        Как порекомендовать платформу
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Когда вы ощутили истинное удовольствие от работы с нашей платформы,
+          порекомендуйте нас вашему кругу знакомых
+        </p>
+        <p>
+          Мы предоставляем вам возможность получать:<br />
+          С ваших рекомендаций - 5%<br />
+          С рекомендаций ваших людей - 2%<br />
+          Перейдите в меню Партнерка, выберите желаемый способ рекомендации
+          (ссылка, Qr-код и/или промокод)<br />
+        </p>
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="800"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/partner/1.png`"
+        />
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('eleventh')"
+    >
+      <input type="checkbox"  v-model="inputs.eleventh"/>
+      <div class="collapse-title text-lg font-bold">
+        Как запустить выкупы с рекламы
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Чтобы запустить выкупы с рекламы, выполните простые рекомендации:
+        </p>
+        <ul class="px-7">
+          <li v-for="(li, index) in liBuyoutRulesData" class="my-1">
+            <span class="pr-3 text-md">{{ index + 1 }}.</span>
+            {{ li }}
+          </li>
+        </ul>
+        <p>В ситуациях, когда выкупы уходят в Архив, используйте правило 9</p>
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/9.png`"
+        />
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="600"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/10.png`"
+        />
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('twelfth')"
+    >
+      <input type="checkbox"  v-model="inputs.twelfth"/>
+      <div class="collapse-title text-lg font-bold">
+        Отзывы уходят в Отмену, что делать
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Средняя частота публикаций отзывов на платформе 91,1% в сутки.<br />
+          Чтобы ваши отзывы проходили модерацию маркетплейса, выполните простые
+          рекомендации:
+        </p>
+        <ul class="px-7">
+          <li v-for="(li, index) in liReviewData" class="my-1">
+            <span class="pr-3 text-md">{{ index + 1 }}.</span>
+            {{ li }}
+          </li>
+        </ul>
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="800"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/6.png`"
+        />
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="400"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/11.png`"
+        />
+        <nuxt-img
+          class="py-5 px-0 lg:px-5 rounded-lg flex justify-center mx-auto"
+          width="600"
+          :src="`https://ozonmpportal.hb.vkcs.cloud/faqImages/popularQuestions/12.png`"
+        />
+      </div>
+    </div>
+
+    <div
+      tabindex="0"
+      class="collapse collapse-arrow bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 rounded-box z-0 flex-none"
+      @click="closeOtherInputs('thirteenth')"
+    >
+      <input type="checkbox"  v-model="inputs.thirteenth"/>
+      <div class="collapse-title text-lg font-bold">
+        Нужны ДДС / Хэшы покупок товаров, что делать
+      </div>
+      <div class="collapse-content flex flex-col gap-3">
+        <p class="-py-7">
+          Данный формат выгрузки данных по оплаченным товарам, не доступен.<br />
+          Вы можете изучить все финансовые операции внутри нашей платформы:
+        </p>
+        <ul class="px-7">
+          <li v-for="(li, index) in liDdsData" class="my-1">
+            <span class="pr-3 text-md">{{ index + 1 }}.</span>
+            {{ li }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+  </div>
+</template>
+
+<style scoped>
+p,
+ul,
+li {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+</style>
