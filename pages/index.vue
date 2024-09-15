@@ -2,7 +2,7 @@
 const { signIn } = useAuth()
 
 definePageMeta({ auth: false })
-navigateTo('/auth', {
+navigateTo('/main', {
   external: true,
 })
 </script>

@@ -4,8 +4,6 @@ import { v4 as uuid } from 'uuid'
 import { checkSignature } from '~~/server/lib/telegram/mod'
 import { User } from '~/server/lib/models/User'
 import { NuxtAuthHandler } from '#auth'
-import { Referral } from '~/server/lib/models/Referral'
-import confirmTwoFaCode from '~/server/utils/confirmTwoFaCode'
 
 const runtimeConfig = useRuntimeConfig()
 export default NuxtAuthHandler({
@@ -22,17 +20,12 @@ export default NuxtAuthHandler({
 
       if (isSignIn) {
         
-        token.twoFaNeeded = (user as any)?.isTwoFaEnabled
-          ? token.twoFaNeeded == false
-            ? false
-            : true
-          : false
+     
         token.email = user ? (user as any)?.email : ''
         token.uuid = user ? (user as any)?.uuid : ''
         token.username = user ? (user as any)?.username : ''
         token.balance = user ? (user as any)?.balance : 0
         token.isBanned = user ? (user as any)?.isBanned : false
-        token.newSession = true
       }
       return Promise.resolve(token)
     },
@@ -47,89 +40,10 @@ export default NuxtAuthHandler({
         return Promise.reject(new Error('User is banned'))
       }
 
-      if (found.username == 'test' && !token.newSession) {
-        return Promise.reject(new Error('Need new session'))
-      }
-
       return Promise.resolve(session)
     },
   },
   providers: [
-    // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
-    CredentialsProvider.default({
-      id: 'telegram-login',
-      name: 'Telegram Login',
-      credentials: {},
-      async authorize(credentials: any, req: any) {
-        const user = { ...req.body }
-        delete user.callbackUrl
-        delete user.csrfToken
-        delete user.redirect
-        delete user.json
-        const referral = JSON.parse(JSON.stringify(user.referral))
-        delete user.referral
-
-        const valid = checkSignature(runtimeConfig.BOT_TOKEN, user)
-
-        if (!valid) throw new Error('invalid signature')
-
-        const foundUser = await User.findOne({
-          telegramUserId: user.id.toString(),
-        })
-        if (foundUser) {
-          if (foundUser.isBanned == true) {
-            throw new Error('Аккаунт заблокирован')
-          }
-          return foundUser
-        } else {
-          const newUser = new User({
-            uuid: uuid(),
-            telegram: user.username,
-            username: user.username,
-            telegramUserId: user.id.toString(),
-            roles: ['user'],
-            firstName: user.first_name,
-            lastName: user.last_name,
-            emailConfirmed: true,
-          })
-          await newUser.save()
-          if (referral) {
-            let inviter = await User.findOne({ uuid: referral })
-            if (!inviter) {
-              inviter = await User.findOne({ username: referral })
-            }
-            if (inviter && inviter.partner) {
-              const refCount = inviter?.partner.refCount ?? 0
-              inviter.partner.refCount = refCount + 1
-              const referralFound = await Referral.findOne({ user: inviter })
-
-              const foundUser = await User.findOne({
-                uuid: newUser.uuid,
-              })
-
-              if (referralFound) {
-                if (foundUser) {
-                  referralFound.referrals.push({
-                    user: foundUser._id,
-                    date: new Date(),
-                  })
-                }
-                await referralFound.save()
-              } else {
-                if (foundUser) {
-                  await Referral.create({
-                    user: inviter,
-                    referrals: [{ user: foundUser._id, date: new Date() }],
-                  })
-                }
-              }
-              await inviter.save()
-            }
-          }
-          return newUser
-        }
-      },
-    }),
     // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
     CredentialsProvider.default({
       name: 'Credentials',
@@ -166,9 +80,6 @@ export default NuxtAuthHandler({
 
         if (!isValid) throw new Error('Invalid password')
 
-        // if (!user.emailConfirmed) throw new Error('Email is not confirmed')
-
-        // if (user.tg2fa && user.telegramUserId && !code) throw new Error('2fa')
         if (user.isBanned) {
           throw new Error('Account is banned')
         }
@@ -176,305 +87,6 @@ export default NuxtAuthHandler({
         return user
       },
     }),
-    // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
-    CredentialsProvider.default({
-      id: '2fa',
-      name: '2fa',
-      credentials: {
-        code: {
-          type: 'text',
-        },
-      },
-
-      async authorize(credentials: any, event: any) {
-        const { code, uuid } = credentials
-
-        const user = await User.findOne({
-          uuid,
-        })
-
-        if (!user) {
-          return null
-        }
-
-        const verified = confirmTwoFaCode(code, user.twoFaSecret)
-
-        if (!verified) {
-          throw new Error('Invalid code')
-        }
-
-        user.isTwoFaEnabled = false
-        return user
-      },
-    }),
+  
   ],
 })
-
-//general auth
-// import CredentialsProvider from 'next-auth/providers/credentials'
-// import bcrypt from 'bcrypt'
-// import { v4 as uuid } from 'uuid'
-// import { checkSignature } from '~~/server/lib/telegram/mod'
-// import { User } from '~/server/lib/models/User'
-// import { NuxtAuthHandler } from '#auth'
-// import { Referral } from '~/server/lib/models/Referral'
-// import confirmTwoFaCode from '~/server/utils/confirmTwoFaCode'
-// import { Plans } from '~/server/lib/models/Plans'
-// import axios from 'axios'
-// import { config } from 'process'
-
-// const runtimeConfig = useRuntimeConfig()
-// export default NuxtAuthHandler({
-//   secret: runtimeConfig.SECRET,
-//   pages: {
-//     signIn: '/auth',
-//   },
-//   session: {
-//     maxAge: 30 * 24 * 60 * 60, // 30 days
-//   },
-//   callbacks: {
-//     jwt: async ({ token, user }) => {
-//       const isSignIn = !!user
-
-//       if (isSignIn) {
-//         token.twoFaNeeded = (user as any)?.isTwoFaEnabled
-//           ? token.twoFaNeeded == false
-//             ? false
-//             : true
-//           : false
-//         token.email = user ? (user as any)?.email : ''
-//         token.uuid = user ? (user as any)?.uuid : ''
-//         token.username = user ? (user as any)?.username : ''
-//         token.balance = user ? (user as any)?.balance : 0
-//         token.isBanned = user ? (user as any)?.isBanned : false
-//       }
-//       return Promise.resolve(token)
-//     },
-//     session: async ({ session, token, user }) => {
-//       ;(session as any).email = token.email
-//       ;(session as any).uuid = token.uuid
-//       ;(session as any).username = token.username
-//       ;(session as any).balance = token.balance
-//       const found = await User.findOne({ uuid: token.uuid })
-//       if (!found) return Promise.reject(new Error('User not found'))
-//       if (found.isBanned == true) {
-//         return Promise.reject(new Error('User is banned'))
-//       }
-
-//       return Promise.resolve(session)
-//     },
-//   },
-//   providers: [
-//     // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
-//     CredentialsProvider.default({
-//       id: 'telegram-login',
-//       name: 'Telegram Login',
-//       credentials: {},
-//       async authorize(credentials: any, req: any) {
-//         const user = { ...req.body }
-//         delete user.callbackUrl
-//         delete user.csrfToken
-//         delete user.redirect
-//         delete user.json
-//         const referral = JSON.parse(JSON.stringify(user.referral))
-//         delete user.referral
-
-//         const valid = checkSignature(runtimeConfig.BOT_TOKEN, user)
-
-//         if (!valid) throw new Error('invalid signature')
-
-//         const foundUser = await User.findOne({
-//           telegramUserId: user.id.toString(),
-//         })
-//         if (foundUser) {
-//           if (foundUser.isBanned == true) {
-//             throw new Error('Аккаунт заблокирован')
-//           }
-//           return foundUser
-//         } else {
-//           const newUser = new User({
-//             uuid: uuid(),
-//             telegram: user.username,
-//             username: user.username,
-//             telegramUserId: user.id.toString(),
-//             roles: ['user'],
-//             firstName: user.first_name,
-//             lastName: user.last_name,
-//             emailConfirmed: true,
-//           })
-//           await newUser.save()
-//           if (referral) {
-//             let inviter = await User.findOne({ uuid: referral })
-//             if (!inviter) {
-//               inviter = await User.findOne({ username: referral })
-//             }
-//             if (inviter && inviter.partner) {
-//               const refCount = inviter?.partner.refCount ?? 0
-//               inviter.partner.refCount = refCount + 1
-//               const referralFound = await Referral.findOne({ user: inviter })
-
-//               const foundUser = await User.findOne({
-//                 uuid: newUser.uuid,
-//               })
-
-//               if (referralFound) {
-//                 if (foundUser) {
-//                   referralFound.referrals.push({
-//                     user: foundUser._id,
-//                     date: new Date(),
-//                   })
-//                 }
-//                 await referralFound.save()
-//               } else {
-//                 if (foundUser) {
-//                   await Referral.create({
-//                     user: inviter,
-//                     referrals: [{ user: foundUser._id, date: new Date() }],
-//                   })
-//                 }
-//               }
-//               await inviter.save()
-//             }
-//           }
-//           return newUser
-//         }
-//       },
-//     }),
-//     // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
-//     CredentialsProvider.default({
-//       name: 'Credentials',
-//       credentials: {
-//         email: {
-//           label: 'email',
-//           type: 'text',
-//         },
-//         password: {
-//           label: 'password',
-//           type: 'password',
-//         },
-//         code: {
-//           type: 'text',
-//         },
-//       },
-
-//       async authorize(credentials: any, event: any) {
-//         let cookie = event.headers.cookie
-
-//         if (runtimeConfig.env === 'developer') {
-//           const testUser = await User.findOne({
-//             uuid: 'c5fdc5d6-a8b0-4986-a829-e721f8e54deb',
-//           })
-
-//           if (testUser) {
-//             return testUser
-//           }
-//         }
-
-//         if (runtimeConfig.env === 'developer') {
-//           const testUser = await User.findOne({
-//             uuid: 'c5fdc5d6-a8b0-4986-a829-e721f8e54deb',
-//           })
-
-//           if (testUser) {
-//             return testUser
-//           }
-//         }
-
-//         const accessToken = decodeURIComponent(
-//           decodeURIComponent(
-//             cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
-//           )
-//         )
-
-//         const refreshToken = decodeURIComponent(
-//           decodeURIComponent(
-//             cookie.replace(
-//               /(?:(?:^|.*;\s*)refresh\s*=\s*([^;]*).*$)|^.*$/,
-//               '$1'
-//             )
-//           )
-//         )
-//         const valid: any = await axios.get(
-//           'https://auth.anykey.group/api/auth/users/me',
-//           {
-//             headers: {
-//               Cookie: `token=${accessToken};refresh=${refreshToken}`,
-//             },
-//           }
-//         )
-
-//         if (!valid.data || !valid.data.uuid) {
-//           throw new Error('Сессия истекла')
-//         }
-
-//         const foundUser = await User.findOne({ uuid: valid.data.uuid })
-
-//         if (foundUser) {
-//           if (foundUser.isBanned == true) {
-//             throw new Error('Аккаунт заблокирован')
-//           }
-
-//           return foundUser
-//         } else {
-//           const plan = await Plans.findOne({ name: 'Standart' })
-
-//           if (!plan)
-//             return {
-//               status: 'error',
-//               error:
-//                 'Ошибка при регистрации. Тариф не найден, отправьте пожалуйста это сообщение в техподдержку',
-//             }
-
-//           const newUser = new User({
-//             uuid: valid.data.uuid,
-//             username: valid.data.username
-//               ? valid.data.username
-//               : valid.data.uuid,
-//             roles: ['user'],
-//             firstName: valid.data.fullName
-//               ? valid.data.fullName.split(' ')[0]
-//               : 'Имя',
-//             lastName: valid.data.fullName
-//               ? valid.data.fullName.split(' ')[1]
-//               : 'Фамилия',
-//             tariff: plan.tariff,
-//           })
-//           await newUser.save()
-
-//           return newUser
-//         }
-//       },
-//     }),
-//     // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
-//     CredentialsProvider.default({
-//       id: '2fa',
-//       name: '2fa',
-//       credentials: {
-//         code: {
-//           type: 'text',
-//         },
-//       },
-
-//       async authorize(credentials: any, event: any) {
-//         const { code, uuid } = credentials
-
-//         const user = await User.findOne({
-//           uuid,
-//         })
-
-//         if (!user) {
-//           return null
-//         }
-
-//         const verified = confirmTwoFaCode(code, user.twoFaSecret)
-
-//         if (!verified) {
-//           throw new Error('Invalid code')
-//         }
-
-//         user.isTwoFaEnabled = false
-//         return user
-//       },
-//     }),
-//   ],
-// })

@@ -112,7 +112,17 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-pdf',
     '@artmizu/yandex-metrika-nuxt',
     'nuxt-gtag',
+    '@nuxt/fonts',
   ],
+
+  icon: {
+    sources: [
+      {
+        src: '~/assets/icons',
+        prefix: 'custom', // Префикс для кастомных иконок
+      },
+    ],
+  },
 
   css: [
     'primevue/resources/primevue.css',
@@ -182,11 +192,6 @@ export default defineNuxtConfig({
     env: process.env.ENV_WORK,
     indexable: true,
     MONGODB_URI: process.env.MONGODB_URI,
-    WB_DB_URI: process.env.WB_DB_URI,
-    AVITO_DB_URI: process.env.AVITO_DB_URI,
-    OZON_DB_URI: process.env.OZON_DB_URI,
-    FLOWWOW_DB_URI: process.env.FLOWWOW_DB_URI,
-    OZON_PVZ_DB_URI: process.env.OZON_PVZ_DB_URI,
     SECRET: process.env.SECRET,
     smtpHost: process.env.smtpHost,
     smtpPort: process.env.smtpPort,
@@ -194,24 +199,6 @@ export default defineNuxtConfig({
     smtpPass: process.env.smtpPass,
     privateKey: process.env.privateKey,
     PUBLIC_SITE_URL: process.env.PUBLIC_SITE_URL,
-    BOT_TOKEN: process.env.BOT_TOKEN,
-    fkSecret1: process.env.fkSecret1,
-    fkSecret2: process.env.fkSecret2,
-    fkApiKey: process.env.fkApiKey,
-    fkID: process.env.fkID,
-    SESSION_TOKEN: process.env.SESSION_TOKEN,
-    serverLoadApiKey: process.env.serverLoadApiKey,
-    server_ip: process.env.server_ip,
-    service_id: process.env.service_id,
-    CHANGING_PROXY: process.env.CHANGING_PROXY,
-    SECOND_CHANGING_PROXY: process.env.SECOND_CHANGING_PROXY,
-    ORGANIZATION_KEY: process.env.ORGANIZATION_KEY,
-    HI_CALL_KEY: process.env.HI_CALL_KEY,
-    ZVONOK_PUBLIC_KEY: process.env.ZVONOK_PUBLIC_KEY,
-    ZVONOK_CAMPAIGN_ID: process.env.ZVONOK_CAMPAIGN_ID,
-    DADATA_TOKEN: process.env.DADATA_TOKEN,
-    DADATA_SECRET: process.env.DADATA_SECRET,
-    PARSER_TOKEN: process.env.PARSER_TOKEN,
   },
 
   security: {

@@ -7,25 +7,6 @@ const store = useMainStore()
 const route = useRoute()
 const app = ref()
 
-// async function reSign() {
-//   const isReload = status.value === 'unauthenticated' ? true : false
-
-//   const { error, url } = await signIn('credentials', {
-//     redirect: false,
-//   })
-
-//   if (error) {
-//     await signOut({ redirect: false })
-//     window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
-//   } else {
-//     if (isReload) {
-//       window.location.reload()
-//     }
-//   }
-// }
-
-// reSign()
-
 const { data: client, refresh } = useLazyAsyncData('client', () =>
   $fetch('/api/user/client')
 )
@@ -34,19 +15,8 @@ useIntervalFn(() => {
 }, 1000 * 60)
 if (status.value === 'authenticated') await store.getClient()
 
-const accessChecker = computed(() => {
-  if (store.client.role == UserRoles.staff) {
-    return store.client.allowedPathes.find(
-      (acc) => acc.value == '/' + route.path.replace(/^\/([^\/]*).*$/, '$1')
-    )
-      ? true
-      : false
-  }
-  return true
-})
-
 watch(client, (newClient) => {
-  store.setClient(newClient?.client as Client)
+  store.setClient(newClient?.client)
 })
 </script>
 
@@ -74,8 +44,7 @@ watch(client, (newClient) => {
         :color="colorMode.value === 'light' ? '#296dff' : '#6467f2'"
       />
       <SeoKit />
-      <NuxtPage v-if="accessChecker" />
-      <Hero v-else />
+      <NuxtPage />
       <div class="my-12 md:hidden"></div>
     </NuxtLayout>
   </div>
@@ -88,9 +57,24 @@ watch(client, (newClient) => {
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 }
 body {
-  overflow: hidden;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Inter', sans-serif;
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
+}
+
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 0px;
+  border-radius: 4px;
 }
 
 .notify-text {

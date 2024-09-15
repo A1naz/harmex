@@ -14,7 +14,7 @@ const colorMode = useColorMode()
 </script>
 
 <template>
-  <NuxtLink href="/buyouts" class="-mb-3">
+  <NuxtLink href="/main" class="-mb-3">
     <!-- <nuxt-img
       v-show="$colorMode.value === 'light' || colorMode.unknown"
       src="/logo/logolight.svg"
