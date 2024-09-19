@@ -128,6 +128,7 @@ export default defineNuxtConfig({
     'primevue/resources/primevue.css',
     'primeicons/primeicons.css',
     '@vuepic/vue-datepicker/dist/main.css',
+    '@/assets/style/css/customButton.css',
   ],
 
   extends: ['nuxt-seo-kit'],

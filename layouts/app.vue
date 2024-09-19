@@ -60,7 +60,7 @@ const MenuIcon2: any = ref(null)
 const isOpen = ref(false)
 
 function toggleMenu() {
-    isOpen.value = !isOpen.value
+  isOpen.value = !isOpen.value
 }
 </script>
 
@@ -77,7 +77,7 @@ function toggleMenu() {
       <div
         class="drawerShadow items-center gap-2 p-4 h-[75px] bg-[#f5f7ff] justify-between"
       >
-        <div class="lg:mx-[14%] flex">
+        <div class="lg:mx-11 flex">
           <nuxt-img
             src="/img/SARAFAN.svg"
             width="150px"
@@ -126,17 +126,17 @@ function toggleMenu() {
           </label>
           <div class="sm:flex mr-10 hidden">
             <button
-              class="btn btn-outline btn-[#1b38ca] hover:bg-[#1a36c3] ml-4 border-[#1b38ca] rounded-xl bg-white"
+              class="myCustomBtn ml-4"
             >
               <Icon name="fluent:shopping-bag-24-regular" size="24"> </Icon>
             </button>
             <button
-              class="btn btn-outline btn-[#1b38ca] hover:bg-[#1a36c3] ml-4 border-[#1b38ca] rounded-xl bg-white"
+              class="myCustomBtn ml-4"
             >
               <Icon name="solar:wallet-linear" size="24"> </Icon>
             </button>
             <button
-              class="btn btn-outline btn-[#1b38ca] hover:bg-[#1a36c3] ml-4 border-[#1b38ca] rounded-xl bg-white"
+              class="myCustomBtn ml-4"
             >
               <Icon name="gg:profile" size="24"></Icon>
             </button>
@@ -145,10 +145,10 @@ function toggleMenu() {
             @click="toggleMenu"
             class="btn bg-[#7209b7] hover:bg-[#9235ff] text-[#fff] flex text-[16px] ml-2 rounded-[10px] pr-8 font-medium sm:hidden"
           >
-          <label
+            <label
               :class="{ opened: isOpen }"
               aria-label="Main Menu"
-                  class="cursor-pointer -mr-8 -ml-4 sm:hidden"
+              class="cursor-pointer -mr-8 -ml-4 sm:hidden"
             >
               <svg width="50" height="30" viewBox="0 0 100 100">
                 <path

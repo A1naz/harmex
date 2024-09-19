@@ -1,33 +1,135 @@
 <script lang="ts" setup>
-const { signIn } = useAuth()
-
 definePageMeta({ auth: false, layout: 'app' })
+
+const favourites = ref<any>([
+  {
+    uuid: '1',
+    title: 'Продвижение аккаунтов',
+    image: '/img/favourites/1.png',
+  },
+  {
+    uuid: '2',
+    title: 'Продвижение аккаунтов',
+    image: '/img/favourites/2.png',
+  },
+  {
+    uuid: '3',
+    title: 'Продвижение Телеграм',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '4',
+    title: 'Продвижение аккаунтов',
+    image: '/img/favourites/4.png',
+  },
+  {
+    uuid: '5',
+    title: 'Аудитория',
+    image: '/img/favourites/5.png',
+  },
+  {
+    uuid: '6',
+    title: 'Продвижение аккаунтов',
+    image: '/img/favourites/6.png',
+  },
+  {
+    uuid: '7',
+    title: 'Услуги',
+    image: '/img/favourites/7.png',
+  },
+  {
+    uuid: '8',
+    title: 'Продвижение аккаунтов',
+    image: '/img/favourites/8.png',
+  },
+  {
+    uuid: '9',
+    title: 'Продвижение бизнеса',
+    image: '/img/favourites/9.png',
+  },
+  {
+    uuid: '10',
+    title: 'Продвижение блогеров',
+    image: '/img/favourites/10.png',
+  },
+])
+const channels = ref<any>([
+  {
+    uuid: '1',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '2',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '3',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '4',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '5',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '6',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '7',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '8',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '9',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+  {
+    uuid: '10',
+    title: 'Telegram',
+    image: '/img/favourites/3.png',
+  },
+])
 </script>
 
 <template>
-  <section>
-    <div class="text-center mt-10 mx-12">
-      <div class="text-3xl">
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since the 1500s, when an unknown printer took a galley of type and
-        scrambled it to make a type specimen book. It has survived not only five
-        centuries, but also the leap into electronic typesetting, remaining
-        essentially unchanged. It was popularised in the 1960s with the release
-        of Letraset sheets containing Lorem Ipsum passages, and more recently
-        with desktop publishing software like Aldus PageMaker including versions
-        of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and
-        typesetting industry. Lorem Ipsum has been the industry's standard dummy
-        text ever since the 1500s, when an unknown printer took a galley of type
-        and scrambled it to make a type specimen book. It has survived not only
-        five centuries, but also the leap into electronic typesetting, remaining
-        essentially unchanged. It was popularised in the 1960s with the release
-        of Letraset sheets containing Lorem Ipsum passages, and more recently
-        with desktop publishing software like Aldus PageMaker including versions
-        of Lorem Ipsum
+  <div class="sm:mx-20 mx-0">
+    <section class="mt-4 flex sm:block">
+      <MenuButtonsLine />
+    </section>
+    <div class="w-[200%] h-[1px] -ml-40 mt-3 bg-[#0c8ce9]"></div>
+    <section class="mt-10 mx-5">
+      <MenuBigCarousel />
+    </section>
+    <section class="mt-10 mx-5">
+      <MenuPopularCarousel />
+    </section>
+    <div class="w-[200%] h-[1px] -ml-40 mt-7 bg-[#0c8ce9]"></div>
+    <section class="mt-10 mx-5 sm:flex block gap-8">
+      <div class="sm:w-1/2 w-full">
+        <MenuFavourites title="Избранное" :items="favourites" />
       </div>
-    </div>
-  </section>
+      <div class="sm:w-1/2 w-full">
+        <MenuFavourites title="Мои каналы" :items="channels" />
+      </div>
+    </section>
+    <div class="flex-col gap-5 text-center mt-20 text-lg">&nbsp;</div>
+  </div>
 </template>
 
 <style scoped></style>
