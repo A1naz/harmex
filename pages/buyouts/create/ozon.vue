@@ -12,6 +12,8 @@ const currency = useCurrency()
 const isCreateButtonDisabled = ref(false)
 const { width, height } = useWindowSize()
 const { notify } = useNotification()
+const mainStore = useMainStore()
+const refreshKey = ref(1)
 
 const loadingTemplates = ref(false)
 const openAll = ref(false)
@@ -142,10 +144,10 @@ const totalQuantity = computed(() => {
 })
 
 const pickpoints = shallowRef()
+const ffPickpoints = shallowRef()
 const modalOpen = ref(false)
-function closeModal() {
-  modalOpen.value = false
-}
+const lastItemDateRange = ref<any>([])
+
 
 async function openChecksModal() {
   const productCountsByAddress: any = {}
@@ -283,7 +285,40 @@ async function pointModalOpen(index: number) {
   if (!pickpoints.value) loading.value = true
 
   store.selectedItem = index
-  modalOpen.value = true
+
+  if (products.value[index].key) {
+    if (
+      products.value[index].dateRange[0] != lastItemDateRange.value[0] ||
+      products.value[index].dateRange[1] != lastItemDateRange.value[1]
+    ) {
+      lastItemDateRange.value = products.value[index].dateRange
+      await getFFPickpoints(products.value[index].dateRange[0] || new Date())
+    }
+
+    modalOpenFF.value = true
+  } else {
+    modalOpen.value = true
+  }
+}
+
+async function getFFPickpoints(date: Date = new Date()) {
+  try {
+    // @ts-ignore
+    const data = await $fetch('/api/ozon/ff/userPickpoints', {
+      method: 'GET',
+      query: {
+        date: new Date(date).toISOString(),
+      },
+    })
+    ffPickpoints.value = (data as any).points
+  } catch (e: any) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: e?.message,
+      type: 'error',
+      duration: 3000,
+    })
+  }
 }
 
 onMounted(async () => {
@@ -388,6 +423,14 @@ const startTimer = () => {
 function removeDiscount(index: number) {
   store.createProducts[index].discountPrice = store.createProducts[index].price
 }
+function refreshElements() {
+  refreshKey.value == 1 ? (refreshKey.value = 0) : (refreshKey.value = 1)
+}
+const modalOpenFF = ref(false)
+function closeModal() {
+  modalOpen.value = false
+  modalOpenFF.value = false
+}
 </script>
 
 <template>
@@ -482,7 +525,7 @@ function removeDiscount(index: number) {
       >
         <BuyoutOzonCreateCard
           v-for="(product, index) in products"
-          :key="index"
+          :key="index + '_' + refreshKey"
           :loading="!pickpoints?.length"
           :product="product"
           :index="index"
@@ -584,7 +627,7 @@ function removeDiscount(index: number) {
           <tbody>
             <BuyoutOzonCreateTableRow
               v-for="(product, index) in products"
-              :key="index"
+              :key="index + '_' + refreshKey"
               :product="product"
               :index="index"
               :open-discount="openDiscount"
@@ -601,6 +644,13 @@ function removeDiscount(index: number) {
         :state="modalOpen"
         :pickpoints="pickpoints"
         @callback="handleAddress"
+        @close="closeModal"
+      />
+      <BuyoutOzonSelectFFPointModal
+        v-if="modalOpenFF"
+        :state="modalOpenFF"
+        :pickpoints="ffPickpoints"
+        @callback="(address: any) => handleAddress(address.a, address.lt, address.lg, address.id)"
         @close="closeModal"
       />
     </ClientOnly>
@@ -668,6 +718,30 @@ function removeDiscount(index: number) {
                 <input
                   type="checkbox"
                   v-model="products[selectedRuleProductIndex].purchaseSoon"
+                  class="checkbox checkbox-primary border-base-content"
+                />
+              </div>
+            </div>
+            <div
+              v-if="rule.id === 1 && mainStore.client.ffEnabled"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
+            >
+              <span class="label-text">{{ 'Выкуп под ключ ' }}</span>
+              <div class="flex gap-4">
+                <input
+                  type="checkbox"
+                  v-model="products[selectedRuleProductIndex].key"
+                  @click="
+                    ;[
+                      refreshElements(),
+                      (products[selectedRuleProductIndex].adress = ''),
+                      (products[selectedRuleProductIndex].dateRange = [
+                        new Date().setHours(new Date().getHours() + 3),
+
+                        new Date().setHours(new Date().getHours() + 3),
+                      ]),
+                    ]
+                  "
                   class="checkbox checkbox-primary border-base-content"
                 />
               </div>
