@@ -83,16 +83,15 @@ export default eventHandler(async (event) => {
 
   if (Object.values(searchParse)[0] !== '') {
     if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
-      searchParse = { uuidbuyout: searchParse.uudidBuyout.replace('#', '') };
+      searchParse = { uuidbuyout: searchParse.uudidBuyout.replace('#', '') }
       pipeLine.splice(3, 0, { $match: { ...searchParse } }) // after $project
-    }  else {
+    } else {
       pipeLine.splice(1, 0, { $match: { ...searchParse } }) // after $match
     }
   }
 
   // if (skipA > 0) pipeLine.push({ $skip: skipA })
   // if (limitA > 0) pipeLine.push({ $limit: limitA })
-
 
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
@@ -119,13 +118,18 @@ export default eventHandler(async (event) => {
   ])
   const sex = (genders: string[]): string => {
     for (const gen of genders) {
-      let foundGen = genderMap.get(gen.toLowerCase())
-      if (foundGen) return foundGen
+      if (gen) {
+        let foundGen = genderMap.get(gen.toLowerCase())
+        if (foundGen) return foundGen
+      }
     }
     return 'Нет'
   }
   const formated = readyForReview.map((deliveryForReview: any) => {
-    const countSoon = soonForReview.filter((sfr) => sfr._id == deliveryForReview.article)
+    const countSoon = soonForReview.filter(
+      (sfr) => sfr._id == deliveryForReview.article
+    )
+
     return {
       ...deliveryForReview,
       countSoon: countSoon.length > 0 ? countSoon[0].count : 0,
