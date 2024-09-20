@@ -58,7 +58,7 @@ function handleSelect(address: any) {
 // }
 
 // const lastPoints = ref(localStorage.getItem('wildberriesFFPointStore')?.split('--'))
-const presetCluster = 'islands#violetClusterIcons'
+const presetCluster = 'slands#blueClusterIcons'
 
 const originalBounds = ref([
   [55.72435065000997, 37.421310551334145],
@@ -138,7 +138,7 @@ onMounted(async () => {
             radius: 1000,
           },
           properties: {
-            iconContent: 'WB',
+            iconContent: 'OZON',
             data: {
               id:  point.id,
               a: point.a,
@@ -148,9 +148,10 @@ onMounted(async () => {
             },
           },
           options: {
-            iconColor: '#8d297f',
+            iconColor: '#0340e9',
             iconLayout: 'default#image',
-            iconImageHref: '/img/pin-map.svg',
+            iconImageHref:
+              'https://ucarecdn.com/a1a464eb-edf1-41d7-875d-6b769199571a/',
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],

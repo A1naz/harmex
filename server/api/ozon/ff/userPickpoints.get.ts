@@ -19,7 +19,6 @@ export default eventHandler(async (event) => {
   }
 
   const pvzs: any = await FFPVZ.findOne({ user: admin ? admin._id : user._id })
-  console.log('userPickpoints', pvzs.length)
 
   if (!pvzs || !pvzs.pvzs || !pvzs.pvzs.length) {
     return {
@@ -34,8 +33,6 @@ export default eventHandler(async (event) => {
   const rmDate = new Date(new Date().setHours(trueDate.getHours() - 24))
 
   pvzs.pvzs = pvzs.pvzs.filter((item: any) => new Date(item.date) > rmDate)
-
-  console.log('userPickpoints', pvzs.pvzs.length)
 
   await pvzs.save()
 
@@ -54,7 +51,6 @@ export default eventHandler(async (event) => {
     })
     .filter((item: any) => item !== undefined)
 
-  console.log('userPickpoints', format.length)
 
   return {
     status: 'ok',
