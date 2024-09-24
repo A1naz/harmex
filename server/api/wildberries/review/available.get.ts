@@ -81,6 +81,12 @@ export default eventHandler(async (event) => {
   const skipA = skip ? parseInt(skip.toString(), 10) : 0
   let searchParse = search ? JSON.parse(search?.toString()) : undefined
 
+  if (searchParse.article) {
+    searchParse.article = {
+      $in: [searchParse.article, Number(searchParse.article)],
+    }
+  }
+
   if (Object.values(searchParse)[0] !== '') {
     if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
       searchParse = { uuidbuyout: searchParse.uudidBuyout.replace('#', '') }

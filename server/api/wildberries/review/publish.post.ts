@@ -46,10 +46,12 @@ export default eventHandler(async (event) => {
       message: 'Выкуп не найден',
     })
   }
+  console.log(deliveryid)
+
   const delivery = await Delivery.findOne({
     _id: deliveryid,
     idbuyout: buyout._id,
-    reviewed: false,
+    reviewed: { $ne: true },
   })
   if (!delivery) {
     return createError({
