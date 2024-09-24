@@ -248,12 +248,12 @@ const filters = [
     params: '?status=canceled',
     queryStatus: 'canceled',
   },
-  {
-    title: 'В архиве',
-    optionValue: 'archived',
-    params: '?status=archived',
-    queryStatus: 'archived',
-  },
+  // {
+  //   title: 'В архиве',
+  //   optionValue: 'archived',
+  //   params: '?status=archived',
+  //   queryStatus: 'archived',
+  // },
 ]
 
 const customLinks = filters.map((filter) => ({
@@ -281,34 +281,6 @@ function changeFilter(e: any) {
 
 <template>
   <div>
-    <!-- <div class="flex items-center gap-2 mt-4">
-      <h1 class="text-2xl font-bold ">
-        Доставки
-      </h1>
-      <InfoButton @openModal="toggleInfoModal" />
-    </div> -->
-
-    <!-- <InfoModal 
-        :isModal="isInfoModal" 
-        title="Доставки"
-        ytSrc='https://www.youtube.com/embed/-SxurcapPcA?si=AxKD5hXOxqc6ZjqJ'
-        @changeVisibility="toggleInfoModal"
-        >
-        <p>
-            В этом разделе можно отследить статусы выкупов после оплаты. Статус "Доставлен" означает, что товар можно
-            забирать из пункта выдачи.
-        </p>
-        <p>
-            Совершайте заборы ваших товаров в течение 7 дней с момента прибытия на ПВЗ. За каждый последующий день вы получаете штраф {{ store.tariffString('deliveryStorage') }} за единицу не забранного товара.
-        </p>
-        <p>
-            Возвраты финансовых средств на не забранные товары с ПВЗ отсутствуют! Работаем по модели Выкупил - Забрал.
-        </p> 
-        <p>
-            Все услуги оказываются по Московскому времени.
-        </p>
-    </InfoModal> -->
-
     <div class="">
       <div class="flex lg:hidden mt-2">
         <div v-if="deliveries.length" class="export">
@@ -584,7 +556,9 @@ function changeFilter(e: any) {
                 <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
                 <li><a @click="exportXLS">Общая таблица Excel</a></li>
-                <li><a @click="exportReadyUntilPenaltyXLS">До штрафа Excel</a></li>
+                <li>
+                  <a @click="exportReadyUntilPenaltyXLS">До штрафа Excel</a>
+                </li>
               </ul>
             </div>
           </div>
@@ -649,10 +623,6 @@ function changeFilter(e: any) {
             />
           </li>
         </ul>
-        <div
-          ref="target"
-          class="flex justify-center items-center h-40 md:h-10"
-        />
       </TransitionSlide>
       <DeliveryWildberriesQrModal
         v-if="modal"
@@ -671,6 +641,11 @@ function changeFilter(e: any) {
       :statusdelivery="currentStatusdDelivery"
       :state="statusModal"
       @close="statusModal = false"
+    />
+    <div
+      ref="target"
+      class="flex justify-center items-center"
+      style="height: 60px"
     />
   </div>
 </template>

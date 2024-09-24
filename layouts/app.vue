@@ -79,7 +79,7 @@ const statusText = computed(() => {
     return 'Тарифы'
   } else if (route.path.startsWith('/productlikes')) {
     return 'Лайки'
-  } else {
+  } else if (status.value === 'authenticated') {
     return storeMain.client.mmenuItems
       .flatMap((section) => section.items)
       .find((item) => route.path.startsWith(item.path))?.title

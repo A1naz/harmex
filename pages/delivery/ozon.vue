@@ -257,12 +257,12 @@ const filters = [
     params: '?status=canceled',
     queryStatus: 'canceled',
   },
-  {
-    title: 'В архиве',
-    optionValue: 'archived',
-    params: '?status=archived',
-    queryStatus: 'archived',
-  },
+  // {
+  //   title: 'В архиве',
+  //   optionValue: 'archived',
+  //   params: '?status=archived',
+  //   queryStatus: 'archived',
+  // },
 ]
 const statusText = computed(() => {
   return filters.find((el: any) => el.queryStatus === route.query.status)?.title
@@ -656,10 +656,6 @@ const customLinks = filters.map((filter) => ({
             />
           </li>
         </ul>
-        <div
-          ref="target"
-          class="flex justify-center items-center h-40 md:h-10"
-        />
       </TransitionSlide>
       <DeliveryQrModal
         v-if="modal"
@@ -677,6 +673,11 @@ const customLinks = filters.map((filter) => ({
       :statusdelivery="currentStatusdDelivery"
       :state="statusModal"
       @close="statusModal = false"
+    />
+    <div
+      ref="target"
+      class="flex justify-center items-center"
+      style="height: 60px"
     />
   </div>
 </template>
