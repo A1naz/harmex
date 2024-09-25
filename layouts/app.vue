@@ -62,6 +62,55 @@ const isOpen = ref(false)
 function toggleMenu() {
   isOpen.value = !isOpen.value
 }
+
+const searchData = ref([]) as any
+const dataLoading = ref(false)
+async function search(searchQuery: any) {
+  dataLoading.value = true
+
+
+
+  setTimeout(() => {
+    const data = [
+      {
+        title: `Telegram продвижение`,
+        price: '20 ₽',
+        rating: '5.0',
+        advanced: '28 834'
+      },
+      {
+        title: `Telegram продвижение - справочник`,
+        price: '20 ₽',
+        rating: '5.0',
+        advanced: '28 834'
+      },
+      {
+        title: `Telegram продвижение`,
+        price: '20 ₽',
+        rating: '5.0',
+        advanced: '28 834'
+      },
+      {
+        title: `Telegram продвижение`,
+        price: '20 ₽',
+        rating: '5.0',
+        advanced: '28 834'
+      },
+      {
+        title: `Telegram продвижение`,
+        price: '20 ₽',
+        rating: '5.0',
+        advanced: '28 834'
+      },
+    ]
+    searchData.value = data.filter((item: any) =>
+      item.title.includes(searchQuery)
+    )
+    dataLoading.value = false
+  }, 200)
+}
+
+
 </script>
 
 <template>
@@ -75,9 +124,9 @@ function toggleMenu() {
       class="drawer-content w-full overflow-hidden scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin"
     >
       <div
-        class="drawerShadow items-center gap-2 p-4 h-[75px] bg-[#f5f7ff] justify-between"
+        class="drawerShadow  items-center gap-2 p-4 h-[75px] bg-[#f5f7ff] justify-between"
       >
-        <div class="lg:mx-11 flex">
+        <div class="lg:mx-11 flex relative">
           <nuxt-img
             src="/img/SARAFAN.svg"
             width="150px"
@@ -86,7 +135,7 @@ function toggleMenu() {
           <nuxt-img
             src="/img/S.svg"
             width="30px"
-            class="block sm:hidden -mr-2 -ml-1.5"
+            class="block sm:hidden -mr-2 -ml-1.5 " 
           />
 
           <button
@@ -112,7 +161,7 @@ function toggleMenu() {
             </label>
             Каталог
           </button>
-          <label class="flex items-center gap-2 w-full ml-4">
+          <!-- <label class="flex items-center gap-2 w-full ml-4">
             <input
               type="text"
               placeholder="Поиск по услуге, категории, функционалу и справочнику"
@@ -123,21 +172,20 @@ function toggleMenu() {
               size="25"
               class="-ml-12 bg-white rounded-lg"
             />
-          </label>
+          </label> -->
+          <MenuSearch
+            :data="searchData"
+            :loading="dataLoading"
+            @search="search"
+          />
           <div class="sm:flex mr-10 hidden">
-            <button
-              class="myCustomBtn ml-4"
-            >
+            <button class="myCustomBtn ml-4">
               <Icon name="fluent:shopping-bag-24-regular" size="24"> </Icon>
             </button>
-            <button
-              class="myCustomBtn ml-4"
-            >
+            <button class="myCustomBtn ml-4">
               <Icon name="solar:wallet-linear" size="24"> </Icon>
             </button>
-            <button
-              class="myCustomBtn ml-4"
-            >
+            <button class="myCustomBtn ml-4">
               <Icon name="gg:profile" size="24"></Icon>
             </button>
           </div>
@@ -172,6 +220,7 @@ function toggleMenu() {
       >
         <div class="hero text-3xl mt-10">Тут будут элементы меню</div>
       </div>
+      
       <div class="px-4">
         <slot />
       </div>
