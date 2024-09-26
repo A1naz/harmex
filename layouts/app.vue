@@ -104,7 +104,7 @@ async function search(searchQuery: any) {
       },
     ]
     searchData.value = data.filter((item: any) =>
-      item.title.includes(searchQuery)
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
     dataLoading.value = false
   }, 200)

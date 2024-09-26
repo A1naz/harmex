@@ -21,7 +21,7 @@ const isVisible = computed(() => {
   )
 })
 
-const searchInput = useDebounceFn(search, 1000)
+const searchInput = useDebounceFn(search, 500)
 const searchQuery = ref('')
 
 function onInput() {
@@ -143,11 +143,11 @@ function close() {
 
 <style scoped>
 .slide-fade-enter-active {
-  transition: all 0.5s ease-out;
+  transition: all 0.2s ease-out;
 }
 
 .slide-fade-leave-active {
-  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .slide-fade-enter-from,
