@@ -68,39 +68,37 @@ const dataLoading = ref(false)
 async function search(searchQuery: any) {
   dataLoading.value = true
 
-
-
   setTimeout(() => {
     const data = [
       {
         title: `Telegram продвижение`,
         price: '20 ₽',
         rating: '5.0',
-        advanced: '28 834'
+        advanced: '28 834',
       },
       {
         title: `Telegram продвижение - справочник`,
         price: '20 ₽',
         rating: '5.0',
-        advanced: '28 834'
+        advanced: '28 834',
       },
       {
         title: `Telegram продвижение`,
         price: '20 ₽',
         rating: '5.0',
-        advanced: '28 834'
+        advanced: '28 834',
       },
       {
         title: `Telegram продвижение`,
         price: '20 ₽',
         rating: '5.0',
-        advanced: '28 834'
+        advanced: '28 834',
       },
       {
         title: `Telegram продвижение`,
         price: '20 ₽',
         rating: '5.0',
-        advanced: '28 834'
+        advanced: '28 834',
       },
     ]
     searchData.value = data.filter((item: any) =>
@@ -109,8 +107,6 @@ async function search(searchQuery: any) {
     dataLoading.value = false
   }, 200)
 }
-
-
 </script>
 
 <template>
@@ -124,18 +120,21 @@ async function search(searchQuery: any) {
       class="drawer-content w-full overflow-hidden scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin"
     >
       <div
-        class="drawerShadow  items-center gap-2 p-4 h-[75px] bg-[#f5f7ff] justify-between"
+        class="drawerShadow items-center gap-2 p-4 h-[75px] bg-[#f5f7ff] justify-between"
       >
         <div class="lg:mx-11 flex relative">
           <nuxt-img
             src="/img/SARAFAN.svg"
             width="150px"
-            class="sm:block hidden"
+            class="sm:block hidden cursor-pointer"
+            @click="navigateTo('/main')"
           />
+
           <nuxt-img
             src="/img/S.svg"
             width="30px"
-            class="block sm:hidden -mr-2 -ml-1.5 " 
+            class="block sm:hidden -mr-2 -ml-1.5"
+            @click="navigateTo('/main')"
           />
 
           <button
@@ -220,7 +219,7 @@ async function search(searchQuery: any) {
       >
         <div class="hero text-3xl mt-10">Тут будут элементы меню</div>
       </div>
-      
+
       <div class="px-4">
         <slot />
       </div>

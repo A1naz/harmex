@@ -2,7 +2,7 @@
 import { ref, watch, computed } from 'vue'
 
 const props = defineProps({
-  data: { type: Array, required: true, default: () => [] },
+  data: { type: Array<any>, required: true, default: () => [] },
   loading: { type: Boolean, required: true },
 })
 
@@ -125,7 +125,8 @@ function close() {
 
           <button
             class="text-secondary bg-white hover:text-black rounded-lg hover:bg-[#f5f7ff] py-1 px-4 border border-white transition w-full"
-          >
+            @click=";[(show = false), navigateTo('/catalog')]">
+          
             Смотреть все
           </button>
         </div>

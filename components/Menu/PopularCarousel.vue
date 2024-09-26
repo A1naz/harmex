@@ -73,6 +73,7 @@ const handleCarouselMove = (isNext: any) => {
   <div class="font-semibold text-[26px] mb-3 flex justify-between">
     <span> Популярное </span>
     <button
+      @click="navigateTo('/catalog')"
       class="btn btn-outline border-[#f95ca4] text-[#f95ca4] rounded-xl btn-sm text-[16px] pr-6 hover:bg-white font-medium hover:text-[#f95ca4] hover:border-[#f95ca4] hover:shadow-xl active:bg-[#f95ca4] active:text-white"
     >
       <Icon name="majesticons:menu-line" width="25px" height="25px" />Все

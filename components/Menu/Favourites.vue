@@ -11,6 +11,7 @@ const props = defineProps({
   <div class="w-full font-semibold text-[26px] mb-8">{{ title }}</div>
   <div class="w-full bg-[#f5f7ff] rounded-xl pt-5">
     <div
+    @click="navigateTo('/catalog')"
       class="cursor-pointer text-[14px] text-[#F72585] w-full text-end pr-16"
     >
       Смотреть все
