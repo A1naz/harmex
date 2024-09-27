@@ -186,7 +186,9 @@ export default eventHandler(async (event) => {
 
   const buyoutIds = deliveries.map(delivery => delivery.idbuyout);
 
-  const buyouts = await Buyout.find({ _id: { $in: buyoutIds }, user: new ObjectId(user._id) })
+  // user: new ObjectId(user._id),
+
+  const buyouts = await Buyout.find({ _id: { $in: buyoutIds } })
     .select('sizeparam product gender')
     .lean() as any;
 
