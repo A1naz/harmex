@@ -3,12 +3,18 @@ import { Delivery } from '@/server/lib/models/Delivery'
 import { Buyout } from '@/server/lib/models/Buyout'
 import { DocuemntEnum } from '~/data/enums'
 
-const keys = Object.keys as <T>(obj: T) =>
-(keyof T extends infer U ? U extends string ? U : U extends number ? `${U}` : never : never)[]
+const keys = Object.keys as <T>(
+  obj: T
+) => (keyof T extends infer U
+  ? U extends string
+    ? U
+    : U extends number
+    ? `${U}`
+    : never
+  : never)[]
 
 export default eventHandler(async (event) => {
   try {
-
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
@@ -20,15 +26,18 @@ export default eventHandler(async (event) => {
         message: 'Нет доставок для экспорта',
       })
     }
+
+    const buyouts = await Buyout.find(deliveries)
     const format = await Promise.all(
       deliveries.map(async (delivery, index) => {
-        const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
-        if (!buyout)
-          return undefined
+        const buyout = buyouts.find((buyout) => buyout.uuid == delivery.uuidbuyout);
+        if (!buyout) return undefined
 
         const phone = delivery.recipientphone
         const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
-        const currentstatus = delivery.statusdelivery?.length ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status : 'Неизвестно'
+        const currentstatus = delivery.statusdelivery?.length
+          ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
+          : 'Неизвестно'
 
         return {
           index,
@@ -48,24 +57,55 @@ export default eventHandler(async (event) => {
           pricebuy: delivery.pricebuy,
           updatedAt: delivery.updatedAt,
         }
-      }),
+      })
     )
 
     const workbook = new ExcelJS.Workbook()
-    const ready = format.filter(item => item)
+    const ready = format.filter((item) => item)
     const sheet = workbook.addWorksheet('Общая таблица', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
     })
 
     sheet.columns = [
       { header: 'Номер', key: 'place', font: { bold: true } },
-      { header: 'Код получения', key: 'receiptcode', width: 16, font: { bold: true } },
-      { header: 'Статус', key: 'currentstatus', width: 24, font: { bold: true } },
-      { header: 'Адрес пункта выдачи', key: 'point', width: 64, font: { bold: true } },
+      {
+        header: 'Код получения',
+        key: 'receiptcode',
+        width: 16,
+        font: { bold: true },
+      },
+      {
+        header: 'Статус',
+        key: 'currentstatus',
+        width: 24,
+        font: { bold: true },
+      },
+      {
+        header: 'Адрес пункта выдачи',
+        key: 'point',
+        width: 64,
+        font: { bold: true },
+      },
       { header: 'Товар', key: 'productname', width: 48, font: { bold: true } },
-      { header: 'Получатель', key: 'recipient', width: 16, font: { bold: true } },
-      { header: 'Телефон получателя', key: 'recipientphone', width: 16, font: { bold: true } },
-      { header: 'Дата обновления', key: 'updatedAt', width: 16, font: { bold: true } },
+      {
+        header: 'Получатель',
+        key: 'recipient',
+        width: 16,
+        font: { bold: true },
+      },
+      { header: 'Размер', key: 'size', width: 16, font: { bold: true } },
+      {
+        header: 'Телефон получателя',
+        key: 'recipientphone',
+        width: 16,
+        font: { bold: true },
+      },
+      {
+        header: 'Дата обновления',
+        key: 'updatedAt',
+        width: 16,
+        font: { bold: true },
+      },
       { header: 'ID Выкупа', key: 'uuid', width: 32, font: { bold: true } },
     ]
     sheet.addRows(ready)
@@ -75,22 +115,22 @@ export default eventHandler(async (event) => {
     idCol.eachCell((cell, rowNumber) => {
       cell.value = {
         text: cell.value!.toString(),
-        hyperlink: `${runtimeConfig.PUBLIC_SITE_URL}/buyouts?uuid=${cell.value?.toString()}`,
+        hyperlink: `${
+          runtimeConfig.PUBLIC_SITE_URL
+        }/buyouts?uuid=${cell.value?.toString()}`,
       }
     })
     // export table
     const buffer = await workbook.xlsx.writeBuffer()
 
-    await userLog(event,
-        {
-            documentType: DocuemntEnum.Delivery,
-            documentId: '',
-            comment: 'Экспорт всех доставок XLS'
-        })
+    await userLog(event, {
+      documentType: DocuemntEnum.Delivery,
+      documentId: '',
+      comment: 'Экспорт всех доставок XLS',
+    })
 
     return buffer
-  }
-  catch (e) {
+  } catch (e) {
     throw createError({
       statusCode: 500,
       message: 'Не удалось создать таблицу',
