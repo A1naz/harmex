@@ -149,7 +149,65 @@ function closeModal() {
   modalOpenFF.value = false
 }
 
+const activeBuyout = ref([]) as any
+const activeBuyoutSumm = ref(0)
+
+const isBalanceEnoughForBuyout = ref(false)
+const balanceForBuyout = ref(0)
+
+async function checkBalance(buyouts: any) {
+  const newBuyoutsSumm = buyouts.reduce((acc: number, item: any) => {
+    return acc + parseFloat(item.price) || 0
+  }, 0)
+  //@ts-ignore
+  const { data, error }: any = await useFetch('/api/buyout/checkBalance', {
+    method: 'GET',
+  })
+
+  if (data.value) {
+    const userBalance = data.value.userBalance
+    activeBuyout.value = data.value.buyouts
+    activeBuyoutSumm.value = activeBuyout.value.reduce(
+      (acc: number, item: any) => {
+        return acc + parseFloat(item.product.price) || 0
+      },
+      0
+    )
+
+    const buyoutSumm = newBuyoutsSumm + activeBuyoutSumm.value
+
+    isBalanceEnoughForBuyout.value = buyoutSumm <= userBalance
+
+    if (!isBalanceEnoughForBuyout.value) {
+      balanceForBuyout.value = userBalance - buyoutSumm
+    }
+
+    return isBalanceEnoughForBuyout.value
+  }
+
+  if (error.value) {
+    notify({
+      title: 'Что-то пошло не так при проверке баланса',
+      text: error.value?.data?.message || 'Ошибка при получении данных',
+      type: 'error',
+      duration: 3000,
+    })
+
+    return false
+  }
+}
+
 async function openChecksModal() {
+  const isBalanceEnough = await checkBalance(store.createProducts)
+  if (!isBalanceEnough) {
+    notify({
+      text: `На вашем балансе недостаточно средств для выкупа`,
+      type: 'error',
+      duration: 3000,
+    })
+    return
+  }
+  
   const productCountsByAddress: any = {}
 
   if (!isUserWarned.value) {
@@ -444,6 +502,7 @@ function refreshElements() {
             class="btn btn-sm btn-primary normal-case bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
             >Шаблоны</label
           >
+
           <label
             v-if="store.createProducts.length > 0"
             class="btn btn-sm text-red-400 bg-base-200 normal-case flex md:hidden"
@@ -639,7 +698,7 @@ function refreshElements() {
     <div v-if="ruleModal">
       <input id="ruleModal" type="checkbox" class="modal-toggle" />
       <label
-       @click="ruleModal = false"
+        @click="ruleModal = false"
         for="ruleModal"
         class="modal modal-open modal-bottom sm:modal-middle cursor-pointer"
       >
