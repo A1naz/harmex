@@ -43,6 +43,7 @@ const tabs = [
   { value: 'deleted', name: 'Удаленные' },
   { value: 'nofunds', name: 'Недостаточно средств' },
   { value: 'reviewsUpdate', name: 'На проверке' },
+  { value: 'archived', name: 'В архиве' },
 ]
 
 const searchOptions = ref([
