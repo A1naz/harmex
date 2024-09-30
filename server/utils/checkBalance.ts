@@ -5,7 +5,7 @@ import { Buyout as ozonBuyout } from '../lib/models/ozon/Buyout'
 
 export const checkBalance = async (user: any, buyouts: any) => {
     try {
-        const userFound = await User.findOne({ user })
+        // const userFound = await User.findOne({ user })
         if (!user) return false
 
         const ozon = await ozonBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
