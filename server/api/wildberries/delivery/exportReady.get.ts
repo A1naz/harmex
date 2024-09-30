@@ -17,7 +17,10 @@ const keys = Object.keys as <T>(
   : never)[]
 
 async function getReady(user: Document) {
-  const deliveries = await Delivery.find({ user }).sort({ _id: -1 })
+  const deliveries = await Delivery.find({
+    user,
+    status: { $ne: 'completed' },
+  }).sort({ _id: -1 })
   const filtered = deliveries.filter((item) => {
     const currentstatus = item.statusdelivery?.length
       ? item.statusdelivery[item.statusdelivery.length - 1].status
