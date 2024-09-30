@@ -56,6 +56,7 @@ export default eventHandler(async (event) => {
   } else if (status === 'pickupReady') {
     const response = await Delivery.find({
       user,
+      status: { $ne: 'completed' },
       $expr: {
         $in: [
           { $arrayElemAt: ['$statusdelivery.status', -1] },
