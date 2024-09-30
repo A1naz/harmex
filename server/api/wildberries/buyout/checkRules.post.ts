@@ -59,9 +59,16 @@ export default eventHandler(async (event) => {
   // const proxies: string[] = allProxies[0].proxies
 
   const products: Item[] = body
+
+  const balanceIsExist = await checkBalance(user, products)
   const result = {
     success: true,
     message: '',
+  }
+  if (!balanceIsExist) {
+    result.success = false
+    result.message = `Недостаточно средств для совершения выкупа`
+    return result
   }
 
   // if (!user.fizFace && !user.bik && !user.rs) {

@@ -34,9 +34,15 @@ export default eventHandler(async (event) => {
   const { points } = await getPickpoints()
 
   const products: Item[] = body
+  const balanceIsExist = await checkBalance(user, products)
   const result = {
     success: true,
     message: '',
+  }
+  if (!balanceIsExist) {
+    result.success = false
+    result.message = `Недостаточно средств для совершения выкупа`
+    return result
   }
 
   // if (!user.fizFace && !user.bik && !user.rs) {

@@ -53,7 +53,10 @@ onMounted(async () => {
     class="modal cursor-pointer"
     @click.self="$emit('close')"
   >
-    <div class="modal-box max-w-lg cursor-auto" :class="{ 'max-w-sm': success }">
+    <div
+      class="modal-box max-w-lg cursor-auto"
+      :class="{ 'max-w-sm': success }"
+    >
       <h3 class="font-semibold text-lg mb-2">Проверяем выкупы по правилам</h3>
       <a
         class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -96,7 +99,11 @@ onMounted(async () => {
           Создать
         </button>
         <button
-          :disabled="isCreateButtonDisabled"
+          :disabled="
+            isCreateButtonDisabled ||
+            (!success &&
+              message == 'Недостаточно средств для совершения выкупа')
+          "
           v-if="!success && !loading"
           class="btn btn-sm h-[2.5rem] btn-primary bg-opacity-20 text-base-content border-none w-[49%] font-normal"
           @click="emit('create')"
