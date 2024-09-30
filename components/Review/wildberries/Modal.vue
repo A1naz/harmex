@@ -35,6 +35,8 @@ const inputs: any = {
 
 const form = reactive({
   text: '',
+  positive: '',
+  negative: '',
   rating: 5,
   date: now.value,
   photos: [
@@ -554,12 +556,26 @@ function convertToMoscowTime(dateString: any): Date {
 
       <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-2 font-medium">Отзыв о товаре</div>
+          <div class="pb-2 font-medium">Опишите достоинства</div>
+
+          <textarea
+            v-model="form.positive"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, хороший телефон"
+          />
+          <div class="pb-2 font-medium">Опишите недостатки</div>
+
+          <textarea
+            v-model="form.negative"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, плохая камера"
+          />
+          <div class="pb-2 font-medium">Поделитесь впечатлениями</div>
 
           <textarea
             v-model="form.text"
             class="textarea w-full textarea-md bg-base-200"
-            placeholder="Например, хороший телефон"
+            placeholder="Например, понравился товар"
           />
 
           <div v-if="review.drafts" class="text-xs">
