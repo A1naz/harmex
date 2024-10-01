@@ -55,7 +55,7 @@ async function login() {
   } else {
     localStorage.removeItem('referralCode')
     store.getClient()
-    return navigateTo('/guide', { external: true })
+    return navigateTo('/main', { external: true })
   }
   loading.value = false
 }
