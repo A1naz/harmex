@@ -35,8 +35,7 @@ defineProps({
                 {{ service }}
               </li>
             </ul>
-            <a class="mt-4 text-[19px] absolute font-medium cursor-pointer"
-              >Смотреть все
+            <a class="mt-4 text-[19px] absolute font-medium cursor-pointer" @click="navigateTo(`/catalog/${social.slug}`)"              >Смотреть все
 
               <Icon
                 class="text-[#F72585] ml-1"

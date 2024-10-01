@@ -4,6 +4,7 @@ definePageMeta({ auth: false, layout: 'app' })
 const socialNetworks = ref([
   {
     name: 'Rutube',
+    slug: 'rutube',
     icon: '/img/catalog/rutube.png', // замените на фактический путь к иконке
     services: [
       'ИИ продвижение',
@@ -14,6 +15,7 @@ const socialNetworks = ref([
   },
   {
     name: 'Yappy',
+    slug: 'yappy',
     icon: '/img/catalog/yappy.png',
     services: [
       'ИИ продвижение',
@@ -24,6 +26,7 @@ const socialNetworks = ref([
   },
   {
     name: 'Instagram',
+    slug: 'instagram',
     icon: '/img/catalog/instagram.png',
     services: [
       'ИИ продвижение',
@@ -34,6 +37,7 @@ const socialNetworks = ref([
   },
   {
     name: 'Facebook',
+    slug: 'facebook',
     icon: '/img/catalog/facebook.png',
     services: [
       'ИИ продвижение',
@@ -44,6 +48,7 @@ const socialNetworks = ref([
   },
   {
     name: 'YouTube',
+    slug: 'youtube',
     icon: '/img/catalog/youtube.png',
     services: [
       'ИИ продвижение',
@@ -54,6 +59,7 @@ const socialNetworks = ref([
   },
   {
     name: 'Pinterest',
+    slug: 'pinterest',
     icon: '/img/catalog/pinterest.png',
     services: [
       'ИИ продвижение',
@@ -63,9 +69,21 @@ const socialNetworks = ref([
     ],
   },
 ])
+
+async function getServices() {
+  const { data }: any = await useFetch('/api/catalog/get')
+
+  if (data.value) {
+    socialNetworks.value = data.value
+  }
+}
 </script>
 
 <template>
+  <div class="hero">
+    <span class="loading loading-ball loading-lg text-[#bdc8fc]"></span>
+    
+  </div>
   <div class="flex">
     <CatalogLeftMenu />
 
