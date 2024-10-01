@@ -17,23 +17,26 @@ const keys = Object.keys as <T>(
   : never)[]
 
 async function getReady(user: Document) {
+  
   const deliveries = await Delivery.find({
     user,
     status: { $ne: 'completed' },
+    statusdelivery: {
+      $elemMatch: {
+        $or: [
+          { status: '^Ожидает получения.*' },
+          { status: { $regex: '^Ожидает получения.*' } },
+        ],
+      },
+    },
   }).sort({ _id: -1 })
 
-  const filtered = deliveries.filter((item) => {
-    const currentstatus = item.statusdelivery?.length
-      ? item.statusdelivery[item.statusdelivery.length - 1].status
-      : 'Неизвестно'
-    return currentstatus.includes('Ожидает получения')
-  })
-  const buyoutsId = filtered.map((item) => item.idbuyout)
+  const buyoutsId = deliveries.map((item) => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
   const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
 
   const format = await Promise.all(
-    filtered
+    deliveries
       .map(async (delivery, index) => {
         const buyout = buyouts.find(
           (buyout) => buyout._id.valueOf() === delivery.idbuyout.valueOf()

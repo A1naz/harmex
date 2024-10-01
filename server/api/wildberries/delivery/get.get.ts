@@ -54,7 +54,7 @@ export default eventHandler(async (event) => {
       })
       .splice((skip as number) ? (skip as number) : 0, limit as number)
   } else if (status === 'pickupReady') {
-    const response = await Delivery.find({
+    deliveries = await Delivery.find({
       user,
       status: { $ne: 'completed' },
       $expr: {
@@ -63,19 +63,12 @@ export default eventHandler(async (event) => {
           ['Готов к получению', 'Готов к выдаче', 'Ожидает получения'],
         ],
       },
-    }).sort({
-      _id: -1,
     })
-
-    deliveries = response
-      .filter(
-        (delivery, index) =>
-          delivery.statusdelivery[delivery.statusdelivery.length - 1].status ==
-            'Готов к выдаче' ||
-          'Готов к получению' ||
-          'Ожидает получения'
-      )
-      .splice(skip as number, limit as number)
+      .sort({
+        _id: -1,
+      })
+      .skip(skip as number)
+      .limit(limit as number)
   } else {
     return {
       error: 'Неизвестный статус',

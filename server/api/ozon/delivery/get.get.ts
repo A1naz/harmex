@@ -30,51 +30,71 @@ export default eventHandler(async (event) => {
       .skip(skip as number)
       .limit(limit as number)
   } else if (status === 'canceled') {
-    deliveries = await Delivery.find({ 
+    deliveries = await Delivery.find({
       user,
       $expr: {
-          $eq: [
-              { $arrayElemAt: ["$statusdelivery.status", -1] }, 
-              'Отменён',
-          ]
-      }
-    }).sort({
+        $eq: [{ $arrayElemAt: ['$statusdelivery.status', -1] }, 'Отменён'],
+      },
+    })
+      .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
   } else if (status === 'onTheWay') {
-    deliveries = await Delivery.find({ 
-      user, 
+    deliveries = await Delivery.find({
+      user,
       $expr: {
-          $or: [
-              { $eq: [ { $arrayElemAt: ["$statusdelivery.status", -1] }, 'В пути' ] },
-              { $eq: [ { $arrayElemAt: ["$statusdelivery.status", -1] }, 'Передаётся в доставку' ] }
-          ]
-      }
-    }).sort({
-      _id: -1,
+        $or: [
+          { $eq: [{ $arrayElemAt: ['$statusdelivery.status', -1] }, 'В пути'] },
+          {
+            $eq: [
+              { $arrayElemAt: ['$statusdelivery.status', -1] },
+              'Передаётся в доставку',
+            ],
+          },
+        ],
+      },
     })
-    .skip(skip as number)
-    .limit(limit as number)
+      .sort({
+        _id: -1,
+      })
+      .skip(skip as number)
+      .limit(limit as number)
   } else if (status === 'pickupReady') {
-    const response = await Delivery.find({ user, status: {$ne : 'completed'} }).sort({
-      _id: -1,
+    deliveries = await Delivery.find({
+      user,
+      status: { $ne: 'completed' },
+      statusdelivery: {
+        $elemMatch: {
+          $or: [
+            { status: '^Ожидает получения.*' },
+            { status: { $regex: '^Ожидает получения.*' } },
+          ],
+        },
+      },
     })
-    deliveries = response.filter(delivery => {
-      return delivery.statusdelivery[delivery.statusdelivery.length - 1].status.includes('Ожидает получения');
-    }).splice(skip as number, limit as number)
+      .sort({
+        _id: -1,
+      })
+      .skip(skip as number)
+      .limit(limit as number)
+
   } else {
     return {
       error: 'Неизвестный статус',
     }
   }
 
-  const buyouts = await Buyout.find({ _id: { $in: deliveries.map((item) => item.idbuyout) } })
+  const buyouts = await Buyout.find({
+    _id: { $in: deliveries.map((item) => item.idbuyout) },
+  })
   const format = await Promise.all(
     deliveries.map(async (delivery) => {
-      const buyout = buyouts.find((item) => item._id.valueOf() === delivery.idbuyout.valueOf())
-      
+      const buyout = buyouts.find(
+        (item) => item._id.valueOf() === delivery.idbuyout.valueOf()
+      )
+
       if (!buyout) return null
       // const place = all.findIndex(
       //   item => item._id.toString() === delivery._id.toString(),
