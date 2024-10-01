@@ -21,13 +21,13 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const balanceIsExist = await checkBalance(user, [found])
-  if (!balanceIsExist) {
-    throw createError({
-      statusCode: 400,
-      message: 'Недостаточно средств',
-    })
-  }
+  // const balanceIsExist = await checkBalance(user, [found])
+  // if (!balanceIsExist) {
+  //   throw createError({
+  //     statusCode: 400,
+  //     message: 'Недостаточно средств',
+  //   })
+  // }
 
   const cached = fs.readFileSync('pvz/ozonPoints.json', 'utf8')
   const parsed = JSON.parse(cached)
