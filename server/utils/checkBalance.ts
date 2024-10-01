@@ -8,11 +8,11 @@ export const checkBalance = async (user: any, buyouts: any) => {
         // const userFound = await User.findOne({ user })
         if (!user) return false
 
-        const ozon = await ozonBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
+        // const ozon = await ozonBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
         const wildberries = await wildberriesBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
 
         const all = [
-            ...ozon.map((item: any) => ({ ...item.toObject(), mp: 'ozon' })),
+            // ...ozon.map((item: any) => ({ ...item.toObject(), mp: 'ozon' })),
             ...wildberries.map((item: any) => ({ ...item.toObject(), mp: 'wildberries' }))
         ]
 
