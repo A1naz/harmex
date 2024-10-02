@@ -35,6 +35,8 @@ const cards = [
     cardHolder: 'Иванов Иван',
   },
 ]
+
+const modalShow = ref(false)
 </script>
 
 <template>
@@ -91,6 +93,7 @@ const cards = [
 
     <div class="flex gap-[25px] justify-between">
       <button
+        @click="modalShow = true"
         class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[25px] rounded-xl relative group"
       >
         <div class="flex items-center justify-center">
@@ -285,6 +288,7 @@ const cards = [
       </div>
     </div>
   </div>
+  <FinanceModal :show="modalShow" @close="modalShow = false" />
 </template>
 
 <style scoped>
