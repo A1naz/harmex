@@ -80,7 +80,7 @@ const cards = [
           />
 
           <div class="flex flex-col justify-start">
-            <span class="font-mono text-lg tracking-wider">
+            <span class="text-lg tracking-wider">
               {{ card.cardNumber }}
             </span>
             <span>{{ card.cardHolder }}</span>
