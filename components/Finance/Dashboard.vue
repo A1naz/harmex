@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { notify } from '@kyvg/vue3-notification'
+import PromptModal from './PromptModal.vue';
 
 const props = defineProps({
   balance: { type: Number, required: true },
@@ -37,6 +38,8 @@ const cards = [
 ]
 
 const modalShow = ref(false)
+const balanceModalShow = ref(false)
+const transferModalShow = ref(false)
 </script>
 
 <template>
@@ -107,6 +110,7 @@ const modalShow = ref(false)
       </button>
 
       <button
+        @click="transferModalShow = true"
         class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[25px] rounded-xl relative group"
       >
         <div class="flex items-center justify-center">
@@ -120,6 +124,7 @@ const modalShow = ref(false)
       </button>
 
       <button
+        @click="balanceModalShow = true"
         class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[25px] rounded-xl relative group"
       >
         <div class="flex items-center justify-center">
@@ -288,7 +293,9 @@ const modalShow = ref(false)
       </div>
     </div>
   </div>
-  <FinanceModal :show="modalShow" @close="modalShow = false" />
+  <FinanceWithdrawModal :show="modalShow" @close="modalShow = false" />
+  <FinanceUpdateBalance :show="balanceModalShow" @close="balanceModalShow = false" />
+  <FinanceTransferModal :show="transferModalShow" @close="transferModalShow = false" />
 </template>
 
 <style scoped>
