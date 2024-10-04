@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid'
 const ServiceSchema = new Schema({
   uuid: { type: String, unique: true, required: true, default: uuid() },
   name: { type: String, required: true },
+  slug: { type: String, required: true },
   items: { type: Array, default: [] },
   mainImage: { type: String, required: true },
   images: { type: Array, default: [] },
@@ -11,7 +12,7 @@ const ServiceSchema = new Schema({
   price: { type: Number, required: true },
   rating: { type: Number, default: 0 },
   advanced: { type: Number, default: 0 },
-  desctiption: { type: String, default: '' },
+  description: { type: String, default: '' },
 })
 
 export const Service = model('Service', ServiceSchema)

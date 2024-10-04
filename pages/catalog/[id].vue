@@ -1,18 +1,49 @@
 <script lang="ts" setup>
+definePageMeta({ auth: false, layout: 'app' })
 const route: any = useRoute()
 const id = route.params.id
-const name = id[0].toUpperCase() + id.slice(1)
+const loading = ref(true)
+const item = ref({} as any)
 
-definePageMeta({ auth: false, layout: 'app' })
+async function getService() {
+  loading.value = true
+  const { data }: any = await useFetch('/api/catalog/info', {
+    params: {
+      slug: id,
+    },
+  })
+
+  if (data.value) {
+    item.value = data.value.service
+    loading.value = false
+  }
+}
+
+getService()
 </script>
 
 <template>
   <div class="mx-12 mt-7">
     <div class="breadcrumbs text-sm">
       <ul class="font-medium text-[20px] text-[#909090]">
-        <li @click="navigateTo('/catalog')" class="cursor-pointer">Социальные сети</li>
-        <li class="text-[#212121]">{{ name }}</li>
+        <li @click="navigateTo('/catalog')" class="cursor-pointer">
+          Социальные сети
+        </li>
+        <li class="text-[#212121]">{{ id[0].toUpperCase() + id.slice(1) }}</li>
       </ul>
+    </div>
+    <div class="flex">
+      <div class="hero mt-20" v-if="loading">
+        <span class="loading loading-dots loading-lg text-[#bdc8fc]"></span>
+      </div>
+      <div
+        v-else
+        v-for="(service, index) in item.items"
+        class="flex mt-8"
+      >
+      
+        <CatalogServiceCard :item="item" :index="index" class="mr-[37px]"/>
+      </div>
     </div>
   </div>
 </template>
