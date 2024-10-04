@@ -86,7 +86,6 @@ export default defineNuxtConfig({
     'nuxt-security',
     '@nuxtjs/color-mode',
     '@bg-dev/nuxt-s3',
-    '@nuxtjs/fontaine',
     '@sfxcode/nuxt-primevue',
     '@morev/vue-transitions/nuxt',
     '@sidebase/nuxt-pdf',

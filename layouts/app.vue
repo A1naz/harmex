@@ -2,6 +2,7 @@
 const storeMain = useMainStore()
 const colorMode = useColorMode()
 const { width } = useWindowSize()
+const { loggedIn, user, session, fetch, clear } = useUserSession()
 
 const theme = ref('light')
 const route = useRoute()
@@ -183,9 +184,9 @@ async function search(searchQuery: any) {
             <button class="myCustomBtn ml-4">
               <Icon name="solar:wallet-linear" size="24"> </Icon>
             </button>
-            <button class="myCustomBtn ml-4">
+            <NuxtLink :to="loggedIn ? '/profile' : '/auth'" class="myCustomBtn ml-4">
               <Icon name="gg:profile" size="24"></Icon>
-            </button>
+            </NuxtLink>
           </div>
           <button
             @click="toggleMenu"

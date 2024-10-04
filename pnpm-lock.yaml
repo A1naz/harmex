@@ -162,12 +162,6 @@ importers:
       '@nuxtjs/eslint-module':
         specifier: ^4.1.0
         version: 4.1.0(eslint@8.57.1)(magicast@0.3.5)(rollup@4.24.0)(vite@5.4.8(@types/node@20.16.10)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3)(webpack@5.95.0)
-      '@nuxtjs/fontaine':
-        specifier: ^0.4.3
-        version: 0.4.3(magicast@0.3.5)(rollup@4.24.0)(webpack-sources@3.2.3)
-      '@nuxtjs/partytown':
-        specifier: ^1.5.0
-        version: 1.5.0(magicast@0.3.5)(rollup@4.24.0)(webpack-sources@3.2.3)
       '@nuxtjs/tailwindcss':
         specifier: ^6.12.1
         version: 6.12.1(magicast@0.3.5)(rollup@4.24.0)(webpack-sources@3.2.3)
@@ -666,11 +660,6 @@ packages:
 
   '@bg-dev/nuxt-s3@0.2.8':
     resolution: {integrity: sha512-Qfai0LojGedah9uSl3ds2NmLyaDTTKNywiTW2WkjhpBQ5FFUPZPFtg0ibPkANo6AebMF5TcMHR+R+iBpgvrbLQ==}
-
-  '@builder.io/partytown@0.10.2':
-    resolution: {integrity: sha512-A9U+4PREWcS+CCYzKGIPovtGB/PBgnH/8oQyCE6Nr9drDJk6cMPpLQIEajpGPmG9tYF7N3FkRvhXm/AS9+0iKg==}
-    engines: {node: '>=18.0.0'}
-    hasBin: true
 
   '@capsizecss/metrics@2.2.0':
     resolution: {integrity: sha512-DkFIser1KbGxWyG2hhQQeCit72TnOQDx5pr9bkA7+XlIy7qv+4lYtslH3bidVxm2qkY2guAgypSIPYuQQuk70A==}
@@ -1541,12 +1530,6 @@ packages:
     resolution: {integrity: sha512-lW9ozEjOrnU8Uot3GOAZ/0ThNAds0d6UAp9n46TNxcTvH/MOcAggGbMNs16c0HYT2HlyPQvXORCHQ5+9p87mmw==}
     peerDependencies:
       eslint: '>=7'
-
-  '@nuxtjs/fontaine@0.4.3':
-    resolution: {integrity: sha512-2bERBEzJgyKSjUGnQoj4kEFiAQErrG9rpBqzVLVMNTB59Fmep/j77CqT7j7yIKKfsr2W+n5nC7WPjp2bHi994Q==}
-
-  '@nuxtjs/partytown@1.5.0':
-    resolution: {integrity: sha512-3qJXEXoHydCEEiHZCy4Q80kHTqKD0T9Ryj8kjh0bwTfNHGQ5auC7pqJxy6+CFOqfZZRcGalqGb0MhhRc8GdTdw==}
 
   '@nuxtjs/tailwindcss@6.12.1':
     resolution: {integrity: sha512-UKmaPRVpxlFqLorhL6neEba2tySlsj6w6yDb7jzS6A0AAjyBQ6k3BQqWO+AaTy2iQLX7eR+1yj3/w43HzY8RtA==}
@@ -8957,8 +8940,6 @@ snapshots:
       - supports-color
       - webpack-sources
 
-  '@builder.io/partytown@0.10.2': {}
-
   '@capsizecss/metrics@2.2.0': {}
 
   '@capsizecss/unpack@2.3.0':
@@ -10059,33 +10040,6 @@ snapshots:
       - supports-color
       - vite
       - webpack
-      - webpack-sources
-
-  '@nuxtjs/fontaine@0.4.3(magicast@0.3.5)(rollup@4.24.0)(webpack-sources@3.2.3)':
-    dependencies:
-      '@nuxt/kit': 3.13.2(magicast@0.3.5)(rollup@4.24.0)(webpack-sources@3.2.3)
-      fontaine: 0.5.0(webpack-sources@3.2.3)
-      magic-string: 0.30.11
-      pathe: 1.1.2
-      ufo: 1.5.4
-    transitivePeerDependencies:
-      - encoding
-      - magicast
-      - rollup
-      - supports-color
-      - webpack-sources
-
-  '@nuxtjs/partytown@1.5.0(magicast@0.3.5)(rollup@4.24.0)(webpack-sources@3.2.3)':
-    dependencies:
-      '@builder.io/partytown': 0.10.2
-      '@nuxt/kit': 3.13.2(magicast@0.3.5)(rollup@4.24.0)(webpack-sources@3.2.3)
-      knitwork: 1.1.0
-      serve-static: 1.16.2
-      ufo: 1.5.4
-    transitivePeerDependencies:
-      - magicast
-      - rollup
-      - supports-color
       - webpack-sources
 
   '@nuxtjs/tailwindcss@6.12.1(magicast@0.3.5)(rollup@4.24.0)(webpack-sources@3.2.3)':

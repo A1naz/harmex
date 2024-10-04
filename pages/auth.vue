@@ -13,6 +13,7 @@ definePageMeta({
   title: 'Вход',
 })
 
+
 const route = useRoute()
 // const { status, data, signIn, signOut } = useAuth()
 const name = useRuntimeConfig().public.NAME
