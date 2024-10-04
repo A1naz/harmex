@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-const { signIn } = useAuth()
 
 definePageMeta({ auth: false })
 navigateTo('/main', {

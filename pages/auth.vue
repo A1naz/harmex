@@ -6,7 +6,6 @@ import { email, helpers, minLength, required } from '@vuelidate/validators'
 const store = useMainStore()
 
 definePageMeta({
-  colorMode: 'dark',
   auth: {
     unauthenticatedOnly: false,
     navigateAuthenticatedTo: '/buyouts',
@@ -15,7 +14,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { status, data, signIn, signOut } = useAuth()
+// const { status, data, signIn, signOut } = useAuth()
 const name = useRuntimeConfig().public.NAME
 const alert = ref(false)
 const alertText = ref('')
@@ -26,39 +25,39 @@ const formData = reactive({
   password: '',
 })
 
-async function login() {
-  v$.value.$validate()
-  // if (v$.value.$error)
-  //   return
+// async function login() {
+//   v$.value.$validate()
+//   // if (v$.value.$error)
+//   //   return
 
-  loading.value = true
-  const { error, url } = await signIn('credentials', {
-    redirect: false,
-    callbackUrl: '/buyouts',
-    ...formData,
-  })
-  if (error) {
-    alertType.value = 'error'
-    if (error === 'Email is not confirmed') {
-      alertText.value = 'Подтвердите email для входа'
-      alertType.value = 'warning'
-    } else if (error == 'Account is banned') {
-      alertText.value = 'Аккаунт заблокирован'
-      alertType.value = 'warning'
-    } else {
-      alertText.value = 'Неверный номер телефона или пароль'
-    }
-    alert.value = true
-    setTimeout(() => {
-      alert.value = false
-    }, 3000)
-  } else {
-    localStorage.removeItem('referralCode')
-    store.getClient()
-    return navigateTo('/main', { external: true })
-  }
-  loading.value = false
-}
+//   loading.value = true
+//   const { error, url } = await signIn('credentials', {
+//     redirect: false,
+//     callbackUrl: '/buyouts',
+//     ...formData,
+//   })
+//   if (error) {
+//     alertType.value = 'error'
+//     if (error === 'Email is not confirmed') {
+//       alertText.value = 'Подтвердите email для входа'
+//       alertType.value = 'warning'
+//     } else if (error == 'Account is banned') {
+//       alertText.value = 'Аккаунт заблокирован'
+//       alertType.value = 'warning'
+//     } else {
+//       alertText.value = 'Неверный номер телефона или пароль'
+//     }
+//     alert.value = true
+//     setTimeout(() => {
+//       alert.value = false
+//     }, 3000)
+//   } else {
+//     localStorage.removeItem('referralCode')
+//     store.getClient()
+//     return navigateTo('/main', { external: true })
+//   }
+//   loading.value = false
+// }
 onMounted(async () => {
   const params = useRoute().query
   if (params?.emailConfirmed) {
@@ -196,7 +195,6 @@ onMounted(() => {
             <button
               type="submit"
               class="btn btn-primary w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              @click.prevent="login"
             >
               <span v-show="loading" class="loading loading-spinner" />
 

@@ -5,7 +5,6 @@ const { width } = useWindowSize()
 
 const theme = ref('light')
 const route = useRoute()
-const { signOut, status } = useAuth()
 const currency = useCurrency()
 
 async function deleteToken(uuid: string) {

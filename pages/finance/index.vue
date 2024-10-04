@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { title } from 'process'
 
-const { signIn } = useAuth()
 
 definePageMeta({ auth: true, title: 'Финансы', layout: 'app' })
 

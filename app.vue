@@ -2,7 +2,6 @@
 import { useMainStore } from '@/stores/main'
 
 const colorMode = useColorMode()
-const { status, signIn, signOut } = useAuth()
 const store = useMainStore()
 const route = useRoute()
 const app = ref()
@@ -13,7 +12,7 @@ const { data: client, refresh } = useLazyAsyncData('client', () =>
 useIntervalFn(() => {
   refresh()
 }, 1000 * 60)
-if (status.value === 'authenticated') await store.getClient()
+// if (status.value === 'authenticated') await store.getClient()
 
 watch(client, (newClient) => {
   store.setClient(newClient?.client)
@@ -43,7 +42,6 @@ watch(client, (newClient) => {
       <NuxtLoadingIndicator
         :color="colorMode.value === 'light' ? '#296dff' : '#6467f2'"
       />
-      <SeoKit />
       <NuxtPage />
       <div class="my-12 md:hidden"></div>
     </NuxtLayout>

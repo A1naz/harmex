@@ -36,30 +36,13 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
 
-  auth: {
-    origin: process.env.PUBLIC_SITE_URL || 'https://app.wbmp.pro',
-    enableGlobalAppMiddleware: true,
-    defaultProvider: 'credentials',
-  },
-
   image: {
-    domains: [
-      'wb.ru',
-      'storage.yandexcloud.net',
-      'basket-10.wb.ru',
-      'basket-1.wb.ru',
-      'basket-2.wb.ru',
-      'basket-3.wb.ru',
-      'basket-4.wb.ru',
-      'basket-5.wb.ru',
-      'basket-6.wb.ru',
-      'basket-7.wb.ru',
-    ],
   },
 
   yandexMetrika: {
     id: '95774883',
   },
+
   gtag: {
     id: 'G-3CZQZ6GGTK',
   },
@@ -96,23 +79,22 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-lazy-load',
     '@nuxtjs/tailwindcss',
-    '@nuxt/image-edge',
     '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
     'nuxt-icon',
-    '@sidebase/nuxt-auth',
     '@vueuse/nuxt',
     'nuxt-security',
     '@nuxtjs/color-mode',
     '@bg-dev/nuxt-s3',
     '@nuxtjs/fontaine',
     '@sfxcode/nuxt-primevue',
-    '@nuxtjs/robots',
     '@morev/vue-transitions/nuxt',
     '@sidebase/nuxt-pdf',
     '@artmizu/yandex-metrika-nuxt',
     'nuxt-gtag',
     '@nuxt/fonts',
+    'nuxt-auth-utils',
+    '@nuxt/image',
   ],
 
   icon: {
@@ -130,9 +112,6 @@ export default defineNuxtConfig({
     '@vuepic/vue-datepicker/dist/main.css',
     '@/assets/style/css/customButton.css',
   ],
-
-  extends: ['nuxt-seo-kit'],
-
   s3: {
     client: {
       credentials: {
@@ -151,11 +130,13 @@ export default defineNuxtConfig({
       },
     },
   },
+
   hooks: {
     close: () => {
       process.exit()
     },
   },
+
   build: {
     transpile: ['primevue', '@vuepic/vue-datepicker'],
   },
@@ -215,10 +196,12 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+
   experimental: {
     payloadExtraction: false,
-    inlineSSRStyles: false,
     renderJsonPayloads: true,
     typedPages: true,
   },
+
+  compatibilityDate: '2024-10-04',
 })
