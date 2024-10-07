@@ -50,6 +50,7 @@
     "primevue": "^3.53.0",
     "qrcode": "^1.5.4",
     "sass": "^1.79.4",
+    "sharp": "^0.33.5",
     "speakeasy": "^2.0.0",
     "tus-js-client": "^4.2.3",
     "unstorage": "^1.12.0",
@@ -96,6 +97,9 @@
   "trustedDependencies": [
     "@morev/vue-transitions",
     "aws-sdk",
-    "core-js"
+    "core-js",
+    "esbuild",
+    "sharp",
+    "vue-demi"
   ]
 }
