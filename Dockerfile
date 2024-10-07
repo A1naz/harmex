@@ -31,7 +31,6 @@ COPY package.json bun.lockb ./
 
 # Install dependencies
 RUN bun install
-RUN bun pm trust --all
 RUN bun run postinstall
 
 # Copy the rest of the application files
