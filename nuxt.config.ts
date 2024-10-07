@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     head: {
       viewport: 'width=device-width,initial-scale=1',
       title:
-        'Сервис самовыкупов MARKETMONSTR - Максимизируйте продвижение на МП',
+        'Sarafan',
       link: [{ rel: 'icon', href: '/favicon.png' }],
       meta: [
         { charset: 'utf-8' },
@@ -39,14 +39,6 @@ export default defineNuxtConfig({
   image: {
   },
 
-  yandexMetrika: {
-    id: '95774883',
-  },
-
-  gtag: {
-    id: 'G-3CZQZ6GGTK',
-  },
-
   lazyLoad: {
     // These are the default values
     images: true,
@@ -68,11 +60,6 @@ export default defineNuxtConfig({
 
   nitro: {
     compressPublicAssets: true,
-    prerender: {
-      crawlLinks: false,
-      routes: [],
-      ignore: ['/'],
-    },
     plugins: ['~/server/index.ts'],
   },
 
@@ -89,11 +76,10 @@ export default defineNuxtConfig({
     '@sfxcode/nuxt-primevue',
     '@morev/vue-transitions/nuxt',
     '@sidebase/nuxt-pdf',
-    '@artmizu/yandex-metrika-nuxt',
-    'nuxt-gtag',
     '@nuxt/fonts',
     'nuxt-auth-utils',
     '@nuxt/image',
+    'nuxt3-notifications'
   ],
 
   icon: {
@@ -154,7 +140,7 @@ export default defineNuxtConfig({
   },
 
   imports: {
-    dirs: ['./stores', './data', './server/lib'],
+    dirs: ['./stores', './data', './server/lib', './server/lib/models'],
   },
 
   runtimeConfig: {

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { useMainStore } from '@/stores/main'
+const { loggedIn, user, session, fetch, clear } = useUserSession()
 
 const colorMode = useColorMode()
 const store = useMainStore()
-const route = useRoute()
 const app = ref()
 
 const { data: client, refresh } = useLazyAsyncData('client', () =>
@@ -21,27 +21,9 @@ watch(client, (newClient) => {
 
 <template>
   <div ref="app">
-    <notifications
-      position="top right"
-      :max="2"
-      :close-on-click="true"
-      :pause-on-hover="true"
-    >
-      <template #body="props">
-        <div style="padding: 1rem; z-index: 1000">
-          <div class="notify-card">
-            <p class="notify-title">
-              {{ props.item.title }}
-            </p>
-            <div class="notify-text" v-html="props.item.text" />
-          </div>
-        </div>
-      </template>
-    </notifications>
+    <NuxtNotifications position="top right" :max="2" :close-on-click="true" :pause-on-hover="true" :speed="500" />
     <NuxtLayout>
-      <NuxtLoadingIndicator
-        :color="colorMode.value === 'light' ? '#296dff' : '#6467f2'"
-      />
+      <NuxtLoadingIndicator :color="colorMode.value === 'light' ? '#296dff' : '#6467f2'" />
       <NuxtPage />
       <div class="my-12 md:hidden"></div>
     </NuxtLayout>
@@ -54,6 +36,7 @@ watch(client, (newClient) => {
 .scroll-primary {
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 }
+
 body {
   font-family: 'Inter', sans-serif;
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
@@ -156,6 +139,6 @@ input::-webkit-inner-spin-button {
 }
 
 .description {
-  @apply text-sm  font-light mt-1;
+  @apply text-sm font-light mt-1;
 }
 </style>

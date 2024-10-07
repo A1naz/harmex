@@ -9,7 +9,6 @@ const props = defineProps({
     default: '65px',
   },
 })
-const colorMode = useColorMode()
 </script>
 
 <template>
@@ -30,7 +29,7 @@ const colorMode = useColorMode()
       alt=""
       srcset=""
     /> -->
-    marketmonstr
+    Sarafan
   </NuxtLink>
 </template>
 

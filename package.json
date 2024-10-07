@@ -1,15 +1,15 @@
 {
   "private": true,
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev --host",
-    "https": "nuxt dev --https --host",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
+    "build": "bunx --bun nuxi build",
+    "dev": "bunx --bun nuxi dev --host",
+    "https": "bunx --bun nuxi dev --https --host",
+    "generate": "bunx --bun nuxi generate",
+    "preview": "bunx --bun nuxi preview",
+    "postinstall": "bunx --bun nuxi prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "update": "nuxi upgrade --force"
+    "update": "bunx --bun nuxi upgrade --force"
   },
   "dependencies": {
     "@artmizu/yandex-metrika-nuxt": "^1.0.4",
@@ -31,7 +31,6 @@
     "@vueuse/components": "^9.13.0",
     "aws-sdk": "^2.1691.0",
     "axios": "^1.7.7",
-    "bcrypt": "^5.1.1",
     "chart.js": "^4.4.4",
     "convertapi": "^1.15.0",
     "crypto-js": "^4.2.0",
@@ -68,7 +67,7 @@
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@sfxcode/nuxt-primevue": "^1.4.2",
     "@sidebase/nuxt-pdf": "^0.1.2",
-    "@types/bcrypt": "^5.0.2",
+    "@types/bun": "^1.1.10",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20.16.10",
     "@types/nodemailer": "^6.4.16",
@@ -87,10 +86,12 @@
     "nuxt-icon": "^0.4.2",
     "nuxt-purgecss": "^2.0.0",
     "nuxt-security": "^0.14.4",
+    "nuxt3-notifications": "^1.2.3",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.8",
     "tailwind-scrollbar": "^3.1.0",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vue-tsc": "^2.1.6"
   },
   "trustedDependencies": [
     "@morev/vue-transitions",

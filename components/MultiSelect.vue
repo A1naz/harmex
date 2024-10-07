@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
 import { v4 as uuidv4 } from 'uuid'
 
 const props = defineProps({
@@ -112,88 +111,52 @@ watch(dropdownOpened, (newValue) => {
 <template>
   <div class="flex flex-col custom-multi-select w-full">
     <div class="join w-full">
-      <input
-        v-model="dataToDisplay"
-        :placeholder="props.placeholder"
-        type="text"
-        class="join-item input input-bordered border-r-0 rounded-lg w-full cursor-pointer"
-        @click.stop="toggleDropdown"
-        readonly
-      />
-      <button
-        v-if="currentDataLoading"
+      <input v-model="dataToDisplay" :placeholder="props.placeholder" type="text"
+        class="join-item input input-bordered border-r-0 rounded-lg w-full cursor-pointer" @click.stop="toggleDropdown"
+        readonly />
+      <button v-if="currentDataLoading"
         class="join-item btn bg-[#F4F4F4] dark:bg-[#181920] border-none hover:bg-[#F4F4F4] hover:dark:bg-[#181920] hover:text-primary"
-        :style="{ 'pointer-events': 'none' }"
-      >
-        <span
-          class="join-item loading loading-spinner loading-sm text-primary flex items-center"
-        ></span>
+        :style="{ 'pointer-events': 'none' }">
+        <span class="join-item loading loading-spinner loading-sm text-primary flex items-center"></span>
       </button>
 
-      <button
-        v-else
-        @click.stop="toggleDropdown"
-        class="join-item btn border border-[#c3c3c3] border-l-0 hover:bg-transparent bg-transparent hover:text-primary"
-      >
+      <button v-else @click.stop="toggleDropdown"
+        class="join-item btn border border-[#c3c3c3] border-l-0 hover:bg-transparent bg-transparent hover:text-primary">
         <Icon v-if="!isDropdownOpen" name="ep:arrow-down" size="24" />
         <Icon v-else name="ep:arrow-up" size="24" />
       </button>
     </div>
-    <div
-      v-if="isDropdownOpen"
-      @click.stop
-      :class="['join drop-shadow-sm z-10 ', uniqueClass]"
-      style="position: relative"
-    >
-      <div
-        class="join-item flex flex-col justify-end bg-base-100 rounded-md drop-shadow-sm w-full mt-[3px]"
-        style="position: absolute; z-index: 9999; top: 100%; right: 0"
-      >
+    <div v-if="isDropdownOpen" @click.stop :class="['join drop-shadow-sm z-10 ', uniqueClass]"
+      style="position: relative">
+      <div class="join-item flex flex-col justify-end bg-base-100 rounded-md drop-shadow-sm w-full mt-[3px]"
+        style="position: absolute; z-index: 9999; top: 100%; right: 0">
         <div v-if="props.search" class="relative z-10">
-          <span
-            class="absolute inset-y-0 right-3 flex items-center pl-2 text-[#909090] cursor-pointer"
-          >
+          <span class="absolute inset-y-0 right-3 flex items-center pl-2 text-[#909090] cursor-pointer">
             <Icon name="gg:search" size="22" />
           </span>
-          <input
-            class="input border border-[#1b38ca] w-full bg-transparent text-gray-500 text-xs"
-            placeholder="Поиск"
-            v-model="searchQuery"
-            @input="searchInput()"
-          />
+          <input class="input border border-[#1b38ca] w-full bg-transparent text-gray-500 text-xs" placeholder="Поиск"
+            v-model="searchQuery" @input="searchInput()" />
         </div>
-        <div
-          v-if="listData && !listDataLoading"
-          class="flex flex-col max-h-[150px] overflow-y-auto scrollbar-custom"
-        >
+        <div v-if="listData && !listDataLoading" class="flex flex-col max-h-[150px] overflow-y-auto scrollbar-custom">
           <div v-for="(item, index) in listData" class="flex flex-col">
             <Button
               class="btn btn-sm btn-ghost flex h-12 justify-start text-left font-normal text-sm btn-primary w-full mt-1"
               :class="{
                 'btn-ghost-hover': item[props.fieldToCheck] === dataToCheck[0],
-              }"
-              @click="setFormData(item)"
-            >
+              }" @click="setFormData(item)">
               <div class="text-left">
                 {{ item[props.fieldToDisplay] }}
               </div>
             </Button>
           </div>
-          <div
-            v-if="listData.length !== 0"
-            ref="target"
-            class="flex justify-center items-center h-4"
-          />
+          <div v-if="listData.length !== 0" ref="target" class="flex justify-center items-center h-4" />
         </div>
         {{}}
         <div v-if="listDataLoading" class="flex justify-center gap-1 py-3">
           <span>Загрузка</span>
           <span class="loading loading-spinner loading-xs p-2" />
         </div>
-        <div
-          v-else-if="listData && listData.length === 0"
-          class="flex flex-col justify-center items-center py-3"
-        >
+        <div v-else-if="listData && listData.length === 0" class="flex flex-col justify-center items-center py-3">
           Ничего нет
         </div>
       </div>
@@ -207,6 +170,7 @@ watch(dropdownOpened, (newValue) => {
   background-color: hsl(var(--bc) / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.2;
 }
+
 .scrollbar-custom {
   max-height: 300px;
   overflow-y: auto;

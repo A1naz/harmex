@@ -6,5 +6,6 @@
   "terminal.integrated.fastScrollSensitivity": 5,
   "terminal.integrated.smoothScrolling": true,
   "editor.fontFamily": "Input Mono",
-  "window.zoomLevel": 0.7
+  "window.zoomLevel": 0.7,
+  "typescript.tsdk": "./node_modules/typescript/lib"
 }

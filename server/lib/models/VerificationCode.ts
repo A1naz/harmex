@@ -1,0 +1,15 @@
+import { Schema, model, Document } from 'mongoose';
+
+interface IVerificationCode extends Document {
+  phoneNumber: string;
+  verificationCode: string;
+  createdAt: Date;
+}
+
+const verificationCodeSchema = new Schema({
+  phoneNumber: { type: String, required: true, unique: true },
+  verificationCode: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now, expires: 300 } // expires in 5 minutes
+});
+
+export const VerificationCode = model<IVerificationCode>('VerificationCode', verificationCodeSchema);

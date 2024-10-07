@@ -2,7 +2,7 @@ import { Schema, model, Document } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 
 // Interface for User document
-export interface IUser extends  Document {
+export interface IUser extends Document {
   phoneNumber?: string;
   username: string;
   firstName?: string;
@@ -16,12 +16,13 @@ export interface IUser extends  Document {
   balance: number;
   registrationDate: Date;
   newPassword?: string;
+  confirmCode?: string;
 }
 
 // Mongoose Schema for User
 const UserSchema = new Schema<IUser>({
   phoneNumber: { type: String, unique: true, required: true },
-  username: { type: String, unique: true, required: true },
+  username: { type: String, unique: true, required: false },
   firstName: { type: String },
   lastName: { type: String },
   email: { type: String },
@@ -33,6 +34,7 @@ const UserSchema = new Schema<IUser>({
   balance: { type: Number, default: 0, required: true },
   registrationDate: { type: Date, default: Date.now },
   newPassword: { type: String },
+  confirmCode: { type: String },
 });
 
 // Mongoose Model for User

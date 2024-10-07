@@ -1,5 +1,4 @@
 import type { H3Event } from "h3";
-import bcrypt from "bcrypt";
 import { User, type IUser } from '~~/server/lib/models/User'
 
 // Logs the user in as the given user model
@@ -21,7 +20,7 @@ async function registerUser(event: H3Event<Request>, data: { phoneNumber?: strin
       statusMessage: "Invalid phoneNumber or password",
     });
   } else {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await Bun.password.hash(password);
     const user = await User.create({
       phoneNumber,
       password: hashedPassword,
@@ -37,7 +36,7 @@ async function getCurrentUser(event: H3Event<Request>) {
   if (!session.user) {
     return null;
   }
-  const dbUser = await User.findOne({uuid: session.user.uuid})
+  const dbUser = await User.findOne({ uuid: session.user.uuid })
   // we're getting the whole user object by default for convenience, but always remove the password
   const result = dbUser?.toObject()
   if (!result) return null
@@ -46,12 +45,9 @@ async function getCurrentUser(event: H3Event<Request>) {
 }
 
 async function attempt(event: H3Event<Request>, phoneNumber: string, password: string) {
-  
-
-  const foundUser = await User.findOne({phoneNumber})
-  
+  const foundUser = await User.findOne({ phoneNumber })
   // compare the password hash
-  if (!foundUser || !foundUser.password || !bcrypt.compareSync(password, foundUser.password)) {
+  if (!foundUser || !foundUser.password || !Bun.password.verifySync(password, foundUser.password)) {
     // return an error if the user is not found or the password doesn't match
     throw createError({
       statusCode: 401,
@@ -69,4 +65,5 @@ export default {
   login,
   user: getCurrentUser,
   attempt,
+  registerUser
 };
