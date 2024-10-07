@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
 
 const props = defineProps({
   data: { type: Array<any>, required: true, default: () => [] },

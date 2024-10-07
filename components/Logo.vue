@@ -1,4 +1,3 @@
-import { onMounted } from 'vue';
 <script setup lang="ts">
 const props = defineProps({
   width: {
@@ -10,7 +9,6 @@ const props = defineProps({
     default: '65px',
   },
 })
-const colorMode = useColorMode()
 </script>
 
 <template>
@@ -31,7 +29,7 @@ const colorMode = useColorMode()
       alt=""
       srcset=""
     /> -->
-    marketmonstr
+    Sarafan
   </NuxtLink>
 </template>
 

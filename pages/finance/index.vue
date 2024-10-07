@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-definePageMeta({ auth: false, title: 'Финансы', layout: 'app' })
+
+
+definePageMeta({ middleware: ['auth'], title: 'Финансы', layout: 'app' })
 
 const buttonsLine = [
   { name: 'Общие', value: 'general' },
@@ -246,41 +248,26 @@ function changeTableType(type: string) {
 <template>
   <div class="flex w-full pt-[25px] px-24">
     <div class="flex w-[1/12] pr-[30px] border-r border-[#bdc8fc]">
-      <FinanceDashboard
-        :secondLevelPercent="10"
-        :ref-balance="1300"
-        :balance="5700"
-        :ref-count="5"
-        :second-level-referrals="1"
-        :first-level-referrals="1"
-        :ref-url="'http://localhost:8080/partner'"
-        :reward-percent="5"
-        :ref-link="5"
-      />
+      <FinanceDashboard :secondLevelPercent="10" :ref-balance="1300" :balance="5700" :ref-count="5"
+        :second-level-referrals="1" :first-level-referrals="1" :ref-url="'http://localhost:8080/partner'"
+        :reward-percent="5" :ref-link="5" />
     </div>
     <div class="flex flex-col px-[24px] gap-[30px] w-full">
       <div class="flex justify-between w-full">
-        <button 
-          v-for="(button, index) of buttonsLine"
-          @click="changeTableType(button.value)"
-          class="btn btn-outline border-[#1b38ca] px-12 bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium rounded-xl relative group"
-        >
+        <button v-for="(button, index) of buttonsLine" @click="changeTableType(button.value)"
+          class="btn btn-outline border-[#1b38ca] px-12 bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium rounded-xl relative group">
           <div class="flex items-center justify-center">
             <span>{{ button.name }}</span>
           </div>
         </button>
         <button
-          class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium rounded-xl relative group"
-        >
+          class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium rounded-xl relative group">
           <div class="flex items-center justify-center">
             <Icon name="lucide:download" size="22px" />
           </div>
         </button>
       </div>
-      <FinanceTable
-        :tableData="tableData"
-        :headers="headersForTable"
-      />
+      <FinanceTable :tableData="tableData" :headers="headersForTable" />
     </div>
   </div>
 </template>
