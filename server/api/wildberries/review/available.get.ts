@@ -20,13 +20,23 @@ export default eventHandler(async (event) => {
     status: 'completed'
   };
 
+
   if (searchParse && Object.values(searchParse)[0] !== '') {
     if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
       filter.uuidbuyout = searchParse.uudidBuyout.replace('#', '');
+    } else if (Object.keys(searchParse)[0] === 'article') {
+      const searchArticle = searchParse.article.trim().toLowerCase();
+      const numericArticle = parseInt(searchArticle, 10);
+
+      filter.$or = [
+        { article: searchArticle },  
+        { article: numericArticle }, 
+      ];
     } else {
       Object.assign(filter, searchParse);
     }
   }
+  // console.log('available wb filter', filter);
 
   const deliveries = await Delivery.find(filter)
     .select('_id article updatedAt pricebuy idbuyout uuidbuyout data8')
@@ -35,6 +45,8 @@ export default eventHandler(async (event) => {
     // .limit(limitA)
     .lean();
 
+  // console.log('available wb deliveries', deliveries);
+
   const buyoutIds = deliveries.map(delivery => delivery.idbuyout);
 
   // user: new ObjectId(user._id),
@@ -42,6 +54,8 @@ export default eventHandler(async (event) => {
   const buyouts = await Buyout.find({ _id: { $in: buyoutIds } })
     .select('sizeparam product gender')
     .lean() as any;
+
+  // console.log('available wb buyouts', buyouts);
 
   const buyoutMap = buyouts.reduce((acc: any, buyout: any) => {
     acc[buyout._id] = buyout;
@@ -125,5 +139,7 @@ export default eventHandler(async (event) => {
       }),
     };
   });
+  // console.log('available wb formated', formated);
+  // console.log('___________________________________');
   return formated;
 });

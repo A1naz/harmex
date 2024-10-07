@@ -275,9 +275,7 @@ async function resumeStatus(item: any) {
   }
 }
 
-function openLogModal(uuid: any) {
-  
-}
+function openLogModal(uuid: any) {}
 </script>
 
 <template>
@@ -591,7 +589,11 @@ function openLogModal(uuid: any) {
       </div>
     </div>
   </div>
-  <LogModal :info="selectedReview" :state="logModal" @close="logModal = false" />
+  <LogModal
+    :info="selectedReview"
+    :state="logModal"
+    @close="logModal = false"
+  />
 </template>
 
 <style scoped></style>
