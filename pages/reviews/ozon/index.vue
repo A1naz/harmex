@@ -23,8 +23,6 @@ const selectedReview = ref({
   uuid: '',
 })
 
-
-
 const target = ref(null)
 const targetIsVisible = ref(false)
 const { stop } = useIntersectionObserver(
@@ -86,7 +84,7 @@ const fetchData = async () => {
     if (response.length < limit.value) end.value = true
   }
   isFetch.value = false
-  loading.value = false
+  // loading.value = false
 }
 
 function changeTab(tab: any) {
@@ -105,7 +103,7 @@ function onSearchInput(val: any) {
   reviews.value = []
   skip.value = 0
   end.value = false
-  loading.value= true
+  // loading.value= true
   fetchData()
 }
 
@@ -220,19 +218,27 @@ const statusText = computed(() => {
 })
 
 async function changeMP(e: any) {
-  mpStore.changeMp(e.value, 'reviews', route.query?.status ? '?status=' + route.query.status : '')
+  mpStore.changeMp(
+    e.value,
+    'reviews',
+    route.query?.status ? '?status=' + route.query.status : ''
+  )
 }
 function selectText() {
-  const index = tabs.findIndex((item) =>route.query?.status ?  item.value == route.query?.status : item.value == 'available' )
+  const index = tabs.findIndex((item) =>
+    route.query?.status
+      ? item.value == route.query?.status
+      : item.value == 'available'
+  )
   if (index == -1) {
     return 'Доступные'
-  } 
+  }
   return tabs[index].name
 }
-const customLinks = tabs.map(filter => ({
+const customLinks = tabs.map((filter) => ({
   title: filter.name,
-  value: filter.value
-}));
+  value: filter.value,
+}))
 
 async function resumeStatus(item: any) {
   const { data, error } = await useFetch(`/api/ozon/review/resume`, {
@@ -242,7 +248,7 @@ async function resumeStatus(item: any) {
     },
     watch: false,
   })
-  if (error.value){
+  if (error.value) {
     notify({
       title: 'Что-то пошло не так',
       text: error.value?.data?.message,
@@ -296,8 +302,27 @@ async function resumeStatus(item: any) {
     </div>
 
     <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-2">
+      <div class="gap-2 hidden lg:flex">
+        <CustomSelect
+          class=""
+          :class="'sm:min-w-[120px]'"
+          :status-text="'Ozon'"
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.sortMp('reviews')
+              : mpStore.sortMp('reviews', true)
+          "
+          @change-value="changeMP"
+        />
+        <CustomSelect
+          class=""
+          :class="'navbar:min-w-[140px] w-[140px] '"
+          :tabs="customLinks"
+          :status-text="selectText()"
+          @change-value="changeTab"
+        />
+      </div>
       <div class="flex w-full gap-2 lg:hidden">
-
         <ExportXls
           api="/api/ozon/review/export"
           fileName="MARKETMONSTR Доступные отзывы"
@@ -309,20 +334,14 @@ async function resumeStatus(item: any) {
             type="text"
             class="input input-sm bg-base-300 bg-opacity-40 rounded-r-none w-full"
             placeholder="Поиск"
-            @change="onSearchInput"
+            @keyup.enter="onSearchInput"
           />
-          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
-            <span
-                v-if="loading"
-                class="loading loading-spinner loading-xs "
-              />
-            <Icon
-            v-else
-              class="text-gray-500 "
-              name="tabler:search"
-              size="20"
-            />
-             
+          <div
+            class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
+            @click="onSearchInput"
+          >
+            <span v-if="loading" class="loading loading-spinner loading-xs" />
+            <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
           </div>
         </div>
       </div>
@@ -331,7 +350,11 @@ async function resumeStatus(item: any) {
           class="lg:hidden"
           :class="'sm:min-w-[140px]'"
           :status-text="'Ozon'"
-          :tabs="store.client.username == 'test'? mpStore.sortMp('reviews') : mpStore.sortMp('reviews', true)"
+          :tabs="
+            store.client.username == 'test'
+              ? mpStore.sortMp('reviews')
+              : mpStore.sortMp('reviews', true)
+          "
           @change-value="changeMP"
         />
         <CustomSelect
@@ -341,7 +364,10 @@ async function resumeStatus(item: any) {
           :status-text="selectText()"
           @change-value="changeTab"
         />
-        <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
+        <select
+          v-model="searchType"
+          class="select bg-base-300 bg-opacity-20 select-sm"
+        >
           <option
             v-for="option in searchOptions"
             :value="option.value"
@@ -361,29 +387,12 @@ async function resumeStatus(item: any) {
           >Черновики</NuxtLink
         > -->
       </div>
-      <div class="gap-2 hidden lg:flex">
-        <CustomSelect
-          class="hidden lg:flex"
-          :class="'sm:min-w-[120px]'"
-          :status-text="'Ozon'"
-          :tabs="store.client.username == 'test'? mpStore.sortMp('reviews') : mpStore.sortMp('reviews', true)"
-          @change-value="changeMP"
-        />
-        <CustomSelect
-          class="hidden lg:flex"
-          :class="'navbar:min-w-[140px] w-[140px]'"
-          :tabs="customLinks"
-          :status-text="selectText()"
-          @change-value="changeTab"
-        />
-        <!-- <NuxtLink
-          to="/reviews/drafts"
-          class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
-          >Черновики</NuxtLink
-        > -->
-      </div>
+
       <div class="gap-2 items-center hidden lg:flex">
-        <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
+        <select
+          v-model="searchType"
+          class="select bg-base-300 bg-opacity-20 select-sm"
+        >
           <option
             v-for="option in searchOptions"
             :value="option.value"
@@ -401,24 +410,17 @@ async function resumeStatus(item: any) {
           <input
             v-model="searchText"
             type="text"
-            class="input input-sm w-[134px] bg-base-300 bg-opacity-40 rounded-r-none "
+            class="input input-sm w-[134px] bg-base-300 bg-opacity-40 rounded-r-none"
             placeholder="Поиск"
-            @change="onSearchInput"
+            @keyup.enter="onSearchInput"
           />
-          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
-            <span
-                v-if="loading"
-                class="loading loading-spinner loading-xs "
-              />
-            <Icon
-            v-else
-              class="text-gray-500 "
-              name="tabler:search"
-              size="20"
-            />
-             
+          <div
+            class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
+            @click="onSearchInput"
+          >
+            <span v-if="loading" class="loading loading-spinner loading-xs" />
+            <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
           </div>
-          
         </div>
         <div class="flex gap-1 items-center">
           <ExportXls
@@ -481,7 +483,10 @@ async function resumeStatus(item: any) {
         class="flex justify-center items-center h-4 mb-10"
       />
     </div>
-    <div v-else-if="isFetch" class="w-full mt-5 flex justify-center items-center">
+    <div
+      v-else-if="isFetch"
+      class="w-full mt-5 flex justify-center items-center"
+    >
       <span class="loading loading-dots loading-lg text-primary"></span>
     </div>
     <Hero v-else />
@@ -525,7 +530,7 @@ async function resumeStatus(item: any) {
     <input type="checkbox" id="reviewRemoveModal" class="modal-toggle" />
     <div class="modal">
       <div class="modal-box max-w-xs py-6 px-3">
-        <h3 class="font-bold text-xl">Вы уверенны что хотите удалить  отзыв?</h3>
+        <h3 class="font-bold text-xl">Вы уверенны что хотите удалить отзыв?</h3>
         <p class="py-2.5">Стоимость услуги 100 рублей!</p>
         <div class="flex justify-between">
           <label
@@ -544,7 +549,11 @@ async function resumeStatus(item: any) {
       </div>
     </div>
   </div>
-  <LogModal :info="selectedReview" :state="logModal" @close="logModal = false" />
+  <LogModal
+    :info="selectedReview"
+    :state="logModal"
+    @close="logModal = false"
+  />
 </template>
 
 <style scoped></style>
