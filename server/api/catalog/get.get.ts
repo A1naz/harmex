@@ -9,6 +9,8 @@ export default eventHandler(async (event) => {
       error: [],
     }
     
+    console.log(services);
+    
   return {
     status: 'ok',
     services,
