@@ -22,7 +22,7 @@ export interface IUser extends Document {
 // Mongoose Schema for User
 const UserSchema = new Schema<IUser>({
   phoneNumber: { type: String, unique: true, required: true },
-  username: { type: String, unique: true, required: false },
+  username: { type: String, unique: false, required: false },
   firstName: { type: String },
   lastName: { type: String },
   email: { type: String },
