@@ -2,7 +2,7 @@
 
 const baseUrl = '/'
 const description =
-  'Повысьте репутацию и продажи на маркетплейсах с MarketMonstr.'
+  'Sarafan'
 
 export default defineNuxtConfig({
   app: {
@@ -61,6 +61,7 @@ export default defineNuxtConfig({
   nitro: {
     compressPublicAssets: true,
     plugins: ['~/server/index.ts'],
+    preset: 'bun'
   },
 
   modules: [

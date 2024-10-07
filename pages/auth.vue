@@ -5,6 +5,8 @@ import { helpers, minLength, required, maxLength } from '@vuelidate/validators'
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 
 const store = useMainStore()
+const route = useRoute()
+const params = route.query
 
 definePageMeta({
   title: 'Вход',
@@ -18,7 +20,6 @@ const formData = reactive({
 })
 
 onMounted(async () => {
-  const params = useRoute().query
   if (params?.emailConfirmed) {
     notify({
       type: 'success',
@@ -81,7 +82,7 @@ async function login() {
   }).catch(err => {
     notify({
       type: 'error',
-      title: 'Неправильный номер телефона или пароль',
+      title: 'Не удалось войти',
       text: err.data.message || err.message
     })
   }).finally(() => {
@@ -90,7 +91,11 @@ async function login() {
   if (response === 'success') {
     await fetch()
     loading.value = false
-    navigateTo('/profile')
+    if (params?.redirect as string) {
+      navigateTo(params.redirect as string)
+    } else {
+      navigateTo('/profile')
+    }
   }
 }
 </script>

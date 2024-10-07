@@ -11,9 +11,8 @@ async function login(event: H3Event<Request>, user: IUser) {
     loggedInAt: new Date(),
   });
 }
-async function registerUser(event: H3Event<Request>, data: { phoneNumber?: string; password?: string }) {
-  const { phoneNumber } = data;
-  const password = data.password;
+async function registerUser(event: H3Event<Request>, data: { phoneNumber: string; password: string }) {
+  const { phoneNumber, password } = data;
   if (!phoneNumber || !password) {
     throw createError({
       statusCode: 400,
@@ -26,6 +25,26 @@ async function registerUser(event: H3Event<Request>, data: { phoneNumber?: strin
       password: hashedPassword,
     });
     await login(event, user);
+  }
+}
+async function changePassword(event: H3Event<Request>, data: { phoneNumber: string; newPassword: string }) {
+  const { phoneNumber, newPassword } = data;
+  if (!phoneNumber || !newPassword) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Invalid phoneNumber or newPassword",
+    });
+  } else {
+    const found = await User.findOne({ phoneNumber });
+    if (!found) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "User not found",
+      });
+    }
+
+    const hashedPassword = await Bun.password.hash(newPassword);
+    await User.updateOne({ phoneNumber }, { $set: { password: hashedPassword } });
   }
 }
 
@@ -51,7 +70,7 @@ async function attempt(event: H3Event<Request>, phoneNumber: string, password: s
     // return an error if the user is not found or the password doesn't match
     throw createError({
       statusCode: 401,
-      statusMessage: "Invalid number or password",
+      statusMessage: "Неверный логин или пароль.",
     });
   }
 
@@ -65,5 +84,6 @@ export default {
   login,
   user: getCurrentUser,
   attempt,
-  registerUser
+  registerUser,
+  changePassword
 };

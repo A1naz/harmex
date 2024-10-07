@@ -1,7 +1,7 @@
 import { VerificationCode } from "~/server/lib/models/VerificationCode";
 export default defineEventHandler(async (event) => {
-  const { phoneNumber } = await readBody(event)
-  const found = await VerificationCode.findOne({ phoneNumber })
+  const { phoneNumber, type } = await readBody(event)
+  const found = await VerificationCode.findOne({ phoneNumber, type })
 
   if (found) {
     const timeDiff = (new Date().getTime() - found.createdAt.getTime()) / 1000;
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   }
   const verificationCode: string = Math.floor(1000 + Math.random() * 9000).toString();
 
-  const verificationCodeDoc = new VerificationCode({ phoneNumber, verificationCode });
+  const verificationCodeDoc = new VerificationCode({ phoneNumber, verificationCode, type });
   await verificationCodeDoc.save();
 
   // Send code to phone logic

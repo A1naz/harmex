@@ -91,6 +91,7 @@ async function sendCode() {
   const response = await $fetch('/api/auth/sendCode', {
     method: 'POST',
     body: {
+      type: 'register',
       phoneNumber: formData.phoneNumber
     }
   }).catch(err => {
