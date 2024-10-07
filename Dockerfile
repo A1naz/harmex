@@ -56,4 +56,4 @@ ENV NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD}
 EXPOSE 80
 
 # Start the app
-ENTRYPOINT ["bun --bun", ".output/server/index.mjs"]
+ENTRYPOINT ["bun", "run", ".output/server/index.mjs"]
