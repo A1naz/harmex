@@ -23,7 +23,6 @@ export default eventHandler(async (event) => {
       _id: -1,
     })
 
-    console.log(deliveries.length)
   } else {
     deliveries = await Delivery.find({ user }).sort({
       _id: -1,

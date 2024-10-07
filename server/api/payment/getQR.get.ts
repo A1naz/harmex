@@ -1,7 +1,5 @@
-import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
 import { PaymentIntend } from '@/server/lib/models/PaymentIntend'
-
 import { v4 as uuid } from 'uuid'
 
 export default eventHandler(async (event) => {
