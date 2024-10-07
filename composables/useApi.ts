@@ -1,4 +1,3 @@
-import { useNotification } from "@kyvg/vue3-notification"
 
 const useApi = () => {
     const { notify } = useNotification()

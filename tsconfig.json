@@ -1,13 +1,15 @@
 {
-  // https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
-  "types": ["@nuxt/types", "@nuxt/image", "@pinia/nuxt"],
-  "noImplicitAny": true,
+  "types": [
+    "@nuxt/types",
+    "@nuxt/image",
+    "@pinia/nuxt",
+  ],
+  "noImplicitAny": false,
   "allowJs": true,
   "compilerOptions": {
-    "typeRoots": [
-      "./node_modules/@yandex/ymaps3-types"
+    "types": [
+      "bun"
     ]
   }
-
 }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
 
 const props = defineProps({
   tableData: { type: Array as () => Array<any>, default: () => [] },
@@ -15,20 +14,11 @@ const currency = useCurrency()
       <table class="min-w-full text-sm font-light">
         <thead class="border-b">
           <tr>
-            <th
-              v-for="(header, index) in headers"
-              :key="index"
-              scope="col"
-              class="px-6 py-4 text-center"
-            >
+            <th v-for="(header, index) in headers" :key="index" scope="col" class="px-6 py-4 text-center">
               <div class="flex items-center justify-center gap-1">
                 <span>{{ header }}</span>
                 <button>
-                  <Icon
-                    name="octicon:filter-24"
-                    class="text-[#7f7f7f]"
-                    size="20px"
-                  />
+                  <Icon name="octicon:filter-24" class="text-[#7f7f7f]" size="20px" />
                 </button>
               </div>
             </th>
