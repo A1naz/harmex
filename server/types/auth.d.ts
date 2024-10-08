@@ -3,6 +3,9 @@ declare module '#auth-utils' {
   interface User {
     uuid: string
     phoneNumber: string
+    login: string
+    email: string
+    emailConfirmed: boolean
   }
 
   interface UserSession {

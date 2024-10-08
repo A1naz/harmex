@@ -90,7 +90,7 @@ const btnDisabled = computed(() => {
           </div>
           <div class="flex flex-col gap-[4px] justify-start w-full">
             <span>Пользователь</span>
-            <MultiSelect
+            <CustomMultiSelect
               :placeholder="'Выберите пользователя'"
               :currentData="[user]"
               :listData="[
@@ -107,7 +107,7 @@ const btnDisabled = computed(() => {
           </div>
           <div class="flex flex-col gap-[4px] justify-start w-full">
             <span>Откуда</span>
-            <MultiSelect
+            <CustomMultiSelect
               :placeholder="'Введите откуда перевести средства'"
               :currentData="[wallet]"
               :listData="[

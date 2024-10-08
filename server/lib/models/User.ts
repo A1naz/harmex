@@ -17,6 +17,7 @@ export interface IUser extends Document {
   registrationDate: Date;
   newPassword?: string;
   confirmCode?: string;
+  newEmail?: string;
 }
 
 // Mongoose Schema for User
@@ -35,6 +36,7 @@ const UserSchema = new Schema<IUser>({
   registrationDate: { type: Date, default: Date.now },
   newPassword: { type: String },
   confirmCode: { type: String },
+  newEmail: { type: String, required: false },
 });
 
 // Mongoose Model for User

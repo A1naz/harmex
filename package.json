@@ -43,6 +43,7 @@
     "md5": "^2.3.0",
     "mongodb": "^5.9.2",
     "mongoose": "^7.8.2",
+    "nodemailer": "^6.9.15",
     "nuxt-lazy-load": "^3.0.4",
     "nuxt-route-meta": "^3.0.10",
     "pinia-plugin-persistedstate": "^4.0.2",
