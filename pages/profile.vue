@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 definePageMeta({ middleware: ['auth'], title: 'Профиль', layout: 'app' })
+import { notify } from '@kyvg/vue3-notification'
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 const router = useRouter()
 
@@ -48,6 +49,10 @@ const docsArray = ref([
 const tooltipVisible = ref(false)
 const emailConfirmModal = ref(false)
 
+const sessionUpdate = async () => {
+  await fetch()
+}
+
 const emailAlerts = reactive({
   value: false,
   arr: [
@@ -90,12 +95,89 @@ const tgAlerts = reactive({
     },
   ],
 })
+
+const twoFaQRModal = ref<any>(null)
+const twoFaShow = ref(false)
+
+async function openTwoFaQRModal() {
+  if (!user.value?.isTwoFaEnabled) {
+    console.log('changeTo', user.value?.isTwoFaEnabled);
+    const { data }: any = await useFetch('/api/2fa/turnOnOff', {
+      method: 'GET',
+      query: {
+        changeTo: user.value?.isTwoFaEnabled,
+      },
+      watch: false,
+    })
+    if (data.value) {
+      notify({
+        title: 'Двухфакторная аутентификация выключена',
+      })
+      await sessionUpdate()
+      // twoFaQRModal.value?.clear()
+    }
+    return
+  }
+  {
+    twoFaShow.value = true
+    // twoFaQRModal.value?.getQr()
+  }
+}
+
+
+const isCodeSent = ref(false)
+const passwordForm = reactive({
+  oldPassword: '',
+  newPassword: '',
+})
+
+const disabledChangePasswordButton = computed(() => {
+  if (user.hasPassword)
+    return passwordForm.oldPassword == '' || passwordForm.newPassword == ''
+  else return passwordForm.newPassword == ''
+})
+
+const headers = useRequestHeaders(['cookie']) as HeadersInit
+
+
+async function updatePassword() {
+  if (passwordForm.oldPassword == '' && passwordForm.newPassword == '') return
+
+  //@ts-ignore
+  const { data, error }: any = await useFetch('/api/user/updatePassword', {
+    method: 'POST',
+    body: passwordForm,
+    headers,
+    watch: false,
+  })
+  if ((data.value as any)?.status === 'error') {
+    // alert.show = true
+    // alert.message = (data.value as any).error!
+    // alert.type = 'error'
+  } else {
+    // if (data.value.newPassword) {
+    //   alert.message = 'Пароль успешно установлен'
+    // } else alert.message = 'Введите код подтверждения'
+
+    isCodeSent.value = true
+    // alert.show = true
+    // alert.type = 'success'
+  }
+  // start()
+  passwordForm.oldPassword = ''
+  passwordForm.newPassword = ''
+  // await store.getClient()
+}
+
+function closeModal() {
+  twoFaShow.value = false
+}
 </script>
 
 <template>
   <div class="flex flex-col gap-[50px] sm:px-[92px] px-[30px] py-[25px]">
     <h1 class="title text-[26px] font-[600]">Профиль</h1>
-
+    {{ user }}
     <div class="flex flex-col gap-[25px] rounded-lg bg-[#f5f7ff] p-[18px]">
       <h2 class="text-[20px] font-[500]">Контактные данные</h2>
       <div class="flex gap-[30px] sm:px-[22px] px-[0px] flex-wrap">
@@ -181,6 +263,79 @@ const tgAlerts = reactive({
             @change-value="(e) => (form.wallet = e.value)"
           />
         </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-[25px] rounded-lg bg-[#f5f7ff] p-[18px]">
+      <h2 class="text-[20px] font-[500]">Пароль</h2>
+
+      <div class="flex flex-col gap-2.5 w-full mt-1">
+        <div class="w-full flex flex-col gap-2.5 xl:flex-row">
+          <input
+            :disabled="isCodeSent"
+            v-show="user.hasPassword"
+            v-model="passwordForm.oldPassword"
+            type="password"
+            placeholder="Старый пароль"
+            class="input input-bordered w-full"
+          />
+          <input
+            :disabled="isCodeSent"
+            v-model="passwordForm.newPassword"
+            :class="{
+              'input-primary': !user.hasPassword,
+            }"
+            type="password"
+            placeholder="Новый пароль"
+            class="input input-bordered w-full"
+          />
+          <button
+            :disabled="disabledChangePasswordButton"
+            class="btn btn-primary bg-opacity-20 border-none text-base-content xl:w-40 mr-0 self-start"
+            @click="updatePassword"
+          >
+            {{ user.hasPassword ? 'Изменить' : 'Сохранить' }}
+          </button>
+        </div>
+        <!-- <div class="join w-full lg:w-1/4">
+          <input
+            :disabled="!isCodeSent"
+            v-model="confirmationCode"
+            type="number"
+            name="verificationCode"
+            class="input input-bordered block w-full p-2.5"
+            placeholder="Код подтверждения"
+            required="true"
+            @keydown.enter="confirmCode"
+          />
+          <button
+            :disabled="!isCodeSent"
+            class="btn join-item rounded-r-full -ml-2"
+            @click="confirmCode"
+          >
+            <IconCSS size="20" name="mdi:check" />
+          </button>
+        </div> -->
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-[25px] rounded-lg bg-[#f5f7ff] p-[18px]">
+      <h2 class="text-[20px] font-[500]">Двухфакторная аутентификация</h2>
+
+      <div class="form-control">
+        <label class="cursor-pointer label px-[22px]">
+          <span class="label-text mr-4"
+            >Включить двухфакторную аутентификацию</span
+          >
+          <!-- v-model="user?.isTwoFaEnabled" -->
+
+          <input
+            @change="openTwoFaQRModal"
+            type="checkbox"
+            class="toggle toggle-primary"
+            v-model="user.isTwoFaEnabled"
+          />
+        </label>
       </div>
     </div>
 
@@ -311,12 +466,13 @@ const tgAlerts = reactive({
       </div></Transition
     >
 
-    <!-- <button @click="logout" class="btn btn-primary">Выйти</button> -->
+    <button @click="logout" class="btn btn-primary">Выйти</button>
   </div>
   <ProfileEmailConfirmModal
     :show="emailConfirmModal"
     @close="emailConfirmModal = false"
   />
+  <ProfileTwoFaQRModal :show="twoFaShow" @closeWithTurnOn="twoFaShow = false" @close="closeModal" ref="twoFaQRModal" />
 </template>
 <style scoped>
 

@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 // Interface for User document
 export interface IUser extends Document {
-  phoneNumber?: string;
+  phoneNumber: string;
   username: string;
   firstName?: string;
   lastName?: string;
@@ -18,6 +18,9 @@ export interface IUser extends Document {
   newPassword?: string;
   confirmCode?: string;
   newEmail?: string;
+  isTwoFaEnabled: boolean;
+  twoFaSecret?: string;
+  twoFaQR?: string;
 }
 
 // Mongoose Schema for User
@@ -37,6 +40,9 @@ const UserSchema = new Schema<IUser>({
   newPassword: { type: String },
   confirmCode: { type: String },
   newEmail: { type: String, required: false },
+  isTwoFaEnabled: { type: Boolean, default: false },
+  twoFaSecret: { type: String, default: '' },
+  twoFaQR: { type: String, required: false },
 });
 
 // Mongoose Model for User

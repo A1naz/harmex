@@ -10,6 +10,7 @@ async function login(event: H3Event<Request>, user: IUser) {
       phoneNumber: user.phoneNumber || '',
       email: user.email || '',
       emailConfirmed: user.emailConfirmed,
+      isTwoFaEnabled: user.isTwoFaEnabled,
     },
     loggedInAt: new Date(),
   });

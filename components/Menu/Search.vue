@@ -51,7 +51,7 @@ function close() {
   <Transition name="slide-fade">
     <div
       v-if="isVisible || (show && searchCompleted && searchQuery.trim() !== '')"
-      class="fixed inset-0 z-[9998]"
+      class="fixed inset-0 z-[1000]"
       :class="
         isVisible || (show && searchCompleted && searchQuery.trim() !== '')
           ? 'bg-black bg-opacity-10 backdrop-blur-[1px]'
@@ -61,7 +61,7 @@ function close() {
     ></div>
   </Transition>
 
-  <div class="flex flex-col items-center gap-2 w-full ml-4 relative z-[9998]">
+  <div class="flex flex-col items-center gap-2 w-full ml-4 relative z-[1000]">
     <label class="flex items-center gap-2 w-full ml-4">
       <input
         type="text"
