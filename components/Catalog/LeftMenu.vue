@@ -14,7 +14,7 @@
               size="24"
               class="text-[#F72585] mr-4"
             />
-            <span class="font-medium text-[16px]">Социальные сети</span>
+            <span class="font-medium text-[16px]">Маркетплейсы</span>
           </div>
           <div>
             <Icon
@@ -36,7 +36,7 @@
               size="24"
               class="text-[#909090] mr-4"
             />
-            <span class="font-medium text-[16px]">Мессенджеры</span>
+            <span class="font-medium text-[16px]">Отели</span>
           </div>
 
           <Icon

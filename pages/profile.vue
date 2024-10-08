@@ -7,6 +7,9 @@ async function logout() {
   await clear()
   router.push('/')
 }
+const sessionUpdate = async () => {
+  await fetch()
+}
 </script>
 
 <template>
@@ -16,5 +19,6 @@ async function logout() {
       {{ user }}
     </div>
     <button @click="logout" class="btn btn-primary">Выйти</button>
+    <button @click="sessionUpdate" class="btn btn-primary">Сессия</button>
   </div>
 </template>

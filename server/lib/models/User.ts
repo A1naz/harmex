@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 // Interface for User document
 export interface IUser extends Document {
-  phoneNumber?: string;
+  phoneNumber: string;
   username: string;
   firstName?: string;
   lastName?: string;
