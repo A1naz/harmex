@@ -6,17 +6,17 @@ const colorMode = useColorMode()
 const store = useMainStore()
 const app = ref()
 
-const { data: client, refresh } = useLazyAsyncData('client', () =>
-  $fetch('/api/user/client')
-)
-useIntervalFn(() => {
-  refresh()
-}, 1000 * 60)
-// if (status.value === 'authenticated') await store.getClient()
+// const { data: client, refresh } = useLazyAsyncData('client', () =>
+//   $fetch('/api/user/client')
+// )
+// useIntervalFn(() => {
+//   refresh()
+// }, 1000 * 60)
+// // if (status.value === 'authenticated') await store.getClient()
 
-watch(client, (newClient) => {
-  store.setClient(newClient?.client)
-})
+// watch(client, (newClient) => {
+//   store.setClient(newClient?.client)
+// })
 </script>
 
 <template>

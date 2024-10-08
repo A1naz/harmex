@@ -11,6 +11,19 @@ async function login(event: H3Event<Request>, user: IUser) {
     loggedInAt: new Date(),
   });
 }
+async function updateSession(event: H3Event<Request>,) {
+
+  const user = await getCurrentUser(event);
+  console.log(user);
+  await replaceUserSession(event, {
+    user: {
+      uuid: user?.uuid || '',
+      phoneNumber: user?.phoneNumber || '',
+    },
+    loggedInAt: new Date(),
+  })
+  
+}
 async function registerUser(event: H3Event<Request>, data: { phoneNumber: string; password: string }) {
   const { phoneNumber, password } = data;
   if (!phoneNumber || !password) {
@@ -50,12 +63,15 @@ async function changePassword(event: H3Event<Request>, data: { phoneNumber: stri
 
 async function getCurrentUser(event: H3Event<Request>) {
   const session = await getUserSession(event);
-
+  
+  console.log(session.user);
+  
   // return null if there's no user
   if (!session.user) {
     return null;
   }
-  const dbUser = await User.findOne({ uuid: session.user.uuid })
+
+  const dbUser = await User.findOne({ uuid: session.user.uuid }).select('-_id -__v -password');
   // we're getting the whole user object by default for convenience, but always remove the password
   const result = dbUser?.toObject()
   if (!result) return null
@@ -85,5 +101,6 @@ export default {
   user: getCurrentUser,
   attempt,
   registerUser,
-  changePassword
+  changePassword,
+  updateSession
 };

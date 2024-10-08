@@ -1,23 +1,6 @@
-import { User } from '@/server/lib/models/User'
-
-export default eventHandler(async (event) => {
-  const user = await User.findOne({})
-  if (!user) return sendRedirect(event, '/auth', 302)
-
-
-  const client = {
-    email: user.email ? user.email : '',
-    username: user.email === user.username ? '' : user.username,
-    uuid: user.uuid,
-    balance: user.balance,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    hasPassword: !!user.password,
-    isBanned: user.isBanned,
-  }
-
-  return {
-    client,
-    status: 'ok',
-  }
-})
+import { User } from "~~/server/lib/models/User";
+import auth from "~~/server/utils/auth";
+export default defineEventHandler(async (event) => {
+  await auth.updateSession(event);
+  return "success";
+});
