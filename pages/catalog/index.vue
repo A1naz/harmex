@@ -29,7 +29,7 @@ watch(selectedType, () => {
 </script>
 
 <template>
-  <div class="flex">
+  <div class="flex mt-4">
     <CatalogLeftMenu :items="menuItems" v-model:selectedType="selectedType" />
     <div class="hero -mt-80" v-if="loading">
       <span class="loading loading-dots loading-lg text-[#bdc8fc]"></span>
