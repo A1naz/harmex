@@ -1,110 +1,100 @@
 <script lang="ts" setup>
-definePageMeta({ layout: 'app' })
+definePageMeta({ layout: "app" });
 
 const favourites = ref<any>([
   {
-    uuid: '1',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/1.png',
+    uuid: "1",
+    title: "Продвижение аккаунтов",
+    image: "/img/favourites/1.png",
   },
   {
-    uuid: '2',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/2.png',
+    uuid: "2",
+    title: "Продвижение аккаунтов",
+    image: "/img/favourites/2.png",
   },
   {
-    uuid: '3',
-    title: 'Продвижение Телеграм',
-    image: '/img/favourites/3.png',
+    uuid: "3",
+    title: "Продвижение Телеграм",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '4',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/4.png',
+    uuid: "4",
+    title: "Продвижение аккаунтов",
+    image: "/img/favourites/4.png",
   },
   {
-    uuid: '5',
-    title: 'Аудитория',
-    image: '/img/favourites/5.png',
+    uuid: "5",
+    title: "Аудитория",
+    image: "/img/favourites/5.png",
   },
   {
-    uuid: '6',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/6.png',
+    uuid: "6",
+    title: "Продвижение аккаунтов",
+    image: "/img/favourites/6.png",
   },
   {
-    uuid: '7',
-    title: 'Услуги',
-    image: '/img/favourites/7.png',
+    uuid: "7",
+    title: "Услуги",
+    image: "/img/favourites/7.png",
   },
   {
-    uuid: '8',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/8.png',
+    uuid: "8",
+    title: "Продвижение аккаунтов",
+    image: "/img/favourites/8.png",
   },
   {
-    uuid: '9',
-    title: 'Продвижение бизнеса',
-    image: '/img/favourites/9.png',
+    uuid: "9",
+    title: "Продвижение бизнеса",
+    image: "/img/favourites/9.png",
   },
   {
-    uuid: '10',
-    title: 'Продвижение блогеров',
-    image: '/img/favourites/10.png',
+    uuid: "10",
+    title: "Продвижение блогеров",
+    image: "/img/favourites/10.png",
   },
-])
+]);
 const channels = ref<any>([
   {
-    uuid: '1',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
+    uuid: "1",
+    title: "Выкупы",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '2',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
+    uuid: "2",
+    title: "Доставки",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '3',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
+    uuid: "3",
+    title: "Отзывы",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '4',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
+    uuid: "4",
+    title: "Лайки на товар",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '5',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
+    uuid: "5",
+    title: "Лайки на бренд",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '6',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
+    uuid: "6",
+    title: "Лайки на отзывы",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '7',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
+    uuid: "7",
+    title: "Лайки на комментарии",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '8',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
+    uuid: "8",
+    title: "Корзина",
+    image: "/img/favourites/3.png",
   },
-  {
-    uuid: '9',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
-  },
-  {
-    uuid: '10',
-    title: 'Telegram',
-    image: '/img/favourites/3.png',
-  },
-])
+]);
 </script>
 
 <template>

@@ -1,16 +1,24 @@
-import { Service } from '~/server/lib/models/Service'
+import { Service } from "~/server/lib/models/Service";
 
 export default eventHandler(async (event) => {
-  const services = await Service.find().select('-_id -__v')
+  const { type } = getQuery(event);
 
-  if (!services || !services.length)
+  if (type == "Отели") {
     return {
-      status: 'error',
-      error: [],
-    }
-    
-  return {
-    status: 'ok',
-    services,
+      status: "ok",
+      services: [],
+    };
+  } else if (type == "Маркетплейсы") {
+    const services = await Service.find();
+
+    if (!services || !services.length)
+      return {
+        status: "error",
+        error: [],
+      };
+    return {
+      status: "ok",
+      services,
+    };
   }
-})
+});

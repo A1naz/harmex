@@ -1,49 +1,55 @@
+<script setup lang="ts">
+const props = defineProps({
+  items: {
+    type: Array as () => Array<any>,
+    default: () => [],
+  },
+  selectedType: {
+    type: String,
+    default: "Маркетплейсы",
+  },
+});
+
+const selectedType = toRef(props, "selectedType");
+
+const emit = defineEmits(["update:selectedType"]);
+
+function selectType(type: string) {
+  emit("update:selectedType", type);
+}
+</script>
 <template>
   <aside
-    class="w-[460px] h-screen py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
+    class="w-[270px] h-screen py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
   >
-    <ul class="space-y-2 mx-2 mt-4">
-      <li>
+    <ul class="space-y-2 mx-2 mt-4 cursor-pointer">
+      <li v-for="item in items" :key="item">
         <a
-          href="#"
-          class="flex justify-between p-3 text-gray-900 bg-[#f5f7ff] rounded-lg"
+          @click="selectType(item)"
+          class="flex justify-between p-2 text-[##909090] rounded-lg"
+          :class="{ 'bg-[#f5f7ff] text-[#212121]': selectedType == item }"
         >
           <div>
             <Icon
               name="iconamoon:menu-burger-horizontal-fill"
-              size="24"
-              class="text-[#F72585] mr-4"
+              size="20"
+              class="mr-4"
+              :class="{
+                'text-[#F72585]': selectedType == item,
+              }"
             />
-            <span class="font-medium text-[16px]">Маркетплейсы</span>
+            <span class="font-medium text-sm">{{ item }}</span>
           </div>
           <div>
             <Icon
               name="material-symbols-light:keyboard-arrow-right"
-              size="30"
-              class="text-[#F72585] mr-4"
+              size="25"
+              class="mr-4"
+              :class="{
+                'text-[#F72585]': selectedType == item,
+              }"
             />
           </div>
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex justify-between p-2 text-gray-600 hover:bg-[#f5f7ff] rounded-lg"
-        >
-          <div>
-            <Icon
-              name="iconamoon:menu-burger-horizontal-fill"
-              size="24"
-              class="text-[#909090] mr-4"
-            />
-            <span class="font-medium text-[16px]">Отели</span>
-          </div>
-
-          <Icon
-            name="material-symbols-light:keyboard-arrow-right"
-            size="30"
-            class="text-[#909090] mr-4"
-          />
         </a>
       </li>
     </ul>

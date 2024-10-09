@@ -4,11 +4,15 @@ defineProps({
     type: Array as () => Array<any>,
     default: () => [],
   },
-})
+  type: {
+    type: String,
+    default: "Маркетплейсы",
+  }
+});
 </script>
 <template>
   <main class="flex-1 p-8">
-    <h1 class="text-2xl font-bold mb-6">Социальные сети</h1>
+    <h1 class="text-2xl font-bold mb-6"></h1>
     <div class="flex flex-wrap gap-6 w-full justify-center">
       <div
         v-for="(social, index) in items"
@@ -31,9 +35,9 @@ defineProps({
                 {{ service }}
               </li>
             </ul>
-            <a
+            <NuxtLink
+              :to="`/catalog/${social.slug}`"
               class="mt-4 text-[19px] absolute font-medium cursor-pointer"
-              @click="navigateTo(`/catalog/${social.slug}`)"
               >Смотреть все
 
               <Icon
@@ -41,7 +45,7 @@ defineProps({
                 name="jam:arrow-right"
                 size="22px"
               ></Icon>
-            </a>
+            </NuxtLink>
           </div>
         </div>
       </div>
