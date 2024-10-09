@@ -1,43 +1,40 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-const baseUrl = '/'
-const description =
-  'Sarafan'
+const baseUrl = process.env.NUXT_APP_BASE_URL || "/";
+const description = "Sarafan";
 
 export default defineNuxtConfig({
   app: {
     baseURL: baseUrl,
     head: {
-      viewport: 'width=device-width,initial-scale=1',
-      title:
-        'Sarafan',
-      link: [{ rel: 'icon', href: '/favicon.png' }],
+      viewport: "width=device-width,initial-scale=1",
+      title: "Sarafan",
+      link: [{ rel: "icon", href: "/favicon.png" }],
       meta: [
-        { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
         {
-          'http-equiv': 'Content-Security-Policy',
-          content: 'upgrade-insecure-requests',
+          "http-equiv": "Content-Security-Policy",
+          content: "upgrade-insecure-requests",
         },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: description },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "description", content: description },
         {
-          name: 'apple-mobile-web-app-status-bar-style',
-          content: 'black-translucent',
+          name: "apple-mobile-web-app-status-bar-style",
+          content: "black-translucent",
         },
-        { name: 'yandex-verification', content: '8b9387e0d0a4e1a8' },
+        { name: "yandex-verification", content: "8b9387e0d0a4e1a8" },
       ],
     },
   },
 
   colorMode: {
-    preference: 'light',
-    dataValue: 'theme',
-    classSuffix: '',
+    preference: "light",
+    dataValue: "theme",
+    classSuffix: "",
   },
 
-  image: {
-  },
+  image: {},
 
   lazyLoad: {
     // These are the default values
@@ -49,9 +46,9 @@ export default defineNuxtConfig({
     directiveOnly: false,
 
     // To remove class set value to false
-    loadingClass: 'isLoading',
-    loadedClass: 'isLoaded',
-    appendClass: 'lazyLoad',
+    loadingClass: "isLoading",
+    loadedClass: "isLoaded",
+    appendClass: "lazyLoad",
 
     observerConfig: {
       // See IntersectionObserver documentation
@@ -59,89 +56,72 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    compressPublicAssets: true,
-    plugins: ['~/server/index.ts'],
-    preset: 'bun'
+    plugins: ["~/server/index.ts"],
+    preset: "bun",
   },
 
   modules: [
-    'nuxt-lazy-load',
-    '@nuxtjs/tailwindcss',
-    '@pinia/nuxt',
-    'pinia-plugin-persistedstate/nuxt',
-    'nuxt-icon',
-    '@vueuse/nuxt',
-    'nuxt-security',
-    '@nuxtjs/color-mode',
-    '@bg-dev/nuxt-s3',
-    '@sfxcode/nuxt-primevue',
-    '@morev/vue-transitions/nuxt',
-    '@sidebase/nuxt-pdf',
-    '@nuxt/fonts',
-    'nuxt-auth-utils',
-    '@nuxt/image',
-    'nuxt3-notifications'
+    "nuxt-lazy-load",
+    "@nuxtjs/tailwindcss",
+    "@pinia/nuxt",
+    "pinia-plugin-persistedstate/nuxt",
+    "nuxt-icon",
+    "@vueuse/nuxt",
+    "nuxt-security",
+    "@nuxtjs/color-mode",
+    "@sfxcode/nuxt-primevue",
+    "@morev/vue-transitions/nuxt",
+    "@nuxt/fonts",
+    "nuxt-auth-utils",
+    "@nuxt/image",
+    "nuxt3-notifications",
+    "@nuxtjs/turnstile",
+    "@nuxt/scripts",
   ],
-
+  turnstile: {
+    siteKey: "0x4AAAAAAAw5ArLU136z91q_",
+  },
   icon: {
     sources: [
       {
-        src: '~/assets/icons',
-        prefix: 'custom', // Префикс для кастомных иконок
+        src: "~/assets/icons",
+        prefix: "custom", // Префикс для кастомных иконок
       },
     ],
   },
 
   css: [
-    'primevue/resources/primevue.css',
-    'primeicons/primeicons.css',
-    '@vuepic/vue-datepicker/dist/main.css',
-    '@/assets/style/css/customButton.css',
+    "primevue/resources/primevue.css",
+    "primeicons/primeicons.css",
+    "@/assets/style/css/customButton.css",
   ],
-  s3: {
-    client: {
-      credentials: {
-        secretAccessKey: process.env.VK_SECRET_KEY || '',
-        accessKeyId: process.env.VK_ACCESS_KEY || '',
-      },
-      endpoint: 'https://hb.vkcs.cloud/reviewImages/',
-      region: 'ru-msk',
-    },
-    publicBucketUrl: `${process.env.PUBLIC_SITE_URL}/images/get/`,
-    bucket: 'ozonmpportal',
-    image: {
-      compression: {
-        maxSizeMB: 10,
-        maxWidthOrHeight: 4000,
-      },
-    },
-  },
+
 
   hooks: {
     close: () => {
-      process.exit()
+      process.exit();
     },
   },
 
   build: {
-    transpile: ['primevue', '@vuepic/vue-datepicker'],
+    transpile: ["primevue"],
   },
 
   primevue: {
     components: {
       include: [
-        'DataTable',
-        'Column',
-        'Chips',
-        'MultiSelect',
-        'Button',
-        'DataView',
+        "DataTable",
+        "Column",
+        "Chips",
+        "MultiSelect",
+        "Button",
+        "DataView",
       ],
     },
   },
 
   imports: {
-    dirs: ['./stores', './data', './server/lib', './server/lib/models'],
+    dirs: ["./stores", "./data", "./server/lib", "./server/lib/models"],
   },
 
   runtimeConfig: {
@@ -149,11 +129,14 @@ export default defineNuxtConfig({
       siteName: process.env.NAME,
       BOT_ID: process.env.BOT_ID,
       siteUrl: process.env.PUBLIC_SITE_URL,
-      language: 'ru',
+      language: "ru",
       trailingSlash: true,
       BOT_LOGIN: process.env.BOT_LOGIN,
       DOMAIN_API_IMAGES_URL: process.env.DOMAIN_API_IMAGES_URL,
       YANDEX_MAPS_API_KEY: process.env.YANDEX_MAPS_API_KEY,
+    },
+    turnstile: {
+      secretKey: "0x4AAAAAAAw5Ajel8a_CNjT4CGlB25Geh48",
     },
     VK_ACCESS_KEY: process.env.VK_ACCESS_KEY,
     VK_SECRET_KEY: process.env.VK_SECRET_KEY,
@@ -172,7 +155,7 @@ export default defineNuxtConfig({
   security: {
     rateLimiter: {
       tokensPerInterval: 200,
-      interval: 'hour',
+      interval: "hour",
       fireImmediately: false,
     },
     headers: false,
@@ -189,5 +172,5 @@ export default defineNuxtConfig({
     typedPages: true,
   },
 
-  compatibilityDate: '2024-10-04',
-})
+  compatibilityDate: "2024-10-04",
+});

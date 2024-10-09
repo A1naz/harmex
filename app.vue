@@ -1,29 +1,16 @@
-<script lang="ts" setup>
-import { useMainStore } from '@/stores/main'
-const { loggedIn, user, session, fetch, clear } = useUserSession()
-
-const colorMode = useColorMode()
-const store = useMainStore()
-const app = ref()
-
-// const { data: client, refresh } = useLazyAsyncData('client', () =>
-//   $fetch('/api/user/client')
-// )
-// useIntervalFn(() => {
-//   refresh()
-// }, 1000 * 60)
-// // if (status.value === 'authenticated') await store.getClient()
-
-// watch(client, (newClient) => {
-//   store.setClient(newClient?.client)
-// })
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <div ref="app">
-    <NuxtNotifications position="top right" :max="2" :close-on-click="true" :pause-on-hover="true" :speed="500" />
+    <NuxtNotifications
+      position="top right"
+      :max="2"
+      :close-on-click="true"
+      :pause-on-hover="true"
+      :speed="500"
+    />
     <NuxtLayout>
-      <NuxtLoadingIndicator :color="colorMode.value === 'light' ? '#296dff' : '#6467f2'" />
+      <NuxtLoadingIndicator :color="'#296dff'" />
       <NuxtPage />
       <div class="my-12 md:hidden"></div>
     </NuxtLayout>
@@ -31,31 +18,15 @@ const app = ref()
 </template>
 
 <style lang="css">
-@import '@/assets/style/datepicker.css';
+/* @import "@/assets/style/datepicker.css"; */
 
 .scroll-primary {
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
-}
-
-::-webkit-scrollbar {
-  height: 6px;
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 0px;
-  border-radius: 4px;
 }
 
 .notify-text {

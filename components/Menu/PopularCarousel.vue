@@ -1,83 +1,83 @@
 <script lang="ts" setup>
 const slides = ref([
   {
-    uuid: '1',
-    title: 'Услуги',
-    type: 'Необходимое',
-    text: 'Эти инструменты помогут продвигать свои услуги',
-    image: '/img/carousel/1.png',
+    uuid: "1",
+    title: "Услуги",
+    type: "Необходимое",
+    text: "Эти инструменты помогут продвигать свои услуги",
+    image: "/img/carousel/1.png",
   },
   {
-    uuid: '2',
-    title: 'Youtube',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/2.png',
+    uuid: "2",
+    title: "Youtube",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/2.png",
   },
   {
-    uuid: '3',
-    title: 'Youtube',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/3.png',
+    uuid: "3",
+    title: "Youtube",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/3.png",
   },
   {
-    uuid: '4',
-    title: 'Telegram',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/4.png',
+    uuid: "4",
+    title: "Telegram",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/4.png",
   },
   {
-    uuid: '5',
-    title: 'Услуги',
-    type: 'Необходимое',
-    text: 'Эти инструменты помогут продвигать свои услуги',
-    image: '/img/carousel/1.png',
+    uuid: "5",
+    title: "Услуги",
+    type: "Необходимое",
+    text: "Эти инструменты помогут продвигать свои услуги",
+    image: "/img/carousel/1.png",
   },
   {
-    uuid: '6',
-    title: 'Youtube',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/2.png',
+    uuid: "6",
+    title: "Youtube",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/2.png",
   },
   {
-    uuid: '7',
-    title: 'Youtube',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/3.png',
+    uuid: "7",
+    title: "Youtube",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/3.png",
   },
   {
-    uuid: '8',
-    title: 'Telegram',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/4.png',
+    uuid: "8",
+    title: "Telegram",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/4.png",
   },
-])
-const carousel: any = ref(null)
+]);
+const carousel: any = ref(null);
 
 const handleCarouselMove = (isNext: any) => {
-  const slideWidth = carousel.value.firstElementChild.clientWidth * 1.3
+  const slideWidth = carousel.value.firstElementChild.clientWidth * 1.3;
 
   if (isNext) {
-    carousel.value.scrollLeft += slideWidth
+    carousel.value.scrollLeft += slideWidth;
   } else {
-    carousel.value.scrollLeft -= slideWidth
+    carousel.value.scrollLeft -= slideWidth;
   }
-}
+};
 </script>
 <template>
   <div class="font-semibold text-[26px] mb-3 flex justify-between">
     <span> Популярное </span>
-    <button
-      @click="navigateTo('/catalog')"
+    <NuxtLink
+      to="/catalog"
       class="btn btn-outline border-[#f95ca4] text-[#f95ca4] rounded-xl btn-sm text-[16px] pr-6 hover:bg-white font-medium hover:text-[#f95ca4] hover:border-[#f95ca4] hover:shadow-xl active:bg-[#f95ca4] active:text-white"
     >
       <Icon name="majesticons:menu-line" width="25px" height="25px" />Все
-    </button>
+    </NuxtLink>
   </div>
   <div>
     <div class="relative top-[80px]">
@@ -111,18 +111,18 @@ const handleCarouselMove = (isNext: any) => {
         >
           <div class="p-4 flex items-center">
             <div>
-              <h2 class="text-[16px] text-[#6B6B6B] font-medium">
+              <h2 class="text-[14px] text-[#6B6B6B] font-medium">
                 {{ slide.type }}
               </h2>
-              <h3 class="text-[20px] text-black font-semibold">
+              <h3 class="text-[17px] text-black font-semibold">
                 {{ slide.title }}
               </h3>
-              <p class="text-[#6B6B6B] mt-2 text-[14px]">
+              <p class="text-[#6B6B6B] mt-2 text-[12px]">
                 {{ slide.text }}
               </p>
             </div>
             <NuxtImg
-              class="w-[122px] h-[122px] rounded-full object-cover mr-4"
+              class="w-[95px] h-[95px] rounded-full object-cover"
               :src="slide.image"
               alt="Image"
             />
@@ -142,7 +142,7 @@ body {
   overflow-x: scroll; /* Оставляем прокрутку активной */
   -ms-overflow-style: none; /* Для IE и Edge */
   scrollbar-width: none; /* Для Firefox */
-  height: 199px;
+  height: 160px;
 }
 
 .carousel-container::-webkit-scrollbar {
@@ -164,8 +164,8 @@ main {
   align-items: center;
   top: 50%;
   transform: translateY(-50%);
-  width: 64px;
-  height: 64px;
+  width: 50px;
+  height: 50px;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -201,10 +201,10 @@ main {
 } */
 
 .carousel-slide {
-  flex: 0 0 375px;
-  margin: 0 61px 0 0;
+  flex: 0 0 257px;
+  margin: 0 40px 0 0;
   aspect-ratio: auto;
-  height: 199px;
+  height: 160px;
   display: flex;
   justify-content: center;
   align-items: center;

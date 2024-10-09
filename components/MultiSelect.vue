@@ -139,7 +139,7 @@ watch(dropdownOpened, (newValue) => {
         </div>
         <div v-if="listData && !listDataLoading" class="flex flex-col max-h-[150px] overflow-y-auto scrollbar-custom">
           <div v-for="(item, index) in listData" class="flex flex-col">
-            <Button
+            <button
               class="btn btn-sm btn-ghost flex h-12 justify-start text-left font-normal text-sm btn-primary w-full mt-1"
               :class="{
                 'btn-ghost-hover': item[props.fieldToCheck] === dataToCheck[0],
@@ -147,7 +147,7 @@ watch(dropdownOpened, (newValue) => {
               <div class="text-left">
                 {{ item[props.fieldToDisplay] }}
               </div>
-            </Button>
+            </button>
           </div>
           <div v-if="listData.length !== 0" ref="target" class="flex justify-center items-center h-4" />
         </div>

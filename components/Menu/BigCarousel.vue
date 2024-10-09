@@ -1,25 +1,25 @@
 <script lang="ts" setup>
-const slides = ref([1, 2, 3, 4, 5, 6, 7, 8])
-const carousel: any = ref(null)
+const slides = ref([1, 2, 3, 4, 5, 6, 7, 8]);
+const carousel: any = ref(null);
 
 const handleCarouselMove = (isNext: any) => {
-  const slideWidth = carousel.value.firstElementChild.clientWidth
-  const maxScrollLeft = carousel.value.scrollWidth - carousel.value.clientWidth
+  const slideWidth = carousel.value.firstElementChild.clientWidth;
+  const maxScrollLeft = carousel.value.scrollWidth - carousel.value.clientWidth;
 
   if (isNext) {
     if (carousel.value.scrollLeft + slideWidth >= maxScrollLeft) {
-      carousel.value.scrollLeft = 0
+      carousel.value.scrollLeft = 0;
     } else {
-      carousel.value.scrollLeft += slideWidth
+      carousel.value.scrollLeft += slideWidth;
     }
   } else {
     if (carousel.value.scrollLeft === 0) {
-      carousel.value.scrollLeft = maxScrollLeft
+      carousel.value.scrollLeft = maxScrollLeft;
     } else {
-      carousel.value.scrollLeft -= slideWidth
+      carousel.value.scrollLeft -= slideWidth;
     }
   }
-}
+};
 </script>
 <template>
   <div>
@@ -44,7 +44,11 @@ const handleCarouselMove = (isNext: any) => {
       dir="ltr"
       ref="carousel"
     >
-      <div v-for="slide in slides" :key="slide" class="carousel-slide overflow-y-hidden">
+      <div
+        v-for="slide in slides"
+        :key="slide"
+        class="carousel-slide overflow-y-hidden"
+      >
         <nuxt-img
           src="/img/AIUpdate.png"
           class="responsive-image"
@@ -54,18 +58,18 @@ const handleCarouselMove = (isNext: any) => {
     </div>
     <!-- <div class="absolute inset-0 bg-black opacity-80 rounded-lg"></div> -->
     <span
-      class="absolute left-[145px] top-[310px] transform -translate-y-1/2 text-white font-medium text-[16px]"
+      class="absolute left-[180px] top-[300px] transform -translate-y-1/2 text-white font-medium text-[16px]"
       >Обновление</span
     >
     <span
-      class="absolute left-[145px] top-[340px] transform -translate-y-1/2 text-white font-semibold text-[26px]"
+      class="absolute left-[180px] top-[325px] transform -translate-y-1/2 text-white font-semibold text-[26px]"
       >Посмотрите обновление по работе с ИИ продвижения</span
     >
   </div>
 </template>
 <style scoped>
 .responsive-image {
-  height: 178px;
+  height: 168px;
   object-fit: cover;
   width: 100%;
 }
@@ -79,7 +83,7 @@ body {
   overflow-x: scroll; /* Оставляем прокрутку активной */
   -ms-overflow-style: none; /* Для IE и Edge */
   scrollbar-width: none; /* Для Firefox */
-  height: 168px;
+  height: 148px;
 }
 
 .carousel-container::-webkit-scrollbar {

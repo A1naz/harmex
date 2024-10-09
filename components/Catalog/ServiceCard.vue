@@ -6,13 +6,13 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="border p-4 rounded-lg shadow-md text-center w-[221px] h-[316px]">
+  <div class="border p-2.5 rounded-lg shadow-md text-center w-[201px] h-[295px]">
     <div>
       <NuxtImg
         :src="item.mainImage || 'null'"
         class="mx-auto rounded-xl"
-        width="189px"
-        height="125px"
+        width="170px"
+        height="105px"
       />
     </div>
     <div class="w-full text-start mt-3">
