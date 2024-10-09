@@ -4,8 +4,13 @@ import MailService from '~~/server/lib/mailService.js';
 import user from '~~/server/utils/auth'; 
 
 export default eventHandler(async (event) => {
-  const currentUser = await user.user(event); 
-  // console.log('currentUser', currentUser);
+  const isAuth = await getUserSession(event); 
+
+  if (!isAuth) {
+    return sendRedirect(event, '/auth', 302);
+  }
+
+  const currentUser = isAuth.user;
 
   if (!currentUser) {
     return sendRedirect(event, '/auth', 302);
@@ -14,7 +19,6 @@ export default eventHandler(async (event) => {
   const body = await readBody(event);
   const { email } = body;
 
-  // console.log('validator', validator.isEmail(email));
 
   if (!validator.isEmail(email)) {
     throw createError({
@@ -24,15 +28,13 @@ export default eventHandler(async (event) => {
   }
 
   const foundedUser = await User.findOne({ uuid: currentUser.uuid });
-  // console.log('foundedUser', foundedUser);
   if (!foundedUser) {
     return sendRedirect(event, '/auth', 302);
   }
 
 
   const foundByEmail = await User.findOne({ email: body.email });
-  // console.log('foundByEmail', foundByEmail);
-  if (foundByEmail && foundByEmail.uuid !== currentUser.uuid) {
+  if (foundByEmail) {
     throw createError({
       statusCode: 400,
       message: 'Email уже занят',
@@ -43,12 +45,10 @@ export default eventHandler(async (event) => {
   if (email !== foundedUser.email) {
     foundedUser.newEmail = email;
     const url = useRuntimeConfig().PUBLIC_SITE_URL;
-    console.log('Отправка сообщения..')
     await MailService.sendNewEmailActivationMail(
       email,
       `${url}/api/auth/activate?uuid=${foundedUser.uuid}`
     );
-    console.log('Сообщение отправлено');
     emailUpdated = true;
   }
 

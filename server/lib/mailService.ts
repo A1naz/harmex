@@ -80,7 +80,7 @@ class MailService {
     const result = await this.transporter.sendMail({
       from: alias,
       to,
-      subject: '[MARKETMONSTR] Подтвердите новый адрес электронной почты',
+      subject: '[HARMEX] Подтвердите новый адрес электронной почты',
       text: '',
       html: `
                 <div>
@@ -88,14 +88,14 @@ class MailService {
                 
                 <h3>
                 Вы собираетесь сменить адрес электронной почты 
-                на платформе MARKETMONSTR
+                на платформе HARMEX
                 </h3>
                 <h3>
                 Для смены адреса электронной почты 
                 вам необходимо перейти по ссылке
                 </h3>
 
-                <a href="${link}"><h2>https://app.marketmonstr.pro/auth</h2></a>
+                <a href="${link}"><h2>https://app.harmex.pro/auth</h2></a>
                 
                 <p>
                 Если вдруг вы не сменяли адрес и 
@@ -110,17 +110,8 @@ class MailService {
                 </p>
 
 
-                Все свои вопросы можете задавать тут
-                
-                <a href="https://t.me/Marketmonstr_bot">Поддержка</a>
-
-
-
                 <p>
-                Решайте любые задачи в MARKETMONSTR
-                </p>
-                <p>
-                С уважением, служба заботы MARKETMONSTR      
+                С уважением, служба заботы HARMEX      
                 </p>          
                 </div>
             `,

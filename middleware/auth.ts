@@ -1,7 +1,13 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  const { loggedIn } = useUserSession();
+  const { loggedIn, user, session } = useUserSession();
   if (!loggedIn.value) {
     return to.path = '/auth?redirect=' + to.path;
   }
-  // if the user is logged in, redirect them to the home page
+
+  const userSession = session.value;
+
+  if (
+    userSession.user?.isTwoFaEnabled && userSession.twoFaNeeded) {
+    return to.path = '/2fa'
+  }
 });

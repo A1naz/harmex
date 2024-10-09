@@ -16,5 +16,15 @@ export default eventHandler(async (event) => {
   user.emailConfirmed = true
   await user.save()
 
+  const sessionUser = await getUserSession(event);
+
+  if (sessionUser.user && sessionUser.user.uuid === user.uuid) {
+    sessionUser.user.emailConfirmed = true;
+    if (user.email) {
+      sessionUser.user.email = user.email;
+    }
+    await setUserSession(event, sessionUser);
+  }
+
   return sendRedirect(event, '/auth?emailConfirmed=true', 302)
 })

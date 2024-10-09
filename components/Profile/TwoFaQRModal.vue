@@ -58,7 +58,11 @@ async function confirm2fa() {
 }
 
 async function findSearchQuery() {
-  if (isCodeConfirmed.value || !code.value || code.value.replaceAll(' ', '').length < 6) {
+  if (
+    isCodeConfirmed.value ||
+    !code.value ||
+    code.value.replaceAll(' ', '').length < 6
+  ) {
     return
   }
 
@@ -86,14 +90,13 @@ async function findSearchQuery() {
 
 const confirm2faDebounced = useDebounceFn(findSearchQuery, 300)
 
-const { show } = toRefs(props);
+const { show } = toRefs(props)
 
 watch(show, (newVal) => {
   if (newVal) {
-    getQr();
+    getQr()
   }
-});
-
+})
 
 const emit = defineEmits(['close', 'closeWithTurnOn'])
 
@@ -101,7 +104,12 @@ defineExpose({ getQr, clear })
 </script>
 
 <template>
-  <input id="twoFaQRModal" type="checkbox" :checked="props.show" class="modal-toggle" />
+  <input
+    id="twoFaQRModal"
+    type="checkbox"
+    :checked="props.show"
+    class="modal-toggle"
+  />
   <div
     id="twoFaQRModal"
     :class="{ 'modal-open': props.show }"
@@ -109,34 +117,34 @@ defineExpose({ getQr, clear })
   >
     <div class="modal-box">
       <label
-        class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
+        class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2"
         @click="$emit('close')"
         >✕</label
       >
 
-      <div class="w-ful flex flex-col justify-center items-center">
+      <div class="w-ful flex flex-col items-center justify-center">
         <span class="text-xl">Двухфакторная аутентификация</span>
         <span class="mt-2"
           >Отсканируйте этот QR-код в приложении Google Authenticator</span
         >
         <NuxtImg
           v-if="!loading"
-          class="rounded-lg mt-4"
+          class="mt-4 rounded-lg"
           height="300"
           width="300"
           :src="qrCode"
         />
-        <div v-else class="h-[300px] flex justify-center">
+        <div v-else class="flex h-[300px] justify-center">
           <span class="loading loading-ring loading-lg mb-10"></span>
         </div>
 
         <div>
-          <div class="mt-2 mb-1">
+          <div class="mb-1 mt-2">
             Если вы не можете отсканировать QR-код, введите код
           </div>
           <div
             @click="copyToClipboard(twoFaSecret)"
-            class="bg-base-100 cursor-pointer rounded-lg p-2 border border-primary md:flex justify-center gap-2 items-center"
+            class="cursor-pointer items-center justify-center gap-2 rounded-lg border border-primary bg-base-100 p-2 md:flex"
           >
             <span class="link flex text-2xl lg:link-hover">
               {{ twoFaSecret }}
@@ -151,30 +159,30 @@ defineExpose({ getQr, clear })
             v-maska
             data-maska="### ###"
             placeholder="Подтвердите код Google Authenticator"
-            class="input-confirm input text-center text-2xl input-bordered w-full mt-3"
+            class="input-confirm input input-bordered mt-3 w-full text-center text-2xl"
           />
         </div>
-        <span class="mt-2 flex text-center text-warning text-md">
+        <span class="text-md mt-2 flex text-center">
           Пожалуйста, сохраните этот код на бумаге. Этот ключ позволит вам
           восстановить ваш Google Authenticator в случае потери телефона. Для
           сброса Google Authenticator обратитесь в службу поддержки.
         </span>
       </div>
 
-      <div class="flex justify-center flex-wrap">
+      <div class="flex flex-wrap justify-center">
         <div class="form-control">
           <label class="label cursor-pointer">
             <span class="label-text mr-2">Я сохранил код</span>
             <input
               type="checkbox"
               v-model="isCodeSaved"
-              class="checkbox checkbox-primary"
+              class="checkbox-primary checkbox"
             />
           </label>
         </div>
         <button
           :disabled="!isCodeSaved || !isCodeConfirmed"
-          class="btn text-[15px] btn-primary mt-3"
+          class="btn btn-primary mt-3 text-[15px]"
           @click="turnOnTwoFa"
         >
           Подключить двухфакторную аутентификацию
@@ -182,9 +190,7 @@ defineExpose({ getQr, clear })
       </div>
     </div>
 
-    <label
-      class="modal-backdrop cursor-pointer"
-      @click="$emit('close')"
+    <label class="modal-backdrop cursor-pointer" @click="$emit('close')"
       >Close</label
     >
   </div>

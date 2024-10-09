@@ -1,5 +1,6 @@
 import user from '~~/server/utils/auth'; 
 import confirmTwoFaCode from '~~/server/utils/confirmTwoFaCode';
+import { User } from '~~/server/lib/models/User'
 
 
 export default eventHandler(async (event) => {
@@ -8,7 +9,7 @@ export default eventHandler(async (event) => {
 
   const { code }: any = getQuery(event)
   
-  const isVerified = confirmTwoFaCode(code, user.twoFaSecret)
+  const isVerified = confirmTwoFaCode(code, userIsAuth.twoFaSecret)
 
   return {
     status: isVerified,

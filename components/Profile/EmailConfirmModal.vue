@@ -36,7 +36,7 @@ async function updateEmail() {
     message.value = error.value.data.message
   } else {
     if (data.value) {
-      message.value = 'Почта успешно изменена'
+      message.value = 'Сообщение для изменения почты было отправлено'
       isEmailSent.value = true
     }
   }
@@ -63,7 +63,7 @@ async function updateEmail() {
 
       <div class="flex w-full flex-col gap-[72]">
         <div class="flex flex-col gap-[15px]">
-          <h2 class="text-center text-[20px] font-[600]">
+          <h2 class="text-center text-[16px] font-[600]">
             Для подтверждения почты на платформе вам будет отправлено письмо со
             ссылкой. Перейдите по ней, чтобы подтвердить и привязать почту к
             аккаунту.
@@ -77,7 +77,7 @@ async function updateEmail() {
               class="input input-bordered w-full"
             />
           </div>
-          <p class=" mx-3" :class="{ 'text-[#5ba270]': message == 'Почта успешно изменена', 'text-[#CC5F5F]' : message != 'Почта успешно изменена' }">{{ message }}</p>
+          <p class="mx-3" :class="{ 'text-[#5ba270]': message == 'Сообщение для изменения почты было отправлено', 'text-[#CC5F5F]' : message != 'Почта успешно изменена' }">{{ message }}</p>
         </div>
         <div class="mt-[20px] flex gap-[16px] self-end">
           <button

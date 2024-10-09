@@ -6,12 +6,12 @@ async function login(event: H3Event<Request>, user: IUser) {
   await replaceUserSession(event, {
     user: {
       uuid: user.uuid,
-      login: user.login || '',
       phoneNumber: user.phoneNumber || '',
       email: user.email || '',
       emailConfirmed: user.emailConfirmed,
       isTwoFaEnabled: user.isTwoFaEnabled,
     },
+    twoFaNeeded: user.isTwoFaEnabled,
     loggedInAt: new Date(),
   });
 }
