@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const items: Array<{ title: string; icon: string; path?: string }> = [
-  { title: "Финансы", icon: "solar:wallet-money-outline", path: "/finance" },
+  { title: "Финансы", icon: "solar:wallet-money-outline", path: "/paymenthistory" },
   { title: "Партнерка", icon: "solar:users-group-rounded-outline" },
   { title: "Планировщик ", icon: "solar:alarm-outline" },
   { title: "Заказы", icon: "solar:bag-4-outline" },

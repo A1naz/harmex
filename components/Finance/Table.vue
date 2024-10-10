@@ -1,53 +1,139 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+
+interface HeaderForTable {
+  value: string
+  label: string
+}
 
 const props = defineProps({
   tableData: { type: Array as () => Array<any>, default: () => [] },
-  headers: { type: Array as () => Array<any>, default: () => [] },
+  headers: { type: Array as () => Array<HeaderForTable>, default: () => [] },
 })
 
-const currency = useCurrency()
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
+const totalPages = computed(() => Math.ceil(props.tableData.length / itemsPerPage.value))
+const paginatedData = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  return props.tableData.slice(start, start + itemsPerPage.value)
+})
 </script>
 
 <template>
-  <div class="flex flex-col gap-[25px]">
-    <div class="overflow-x-auto">
-      <table class="min-w-full text-sm font-light">
-        <thead class="border-b">
+  <div class="finance-table-container">
+    <div class="table-wrapper">
+      <table class="finance-table">
+        <thead>
           <tr>
-            <th v-for="(header, index) in headers" :key="index" scope="col" class="px-6 py-4 text-center">
-              <div class="flex items-center justify-center gap-1">
-                <span>{{ header }}</span>
+            <th v-for="(header, index) in props.headers" :key="index" scope="col" class="table-header">
+              <div class="header-content">
+                <span>{{ header.label }}</span>
                 <button>
-                  <Icon name="octicon:filter-24" class="text-[#7f7f7f]" size="20px" />
+                  <Icon name="octicon:filter-24" class="filter-icon" size="20px" />
                 </button>
               </div>
             </th>
           </tr>
         </thead>
-
         <tbody>
-          <tr v-for="row in tableData" :key="row.number" class="">
-            <td class="px-6 py-4 text-center">{{ row.number }}</td>
-            <td class="px-6 py-4 text-center">{{ row.date }}</td>
-            <td class="px-6 py-4 text-center">{{ row.source }}</td>
-            <td class="px-6 py-4 text-center">{{ row.direction }}</td>
-            <td class="px-6 py-4 text-center">{{ row.status }}</td>
-            <td class="px-6 py-4 text-center">{{ row.summ }}</td>
-            <td v-if="row.comment" class="px-6 py-4 text-center">
-              {{ row.comment }}
+          <tr v-for="row in paginatedData" :key="row.id" class="table-row">
+            <td v-for="(header, index) in props.headers" :key="index" class="table-cell">
+              {{ row[header.value] }}
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="flex justify-center items-center text-[#8c8c8c] mb-[25px]">
-      <Icon name="solar:alt-arrow-left-linear" class="" size="22px" />
-      <button v-for="item in 5" :key="item" class="mx-2">
-        {{ item }}
+    <div class="pagination-controls flex items-center">
+      <button class="pagination-button flex items-center" :disabled="currentPage === 1" @click="currentPage = 1">
+        <Icon name="solar:alt-arrow-left-linear" size="24" />
       </button>
-      <Icon name="solar:alt-arrow-right-linear" class="" size="22px" />
+      <button
+        v-for="page in totalPages" :key="page" class="pagination-button" :class="{ active: currentPage === page }"
+        @click="currentPage = page"
+      >
+        {{ page }}
+      </button>
+      <button class="pagination-button flex items-center" :disabled="currentPage === totalPages" @click="currentPage = totalPages">
+        <Icon name="solar:alt-arrow-right-linear" size="24" />
+      </button>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.finance-table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  width: 60vw;
+}
+
+.finance-table {
+  @apply table;
+  width: 100%;
+  table-layout: auto;
+}
+
+.table-header, .table-cell {
+  padding: 0.5em;
+  text-align: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-icon {
+  color: #7f7f7f;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1em;
+  color: #8c8c8c;
+}
+
+.pagination-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0 0.2em;
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+}
+
+.pagination-button.active {
+  @apply text-blue-800;
+}
+
+@media (max-width: 640px) {
+  .table-wrapper {
+    width: 100%;
+  }
+  .finance-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .table-header, .table-cell {
+    padding: 0.25em;
+  }
+  .pagination-button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+</style>
