@@ -12,6 +12,9 @@ export default defineNitroPlugin(() => {
     session.user = {
       uuid: user.uuid,
       phoneNumber: user.phoneNumber,
+      email: user.email ? user.email : "",
+      emailConfirmed: user.emailConfirmed,
+      isTwoFaEnabled: user.isTwoFaEnabled,
     };
 
   });

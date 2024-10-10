@@ -7,8 +7,12 @@ async function login(event: H3Event<Request>, user: IUser) {
   await replaceUserSession(event, {
     user: {
       uuid: user.uuid,
+      email: user.email ? user.email : "",
+      emailConfirmed: user.emailConfirmed,
+      isTwoFaEnabled: user.isTwoFaEnabled,
       phoneNumber: user.phoneNumber || "",
     },
+    twoFaNeeded: user.isTwoFaEnabled,
     loggedInAt: new Date(),
   });
 }
@@ -44,7 +48,9 @@ async function changePassword(
       statusMessage: "Invalid phoneNumber or newPassword",
     });
   } else {
-    const found = await User.findOne({ phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, "") });
+    const found = await User.findOne({
+      phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ""),
+    });
     if (!found) {
       throw createError({
         statusCode: 404,
@@ -60,26 +66,20 @@ async function changePassword(
   }
 }
 
-// async function getCurrentUser(event: H3Event<Request>) {
-//   const session = await getUserSession(event);
+async function getCurrentUser(event: H3Event<Request>) {
+  const session = await getUserSession(event);
 
-//   console.log(session.user);
+  // return null if there's no user
+  if (!session.user) {
+    return null;
+  }
+  const dbUser = await User.findOne({ uuid: session.user.uuid }).select('-password');
+  // we're getting the whole user object by default for convenience, but always remove the password
+  const result = dbUser?.toObject()
+  if (!result) return null
+  return result;
+}
 
-//   // return null if there's no user
-//   if (!session.user) {
-//     return null;
-//   }
-
-//   const dbUser = await User.findOne({ uuid: session.user.uuid }).select(
-//     "-_id -__v -password"
-//   );
-
-//   // we're getting the whole user object by default for convenience, but always remove the password
-//   const result = dbUser?.toObject();
-//   if (!result) return null;
-//   delete result.password;
-//   return result;
-// }
 
 async function attempt(
   event: H3Event<Request>,
@@ -111,7 +111,7 @@ async function attempt(
 
 export default {
   login,
-  // user: getCurrentUser,
+  user: getCurrentUser,
   attempt,
   registerUser,
   changePassword,

@@ -1,23 +1,25 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref } from "vue";
 
 interface HeaderForTable {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 const props = defineProps({
   tableData: { type: Array as () => Array<any>, default: () => [] },
   headers: { type: Array as () => Array<HeaderForTable>, default: () => [] },
-})
+});
 
-const currentPage = ref(1)
-const itemsPerPage = ref(10)
-const totalPages = computed(() => Math.ceil(props.tableData.length / itemsPerPage.value))
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
+const totalPages = computed(() =>
+  Math.ceil(props.tableData.length / itemsPerPage.value)
+);
 const paginatedData = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value
-  return props.tableData.slice(start, start + itemsPerPage.value)
-})
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  return props.tableData.slice(start, start + itemsPerPage.value);
+});
 </script>
 
 <template>
@@ -26,11 +28,20 @@ const paginatedData = computed(() => {
       <table class="finance-table">
         <thead>
           <tr>
-            <th v-for="(header, index) in props.headers" :key="index" scope="col" class="table-header">
+            <th
+              v-for="(header, index) in props.headers"
+              :key="index"
+              scope="col"
+              class="table-header"
+            >
               <div class="header-content">
                 <span>{{ header.label }}</span>
                 <button>
-                  <Icon name="octicon:filter-24" class="filter-icon" size="20px" />
+                  <Icon
+                    name="octicon:filter-24"
+                    class="filter-icon"
+                    size="20px"
+                  />
                 </button>
               </div>
             </th>
@@ -38,24 +49,44 @@ const paginatedData = computed(() => {
         </thead>
         <tbody>
           <tr v-for="row in paginatedData" :key="row.id" class="table-row">
-            <td v-for="(header, index) in props.headers" :key="index" class="table-cell">
-              {{ row[header.value] }}
+            <td
+              v-for="(header, index) in props.headers"
+              :key="index"
+              class="table-cell"
+            >
+              <span v-if="header.value !== 'historyBtn'">
+                {{ row[header.value] }}
+              </span>
+              <button v-else class="myCustomBtnSm">
+                История платежей
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="pagination-controls flex items-center">
-      <button class="pagination-button flex items-center" :disabled="currentPage === 1" @click="currentPage = 1">
+      <button
+        class="pagination-button flex items-center"
+        :disabled="currentPage === 1"
+        @click="currentPage = 1"
+      >
         <Icon name="solar:alt-arrow-left-linear" size="24" />
       </button>
       <button
-        v-for="page in totalPages" :key="page" class="pagination-button" :class="{ active: currentPage === page }"
+        v-for="page in totalPages"
+        :key="page"
+        class="pagination-button"
+        :class="{ active: currentPage === page }"
         @click="currentPage = page"
       >
         {{ page }}
       </button>
-      <button class="pagination-button flex items-center" :disabled="currentPage === totalPages" @click="currentPage = totalPages">
+      <button
+        class="pagination-button flex items-center"
+        :disabled="currentPage === totalPages"
+        @click="currentPage = totalPages"
+      >
         <Icon name="solar:alt-arrow-right-linear" size="24" />
       </button>
     </div>
@@ -81,7 +112,8 @@ const paginatedData = computed(() => {
   table-layout: auto;
 }
 
-.table-header, .table-cell {
+.table-header,
+.table-cell {
   padding: 0.5em;
   text-align: center;
 }
@@ -128,7 +160,8 @@ const paginatedData = computed(() => {
     overflow-x: auto;
     white-space: nowrap;
   }
-  .table-header, .table-cell {
+  .table-header,
+  .table-cell {
     padding: 0.25em;
   }
   .pagination-button {

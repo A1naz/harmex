@@ -94,10 +94,14 @@ async function login() {
   if (response === "success") {
     await fetch();
     loading.value = false;
-    if (params?.redirect as string) {
-      navigateTo(params.redirect as string);
+
+    if (session.value.user?.isTwoFaEnabled && session.value?.twoFaNeeded) {
+      
+      return navigateTo("/2fa");
+    } else if (params?.redirect as string) {
+      return navigateTo(params.redirect as string);
     } else {
-      navigateTo("/profile");
+      return navigateTo("/profile");
     }
   }
 }

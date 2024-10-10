@@ -1,6 +1,6 @@
-import { ObjectId } from 'mongoose'
+import { type ObjectId } from 'mongoose'
 import { TariffTypeEnum, FieldsType, UserRoles, DocuemntEnum } from './enums'
-import { MenuSection } from './menu/types'
+import { type MenuSection } from './menu/types'
 
 export interface Entity {
   _id?: ObjectId
@@ -31,7 +31,7 @@ export interface IUser extends Entity {
   username: string | undefined
   firstName: string
   lastName: string
-  email: string
+  email?: string
   apiKeys?: Array<{
     mp: string
     keys: string[]
@@ -46,7 +46,7 @@ export interface IUser extends Entity {
   tabs: string
   newEmail: string
   emailConfirmed: boolean
-  telegram: string | undefined
+  telegram: string
   telegramUserId: string
   telegramUnlinkEmailSend: Date
   tg2fa: boolean
@@ -55,7 +55,7 @@ export interface IUser extends Entity {
   registrationDate: Date
   partner: Partner
   tariff: ITariff
-  twoFaQR: string
+  twoFaQR: string | null
   twoFaSecret: string
   isTwoFaEnabled: boolean
   post: Object
