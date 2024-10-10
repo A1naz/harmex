@@ -1,155 +1,160 @@
 <script lang="ts" setup>
-type TableType = 'general' | 'expenses' | 'replenishment'
+type TableType = "general" | "expenses" | "replenishment";
 definePageMeta({
-  layout: 'app',
-
-})
+  layout: "app",
+});
 interface Transaction {
-  number: string
-  date: string
-  source: string
-  direction: string
-  status: string
-  summ: number
-  comment: string
+  number: string;
+  date: string;
+  source: string;
+  direction: string;
+  status: string;
+  summ: number;
+  comment: string;
 }
 
 interface GeneralTable {
-  summ: number
-  date: string
-  source: string
-  replenishment: string
-  service: string
-  partners: string
-  tariff: string
-  comment: string
-  id: string
+  summ: number;
+  date: string;
+  source: string;
+  article: string | number;
+  orderId: string | number;
+  comment: string;
 }
 
 interface ReplenishmentTable {
-  summ: number
-  date: string
-  source: string
-  orderId: string
-  comment: string
+  summ: number;
+  date: string;
+  source: string;
+  orderId: string;
+  comment: string;
 }
 
 interface ExpenseTable {
-  summ: number
-  date: string
-  source: string
-  service: string
-  orderId: string
+  summ: number;
+  date: string;
+  source: string;
+  article: string | number;
+  orderId: string;
 }
+
+interface PartnerTable {
+  comissions: number;
+  username: string;
+  date: string;
+  summ: string | number;
+  history: string;
+}
+
 interface Button {
-  label: string
-  value: TableType
+  label: string;
+  value: TableType;
 }
 
 const buttonsLine: Button[] = [
-  { label: 'Общие', value: 'general' },
-  { label: 'Расходы', value: 'expenses' },
-  { label: 'Пополнения', value: 'replenishment' },
-]
+  { label: "Общие", value: "general" },
+  { label: "Расходы", value: "expenses" },
+  { label: "Пополнения", value: "replenishment" },
+];
 
-const data = ref<Transaction[]>([])
-const tableData = ref<(GeneralTable | ReplenishmentTable | ExpenseTable)[]>([])
-const tableType = ref<'general' | 'expenses' | 'replenishment'>('general')
+const data = ref<Transaction[]>([]);
+const tableData = ref<(GeneralTable | ReplenishmentTable | ExpenseTable)[]>([]);
+const tableType = ref<
+  "general" | "expenses" | "replenishment" | "partner" | "genealogy"
+>("general");
 
 interface HeaderForTable {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
-const headersForTable = ref<HeaderForTable[]>([])
+const headersForTable = ref<HeaderForTable[]>([]);
 
-const { data: fetchedData, error } = await useFetch<Transaction[]>('/api/finance/finance-data')
+const { data: fetchedData, error } = await useFetch<Transaction[]>(
+  "/api/finance/finance-data"
+);
 
 watch(
   () => fetchedData.value,
   (newData) => {
     if (newData) {
-      data.value = newData
-      updateTableData()
+      data.value = newData;
+      updateTableData();
     }
   },
-  { immediate: true },
-)
+  { immediate: true }
+);
 
 function updateTableData() {
   switch (tableType.value) {
-    case 'general':
+    case "general":
       headersForTable.value = [
-        { value: 'summ', label: 'Сумма' },
-        { value: 'date', label: 'Дата' },
-        { value: 'source', label: 'Источник' },
-        { value: 'replenishment', label: 'Пополнение' },
-        { value: 'service', label: 'Услуга' },
-        { value: 'partners', label: 'Партнерка' },
-        { value: 'tariff', label: 'Тариф' },
-        { value: 'comment', label: 'Комментарий' },
-      ]
-      tableData.value = data.value.map(item => ({
+        { value: "summ", label: "Сумма" },
+        { value: "date", label: "Дата" },
+        { value: "source", label: "Источник" },
+        { value: "replenishment", label: "Пополнение" },
+        { value: "service", label: "Услуга" },
+        { value: "partners", label: "Партнерка" },
+        { value: "tariff", label: "Тариф" },
+        { value: "comment", label: "Комментарий" },
+      ];
+      tableData.value = data.value.map((item) => ({
         summ: item.summ,
         date: item.date,
         source: item.source,
         replenishment: item.source,
         service: item.direction,
-        partners: '-',
+        partners: "-",
         tariff: item.source,
         comment: item.comment,
         id: item.number,
-      }))
-      break
+      }));
+      break;
 
-    case 'replenishment':
+    case "replenishment":
       headersForTable.value = [
-        { value: 'summ', label: 'Сумма' },
-        { value: 'date', label: 'Дата' },
-        { value: 'source', label: 'Источник' },
-        { value: 'orderId', label: 'ID заказа' },
-        { value: 'comment', label: 'Комментарий' },
-      ]
+        { value: "summ", label: "Сумма" },
+        { value: "date", label: "Дата" },
+        { value: "source", label: "Источник" },
+        { value: "orderId", label: "ID заказа" },
+        { value: "comment", label: "Комментарий" },
+      ];
       tableData.value = data.value
-        .filter(item => item.source === 'Перевод')
-        .map(item => ({
+        .filter((item) => item.source === "Перевод")
+        .map((item) => ({
           summ: item.summ,
           date: item.date,
           source: item.direction,
           orderId: item.number,
           comment: item.comment,
-        }))
-      break
+        }));
+      break;
 
-    case 'expenses':
+    case "expenses":
       headersForTable.value = [
-        { value: 'summ', label: 'Сумма' },
-        { value: 'date', label: 'Дата' },
-        { value: 'source', label: 'Источник' },
-        { value: 'service', label: 'Услуга' },
-        { value: 'orderId', label: 'ID заказа' },
-      ]
+        { value: "summ", label: "Сумма" },
+        { value: "date", label: "Дата" },
+        { value: "source", label: "Источник" },
+        { value: "service", label: "Услуга" },
+        { value: "orderId", label: "ID заказа" },
+      ];
       tableData.value = data.value
-        .filter(item => item.source === 'Услуга')
-        .map(item => ({
+        .filter((item) => item.source === "Услуга")
+        .map((item) => ({
           summ: item.summ,
           date: item.date,
           source: item.source,
           service: item.direction,
           orderId: item.number,
-        }))
-      break
+        }));
+      break;
   }
 }
 
 function changeTableType(type: TableType) {
-  tableType.value = type
+  tableType.value = type;
 }
 
-watch(
-  () => tableType.value,
-  updateTableData,
-  { immediate: true },
-)
+watch(() => tableType.value, updateTableData, { immediate: true });
 </script>
 
 <template>
