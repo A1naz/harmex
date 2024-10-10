@@ -25,14 +25,17 @@ const queries = computed(() => props.queries)
 
 async function onInput(event: Event, index: number) {
   const newValue = (event.target as HTMLInputElement).value
-  store.changeSearchQuery({
-    value: newValue,
-    queryIndex: index,
-    productIndex: props.productIndex,
-  }, false, false)
+  store.changeSearchQuery(
+    {
+      value: newValue,
+      queryIndex: index,
+      productIndex: props.productIndex,
+    },
+    false,
+    false
+  )
 
-  if (!newValue)
-    return
+  if (!newValue) return
   store.changeSearchQueryStatus(index, props.productIndex, false, true)
 
   // const result = await findSearchQueryDebounced(props.queries[index].value)
@@ -60,27 +63,35 @@ async function onInput(event: Event, index: number) {
 //       store.changeSearchQueryStatus(i, props.productIndex, true, false)
 //   }
 // })
+
+const isAddBtnDisabled = computed(() => props.queries.length >= 5)
 </script>
 
 <template>
   <div
     v-for="(query, index) of queries"
-    :key="index" class="relative flex items-center flex-grow-0 w-full"
+    :key="index"
+    class="relative flex items-center flex-grow-0 w-full"
   >
     <div class="dropdown w-full">
-      <label tabindex="0"><input
-        :value="query.value"
-        :class="{
-          'input-error': query.error,
-        }"
-        type="text" placeholder="Поисковый запрос" class="input input-bordered input-sm w-full"
-        @input="onInput($event, index)"
-      ></label>
-      <ul v-if="!query.loading && query.value" tabindex="0" class="dropdown-content z-[1] p-2 shadow bg-base-100 rounded-lg w-full">
+      <label tabindex="0"
+        ><input
+          :value="query.value"
+          :class="{
+            'input-error': query.error,
+          }"
+          type="text"
+          placeholder="Поисковый запрос"
+          class="input input-bordered input-sm w-full"
+          @input="onInput($event, index)"
+      /></label>
+      <ul
+        v-if="!query.loading && query.value"
+        tabindex="0"
+        class="dropdown-content z-[1] p-2 shadow bg-base-100 rounded-lg w-full"
+      >
         <div v-if="!query.loading">
-          <div v-if="query.error">
-            Товар не найден
-          </div>
+          <div v-if="query.error">Товар не найден</div>
           <div v-else>
             <div v-if="query.value && query.message">
               {{ query.message }}
@@ -94,13 +105,14 @@ async function onInput(event: Event, index: number) {
       v-if="query.loading"
       class="absolute right-8 loading loading-spinner loading-xs p-2"
     /> -->
-    <div
+    <button
+      :disabled="isAddBtnDisabled"
       v-if="index === 0"
       class="absolute right-0 btn btn-ghost btn-sm btn-square"
       @click="emit('add')"
     >
       <IconCSS size="16" name="ic:round-plus" />
-    </div>
+    </button>
     <div
       v-else
       class="absolute right-0 btn btn-ghost btn-sm btn-square"
@@ -111,6 +123,4 @@ async function onInput(event: Event, index: number) {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
