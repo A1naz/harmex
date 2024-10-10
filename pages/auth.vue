@@ -37,7 +37,8 @@ onMounted(async () => {
   if (params?.confirmed) {
     notify({
       type: 'info',
-      title: 'Письмо для подтверждения было отправлено на указанный email. (Проверьте папку Спам)',
+      title:
+        'Письмо для подтверждения было отправлено на указанный email. (Проверьте папку Спам)',
       duration: 3000,
     })
   }
@@ -78,20 +79,24 @@ async function login() {
     body: {
       phoneNumber: formData.phoneNumber,
       password: formData.password,
-    }
-  }).catch(err => {
-    notify({
-      type: 'error',
-      title: 'Не удалось войти',
-      text: err.data.message || err.message
-    })
-  }).finally(() => {
-    loading.value = false
+    },
   })
+    .catch((err) => {
+      notify({
+        type: 'error',
+        title: 'Не удалось войти',
+        text: err.data.message || err.message,
+      })
+    })
+    .finally(() => {
+      loading.value = false
+    })
   if (response === 'success') {
     await fetch()
     loading.value = false
-    if (params?.redirect as string) {
+    if (user.value?.isTwoFaEnabled && session.value?.twoFaNeeded) {
+      navigateTo('/2fa')
+    } else if (params?.redirect as string) {
       navigateTo(params.redirect as string)
     } else {
       navigateTo('/profile')
@@ -101,50 +106,80 @@ async function login() {
 </script>
 
 <template>
-  <div id="auth" class="flex sm:items-center sm:justify-center h-screen">
+  <div id="auth" class="flex h-screen sm:items-center sm:justify-center">
     <section
-      class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3">
-      <h3 class="font-bold text-xl">Войдите в аккаунт</h3>
+      class="align-center flex w-full max-w-md flex-col justify-center gap-3 rounded-lg p-4 shadow-lg lg:max-w-lg"
+    >
+      <h3 class="text-xl font-bold">Войдите в аккаунт</h3>
 
       <div class="box flex flex-col gap-3">
         <form @submit.prevent="login" class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
             <label>Номер телефона </label>
-            <input v-maska data-maska="+7 (###) ###-##-##" v-model="formData.phoneNumber"
-              placeholder="+7 (___) ___-__-__" required="true" class="input input-bordered" />
-            <div v-if="v$.phoneNumber.$error" class="text-red-500 text-xs mt-1">
+            <input
+              v-maska
+              data-maska="+7 (###) ###-##-##"
+              v-model="formData.phoneNumber"
+              placeholder="+7 (___) ___-__-__"
+              required="true"
+              class="input input-bordered"
+            />
+            <div v-if="v$.phoneNumber.$error" class="mt-1 text-xs text-red-500">
               {{ v$.phoneNumber.$errors[0].$message }}
             </div>
           </div>
           <div class="flex flex-col gap-1">
             <label>Пароль </label>
             <div class="flex flex-col gap-0.5">
-              <label class="input input-bordered w-full flex">
-                <input id="password" v-model="formData.password" :type="inputType" name="password"
-                  placeholder="••••••••" required="true" class="w-full" />
-                <button type="button" class="hover:text-primary w-1/12" @click="togglePassword">
-                  <IconCSS v-if="passwordShow" class="w-20 h-20" size="25" name="mdi:hide-outline" />
-                  <IconCSS v-else class="w-20 h-20" size="25" name="mdi:show-outline" />
+              <label class="input input-bordered flex w-full">
+                <input
+                  id="password"
+                  v-model="formData.password"
+                  :type="inputType"
+                  name="password"
+                  placeholder="••••••••"
+                  required="true"
+                  class="w-full"
+                />
+                <button
+                  type="button"
+                  class="w-1/12 hover:text-primary"
+                  @click="togglePassword"
+                >
+                  <IconCSS
+                    v-if="passwordShow"
+                    class="h-20 w-20"
+                    size="25"
+                    name="mdi:hide-outline"
+                  />
+                  <IconCSS
+                    v-else
+                    class="h-20 w-20"
+                    size="25"
+                    name="mdi:show-outline"
+                  />
                 </button>
               </label>
-              <NuxtLink class="text-primary my-1" href="/resetPassword">
+              <NuxtLink class="my-1 text-primary" href="/resetPassword">
                 Забыли пароль?
               </NuxtLink>
             </div>
-            <div v-if="v$.password.$error" class="text-red-500 text-xs mt-1">
+            <div v-if="v$.password.$error" class="mt-1 text-xs text-red-500">
               {{ v$.password.$errors[0].$message }}
             </div>
           </div>
 
           <div class="flex flex-col gap-0.5">
-            <button type="submit"
-              class="btn btn-primary w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+            <button
+              type="submit"
+              class="bg-primary-600 hover:bg-primary-700 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 btn btn-primary w-full rounded-lg px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
+            >
               <span v-show="loading" class="loading loading-spinner" />
 
               Войти
             </button>
 
-            <p class="mt-3 mb-1">
+            <p class="mb-1 mt-3">
               Ещё не зарегистрированы?
               <NuxtLink href="/register" class="text-primary underline">
                 Регистрация

@@ -4,10 +4,4 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return to.path = '/auth?redirect=' + to.path;
   }
 
-  const userSession = session.value;
-
-  if (
-    userSession.user?.isTwoFaEnabled && userSession.twoFaNeeded) {
-    return to.path = '/2fa'
-  }
 });
