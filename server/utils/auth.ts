@@ -7,6 +7,7 @@ async function login(event: H3Event<Request>, user: IUser) {
     user: {
       uuid: user.uuid,
       phoneNumber: user.phoneNumber || '',
+      acesses: user.acesses ? user.acesses : [],
     },
     loggedInAt: new Date(),
   });
@@ -19,6 +20,7 @@ async function updateSession(event: H3Event<Request>,) {
     user: {
       uuid: user?.uuid || '',
       phoneNumber: user?.phoneNumber || '',
+      acesses: user?.acesses || [],
     },
     loggedInAt: new Date(),
   })
@@ -89,7 +91,6 @@ async function attempt(event: H3Event<Request>, phoneNumber: string, password: s
       statusMessage: "Неверный логин или пароль.",
     });
   }
-
   // log in as the selected user
   await login(event, foundUser);
 

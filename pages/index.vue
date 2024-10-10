@@ -95,12 +95,69 @@ const channels = ref<any>([
     image: "/img/favourites/3.png",
   },
 ]);
+
+const quickAccessModal = ref(false)
+const accesses = ref([]) as any;
+const quickAccesses = ref({}) as any;
+const accessesLoading = ref(false);
+const { notify } = useNotification();
+
+async function getAccesses() {
+  accessesLoading.value = true;
+  const response = await useFetch("/api/user/accesses", {
+    method: "GET",
+    watch: false,
+  })
+    .catch((err) => {
+      notify({
+        type: "error",
+        title: "Не получить доступы",
+        text: err.data.message || err.message,
+      });
+    })
+    .finally(() => {
+      accessesLoading.value = false;
+    });
+  if(response) {
+    accesses.value = response.data.value?.acesses;
+    quickAccesses.value = response.data.value?.quickAccesses;
+  }
+}
+
+getAccesses();
+
+async function saveAccesses(availableAccesses: any, quick: any) {
+  const response = await useFetch("/api/user/saveAccesses", {
+    method: "POST",
+    body: {
+      accesses: availableAccesses.map((i: any) => i.path),
+      quickAccesses: quick.map((i: any) => i.path),
+    },
+    watch: false,
+  })
+    .catch((err) => {
+      notify({
+        type: "error",
+        title: "Не получить доступы",
+        text: err.data.message || err.message,
+      });
+    });
+  if(response) {
+    notify({
+      type: "success",
+      title: "Доступы сохранены",
+    })
+    quickAccesses.value = quick.map((i: any) => i.path);
+    quickAccessModal.value = false
+  }
+}
 </script>
 
 <template>
   <div class="sm:mx-20 mx-0">
+    {{ quickAccesses }}
     <section class="mt-4 flex sm:block">
-      <MenuButtonsLine />
+      <MenuButtonsLine @edit-click="quickAccessModal = true" :quickAccesses="quickAccesses" />
     </section>
     <div class="w-[200%] h-[1px] -ml-40 mt-3 bg-[#0c8ce9]"></div>
     <section class="mt-10 mx-5">
@@ -120,6 +177,7 @@ const channels = ref<any>([
     </section>
     <div class="flex-col gap-5 text-center mt-20 text-lg">&nbsp;</div>
   </div>
+  <MenuQuickAccessModal @save="saveAccesses" :accesses="accesses" :quickAccesses="quickAccesses" :show="quickAccessModal" @close="quickAccessModal = false" />
 </template>
 
 <style scoped></style>

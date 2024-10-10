@@ -12,6 +12,7 @@ export default defineNitroPlugin(() => {
     session.user = {
       uuid: user.uuid,
       phoneNumber: user.phoneNumber,
+      acesses: user.acesses || [],
     };
 
   });
