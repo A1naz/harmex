@@ -126,7 +126,17 @@ async function getAccesses() {
 
 getAccesses();
 
+const { user } = useUserSession();
+
 async function saveAccesses(availableAccesses: any, quick: any) {
+  if(!user.value) {
+    notify({
+      type: "error",
+      title: "Необходима авторизация",
+    })
+    return
+  }
+
   const response = await useFetch("/api/user/saveAccesses", {
     method: "POST",
     body: {
