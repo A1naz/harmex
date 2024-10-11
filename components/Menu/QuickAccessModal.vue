@@ -4,7 +4,7 @@ const { user, session, fetch } = useUserSession()
 const props = defineProps({
   show: { type: Boolean, required: true },
   accesses: { type: Array, required: true, default: () => [] },
-  quickAccesses: { type: Array, required: true, default: () => [] },
+  quickAccesses: { type: Object, required: true, default: () => {} },
 })
 
 const emit = defineEmits(['close', 'save'])

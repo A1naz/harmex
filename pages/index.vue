@@ -155,7 +155,6 @@ async function saveAccesses(availableAccesses: any, quick: any) {
 
 <template>
   <div class="sm:mx-20 mx-0">
-    {{ quickAccesses }}
     <section class="mt-4 flex sm:block">
       <MenuButtonsLine @edit-click="quickAccessModal = true" :quickAccesses="quickAccesses" />
     </section>

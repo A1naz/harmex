@@ -1,23 +1,50 @@
 <script setup lang="ts">
 const emit = defineEmits(['editClick'])
 const props = defineProps({
-  quickAccesses: { type: Array, required: false },
+  quickAccesses: { type: Object, required: false },
 })
-const items: Array<{ title: string; icon: string; path?: string }> = [
+const items: Array<{
+  title: string
+  icon: string
+  path?: string
+  value?: boolean
+}> = [
   {
     title: 'Финансы',
     icon: 'solar:wallet-money-outline',
     path: '/paymenthistory',
+    value: true,
   },
   {
     title: 'Партнерка',
     icon: 'solar:users-group-rounded-outline',
     path: '/partner',
+    value: false,
   },
-  { title: 'Пополнение ', icon: 'solar:alarm-outline', path: '/balance' },
-  { title: 'Заказы', icon: 'solar:bag-4-outline', path: '/orders' },
-  { title: 'Вывод', icon: 'solar:plain-outline', path: '/withdraw' },
-  { title: 'Команда', icon: 'solar:heart-outline', path: '/team' },
+  {
+    title: 'Пополнение ',
+    icon: 'solar:alarm-outline',
+    path: '/balance',
+    value: false,
+  },
+  {
+    title: 'Заказы',
+    icon: 'solar:bag-4-outline',
+    path: '/orders',
+    value: false,
+  },
+  {
+    title: 'Вывод',
+    icon: 'solar:plain-outline',
+    path: '/withdraw',
+    value: false,
+  },
+  {
+    title: 'Команда',
+    icon: 'solar:heart-outline',
+    path: '/team',
+    value: false,
+  },
 ]
 
 const quickAccesses = computed(() => {
@@ -33,7 +60,7 @@ const quickAccesses = computed(() => {
   >
     <div class="flex w-full flex-col flex-wrap justify-start gap-4 md:flex-row">
       <NuxtLink
-        :to="item.path || '/'"
+        :to="item.value ? item.path : '/'"
         v-for="item of quickAccesses"
         class="myCustomBtn md:min-w-40"
       >
