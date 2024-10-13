@@ -10,6 +10,13 @@ async function logout() {
   router.push("/");
 }
 
+const { locale, locales, setLocale } = useI18n();
+const switchLocalePath = useSwitchLocalePath();
+
+const availableLocales = computed(() => {
+  return locales.value.filter((i) => i.code !== locale.value);
+});
+
 const twoFaQRModal = ref<any>(null);
 const twoFaShow = ref(false);
 const isTwoFaEnabled = ref(user.value?.isTwoFaEnabled || false);
@@ -155,17 +162,33 @@ async function updatePassword() {
   passwordForm.oldPassword = "";
   passwordForm.newPassword = "";
 }
+
+function swapLanguage(e: any) {
+  console.log(e.value);
+  
+  form.language = e.value;
+  setLocale(e.value);
+}
 </script>
+
 
 <template>
   <div>
+    <a
+      v-for="locale in availableLocales"
+      :href="switchLocalePath(locale.code)"
+      :key="locale.code"
+    >
+    </a>
     <div class="flex flex-col gap-12 py-6 md:gap-6 md:py-4">
-      <h1 class="text-xl font-semibold">Профиль</h1>
+      <h1 class="text-xl font-semibold">{{ $t("profile") }}</h1>
       <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
         <h2 class="text-lg font-medium">Контактные данные</h2>
         <div class="flex flex-col gap-6 md:flex-row">
           <div class="flex flex-col gap-1">
-            <p class="text-xs font-medium text-blue-800">Номер телефона</p>
+            <p class="text-xs font-medium text-blue-800">
+              {{ $t("Номер телефона") }}
+            </p>
             <input
               v-model="form.phoneNumber"
               readonly
@@ -234,7 +257,7 @@ async function updatePassword() {
                     images: '/icons/figma/profile/usaFlag.svg',
                   },
                 ]"
-                @change-value="(e: any) => (form.language = e.value)"
+                       @change-value="(e: any) => swapLanguage(e)"
               />
             </div>
             <div class="flex flex-col gap-1">

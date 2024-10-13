@@ -78,10 +78,13 @@ export default defineNuxtConfig({
     "@nuxtjs/turnstile",
     "@nuxt/scripts",
     "shadcn-nuxt",
+    "@nuxtjs/i18n",
   ],
+
   turnstile: {
     siteKey: "0x4AAAAAAAw5ArLU136z91q_",
   },
+
   icon: {
     sources: [
       {
@@ -187,6 +190,23 @@ export default defineNuxtConfig({
     payloadExtraction: false,
     renderJsonPayloads: true,
     typedPages: true,
+  },
+
+  i18n: {
+    lazy: true,
+    langDir: "locales",
+    strategy: "prefix_except_default",
+    defaultLocale: "ru",
+    locales: [
+      {
+        code: "ru",
+        file: "ru.json",
+      },
+      {
+        code: "en",
+        file: "en.json",
+      },
+    ],
   },
 
   compatibilityDate: "2024-10-04",
