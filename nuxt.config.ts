@@ -205,7 +205,6 @@ export default defineNuxtConfig({
       {
         code: "en",
         file: "en.json",
-        domain: process.env.PROTOCOL + '/en' + process.env.DOMAIN,
       },
     ],
   },
