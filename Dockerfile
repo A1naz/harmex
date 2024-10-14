@@ -1,8 +1,5 @@
-FROM node:19-alpine
-
-RUN mkdir -p /usr/src/nuxt-app
-WORKDIR /usr/src/nuxt-app
-COPY . .
+# Stage 1: Build Stage
+FROM oven/bun:latest AS build
 
 ARG MONGODB_URI
 ARG NAME
@@ -67,8 +64,6 @@ ARG smtpHost
 ARG smtpPort
 ARG smtpUser
 ARG smtpPass
-ARG PROTOCOL
-ARG ARGDOMAIN_NAME
 
 
 
@@ -93,17 +88,19 @@ ENV smtpHost=${smtpHost}
 ENV smtpPort=${smtpPort}
 ENV smtpUser=${smtpUser}
 ENV smtpPass=${smtpPass}
-ENV PROTOCOL=${PROTOCOL}
-ENV ARGDOMAIN_NAME=${ARGDOMAIN_NAME}
 
-RUN npm install -g pnpm
-RUN apk add --no-cache python3 make g++
-RUN pnpm install
-RUN pnpm run build
-ENV NODE_ENV production
-ENV PORT 80
+# Set environment to production
+ENV NODE_ENV=production
 
-EXPOSE 80 
+# Set working directory
+WORKDIR /usr/src/nuxt-app
 
-ENTRYPOINT ["node", ".output/server/index.mjs"]
+# Copy only necessary files from build stage
+COPY --from=build /usr/src/nuxt-app/.output ./.output
+COPY --from=build /usr/src/nuxt-app/package.json ./
 
+# Expose the port the app will run on
+EXPOSE 80
+
+# Start the app
+ENTRYPOINT ["bun", "run", ".output/server/index.mjs"]
