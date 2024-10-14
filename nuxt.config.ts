@@ -56,8 +56,13 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    plugins: ["~/server/index.ts"],
-    preset: "bun",
+    compressPublicAssets: true,
+    prerender: {
+      crawlLinks: false,
+      routes: [],
+    },
+    plugins: ['~/server/index.ts'],
+
   },
 
   modules: [
