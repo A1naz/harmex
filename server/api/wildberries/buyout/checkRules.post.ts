@@ -77,6 +77,8 @@ export default eventHandler(async (event) => {
   // }
 
   for (const item of products) {
+    
+    
     const rules = item.rules.map((rule) => rule.id)
     let sort = 'popular'
 
@@ -88,6 +90,7 @@ export default eventHandler(async (event) => {
       result.success = false
       result.message = `Дата ${item.article} не может быть меньше текущей по МСК`
     }
+
 
     // if (rules.includes(11)) sort = 'priceup'
     // if (rules.includes(12)) sort = 'pricedown'
