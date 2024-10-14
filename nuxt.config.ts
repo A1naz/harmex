@@ -197,6 +197,7 @@ export default defineNuxtConfig({
     langDir: "locales",
     strategy: 'prefix_except_default',
     defaultLocale: "ru",
+    detectBrowserLanguage: false,
     locales: [
       {
         code: "ru",
@@ -207,6 +208,7 @@ export default defineNuxtConfig({
         file: "en.json",
       },
     ],
+    
   },
   ssr: true,
 
