@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { notify } from "@kyvg/vue3-notification";
+// import { notify } from "@kyvg/vue3-notification";
 
 definePageMeta({ title: "Профиль", layout: "app" });
 const { loggedIn, user, session, fetch, clear } = useUserSession();
@@ -10,12 +10,11 @@ async function logout() {
   router.push("/");
 }
 
-const { locale, locales, setLocale } = useI18n();
-const switchLocalePath = useSwitchLocalePath();
+const { $getLocale, $switchLocale, $getLocales, $t } = useNuxtApp()
 
-const availableLocales = computed(() => {
-  return locales.value.filter((i) => i.code !== locale.value);
-});
+// const availableLocales = computed(() => {
+//   return locales.value.filter((i) => i.code !== locale.value);
+// });
 
 const twoFaQRModal = ref<any>(null);
 const twoFaShow = ref(false);
@@ -167,7 +166,7 @@ function swapLanguage(e: any) {
   console.log(e.value);
 
   form.language = e.value;
-  setLocale(e.value);
+  $switchLocale(e.value);
 }
 </script>
 

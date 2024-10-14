@@ -12,7 +12,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <NuxtLink href="/main" class="-mb-3">
+  <i18n-link to="/main" class="-mb-3">
     <!-- <nuxt-img
       v-show="$colorMode.value === 'light' || colorMode.unknown"
       src="/logo/logolight.svg"
@@ -30,7 +30,7 @@ const props = defineProps({
       srcset=""
     /> -->
     Sarafan
-  </NuxtLink>
+  </i18n-link>
 </template>
 
 <style scoped></style>

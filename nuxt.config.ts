@@ -79,6 +79,8 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "shadcn-nuxt",
     // "@nuxtjs/i18n",
+    'nuxt-i18n-micro',
+
   ],
 
   turnstile: {
@@ -192,25 +194,21 @@ export default defineNuxtConfig({
     typedPages: true,
   },
 
-  // i18n: {
-  //   lazy: true,
-  //   langDir: "locales",
-  //   strategy: 'prefix_except_default',
-  //   detectBrowserLanguage: false,
-  //   locales: [
-  //     {
-  //       code: "ru",
-  //       file: "ru.json",
-  //       name: "Русский",
-  //     },
-  //     {
-  //       code: "en",
-  //       file: "en.json",
-  //       name: "English",
-  //     },
-  //   ],
-  //   defaultLocale: "ru",
-  // },
+  i18n: {
+    translationDir: "locales",
+    meta: true,
+    locales: [
+      {
+        code: "ru",
+        dir: "ltr",
+      },
+      {
+        code: "en",
+        dir: "ltr",
+      },
+    ],
+    defaultLocale: "ru",
+  },
   ssr: true,
 
   compatibilityDate: "2024-10-04",
