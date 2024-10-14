@@ -195,7 +195,7 @@ export default defineNuxtConfig({
   i18n: {
     lazy: true,
     langDir: "locales",
-    strategy: "prefix_except_default",
+    strategy: 'no_prefix',
     defaultLocale: "ru",
     locales: [
       {
@@ -208,6 +208,7 @@ export default defineNuxtConfig({
       },
     ],
   },
+  ssr: true,
 
   compatibilityDate: "2024-10-04",
 });
