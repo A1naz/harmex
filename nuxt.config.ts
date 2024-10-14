@@ -192,25 +192,25 @@ export default defineNuxtConfig({
     typedPages: true,
   },
 
-  i18n: {
-    lazy: true,
-    langDir: "locales",
-    strategy: 'prefix_except_default',
-    detectBrowserLanguage: false,
-    locales: [
-      {
-        code: "ru",
-        file: "ru.json",
-        name: "Русский",
-      },
-      {
-        code: "en",
-        file: "en.json",
-        name: "English",
-      },
-    ],
-    defaultLocale: "ru",
-  },
+  // i18n: {
+  //   lazy: true,
+  //   langDir: "locales",
+  //   strategy: 'prefix_except_default',
+  //   detectBrowserLanguage: false,
+  //   locales: [
+  //     {
+  //       code: "ru",
+  //       file: "ru.json",
+  //       name: "Русский",
+  //     },
+  //     {
+  //       code: "en",
+  //       file: "en.json",
+  //       name: "English",
+  //     },
+  //   ],
+  //   defaultLocale: "ru",
+  // },
   ssr: true,
 
   compatibilityDate: "2024-10-04",
