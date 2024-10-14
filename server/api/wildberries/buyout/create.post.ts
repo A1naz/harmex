@@ -66,6 +66,11 @@ export default eventHandler(async (event) => {
   for await (const product of products) {
     const rules = product.rules.map((rule) => rule.id)
     const searchQueries = product.searchQuery.map((item: any) => item.value)
+    if (product.searchQuery.length > 5) {
+      throw createError(
+        `Для продукта ${product.article} указано больше 5 поисковых запросов`
+      )
+    }
 
     if (userTimezoneOffsetHours && userOffsetMinutes) {
       const date1 = product.purchaseSoon
