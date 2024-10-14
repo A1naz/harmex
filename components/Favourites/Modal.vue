@@ -19,7 +19,7 @@ function deleteItem(deleteItem:any){
 
 <template>
   <input type="checkbox" id="selectUser" :checked="show" class="modal-toggle" />
-  <div class="modal z-[9999] cursor-pointer" @click="closeModal">
+  <div class="modal z-[9999] cursor-pointer w-full" @click="closeModal">
     <div
       class="modal-box w-full cursor-auto rounded-[8px] border border-[#dee2e6] px-[10px] py-[36px] sm:w-9/12 sm:max-w-2xl sm:px-[58px]"
       @click.stop
