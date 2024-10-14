@@ -1,14 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 const baseUrl = process.env.NUXT_APP_BASE_URL || "/";
-const description = "Sarafan";
+const description = "Harmex";
 
 export default defineNuxtConfig({
   app: {
     baseURL: baseUrl,
     head: {
       viewport: "width=device-width,initial-scale=1",
-      title: "Sarafan",
+      title: "Harmex",
       link: [{ rel: "icon", href: "/favicon.png" }],
       meta: [
         { charset: "utf-8" },
@@ -195,16 +195,18 @@ export default defineNuxtConfig({
   i18n: {
     lazy: true,
     langDir: "locales",
-    strategy: 'no_prefix',
+    strategy: 'prefix_except_default',
     defaultLocale: "ru",
     locales: [
       {
         code: "ru",
         file: "ru.json",
+        domain:  process.PUBLIC_SITE_URL || "app.harmex.ru",
       },
       {
         code: "en",
         file: "en.json",
+        domain: process.env.PROTOCOL + '/en' + process.env.DOMAIN,
       },
     ],
   },

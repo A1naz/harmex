@@ -64,6 +64,8 @@ ARG smtpHost
 ARG smtpPort
 ARG smtpUser
 ARG smtpPass
+ARG PROTOCOL
+ARG ARGDOMAIN_NAME
 
 
 
@@ -88,6 +90,8 @@ ENV smtpHost=${smtpHost}
 ENV smtpPort=${smtpPort}
 ENV smtpUser=${smtpUser}
 ENV smtpPass=${smtpPass}
+ENV PROTOCOL=${PROTOCOL}
+ENV ARGDOMAIN_NAME=${ARGDOMAIN_NAME}
 
 # Set environment to production
 ENV NODE_ENV=production
