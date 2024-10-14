@@ -7,12 +7,12 @@ export default defineEventHandler(async (event) => {
         return []
     }
 
-    const user = await User.findOne({ uuid: isAuth.user?.uuid }).select('uuid favourites')
+    const user = await User.findOne({ uuid: isAuth.user?.uuid }).select('uuid favourites services')
 
     if (!user) {
         return []
     }
 
-    return user.favourites
+    return {favourites:user.favourites, services: user.services};
 
 })

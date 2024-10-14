@@ -7,9 +7,9 @@ export default defineEventHandler(async (event) => {
         return sendRedirect(event, '/auth', 302);
     }
 
-    const { favourites } = await readBody(event);
+    const { services } = await readBody(event);
 
-    const user = await User.findOne({ uuid: isAuth.user?.uuid }).select('uuid favourites ');
+    const user = await User.findOne({ uuid: isAuth.user?.uuid }).select('uuid services');
 
     if (!user) {
         return sendRedirect(event, '/auth', 302);
@@ -17,8 +17,12 @@ export default defineEventHandler(async (event) => {
 
     const result = await User.updateOne(
         { uuid: isAuth.user?.uuid },
-        { $set: { favourites } }
+        {
+            $set: {
+                services
+            }
+        }
     );
 
-    return favourites;
+    return services;
 });

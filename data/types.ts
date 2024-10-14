@@ -43,6 +43,7 @@ export interface IUser extends Entity {
   uuidCompany: string
   acesses: string[]
   favourites: string[]
+  services: string[]
   roles: UserRoles[]
   tabs: string
   newEmail: string

@@ -1,55 +1,53 @@
 <script setup lang="ts">
 import { VueDraggable } from 'vue-draggable-plus'
 
-interface Favourites {
+interface Services {
   uuid: string
   image: string
   title: string
 }
 
 const props = defineProps({
-  favourites: { type: Array<Favourites>, required: true },
-  userFavourites: { type: Array, required: true },
+  services: { type: Array<Services>, required: true },
+  userServices: { type: Array, required: true },
   editMode: { type: Boolean, required: true },
   loading: { type: Boolean, required: true },
 })
 
-const emit = defineEmits(['close', 'delete', 'update:favourites', 'set'])
+const emit = defineEmits(['close', 'delete', 'update:services', 'set'])
 const currentIndex = ref(0)
-const favourites = ref(props.favourites)
+const services = ref(props.services)
 
-const setFavourites = (item: any, index: number) => {
+const setServices = (item: any, index: number) => {
   currentIndex.value = index
   emit('set', item)
 }
 
-const usersFavourites = computed(() => {
-  return Array.isArray(props.userFavourites)
-    ? props.favourites.filter((item) =>
-        props.userFavourites.includes(item.uuid)
-      )
+const usersServices = computed(() => {
+  return Array.isArray(props.userServices)
+    ? props.services.filter((item) => props.userServices.includes(item.uuid))
     : []
 })
 
-const handleUpdate = (newFavourites: Favourites[]) => {
-  emit('update:favourites', newFavourites)
+const handleUpdate = (newServices: Services[]) => {
+  emit('update:services', newServices)
 }
 </script>
 
 <template>
   <VueDraggable
-    v-model="favourites"
+    v-model="services"
     class="flex w-full flex-wrap justify-center gap-2 sm:justify-start sm:gap-6"
     target=".sort-target"
     :disabled="!editMode"
     :scroll="true"
-    @end="handleUpdate(favourites)"
+    @end="handleUpdate(services)"
   >
     <TransitionGroup type="transition" tag="ul" name="fade" class="sort-target">
       <li
-        v-for="(item, index) in !editMode && usersFavourites.length > 0
-          ? usersFavourites
-          : props.favourites"
+        v-for="(item, index) in !editMode && usersServices.length > 0
+          ? usersServices
+          : props.services"
         :key="item.uuid"
         class="relative flex h-[164px] w-[147px] flex-col gap-1 rounded-[5px] border border-[#EDEDED] bg-white p-3 text-[14px]"
         :class="{ 'cursor-grab': editMode }"
@@ -69,11 +67,11 @@ const handleUpdate = (newFavourites: Favourites[]) => {
               <Icon name="ic:baseline-minus" size="14px" />
             </button>
             <button
-              @click="setFavourites(item, index)"
+              @click="setServices(item, index)"
               class="flex h-6 w-6 items-center justify-center rounded-full border"
               :class="`${
-                Array.isArray(props.userFavourites) &&
-                props.userFavourites.includes(item.uuid)
+                Array.isArray(props.userServices) &&
+                props.userServices.includes(item.uuid)
                   ? 'border-white bg-[#1b38ca] text-white'
                   : ' border-[#1b38ca] bg-white text-[#1b38ca]'
               }`"
@@ -83,7 +81,6 @@ const handleUpdate = (newFavourites: Favourites[]) => {
           </div>
         </div>
         <div class="ml-[5px] text-sm font-medium">{{ item.title }}</div>
-        <!-- <div v-if="loading && currentIndex === index" class="absolute flex justify-center top-10 right-8 bg-[#1b38ca] loading loading-spinner w-1/2 mx-auto"></div> -->
       </li>
     </TransitionGroup>
   </VueDraggable>
@@ -99,7 +96,7 @@ const handleUpdate = (newFavourites: Favourites[]) => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: scaleY(0.01) translate(30px, 0);
+  transform: scaleY(0) translate(30px, 0);
 }
 
 .fade-leave-active {

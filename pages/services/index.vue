@@ -8,66 +8,56 @@ const router = useRouter()
 const editMode = ref(false)
 const modalShow = ref(false)
 const currentItem = ref({}) as any
-const userFavourites = ref([]) as any
+const userServices = ref([]) as any
 
-const favourites = ref<any>([
+const services = ref<any>([
   {
-    uuid: '1',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/1.png',
+    uuid: "1",
+    title: "Выкупы",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '2',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/2.png',
+    uuid: "2",
+    title: "Доставки",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '3',
-    title: 'Продвижение Телеграм',
-    image: '/img/favourites/3.png',
+    uuid: "3",
+    title: "Отзывы",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '4',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/4.png',
+    uuid: "4",
+    title: "Лайки на товар",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '5',
-    title: 'Аудитория',
-    image: '/img/favourites/5.png',
+    uuid: "5",
+    title: "Лайки на бренд",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '6',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/6.png',
+    uuid: "6",
+    title: "Лайки на отзывы",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '7',
-    title: 'Услуги',
-    image: '/img/favourites/7.png',
+    uuid: "7",
+    title: "Лайки на комментарии",
+    image: "/img/favourites/3.png",
   },
   {
-    uuid: '8',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/8.png',
+    uuid: "8",
+    title: "Корзина",
+    image: "/img/favourites/3.png",
   },
-  {
-    uuid: '9',
-    title: 'Продвижение бизнеса',
-    image: '/img/favourites/9.png',
-  },
-  {
-    uuid: '10',
-    title: 'Продвижение блогеров',
-    image: '/img/favourites/10.png',
-  },
-])
+]);
 
 function changeMode() {
   editMode.value = !editMode.value
 }
 
-async function getFavourites() {
+async function getServices() {
   loading.value = true
   const response:any = await useFetch('/api/user/favourites', {
     method: 'GET',
@@ -84,26 +74,25 @@ async function getFavourites() {
       loading.value = false
     })
   if (response) {
-    userFavourites.value = response.data.value.favourites
+    userServices.value = response.data.value.services
   }
 }
 
-getFavourites()
+getServices()
 
-async function setFavourite(uuid: string) {
+async function setServices(uuid: string) {
   loading.value = true
-  
-  if (userFavourites.value.includes(uuid)) {
-    userFavourites.value = userFavourites.value.filter(
+  if (userServices.value.includes(uuid)) {
+    userServices.value = userServices.value.filter(
       (item: string) => item !== uuid
     )
   } else {
-    userFavourites.value.push(uuid)
+    userServices.value.push(uuid)
   }
-  const response = await useFetch('/api/user/setFavourite', {
+  const response = await useFetch('/api/user/setServices', {
     method: 'POST',
     body: {
-      favourites: userFavourites,
+      services: userServices,
     },
     watch: false,
   })
@@ -118,7 +107,7 @@ async function setFavourite(uuid: string) {
       loading.value = false
     })
   if (response) {
-   await getFavourites()
+   await getServices()
   }
 }
 </script>
@@ -140,7 +129,7 @@ async function setFavourite(uuid: string) {
       </button>
       <div class="flex flex-col gap-6">
         <div class="flex gap-5">
-          <h1 class="text-[22px] font-[600]">Избранное</h1>
+          <h1 class="text-[22px] font-[600]">Услуги</h1>
           <button
             @click="changeMode"
             class="flex items-center justify-start text-[12px] text-[#909090] hover:text-[#1b38ca]"
@@ -148,24 +137,24 @@ async function setFavourite(uuid: string) {
             {{ editMode ? 'Сохранить' : 'Изменить' }}
           </button>
         </div>
-        <FavouritesDraggedCards
-          :favourites="favourites"
-          :userFavourites="userFavourites"
+        <ServicesDraggedCards
+          :services="services"
+          :userServices="userServices"
           :editMode="editMode"
           :loading="loading"
           @delete=";[currentItem, modalShow] = [$event, true]"
-          @update:favourites="favourites = $event"
-          @set="setFavourite($event.uuid)"
+          @update:services="services = $event"
+          @set="setServices($event.uuid)"
         />
       </div>
     </section>
   </div>
-  <FavouritesModal
+  <ServicesModal
     :show="modalShow"
     :item="currentItem"
     @close="modalShow = false"
     @delete="
-      favourites = favourites.filter(
+      services = services.filter(
         (item: any) => item.uuid !== currentItem.uuid
       )
     "

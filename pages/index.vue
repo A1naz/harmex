@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-definePageMeta({ layout: "app" });
+definePageMeta({ layout: "app"});
 
 const favourites = ref<any>([
   {
@@ -95,6 +95,33 @@ const channels = ref<any>([
     image: "/img/favourites/3.png",
   },
 ]);
+
+async function getFavourites() {
+  const response:any = await useFetch('/api/user/favourites', {
+    method: 'GET',
+    watch: false,
+  })
+    .catch((err) => {
+      // notify({
+      //   type: 'error',
+      //   title: 'Не получить доступы',
+      //   text: err.data.message || err.message,
+      // })
+    })
+    // .finally(() => {
+    //   loading.value = false
+    // })
+  if (response) {
+    favourites.value = favourites.value.filter(
+      (item: any) => response.data.value.favourites.includes(item.uuid)
+    )
+    channels.value = favourites.value.filter(
+      (item: any) => response.data.value.services.includes(item.uuid)
+    )
+  }
+}
+getFavourites()
+
 </script>
 
 <template>
@@ -112,10 +139,10 @@ const channels = ref<any>([
     <div class="w-[200%] h-[1px] -ml-40 mt-7 bg-[#0c8ce9]"></div>
     <section class="mt-10 mx-5 sm:flex block gap-8">
       <div class="sm:w-1/2 w-full">
-        <MenuFavourites title="Избранное" :items="favourites" />
+        <MenuFavourites title="Избранное" :toAll="'/favourites'" :items="favourites" />
       </div>
       <div class="sm:w-1/2 w-full">
-        <MenuFavourites title="Мои каналы" :items="channels" />
+        <MenuFavourites title="Услуги" :toAll="'/services'" :items="channels" />
       </div>
     </section>
     <div class="flex-col gap-5 text-center mt-20 text-lg">&nbsp;</div>
