@@ -165,12 +165,11 @@ async function updatePassword() {
 
 function swapLanguage(e: any) {
   console.log(e.value);
-  
+
   form.language = e.value;
   setLocale(e.value);
 }
 </script>
-
 
 <template>
   <div>
@@ -182,6 +181,10 @@ function swapLanguage(e: any) {
     </a>
     <div class="flex flex-col gap-12 py-6 md:gap-6 md:py-4">
       <h1 class="text-xl font-semibold">{{ $t("profile") }}</h1>
+      <div>
+        <button @click="setLocale('en')">en</button>
+        <button @click="setLocale('ru')">ru</button>
+      </div>
       <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
         <h2 class="text-lg font-medium">Контактные данные</h2>
         <div class="flex flex-col gap-6 md:flex-row">
@@ -257,7 +260,7 @@ function swapLanguage(e: any) {
                     images: '/icons/figma/profile/usaFlag.svg',
                   },
                 ]"
-                       @change-value="(e: any) => swapLanguage(e)"
+                @change-value="(e: any) => swapLanguage(e)"
               />
             </div>
             <div class="flex flex-col gap-1">
