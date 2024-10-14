@@ -201,7 +201,6 @@ export default defineNuxtConfig({
       {
         code: "ru",
         file: "ru.json",
-        domain:  process.PUBLIC_SITE_URL || "app.harmex.ru",
       },
       {
         code: "en",
