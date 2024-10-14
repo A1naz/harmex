@@ -78,7 +78,7 @@ export default defineNuxtConfig({
     "@nuxtjs/turnstile",
     "@nuxt/scripts",
     "shadcn-nuxt",
-    "@nuxtjs/i18n",
+    // "@nuxtjs/i18n",
   ],
 
   turnstile: {

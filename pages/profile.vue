@@ -173,18 +173,9 @@ function swapLanguage(e: any) {
 
 <template>
   <div>
-    <a
-      v-for="locale in availableLocales"
-      :href="switchLocalePath(locale.code)"
-      :key="locale.code"
-    >
-    </a>
+
     <div class="flex flex-col gap-12 py-6 md:gap-6 md:py-4">
       <h1 class="text-xl font-semibold">{{ $t("profile") }}</h1>
-      <div>
-        <button @click="setLocale('en')">en</button>
-        <button @click="setLocale('ru')">ru</button>
-      </div>
       <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
         <h2 class="text-lg font-medium">Контактные данные</h2>
         <div class="flex flex-col gap-6 md:flex-row">
