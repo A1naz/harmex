@@ -37,7 +37,7 @@ defineProps({
             </ul>
             <NuxtLink
               :to="`/catalog/${social.slug}`"
-              class="mt-3 text-[16px] absolute font-medium cursor-pointer"
+              class="mt-2 text-[16px] absolute font-medium cursor-pointer"
               >Смотреть все
               <Icon
                 class="text-[#F72585] -mt-0.5"
