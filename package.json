@@ -61,7 +61,8 @@
     "validator": "^13.12.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.38.6",
+    "@antfu/eslint-config": "^3.7.3",
+    "@nuxt/eslint": "^0.6.0",
     "@nuxt/image": "^1.8.1",
     "@nuxtjs/color-mode": "^3.5.1",
     "@nuxtjs/eslint-module": "^4.1.0",
@@ -78,7 +79,7 @@
     "@vueuse/core": "^11.1.0",
     "@vueuse/nuxt": "^10.11.1",
     "daisyui": "^4.12.13",
-    "eslint": "^8.57.1",
+    "eslint": "^9.12.0",
     "nuxt": "^3.13.2",
     "nuxt-auth-utils": "^0.4.4",
     "nuxt-gtag": "^1.2.1",

@@ -78,10 +78,14 @@ export default defineNuxtConfig({
     "@nuxtjs/turnstile",
     "@nuxt/scripts",
     "shadcn-nuxt",
-    // "@nuxtjs/i18n",
     'nuxt-i18n-micro',
-
+    "@nuxt/eslint",
   ],
+  eslint: {
+    config: {
+      standalone: false // <---
+    }
+  },
 
   turnstile: {
     siteKey: "0x4AAAAAAAw5ArLU136z91q_",
