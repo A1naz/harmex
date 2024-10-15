@@ -4,13 +4,17 @@ defineProps({
   items: {
     type: Array as () => Array<any>,
   },
+  toAll: {
+    type: String,
+    default: '/favourites',
+  },
 });
 </script>
 <template>
   <div class="w-full font-semibold text-[26px] mb-8">{{ title }}</div>
   <div class="w-full bg-[#f5f7ff] rounded-xl pt-5">
     <div class="w-full text-end pr-12">
-      <NuxtLink to="/catalog" class="cursor-pointer text-[14px] text-[#F72585]">
+      <NuxtLink :to="toAll" class="cursor-pointer text-[14px] text-[#F72585]">
         Смотреть все
       </NuxtLink>
     </div>
