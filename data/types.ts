@@ -70,6 +70,8 @@ export interface IUser extends Entity {
   landing: string;
   quickAccesses: Array<string>;
   acesses: Array<string>;
+  favourites: string[]
+  services: string[]
 }
 
 export interface IUserLogs extends Entity {
