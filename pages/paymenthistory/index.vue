@@ -190,9 +190,8 @@ function updateTableData() {
         { value: "summ", label: "Сумма" },
         { value: "source", label: "Источник" },
         { value: "service", label: "Услуга" },
-        { value: "historyBtn", label: "История" },
       ];
-      tableData.value = data.value
+      tableData.value = data.value      
         .map((item: any) => ({
           commission: item.commission,
           username: item.username,

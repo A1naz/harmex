@@ -54,12 +54,10 @@ const paginatedData = computed(() => {
               :key="index"
               class="table-cell"
             >
-              <span v-if="header.value !== 'historyBtn'">
+              <span>
                 {{ row[header.value] }}
               </span>
-              <button v-else class="myCustomBtnSm">
-                История платежей
-              </button>
+ 
             </td>
           </tr>
         </tbody>
