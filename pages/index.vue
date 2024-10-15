@@ -51,14 +51,8 @@ const favourites = ref<any>([
     uuid: '1',
     title: 'Продвижение аккаунтов',
     image: '/img/favourites/1.png',
-    uuid: '1',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/1.png',
   },
   {
-    uuid: '2',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/2.png',
     uuid: '2',
     title: 'Продвижение аккаунтов',
     image: '/img/favourites/2.png',
@@ -67,14 +61,8 @@ const favourites = ref<any>([
     uuid: '3',
     title: 'Продвижение Телеграм',
     image: '/img/favourites/3.png',
-    uuid: '3',
-    title: 'Продвижение Телеграм',
-    image: '/img/favourites/3.png',
   },
   {
-    uuid: '4',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/4.png',
     uuid: '4',
     title: 'Продвижение аккаунтов',
     image: '/img/favourites/4.png',
@@ -83,14 +71,8 @@ const favourites = ref<any>([
     uuid: '5',
     title: 'Аудитория',
     image: '/img/favourites/5.png',
-    uuid: '5',
-    title: 'Аудитория',
-    image: '/img/favourites/5.png',
   },
   {
-    uuid: '6',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/6.png',
     uuid: '6',
     title: 'Продвижение аккаунтов',
     image: '/img/favourites/6.png',
@@ -99,14 +81,8 @@ const favourites = ref<any>([
     uuid: '7',
     title: 'Услуги',
     image: '/img/favourites/7.png',
-    uuid: '7',
-    title: 'Услуги',
-    image: '/img/favourites/7.png',
   },
   {
-    uuid: '8',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/8.png',
     uuid: '8',
     title: 'Продвижение аккаунтов',
     image: '/img/favourites/8.png',
@@ -115,33 +91,20 @@ const favourites = ref<any>([
     uuid: '9',
     title: 'Продвижение бизнеса',
     image: '/img/favourites/9.png',
-    uuid: '9',
-    title: 'Продвижение бизнеса',
-    image: '/img/favourites/9.png',
   },
   {
     uuid: '10',
     title: 'Продвижение блогеров',
     image: '/img/favourites/10.png',
-    uuid: '10',
-    title: 'Продвижение блогеров',
-    image: '/img/favourites/10.png',
   },
-])
 ])
 const channels = ref<any>([
   {
     uuid: '1',
     title: 'Выкупы',
     image: '/img/favourites/3.png',
-    uuid: '1',
-    title: 'Выкупы',
-    image: '/img/favourites/3.png',
   },
   {
-    uuid: '2',
-    title: 'Доставки',
-    image: '/img/favourites/3.png',
     uuid: '2',
     title: 'Доставки',
     image: '/img/favourites/3.png',
@@ -150,14 +113,8 @@ const channels = ref<any>([
     uuid: '3',
     title: 'Отзывы',
     image: '/img/favourites/3.png',
-    uuid: '3',
-    title: 'Отзывы',
-    image: '/img/favourites/3.png',
   },
   {
-    uuid: '4',
-    title: 'Лайки на товар',
-    image: '/img/favourites/3.png',
     uuid: '4',
     title: 'Лайки на товар',
     image: '/img/favourites/3.png',
@@ -166,14 +123,8 @@ const channels = ref<any>([
     uuid: '5',
     title: 'Лайки на бренд',
     image: '/img/favourites/3.png',
-    uuid: '5',
-    title: 'Лайки на бренд',
-    image: '/img/favourites/3.png',
   },
   {
-    uuid: '6',
-    title: 'Лайки на отзывы',
-    image: '/img/favourites/3.png',
     uuid: '6',
     title: 'Лайки на отзывы',
     image: '/img/favourites/3.png',
@@ -182,14 +133,8 @@ const channels = ref<any>([
     uuid: '7',
     title: 'Лайки на комментарии',
     image: '/img/favourites/3.png',
-    uuid: '7',
-    title: 'Лайки на комментарии',
-    image: '/img/favourites/3.png',
   },
   {
-    uuid: '8',
-    title: 'Корзина',
-    image: '/img/favourites/3.png',
     uuid: '8',
     title: 'Корзина',
     image: '/img/favourites/3.png',
@@ -267,37 +212,10 @@ async function saveAccesses(availableAccesses: any, quick: any) {
     quickAccessModal.value = false
   }
 }
-
-async function getFavourites() {
-  const response: any = await useFetch('/api/user/favourites', {
-    method: 'GET',
-    watch: false,
-  })
-  if (response) {
-    if (
-      response.data.value.favourites &&
-      response.data.value.favourites.length > 0
-    ) {
-      favourites.value = favourites.value.filter((item: any) =>
-        response.data.value.favourites.includes(item.uuid)
-      )
-    }
-
-    if (
-      response.data.value.services &&
-      response.data.value.services.length > 0
-    ) {
-      channels.value = channels.value.filter((item: any) =>
-        response.data.value.services.includes(item.uuid)
-      )
-    }
-  }
-}
-getFavourites()
 </script>
 
 <template>
-  <div class="mx-0 sm:mx-20">
+  <div class="sm:mx-20 mx-0">
     <section class="mt-4 flex sm:block">
       <div v-if="accessesLoading" class="hero">
         <span class="loading loading-dots loading-lg text-primary" />
@@ -308,20 +226,16 @@ getFavourites()
     <section class="mt-10 mx-5">
       <MenuBigCarousel />
     </section>
-    <section class="mx-5 mt-10">
+    <section class="mt-10 mx-5">
       <MenuPopularCarousel />
     </section>
     <div class="w-[200%] h-[1px] -ml-40 mt-7 bg-[#0c8ce9]" />
-    <section class="mx-5 mt-10 block gap-8 sm:flex">
-      <div class="w-full sm:w-1/2">
-        <MenuFavourites
-          title="Избранное"
-          :toAll="'/favourites'"
-          :items="favourites"
-        />
+    <section class="mt-10 mx-5 sm:flex block gap-8">
+      <div class="sm:w-1/2 w-full">
+        <MenuFavourites title="Избранное" :items="favourites" />
       </div>
-      <div class="w-full sm:w-1/2">
-        <MenuFavourites title="Услуги" :toAll="'/services'" :items="channels" />
+      <div class="sm:w-1/2 w-full">
+        <MenuFavourites title="Мои каналы" :items="channels" />
       </div>
     </section>
     <div class="flex-col gap-5 text-center mt-20 text-lg">
