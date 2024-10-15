@@ -6,7 +6,6 @@ declare module '#auth-utils' {
     emailConfirmed: boolean
     isTwoFaEnabled: boolean
     phoneNumber: string
-    acesses: string[]
   }
 
   interface UserSession {

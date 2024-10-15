@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps({
-  quickAccesses: { type: Object, required: false },
+  quickAccesses: { type: Object, required: true },
+  items: { type: Object, required: true },
 })
 defineEmits(['editClick'])
 // const quickAccesses = computed(() => {
@@ -15,7 +16,7 @@ defineEmits(['editClick'])
   <div class="flex w-full flex-col items-center justify-between gap-4 md:flex-row">
     <div class="flex w-full flex-col flex-wrap justify-start gap-4 md:flex-row">
       <NuxtLink
-        v-for="item of quickAccesses" :key="item.path" :to="item.value ? item.path : '/'"
+        v-for="item of quickAccesses.length > 0 ? quickAccesses : items" :key="item.path" :to="item.value ? item.path : '/'"
         class="myCustomBtn md:min-w-40"
       >
         <div class="flex items-center justify-center">
