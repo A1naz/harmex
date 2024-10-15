@@ -58,8 +58,7 @@
     "tailwindcss-animate": "^1.0.7",
     "unstorage": "^1.12.0",
     "uuid": "^9.0.1",
-    "validator": "^13.12.0",
-    "vue-draggable-plus": "^0.5.3"
+    "validator": "^13.12.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.7.3",
