@@ -1,5 +1,6 @@
 <script setup lang="ts">
-defineProps({
+
+const props = defineProps({
   show: { type: Boolean, required: true },
 })
 
@@ -40,7 +41,7 @@ const btnDisabled = computed(() => {
 
 <template>
   <input type="checkbox" id="selectUser" :checked="show" class="modal-toggle" />
-  <div class="modal cursor-pointer z-[9999]"  @click="closeModal">
+  <div class="modal cursor-pointer z-[9999]">
     <div
       class="modal-box rounded-[8px] w-full z-[10000] sm:w-9/12 sm:max-w-2xl cursor-auto border py-[36px] px-[10px] sm:px-[40px] border-[#dee2e6]"
     >

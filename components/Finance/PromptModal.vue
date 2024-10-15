@@ -1,5 +1,6 @@
 <script setup lang="ts">
-defineProps({
+
+const props = defineProps({
   show: { type: Boolean, required: true },
 })
 

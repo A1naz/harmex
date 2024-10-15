@@ -1,14 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 const baseUrl = process.env.NUXT_APP_BASE_URL || "/";
-const description = "Harmex";
+const description = "Sarafan";
 
 export default defineNuxtConfig({
   app: {
     baseURL: baseUrl,
     head: {
       viewport: "width=device-width,initial-scale=1",
-      title: "Harmex",
+      title: "Sarafan",
       link: [{ rel: "icon", href: "/favicon.png" }],
       meta: [
         { charset: "utf-8" },
@@ -77,16 +77,10 @@ export default defineNuxtConfig({
     "nuxt3-notifications",
     "@nuxtjs/turnstile",
     "@nuxt/scripts",
-    "shadcn-nuxt",
-    // "@nuxtjs/i18n",
-    'nuxt-i18n-micro',
-
   ],
-
   turnstile: {
     siteKey: "0x4AAAAAAAw5ArLU136z91q_",
   },
-
   icon: {
     sources: [
       {
@@ -102,6 +96,7 @@ export default defineNuxtConfig({
     "@/assets/style/css/customButton.css",
   ],
 
+
   hooks: {
     close: () => {
       process.exit();
@@ -110,18 +105,6 @@ export default defineNuxtConfig({
 
   build: {
     transpile: ["primevue"],
-  },
-
-  shadcn: {
-    /**
-     * Prefix for all the imported component
-     */
-    prefix: "sha",
-    /**
-     * Directory that the component lives in.
-     * @default "./components/ui"
-     */
-    componentDir: "./components/ui",
   },
 
   primevue: {
@@ -155,16 +138,11 @@ export default defineNuxtConfig({
     turnstile: {
       secretKey: "0x4AAAAAAAw5Ajel8a_CNjT4CGlB25Geh48",
     },
-    MONGODB_URI: process.env.MONGODB_URI,
-    WB_DB_URI: process.env.WB_DB_URI,
-    AVITO_DB_URI: process.env.AVITO_DB_URI,
-    OZON_DB_URI: process.env.OZON_DB_URI,
-    FLOWWOW_DB_URI: process.env.FLOWWOW_DB_URI,
-    OZON_PVZ_DB_URI: process.env.OZON_PVZ_DB_URI,
     VK_ACCESS_KEY: process.env.VK_ACCESS_KEY,
     VK_SECRET_KEY: process.env.VK_SECRET_KEY,
     env: process.env.ENV_WORK,
     indexable: true,
+    MONGODB_URI: process.env.MONGODB_URI,
     SECRET: process.env.SECRET,
     smtpHost: process.env.smtpHost,
     smtpPort: process.env.smtpPort,
@@ -193,23 +171,6 @@ export default defineNuxtConfig({
     renderJsonPayloads: true,
     typedPages: true,
   },
-
-  i18n: {
-    translationDir: "locales",
-    meta: true,
-    locales: [
-      {
-        code: "ru",
-        dir: "ltr",
-      },
-      {
-        code: "en",
-        dir: "ltr",
-      },
-    ],
-    defaultLocale: "ru",
-  },
-  ssr: true,
 
   compatibilityDate: "2024-10-04",
 });

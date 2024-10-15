@@ -20,7 +20,7 @@ function selectType(type: string) {
 </script>
 <template>
   <aside
-    class="w-[245px] h-screen py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
+    class="w-[240px] h-screen py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
   >
     <ul class="space-y-2 mx-2 mt-4 cursor-pointer">
       <li v-for="item in items" :key="item">
