@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose'
-import { OzonConnection } from '~/server/connections/ozon'
+import { Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
+import { OzonConnection } from '~/server/connections/ozon'
 import { User } from '../User'
 
 const ProductSchema = new Schema({

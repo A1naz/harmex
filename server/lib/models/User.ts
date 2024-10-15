@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { model, Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
 import { Tariff } from './Tariff'
 
@@ -76,6 +76,5 @@ const UserSchema = new Schema<IUserSchema>({
   fizFace: { type: Boolean, default: false },
   quickAccesses: { type: [String], default: [] },
 })
-
 
 export const User = model<IUserSchema>('User', UserSchema)

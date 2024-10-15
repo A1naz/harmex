@@ -20,7 +20,7 @@ function balanceUpdate() {
 </script>
 
 <template>
-  <input type="checkbox" id="selectUser" :checked="show" class="modal-toggle" />
+  <input id="selectUser" type="checkbox" :checked="show" class="modal-toggle">
   <div class="modal cursor-pointer z-[9999]" @click="closeModal">
     <div
       class="modal-box rounded-[8px] w-full sm:w-9/12 sm:max-w-2xl cursor-auto border py-[36px] px-[10px] sm:px-[40px] border-[#dee2e6]"
@@ -38,21 +38,23 @@ function balanceUpdate() {
         <div
           class="flex flex-col w-full justify-center items-center gap-[15px] mb-[47px]"
         >
-          <h1 class="text-xl font-bold">Пополнение счета</h1>
+          <h1 class="text-xl font-bold">
+            Пополнение счета
+          </h1>
           <div class="flex flex-col gap-[4px] justify-start w-full">
             <span>{{ 'Сумма пополнения' }}</span>
             <input
+              v-model="summ"
               type="number"
               class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
               placeholder="Введите сумму пополнения"
-              v-model="summ"
-            />
+            >
           </div>
           <div class="flex gap-[17px] justify-start w-full">
             <button
-              @click="summ = item"
               v-for="item in summArr"
               class="px-[10px] border hover:bg-transparent hover:border-[#595959] hover:text-[#595959] rounded-[10px] py-1.5 bg-[#302e37] text-white"
+              @click="summ = item"
             >
               {{ item }} ₽
             </button>
@@ -61,8 +63,8 @@ function balanceUpdate() {
         <div class="flex gap-[16px] self-end">
           <button
             :disabled="!summ"
-            @click="balanceUpdate"
             class="py-2 px-9 disabled:hover:text-white border rounded-lg disabled:bg-[#595959] disabled:border-[#595959] text-white bg-[#1b38ca] border-[#1b38ca] hover:bg-transparent hover:text-[#1b38ca] hover:border-[#1b38ca]"
+            @click="balanceUpdate"
           >
             Далеее
           </button>
@@ -72,7 +74,9 @@ function balanceUpdate() {
         <div
           class="flex flex-col w-full justify-center items-center gap-[20px]"
         >
-          <h1 class="text-xl font-bold">Пополнение счета</h1>
+          <h1 class="text-xl font-bold">
+            Пополнение счета
+          </h1>
           <div class="flex gap-[20px] justify-start w-full">
             <span class="text-lg font-semibold">{{
               'Оплата заказа №21239964 (4715)'
@@ -120,19 +124,15 @@ function balanceUpdate() {
                   src="/icons/figma/finance/qrBalance.svg"
                   class="w-[197px] h-[187px]"
                 />
-                <span class="text-[#cc5f5f] leading-4 text-xs"
-                  >Не изменяйте данные, иначе платеж не будет зачислен</span
-                >
+                <span class="text-[#cc5f5f] leading-4 text-xs">Не изменяйте данные, иначе платеж не будет зачислен</span>
               </div>
             </div>
           </div>
           <div>
-            <span class="text-[0.825rem]"
-              >Ваши личные данные будут использоваться для обработки ваших
+            <span class="text-[0.825rem]">Ваши личные данные будут использоваться для обработки ваших
               заказов и других целей, описанных в нашей
               <a class="text-[#1b38ca] link no-underline hover:underline">политике конфидециальности</a>, продолжая вы соглашаетесь
-              с условиями<a class="text-[#1b38ca] link no-underline hover:underline"> оферты</a>.</span
-            >
+              с условиями<a class="text-[#1b38ca] link no-underline hover:underline"> оферты</a>.</span>
           </div>
         </div>
       </div>

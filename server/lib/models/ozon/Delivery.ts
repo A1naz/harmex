@@ -1,5 +1,5 @@
-import { Schema, model } from 'mongoose'
-import { OzonConnection } from '~/server/connections/ozon';
+import { Schema } from 'mongoose'
+import { OzonConnection } from '~/server/connections/ozon'
 
 const DeliverySchema = new Schema({
   article: { type: Schema.Types.Mixed, required: true, text: true },

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const props = defineProps({
   data: { type: Array<any>, required: true, default: () => [] },
   loading: { type: Boolean, required: true },
@@ -12,11 +11,11 @@ const searchCompleted = ref(false)
 
 const isVisible = computed(() => {
   return (
-    props.data.length > 0 &&
-    !props.loading &&
-    show.value &&
-    searchQuery.value.trim() !== '' &&
-    searchCompleted.value
+    props.data.length > 0
+    && !props.loading
+    && show.value
+    && searchQuery.value.trim() !== ''
+    && searchCompleted.value
   )
 })
 
@@ -58,33 +57,33 @@ function close() {
           : ''
       "
       @click="close"
-    ></div>
+    />
   </Transition>
 
   <div class="flex flex-col items-center gap-2 w-full ml-4 relative z-[9998]">
     <label class="flex items-center gap-2 w-full ml-4">
       <input
-        type="text"
         v-model="searchQuery"
+        type="text"
         placeholder="Поиск по услуге, категории, функционалу и справочнику"
         class="input input-bordered w-full border-[#1B38CA] bg-white outline-none"
         @input="onInput()"
         @focus="show = true"
-      />
+      >
       <Icon name="mynaui:search" size="25" class="-ml-12 bg-white rounded-lg" />
     </label>
     <Transition name="slide-fade">
       <div
-        class="flex flex-col absolute w-[98%] ml-4"
-        style="top: calc(100% + 0.5rem)"
         v-if="
           isVisible || (show && searchCompleted && searchQuery.trim() !== '')
         "
+        class="flex flex-col absolute w-[98%] ml-4"
+        style="top: calc(100% + 0.5rem)"
       >
         <div
           v-if="isVisible"
-          @click.stop
           class="flex flex-col gap-1 w-full text-center z-[99999] p-3 pb-1 rounded-lg bg-white"
+          @click.stop
         >
           <Button
             v-for="item in data"
@@ -107,8 +106,7 @@ function close() {
               <span class="text-start font-bold"> {{ item?.price }} </span>
               <span class="text-start"> {{ item?.title }} </span>
               <div class="flex gap-5 justify-between text-sm">
-                <span
-                  >Продвинуто: {{ item?.advanced ? item?.advanced : 0 }}
+                <span>Продвинуто: {{ item?.advanced ? item?.advanced : 0 }}
                 </span>
                 <div class="flex gap-0.5">
                   <Icon
@@ -124,15 +122,15 @@ function close() {
 
           <button
             class="text-secondary bg-white hover:text-black rounded-lg hover:bg-[#f5f7ff] py-1 px-4 border border-white transition w-full"
-            @click=";[(show = false), navigateTo('/catalog')]">
-          
+            @click=";[(show = false), navigateTo('/catalog')]"
+          >
             Смотреть все
           </button>
         </div>
         <div
-          @click.stop
-          class="flex flex-col gap-1 w-full text-center z-[99999] p-3 rounded-lg bg-white"
           v-else-if="show && searchCompleted && searchQuery.trim() !== ''"
+          class="flex flex-col gap-1 w-full text-center z-[99999] p-3 rounded-lg bg-white"
+          @click.stop
         >
           Ничего не найдено {{ searchQuery }}
         </div>

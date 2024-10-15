@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose'
-import { FlowwowConnection } from '~/server/connections/flowwow'
+import { Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
+import { FlowwowConnection } from '~/server/connections/flowwow'
 import { User } from '../User'
 
 const ProductSchema = new Schema({

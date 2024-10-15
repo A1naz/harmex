@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose'
-import { FlowwowConnection } from '~/server/connections/flowwow'
+import { Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
+import { FlowwowConnection } from '~/server/connections/flowwow'
 
 const LikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -31,4 +31,3 @@ const LikeSchema = new Schema({
 // })
 
 export const Like = FlowwowConnection.model('Like', LikeSchema)
-

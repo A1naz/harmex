@@ -3,7 +3,7 @@
   "types": [
     "@nuxt/types",
     "@nuxt/image",
-    "@pinia/nuxt",
+    "@pinia/nuxt"
   ],
   "noImplicitAny": false,
   "allowJs": true,

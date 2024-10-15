@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 // import { notify } from "@kyvg/vue3-notification";
 
-definePageMeta({ title: "Профиль", layout: "app" });
-const { loggedIn, user, session, fetch, clear } = useUserSession();
-const router = useRouter();
-if (!loggedIn || !user) router.push("/auth?redirect=/profile");
+definePageMeta({ title: 'Профиль', layout: 'app' })
+const { loggedIn, user, session, fetch, clear } = useUserSession()
+const router = useRouter()
+if (!loggedIn || !user)
+  router.push('/auth?redirect=/profile')
 async function logout() {
-  await clear();
-  router.push("/");
+  await clear()
+  router.push('/')
 }
 
 const { $getLocale, $switchLocale, $getLocales, $t } = useNuxtApp()
@@ -16,122 +17,122 @@ const { $getLocale, $switchLocale, $getLocales, $t } = useNuxtApp()
 //   return locales.value.filter((i) => i.code !== locale.value);
 // });
 
-const twoFaQRModal = ref<any>(null);
-const twoFaShow = ref(false);
-const isTwoFaEnabled = ref(user.value?.isTwoFaEnabled || false);
+const twoFaQRModal = ref<any>(null)
+const twoFaShow = ref(false)
+const isTwoFaEnabled = ref(user.value?.isTwoFaEnabled || false)
 
 async function openTwoFaQRModal() {
   if (!isTwoFaEnabled.value) {
-    const { data }: any = await useFetch("/api/2fa/turnOnOff", {
-      method: "GET",
+    const { data }: any = await useFetch('/api/2fa/turnOnOff', {
+      method: 'GET',
       query: { changeTo: isTwoFaEnabled.value },
       watch: false,
-    });
+    })
     if (data.value) {
       notify({
-        title: "Двухфакторная аутентификация выключена",
-      });
-      isTwoFaEnabled.value = false;
-      await fetch();
+        title: 'Двухфакторная аутентификация выключена',
+      })
+      isTwoFaEnabled.value = false
+      await fetch()
     }
-    return;
-  } else {
-    twoFaShow.value = true;
+  }
+  else {
+    twoFaShow.value = true
   }
 }
 
 function closeModal() {
-  twoFaShow.value = false;
-  isTwoFaEnabled.value = false;
+  twoFaShow.value = false
+  isTwoFaEnabled.value = false
 }
 
 const form = reactive({
-  login: "",
-  email: "",
-  phoneNumber: "",
-  language: "ru",
-  wallet: "rubles",
-});
+  login: '',
+  email: '',
+  phoneNumber: '',
+  language: 'ru',
+  wallet: 'rubles',
+})
 
 onMounted(() => {
-  form.email = user.value?.email || "";
-  form.phoneNumber = user.value?.phoneNumber || "";
-});
+  form.email = user.value?.email || ''
+  form.phoneNumber = user.value?.phoneNumber || ''
+})
 
 const docsArray = ref([
   {
-    title: "Политика конфиденциальности",
-    path: "",
+    title: 'Политика конфиденциальности',
+    path: '',
   },
   {
-    title: "Политика Cookies",
-    path: "",
+    title: 'Политика Cookies',
+    path: '',
   },
   {
-    title: "Обработка персональных данных",
-    path: "",
+    title: 'Обработка персональных данных',
+    path: '',
   },
   {
-    title: "Согласие на рассылку",
-    path: "",
+    title: 'Согласие на рассылку',
+    path: '',
   },
   {
-    title: "Пользовательское соглашение ",
-    path: "",
+    title: 'Пользовательское соглашение ',
+    path: '',
   },
-]);
+])
 
-const tooltipVisible = ref(false);
-const emailConfirmModal = ref(false);
+const tooltipVisible = ref(false)
+const emailConfirmModal = ref(false)
 
 const emailAlerts = reactive({
   value: false,
   arr: [
     {
-      title: "Партнерка",
+      title: 'Партнерка',
       value: false,
     },
     {
-      title: "Услуги",
+      title: 'Услуги',
       value: false,
     },
     {
-      title: "Новинки/акции",
+      title: 'Новинки/акции',
       value: false,
     },
     {
-      title: "Промокоды",
+      title: 'Промокоды',
       value: false,
     },
   ],
-});
+})
 const tgAlerts = reactive({
   value: false,
   arr: [
     {
-      title: "Партнерка",
+      title: 'Партнерка',
       value: false,
     },
     {
-      title: "Услуги",
+      title: 'Услуги',
       value: false,
     },
     {
-      title: "Новинки/акции",
+      title: 'Новинки/акции',
       value: false,
     },
     {
-      title: "Промокоды",
+      title: 'Промокоды',
       value: false,
     },
   ],
-});
+})
 
-const isCodeSent = ref(false);
+const isCodeSent = ref(false)
 const passwordForm = reactive({
-  oldPassword: "",
-  newPassword: "",
-});
+  oldPassword: '',
+  newPassword: '',
+})
 
 // const disabledChangePasswordButton = computed(() => {
 //   if (user.value?.hasPassword)
@@ -140,43 +141,47 @@ const passwordForm = reactive({
 // });
 
 async function updatePassword() {
-  if (passwordForm.oldPassword === "" && passwordForm.newPassword === "")
-    return;
+  if (passwordForm.oldPassword === '' && passwordForm.newPassword === '')
+    return
 
-  const { data, error }: any = await useFetch("/api/user/changePassword", {
-    method: "POST",
+  const { data, error }: any = await useFetch('/api/user/changePassword', {
+    method: 'POST',
     body: passwordForm,
     watch: false,
-  });
-  if (error.value)
+  })
+  if (error.value) {
     return notify({
-      type: "error",
-      title: "Не удалось поменять пароль.",
+      type: 'error',
+      title: 'Не удалось поменять пароль.',
       text: error.value.message,
-    });
+    })
+  }
 
-  if (data.value === "success")
-    notify({ type: "success", title: "Пароль успешно изменен." });
+  if (data.value === 'success')
+    notify({ type: 'success', title: 'Пароль успешно изменен.' })
 
-  passwordForm.oldPassword = "";
-  passwordForm.newPassword = "";
+  passwordForm.oldPassword = ''
+  passwordForm.newPassword = ''
 }
 
 function swapLanguage(e: any) {
-  console.log(e.value);
+  console.log(e.value)
 
-  form.language = e.value;
-  $switchLocale(e.value);
+  form.language = e.value
+  $switchLocale(e.value)
 }
 </script>
 
 <template>
   <div>
-
     <div class="flex flex-col gap-12 py-6 md:gap-6 md:py-4">
-      <h1 class="text-xl font-semibold">{{ $t("profile") }}</h1>
+      <h1 class="text-xl font-semibold">
+        {{ $t("profile") }}
+      </h1>
       <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
-        <h2 class="text-lg font-medium">Контактные данные</h2>
+        <h2 class="text-lg font-medium">
+          Контактные данные
+        </h2>
         <div class="flex flex-col gap-6 md:flex-row">
           <div class="flex flex-col gap-1">
             <p class="text-xs font-medium text-blue-800">
@@ -187,10 +192,12 @@ function swapLanguage(e: any) {
               readonly
               placeholder="Номер телефона"
               class="input input-bordered border-blue-800 w-full"
-            />
+            >
           </div>
           <div class="flex flex-col gap-1 relative">
-            <p class="text-xs font-medium text-blue-800">Почта</p>
+            <p class="text-xs font-medium text-blue-800">
+              Почта
+            </p>
             <label
               class="input input-bordered border-blue-800 flex items-center justify-between relative bg-white"
               @click="emailConfirmModal = true"
@@ -200,7 +207,7 @@ function swapLanguage(e: any) {
                 placeholder="Введите почту"
                 readonly
                 class="flex-grow w-full text-ellipsis min-w-52"
-              />
+              >
               <button
                 class="flex items-center justify-center mx-2 text-red-600"
                 :class="{
@@ -236,7 +243,9 @@ function swapLanguage(e: any) {
           </div>
           <div class="flex gap-2">
             <div class="flex flex-col gap-1">
-              <p class="text-xs font-medium text-blue-800">Язык</p>
+              <p class="text-xs font-medium text-blue-800">
+                Язык
+              </p>
               <custom-select
                 :tabs="[
                   {
@@ -254,7 +263,9 @@ function swapLanguage(e: any) {
               />
             </div>
             <div class="flex flex-col gap-1">
-              <p class="text-xs font-medium text-blue-800">Валюта</p>
+              <p class="text-xs font-medium text-blue-800">
+                Валюта
+              </p>
               <custom-select
                 :tabs="[
                   { title: '₽', value: 'rubles' },
@@ -269,7 +280,9 @@ function swapLanguage(e: any) {
       </div>
 
       <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
-        <h2 class="text-lg font-medium">Пароль</h2>
+        <h2 class="text-lg font-medium">
+          Пароль
+        </h2>
         <div class="flex flex-col gap-2.5">
           <div v-if="user" class="flex flex-col gap-2.5 xl:flex-row">
             <input
@@ -278,14 +291,14 @@ function swapLanguage(e: any) {
               type="password"
               placeholder="Старый пароль"
               class="input input-bordered w-full"
-            />
+            >
             <input
               v-model="passwordForm.newPassword"
               :disabled="isCodeSent"
               type="password"
               placeholder="Новый пароль"
               class="input input-bordered w-full"
-            />
+            >
             <button class="btn btn-primary xl:w-40" @click="updatePassword">
               "Изменить"
             </button>
@@ -294,26 +307,28 @@ function swapLanguage(e: any) {
       </div>
 
       <div class="flex flex-col gap-[20px] rounded-lg bg-[#f5f7ff] p-[14px]">
-        <h2 class="text-[20px] font-[500]">Двухфакторная аутентификация</h2>
+        <h2 class="text-[20px] font-[500]">
+          Двухфакторная аутентификация
+        </h2>
 
         <div class="form-control">
           <label class="label cursor-pointer px-[18px]">
-            <span class="label-text mr-4"
-              >Включить двухфакторную аутентификацию</span
-            >
+            <span class="label-text mr-4">Включить двухфакторную аутентификацию</span>
 
             <input
-              @change="openTwoFaQRModal"
+              v-model="isTwoFaEnabled"
               type="checkbox"
               class="toggle toggle-primary"
-              v-model="isTwoFaEnabled"
-            />
+              @change="openTwoFaQRModal"
+            >
           </label>
         </div>
       </div>
 
       <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
-        <h2 class="text-lg font-medium">Чат-бот уведомлений</h2>
+        <h2 class="text-lg font-medium">
+          Чат-бот уведомлений
+        </h2>
         <div class="flex flex-col gap-6">
           <div class="flex justify-between w-full">
             <div class="flex gap-3">
@@ -322,7 +337,9 @@ function swapLanguage(e: any) {
                 class="w-10 h-10"
               />
               <div class="flex flex-col gap-1">
-                <p class="text-sm font-normal">Уведомления Email</p>
+                <p class="text-sm font-normal">
+                  Уведомления Email
+                </p>
                 <p class="text-xs font-normal text-gray-500">
                   Функции недоступны. Подключите уведомления Email
                 </p>
@@ -336,7 +353,7 @@ function swapLanguage(e: any) {
                   class="toggle"
                   :checked="emailAlerts.value"
                   @click="emailAlerts.value = !emailAlerts.value"
-                />
+                >
               </label>
             </div>
           </div>
@@ -355,7 +372,7 @@ function swapLanguage(e: any) {
                     class="toggle"
                     :checked="item.value"
                     @click="item.value = !item.value"
-                  />
+                  >
                 </label>
               </div>
             </div>
@@ -365,7 +382,9 @@ function swapLanguage(e: any) {
             <div class="flex gap-3">
               <nuxt-img src="/icons/figma/profile/tg.svg" class="w-10 h-10" />
               <div class="flex flex-col gap-1">
-                <p class="text-sm font-normal">Telegram чат-бот</p>
+                <p class="text-sm font-normal">
+                  Telegram чат-бот
+                </p>
                 <p class="text-xs font-normal text-gray-500">
                   Функции недоступны. Подключите Telegram-бот.
                 </p>
@@ -388,7 +407,7 @@ function swapLanguage(e: any) {
                       class="toggle"
                       :checked="tgAlerts.value"
                       @click="tgAlerts.value = !tgAlerts.value"
-                    />
+                    >
                   </label>
                 </div>
               </div>
@@ -409,7 +428,7 @@ function swapLanguage(e: any) {
                     class="toggle"
                     :checked="item.value"
                     @click="item.value = !item.value"
-                  />
+                  >
                 </label>
               </div>
             </div>
@@ -418,7 +437,9 @@ function swapLanguage(e: any) {
       </div>
 
       <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
-        <h2 class="text-lg font-medium">Документы</h2>
+        <h2 class="text-lg font-medium">
+          Документы
+        </h2>
         <div class="flex flex-col gap-6">
           <div class="flex flex-col gap-2 text-sm text-gray-600">
             <a
@@ -426,13 +447,14 @@ function swapLanguage(e: any) {
               :key="index"
               :href="item.path"
               class="underline hover:text-blue-800"
-              >{{ item.title }}</a
-            >
+            >{{ item.title }}</a>
           </div>
         </div>
       </div>
 
-      <button class="btn btn-primary" @click="logout">Выйти</button>
+      <button class="btn btn-primary" @click="logout">
+        Выйти
+      </button>
     </div>
 
     <profile-email-confirm-modal
@@ -442,10 +464,10 @@ function swapLanguage(e: any) {
   </div>
 
   <ProfileTwoFaQRModal
-    :show="twoFaShow"
-    @closeWithTurnOn="twoFaShow = false"
-    @close="closeModal"
     ref="twoFaQRModal"
+    :show="twoFaShow"
+    @close-with-turn-on="twoFaShow = false"
+    @close="closeModal"
   />
 </template>
 

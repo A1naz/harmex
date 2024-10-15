@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose'
-import { AvitoConnection } from '~/server/connections/avito'
+import { Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
+import { AvitoConnection } from '~/server/connections/avito'
 import { User } from '../User'
 
 const ProductSchema = new Schema({

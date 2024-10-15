@@ -1,5 +1,4 @@
-import { Schema, model } from 'mongoose'
-import { v4 as uuid } from 'uuid'
+import { Schema } from 'mongoose'
 import { OzonConnection } from '~/server/connections/ozon'
 
 const QuestionSchema = new Schema({
@@ -11,8 +10,8 @@ const QuestionSchema = new Schema({
   gender: { type: String },
   createdDate: { type: Date, default: new Date(Date.now()) },
   publishDate: { type: Date, required: true },
-  anonim: {type: Boolean, default: false},
-  uuid: { type: String},
+  anonim: { type: Boolean, default: false },
+  uuid: { type: String },
 })
 
 // QuestionSchema.pre('save', function (next) {

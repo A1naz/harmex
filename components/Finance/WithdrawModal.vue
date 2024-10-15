@@ -1,5 +1,5 @@
 <script setup lang="ts">
- defineProps({
+defineProps({
   show: { type: Boolean, required: true },
 })
 
@@ -31,9 +31,11 @@ const selectedOption = ref<string | null>(null)
 function changeForm() {
   if (selectedOption.value == 'ИП') {
     modalType.value = 'ip'
-  } else if (selectedOption.value == 'ООО') {
+  }
+  else if (selectedOption.value == 'ООО') {
     modalType.value = 'ooo'
-  } else if (selectedOption.value == 'Самозанятость') {
+  }
+  else if (selectedOption.value == 'Самозанятость') {
     modalType.value = 'self'
   }
 }
@@ -173,21 +175,24 @@ const selfForm = ref([
 function withdraw(type: any) {
   if (!selectedWalletType.value) {
     walletError.value.value = true
-  } else {
+  }
+  else {
     walletError.value.value = false
   }
 
   let withdrawForm = [] as any
   if (type === 'ip') {
     withdrawForm = ipForm.value
-  } else if (type === 'ooo') {
+  }
+  else if (type === 'ooo') {
     withdrawForm = oooForm.value
   }
 
   withdrawForm.forEach((item: any) => {
     if (!item.value) {
       item.error = true
-    } else {
+    }
+    else {
       item.error = false
     }
   })
@@ -202,7 +207,7 @@ function withdraw(type: any) {
 </script>
 
 <template>
-  <input type="checkbox" id="selectUser" :checked="show" class="modal-toggle" />
+  <input id="selectUser" type="checkbox" :checked="show" class="modal-toggle">
   <div class="modal cursor-pointer z-[9999]" @click="closeModal">
     <div
       class="modal-box rounded-[8px] w-full sm:w-9/12 sm:max-w-2xl cursor-auto border py-[36px] px-[10px] sm:px-[58px] border-[#dee2e6]"
@@ -222,7 +227,9 @@ function withdraw(type: any) {
         <div
           class="flex flex-col w-full justify-center items-center gap-[15px] mb-[47px]"
         >
-          <h1 class="text-2xl font-bold">Вывод средств</h1>
+          <h1 class="text-2xl font-bold">
+            Вывод средств
+          </h1>
           <span class="text-lg">Выберите куда хотите вывести средства</span>
 
           <div class="flex gap-[31px]">
@@ -233,15 +240,15 @@ function withdraw(type: any) {
             >
               <label
                 class="flex items-center cursor-pointer relative"
-                :for="'check-' + index"
+                :for="`check-${index}`"
               >
                 <input
+                  :id="`check-${index}`"
+                  v-model="selectedOption"
                   type="radio"
                   :value="option"
-                  v-model="selectedOption"
                   class="peer h-5 w-5 rounded-full cursor-pointer transition-all appearance-none shadow hover:shadow-md border border-slate-300 checked:bg-[#0624bd] checked:border-[#0624bd]"
-                  :id="'check-' + index"
-                />
+                >
                 <span
                   class="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 >
@@ -257,16 +264,16 @@ function withdraw(type: any) {
                       fill-rule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                       clip-rule="evenodd"
-                    ></path>
+                    />
                   </svg>
                 </span>
                 <span
                   class="absolute inset-0 rounded-full border border-transparent peer-checked:border-[#0624bd] peer-checked:scale-125 transition-all"
-                ></span>
+                />
               </label>
               <label
                 class="cursor-pointer ml-2 text-slate-600 text-sm"
-                :for="'check-' + index"
+                :for="`check-${index}`"
               >
                 {{ option }}
               </label>
@@ -277,15 +284,15 @@ function withdraw(type: any) {
         <div class="flex gap-[16px] self-end">
           <button
             :disabled="!selectedOption"
-            @click="closeModal"
             class="py-2 px-5 rounded-lg disabled:border-[#595959] disabled:text-[#595959] border disabled:hover:bg-transparent border-[#1b38ca] text-[#1b38ca] hover:bg-[#1b38ca] hover:text-white"
+            @click="closeModal"
           >
             Отменить
           </button>
           <button
             :disabled="!selectedOption"
-            @click="changeForm"
             class="py-2 px-9 disabled:hover:text-white border rounded-lg disabled:bg-[#595959] disabled:border-[#595959] text-white bg-[#1b38ca] border-[#1b38ca] hover:bg-transparent hover:text-[#1b38ca] hover:border-[#1b38ca]"
+            @click="changeForm"
           >
             Далее
           </button>
@@ -305,8 +312,8 @@ function withdraw(type: any) {
               modalType == 'ip'
                 ? 'ИП'
                 : modalType == 'ooo'
-                ? 'ООО'
-                : 'Самозанятый'
+                  ? 'ООО'
+                  : 'Самозанятый'
             }}
           </h1>
           <span class="text-lg">Выберите откуда хотите вывести средства</span>
@@ -319,15 +326,15 @@ function withdraw(type: any) {
             >
               <label
                 class="flex items-center cursor-pointer relative"
-                :for="'check-' + index"
+                :for="`check-${index}`"
               >
                 <input
+                  :id="`check-${index}`"
+                  v-model="selectedWalletType"
                   type="radio"
                   :value="option"
-                  v-model="selectedWalletType"
                   class="peer h-5 w-5 rounded-full cursor-pointer transition-all appearance-none shadow hover:shadow-md border border-slate-300 checked:bg-[#0624bd] checked:border-[#0624bd]"
-                  :id="'check-' + index"
-                />
+                >
                 <span
                   class="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 >
@@ -343,16 +350,16 @@ function withdraw(type: any) {
                       fill-rule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                       clip-rule="evenodd"
-                    ></path>
+                    />
                   </svg>
                 </span>
                 <span
                   class="absolute inset-0 rounded-full border border-transparent peer-checked:border-[#0624bd] peer-checked:scale-125 transition-all"
-                ></span>
+                />
               </label>
               <label
                 class="cursor-pointer ml-2 text-slate-600"
-                :for="'check-' + index"
+                :for="`check-${index}`"
               >
                 {{ option.title }}
               </label>
@@ -361,25 +368,24 @@ function withdraw(type: any) {
           <span
             v-if="walletError.value"
             class="text-[#cc5f5f] flex justify-start w-full"
-            >{{ walletError.title }}</span
-          >
+          >{{ walletError.title }}</span>
 
           <div
             v-for="option in modalType === 'ip'
               ? ipForm
               : modalType === 'ooo'
-              ? oooForm
-              : selfForm"
+                ? oooForm
+                : selfForm"
             class="flex flex-col gap-[4px] justify-start w-full"
           >
             <span>{{ option.title }}</span>
             <input
+              v-model="option.value"
               :type="option.inputType"
               :class="option.error ? 'border-[#cc5f5f]' : ''"
               class="w-full input input-bordered rounded-lg p-2"
               :placeholder="option.placeholder"
-              v-model="option.value"
-            />
+            >
             <span v-if="option.error" class="text-[#cc5f5f]">{{
               option.errorText
             }}</span>
@@ -388,14 +394,14 @@ function withdraw(type: any) {
 
         <div class="flex gap-[16px] self-end">
           <button
-            @click="modalType = 'choice'"
             class="py-2 px-5 rounded-lg disabled:border-[#595959] disabled:text-[#595959] border disabled:hover:bg-transparent border-[#1b38ca] text-[#1b38ca] hover:bg-[#1b38ca] hover:text-white"
+            @click="modalType = 'choice'"
           >
             Назад
           </button>
           <button
-            @click="withdraw(modalType)"
             class="py-2 px-9 disabled:hover:text-white border rounded-lg disabled:bg-[#595959] disabled:border-[#595959] text-white bg-[#1b38ca] border-[#1b38ca] hover:bg-transparent hover:text-[#1b38ca] hover:border-[#1b38ca]"
+            @click="withdraw(modalType)"
           >
             Вывести
           </button>
@@ -409,9 +415,10 @@ function withdraw(type: any) {
         <div
           class="flex flex-col w-full justify-center items-center gap-[15px] mb-[47px]"
         >
-          <h1 class="text-xl font-bold">Запрос на вывод средств отправлен успешно!</h1>
+          <h1 class="text-xl font-bold">
+            Запрос на вывод средств отправлен успешно!
+          </h1>
           <span class="text-[0.925rem] leading-5	text-center ">Наши специалисты обработают запрос в течении нескольких рабочих дней. Следите за статусом заявки в разделе "История выплат"</span>
-
         </div>
 
         <div class="flex gap-[16px] self-end">
