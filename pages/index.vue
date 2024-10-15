@@ -212,6 +212,33 @@ async function saveAccesses(availableAccesses: any, quick: any) {
     quickAccessModal.value = false
   }
 }
+
+async function getFavourites() {
+  const response: any = await useFetch('/api/user/favourites', {
+    method: 'GET',
+    watch: false,
+  })
+  if (response) {
+    if (
+      response.data.value.favourites &&
+      response.data.value.favourites.length > 0
+    ) {
+      favourites.value = favourites.value.filter((item: any) =>
+        response.data.value.favourites.includes(item.uuid)
+      )
+    }
+
+    if (
+      response.data.value.services &&
+      response.data.value.services.length > 0
+    ) {
+      channels.value = channels.value.filter((item: any) =>
+        response.data.value.services.includes(item.uuid)
+      )
+    }
+  }
+}
+getFavourites()
 </script>
 
 <template>
@@ -230,12 +257,16 @@ async function saveAccesses(availableAccesses: any, quick: any) {
       <MenuPopularCarousel />
     </section>
     <div class="w-[200%] h-[1px] -ml-40 mt-7 bg-[#0c8ce9]" />
-    <section class="mt-10 mx-5 sm:flex block gap-8">
-      <div class="sm:w-1/2 w-full">
-        <MenuFavourites title="Избранное" :items="favourites" />
+    <section class="mx-5 mt-10 block gap-8 sm:flex">
+      <div class="w-full sm:w-1/2">
+        <MenuFavourites
+          title="Избранное"
+          :toAll="'/favourites'"
+          :items="favourites"
+        />
       </div>
-      <div class="sm:w-1/2 w-full">
-        <MenuFavourites title="Мои каналы" :items="channels" />
+      <div class="w-full sm:w-1/2">
+        <MenuFavourites title="Услуги" :toAll="'/services'" :items="channels" />
       </div>
     </section>
     <div class="flex-col gap-5 text-center mt-20 text-lg">
