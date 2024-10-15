@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { notify } from '@kyvg/vue3-notification'
 
-definePageMeta({ layout: 'app', middleware: 'auth'  })
+definePageMeta({ layout: 'app', middleware: 'auth' })
 
 const loading = ref(true)
 const router = useRouter()
@@ -12,54 +12,60 @@ const userServices = ref([]) as any
 
 const services = ref<any>([
   {
-    uuid: "1",
-    title: "Выкупы",
-    image: "/img/favourites/3.png",
+    uuid: '1',
+    title: 'Выкупы',
+    image: '/img/favourites/3.png',
   },
   {
-    uuid: "2",
-    title: "Доставки",
-    image: "/img/favourites/3.png",
+    uuid: '2',
+    title: 'Доставки',
+    image: '/img/favourites/3.png',
   },
   {
-    uuid: "3",
-    title: "Отзывы",
-    image: "/img/favourites/3.png",
+    uuid: '3',
+    title: 'Отзывы',
+    image: '/img/favourites/3.png',
   },
   {
-    uuid: "4",
-    title: "Лайки на товар",
-    image: "/img/favourites/3.png",
+    uuid: '4',
+    title: 'Лайки на товар',
+    image: '/img/favourites/3.png',
   },
   {
-    uuid: "5",
-    title: "Лайки на бренд",
-    image: "/img/favourites/3.png",
+    uuid: '5',
+    title: 'Лайки на бренд',
+    image: '/img/favourites/3.png',
   },
   {
-    uuid: "6",
-    title: "Лайки на отзывы",
-    image: "/img/favourites/3.png",
+    uuid: '6',
+    title: 'Лайки на отзывы',
+    image: '/img/favourites/3.png',
   },
   {
-    uuid: "7",
-    title: "Лайки на комментарии",
-    image: "/img/favourites/3.png",
+    uuid: '7',
+    title: 'Лайки на комментарии',
+    image: '/img/favourites/3.png',
   },
   {
-    uuid: "8",
-    title: "Корзина",
-    image: "/img/favourites/3.png",
+    uuid: '8',
+    title: 'Корзина',
+    image: '/img/favourites/3.png',
   },
-]);
+])
 
 function changeMode() {
   editMode.value = !editMode.value
+
+  if (!editMode.value) {
+    userServices.value = services.value.filter((fav: any) =>
+      userServices.value.some((userFav: any) => userFav.uuid === fav.uuid)
+    )
+  }
 }
 
 async function getServices() {
   loading.value = true
-  const response:any = await useFetch('/api/user/favourites', {
+  const response: any = await useFetch('/api/user/favourites', {
     method: 'GET',
     watch: false,
   })
@@ -74,7 +80,10 @@ async function getServices() {
       loading.value = false
     })
   if (response) {
-    userServices.value = response.data.value.services
+    const userServUUIDs = response.data.value.services
+    userServices.value = services.value.filter((item: any) =>
+      userServUUIDs.includes(item.uuid)
+    )
   }
 }
 
@@ -82,17 +91,19 @@ getServices()
 
 async function setServices(uuid: string) {
   loading.value = true
-  if (userServices.value.includes(uuid)) {
+  if (userServices.value.some((fav: any) => fav.uuid === uuid)) {
     userServices.value = userServices.value.filter(
-      (item: string) => item !== uuid
+      (item: any) => item.uuid !== uuid
     )
   } else {
-    userServices.value.push(uuid)
+    userServices.value.push(
+      services.value.find((item: any) => item.uuid === uuid)
+    )
   }
   const response = await useFetch('/api/user/setServices', {
     method: 'POST',
     body: {
-      services: userServices,
+      services: userServices.value.map((item: any) => item.uuid),
     },
     watch: false,
   })
@@ -107,7 +118,7 @@ async function setServices(uuid: string) {
       loading.value = false
     })
   if (response) {
-   await getServices()
+    await getServices()
   }
 }
 </script>
@@ -138,6 +149,7 @@ async function setServices(uuid: string) {
           </button>
         </div>
         <ServicesDraggedCards
+          v-if="!loading || editMode"
           :services="services"
           :userServices="userServices"
           :editMode="editMode"
@@ -146,6 +158,12 @@ async function setServices(uuid: string) {
           @update:services="services = $event"
           @set="setServices($event.uuid)"
         />
+        <div v-else-if="!editMode" class="hero">
+          <span class="loading loading-spinner loading-lg bg-[#1b38ca]"></span>
+        </div>
+        <div v-if="userServices.length === 0 && !editMode" class="hero">
+          <span class="">Сохраните услуги для их отображения</span>
+        </div>
       </div>
     </section>
   </div>
@@ -154,9 +172,7 @@ async function setServices(uuid: string) {
     :item="currentItem"
     @close="modalShow = false"
     @delete="
-      services = services.filter(
-        (item: any) => item.uuid !== currentItem.uuid
-      )
+      services = services.filter((item: any) => item.uuid !== currentItem.uuid)
     "
   />
 </template>

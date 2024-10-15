@@ -9,25 +9,19 @@ interface Services {
 
 const props = defineProps({
   services: { type: Array<Services>, required: true },
-  userServices: { type: Array, required: true },
+  userServices: { type: Array<Services>, required: true },
   editMode: { type: Boolean, required: true },
   loading: { type: Boolean, required: true },
 })
 
 const emit = defineEmits(['close', 'delete', 'update:services', 'set'])
 const currentIndex = ref(0)
-const services = ref(props.services)
+const services = ref(props.services) as any
 
 const setServices = (item: any, index: number) => {
   currentIndex.value = index
   emit('set', item)
 }
-
-const usersServices = computed(() => {
-  return Array.isArray(props.userServices)
-    ? props.services.filter((item) => props.userServices.includes(item.uuid))
-    : []
-})
 
 const handleUpdate = (newServices: Services[]) => {
   emit('update:services', newServices)
@@ -45,9 +39,7 @@ const handleUpdate = (newServices: Services[]) => {
   >
     <TransitionGroup type="transition" tag="ul" name="fade" class="sort-target">
       <li
-        v-for="(item, index) in !editMode && usersServices.length > 0
-          ? usersServices
-          : props.services"
+        v-for="(item, index) in editMode ? services : props.userServices"
         :key="item.uuid"
         class="relative flex h-[164px] w-[147px] flex-col gap-1 rounded-[5px] border border-[#EDEDED] bg-white p-3 text-[14px]"
         :class="{ 'cursor-grab': editMode }"
@@ -71,7 +63,7 @@ const handleUpdate = (newServices: Services[]) => {
               class="flex h-6 w-6 items-center justify-center rounded-full border"
               :class="`${
                 Array.isArray(props.userServices) &&
-                props.userServices.includes(item.uuid)
+                props.userServices.some((fav: any) => fav.uuid === item.uuid)
                   ? 'border-white bg-[#1b38ca] text-white'
                   : ' border-[#1b38ca] bg-white text-[#1b38ca]'
               }`"

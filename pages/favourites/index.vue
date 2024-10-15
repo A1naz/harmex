@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { notify } from '@kyvg/vue3-notification'
 
-definePageMeta({ layout: 'app', middleware: 'auth'  })
+definePageMeta({ layout: 'app', middleware: 'auth' })
 
 const loading = ref(true)
 const router = useRouter()
@@ -65,11 +65,16 @@ const favourites = ref<any>([
 
 function changeMode() {
   editMode.value = !editMode.value
+  if (!editMode.value) {
+    userFavourites.value = favourites.value.filter((fav: any) =>
+      userFavourites.value.some((userFav: any) => userFav.uuid === fav.uuid)
+    )
+  }
 }
 
 async function getFavourites() {
   loading.value = true
-  const response:any = await useFetch('/api/user/favourites', {
+  const response: any = await useFetch('/api/user/favourites', {
     method: 'GET',
     watch: false,
   })
@@ -79,31 +84,34 @@ async function getFavourites() {
         title: 'Не получить доступы',
         text: err.data.message || err.message,
       })
-    })
-    .finally(() => {
       loading.value = false
     })
   if (response) {
-    userFavourites.value = response.data.value.favourites
+    const userFavsUUIDs = response.data.value.favourites
+    userFavourites.value = favourites.value.filter((item: any) =>
+      userFavsUUIDs.includes(item.uuid)
+    )
   }
+  loading.value = false
 }
 
 getFavourites()
 
 async function setFavourite(uuid: string) {
   loading.value = true
-  
-  if (userFavourites.value.includes(uuid)) {
+  if (userFavourites.value.some((fav: any) => fav.uuid === uuid)) {
     userFavourites.value = userFavourites.value.filter(
-      (item: string) => item !== uuid
+      (item: any) => item.uuid !== uuid
     )
   } else {
-    userFavourites.value.push(uuid)
+    userFavourites.value.push(
+      favourites.value.find((item: any) => item.uuid === uuid)
+    )
   }
   const response = await useFetch('/api/user/setFavourite', {
     method: 'POST',
     body: {
-      favourites: userFavourites,
+      favourites: userFavourites.value.map((item: any) => item.uuid),
     },
     watch: false,
   })
@@ -113,13 +121,13 @@ async function setFavourite(uuid: string) {
         title: 'Не удалось получить избранное',
         text: err.data.message || err.message,
       })
-    })
-    .finally(() => {
       loading.value = false
     })
+
   if (response) {
-   await getFavourites()
+    await getFavourites()
   }
+  loading.value = false
 }
 </script>
 
@@ -149,6 +157,7 @@ async function setFavourite(uuid: string) {
           </button>
         </div>
         <FavouritesDraggedCards
+          v-if="!loading || editMode"
           :favourites="favourites"
           :userFavourites="userFavourites"
           :editMode="editMode"
@@ -157,6 +166,12 @@ async function setFavourite(uuid: string) {
           @update:favourites="favourites = $event"
           @set="setFavourite($event.uuid)"
         />
+        <div v-if="loading && !editMode" class="hero">
+          <span class="loading loading-spinner loading-lg bg-[#1b38ca]"></span>
+        </div>
+        <div v-if="userFavourites.length === 0 && !editMode" class="hero">
+          <span class="">Сохраните услуги для их отображения</span>
+        </div>
       </div>
     </section>
   </div>

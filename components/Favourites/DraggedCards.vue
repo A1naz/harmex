@@ -9,27 +9,20 @@ interface Favourites {
 
 const props = defineProps({
   favourites: { type: Array<Favourites>, required: true },
-  userFavourites: { type: Array, required: true },
+  userFavourites: { type: Array<Favourites>, required: true },
   editMode: { type: Boolean, required: true },
   loading: { type: Boolean, required: true },
 })
 
 const emit = defineEmits(['close', 'delete', 'update:favourites', 'set'])
 const currentIndex = ref(0)
-const favourites = ref(props.favourites)
+const favourites = ref(props.favourites) as any
 
 const setFavourites = (item: any, index: number) => {
   currentIndex.value = index
+
   emit('set', item)
 }
-
-const usersFavourites = computed(() => {
-  return Array.isArray(props.userFavourites)
-    ? props.favourites.filter((item) =>
-        props.userFavourites.includes(item.uuid)
-      )
-    : []
-})
 
 const handleUpdate = (newFavourites: Favourites[]) => {
   emit('update:favourites', newFavourites)
@@ -47,9 +40,7 @@ const handleUpdate = (newFavourites: Favourites[]) => {
   >
     <TransitionGroup type="transition" tag="ul" name="fade" class="sort-target">
       <li
-        v-for="(item, index) in !editMode && usersFavourites.length > 0
-          ? usersFavourites
-          : props.favourites"
+        v-for="(item, index) in editMode ? favourites : props.userFavourites"
         :key="item.uuid"
         class="relative flex h-[164px] w-[147px] flex-col gap-1 rounded-[5px] border border-[#EDEDED] bg-white p-3 text-[14px]"
         :class="{ 'cursor-grab': editMode }"
@@ -73,14 +64,15 @@ const handleUpdate = (newFavourites: Favourites[]) => {
               class="flex h-6 w-6 items-center justify-center rounded-full border"
               :class="`${
                 Array.isArray(props.userFavourites) &&
-                props.userFavourites.includes(item.uuid)
-                  ? 'border-white bg-[#1b38ca] text-white'
+                props.userFavourites.some((fav: any) => fav.uuid === item.uuid)
+                ? 'border-white bg-[#1b38ca] text-white'
                   : ' border-[#1b38ca] bg-white text-[#1b38ca]'
               }`"
             >
               <Icon name="ri:pushpin-line" size="16px" />
             </button>
           </div>
+          {{}}
         </div>
         <div class="ml-[5px] text-sm font-medium">{{ item.title }}</div>
         <!-- <div v-if="loading && currentIndex === index" class="absolute flex justify-center top-10 right-8 bg-[#1b38ca] loading loading-spinner w-1/2 mx-auto"></div> -->
@@ -99,7 +91,7 @@ const handleUpdate = (newFavourites: Favourites[]) => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: scaleY(0.01) translate(30px, 0);
+  transform: scaleY(0) translate(30px, 0);
 }
 
 .fade-leave-active {

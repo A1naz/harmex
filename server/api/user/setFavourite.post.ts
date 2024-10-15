@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
     const { favourites } = await readBody(event);
 
-    const user = await User.findOne({ uuid: isAuth.user?.uuid }).select('uuid favourites ');
+    const user = await User.findOne({ uuid: isAuth.user?.uuid }).select('uuid favourites');
 
     if (!user) {
         return sendRedirect(event, '/auth', 302);

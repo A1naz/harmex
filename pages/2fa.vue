@@ -58,8 +58,6 @@ async function confirm2fa() {
   }
 }
 
-
-
 async function logout() {
   await clear()
   navigateTo('/auth')
