@@ -144,12 +144,13 @@ main {
 .carousel-slide {
   flex: 0 0 100%;
   aspect-ratio: auto;
-  height: 168px;
+  height: 148px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: transparent;
   scroll-snap-align: center;
+  overflow-y: hidden;
 }
 
 @media (max-width: 600px) {

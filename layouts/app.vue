@@ -67,13 +67,13 @@ async function search(searchQuery: any) {
       class="drawer-content w-full overflow-hidden">
       <div class="drawerShadow flex w-full items-center gap-2 px-16 sm:px-0 h-[75px] bg-[#f5f7ff] justify-center">
         <div class="lg:px-16 flex w-full relative gap-2">
-          <NuxtLink to="/" class="sm:flex hidden cursor-pointer items-center">
+          <i18n-link to="/" class="sm:flex hidden cursor-pointer items-center">
             <nuxt-img src="/img/SARAFAN.svg" width="150px" />
-          </NuxtLink>
+          </i18n-link>
 
-          <NuxtLink to="/" class="flex items-center sm:hidden -mr-2 -ml-1.5">
+          <i18n-link to="/" class="flex items-center sm:hidden -mr-2 -ml-1.5">
             <nuxt-img src="/img/S.svg" width="30px" />
-          </NuxtLink>
+          </i18n-link>
 
           <button @click="toggleMenu"
             class="btn btn-secondary text-[#fff] sm:flex text-[16px] ml-8 hidden rounded-[10px] pr-8 font-medium">
