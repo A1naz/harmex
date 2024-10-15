@@ -166,16 +166,15 @@ async function getAccesses() {
     })
   if (response) {
     accesses.value = response.data.value?.acesses
-    quickAccesses.value = items.filter(item =>
-      response.data.value?.quickAccesses.includes(item.path),
-    )
+    quickAccesses.value = response.data.value?.quickAccesses
+      .map((path: string) => items.find((item) => item.path === path))
+      .filter(Boolean)
   }
 }
 
 if (user.value) {
   getAccesses()
-}
-else {
+} else {
   quickAccesses.value = items
   accessesLoading.value = false
 }
@@ -239,21 +238,36 @@ async function getFavourites() {
   }
 }
 getFavourites()
+function quickAccessShow() {
+  if (!user.value) {
+    notify({
+      type: 'error',
+      title: 'Необходима авторизация',
+    })
+    return
+  }
+  quickAccessModal.value = true
+}
 </script>
 
 <template>
-  <div class="sm:mx-20 mx-0">
+  <div class="mx-0 sm:mx-20">
     <section class="mt-4 flex sm:block">
       <div v-if="accessesLoading" class="hero">
         <span class="loading loading-dots loading-lg text-primary" />
       </div>
-      <MenuButtonsLine v-else :quick-accesses="quickAccesses" @edit-click="quickAccessModal = true" />
+      <MenuButtonsLine
+        v-else
+        :items="items"
+        :quick-accesses="quickAccesses"
+        @edit-click="quickAccessShow"
+      />
     </section>
-    <div class="w-[200%] h-[1px] -ml-40 mt-3 bg-[#0c8ce9]" />
-    <section class="mt-10 mx-5">
+    <div class="-ml-40 mt-3 h-[1px] w-[200%] bg-[#0c8ce9]" />
+    <section class="mx-5 mt-10">
       <MenuBigCarousel />
     </section>
-    <section class="mt-10 mx-5">
+    <section class="mx-5 mt-10">
       <MenuPopularCarousel />
     </section>
     <div class="w-[200%] h-[1px] -ml-40 mt-7 bg-[#0c8ce9]" />
@@ -269,12 +283,13 @@ getFavourites()
         <MenuFavourites title="Услуги" :toAll="'/services'" :items="channels" />
       </div>
     </section>
-    <div class="flex-col gap-5 text-center mt-20 text-lg">
-      &nbsp;
-    </div>
+    <div class="mt-20 flex-col gap-5 text-center text-lg">&nbsp;</div>
     <MenuQuickAccessModal
-      :accesses="accesses" :quick-accesses="quickAccesses" :show="quickAccessModal"
-      @save="saveAccesses" @close="quickAccessModal = false"
+      :accesses="accesses"
+      :quick-accesses="quickAccesses"
+      :show="quickAccessModal"
+      @save="saveAccesses"
+      @close="quickAccessModal = false"
     />
   </div>
 </template>
