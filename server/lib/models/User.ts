@@ -74,6 +74,7 @@ const UserSchema = new Schema<IUserSchema>({
     },
   },
   fizFace: { type: Boolean, default: false },
+  quickAccesses: { type: [String], default: [] },
 })
 
 
