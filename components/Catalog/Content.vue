@@ -6,44 +6,44 @@ defineProps({
   },
   type: {
     type: String,
-    default: "Маркетплейсы",
+    default: 'Маркетплейсы',
   },
-});
+})
 </script>
+
 <template>
   <main class="flex-1 mx-3">
-    <h1 class="text-2xl font-bold mb-6"></h1>
+    <h1 class="text-2xl font-bold mb-6" />
     <div class="flex flex-wrap gap-5 w-full justify-start">
-      <div
-        v-for="(social, index) in items"
-        :key="index"
-        class="border rounded-lg shadow-md w-[360px] p-3"
-      >
+      <div v-for="(social, index) in items" :key="index" class="border rounded-lg shadow-md w-[360px] p-3 relative">
         <div class="flex">
-          <div class="flex items-center justify-center">
-            <NuxtImg
-              :src="social.mainImage"
-              :alt="social.name"
-              class="w-[170px] h-[170px]"
-            />
+          <!-- Контейнер для изображения и текста "Ожидается" -->
+          <div class="flex items-center justify-center relative w-[170px] h-[170px]">
+            <NuxtImg :src="social.mainImage" :alt="social.name" class="w-full" />
+            <!-- Отображаем надпись, если social.disabled -->
+            <div v-if="social.disabled" class="overlay">
+              Ожидается
+            </div>
           </div>
+
           <div class="pl-4">
-            <h2 class="text-[15px] font-semibold">{{ social.name }}</h2>
-            <p class="text-[13px] font-medium">Доступные услуги:</p>
+            <h2 class="text-[15px] font-semibold">
+              {{ social.name }}
+            </h2>
+            <p class="text-[13px] font-medium">
+              Доступные услуги:
+            </p>
             <ul class="text-sm text-[#909090] underline text-[13px]">
               <li v-for="(service, i) in social.items" :key="i">
-                {{ service }}
+                {{ service.title }}
               </li>
             </ul>
             <NuxtLink
-              :to="`/catalog/${social.slug}`"
+              v-if="!social.disabled" :to="`/catalog/${social.slug}`"
               class="mt-2 text-[16px] absolute font-medium cursor-pointer"
-              >Смотреть все
-              <Icon
-                class="text-[#F72585] -mt-0.5"
-                name="jam:arrow-right"
-                size="18px"
-              ></Icon>
+            >
+              Смотреть все
+              <Icon class="text-[#F72585] -mt-0.5" name="jam:arrow-right" size="18px" />
             </NuxtLink>
           </div>
         </div>
@@ -51,3 +51,20 @@ defineProps({
     </div>
   </main>
 </template>
+
+<style scoped>
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: 36px;
+  color: rgba(0, 0, 0, 0.35);
+  /* Полупрозрачный цвет */
+  font-weight: bold;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  /* Чтобы текст не блокировал клики */
+}
+</style>

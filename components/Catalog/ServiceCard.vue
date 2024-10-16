@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps({
+defineProps({
   item: { type: Object, required: true },
   index: { default: 0 },
 })
@@ -8,20 +8,15 @@ const props = defineProps({
 <template>
   <div class="border p-2.5 rounded-lg shadow-md text-center w-[201px] h-[295px]">
     <div>
-      <NuxtImg
-        :src="item.mainImage || 'null'"
-        class="mx-auto rounded-xl"
-        width="170px"
-        height="105px"
-      />
+      <NuxtImg :src="item.mainImage || 'null'" class="mx-auto rounded-xl" width="170px" height="105px" />
     </div>
     <div class="w-full text-start mt-3">
-      <div
-        class="badge bg-[#FCD1A1] text-[#653600] whitespace-nowrap relative text-[12.5px] text-start -ml-1"
-      >
-        {{ item.name }} {{ item.items[index] }}
+      <div class="badge bg-[#FCD1A1] text-[#653600] whitespace-nowrap relative text-[12.5px] text-start -ml-1">
+        {{ item.name }} {{ item.items[index].title }}
       </div>
-      <p class="text-[16px] font-bold text-gray-800">от {{ item.price }} ₽</p>
+      <p class="text-[16px] font-bold text-gray-800">
+        от {{ item.price }} ₽
+      </p>
     </div>
     <p class="truncate-text text-[#909090] mt-2 text-[14px] text-start">
       Подписки на аккаунт можно увеличить ИИ
@@ -33,10 +28,9 @@ const props = defineProps({
       </span>
       • 5.0
     </p>
-
-    <button class="btn bg-[#F5F7FF] w-full rounded-xl">
+    <i18n-link :to="`/${item.slug}${item.items[index].path}`" class="btn bg-[#F5F7FF] w-full rounded-xl">
       {{ item.unavailable ? 'Предзаказ' : 'Выбрать' }}
-    </button>
+    </i18n-link>
   </div>
 </template>
 
