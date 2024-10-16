@@ -2,7 +2,7 @@
 const props = defineProps({
   show: { type: Boolean, required: true },
   accesses: { type: Array, required: true, default: () => [] },
-  quickAccesses: { type: Object, required: true, default: () => { } },
+  quickAccesses: { type: Object, required: true, default: () => {} },
 })
 
 const emit = defineEmits(['close', 'save'])
@@ -14,21 +14,48 @@ function closeModal() {
   emit('close')
 }
 
-const items: Array<{ title: string, icon: string, path?: string }> = [
+const items: Array<{
+  title: string
+  icon: string
+  path: string
+  value: boolean
+}> = [
   {
     title: 'Финансы',
     icon: 'solar:wallet-money-outline',
     path: '/paymenthistory',
+    value: true,
   },
   {
     title: 'Партнерка',
     icon: 'solar:users-group-rounded-outline',
     path: '/partner',
+    value: false,
   },
-  { title: 'Пополнение ', icon: 'solar:alarm-outline', path: '/balance' },
-  { title: 'Заказы', icon: 'solar:bag-4-outline', path: '/orders' },
-  { title: 'Вывод', icon: 'solar:plain-outline', path: '/withdraw' },
-  { title: 'Команда', icon: 'solar:heart-outline', path: '/team' },
+  {
+    title: 'Пополнение ',
+    icon: 'solar:alarm-outline',
+    path: '/balance',
+    value: false,
+  },
+  {
+    title: 'Заказы',
+    icon: 'solar:bag-4-outline',
+    path: '/orders',
+    value: false,
+  },
+  {
+    title: 'Вывод',
+    icon: 'solar:plain-outline',
+    path: '/withdraw',
+    value: false,
+  },
+  {
+    title: 'Команда',
+    icon: 'solar:heart-outline',
+    path: '/team',
+    value: false,
+  },
 ]
 
 const acesses: any = computed(() => {
@@ -39,27 +66,21 @@ watch(
   () => props.show,
   async (newVal) => {
     if (newVal) {
-      if (props.accesses?.length > 0) {
-        availableItems.value = items.filter(item =>
-          props.accesses.includes(item.path),
-        )
-      }
-      else {
-        availableItems.value = items
-      }
-      if (props.quickAccesses?.length > 0) {
-        quickItems.value = items.filter(item =>
-          props.quickAccesses.some((q: any) => q.path === item.path),
-        )
-      }
-      else {
-        quickItems.value = []
-      }
+      availableItems.value = props.accesses?.length
+        ? items.filter((item) => props.accesses.includes(item.path))
+        : items
+
+      quickItems.value = props.quickAccesses?.length
+        ? props.quickAccesses
+            .map((q: any) => items.find((item) => item.path === q.path))
+            .filter(Boolean)
+        : []
+
       availableItems.value = availableItems.value.filter(
-        (i: any) => !quickItems.value.some((q: any) => q.path === i.path),
+        (i: any) => !quickItems.value.some((q: any) => q.path === i.path)
       )
     }
-  },
+  }
 )
 
 function addToAvailable(item: any) {
@@ -69,7 +90,7 @@ function addToAvailable(item: any) {
 
 function addToQuick(item: any) {
   availableItems.value = availableItems.value.filter(
-    (i: any) => i.path !== item.path,
+    (i: any) => i.path !== item.path
   )
   quickItems.value.push(item)
 }
@@ -80,29 +101,40 @@ function save() {
 </script>
 
 <template>
-  <input id="selectUser" type="checkbox" :checked="show" class="modal-toggle">
-  <div class="modal z-[9999] cursor-pointer backdrop-blur-[2px]" @click="closeModal">
-    <div class="modal-box w-full cursor-auto rounded-[8px] border border-[#dee2e6] p-0 sm:max-w-2xl" @click.stop>
+  <input id="selectUser" type="checkbox" :checked="show" class="modal-toggle" />
+  <div
+    class="modal z-[9999] cursor-pointer backdrop-blur-[2px]"
+    @click="closeModal"
+  >
+    <div
+      class="modal-box w-full cursor-auto rounded-[8px] border border-[#dee2e6] p-0 sm:max-w-2xl"
+      @click.stop
+    >
       <form method="dialog">
-        <label class="btn btn-circle btn-xs absolute right-2 top-2 bg-[#e5e5e5]" @click="closeModal">
+        <label
+          class="btn btn-circle btn-xs absolute right-2 top-2 bg-[#e5e5e5]"
+          @click="closeModal"
+        >
           ✕
         </label>
       </form>
 
-      <div class="flex w-full flex-col items-center justify-center gap-6 px-[20px] py-[30px] pb-[25px] sm:px-[32px]">
-        <h3 class="text-[20px] font-[600]">
-          Быстрый доступ
-        </h3>
-        <div class="flex w-full flex-col items-center gap-4 text-[14px] font-[400]">
-          <h4 class="text-[16px] font-[500]">
-            Сохраненные функции
-          </h4>
+      <div
+        class="flex w-full flex-col items-center justify-center gap-6 px-[20px] py-[30px] pb-[25px] sm:px-[32px]"
+      >
+        <h3 class="text-[20px] font-[600]">Быстрый доступ</h3>
+        <div
+          class="flex w-full flex-col items-center gap-4 text-[14px] font-[400]"
+        >
+          <h4 class="text-[16px] font-[500]">Сохраненные функции</h4>
           <div
             v-if="quickItems && quickItems.length > 0"
             class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3"
           >
             <label
-              v-for="item of quickItems" :key="item.path" class="myCustomBtn relative md:min-w-40"
+              v-for="item of quickItems"
+              :key="item.path"
+              class="myCustomBtn relative md:min-w-40"
               @click="addToAvailable(item)"
             >
               <div class="flex items-center justify-center">
@@ -118,7 +150,10 @@ function save() {
               </div>
             </label>
           </div>
-          <div v-else class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+          <div
+            v-else
+            class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3"
+          >
             <p class="col-span-3 flex w-full items-center justify-center">
               Нет сохраненных функций
             </p>
@@ -128,17 +163,21 @@ function save() {
 
       <div class="w-full border-b border-[#BDC8FC]" />
 
-      <div class="flex w-full flex-col items-center justify-center gap-6 px-[20px] py-[30px] pt-[25px] sm:px-[32px]">
-        <div class="flex w-full flex-col items-center gap-4 text-[14px] font-[400]">
-          <h4 class="text-[16px] font-[500]">
-            Доступные функции
-          </h4>
+      <div
+        class="flex w-full flex-col items-center justify-center gap-6 px-[20px] py-[30px] pt-[25px] sm:px-[32px]"
+      >
+        <div
+          class="flex w-full flex-col items-center gap-4 text-[14px] font-[400]"
+        >
+          <h4 class="text-[16px] font-[500]">Доступные функции</h4>
           <div
             v-if="availableItems && availableItems.length > 0"
             class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3"
           >
             <label
-              v-for="item of availableItems" :key="item.path" class="myCustomBtn relative md:min-w-40"
+              v-for="item of availableItems"
+              :key="item.path"
+              class="myCustomBtn relative md:min-w-40"
               @click="addToQuick(item)"
             >
               <div class="flex items-center justify-center">
@@ -154,18 +193,24 @@ function save() {
               </div>
             </label>
           </div>
-          <div v-else class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+          <div
+            v-else
+            class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3"
+          >
             <p class="col-span-3 flex w-full items-center justify-center">
               Нет доступных функций
             </p>
           </div>
         </div>
-        <div class="grid w-full grid-cols-1 items-center justify-center gap-4 md:grid-cols-3">
+        <div
+          class="grid w-full grid-cols-1 items-center justify-center gap-4 md:grid-cols-3"
+        >
           <div />
           <label
             class="btn w-full border bg-[#1B38CA] px-8 text-white hover:border-[#1B38CA] hover:bg-white hover:text-black"
             @click="save"
-          >Сохранить</label>
+            >Сохранить</label
+          >
           <div />
         </div>
       </div>
