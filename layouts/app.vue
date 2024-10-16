@@ -118,7 +118,7 @@ async function search(searchQuery: any) {
         <div class="hero text-3xl mt-10">Тут будут элементы меню</div>
       </div>
 
-      <div class="px-16 ">
+      <div class="px-4 sm:px-16 ">
         <slot />
    
       </div>

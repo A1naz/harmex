@@ -87,13 +87,13 @@ async function attempt(
   phoneNumber: string,
   password: string,
 ) {
-  console.log('attempt', phoneNumber, password)
+  // console.log('attempt', phoneNumber, password)
 
   const foundUser = await User.findOne({
     phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
   })
 
-  console.log(foundUser)
+  // console.log(foundUser)
 
   if (
     !foundUser

@@ -155,13 +155,13 @@ const getStatus = computed(() => {
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-100 shadow-lg min-w-[320px]">
+  <div class="buyout-card card bg-base-100 shadow-lg min-w-[214px]">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-3 relative"
     >
-      <div class="dropdown dropdown-end absolute right-1 top-2">
+      <div class="dropdown dropdown-end absolute -right-1 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
-          <Icon name="ph:dots-three-outline-vertical-fill" size="28" />
+          <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
         </label>
         <ul
           tabindex="0"
@@ -227,8 +227,8 @@ const getStatus = computed(() => {
 
       <div class="truncate">
         <div class="flex justify-between gap-1 items-center">
-          <div class="flex gap-x-3 flex-wrap">
-            <span class="text-xs text-gray-500 py-1"
+          <div class="flex gap-x-2 flex-nowrap">
+            <span class="text-[0.6rem] text-gray-500 py-1"
               >Создан: {{ defaultDate(info.createdAt) }}
             </span>
             <div
@@ -239,7 +239,7 @@ const getStatus = computed(() => {
                   info.status !== 'work' &&
                   info.status !== 'archived',
               }"
-              class="text-xs rounded-2xl px-2 bg-base-200 py-1"
+              class="text-[0.6rem] rounded-2xl px-2 bg-base-200 py-1"
             >
               Выкуплено {{ info.completed }} шт.
             </div>
@@ -253,10 +253,10 @@ const getStatus = computed(() => {
           </div>
         </div>
 
-        <div class="flex gap-3 flex-wrap">
-          <h2 class="card-title mt-2">Выкуп №{{ info.place }}</h2>
+        <div class="flex gap-2 flex-nowrap">
+          <h2 class="card-title text-[1.1rem] mt-2">Выкуп №{{ info.place }}</h2>
           <div
-            class="mt-2 rounded-2xl py-1.5 px-2 text-md flex items-center w-fit text-sm"
+            class="mt-2 rounded-2xl py-0.5 px-2 text-md flex items-center w-fit text-sm text-[0.725rem] text-[0.725rem]"
             :class="{
               'text-base-content bg-[#b5ffbc] dark:bg-green-600 ':
                 info.status === 'active' ||
@@ -274,7 +274,7 @@ const getStatus = computed(() => {
           <a
             :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
             target="_blank"
-            class="text-base text-primary link link-hover mt-0 flex items-center"
+            class="text-base text-[0.85rem] text-primary link link-hover mt-0 flex items-center"
             :class="{
               'mt-2': width > 364,
             }"
@@ -286,8 +286,8 @@ const getStatus = computed(() => {
         <div class="flex justify-between mt-2"></div>
       </div>
 
-      <div class="flex gap-4">
-        <div class="flex-none" style="width: 120px; height: 170px">
+      <div class="flex gap-3 w-full">
+        <div class="flex-none" style="width: 80px; height: 124px">
           <nuxt-img
             class="rounded-xl h-full"
             width="120"
@@ -297,39 +297,39 @@ const getStatus = computed(() => {
             :src="info?.product?.image || '/logo/logocolor.svg'"
           />
         </div>
-        <div class="flex flex-col">
-          <div class="mb-2">
-            <div class="text-xs text-gray-500 truncate max-w-[150px]">
+        <div class="flex flex-col w-full">
+          <div class="mb-2 w-full">
+            <div class="text-xs text-[0.6rem] text-gray-500 truncate max-w-[150px]">
               #{{ info.uuid }}
             </div>
-            <div class="truncate text-bold max-w-[150px]">
+            <div class="truncate text-[0.9rem] text-bold max-w-[150px]">
               {{ info.product?.name }}
             </div>
           </div>
-          <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-1.5">
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Цена: </span>
-              <div class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Цена: </span>
+              <div class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm text-[0.725rem]">
                 {{ info.product?.priceText }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Количество: </span>
-              <div class="rounded-md py-0 px-2 bg-warning text-sm">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Количество: </span>
+              <div class="rounded-md py-0 px-2 bg-warning text-sm text-[0.725rem]">
                 {{ info.quantity }} шт.
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Сумма: </span>
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Сумма: </span>
               <div
-                class="rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm"
+                class="rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm text-[0.725rem]"
               >
                 {{ currency.format(info.quantity * info.product?.price) }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Категория: </span>
-              <div class="bg-base-300 rounded-md py-0 px-2 text-sm">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Категория: </span>
+              <div class="bg-base-300 rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 Wildberries
               </div>
             </div>
@@ -337,7 +337,7 @@ const getStatus = computed(() => {
         </div>
       </div>
       <button
-        class="btn mt-2 text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 dark:bg-primary dark:bg-opacity-50 dark:border-none btn-primary"
+        class="btn  btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 dark:bg-primary dark:bg-opacity-50 dark:border-none btn-primary"
         @click="$emit('openModal', index)"
       >
         Открыть

@@ -61,7 +61,9 @@ function close() {
     ></div>
   </Transition>
 
-  <div class="flex flex-col items-center gap-2 w-full ml-4 relative z-[9998]">
+  <div class="flex flex-col items-center gap-2 w-full ml-4 relative " :class=" isVisible || (show && searchCompleted && searchQuery.trim() !== '')
+          ? 'z-[9998]'
+          : ''">
     <label class="flex items-center gap-2 w-full ml-4">
       <input
         type="text"
