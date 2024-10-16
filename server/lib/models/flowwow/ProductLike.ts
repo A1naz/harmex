@@ -1,6 +1,6 @@
-import { Schema } from 'mongoose'
-import { v4 as uuid } from 'uuid'
+import { Schema, model } from 'mongoose'
 import { FlowwowConnection } from '~/server/connections/flowwow'
+import { v4 as uuid } from 'uuid'
 
 const ProductLikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },

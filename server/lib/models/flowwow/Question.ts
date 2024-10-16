@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { v4 as uuid } from 'uuid'
 import { FlowwowConnection } from '~/server/connections/flowwow'
 

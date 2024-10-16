@@ -1,30 +1,26 @@
 <script lang="ts" setup>
-const slides = ref([1, 2, 3, 4, 5, 6, 7, 8])
-const carousel: any = ref(null)
+const slides = ref([1, 2, 3, 4, 5, 6, 7, 8]);
+const carousel: any = ref(null);
 
-function handleCarouselMove(isNext: any) {
-  const slideWidth = carousel.value.firstElementChild.clientWidth
-  const maxScrollLeft = carousel.value.scrollWidth - carousel.value.clientWidth
+const handleCarouselMove = (isNext: any) => {
+  const slideWidth = carousel.value.firstElementChild.clientWidth;
+  const maxScrollLeft = carousel.value.scrollWidth - carousel.value.clientWidth;
 
   if (isNext) {
     if (carousel.value.scrollLeft + slideWidth >= maxScrollLeft) {
-      carousel.value.scrollLeft = 0
+      carousel.value.scrollLeft = 0;
+    } else {
+      carousel.value.scrollLeft += slideWidth;
     }
-    else {
-      carousel.value.scrollLeft += slideWidth
-    }
-  }
-  else {
+  } else {
     if (carousel.value.scrollLeft === 0) {
-      carousel.value.scrollLeft = maxScrollLeft
-    }
-    else {
-      carousel.value.scrollLeft -= slideWidth
+      carousel.value.scrollLeft = maxScrollLeft;
+    } else {
+      carousel.value.scrollLeft -= slideWidth;
     }
   }
-}
+};
 </script>
-
 <template>
   <div>
     <div class="relative top-[80px]">
@@ -44,9 +40,9 @@ function handleCarouselMove(isNext: any) {
     </div>
 
     <div
-      ref="carousel"
       class="carousel-container rounded-lg relative"
       dir="ltr"
+      ref="carousel"
     >
       <div
         v-for="slide in slides"
@@ -63,13 +59,14 @@ function handleCarouselMove(isNext: any) {
     <!-- <div class="absolute inset-0 bg-black opacity-80 rounded-lg"></div> -->
     <span
       class="absolute left-[180px] top-[300px] transform -translate-y-1/2 text-white font-medium text-[16px]"
-    >Обновление</span>
+      >Обновление</span
+    >
     <span
       class="absolute left-[180px] top-[325px] transform -translate-y-1/2 text-white font-semibold text-[26px]"
-    >Посмотрите обновление по работе с ИИ продвижения</span>
+      >Посмотрите обновление по работе с ИИ продвижения</span
+    >
   </div>
 </template>
-
 <style scoped>
 .responsive-image {
   height: 168px;

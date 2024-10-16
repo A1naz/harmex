@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { wildberriesConnection } from '~/server/connections/wildberries'
 
 const FFPVZSchema = new Schema({

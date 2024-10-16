@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose'
 import { OzonConnection } from '~/server/connections/ozon'
+import { Schema, model } from 'mongoose'
 import { Buyout } from '~/server/lib/models/ozon/Buyout'
 
 const BuyoutlogSchema = new Schema({

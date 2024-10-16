@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { FlowwowConnection } from '~/server/connections/flowwow'
 
 const FFPVZSchema = new Schema({

@@ -1,4 +1,5 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
+import { v4 as uuid } from 'uuid'
 import { wildberriesConnection } from '~/server/connections/wildberries'
 
 const QuestionSchema = new Schema({
@@ -10,7 +11,7 @@ const QuestionSchema = new Schema({
   gender: { type: String },
   createdDate: { type: Date, default: new Date(Date.now()) },
   publishDate: { type: Date, required: true },
-  uuid: { type: String },
+  uuid: { type: String},
 })
 
 // QuestionSchema.pre('save', function (next) {

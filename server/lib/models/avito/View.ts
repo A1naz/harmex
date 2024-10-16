@@ -1,4 +1,5 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
+import { v4 as uuid } from 'uuid'
 import { AvitoConnection } from '~/server/connections/avito'
 
 const ViewSchema = new Schema({
@@ -12,7 +13,8 @@ const ViewSchema = new Schema({
   dateStart: { type: Date, required: true },
   dateEnd: { type: Date, required: true },
   amount: { type: Number, required: true },
-  uuid: { type: String },
+  uuid: { type: String},
 })
+
 
 export const View = AvitoConnection.model('View', ViewSchema)

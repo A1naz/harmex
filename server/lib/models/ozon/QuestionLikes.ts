@@ -1,5 +1,6 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { OzonConnection } from '~/server/connections/ozon'
+import { v4 as uuid } from 'uuid'
 
 const QuestionLikesSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -20,7 +21,7 @@ const QuestionLikesSchema = new Schema({
   dateStart: { type: Date },
   dateEnd: { type: Date },
   period: { type: String },
-  uuid: { type: String },
+  uuid: { type: String},
 })
 
 // LikeSchema.pre('save', function (next) {
@@ -30,3 +31,4 @@ const QuestionLikesSchema = new Schema({
 // })
 
 export const QuestionLike = OzonConnection.model('QuestionLikes', QuestionLikesSchema)
+

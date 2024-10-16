@@ -22,7 +22,7 @@ const svgStyles = ref({
   fill: props.color,
 })
 
-async function loadSvg() {
+const loadSvg = async () => {
   const { data } = await useFetch(props.path).get().json()
   svgContent.value = data
 }
@@ -38,8 +38,8 @@ watch(() => props.path, loadSvg, { immediate: true })
     viewBox="0 0 24 24"
     fill="currentColor"
     :style="svgStyles"
-    aria-hidden="true"
     v-html="svgContent"
+    aria-hidden="true"
   />
 </template>
 

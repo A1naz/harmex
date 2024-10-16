@@ -1,5 +1,6 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { wildberriesConnection } from '~/server/connections/wildberries'
+import { v4 as uuid } from 'uuid'
 
 const ProductLikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },

@@ -1,7 +1,7 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { v4 as uuid } from 'uuid'
-import { OzonConnection } from '~/server/connections/ozon'
 import { User } from '~/server/lib/models/User'
+import { OzonConnection } from '~/server/connections/ozon'
 
 const BuyoutTemplateSchema = new Schema({
   uuid: { type: String, default: uuid(), required: true },

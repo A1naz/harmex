@@ -7,5 +7,5 @@ export const useMyAuthStore = defineStore({
   }),
   actions: {
 
-  },
+  }
 })

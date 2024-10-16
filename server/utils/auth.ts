@@ -1,113 +1,112 @@
-import type { H3Event } from 'h3'
-import { User } from '~~/server/lib/models/User'
+import type { H3Event } from "h3";
+import { User } from "~~/server/lib/models/User";
+const config = useRuntimeConfig();
 
 // Logs the user in as the given user model
 async function login(event: H3Event<Request>, user: IUser) {
   await replaceUserSession(event, {
     user: {
       uuid: user.uuid,
-      email: user.email ? user.email : '',
+      email: user.email ? user.email : "",
       emailConfirmed: user.emailConfirmed,
       isTwoFaEnabled: user.isTwoFaEnabled,
-      phoneNumber: user.phoneNumber || '',
+      phoneNumber: user.phoneNumber || "",
     },
     twoFaNeeded: user.isTwoFaEnabled,
     loggedInAt: new Date(),
-  })
+  });
 }
 
 async function registerUser(
   event: H3Event<Request>,
-  data: { phoneNumber: string, password: string },
+  data: { phoneNumber: string; password: string }
 ) {
-  const { phoneNumber, password } = data
+  const { phoneNumber, password } = data;
   if (!phoneNumber || !password) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid phoneNumber or password',
-    })
-  }
-  else {
-    const hashedPassword = await Bun.password.hash(password, 'bcrypt')
+      statusMessage: "Invalid phoneNumber or password",
+    });
+  } else {
+    const hashedPassword = await Bun.password.hash(password, "bcrypt");
     const user = await User.create({
-      phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
+      phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ""),
       password: hashedPassword,
-    })
-    await login(event, user)
+    });
+    await login(event, user);
   }
 }
 
 async function changePassword(
   event: H3Event<Request>,
-  data: { phoneNumber: string, newPassword: string },
+  data: { phoneNumber: string; newPassword: string }
 ) {
-  const { phoneNumber, newPassword } = data
+  const { phoneNumber, newPassword } = data;
   if (!phoneNumber || !newPassword) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid phoneNumber or newPassword',
-    })
-  }
-  else {
+      statusMessage: "Invalid phoneNumber or newPassword",
+    });
+  } else {
     const found = await User.findOne({
-      phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
-    })
+      phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ""),
+    });
     if (!found) {
       throw createError({
         statusCode: 404,
-        message: 'User not found',
-      })
+        message: "User not found",
+      });
     }
 
-    const hashedPassword = await Bun.password.hash(newPassword, 'bcrypt')
+    const hashedPassword = await Bun.password.hash(newPassword, "bcrypt");
     await User.updateOne(
-      { phoneNumber: phoneNumber.replace(/[()\-\s]/g, '') },
-      { $set: { password: hashedPassword } },
-    )
+      { phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, "") },
+      { $set: { password: hashedPassword } }
+    );
   }
 }
 
 async function getCurrentUser(event: H3Event<Request>) {
-  const session = await getUserSession(event)
+  const session = await getUserSession(event);
 
   // return null if there's no user
   if (!session.user) {
-    return null
+    return null;
   }
-  const dbUser = await User.findOne({ uuid: session.user.uuid }).select('-password')
+  const dbUser = await User.findOne({ uuid: session.user.uuid }).select('-password');
   // we're getting the whole user object by default for convenience, but always remove the password
   const result = dbUser?.toObject()
-  if (!result)
-    return null
-  return result
+  if (!result) return null
+  return result;
 }
+
 
 async function attempt(
   event: H3Event<Request>,
   phoneNumber: string,
-  password: string,
+  password: string
 ) {
   const foundUser = await User.findOne({
-    phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
-  })
+    phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ""),
+  });
 
   if (
-    !foundUser
-    || !foundUser.password
+    !foundUser ||
+    !foundUser.password ||
     // config.env !== "developer" &&
-    || !Bun.password.verifySync(password, foundUser.password, 'bcrypt')
+    !Bun.password.verifySync(password, foundUser.password, "bcrypt")
   ) {
     // return an error if the user is not found or the password doesn't match
     throw createError({
       statusCode: 401,
-      message: 'Неверный логин или пароль.',
-    })
+      message: "Неверный логин или пароль.",
+    });
   }
 
   // log in as the selected user
-  await login(event, foundUser)
+  await login(event, foundUser);
 
-  return true
+  return true;
 }
 
 export default {
@@ -117,4 +116,4 @@ export default {
   registerUser,
   changePassword,
   updateSession,
-}
+};

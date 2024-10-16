@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose'
 import { FlowwowConnection } from '~/server/connections/flowwow'
+import { Schema, model } from 'mongoose'
 import { Buyout } from '~/server/lib/models/wildberries/Buyout'
 
 const BuyoutlogSchema = new Schema({

@@ -1,7 +1,7 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { v4 as uuid } from 'uuid'
-import { AvitoConnection } from '~/server/connections/avito'
 import { User } from '~/server/lib/models/User'
+import { AvitoConnection } from '~/server/connections/avito'
 
 const BuyoutTemplateSchema = new Schema({
   uuid: { type: String, default: uuid(), required: true },

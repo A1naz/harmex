@@ -1,5 +1,6 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { AvitoConnection } from '~/server/connections/avito'
+import { v4 as uuid } from 'uuid'
 
 const ProductLikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -13,7 +14,7 @@ const ProductLikeSchema = new Schema({
   endedDate: { type: Date, default: null },
   progress: { type: Number, default: 0 },
   amount: { type: Number, required: true },
-  uuid: { type: String },
+  uuid: { type: String},
 })
 
 // ProductLikeSchema.pre('save', function (next) {

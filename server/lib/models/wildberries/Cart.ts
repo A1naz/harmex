@@ -1,5 +1,6 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { wildberriesConnection } from '~/server/connections/wildberries'
+import { v4 as uuid } from 'uuid'
 
 const CartSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -13,7 +14,7 @@ const CartSchema = new Schema({
   size: { type: String, required: true },
   createdDate: { type: Date, default: new Date() },
   endedDate: { type: Date },
-  uuid: { type: String },
+  uuid: {type: String},
 })
 
 // CartSchema.pre('save', function (next) {

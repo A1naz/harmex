@@ -17,7 +17,7 @@ export interface Item {
   sex: string
   searchQuery: SearchQuery[]
   adress: string
-  pointCoordinates: { lat: number, lon: number }
+  pointCoordinates: { lat: number; lon: number }
   pointId: string | number
   dateRange: [Date | null, Date | null]
   selectedSize: number | string

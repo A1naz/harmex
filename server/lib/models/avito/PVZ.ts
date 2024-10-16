@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { AvitoConnection } from '~/server/connections/avito'
 
 const PVZSchema = new Schema({

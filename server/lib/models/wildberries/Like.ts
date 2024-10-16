@@ -1,5 +1,6 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { wildberriesConnection } from '~/server/connections/wildberries'
+import { v4 as uuid } from 'uuid'
 
 const LikeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -20,7 +21,7 @@ const LikeSchema = new Schema({
   dateStart: { type: Date },
   dateEnd: { type: Date },
   period: { type: String },
-  uuid: { type: String },
+  uuid: { type: String},
 })
 
 // LikeSchema.pre('save', function (next) {
@@ -30,3 +31,4 @@ const LikeSchema = new Schema({
 // })
 
 export const Like = wildberriesConnection.model('Like', LikeSchema)
+

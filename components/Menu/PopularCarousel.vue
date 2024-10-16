@@ -1,76 +1,74 @@
 <script lang="ts" setup>
 const slides = ref([
   {
-    uuid: '1',
-    title: 'Услуги',
-    type: 'Необходимое',
-    text: 'Эти инструменты помогут продвигать свои услуги',
-    image: '/img/carousel/1.png',
+    uuid: "1",
+    title: "Услуги",
+    type: "Необходимое",
+    text: "Эти инструменты помогут продвигать свои услуги",
+    image: "/img/carousel/1.png",
   },
   {
-    uuid: '2',
-    title: 'Youtube',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/2.png',
+    uuid: "2",
+    title: "Youtube",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/2.png",
   },
   {
-    uuid: '3',
-    title: 'Youtube',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/3.png',
+    uuid: "3",
+    title: "Youtube",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/3.png",
   },
   {
-    uuid: '4',
-    title: 'Telegram',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/4.png',
+    uuid: "4",
+    title: "Telegram",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/4.png",
   },
   {
-    uuid: '5',
-    title: 'Услуги',
-    type: 'Необходимое',
-    text: 'Эти инструменты помогут продвигать свои услуги',
-    image: '/img/carousel/1.png',
+    uuid: "5",
+    title: "Услуги",
+    type: "Необходимое",
+    text: "Эти инструменты помогут продвигать свои услуги",
+    image: "/img/carousel/1.png",
   },
   {
-    uuid: '6',
-    title: 'Youtube',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/2.png',
+    uuid: "6",
+    title: "Youtube",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/2.png",
   },
   {
-    uuid: '7',
-    title: 'Youtube',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/3.png',
+    uuid: "7",
+    title: "Youtube",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/3.png",
   },
   {
-    uuid: '8',
-    title: 'Telegram',
-    type: 'Для блогеров',
-    text: 'Эти инструменты помогут продвигать свои соц сети',
-    image: '/img/carousel/4.png',
+    uuid: "8",
+    title: "Telegram",
+    type: "Для блогеров",
+    text: "Эти инструменты помогут продвигать свои соц сети",
+    image: "/img/carousel/4.png",
   },
-])
-const carousel: any = ref(null)
+]);
+const carousel: any = ref(null);
 
-function handleCarouselMove(isNext: any) {
-  const slideWidth = carousel.value.firstElementChild.clientWidth * 1.3
+const handleCarouselMove = (isNext: any) => {
+  const slideWidth = carousel.value.firstElementChild.clientWidth * 1.3;
 
   if (isNext) {
-    carousel.value.scrollLeft += slideWidth
+    carousel.value.scrollLeft += slideWidth;
+  } else {
+    carousel.value.scrollLeft -= slideWidth;
   }
-  else {
-    carousel.value.scrollLeft -= slideWidth
-  }
-}
+};
 </script>
-
 <template>
   <div class="font-semibold text-[26px] mb-3 flex justify-between">
     <span> Популярное </span>
@@ -99,9 +97,9 @@ function handleCarouselMove(isNext: any) {
     </div>
 
     <div
-      ref="carousel"
       class="carousel-container rounded-2xl relative"
       dir="ltr"
+      ref="carousel"
     >
       <div
         v-for="slide in slides"
@@ -134,7 +132,6 @@ function handleCarouselMove(isNext: any) {
     </div>
   </div>
 </template>
-
 <style scoped>
 body {
   margin: 0;

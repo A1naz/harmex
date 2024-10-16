@@ -1,83 +1,81 @@
 <!-- eslint-disable @typescript-eslint/no-use-before-define -->
 <script lang="ts" setup>
-import { useVuelidate } from '@vuelidate/core'
-import { helpers, maxLength, minLength, required } from '@vuelidate/validators'
+import { useVuelidate } from "@vuelidate/core";
+import { helpers, minLength, required, maxLength } from "@vuelidate/validators";
+const { loggedIn, user, session, fetch, clear } = useUserSession();
 
-const { loggedIn, user, session, fetch, clear } = useUserSession()
-
-const store = useMainStore()
-const route = useRoute()
-const params = route.query
+const store = useMainStore();
+const route = useRoute();
+const params = route.query;
 
 definePageMeta({
-  title: 'Вход',
-})
+  title: "Вход",
+});
 
-const { notify } = useNotification()
-const loading = ref(false)
+const { notify } = useNotification();
+const loading = ref(false);
 const formData = reactive({
-  phoneNumber: '',
-  password: '',
-})
+  phoneNumber: "",
+  password: "",
+});
 
 onMounted(async () => {
   if (params?.emailConfirmed) {
     notify({
-      type: 'success',
-      title: 'Email успешно подтвержден!',
+      type: "success",
+      title: "Email успешно подтвержден!",
       duration: 3000,
-    })
+    });
   }
   if (params?.passwordChanged) {
     notify({
-      type: 'success',
-      title: 'Пароль успешно изменен!',
+      type: "success",
+      title: "Пароль успешно изменен!",
       duration: 3000,
-    })
+    });
   }
   if (params?.confirmed) {
     notify({
-      type: 'info',
+      type: "info",
       title:
-        'Письмо для подтверждения было отправлено на указанный email. (Проверьте папку Спам)',
+        "Письмо для подтверждения было отправлено на указанный email. (Проверьте папку Спам)",
       duration: 3000,
-    })
+    });
   }
-})
+});
 
-const passwordShow = ref(false)
-const inputType = ref(passwordShow.value ? 'text' : 'password')
-function togglePassword() {
-  passwordShow.value = !passwordShow.value
-  inputType.value = passwordShow.value ? 'text' : 'password'
-}
+const passwordShow = ref(false);
+const inputType = ref(passwordShow.value ? "text" : "password");
+const togglePassword = () => {
+  passwordShow.value = !passwordShow.value;
+  inputType.value = passwordShow.value ? "text" : "password";
+};
 
 const rules = computed(() => {
   return {
     phoneNumber: {
-      required: helpers.withMessage('Введите номер телефона', required),
-      minLength: helpers.withMessage('Неверный номер телефона', minLength(18)),
-      maxLength: helpers.withMessage('Неверный номер телефона', maxLength(18)),
+      required: helpers.withMessage("Введите номер телефона", required),
+      minLength: helpers.withMessage("Неверный номер телефона", minLength(18)),
+      maxLength: helpers.withMessage("Неверный номер телефона", maxLength(18)),
     },
     password: {
-      required: helpers.withMessage('Введите пароль', required),
+      required: helpers.withMessage("Введите пароль", required),
       minLength: helpers.withMessage(
-        'Пароль должен быть длиннее 6 символов',
-        minLength(6),
+        "Пароль должен быть длиннее 6 символов",
+        minLength(6)
       ),
     },
-  }
-})
+  };
+});
 
-const v$ = useVuelidate(rules, formData)
+const v$ = useVuelidate(rules, formData);
 
 async function login() {
-  const valid = await v$.value.$validate()
-  if (!valid)
-    return
-  loading.value = true
-  const response = await $fetch('/api/auth/login', {
-    method: 'POST',
+  const valid = await v$.value.$validate();
+  if (!valid) return;
+  loading.value = true;
+  const response = await $fetch("/api/auth/login", {
+    method: "POST",
     body: {
       phoneNumber: formData.phoneNumber,
       password: formData.password,
@@ -85,26 +83,25 @@ async function login() {
   })
     .catch((err) => {
       notify({
-        type: 'error',
-        title: 'Не удалось войти',
+        type: "error",
+        title: "Не удалось войти",
         text: err.data.message || err.message,
-      })
+      });
     })
     .finally(() => {
-      loading.value = false
-    })
-  if (response === 'success') {
-    await fetch()
-    loading.value = false
+      loading.value = false;
+    });
+  if (response === "success") {
+    await fetch();
+    loading.value = false;
 
     if (session.value.user?.isTwoFaEnabled && session.value?.twoFaNeeded) {
-      return navigateTo('/2fa')
-    }
-    else if (params?.redirect as string) {
-      return navigateTo(params.redirect as string)
-    }
-    else {
-      return navigateTo('/profile')
+      
+      return navigateTo("/2fa");
+    } else if (params?.redirect as string) {
+      return navigateTo(params.redirect as string);
+    } else {
+      return navigateTo("/profile");
     }
   }
 }
@@ -115,22 +112,20 @@ async function login() {
     <section
       class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3"
     >
-      <h3 class="font-bold text-xl">
-        Войдите в аккаунт
-      </h3>
+      <h3 class="font-bold text-xl">Войдите в аккаунт</h3>
 
       <div class="box flex flex-col gap-3">
-        <form class="flex flex-col gap-3" @submit.prevent="login">
+        <form @submit.prevent="login" class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
             <label>Номер телефона </label>
             <input
-              v-model="formData.phoneNumber"
               v-maska
               data-maska="+7 (###) ###-##-##"
+              v-model="formData.phoneNumber"
               placeholder="+7 (___) ___-__-__"
               required="true"
               class="input input-bordered"
-            >
+            />
             <div v-if="v$.phoneNumber.$error" class="text-red-500 text-xs mt-1">
               {{ v$.phoneNumber.$errors[0].$message }}
             </div>
@@ -147,7 +142,7 @@ async function login() {
                   placeholder="••••••••"
                   required="true"
                   class="w-full"
-                >
+                />
                 <button
                   type="button"
                   class="hover:text-primary w-1/12"

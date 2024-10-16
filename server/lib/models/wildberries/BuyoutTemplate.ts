@@ -1,7 +1,7 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { v4 as uuid } from 'uuid'
-import { wildberriesConnection } from '~/server/connections/wildberries'
 import { User } from '~/server/lib/models/User'
+import { wildberriesConnection } from '~/server/connections/wildberries'
 
 const BuyoutTemplateSchema = new Schema({
   uuid: { type: String, default: uuid(), required: true },

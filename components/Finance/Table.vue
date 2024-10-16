@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref } from "vue";
 
 interface HeaderForTable {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 const props = defineProps({
   tableData: { type: Array as () => Array<any>, default: () => [] },
   headers: { type: Array as () => Array<HeaderForTable>, default: () => [] },
-})
+});
 
-const currentPage = ref(1)
-const itemsPerPage = ref(10)
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
 const totalPages = computed(() =>
-  Math.ceil(props.tableData.length / itemsPerPage.value),
-)
+  Math.ceil(props.tableData.length / itemsPerPage.value)
+);
 const paginatedData = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value
-  return props.tableData.slice(start, start + itemsPerPage.value)
-})
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  return props.tableData.slice(start, start + itemsPerPage.value);
+});
 </script>
 
 <template>
@@ -57,6 +57,7 @@ const paginatedData = computed(() => {
               <span>
                 {{ row[header.value] }}
               </span>
+ 
             </td>
           </tr>
         </tbody>

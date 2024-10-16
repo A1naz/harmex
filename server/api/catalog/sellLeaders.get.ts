@@ -1,3 +1,5 @@
+import { Service } from '~/server/lib/models/Service'
+
 export default eventHandler(async (event) => {
   const services = [
     {
@@ -136,12 +138,11 @@ export default eventHandler(async (event) => {
     },
   ]
 
-  if (!services || !services.length) {
+  if (!services || !services.length)
     return {
       status: 'error',
       error: [],
     }
-  }
 
   return {
     status: 'ok',

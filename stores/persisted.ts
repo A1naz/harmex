@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export const usePersistedStore = defineStore('persisted', {
   state: () => ({
-    activeDropdown: 'sad' as string,
+    activeDropdown: 'sad' as String,
   }),
-  persist: true,
+  persist: true
 })
