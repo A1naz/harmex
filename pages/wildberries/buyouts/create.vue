@@ -261,7 +261,7 @@ async function createBuyout() {
     })
 
     store.createProducts = []
-    navigateTo({ path: '/buyouts/wildberries' })
+    navigateTo({ path: '/wildberries/buyouts' })
   }
 }
 
