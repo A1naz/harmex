@@ -416,7 +416,7 @@ const updateSearchType = (filter: any) => {
         }">
           <template #body="{ data }">
             <div class="">
-              {{ $dayjs(data.dataoperation).format('D MMMM HH:mm') }}
+              {{ defaultDate(data.dataoperation) }}
             </div>
           </template>
         </Column>
