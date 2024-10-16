@@ -2,6 +2,7 @@
 FROM oven/bun:latest AS build
 
 ARG MONGODB_URI
+ARG WB_DB_URI
 ARG NAME
 ARG SECRET
 ARG PUBLIC_SITE_URL
@@ -34,6 +35,7 @@ ENV smtpHost=${smtpHost}
 ENV smtpPort=${smtpPort}
 ENV smtpUser=${smtpUser}
 ENV smtpPass=${smtpPass}
+ENV WB_DB_URI=${WB_DB_URI}
 
 # Set working directory
 WORKDIR /usr/src/nuxt-app

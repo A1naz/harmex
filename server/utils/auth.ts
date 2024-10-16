@@ -10,6 +10,7 @@ async function login(event: H3Event<Request>, user: IUser) {
       emailConfirmed: user.emailConfirmed,
       isTwoFaEnabled: user.isTwoFaEnabled,
       phoneNumber: user.phoneNumber || '',
+      acesses: user.acesses,
     },
     twoFaNeeded: user.isTwoFaEnabled,
     loggedInAt: new Date(),
@@ -87,13 +88,9 @@ async function attempt(
   phoneNumber: string,
   password: string,
 ) {
-  console.log('attempt', phoneNumber, password)
-
   const foundUser = await User.findOne({
     phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
   })
-
-  console.log(foundUser)
 
   if (
     !foundUser
