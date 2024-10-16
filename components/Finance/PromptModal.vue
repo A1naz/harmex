@@ -11,7 +11,7 @@ function closeModal() {
 </script>
 
 <template>
-  <input type="checkbox" id="selectUser" :checked="show" class="modal-toggle" />
+  <input id="selectUser" type="checkbox" :checked="show" class="modal-toggle">
   <div class="modal cursor-pointer z-[9999]" @click="closeModal">
     <div
       class="modal-box rounded-[8px] w-full sm:w-9/12 sm:max-w-2xl cursor-auto border py-[36px] px-[10px] sm:px-[58px] border-[#dee2e6]"
@@ -37,10 +37,8 @@ function closeModal() {
             <h2 class="font-bold">
               Как вывести деньги на Юридическое лицо или ИП?
             </h2>
-            <span
-              >Оставьте заявку на вывод средств в данном разделе, заполнив все
-              поля с реквизитами.</span
-            >
+            <span>Оставьте заявку на вывод средств в данном разделе, заполнив все
+              поля с реквизитами.</span>
           </div>
           <div class="flex gap-[5px] w-full justify-start">
             <p class="font-normal">
@@ -49,13 +47,10 @@ function closeModal() {
               процедурой оформления, предусмотренной на платформе (такими
               документами в зависимости от типа налогообложения и основания
               выплаты могут являться-
-              <span class="font-bold"
-                >Договор, Соглашение, Отчет, Акт, Счет</span
-              >). Передача документов происходит посредством нашего<span
+              <span class="font-bold">Договор, Соглашение, Отчет, Акт, Счет</span>). Передача документов происходит посредством нашего<span
                 class="font-bold"
               >
-                специального бота</span
-              >, в который вы предварительно получите приглашение.
+                специального бота</span>, в который вы предварительно получите приглашение.
             </p>
           </div>
           <div class="flex gap-[5px] w-full justify-start">

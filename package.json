@@ -1,5 +1,6 @@
 {
   "private": true,
+  "packageManager": "bun@1.1.29",
   "scripts": {
     "build": "bunx --bun nuxi build",
     "dev": "bunx --bun nuxi dev --host",
@@ -27,6 +28,7 @@
     "@types/validator": "^13.12.2",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
+    "@vuepic/vue-datepicker": "^4.5.1",
     "@vuesax-alpha/icons-vue": "0.0.2-beta.12",
     "@vueuse/components": "^9.13.0",
     "bcrypt": "^5.1.1",
@@ -46,7 +48,7 @@
     "nuxt-i18n-micro": "^1.22.1",
     "nuxt-lazy-load": "^3.0.4",
     "nuxt-route-meta": "^3.0.10",
-    "pinia-plugin-persistedstate": "^4.1.1",
+    "pinia-plugin-persistedstate": "^3.2.0",
     "primeicons": "^6.0.1",
     "primevue": "^3.53.0",
     "qrcode": "^1.5.4",
@@ -59,7 +61,11 @@
     "unstorage": "^1.12.0",
     "uuid": "^9.0.1",
     "validator": "^13.12.0",
+<<<<<<< HEAD
     "vue-draggable-plus": "^0.5.3"
+=======
+    "vue-yandex-maps": "^1.1.0"
+>>>>>>> origin/buyouts
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.7.3",
@@ -70,6 +76,7 @@
     "@nuxtjs/i18n": "^8.5.5",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@nuxtjs/turnstile": "^0.9.10",
+    "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@sfxcode/nuxt-primevue": "^1.4.2",
     "@types/bun": "^1.1.11",
     "@types/jsonwebtoken": "^9.0.7",
@@ -79,6 +86,7 @@
     "@types/uuid": "^9.0.8",
     "@vueuse/core": "^11.1.0",
     "@vueuse/nuxt": "^10.11.1",
+    "@yandex/ymaps3-types": "^0.0.5",
     "daisyui": "^4.12.13",
     "eslint": "^9.12.0",
     "nuxt": "^3.13.2",
@@ -100,6 +108,5 @@
     "esbuild",
     "sharp",
     "vue-demi"
-  ],
-  "packageManager": "bun@1.1.29"
+  ]
 }

@@ -1,5 +1,5 @@
+import { Schema } from 'mongoose'
 import { FlowwowConnection } from '~/server/connections/flowwow'
-import { Schema, model } from 'mongoose'
 
 const TaskLogSchema = new Schema({
   date: { type: Date, required: true },

@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import { notify } from '@kyvg/vue3-notification'
+
+const props = defineProps({
+  show: { type: Boolean, required: true, default: false },
+})
+const emit = defineEmits(['close', 'closeWithTurnOn'])
 const qrCode = ref('null')
 const twoFaSecret = ref('')
 const loading = ref(true)
 const isCodeSaved = ref(false)
 const code = ref('')
 const isCodeConfirmed = ref(false)
-import { notify } from '@kyvg/vue3-notification'
-
-const props = defineProps({
-  show: { type: Boolean, required: true, default: false },
-})
 
 async function getQr() {
   if (twoFaSecret.value == '') {
@@ -58,9 +59,9 @@ async function confirm2fa() {
 
 async function findSearchQuery() {
   if (
-    isCodeConfirmed.value ||
-    !code.value ||
-    code.value.replaceAll(' ', '').length < 6
+    isCodeConfirmed.value
+    || !code.value
+    || code.value.replaceAll(' ', '').length < 6
   ) {
     return
   }
@@ -79,7 +80,8 @@ async function findSearchQuery() {
       notify({
         title: 'Неверный код',
       })
-    } else {
+    }
+    else {
       notify({
         title: 'Код подтвержден',
       })
@@ -97,8 +99,6 @@ watch(show, (newVal) => {
   }
 })
 
-const emit = defineEmits(['close', 'closeWithTurnOn'])
-
 defineExpose({ getQr, clear })
 </script>
 
@@ -108,7 +108,7 @@ defineExpose({ getQr, clear })
     type="checkbox"
     :checked="props.show"
     class="modal-toggle"
-  />
+  >
   <div
     id="twoFaQRModal"
     :class="{ 'modal-open': props.show }"
@@ -118,14 +118,11 @@ defineExpose({ getQr, clear })
       <label
         class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2"
         @click="$emit('close')"
-        >✕</label
-      >
+      >✕</label>
 
       <div class="w-ful flex flex-col items-center justify-center">
         <span class="text-xl">Двухфакторная аутентификация</span>
-        <span class="mt-2"
-          >Отсканируйте этот QR-код в приложении Google Authenticator</span
-        >
+        <span class="mt-2">Отсканируйте этот QR-код в приложении Google Authenticator</span>
         <NuxtImg
           v-if="!loading"
           class="mt-4 rounded-lg"
@@ -134,7 +131,7 @@ defineExpose({ getQr, clear })
           :src="qrCode"
         />
         <div v-else class="flex h-[300px] justify-center">
-          <span class="loading loading-ring loading-lg mb-10"></span>
+          <span class="loading loading-ring loading-lg mb-10" />
         </div>
 
         <div>
@@ -142,24 +139,24 @@ defineExpose({ getQr, clear })
             Если вы не можете отсканировать QR-код, введите код
           </div>
           <div
-            @click="copyToClipboard(twoFaSecret)"
             class="cursor-pointer items-center justify-center gap-2 rounded-lg border border-primary bg-base-100 p-2 md:flex"
+            @click="copyToClipboard(twoFaSecret)"
           >
             <span class="link flex text-2xl lg:link-hover">
               {{ twoFaSecret }}
             </span>
           </div>
           <input
-            :disabled="isCodeConfirmed"
-            v-model="code"
-            @keyup.enter="confirm2fa"
-            @input="confirm2faDebounced"
             ref="codeInput"
+            v-model="code"
             v-maska
+            :disabled="isCodeConfirmed"
             data-maska="### ###"
             placeholder="Подтвердите код Google Authenticator"
             class="input-confirm input input-bordered mt-3 w-full text-center text-2xl"
-          />
+            @keyup.enter="confirm2fa"
+            @input="confirm2faDebounced"
+          >
         </div>
         <span class="text-md mt-2 flex text-center">
           Пожалуйста, сохраните этот код на бумаге. Этот ключ позволит вам
@@ -173,10 +170,10 @@ defineExpose({ getQr, clear })
           <label class="label cursor-pointer">
             <span class="label-text mr-2">Я сохранил код</span>
             <input
-              type="checkbox"
               v-model="isCodeSaved"
+              type="checkbox"
               class="checkbox-primary checkbox"
-            />
+            >
           </label>
         </div>
         <button
@@ -189,9 +186,7 @@ defineExpose({ getQr, clear })
       </div>
     </div>
 
-    <label class="modal-backdrop cursor-pointer" @click="$emit('close')"
-      >Close</label
-    >
+    <label class="modal-backdrop cursor-pointer" @click="$emit('close')">Close</label>
   </div>
 </template>
 

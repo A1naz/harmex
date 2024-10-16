@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema } from 'mongoose'
 import { OzonConnection } from '~/server/connections/ozon'
 
 const FFPVZSchema = new Schema({

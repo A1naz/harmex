@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose'
-import { FlowwowConnection } from '~/server/connections/flowwow'
+import { Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
+import { FlowwowConnection } from '~/server/connections/flowwow'
 
 const CartSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -14,7 +14,7 @@ const CartSchema = new Schema({
   size: { type: String, required: true },
   createdDate: { type: Date, default: new Date() },
   endedDate: { type: Date },
-  uuid: {type: String, default: uuid()},
+  uuid: { type: String, default: uuid() },
 })
 
 // CartSchema.pre('save', function (next) {

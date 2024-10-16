@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema } from 'mongoose'
 import { AvitoConnection } from '~/server/connections/avito'
 
 const DeliverySchema = new Schema({

@@ -10,9 +10,9 @@
       :speed="500"
     />
     <NuxtLayout>
-      <NuxtLoadingIndicator :color="'#296dff'" />
+      <NuxtLoadingIndicator color="#296dff" />
       <NuxtPage />
-      <div class="my-12 md:hidden"></div>
+      <div class="my-12 md:hidden" />
     </NuxtLayout>
   </div>
 </template>

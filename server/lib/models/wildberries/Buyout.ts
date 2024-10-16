@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose'
-import { wildberriesConnection } from '~/server/connections/wildberries'
+import { Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
+import { wildberriesConnection } from '~/server/connections/wildberries'
 import { User } from '../User'
 
 const ProductSchema = new Schema({
@@ -50,6 +50,4 @@ const BuyoutSchema = new Schema({
   data18: { type: {}, default: '' },
 })
 
-
 export const Buyout = wildberriesConnection.model('Buyout', BuyoutSchema)
-

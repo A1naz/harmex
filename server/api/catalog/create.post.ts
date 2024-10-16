@@ -1,5 +1,5 @@
-import { Service } from '~/server/lib/models/Service'
 import { v4 } from 'uuid'
+import { Service } from '~/server/lib/models/Service'
 
 export default eventHandler(async (event) => {
   const body = await readBody(event)

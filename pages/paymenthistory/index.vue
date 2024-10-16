@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-type TableType = "general" | "expenses" | "replenishment";
+type TableType = 'general' | 'expenses' | 'replenishment'
 definePageMeta({
-  layout: "app",
-});
+  layout: 'app',
+})
 // interface Transaction {
 //   summ: number;
 //   date: string | Date;
@@ -64,52 +64,52 @@ definePageMeta({
 //   value: TableType;
 // }
 
-const buttonsLine: Array<{ label: string; value: string }> = [
-  { label: "Общее", value: "general" },
-  { label: "Пополнение", value: "replenishment" },
-  { label: "Расходы", value: "expenses" },
-  { label: "Партнерка", value: "partner" },
-  { label: "Генеалогия", value: "genealogy" },
-];
+const buttonsLine: Array<{ label: string, value: string }> = [
+  { label: 'Общее', value: 'general' },
+  { label: 'Пополнение', value: 'replenishment' },
+  { label: 'Расходы', value: 'expenses' },
+  { label: 'Партнерка', value: 'partner' },
+  { label: 'Генеалогия', value: 'genealogy' },
+]
 
-const data = ref<any>([]);
-const tableData = ref<any>([]);
-const tableType = ref("general");
+const data = ref<any>([])
+const tableData = ref<any>([])
+const tableType = ref('general')
 
 // interface HeaderForTable {
 //   value: string;
 //   label: string;
 // }
-const headersForTable = ref<any>([]);
+const headersForTable = ref<any>([])
 
 const { data: fetchedData, error } = await useFetch(
-  "/api/finance/finance-data"
-);
+  '/api/finance/finance-data',
+)
 
 watch(
   () => fetchedData.value,
   (newData) => {
     if (newData) {
-      data.value = newData;
-      updateTableData();
+      data.value = newData
+      updateTableData()
     }
   },
-  { immediate: true }
-);
+  { immediate: true },
+)
 
 function updateTableData() {
   switch (tableType.value) {
-    case "general":
+    case 'general':
       headersForTable.value = [
-        { value: "summ", label: "Сумма" },
-        { value: "date", label: "Дата" },
-        { value: "executionDate", label: "Дата исполнения" },
-        { value: "source", label: "Источник" },
-        { value: "service", label: "Услуга" },
-        { value: "article", label: "Артикул" },
-        { value: "orderId", label: "ID заказа" },
-        { value: "comment", label: "Комментарий" },
-      ];
+        { value: 'summ', label: 'Сумма' },
+        { value: 'date', label: 'Дата' },
+        { value: 'executionDate', label: 'Дата исполнения' },
+        { value: 'source', label: 'Источник' },
+        { value: 'service', label: 'Услуга' },
+        { value: 'article', label: 'Артикул' },
+        { value: 'orderId', label: 'ID заказа' },
+        { value: 'comment', label: 'Комментарий' },
+      ]
       tableData.value = data.value.map((item: any) => ({
         summ: item.summ,
         date: item.date,
@@ -119,18 +119,18 @@ function updateTableData() {
         article: item.article,
         orderId: item.orderId,
         comment: item.comment,
-      }));
-      break;
+      }))
+      break
 
-    case "replenishment":
+    case 'replenishment':
       headersForTable.value = [
-        { value: "summ", label: "Сумма" },
-        { value: "date", label: "Дата" },
-        { value: "executionDate", label: "Дата исполнения" },
-        { value: "source", label: "Источник" },
-        { value: "orderId", label: "ID заказа" },
-        { value: "comment", label: "Комментарий" },
-      ];
+        { value: 'summ', label: 'Сумма' },
+        { value: 'date', label: 'Дата' },
+        { value: 'executionDate', label: 'Дата исполнения' },
+        { value: 'source', label: 'Источник' },
+        { value: 'orderId', label: 'ID заказа' },
+        { value: 'comment', label: 'Комментарий' },
+      ]
       tableData.value = data.value
         .map((item: any) => ({
           summ: item.summ,
@@ -139,19 +139,19 @@ function updateTableData() {
           source: item.source,
           orderId: item.orderId,
           comment: item.comment,
-        }));
-      break;
+        }))
+      break
 
-    case "expenses":
+    case 'expenses':
       headersForTable.value = [
-        { value: "summ", label: "Сумма" },
-        { value: "date", label: "Дата" },
-        { value: "executionDate", label: "Дата исполнения" },
-        { value: "source", label: "Источник" },
-        { value: "service", label: "Услуга" },
-        { value: "article", label: "Артикул" },
-        { value: "orderId", label: "ID заказа" },
-      ];
+        { value: 'summ', label: 'Сумма' },
+        { value: 'date', label: 'Дата' },
+        { value: 'executionDate', label: 'Дата исполнения' },
+        { value: 'source', label: 'Источник' },
+        { value: 'service', label: 'Услуга' },
+        { value: 'article', label: 'Артикул' },
+        { value: 'orderId', label: 'ID заказа' },
+      ]
       tableData.value = data.value
         .map((item: any) => ({
           summ: item.summ,
@@ -161,16 +161,16 @@ function updateTableData() {
           service: item.service,
           orderId: item.orderId,
           article: item.article,
-        }));
-      break;
+        }))
+      break
 
-    case "partner":
+    case 'partner':
       headersForTable.value = [
-        { value: "summ", label: "Сумма" },
-        { value: "date", label: "Дата и время исполнения" },
-        { value: "source", label: "Источник" },
-        { value: "service", label: "Услуга" },
-      ];
+        { value: 'summ', label: 'Сумма' },
+        { value: 'date', label: 'Дата и время исполнения' },
+        { value: 'source', label: 'Источник' },
+        { value: 'service', label: 'Услуга' },
+      ]
       tableData.value = data.value
         .map((item: any) => ({
           summ: item.summ,
@@ -179,19 +179,19 @@ function updateTableData() {
           service: item.service,
           orderId: item.orderId,
           article: item.article,
-        }));
-      break;
+        }))
+      break
 
-    case "genealogy":
+    case 'genealogy':
       headersForTable.value = [
-        { value: "commission", label: "Комиссионнные" },
-        { value: "username", label: "Логин реферала" },
-        { value: "date", label: "Дата и время исполнения" },
-        { value: "summ", label: "Сумма" },
-        { value: "source", label: "Источник" },
-        { value: "service", label: "Услуга" },
-      ];
-      tableData.value = data.value      
+        { value: 'commission', label: 'Комиссионнные' },
+        { value: 'username', label: 'Логин реферала' },
+        { value: 'date', label: 'Дата и время исполнения' },
+        { value: 'summ', label: 'Сумма' },
+        { value: 'source', label: 'Источник' },
+        { value: 'service', label: 'Услуга' },
+      ]
+      tableData.value = data.value
         .map((item: any) => ({
           commission: item.commission,
           username: item.username,
@@ -199,16 +199,16 @@ function updateTableData() {
           summ: item.summ,
           source: item.source,
           service: item.service,
-        }));
-      break;
+        }))
+      break
   }
 }
 
 function changeTableType(type: string) {
-  tableType.value = type;
+  tableType.value = type
 }
 
-watch(() => tableType.value, updateTableData, { immediate: true });
+watch(() => tableType.value, updateTableData, { immediate: true })
 </script>
 
 <template>

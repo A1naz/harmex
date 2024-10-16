@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core'
-import { email, helpers, minLength, required, sameAs, maxLength, and } from '@vuelidate/validators'
+import { helpers, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
+
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 
 const store = useMainStore()
@@ -29,13 +30,13 @@ watch(counter, (newValue) => {
   if (newValue < 60) {
     resendCodeTimer.value = 60 - newValue
     resendCodeText.value = `Подтвердить (${resendCodeTimer.value})`
-  } else {
+  }
+  else {
     pause()
     resendCodeText.value = 'Подтвердить'
     resendCodeDisabled.value = false
   }
 })
-
 
 const loading = ref(false)
 
@@ -57,7 +58,7 @@ const rules = computed(() => {
       required: helpers.withMessage('Введите пароль', required),
       minLength: helpers.withMessage(
         'Пароль должен быть длиннее 6 символов',
-        minLength(6)
+        minLength(6),
       ),
     },
     repeatPassword: {
@@ -81,20 +82,21 @@ function startCodeTimer() {
 }
 async function sendCode() {
   const valid = await v$.value.phoneNumber.$validate()
-  if (!valid) return
+  if (!valid)
+    return
   loading.value = true
 
   const response = await $fetch('/api/auth/sendCode', {
     method: 'POST',
     body: {
       type: 'resetPassword',
-      phoneNumber: formData.phoneNumber
-    }
-  }).catch(err => {
+      phoneNumber: formData.phoneNumber,
+    },
+  }).catch((err) => {
     notify({
       type: 'error',
       title: 'Ошибка отправки кода',
-      text: err.data.message || err.message
+      text: err.data.message || err.message,
     })
     if (err.status === 400) {
       startCodeTimer()
@@ -107,7 +109,7 @@ async function sendCode() {
     notify({
       type: 'success',
       title: 'Код отправлен',
-      text: 'На ваш номер отправлен код подтверждения'
+      text: 'На ваш номер отправлен код подтверждения',
     })
     formData.code = response
   }
@@ -122,7 +124,8 @@ async function resetPassword() {
     return
   }
   const valid = await v$.value.$validate()
-  if (!valid) return
+  if (!valid)
+    return
   loading.value = true
   const response = await $fetch('/api/auth/resetPassword', {
     method: 'POST',
@@ -131,12 +134,12 @@ async function resetPassword() {
       newPassword: formData.newPassword,
       repeatPassword: formData.repeatPassword,
       code: formData.code,
-    }
-  }).catch(err => {
+    },
+  }).catch((err) => {
     notify({
       type: 'error',
       title: 'Ошибка',
-      text: err.data.message || err.message
+      text: err.data.message || err.message,
     })
   }).finally(() => {
     loading.value = false
@@ -153,30 +156,34 @@ async function resetPassword() {
 
 const passwordShow = ref(false)
 const inputType = ref(passwordShow.value ? 'text' : 'password')
-const togglePassword = () => {
+function togglePassword() {
   passwordShow.value = !passwordShow.value
   inputType.value = passwordShow.value ? 'text' : 'password'
 }
-
-
 </script>
 
 <template>
   <div id="resetPassword" class="flex sm:items-center sm:justify-center h-screen">
-
     <section
-      class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3">
-      <h3 class="font-bold text-xl">Восстановление пароля</h3>
+      class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3"
+    >
+      <h3 class="font-bold text-xl">
+        Восстановление пароля
+      </h3>
 
       <div class="box flex flex-col gap-3">
         <form class="flex flex-col gap-3" @submit.prevent="resetPassword">
           <div class="flex flex-col gap-1">
             <label>Номер телефона</label>
             <label class="input input-bordered flex items-center justify-between p-0 pl-4">
-              <input :disabled="codeSended" v-maska data-maska="+7 (###) ###-##-##" v-model="formData.phoneNumber"
-                placeholder="+7 (___) ___-__-__" required="true" />
-              <button :disabled="codeSended && resendCodeDisabled" @click.prevent="sendCode"
-                class="btn btn-ghost shadow-none hover:shadow-none"> {{ resendCodeText }}
+              <input
+                v-model="formData.phoneNumber" v-maska :disabled="codeSended" data-maska="+7 (###) ###-##-##"
+                placeholder="+7 (___) ___-__-__" required="true"
+              >
+              <button
+                :disabled="codeSended && resendCodeDisabled" class="btn btn-ghost shadow-none hover:shadow-none"
+                @click.prevent="sendCode"
+              > {{ resendCodeText }}
               </button>
             </label>
             <div v-if="v$.phoneNumber.$error" class="text-red-500 text-xs mt-1">
@@ -186,7 +193,7 @@ const togglePassword = () => {
           <div v-if="codeSended" class="flex flex-col gap-1">
             <label>Код потверждения</label>
             <label class="input input-bordered flex items-center justify-between p-0 pl-4">
-              <input v-model="formData.code" placeholder="1234" required="true" />
+              <input v-model="formData.code" placeholder="1234" required="true">
             </label>
             <div v-if="v$.code.$error" class="text-red-500 text-xs mt-1">
               {{ v$.code.$errors[0].$message }}
@@ -196,8 +203,10 @@ const togglePassword = () => {
             <label>Новый пароль </label>
             <div class="flex flex-col gap-0.5">
               <label class="input input-bordered w-full flex">
-                <input id="password" v-model="formData.newPassword" :type="inputType" name="password"
-                  placeholder="••••••••" required="true" class="w-full" />
+                <input
+                  id="password" v-model="formData.newPassword" :type="inputType" name="password"
+                  placeholder="••••••••" required="true" class="w-full"
+                >
                 <button type="button" class="hover:text-primary w-1/12" @click="togglePassword">
                   <IconCSS v-if="passwordShow" class="w-20 h-20" size="25" name="mdi:hide-outline" />
                   <IconCSS v-else class="w-20 h-20" size="25" name="mdi:show-outline" />
@@ -210,8 +219,10 @@ const togglePassword = () => {
             <label>Новый пароль еще раз</label>
             <div class="flex flex-col gap-0.5">
               <label class="input input-bordered w-full flex">
-                <input id="repeatPassword" v-model="formData.repeatPassword" :type="inputType" name="repeatPassword"
-                  placeholder="••••••••" required="true" class="w-full" />
+                <input
+                  id="repeatPassword" v-model="formData.repeatPassword" :type="inputType" name="repeatPassword"
+                  placeholder="••••••••" required="true" class="w-full"
+                >
                 <button type="button" class="hover:text-primary w-1/12" @click="togglePassword">
                   <IconCSS v-if="passwordShow" class="w-20 h-20" size="25" name="mdi:hide-outline" />
                   <IconCSS v-else class="w-20 h-20" size="25" name="mdi:show-outline" />
@@ -223,8 +234,10 @@ const togglePassword = () => {
             </div>
           </div>
           <div class="flex flex-col gap-0.5">
-            <button type="submit"
-              class="btn btn-primary w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+            <button
+              type="submit"
+              class="btn btn-primary w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            >
               <span v-show="loading" class="loading loading-spinner" />
 
               Сменить пароль

@@ -1,5 +1,5 @@
+import { Schema } from 'mongoose'
 import { AvitoConnection } from '~/server/connections/avito'
-import { Schema, model } from 'mongoose'
 import { Buyout } from '~/server/lib/models/avito/Buyout'
 
 const BuyoutlogSchema = new Schema({

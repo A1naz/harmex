@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema } from 'mongoose'
 import { wildberriesConnection } from '~/server/connections/wildberries'
 
 const DeliverySchema = new Schema({

@@ -5,18 +5,20 @@ export default eventHandler(async (event) => {
 
   const foundedUser = await User.findOne({ uuid: userAuth.user?.uuid })
 
-  if (!foundedUser) return sendRedirect(event, '/auth', 302)
+  if (!foundedUser)
+    return sendRedirect(event, '/auth', 302)
 
   const { changeTo } = getQuery(event)
-  
+
   if (foundedUser.isTwoFaEnabled) {
-    foundedUser.isTwoFaEnabled = false;
-  } else {
-    foundedUser.isTwoFaEnabled = changeTo;
+    foundedUser.isTwoFaEnabled = false
   }
-  console.log(foundedUser.isTwoFaEnabled);
-  
-   await foundedUser.save()
+  else {
+    foundedUser.isTwoFaEnabled = changeTo
+  }
+  console.log(foundedUser.isTwoFaEnabled)
+
+  await foundedUser.save()
 
   return {
     status: 'ok',
