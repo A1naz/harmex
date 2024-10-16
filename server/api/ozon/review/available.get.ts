@@ -20,13 +20,31 @@ export default eventHandler(async (event) => {
     status: 'completed'
   };
 
+  // if (searchParse && Object.values(searchParse)[0] !== '') {
+  //   if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
+  //     filter.uuidbuyout = searchParse.uudidBuyout.replace('#', '');
+  //   } else {
+  //     Object.assign(filter, searchParse);
+  //   }
+  // }
+
   if (searchParse && Object.values(searchParse)[0] !== '') {
     if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
       filter.uuidbuyout = searchParse.uudidBuyout.replace('#', '');
+    } else if (Object.keys(searchParse)[0] === 'article') {
+      const searchArticle = searchParse.article.trim().toLowerCase();
+      const numericArticle = parseInt(searchArticle, 10);
+
+      filter.$or = [
+        { article: searchArticle },  
+        { article: numericArticle }, 
+      ];
     } else {
       Object.assign(filter, searchParse);
     }
   }
+    // console.log('available ozon filter', filter);
+
 
   const deliveries = await Delivery.find(filter)
     .select('_id article updatedAt pricebuy idbuyout uuidbuyout data8') 

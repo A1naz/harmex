@@ -57,10 +57,10 @@ async function findSearchQuery(value: string) {
   //   },
   // })
   return {
-      found: false,
-      page: -1,
-      advert: false,
-    }
+    found: false,
+    page: -1,
+    advert: false,
+  }
 }
 const findSearchQueryDebounced = useDebounceFn(findSearchQuery, 1000)
 
@@ -106,8 +106,6 @@ async function onInput(event: Event, index: number) {
   //   }
   // }
   store.changeSearchQueryStatus(index, props.productIndex, false, false, ``)
-
-
 }
 
 onMounted(async () => {
@@ -116,9 +114,11 @@ onMounted(async () => {
     const result = await findSearchQuery(props.queries[i].value)
     if (!result) continue
     // if (!result.found)
-      // store.changeSearchQueryStatus(i, props.productIndex, true, false)
+    // store.changeSearchQueryStatus(i, props.productIndex, true, false)
   }
 })
+
+const isAddBtnDisabled = computed(() => props.queries.length >= 5)
 </script>
 
 <template>
@@ -160,13 +160,14 @@ onMounted(async () => {
       v-if="query.loading"
       class="absolute right-8 loading loading-spinner loading-xs p-2"
     />
-    <div
+    <button
+      :disabled="isAddBtnDisabled"
       v-if="index === 0"
       class="absolute right-0 btn btn-ghost btn-sm btn-square"
       @click="emit('add')"
     >
       <IconCSS size="16" name="ic:round-plus" />
-    </div>
+    </button>
     <div
       v-else
       class="absolute right-0 btn btn-ghost btn-sm btn-square"

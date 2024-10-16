@@ -41,7 +41,7 @@ export default eventHandler(async (event) => {
   //     'Необходимо заполнить банковские реквизиты в меню Профиль'
   //   )
   // }
-  
+
   const body = await readBody(event)
   const last = await Buyout.findOne({ user }).sort({ _id: -1 })
   const params = getQuery(event)
@@ -67,6 +67,12 @@ export default eventHandler(async (event) => {
     throw createError('Можно создать максимум 10 выкупов за раз')
   }
   for await (const product of products) {
+    if (product.searchQuery.length > 5) {
+      throw createError(
+        `Для продукта ${product.article} указано больше 5 поисковых запросов`
+      )
+    }
+
     const rules = product.rules.map((rule) => rule.id)
     const searchQueries = product.searchQuery.map((item: any) => item.value)
 

@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import { OzonConnection } from '~/server/connections/ozon';
 
 const DeliverySchema = new Schema({
-  article: { type: Number, required: true, },
+  article: { type: Schema.Types.Mixed, required: true, text: true },
   pricebuy: { type: Number, required: true },
   point: { type: String, required: true },
   point_city: { type: String, required: false },
