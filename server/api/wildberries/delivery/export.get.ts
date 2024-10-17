@@ -21,7 +21,7 @@ export default eventHandler(async (event) => {
       return sendRedirect(event, '/auth', 302)
 
     const runtimeConfig = useRuntimeConfig()
-    const deliveries = await Delivery.find({ user }).sort({ _id: -1 }).limit(5)
+    const deliveries = await Delivery.find({ user }).sort({ _id: -1 })
     if (!deliveries.length) {
       throw createError({
         statusCode: 400,
