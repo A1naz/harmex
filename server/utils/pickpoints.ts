@@ -1,4 +1,4 @@
-import fs from 'node:fs'
+import fs from 'bun'
 import { PVZ } from '~/server/lib/models/ozon/PVZ'
 
 // async function getRandomProxy(): Promise<string> {
@@ -10,15 +10,15 @@ import { PVZ } from '~/server/lib/models/ozon/PVZ'
 // }
 
 export async function removeExtraPickpoints() {
-  const cached = fs.readFileSync('pvz/wildberriesPoints.json', 'utf8')
-  const parsed = JSON.parse(cached)
+  const cached = Bun.file('pvz/wildberriesPoints.json', { type: 'application/json' })
+  const parsed = await cached.json()
 
   // Обновление даты, чтобы не было зацикливаний
   const cache = {
     updated: new Date(),
     points: parsed.points,
   }
-  fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
+  Bun.write('pvz/wildberriesPoints.json', JSON.stringify(cache))
 
   const data: any = await $fetch(
     'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
@@ -80,7 +80,7 @@ export async function removeExtraPickpoints() {
     updated: new Date(),
     points: parsed.points,
   }
-  fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(newCache))
+  Bun.write('pvz/wildberriesPoints.json', JSON.stringify(newCache))
 }
 
 export async function createPickpointsFile() {
@@ -110,7 +110,7 @@ export async function createPickpointsFile() {
     points: collection,
   }
 
-  fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
+  Bun.write('pvz/wildberriesPoints.json', JSON.stringify(cache))
 }
 
 export async function createOzonPickpointsFile() {
@@ -129,7 +129,7 @@ export async function createOzonPickpointsFile() {
     points: collection,
   }
 
-  fs.writeFileSync('pvz/ozonPoints.json', JSON.stringify(cache))
+  Bun.write('pvz/ozonPoints.json', JSON.stringify(cache))
 }
 
 export async function createAllPickpoints() {
