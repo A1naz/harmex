@@ -22,6 +22,7 @@ ARG smtpHost
 ARG smtpPort
 ARG smtpUser
 ARG smtpPass
+ARG PARSER_TOKEN
 
 ENV MONGODB_URI=${MONGODB_URI}
 ENV NAME=${NAME}
@@ -45,6 +46,7 @@ ENV smtpPort=${smtpPort}
 ENV smtpUser=${smtpUser}
 ENV smtpPass=${smtpPass}
 ENV WB_DB_URI=${WB_DB_URI}
+ENV PARSER_TOKEN=${PARSER_TOKEN}
 
 # Set working directory
 WORKDIR /usr/src/nuxt-app

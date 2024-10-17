@@ -177,6 +177,7 @@ export default defineNuxtConfig({
     smtpPass: process.env.smtpPass,
     privateKey: process.env.privateKey,
     PUBLIC_SITE_URL: process.env.PUBLIC_SITE_URL,
+    PARSER_TOKEN: process.env.PARSER_TOKEN,
   },
 
   security: {
