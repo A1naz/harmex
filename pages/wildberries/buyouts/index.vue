@@ -6,7 +6,6 @@ definePageMeta({
   title: 'Выкупы',
   middleware: 'auth',
 })
-const { width } = useWindowSize()
 const route = useRoute()
 const buyouts = ref([]) as any
 const modal = ref(false)
