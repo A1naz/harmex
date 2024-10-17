@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const theme = useColorMode()
 const props = defineProps({
   info: {
     type: Object as any,
@@ -15,8 +14,8 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['close'])
+const theme = useColorMode()
 const currency = useCurrency()
-const store = useMainStore()
 const getStatus = computed(() => {
   switch (props.info.status) {
     case 'active':
@@ -32,6 +31,7 @@ const getStatus = computed(() => {
     case 'paused':
       return 'Пауза'
   }
+  return 'Неизвестно'
 })
 
 const getGender = computed(() => {
@@ -43,6 +43,7 @@ const getGender = computed(() => {
     case 'none':
       return 'Нет'
   }
+  return 'нет'
 })
 
 onKeyStroke('Escape', (e) => {
@@ -51,38 +52,26 @@ onKeyStroke('Escape', (e) => {
 })
 </script>
 
-<template>
-  <div
-    id="buyoutInfoModal"
-    :class="{ 'modal-open': state }"
-    class="modal cursor-pointer"
-    @click="$emit('close')"
-  >
+<template class="overflow-hidden">
+  <div id="buyoutInfoModal" :class="{ 'modal-open': state }" class="modal cursor-pointer" @click="$emit('close')">
     <div v-if="state" class="modal-box max-w-md max-h-[90%] p-0">
       <div class="cursor-auto" @click.stop>
         <div class="p-5">
-          <a
-            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            @click="$emit('close')"
-            >✕</a
-          >
+          <a class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="$emit('close')">✕</a>
           <div class="flex gap-2 mb-1">
-            <span class="text-sm text-gray-500"
-              >Создан:
+            <span class="text-sm text-gray-500">Создан:
               {{
                 $dayjs(info.createdAt).locale('ru').format('D MMMM YYYY HH:mm')
-              }}</span
-            >
+              }}</span>
             <div
               :class="{
                 'opacity-0':
-                  info.status !== 'active' &&
-                  info.status !== 'paused' &&
-                  info.status !== 'work' &&
-                  info.status !== 'busy' &&
-                  info.status !== 'archived',
-              }"
-              class="text-xs rounded-2xl px-2 bg-base-200 py-1 -mt-1"
+                  info.status !== 'active'
+                  && info.status !== 'paused'
+                  && info.status !== 'work'
+                  && info.status !== 'busy'
+                  && info.status !== 'archived',
+              }" class="text-xs rounded-2xl px-2 bg-base-200 py-1 -mt-1"
             >
               Выкуплено {{ info.completed }} шт.
             </div>
@@ -92,36 +81,33 @@ onKeyStroke('Escape', (e) => {
               Информация о выкупе № {{ info.place }}
             </div>
             <span
-              class="rounded-2xl py-0 px-2 text-md mb-2 max-h-7 text-[9-px] whitespace-nowrap"
-              :class="{
+              class="rounded-2xl py-0 px-2 text-md mb-2 max-h-7 text-[9-px] whitespace-nowrap" :class="{
                 'bg-[#b5ffbc] dark:bg-green-600':
-                  info.status === 'active' ||
-                  info.status === 'work' ||
-                  info.status === 'busy',
+                  info.status === 'active'
+                  || info.status === 'work'
+                  || info.status === 'busy',
                 'text-base-content bg-[#b5ffbc] dark:bg-green-600 ':
-                  (info.status === 'active' ||
-                    info.status === 'work' ||
-                    info.status === 'busy') &&
-                  theme.value === 'dark',
+                  (info.status === 'active'
+                    || info.status === 'work'
+                    || info.status === 'busy')
+                  && theme.value === 'dark',
                 'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
                   info.status === 'completed' || info.status === 'nofunds',
                 'text-base-content bg-yellow-300':
                   info.status === 'archived' || info.status === 'paused',
               }"
-              >{{ getStatus }}</span
-            >
+            >{{ getStatus }}</span>
           </div>
 
-          <div class="text-xs text-gray-500">#{{ info.uuid }}</div>
+          <div class="text-xs text-gray-500">
+            #{{ info.uuid }}
+          </div>
 
           <div class="flex gap-3 mt-2 items-center">
             <div class="flex-none" style="width: 100px; height: 150px">
               <nuxt-img
-                class="rounded-xl h-full"
-                width="100"
-                height="150"
-                :src="info?.product?.image || '/logo/logocolor.svg'"
-                loading="lazy"
+                class="rounded-xl h-full" width="100" height="150"
+                :src="info?.product?.image || '/logo/logocolor.svg'" loading="lazy"
               />
             </div>
             <div class="flex flex-col truncate gap-2">
@@ -132,8 +118,7 @@ onKeyStroke('Escape', (e) => {
                 <div>
                   <span class="text-sm text-gray-500 mr-2">Артикул: </span>
                   <a
-                    :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
-                    target="_blank"
+                    :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
                     class="text-sm text-primary link link-hover font-bold"
                   >
                     {{ info.article }}
@@ -142,36 +127,29 @@ onKeyStroke('Escape', (e) => {
               </div>
               <div>
                 <span class="text-sm text-gray-500 mr-2 my-auto">Цена: </span>
-                <span
-                  class="rounded-md py-0 px-2 text-sm bg-[#b5ffbc] dark:bg-green-600"
-                  >{{ info.product?.priceText }}</span
-                >
+                <span class="rounded-md py-0 px-2 text-sm bg-[#b5ffbc] dark:bg-green-600">{{ info.product?.priceText
+                }}</span>
               </div>
               <div>
-                <span class="text-sm text-gray-500 mr-2 my-auto"
-                  >Количество:
+                <span class="text-sm text-gray-500 mr-2 my-auto">Количество:
                 </span>
                 <span
-                  class="rounded-md py-0 px-2 text-sm"
-                  :class="{
+                  class="rounded-md py-0 px-2 text-sm" :class="{
                     'bg-amber-500': theme.value === 'dark',
                     'bg-amber-100': theme.value === 'light',
                   }"
-                  >{{ info.quantity }} шт.</span
-                >
+                >{{ info.quantity }} шт.</span>
               </div>
               <div>
                 <span class="text-sm text-gray-500 mr-2 my-auto">Сумма: </span>
                 <span
-                  class="rounded-md py-0 px-2 text-sm"
-                  :class="{
+                  class="rounded-md py-0 px-2 text-sm" :class="{
                     'bg-indigo-500': theme.value === 'dark',
                     'bg-indigo-300': theme.value === 'light',
                   }"
-                  >{{
-                    currency.format(info.quantity * info.product?.price)
-                  }}</span
-                >
+                >{{
+                  currency.format(info.quantity * info.product?.price)
+                }}</span>
               </div>
               <div>
                 <span class="text-sm text-gray-500 mr-2">Размер: </span>
@@ -189,17 +167,13 @@ onKeyStroke('Escape', (e) => {
           </div>
         </div>
 
-        <!-- 
+        <!--
         <div class="divider" /> -->
 
-        <div
-          class="flex flex-col gap-2 mt-2 justify-center p-5 bg-[#f2f4ff] dark:bg-primary dark:bg-opacity-10"
-        >
-          <div class="flex justify-between"></div>
+        <div class="flex flex-col gap-2 mt-2 justify-center p-5 bg-[#f2f4ff] dark:bg-primary dark:bg-opacity-10">
+          <div class="flex justify-between" />
 
-          <div
-            class="flex items-start justify-between flex-col md:flex-row gap-2"
-          >
+          <div class="flex items-start justify-between flex-col md:flex-row gap-2">
             <div class="flex items-start flex-col">
               <span class="text-md font-bold mb-1">Поисковый запрос:</span>
               <span class="text-sm">{{ info.searchQuery }}</span>
@@ -211,8 +185,7 @@ onKeyStroke('Escape', (e) => {
                 :class="{
                   'bg-base-200': theme.value === 'dark',
                   'bg-base-100': theme.value === 'light',
-                }"
-                class="rounded-lg p-2"
+                }" class="rounded-lg p-2"
               >
                 <span class="text-sm flex flex-col justify-start">
                   <div class="text-sm">
@@ -240,8 +213,7 @@ onKeyStroke('Escape', (e) => {
           <div class="flex items-start flex-col">
             <span class="text-lg font-bold mb-1">Адрес:</span>
             <a
-              target="_blank"
-              class="text-sm link link-hover truncate max-w-[90%] whitespace-normal"
+              target="_blank" class="text-sm link link-hover truncate max-w-[90%] whitespace-normal"
               :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
             >
               {{ info.point }}
@@ -259,4 +231,8 @@ onKeyStroke('Escape', (e) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#buyoutInfoModal {
+  overflow: hidden;
+}
+</style>

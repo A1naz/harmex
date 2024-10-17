@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div ref="app">
+  <div>
     <NuxtNotifications
       position="top right"
       :max="2"
@@ -9,10 +9,10 @@
       :pause-on-hover="true"
       :speed="500"
     />
-    <NuxtLayout>
-      <NuxtLoadingIndicator :color="'#296dff'" />
+    <NuxtLayout class="overflow-hidden">
+      <NuxtLoadingIndicator color="#296dff" />
       <NuxtPage />
-      <div class="my-12 md:hidden"></div>
+      <div class="my-12 md:hidden" />
     </NuxtLayout>
   </div>
 </template>
@@ -26,7 +26,6 @@
 
 body {
   font-family: "Inter", sans-serif;
-  @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 }
 
 .notify-text {
