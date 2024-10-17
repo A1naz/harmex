@@ -162,4 +162,8 @@ defineExpose({
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.btn{
+  min-height: auto;
+}
+</style>

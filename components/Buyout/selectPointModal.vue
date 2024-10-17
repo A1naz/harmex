@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-import { loadYmap } from 'vue-yandex-maps'
 import { notify } from '@kyvg/vue3-notification'
-
-const { height } = useWindowSize()
-const config = useRuntimeConfig()
+import { loadYmap } from 'vue-yandex-maps'
 
 const props = defineProps({
   pickpoints: {
@@ -16,6 +13,9 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['callback', 'close'])
+const { height } = useWindowSize()
+const config = useRuntimeConfig()
+
 const store = useMainStore()
 
 function closeModal() {
@@ -32,7 +32,7 @@ function handleSelect(address: string) {
   if (
     props.pickpoints.findIndex(
       (item: any) =>
-        item.lt === lastAddress.value.lt && item.lg === lastAddress.value.lg
+        item.lt === lastAddress.value.lt && item.lg === lastAddress.value.lg,
     ) === -1
   ) {
     return notify({
@@ -42,15 +42,16 @@ function handleSelect(address: string) {
     })
   }
 
-  let pointStore: any = localStorage.getItem('pointStore')
+  const pointStore: any = localStorage.getItem('pointStore')
 
   const arr = JSON.parse(pointStore) || []
 
-  if (arr.length > 20) arr.splice(arr.length - 1, 1)
+  if (arr.length > 20)
+    arr.splice(arr.length - 1, 1)
   if (
     !arr.find(
       (el: any) =>
-        el.lt === lastAddress.value.lt && el.lg === lastAddress.value.lg
+        el.lt === lastAddress.value.lt && el.lg === lastAddress.value.lg,
     )
   ) {
     arr.unshift({
@@ -66,11 +67,11 @@ function handleSelect(address: string) {
 }
 
 function handleDelete(address: any) {
-  let pointStore: any = localStorage.getItem('pointStore')
+  const pointStore: any = localStorage.getItem('pointStore')
   const arr = JSON.parse(pointStore) || []
   arr.splice(
     arr.indexOf(arr.find((el: any) => el.address === address.address)),
-    1
+    1,
   )
   localStorage.setItem('pointStore', JSON.stringify(arr))
   emit('callback', address.address, lastAddress.value.lt, lastAddress.value.lg)
@@ -145,7 +146,7 @@ onMounted(async () => {
         ymaps.templateLayoutFactory.createClass('Группа объектов'),
     })
     const iconLayout = ymaps.templateLayoutFactory.createClass(
-      '<div>$[properties.iconContent]</div>'
+      '<div>$[properties.iconContent]</div>',
     )
     const collection = {
       type: 'FeatureCollection',
@@ -219,7 +220,7 @@ onMounted(async () => {
           select: () => {
             handleSelect(obj.properties.data.a)
           },
-        }
+        },
       )
       // set this layout as a custom balloon content layout
       objectManager.objects.setObjectOptions(objectId, {
@@ -237,7 +238,8 @@ onMounted(async () => {
       // objectManager.objects.balloon.open(objectId)
     })
     loading.value = false
-  } catch (e) {
+  }
+  catch (e) {
     loading.value = false
     // eslint-disable-next-line no-console
     console.log(e)
@@ -253,19 +255,21 @@ onKeyStroke('Escape', (e) => {
 async function getAddressText(lt: number, lg: number) {
   addressText.value = 'Загрузка...'
   const { data, error }: any = await useFetch(
-    `/api/buyout/addressText`, {
+    `/api/buyout/addressText`,
+    {
       method: 'GET',
       params: {
         lt,
         lg,
-      }
-    }
+      },
+    },
   )
   if (data.value) {
     addressText.value = data.value
     lastAddress.value = { lt, lg }
     return addressText.value
-  } else {
+  }
+  else {
     addressText.value = 'Нет данных'
     return addressText.value
   }
@@ -285,9 +289,10 @@ async function getAddressText(lt: number, lg: number) {
         <a
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           @click="closeModal"
-          >✕</a
-        >
-        <div class="title mb-2">Выберите ПВЗ</div>
+        >✕</a>
+        <div class="title mb-2">
+          Выберите ПВЗ
+        </div>
         <div
           v-if="loading"
           class="loading flex justify-center items-center h-full"
@@ -308,16 +313,18 @@ async function getAddressText(lt: number, lg: number) {
             <div id="ymap" class="yandex-container rounded-lg" />
           </div>
           <div class="last md:h-full rounded-lg p-2 max-w-xs">
-            <h2 class="font-bold">Последние использованные ПВЗ</h2>
+            <h2 class="font-bold">
+              Последние использованные ПВЗ
+            </h2>
             <div
               class="flex flex-col gap-2 mt-2 overflow-y-auto overflow-x-hidden"
               :style="`height: ${height - height / 3.3}px`"
             >
               <div
+                v-for="(item, index) of lastPoints"
                 v-if="
                   lastPoints && lastPoints.length > 0 && lastPoints[0] !== ''
                 "
-                v-for="(item, index) of lastPoints"
                 class="w-full flex flex-row pr-1"
               >
                 <button
@@ -357,11 +364,11 @@ async function getAddressText(lt: number, lg: number) {
         </div>
       </div>
     </div>
-    <div class="modal-backdrop cursor-pointer" @click="closeModal"></div>
+    <div class="modal-backdrop cursor-pointer" @click="closeModal" />
   </div>
 </template>
 
-<style>
+<style scoped>
 .yandex-container {
   height: 75vh;
   width: 100%;
