@@ -1,10 +1,8 @@
 import type { Document } from 'mongoose'
-
 import { Buyout } from '~~/server/lib/models/wildberries/Buyout'
 import { Buyoutlog } from '~~/server/lib/models/wildberries/Buyoutlog'
 import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
 import ExcelJS from 'exceljs'
-import { DocuemntEnum } from '~/data/enums'
 
 const keys = Object.keys as <T>(
   obj: T

@@ -17,7 +17,7 @@ const keys = Object.keys as <T>(
   : never)[]
 
 async function getReady(user: Document) {
-  const deliveries = await Delivery.find({ user }).sort({ _id: -1 }).limit(200)
+  const deliveries = await Delivery.find({ user }).sort({ _id: -1 }).limit(5000)
   const filtered = deliveries.filter((item) => {
     const currentstatus = item.statusdelivery?.length
       ? item.statusdelivery[item.statusdelivery.length - 1].status
@@ -131,7 +131,6 @@ export default eventHandler(async (event) => {
     if (!user)
       return sendRedirect(event, '/auth', 302)
 
-    const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
     const ready = (await getReady(user)).filter(item => item !== undefined)
 
