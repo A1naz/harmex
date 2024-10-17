@@ -1,18 +1,19 @@
-import { Delivery } from '~/server/lib/models/ozon/Delivery'
 import { Buyout } from '~/server/lib/models/ozon/Buyout'
 
-export default eventHandler(async (event) => {
+import { Delivery } from '~/server/lib/models/ozon/Delivery'
 
+export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const all = await Delivery.find({ user }).sort({ _id: -1 })
 
-  const buyoutsId = all.map(item => item.idbuyout);
+  const buyoutsId = all.map(item => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
   const format = await Promise.all(
     all.map(async (delivery) => {
-      const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf());
+      const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf())
       if (!buyout)
         return null
       const place = all.findIndex(
@@ -52,7 +53,7 @@ export default eventHandler(async (event) => {
       return false
   })
   const points = {} as any
-  filtered.forEach((item, index) => {
+  filtered.forEach((item) => {
     if (points[item!.point])
       points[item!.point].push(item)
     else
@@ -60,4 +61,3 @@ export default eventHandler(async (event) => {
   })
   return points
 })
-

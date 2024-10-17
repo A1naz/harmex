@@ -1,10 +1,12 @@
-import { Delivery } from '~/server/lib/models/ozon/Delivery'
 import { Buyout } from '~/server/lib/models/ozon/Buyout'
+
+import { Delivery } from '~/server/lib/models/ozon/Delivery'
 import { getAdminEntity } from '~/server/utils/getAdmin'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const { status, limit, skip } = getQuery(event)
 
@@ -15,21 +17,24 @@ export default eventHandler(async (event) => {
       .sort({ _id: -1 })
       .skip(skip as number)
       .limit(limit as number)
-  } else if (status === 'active') {
+  }
+  else if (status === 'active') {
     deliveries = await Delivery.find({ user, status: 'work' })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  } else if (status === 'completed') {
+  }
+  else if (status === 'completed') {
     deliveries = await Delivery.find({ user, status: 'completed' })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  } else if (status === 'canceled') {
+  }
+  else if (status === 'canceled') {
     deliveries = await Delivery.find({
       user,
       $expr: {
@@ -41,7 +46,8 @@ export default eventHandler(async (event) => {
       })
       .skip(skip as number)
       .limit(limit as number)
-  } else if (status === 'onTheWay') {
+  }
+  else if (status === 'onTheWay') {
     deliveries = await Delivery.find({
       user,
       $expr: {
@@ -61,7 +67,8 @@ export default eventHandler(async (event) => {
       })
       .skip(skip as number)
       .limit(limit as number)
-  } else if (status === 'pickupReady') {
+  }
+  else if (status === 'pickupReady') {
     deliveries = await Delivery.find({
       user,
       status: { $ne: 'completed' },
@@ -79,23 +86,24 @@ export default eventHandler(async (event) => {
       })
       .skip(skip as number)
       .limit(limit as number)
-
-  } else {
+  }
+  else {
     return {
       error: 'Неизвестный статус',
     }
   }
 
   const buyouts = await Buyout.find({
-    _id: { $in: deliveries.map((item) => item.idbuyout) },
+    _id: { $in: deliveries.map(item => item.idbuyout) },
   })
   const format = await Promise.all(
     deliveries.map(async (delivery) => {
       const buyout = buyouts.find(
-        (item) => item._id.valueOf() === delivery.idbuyout.valueOf()
+        item => item._id.valueOf() === delivery.idbuyout.valueOf(),
       )
 
-      if (!buyout) return null
+      if (!buyout)
+        return null
       // const place = all.findIndex(
       //   item => item._id.toString() === delivery._id.toString(),
       // )
@@ -129,7 +137,7 @@ export default eventHandler(async (event) => {
         updatedAt: delivery.updatedAt,
         discountPrice: buyout.discountPrice,
       }
-    })
+    }),
   )
   const filtered = format.filter(Boolean)
   return filtered

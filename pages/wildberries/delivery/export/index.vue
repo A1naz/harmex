@@ -9,11 +9,24 @@ const mpStore = useMPStore()
 const pdfSection = ref<HTMLElement>()
 const { $dayjs } = useNuxtApp()
 const { $html2pdf } = useNuxtApp()
+const openAll = ref(false)
+const { width, height } = useWindowSize()
 const progress = ref(0)
 const max = ref(100)
+const route = useRoute()
 const currency = useCurrency()
 const font = ref()
+const router = useRouter()
 const deliveries = ref([]) as any
+function selectStatus(e: Event) {
+  const target = e.target as HTMLSelectElement
+  router.push({
+    path: '/delivery',
+    query: {
+      status: target.value,
+    },
+  })
+}
 const modalInfo = reactive({
   src: '',
   code: 0,
@@ -52,42 +65,37 @@ async function exportToFile() {
   }
   return worker.save()
 }
+const modal = ref(false)
+function openModal(code: number, src: string) {
+  modalInfo.src = src
+  modalInfo.code = code
+  modal.value = true
+}
 const target = ref(null)
 const targetIsVisible = ref(false)
-
-// // eslint-disable-next-line unused-imports/no-unused-vars
 const { stop } = useIntersectionObserver(
   target,
-  ([{ isIntersecting }]) => {
+  ([{ isIntersecting }], observerElement) => {
     targetIsVisible.value = isIntersecting
   },
 )
 const skip = ref(50)
 const end = ref(false)
-async function getDeliveries() {
-  const { data } = await useFetch(`/api/${mpStore.selectedMP || 'wildberries'}/delivery/getReady`, {
-    method: 'GET',
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-  })
+const { data, error } = await useFetch(`/api/${mpStore.selectedMP || 'wildberries'}/delivery/getReady`, {
+  method: 'GET',
+  headers: useRequestHeaders(['cookie']) as HeadersInit,
+})
 
+onMounted(async () => {
   deliveries.value = data.value
-}
-// const { data } = await useFetch(`/api/${mpStore.selectedMP || 'wildberries'}/delivery/getReady`, {
-//   method: 'GET',
-//   headers: useRequestHeaders(['cookie']) as HeadersInit,
-// })
-getDeliveries()
-
-// onMounted(async () => {
-//   deliveries.value = data.value
-//   const response = await $fetch('/Roboto-Regular.ttf', {
-//     responseType: 'arrayBuffer',
-//   }) as ArrayBuffer
-//   font.value = response
-//   setTimeout(() => {
-//     deliveries.value = data.value
-//   }, 1000)
-// })
+  const response = await $fetch('/Roboto-Regular.ttf', {
+    responseType: 'arrayBuffer',
+  }) as ArrayBuffer
+  font.value = response
+  setTimeout(() => {
+    deliveries.value = data.value
+  }, 1000)
+})
 </script>
 
 <template>
@@ -95,12 +103,12 @@ getDeliveries()
     <progress class="progress progress-primary w-full fixed" :value="progress" :max="max" />
     <div class="flex">
       <button
-        class="btn m-2 mt-4" @click=""
+        class="btn m-2 mt-4" @click="exportToFile"
       >
         Скачать PDF
       </button>
     </div>
-    <!-- <div v-if="deliveries" ref="pdfSection" class="h-[90vh]">
+    <div v-if="deliveries" ref="pdfSection" class="h-[90vh]">
       <h1 class="text-3xl font-bold text-center p-4 bg-purple-700 text-white">
         Готовы к выдаче
       </h1>
@@ -154,7 +162,7 @@ getDeliveries()
           </h1>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 

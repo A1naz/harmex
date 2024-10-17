@@ -60,10 +60,7 @@ async function exportToFile() {
       worker = worker.get('pdf').then((pdf: any) => {
         progress.value += 1
         pdf.addPage()
-      }).from(page)
-        .toContainer()
-        .toCanvas()
-        .toPdf()
+      }).from(page).toContainer().toCanvas().toPdf()
     })
   }
   return worker.save()
@@ -96,8 +93,8 @@ onMounted(async () => {
   }) as ArrayBuffer
   font.value = response
   setTimeout(() => {
-    deliveries.value = data.value;
-  }, 1000);
+    deliveries.value = data.value
+  }, 1000)
 })
 </script>
 
@@ -161,7 +158,7 @@ onMounted(async () => {
       <div class="hero-content text-center flex justify-center items-center h-80">
         <div class="max-w-md">
           <h1 class="text-3xl font-bold">
-            Здесь ничего нет 
+            Здесь ничего нет
           </h1>
         </div>
       </div>

@@ -280,34 +280,6 @@ const customLinks = filters.map(filter => ({
 
 <template>
   <div>
-    <!-- <div class="flex items-center gap-2 mt-4">
-      <h1 class="text-2xl font-bold ">
-        Доставки
-      </h1>
-      <InfoButton @openModal="toggleInfoModal" />
-    </div> -->
-
-    <!-- <InfoModal
-        :isModal="isInfoModal"
-        title="Доставки"
-        ytSrc='https://www.youtube.com/embed/-SxurcapPcA?si=AxKD5hXOxqc6ZjqJ'
-        @changeVisibility="toggleInfoModal"
-        >
-        <p>
-            В этом разделе можно отследить статусы выкупов после оплаты. Статус "Доставлен" означает, что товар можно
-            забирать из пункта выдачи.
-        </p>
-        <p>
-            Совершайте заборы ваших товаров в течение 7 дней с момента прибытия на ПВЗ. За каждый последующий день вы получаете штраф {{ store.tariffString('deliveryStorage') }} за единицу не забранного товара.
-        </p>
-        <p>
-            Возвраты финансовых средств на не забранные товары с ПВЗ отсутствуют! Работаем по модели Выкупил - Забрал.
-        </p>
-        <p>
-            Все услуги оказываются по Московскому времени.
-        </p>
-    </InfoModal> -->
-
     <div class="">
       <div class="flex lg:hidden mt-2">
         <div v-if="deliveries.length" class="export">
@@ -330,11 +302,11 @@ const customLinks = filters.map(filter => ({
               tabindex="0"
               class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10"
             >
-              <li>
+              <!-- <li>
                 <NuxtLink target="blank" to="/delivery/export">
                   Готовы к выдаче PDF
                 </NuxtLink>
-              </li>
+              </li> -->
               <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
               <li><a @click="exportXLS">Общая таблица Excel</a></li>
@@ -365,52 +337,11 @@ const customLinks = filters.map(filter => ({
       </div>
       <div class="flex gap-2 mt-2 lg:hidden">
         <CustomSelect
-          class="h-[2rem] lg:hidden sm:min-w-[120px]"
-
-          status-text="Ozon"
-          :tabs="
-            // eslint-disable-next-line vue/eqeqeq
-            store.client.username == 'test'
-              ? mpStore.sortMp('delivery')
-              : mpStore.sortMp('delivery', true)
-          "
-          @change-value="changeFilter"
-        />
-        <CustomSelect
           class="h-[2rem] lg:hidden min-w-[100px]"
 
           :status-text="statusText"
           :links="customLinks"
         />
-        <!-- <div class="dropdown  ">
-              <div
-                tabindex="0"
-                role="button"
-                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[120px]"
-              >
-                {{ statusText }}
-              </div>
-              <ul
-                tabindex="0"
-                class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
-              >
-                <li>
-                  <NuxtLink
-                    v-for="filter in filters"
-                    :to="'/buyouts' + filter.params"
-                    :external="false"
-                    :class="{
-                      'btn-active': route.query.status === filter.queryStatus,
-                    }"
-                    class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                  >
-                    <span>
-                      {{ filter.title }}
-                    </span>
-                  </NuxtLink>
-                </li>
-              </ul>
-            </div> -->
         <CustomSelect
           class="h-[2rem] bg-[#f4f4f4]"
           :tabs="[
@@ -419,98 +350,19 @@ const customLinks = filters.map(filter => ({
           ]"
           @change-value="updateSearchType"
         />
-        <!-- <select v-model="search.type" class="select select-bordered select-sm">
-              <option value="article">
-                Артикул
-              </option>
-              <option value="uuid">
-                ID выкупа
-              </option>
-            </select> -->
       </div>
 
       <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-4">
         <div class="flex gap-2">
-          <CustomSelect
-            class="h-[2rem] hidden lg:flex sm:min-w-[120px]"
-
-            status-text="Ozon"
-            :tabs="
-              // eslint-disable-next-line vue/eqeqeq
-              store.client.username == 'test'
-                ? mpStore.sortMp('delivery')
-                : mpStore.sortMp('delivery', true)
-            "
-            @change-value="changeFilter"
-          />
           <CustomSelect
             class="h-[2rem] hidden lg:flex min-w-[100px]"
 
             :status-text="statusText"
             :links="customLinks"
           />
-          <!-- <div class="dropdown hidden lg:block">
-              <div
-                tabindex="0"
-                role="button"
-                class="font-medium normal-case btn-primary bg-opacity-20 border-none text-base-content btn btn-sm w-[120px]"
-              >
-                {{ statusText }}
-              </div>
-              <ul
-                tabindex="0"
-                class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[200px]"
-              >
-                <li>
-                  <NuxtLink
-                    v-for="filter in filters"
-                    :to="'/delivery' + filter.params"
-                    :external="false"
-                    :class="{
-                      'btn-active': route.query.status === filter.queryStatus,
-                    }"
-                    class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                  >
-                    <span>
-                      {{ filter.title }}
-                    </span>
-                  </NuxtLink>
-                </li>
-              </ul>
-        </div>          -->
         </div>
 
-        <!-- <div class="hidden lg:block">
-         <NuxtLink
-            v-for="filter in filters"
-            :to=" '/delivery' + filter.params"
-            :external="false"
-            :class="{
-                'btn-active': route.query.status === filter.queryStatus,
-            }"
-            class="btn btn-ghost btn-sm normal-case font-medium"
-        >
-        {{ filter.title }}
-        </NuxtLink>
-      </div>
-      <select
-        class="select select-bordered select-sm lg:hidden"
-        @change="selectStatus"
-      >
-      <option
-        v-for="filter in filters"
-        :value="filter.optionValue"
-        :selected="route.query.status === filter.queryStatus"
-        >
-        {{ filter.title }}
-        </option>
-      </select> -->
-
         <div class="gap-4 hidden lg:flex">
-          <!-- <div class="flex items-center">
-          <input id="openAll" v-model="openAll" type="checkbox" class="checkbox checkbox-primary checkbox-sm">
-          <label for="openAll" class="cursor-pointer select-none ml-2">Развернуть все</label>
-        </div> -->
           <div class="search flex justify-between items-center gap-2">
             <div />
             <div class="flex gap-4 items-center">
@@ -522,14 +374,6 @@ const customLinks = filters.map(filter => ({
                 ]"
                 @change-value="updateSearchType"
               />
-              <!-- <select v-model="search.type" class="select select-bordered select-sm">
-              <option value="article">
-                Артикул
-              </option>
-              <option value="uuid">
-                ID выкупа
-              </option>
-            </select> -->
               <div class="flex w-full">
                 <input
                   ref="codeInput"
@@ -592,22 +436,6 @@ const customLinks = filters.map(filter => ({
       </div>
     </div>
 
-    <!-- <div v-if="deliveries?.length" class="" >
-      <TransitionSlide group tag="ul" class="flex md:hidden flex-col gap-3">
-        <li v-for="(delivery, index) of deliveries" :key="index" class="overflow-visible z-0">
-          <DeliveryExpand
-            :state="openAll"
-            :info="delivery"
-            @open-modal="openModal"
-            @open-status-modal="openStatusModal"
-            @open-penalty-modal="penaltyModal = true"
-
-          />
-        </li>
-        <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
-      </TransitionSlide>
-      <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
-    </div> -->
     <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
       <TransitionSlide
         group

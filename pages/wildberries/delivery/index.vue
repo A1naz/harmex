@@ -338,18 +338,6 @@ function changeFilter(e: any) {
       </div>
       <div class="flex gap-2 mt-2 lg:hidden">
         <CustomSelect
-          class="h-[2rem] lg:hidden sm:min-w-[120px]"
-
-          status-text="Wildberries"
-          :tabs="
-            // eslint-disable-next-line vue/eqeqeq
-            store.client.username == 'test'
-              ? mpStore.sortMp('delivery')
-              : mpStore.sortMp('delivery', true)
-          "
-          @change-value="changeFilter"
-        />
-        <CustomSelect
           class="h-[2rem] lg:hidden min-w-[100px]"
 
           :status-text="statusText"
@@ -367,18 +355,6 @@ function changeFilter(e: any) {
 
       <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-4">
         <div class="flex gap-2">
-          <CustomSelect
-            class="h-[2rem] hidden lg:flex sm:min-w-[120px]"
-
-            status-text="Wildberries"
-            :tabs="
-              // eslint-disable-next-line vue/eqeqeq
-              store.client.username == 'test'
-                ? mpStore.sortMp('delivery')
-                : mpStore.sortMp('delivery', true)
-            "
-            @change-value="changeFilter"
-          />
           <CustomSelect
             class="h-[2rem] hidden lg:flex min-w-[100px]"
 
@@ -445,11 +421,11 @@ function changeFilter(e: any) {
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
               >
-                <li>
+                <!-- <li>
                   <NuxtLink target="blank" to="/wildberries/delivery/export">
                     Готовы к выдаче PDF
                   </NuxtLink>
-                </li>
+                </li> -->
                 <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
                 <li><a @click="exportXLS">Общая таблица Excel</a></li>
