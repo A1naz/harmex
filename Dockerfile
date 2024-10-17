@@ -44,6 +44,7 @@ ENV smtpHost=${smtpHost}
 ENV smtpPort=${smtpPort}
 ENV smtpUser=${smtpUser}
 ENV smtpPass=${smtpPass}
+ENV WB_DB_URI=${WB_DB_URI}
 
 # Set working directory
 WORKDIR /usr/src/nuxt-app
