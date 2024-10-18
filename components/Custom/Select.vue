@@ -146,7 +146,7 @@ defineExpose({
           </p>
         </button>
       </li>
-      <li v-for="filter in links" @click="updateText(filter.title)">
+      <li v-for="filter in links" :key="filter.title" @click="updateText(filter.title)">
         <NuxtLink
           :to="(filter.slot ? filter.slot : `/${filter.value}`)
             + (filter.query ? filter.query : '')

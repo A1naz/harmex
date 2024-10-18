@@ -1,0 +1,295 @@
+<script setup lang="ts">
+interface IProps {
+  carts: any[]
+  getStatus: (status: string) => string
+  resumeStatus: (item: any) => any
+}
+const props = defineProps<IProps>()
+const emit = defineEmits(['logModal'])
+const { $dayjs } = useNuxtApp()
+function removeCart(index: number) {
+
+}
+</script>
+
+<template>
+  <ClientOnly>
+    <table class="table table-sm">
+      <thead>
+        <tr class="bg-primary bg-opacity-5">
+          <!-- <th class="text-center">№</th> -->
+          <th class="text-center">
+            Фото
+          </th>
+          <th class="text-center">
+            Артикул
+          </th>
+          <th class="text-center">
+            Маркетплейс
+          </th>
+          <th class="text-center">
+            Размер
+          </th>
+          <th class="text-center">
+            Количество
+          </th>
+          <th class="text-center">
+            Ключевой запрос
+          </th>
+          <th class="text-center">
+            Статус
+          </th>
+          <th class="text-center">
+            Дата создания
+          </th>
+          <th class="text-center">
+            Дата завершения
+          </th>
+          <th class="text-center">
+            Инфо
+          </th>
+          <!-- <th class="text-center"></th> -->
+        </tr>
+      </thead>
+      <tbody class="rounded-b-lg">
+        <tr
+          v-for="(item, index) in carts"
+          :key="index"
+          class="bg-base-100 border-b-0 rounded-b-lg"
+        >
+          <!-- <td class="text-center border-x border-[#f9fafb]">{{ item.place }}</td> -->
+          <td
+            class="text-center border-r  border-[#f9fafb] mx-auto"
+          >
+            <div
+              style="width: 40px; height: 40px; border-radius: 4px"
+              class="mx-auto"
+            >
+              <div class="dropdown dropdown-hover">
+                <label tabindex="0">
+                  <nuxt-img
+                    class="rounded-lg z-0"
+                    alt=""
+                    loading="lazy"
+                    fit="fill"
+                    :src="item.image"
+                  />
+                </label>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
+                >
+                  <nuxt-img
+                    class="rounded-lg z-[9999]"
+                    loading="lazy"
+                    fit="fill"
+                    :src="item.image"
+                  />
+                </ul>
+              </div>
+            </div>
+          </td>
+          <td
+            class="text-center border-r border-[#f9fafb] text-base-content truncate"
+          >
+            <a
+              :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
+              class="text-sm text-primary link link-hover"
+            >
+              {{ item.article }}
+            </a>
+          </td>
+          <td class="text-center  border-r border-[#f9fafb]">
+            Ozon
+          </td>
+          <td
+            class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] truncate"
+          >
+            {{ item.size == "none" ? "-" : item.size }}
+          </td>
+          <td class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] whitespace-normal break-words">
+            <div class="flex flex-col">
+              {{ item.amount }}
+            </div>
+          </td>
+
+          <td class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] whitespace-normal break-words truncate">
+            <div class="flex flex-col">
+              {{ item.query }}
+            </div>
+          </td>
+
+          <td class="text-center  border-r border-[#f9fafb]">
+            <div
+              :class="{
+                ' text-red-500 rounded-full py-1 px-2  text-center':
+                  item.status === 'nofunds',
+                'text-error rounded-full py-1 px-2  text-center':
+                  item.status === 'spam',
+                'bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                  item.status === 'created',
+                'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                  item.status === 'work' || item.status === 'busy',
+                'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                  item.status === 'completed',
+              }"
+            >
+              {{ getStatus(item.status) }}
+            </div>
+            <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-[#f9fafb] dark:border-opacity-20" @click="resumeStatus(item)">
+              Возобновить
+            </button>
+          </td>
+          <td class="text-center border-r border-[#f9fafb] max-w-[100px]">
+            <div
+              class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+            >
+              {{ defaultDate(item.createdDate) }}
+            </div>
+          </td>
+          <td class="text-center border-r border-[#f9fafb]">
+            <div
+              v-if="item.endedDate"
+              class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+            >
+              {{ defaultDate(item.endedDate) }}
+            </div>
+            <div v-else>
+              Нет
+            </div>
+          </td>
+          <td
+            class="text-center whitespace-pre-wrap overflow-x-auto border-r border-[#f9fafb] w-[40px]"
+          >
+            <div class="rounded-lg p-0.5 text-center">
+              <button
+                class="btn btn-primary btn-sm btn-square mb-2"
+                @click="$emit('logModal', item.id)"
+              >
+                <svg
+                  data-v-f136eeaa=""
+                  data-v-a5d236d9=""
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  aria-hidden="true"
+                  role="img"
+                  class="icon"
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                    d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </td>
+          <!-- <td class="text-center max-w-[60px]">
+              <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="removeCart(item.id)">
+                <IconCSS name="material-symbols:close" size="15" />
+              </div>
+              <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="">
+                <IconCSS name="fluent:copy-20-filled" size="15" />
+              </div>
+
+            </td> -->
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- <DataTable class="bg-base-200 hidden lg:block" :value="carts">
+      <Column field="place" header="№" />
+      <Column field="image" header="Фото">
+        <template #body="{ data }">
+          <div
+            style="width: 28px; height: 36px; overflow: visible; position: relative; border-radius: 4px"
+          >
+            <div class="dropdown dropdown-hover">
+              <label tabindex="0"> <nuxt-img
+                class="rounded-lg z-0" alt="" loading="lazy" fit="fill"
+                :src="data.image"
+              />
+              </label>
+              <ul
+                tabindex="0"
+                class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
+              >
+                <nuxt-img
+                  class="rounded-lg z-[1]" loading="lazy" fit="fill"
+                  :src="data.image"
+                />
+              </ul>
+            </div>
+          </div>
+        </template>
+      </Column>
+      <Column field="article" header="Артикул">
+        <template #body="{ data }">
+          <a
+          :href="`https://www.ozon.ru/product/${data.article}`" target="_blank"
+            class="text-sm text-secondary link link-hover"
+          >
+            {{ data.article }}
+          </a>
+        </template>
+      </Column>
+      <Column field="size" header="Размер">
+        <template #body="{ data }">
+          <div>{{ data.size }}</div>
+        </template>
+      </Column>
+      <Column field="amount" header="Кол-во">
+        <template #body="{ data }">
+          <div>{{ data.amount }}</div>
+        </template>
+      </Column>
+      <Column field="query" header="Ключевой запрос">
+        <template #body="{ data }">
+          <p class="max-w-xs truncate">
+            {{ data.query }}
+          </p>
+        </template>
+      </Column>
+
+      <Column field="status" header="Статус">
+        <template #body="{ data }">
+          <div
+            :class="{
+              'text-error': data.status === 'nofunds',
+              'text-primary': data.status === 'created',
+              'text-warning': data.status === 'work',
+              'text-success': data.status === 'completed',
+            }"
+          >
+            {{ getStatus(data.status) }}
+          </div>
+        </template>
+      </Column>
+      <Column field="createdDate" header="Дата создания">
+        <template #body="{ data }">
+          <div>
+            {{ defaultDate(data.createdDate) }}
+          </div>
+        </template>
+      </Column>
+      <Column field="endedDate" header="Дата завершения">
+        <template #body="{ data }">
+          <div v-if="data.endedDate">
+            {{ defaultDate(data.endedDate) }}
+          </div>
+          <div v-else>
+            Нет
+          </div>
+        </template>
+      </Column>
+    </DataTable> -->
+  </ClientOnly>
+</template>
+
+<style scoped>
+
+</style>
