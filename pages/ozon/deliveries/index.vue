@@ -263,26 +263,26 @@ function updateSearchType(filter: any) {
   search.type = filter.value
 }
 
-function changeFilter(e: any) {
-  mpStore.changeMp(
-    e.value,
-    'delivery',
-    route.query?.status ? `?status=${route.query.status}` : '',
-  )
-}
+// function changeFilter(e: any) {
+//   mpStore.changeMp(
+//     e.value,
+//     'deliveries',
+//     route.query?.status ? `?status=${route.query.status}` : '',
+//   )
+// }
 
 const customLinks = filters.map(filter => ({
   title: filter.title,
-  slot: '/delivery/ozon',
+  slot: '/ozon/deliveries',
   query: filter.params,
 }))
 </script>
 
 <template>
   <div>
-    <div class="">
-      <div class="flex lg:hidden mt-2">
-        <div v-if="deliveries.length" class="export">
+    <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
+      <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
+        <div v-if="deliveries.length" class="export lg:absolute right-0 top-0">
           <button
             v-if="loadingExport"
             disabled
@@ -292,21 +292,15 @@ const customLinks = filters.map(filter => ({
               class="loading loading-spinner loading-sm text-primary"
             />
           </button>
-          <div v-else class="dropdown">
+          <div v-else class="dropdown lg:dropdown-end z-10">
             <label
               tabindex="0"
-              class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
-            >XLS
-            </label>
+              class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
+            >XLS</label>
             <ul
               tabindex="0"
-              class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10"
+              class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-1"
             >
-              <!-- <li>
-                <NuxtLink target="blank" to="/delivery/export">
-                  Готовы к выдаче PDF
-                </NuxtLink>
-              </li> -->
               <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
               <li><a @click="exportXLS">Общая таблица Excel</a></li>
@@ -314,123 +308,46 @@ const customLinks = filters.map(filter => ({
             </ul>
           </div>
         </div>
-        <div class="flex w-full">
-          <input
-            ref="codeInputMob"
-            v-model="search.text"
-            type="text"
-            class="input input-sm bg-base-300 bg-opacity-40 rounded-r-none w-full"
-            placeholder="Поиск"
-            @input="onSearchInput()"
-          >
-          <div
-            class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
-            @click="codeInputMob.focus()"
-          >
-            <span
-              v-if="search.loading"
-              class="loading loading-spinner loading-xs"
+        <div class="w-full flex gap-1 lg:gap-2 ">
+          <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+            <span><CustomSelect
+              class="h-[2rem]  min-w-[95px]"
+              :status-text="statusText"
+              :links="customLinks"
+            /> </span>
+          </div>
+          <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
+            <CustomSelect
+              class="h-[2rem] bg-[#f4f4f4]"
+              :tabs="[
+                { title: 'Артикул', value: 'article' },
+                { title: 'ID выкупа', value: 'uuid' },
+              ]"
+              @change-value="updateSearchType"
             />
-            <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
           </div>
-        </div>
-      </div>
-      <div class="flex gap-2 mt-2 lg:hidden">
-        <CustomSelect
-          class="h-[2rem] lg:hidden min-w-[100px]"
-
-          :status-text="statusText"
-          :links="customLinks"
-        />
-        <CustomSelect
-          class="h-[2rem] bg-[#f4f4f4]"
-          :tabs="[
-            { title: 'Артикул', value: 'article' },
-            { title: 'ID выкупа', value: 'uuid' },
-          ]"
-          @change-value="updateSearchType"
-        />
-      </div>
-
-      <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-4">
-        <div class="flex gap-2">
-          <CustomSelect
-            class="h-[2rem] hidden lg:flex min-w-[100px]"
-
-            :status-text="statusText"
-            :links="customLinks"
-          />
-        </div>
-
-        <div class="gap-4 hidden lg:flex">
-          <div class="search flex justify-between items-center gap-2">
-            <div />
-            <div class="flex gap-4 items-center">
-              <CustomSelect
-                class="h-[2rem] bg-[#f4f4f4]"
-                :tabs="[
-                  { title: 'Артикул', value: 'article' },
-                  { title: 'ID выкупа', value: 'uuid' },
-                ]"
-                @change-value="updateSearchType"
-              />
-              <div class="flex w-full">
-                <input
-                  ref="codeInput"
-                  v-model="search.text"
-                  type="text"
-                  class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none"
-                  placeholder="Поиск"
-                  @input="onSearchInput()"
-                >
-                <div
-                  class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
-                  @click="codeInput.focus()"
-                >
-                  <span
-                    v-if="search.loading"
-                    class="loading loading-spinner loading-xs"
-                  />
-                  <Icon
-                    v-else
-                    class="text-gray-500"
-                    name="tabler:search"
-                    size="20"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-if="deliveries.length" class="export">
-            <button
-              v-if="loadingExport"
-              disabled
-              class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
-            >
-              <span
-                class="loading loading-spinner loading-sm text-primary"
-              />
-            </button>
-            <div v-else class="dropdown dropdown-end z-10">
-              <label
-                tabindex="0"
-                class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content m-1"
-              >XLS</label>
-              <ul
-                tabindex="0"
-                class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+          <div class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]">
+            <label class="w-full flex bg-[#ececed] rounded-lg items-center">
+              <input
+                ref="codeInputMob"
+                v-model="search.text"
+                type="text"
+                class="input input-sm bg-transparent rounded-r-none w-full"
+                placeholder="Поиск"
+                @input="onSearchInput()"
               >
-                <li>
-                  <NuxtLink target="blank" to="/ozon/delivery/export">
-                    Готовы к выдаче PDF
-                  </NuxtLink>
-                </li>
-                <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
-
-                <li><a @click="exportXLS">Общая таблица Excel</a></li>
-                <li><a @click="exportReadyUntilPenaltyXLS">До штрафа</a></li>
-              </ul>
-            </div>
+              <span
+                v-if="search.loading"
+                class="loading loading-spinner loading-xs flex justify-end p-2"
+              />
+              <Icon
+                v-else
+                class="text-[#8f8e93] flex justify-end pr-2"
+                name="tabler:search"
+                size="30"
+                @click="codeInputMob.focus()"
+              />
+            </label>
           </div>
         </div>
       </div>

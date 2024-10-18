@@ -405,12 +405,12 @@ const customLinks = filters.map(filter => ({
         </div>
         <div class="w-full flex gap-1 lg:gap-2 ">
           <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
-            <span><CustomSelect
+            <!-- <span><CustomSelect
               class="h-[2rem]  lg:min-w-[120px]"
               status-text="Wildberries"
               :tabs="storeMain.client.username === 'test' ? mpStore.sortMp('buyouts') : mpStore.sortMp('buyouts', true)"
               @change-value="changeMP"
-            /></span>
+            /></span> -->
             <span><CustomSelect
               class="h-[2rem]  min-w-[95px]"
               :status-text="statusText"
