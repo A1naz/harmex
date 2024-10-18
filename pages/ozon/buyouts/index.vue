@@ -404,7 +404,7 @@ async function removeBuyout() {
       <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
         <div class="flex gap-2">
           <NuxtLink
-            to="/wildberries/buyouts/create"
+            to="/ozon/buyouts/create"
             class="btn btn-primary bg-[#6675ff] dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
           >
             <Icon name="fluent:add-24-filled" size="12" />
