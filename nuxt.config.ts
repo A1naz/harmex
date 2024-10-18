@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import process from 'node:process'
 
 const baseUrl = process.env.NUXT_APP_BASE_URL || '/'
 const description = 'Harmex'
