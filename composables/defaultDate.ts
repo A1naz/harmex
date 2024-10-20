@@ -1,5 +1,5 @@
 ﻿﻿function addLeadingZero(num: number) {
-  return num < 10 ? '0' + num : num
+  return num < 10 ? `0${num}` : num
 }
 
 // Функция для форматирования даты и времени

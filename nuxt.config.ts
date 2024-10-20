@@ -81,6 +81,7 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     'nuxt-i18n-micro',
     '@nuxt/eslint',
+    '@bg-dev/nuxt-s3',
   ],
   eslint: {
     config: {
@@ -107,6 +108,25 @@ export default defineNuxtConfig({
     '@/assets/style/css/customButton.css',
     '@vuepic/vue-datepicker/dist/main.css',
   ],
+
+  s3: {
+    client: {
+      credentials: {
+        secretAccessKey: process.env.VK_SECRET_KEY || '',
+        accessKeyId: process.env.VK_ACCESS_KEY || '',
+      },
+      endpoint: 'https://hb.vkcs.cloud/reviewImages/',
+      region: 'ru-msk',
+    },
+    publicBucketUrl: `${process.env.PUBLIC_SITE_URL}/images/get/`,
+    bucket: 'ozonmpportal',
+    image: {
+      compression: {
+        maxSizeMB: 10,
+        maxWidthOrHeight: 4000,
+      },
+    },
+  },
 
   hooks: {
     close: () => {

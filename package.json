@@ -14,6 +14,7 @@
     "update": "bunx --bun nuxi upgrade --force"
   },
   "dependencies": {
+    "@bg-dev/nuxt-s3": "0.2.8",
     "@formkit/auto-animate": "1.0.0-beta.6",
     "@kyvg/vue3-notification": "^2.9.1",
     "@morev/vue-transitions": "^3.0.2",
@@ -31,6 +32,7 @@
     "@vuepic/vue-datepicker": "^4.5.1",
     "@vuesax-alpha/icons-vue": "0.0.2-beta.12",
     "@vueuse/components": "^9.13.0",
+    "aws-sdk": "^2.1555.0",
     "bcrypt": "^5.1.1",
     "chart.js": "^4.4.4",
     "clsx": "^2.1.1",
@@ -60,6 +62,7 @@
     "speakeasy": "^2.0.0",
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
+    "tus-js-client": "^4.2.3",
     "unstorage": "^1.12.0",
     "uuid": "^9.0.1",
     "validator": "^13.12.0",
