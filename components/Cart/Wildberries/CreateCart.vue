@@ -81,7 +81,7 @@ async function getProductInfo() {
 
   loadingUrl.value = false
 }
-let timeout = null as NodeJS.Timeout | null
+let timeout = null as NodeJS.Timer | null
 async function changeUrl() {
   if (article.value === '')
     return
@@ -95,19 +95,6 @@ function selectPeriod(event: any) {
 }
 function selectSize(event: any) {
   size.value = event.target.value
-}
-function getStatus(status: string) {
-  if (status === 'created')
-    return 'Создан'
-  else if (status === 'work')
-    return 'В работе'
-  else if (status === 'busy')
-    return 'В работе'
-  else if (status === 'completed')
-    return 'Завершен'
-  else if (status === 'nofunds')
-    return 'Недостаточно средств'
-  else return status
 }
 function removeProduct() {
   productData.value = null

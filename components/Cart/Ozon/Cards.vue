@@ -3,7 +3,7 @@ interface IProps {
   carts: any[]
   getStatus: (status: string) => string
 }
-const props = defineProps<IProps>()
+defineProps<IProps>()
 </script>
 
 <template>
@@ -19,7 +19,7 @@ const props = defineProps<IProps>()
               Артикул
             </div>
             <a
-            :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
+              :href="`https://www.ozon.ru/product/${item.article}`" target="_blank"
               class="text-primary link link-hover text-sm"
             >
               {{ item.article }}
@@ -30,14 +30,14 @@ const props = defineProps<IProps>()
               Статус
             </div>
             <div
-            class="whitespace-nowrap text-sm"
+              class="whitespace-nowrap text-sm"
               :class="{
-                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-1.5 text-center':
-                    item.status === 'created',
-                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2 text-center':
-                    item.status === 'work' || item.status === 'busy',
-                  'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
-                    item.status === 'completed',
+                'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-1.5 text-center':
+                  item.status === 'created',
+                'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2 text-center':
+                  item.status === 'work' || item.status === 'busy',
+                'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                  item.status === 'completed',
               }"
             >
               <div>
@@ -71,7 +71,7 @@ const props = defineProps<IProps>()
           </div>
           <div>Дата Завершения:</div>
           <div>
-            <div v-if="item.endedDate" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-end px-3" >
+            <div v-if="item.endedDate" class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-end px-3">
               {{ defaultDate(item.endedDate) }}
             </div>
             <div v-else>

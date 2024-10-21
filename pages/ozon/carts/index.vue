@@ -3,10 +3,9 @@ import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Корзина',
 })
-const mpStore = useMPStore()
 const route = useRoute()
 const router = useRouter()
 const sortPage = ref('all')
@@ -162,10 +161,6 @@ function updateSearchType(filter: any) {
   search.type = filter.value
 }
 
-function changeFilter(e: any) {
-  mpStore.changeMp(e.value, 'cart')
-}
-
 onMounted(() => {
   if (route.query.modalShow) {
     modalShow.value = route.query.modalShow === 'true'
@@ -233,7 +228,7 @@ onMounted(() => {
                 type="text"
                 class="input input-sm bg-base-300 bg-opacity-40 text-gray-500 w-full"
                 placeholder="Поиск по вопросам"
-                @input="onSearchInput($event)"
+                @input="onSearchInput()"
               >
               <span
                 v-if="search.loading"

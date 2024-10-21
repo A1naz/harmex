@@ -4,7 +4,7 @@ import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Корзина',
 })
 const mpStore = useMPStore()
@@ -109,7 +109,7 @@ async function getProductInfo() {
 
   loadingUrl.value = false
 }
-let timeout = null as NodeJS.Timeout | null
+let timeout = null as NodeJS.Timer | null
 async function changeUrl() {
   if (article.value === '')
     return

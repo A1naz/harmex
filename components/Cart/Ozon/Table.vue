@@ -4,12 +4,9 @@ interface IProps {
   getStatus: (status: string) => string
   resumeStatus: (item: any) => any
 }
-const props = defineProps<IProps>()
+defineProps<IProps>()
 const emit = defineEmits(['logModal'])
 const { $dayjs } = useNuxtApp()
-function removeCart(index: number) {
-
-}
 </script>
 
 <template>
