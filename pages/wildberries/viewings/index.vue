@@ -3,25 +3,14 @@ import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Просмотры',
 })
 const store = useMainStore()
 const mpStore = useMPStore()
-const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const viewings = ref([]) as any
-const amount = ref(0)
-const now = useNow()
 const sortPage = ref('all')
 const sortPageDate = ref('')
-const publishDate = ref(now.value)
-const loadingUrl = ref(false)
-const searchQuery = ref('')
-const article = ref('')
-const sex = ref('male')
-const { width, height } = useWindowSize()
-const productData = ref<any>(null)
-const urlError = ref(false)
 const modalShow = ref<boolean>(false)
 const route = useRoute()
 const router = useRouter()
@@ -44,12 +33,7 @@ const skip = ref(0)
 const end = ref(false)
 const target = ref(null)
 const targetIsVisible = ref(false)
-const { stop } = useIntersectionObserver(
-  target,
-  ([{ isIntersecting }], observerElement) => {
-    targetIsVisible.value = isIntersecting
-  },
-)
+
 watch(targetIsVisible, async (isVisible) => {
   if (!end.value && isVisible && viewings.value.length >= limit.value) {
     await getViewings()
@@ -66,7 +50,6 @@ function clearViewings() {
 async function getViewings() {
   modalShow.value = false
   clearViewings()
-  // @ts-ignore
   const { data, error } = await useFetch('/api/wildberries/viewings/get', {
     method: 'GET',
     query: {
@@ -99,60 +82,7 @@ async function getViewings() {
   loading.value = false
 }
 await getViewings()
-async function create() {
-  // @ts-ignore
-  const { data, error } = await useFetch('/api/wildberries/viewings/create', {
-    method: 'POST',
-    body: {
-      article: article.value,
-      publishDate: publishDate.value,
-      gender: sex.value,
-      productData: productData.value,
-      searchQuery: searchQuery.value,
-    },
-  })
-  if (error.value) {
-    return notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: error.value.message,
-    })
-  }
-  if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    removeProduct()
-    publishDate.value = now.value
-    getViewings()
-  }
-}
-async function getProductInfo() {
-  if (!article.value)
-    return
 
-  const { data, error } = await useFetch(`/api/wildberries/product/${article.value}`, {
-    method: 'GET',
-  })
-  if ((data.value as any)?.product) {
-    productData.value = (data.value as any).product
-    urlError.value = false
-  }
-  if (error.value)
-    urlError.value = true
-
-  loadingUrl.value = false
-}
-let timeout = null as NodeJS.Timeout | null
-async function changeUrl() {
-  if (article.value === '')
-    return
-  loadingUrl.value = true
-  if (timeout)
-    clearTimeout(timeout)
-  timeout = setTimeout(getProductInfo, 2000)
-}
-function selectSex(event: any) {
-  sex.value = event.target.value
-}
 function getStatus(status: string) {
   if (status === 'created') {
     return 'Создан'
@@ -205,11 +135,6 @@ async function resumeStatus(item: any) {
   }
 }
 
-function removeProduct() {
-  productData.value = null
-  article.value = ''
-  amount.value = 0
-}
 onMounted(() => {
   if (route.query.modalShow) {
     modalShow.value = route.query.modalShow === 'true'
@@ -233,7 +158,7 @@ async function selectFilterDate(e: any, date?: boolean) {
   await getViewings()
 }
 
-async function findBuyouts(value: string, type: string) {
+async function findBuyouts(value: string, _type: string) {
   viewings.value = []
   skip.value = 0
   end.value = false
@@ -250,8 +175,7 @@ async function findBuyouts(value: string, type: string) {
 
 const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
 
-async function onSearchInput(event: Event) {
-  const newValue = (event.target as HTMLInputElement).value
+async function onSearchInput(_event: Event) {
   search.loading = true
   findBuyoutsDebounced(search.text, search.type)
 }
@@ -283,13 +207,13 @@ function changeFilter(e: any) {
             <Icon name="fluent:add-24-filled" size="17" />
             <span class="hidden lg:flex">Просмотр</span>
           </button>
-          <CustomSelect
+          <!-- <CustomSelect
             class="hidden lg:flex sm:min-w-[120px]"
 
             status-text="Wildberries"
             :tabs="mpStore.sortMp('viewings')"
             @change-value="changeFilter"
-          />
+          /> -->
           <CustomSelect
             class="hidden lg:flex sm:min-w-[120px]"
 
