@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const theme = useColorMode()
+import { notify } from '@kyvg/vue3-notification'
+
 const props = defineProps({
   info: {
     type: Object as any,
@@ -9,15 +10,12 @@ const props = defineProps({
     type: Boolean,
   },
 })
-import { notify } from '@kyvg/vue3-notification'
 const emit = defineEmits(['openModal', 'openStatusModal', 'openPenaltyModal'])
 const currency = useCurrency()
-const store = useMainStore()
 const router = useRouter()
 const opened = ref()
-const qrCode = ref(null)
 function openBuyout() {
-  router.push(`/buyouts/ozon?uuid=${props.info.uuid}`)
+  router.push(`/ozon/buyouts?uuid=${props.info.uuid}`)
 }
 onMounted(async () => {
   opened.value = props.state
@@ -26,26 +24,28 @@ watch(
   () => props.state,
   (newState) => {
     opened.value = newState
-  }
+  },
 )
 function daysToPenalty(statusdelivery: any[]) {
-  const item = statusdelivery.find((item) => item.status)
-  if (!item) return
+  const item = statusdelivery.find(item => item.status)
+  if (!item)
+    return
 
   const updatedAt = new Date(item.date)
   const penaltyDay = new Date(updatedAt.getTime() + 7 * 24 * 60 * 60 * 1000)
   const now = new Date()
   const timeLeft = penaltyDay.getTime() - now.getTime()
-  // eslint-disable-next-line max-statements-per-line
+
   if (timeLeft < 0) {
     return 'Получение со штрафом!'
-  } else {
+  }
+  else {
     const days = Math.round(timeLeft / 1000 / 60 / 60 / 24)
     return `До штрафа осталось: ${days} д.`
   }
 }
 
-const copyToClipboard = (text: string) => {
+function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text)
   notify({ text: 'Скопировано в буфер обмена', type: 'success' })
 }
@@ -55,7 +55,7 @@ const copyToClipboard = (text: string) => {
   <div
     class="collapse collapse-arrow border bg-base-200 rounded-box z-0 overflow-hidden border-[#eff0ff] dark:border-primary dark:border-opacity-10"
   >
-    <input v-model="opened" type="checkbox" />
+    <input v-model="opened" type="checkbox">
 
     <div
       class="collapse-title relative text-xl font-medium bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10"
@@ -75,12 +75,12 @@ const copyToClipboard = (text: string) => {
               <span> Доставка </span>
               <div
                 v-if="
-                  info.currentstatus === 'Готов к выдаче' &&
-                  info.statusdelivery.length > 1
+                  info.currentstatus === 'Готов к выдаче'
+                    && info.statusdelivery.length > 1
                 "
                 class="text-s link bg-[#FF6666] dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"
-                @click="emit('openPenaltyModal')"
                 style="min-width: fit-content"
+                @click="emit('openPenaltyModal')"
               >
                 <IconCSS name="ph:warning-circle-light" size="25" />
 
@@ -92,17 +92,17 @@ const copyToClipboard = (text: string) => {
 
             <label
               class="text-[0.6rem] sm:text-[0.8rem] lg:text-xs break-all z-10"
-              @click="openBuyout"
               style="white-space: nowrap"
+              @click="openBuyout"
             >
               <span class="link link-hover hover:text-primary">
                 #{{ info.uuid }}
               </span>
               <IconCSS
-                @click.stop
                 class="hover:text-primary cursor-pointer ml-2"
                 name="solar:copy-bold"
                 size="25"
+                @click.stop
                 @click="copyToClipboard(info.uuid)"
               />
             </label>
@@ -178,8 +178,7 @@ const copyToClipboard = (text: string) => {
 
               <span
                 class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content"
-                >{{ info.size === 'none' ? 'Не указан' : info.size }}</span
-              >
+              >{{ info.size === 'none' ? 'Не указан' : info.size }}</span>
             </div>
           </div>
 
@@ -189,12 +188,11 @@ const copyToClipboard = (text: string) => {
 
               <span
                 class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content"
-                >{{
-                  info.discountPrice == info.product?.price
-                    ? '%'
-                    : info.discountPrice + ' ₽'
-                }}</span
-              >
+              >{{
+                info.discountPrice == info.product?.price
+                  ? '%'
+                  : `${info.discountPrice} ₽`
+              }}</span>
             </div>
           </div>
         </div>
@@ -205,12 +203,16 @@ const copyToClipboard = (text: string) => {
       <div class="receipt flex gap-4 lg:gap-8 items-center flex-wrap">
         <div class="flex gap-2 md:gap-10 lg:gap-10">
           <div class="lg:mr-10 text-primary text-xs">
-            <div class="text-sm text-gray-500 mb-1">Получатель:</div>
+            <div class="text-sm text-gray-500 mb-1">
+              Получатель:
+            </div>
             {{ info.recipient }} {{ info.recipientphone }}
           </div>
 
           <div class="text-primary text-xs">
-            <div class="text-sm text-gray-500 mb-1">Код получения:</div>
+            <div class="text-sm text-gray-500 mb-1">
+              Код получения:
+            </div>
             {{ info?.receiptcode ? info?.receiptcode : 'Товар не доставлен' }}
           </div>
 
@@ -222,7 +224,7 @@ const copyToClipboard = (text: string) => {
                 emit(
                   'openModal',
                   parseInt(info.receiptcode),
-                  info.receiptcodeqr
+                  info.receiptcodeqr,
                 )
               "
             >
@@ -233,7 +235,9 @@ const copyToClipboard = (text: string) => {
         </div>
 
         <div class="w-76">
-          <div class="text-sm text-gray-500">Адрес:</div>
+          <div class="text-sm text-gray-500">
+            Адрес:
+          </div>
           <a
             target="_blank"
             class="text-base-content text-xs link link-hover w-52 lg:w-76 break-all"

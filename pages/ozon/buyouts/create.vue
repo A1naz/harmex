@@ -224,7 +224,7 @@ async function createBuyout() {
     })
 
     store.createProducts = []
-    navigateTo({ path: '/buyouts/ozon' })
+    navigateTo({ path: '/ozon/buyouts' })
   }
 }
 

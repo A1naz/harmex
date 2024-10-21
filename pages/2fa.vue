@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { notify } from '@kyvg/vue3-notification'
+
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 // console.log('2fa', user)
 
@@ -9,7 +10,7 @@ const { loggedIn, user, session, fetch, clear } = useUserSession()
 
 definePageMeta({
   title: 'Двухфакторная аутентификация',
-  auth: true,
+  middleware: 'auth',
 })
 
 const codeInput = ref()
@@ -22,43 +23,41 @@ onMounted(() => {
 
 async function confirm2fa() {
   if (!code.value) {
-    return;
+    return
   }
 
   if (code.value.length < 6) {
     notify({
       title: 'Код должен содержать 6 цифр',
-    });
-    return;
+    })
+    return
   }
-  await fetch(); 
+  await fetch()
 
   try {
     const { data, error } = await useFetch('/api/2fa/login', {
       method: 'POST',
-      query: { 
-        code: code.value.replaceAll(' ', '') 
+      query: {
+        code: code.value.replaceAll(' ', ''),
       },
-    });
+    })
 
     if (error.value) {
       notify({
         title: 'Неверный код двухфакторной аутентификации',
-      });
-      return; 
+      })
+      return
     }
 
-    await fetch(); 
-    return navigateTo('/', { external: true }); 
-
-  } catch (err) {
+    await fetch()
+    return navigateTo('/', { external: true })
+  }
+  catch (err) {
     notify({
       title: 'Ошибка при проверке кода 2FA',
-    });
+    })
   }
 }
-
-
 
 async function logout() {
   await clear()
@@ -67,7 +66,7 @@ async function logout() {
 </script>
 
 <template>
-  <div class="title hidden w-full justify-center p-2 xl:flex"></div>
+  <div class="title hidden w-full justify-center p-2 xl:flex" />
   <div
     class="absolute mt-[12%] flex w-full flex-col justify-center overflow-hidden py-10"
   >
@@ -75,7 +74,6 @@ async function logout() {
       <div
         class="card flex w-[400px] flex-col justify-center bg-base-100 shadow-2xl p-2"
       >
-      
         <div class="-mb-2 mt-1 text-center text-xl ">
           Двухфакторная аутентификация
         </div>
@@ -85,16 +83,18 @@ async function logout() {
         </div>
         <div class="flex flex-wrap justify-center gap-3">
           <input
-            @keyup.enter="confirm2fa"
             ref="codeInput"
-            placeholder="Введите 6-ти значный код"
+            v-model="code"
             v-maska
+            placeholder="Введите 6-ти значный код"
             data-maska="### ###"
             class="input input-bordered w-full max-w-xs text-xl"
-            v-model="code"
-          />
+            @keyup.enter="confirm2fa"
+          >
           <div class="mb-5 mt-4 flex justify-between gap-28">
-            <button class="btn w-32" @click="logout">Выйти</button>
+            <button class="btn w-32" @click="logout">
+              Выйти
+            </button>
             <button class="btn btn-primary" @click="confirm2fa">
               Подтвердить
             </button>

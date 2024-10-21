@@ -9,8 +9,8 @@ const props = defineProps({
     required: true,
   },
 })
-const { width } = useWindowSize()
 const emit = defineEmits(['openModal'])
+const { width } = useWindowSize()
 const router = useRouter()
 
 const delIndex = 0
@@ -28,7 +28,7 @@ const countSoonAvailable = props.info.countSoon
 const sex = props.info.delivs[delIndex].sex
 
 function openBuyout() {
-  router.push(`/buyouts/wildberries?uuid=${buyoutuuId}`)
+  router.push(`/wildberries/buyouts?uuid=${buyoutuuId}`)
 }
 </script>
 
@@ -36,12 +36,10 @@ function openBuyout() {
   <div class="rounded-lg bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 border-none text-base-content">
     <div class="p-4 relative text-xl font-medium flex flex-col gap-2">
       <label
-              class="text-[0.6rem] self-start link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate lg:hidden "
-              @click="openBuyout"
-              >#{{ buyoutuuId }}</label
-            >
+        class="text-[0.6rem] self-start link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate lg:hidden "
+        @click="openBuyout"
+      >#{{ buyoutuuId }}</label>
       <div class="flex gap-4">
-        
         <a
           class=""
           :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
@@ -81,61 +79,57 @@ function openBuyout() {
               >
                 {{ article }}
               </a>
-             
             </div>
             <label
               class="text-[0.6rem] self-end link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate hidden lg:block "
               @click="openBuyout"
-              >#{{ buyoutuuId }}</label
-            >
+            >#{{ buyoutuuId }}</label>
           </div>
           <div class="flex justify-between flex-wrap gap-2 items-center mt-2 mb-2">
             <div class="lg:m-0 text-xs bg-[#d3d6ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content rounded-md px-4 py-1.5">
-              Обновлено 
+              Обновлено
               {{ $dayjs(updatedAt).locale('ru').format(
-                        'D MMMM YYYY HH:mm'
-                        ) }}
+                'D MMMM YYYY HH:mm',
+              ) }}
             </div>
           </div>
-        <div class="flex justify-between flex-wrap gap-2 items-center mt-1">
-        <div class="flex gap-4 text-sm">
-          <div class="text-gray-500">Пол: 
-            <span class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F]  px-1 text-base-content py-0.5 ml-1">{{ sex }}</span>
-            
-          </div>
-          <div class="text-gray-500">Размер: 
-            <span class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F] px-1 text-base-content py-0.5 ml-1">{{ size === 'none' ? 'Нет' : size }}</span>
-          </div>
-        </div>
+          <div class="flex justify-between flex-wrap gap-2 items-center mt-1">
+            <div class="flex gap-4 text-sm">
+              <div class="text-gray-500">
+                Пол:
+                <span class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F]  px-1 text-base-content py-0.5 ml-1">{{ sex }}</span>
+              </div>
+              <div class="text-gray-500">
+                Размер:
+                <span class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F] px-1 text-base-content py-0.5 ml-1">{{ size === 'none' ? 'Нет' : size }}</span>
+              </div>
+            </div>
 
-        <div class="flex-col justify-center gap-2 hidden lg:flex">
-          <label
-            for="review-modal"
-            class="btn btn-md text-lg btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none text-base-content"
-            @click="$emit('openModal', buyoutuuId, deliveryId)"
-            >Оставить отзыв (доступно: {{ countAllAvailable }})
-          </label>
-          <!-- <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
+            <div class="flex-col justify-center gap-2 hidden lg:flex">
+              <label
+                for="review-modal"
+                class="btn btn-md text-lg btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none text-base-content"
+                @click="$emit('openModal', buyoutuuId, deliveryId)"
+              >Оставить отзыв (доступно: {{ countAllAvailable }})
+              </label>
+              <!-- <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
             Скоро будет доступно еще {{ countSoonAvailable }}
           </div> -->
+            </div>
+          </div>
         </div>
-      </div>
-      </div>
-      
-        
       </div>
       <div class="flex flex-col justify-center gap-2 lg:hidden">
-          <label
-            for="review-modal"
-            class="btn btn-sm btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content "
-            @click="$emit('openModal', buyoutuuId, deliveryId)"
-            >Оставить отзыв (доступно: {{ countAllAvailable }})
-          </label>
-          <!-- <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
+        <label
+          for="review-modal"
+          class="btn btn-sm btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content "
+          @click="$emit('openModal', buyoutuuId, deliveryId)"
+        >Оставить отзыв (доступно: {{ countAllAvailable }})
+        </label>
+        <!-- <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
             Скоро будет доступно еще {{ countSoonAvailable }}
           </div> -->
-        </div>
-      
+      </div>
     </div>
   </div>
 </template>

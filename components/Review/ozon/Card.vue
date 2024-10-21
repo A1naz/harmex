@@ -26,7 +26,7 @@ const countSoonAvailable = props.info.countSoon
 const sex = props.info.delivs[delIndex].sex
 
 function openBuyout() {
-  router.push(`/buyouts/ozon?uuid=${buyoutuuId}`)
+  router.push(`/ozon/buyouts?uuid=${buyoutuuId}`)
 }
 </script>
 
