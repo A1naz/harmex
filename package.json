@@ -14,8 +14,6 @@
     "update": "bunx --bun nuxi upgrade --force"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.675.0",
-    "@aws-sdk/s3-request-presigner": "1.0.0-rc.3",
     "@bg-dev/nuxt-s3": "0.2.8",
     "@formkit/auto-animate": "1.0.0-beta.6",
     "@kyvg/vue3-notification": "^2.9.1",
