@@ -3,17 +3,14 @@ import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Доставки',
 })
 
-const mpStore = useMPStore()
 const openAll = ref(false)
 const route = useRoute()
-const store = useMainStore()
 const deliveries = ref([]) as any
 const autoTarget = ref(true)
-const codeInput = ref()
 const codeInputMob = ref()
 const loadingExport = ref(false)
 const status = computed(() => route.query?.status || 'all')
@@ -270,14 +267,6 @@ const statusText = computed(() => {
 function updateSearchType(filter: any) {
   search.value.type = filter.value
 }
-
-// function changeFilter(e: any) {
-//   mpStore.changeMp(
-//     e.value,
-//     'delivery',
-//     route.query?.status ? `?status=${route.query.status}` : '',
-//   )
-// }
 </script>
 
 <template>
