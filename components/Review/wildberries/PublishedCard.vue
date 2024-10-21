@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { UseImage } from '@vueuse/components'
 import { notify } from '@kyvg/vue3-notification'
-const router = useRouter()
-const config = useRuntimeConfig()
+import { UseImage } from '@vueuse/components'
 
 const props = defineProps({
   info: {
@@ -23,6 +21,9 @@ const emit = defineEmits([
   'logModal',
   'resumeStatus',
 ])
+const router = useRouter()
+const config = useRuntimeConfig()
+
 const { $dayjs } = useNuxtApp()
 onMounted(() => {})
 const getStatus = computed(() => {
@@ -33,7 +34,7 @@ const getStatus = computed(() => {
       return 'В очереди'
     case 'working':
       return 'В работе'
-      case 'busy':
+    case 'busy':
       return 'В работе'
     case 'published':
       return 'Опубликован'
@@ -49,7 +50,7 @@ const getStatus = computed(() => {
 })
 
 function openBuyout() {
-  router.push(`/buyouts/wildberries?uuid=${props.info.buyoutuuid}`)
+  router.push(`/wildberries/buyouts?uuid=${props.info.buyoutuuid}`)
 }
 
 function removeReview() {
@@ -70,8 +71,8 @@ async function resumeStatus(item: any) {
         <div class="flex gap-1">
           <button
 
-            @click="emit('logModal', info)"
             class="btn btn-sm btn-ghost btn-circle hover:text-primary"
+            @click="emit('logModal', info)"
           >
             <svg
               data-v-f136eeaa=""
@@ -90,46 +91,48 @@ async function resumeStatus(item: any) {
                 fill-rule="evenodd"
                 d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
                 clip-rule="evenodd"
-              ></path>
+              />
             </svg>
           </button>
           <button
             v-if="info.status === 'published'"
-            @click="emit('removeReview', info.id)"
             class="btn btn-sm btn-ghost btn-circle hover:text-primary"
+            @click="emit('removeReview', info.id)"
           >
-            
-            <Icon name="heroicons-outline:trash" size="30" class=""/>
+            <Icon name="heroicons-outline:trash" size="30" class="" />
           </button>
         </div>
       </div>
       <div class="flex gap-1">
         <span
-            :class="{
-              'bg-success bg-opacity-50 text-green-500':
-                info.status === 'working' || info.status === 'published' || info.status === 'busy',
-              'bg-[#F8C68A] text-[#D67500]':
-                info.status === 'waiting' ||
-                info.status === 'created',
-                'bg-[#F8C68A]  text-red-500':
-                info.status === 'nofunds',
-              'bg-[#FF685E] text-[#9C0A00]':
-                info.status === 'canceled' ||
-                info.status === 'deleted' ||
-                info.status === 'deleting',
-            }"
-            class="text-black p-1.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
-            >{{ getStatus }}
+          :class="{
+            'bg-success bg-opacity-50 text-green-500':
+              info.status === 'working' || info.status === 'published' || info.status === 'busy',
+            'bg-[#F8C68A] text-[#D67500]':
+              info.status === 'waiting'
+              || info.status === 'created',
+            'bg-[#F8C68A]  text-red-500':
+              info.status === 'nofunds',
+            'bg-[#FF685E] text-[#9C0A00]':
+              info.status === 'canceled'
+              || info.status === 'deleted'
+              || info.status === 'deleting',
+          }"
+          class="text-black p-1.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
+        >{{ getStatus }}
         </span>
         <button v-if="info.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square my-2.5 text-base-content hover:text-primary w-fit p-1.5 px-4 rounded-full border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(info)">
-          Возобновить  
+          Возобновить
         </button>
       </div>
       <div class="flex justify-between item gap-2 mb-2 flex-wrap">
-        
-        <h2 v-if="info.draftName" class="card-title">{{ info.draftName }}</h2>
+        <h2 v-if="info.draftName" class="card-title">
+          {{ info.draftName }}
+        </h2>
         <div v-else class="flex gap-3">
-          <h2  class="card-title text-2xl font-bold">Отзыв</h2>
+          <h2 class="card-title text-2xl font-bold">
+            Отзыв
+          </h2>
           <div
             class="bg-base-300 rounded-md text-md font-normal my-auto p-0.5 mt-1 px-2"
           >
@@ -140,8 +143,7 @@ async function resumeStatus(item: any) {
       <label
         class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate "
         @click="openBuyout"
-        >#{{ info.buyoutuuid }}</label
-      >
+      >#{{ info.buyoutuuid }}</label>
       <div class="flex flex-col gap-4">
         <div class="flex flex-col">
           <div class="relative w-full rounded-lg">
@@ -157,10 +159,11 @@ async function resumeStatus(item: any) {
             </a>
           </div>
         </div>
-        
 
         <div>
-          <div class="font-bold">Рейтинг</div>
+          <div class="font-bold">
+            Рейтинг
+          </div>
           <div class="relative w-full rounded-lg">
             <div class="rating gap-2">
               <input
@@ -169,40 +172,42 @@ async function resumeStatus(item: any) {
                 :checked="info.rating === 1"
                 :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              />
+              >
               <input
                 type="radio"
                 disabled
                 :checked="info.rating === 2"
                 :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              />
+              >
               <input
                 type="radio"
                 disabled
                 :checked="info.rating === 3"
                 :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              />
+              >
               <input
                 type="radio"
                 disabled
                 :checked="info.rating === 4"
                 :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              />
+              >
               <input
                 type="radio"
                 disabled
                 :checked="info.rating === 5"
                 :name="`rating${index}`"
                 class="mask mask-star-2 bg-yellow-400"
-              />
+              >
             </div>
           </div>
         </div>
         <div class="w-full">
-          <div class="font-bold">Отзыв о товаре</div>
+          <div class="font-bold">
+            Отзыв о товаре
+          </div>
           <div
             class="w-full bg-base-100 h-auto overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-100 scrollbar-thin"
           >
@@ -225,13 +230,13 @@ async function resumeStatus(item: any) {
               <label v-if="photo" for="reviewImageModal">
                 <div
                   class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-16 h-16 hover:bg-base-200 rounded-lg flex-none"
-                  @click="() => emit('openImage', config.public.DOMAIN_API_IMAGES_URL + 'reviewImages/' + photo)"
+                  @click="() => emit('openImage', `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`)"
                 >
                   <div class="absolute inset-0">
-                    <UseImage :src="config.public.DOMAIN_API_IMAGES_URL + 'reviewImages/' + photo">
+                    <UseImage :src="`${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`">
                       <template #default>
                         <nuxt-img
-                          :src="config.public.DOMAIN_API_IMAGES_URL + 'reviewImages/' + photo"
+                          :src="`${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`"
                           class="w-full h-full object-contain rounded-lg"
                           loading="lazy"
                         />

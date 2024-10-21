@@ -3,7 +3,7 @@ import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Доставки',
 })
 
