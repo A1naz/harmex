@@ -1,8 +1,6 @@
 import type { Config } from 'tailwindcss'
-import typography from '@tailwindcss/typography'
-import daisyui from 'daisyui'
-import scrollbar from 'tailwind-scrollbar'
-import animate from 'tailwindcss-animate'
+
+const animate = require('tailwindcss-animate')
 
 export default {
   content: [],
@@ -157,8 +155,8 @@ export default {
   },
   plugins: [
     animate,
-    typography,
-    daisyui,
-    scrollbar,
+    require('@tailwindcss/typography'),
+    require('daisyui'),
+    require('tailwind-scrollbar')({ nocompatible: true }),
   ],
 } satisfies Config

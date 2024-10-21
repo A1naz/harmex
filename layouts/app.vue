@@ -59,7 +59,10 @@ async function search(searchQuery: any) {
   <div class="drawer lg:drawer-open z-10 h-fullX">
     <input id="my-drawer" type="checkbox" class="drawer-toggle">
 
-    <div ref="drawerContent" style="z-index: 9999" class="drawer-content w-full">
+    <div
+      ref="drawerContent" style="z-index: 9999"
+      class="drawer-content w-full"
+    >
       <div class="drawerShadow flex w-full items-center gap-2 px-16 sm:px-0 h-[75px] bg-[#f5f7ff] justify-center">
         <div class="lg:px-16 flex w-full relative gap-2">
           <i18n-link to="/" class="sm:flex hidden cursor-pointer items-center">
@@ -69,7 +72,11 @@ async function search(searchQuery: any) {
           <i18n-link to="/" class="flex items-center sm:hidden -mr-2 -ml-1.5">
             <nuxt-img src="/img/S.svg" width="30px" />
           </i18n-link>
-          <i18n-link to="/catalog" class="btn btn-secondary text-[#fff] sm:flex text-[16px] ml-8 hidden rounded-[10px] pr-8 font-medium">
+
+          <button
+            class="btn btn-secondary text-[#fff] sm:flex text-[16px] ml-8 hidden rounded-[10px] pr-8 font-medium"
+            @click="toggleMenu"
+          >
             <label :class="{ opened: isOpen }" aria-label="Main Menu" class="cursor-pointer -mr-2 -ml-2">
               <svg width="50" height="30" viewBox="0 0 100 100">
                 <path
@@ -84,16 +91,15 @@ async function search(searchQuery: any) {
               </svg>
             </label>
             Каталог
-          </i18n-link>
-
+          </button>
           <MenuSearch :data="searchData" :loading="dataLoading" @search="search" />
           <div class="sm:flex hidden">
             <button class="myCustomBtn ml-4">
               <Icon name="fluent:shopping-bag-24-regular" size="24" />
             </button>
-            <I18nLink to="/paymenthistory" class="myCustomBtn ml-4">
+            <button class="myCustomBtn ml-4">
               <Icon name="solar:wallet-linear" size="24" />
-            </I18nLink>
+            </button>
             <NuxtLink :to="loggedIn ? '/profile' : '/auth'" class="myCustomBtn ml-4">
               <Icon name="gg:profile" size="24" />
             </NuxtLink>
