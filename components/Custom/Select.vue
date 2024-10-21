@@ -137,7 +137,7 @@ defineExpose({
             filter.title
               !== (reactiveStatusText ? reactiveStatusText : statusText)
           "
-          class="btn btn-ghost btn-xs h-[2rem] w-full items-center justify-center text-left text-xs font-normal normal-case leading-none hover:border hover:border-[#1b38ca] hover:bg-white"
+          class="btn btn-ghost btn-xs h-[2rem] w-full items-center justify-center text-center text-xs text-[0.65rem] whitespace-normal font-normal normal-case leading-none hover:border hover:border-[#1b38ca] hover:bg-white"
           @click="updateValue(filter)"
         >
           <nuxt-img v-if="filter && filter.images" :src="filter ? filter.images : ''" class="h-6 w-6" />
