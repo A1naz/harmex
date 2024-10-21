@@ -78,6 +78,7 @@ export default defineNuxtConfig({
     'nuxt3-notifications',
     '@nuxtjs/turnstile',
     '@nuxt/scripts',
+    'radix-vue/nuxt',
     'shadcn-nuxt',
     'nuxt-i18n-micro',
     '@nuxt/eslint',

@@ -7,6 +7,7 @@ declare module '#auth-utils' {
     isTwoFaEnabled: boolean
     phoneNumber: string
     acesses: string[]
+    username: string | undefined
   }
 
   interface UserSession {
