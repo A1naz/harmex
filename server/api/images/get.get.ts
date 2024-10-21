@@ -1,36 +1,36 @@
-import AWS from 'aws-sdk'
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const { path }: any = getQuery(event)
 
-  const bucket = 'ozonmpportal'
-  AWS.config.update({
-    accessKeyId: config.VK_ACCESS_KEY,
-    secretAccessKey: config.VK_SECRET_KEY,
+  const s3 = new S3Client({
+    region: 'ru-central1',
+    credentials: {
+      accessKeyId: config.VK_ACCESS_KEY,
+      secretAccessKey: config.VK_SECRET_KEY,
+    },
     endpoint: 'https://hb.vkcs.cloud',
   })
 
-  const params: AWS.S3.GetObjectRequest = {
+  const params = {
     Bucket: 'ozonmpportal',
     Key: path.replace('ozonmpportal/', ''),
   }
 
-  const getImage = (params: AWS.S3.GetObjectRequest) => {
-    return new Promise((resolve, reject) => {
-      s3.getObject(params, (err, data) => {
-        if (err) {
-          reject(err)
-        }
-        else {
-          resolve(data.Body)
-        }
-      })
-    })
+  const getImage = async (params: any) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const command = new GetObjectCommand(params)
+      const response = await s3.send(command)
+      return response.Body
+    }
+    catch (err) {
+      throw err
+    }
   }
-
-  const s3 = new AWS.S3()
 
   const data = await getImage(params)
 
