@@ -34,8 +34,11 @@ defineProps({
               Доступные услуги:
             </p>
             <ul class="text-sm text-[#909090] underline text-[13px]">
-              <li v-for="(service, i) in social.items" :key="i">
+              <li v-for="(service, i) in social.items.slice(0, 4)" :key="i">
                 {{ service.title }}
+              </li>
+              <li v-if="social.items.length > 5">
+                ...
               </li>
             </ul>
             <NuxtLink

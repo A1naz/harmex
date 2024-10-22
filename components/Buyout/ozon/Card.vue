@@ -159,8 +159,17 @@ const getStatus = computed(() => {
       return 'Ожидание скидки'
     case 'discountGiven':
       return 'Скидка предоставлена'
+    default:
+      return 'Неизвестный статус'
   }
 })
+async function copyToClipboard(text: string) {
+  await navigator.clipboard.writeText(text)
+  notify({
+    title: 'Успешно',
+    text: 'Скопировано в буфер обмена',
+  })
+}
 </script>
 
 <template>
@@ -168,6 +177,13 @@ const getStatus = computed(() => {
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-4 relative"
     >
+      <button
+        v-show="info.status === 'paused' || info.status === 'nofunds'"
+        class="btn btn-xs btn-neutral absolute left-3 top-3 "
+        @click="unpauseBuyout"
+      >
+        Возобновить
+      </button>
       <div class="dropdown dropdown-end absolute right-1 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
           <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
@@ -234,7 +250,7 @@ const getStatus = computed(() => {
         </ul>
       </div>
 
-      <div class="truncate">
+      <!-- <div class="truncate">
         <div class="flex justify-between gap-1 items-center">
           <div class="flex gap-x-3 flex-wrap">
             <span class="text-[0.6rem] text-gray-500 py-1">Создан: {{
@@ -301,9 +317,9 @@ const getStatus = computed(() => {
         </div>
 
         <div class="flex justify-between mt-2" />
-      </div>
+      </div> -->
 
-      <div class="flex gap-4 ">
+      <div class="flex gap-4 mt-6 truncate">
         <div
           class="flex-none my-auto" style="width: 90px; height: 90px"
         >
@@ -316,34 +332,63 @@ const getStatus = computed(() => {
             :src="info?.product?.image || '/logo/logocolor.svg'"
           />
         </div>
-        <div class="flex flex-col">
-          <div class="mb-2">
-            <div class="text-xs text-[0.6rem] text-gray-500 truncate max-w-[150px]">
-              #{{ info.uuid }}
-            </div>
-            <div class="truncate text-[0.9rem] text-bold max-w-[150px]">
-              {{ info.product?.name }}
-            </div>
-          </div>
+        <div class="flex flex-col w-full">
           <div class="flex flex-col gap-1.5">
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto text-[0.725rem]">Сумма: </span>
-              <div class="text-[0.725rem] rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Артикул: </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                <a
+                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+                  target="_blank"
+                  class="link link-hover"
+                >
+                  {{ info.article }}
+                </a>
+              </div>
+            </div>
+            <div class="flex gap-2 ">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Статус: </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] max-w-[150px] truncate"
+                :class="{
+                  ' bg-[#b5ffbc] dark:bg-success':
+                    info.status === 'active'
+                    || info.status === 'work'
+                    || info.status === 'busy'
+                    || info.status === 'discountGiven',
+                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                    info.status === 'completed' || info.status === 'nofunds',
+                  'text-base-content bg-yellow-300':
+                    info.status === 'archived'
+                    || info.status === 'paused'
+                    || info.status === 'discountAwaiting',
+                }"
+              >
+                {{ getStatus }}
+              </div>
+            </div>
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">ID заказа: </span>
+              <button class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate" @click="copyToClipboard(info.uuid)">
+                #{{ info.uuid }}
+              </button>
+            </div>
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Наименование: </span>
+              <div class="truncate text-[0.9rem] text-bold">
+                {{ info.product?.name }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Цена: </span>
+              <div class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm text-[0.725rem]">
                 {{ info.product?.priceText }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto text-[0.725rem]">Количество: </span>
-              <div class="text-[0.725rem] rounded-md py-0 px-2 bg-warning text-sm">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Количество: </span>
+              <div class="rounded-md py-0 px-2 bg-warning text-sm text-[0.725rem]">
                 {{ info.quantity }} шт.
-              </div>
-            </div>
-            <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto text-[0.725rem]">Сумма: </span>
-              <div
-                class="text-[0.725rem] rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm"
-              >
-                {{ currency.format(info.quantity * info.product?.price) }}
               </div>
             </div>
             <div class="flex gap-2">
@@ -358,9 +403,17 @@ const getStatus = computed(() => {
                 }}
               </div>
             </div>
+            <!-- <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Сумма: </span>
+              <div
+                class="rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm text-[0.725rem]"
+              >
+                {{ currency.format(info.quantity * info.product?.price) }}
+              </div>
+            </div> -->
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto text-[0.725rem]">Категория: </span>
-              <div class="bg-base-300 rounded-md py-0 px-2 text-sm">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Источник: </span>
+              <div class="bg-base-300 rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 Ozon
               </div>
             </div>
