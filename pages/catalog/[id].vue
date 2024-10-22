@@ -45,7 +45,7 @@ function navigateToCatalog() {
     <div class="breadcrumbs text-sm">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer" @click="navigateToCatalog">
-          Социальные сети
+          Маркетплейсы
         </li>
         <li class="text-[#212121]">
           {{ id[0].toUpperCase() + id.slice(1) }}

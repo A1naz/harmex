@@ -20,6 +20,7 @@ export default defineNitroPlugin(() => {
       isTwoFaEnabled: user.isTwoFaEnabled,
       acesses: user.acesses,
       username: user.username,
+      balance: user.balance,
     }
   })
 
