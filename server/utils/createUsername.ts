@@ -1,21 +1,25 @@
-import { User } from '~~/server/lib/models/User'
+import { generateUsername } from 'unique-username-generator'
+import { User } from '~/server/lib/models/User'
 
-export async function createUsername(email: string): Promise<string> {
-  let userName = email.split('@')[0].replaceAll('.', '').replaceAll('-', '_')
-  const findUsernames = await User.find(
-    { username: { $regex: `^${userName}`, $options: 'i' } },
-    { username: 1, _id: 0 },
-  ).lean()
-  if (findUsernames.length > 0) {
-    const usernames = findUsernames.map(user => user.username)
-    if (usernames.includes(userName)) {
-      let start = 1
-      const userNickToCheck = userName.toString()
-      while (usernames.includes(`${userNickToCheck}_${start}`)) {
-        start++
-      }
-      userName = `${userNickToCheck}_${start}`
+export async function generateUniqueUsername(): Promise<string> {
+  let username = generateRandomUsername()
+  let isUnique = false
+  while (!isUnique) {
+    const existingUser = await User.findOne({ username })
+    if (!existingUser) {
+      isUnique = true
+      break
     }
+    username = generateRandomUsernameWithDigits()
   }
-  return userName
+  return username
+}
+
+function generateRandomUsername(): string {
+  const randomName = generateUsername('', 0, 10)
+  return randomName
+}
+function generateRandomUsernameWithDigits(): string {
+  const randomName = generateUsername('', 2, 10)
+  return randomName
 }

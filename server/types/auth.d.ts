@@ -8,6 +8,7 @@ declare module '#auth-utils' {
     phoneNumber: string
     acesses: string[]
     username: string | undefined
+    balance: number
   }
 
   interface UserSession {
