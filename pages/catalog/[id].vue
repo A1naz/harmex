@@ -52,24 +52,26 @@ function navigateToCatalog() {
         </li>
       </ul>
     </div>
-    <div class="flex overflow-x-auto">
+    <div class="flex flex-wrap overflow-x-auto">
       <div v-if="loading" class="hero mt-20">
         <span class="loading loading-dots loading-lg text-primary" />
       </div>
-      <div v-for="(service, index) in item.items" v-else class="flex mt-8">
-        <CatalogServiceCard :item="item" :index="index" class="mr-5" />
+      <div v-else class="flex flex-wrap gap-x-4">
+        <div v-for="(service, index) in item.items" class="mt-8 ">
+          <CatalogServiceCard :item="item" :index="index" />
+        </div>
       </div>
     </div>
-    <div class="mt-8 text-[18px] font-semibold">
+    <!-- <div class="mt-8 text-[18px] font-semibold">
       Лидеры продаж
-    </div>
-    <div class="flex overflow-x-auto">
+    </div> -->
+    <!-- <div class="flex flex-wrap overflow-x-auto">
       <div v-if="loading" class="hero mt-20">
         <span class="loading loading-dots loading-lg text-primary" />
       </div>
       <div v-for="(service, index) in item.items" v-else class="flex mt-8">
         <CatalogServiceCard :item="item" :index="index" class="mr-5" />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
