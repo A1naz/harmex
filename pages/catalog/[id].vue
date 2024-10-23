@@ -52,7 +52,7 @@ function navigateToCatalog() {
         </li>
       </ul>
     </div>
-    <div class="flex">
+    <div class="flex overflow-x-auto">
       <div v-if="loading" class="hero mt-20">
         <span class="loading loading-dots loading-lg text-primary" />
       </div>
@@ -63,7 +63,7 @@ function navigateToCatalog() {
     <div class="mt-8 text-[18px] font-semibold">
       Лидеры продаж
     </div>
-    <div class="flex">
+    <div class="flex overflow-x-auto">
       <div v-if="loading" class="hero mt-20">
         <span class="loading loading-dots loading-lg text-primary" />
       </div>

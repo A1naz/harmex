@@ -1,10 +1,9 @@
-import { User } from '@/server/lib/models/User'
-import { Cart } from '~~/server/lib/models/wildberries/Cart'
+import { ProductLike } from '~/server/lib/models/ozon/ProductLike'
+import { Like } from '~/server/lib/models/ozon/Like'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
   const {
     dateFilter,
@@ -15,13 +14,15 @@ export default eventHandler(async (event) => {
     limit = 50,
   } = getQuery(event)
 
-  let carts = []
-  let searchQuery: { status?: any, $or?: any, createdDate?: any } = {}
-  if (type === 'article') {
+  let likes = []
+
+  let searchQuery: { status?: any; $or?: any; createdDate?: any } = {}
+  if (type === 'name') {
     searchQuery = {
-      $or: [{ article: { $regex: string, $options: 'i' } }],
+      $or: [{ name: { $regex: string, $options: 'i' } }],
     }
   }
+
   switch (statusQuery) {
     case 'completed':
     case 'nofunds':
@@ -52,7 +53,7 @@ export default eventHandler(async (event) => {
       break
   }
 
-  carts = await Cart.find({
+  likes = await ProductLike.find({
     user,
     ...searchQuery,
   })
@@ -60,20 +61,19 @@ export default eventHandler(async (event) => {
     .skip(skip as number)
     .limit(limit as number)
 
-  const format = carts.map((cart, index) => {
+  const format = likes.map((like, index) => {
     return {
-      id: cart._id,
+      id: like._id,
       place: index + 1,
-      name: cart.name,
-      status: cart.status,
-      article: cart.article,
-      amount: cart.amount,
-      image: cart.image,
-      size: cart.size,
-      query: cart.query,
-      createdDate: cart.createdDate,
-      endedDate: cart.endedDate || null,
-      uuid: cart.uuid,
+      name: like.name,
+      url: like.url,
+      type: like.type,
+      status: like.status,
+      amount: like.amount,
+      image: like.image,
+      createdDate: like.createdDate,
+      endedDate: like.endedDate || null,
+      uuid: like.uuid,
     }
   })
   return format
