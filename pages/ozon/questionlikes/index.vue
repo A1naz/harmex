@@ -3,13 +3,10 @@ import { notify, useNotification } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Лайки на вопросы',
 })
-const store = useMainStore()
 const mpStore = useMPStore()
-const mpChange = useMPChange()
-const router = useRouter()
 const review_likes = ref<any>([])
 const MPSelect = ref()
 const sortPage = ref('all')
@@ -23,7 +20,6 @@ const selectedMP = ref<any>(
   mpStore.selectedMP.charAt(0).toUpperCase() + mpStore.selectedMP.slice(1)
   || 'Wildberries',
 )
-const { width, height } = useWindowSize()
 // const { data, error } = await useFetch(`/api/${selectedMP.value}/likes/get`)
 // review_likes.value = data.value
 
@@ -32,9 +28,10 @@ const skip = ref(0)
 const end = ref(false)
 const target = ref(null)
 const targetIsVisible = ref(false)
+// eslint-disable-next-line unused-imports/no-unused-vars
 const { stop } = useIntersectionObserver(
   target,
-  ([{ isIntersecting }], observerElement) => {
+  ([{ isIntersecting }]) => {
     targetIsVisible.value = isIntersecting
   },
 )
@@ -160,11 +157,6 @@ async function getLikes() {
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
-function openRemoveReviewModal(id: any) {
-  idForRemove.value = id
-
-  reviewRemoveModalClose.value?.click()
-}
 
 async function deleteLike() {
   const { data, error } = await useFetch('/api/questionlikes/delete', {
@@ -201,7 +193,7 @@ async function selectFilterDate(e: any, date?: boolean) {
   await getLikes()
 }
 
-async function findBuyouts(value: string, type: string) {
+async function findBuyouts(value: string) {
   review_likes.value = []
   skip.value = 0
   end.value = false
@@ -218,36 +210,13 @@ async function findBuyouts(value: string, type: string) {
 
 const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
 
-async function onSearchInput(event: Event) {
-  const newValue = (event.target as HTMLInputElement).value
+async function onSearchInput() {
   search.loading = true
   findBuyoutsDebounced(search.text, search.type)
 }
 function updateSearchType(filter: any) {
   search.type = filter.value
 }
-
-async function selectMP(value: any) {
-  review_likes.value = []
-  skip.value = 0
-  end.value = false
-  mpStore.changeMp(value.value, 'questionlikes')
-  selectedMP.value = mpStore.selectedMP
-  getLikes()
-}
-
-const links = computed(() => {
-  const links = ref([
-    { title: 'Товар/бренд', slot: '/productlikes', query: '' },
-  ])
-  if (mpStore.selectedMP !== 'avito') {
-    links.value.push({ title: 'Отзывы', slot: '/likes', query: '' })
-  }
-  if (mpStore.selectedMP === 'ozon') {
-    links.value.push({ title: 'Вопрос', slot: '/questionlikes', query: '' })
-  }
-  return links.value
-})
 </script>
 
 <template>
@@ -304,14 +273,14 @@ const links = computed(() => {
               type="text"
               class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
               placeholder="Поиск по лайкам"
-              @input="onSearchInput($event)"
+              @input="onSearchInput()"
             >
             <span
               v-if="search.loading"
               class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
             />
             <Icon
-              v-if="search.text == '' && !search.loading"
+              v-if="search.text === '' && !search.loading"
               class="absolute right-0.5 p-2 my-auto text-gray-500"
               name="tabler:search"
               size="35"
@@ -499,9 +468,9 @@ const links = computed(() => {
               </div>
             </td>
           </tr>
-          <div ref="target" class="flex justify-center items-center h-10" />
         </tbody>
       </table>
+      <div ref="target" class="flex justify-center items-center h-10" />
     </div>
 
     <Hero v-else-if="!loading" />
@@ -529,8 +498,8 @@ const links = computed(() => {
         </div>
       </div>
     </div>
+    <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
   </div>
-  <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
 </template>
 
 <style>

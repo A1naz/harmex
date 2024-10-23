@@ -3,7 +3,7 @@ import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Лайки на товар/бренд',
 })
 
@@ -190,7 +190,7 @@ const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
 
 async function onSearchInput() {
   search.loading = true
-  findBuyoutsDebounced(search.text, search.type)
+  findBuyoutsDebounced(search.text)
 }
 function updateSearchType(filter: any) {
   search.type = filter.value
@@ -474,9 +474,9 @@ function updateSearchType(filter: any) {
               </div>
             </td>
           </tr>
-          <div ref="target" class="flex justify-center items-center h-4" />
         </tbody>
       </table>
+      <div ref="target" class="flex justify-center items-center h-4" />
     </div>
 
     <Hero v-else />

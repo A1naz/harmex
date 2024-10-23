@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useNotification } from '@kyvg/vue3-notification'
 
-const isPageBtnsDisabled = ref(false)
+// const isPageBtnsDisabled = ref(false)
 const limit = ref(50)
 const page = ref(1)
 const feedbacksCount = ref(0)
-const maxPage = computed(() => Math.ceil(feedbacksCount.value / limit.value))
+// const maxPage = computed(() => Math.ceil(feedbacksCount.value / limit.value))
 definePageMeta({
   layout: 'app',
   auth: true,
@@ -25,6 +25,7 @@ const savedArticle = ref('')
 const loading = ref(false)
 const selectSortBy = ref('')
 const sortBy = computed(() => route.query?.sortBy || 'date')
+const period = ref('3h')
 
 async function getProductReviews() {
   reviews.value = []
@@ -43,7 +44,7 @@ async function getProductReviews() {
         sortBy: sortBy.value ?? 'date',
       },
       watch: false,
-    }
+    },
   )
   loading.value = false
   if (error.value) {
@@ -70,83 +71,90 @@ async function getProductReviews() {
   sortReviews()
 }
 
-async function increaseReviews() {
-  limit.value += 50
-  const { data, error }: any = await useFetch(
-    '/api/ozon/likes/productReviews',
-    {
-      method: 'GET',
-      headers: useRequestHeaders(['cookie']) as HeadersInit,
-      query: {
-        article: savedArticle.value,
-        limit: limit.value,
-        sortBy: sortBy.value ?? 'date',
-      },
-      watch: false,
-    }
-  )
-  if (error.value) {
-    notify({
-      title: 'Что-то пошло не так',
-      text: error.value.data.message,
-      type: 'error',
-    })
-    return
-  }
-  if (!data.value.length) {
-    notify({
-      title: 'Отзывы не найдены',
-    })
-  }
-  const initial = (data.value as any).map((review: any) => {
-    review.addLikes = 0
-    review.addDislikes = 0
-    return review
-  }) as any[]
-  reviews.value.push(...initial)
-  sortReviews()
-}
+// async function increaseReviews() {
+//   limit.value += 50
+//   const { data, error }: any = await useFetch(
+//     '/api/ozon/likes/productReviews',
+//     {
+//       method: 'GET',
+//       headers: useRequestHeaders(['cookie']) as HeadersInit,
+//       query: {
+//         article: savedArticle.value,
+//         limit: limit.value,
+//         sortBy: sortBy.value ?? 'date',
+//       },
+//       watch: false,
+//     },
+//   )
+//   if (error.value) {
+//     notify({
+//       title: 'Что-то пошло не так',
+//       text: error.value.data.message,
+//       type: 'error',
+//     })
+//     return
+//   }
+//   if (!data.value.length) {
+//     notify({
+//       title: 'Отзывы не найдены',
+//     })
+//   }
+//   const initial = (data.value as any).map((review: any) => {
+//     review.addLikes = 0
+//     review.addDislikes = 0
+//     return review
+//   }) as any[]
+//   reviews.value.push(...initial)
+//   sortReviews()
+// }
 
 function addLike(id: string, productArticle: number) {
   reviews.value.map((review: any) => {
-    if (review.id === id) review.addLikes++
+    if (review.id === id)
+      review.addLikes++
     return review
   })
   changedReviews.value.find((review: any) => review.id === id)
     ? (changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id) review.likes++
+        if (review.id === id)
+          review.likes++
 
         return review
       }))
     : changedReviews.value.push({
-        id,
-        productArticle,
-        likes: 1,
-        dislikes: 0,
-      })
+      id,
+      productArticle,
+      likes: 1,
+      dislikes: 0,
+    })
 }
 
 function removeLike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id) review.addLikes--
+    if (review.id === id)
+      review.addLikes--
     return review
   })
   const review = changedReviews.value.find((review: any) => review.id === id)
   if (review) {
     if (review.likes > 1) {
       changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id) review.likes--
+        if (review.id === id)
+          review.likes--
 
         return review
       })
-    } else {
+    }
+    else {
       if (review.likes === 1 && review.dislikes === 0) {
         changedReviews.value = changedReviews.value.filter(
-          (review: any) => review.id !== id
+          (review: any) => review.id !== id,
         )
-      } else {
+      }
+      else {
         changedReviews.value = changedReviews.value.map((review: any) => {
-          if (review.id === id) review.likes--
+          if (review.id === id)
+            review.likes--
 
           return review
         })
@@ -156,59 +164,66 @@ function removeLike(id: string) {
 }
 function addDislike(id: string, productArticle: number) {
   reviews.value.map((review: any) => {
-    if (review.id === id) review.addDislikes++
+    if (review.id === id)
+      review.addDislikes++
     return review
   })
   changedReviews.value.find((review: any) => review.id === id)
     ? (changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id) review.dislikes++
+        if (review.id === id)
+          review.dislikes++
 
         return review
       }))
     : changedReviews.value.push({
-        id,
-        productArticle,
-        likes: 0,
-        dislikes: 1,
-      })
+      id,
+      productArticle,
+      likes: 0,
+      dislikes: 1,
+    })
 }
 function removeDislike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id) review.addDislikes--
+    if (review.id === id)
+      review.addDislikes--
     return review
   })
   const review = changedReviews.value.find((review: any) => review.id === id)
   if (review) {
     if (review.dislikes > 1) {
       changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id) review.dislikes--
+        if (review.id === id)
+          review.dislikes--
         return review
       })
-    } else {
+    }
+    else {
       if (review.likes === 0 && review.dislikes === 1) {
         changedReviews.value = changedReviews.value.filter(
-          (review: any) => review.id !== id
+          (review: any) => review.id !== id,
         )
-      } else {
+      }
+      else {
         changedReviews.value = changedReviews.value.map((review: any) => {
-          if (review.id === id) review.dislikes--
+          if (review.id === id)
+            review.dislikes--
           return review
         })
       }
     }
   }
 }
-async function selectSorting(e: any) {
-  page.value = 1
+// async function selectSorting(e: any) {
+//   page.value = 1
 
-  selectSortBy.value = e.target.value
-  router.push({
-    query: {
-      sortBy: e.target.value,
-    },
-  })
-  await getProductReviews()
-}
+//   selectSortBy.value = e.target.value
+//   router.push({
+//     query: {
+//       sortBy: e.target.value,
+//     },
+//   })
+//   await getProductReviews()
+// }
 async function save() {
   isCreateButtonDisabled.value = true
   // const userOffsetMinutes = new Date().getTimezoneOffset()
@@ -243,16 +258,16 @@ async function save() {
       title: 'Успешно',
     })
 
-    return router.push('/likes')
+    return router.push('/ozon/likes')
     isCreateButtonDisabled.value = false
   }
 }
 
-async function cancel() {
-  changedReviews.value = []
-  article.value = savedArticle.value
-  getProductReviews()
-}
+// async function cancel() {
+//   changedReviews.value = []
+//   article.value = savedArticle.value
+//   getProductReviews()
+// }
 function getAddedLikes() {
   const addedLikes = changedReviews.value.reduce(
     (acc: any, review: any) => {
@@ -263,7 +278,7 @@ function getAddedLikes() {
     {
       likes: 0,
       dislikes: 0,
-    }
+    },
   )
   return addedLikes
 }
@@ -272,62 +287,54 @@ function sortReviews() {
   if (val === 'date') {
     reviews.value = reviews.value.sort(
       (a: any, b: any) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
+        new Date(b.date).getTime() - new Date(a.date).getTime(),
     )
-  } else if (val === 'rating') {
+  }
+  else if (val === 'rating') {
     reviews.value = reviews.value.sort((a: any, b: any) => {
-      if (b.rating > a.rating) return 1
-      else if (b.rating < a.rating) return -1
+      if (b.rating > a.rating)
+        return 1
+      else if (b.rating < a.rating)
+        return -1
       else return 0
     })
-  } else if (val === 'rank') {
+  }
+  else if (val === 'rank') {
     reviews.value = reviews.value.sort((a: any, b: any) => b.rank - a.rank)
   }
 }
 watch(
   () => sortBy.value,
-  (route) => {
+  () => {
     selectSortBy.value = sortBy.value.toString()
     sortReviews()
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 )
 
-const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
-const period = ref('3h')
+// async function swapPage(value: number) {
+//   if (value === -1 && page.value <= 1) {
+//     return
+//   }
 
-async function swapPage(value: number) {
-  if (value === -1 && page.value <= 1) {
-    return
-  }
-
-  if (value === 1 && page.value >= maxPage.value) {
-    notify({
-      type: 'error',
-      text: 'Последняя страница',
-    })
-    return
-  }
-  isPageBtnsDisabled.value = true
-  page.value += value
-  await getProductReviews()
-  isPageBtnsDisabled.value = false
-}
-
-const closeModal = (event: MouseEvent) => {
-  if ((event.target as HTMLElement).classList.contains('modalCustom')) {
-    modalShow.value = false
-  }
-}
-function selectPeriod(event: any) {
-  period.value = event.target.value
-}
+//   if (value === 1 && page.value >= maxPage.value) {
+//     notify({
+//       type: 'error',
+//       text: 'Последняя страница',
+//     })
+//     return
+//   }
+//   isPageBtnsDisabled.value = true
+//   page.value += value
+//   await getProductReviews()
+//   isPageBtnsDisabled.value = false
+// }
 
 function handleArticleChanged(
   periodChanged: any,
   reviewsChanged: any,
   feedbacksCountChanged: any,
-  articleChanged: any
+  articleChanged: any,
 ) {
   modalShow.value = false
   savedArticle.value = articleChanged
@@ -342,12 +349,13 @@ function changeCommentLikes(
   commentId: string,
   add: boolean,
   type: string,
-  productArticle: number
+  productArticle: number,
 ) {
   const adding = add ? 1 : -1
 
   const isChangedCommentsIncludes = changedComments.value.findIndex(
-    (comment: any) => comment.id == commentId
+    // eslint-disable-next-line eqeqeq
+    (comment: any) => comment.id == commentId,
   )
 
   if (isChangedCommentsIncludes < 0) {
@@ -355,11 +363,12 @@ function changeCommentLikes(
       changedComments.value.push({
         id: commentId,
         reviewId,
-        productArticle,        
+        productArticle,
         likes: 1,
         dislikes: 0,
       })
-    } else {
+    }
+    else {
       changedComments.value.push({
         id: commentId,
         reviewId,
@@ -368,18 +377,20 @@ function changeCommentLikes(
         dislikes: 1,
       })
     }
-  } else {
+  }
+  else {
     if (type === 'likes') {
-      changedComments.value[isChangedCommentsIncludes].likes =
-        changedComments.value[isChangedCommentsIncludes].likes + 1 * adding
-    } else {
-      changedComments.value[isChangedCommentsIncludes].dislikes =
-        changedComments.value[isChangedCommentsIncludes].dislikes + 1 * adding
+      changedComments.value[isChangedCommentsIncludes].likes
+        = changedComments.value[isChangedCommentsIncludes].likes + 1 * adding
+    }
+    else {
+      changedComments.value[isChangedCommentsIncludes].dislikes
+        = changedComments.value[isChangedCommentsIncludes].dislikes + 1 * adding
     }
 
     if (
-      changedComments.value[isChangedCommentsIncludes].likes <= 0 &&
-      changedComments.value[isChangedCommentsIncludes].dislikes <= 0
+      changedComments.value[isChangedCommentsIncludes].likes <= 0
+      && changedComments.value[isChangedCommentsIncludes].dislikes <= 0
     ) {
       changedComments.value.splice(isChangedCommentsIncludes, 1)
     }
@@ -464,8 +475,7 @@ const changedCommentsLikes = computed(() => getAddedCommentsLikes())
             </p>
             <span
               class="text-xs text-base-content lg:text-sm font-bold my-auto"
-              >{{ getAddedLikes().likes + changedCommentsLikes.likes }}</span
-            >
+            >{{ getAddedLikes().likes + changedCommentsLikes.likes }}</span>
           </div>
 
           <div class="flex gap-5">
@@ -476,18 +486,17 @@ const changedCommentsLikes = computed(() => getAddedCommentsLikes())
             </p>
             <span
               class="text-xs text-base-content lg:text-sm font-bold my-auto"
-              >{{
-                getAddedLikes().dislikes + changedCommentsLikes.dislikes
-              }}</span
-            >
+            >{{
+              getAddedLikes().dislikes + changedCommentsLikes.dislikes
+            }}</span>
           </div>
         </div>
       </div>
       <div class="save ml-auto flex gap-2 mt-1">
         <button
           class="btn btn-primary text-base-content bg-opacity-50 border-none btn-sm w-[100%] sm:w-[100%] rounded-full"
-          @click="save"
           :disabled="isCreateButtonDisabled"
+          @click="save"
         >
           Создать лайки
           <Icon class="justify-end" name="formkit:right" size="20" />
@@ -510,7 +519,7 @@ const changedCommentsLikes = computed(() => getAddedCommentsLikes())
         @remove-dislike="removeDislike"
         @add-dislike="addDislike"
         @remove-like="removeLike"
-        @changeCommentLikes="changeCommentLikes"
+        @change-comment-likes="changeCommentLikes"
       />
     </div>
     <LikesOzonCreateLike

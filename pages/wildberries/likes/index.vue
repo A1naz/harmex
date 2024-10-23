@@ -3,13 +3,13 @@ import { notify, useNotification } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Лайки на отзывы',
 })
-const store = useMainStore()
+
+const { user } = useUserSession()
+
 const mpStore = useMPStore()
-const mpChange = useMPChange()
-const router = useRouter()
 const review_likes = ref<any>([])
 const sortPage = ref('all')
 const sortPageDate = ref('')
@@ -19,11 +19,6 @@ const logModal = ref(false)
 const selectedLike = ref({
   uuid: '',
 })
-const selectedMP = ref<any>(
-  mpStore.selectedMP.charAt(0).toUpperCase() + mpStore.selectedMP.slice(1)
-  || 'Wildberries',
-)
-const { width, height } = useWindowSize()
 // const { data, error } = await useFetch(`/api/${selectedMP.value}/likes/get`)
 // review_likes.value = data.value
 
@@ -32,9 +27,10 @@ const skip = ref(0)
 const end = ref(false)
 const target = ref(null)
 const targetIsVisible = ref(false)
+// eslint-disable-next-line unused-imports/no-unused-vars
 const { stop } = useIntersectionObserver(
   target,
-  ([{ isIntersecting }], observerElement) => {
+  ([{ isIntersecting }]) => {
     targetIsVisible.value = isIntersecting
   },
 )
@@ -110,27 +106,6 @@ async function resumeStatus(item: any) {
   }
 }
 
-const likesIsExist = computed(() => {
-  const page = mpChange.pages.find(
-    el => el.value === mpStore.selectedMP.toString(),
-  )
-  const likesReview = page?.likes?.find(el => el.value === 'likes')
-
-  if (page && likesReview) {
-    return page.value
-  }
-  else {
-    const mpWithLikes = mpChange.pages.find(el =>
-      el.likes?.some(like => like.value === 'likes'),
-    )
-    return mpWithLikes?.value
-  }
-})
-
-function firstLetterUppercase(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
-
 async function getLikes() {
   const { data, error } = await useFetch(
     `/api/wildberries/likes/get`,
@@ -169,12 +144,6 @@ async function getLikes() {
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
-function openRemoveReviewModal(id: any) {
-  idForRemove.value = id
-
-  reviewRemoveModalClose.value?.click()
-}
-
 async function deleteLike() {
   const { data, error } = await useFetch('/api/likes/delete', {
     method: 'DELETE',
@@ -210,7 +179,7 @@ async function selectFilterDate(e: any, date?: boolean) {
   await getLikes()
 }
 
-async function findBuyouts(value: string, type: string) {
+async function findBuyouts(value: string) {
   review_likes.value = []
   skip.value = 0
   end.value = false
@@ -227,169 +196,91 @@ async function findBuyouts(value: string, type: string) {
 
 const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
 
-async function onSearchInput(event: Event) {
-  const newValue = (event.target as HTMLInputElement).value
+async function onSearchInput() {
   search.loading = true
-  findBuyoutsDebounced(search.text, search.type)
+  findBuyoutsDebounced(search.text)
 }
 function updateSearchType(filter: any) {
   search.type = filter.value
 }
-
-async function selectMP(value: any) {
-  review_likes.value = []
-  skip.value = 0
-  end.value = false
-  mpStore.changeMp(value.value, 'likes')
-  selectedMP.value = mpStore.selectedMP
-  getLikes()
-}
-const links = computed(() => {
-  const links = ref([
-    { title: 'Товар/бренд', slot: '/productlikes', query: '' },
-  ])
-  if (mpStore.selectedMP !== 'avito') {
-    links.value.push({ title: 'Отзывы', slot: '/likes', query: '' })
-  }
-  if (mpStore.selectedMP === 'ozon') {
-    links.value.push({ title: 'Вопрос', slot: '/questionlikes', query: '' })
-  }
-  return links.value
-})
 </script>
 
 <template>
   <div>
-    <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2 mb-4">
-      <div class="flex gap-1 navbar:gap-2 lg:gap-3">
+    <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full my-4">
+      <div class="flex gap-2 ">
         <NuxtLink
-          v-if="store.client.username == 'test'"
-          to="/likes/create"
+          v-if="user?.username === 'test'"
+          to="/wildberries/likes/create"
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
         >
           <Icon name="fluent:add-24-filled" size="24" />
           <span class="hidden lg:flex">Лайки</span>
         </NuxtLink>
-        <CustomSelect
-          v-if="width < 1024"
-          class="lg:hidden -mr-2"
+      </div>
+      <div class="w-full flex gap-2 lg:gap-2 ">
+        <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+          <span>
+            <CustomSelect
+              class="flex min-w-[100px] navbar:min-w-[20px] h-[2rem]"
 
-          status-text="Отзывы"
-          :links="mpStore.sortLikes(mpStore.selectedMP.toString())"
-        />
-        <CustomSelect
-          ref="MPSelect"
-          class="hidden lg:flex min-w-[105px]"
-
-          :status-text="firstLetterUppercase(likesIsExist)"
-          :tabs="store.client.username == 'test' ? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
-          @change-value="selectMP"
-        />
-
-        <CustomSelect
-          class="hidden lg:flex min-w-[95px] navbar:min-w-[20px]"
-
-          status-text="Отзывы"
-          :links="mpStore.sortLikes(mpStore.selectedMP.toString())"
-        />
-
-        <CustomSelect
-          class="hidden lg:flex min-w-[100px] navbar:min-w-[20px]"
-
-          :tabs="[
-            { title: 'Все лайки', value: 'all' },
-            { title: 'Активные', value: 'work' },
-            { title: 'Завершенные', value: 'completed' },
-            { title: 'Недостаточно средств', value: 'nofunds' },
-            { title: 'В архиве', value: 'archived' },
-          ]"
-          @change-value="selectFilterDate"
-        />
-
-        <div class="relative justify-end flex-grow-0 w-full lg:hidden">
-          <input
-            ref="codeInput"
-            v-model="search.text"
-            type="text"
-            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
-            placeholder="Поиск"
-            @input="onSearchInput($event)"
-          >
-          <span
-            v-if="search.loading"
-            class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
+              :tabs="[
+                { title: 'Все лайки', value: 'all' },
+                { title: 'Активные', value: 'work' },
+                { title: 'Завершенные', value: 'completed' },
+                { title: 'Недостаточно средств', value: 'nofunds' },
+                { title: 'В архиве', value: 'archived' },
+              ]"
+              @change-value="selectFilterDate"
+            />
+          </span>
+        </div>
+        <div class="flex lg:ml-auto gap-2 lg:gap-3">
+          <CustomSelect
+            class="bg-[#f4f4f4] sm:min-w-[120px] navbar:min-w-[100px] h-[2rem]"
+            :tabs="[
+              { title: 'За все время', value: 'all' },
+              { title: 'Сегодня', value: 'today' },
+              { title: '3 дня', value: '3days' },
+              { title: 'Неделя', value: '7days' },
+            ]"
+            @change-value="selectFilterDate($event, true)"
           />
-          <Icon
-            v-if="search.text == '' && !search.loading"
-            class="absolute right-0.5 p-2 my-auto text-gray-500"
-            name="tabler:search"
-            size="35"
-            @click="codeInput.focus()"
+
+          <CustomSelect
+            class="bg-[#f4f4f4] h-[2rem]"
+            :tabs="[{ title: 'Артикул', value: 'article' }]"
+            @change-value="updateSearchType"
           />
         </div>
-      </div>
-      <div class="flex gap-1 lg:gap-3">
-        <CustomSelect
-          ref="MPSelect"
-          class="lg:hidden min-w-[105px]"
-
-          :status-text="firstLetterUppercase(likesIsExist || 'wildberries')"
-          :tabs="store.client.username == 'test' ? mpChange.pages.filter((e: any) => Array.isArray(e.likes) && e.likes.length > 0) : mpChange.pages.filter((e: any) => !e.test && Array.isArray(e.likes) && e.likes.length > 0)"
-          @change-value="selectMP"
-        />
-        <CustomSelect
-          class="lg:hidden min-w-[95px]"
-
-          :tabs="[
-            { title: 'Все лайки', value: 'all' },
-            { title: 'Активные', value: 'work' },
-            { title: 'Завершенные', value: 'completed' },
-            { title: 'Недостаточно средств', value: 'nofunds' },
-          ]"
-          @change-value="selectFilterDate"
-        />
-
-        <CustomSelect
-          class="bg-[#f4f4f4] sm:min-w-[120px] navbar:min-w-[100px]"
-          :tabs="[
-            { title: 'За все время', value: 'all' },
-            { title: 'Сегодня', value: 'today' },
-            { title: '3 дня', value: '3days' },
-            { title: 'Неделя', value: '7days' },
-          ]"
-          @change-value="selectFilterDate($event, true)"
-        />
-
-        <CustomSelect
-          class="bg-[#f4f4f4]"
-          :tabs="[{ title: 'Артикул', value: 'article' }]"
-          @change-value="updateSearchType"
-        />
-        <div class="relative justify-end flex-grow-0 w-full hidden lg:flex">
-          <input
-            ref="codeInput"
-            v-model="search.text"
-            type="text"
-            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
-            placeholder="Поиск"
-            @input="onSearchInput($event)"
-          >
-          <span
-            v-if="search.loading"
-            class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
-          />
-          <Icon
-            v-if="search.text == '' && !search.loading"
-            class="absolute right-0.5 p-2 my-auto text-gray-500"
-            name="tabler:search"
-            size="35"
-            @click="codeInput.focus()"
-          />
+        <div class="absolute right-0 top-0 w-[calc(100%-55px)] lg:w-fit lg:static">
+          <div class="relative justify-end flex-grow-0 w-full">
+            <input
+              ref="codeInput"
+              v-model="search.text"
+              type="text"
+              class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+              placeholder="Поиск"
+              @input="onSearchInput()"
+            >
+            <span
+              v-if="search.loading"
+              class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
+            />
+            <Icon
+              v-if="search.text === '' && !search.loading"
+              class="absolute right-0.5 p-2 my-auto text-gray-500"
+              name="tabler:search"
+              size="35"
+              @click="codeInput.focus()"
+            />
+          </div>
         </div>
       </div>
     </div>
+
     <div
-      v-if="store.client.username !== 'test'"
+      v-if="user?.username !== 'test'"
       class="text-red-500 ml-1 mt-1 mb-2"
     >
       Функционал временно недоступен
@@ -432,16 +323,16 @@ const links = computed(() => {
             :key="index"
             class="bg-base-100 border-b-0"
           >
-            <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
+            <!-- <td class="text-center border-x border-[#f9fafb]">{{ item.place }}</td> -->
             <td
-              class="text-center border-r border-primary border-opacity-5 mx-auto"
+              class="text-center border-r border-[#f9fafb] mx-auto"
               :class="{ 'rounded-bl-2xl': index === review_likes.length - 1 }"
             >
               <div
                 :style="`width: ${
-                  selectedMP === 'Ozon' ? '40px' : '28px'
+                  '28px'
                 }; height: ${
-                  selectedMP === 'Ozon' ? '40px' : '36px'
+                  '36px'
                 }; border-radius: 4px;`"
                 class="mx-auto"
               >
@@ -470,15 +361,11 @@ const links = computed(() => {
               </div>
             </td>
             <td
-              class="text-center border-r border-primary border-opacity-5 text-primary"
+              class="text-center border-r border-[#f9fafb] text-primary"
             >
               <a
                 :href="
-                  mpStore.selectedMP === 'wildberries'
-                    ? `https://www.wildberries.ru/catalog/${item.article}/detail.aspx`
-                    : mpStore.selectedMP === 'avito'
-                      ? `https://www.avito.ru/${item.article}`
-                      : `https://www.ozon.ru/product/${item.article}`
+                  `https://www.wildberries.ru/catalog/${item.article}/detail.aspx`
                 "
                 target="_blank"
                 class="text-primary link link-hover"
@@ -486,14 +373,14 @@ const links = computed(() => {
                 {{ item.article }}
               </a>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center border-r border-[#f9fafb]">
               <div class="flex flex-col">
                 <span>Да: {{ item.likes }}</span>
                 <span>Нет: {{ item.dislikes }}</span>
               </div>
             </td>
 
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center border-r border-[#f9fafb]">
               <div
                 class="whitespace-nowrap"
                 :class="{
@@ -517,14 +404,14 @@ const links = computed(() => {
                 Возобновить
               </button>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center border-r border-[#f9fafb]">
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
                 {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
               </div>
             </td>
-            <td class="text-center border-r border-primary border-opacity-5">
+            <td class="text-center border-r border-[#f9fafb]">
               <div
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
@@ -533,7 +420,7 @@ const links = computed(() => {
               </div>
             </td>
             <td
-              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-primary border-opacity-5"
+              class="text-center whitespace-pre-wrap max-w-[300px] overflow-x-auto border-r border-[#f9fafb]"
             >
               <div v-if="item.period">
                 <div>{{ item.period }}</div>
@@ -543,7 +430,7 @@ const links = computed(() => {
               </div>
             </td>
             <td
-              class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
+              class="text-center whitespace-pre-wrap overflow-x-auto border-r border-[#f9fafb] w-[40px]"
               :class="{ 'rounded-br-2xl': index === review_likes.length - 1 }"
             >
               <div class="rounded-lg p-0.5 text-center">
@@ -574,10 +461,9 @@ const links = computed(() => {
               </div>
             </td>
           </tr>
-          <div ref="target" class="flex justify-center items-center h-4" />
         </tbody>
       </table>
-      <div ref="target" class="flex justify-center items-center h-4" />
+      <div ref="target" class="flex justify-center items-center h-10" />
     </div>
 
     <Hero v-else-if="!loading" />
@@ -605,8 +491,8 @@ const links = computed(() => {
         </div>
       </div>
     </div>
+    <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
   </div>
-  <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
 </template>
 
 <style>

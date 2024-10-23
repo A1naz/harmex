@@ -46,7 +46,7 @@ async function getProductReviews() {
         page: page.value,
         sortBy: sortBy.value ?? 'date',
       },
-    }
+    },
   )
   loading.value = false
   btnDisabled.value = false
@@ -78,7 +78,7 @@ async function getProductReviews() {
     period.value,
     reviews.value,
     feedbacksCount.value,
-    savedArticle.value
+    savedArticle.value,
   )
   sortReviews()
 }
@@ -95,7 +95,7 @@ async function increaseReviews() {
         limit: limit.value,
         sortBy: sortBy.value ?? 'date',
       },
-    }
+    },
   )
   if (error.value) {
     notify({
@@ -121,43 +121,50 @@ async function increaseReviews() {
 
 function addLike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id) review.addLikes++
+    if (review.id === id)
+      review.addLikes++
     return review
   })
   changedReviews.value.find((review: any) => review.id === id)
     ? (changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id) review.likes++
+        if (review.id === id)
+          review.likes++
 
         return review
       }))
     : changedReviews.value.push({
-        id,
-        likes: 1,
-        dislikes: 0,
-      })
+      id,
+      likes: 1,
+      dislikes: 0,
+    })
 }
 
 function removeLike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id) review.addLikes--
+    if (review.id === id)
+      review.addLikes--
     return review
   })
   const review = changedReviews.value.find((review: any) => review.id === id)
   if (review) {
     if (review.likes > 1) {
       changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id) review.likes--
+        if (review.id === id)
+          review.likes--
 
         return review
       })
-    } else {
+    }
+    else {
       if (review.likes === 1 && review.dislikes === 0) {
         changedReviews.value = changedReviews.value.filter(
-          (review: any) => review.id !== id
+          (review: any) => review.id !== id,
         )
-      } else {
+      }
+      else {
         changedReviews.value = changedReviews.value.map((review: any) => {
-          if (review.id === id) review.likes--
+          if (review.id === id)
+            review.likes--
 
           return review
         })
@@ -167,41 +174,48 @@ function removeLike(id: string) {
 }
 function addDislike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id) review.addDislikes++
+    if (review.id === id)
+      review.addDislikes++
     return review
   })
   changedReviews.value.find((review: any) => review.id === id)
     ? (changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id) review.dislikes++
+        if (review.id === id)
+          review.dislikes++
 
         return review
       }))
     : changedReviews.value.push({
-        id,
-        likes: 0,
-        dislikes: 1,
-      })
+      id,
+      likes: 0,
+      dislikes: 1,
+    })
 }
 function removeDislike(id: string) {
   reviews.value.map((review: any) => {
-    if (review.id === id) review.addDislikes--
+    if (review.id === id)
+      review.addDislikes--
     return review
   })
   const review = changedReviews.value.find((review: any) => review.id === id)
   if (review) {
     if (review.dislikes > 1) {
       changedReviews.value = changedReviews.value.map((review: any) => {
-        if (review.id === id) review.dislikes--
+        if (review.id === id)
+          review.dislikes--
         return review
       })
-    } else {
+    }
+    else {
       if (review.likes === 0 && review.dislikes === 1) {
         changedReviews.value = changedReviews.value.filter(
-          (review: any) => review.id !== id
+          (review: any) => review.id !== id,
         )
-      } else {
+      }
+      else {
         changedReviews.value = changedReviews.value.map((review: any) => {
-          if (review.id === id) review.dislikes--
+          if (review.id === id)
+            review.dislikes--
           return review
         })
       }
@@ -269,7 +283,7 @@ function getAddedLikes() {
     {
       likes: 0,
       dislikes: 0,
-    }
+    },
   )
   return addedLikes
 }
@@ -278,15 +292,19 @@ function sortReviews() {
   if (val === 'date') {
     reviews.value = reviews.value.sort(
       (a: any, b: any) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
+        new Date(b.date).getTime() - new Date(a.date).getTime(),
     )
-  } else if (val === 'rating') {
+  }
+  else if (val === 'rating') {
     reviews.value = reviews.value.sort((a: any, b: any) => {
-      if (b.rating > a.rating) return 1
-      else if (b.rating < a.rating) return -1
+      if (b.rating > a.rating)
+        return 1
+      else if (b.rating < a.rating)
+        return -1
       else return 0
     })
-  } else if (val === 'rank') {
+  }
+  else if (val === 'rank') {
     reviews.value = reviews.value.sort((a: any, b: any) => b.rank - a.rank)
   }
 }
@@ -296,7 +314,7 @@ watch(
     selectSortBy.value = sortBy.value.toString()
     sortReviews()
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 )
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
@@ -310,13 +328,14 @@ const timerRunning = ref(false)
 const timerFinished = ref(false)
 let interval: any
 
-const startTimer = () => {
+function startTimer() {
   timer.value = 25
   timerRunning.value = true
   interval = setInterval(() => {
-    if (timer.value > 0 && loading.value) { 
+    if (timer.value > 0 && loading.value) {
       timer.value--
-    } else {
+    }
+    else {
       clearInterval(interval)
       timerRunning.value = false
       timerFinished.value = true
@@ -327,8 +346,9 @@ const startTimer = () => {
 async function selectCreatePage(e: any) {
   const target = e
   if (target.value == '/likes/create/ozon') {
-    return
-  } else {
+
+  }
+  else {
     return navigateTo(target.value)
   }
 }
@@ -355,13 +375,6 @@ async function selectCreatePage(e: any) {
       class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4"
     >
       <div class="flex justify-between">
-        <ProductLikesOzonCustomSelect
-          class="lg:flex"
-          :class="'sm:min-w-[120px]'"
-          :tabs="mpStore.likesOzon"
-          :status-text="'Лайк на отзыв/комментарий'"
-          @change-value="selectCreatePage"
-        />
         <NuxtLink
           to="/likes"
           class="text-gray-500 hover:text-gray-700 self-end mb-5"
@@ -385,7 +398,7 @@ async function selectCreatePage(e: any) {
                 placeholder="Введите артикул"
                 type="number"
                 @keydown.enter="getProductReviews"
-              />
+              >
               <span
                 v-if="loading === true"
                 class="absolute right-2 top-2 md:top-4 loading loading-dots loading-xs p-2 my-auto"
@@ -404,19 +417,31 @@ async function selectCreatePage(e: any) {
               class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px] bg-base-200"
               @change="selectPeriod"
             >
-              <option value="3h">3 часа</option>
-              <option value="12h">12 часов</option>
-              <option value="1day">1 день</option>
-              <option value="3days">3 дня</option>
-              <option value="7days">7 дней</option>
-              <option value="14days">14 дней</option>
+              <option value="3h">
+                3 часа
+              </option>
+              <option value="12h">
+                12 часов
+              </option>
+              <option value="1day">
+                1 день
+              </option>
+              <option value="3days">
+                3 дня
+              </option>
+              <option value="7days">
+                7 дней
+              </option>
+              <option value="14days">
+                14 дней
+              </option>
             </select>
           </div>
           <div class="w-full ml-auto self-end justify-end lg:w-40 ">
             <button
               class="btn w-full btn-primary text-base-content dark:bg-primary bg-[#b2baff] border-none"
-              @click="getProductReviews"
               :disabled="btnDisabled || !article"
+              @click="getProductReviews"
             >
               Добавить
             </button>
