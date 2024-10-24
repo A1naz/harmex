@@ -340,9 +340,9 @@ async function selectCreatePage(e: any) {
     <div
       class="flex flex-col bg-base-100 rounded-lg w-full max-w-[810px] gap-5 p-4"
     >
-      <div class="flex justify-between">
+      <div class="flex justify-end">
         <NuxtLink
-          to="/likes"
+          to="/wildberries/likes"
           class="text-gray-500 hover:text-gray-700 self-end mb-2"
         >
           <Icon name="material-symbols:close-rounded" size="24" />
