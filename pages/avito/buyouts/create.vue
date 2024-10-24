@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import type { Rule } from '@/data/buyout/rules'
+import type { ISearchQueryChangeAvito } from '@/stores/avitoBuyout'
 import { rules } from '@/data/buyout/rules'
 import { useNotification } from '@kyvg/vue3-notification'
 import { useWindowSize } from '@vueuse/core'
@@ -22,13 +23,14 @@ const codeInput = ref()
 definePageMeta({
   layout: 'app',
   middleware: 'auth',
-  title: 'Добавить выкупы Flowwow',
+  title: 'Добавить выкупы Avito',
 })
-const store = useFlowwowBuyoutStore()
-const isUserWarned: any = ref(false)
-const route = useRoute()
-const products = computed(() => store.createProducts)
 
+const store = useAvitoBuyoutStore()
+const products = computed(() => store.createProducts)
+const route = useRoute()
+
+const isUserWarned: any = ref(false)
 onMounted(() => {
   isUserWarned.value
     = localStorage.getItem('isUserWarned') === 'true'
@@ -47,6 +49,16 @@ const infoType = ref('')
 const defaultRules: Rule[] = rules
 const article = ref<string>()
 
+// products.value.forEach((product: any, i: number) => {
+//   if ( wasRuleChanged) {
+//     products.value[i].rules.push({
+//       category: 3,
+//       description:
+//         'Не выкупать если товар не найден в поисковой выдаче (не выкупать по прямой ссылке)',
+//       id: 5,
+//     })
+//   }
+// })
 const loading = ref(false)
 
 async function addProduct() {
@@ -54,11 +66,17 @@ async function addProduct() {
     return
   startTimer()
   loading.value = true
-
-  store.addProduct(article.value).finally(() => {
+  const string = article.value.toString().trim()
+  if (string.includes(',')) {
+    const articles = string.split(',')
+    for (const item of articles) await store.addProduct(Number(item))
     loading.value = false
-  })
-
+  }
+  else {
+    store.addProduct(Number(article.value)).finally(() => {
+      loading.value = false
+    })
+  }
   article.value = ''
 }
 
@@ -81,13 +99,13 @@ function openInfoModal(type: string) {
 }
 
 const totalSum = computed(() => {
-  return products.value.reduce((acc: number, item: any) => {
+  return products.value.reduce((acc, item) => {
     return acc + item.price * item.quantity
   }, 0)
 })
 
 const totalQuantity = computed(() => {
-  return products.value.reduce((acc: number, item: any) => {
+  return products.value.reduce((acc, item) => {
     return acc + item.quantity
   }, 0)
 })
@@ -103,7 +121,7 @@ async function openChecksModal() {
 
   if (!isUserWarned.value) {
     const { data }: any = await useFetch(
-      '/api/flowwow/buyout/checkPVZRestrictions',
+      '/api/avito/buyout/checkPVZRestrictions',
       {
         method: 'GET',
       },
@@ -136,12 +154,12 @@ async function openChecksModal() {
 
   let valid = true
   let errorMsg = ''
-  products.value.forEach((item, _index) => {
-    if (!item.deliveryPeriodDate || !item.deliveryPeriodTime) {
+  products.value.forEach((item) => {
+    if (!item.adress) {
       valid = false
-      errorMsg = 'Не у всех товаров указаны дата и время доставки'
-      return
+      errorMsg = 'Не у всех товаров указан адрес доставки'
     }
+
     if (!item.dateRange[0] || !item.dateRange[1]) {
       valid = false
       errorMsg = 'Не у всех товаров указаны даты выкупов'
@@ -171,7 +189,7 @@ async function createBuyout() {
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
   disabledCreateButton.value = true
-  const { data, error } = await useFetch('/api/flowwow/buyout/create', {
+  const { data, error }: any = await useFetch('/api/avito/buyout/create', {
     method: 'POST',
     watch: false,
     body: JSON.stringify(products.value),
@@ -198,7 +216,7 @@ async function createBuyout() {
     })
 
     store.createProducts = []
-    navigateTo({ path: '/buyouts/flowwow' })
+    navigateTo({ path: '/buyouts/avito' })
   }
 }
 
@@ -214,7 +232,7 @@ watch(products.value, (old, value) => {
 
 async function getPickpoints() {
   try {
-    const data = await $fetch('/api/flowwow/buyout/pickpoints', {
+    const data = await $fetch('/api/avito/buyout/pickpoints', {
       method: 'GET',
     })
     pickpoints.value = (data as any).points
@@ -266,7 +284,7 @@ async function createTemplate() {
   isCreatingTemplatesDisabled.value = true
 
   const { data } = await useFetch(
-    '/api/flowwow/buyout/createBuyoutTemplate',
+    '/api/avito/buyout/createBuyoutTemplate',
     {
       method: 'POST',
       query: {
@@ -291,7 +309,7 @@ async function createTemplate() {
 
 async function getTemplates() {
   loadingTemplates.value = true
-  const { data }: any = await useFetch('/api/flowwow/buyout/templates')
+  const { data }: any = await useFetch('/api/avito/buyout/templates')
   if (data.value) {
     templates.value = data.value.templates
   }
@@ -349,7 +367,11 @@ function startTimer() {
           <Icon name="mdi:loading" class="h-20 w-20 animate-spin text-white" />
         </div>
       </div>
-
+      <!-- <h1 class="text-2xl font-bold mt-4">Добавить выкупы</h1>
+    <p class="text-xs text-gray-500 font-light mt-1 lg:text-sm">
+      Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
+      данные.
+    </p> -->
       <div class="flex flex-col md:flex-row md:justify-between">
         <div class="mt-6 md:flex items-center gap-2.5 w-full">
           <div
@@ -358,7 +380,7 @@ function startTimer() {
             <input
               ref="codeInput"
               v-model="article"
-              placeholder="Ссылка на продукт"
+              placeholder="Артикул"
               class="input input-sm w-full mb-2 md:mb-0 bg-base-300 border-base-300 bg-opacity-30 border-opacity-30"
               @keydown.enter="addProduct"
             >
@@ -419,7 +441,7 @@ function startTimer() {
           class="products-card grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-4"
         >
           <!-- :loading="!pickpoints?.length" -->
-          <BuyoutFlowwowCreateCard
+          <BuyoutAvitoCreateCard
             v-for="(product, index) in products"
             :key="index"
             :loading="false"
@@ -457,18 +479,28 @@ function startTimer() {
                   </div>
                 </th>
 
+                <!-- <th @click="openInfoModal('size')" class="font-normal">
+                <div class="text-center">
+                  <span> Размер </span>
+                </div>
+              </th> -->
                 <th class="font-normal" @click="openInfoModal('sex')">
+                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
                     <span> Пол </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
 
                 <th class="font-normal" @click="openInfoModal('rules')">
+                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
                     <span> Правила </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
                 <th class="font-normal" @click="openInfoModal('dates')">
+                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
                     <span> Даты выкупов </span>
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
@@ -476,8 +508,10 @@ function startTimer() {
                 </th>
 
                 <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
+                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
-                    <span> Дата доставки </span>
+                    <span> Адрес </span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
                 <th
@@ -489,13 +523,6 @@ function startTimer() {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
-                <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
-                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
-                  <div class="text-center">
-                    <span> Адрес </span>
-                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
-                  </div>
-                </th>
                 <th
                   class="font-normal text-base-content"
                   @click="openInfoModal('search')"
@@ -505,7 +532,15 @@ function startTimer() {
                   <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
-                <th />
+                <th
+                  class="font-normal text-base-content"
+                  @click="openInfoModal('searchRegion')"
+                >
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Регион поиска</span>
+                  <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+                  </div>
+                </th>
 
                 <th class="text-base-content" />
               </tr>
@@ -513,7 +548,7 @@ function startTimer() {
 
             <tbody>
               <!-- :loading="!pickpoints?.length" -->
-              <BuyoutFlowwowCreateTableRow
+              <BuyoutAvitoCreateTableRow
                 v-for="(product, index) in products"
                 :key="index"
                 :product="product"
@@ -525,7 +560,7 @@ function startTimer() {
             </tbody>
           </table>
         </div>
-        <BuyoutFlowwowSelectPointModal
+        <BuyoutAvitoSelectPointModal
           v-if="modalOpen"
           :state="modalOpen"
           :pickpoints="pickpoints"
@@ -538,6 +573,12 @@ function startTimer() {
         class="mt-6 md:flex justify-start lg:justify-end"
       >
         <div class="m-5">
+          <!-- <label
+          v-if="store.createProducts.length > 0"
+          class="btn btn-sm btn-error bg-red-400 normal-case mt-1 ml-0 md:mt-0 md:ml-2 z-0"
+          for="removeAllModelCreateProducts"
+          >Удалить все</label
+        > -->
           <label
             class="btn btn-sm btn-primary normal-case border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
             for="template-modal"
@@ -550,6 +591,12 @@ function startTimer() {
             :disabled="disabledCreateButton"
             @click="openChecksModal"
           >
+            <!-- {{
+            products.length > 1
+              ? `Создать
+          выкупы`
+              : `Создать выкуп`
+          }} -->
             Создать
           </button>
         </div>
@@ -586,19 +633,42 @@ function startTimer() {
                   >
                 </div>
               </div>
-
+              <!-- <div
+              v-if="rule.id === 1"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
+            >
+              <span class="label-text"
+                >{{ 'Выкуп под ключ ' }}</span
+              >
+              <div class="flex gap-4">
+                <input
+                  type="checkbox"
+                  v-model="products[selectedRuleProductIndex].key"
+                  class="checkbox checkbox-primary border-base-content"
+                />
+              </div>
+            </div> -->
               <div
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
                 <span class="label-text">{{ rule.id }}. {{ rule.description }}</span>
 
+                <!-- :disabled="
+                  !!store.createProducts[selectedRuleProductIndex].rules.find(
+                    (item) =>
+                      item.category === rule.category && item.id !== rule.id
+                  ) ||
+                  !!store.createProducts[selectedRuleProductIndex].rules.find(
+                    (item) => item.id === rule?.relies
+                  )
+                " -->
                 <input
                   disabled
                   type="checkbox"
                   class="checkbox checkbox-primary border-base-content"
                   :checked="
                     !!store.createProducts[selectedRuleProductIndex].rules.find(
-                      (item: any) => item.id === rule.id,
+                      (item) => item.id === rule.id,
                     )
                   "
                   @change="
@@ -669,7 +739,7 @@ function startTimer() {
           </div>
         </form>
       </dialog>
-      <BuyoutFlowwowCreateChecksModal
+      <BuyoutAvitoCreateChecksModal
         v-if="checksModal"
         :is-create-button-disabled="isCreateButtonDisabled"
         :state="checksModal"
@@ -776,7 +846,7 @@ function startTimer() {
             <span class="loading loading-spinner loading-lg" />
           </div>
           <div class="mb-10" />
-          <BuyoutFlowwowTemplateExpand
+          <BuyoutAvitoTemplateExpand
             v-for="template in templates"
             :key="template.uuid"
             class="mt-1"
@@ -814,7 +884,7 @@ function startTimer() {
         </div>
       </div>
     </div>
-    <BuyoutFlowwowCreateModal
+    <BuyoutAvitoCreateModal
       :show="modalShow"
       :add-product="modalAddProduct"
       @close-modal="modalShow = false"

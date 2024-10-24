@@ -1,10 +1,14 @@
-import { Buyout } from '@/server/lib/models/flowwow/Buyout'
-import { Delivery } from '@/server/lib/models/flowwow/Delivery'
+import { Buyout } from '@/server/lib/models/avito/Buyout'
+import { Delivery } from '@/server/lib/models/avito/Delivery'
 import { User } from '@/server/lib/models/User'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
-  const user = (await getAdminEntity(event)) as any
+  const session = (await getAdminEntity(event)) as any
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
+
+  const user = await User.findOne({ uuid: session.uuid })
   if (!user)
     return sendRedirect(event, '/auth', 302)
 

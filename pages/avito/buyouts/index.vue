@@ -12,7 +12,7 @@ const route = useRoute()
 const buyouts = ref([]) as any
 const modal = ref(false)
 const logModal = ref(false)
-const selectedBuyout = ref<any>({})
+const selectedBuyout = ref({})
 const selectedIndex = ref(-1)
 const storeMain = useMainStore()
 const selectedPlace = ref(-1)
@@ -46,7 +46,7 @@ const skip = ref(50)
 const end = ref(false)
 async function getBuyouts() {
   loading.value = true
-  const { data } = await useFetch(() => '/api/flowwow/buyout/get', {
+  const { data } = await useFetch(() => '/api/avito/buyout/get', {
     method: 'GET',
     query: {
       status: status.value ?? 'all',
@@ -113,7 +113,7 @@ async function selectFilterDate(e: any) {
   dateFilter.value = target.value
   skip.value = 50
   end.value = false
-  const { data } = await useFetch('/api/flowwow/buyout/get', {
+  const { data } = await useFetch('/api/avito/buyout/get', {
     method: 'GET',
     query: {
       status: status.value || 'all',
@@ -131,7 +131,7 @@ async function findBuyouts(value: string, type: string) {
     getBuyouts()
     return
   }
-  const { data } = await useFetch('/api/flowwow/buyout/search', {
+  const { data } = await useFetch('/api/avito/buyout/search', {
     query: {
       string: value,
       type,
@@ -252,7 +252,7 @@ watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && buyouts.value.length >= 50) {
     if (end.value)
       return
-    const { data } = await useFetch('/api/flowwow/buyout/get', {
+    const { data } = await useFetch('/api/avito/buyout/get', {
       method: 'GET',
       query: {
         status: route.query?.status || 'all',
@@ -275,7 +275,7 @@ watch(
   async () => {
     skip.value = 50
     end.value = false
-    const { data } = await useFetch('/api/flowwow/buyout/get', {
+    const { data } = await useFetch('/api/avito/buyout/get', {
       method: 'GET',
       query: {
         status: status.value || 'all',
@@ -301,7 +301,7 @@ onMounted(async () => {
       }
       else {
         const { data } = await useFetch(
-          '/api/flowwow/buyout/getOne',
+          '/api/avito/buyout/getOne',
           {
             method: 'GET',
             query: { uuid },
@@ -350,7 +350,7 @@ async function changeMP(e: any) {
 }
 const customLinks = filters.map(filter => ({
   title: filter.title,
-  slot: '/buyouts/flowwow',
+  slot: '/buyouts/avito',
   query: filter.params,
 }))
 
@@ -363,7 +363,7 @@ function openRemoveModal(index: number) {
 
 async function removeBuyout() {
   const { error }: any = await useFetch(
-    '/api/flowwow/buyout/delete',
+    '/api/avito/buyout/delete',
     {
       method: 'DELETE',
       body: {
@@ -400,7 +400,7 @@ async function removeBuyout() {
       <div class="flex gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-max">
         <div class="flex gap-2">
           <NuxtLink
-            to="/flowwow/buyouts/create"
+            to="/buyouts/create"
             class="btn btn-primary btn-sm bg-[#6675ff] dark:bg-primary border-none gap-2 font-medium normal-case"
           >
             <Icon name="fluent:add-24-filled" size="12" />
@@ -439,7 +439,7 @@ async function removeBuyout() {
             <CustomSelect
               class=" lg:min-w-[120px]"
 
-              status-text="Flowwow"
+              status-text="Avito"
               :tabs="storeMain.client.username === 'test' ? mpStore.sortMp('buyouts') : mpStore.sortMp('buyouts', true)"
               @change-value="changeMP"
             />
@@ -476,6 +476,7 @@ async function removeBuyout() {
           </div>
         </div>
       </div>
+
       <div class="items-center flex-wrap self-start hidden lg:flex">
         <div class="search flex items-center flex-wrap gap-3">
           <CustomSelect
@@ -489,6 +490,7 @@ async function removeBuyout() {
             ]"
             @change-value="selectFilterDate"
           />
+
           <div class="flex items-center justify-between gap-3">
             <CustomSelect
               class="bg-[#f4f4f4] min-w-[100px]"
@@ -565,7 +567,7 @@ async function removeBuyout() {
           group
           class="cards grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 h-full"
         >
-          <BuyoutFlowwowCard
+          <BuyoutAvitoCard
             v-for="(buyout, index) of buyouts"
             :key="buyout.uuid"
             :index="index"
@@ -586,21 +588,21 @@ async function removeBuyout() {
     <div v-else class="w-full mt-5 flex justify-center items-center">
       <span class="loading loading-dots loading-lg text-primary" />
     </div>
-    <BuyoutFlowwowLogModal
+    <BuyoutAvitoLogModal
       v-if="logModal"
       :info="selectedBuyout"
       :index="selectedIndex"
       :state="logModal"
       @close="logModal = false"
     />
-    <BuyoutFlowwowInfoModal
+    <BuyoutAvitoInfoModal
       v-if="modal"
       :info="selectedBuyout"
       :state="modal"
       :index="selectedIndex"
       @close="modal = false"
     />
-    <BuyoutFlowwowModal
+    <BuyoutRemoveModal
       v-if="removeModal"
       :info="selectedBuyout"
       :state="removeModal"

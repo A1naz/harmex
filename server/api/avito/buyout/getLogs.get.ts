@@ -1,8 +1,12 @@
-import { Buyoutlog } from '@/server/lib/models/flowwow/Buyoutlog'
+import { Buyoutlog } from '@/server/lib/models/avito/Buyoutlog'
 import { User } from '@/server/lib/models/User'
 
 export default eventHandler(async (event) => {
-  const user = (await getAdminEntity(event)) as any
+  const session = (await getAdminEntity(event)) as any
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
+
+  const user = await User.findOne({ uuid: session.uuid })
   if (!user)
     return sendRedirect(event, '/auth', 302)
 

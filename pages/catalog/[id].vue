@@ -4,7 +4,7 @@ const route: any = useRoute()
 const id = route.params.id
 const loading = ref(true)
 const item = ref({} as any)
-const sellLeaders = ref([] as any)
+// const sellLeaders = ref([] as any)
 
 async function getService() {
   loading.value = true
@@ -19,19 +19,19 @@ async function getService() {
     loading.value = false
   }
 }
-async function getLeaders() {
-  loading.value = true
-  const { data }: any = await useFetch('/api/catalog/sellLeaders', {
-    params: {
-      slug: id,
-    },
-  })
+// async function getLeaders() {
+//   loading.value = true
+//   const { data }: any = await useFetch('/api/catalog/sellLeaders', {
+//     params: {
+//       slug: id,
+//     },
+//   })
 
-  if (data.value) {
-    sellLeaders.value = data.value
-    loading.value = false
-  }
-}
+//   if (data.value) {
+//     sellLeaders.value = data.value
+//     loading.value = false
+//   }
+// }
 
 getService()
 
@@ -57,7 +57,7 @@ function navigateToCatalog() {
         <span class="loading loading-dots loading-lg text-primary" />
       </div>
       <div v-else class="flex flex-wrap gap-x-4">
-        <div v-for="(service, index) in item.items" class="mt-8 ">
+        <div v-for="(service, index) in item.items" :key="index" class="mt-8">
           <CatalogServiceCard :item="item" :index="index" />
         </div>
       </div>
