@@ -182,6 +182,7 @@ async function openChecksModal() {
           closeWarningModal.value?.click()
           return
         }
+
       }
     }
   }
@@ -206,6 +207,15 @@ async function openChecksModal() {
     // errorMsg = 'Не у всех товаров указана скидка'
     //}
     if (!item.selectedSize) item.selectedSize = 'none'
+
+
+    item.searchQuery.forEach((query: any) => {
+      if (query.value.length > 50) {
+        valid = false
+        errorMsg = 'Максимальная длина 1 поискового запроса 50 символов'
+      }
+    })
+
   })
   if (!valid) {
     notify({
