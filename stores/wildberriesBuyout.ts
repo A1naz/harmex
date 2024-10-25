@@ -154,6 +154,7 @@ export const useWildberriesBuyoutStore = defineStore('wildberriesBuyout', {
         this.createProducts[options.productIndex].searchQuery[
           options.queryIndex
         ]
+        
       query.value = options.value
       query.error = error
       query.loading = loading
