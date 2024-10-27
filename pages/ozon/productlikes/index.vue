@@ -199,6 +199,23 @@ function updateSearchType(filter: any) {
 
 <template>
   <div>
+    <div class="breadcrumbs text-sm mt-8">
+      <ul class="font-medium text-[18px] text-[#909090]">
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+            Маркетплейсы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog/ozon" class="cursor-pointer text-[#909090]">
+            Ozon
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer text-[#1e2734]">
+          Лайки на продукты
+        </li>
+      </ul>
+    </div>
     <ProductLikesOzonCreateLike
       :show="modalShow"
       @close-modal="modalShow = false"

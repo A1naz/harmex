@@ -264,6 +264,23 @@ async function resumeStatus(item: any) {
 
 <template>
   <div>
+    <div class="breadcrumbs text-sm mt-8">
+      <ul class="font-medium text-[18px] text-[#909090]">
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+            Маркетплейсы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog/wildberries" class="cursor-pointer text-[#909090]">
+            Wildberries
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer text-[#1e2734]">
+          Отзывы
+        </li>
+      </ul>
+    </div>
     <div>
       <div class="page-header" />
 
@@ -330,7 +347,7 @@ async function resumeStatus(item: any) {
           </select>
         </div>
         <div class="gap-2 hidden lg:flex">
-          <CustomSelect
+          <!-- <CustomSelect
             class="hidden lg:flex sm:min-w-[120px]"
 
             status-text="Wildberries"
@@ -340,7 +357,7 @@ async function resumeStatus(item: any) {
                 : mpStore.sortMp('reviews', true)
             "
             @change-value="changeMP"
-          />
+          /> -->
           <CustomSelect
             class="hidden lg:flex navbar:min-w-[140px] w-[140px]"
 

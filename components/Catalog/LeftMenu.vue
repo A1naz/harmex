@@ -6,36 +6,37 @@ const props = defineProps({
   },
   selectedType: {
     type: String,
-    default: "Маркетплейсы",
+    default: 'Маркетплейсы',
   },
-});
+})
 
-const selectedType = toRef(props, "selectedType");
+const emit = defineEmits(['update:selectedType'])
 
-const emit = defineEmits(["update:selectedType"]);
+const selectedType = toRef(props, 'selectedType')
 
 function selectType(type: string) {
-  emit("update:selectedType", type);
+  emit('update:selectedType', type)
 }
 </script>
+
 <template>
-  <aside
-    class="w-[245px] h-screen py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
+  <div
+    class="w-[260px] h-screen py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
   >
-    <ul class="space-y-2 mx-2 mt-4 cursor-pointer">
+    <ul class="mt-4 cursor-pointer">
       <li v-for="item in items" :key="item">
         <a
+          class="flex justify-between p-2 text-[##909090] rounded-lg w-[240px]"
+          :class="{ 'bg-[#f5f7ff] text-[#212121]': selectedType === item }"
           @click="selectType(item)"
-          class="flex justify-between p-2 text-[##909090] rounded-lg"
-          :class="{ 'bg-[#f5f7ff] text-[#212121]': selectedType == item }"
         >
           <div>
             <Icon
               name="iconamoon:menu-burger-horizontal-fill"
-              size="20"
+              size="25"
               class="mr-4"
               :class="{
-                'text-[#F72585]': selectedType == item,
+                'text-[#F72585]': selectedType === item,
               }"
             />
             <span class="font-medium text-sm">{{ item }}</span>
@@ -46,12 +47,12 @@ function selectType(type: string) {
               size="25"
               class="mr-4"
               :class="{
-                'text-[#F72585]': selectedType == item,
+                'text-[#F72585]': selectedType === item,
               }"
             />
           </div>
         </a>
       </li>
     </ul>
-  </aside>
+  </div>
 </template>
