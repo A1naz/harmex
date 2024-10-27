@@ -336,6 +336,28 @@ function startTimer() {
 
 <template>
   <div>
+    <div class="breadcrumbs text-sm mt-8">
+      <ul class="font-medium text-[18px] text-[#909090]">
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+            Маркетплейсы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog/flowwow" class="cursor-pointer text-[#909090]">
+            Flowwow
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/flowwow/buyouts" class="cursor-pointer text-[#909090]">
+            Выкупы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer text-[#1e2734]">
+          Создать
+        </li>
+      </ul>
+    </div>
     <div>
       <div
         v-if="loading"

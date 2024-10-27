@@ -11,7 +11,7 @@ defineProps({
       <NuxtImg :src="item.mainImage || 'null'" class="mx-auto rounded-xl" width="170px" height="105px" />
     </div>
     <div class="w-full text-start mt-3">
-      <div class="badge bg-[#FCD1A1] text-[#653600] whitespace-nowrap relative text-[12.5px] text-start -ml-1">
+      <div class="badge bg-[#FCD1A1] text-[#653600] whitespace-nowrap relative text-[11.5px] text-start -ml-1">
         {{ item.name }} {{ item.items[index].title }}
       </div>
       <p class="text-[16px] font-bold text-gray-800">
