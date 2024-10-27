@@ -3,13 +3,13 @@ import { rules } from '@/data/buyout/rules'
 import { notify } from '@kyvg/vue3-notification'
 import { defineStore } from 'pinia'
 
-export interface ISearchQueryChangeOzon {
+export interface ISearchQueryChangeAvito {
   value: string
   queryIndex: number
   productIndex: number
 }
 
-export const useOzonBuyoutStore = defineStore('ozonBuyout', {
+export const useAvitoBuyoutStore = defineStore('avitoBuyout', {
   state: () => ({
     createProducts: [] as Item[],
     selectedItem: null as number | null,
@@ -19,13 +19,12 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
     storage: persistedState.localStorage,
   },
   actions: {
-    async createTemplate(title: string, products: Array<any>) {
+    async createTemplate(_title: string, _products: Array<any>) {
       return { status: 'ok' }
     },
 
     async cloneBuyout(uuid: string) {
-      // @ts-ignore
-      const { data, error } = await useFetch('/api/ozon/buyout/clone', {
+      const { data, error } = await useFetch('/api/avito/buyout/clone', {
         query: {
           uuid,
         },
@@ -72,7 +71,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
         return
       }
 
-      const { data, error } = await useFetch(`/api/ozon/product/${article}`, {
+      const { data, error } = await useFetch(`/api/avito/product/${article}`, {
         method: 'GET',
       })
       if (error.value) {
@@ -98,7 +97,6 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
       endDate.setMinutes(0)
 
       this.createProducts.push(
-        // @ts-ignore
         reactive({
           image: product.image,
           name: product.name,
@@ -110,14 +108,14 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
           dateRange: [startDate, endDate],
           adress: '',
           searchQuery: [{ value: '', loading: false, error: false }],
+          searchQueryRegion: [{ value: '', loading: false, error: false }],
           selectedSize: product.sizes[0] ?? 'none',
           priceText: product.priceText,
           rules: [],
           pointCoordinates: { lat: 0, lon: 0 },
-          discountRequestPrice: product.price,
-          discountPrice: product.price,
         }),
       )
+      // this.changeRule(true, this.createProducts.length - 1, 5)
     },
     removeSearchQuery(index: number, place: number) {
       this.createProducts[index].searchQuery.splice(place, 1)
@@ -145,7 +143,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
       query.message = message
     },
     changeSearchQuery(
-      options: ISearchQueryChangeOzon,
+      options: ISearchQueryChange,
       error = false,
       loading = false,
     ) {
@@ -157,17 +155,21 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
       query.error = error
       query.loading = loading
     },
+    changeSearchQueryRegion(
+      options: ISearchQueryChange,
+      error = false,
+      loading = false,
+    ) {
+      const query
+        = this.createProducts[options.productIndex].searchQueryRegion[
+          options.queryIndex
+        ]
+      query.value = options.value
+      query.error = error
+      query.loading = loading
+    },
     changeQuantity(value: number, index: number) {
       this.createProducts[index].quantity = value
-    },
-    changeDiscount(value: number, index: number) {
-      this.createProducts[index].discount = value
-    },
-    changeDiscountPrice(value: number, index: number) {
-      this.createProducts[index].discountPrice = value
-    },
-    changeDiscountRequestPrice(value: number, index: number) {
-      this.createProducts[index].discountRequestPrice = value
     },
     changeSize(value: string | number, index: number) {
       this.createProducts[index].selectedSize = value
@@ -196,14 +198,13 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
     removeProduct(index: number) {
       this.createProducts.splice(index, 1)
     },
-    handleAddress(address: string, lt: number, lg: number, id: string) {
+    handleAddress(address: string, lt: number, lg: number) {
       const index = this.selectedItem!
       this.createProducts[index].adress = address
       this.createProducts[index].pointCoordinates = {
         lat: lt,
         lon: lg,
       }
-      this.createProducts[index].pointId = id
     },
   },
 })

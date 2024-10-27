@@ -159,6 +159,6 @@ export default {
     animate,
     typography,
     daisyui,
-    scrollbar,
+    // scrollbar,
   ],
 } satisfies Config
