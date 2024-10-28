@@ -2,7 +2,7 @@
 import type { Rule } from '@/data/buyout/rules'
 import type { ISearchQueryChange } from '@/stores/wildberriesBuyout'
 import { rules } from '@/data/buyout/rules'
-import { useNotification } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 import { useWindowSize } from '@vueuse/core'
 
 const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
@@ -11,7 +11,6 @@ const closeTemplateSelectModal = ref(null) as Ref<HTMLLabelElement | null>
 const currency = useCurrency()
 const isCreateButtonDisabled = ref(false)
 const { width } = useWindowSize()
-const { notify } = useNotification()
 
 const isWarningChecked = ref(false)
 const disabledCreateButton = ref(false)

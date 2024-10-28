@@ -40,7 +40,7 @@ watch(selectedType, () => {
     <div class="px-10">
       <div class="breadcrumbs text-sm ml-3">
         <ul class="font-medium text-[18px] text-[#909090]">
-          <li class="cursor-pointer">
+          <li class="cursor-pointer" v-if="!loading">
             Каталог
           </li>
         </ul>

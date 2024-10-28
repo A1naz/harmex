@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 import { loadYmap } from 'vue-yandex-maps'
 
 const props = defineProps({
