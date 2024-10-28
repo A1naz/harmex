@@ -215,136 +215,80 @@ function changeFilter(e: any) {
         @create=";[(skip = 0), getViewings()]"
       />
 
-      <div class="breadcrumbs text-sm mt-8">
-        <ul class="font-medium text-[18px] text-[#909090]">
-          <li class="cursor-pointer">
-            <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
-              Маркетплейсы
-            </NuxtLink>
-          </li>
-          <li class="cursor-pointer">
-            <NuxtLink to="/catalog/wildberries" class="cursor-pointer text-[#909090]">
-              Wildberries
-            </NuxtLink>
-          </li>
-          <li class="cursor-pointer text-[#1e2734]">
-            Просмотры
-          </li>
-        </ul>
-      </div>
-
-      <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
-        <div class="flex gap-1 lg:gap-4">
-          <button
-            :disabled="store.client.username !== 'test'"
-            class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
-            @click="navigateTo(`/viewings/create/`)"
-          >
-            <Icon name="fluent:add-24-filled" size="17" />
-            <span class="hidden lg:flex">Просмотр</span>
-          </button>
-          <!-- <CustomSelect
-            class="hidden lg:flex sm:min-w-[120px]"
-
-            status-text="Wildberries"
-            :tabs="mpStore.sortMp('viewings')"
-            @change-value="changeFilter"
-          /> -->
-          <CustomSelect
-            class="hidden lg:flex sm:min-w-[120px]"
-
-            :tabs="[
-              { title: 'Все просмотры', value: 'all' },
-              { title: 'Активные', value: 'created' },
-              { title: 'Завершенные', value: 'completed' },
-              { title: 'Недостаточно средств', value: 'nofunds' },
-              { title: 'В архиве', value: 'archived' },
-            ]"
-            @change-value="selectFilterDate"
-          />
-
-          <div class="relative justify-end flex-grow-0 w-full lg:hidden">
-            <input
-              ref="codeInput"
-              v-model="search.text"
-              type="text"
-              class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
-              placeholder="Поиск"
-              @input="onSearchInput($event)"
+      <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
+        <div class="flex relative gap-3 lg:gap-4 flex-col lg:flex-row w-full lg:w-full">
+          <div class="flex gap-2">
+            <button
+              :disabled="store.client.username !== 'test'"
+              class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
+              @click="navigateTo(`/viewings/create/`)"
             >
-            <span
-              v-if="search.loading"
-              class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
-            />
-            <Icon
-              v-else
-              class="absolute right-0.5 p-2 my-auto text-gray-500"
-              name="tabler:search"
-              size="35"
-              @click="codeInput.focus()"
-            />
+              <Icon name="fluent:add-24-filled" size="17" />
+              <span class="hidden lg:flex">Просмотр</span>
+            </button>
           </div>
-        </div>
-        <div class="flex gap-2 lg:gap-5">
-          <CustomSelect
-            class="lg:hidden min-w-[80px] sm:min-w-[120px]"
+          <div class="w-full flex gap-2 lg:gap-2 ">
+            <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+              <span>
+                <CustomSelect
+                  class="h-[2rem] sm:min-w-[120px]"
 
-            status-text="Wildberries"
-            :tabs="mpStore.sortMp('viewings')"
-            @change-value="changeFilter"
-          />
-          <CustomSelect
-            class="lg:hidden sm:min-w-[120px]"
+                  :tabs="[
+                    { title: 'Все просмотры', value: 'all' },
+                    { title: 'Активные', value: 'created' },
+                    { title: 'Завершенные', value: 'completed' },
+                    { title: 'Недостаточно средств', value: 'nofunds' },
+                    { title: 'В архиве', value: 'archived' },
+                  ]"
+                  @change-value="selectFilterDate"
+                />
+              </span>
+            </div>
+            <div class="flex lg:ml-auto gap-2 lg:gap-3">
+              <CustomSelect
+                class="h-[2rem] bg-[#f4f4f4] sm:min-w-[120px]"
+                :tabs="[
+                  { title: 'За все время', value: 'all' },
+                  { title: 'Сегодня', value: 'today' },
+                  { title: '3 дня', value: '3days' },
+                  { title: 'Неделя', value: '7days' },
+                ]"
+                @change-value="selectFilterDate($event, true)"
+              />
 
-            :tabs="[
-              { title: 'Все просмотры', value: 'all' },
-              { title: 'Активные', value: 'created' },
-              { title: 'Завершенные', value: 'completed' },
-              { title: 'Недостаточно средств', value: 'nofunds' },
-              { title: 'В архиве', value: 'archived' },
-            ]"
-            @change-value="selectFilterDate"
-          />
-
-          <CustomSelect
-            class="bg-[#f4f4f4] sm:min-w-[120px]"
-            :tabs="[
-              { title: 'За все время', value: 'all' },
-              { title: 'Сегодня', value: 'today' },
-              { title: '3 дня', value: '3days' },
-              { title: 'Неделя', value: '7days' },
-            ]"
-            @change-value="selectFilterDate($event, true)"
-          />
-
-          <CustomSelect
-            class="bg-[#f4f4f4]"
-            :tabs="[{ title: 'Артикул', value: 'article' }]"
-            @change-value="updateSearchType"
-          />
-          <div class="relative justify-end flex-grow-0 w-full hidden lg:flex">
-            <input
-              ref="codeInput"
-              v-model="search.text"
-              type="text"
-              class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
-              placeholder="Поиск"
-              @input="onSearchInput($event)"
-            >
-            <span
-              v-if="search.loading"
-              class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
-            />
-            <Icon
-              v-else
-              class="absolute right-0.5 p-2 my-auto text-gray-500"
-              name="tabler:search"
-              size="35"
-              @click="codeInput.focus()"
-            />
+              <CustomSelect
+                class="h-[2rem] bg-[#f4f4f4]"
+                :tabs="[{ title: 'Артикул', value: 'article' }]"
+                @change-value="updateSearchType"
+              />
+            </div>
+            <div class="absolute right-0 top-0 w-[calc(100%-55px)] lg:w-fit lg:static">
+              <div class="relative justify-end flex-grow-0 w-full">
+                <input
+                  ref="codeInput"
+                  v-model="search.text"
+                  type="text"
+                  class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+                  placeholder="Поиск"
+                  @input="onSearchInput($event)"
+                >
+                <span
+                  v-if="search.loading"
+                  class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
+                />
+                <Icon
+                  v-else
+                  class="absolute right-0.5 p-2 my-auto text-gray-500"
+                  name="tabler:search"
+                  size="35"
+                  @click="codeInput.focus()"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       <div v-if="store.client.username !== 'test'" class="text-red-500 ml-1 mt-1">
         Функционал временно недоступен
       </div>
@@ -392,7 +336,7 @@ function changeFilter(e: any) {
                 class="bg-base-100 border-b-0 rounded-b-lg"
               >
                 <td
-                  class="text-center border-r border-primary border-opacity-5 mx-auto"
+                  class="text-center border-r border-[#f9fafb] mx-auto"
                 >
                   <div
                     style="width: 40px; height: 40px; border-radius: 4px"
@@ -423,7 +367,7 @@ function changeFilter(e: any) {
                   </div>
                 </td>
                 <td
-                  class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
+                  class="text-center border-r border-[#f9fafb] text-base-content truncate"
                 >
                   <a
                     :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`"
@@ -434,24 +378,24 @@ function changeFilter(e: any) {
                   </a>
                 </td>
                 <td
-                  class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
+                  class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] truncate"
                 >
                   Wildberries
                 </td>
                 <td
-                  class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
+                  class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] truncate"
                 >
                   {{ item.amount }}
                 </td>
                 <td
-                  class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] whitespace-normal break-words"
+                  class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] whitespace-normal break-words"
                 >
                   <div class="flex flex-col">
                     {{ item.text }}
                   </div>
                 </td>
 
-                <td class="text-center border-r border-primary border-opacity-5">
+                <td class="text-center border-r border-[#f9fafb]">
                   <div
                     :class="{
                       'text-red-500 rounded-full py-1 px-2  text-center':
@@ -476,7 +420,7 @@ function changeFilter(e: any) {
                     Возобновить
                   </button>
                 </td>
-                <td class="text-center border-r border-primary border-opacity-5">
+                <td class="text-center border-r border-[#f9fafb]">
                   <div
                     class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                   >
@@ -484,7 +428,7 @@ function changeFilter(e: any) {
                     {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
                   </div>
                 </td>
-                <td class="text-center border-r border-primary border-opacity-5">
+                <td class="text-center border-r border-[#f9fafb]">
                   <div
                     v-if="item.publishDate"
                     class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
@@ -494,7 +438,7 @@ function changeFilter(e: any) {
                   </div>
                 </td>
                 <td
-                  class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
+                  class="text-center whitespace-pre-wrap overflow-x-auto border-r border-[#f9fafb] w-[40px]"
                 >
                   <div class="rounded-lg p-0.5 my-2 text-center">
                     <button
