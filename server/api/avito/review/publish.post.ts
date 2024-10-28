@@ -1,16 +1,18 @@
-import { Delivery } from '@/server/lib/models/avito/Delivery'
 import { Buyout } from '@/server/lib/models/avito/Buyout'
+import { Delivery } from '@/server/lib/models/avito/Delivery'
 import { Review } from '@/server/lib/models/avito/Review'
-import { DocuemntEnum } from '~/data/enums'
 import { v4 as uuid } from 'uuid'
+import { DocuemntEnum } from '~/data/enums'
+
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const { buyoutuuid, deliveryid, rating, text, photos, date } = await readBody(
-    event
+    event,
   )
 
   if (text) {
@@ -51,9 +53,9 @@ export default eventHandler(async (event) => {
 
   const images = photos.map((photo: any) =>
     photo.public.replace(
-      config.public.DOMAIN_API_IMAGES_URL + 'reviewImages/',
-      ''
-    )
+      `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/`,
+      '',
+    ),
   )
 
   const review = new Review({

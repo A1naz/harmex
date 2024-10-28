@@ -51,7 +51,6 @@ const searchOptions = ref([
 
 const skip = ref<number>(0)
 const limit = computed(() => (currentTab.value == 'available' ? 1000 : 50))
-const search = ref<any>({ type: 'article', text: '' })
 const loading = ref(false)
 
 const searchType = ref<SelectOptions>(SelectOptions.article)
@@ -111,7 +110,7 @@ function selectText() {
   return tabs[index].name
 }
 
-function onSearchInput(val: any) {
+function onSearchInput() {
   if (searchText.value !== '' && searchText.value.trim() === '') {
     return
   }
@@ -131,22 +130,10 @@ function openPhoto(src: string) {
 const selectedDelivery = ref('')
 const modalOpen = ref(false)
 
-async function getDrafts(art: any) {
-  const res = await getData('/flowwow/review/drafts', {
-    search: { article: { $in: ['', art] } },
-  })
-  if (res && res.length > 0) {
-    selectedArticle.value = {
-      ...selectedArticle.value,
-      drafts: res,
-    }
-  }
-}
-
 const selectedArticle = ref<any>({})
 function openModal(review: any, uuid: string, deliveryid: string) {
   selectedArticle.value = review
-  getDrafts(review.article)
+  // getDrafts(review.article)
   selectedUUID.value = uuid
   selectedDelivery.value = deliveryid
   modalOpen.value = true
@@ -183,6 +170,7 @@ async function removeReview() {
       type: 'success',
     })
     const startIn = reviews.value.find(
+      // eslint-disable-next-line eqeqeq
       (rev: any) => rev.uuid == uuidForRemove.value,
     )
     reviews.value.splice(startIn, 1)
@@ -226,21 +214,6 @@ onMounted(() => {
   fetchData()
 })
 
-const isInfoModal = ref<boolean>(false)
-function toggleInfoModal() {
-  isInfoModal.value = !isInfoModal.value
-}
-const statusText = computed(() => {
-  return tabs.find((el: any) => el.value === route.query.status)?.name
-})
-
-async function changeMP(e: any) {
-  mpStore.changeMp(
-    e.value,
-    'reviews',
-    route.query?.status ? `?status=${route.query.status}` : '',
-  )
-}
 const customLinks = tabs.map(filter => ({
   title: filter.name,
   value: filter.value,
@@ -276,10 +249,6 @@ async function resumeStatus(item: any) {
     fetchData()
   }
 }
-
-function openLogModal(uuid: any) {
-
-}
 </script>
 
 <template>
@@ -311,167 +280,56 @@ function openLogModal(uuid: any) {
         </InfoModal> -->
     </div>
 
-    <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-2">
-      <div class="flex w-full gap-2 lg:hidden">
-        <ExportXls
-          api="/api/flowwow/review/export"
-          file-name="MARKETMONSTR Доступные отзывы"
-          :is-visible="true"
-        />
-        <div class="flex w-full">
-          <input
-            v-model="searchText"
-            type="text"
-            class="input input-sm bg-base-300 bg-opacity-40 rounded-r-none w-full"
-            placeholder="Поиск"
-            @change="onSearchInput"
-          >
-          <div
-            class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
-            @click="onSearchInput"
-          >
-            <span v-if="loading" class="loading loading-spinner loading-xs" />
-            <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
-          </div>
-        </div>
-      </div>
-
-      <div class="flex gap-2 flex-wrap lg:hidden">
-        <CustomSelect
-          class="lg:hidden sm:min-w-[120px]"
-
-          status-text="Flowwow"
-          :tabs="
-            store.client.username == 'test'
-              ? mpStore.sortMp('reviews')
-              : mpStore.sortMp('reviews', true)
-          "
-          @change-value="changeMP"
-        />
-        <CustomSelect
-          class=" navbar:min-w-[140px] w-[140px]"
-
-          :tabs="customLinks"
-          :status-text="selectText()"
-          @change-value="changeTab"
-        />
-        <select
-          v-model="searchType"
-          class="select bg-base-300 bg-opacity-20 select-sm"
-        >
-          <option
-            v-for="option in searchOptions"
-            :key="`k-${option.value}`"
-            :value="option.value"
-            :default="option.value == SelectOptions.article"
-            :hidden="
-              option.value == SelectOptions.idReview
-                && currentTab == 'available'
-            "
-          >
-            {{ option.name }}
-          </option>
-        </select>
-
-        <!-- <NuxtLink
-          to="/reviews/wildberries/drafts"
-          class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
-          >Черновики</NuxtLink
-        > -->
-      </div>
-      <div class="gap-2 hidden lg:flex">
-        <CustomSelect
-          class="hidden lg:flex sm:min-w-[120px]"
-
-          status-text="Flowwow"
-          :tabs="
-            store.client.username == 'test'
-              ? mpStore.sortMp('reviews')
-              : mpStore.sortMp('reviews', true)
-          "
-          @change-value="changeMP"
-        />
-        <CustomSelect
-          class="hidden lg:flex navbar:min-w-[140px] w-[140px]"
-
-          :tabs="customLinks"
-          :status-text="selectText()"
-          @change-value="changeTab"
-        />
-        <!-- <div class="dropdown">
-          <div
-            tabindex="0"
-            role="button"
-            class="font-medium normal-case btn btn-primary bg-opacity-20 border-none text-base-content btn-sm w-[150px]"
-          >
-            <span>{{ statusText }}</span>
-          </div>
-          <ul
-            tabindex="0"
-            class="shadow dropdown-content z-[1] bg-base-100 p-1 rounded-lg mt-1 max-w-[150px]"
-          >
-            <li>
-              <Button
-                class="btn btn-ghost btn-xs normal-case font-medium w-full"
-                v-for="tab in tabs"
-                :class="[
-                  'btn btn-ghost btn-sm normal-case font-medium',
-                  { 'btn-active': tab.value === currentTab },
-                ]"
-                @click="changeTab(tab.value)"
-              >
-                {{ tab.name }}
-              </Button>
-            </li>
-          </ul>
-        </div> -->
-        <!-- <NuxtLink
-          to="/reviews/wildberries/drafts"
-          class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
-          >Черновики</NuxtLink
-        > -->
-      </div>
-      <div class="gap-2 items-center hidden lg:flex">
-        <select
-          v-model="searchType"
-          class="select bg-base-300 bg-opacity-20 select-sm"
-        >
-          <option
-            v-for="option in searchOptions"
-            :key="`k-${option.value}`"
-            :value="option.value"
-            :default="option.value == SelectOptions.article"
-            :hidden="
-              option.value == SelectOptions.idReview
-                && currentTab == 'available'
-            "
-          >
-            {{ option.name }}
-          </option>
-        </select>
-        <div class="flex w-full">
-          <input
-            v-model="searchText"
-            type="text"
-            class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none"
-            placeholder="Поиск"
-            @change="onSearchInput"
-          >
-          <div
-            class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
-            @click="onSearchInput"
-          >
-            <span v-if="loading" class="loading loading-spinner loading-xs" />
-            <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
-          </div>
-        </div>
-
-        <div class="flex gap-1 items-center">
+    <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
+      <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
+        <div class="export lg:absolute right-0 top-0">
           <ExportXls
-            api="/api/flowwow/review/export"
+            api="/api/avito/review/export"
             file-name="MARKETMONSTR Доступные отзывы"
             :is-visible="true"
           />
+        </div>
+        <div class="w-full flex gap-1 lg:gap-2 ">
+          <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+            <span><CustomSelect
+              class="h-[2rem]  min-w-[95px]"
+
+              :tabs="customLinks"
+              :status-text="selectText()"
+              @change-value="changeTab"
+            />
+            </span>
+          </div>
+          <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
+            <CustomSelect
+              class="h-[2rem] bg-[#f4f4f4]"
+              :tabs="searchOptions.map((el: any) => ({ title: el.name, value: el.value }))"
+              @change-value="(e: any) => (searchType = e.value)"
+            />
+          </div>
+          <div class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]">
+            <label class="w-full flex bg-[#ececed] rounded-lg items-center">
+              <input
+                v-model="searchText"
+                type="text"
+                class="input input-sm w-[134px] bg-transparent bg-opacity-40 rounded-r-none "
+                placeholder="Поиск"
+                @change="onSearchInput"
+              >
+              <div class="hover:bg-transparent bg-transparent bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
+                <span
+                  v-if="loading"
+                  class="loading loading-spinner loading-xs "
+                />
+                <Icon
+                  v-else
+                  class="text-gray-500 "
+                  name="tabler:search"
+                  size="20"
+                />
+              </div>
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -566,35 +424,35 @@ function openLogModal(uuid: any) {
         />
       </label>
     </label>
-  </div>
-  <div>
-    <!-- You can open the modal using ID.showModal() method -->
-    <!-- Put this part before </body> tag -->
-    <input id="reviewRemoveModal" type="checkbox" class="modal-toggle">
-    <div class="modal">
-      <div class="modal-box max-w-xs py-6 px-3">
-        <h3 class="font-bold text-xl">
-          Вы уверенны что хотите удалить отзыв?
-        </h3>
-        <p class="py-2.5">
-          Стоимость услуги 100 рублей!
-        </p>
-        <div class="flex justify-between">
-          <label
-            ref="reviewRemoveModalClose"
-            for="reviewRemoveModal"
-            class="btn btn-ghost w-1/2"
-          >Отмена</label>
-          <label
-            for="reviewRemoveModal"
-            class="btn btn-[#ebedff] hover:bg-[#b2baff] w-1/2"
-            @click="removeReview"
-          >Удалить</label>
+    <div>
+      <!-- You can open the modal using ID.showModal() method -->
+      <!-- Put this part before </body> tag -->
+      <input id="reviewRemoveModal" type="checkbox" class="modal-toggle">
+      <div class="modal">
+        <div class="modal-box max-w-xs py-6 px-3">
+          <h3 class="font-bold text-xl">
+            Вы уверенны что хотите удалить отзыв?
+          </h3>
+          <p class="py-2.5">
+            Стоимость услуги 100 рублей!
+          </p>
+          <div class="flex justify-between">
+            <label
+              ref="reviewRemoveModalClose"
+              for="reviewRemoveModal"
+              class="btn btn-ghost w-1/2"
+            >Отмена</label>
+            <label
+              for="reviewRemoveModal"
+              class="btn btn-[#ebedff] hover:bg-[#b2baff] w-1/2"
+              @click="removeReview"
+            >Удалить</label>
+          </div>
         </div>
       </div>
     </div>
+    <LogModal :info="selectedReview" :state="logModal" @close="logModal = false" />
   </div>
-  <LogModal :info="selectedReview" :state="logModal" @close="logModal = false" />
 </template>
 
 <style scoped></style>

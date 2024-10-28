@@ -131,7 +131,7 @@ async function getDrafts(art: any) {
 const selectedArticle = ref<any>({})
 function openModal(review: any, uuid: string, deliveryid: string) {
   selectedArticle.value = review
-  getDrafts(review.article)
+  // getDrafts(review.article)
   selectedUUID.value = uuid
   selectedDelivery.value = deliveryid
   modalOpen.value = true
@@ -295,133 +295,56 @@ async function resumeStatus(item: any) {
         </InfoModal> -->
     </div>
 
-    <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-2">
-      <div class="flex w-full gap-2 lg:hidden">
-        <ExportXls
-          api="/api/avito/review/export"
-          file-name="MARKETMONSTR Доступные отзывы"
-          :is-visible="true"
-        />
-        <div class="flex w-full">
-          <input
-            v-model="searchText"
-            type="text"
-            class="input input-sm bg-base-300 bg-opacity-40 rounded-r-none w-full"
-            placeholder="Поиск"
-            @change="onSearchInput"
-          >
-          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
-            <span
-              v-if="loading"
-              class="loading loading-spinner loading-xs "
-            />
-            <Icon
-              v-else
-              class="text-gray-500 "
-              name="tabler:search"
-              size="20"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="flex gap-2 flex-wrap lg:hidden">
-        <CustomSelect
-          class="lg:hidden sm:min-w-[140px]"
-
-          status-text="Avito"
-          :tabs="store.client.username == 'test' ? mpStore.sortMp('reviews') : mpStore.sortMp('reviews', true)"
-          @change-value="changeMP"
-        />
-        <CustomSelect
-          class="lg:hidden navbar:min-w-[140px] w-[140px] "
-
-          :tabs="customLinks"
-          :status-text="selectText()"
-          @change-value="changeTab"
-        />
-        <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
-          <option
-            v-for="option in searchOptions"
-            :key="`k-${option.value}`"
-            :value="option.value"
-            :default="option.value == SelectOptions.article"
-            :hidden="
-              option.value == SelectOptions.idReview
-                && currentTab == 'available'
-            "
-          >
-            {{ option.name }}
-          </option>
-        </select>
-        <!-- <NuxtLink
-          to="/reviews/ozon/drafts"
-          class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
-          >Черновики</NuxtLink
-        > -->
-      </div>
-      <div class="gap-2 hidden lg:flex">
-        <CustomSelect
-          class="hidden lg:flex sm:min-w-[120px]"
-
-          status-text="Avito"
-          :tabs="store.client.username == 'test' ? mpStore.sortMp('reviews') : mpStore.sortMp('reviews', true)"
-          @change-value="changeMP"
-        />
-        <CustomSelect
-          class="hidden lg:flex navbar:min-w-[140px] w-[140px]"
-
-          :tabs="customLinks"
-          :status-text="selectText()"
-          @change-value="changeTab"
-        />
-        <!-- <NuxtLink
-          to="/reviews/drafts"
-          class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
-          >Черновики</NuxtLink
-        > -->
-      </div>
-      <div class="gap-2 items-center hidden lg:flex">
-        <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
-          <option
-            v-for="option in searchOptions"
-            :key="`k-${option.value}`"
-            :value="option.value"
-            :default="option.value == SelectOptions.article"
-            :hidden="
-              option.value == SelectOptions.idReview
-                && currentTab == 'available'
-            "
-          >
-            {{ option.name }}
-          </option>
-        </select>
-        <div class="flex w-full">
-          <input
-            v-model="searchText"
-            type="text"
-            class="input input-sm w-[134px] bg-base-300 bg-opacity-40 rounded-r-none "
-            placeholder="Поиск"
-            @change="onSearchInput"
-          >
-          <div class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
-            <span
-              v-if="loading"
-              class="loading loading-spinner loading-xs "
-            />
-            <Icon
-              v-else
-              class="text-gray-500 "
-              name="tabler:search"
-              size="20"
-            />
-          </div>
-        </div>
-        <div class="flex gap-1 items-center">
+    <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
+      <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
+        <div class="export lg:absolute right-0 top-0">
           <ExportXls
             api="/api/avito/review/export"
             file-name="MARKETMONSTR Доступные отзывы"
             :is-visible="true"
           />
+        </div>
+        <div class="w-full flex gap-1 lg:gap-2 ">
+          <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+            <span><CustomSelect
+              class="h-[2rem]  min-w-[95px]"
+
+              :tabs="customLinks"
+              :status-text="selectText()"
+              @change-value="changeTab"
+            />
+            </span>
+          </div>
+          <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
+            <CustomSelect
+              class="h-[2rem] bg-[#f4f4f4]"
+              :tabs="searchOptions.map((el: any) => ({ title: el.name, value: el.value }))"
+              @change-value="(e: any) => (searchType = e.value)"
+            />
+          </div>
+          <div class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]">
+            <label class="w-full flex bg-[#ececed] rounded-lg items-center">
+              <input
+                v-model="searchText"
+                type="text"
+                class="input input-sm w-[134px] bg-transparent bg-opacity-40 rounded-r-none "
+                placeholder="Поиск"
+                @change="onSearchInput"
+              >
+              <div class="hover:bg-transparent bg-transparent bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
+                <span
+                  v-if="loading"
+                  class="loading loading-spinner loading-xs "
+                />
+                <Icon
+                  v-else
+                  class="text-gray-500 "
+                  name="tabler:search"
+                  size="20"
+                />
+              </div>
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -474,7 +397,7 @@ async function resumeStatus(item: any) {
       <div
         v-if="!isFetch && reviews && reviews.length > 0"
         ref="target"
-        class="flex justify-center items-center h-4 mb-10"
+        class="flex justify-center items-center h-10 mb-10"
       />
     </div>
     <div v-else-if="isFetch" class="w-full mt-5 flex justify-center items-center">
