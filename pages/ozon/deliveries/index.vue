@@ -8,12 +8,9 @@ definePageMeta({
 })
 const openAll = ref(false)
 const route = useRoute()
-const store = useMainStore()
-const mpStore = useMPStore()
 const deliveries = ref([]) as any
 const autoTarget = ref(true)
 const loading = ref(true)
-const codeInput = ref()
 const codeInputMob = ref()
 const loadingExport = ref(false)
 const status = computed(() => route.query?.status || 'all')

@@ -14,8 +14,8 @@ const props = defineProps({
   },
 })
 
-const uuid = toRef(props, 'uuid')
 const emit = defineEmits(['getTemplates', 'closeModal'])
+const uuid = toRef(props, 'uuid')
 const store = useFlowwowBuyoutStore()
 const opened = ref()
 
@@ -26,13 +26,14 @@ watch(
   () => props.opened,
   (newState) => {
     opened.value = newState
-  }
+  },
 )
 
 async function selectTemplate() {
   if (props.info.buyoutsArray.length <= 10) {
     store.createProducts = props.info.buyoutsArray
-  } else {
+  }
+  else {
     notify({
       title: 'За раз можно создать максимум 10 выкупов',
       text: 'Добавлены первые 10 выкупов',
@@ -60,11 +61,12 @@ async function deleteTemplate() {
   }
 }
 </script>
+
 <template>
   <div
     class="collapse collapse-arrow bg-primary bg-opacity-5 rounded-box z-0 overflow-hidden"
   >
-    <input type="checkbox" v-model="opened" />
+    <input v-model="opened" type="checkbox">
     <div
       class="collapse-title relative text-md font-medium flex flex-col md:justify-between md:flex-row"
     >
@@ -74,16 +76,12 @@ async function deleteTemplate() {
         </div>
       </div>
       <div class="flex z-10 gap-3">
-        
-        <label @click="deleteTemplate" class="btn btn-ghost btn-sm text-red-500 z-10"
-          >Удалить</label
-        >
-        <nuxt-link to="/buyouts/create/flowwow">
+        <label class="btn btn-ghost btn-sm text-red-500 z-10" @click="deleteTemplate">Удалить</label>
+        <nuxt-link to="/flowwow/buyouts/create">
           <label
-            @click="selectTemplate"
             class="btn btn-sm btn-ghost truncate mr-1 hover:bg-[#b2baff] hover:dark:bg-primary hover:dark:bg-opacity-20 border-none text-base-content"
-            >Добавить</label
-          >
+            @click="selectTemplate"
+          >Добавить</label>
         </nuxt-link>
       </div>
     </div>
@@ -93,7 +91,7 @@ async function deleteTemplate() {
       <BuyoutFlowwowTemplateCard
         v-for="product in info.buyoutsArray"
         :product="product"
-      ></BuyoutFlowwowTemplateCard>
+      />
     </div>
   </div>
   <!-- <BuyoutDeleteConfirmModal :uuid="uuid" @delete-template="deleteTemplate"></BuyoutDeleteConfirmModal> -->
