@@ -90,15 +90,15 @@ async function search(searchQuery: any) {
           </i18n-link>
           <MenuSearch :data="searchData" :loading="dataLoading" @search="search" />
           <div class="sm:flex hidden ml-5">
-            <I18nLink :to="loggedIn ? '/profile' : '/auth'" class="myCustomBtn">
-              <Icon name="gg:profile" size="24" />
+            <I18nLink to="/paymenthistory" class="myCustomBtn">
+              <Icon name="solar:wallet-linear" size="24" />
+              {{ user?.balance ? currency.format(user.balance) : '' }}
             </I18nLink>
             <button class="myCustomBtn ml-2">
               <Icon name="fluent:shopping-bag-24-regular" size="24" />
             </button>
-            <I18nLink to="/paymenthistory" class="myCustomBtn mx-2">
-              <Icon name="solar:wallet-linear" size="24" />
-              {{ user?.balance ? currency.format(user.balance) : '' }}
+            <I18nLink :to="loggedIn ? '/profile' : '/auth'" class="myCustomBtn ml-2">
+              <Icon name="gg:profile" size="24" />
             </I18nLink>
           </div>
           <I18nLink
