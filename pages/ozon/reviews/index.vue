@@ -85,7 +85,7 @@ function changeTab(tab: any) {
   skip.value = 0
   end.value = false
   currentTab.value = tab.value
-  router.push(`/reviews/ozon?status=${tab.value}`)
+  router.push(`/ozon/reviews?status=${tab.value}`)
   fetchData()
 }
 
@@ -279,85 +279,73 @@ async function resumeStatus(item: any) {
       </ul>
     </div>
     <div>
-      <div class="flex justify-between mb-2 mt-4 items-center flex-wrap gap-2">
-        <div class="gap-2 hidden lg:flex">
-          <CustomSelect
-            class=" sm:min-w-[120px]" status-text="Ozon" :tabs="store.client.username === 'test'
-              ? mpStore.sortMp('reviews')
-              : mpStore.sortMp('reviews', true)
-            " @change-value="changeMP"
-          />
-          <CustomSelect
-            class=" navbar:min-w-[140px] w-[140px] " :tabs="customLinks" :status-text="selectText()"
-            @change-value="changeTab"
-          />
-        </div>
-        <div class="flex w-full gap-2 lg:hidden">
-          <ExportXls api="/api/ozon/review/export" file-name="MARKETMONSTR Доступные отзывы" :is-visible="true" />
-          <div class="flex w-full">
-            <input
-              v-model="searchText" type="text" class="input input-sm bg-base-300 bg-opacity-40 rounded-r-none w-full"
-              placeholder="Поиск" @keyup.enter="onSearchInput"
-            >
-            <div
-              class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
-              @click="onSearchInput"
-            >
-              <span v-if="loading" class="loading loading-spinner loading-xs" />
-              <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
-            </div>
+      <div class="breadcrumbs text-sm mt-8">
+        <ul class="font-medium text-[18px] text-[#909090]">
+          <li class="cursor-pointer">
+            <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+              Маркетплейсы
+            </NuxtLink>
+          </li>
+          <li class="cursor-pointer">
+            <NuxtLink to="/catalog/ozon" class="cursor-pointer text-[#909090]">
+              Ozon
+            </NuxtLink>
+          </li>
+          <li class="cursor-pointer text-[#1e2734]">
+            Отзывы
+          </li>
+        </ul>
+      </div>
+      <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
+        <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
+          <div class="export lg:absolute right-0 top-0">
+            <ExportXls
+              api="/api/avito/review/export"
+              file-name="MARKETMONSTR Доступные отзывы"
+              :is-visible="true"
+            />
           </div>
-        </div>
-        <div class="flex gap-2 flex-wrap lg:hidden">
-          <CustomSelect
-            class="lg:hidden sm:min-w-[140px]" status-text="Ozon" :tabs="store.client.username === 'test'
-              ? mpStore.sortMp('reviews')
-              : mpStore.sortMp('reviews', true)
-            " @change-value="changeMP"
-          />
-          <CustomSelect
-            class="lg:hidden navbar:min-w-[140px] w-[140px] " :tabs="customLinks" :status-text="selectText()"
-            @change-value="changeTab"
-          />
-          <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
-            <option
-              v-for="option in searchOptions" :key="`k-${option.value}`" :value="option.value"
-              :default="option.value === SelectOptions.article" :hidden="option.value === SelectOptions.idReview
-                && currentTab === 'available'
-              "
-            >
-              {{ option.name }}
-            </option>
-          </select>
-        </div>
+          <div class="w-full flex gap-1 lg:gap-2 ">
+            <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+              <span><CustomSelect
+                class="h-[2rem]  min-w-[95px]"
 
-        <div class="gap-2 items-center hidden lg:flex">
-          <select v-model="searchType" class="select bg-base-300 bg-opacity-20 select-sm">
-            <option
-              v-for="option in searchOptions" :key="`k-${option.value}`" :value="option.value"
-              :default="option.value === SelectOptions.article" :hidden="option.value === SelectOptions.idReview
-                && currentTab === 'available'
-              "
-            >
-              {{ option.name }}
-            </option>
-          </select>
-          <div class="flex w-full">
-            <input
-              v-model="searchText" type="text"
-              class="input input-sm w-[134px] bg-base-300 bg-opacity-40 rounded-r-none" placeholder="Поиск"
-              @keyup.enter="onSearchInput"
-            >
-            <div
-              class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
-              @click="onSearchInput"
-            >
-              <span v-if="loading" class="loading loading-spinner loading-xs" />
-              <Icon v-else class="text-gray-500" name="tabler:search" size="20" />
+                :tabs="customLinks"
+                :status-text="selectText()"
+                @change-value="changeTab"
+              />
+              </span>
             </div>
-          </div>
-          <div class="flex gap-1 items-center">
-            <ExportXls api="/api/ozon/review/export" file-name="MARKETMONSTR Доступные отзывы" :is-visible="true" />
+            <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
+              <CustomSelect
+                class="h-[2rem] bg-[#f4f4f4]"
+                :tabs="searchOptions.map((el: any) => ({ title: el.name, value: el.value }))"
+                @change-value="(e: any) => (searchType = e.value)"
+              />
+            </div>
+            <div class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]">
+              <label class="w-full flex bg-[#ececed] rounded-lg items-center">
+                <input
+                  v-model="searchText"
+                  type="text"
+                  class="input input-sm w-[134px] bg-transparent bg-opacity-40 rounded-r-none "
+                  placeholder="Поиск"
+                  @change="onSearchInput"
+                >
+                <div class="hover:bg-transparent bg-transparent bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer " @click="onSearchInput">
+                  <span
+                    v-if="loading"
+                    class="loading loading-spinner loading-xs "
+                  />
+                  <Icon
+                    v-else
+                    class="text-gray-500 "
+                    name="tabler:search"
+                    size="20"
+                  />
+                </div>
+              </label>
+            </div>
           </div>
         </div>
       </div>
