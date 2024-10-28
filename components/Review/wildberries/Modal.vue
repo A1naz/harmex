@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { useNotification } from '@kyvg/vue3-notification'
 import { UseImage } from '@vueuse/components'
 import { Upload } from 'tus-js-client'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
-import { isUnparsedNode } from 'typescript'
 
 const config = useRuntimeConfig()
 const store = useMainStore()
