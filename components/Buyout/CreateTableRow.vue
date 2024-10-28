@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 import { useOzonBuyoutStore } from '../../stores/ozonBuyout'
 import type { Rule } from '@/data/buyout/rules'
 

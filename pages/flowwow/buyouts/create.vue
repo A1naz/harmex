@@ -136,7 +136,7 @@ async function openChecksModal() {
 
   let valid = true
   let errorMsg = ''
-  products.value.forEach((item, _index) => {
+  products.value.forEach((item: { deliveryPeriodDate: any; deliveryPeriodTime: any; dateRange: any[]; searchQuery: { value: any; }[]; selectedSize: string; }, _index: any) => {
     if (!item.deliveryPeriodDate || !item.deliveryPeriodTime) {
       valid = false
       errorMsg = 'Не у всех товаров указаны дата и время доставки'
@@ -203,7 +203,7 @@ async function createBuyout() {
 }
 
 watch(products.value, (old, value) => {
-  value.forEach((item, index) => {
+  value.forEach((item: { quantity: number; }, index: string | number) => {
     if (item.quantity < 1)
       products.value[index].quantity = 1
 
