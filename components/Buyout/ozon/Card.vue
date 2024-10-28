@@ -28,7 +28,7 @@ const currency = useCurrency()
 const router = useRouter()
 function cloneBuyout() {
   router.push({
-    path: '/buyouts/create/ozon',
+    path: '/ozon/buyouts/create',
     query: {
       uuid: props.info.uuid,
     },
