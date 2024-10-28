@@ -238,7 +238,6 @@ function updateSearchType(filter: any) {
         </li>
       </ul>
     </div>
-
     <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full mt-4 mb-10">
       <div class="flex gap-2 ">
         <NuxtLink

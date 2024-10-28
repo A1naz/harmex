@@ -30,12 +30,28 @@ watch(selectedType, () => {
 
 <template>
   <div class="flex mt-4">
-    <CatalogLeftMenu v-model:selected-type="selectedType" :items="menuItems" />
-    <div v-if="loading" class="hero -mt-80">
+    <div class="left-menu">
+      <CatalogLeftMenu v-model:selected-type="selectedType" :items="menuItems" />
+    </div>
+    <div v-if="loading" class="hero -mt-80 text-[#bdc8fc]">
       <span class="loading loading-dots loading-lg text-primary" />
     </div>
-    <CatalogContent v-else :items="socialNetworks" />
+
+    <div class="px-10">
+      <div class="breadcrumbs text-sm ml-3">
+        <ul class="font-medium text-[18px] text-[#909090]">
+          <li class="cursor-pointer">
+            Каталог
+          </li>
+        </ul>
+      </div>
+      <CatalogContent v-if="!loading" :items="socialNetworks" />
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.left-menu {
+  width: 240px;
+}
+</style>

@@ -8,12 +8,9 @@ definePageMeta({
 })
 const openAll = ref(false)
 const route = useRoute()
-const store = useMainStore()
-const mpStore = useMPStore()
 const deliveries = ref([]) as any
 const autoTarget = ref(true)
 const loading = ref(true)
-const codeInput = ref()
 const codeInputMob = ref()
 const loadingExport = ref(false)
 const status = computed(() => route.query?.status || 'all')
@@ -297,7 +294,7 @@ const customLinks = filters.map(filter => ({
         </li>
       </ul>
     </div>
-    <div class="flex justify-start lg:justify-between  mb-4 items-center mt-2">
+    <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
       <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
         <div v-if="deliveries.length" class="export lg:absolute right-0 top-0">
           <button

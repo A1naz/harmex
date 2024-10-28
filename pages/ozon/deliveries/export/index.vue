@@ -100,7 +100,6 @@ onMounted(async () => {
 
 <template>
   <div class="overflow-auto">
-    <progress class="progress progress-primary w-full fixed" :value="progress" :max="max" />
     <div class="flex">
       <button
         class="btn m-2 mt-4" @click="exportToFile"

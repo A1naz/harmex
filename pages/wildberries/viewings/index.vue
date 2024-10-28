@@ -191,6 +191,23 @@ function changeFilter(e: any) {
 
 <template>
   <div>
+    <div class="breadcrumbs text-sm mt-8">
+      <ul class="font-medium text-[18px] text-[#909090]">
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+            Маркетплейсы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog/wildberries" class="cursor-pointer text-[#909090]">
+            Wildberries
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer text-[#1e2734]">
+          Просмотры
+        </li>
+      </ul>
+    </div>
     <div>
       <ViewingsWildberriesCreateView
         :show="modalShow"

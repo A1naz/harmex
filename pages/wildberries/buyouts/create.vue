@@ -419,6 +419,28 @@ function refreshElements() {
 
 <template>
   <div>
+    <div class="breadcrumbs text-sm mt-8">
+      <ul class="font-medium text-[18px] text-[#909090]">
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+            Маркетплейсы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog/wildberries" class="cursor-pointer text-[#909090]">
+            Wildberries
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/wildberries/buyouts" class="cursor-pointer text-[#909090]">
+            Выкупы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer text-[#1e2734]">
+          Создать
+        </li>
+      </ul>
+    </div>
     <div>
       <!-- <h1 class="text-2xl font-bold mt-4">Добавить выкупы</h1>
     <p class="text-xs text-gray-500 font-light mt-1 lg:text-sm">

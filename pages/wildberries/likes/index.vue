@@ -220,7 +220,7 @@ function updateSearchType(filter: any) {
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">
-          Лайки на отзыв
+          Лайки на отзывы
         </li>
       </ul>
     </div>
