@@ -257,6 +257,23 @@ function updateSearchType(filter: any) {
 
 <template>
   <div>
+    <div class="breadcrumbs text-sm mt-8">
+      <ul class="font-medium text-[18px] text-[#909090]">
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+            Маркетплейсы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog/flowwow" class="cursor-pointer text-[#909090]">
+            Flowwow
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer text-[#1e2734]">
+          Доставки
+        </li>
+      </ul>
+    </div>
     <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
       <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
         <div v-if="deliveries.length" class="export lg:absolute right-0 top-0">
