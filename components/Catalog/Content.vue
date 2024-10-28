@@ -37,13 +37,10 @@ defineProps({
               <li v-for="(service, i) in social.items.slice(0, 4)" :key="i">
                 {{ service.title }}
               </li>
-              <li v-if="social.items.length > 5">
-                ...
-              </li>
             </ul>
             <NuxtLink
               v-if="!social.disabled" :to="`/catalog/${social.slug}`"
-              class="mt-2 text-[16px] absolute font-medium cursor-pointer"
+              class="text-[16px] absolute font-medium cursor-pointer bottom-3"
             >
               Смотреть все
               <Icon class="text-[#F72585] -mt-0.5" name="jam:arrow-right" size="18px" />
