@@ -34,13 +34,13 @@ defineProps({
               Доступные услуги:
             </p>
             <ul class="text-sm text-[#909090] underline text-[13px]">
-              <li v-for="(service, i) in social.items.slice(0, 4)" :key="i">
+              <li v-for="(service, i) in social.items.slice(0, 5)" :key="i">
                 {{ service.title }}
               </li>
             </ul>
             <NuxtLink
               v-if="!social.disabled" :to="`/catalog/${social.slug}`"
-              class="text-[16px] absolute font-medium cursor-pointer bottom-3"
+              class="text-[16px] absolute font-medium cursor-pointer bottom-2"
             >
               Смотреть все
               <Icon class="text-[#F72585] -mt-0.5" name="jam:arrow-right" size="18px" />
