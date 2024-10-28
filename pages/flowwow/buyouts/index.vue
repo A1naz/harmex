@@ -350,7 +350,7 @@ async function changeMP(e: any) {
 }
 const customLinks = filters.map(filter => ({
   title: filter.title,
-  slot: '/buyouts/flowwow',
+  slot: '/flowwow/buyouts/',
   query: filter.params,
 }))
 
@@ -413,64 +413,36 @@ async function removeBuyout() {
       </ul>
     </div>
     <div />
-    <div class="flex justify-between mb-4 items-center mt-4">
-      <div class="flex gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-max">
+    <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
+      <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
         <div class="flex gap-2">
           <NuxtLink
             to="/flowwow/buyouts/create"
-            class="btn btn-primary btn-sm bg-[#6675ff] dark:bg-primary border-none gap-2 font-medium normal-case"
+            class="btn btn-primary bg-[#6675ff] dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
           >
             <Icon name="fluent:add-24-filled" size="12" />
             <span class="hidden lg:inline">Выкупы</span>
           </NuxtLink>
-          <div class="relative flex items-center flex-grow-0 w-full lg:hidden">
-            <input
-              ref="codeInput"
-              v-model="search.text"
-              type="text"
-              class="input input-sm border-none w-full bg-[#ececed] dark:bg-base-300 dark:bg-opacity-40"
-              placeholder="Поиск по товарам"
-              @input="onSearchInput($event)"
-            >
-            <span
-              v-if="search.loading"
-              class="absolute right-2 loading loading-spinner loading-xs p-2"
-            />
-            <Icon
-              v-else
-              class="absolute right-2 p-2 text-[#8f8e93]"
-              name="tabler:search"
-              size="35"
-              @click="codeInput.focus()"
-            />
-          </div>
         </div>
-
-        <div clas="flex gap-2">
-          <div
-            class="search flex items-center gap-1 lg:gap-3"
-            :class="{
-              'flex-wrap': width < 335,
-            }"
-          >
-            <CustomSelect
-              class=" lg:min-w-[120px]"
-
-              status-text="Flowwow"
+        <div class="w-full flex gap-1 lg:gap-2 ">
+          <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+            <!-- <span><CustomSelect
+              class="h-[2rem]  lg:min-w-[120px]"
+              status-text="Wildberries"
               :tabs="storeMain.client.username === 'test' ? mpStore.sortMp('buyouts') : mpStore.sortMp('buyouts', true)"
               @change-value="changeMP"
-            />
-            <CustomSelect
-              class=" min-w-[95px]"
+            /></span> -->
+            <span><CustomSelect
+              class="h-[2rem]  min-w-[95px]"
               :status-text="statusText"
-
               :links="customLinks"
-            />
-
+            /> </span>
+          </div>
+          <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
             <CustomSelect
-              class="bg-[#f4f4f4] lg:hidden"
+              class="bg-[#f4f4f4] h-[2rem]"
               :tabs="[
-                { title: 'За все время', value: 'all' },
+                { title: 'Все время', value: 'all' },
                 { title: 'Сегодня', value: 'today' },
                 { title: 'Вчера', value: '2days' },
                 { title: '3 дня', value: '3days' },
@@ -479,36 +451,8 @@ async function removeBuyout() {
               @change-value="selectFilterDate"
             />
 
-            <div class="flex gap-3 items-center lg:hidden">
-              <CustomSelect
-                class="max-w-[80px] bg-[#f4f4f4]"
-                :tabs="[
-                  { title: 'Артикул', value: 'article' },
-                  { title: 'ID выкупа', value: 'uuid' },
-                  { title: 'Имя', value: 'name' },
-                ]"
-                @change-value="updateSearchType"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="items-center flex-wrap self-start hidden lg:flex">
-        <div class="search flex items-center flex-wrap gap-3">
-          <CustomSelect
-            class="bg-[#f4f4f4]"
-            :tabs="[
-              { title: 'За все время', value: 'all' },
-              { title: 'Сегодня', value: 'today' },
-              { title: 'Вчера', value: '2days' },
-              { title: '3 дня', value: '3days' },
-              { title: 'Неделя', value: '7days' },
-            ]"
-            @change-value="selectFilterDate"
-          />
-          <div class="flex items-center justify-between gap-3">
             <CustomSelect
-              class="bg-[#f4f4f4] min-w-[100px]"
+              class="h-[2rem] bg-[#f4f4f4] min-w-[100px]"
               :tabs="[
                 { title: 'Артикул', value: 'article' },
                 { title: 'ID выкупа', value: 'uuid' },
@@ -516,28 +460,29 @@ async function removeBuyout() {
               ]"
               @change-value="updateSearchType"
             />
-
-            <div class="relative justify-end flex-grow-0 w-full hidden lg:flex">
+          </div>
+          <div class="absolute right-0 top-0 w-[calc(100%-40px)] lg:w-fit lg:static">
+            <label class="w-full flex bg-[#ececed] rounded-lg items-center">
               <input
                 ref="codeInput"
                 v-model="search.text"
                 type="text"
-                class="input input-sm border-none bg-[#ececed] dark:bg-base-300 dark:bg-opacity-40"
+                class="input input-sm border-none bg-transparent  dark:bg-base-300 dark:bg-opacity-40 w-full lg:w-11/12"
                 placeholder="Поиск по товарам"
-                @input="onSearchInput($event)"
+                @input="onSearchInput()"
               >
               <span
                 v-if="search.loading"
-                class="absolute right-2 loading loading-spinner loading-xs p-2 mt-2"
+                class="loading loading-spinner loading-xs flex justify-end p-2"
               />
               <Icon
                 v-else
-                class="absolute right-2 p-2 text-[#8f8e93]"
+                class="text-[#8f8e93] flex justify-end pr-2"
                 name="tabler:search"
-                size="35"
+                size="30"
                 @click="codeInput.focus()"
               />
-            </div>
+            </label>
           </div>
         </div>
       </div>
@@ -580,7 +525,7 @@ async function removeBuyout() {
       <div>
         <TransitionSlide
           group
-          class="cards grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 h-full"
+          class="cards grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] h-full"
         >
           <BuyoutFlowwowCard
             v-for="(buyout, index) of buyouts"
@@ -617,7 +562,7 @@ async function removeBuyout() {
       :index="selectedIndex"
       @close="modal = false"
     />
-    <BuyoutFlowwowModal
+    <BuyoutRemoveModal
       v-if="removeModal"
       :info="selectedBuyout"
       :state="removeModal"
