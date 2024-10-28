@@ -93,10 +93,10 @@ const transferModalShow = ref(false)
       </div>
     </div>
 
-    <div class="flex gap-[25px] justify-between">
+    <div class="flex gap-[5px] justify-center">
       <button
         @click="modalShow = true"
-        class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[25px] rounded-xl relative group"
+        class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
       >
         <div class="flex items-center justify-center">
           <Icon
@@ -108,7 +108,7 @@ const transferModalShow = ref(false)
         </div>
       </button>
 
-      <button
+      <!-- <button
         @click="transferModalShow = true"
         class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[25px] rounded-xl relative group"
       >
@@ -120,11 +120,11 @@ const transferModalShow = ref(false)
           />
           <span class="ml-3">Перевод</span>
         </div>
-      </button>
+      </button> -->
 
       <button
         @click="balanceModalShow = true"
-        class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[25px] rounded-xl relative group"
+        class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
       >
         <div class="flex items-center justify-center">
           <Icon
