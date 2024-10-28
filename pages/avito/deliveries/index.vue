@@ -3,11 +3,12 @@ import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({
   layout: 'app',
-  middleware: 'auth',
+  auth: true,
   title: 'Доставки',
 })
 const openAll = ref(false)
 const route = useRoute()
+const router = useRouter()
 const deliveries = ref([]) as any
 const autoTarget = ref(true)
 const loading = ref(true)
@@ -21,15 +22,6 @@ const search = reactive({
   type: 'article',
 })
 
-// function selectStatus(e: Event) {
-//   const target = e.target as HTMLSelectElement
-//   router.push({
-//     path: '/delivery',
-//     query: {
-//       status: target.value,
-//     },
-//   })
-// }
 const modalInfo = reactive({
   src: '',
   code: 0,
@@ -60,7 +52,7 @@ const skip = ref(50)
 const end = ref(false)
 async function getDeliveries() {
   loading.value = true
-  const { data } = await useFetch('/api/ozon/delivery/get', {
+  const { data } = await useFetch('/api/avito/delivery/get', {
     method: 'GET',
     query: {
       status: status.value ?? 'all',
@@ -74,13 +66,13 @@ getDeliveries()
 
 async function exportReadyXLS() {
   loadingExport.value = true
-  const { data } = await useFetch('/api/ozon/delivery/exportReady', {
+  const { data } = await useFetch('/api/avito/delivery/exportReady', {
     responseType: 'blob',
   })
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Готовы к выдаче Ozon.xlsx')
+  fileLink.setAttribute('download', 'Готовы к выдаче Avito.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
   loadingExport.value = false
@@ -89,7 +81,7 @@ async function exportReadyXLS() {
 async function exportReadyUntilPenaltyXLS() {
   loadingExport.value = true
   const { data, error } = await useFetch(
-    '/api/ozon/delivery/exportReadyUntilPenalty',
+    '/api/avito/delivery/exportReadyUntilPenalty',
     {
       responseType: 'blob',
     },
@@ -108,16 +100,15 @@ async function exportReadyUntilPenaltyXLS() {
   fileLink.href = fileURL
   fileLink.setAttribute(
     'download',
-    'Готовы к выдаче Wildberries до штрафа.xlsx',
+    'Готовы к выдаче Avito до штрафа.xlsx',
   )
   document.body.appendChild(fileLink)
   fileLink.click()
   loadingExport.value = false
 }
-
 async function exportXLS() {
   loadingExport.value = true
-  const { data, error } = await useFetch('/api/ozon/delivery/export', {
+  const { data, error } = await useFetch('/api/avito/delivery/export', {
     responseType: 'blob',
   })
   if (error.value) {
@@ -132,7 +123,7 @@ async function exportXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
   const fileLink = document.createElement('a')
   fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Общая таблица Ozon.xlsx')
+  fileLink.setAttribute('download', 'Общая таблица Avito.xlsx')
   document.body.appendChild(fileLink)
   fileLink.click()
   loadingExport.value = false
@@ -145,7 +136,7 @@ async function findDeliveries(value: string, type: string) {
     search.loading = false
     return
   }
-  const { data } = await useFetch('/api/ozon/delivery/search', {
+  const { data } = await useFetch('/api/avito/delivery/search', {
     query: {
       string: value,
       type,
@@ -165,16 +156,11 @@ async function onSearchInput() {
   findDeliveriesDebounced(search.text, search.type)
 }
 
-// const isInfoModal = ref<boolean>(false)
-// function toggleInfoModal() {
-//   isInfoModal.value = !isInfoModal.value
-// }
-
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && deliveries.value.length >= 50) {
     if (end.value)
       return
-    const { data } = await useFetch('/api/ozon/delivery/get', {
+    const { data } = await useFetch('/api/avito/delivery/get', {
       method: 'GET',
       query: {
         status: route.query?.status || 'all',
@@ -196,7 +182,7 @@ watch(
   async () => {
     skip.value = 50
     end.value = false
-    const { data } = await useFetch('/api/ozon/delivery/get', {
+    const { data } = await useFetch('/api/avito/delivery/get', {
       method: 'GET',
       query: {
         status: status.value ?? 'all',
@@ -245,12 +231,12 @@ const filters = [
     params: '?status=canceled',
     queryStatus: 'canceled',
   },
-  // {
-  //   title: 'В архиве',
-  //   optionValue: 'archived',
-  //   params: '?status=archived',
-  //   queryStatus: 'archived',
-  // },
+  {
+    title: 'В архиве',
+    optionValue: 'archived',
+    params: '?status=archived',
+    queryStatus: 'archived',
+  },
 ]
 const statusText = computed(() => {
   return filters.find((el: any) => el.queryStatus === route.query.status)?.title
@@ -260,17 +246,9 @@ function updateSearchType(filter: any) {
   search.type = filter.value
 }
 
-// function changeFilter(e: any) {
-//   mpStore.changeMp(
-//     e.value,
-//     'deliveries',
-//     route.query?.status ? `?status=${route.query.status}` : '',
-//   )
-// }
-
 const customLinks = filters.map(filter => ({
   title: filter.title,
-  slot: '/ozon/deliveries',
+  slot: '/avito/deliveries',
   query: filter.params,
 }))
 </script>
@@ -285,8 +263,8 @@ const customLinks = filters.map(filter => ({
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink to="/catalog/ozon" class="cursor-pointer text-[#909090]">
-            Ozon
+          <NuxtLink to="/catalog/avito" class="cursor-pointer text-[#909090]">
+            Avito
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">
@@ -367,6 +345,22 @@ const customLinks = filters.map(filter => ({
       </div>
     </div>
 
+    <!-- <div v-if="deliveries?.length" class="" >
+      <TransitionSlide group tag="ul" class="flex md:hidden flex-col gap-3">
+        <li v-for="(delivery, index) of deliveries" :key="index" class="overflow-visible z-0">
+          <DeliveryExpand
+            :state="openAll"
+            :info="delivery"
+            @open-modal="openModal"
+            @open-status-modal="openStatusModal"
+            @open-penalty-modal="penaltyModal = true"
+
+          />
+        </li>
+        <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
+      </TransitionSlide>
+      <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
+    </div> -->
     <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
       <TransitionSlide
         group
@@ -382,7 +376,7 @@ const customLinks = filters.map(filter => ({
             :key="index"
             class="overflow-visible z-0"
           >
-            <DeliveryOzonExpand
+            <DeliveryAvitoExpand
               :state="openAll"
               :info="delivery"
               @open-modal="openModal"
@@ -399,7 +393,7 @@ const customLinks = filters.map(filter => ({
             :key="index"
             class="overflow-visible z-0"
           >
-            <DeliveryOzonExpand
+            <DeliveryAvitoExpand
               :state="openAll"
               :info="delivery"
               @open-modal="openModal"
@@ -408,6 +402,10 @@ const customLinks = filters.map(filter => ({
             />
           </li>
         </ul>
+        <div
+          ref="target"
+          class="flex justify-center items-center h-40 md:h-12"
+        />
       </TransitionSlide>
       <DeliveryQrModal
         v-if="modal"
@@ -425,11 +423,6 @@ const customLinks = filters.map(filter => ({
       :statusdelivery="currentStatusdDelivery"
       :state="statusModal"
       @close="statusModal = false"
-    />
-    <div
-      ref="target"
-      class="flex justify-center items-center"
-      style="height: 60px"
     />
   </div>
 </template>
