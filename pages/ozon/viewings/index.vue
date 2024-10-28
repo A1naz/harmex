@@ -197,6 +197,25 @@ function changeFilter(e: any) {
       @close-modal="modalShow = false"
       @create=";[(skip = 0), getViewings()]"
     />
+
+    <div class="breadcrumbs text-sm mt-8">
+      <ul class="font-medium text-[18px] text-[#909090]">
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+            Маркетплейсы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog/ozon" class="cursor-pointer text-[#909090]">
+            Ozon
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer text-[#1e2734]">
+          Просмотры
+        </li>
+      </ul>
+    </div>
+
     <div class="flex mt-4 flex-col lg:flex-row lg:justify-between gap-2">
       <div class="flex gap-1 lg:gap-4">
         <button

@@ -8,13 +8,9 @@ definePageMeta({
   title: 'Отзывы Avito',
 })
 
-const { getData } = useApi()
-
 const route = useRoute()
 const end = ref(false)
 
-const store = useMainStore()
-const mpStore = useMPStore()
 const router = useRouter()
 
 const status = ref(route.query?.status ?? 'available')
@@ -25,9 +21,10 @@ const selectedReview = ref({
 
 const target = ref(null)
 const targetIsVisible = ref(false)
+// eslint-disable-next-line unused-imports/no-unused-vars
 const { stop } = useIntersectionObserver(
   target,
-  ([{ isIntersecting }], observerElement) => {
+  ([{ isIntersecting }]) => {
     targetIsVisible.value = isIntersecting
   },
 )
@@ -96,7 +93,7 @@ function changeTab(tab: any) {
   fetchData()
 }
 
-function onSearchInput(val: any) {
+function onSearchInput() {
   if (searchText.value !== '' && searchText.value.trim() === '') {
     return
   }
@@ -115,18 +112,6 @@ function openPhoto(src: string) {
 }
 const selectedDelivery = ref('')
 const modalOpen = ref(false)
-
-async function getDrafts(art: any) {
-  const res = await getData('/review/drafts', {
-    search: { article: { $in: ['', art] } },
-  })
-  if (res && res.length > 0) {
-    selectedArticle.value = {
-      ...selectedArticle.value,
-      drafts: res,
-    }
-  }
-}
 
 const selectedArticle = ref<any>({})
 function openModal(review: any, uuid: string, deliveryid: string) {
@@ -211,17 +196,6 @@ onMounted(() => {
   fetchData()
 })
 
-const isInfoModal = ref<boolean>(false)
-function toggleInfoModal() {
-  isInfoModal.value = !isInfoModal.value
-}
-const statusText = computed(() => {
-  return tabs.find((el: any) => el.value === route.query.status)?.name
-})
-
-async function changeMP(e: any) {
-  mpStore.changeMp(e.value, 'reviews', route.query?.status ? `?status=${route.query.status}` : '')
-}
 function selectText() {
   const index = tabs.findIndex(item => route.query?.status ? item.value == route.query?.status : item.value == 'available')
   if (index == -1) {
@@ -269,6 +243,23 @@ async function resumeStatus(item: any) {
 <template>
   <div>
     <div class="page-header">
+      <div class="breadcrumbs text-sm mt-8">
+        <ul class="font-medium text-[18px] text-[#909090]">
+          <li class="cursor-pointer">
+            <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+              Маркетплейсы
+            </NuxtLink>
+          </li>
+          <li class="cursor-pointer">
+            <NuxtLink to="/catalog/avito" class="cursor-pointer text-[#909090]">
+              Avito
+            </NuxtLink>
+          </li>
+          <li class="cursor-pointer text-[#1e2734]">
+            Отзывы
+          </li>
+        </ul>
+      </div>
       <!-- <div class="flex items-center gap-2 mt-4">
         <h1 class="text-2xl font-bold">Отзывы</h1>
         <InfoButton @openModal="toggleInfoModal" />

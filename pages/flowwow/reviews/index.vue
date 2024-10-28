@@ -253,6 +253,23 @@ async function resumeStatus(item: any) {
 
 <template>
   <div>
+    <div class="breadcrumbs text-sm mt-8">
+      <ul class="font-medium text-[18px] text-[#909090]">
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+            Маркетплейсы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog/flowwow" class="cursor-pointer text-[#909090]">
+            Flowwow
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer text-[#1e2734]">
+          Отзывы
+        </li>
+      </ul>
+    </div>
     <div class="page-header">
       <!-- <div class="flex items-center gap-2 mt-4">
         <h1 class="text-2xl font-bold">Отзывы</h1>

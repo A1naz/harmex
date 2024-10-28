@@ -7,24 +7,12 @@ definePageMeta({
   title: 'Лайки на товар/бренд',
 })
 
-const store = useMainStore()
-const mpStore = useMPStore()
-const mpChange = useMPChange()
 const router = useRouter()
 const route = useRoute()
-const MPSelect = ref()
-const selectedMP = ref(mpStore.selectedMP || 'wildberries')
 const product_likes = ref([]) as any
-const amount = ref(0)
-const loadingUrl = ref(false)
 const sortPage = ref('all')
 const sortPageDate = ref('')
 const loading = ref(false)
-const url = ref('')
-const period = ref('3h')
-const { width, height } = useWindowSize()
-const productData = ref<any>(null)
-const urlError = ref(false)
 const modalShow = ref<boolean>(false)
 const logModal = ref(false)
 const selectedLike = ref({
@@ -44,9 +32,10 @@ const skip = ref(0)
 const end = ref(false)
 const target = ref(null)
 const targetIsVisible = ref(false)
+// eslint-disable-next-line unused-imports/no-unused-vars
 const { stop } = useIntersectionObserver(
   target,
-  ([{ isIntersecting }], observerElement) => {
+  ([{ isIntersecting }]) => {
     targetIsVisible.value = isIntersecting
   },
 )
@@ -96,65 +85,7 @@ async function getProductLikes() {
   }
 }
 await getProductLikes()
-async function create() {
-  const { data, error } = await useFetch(
-    `/api/avito/productlikes/create`,
-    {
-      method: 'POST',
-      body: {
-        url: url.value,
-        amount: amount.value,
-        period: period.value,
-        productData: productData.value,
-      },
-    },
-  )
-  if (error.value) {
-    return notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: error.value.message,
-    })
-  }
-  if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    getProductLikes()
-  }
-  modalShow.value = false
-  removeProduct()
-}
-async function sendUrl() {
-  const { data, error } = await useFetch(
-    `/api/avito/productlikes/extract`,
-    {
-      method: 'POST',
-      body: {
-        url: url.value,
-      },
-    },
-  )
-  if (data.value) {
-    productData.value = data.value
-    urlError.value = false
-  }
-  if (error.value)
-    urlError.value = true
 
-  loadingUrl.value = false
-}
-
-let timeout = null as NodeJS.Timeout | null
-async function changeUrl() {
-  if (url.value === '')
-    return
-  loadingUrl.value = true
-  if (timeout)
-    clearTimeout(timeout)
-  timeout = setTimeout(sendUrl, 2000)
-}
-function selectPeriod(event: any) {
-  period.value = event.target.value
-}
 function getStatus(status: string) {
   if (status === 'created')
     return 'Создан'
@@ -197,11 +128,6 @@ async function resumeStatus(item: any) {
     selectFilterDate({ value: sortPage.value })
   }
 }
-function removeProduct() {
-  productData.value = null
-  url.value = ''
-  amount.value = 0
-}
 
 onMounted(() => {
   if (route.query.modalShow) {
@@ -214,11 +140,6 @@ onMounted(() => {
 
 const reviewRemoveModalClose: any = ref(null)
 const idForRemove = ref('')
-function openRemoveReviewModal(id: any, name: any) {
-  idForRemove.value = id
-  reviewRemoveModalClose.value?.click()
-}
-
 async function deleteLike() {
   const { data, error } = await useFetch(
     `/api/avito/productlikes/delete`,
@@ -243,17 +164,6 @@ async function deleteLike() {
   }
 }
 
-const currentFilter = ref('')
-function changePage(filter: string) {
-  currentFilter.value = filter
-}
-function closeModal(event: MouseEvent) {
-  if ((event.target as HTMLElement).classList.contains('modalCustom')) {
-    modalShow.value = false
-    currentFilter.value = ''
-  }
-}
-
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
     sortPageDate.value = e.value
@@ -268,11 +178,7 @@ async function selectFilterDate(e: any, date?: boolean) {
   await getProductLikes()
 }
 
-async function changeFilter(e: any) {
-  mpStore.changeMp(e.value, 'productlikes')
-}
-
-async function findBuyouts(value: string, type: string) {
+async function findBuyouts(value: string) {
   product_likes.value = []
   skip.value = 0
   end.value = false
@@ -289,8 +195,7 @@ async function findBuyouts(value: string, type: string) {
 
 const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
 
-async function onSearchInput(event: Event) {
-  const newValue = (event.target as HTMLInputElement).value
+async function onSearchInput() {
   search.loading = true
   findBuyoutsDebounced(search.text, search.type)
 }
@@ -306,6 +211,24 @@ function updateSearchType(filter: any) {
       @close-modal="modalShow = false"
       @create="getProductLikes()"
     />
+
+    <div class="breadcrumbs text-sm mt-8">
+      <ul class="font-medium text-[18px] text-[#909090]">
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+            Маркетплейсы
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer">
+          <NuxtLink to="/catalog/avito" class="cursor-pointer text-[#909090]">
+            Avito
+          </NuxtLink>
+        </li>
+        <li class="cursor-pointer text-[#1e2734]">
+          Лайки на товар
+        </li>
+      </ul>
+    </div>
 
     <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full mt-4">
       <div class="flex gap-2 ">
@@ -361,7 +284,7 @@ function updateSearchType(filter: any) {
               type="text"
               class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
               placeholder="Поиск по лайкам"
-              @input="onSearchInput($event)"
+              @input="onSearchInput()"
             >
             <span
               v-if="search.loading"
@@ -571,30 +494,29 @@ function updateSearchType(filter: any) {
     </div>
 
     <Hero v-else />
-  </div>
-
-  <input id="reviewRemoveModal" type="checkbox" class="modal-toggle">
-  <div class="modal">
-    <div class="modal-box max-w-xs">
-      <h3 class="font-normal text-lg text-center">
-        Вы уверены, что хотитет удалить лайки к данному товару?
-      </h3>
-      <p class="py-2" />
-      <div class="modal-action flex justify-between">
-        <label
-          ref="reviewRemoveModalClose"
-          for="reviewRemoveModal"
-          class="btn btn-primary"
-        >Отмена</label>
-        <label
-          for="reviewRemoveModal"
-          class="btn btn-error text-white"
-          @click="deleteLike"
-        >Удалить</label>
+    <input id="reviewRemoveModal" type="checkbox" class="modal-toggle">
+    <div class="modal">
+      <div class="modal-box max-w-xs">
+        <h3 class="font-normal text-lg text-center">
+          Вы уверены, что хотитет удалить лайки к данному товару?
+        </h3>
+        <p class="py-2" />
+        <div class="modal-action flex justify-between">
+          <label
+            ref="reviewRemoveModalClose"
+            for="reviewRemoveModal"
+            class="btn btn-primary"
+          >Отмена</label>
+          <label
+            for="reviewRemoveModal"
+            class="btn btn-error text-white"
+            @click="deleteLike"
+          >Удалить</label>
+        </div>
       </div>
     </div>
+    <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
   </div>
-  <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
 </template>
 
 <style scoped>
