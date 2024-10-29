@@ -240,7 +240,7 @@ const updateSearchType = (filter: any) => {
           { title: 'Ozon', value: 'ozon' },
           { title: 'Wildberries', value: 'wildberries' },
           { title: 'Avito', value: 'avito' },
-          { title: 'Flowwow', value: 'flowwow' },
+          // { title: 'Flowwow', value: 'flowwow' },
         ]" @change-value="selectMp" />
         <CustomSelect :class="'bg-[#f4f4f4] sm:min-w-[120px]'" :tabs="[
           { title: 'Все', value: 'all' },

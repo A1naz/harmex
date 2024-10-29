@@ -22,12 +22,12 @@ const mps = [
     category: 'товары и отели',
     awaiting: true,
   },
-  {
-    title: 'Flowwow',
-    value: 'flowwow',
-    category: 'товары',
-    awaiting: true,
-  },
+  // {
+  //   title: 'Flowwow',
+  //   value: 'flowwow',
+  //   category: 'товары',
+  //   awaiting: true,
+  // },
   {
     title: 'Магнит Маркет',
     value: 'magnitMarket',

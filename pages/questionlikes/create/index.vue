@@ -26,12 +26,12 @@ const mps = [
     awaiting: store.client.username == 'test' ? false : true,
     other: true,
   },
-  {
-    title: 'Flowwow',
-    value: 'flowwow',
-    category: 'товары',
-    awaiting: true,
-  },
+  // {
+  //   title: 'Flowwow',
+  //   value: 'flowwow',
+  //   category: 'товары',
+  //   awaiting: true,
+  // },
   {
     title: 'Магнит Маркет',
     value: 'magnitMarket',
