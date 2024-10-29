@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { notify } from '@kyvg/vue3-notification'
+
 definePageMeta({ auth: false, layout: 'app' })
 
 const menuItems = ref(['Маркетплейсы', 'Отели'])
@@ -26,6 +28,63 @@ const bouncedGet = useDebounceFn(getServices, 250)
 watch(selectedType, () => {
   bouncedGet()
 })
+
+const favourites = ref([]) as any
+const loadingFavourites = ref(true)
+async function getFavourites() {
+  try {
+    const response: any = await $fetch('/api/user/favourites', {
+      method: 'GET',
+    })
+    if (response?.favourites) {
+      favourites.value = response.favourites
+    }
+  }
+  catch (err) {
+    notify({
+      type: 'error',
+      title: 'Ошибка загрузки избранного',
+      text: err.message,
+    })
+  }
+  finally {
+    loadingFavourites.value = false
+  }
+}
+getFavourites()
+
+async function setFavourites(path: string) {
+  try {
+    loadingFavourites.value = true
+    if (favourites.value.includes(path)) {
+      favourites.value = favourites.value.filter((item: string) => item !== path)
+    }
+    else {
+      favourites.value.push(path)
+    }
+
+    await $fetch('/api/user/setFavourite', {
+      method: 'POST',
+      body: {
+        favourites: favourites.value,
+      },
+    })
+    notify({
+      type: 'success',
+      title: 'Избранное обновлено',
+    })
+  }
+  catch (err) {
+    notify({
+      type: 'error',
+      title: 'Ошибка при обновлении избранного',
+      text: err.message,
+    })
+  }
+  finally {
+    loadingFavourites.value = false
+  }
+}
 </script>
 
 <template>
@@ -36,16 +95,15 @@ watch(selectedType, () => {
     <div v-if="loading" class="hero -mt-80 text-[#bdc8fc]">
       <span class="loading loading-dots loading-lg text-primary" />
     </div>
-
     <div class="px-10">
       <div class="breadcrumbs text-sm ml-3">
         <ul class="font-medium text-[18px] text-[#909090]">
-          <li class="cursor-pointer" v-if="!loading">
+          <li v-if="!loading" class="cursor-pointer">
             Каталог
           </li>
         </ul>
       </div>
-      <CatalogContent v-if="!loading" :items="socialNetworks" />
+      <CatalogContent v-if="!loading" :items="socialNetworks" :favourites="favourites" @set-favourites="setFavourites" />
     </div>
   </div>
 </template>

@@ -4,29 +4,54 @@ defineProps({
     type: Array as () => Array<any>,
     default: () => [],
   },
+  favourites: {
+    type: Array as () => Array<any>,
+    default: () => [],
+  },
   type: {
     type: String,
     default: 'Маркетплейсы',
   },
 })
+
+defineEmits(['setFavourites'])
 </script>
 
 <template>
   <main class="flex-1 mx-3">
     <h1 class="text-2xl font-bold mb-6" />
     <div class="flex flex-wrap gap-5 w-full justify-start">
-      <div v-for="(social, index) in items" :key="index" class="border rounded-lg shadow-md w-[360px] p-3 relative">
-        <div class="flex">
-          <!-- Контейнер для изображения и текста "Ожидается" -->
+      <div
+        v-for="(social, index) in items"
+        :key="index"
+        class="card border rounded-lg shadow-md w-[360px] p-3 relative"
+      >
+        <div class="flex w-full">
           <div class="flex items-center justify-center relative w-[170px] h-[170px]">
             <NuxtImg :src="social.mainImage" :alt="social.name" class="w-full" />
-            <!-- Отображаем надпись, если social.disabled -->
             <div v-if="social.disabled" class="overlay">
               Ожидается
             </div>
           </div>
-
           <div class="pl-4">
+            <button
+              v-if="!social.disabled"
+              class="heart-btn absolute top-2 right-2"
+              @click="$emit('setFavourites', `/catalog/${social.slug}`)"
+            >
+              <IconCSS
+                v-if="favourites.includes(`/catalog/${social.slug}`)"
+                name="solar:heart-bold"
+                class="text-[#1b38ca]"
+                size="21"
+              />
+              <IconCSS
+                v-else
+                name="solar:heart-outline"
+                class="text-[#c8c8c8] heart-outline"
+                size="20"
+              />
+            </button>
             <h2 class="text-[15px] font-semibold">
               {{ social.name }}
             </h2>
@@ -39,8 +64,9 @@ defineProps({
               </li>
             </ul>
             <NuxtLink
-              v-if="!social.disabled" :to="`/catalog/${social.slug}`"
-              class="text-[16px] absolute font-medium cursor-pointer bottom-2"
+              v-if="!social.disabled"
+              :to="`/catalog/${social.slug}`"
+              class="text-[16px] absolute font-medium cursor-pointer bottom-2 hover:text-[#F72585]"
             >
               Смотреть все
               <Icon class="text-[#F72585] -mt-0.5" name="jam:arrow-right" size="18px" />
@@ -60,11 +86,18 @@ defineProps({
   transform: translate(-50%, -50%) rotate(-45deg);
   font-size: 36px;
   color: rgba(0, 0, 0, 0.35);
-  /* Полупрозрачный цвет */
   font-weight: bold;
   white-space: nowrap;
   z-index: 10;
   pointer-events: none;
-  /* Чтобы текст не блокировал клики */
+}
+
+.heart-outline {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover .heart-outline {
+  opacity: 1;
 }
 </style>

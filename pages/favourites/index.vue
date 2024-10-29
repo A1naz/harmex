@@ -12,66 +12,48 @@ const modalShow = ref(false)
 const currentItem = ref({}) as any
 const userFavourites = ref([]) as any
 
-const favourites = ref<any>([
-  {
-    uuid: '1',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/1.png',
-  },
-  {
-    uuid: '2',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/2.png',
-  },
-  {
-    uuid: '3',
-    title: 'Продвижение Телеграм',
-    image: '/img/favourites/3.png',
-  },
-  {
-    uuid: '4',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/4.png',
-  },
-  {
-    uuid: '5',
-    title: 'Аудитория',
-    image: '/img/favourites/5.png',
-  },
-  {
-    uuid: '6',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/6.png',
-  },
-  {
-    uuid: '7',
-    title: 'Услуги',
-    image: '/img/favourites/7.png',
-  },
-  {
-    uuid: '8',
-    title: 'Продвижение аккаунтов',
-    image: '/img/favourites/8.png',
-  },
-  {
-    uuid: '9',
-    title: 'Продвижение бизнеса',
-    image: '/img/favourites/9.png',
-  },
-  {
-    uuid: '10',
-    title: 'Продвижение блогеров',
-    image: '/img/favourites/10.png',
-  },
-])
+const favourites = ref<any>([])
+
+async function getServices() {
+  loading.value = true
+  const { data }: any = await useFetch('/api/catalog/get', {
+    method: 'GET',
+    params: {
+      type: 'Маркетплейсы',
+    },
+  })
+
+  if (data.value) {
+    favourites.value = data.value.services.map((favItem: any) => {
+      return {
+        path: `/catalog/${favItem.slug}`,
+        title: favItem.name,
+        image: favItem.mainImage,
+        items: favItem.items.map((item: any) => {
+          return {
+            path: `/${favItem.slug}${item.path}`,
+            title: item.title,
+            image: favItem.mainImage,
+          }
+        }),
+        disabled: favItem.disabled,
+      }
+    })
+  }
+  console.log('favourites', favourites.value)
+
+  loading.value = false
+}
+
+// getServices()
 
 function changeMode() {
   editMode.value = !editMode.value
-  if (!editMode.value) {
-    userFavourites.value = favourites.value.filter((fav: any) =>
-      userFavourites.value.some((userFav: any) => userFav.uuid === fav.uuid)
-    )
-  }
+  // if (!editMode.value) {
+  //   userFavourites.value = favourites.value.filter((fav: any) =>
+  //     userFavourites.value.some((userFav: any) => userFav.uuid === fav.uuid),
+  //   )
+  // }
 }
 
 async function getFavourites() {
@@ -90,30 +72,48 @@ async function getFavourites() {
     })
   if (response) {
     const userFavsUUIDs = response.data.value.favourites
-    userFavourites.value = favourites.value.filter((item: any) =>
-      userFavsUUIDs.includes(item.uuid)
-    )
+    console.log('userFavsUUIDs', response.data.value.favourites)
+    userFavourites.value = response.data.value.favourites
   }
   loading.value = false
 }
 
-getFavourites()
+async function fetchData() {
+  await getServices()
+  await getFavourites()
+}
 
-async function setFavourite(uuid: string) {
+fetchData()
+
+async function setFavourite(path: string) {
   loading.value = true
-  if (userFavourites.value.some((fav: any) => fav.uuid === uuid)) {
+
+  if (!favourites.value.length) {
+    console.warn('No items in favourites.')
+    loading.value = false
+    return
+  }
+
+  const foundItem = favourites.value.find((item: any) => item.path === path)
+
+  if (userFavourites.value.some((fav: any) => fav.path === path)) {
     userFavourites.value = userFavourites.value.filter(
-      (item: any) => item.uuid !== uuid
-    )
-  } else {
-    userFavourites.value.push(
-      favourites.value.find((item: any) => item.uuid === uuid)
+      (item: any) => item.path !== path,
     )
   }
+  else {
+    if (foundItem) {
+      userFavourites.value.push(foundItem)
+    }
+    else {
+      console.warn(`Item with path ${path} not found in favourites.`)
+    }
+  }
+
   const response = await useFetch('/api/user/setFavourite', {
     method: 'POST',
     body: {
-      favourites: userFavourites.value.map((item: any) => item.uuid),
+      favourites: userFavourites.value.map((item: any) => item.path),
     },
     watch: false,
   })
@@ -156,8 +156,8 @@ async function getAccesses() {
     })
   if (response) {
     accesses.value = response.data.value?.acesses
-    quickAccesses.value = items.filter((item) =>
-      response.data.value?.quickAccesses.includes(item.path)
+    quickAccesses.value = items.filter(item =>
+      response.data.value?.quickAccesses.includes(item.path),
     )
   }
 }
@@ -194,7 +194,6 @@ async function saveAccesses(availableAccesses: any, quick: any) {
     quickAccessModal.value = false
   }
 }
-
 
 const items: Array<{
   title: string
@@ -242,9 +241,21 @@ const items: Array<{
 
 if (user.value) {
   getAccesses()
-} else {
+}
+else {
   quickAccesses.value = items
   accessesLoading.value = false
+}
+
+function updateFavourites(uuid: string, items: any) {
+  const index = favourites.value.findIndex((item: any) => item.uuid === uuid)
+  if (index === -1) {
+    return
+  }
+
+  const updatedFavourite = { ...favourites.value[index], items }
+
+  favourites.value.splice(index, 1, updatedFavourite)
 }
 </script>
 
@@ -261,37 +272,49 @@ if (user.value) {
       />
     </section>
 
-    <div class="-ml-40 mt-3 h-[1px] w-[200%] bg-[#BDC8FC]"></div>
+    <div class="-ml-40 mt-3 h-[1px] w-[200%] bg-[#BDC8FC]" />
     <section class="my-5 flex flex-col gap-6">
       <button
-        @click="router.back()"
         class="flex items-center justify-start text-[14px] hover:text-[#1b38ca]"
+        @click="router.back()"
       >
         <Icon name="solar:alt-arrow-left-outline" size="22px" />
         <span>Назад</span>
       </button>
       <div class="flex flex-col gap-6">
         <div class="flex gap-5">
-          <h1 class="text-[22px] font-[600]">Избранное</h1>
+          <h1 class="text-[22px] font-[600]">
+            Избранное
+          </h1>
           <button
-            @click="changeMode"
             class="flex items-center justify-start text-[12px] text-[#909090] hover:text-[#1b38ca]"
+            @click="changeMode"
           >
             {{ editMode ? 'Сохранить' : 'Изменить' }}
           </button>
         </div>
-        <FavouritesDraggedCards
-          v-if="!loading || editMode"
-          :favourites="favourites"
-          :userFavourites="userFavourites"
-          :editMode="editMode"
-          :loading="loading"
-          @delete=";[currentItem, modalShow] = [$event, true]"
-          @update:favourites="favourites = $event"
-          @set="setFavourite($event.uuid)"
-        />
+
+        <div
+          v-for="item in favourites.filter((fav: any) =>
+            editMode ? !fav.disabled : userFavourites.some((userFav: any) =>
+              fav.items && fav.items.some((favItem: any) => favItem.path === userFav),
+            ),
+          )"
+          v-if="!loading || editMode" :key="item.path"
+        >
+          {{ item.items }}
+          <FavouritesDraggedCards
+            :favourites="item.items"
+            :user-favourites="userFavourites"
+            :edit-mode="editMode"
+            :loading="loading"
+            @delete=";[currentItem, modalShow] = [$event, true]"
+            @update:favourites="updateFavourites(item.uuid, $event)"
+            @set="setFavourite($event.path)"
+          />
+        </div>
         <div v-else-if="loading && !editMode" class="hero">
-          <span class="loading loading-spinner loading-lg bg-[#1b38ca]"></span>
+          <span class="loading loading-spinner loading-lg bg-[#1b38ca]" />
         </div>
         <div v-if="userFavourites.length === 0 && !editMode" class="hero">
           <span class="">Сохраните услуги для их отображения</span>
@@ -305,7 +328,7 @@ if (user.value) {
     @close="modalShow = false"
     @delete="
       favourites = favourites.filter(
-        (item: any) => item.uuid !== currentItem.uuid
+        (item: any) => item.uuid !== currentItem.uuid,
       )
     "
   />

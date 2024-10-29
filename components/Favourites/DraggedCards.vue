@@ -2,7 +2,7 @@
 import { VueDraggable } from 'vue-draggable-plus'
 
 interface Favourites {
-  uuid: string
+  path: string
   image: string
   title: string
 }
@@ -18,13 +18,13 @@ const emit = defineEmits(['close', 'delete', 'update:favourites', 'set'])
 const currentIndex = ref(0)
 const favourites = ref(props.favourites) as any
 
-const setFavourites = (item: any, index: number) => {
+function setFavourites(item: any, index: number) {
   currentIndex.value = index
 
   emit('set', item)
 }
 
-const handleUpdate = (newFavourites: Favourites[]) => {
+function handleUpdate(newFavourites: Favourites[]) {
   emit('update:favourites', newFavourites)
 }
 </script>
@@ -41,7 +41,7 @@ const handleUpdate = (newFavourites: Favourites[]) => {
     <TransitionGroup type="transition" tag="ul" name="fade" class="sort-target">
       <li
         v-for="(item, index) in editMode ? favourites : props.userFavourites"
-        :key="item.uuid"
+        :key="item.path"
         class="relative flex h-[164px] w-[147px] flex-col gap-1 rounded-[5px] border border-[#EDEDED] bg-white p-3 text-[14px]"
         :class="{ 'cursor-grab': editMode }"
       >
@@ -54,27 +54,27 @@ const handleUpdate = (newFavourites: Favourites[]) => {
           />
           <div v-if="editMode" class="absolute -right-2 -top-2.5 flex gap-1.5">
             <button
-              @click="$emit('delete', item)"
               class="flex h-6 w-6 items-center justify-center rounded-full border border-[#1b38ca] bg-white text-[#1b38ca]"
+              @click="$emit('delete', item)"
             >
               <Icon name="ic:baseline-minus" size="14px" />
             </button>
             <button
-              @click="setFavourites(item, index)"
               class="flex h-6 w-6 items-center justify-center rounded-full border"
-              :class="`${
-                Array.isArray(props.userFavourites) &&
-                props.userFavourites.some((fav: any) => fav.uuid === item.uuid)
-                ? 'border-white bg-[#1b38ca] text-white'
-                  : ' border-[#1b38ca] bg-white text-[#1b38ca]'
-              }`"
+              :class="{
+                'border-white bg-[#1b38ca] text-white': Array.isArray(props.userFavourites) && props.userFavourites.some(fav => fav?.path === item?.path),
+                'border-[#1b38ca] bg-white text-[#1b38ca]': !(Array.isArray(props.userFavourites) && props.userFavourites.some(fav => fav?.path === item?.path)),
+              }"
+              @click="setFavourites(item, index)"
             >
               <Icon name="ri:pushpin-line" size="16px" />
             </button>
           </div>
           {{}}
         </div>
-        <div class="ml-[5px] text-sm font-medium">{{ item.title }}</div>
+        <div class="ml-[5px] text-sm font-medium">
+          {{ item.title }}
+        </div>
         <!-- <div v-if="loading && currentIndex === index" class="absolute flex justify-center top-10 right-8 bg-[#1b38ca] loading loading-spinner w-1/2 mx-auto"></div> -->
       </li>
     </TransitionGroup>
