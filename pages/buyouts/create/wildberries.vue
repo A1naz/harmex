@@ -213,6 +213,13 @@ async function openChecksModal() {
       valid = false
       errorMsg = 'Выберите точную дату для выкупа под ключ ' + item.article
     }
+
+    item.searchQuery.forEach((query: any) => {
+      if (query.value.length > 50) {
+        valid = false
+        errorMsg = 'Максимальная длина 1 поискового запроса 50 символов'
+      }
+    })
   })
 
   if (!valid) {
