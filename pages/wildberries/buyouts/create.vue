@@ -2,8 +2,9 @@
 import type { Rule } from '@/data/buyout/rules'
 import type { ISearchQueryChange } from '@/stores/wildberriesBuyout'
 import { rules } from '@/data/buyout/rules'
-const { notify } = useNotification();
 import { useWindowSize } from '@vueuse/core'
+
+const { notify } = useNotification()
 
 const closeWarningModal = ref(null) as Ref<HTMLLabelElement | null>
 const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>

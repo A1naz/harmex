@@ -365,12 +365,12 @@ function startTimer() {
       class="flex flex-col bg-base-100 rounded-lg w-full max-w-lg  gap-5 p-4"
     >
       <div class="flex justify-end">
-        <i18n-link
+        <NuxtLink
           to="/ozon/questionlikes"
           class="text-gray-500 hover:text-gray-700 self-end"
         >
           <Icon name="material-symbols:close-rounded" size="24" />
-        </i18n-link>
+        </NuxtLink>
       </div>
       <div class="bg-base-100 rounded-lg">
         <div class="flex flex-wrap items-center gap-6 mb-2">

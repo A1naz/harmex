@@ -28,9 +28,9 @@ defineProps({
       </span>
       • 5.0
     </p>
-    <i18n-link :to="`/${item.slug}${item.items[index].path}`" class="btn bg-[#F5F7FF] w-full rounded-xl">
+    <NuxtLink :to="`/${item.slug}${item.items[index].path}`" class="btn bg-[#F5F7FF] w-full rounded-xl">
       {{ item.unavailable ? 'Предзаказ' : 'Выбрать' }}
-    </i18n-link>
+    </NuxtLink>
   </div>
 </template>
 

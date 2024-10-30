@@ -80,9 +80,10 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     'radix-vue/nuxt',
     'shadcn-nuxt',
-    'nuxt-i18n-micro',
     '@nuxt/eslint',
     '@bg-dev/nuxt-s3',
+    '@nuxtjs/i18n',
+    // '@nuxtjs/seo',
   ],
   eslint: {
     config: {
@@ -223,20 +224,18 @@ export default defineNuxtConfig({
   },
 
   i18n: {
-    translationDir: 'locales',
-    meta: true,
     locales: [
-      {
-        code: 'ru',
-        dir: 'ltr',
-      },
-      {
-        code: 'en',
-        dir: 'ltr',
-      },
+      { code: 'en', language: 'en-US', dir: 'ltr', file: 'en.json' },
+      { code: 'ru', language: 'ru-RU', dir: 'ltr', file: 'ru.json' },
     ],
     defaultLocale: 'ru',
+    langDir: 'locales',
+    lazy: true,
   },
+  // robots: {
+  //   autoI18n: false,
+  // },
+
   ssr: true,
 
   compatibilityDate: '2024-10-04',

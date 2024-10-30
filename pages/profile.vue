@@ -3,6 +3,7 @@
 
 definePageMeta({ title: 'Профиль', layout: 'app' })
 const { loggedIn, user, fetch, clear } = useUserSession()
+const { setLocale } = useI18n()
 const router = useRouter()
 if (!loggedIn || !user)
   router.push('/auth?redirect=/profile')
@@ -11,12 +12,14 @@ async function logout() {
   router.push('/')
 }
 
-const { $switchLocale, $t } = useNuxtApp()
+// const { $switchLocale, $t } = useNuxtApp()
 
 // const availableLocales = computed(() => {
 //   return locales.value.filter((i) => i.code !== locale.value);
 // });
 
+const { notify } = useNotification()
+const persistStore = usePersistedStore()
 const twoFaQRModal = ref<any>(null)
 const twoFaShow = ref(false)
 const isTwoFaEnabled = ref(user.value?.isTwoFaEnabled || false)
@@ -166,10 +169,14 @@ async function updatePassword() {
   passwordForm.newPassword = ''
 }
 
-function swapLanguage(e: any) {
-  form.language = e.value
-  $switchLocale(e.value)
+function swapLanguage(_e: any) {
+  // form.language = e.value
+  // $switchLocale(e.value)
 }
+
+watch(() => persistStore.language, (newLanguage) => {
+  setLocale(newLanguage)
+})
 </script>
 
 <template>
@@ -177,7 +184,7 @@ function swapLanguage(e: any) {
     <div>
       <div class="flex flex-col gap-12 py-6 md:gap-6 md:py-4">
         <h1 class="text-xl font-semibold">
-          {{ $t("profile") }}
+          <!-- {{ $t("profile") }} -->
         </h1>
         <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
           <h2 class="text-lg font-medium">
@@ -195,7 +202,7 @@ function swapLanguage(e: any) {
             </div>
             <div class="flex flex-col gap-1">
               <p class="text-xs font-medium text-blue-800">
-                {{ $t("Номер телефона") }}
+                <!-- {{ $t("Номер телефона") }} -->
               </p>
               <input
                 v-model="form.phoneNumber" readonly placeholder="Номер телефона"
@@ -240,7 +247,7 @@ function swapLanguage(e: any) {
                 <p class="text-xs font-medium text-blue-800">
                   Язык
                 </p>
-                <custom-select
+                <!-- <custom-select
                   :tabs="[
                     {
                       title: 'Русский',
@@ -253,7 +260,8 @@ function swapLanguage(e: any) {
                       images: '/icons/figma/profile/usaFlag.svg',
                     },
                   ]" @change-value="(e: any) => swapLanguage(e)"
-                />
+                /> -->
+                <ProfileLanguageSelect />
               </div>
               <div class="flex flex-col gap-1">
                 <p class="text-xs font-medium text-blue-800">
