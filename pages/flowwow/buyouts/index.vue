@@ -450,7 +450,7 @@ async function removeBuyout() {
               ]"
               @change-value="selectFilterDate"
             />
-
+            <!--
             <CustomSelect
               class="h-[2rem] bg-[#f4f4f4] min-w-[100px]"
               :tabs="[
@@ -459,7 +459,7 @@ async function removeBuyout() {
                 { title: 'Имя', value: 'name' },
               ]"
               @change-value="updateSearchType"
-            />
+            /> -->
           </div>
           <div class="absolute right-0 top-0 w-[calc(100%-40px)] lg:w-fit lg:static">
             <label class="w-full flex bg-[#ececed] rounded-lg items-center">
@@ -468,7 +468,7 @@ async function removeBuyout() {
                 v-model="search.text"
                 type="text"
                 class="input input-sm border-none bg-transparent  dark:bg-base-300 dark:bg-opacity-40 w-full lg:w-11/12"
-                placeholder="Поиск по товарам"
+                placeholder="артикул, id, наименование товара"
                 @input="onSearchInput()"
               >
               <span
