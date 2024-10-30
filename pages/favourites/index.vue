@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { notify } from '@kyvg/vue3-notification'
 
-definePageMeta({ layout: 'app', middleware: 'auth' })
+definePageMeta({ layout: 'app' })
 
 const { user } = useUserSession()
 
@@ -13,6 +13,58 @@ const currentItem = ref({}) as any
 const userFavourites = ref([]) as any
 
 const favourites = ref<any>([])
+const favouritesPaths = ref([])
+
+const accessesLoading = ref(true)
+const quickAccessModal = ref(false)
+const accesses = ref([]) as any
+const quickAccesses = ref({}) as any
+const loadingSetFavourite = ref(false)
+const currentMp = ref('')
+
+const items: Array<{
+  title: string
+  icon: string
+  path: string
+  value?: boolean
+}> = [
+  {
+    title: 'Финансы',
+    icon: 'solar:wallet-money-outline',
+    path: '/paymenthistory',
+    value: true,
+  },
+  {
+    title: 'Партнерка',
+    icon: 'solar:users-group-rounded-outline',
+    path: '/partner',
+    value: false,
+  },
+  {
+    title: 'Пополнение ',
+    icon: 'solar:alarm-outline',
+    path: '/balance',
+    value: false,
+  },
+  {
+    title: 'Заказы',
+    icon: 'solar:bag-4-outline',
+    path: '/orders',
+    value: false,
+  },
+  {
+    title: 'Вывод',
+    icon: 'solar:plain-outline',
+    path: '/withdraw',
+    value: false,
+  },
+  {
+    title: 'Команда',
+    icon: 'solar:heart-outline',
+    path: '/team',
+    value: false,
+  },
+]
 
 async function getServices() {
   loading.value = true
@@ -40,7 +92,6 @@ async function getServices() {
       }
     })
   }
-  console.log('favourites', favourites.value)
 
   loading.value = false
 }
@@ -61,81 +112,80 @@ async function getFavourites() {
   const response: any = await useFetch('/api/user/favourites', {
     method: 'GET',
     watch: false,
-  })
-    .catch((err) => {
-      notify({
-        type: 'error',
-        title: 'Не получить доступы',
-        text: err.data.message || err.message,
-      })
-      loading.value = false
+  }).catch((err) => {
+    notify({
+      type: 'error',
+      title: 'Не получить доступы',
+      text: err.data.message || err.message,
     })
+    loading.value = false
+  })
+
   if (response) {
     const userFavsUUIDs = response.data.value.favourites
-    console.log('userFavsUUIDs', response.data.value.favourites)
-    userFavourites.value = response.data.value.favourites
+    favouritesPaths.value = userFavsUUIDs
+
+    userFavourites.value = favourites.value
+      .map((fav: any) => {
+        const filteredItems = fav.items.filter((favItem: any) =>
+          userFavsUUIDs.includes(favItem.path),
+        )
+
+        if (filteredItems.length > 0) {
+          filteredItems.sort((a: any, b: any) => {
+            const indexA = userFavsUUIDs.indexOf(a.path)
+            const indexB = userFavsUUIDs.indexOf(b.path)
+            return indexA - indexB
+          })
+
+          return { ...fav, items: filteredItems }
+        }
+      })
+      .filter(Boolean)
   }
+
   loading.value = false
 }
 
 async function fetchData() {
-  await getServices()
-  await getFavourites()
+  await Promise.all([getServices(), getFavourites()])
 }
 
-fetchData()
+async function setFavourite(fav: any) {
+  if (fav.path.includes('catalog'))
+    currentMp.value = fav.path.replace('/catalog/', '')
 
-async function setFavourite(path: string) {
-  loading.value = true
+  loadingSetFavourite.value = true
 
-  if (!favourites.value.length) {
-    console.warn('No items in favourites.')
-    loading.value = false
-    return
-  }
-
-  const foundItem = favourites.value.find((item: any) => item.path === path)
-
-  if (userFavourites.value.some((fav: any) => fav.path === path)) {
-    userFavourites.value = userFavourites.value.filter(
-      (item: any) => item.path !== path,
-    )
+  const allPaths = favouritesPaths.value
+  if (allPaths.includes(fav.path)) {
+    allPaths.splice(allPaths.indexOf(fav.path), 1)
   }
   else {
-    if (foundItem) {
-      userFavourites.value.push(foundItem)
-    }
-    else {
-      console.warn(`Item with path ${path} not found in favourites.`)
-    }
+    allPaths.push(fav.path)
   }
-
   const response = await useFetch('/api/user/setFavourite', {
     method: 'POST',
     body: {
-      favourites: userFavourites.value.map((item: any) => item.path),
+      favourites: allPaths,
     },
     watch: false,
-  })
-    .catch((err) => {
-      notify({
-        type: 'error',
-        title: 'Не удалось получить избранное',
-        text: err.data.message || err.message,
-      })
-      loading.value = false
+  }).catch((err) => {
+    notify({
+      type: 'error',
+      title: 'Не удалось обновить избранное',
+      text: err.data.message || err.message,
     })
+    loadingSetFavourite.value = false
+    currentMp.value = ''
+  })
 
   if (response) {
     await getFavourites()
   }
-  loading.value = false
+  loadingSetFavourite.value = false
+  currentMp.value = ''
 }
-
-const accessesLoading = ref(true)
-const quickAccessModal = ref(false)
-const accesses = ref([]) as any
-const quickAccesses = ref({}) as any
 
 async function getAccesses() {
   accessesLoading.value = true
@@ -195,50 +245,6 @@ async function saveAccesses(availableAccesses: any, quick: any) {
   }
 }
 
-const items: Array<{
-  title: string
-  icon: string
-  path: string
-  value?: boolean
-}> = [
-  {
-    title: 'Финансы',
-    icon: 'solar:wallet-money-outline',
-    path: '/paymenthistory',
-    value: true,
-  },
-  {
-    title: 'Партнерка',
-    icon: 'solar:users-group-rounded-outline',
-    path: '/partner',
-    value: false,
-  },
-  {
-    title: 'Пополнение ',
-    icon: 'solar:alarm-outline',
-    path: '/balance',
-    value: false,
-  },
-  {
-    title: 'Заказы',
-    icon: 'solar:bag-4-outline',
-    path: '/orders',
-    value: false,
-  },
-  {
-    title: 'Вывод',
-    icon: 'solar:plain-outline',
-    path: '/withdraw',
-    value: false,
-  },
-  {
-    title: 'Команда',
-    icon: 'solar:heart-outline',
-    path: '/team',
-    value: false,
-  },
-]
-
 if (user.value) {
   getAccesses()
 }
@@ -247,8 +253,8 @@ else {
   accessesLoading.value = false
 }
 
-function updateFavourites(uuid: string, items: any) {
-  const index = favourites.value.findIndex((item: any) => item.uuid === uuid)
+function updateFavourites(path: string, items: any) {
+  const index = favourites.value.findIndex((item: any) => item.path === path)
   if (index === -1) {
     return
   }
@@ -257,6 +263,8 @@ function updateFavourites(uuid: string, items: any) {
 
   favourites.value.splice(index, 1, updatedFavourite)
 }
+
+fetchData()
 </script>
 
 <template>
@@ -271,7 +279,6 @@ function updateFavourites(uuid: string, items: any) {
         @edit-click="quickAccessModal = true"
       />
     </section>
-
     <div class="-ml-40 mt-3 h-[1px] w-[200%] bg-[#BDC8FC]" />
     <section class="my-5 flex flex-col gap-6">
       <button
@@ -295,22 +302,48 @@ function updateFavourites(uuid: string, items: any) {
         </div>
 
         <div
-          v-for="item in favourites.filter((fav: any) =>
-            editMode ? !fav.disabled : userFavourites.some((userFav: any) =>
-              fav.items && fav.items.some((favItem: any) => favItem.path === userFav),
-            ),
-          )"
+          v-for="item in editMode ? favourites.filter((fav: any) => !fav.disabled) : userFavourites"
           v-if="!loading || editMode" :key="item.path"
+          class="flex gap-[1.5rem]"
         >
-          {{ item.items }}
+          <div
+            v-if="editMode || !editMode && favouritesPaths.includes(item.path)"
+            class="relative flex h-[164px] w-[147px] flex-col gap-1 rounded-[5px] border border-[#EDEDED] bg-white p-3 text-[14px]"
+            :class="{ 'cursor-grab': editMode }"
+          >
+            <div class="relative mt-[5px] flex justify-center">
+              <NuxtImg
+                :src="item.image"
+                width="105px"
+                height="84px"
+                class="w-full rounded-[5px]"
+              />
+              <div v-if="editMode" class="absolute -right-2 -top-2.5 flex gap-1.5">
+                <button
+                  class="flex h-6 w-6 items-center justify-center rounded-full border"
+                  :class="{
+                    'border-white bg-[#1b38ca] text-white': favouritesPaths.includes(item.path),
+                    'border-[#1b38ca] bg-white text-[#1b38ca]': !favouritesPaths.includes(item.path),
+                    'loading loading-spinner w-full bg-[#1b38ca] text-[#1b38ca] ': loadingSetFavourite && item.path === `/catalog/${currentMp}`,
+                  }"
+                  @click="setFavourite(item)"
+                >
+                  <Icon name="ri:pushpin-line" size="16px" />
+                </button>
+              </div>
+            </div>
+            <div class="ml-[5px] text-sm font-medium">
+              {{ item.title }}
+            </div>
+          </div>
           <FavouritesDraggedCards
             :favourites="item.items"
-            :user-favourites="userFavourites"
+            :user-favourites="editMode ? userFavourites : userFavourites.find((fav: any) => fav.path === item.path).items || []"
             :edit-mode="editMode"
-            :loading="loading"
+            :loading="loadingSetFavourite"
             @delete=";[currentItem, modalShow] = [$event, true]"
-            @update:favourites="updateFavourites(item.uuid, $event)"
-            @set="setFavourite($event.path)"
+            @update:favourites="updateFavourites(item.path, $event)"
+            @set="setFavourite($event)"
           />
         </div>
         <div v-else-if="loading && !editMode" class="hero">
@@ -320,25 +353,27 @@ function updateFavourites(uuid: string, items: any) {
           <span class="">Сохраните услуги для их отображения</span>
         </div>
       </div>
+      <FavouritesModal
+        :show="modalShow"
+        :item="currentItem"
+        @close="modalShow = false"
+        @delete="
+          favourites = favourites.filter(
+            (item: any) => item.uuid !== currentItem.uuid,
+          )
+        "
+      />
+      <MenuQuickAccessModal
+        :accesses="accesses"
+        :quick-accesses="quickAccesses"
+        :show="quickAccessModal"
+        @save="saveAccesses"
+        @close="quickAccessModal = false"
+      />
     </section>
   </div>
-  <FavouritesModal
-    :show="modalShow"
-    :item="currentItem"
-    @close="modalShow = false"
-    @delete="
-      favourites = favourites.filter(
-        (item: any) => item.uuid !== currentItem.uuid,
-      )
-    "
-  />
-  <MenuQuickAccessModal
-    :accesses="accesses"
-    :quick-accesses="quickAccesses"
-    :show="quickAccessModal"
-    @save="saveAccesses"
-    @close="quickAccessModal = false"
-  />
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import { VueDraggable } from 'vue-draggable-plus'
 
-interface Favourites {
-  path: string
-  image: string
-  title: string
-}
-
 const props = defineProps({
   favourites: { type: Array<Favourites>, required: true },
   userFavourites: { type: Array<Favourites>, required: true },
@@ -15,12 +9,32 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close', 'delete', 'update:favourites', 'set'])
-const currentIndex = ref(0)
+
+definePageMeta({
+  middleware: 'auth',
+  layout: 'app',
+  title: 'Избранное',
+})
+
+interface Favourites {
+  path: string
+  image: string
+  title: string
+}
+
+const currentPath = ref('')
 const favourites = ref(props.favourites) as any
 
-function setFavourites(item: any, index: number) {
-  currentIndex.value = index
+watch(
+  () => props.favourites,
+  (newFavourites) => {
+    favourites.value = [...newFavourites]
+  },
+  { immediate: true },
+)
 
+function setFavourites(item: any, index: number) {
+  currentPath.value = item.path
   emit('set', item)
 }
 
@@ -52,18 +66,25 @@ function handleUpdate(newFavourites: Favourites[]) {
             height="84px"
             class="w-full rounded-[5px]"
           />
+
           <div v-if="editMode" class="absolute -right-2 -top-2.5 flex gap-1.5">
-            <button
+            <!-- <button
               class="flex h-6 w-6 items-center justify-center rounded-full border border-[#1b38ca] bg-white text-[#1b38ca]"
               @click="$emit('delete', item)"
             >
               <Icon name="ic:baseline-minus" size="14px" />
-            </button>
+            </button> -->
             <button
               class="flex h-6 w-6 items-center justify-center rounded-full border"
+              :disabled="currentPath === index && loading"
               :class="{
-                'border-white bg-[#1b38ca] text-white': Array.isArray(props.userFavourites) && props.userFavourites.some(fav => fav?.path === item?.path),
-                'border-[#1b38ca] bg-white text-[#1b38ca]': !(Array.isArray(props.userFavourites) && props.userFavourites.some(fav => fav?.path === item?.path)),
+                'border-white bg-[#1b38ca] text-white': props.userFavourites.some(fav =>
+                  fav.items && fav.items.some(favItem => favItem.path === item.path),
+                ),
+                'border-[#1b38ca] bg-white text-[#1b38ca]': !props.userFavourites.some(fav =>
+                  fav.items && fav.items.some(favItem => favItem.path === item.path),
+                ),
+                'loading loading-spinner w-full bg-[#1b38ca] text-[#1b38ca] ': currentPath === item.path && loading,
               }"
               @click="setFavourites(item, index)"
             >
@@ -75,7 +96,7 @@ function handleUpdate(newFavourites: Favourites[]) {
         <div class="ml-[5px] text-sm font-medium">
           {{ item.title }}
         </div>
-        <!-- <div v-if="loading && currentIndex === index" class="absolute flex justify-center top-10 right-8 bg-[#1b38ca] loading loading-spinner w-1/2 mx-auto"></div> -->
+        <!-- <div v-if="loading && currentPath === index" class="absolute flex justify-center top-10 right-8 bg-[#1b38ca] loading loading-spinner w-1/2 mx-auto"></div> -->
       </li>
     </TransitionGroup>
   </VueDraggable>
