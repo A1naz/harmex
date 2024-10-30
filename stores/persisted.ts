@@ -9,6 +9,7 @@ export const usePersistedStore = defineStore('persisted', {
     currency: 'RUB',
     activeDropdown: '',
     accessesLoading: false,
+    ref: null as string | null,
   }),
   actions: {
     updateLanguage(language: string) {
