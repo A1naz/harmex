@@ -163,36 +163,6 @@ async function saveAccesses(availableAccesses: any, quick: any) {
   }
 }
 
-async function getServices() {
-  // loading.value = true
-  const { data }: any = await useFetch('/api/catalog/get', {
-    method: 'GET',
-    params: {
-      type: 'Маркетплейсы',
-    },
-  })
-
-  if (data.value) {
-    favourites.value = data.value.services.map((favItem: any) => {
-      return {
-        path: `/catalog/${favItem.slug}`,
-        title: favItem.name,
-        image: favItem.mainImage,
-        items: favItem.items.map((item: any) => {
-          return {
-            path: `/${favItem.slug}${item.path}`,
-            title: item.title,
-            image: favItem.mainImage,
-          }
-        }),
-        disabled: favItem.disabled,
-      }
-    })
-  }
-
-  // loading.value = false
-}
-
 async function getFavourites() {
   // loading.value = true
   const response: any = await useFetch('/api/user/favourites', {
@@ -208,46 +178,19 @@ async function getFavourites() {
   })
 
   if (response) {
-    const userFavsUUIDs = response.data.value.favourites
-    // favouritesPaths.value = userFavsUUIDs
-
-    userFavourites.value = favourites.value
-      .map((fav: any) => {
-        const filteredItems = fav.items.filter((favItem: any) =>
-          userFavsUUIDs.includes(favItem.path),
-        )
-
-        if (filteredItems.length > 0) {
-          filteredItems.sort((a: any, b: any) => {
-            const indexA = userFavsUUIDs.indexOf(a.path)
-            const indexB = userFavsUUIDs.indexOf(b.path)
-            return indexA - indexB
-          })
-
-          return { ...fav, items: filteredItems }
-        }
-      })
-      .filter(Boolean)
+    userFavourites.value = response.data.value.favourites
 
     if (userFavourites.value.length === 0) {
-      userFavourites.value = favourites.value.filter((item: any) => !item.disabled)
-    }
-
-    if (
-      response.data.value.services
-      && response.data.value.services.length > 0
-    ) {
-      channels.value = channels.value.filter((item: any) =>
-        response.data.value.services.includes(item.uuid),
-      )
+      userFavourites.value = response.data.value.services
+        .map((item: any) => ({ path: `/catalog/${item.slug}`, title: item.name, image: item.mainImage, disabled: item.disabled }))
+        .filter((item: any) => !item.disabled)
     }
   }
 
   // loading.value = false
 }
-async function fetchData() {
-  await Promise.all([getServices(), getFavourites()])
-}
+getFavourites()
+
 function quickAccessShow() {
   if (!user.value) {
     notify({
@@ -258,8 +201,6 @@ function quickAccessShow() {
   }
   quickAccessModal.value = true
 }
-
-fetchData()
 </script>
 
 <template>
@@ -292,7 +233,7 @@ fetchData()
         />
       </div>
       <div class="w-full sm:w-1/2">
-        <MenuFavourites title="Услуги" to-all="/services" :items="channels" />
+        <MenuFavourites title="Топ поставщиков" to-all="/services" :items="channels" />
       </div>
     </section>
     <div class="mt-20 flex-col gap-5 text-center text-lg">

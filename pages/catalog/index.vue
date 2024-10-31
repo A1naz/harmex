@@ -3,6 +3,8 @@ import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({ auth: false, layout: 'app' })
 
+const { user } = useUserSession()
+
 const menuItems = ref(['Маркетплейсы', 'Отели'])
 const selectedType = ref('Маркетплейсы')
 const socialNetworks = ref([])
@@ -36,8 +38,8 @@ async function getFavourites() {
     const response: any = await $fetch('/api/user/favourites', {
       method: 'GET',
     })
-    if (response?.favourites) {
-      favourites.value = response.favourites
+    if (response?.favouritesPaths) {
+      favourites.value = response.favouritesPaths
     }
   }
   catch (err) {
@@ -54,12 +56,22 @@ async function getFavourites() {
 getFavourites()
 
 async function setFavourites(path: string) {
+  if (!user.value) {
+    notify({
+      type: 'error',
+      title: 'Необходима авторизация',
+    })
+    return
+  }
   try {
     loadingFavourites.value = true
     if (favourites.value.includes(path)) {
       favourites.value = favourites.value.filter((item: string) => item !== path)
     }
     else {
+      if (favourites.value.length >= 10) {
+        favourites.value.shift()
+      }
       favourites.value.push(path)
     }
 
