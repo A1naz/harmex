@@ -19,8 +19,11 @@ defineProps({
       </NuxtLink>
     </div> -->
     <div class="flex flex-wrap justify-center">
-      <div
+      <Nuxt-link
         v-for="item in items"
+        v-if="items.length && items.length > 0"
+        :key="item.id"
+        :to="item.path"
         class="bg-white text-[14px] w-[110px] h-[125px] ml-8 mt-5 rounded-xl mb-[15px]"
       >
         <div class="mt-[5px] flex justify-center">
@@ -33,6 +36,15 @@ defineProps({
         </div>
         <div class="text-sm font-medium ml-[5px]">
           {{ item.title }}
+        </div>
+      </Nuxt-link>
+      <div v-else class="hero">
+        <div class="hero-content text-center flex justify-center items-center h-80">
+          <div class="max-w-md">
+            <h1 class="text-3xl font-bold">
+              Здесь ничего нет
+            </h1>
+          </div>
         </div>
       </div>
     </div>

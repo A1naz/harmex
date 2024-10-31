@@ -49,46 +49,7 @@ const items: Array<{
 const favourites = ref<any>([])
 const userFavourites = ref([]) as any
 const channels = ref<any>([
-  {
-    uuid: '1',
-    title: 'Выкупы',
-    image: '/img/favourites/3.png',
-  },
-  {
-    uuid: '2',
-    title: 'Доставки',
-    image: '/img/favourites/3.png',
-  },
-  {
-    uuid: '3',
-    title: 'Отзывы',
-    image: '/img/favourites/3.png',
-  },
-  {
-    uuid: '4',
-    title: 'Лайки на товар',
-    image: '/img/favourites/3.png',
-  },
-  {
-    uuid: '5',
-    title: 'Лайки на бренд',
-    image: '/img/favourites/3.png',
-  },
-  {
-    uuid: '6',
-    title: 'Лайки на отзывы',
-    image: '/img/favourites/3.png',
-  },
-  {
-    uuid: '7',
-    title: 'Лайки на комментарии',
-    image: '/img/favourites/3.png',
-  },
-  {
-    uuid: '8',
-    title: 'Корзина',
-    image: '/img/favourites/3.png',
-  },
+
 ])
 
 const quickAccessModal = ref(false)
