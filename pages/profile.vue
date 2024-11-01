@@ -182,9 +182,10 @@ watch(() => persistStore.language, (newLanguage) => {
 <template>
   <div>
     <div>
-      <div class="flex flex-col gap-12 py-6 md:gap-6 md:py-4">
+      <div class="flex flex-col gap-8 py-6 md:gap-6 md:py-4">
         <h1 class="text-xl font-semibold">
           <!-- {{ $t("profile") }} -->
+          {{ 'Профиль' }}
         </h1>
         <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
           <h2 class="text-lg font-medium">
@@ -203,6 +204,7 @@ watch(() => persistStore.language, (newLanguage) => {
             <div class="flex flex-col gap-1">
               <p class="text-xs font-medium text-blue-800">
                 <!-- {{ $t("Номер телефона") }} -->
+                {{ 'Номер телефона' }}
               </p>
               <input
                 v-model="form.phoneNumber" readonly placeholder="Номер телефона"
@@ -305,13 +307,13 @@ watch(() => persistStore.language, (newLanguage) => {
           </div>
         </div>
 
-        <div class="flex flex-col gap-[20px] rounded-lg bg-[#f5f7ff] p-[14px]">
+        <div class="flex flex-col gap-[20px] rounded-lg bg-blue-50 p-4">
           <h2 class="text-[20px] font-[500]">
             Двухфакторная аутентификация
           </h2>
 
           <div class="form-control">
-            <label class="label cursor-pointer px-[18px]">
+            <label class="label cursor-pointer ">
               <span class="label-text mr-4">Включить двухфакторную аутентификацию</span>
 
               <input v-model="isTwoFaEnabled" type="checkbox" class="toggle toggle-primary" @change="openTwoFaQRModal">
@@ -337,7 +339,7 @@ watch(() => persistStore.language, (newLanguage) => {
                 </div>
               </div>
               <div class="form-control">
-                <label class="label cursor-pointer flex gap-2">
+                <label class="label cursor-pointer flex gap-2 text-gray-500 text-xs p-0 lg:py-2 lg:px-1">
                   <span class="hidden sm:inline">Включить все</span>
                   <input
                     type="checkbox" class="toggle" :checked="emailAlerts.value"
@@ -351,7 +353,7 @@ watch(() => persistStore.language, (newLanguage) => {
               <div v-if="emailAlerts.value" class="flex flex-col gap-3">
                 <div
                   v-for="(item, index) in emailAlerts.arr" :key="index"
-                  class="flex justify-between items-center w-full p-2 bg-white border border-t-0 last:mb-8 rounded-t-none rounded-b-md"
+                  class="flex justify-between items-center w-full p-2  bg-white border border-t-0 last:mb-8 rounded-t-none rounded-b-md"
                 >
                   <span class="text-sm font-normal">{{ item.title }}</span>
                   <label class="label cursor-pointer p-0">
@@ -361,27 +363,29 @@ watch(() => persistStore.language, (newLanguage) => {
               </div>
             </transition>
 
-            <div class="flex justify-between w-full">
-              <div class="flex gap-3">
-                <nuxt-img src="/icons/figma/profile/tg.svg" class="w-10 h-10" />
-                <div class="flex flex-col gap-1">
-                  <p class="text-sm font-normal">
-                    Telegram чат-бот
-                  </p>
-                  <p class="text-xs font-normal text-gray-500">
-                    Функции недоступны. Подключите Telegram-бот.
-                  </p>
+            <div class="flex justify-start w-full gap-3">
+              <nuxt-img src="/icons/figma/profile/tg.svg" class="w-10 h-10" />
+              <div class="flex gap-3 flex-col lg:flex-row lg:w-full">
+                <div class="flex gap-3">
+                  <div class="flex flex-col gap-1">
+                    <p class="text-sm font-normal">
+                      Telegram чат-бот
+                    </p>
+                    <p class="text-xs font-normal text-gray-500">
+                      Функции недоступны. Подключите Telegram-бот.
+                    </p>
+                  </div>
                 </div>
+                <a href="#" class="flex items-center hover:text-blue-800 lg:ml-auto text-gray-500 text-xs">
+                  <span>Перейти в чат бот</span>
+                  <icon name="solar:arrow-right-linear" class="ml-1 w-4 h-4 transition-colors duration-200" />
+                </a>
               </div>
-              <div>
+              <div class="ml-auto">
                 <div class="flex gap-4 items-center text-gray-500 text-xs">
-                  <a href="#" class="flex items-center hover:text-blue-800">
-                    <span>Перейти в чат бот</span>
-                    <icon name="solar:arrow-right-linear" class="ml-1 w-4 h-4 transition-colors duration-200" />
-                  </a>
                   <div class="form-control">
-                    <label class="label cursor-pointer gap-2">
-                      <span class="hidden sm:inline">Включить все</span>
+                    <label class="label cursor-pointer gap-2 p-0 lg:py-2 lg:px-1">
+                      <span class="hidden sm:inline whitespace-nowrap">Включить все</span>
                       <input
                         type="checkbox" class="toggle" :checked="tgAlerts.value"
                         @click="tgAlerts.value = !tgAlerts.value"
