@@ -3,11 +3,13 @@ const props = defineProps<{
   title: string
   icon: string
   href: string
+  external: boolean | undefined
 }>()
 const route = useRoute()
 const changeMP = useMPChange()
 
 const active = computed(() => {
+  if (props.external) return false
   return route.path.includes(props.href.toLowerCase().split('/')[1])
 })
 
@@ -61,7 +63,7 @@ onMounted(() => {
 <template>
   <li v-if="props.href != '/autoanswer'">
 
-    <NuxtLink class="mx-4 rounded-lg" :to="mpHref">
+    <NuxtLink class="mx-4 rounded-lg" :to="mpHref" v-if="!props.external">
       <div v-if="!active" class="flex">
         <Icon :name="icon" size="24" />
         <span
@@ -84,6 +86,18 @@ onMounted(() => {
         }}</span>
       </div>
     </NuxtLink>
+
+    <a class="mx-4 rounded-lg" :href="props.href" v-else target="_blank">
+      <div class="flex">
+        <Icon :name="icon" size="24" />
+        <span
+          class="ml-2 mt-[2px]"
+          :class="{
+            'opacity-100': !active,
+          }"
+          >{{ title }}</span>
+      </div>
+    </a>
   </li>
 </template>
 

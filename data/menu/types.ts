@@ -10,6 +10,7 @@ export interface MenuDataList {
   icon: string
   path: string
   access?: string
+  external?: boolean
 }
 
 export interface MenuSectionList {

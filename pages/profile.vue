@@ -609,13 +609,13 @@ const isSetBankBtnDisabled = computed(() => {
           v-if="!store.client.fizFace && !store.client.staff"
         >
           <input
-            v-model="form.firstName"
-            placeholder="Имя"
+            v-model="form.lastName"
+            placeholder="Фамилия"
             class="input input-bordered w-full"
           />
           <input
-            v-model="form.lastName"
-            placeholder="Фамилия"
+            v-model="form.firstName"
+            placeholder="Имя"
             class="input input-bordered w-full"
           />
           <input

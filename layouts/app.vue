@@ -302,7 +302,9 @@ onMounted(() => {
               :title="item.title"
               :icon="item.icon"
               :href="item.path.includes('productlikes') ? '/likes' : item.path"
+              :external="item.external"
             />
+    
           </div>
         </section>
 
