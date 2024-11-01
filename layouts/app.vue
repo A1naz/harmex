@@ -11,47 +11,34 @@ function toggleMenu() {
 
 const searchData = ref([]) as any
 const dataLoading = ref(false)
-async function search(searchQuery: any) {
+async function search(searchQuery) {
   dataLoading.value = true
 
-  setTimeout(() => {
-    const data = [
-      {
-        title: `Telegram продвижение`,
-        price: '20 ₽',
-        rating: '5.0',
-        advanced: '28 834',
+  try {
+    const response = await $fetch(`/api/catalog/get`, {
+      method: 'GET',
+      query: {
+        type: 'Маркетплейсы',
+        searchQuery: searchQuery || '',
       },
-      {
-        title: `Telegram продвижение - справочник`,
-        price: '20 ₽',
-        rating: '5.0',
-        advanced: '28 834',
-      },
-      {
-        title: `Telegram продвижение`,
-        price: '20 ₽',
-        rating: '5.0',
-        advanced: '28 834',
-      },
-      {
-        title: `Telegram продвижение`,
-        price: '20 ₽',
-        rating: '5.0',
-        advanced: '28 834',
-      },
-      {
-        title: `Telegram продвижение`,
-        price: '20 ₽',
-        rating: '5.0',
-        advanced: '28 834',
-      },
-    ]
-    searchData.value = data.filter((item: any) =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()),
-    )
+      watch: false,
+    })
+
+    if (response.status === 'ok') {
+      searchData.value = response.services
+    }
+    else {
+      console.error(response.error)
+      searchData.value = []
+    }
+  }
+  catch (error) {
+    console.error('Ошибка при запросе:', error)
+    searchData.value = []
+  }
+  finally {
     dataLoading.value = false
-  }, 200)
+  }
 }
 </script>
 

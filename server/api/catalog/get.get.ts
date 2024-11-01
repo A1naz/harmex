@@ -2,7 +2,7 @@ import { disables } from '@antfu/eslint-config'
 import { Service } from '~/server/lib/models/Service'
 
 export default eventHandler(async (event) => {
-  const { type } = getQuery(event)
+  const { type, searchQuery } = getQuery(event)
 
   if (type === 'Отели') {
     return {
@@ -11,7 +11,18 @@ export default eventHandler(async (event) => {
     }
   }
   else if (type === 'Маркетплейсы') {
-    const services = (await Service.find().select('-_id -__v').sort({ disabled: 1 }))
+    const query = searchQuery
+      ? {
+          $or: [
+            { name: { $regex: searchQuery, $options: 'i' } },
+            { items: { $elemMatch: { title: { $regex: searchQuery, $options: 'i' } } } },
+          ],
+        }
+      : {}
+
+    const services = await Service.find(query)
+      .select('-_id -__v')
+      .sort({ disabled: 1 })
 
     if (!services || !services.length) {
       return {
