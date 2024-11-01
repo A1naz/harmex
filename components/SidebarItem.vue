@@ -66,13 +66,9 @@ onMounted(() => {
     <NuxtLink class="mx-4 rounded-lg" :to="mpHref" v-if="!props.external">
       <div v-if="!active" class="flex">
         <Icon :name="icon" size="24" />
-        <span
-          class="ml-2 mt-[2px]"
-          :class="{
-            'opacity-100': !active,
-          }"
-          >{{ title }}</span
-        >
+        <span class="ml-2 mt-[2px]" :class="{
+          'opacity-100': !active,
+        }">{{ title }}</span>
       </div>
       <div v-else class="flex">
         <div class="hidden dark:block">
@@ -90,12 +86,9 @@ onMounted(() => {
     <a class="mx-4 rounded-lg" :href="props.href" v-else target="_blank">
       <div class="flex">
         <Icon :name="icon" size="24" />
-        <span
-          class="ml-2 mt-[2px]"
-          :class="{
-            'opacity-100': !active,
-          }"
-          >{{ title }}</span>
+        <span class="ml-2 mt-[2px]" :class="{
+          'opacity-100': !active,
+        }">{{ title }}</span>
       </div>
     </a>
   </li>
