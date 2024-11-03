@@ -134,12 +134,15 @@ const v$ = useVuelidate(rules, formData)
 async function submitForm() {
   v$.value.$validate()
 
-  if (!v$.value.$errors.length) {
+  console.log('v$.value.$errors', v$.value.$errors);
+  
+  console.log(faceType.value);
+  
+  if (!v$.value.$errors.length || faceType.value === 'fizFace') {
     loading.value = true
     if (referralFromLocal.value && referralFromLocal.value.length > 0) {
       formData.referral = referralFromLocal.value
     }
-    console.log('formData', faceType.value)
 
     if (faceType.value === 'yurFace') {
       console.log('yurFace')
@@ -171,7 +174,6 @@ async function submitForm() {
       }
       loading.value = false
     } else if (faceType.value === 'fizFace') {
-      console.log(faceType.value)
 
       // @ts-ignore
       const { data } = await useFetch('/api/auth/registerFiz', {
