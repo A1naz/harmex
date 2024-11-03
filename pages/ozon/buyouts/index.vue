@@ -7,7 +7,6 @@ definePageMeta({
   middleware: 'auth',
 })
 const removeModal = ref(false)
-const { width } = useWindowSize()
 const route = useRoute()
 const buyouts = ref([]) as any
 const modal = ref(false)
@@ -15,7 +14,6 @@ const logModal = ref(false)
 const selectedBuyout = ref<any>({})
 const selectedIndex = ref(-1)
 const storeMain = useMainStore()
-const mpStore = useMPStore()
 const selectedPlace = ref(-1)
 const status = computed(() => route.query?.status || 'all')
 const loading = ref(false)
@@ -345,13 +343,6 @@ onUnmounted(() => {
 
 const codeInput = ref()
 
-function updateSearchType(filter: any) {
-  search.type = filter.value
-}
-
-async function changeMP(e: any) {
-  mpStore.changeMp(e.value, 'buyouts', route.query?.status ? `?status=${route.query.status}` : '')
-}
 const customLinks = filters.map(filter => ({
   title: filter.title,
   slot: '/buyouts/ozon',
