@@ -47,6 +47,8 @@ const formData = reactive({
   checked: false,
   referral,
   landing: '',
+  bik: '',
+  rs: '',
 })
 const passwordInputType = ref('password')
 const passwordConfirmInputType = ref('password')
@@ -88,6 +90,19 @@ const rules = computed(() => {
     email: {
       required: helpers.withMessage('Введите email', required),
       email: helpers.withMessage('Введите корректный email', email),
+    },
+    bik: {
+      required: helpers.withMessage('Введите БИК', required),
+    },
+    rs: {
+      required: helpers.withMessage('Введите Р/С', required),
+      minLength: helpers.withMessage('Р/С должен содержать 20 цифр', minLength(20)),
+    },
+   name: {
+      required: helpers.withMessage('Введите имя', required),
+    },
+   lastname: {
+      required: helpers.withMessage('Введите фамилию', required),
     },
     password: {
       required: helpers.withMessage('Введите пароль', required),
@@ -540,6 +555,113 @@ const toggleConfirmPassword = () => {
                 required="true"
                 readonly
               />
+
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+              БИК
+            </label>
+            <input
+              :disabled="!isInnConfirmed && faceType == 'yurFace'"
+              id="name"
+              v-model="formData.bik"
+              type="text"
+              name="bik"
+              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              :class="{
+                'input-error': v$.bik.$error,
+              }"
+              @input="v$.bik.$touch"
+              placeholder="БИК"
+              required="true"
+            />
+
+            <div
+              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+            >
+              {{ v$.bik?.$errors[0]?.$message }}
+            </div>
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+              Расчетный счёт
+            </label>
+            <input
+              :disabled="!isInnConfirmed && faceType == 'yurFace'"
+              id="rs"
+              v-model="formData.rs"
+              type="text"
+              name="rs"
+              v-maska
+              data-maska="####################"
+              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              :class="{
+                'input-error': v$.rs.$error,
+              }"
+              @input="v$.rs.$touch"
+              placeholder="Р/С"
+              required="true"
+            />
+
+            <div
+              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+            >
+              {{ v$.rs?.$errors[0]?.$message }}
+            </div>
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+              Имя
+            </label>
+            <input
+              :disabled="!isInnConfirmed && faceType == 'yurFace'"
+              id="name"
+              v-model="formData.name"
+              type="text"
+              name="name"
+              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              :class="{
+                'input-error': v$.name.$error,
+              }"
+              @input="v$.name.$touch"
+              placeholder="Иван"
+              required="true"
+            />
+
+            <div
+              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+            >
+              {{ v$.name?.$errors[0]?.$message }}
+            </div>
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+              Фамилия
+            </label>
+            <input
+              :disabled="!isInnConfirmed && faceType == 'yurFace'"
+              id="lastname"
+              v-model="formData.lastname"
+              type="text"
+              name="lastname"
+              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              :class="{
+                'input-error': v$.lastname.$error,
+              }"
+              @input="v$.lastname.$touch"
+              placeholder="Иванов"
+              required="true"
+            />
+
+            <div
+              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+            >
+              {{ v$.lastname?.$errors[0]?.$message }}
+            </div>
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+              Отчество
+            </label>
+            <input
+              :disabled="!isInnConfirmed && faceType == 'yurFace'"
+              id="name"
+              v-model="formData.middleName"
+              type="text"
+              name="middleName"
+              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              placeholder="Иванович"
+            />
             </div>
           </div>
 
@@ -728,6 +850,7 @@ const toggleConfirmPassword = () => {
         </div>
       </div>
     </section>
+
   </div>
 </template>
 

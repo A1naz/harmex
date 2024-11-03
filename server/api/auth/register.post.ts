@@ -23,7 +23,12 @@ export default eventHandler(async (event) => {
     orgOgrn,
     orgInn,
     phoneNumber,
-    landing
+    landing,
+    bik,
+    rs,
+    name,
+    middleName,
+    lastname,
   } = body
 
   if (!email || !password)
@@ -88,6 +93,22 @@ export default eventHandler(async (event) => {
 
   const newUsername = await createUsername(email)
 
+  //@ts-ignore
+  const bankInfo: any = await $fetch(`https://bik-info.ru/api.html?type=json`, {
+    method: 'GET',
+    params: {
+      bik,
+    },
+  })
+
+  if (!bankInfo || !bankInfo.bik) {
+    return {
+      status: 'error',
+      error:
+        'Не удалось получить информацию о банке, проверьте правильность БИК',
+    }
+  }
+
   const user: IUser = new User({
     email,
     password: hash,
@@ -99,13 +120,18 @@ export default eventHandler(async (event) => {
     orgName,
     orgOgrn,
     orgInn,
-    lastname: '',
-    name: '',
-    middleName: '',
+    lastName: lastname,
+    firstName: name,
+    middleName,
     phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
     emailConfirmed: true,
     landing
   })
+
+  user.bankInfo = { ...bankInfo, rs }
+  user.rs = rs
+  user.bik = bik
+
   const url = useRuntimeConfig().PUBLIC_SITE_URL
   const link = `${url}/api/auth/activate?uuid=${user.uuid}`
   try {
@@ -113,7 +139,7 @@ export default eventHandler(async (event) => {
   } catch (error) {
     return { status: 'error', error: 'Ошибка отправки письма.' }
   }
-  
+
   await user.save()
   if (referral) {
     let inviter = await User.findOne({ uuid: referral })
