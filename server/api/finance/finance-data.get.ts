@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/', 302)
 
-  const { tableType }: any = getQuery(event)
-  const page = 1
+  const { tableType, page }: any = getQuery(event)
+
   switch (tableType) {
     case 'general':
     {

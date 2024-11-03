@@ -16,6 +16,7 @@ const buttonsLine: Array<{ label: string, value: string }> = [
 const tableData = ref<any>([])
 const fetchedData = ref<any>([])
 const tableType = ref('general')
+const currentPage = ref(1)
 
 const headersForTable = ref<any>([])
 
@@ -27,6 +28,7 @@ async function getData() {
       method: 'GET',
       query: {
         tableType: tableType.value,
+        page: currentPage.value,
       },
       watch: false,
     },
@@ -149,6 +151,7 @@ function changeTableType(type: string) {
 }
 
 watch(() => tableType.value, updateTableData, { immediate: true })
+watch(() => currentPage.value, updateTableData)
 </script>
 
 <template>
@@ -179,7 +182,8 @@ watch(() => tableType.value, updateTableData, { immediate: true })
           </div>
         </button>
       </div>
-      <FinanceTable :table-data="tableData" :headers="headersForTable" />
+      <FinanceTable :table-data="tableData" :headers="headersForTable" @swap-page="(page: number) => {currentPage = page}" />
     </div>
   </div>
+  {{currentPage}}
 </template>
