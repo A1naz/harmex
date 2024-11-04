@@ -44,6 +44,11 @@ watch(loadingData, (newVal) => {
 function close() {
   show.value = false
 }
+
+function toFound(path: string) {
+  close()
+  navigateTo(path)
+}
 </script>
 
 <template>
@@ -87,45 +92,18 @@ function close() {
           class="flex flex-col gap-1 w-full text-center z-[99999] p-3 pb-1 rounded-lg bg-white max-h-[600px] overflow-y-auto"
           @click.stop
         >
-          <div v-for="item in data" :key="item.slug" class="flex flex-col">
-            <NuxtLink
-              :to="`/catalog/${item.slug}`"
-              class="bg-transparent text-[#909090] hover:text-black rounded-lg hover:bg-[#f5f7ff] py-2 px-4 border border-white transition w-full"
+          <div
+            v-for="item in data"
+            :key="item.slug"
+            class="border transition w-full border-none"
+          >
+            <button
+              v-for="service in item.items" :key="service.path"
+              class="w-full bg-transparent text-[#909090] hover:text-black rounded-lg hover:bg-[#f5f7ff] border-white  py-2 px-4 "
+              @click="toFound(`/${item.slug}${service.path}`)"
             >
-              {{ item?.name }}
-            </NuxtLink>
-          </div>
-
-          <div v-for="item in data" :key="item.slug" class="flex flex-col">
-            <div v-for="service in item.items" :key="service.path" class="flex flex-col">
-              <NuxtLink
-                :to="`/${item.slug}${service.path}`"
-                class="bg-transparent flex hover:text-black rounded-lg hover:bg-[#f5f7ff] py-2 px-4 border border-white transition w-full"
-              >
-                <div class="rounded-lg flex items-center justify-center max-w-[150px]">
-                  <nuxt-img
-                    :src="item.mainImage"
-                    class="responsive-image"
-                    height="178px"
-                  />
-                </div>
-                <div class="ml-4 flex flex-col gap-1">
-                  <span class="text-start font-bold"> {{ service?.price || 0 }} </span>
-                  <span class="text-start"> {{ service?.title }} </span>
-                  <div class="flex gap-5 justify-between text-sm">
-                    <span>Продвинуто: {{ service?.advanced ? service?.advanced : 0 }}</span>
-                    <div class="flex gap-0.5">
-                      <Icon
-                        name="pepicons-pop:star-filled"
-                        size="18"
-                        class="text-[#ff9966] rounded-lg w-full flex my-auto"
-                      />
-                      <span> {{ service?.rating ? service?.rating : 0 }} </span>
-                    </div>
-                  </div>
-                </div>
-              </NuxtLink>
-            </div>
+              {{ `${item?.name} ${service.title}` }}
+            </button>
           </div>
 
           <button

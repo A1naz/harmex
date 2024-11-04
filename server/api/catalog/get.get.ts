@@ -15,19 +15,14 @@ export default eventHandler(async (event) => {
 
     if (searchQuery) {
       const query = {
-        $or: [
-          { name: { $regex: searchQuery, $options: 'i' } },
-          { items: { $elemMatch: { title: { $regex: searchQuery, $options: 'i' } } } },
-        ],
+        items: { $elemMatch: { title: { $regex: searchQuery, $options: 'i' } } },
+        disabled: { $ne: true },
       }
 
       services = await Service.aggregate([
         { $match: query },
         {
-          $project: {
-            name: 1,
-            disabled: 1,
-            slug: 1,
+          $addFields: {
             items: {
               $filter: {
                 input: '$items',
@@ -35,6 +30,12 @@ export default eventHandler(async (event) => {
                 cond: { $regexMatch: { input: '$$item.title', regex: searchQuery, options: 'i' } },
               },
             },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            __v: 0,
           },
         },
         { $sort: { disabled: 1 } },
