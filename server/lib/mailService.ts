@@ -76,7 +76,6 @@ class MailService {
                 </div>
             `,
     })
-    console.log('sendActivationMail')
 
     return result
   }
