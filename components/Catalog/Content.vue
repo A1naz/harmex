@@ -31,9 +31,9 @@ defineEmits(['setFavourites', 'vote'])
         <div class="flex w-full">
           <div class="flex items-center justify-center relative w-[170px] h-[170px]">
             <NuxtImg :src="social.mainImage" :alt="social.name" class="w-full" />
-            <div v-if="social.disabled" class="overlay">
+            <!-- <div v-if="social.disabled" class="overlay">
               Ожидается
-            </div>
+            </div> -->
           </div>
           <div class="pl-4">
             <button
