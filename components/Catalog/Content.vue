@@ -14,7 +14,7 @@ defineProps({
   },
 })
 
-defineEmits(['setFavourites'])
+defineEmits(['setFavourites', 'vote'])
 </script>
 
 <template>
@@ -24,7 +24,9 @@ defineEmits(['setFavourites'])
       <div
         v-for="(social, index) in items"
         :key="index"
-        class="card border rounded-lg shadow-md w-[360px] p-3 relative"
+        class="card border rounded-lg shadow-md w-[360px] p-3 relative " :class="{
+          'bg-[#f5f7ff]': social.disabled,
+        }"
       >
         <div class="flex w-full">
           <div class="flex items-center justify-center relative w-[170px] h-[170px]">
@@ -71,6 +73,14 @@ defineEmits(['setFavourites'])
               Смотреть все
               <Icon class="text-[#F72585] -mt-0.5" name="jam:arrow-right" size="18px" />
             </NuxtLink>
+            <button
+              v-else
+              class="text-[16px] absolute font-medium cursor-pointer bottom-2 hover:text-[#F72585]"
+              @click="$emit('vote', social.slug)"
+            >
+              Запросить
+              <Icon class="text-[#F72585] -mt-0.5" name="jam:arrow-right" size="18px" />
+            </button>
           </div>
         </div>
       </div>

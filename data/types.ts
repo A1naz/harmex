@@ -73,6 +73,7 @@ export interface IUser extends Entity {
   acesses: Array<string>
   services: Array<string>
   favourites: Array<string>
+  votedFor: Array<string>
 }
 
 export interface IUserLogs extends Entity {
