@@ -1,5 +1,9 @@
 <script lang="ts" setup>
+import { notify } from '@kyvg/vue3-notification'
+
 definePageMeta({ auth: false, layout: 'app' })
+
+const { user } = useUserSession()
 const route: any = useRoute()
 const id = route.params.id
 const loading = ref(true)
@@ -38,6 +42,75 @@ getService()
 function navigateToCatalog() {
   navigateTo('/catalog')
 }
+
+const favourites = ref([]) as any
+const loadingFavourites = ref(true)
+async function getFavourites() {
+  try {
+    const response: any = await $fetch('/api/user/favourites', {
+      method: 'GET',
+    })
+    if (response?.favouritesPaths) {
+      favourites.value = response.favouritesPaths
+    }
+  }
+  catch (err) {
+    notify({
+      type: 'error',
+      title: 'Ошибка загрузки избранного',
+      text: err.message,
+    })
+  }
+  finally {
+    loadingFavourites.value = false
+  }
+}
+getFavourites()
+
+async function setFavourites(path: string) {
+  if (!user.value) {
+    notify({
+      type: 'error',
+      title: 'Необходима авторизация',
+    })
+    return
+  }
+  try {
+    loadingFavourites.value = true
+
+    if (favourites.value.includes(path)) {
+      favourites.value = favourites.value.filter((item: string) => item !== path)
+    }
+    else {
+      if (favourites.value.length >= 10) {
+        favourites.value.shift()
+      }
+      favourites.value.push(path)
+    }
+
+    await $fetch('/api/user/setFavourite', {
+      method: 'POST',
+      body: {
+        favourites: favourites.value,
+      },
+    })
+
+    notify({
+      type: 'success',
+      title: 'Избранное обновлено',
+    })
+  }
+  catch (err) {
+    notify({
+      type: 'error',
+      title: 'Ошибка при обновлении избранного',
+      text: err.message,
+    })
+  }
+  finally {
+    loadingFavourites.value = false
+  }
+}
 </script>
 
 <template>
@@ -58,7 +131,7 @@ function navigateToCatalog() {
       </div>
       <div v-else class="flex flex-wrap gap-x-4">
         <div v-for="(service, index) in item.items" :key="index" class="mt-8">
-          <CatalogServiceCard :item="item" :index="index" />
+          <CatalogServiceCard :favourites="favourites" :item="item" :index="index" @set-favourites="setFavourites" />
         </div>
       </div>
     </div>
