@@ -44,6 +44,11 @@ watch(loadingData, (newVal) => {
 function close() {
   show.value = false
 }
+
+function toFound(path: string) {
+  close()
+  navigateTo(path)
+}
 </script>
 
 <template>
@@ -51,17 +56,16 @@ function close() {
     <div
       v-if="isVisible || (show && searchCompleted && searchQuery.trim() !== '')"
       class="fixed inset-0 z-[9998]"
-      :class="
-        isVisible || (show && searchCompleted && searchQuery.trim() !== '')
-          ? 'bg-black bg-opacity-10 backdrop-blur-[1px]'
-          : ''
-      "
+      :class="isVisible || (show && searchCompleted && searchQuery.trim() !== '')
+        ? 'bg-black bg-opacity-10 backdrop-blur-[1px]'
+        : ''"
       @click="close"
     />
   </Transition>
 
   <div
-    class="flex flex-col items-center gap-2 w-full ml-4 relative " :class=" isVisible || (show && searchCompleted && searchQuery.trim() !== '')
+    class="flex flex-col items-center gap-2 w-full ml-4 relative"
+    :class="isVisible || (show && searchCompleted && searchQuery.trim() !== '')
       ? 'z-[9998]'
       : ''"
   >
@@ -76,53 +80,31 @@ function close() {
       >
       <Icon name="mynaui:search" size="25" class="-ml-12 bg-white rounded-lg" />
     </label>
+
     <Transition name="slide-fade">
       <div
-        v-if="
-          isVisible || (show && searchCompleted && searchQuery.trim() !== '')
-        "
+        v-if="isVisible || (show && searchCompleted && searchQuery.trim() !== '')"
         class="flex flex-col absolute w-[98%] ml-4"
         style="top: calc(100% + 0.5rem)"
       >
         <div
           v-if="isVisible"
-          class="flex flex-col gap-1 w-full text-center z-[99999] p-3 pb-1 rounded-lg bg-white"
+          class="flex flex-col gap-1 w-full text-center z-[99999] p-3 pb-1 rounded-lg bg-white max-h-[600px] overflow-y-auto"
           @click.stop
         >
-          <button
+          <div
             v-for="item in data"
-            class="bg-transparent text-[#909090] hover:text-black rounded-lg hover:bg-[#f5f7ff] py-2 px-4 border border-white transition w-full"
+            :key="item.slug"
+            class="border transition w-full border-none"
           >
-            {{ item?.title }}
-          </button>
-          <button
-            v-for="item in data"
-            class="bg-transparent flex hover:text-black rounded-lg hover:bg-[#f5f7ff] py-2 px-4 border border-white transition w-full"
-          >
-            <div class="rounded-lg flex items-center justify-center">
-              <nuxt-img
-                src="/img/tg.svg"
-                class="responsive-image"
-                height="178px"
-              />
-            </div>
-            <div class="ml-4 flex flex-col gap-1">
-              <span class="text-start font-bold"> {{ item?.price }} </span>
-              <span class="text-start"> {{ item?.title }} </span>
-              <div class="flex gap-5 justify-between text-sm">
-                <span>Продвинуто: {{ item?.advanced ? item?.advanced : 0 }}
-                </span>
-                <div class="flex gap-0.5">
-                  <Icon
-                    name="pepicons-pop:star-filled"
-                    size="18"
-                    class="text-[#ff9966] rounded-lg w-full flex my-auto"
-                  />
-                  <span> {{ item?.rating ? item?.rating : 0 }} </span>
-                </div>
-              </div>
-            </div>
-          </button>
+            <button
+              v-for="service in item.items" :key="service.path"
+              class="w-full bg-transparent text-[#909090] hover:text-black rounded-lg hover:bg-[#f5f7ff] border-white  py-2 px-4 "
+              @click="toFound(`/${item.slug}${service.path}`)"
+            >
+              {{ `${item?.name} ${service.title}` }}
+            </button>
+          </div>
 
           <button
             class="text-secondary bg-white hover:text-black rounded-lg hover:bg-[#f5f7ff] py-1 px-4 border border-white transition w-full"
@@ -131,6 +113,7 @@ function close() {
             Смотреть все
           </button>
         </div>
+
         <div
           v-else-if="show && searchCompleted && searchQuery.trim() !== ''"
           class="flex flex-col gap-1 w-full text-center z-[99999] p-3 rounded-lg bg-white"
@@ -154,7 +137,6 @@ function close() {
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  /* transform: translateY(20px); */
   opacity: 0;
 }
 </style>
