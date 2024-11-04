@@ -211,7 +211,7 @@ async function copyToClipboard(text: string) {
             <div
               v-if="isVisible"
               :style="{ top: `${tooltipPosition.top}px`, left: `${tooltipPosition.left}px` }"
-              class="tooltip-class fixed bg-white shadow-lg text-black text-sm px-[15px] py-[12.5px] rounded-lg z-50 whitespace-nowrap"
+              class="tooltip-class fixed bg-white shadow-lg text-black text-sm px-[15px] py-[12.5px] rounded-lg z-50 whitespace-nowrap flex flex-col justify-start text-left"
               @mouseenter="onMouseEnterTooltip"
 
               @mouseleave="onMouseLeaveTooltip"
