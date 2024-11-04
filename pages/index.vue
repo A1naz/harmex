@@ -141,7 +141,7 @@ async function getFavourites() {
   if (response) {
     userFavourites.value = response.data.value.favourites
 
-    if (userFavourites.value.length === 0) {
+    if (userFavourites && userFavourites.value && userFavourites.value.length === 0) {
       userFavourites.value = response.data.value.services
         .map((item: any) => ({ path: `/catalog/${item.slug}`, title: item.name, image: item.mainImage, disabled: item.disabled }))
         .filter((item: any) => !item.disabled)
