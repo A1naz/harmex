@@ -9,6 +9,7 @@ declare module '#auth-utils' {
     acesses: string[]
     username: string | undefined
     balance: number
+    fizFace: boolean
   }
 
   interface UserSession {

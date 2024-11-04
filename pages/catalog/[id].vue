@@ -8,6 +8,24 @@ const route: any = useRoute()
 const id = route.params.id
 const loading = ref(true)
 const item = ref({} as any)
+const userInfo = ref([]) as any
+
+function getUser() {
+  const { data }: any = useFetch('/api/user/getCurrentUser', {
+    method: 'GET',
+    watch: false,
+  })
+
+  if (data.value) {
+    userInfo.value = data.value
+  }
+}
+
+if (user.value && user.value.fizFace === false) {
+  getUser()
+}
+getUser()
+
 // const sellLeaders = ref([] as any)
 
 async function getService() {
@@ -115,7 +133,7 @@ async function setFavourites(path: string) {
 
 <template>
   <div class="mx-12 mt-7">
-    <div class="breadcrumbs text-sm">
+    <div class="breadcrumbs text-sm flex justify-between w-full">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer" @click="navigateToCatalog">
           Маркетплейсы
@@ -124,6 +142,21 @@ async function setFavourites(path: string) {
           {{ id[0].toUpperCase() + id.slice(1) }}
         </li>
       </ul>
+      <div v-if="user && !user.fizFace" class="flex gap-3">
+        <div class="p-3 bg-white border border-gray-300 rounded-lg shadow-sm flex gap-2 items-center text-center group">
+          <div>
+            <div class="org-name font-semibold text-gray-800">
+              {{ userInfo.orgName ? userInfo.orgName : userInfo.name || 'Неизвестная организация' }}
+            </div>
+            <div class="org-inn text-gray-500 text-sm mt-1">
+              ИНН: {{ userInfo.orgInn || '---' }}
+            </div>
+          </div>
+          <button class="p-1 flex flex-col justify-center items-center text-center group-hover:text-[#1b38ca]">
+            <Icon name="ph:share-fat-fill" size="24" />
+          </button>
+        </div>
+      </div>
     </div>
     <div class="flex flex-wrap overflow-x-auto">
       <div v-if="loading" class="hero mt-20">

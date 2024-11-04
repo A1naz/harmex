@@ -158,7 +158,7 @@ watch(() => currentPage.value, updateTableData)
   <div class="flex flex-col sm:flex-row mt-8 gap-8">
     <FinanceDashboard
       :second-level-percent="10" :ref-balance="1300" :balance="5700" :ref-count="5"
-      :second-level-referrals="1" :first-level-referrals="1" ref-url="http://localhost:8080/partner" :reward-percent="5"
+      :second-level-referrals="1" :first-level-referrals="12" ref-url="http://localhost:8080/partner" :reward-percent="5"
       :ref-link="5"
     />
     <div class="divider bg- lg:divider-horizontal" />
@@ -182,8 +182,7 @@ watch(() => currentPage.value, updateTableData)
           </div>
         </button>
       </div>
-      <FinanceTable :table-data="tableData" :headers="headersForTable" @swap-page="(page: number) => {currentPage = page}" />
+      <FinanceTable :table-data="tableData" :headers="headersForTable" @swap-page="(page: number) => { currentPage = page }" />
     </div>
   </div>
-  {{currentPage}}
 </template>
