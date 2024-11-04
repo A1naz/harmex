@@ -77,6 +77,7 @@ const UserSchema = new Schema<IUserSchema>({
   quickAccesses: { type: [String], default: [] },
   services: { type: [String], default: [] },
   favourites: { type: [String], default: [] },
+  votedFor: { type: [String], default: [] },
 })
 
 export const User = model<IUserSchema>('User', UserSchema)

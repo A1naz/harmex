@@ -59,12 +59,8 @@ const transferModalShow = ref(false)
           <div
             class="bg-transparent self-end mb-5 flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
           >
-            <span class="text-lg font-semibold"
-              >Кошелек: {{ currency.format(props.balance) || 0 }}</span
-            >
-            <span class="text-lg font-semibold"
-              >Партнерка: {{ currency.format(props.refBalance) || 0 }}</span
-            >
+            <span class="text-lg font-semibold">Кошелек: {{ currency.format(props.balance) || 0 }}</span>
+            <span class="text-lg font-semibold">Партнерка: {{ currency.format(props.refBalance) || 0 }}</span>
           </div>
         </div>
       </div>
@@ -80,7 +76,7 @@ const transferModalShow = ref(false)
         >
           <nuxt-img
             class="w-20 h-20"
-            :src="'icons/figma/finance/' + card.cardType + '.svg'"
+            :src="`icons/figma/finance/${card.cardType}.svg`"
           />
 
           <div class="flex flex-col justify-start text-black">
@@ -95,8 +91,8 @@ const transferModalShow = ref(false)
 
     <div class="flex gap-[5px] justify-center">
       <button
-        @click="modalShow = true"
         class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
+        @click="modalShow = true"
       >
         <div class="flex items-center justify-center">
           <Icon
@@ -123,8 +119,8 @@ const transferModalShow = ref(false)
       </button> -->
 
       <button
-        @click="balanceModalShow = true"
         class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
+        @click="balanceModalShow = true"
       >
         <div class="flex items-center justify-center">
           <Icon
@@ -148,49 +144,18 @@ const transferModalShow = ref(false)
         <div class="flex w-2/5">
           <span
             class="text-sm text-center text-[#909090] flex-wrap whitespace-pre-wrap"
-            >Доходность зависит от количества приглашенных пользователей</span
-          >
+          >Доходность зависит от количества приглашенных пользователей</span>
         </div>
       </div>
       <div class="background-div flex justify-center p-[14px]">
         <div
-          class="bg-base-100 self-end mb-10 flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
+          class="bg-base-100 self-end ml-3 mb-10 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm"
         >
           <div class="font-bold text-[0.9rem] whitespace-nowrap">
-            {{ '15 человек' }}
+            {{ `${firstLevelReferrals} человек` }}
           </div>
-          <div class="text-primary text-sm">
-            {{ '7 % дохода' }}
-          </div>
-        </div>
-        <IconCSS
-          class="self-end mb-12 ml-3 text-primary"
-          name="bi:arrow-right"
-          size="35"
-        />
-        <div
-          class="bg-base-100 self-end ml-3 mb-10 flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
-        >
-          <div class="font-bold text-[0.9rem] whitespace-nowrap">
-            {{ '120 человек' }}
-          </div>
-          <div class="text-primary text-sm">
-            {{ '12% дохода' }}
-          </div>
-        </div>
-        <IconCSS
-          class="self-end mb-12 ml-3 text-primary"
-          name="bi:arrow-right"
-          size="35"
-        />
-        <div
-          class="bg-base-100 self-end ml-3 mb-10 flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
-        >
-          <div class="font-bold text-[0.9rem] whitespace-nowrap">
-            {{ '15 человек' }}
-          </div>
-          <div class="text-primary text-sm">
-            {{ '12% дохода' }}
+          <div class="text-primary text-sm text-center">
+            {{ `${firstLevelReferrals * 750} ₽` }}
           </div>
         </div>
       </div>
@@ -199,13 +164,17 @@ const transferModalShow = ref(false)
     <div class="flex flex-col gap-5 w-full">
       <div class="bg-[#f5f7ff] rounded-lg px-5 flex flex-col gap-[18px] py-3">
         <div class="flex gap-2">
-          <h2 class="text-lg font-bold">Партнерка</h2>
+          <h2 class="text-lg font-bold">
+            Партнерка
+          </h2>
         </div>
         <div class="flex flex-col gap-[15px]">
           <div
             class="bg-white rounded-lg px-[15px] py-2.5 border border-[#ededed]"
           >
-            <h3 class="mb-3">Реферальная ссылка</h3>
+            <h3 class="mb-3">
+              Реферальная ссылка
+            </h3>
 
             <div
               class="bg-[#F7F7F7] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto"
@@ -213,11 +182,11 @@ const transferModalShow = ref(false)
               <span
                 class="cursor-pointer hover:underline truncate"
                 @click="copyToClipboard(refUrl)"
-                >{{ refUrl }}
+              >{{ refUrl }}
               </span>
               <button
-                @click="copyToClipboard(refUrl)"
                 class="text-primary text-opacity-50 hover:text-opacity-100"
+                @click="copyToClipboard(refUrl)"
               >
                 <IconCSS
                   name="solar:copy-outline"
@@ -232,7 +201,9 @@ const transferModalShow = ref(false)
             class="bg-white rounded-lg px-[15px] py-2.5 border border-[#ededed]"
           >
             <div class="flex mb-3 gap-2 flex-wrap">
-              <h3 class="flex my-auto">Персональный промокод:</h3>
+              <h3 class="flex my-auto">
+                Персональный промокод:
+              </h3>
               <button
                 disabled
                 class="text-xs text-[#1B38CA] flex mt-auto mb-0.5"
@@ -249,7 +220,7 @@ const transferModalShow = ref(false)
                   placeholder="Введите промокод"
                   class="input join-item w-full placeholder:text-[#909090] border-none bg-base-200"
                   disabled
-                />
+                >
 
                 <button
                   class="justify-end text-opacity-50 hover:text-opacity-100 m-3"
@@ -268,7 +239,9 @@ const transferModalShow = ref(false)
           <div
             class="bg-white rounded-lg px-[15px] py-2.5 border border-[#ededed]"
           >
-            <h3 class="mb-1 sm:mb-3">QR-код:</h3>
+            <h3 class="mb-1 sm:mb-3">
+              QR-код:
+            </h3>
             <div
               class="join bg-white rounded-lg border border-none flex justify-between gap-2 items-center justify-self-end"
             >
@@ -280,10 +253,8 @@ const transferModalShow = ref(false)
                     class="w-8 h-8 rounded-none"
                     src="/icons/figma/finance/qrIcon.svg"
                     alt="qr"
-                  />
-                  <span class="white-space-nowrap text-sm text-[#1B38CA]"
-                    >QR-код</span
                   >
+                  <span class="white-space-nowrap text-sm text-[#1B38CA]">QR-код</span>
                 </button>
               </div>
             </div>
