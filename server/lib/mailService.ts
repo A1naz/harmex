@@ -20,7 +20,7 @@ class MailService {
         pass: smtpPass,
       },
       dkim: {
-        domainName: 'marketmonstr.pro',
+        domainName: 'harmex.ru',
         keySelector: 'mail',
         privateKey: dkimKey,
       },
@@ -76,6 +76,8 @@ class MailService {
                 </div>
             `,
     })
+    console.log('sendActivationMail')
+
     return result
   }
 
@@ -157,7 +159,7 @@ class MailService {
   async sendConsultation(name: string, email: string, phone: string) {
     const result = this.transporter.sendMail({
       from: alias,
-      to: 'support@marketmonstr.pro',
+      to: 'support@harmex.ru',
       subject: '[HARMEX] Получить консультацию',
       text: '',
       html: `
