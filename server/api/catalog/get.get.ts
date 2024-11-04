@@ -11,18 +11,40 @@ export default eventHandler(async (event) => {
     }
   }
   else if (type === 'Маркетплейсы') {
-    const query = searchQuery
-      ? {
-          $or: [
-            { name: { $regex: searchQuery, $options: 'i' } },
-            { items: { $elemMatch: { title: { $regex: searchQuery, $options: 'i' } } } },
-          ],
-        }
-      : {}
+    let services
 
-    const services = await Service.find(query)
-      .select('-_id -__v')
-      .sort({ disabled: 1 })
+    if (searchQuery) {
+      const query = {
+        $or: [
+          { name: { $regex: searchQuery, $options: 'i' } },
+          { items: { $elemMatch: { title: { $regex: searchQuery, $options: 'i' } } } },
+        ],
+      }
+
+      services = await Service.aggregate([
+        { $match: query },
+        {
+          $project: {
+            name: 1,
+            disabled: 1,
+            slug: 1,
+            items: {
+              $filter: {
+                input: '$items',
+                as: 'item',
+                cond: { $regexMatch: { input: '$$item.title', regex: searchQuery, options: 'i' } },
+              },
+            },
+          },
+        },
+        { $sort: { disabled: 1 } },
+      ])
+    }
+    else {
+      services = await Service.find({})
+        .select('-_id -__v')
+        .sort({ disabled: 1 })
+    }
 
     if (!services || !services.length) {
       return {
@@ -30,6 +52,7 @@ export default eventHandler(async (event) => {
         error: [],
       }
     }
+
     return {
       status: 'ok',
       services,

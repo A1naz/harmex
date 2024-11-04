@@ -51,11 +51,9 @@ function close() {
     <div
       v-if="isVisible || (show && searchCompleted && searchQuery.trim() !== '')"
       class="fixed inset-0 z-[9998]"
-      :class="
-        isVisible || (show && searchCompleted && searchQuery.trim() !== '')
-          ? 'bg-black bg-opacity-10 backdrop-blur-[1px]'
-          : ''
-      "
+      :class="isVisible || (show && searchCompleted && searchQuery.trim() !== '')
+        ? 'bg-black bg-opacity-10 backdrop-blur-[1px]'
+        : ''"
       @click="close"
     />
   </Transition>
@@ -80,9 +78,7 @@ function close() {
 
     <Transition name="slide-fade">
       <div
-        v-if="
-          isVisible || (show && searchCompleted && searchQuery.trim() !== '')
-        "
+        v-if="isVisible || (show && searchCompleted && searchQuery.trim() !== '')"
         class="flex flex-col absolute w-[98%] ml-4"
         style="top: calc(100% + 0.5rem)"
       >
@@ -92,39 +88,44 @@ function close() {
           @click.stop
         >
           <div v-for="item in data" :key="item.slug" class="flex flex-col">
-            <button
+            <NuxtLink
+              :to="`/catalog/${item.slug}`"
               class="bg-transparent text-[#909090] hover:text-black rounded-lg hover:bg-[#f5f7ff] py-2 px-4 border border-white transition w-full"
             >
               {{ item?.name }}
-            </button>
-            <button
-              v-for="service in item.items"
-              :key="service.path"
-              class="bg-transparent flex hover:text-black rounded-lg hover:bg-[#f5f7ff] py-2 px-4 border border-white transition w-full"
-            >
-              <div class="rounded-lg flex items-center justify-center max-w-[150px]">
-                <nuxt-img
-                  :src="item.mainImage"
-                  class="responsive-image"
-                  height="178px"
-                />
-              </div>
-              <div class="ml-4 flex flex-col gap-1">
-                <span class="text-start font-bold"> {{ service?.price || 0 }} </span>
-                <span class="text-start"> {{ service?.title }} </span>
-                <div class="flex gap-5 justify-between text-sm">
-                  <span>Продвинуто: {{ service?.advanced ? service?.advanced : 0 }}</span>
-                  <div class="flex gap-0.5">
-                    <Icon
-                      name="pepicons-pop:star-filled"
-                      size="18"
-                      class="text-[#ff9966] rounded-lg w-full flex my-auto"
-                    />
-                    <span> {{ service?.rating ? service?.rating : 0 }} </span>
+            </NuxtLink>
+          </div>
+
+          <div v-for="item in data" :key="item.slug" class="flex flex-col">
+            <div v-for="service in item.items" :key="service.path" class="flex flex-col">
+              <NuxtLink
+                :to="`/${item.slug}${service.path}`"
+                class="bg-transparent flex hover:text-black rounded-lg hover:bg-[#f5f7ff] py-2 px-4 border border-white transition w-full"
+              >
+                <div class="rounded-lg flex items-center justify-center max-w-[150px]">
+                  <nuxt-img
+                    :src="item.mainImage"
+                    class="responsive-image"
+                    height="178px"
+                  />
+                </div>
+                <div class="ml-4 flex flex-col gap-1">
+                  <span class="text-start font-bold"> {{ service?.price || 0 }} </span>
+                  <span class="text-start"> {{ service?.title }} </span>
+                  <div class="flex gap-5 justify-between text-sm">
+                    <span>Продвинуто: {{ service?.advanced ? service?.advanced : 0 }}</span>
+                    <div class="flex gap-0.5">
+                      <Icon
+                        name="pepicons-pop:star-filled"
+                        size="18"
+                        class="text-[#ff9966] rounded-lg w-full flex my-auto"
+                      />
+                      <span> {{ service?.rating ? service?.rating : 0 }} </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </button>
+              </NuxtLink>
+            </div>
           </div>
 
           <button
