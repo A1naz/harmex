@@ -46,7 +46,7 @@ const items: Array<{
     value: false,
   },
 ]
-const favourites = ref<any>([])
+
 const userFavourites = ref([]) as any
 const channels = ref<any>([
 

@@ -3,6 +3,7 @@ defineProps({
   title: String,
   items: {
     type: Array as () => Array<any>,
+    default: () => [],
   },
   toAll: String,
 })
@@ -21,7 +22,6 @@ defineProps({
     <div class="flex flex-wrap justify-center">
       <Nuxt-link
         v-for="item in items"
-        v-if="items.length && items.length > 0"
         :key="item.id"
         :to="item.path"
         class="bg-white text-[14px] w-[110px] h-[125px] ml-8 mt-5 rounded-xl mb-[15px]"
@@ -38,7 +38,7 @@ defineProps({
           {{ item.title }}
         </div>
       </Nuxt-link>
-      <div v-else class="hero">
+      <div v-if="!items.length" class="hero">
         <div class="hero-content text-center flex justify-center items-center h-80">
           <div class="max-w-md">
             <h1 class="text-3xl font-bold">
