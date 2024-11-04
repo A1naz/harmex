@@ -60,7 +60,7 @@ async function search(searchQuery: any) {
     <input id="my-drawer" type="checkbox" class="drawer-toggle">
 
     <div ref="drawerContent" style="z-index: 9999" class="drawer-content w-full">
-      <div class="drawerShadow flex w-full items-center gap-2 px-16 sm:px-0 h-[75px] bg-[#f5f7ff] justify-center">
+      <div class="drawerShadow flex w-full items-center gap-2 px-8 sm:px-0 h-[75px] bg-[#f5f7ff] justify-center">
         <div class="lg:px-16 flex w-full relative gap-2">
           <NuxtLinkLocale to="/" class="sm:flex hidden cursor-pointer items-center">
             <nuxt-img src="/img/HARMEX.svg" width="150px" />
