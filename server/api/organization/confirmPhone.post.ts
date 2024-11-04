@@ -96,6 +96,7 @@ export default eventHandler(async (event) => {
       }
     }
     catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e)
 
       return {
