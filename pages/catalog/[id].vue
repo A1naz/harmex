@@ -192,7 +192,7 @@ async function copyToClipboard(text: string) {
           {{ id[0].toUpperCase() + id.slice(1) }}
         </li>
       </ul>
-      <div v-if="user && !user.fizFace" class="flex gap-3">
+      <div class="flex gap-3">
         <div class="p-3 bg-white rounded-lg shadow-xs flex gap-2 items-center text-center ">
           <div class="org-name font-semibold text-gray-800">
             {{ 'Максимус'.toUpperCase() }}
