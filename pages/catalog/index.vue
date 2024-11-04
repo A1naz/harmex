@@ -42,7 +42,7 @@ async function getFavourites() {
       favourites.value = response.favouritesPaths
     }
   }
-  catch (err) {
+  catch (err: any) {
     notify({
       type: 'error',
       title: 'Ошибка загрузки избранного',
@@ -86,7 +86,7 @@ async function setFavourites(path: string) {
       title: 'Избранное обновлено',
     })
   }
-  catch (err) {
+  catch (err: any) {
     notify({
       type: 'error',
       title: 'Ошибка при обновлении избранного',
@@ -96,6 +96,39 @@ async function setFavourites(path: string) {
   finally {
     loadingFavourites.value = false
   }
+}
+
+const voteLoading = ref(false)
+async function voteForMp(slug: string) {
+  if (!user.value) {
+    notify({
+      type: 'error',
+      title: 'Необходима авторизация',
+    })
+    return
+  }
+  voteLoading.value = true
+  const response: any = await $fetch('/api/catalog/vote', {
+    method: 'POST',
+    query: {
+      slug,
+    },
+  })
+  if (response.status === 'ok') {
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Вы успешно проголосовали за добавление маркетплейса',
+    })
+  }
+  else {
+    notify({
+      type: 'error',
+      title: 'Ошибка',
+      text: response.message,
+    })
+  }
+  voteLoading.value = false
 }
 </script>
 
@@ -115,7 +148,7 @@ async function setFavourites(path: string) {
           </li>
         </ul>
       </div>
-      <CatalogContent v-if="!loading" :items="socialNetworks" :favourites="favourites" @set-favourites="setFavourites" />
+      <CatalogContent v-if="!loading" :items="socialNetworks" :favourites="favourites" :vote-loading="voteLoading" @set-favourites="setFavourites" />
     </div>
   </div>
 </template>
