@@ -184,17 +184,16 @@ watch(() => persistStore.language, (newLanguage) => {
     <div>
       <div class="flex flex-col gap-8 py-6 md:gap-6 md:py-4">
         <h1 class="text-xl font-semibold">
-          <!-- {{ $t("profile") }} -->
-          {{ 'Профиль' }}
+          {{ $t("Профиль") }}
         </h1>
         <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
           <h2 class="text-lg font-medium">
-            Контактные данные
+            {{ $t("Контактные данные") }}
           </h2>
           <div class="flex flex-col gap-6 md:flex-row">
             <div class="flex flex-col gap-1">
               <p class="text-xs font-medium text-blue-800">
-                Логин
+                {{ $t("Логин") }}
               </p>
               <input
                 v-model="form.username" readonly placeholder="Логин"
@@ -203,8 +202,7 @@ watch(() => persistStore.language, (newLanguage) => {
             </div>
             <div class="flex flex-col gap-1">
               <p class="text-xs font-medium text-blue-800">
-                <!-- {{ $t("Номер телефона") }} -->
-                {{ 'Номер телефона' }}
+                {{ $t("Номер телефона") }}
               </p>
               <input
                 v-model="form.phoneNumber" readonly placeholder="Номер телефона"
@@ -213,7 +211,7 @@ watch(() => persistStore.language, (newLanguage) => {
             </div>
             <div class="flex flex-col gap-1 relative">
               <p class="text-xs font-medium text-blue-800">
-                Почта
+                {{ $t("Почта") }}
               </p>
               <label
                 class="input input-bordered border-blue-800 flex items-center justify-between relative bg-white"
@@ -247,7 +245,7 @@ watch(() => persistStore.language, (newLanguage) => {
             <div class="flex gap-2">
               <div class="flex flex-col gap-1">
                 <p class="text-xs font-medium text-blue-800">
-                  Язык
+                  {{ $t("Язык") }}
                 </p>
                 <!-- <custom-select
                   :tabs="[
@@ -267,7 +265,7 @@ watch(() => persistStore.language, (newLanguage) => {
               </div>
               <div class="flex flex-col gap-1">
                 <p class="text-xs font-medium text-blue-800">
-                  Валюта
+                  {{ $t("Валюта") }}
                 </p>
                 <custom-select
                   :tabs="[

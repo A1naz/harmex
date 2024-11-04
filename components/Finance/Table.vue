@@ -1,25 +1,32 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue'
 
 interface HeaderForTable {
-  value: string;
-  label: string;
+  value: string
+  label: string
 }
+
+
+const emit = defineEmits(['swapPage'])
 
 const props = defineProps({
   tableData: { type: Array as () => Array<any>, default: () => [] },
   headers: { type: Array as () => Array<HeaderForTable>, default: () => [] },
-});
+})
 
-const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const currentPage = ref(1)
+const itemsPerPage = ref(25)
 const totalPages = computed(() =>
-  Math.ceil(props.tableData.length / itemsPerPage.value)
-);
+  Math.ceil(240 / itemsPerPage.value),
+)
 const paginatedData = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  return props.tableData.slice(start, start + itemsPerPage.value);
-});
+  return props.tableData
+})
+
+function swapPage(swapTo: number) {
+  currentPage.value += swapTo
+  emit('swapPage', currentPage.value)
+}
 </script>
 
 <template>
@@ -28,20 +35,11 @@ const paginatedData = computed(() => {
       <table class="finance-table">
         <thead>
           <tr>
-            <th
-              v-for="(header, index) in props.headers"
-              :key="index"
-              scope="col"
-              class="table-header"
-            >
+            <th v-for="(header, index) in props.headers" :key="index" scope="col" class="table-header">
               <div class="header-content">
                 <span>{{ header.label }}</span>
                 <button>
-                  <Icon
-                    name="octicon:filter-24"
-                    class="filter-icon"
-                    size="20px"
-                  />
+                  <Icon name="octicon:filter-24" class="filter-icon" size="20px" />
                 </button>
               </div>
             </th>
@@ -49,42 +47,24 @@ const paginatedData = computed(() => {
         </thead>
         <tbody>
           <tr v-for="row in paginatedData" :key="row.id" class="table-row">
-            <td
-              v-for="(header, index) in props.headers"
-              :key="index"
-              class="table-cell"
-            >
+            <td v-for="(header, index) in props.headers" :key="index" class="table-cell">
               <span>
                 {{ row[header.value] }}
               </span>
- 
             </td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="pagination-controls flex items-center">
-      <button
-        class="pagination-button flex items-center"
-        :disabled="currentPage === 1"
-        @click="currentPage = 1"
-      >
+      <button class="pagination-button flex items-center" :disabled="currentPage === 1" @click="swapPage(-1)">
         <Icon name="solar:alt-arrow-left-linear" size="24" />
       </button>
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        class="pagination-button"
-        :class="{ active: currentPage === page }"
-        @click="currentPage = page"
-      >
+      <button v-for="page in totalPages" :key="page" class="pagination-button" :class="{ active: currentPage === page }"
+        @click="[currentPage = page, swapPage(0)]">
         {{ page }}
       </button>
-      <button
-        class="pagination-button flex items-center"
-        :disabled="currentPage === totalPages"
-        @click="currentPage = totalPages"
-      >
+      <button class="pagination-button flex items-center" :disabled="currentPage === totalPages" @click="swapPage(1)">
         <Icon name="solar:alt-arrow-right-linear" size="24" />
       </button>
     </div>
@@ -153,15 +133,18 @@ const paginatedData = computed(() => {
   .table-wrapper {
     width: 100%;
   }
+
   .finance-table {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
   }
+
   .table-header,
   .table-cell {
     padding: 0.25em;
   }
+
   .pagination-button {
     width: 2.5rem;
     height: 2.5rem;
