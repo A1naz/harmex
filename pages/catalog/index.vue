@@ -148,7 +148,7 @@ async function voteForMp(slug: string) {
           </li>
         </ul>
       </div>
-      <CatalogContent v-if="!loading" :items="socialNetworks" :favourites="favourites" :vote-loading="voteLoading" @set-favourites="setFavourites" />
+      <CatalogContent v-if="!loading" :items="socialNetworks" :favourites="favourites" @vote="voteForMp" @set-favourites="setFavourites" />
     </div>
   </div>
 </template>
