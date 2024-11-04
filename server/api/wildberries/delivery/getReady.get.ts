@@ -3,15 +3,11 @@ import { Buyout } from '~~/server/lib/models/wildberries/Buyout'
 import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
 
 export default eventHandler(async (event) => {
-  console.log('start')
   const user = await getAdminEntity(event)
-  console.log('user', user.username)
   if (!user)
     return sendRedirect(event, '/auth', 302)
-  console.log('start Deliveries', Delivery)
 
   const all = await Delivery.find({ user }).sort({ _id: -1 }).limit(500)
-  console.log('all', all[0]?.uuid)
 
   const buyoutsId = all.map(item => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
@@ -51,14 +47,12 @@ export default eventHandler(async (event) => {
     }),
   )
 
-  console.log('format', format[0]?.uuid)
   const filtered = format.filter((item) => {
     if (item)
       return item!.currentstatus === 'Готов к выдаче' || item!.currentstatus === 'Готов к получению'
     else
       return false
   })
-  console.log('filtered', filtered[0]?.uuid)
   const points = {} as any
   filtered.forEach((item, index) => {
     if (points[item!.point])

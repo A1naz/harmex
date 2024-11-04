@@ -21,6 +21,7 @@ export default defineNitroPlugin(() => {
       acesses: user.acesses,
       username: user.username,
       balance: user.balance,
+      fizFace: user.fizFace,
     }
   })
 
