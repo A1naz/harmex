@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { notify } = useNotification()
+import { notify } from '@kyvg/vue3-notification'
 
 definePageMeta({ auth: false, layout: 'app' })
 
@@ -129,56 +129,6 @@ async function setFavourites(path: string) {
     loadingFavourites.value = false
   }
 }
-
-const isVisible = ref(false)
-const tooltipPosition = ref({ top: 0, left: 0 })
-const tooltipButton = ref<HTMLElement | null>(null)
-const hideTooltipTimeout = ref<NodeJS.Timer | null>(null)
-
-function showTooltip() {
-  isVisible.value = true
-  if (tooltipButton.value) {
-    const buttonRect = tooltipButton.value.getBoundingClientRect()
-
-    nextTick(() => {
-      const tooltipElement = document.querySelector('.tooltip-class')
-      const tooltipWidth = tooltipElement ? tooltipElement.offsetWidth : 0
-
-      tooltipPosition.value = {
-        top: buttonRect.bottom + 10,
-        left: buttonRect.left + (buttonRect.width / 2) - (tooltipWidth / 2) - 2,
-      }
-    })
-  }
-}
-
-function hideTooltip() {
-  if (hideTooltipTimeout.value) {
-    clearTimeout(hideTooltipTimeout.value)
-  }
-
-  hideTooltipTimeout.value = setTimeout(() => {
-    isVisible.value = false
-  }, 500)
-}
-
-function onMouseEnterTooltip() {
-  if (hideTooltipTimeout.value) {
-    clearTimeout(hideTooltipTimeout.value)
-  }
-}
-
-function onMouseLeaveTooltip() {
-  hideTooltip()
-}
-
-async function copyToClipboard(text: string) {
-  await navigator.clipboard.writeText(text)
-  notify({
-    title: 'Успешно',
-    text: 'Скопировано в буфер обмена',
-  })
-}
 </script>
 
 <template>
@@ -192,46 +142,6 @@ async function copyToClipboard(text: string) {
           {{ id[0].toUpperCase() + id.slice(1) }}
         </li>
       </ul>
-      <div class="flex gap-3">
-        <div class="p-3 bg-white rounded-lg shadow-xs flex gap-2 items-center text-center ">
-          <div class="org-name font-semibold text-gray-800">
-            {{ 'Максимус'.toUpperCase() }}
-          </div>
-
-          <button
-            ref="tooltipButton"
-            class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
-            @mouseenter="showTooltip"
-            @mouseleave="hideTooltip"
-          >
-            <Icon name="si:info-fill" size="24" />
-          </button>
-
-          <Transition>
-            <div
-              v-if="isVisible"
-              :style="{ top: `${tooltipPosition.top}px`, left: `${tooltipPosition.left}px` }"
-              class="tooltip-class fixed bg-white shadow-lg text-black text-sm px-[15px] py-[12.5px] rounded-lg z-50 whitespace-nowrap flex flex-col justify-start text-left"
-              @mouseenter="onMouseEnterTooltip"
-
-              @mouseleave="onMouseLeaveTooltip"
-            >
-              <div
-                class="absolute top-[-9px] left-1/2 w-[20px] h-[30px] rounded-[3px] rotate-45 bg-white transform -translate-x-1/2"
-              />
-              <p class="relative z-10 ">
-                {{ 'ИП Пупкин Андрей Иванович' }}
-              </p>
-              <p>ИНН: 12341232 </p>
-              <p>На Harmex с 29.11.2024</p>
-            </div>
-          </Transition>
-
-          <button class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]" @click="copyToClipboard(`https://app.harmex.ru/register?uuid=${user.uuid}`)">
-            <Icon name="ph:share-fat-fill" size="24" />
-          </button>
-        </div>
-      </div>
     </div>
     <div class="flex flex-wrap overflow-x-auto">
       <div v-if="loading" class="hero mt-20">

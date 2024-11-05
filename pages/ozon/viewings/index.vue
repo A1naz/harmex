@@ -188,11 +188,44 @@ function updateSearchType(filter: any) {
 function changeFilter(e: any) {
   mpStore.changeMp(e.value, 'viewings')
 }
+
+const orgInfo = ref({}) as any
+const isVisible = ref(false)
+
+async function getOrgInfo() {
+  const currentPath = router.currentRoute.value.path
+
+  const pathSegments = currentPath.split('/').filter(Boolean)
+
+  const mp = pathSegments[0]
+  const serviceType = `/${pathSegments[1]}`
+
+  const { data }: any = await useFetch('/api/catalog/getOrgInfo', {
+    method: 'GET',
+    query: {
+      serviceType,
+      mp,
+    },
+  })
+
+  if (!data.value)
+    return
+  orgInfo.value = data.value.orgInfo
+}
+getOrgInfo()
+
+async function copyToClipboard(text: string) {
+  await navigator.clipboard.writeText(text)
+  notify({
+    title: 'Успешно',
+    text: 'Скопировано в буфер обмена',
+  })
+}
 </script>
 
 <template>
   <div>
-    <div class="breadcrumbs text-sm mt-8">
+    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
@@ -208,6 +241,18 @@ function changeFilter(e: any) {
           Просмотры
         </li>
       </ul>
+      <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
+        <div class=" bg-white rounded-lg shadow-xs flex gap-2 items-center text-center ">
+          <div class="org-name font-semibold text-gray-800">
+            {{ orgInfo.title.toUpperCase() }}
+          </div>
+
+          <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
+          <button class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]" @click="copyToClipboard(`https://app.harmex.ru/register?uuid`)">
+            <Icon name="ph:share-fat-fill" size="20" />
+          </button>
+        </div>
+      </div>
     </div>
     <ViewingsOzonCreateView
       :show="modalShow"
