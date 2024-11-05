@@ -1,8 +1,7 @@
 import type { Item } from '@/data/buyout/createProduct'
 import { rules } from '@/data/buyout/rules'
+import { notify } from '@kyvg/vue3-notification'
 import { defineStore } from 'pinia'
-
-const { notify } = useNotification()
 
 export interface ISearchQueryChange {
   value: string

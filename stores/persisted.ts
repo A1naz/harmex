@@ -1,6 +1,5 @@
+import { notify } from '@kyvg/vue3-notification'
 import { defineStore } from 'pinia'
-
-const { notify } = useNotification()
 
 export const usePersistedStore = defineStore('persisted', {
   state: () => ({
