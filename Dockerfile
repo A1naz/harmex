@@ -122,7 +122,7 @@ COPY --from=build /usr/src/nuxt-app/.output ./.output
 COPY --from=build /usr/src/nuxt-app/package.json ./
 
 # Expose the port the app will run on
-EXPOSE 80
+EXPOSE 8080
 
 # Start the app
 ENTRYPOINT ["bun", "run", ".output/server/index.mjs"]
