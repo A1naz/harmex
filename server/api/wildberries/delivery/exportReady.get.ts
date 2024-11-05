@@ -61,9 +61,10 @@ async function getReady(user: Document) {
 
         const phone: any = delivery.recipientphone
         const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
-        const currentstatus = delivery.statusdelivery?.length
-          ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
-          : 'Неизвестно'
+        const currentstatus = "Готов к выдаче"
+        // delivery.statusdelivery?.length
+        //   ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
+        //   : 'Неизвестно'
         const statusupdated = delivery.statusdelivery?.length
           ? new Date(
               delivery.statusdelivery[delivery.statusdelivery.length - 1].date
