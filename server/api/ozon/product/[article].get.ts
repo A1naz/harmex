@@ -8,6 +8,15 @@ export default eventHandler(async (event) => {
   const params = event.context.params as any
   const article = params.article
 
+
+  console.log('start');
+  
+  await new Promise((resolve) => setTimeout(resolve, 100000))
+
+  console.log('stop');
+  
+
+
   console.log(config.PARSER_TOKEN)
 
   const data: any = await $fetch('http://95.163.249.133:3000', {

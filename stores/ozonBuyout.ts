@@ -74,6 +74,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
 
       const { data, error } = await useFetch(`/api/ozon/product/${article}`, {
         method: 'GET',
+        timeout: 600000,
       })
       if (error.value) {
         notify({
