@@ -1,16 +1,14 @@
 {
   "private": true,
   "scripts": {
-    "build": "bunx --bun nuxi build",
-    "dev": "bunx --bun nuxi dev --host",
-    "https": "bunx --bun nuxi dev --https --host",
-    "tunnel": "bunx --bun nuxi dev --host --tunnel",
-    "generate": "bunx --bun nuxi generate",
-    "preview": "bunx --bun nuxi preview",
-    "postinstall": "bunx --bun nuxi prepare",
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "update": "bunx --bun nuxi upgrade --force"
+    "update": "nuxi upgrade --force"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.682.0",
