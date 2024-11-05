@@ -1,10 +1,10 @@
-import { Buyout } from '@/server/lib/models/wildberries/Buyout'
-import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '@/server/lib/helpers'
+import { Buyout } from '@/server/lib/models/wildberries/Buyout'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
+  const session = await getAdminEntity(event)
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
 
   const query = getQuery(event)
   const buyout = await Buyout.findOne({ uuid: query.uuid })
@@ -24,7 +24,7 @@ export default eventHandler(async (event) => {
     `https://card.wb.ru/cards/detail?spp=0&regions=80,64,38,4,115,83,33,68,70,69,30,86,40,1,66,31,48,110,22&pricemarginCoeff=1.0&reg=0&appType=1&emp=0&locale=ru&lang=ru&curr=rub&couponsGeo=2,12,7,3,6,21&dest=12358289&nm=${article}`,
     {
       method: 'GET',
-    }
+    },
   )
 
   const productInfo = rawData.data.products[0]
@@ -32,20 +32,23 @@ export default eventHandler(async (event) => {
 
   let sizes = []
 
-  if (priceData?.data?.products[0]?.sizes)
+  if (priceData?.data?.products[0]?.sizes) {
     sizes = priceData?.data?.products[0]?.sizes
       .filter((item: any) => item.stocks.length)
       .map((item: any) => item.origName)
-  else
+  }
+  else {
     sizes = productInfo?.sizes_table?.values.map((size: any) => size.tech_size)
+  }
 
   const product = priceData?.data?.products.find(
-    (item: any) => item.id === Number(article)
+    (item: any) => item.id === Number(article),
   )
   const priceRaw = product?.salePriceU.toString()
   let instock = false
   product.sizes.forEach((size: any) => {
-    if (size.stocks.length > 0) instock = true
+    if (size.stocks.length > 0)
+      instock = true
   })
 
   if (!priceRaw || !sizes) {

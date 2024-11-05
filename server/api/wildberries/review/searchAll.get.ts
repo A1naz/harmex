@@ -1,17 +1,18 @@
-﻿import { Delivery } from '@/server/lib/models/wildberries/Delivery'
-import { Buyout } from '@/server/lib/models/wildberries/Buyout'
+﻿import { Buyout } from '@/server/lib/models/wildberries/Buyout'
+import { Delivery } from '@/server/lib/models/wildberries/Delivery'
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
-
-    const { status, type, string } = getQuery(event)
+  const { status, type, string } = getQuery(event)
 
   let trueStatus: any
-  if (status == 'all') {
+  if (status === 'all') {
     trueStatus = {}
-  } else {
+  }
+  else {
     trueStatus = status
   }
 
@@ -25,7 +26,8 @@ export default eventHandler(async (event) => {
     }).sort({
       createdAt: -1,
     })
-  } else if (type === 'uuid') {
+  }
+  else if (type === 'uuid') {
     const uuid = string?.toString().replaceAll('#', '')
     readyForReview = await Delivery.find({
       status: trueStatus,
@@ -36,12 +38,14 @@ export default eventHandler(async (event) => {
     })
   }
 
-  if (!readyForReview) return []
+  if (!readyForReview)
+    return []
 
   const format = await Promise.all(
     readyForReview.map(async (delivery) => {
       const buyout = await Buyout.findOne({ _id: delivery.idbuyout })
-      if (!buyout) return undefined
+      if (!buyout)
+        return undefined
       return {
         status: trueStatus,
         buyoutuuid: buyout.uuid,
@@ -54,7 +58,7 @@ export default eventHandler(async (event) => {
         updatedAt: delivery.updatedAt,
         id: delivery._id,
       }
-    })
+    }),
   )
-  return format.filter((item) => item !== undefined)
+  return format.filter(item => item !== undefined)
 })

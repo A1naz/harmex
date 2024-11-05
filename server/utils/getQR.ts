@@ -1,5 +1,5 @@
-import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
+import speakeasy from 'speakeasy'
 
 export default function getQR() {
   const secret: any = speakeasy.generateSecret({
@@ -11,7 +11,8 @@ export default function getQR() {
       qrcode.toDataURL(secret.otpauth_url, (err: any, data: any) => {
         if (err) {
           reject(err)
-        } else {
+        }
+        else {
           resolve(data)
         }
       })
@@ -25,16 +26,15 @@ export default function getQR() {
       code = await getQR()
 
       return code
-    } catch (error) {
-
+    }
+    catch (error) {
       console.error(error)
-      return undefined 
+      return undefined
     }
   }
 
-  getCodeAndDoSomething().then((result) => {
+  getCodeAndDoSomething().then(() => {
   })
-  
 
   return { code, secret }
 }

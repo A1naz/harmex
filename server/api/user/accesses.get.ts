@@ -1,22 +1,18 @@
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
-import MenuBuilder from '~/server/utils/menuBuilder'
-import { UserRoles } from '~/data/enums'
+import { User } from "~~/server/lib/models/User"
 
-export default eventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
+    const isAuth = await getUserSession(event)
 
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
+    if (!isAuth) {
+        return { acesses: [], quickAccesses: [] }
+    }
 
-  const user = await User.findOne({ uuid: session.uuid }, {acesses: 1})
-  if (!user) return sendRedirect(event, '/auth', 302)
+    const user = await User.findOne({ uuid: isAuth.user?.uuid }).select('uuid acesses quickAccesses')
 
-  const { allowedPathes} = user.roles[0] == UserRoles.staff 
-    ? MenuBuilder.filteredAccess(user.acesses) 
-    : MenuBuilder.filteredAccess()
+    if (!user) {
+        return { acesses: [], quickAccesses: [] }
+    }
 
-  return {
-    accesses: allowedPathes,
-    status: 'ok',
-  }
+    return { acesses: user.acesses, quickAccesses: user.quickAccesses }
+
 })

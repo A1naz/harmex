@@ -16,9 +16,10 @@ const editData = ref<IReviewDraft>({})
 
 function toEdit(bool?: boolean) {
   editData.value = { ...props.draft }
-  if (!!bool) {
+  if (bool) {
     isEdit.value = bool
-  } else {
+  }
+  else {
     isEdit.value = !isEdit.value
   }
 }
@@ -43,17 +44,20 @@ const classEditing = [
   'bg-white outline outline-warning rounded cursor-text p-2 w-full bg-base-200',
 ]
 </script>
+
 <template>
   <div class="buyout-card card bg-base-200 shadow-lg">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
     >
-      <div v-if="draft.isEdit">...updating</div>
+      <div v-if="draft.isEdit">
+        ...updating
+      </div>
       <div v-else>
         <div class="h-[30px] mb-2">
           <div
             v-if="!isEdit"
-            :class="[classEditable, 'w-full p-1']"
+            class="w-full p-1" :class="[classEditable]"
             @dblclick="toEdit(true)"
           >
             <h2 v-if="draft.draftName" class="card-title">
@@ -66,22 +70,23 @@ const classEditing = [
 
           <div v-else>
             <input
-              type="text"
               v-model="editData.draftName"
+              type="text"
               :class="classEditing"
-            />
+            >
           </div>
         </div>
         <div class="flex flex-col gap-4">
           <div class="flex flex-col w-full">
             <div class="relative w-full rounded-lg">
-              <div class="font-bold">Артикул</div>
+              <div class="font-bold">
+                Артикул
+              </div>
               <div class="w-full">
                 <div
                   v-if="!isEdit"
-                  :class="[
+                  class="w-full p-1 text-sm text-primary link link-hover h-[30px]" :class="[
                     classEditable,
-                    'w-full p-1 text-sm text-primary link link-hover h-[30px]',
                   ]"
                   @dblclick="toEdit(true)"
                 >
@@ -95,22 +100,23 @@ const classEditing = [
 
                 <div v-else>
                   <input
-                    type="text"
                     v-model="editData.article"
+                    type="text"
                     :class="classEditing"
-                  />
+                  >
                 </div>
               </div>
             </div>
           </div>
           <div class="w-full">
-            <div class="font-bold">Отзыв от товаре</div>
+            <div class="font-bold">
+              Отзыв от товаре
+            </div>
 
             <div
               v-if="!isEdit"
-              :class="[
+              class="p-1 w-full bg-base-200  h-[180px]  overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin" :class="[
                 classEditable,
-                'p-1 w-full bg-base-200  h-[180px]  overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin',
               ]"
               @dblclick="toEdit(true)"
             >
@@ -120,8 +126,8 @@ const classEditing = [
             <div v-else>
               <textarea
                 v-model="editData.text"
-                :class="[classEditing, 'h-[180px]']"
-              ></textarea>
+                class="h-[180px]" :class="[classEditing]"
+              />
               <div class="flex flex-row gap-2">
                 <button
                   class="btn btn-neutral btn-sm normal-case font-medium"
@@ -140,7 +146,9 @@ const classEditing = [
           </div>
           <div class="flex flex-row justify-between p-1">
             <div>
-              <div class="font-bold">Дата создания</div>
+              <div class="font-bold">
+                Дата создания
+              </div>
               <div class="relative w-full rounded-lg">
                 <div>
                   {{ defaultDate(draft.createdAt) }}
@@ -151,7 +159,7 @@ const classEditing = [
               class="btn btn-sm m-1 btn-outline btn-error"
               @click="deleteDraft"
             >
-              <span class="pi pi-trash"></span>
+              <span class="pi pi-trash" />
             </Button>
           </div>
         </div>

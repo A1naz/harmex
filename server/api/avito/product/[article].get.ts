@@ -1,33 +1,34 @@
 import fs from 'node:fs'
-import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '~~/server/lib/helpers'
-import { ProxySearchQuery } from '~/server/lib/models/ProxySearchQuery'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { ConnectionPoolClosedEvent } from 'mongodb'
+import { ProxySearchQuery } from '~/server/lib/models/ProxySearchQuery'
+
 const config = useRuntimeConfig()
 const apiKey = config.serverLoadApiKey
 
-//@ts-ignore
+// @ts-ignore
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
+  const session = (await getAdminEntity(event)) as any
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
 
   const params = event.context.params as any
   const article = params.article
 
-  //@ts-ignore
+  // @ts-ignore
   const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     body: {
       type: 'avitoProduct',
       url: `https://www.avito.ru/${article}`,
-      token: config.PARSER_TOKEN
-      
+      token: config.PARSER_TOKEN,
+
     },
   }).catch((e) => {
     throw createError({
       statusCode: 404,
-      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
     })
   })
 
@@ -41,11 +42,11 @@ export default eventHandler(async (event) => {
   return {
     product: {
       image: data.image || '',
-      article: article,
+      article,
       name: data.name || '',
       sizes: ['0'],
       price: data.price || 0,
-      priceText: data.price ? data.price + ' ₽' : '',
+      priceText: data.price ? `${data.price} ₽` : '',
     },
   }
 })

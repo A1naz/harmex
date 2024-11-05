@@ -2,11 +2,11 @@ import { Buyout } from '@/server/lib/models/ozon/Buyout'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
-
-    const body = await readBody(event)
+  const body = await readBody(event)
 
   const found = await Buyout.findOne({ user, uuid: body.uuid })
   if (!found) {
@@ -19,12 +19,11 @@ export default eventHandler(async (event) => {
     found.status = 'active'
   await found.save()
 
-  await userLog(event,
-    {
-        documentType: DocuemntEnum.Buyout,
-        documentId: found.uuid,
-        comment: 'снят с паузы'
-    })
+  await userLog(event, {
+    documentType: DocuemntEnum.Buyout,
+    documentId: found.uuid,
+    comment: 'снят с паузы',
+  })
 
   return {
     status: 'ok',

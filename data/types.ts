@@ -1,6 +1,6 @@
-import { ObjectId } from 'mongoose'
-import { TariffTypeEnum, FieldsType, UserRoles, DocuemntEnum } from './enums'
-import { MenuSection } from './menu/types'
+import type { ObjectId } from 'mongoose'
+import type { DocuemntEnum, FieldsType, TariffTypeEnum, UserRoles } from './enums'
+import type { MenuSection } from './menu/types'
 
 export interface Entity {
   _id?: ObjectId
@@ -20,17 +20,19 @@ export interface StateMain {
 }
 
 export interface IUser extends Entity {
+  save: () => unknown
   orgKey: string
   orgName: string
   orgOgrn: string
   orgInn: string
   middleName: string
   phoneNumber: string
+  phoneConfirmed: boolean
   isBanned: boolean
   username: string | undefined
   firstName: string
   lastName: string
-  email: string
+  email?: string
   apiKeys?: Array<{
     mp: string
     keys: string[]
@@ -40,12 +42,11 @@ export interface IUser extends Entity {
   password: string
   uuid: string
   uuidCompany: string
-  acesses: string[]
   roles: UserRoles[]
   tabs: string
   newEmail: string
   emailConfirmed: boolean
-  telegram: string | undefined
+  telegram: string
   telegramUserId: string
   telegramUnlinkEmailSend: Date
   tg2fa: boolean
@@ -54,20 +55,25 @@ export interface IUser extends Entity {
   registrationDate: Date
   partner: Partner
   tariff: ITariff
-  twoFaQR: string
+  twoFaQR: string | null
   twoFaSecret: string
   isTwoFaEnabled: boolean
-  post: Object
+  post: object
   MPTariffs: []
   newPassword: string
   ffEnabled: boolean
   terminateSession: boolean
   bik: string
   rs: string
-  bankInfo: Object
+  bankInfo: object
   fizFace: boolean
   staff: boolean
   landing: string
+  quickAccesses: Array<string>
+  acesses: Array<string>
+  services: Array<string>
+  favourites: Array<string>
+  votedFor: Array<string>
 }
 
 export interface IUserLogs extends Entity {

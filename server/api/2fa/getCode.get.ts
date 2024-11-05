@@ -1,25 +1,26 @@
 import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  const userAuth = await getUserSession(event)
+  if (!userAuth) return sendRedirect(event, '/auth', 302)
+  const userFound = await User.findOne({ uuid: userAuth.user?.uuid })
+  if (!userFound) return sendRedirect(event, '/auth', 302)
 
-  if (user.twoFaQR) {
-    
+  if (userFound.twoFaQR) {
     return {
-      qrCode: user.twoFaQR,
-      secret: user.twoFaSecret,
+      qrCode: userFound.twoFaQR,
+      secret: userFound.twoFaSecret,
     }
   } else {
+    
     const secret: any = speakeasy.generateSecret({
       length: 10,
-      name: 'MARKETMONSTR: ' + user.username,
+      name: 'HARMEX: ' + userFound.phoneNumber.replace(/[\(\)\-\s]/g, ''),
     })
-  
-    const qrCode = await new Promise((resolve, reject) => {
+
+    const qrCode: string = await new Promise((resolve, reject) => {
       qrcode.toDataURL(secret.otpauth_url, (err: any, data: any) => {
         if (err) {
           reject(err)
@@ -29,9 +30,9 @@ export default eventHandler(async (event) => {
       })
     })
 
-    user.twoFaQR = qrCode
-    user.twoFaSecret = secret.base32
-    await user.save()
+    userFound.twoFaQR = qrCode
+    userFound.twoFaSecret = secret.base32
+    await userFound.save()
 
     return {
       qrCode,

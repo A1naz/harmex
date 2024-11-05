@@ -1,16 +1,11 @@
+import MailService from '~~/server/lib/mailService.js'
+import { Referral } from '~~/server/lib/models/Referral'
+import { User } from '~~/server/lib/models/User'
 import bcrypt from 'bcrypt'
 import { v4 as uuid } from 'uuid'
 import validator from 'validator'
-import { getServerSession } from '#auth'
-import { User } from '~~/server/lib/models/User'
-import { Plans } from '~/server/lib/models/Plans'
-import { Referral } from '~~/server/lib/models/Referral'
-import MailService from '~~/server/lib/mailService.js'
-import { createUsername } from '~/server/utils/createUsername'
+import { createUsername } from '~/server/utils/createUsernameFromMail'
 
-function hasWhiteSpace(s: string) {
-  return s.includes(' ') || !/^[a-zA-Z0-9_-]{4,14}$/.test(s)
-}
 export default eventHandler(async (event) => {
   const body = await readBody(event)
 
@@ -19,7 +14,7 @@ export default eventHandler(async (event) => {
     password,
     referral,
     phoneNumber,
-    landing
+    landing,
   } = body
 
   if (!email || !password)
@@ -38,8 +33,6 @@ export default eventHandler(async (event) => {
       error: 'Пароль должен быть от 6 до 36 символов.',
     }
   }
-  const session = await getServerSession(event)
-  if (session) return { status: 'error', error: 'Вы уже авторизованы.' }
 
   const checkEmail = await User.findOne({
     email: { $regex: new RegExp(email, 'i') },
@@ -52,7 +45,7 @@ export default eventHandler(async (event) => {
   }
 
   const checkNumber = await User.findOne({
-    phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
+    phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
   })
 
   if (checkNumber) {
@@ -62,30 +55,21 @@ export default eventHandler(async (event) => {
     }
   }
 
-  const hash = bcrypt.hashSync(password, 7)
-
-  const plan = await Plans.findOne({ name: 'Standart' })
-  if (!plan)
-    return {
-      status: 'error',
-      error:
-        'Ошибка при регистрации. Тариф не найден, отправьте пожалуйста это сообщение в техподдержку',
-    }
+  const hashedPassword = await Bun.password.hash(password, 'bcrypt')
 
   const newUsername = await createUsername(email)
 
   const user: IUser = new User({
     email,
-    password: hash,
+    password: hashedPassword,
     username: newUsername,
     roles: ['user'],
-    tariff: plan.tariff,
     uuid: uuid(),
     orgInn: uuid(),
     lastname: '',
     name: '',
     middleName: '',
-    phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
+    phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
     emailConfirmed: true,
     fizFace: true,
     landing,
@@ -94,7 +78,9 @@ export default eventHandler(async (event) => {
   const link = `${url}/api/auth/activate?uuid=${user.uuid}`
   try {
     await MailService.sendActivationMail(user.email, link)
-  } catch (error) {
+  }
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  catch (error) {
     return { status: 'error', error: 'Ошибка отправки письма.' }
   }
   await user.save()
@@ -115,7 +101,8 @@ export default eventHandler(async (event) => {
       if (referralFound) {
         referralFound.referrals.push({ user: user._id, date: new Date() })
         await referralFound.save()
-      } else {
+      }
+      else {
         await Referral.create({
           user: inviter,
           referrals: [{ user: user._id, date: new Date() }],

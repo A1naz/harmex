@@ -1,55 +1,82 @@
-import * as https from 'https'
 import { HttpsProxyAgent } from 'https-proxy-agent'
+
 const c = [
-  143, 287, 431, 719, 1007, 1061, 1115, 1169, 1313, 1601, 1655, 1919, 2045, 2057
+  143,
+  287,
+  431,
+  719,
+  1007,
+  1061,
+  1115,
+  1169,
+  1313,
+  1601,
+  1655,
+  1919,
+  2045,
+  2057,
 ]
-import { proxies } from './proxy'
 
 function p(t: any, e: any) {
   for (let i = 0; i < e.length; i++) {
     const first = e[i - 1] ? e[i - 1] : 0
-    if (t > first && t <= e[i]) return i + 1
+    if (t > first && t <= e[i])
+      return i + 1
   }
 }
-const sleep = (ms: any) => new Promise((r) => setTimeout(r, ms))
+const sleep = (ms: any) => new Promise(r => setTimeout(r, ms))
 
 export function findImage(input: string) {
-  const nm = parseInt(input, 10)
+  const nm = Number.parseInt(input, 10)
   const vol = Math.floor(nm / 1e5)
   const part = Math.floor(nm / 1e3)
   let host
   if (vol >= 0 && vol <= 143) {
     host = '//basket-01.wb.ru'
-  } else if (vol >= 144 && vol <= 287) {
+  }
+  else if (vol >= 144 && vol <= 287) {
     host = '//basket-02.wb.ru'
-  } else if (vol >= 288 && vol <= 431) {
+  }
+  else if (vol >= 288 && vol <= 431) {
     host = '//basket-03.wb.ru'
-  } else if (vol >= 432 && vol <= 719) {
+  }
+  else if (vol >= 432 && vol <= 719) {
     host = '//basket-04.wb.ru'
-  } else if (vol >= 720 && vol <= 1007) {
+  }
+  else if (vol >= 720 && vol <= 1007) {
     host = '//basket-05.wb.ru'
-  } else if (vol >= 1008 && vol <= 1061) {
+  }
+  else if (vol >= 1008 && vol <= 1061) {
     host = '//basket-06.wb.ru'
-  } else if (vol >= 1062 && vol <= 1115) {
+  }
+  else if (vol >= 1062 && vol <= 1115) {
     host = '//basket-07.wb.ru'
-  } else if (vol >= 1116 && vol <= 1169) {
+  }
+  else if (vol >= 1116 && vol <= 1169) {
     host = '//basket-08.wb.ru'
-  } else if (vol >= 1170 && vol <= 1313) {
+  }
+  else if (vol >= 1170 && vol <= 1313) {
     host = '//basket-09.wb.ru'
-  } else if (vol >= 1314 && vol <= 1601) {
+  }
+  else if (vol >= 1314 && vol <= 1601) {
     host = '//basket-10.wb.ru'
-  } else if (vol >= 1602 && vol <= 1655) {
+  }
+  else if (vol >= 1602 && vol <= 1655) {
     host = '//basket-11.wb.ru'
-  } else if (vol >= 1656 && vol <= 1919) {
+  }
+  else if (vol >= 1656 && vol <= 1919) {
     host = '//basket-12.wb.ru'
-  } else if (vol >= 1920 && vol <= 2045) {
+  }
+  else if (vol >= 1920 && vol <= 2045) {
     host = '//basket-13.wb.ru'
-  } else if (vol >= 2046 && vol <= 2191) {
+  }
+  else if (vol >= 2046 && vol <= 2191) {
     host = '//basket-14.wb.ru'
-  } else {
+  }
+  else {
     host = '//basket-15.wbbasket.ru'
   }
-  
+
   return `https:${host}/vol${vol}/part${part}/${nm}/images/big/1.webp`
 }
 
@@ -62,18 +89,17 @@ export function findProductCard(article: number) {
   const result = `https://basket-${
     (a as number) < 10 ? `0${a}` : a
   }.wb.ru/vol${n}/part${Math.floor(article / 1e3)}/${article}/info/ru/card.json`
-  
+
   return result
 }
 
-const cycleCount = 0
 export async function findPositionByQuery(
   query: string,
   article: number,
   proxies: string[] = [],
   sort = 'popular',
   n: number = 0,
-  cycleCount: number = 0
+  cycleCount: number = 0,
 ) {
   const pages = 50
   try {
@@ -94,15 +120,14 @@ export async function findPositionByQuery(
           'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
         },
-      }
+      },
     )
     const advertPages = advertData.pages
     if (advertData.adverts) {
       const foundIndex = advertData.adverts.findIndex(
-        (el: any) => el.id === article
+        (el: any) => el.id === article,
       )
       if (foundIndex !== -1) {
-        const item = advertData.adverts[foundIndex]
         const place = foundIndex + 1
         const page = Math.ceil(place / advertPages[0].count)
         result.found = true
@@ -127,22 +152,25 @@ export async function findPositionByQuery(
               'User-Agent':
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
             },
-          }
+          },
         )
 
         const parsed = JSON.parse(data)
         const products = parsed?.data?.products
 
-        if (!products) return result
+        if (!products)
+          return result
 
         products.forEach((el: any) => {
+          // eslint-disable-next-line eqeqeq
           if (el.id == article) {
             result.found = true
             result.page = i
             return result
           }
         })
-        if (result.found) return result
+        if (result.found)
+          return result
       }
       return result
     }
@@ -150,8 +178,13 @@ export async function findPositionByQuery(
     if (n < pages) {
       const cycleResult = await findPositionCycle()
       return cycleResult
-    } else return result
-  } catch (e) {
+    }
+    else {
+      return result
+    }
+  }
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  catch (e) {
     cycleCount++
 
     if (n <= 1) {
@@ -160,10 +193,11 @@ export async function findPositionByQuery(
         article,
         proxies,
         sort,
-        n
+        n,
       )
       return newResult
-    } else if (n < pages && cycleCount < 10) {
+    }
+    else if (n < pages && cycleCount < 10) {
       await sleep(2500)
       const newResult: any = await findPositionByQuery(
         query,
@@ -171,7 +205,7 @@ export async function findPositionByQuery(
         proxies,
         sort,
         n,
-        cycleCount
+        cycleCount,
       )
       return newResult
     }

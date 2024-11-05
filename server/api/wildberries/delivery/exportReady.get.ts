@@ -1,10 +1,8 @@
-import ExcelJS from 'exceljs'
-
 import type { Document } from 'mongoose'
-import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
 import { Buyout } from '~~/server/lib/models/wildberries/Buyout'
 import { Buyoutlog } from '~~/server/lib/models/wildberries/Buyoutlog'
-import { DocuemntEnum } from '~/data/enums'
+import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
+import ExcelJS from 'exceljs'
 
 const keys = Object.keys as <T>(
   obj: T
@@ -12,8 +10,8 @@ const keys = Object.keys as <T>(
   ? U extends string
     ? U
     : U extends number
-    ? `${U}`
-    : never
+      ? `${U}`
+      : never
   : never)[]
 
 async function getReady(user: Document) {
@@ -34,7 +32,7 @@ async function getReady(user: Document) {
   if (!deliveries.length) {
     return []
   }
-  const buyoutsId = deliveries.map((item) => item.idbuyout)
+  const buyoutsId = deliveries.map(item => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
   const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
 
@@ -42,14 +40,15 @@ async function getReady(user: Document) {
     deliveries
       .map(async (delivery, index) => {
         const buyout = buyouts.find(
-          (buyout) => buyout._id.valueOf() === delivery.idbuyout.valueOf()
+          buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf(),
         )
 
-        if (!buyout) return undefined
+        if (!buyout)
+          return undefined
         const foundLog = logs.find(
-          (item) =>
-            item.buyout.valueOf() === buyout._id.valueOf() &&
-            item.text.includes('Выкуп выполнен')
+          item =>
+            item.buyout.valueOf() === buyout._id.valueOf()
+            && item.text.includes('Выкуп выполнен'),
         )
         const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt)
         const place = index + 1
@@ -61,26 +60,25 @@ async function getReady(user: Document) {
 
         const phone: any = delivery.recipientphone
         const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
-        const currentstatus = "Готов к выдаче"
-        // delivery.statusdelivery?.length
-        //   ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
-        //   : 'Неизвестно'
+        const currentstatus = delivery.statusdelivery?.length
+          ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
+          : 'Неизвестно'
         const statusupdated = delivery.statusdelivery?.length
           ? new Date(
-              delivery.statusdelivery[delivery.statusdelivery.length - 1].date
-            )
+            delivery.statusdelivery[delivery.statusdelivery.length - 1].date,
+          )
           : new Date()
         const deliveryDate = delivery.statusdelivery?.length
           ? new Date(
-              delivery.statusdelivery?.find(
-                (item) =>
-                  item.status === 'Готов к выдаче' ||
-                  item.status === 'Готов к получению'
-              )?.date
-            )
+            delivery.statusdelivery?.find(
+              item =>
+                item.status === 'Готов к выдаче'
+                || item.status === 'Готов к получению',
+            )?.date,
+          )
           : new Date()
         const expireDate = new Date(
-          deliveryDate.getTime() + 1000 * 60 * 60 * 24 * 14
+          deliveryDate.getTime() + 1000 * 60 * 60 * 24 * 14,
         )
         return {
           index,
@@ -110,7 +108,7 @@ async function getReady(user: Document) {
           key: buyout.ff ? 'Выкуп под ключ' : 'Выкуп',
         }
       })
-      .filter((item) => item !== undefined)
+      .filter(item => item !== undefined),
   )
 
   return format
@@ -119,11 +117,12 @@ async function getReady(user: Document) {
 export default eventHandler(async (event) => {
   try {
     const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+    if (!user)
+      return sendRedirect(event, '/auth', 302)
 
     const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
-    const ready = (await getReady(user)).filter((item) => item !== undefined)
+    const ready = (await getReady(user)).filter(item => item !== undefined)
 
     const sheet = workbook.addWorksheet('Готовы к выдаче', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
@@ -204,21 +203,21 @@ export default eventHandler(async (event) => {
 
     for (const item of ready) {
       if (
-        !item?.receiptcodeqr ||
-        item?.receiptcodeqr?.length < 40 ||
-        item?.receiptcodeqr === 'undefined'
+        !item?.receiptcodeqr
+        || item?.receiptcodeqr?.length < 40
+        || item?.receiptcodeqr === 'undefined'
       ) {
         continue
       }
 
       if (
         item.receiptcodeqr.includes(
-          'data:image/png;base64,data:image/png;base64,'
+          'data:image/png;base64,data:image/png;base64,',
         )
       ) {
         item.receiptcodeqr = item.receiptcodeqr.replace(
           'data:image/png;base64,',
-          ''
+          '',
         )
       }
 
@@ -235,14 +234,15 @@ export default eventHandler(async (event) => {
     // export table
     const buffer = await workbook.xlsx.writeBuffer()
 
-    await userLog(event, {
-      documentType: DocuemntEnum.Delivery,
-      documentId: '',
-      comment: 'Экспорт доставок готовых к выдаче',
-    })
+    // await userLog(event, {
+    //   documentType: DocuemntEnum.Delivery,
+    //   documentId: '',
+    //   comment: 'Экспорт доставок готовых к выдаче',
+    // })
 
     return buffer
-  } catch (e) {
+  }
+  catch (e) {
     console.log(e)
     throw createError({
       statusCode: 500,

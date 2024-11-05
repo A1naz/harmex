@@ -1,18 +1,19 @@
-import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
 import { Buyout } from '~~/server/lib/models/wildberries/Buyout'
 
+import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
+
 export default eventHandler(async (event) => {
-
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
-  const all = await Delivery.find({ user }).sort({ _id: -1 })
+  const all = await Delivery.find({ user }).sort({ _id: -1 }).limit(500)
 
-  const buyoutsId = all.map(item => item.idbuyout);
+  const buyoutsId = all.map(item => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
   const format = await Promise.all(
     all.map(async (delivery) => {
-      const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf());
+      const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf())
       if (!buyout)
         return null
       const place = all.findIndex(
@@ -45,6 +46,7 @@ export default eventHandler(async (event) => {
       }
     }),
   )
+
   const filtered = format.filter((item) => {
     if (item)
       return item!.currentstatus === 'Готов к выдаче' || item!.currentstatus === 'Готов к получению'

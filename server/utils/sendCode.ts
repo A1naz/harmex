@@ -1,4 +1,5 @@
-import { ConfirmPhone } from '~/server/lib/models/ConfirmPhone'
+import { ConfirmPhone } from '@/server/lib/models/ConfirmPhone'
+
 const config = useRuntimeConfig()
 const hiCallKey = config.HI_CALL_KEY
 
@@ -21,7 +22,7 @@ export default async function sendCode(phoneNumber: string) {
   }
 
   const data: any = await $fetch(
-    `https://a.hi-call.ru/voice/${hiCallKey}/${phoneNumber.replace('+', '')}`
+    `https://a.hi-call.ru/voice/${hiCallKey}/${phoneNumber.replace('+', '')}`,
   )
 
   if (!data) {

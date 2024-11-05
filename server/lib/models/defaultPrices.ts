@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { model, Schema } from 'mongoose'
 import { Tariff } from './Tariff'
 
 const defaultPricesSchema = new Schema({

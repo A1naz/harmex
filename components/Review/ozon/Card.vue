@@ -9,8 +9,6 @@ const props = defineProps({
     required: true,
   },
 })
-const store = useMainStore()
-const { width } = useWindowSize()
 const emit = defineEmits(['openModal'])
 const router = useRouter()
 const delIndex = 0
@@ -28,7 +26,7 @@ const countSoonAvailable = props.info.countSoon
 const sex = props.info.delivs[delIndex].sex
 
 function openBuyout() {
-  router.push(`/buyouts/ozon?uuid=${buyoutuuId}`)
+  router.push(`/ozon/buyouts?uuid=${buyoutuuId}`)
 }
 </script>
 
@@ -40,8 +38,7 @@ function openBuyout() {
       <label
         class="text-[0.6rem] self-start link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate lg:hidden"
         @click="openBuyout"
-        >#{{ buyoutuuId }}</label
-      >
+      >#{{ buyoutuuId }}</label>
       <div class="flex gap-4">
         <a
           class=""
@@ -86,8 +83,7 @@ function openBuyout() {
             <label
               class="text-[0.6rem] self-end link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate hidden lg:block"
               @click="openBuyout"
-              >#{{ buyoutuuId }}</label
-            >
+            >#{{ buyoutuuId }}</label>
           </div>
           <div
             class="flex justify-between flex-wrap gap-2 items-center mt-2 mb-2"
@@ -105,15 +101,13 @@ function openBuyout() {
                 Пол:
                 <span
                   class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F] px-1 text-base-content py-0.5 ml-1"
-                  >{{ sex }}</span
-                >
+                >{{ sex }}</span>
               </div>
               <div class="text-gray-500">
                 Размер:
                 <span
                   class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F] px-1 text-base-content py-0.5 ml-1"
-                  >{{ size === 'none' ? 'Нет' : size }}</span
-                >
+                >{{ size === 'none' ? 'Нет' : size }}</span>
               </div>
             </div>
 

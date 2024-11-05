@@ -1,7 +1,5 @@
 import type { Rule } from '@/data/buyout/rules'
-import { findPositionByQuery } from '@/server/lib/helpers'
 import getPickpoints from '@/server/utils/wildberries/getPoints'
-import { ProxySearchQuery } from '~/server/lib/models/ProxySearchQuery'
 
 interface Item {
   image: string
@@ -20,43 +18,15 @@ interface Item {
   purchaseSoon: boolean
 }
 
-const sorts = [
-  {
-    ruleId: 10,
-    sort: 'popular',
-  },
-  {
-    ruleId: 11,
-    sort: 'priceup',
-  },
-  {
-    ruleId: 12,
-    sort: 'pricedown',
-  },
-  {
-    ruleId: 13,
-    sort: 'newly',
-  },
-  {
-    ruleId: 14,
-    sort: 'benefit',
-  },
-  {
-    ruleId: 15,
-    sort: 'rate',
-  },
-]
-
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
   const query = getQuery(event)
   const { userTimezoneOffsetHours } = query
   const { points } = await getPickpoints()
-  // const allProxies: any = await ProxySearchQuery.find()
-  // const proxies: string[] = allProxies[0].proxies
 
   const products: Item[] = body
 
@@ -71,17 +41,7 @@ export default eventHandler(async (event) => {
     return result
   }
 
-  // if (!user.fizFace && !user.bik && !user.rs) {
-  //   result.success = false
-  //   result.message = 'Необходимо заполнить банковские реквизиты в меню'
-  // }
-
   for (const item of products) {
-    
-    
-    const rules = item.rules.map((rule) => rule.id)
-    let sort = 'popular'
-
     const curDate = new Date()
     curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))
     const firstDate = new Date(item.dateRange[0])
@@ -90,7 +50,6 @@ export default eventHandler(async (event) => {
       result.success = false
       result.message = `Дата ${item.article} не может быть меньше текущей по МСК`
     }
-
 
     // if (rules.includes(11)) sort = 'priceup'
     // if (rules.includes(12)) sort = 'pricedown'

@@ -1,8 +1,8 @@
-import { v4 as uuid } from 'uuid'
 import type { Rule } from '@/data/buyout/rules'
 import { Buyout } from '@/server/lib/models/wildberries/Buyout'
+import { userLog } from '@/server/utils/userLog'
 import getPickpoints from '@/server/utils/wildberries/getPoints'
-import { userLog } from '~/server/utils/userLog'
+import { v4 as uuid } from 'uuid'
 import { DocuemntEnum } from '~/data/enums'
 import { getDisctrict } from '~/server/utils/getDisctrict'
 
@@ -30,8 +30,9 @@ interface Item {
   }
 }
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  const user: any = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   // if (!user.fizFace && !user.bik && !user.rs) {
   //   throw createError(
@@ -44,16 +45,6 @@ export default eventHandler(async (event) => {
   const params = getQuery(event)
   const { userTimezoneOffsetHours, userOffsetMinutes } = params
 
-  const activeBuyouts = await Buyout.find({
-    user,
-    status: { $in: ['active', 'work', 'created'] },
-  })
-  const sum = activeBuyouts.reduce((acc, item) => {
-    const price =
-      parseInt(item.product.price) * (item.quantity - item.completed)
-    return acc + price
-  }, 0)
-
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
 
@@ -64,11 +55,11 @@ export default eventHandler(async (event) => {
     throw createError('Можно создать максимум 10 выкупов за раз')
   }
   for await (const product of products) {
-    const rules = product.rules.map((rule) => rule.id)
+    const rules = product.rules.map(rule => rule.id)
     const searchQueries = product.searchQuery.map((item: any) => item.value)
     if (product.searchQuery.length > 5) {
       throw createError(
-        `Для продукта ${product.article} указано больше 5 поисковых запросов`
+        `Для продукта ${product.article} указано больше 5 поисковых запросов`,
       )
     }
 
@@ -82,23 +73,24 @@ export default eventHandler(async (event) => {
 
       if (!product.purchaseSoon) {
         date1.setHours(
-          date1.getHours()
+          date1.getHours(),
           // + Number(userTimezoneOffsetHours)
         )
         date1.setMinutes(
-          date1.getMinutes()
+          date1.getMinutes(),
           // + Number(userOffsetMinutes)
         )
 
         date2.setHours(
-          date2.getHours()
+          date2.getHours(),
           // + Number(userTimezoneOffsetHours)
         )
         date2.setMinutes(
-          date2.getMinutes()
+          date2.getMinutes(),
           // + Number(userOffsetMinutes)
         )
-      } else {
+      }
+      else {
         date1.setHours(date1.getHours())
         date2.setHours(date2.getHours())
       }
@@ -112,7 +104,8 @@ export default eventHandler(async (event) => {
     if (foundPoint.city && foundPoint.state) {
       city = foundPoint.city
       state = foundPoint.state
-    } else {
+    }
+    else {
       ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
     }
 

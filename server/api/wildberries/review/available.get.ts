@@ -1,70 +1,62 @@
+import { SelectOptionsReviews } from '@/data/enums'
 import { Delivery } from '@/server/lib/models/wildberries/Delivery'
 import { ObjectId } from 'mongodb'
-import { Buyout } from '~/server/lib/models/wildberries/Buyout';
-import { SelectOptionsReviews } from '@/data/enums'
+import { Buyout } from '~/server/lib/models/wildberries/Buyout'
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event);
-  if (!user) return sendRedirect(event, '/auth', 302);
+  const user: any = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
-  const { skip, limit, search } = getQuery(event);
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  const { skip, limit, search } = getQuery(event)
 
-  const skipA = skip ? parseInt(skip.toString(), 10) : 0;
-  const limitA = limit ? parseInt(limit.toString(), 10) : 1000;
-  let searchParse = search ? JSON.parse(search?.toString()) : undefined;
+  const searchParse = search ? JSON.parse(search?.toString()) : undefined
 
   const filter: any = {
-    user: new ObjectId(user._id),
-    reviewed: { $ne: true },
+    'user': new ObjectId(user._id),
+    'reviewed': { $ne: true },
     'statusdelivery.status': { $regex: 'Получен' },
-    status: 'completed'
-  };
-
+    'status': 'completed',
+  }
 
   if (searchParse && Object.values(searchParse)[0] !== '') {
     if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
-      filter.uuidbuyout = searchParse.uudidBuyout.replace('#', '');
-    } else if (Object.keys(searchParse)[0] === 'article') {
-      const searchArticle = searchParse.article.trim().toLowerCase();
-      const numericArticle = parseInt(searchArticle, 10);
+      filter.uuidbuyout = searchParse.uudidBuyout.replace('#', '')
+    }
+    else if (Object.keys(searchParse)[0] === 'article') {
+      const searchArticle = searchParse.article.trim().toLowerCase()
+      const numericArticle = Number.parseInt(searchArticle, 10)
 
       filter.$or = [
-        { article: searchArticle },  
-        { article: numericArticle }, 
-      ];
-    } else {
-      Object.assign(filter, searchParse);
+        { article: searchArticle },
+        { article: numericArticle },
+      ]
+    }
+    else {
+      Object.assign(filter, searchParse)
     }
   }
-  // console.log('available wb filter', filter);
-
   const deliveries = await Delivery.find(filter)
     .select('_id article updatedAt pricebuy idbuyout uuidbuyout data8')
     .sort({ _id: -1 })
-    // .skip(skipA)
-    // .limit(limitA)
-    .lean();
 
-  // console.log('available wb deliveries', deliveries);
+    .lean()
 
-  const buyoutIds = deliveries.map(delivery => delivery.idbuyout);
-
-  // user: new ObjectId(user._id),
+  const buyoutIds = deliveries.map(delivery => delivery.idbuyout)
 
   const buyouts = await Buyout.find({ _id: { $in: buyoutIds } })
     .select('sizeparam product gender')
-    .lean() as any;
-
-  // console.log('available wb buyouts', buyouts);
+    .lean() as any
 
   const buyoutMap = buyouts.reduce((acc: any, buyout: any) => {
-    acc[buyout._id] = buyout;
-    return acc;
-  }, {}) as any;
+    acc[buyout._id] = buyout
+    return acc
+  }, {}) as any
 
   const groupedArticles = deliveries.reduce((acc: any, delivery: any) => {
-    const article = delivery.article.toString().trim().toLowerCase();
-    const buyout = buyoutMap[delivery.idbuyout];
+    const article = delivery.article.toString().trim().toLowerCase()
+    const buyout = buyoutMap[delivery.idbuyout]
 
     if (!acc[article]) {
       acc[article] = {
@@ -73,17 +65,17 @@ export default eventHandler(async (event) => {
         countAvailable: 0,
         productimage: new Set(),
         productname: new Set(),
-        delivs: []
-      };
+        delivs: [],
+      }
     }
 
-    acc[article].countAvailable += 1;
+    acc[article].countAvailable += 1
 
-    const productImage = buyout?.product?.image || '/no-image.png';
-    const productName = buyout?.product?.name || 'Неизвестно';
+    const productImage = buyout?.product?.image || '/no-image.png'
+    const productName = buyout?.product?.name || 'Неизвестно'
 
-    acc[article].productimage.add(productImage);
-    acc[article].productname.add(productName);
+    acc[article].productimage.add(productImage)
+    acc[article].productname.add(productName)
 
     acc[article].delivs.push({
       delivId: delivery._id,
@@ -92,40 +84,32 @@ export default eventHandler(async (event) => {
       buyoutId: delivery.uuidbuyout,
       gender: [delivery.data8, buyout?.gender],
       sizeparam: buyout?.sizeparam,
-    });
+    })
 
-    return acc;
-  }, {});
-
-  // const seenArticles = new Set();
-  // Object.keys(groupedArticles).forEach((article) => {
-  //   if (seenArticles.has(article)) {
-  //     console.log(`Повторяющийся артикул: ${article}`);
-  //   } else {
-  //     seenArticles.add(article);
-  //   }
-  // });
+    return acc
+  }, {})
 
   const result = Object.values(groupedArticles).map((article: any) => ({
     ...article,
     productimage: Array.from(article.productimage),
-    productname: Array.from(article.productname)
-  })).sort((a, b) => b.countAvailable - a.countAvailable);
+    productname: Array.from(article.productname),
+  })).sort((a, b) => b.countAvailable - a.countAvailable)
 
   const genderMap = new Map<string, string>([
     ['female', 'Женский'],
     ['male', 'Мужской'],
-  ]);
+  ])
 
   const sex = (genders: string[]): string => {
     for (const gen of genders) {
       if (gen && typeof gen === 'string') {
-        let foundGen = genderMap.get(gen.toLowerCase());
-        if (foundGen) return foundGen;
+        const foundGen = genderMap.get(gen.toLowerCase())
+        if (foundGen)
+          return foundGen
       }
     }
-    return 'Нет';
-  };
+    return 'Нет'
+  }
 
   const formated = result.map((deliveryForReview: any) => {
     return {
@@ -135,11 +119,10 @@ export default eventHandler(async (event) => {
         return {
           ...delivery,
           sex: sex(delivery.gender),
-        };
+        }
       }),
-    };
-  });
-  // console.log('available wb formated', formated);
-  // console.log('___________________________________');
-  return formated;
-});
+    }
+  })
+
+  return formated
+})

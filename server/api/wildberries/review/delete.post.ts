@@ -1,15 +1,12 @@
 ﻿import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { Review } from '~~/server/lib/models/wildberries/Review'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
+  const user: any = (await getAdminEntity(event)) as any
 
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
-
-  const user = await User.findOne({ uuid: session.uuid })
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const { id } = getQuery(event)
 
@@ -31,12 +28,11 @@ export default eventHandler(async (event) => {
   found.status = 'deleting'
   await found.save()
 
-  await userLog(event,
-    {
-        documentType: DocuemntEnum.Review,
-        documentId: found._id,
-        comment: 'Статус: удаление'
-    })
+  await userLog(event, {
+    documentType: DocuemntEnum.Review,
+    documentId: found._id,
+    comment: 'Статус: удаление',
+  })
 
   return { status: 'ok' }
 })

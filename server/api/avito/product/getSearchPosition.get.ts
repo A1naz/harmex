@@ -1,14 +1,15 @@
-import { getServerSession } from '#auth'
 import { findPositionByQuery } from '@/server/lib/helpers'
 import { ProxySearchQuery } from '~/server/lib/models/ProxySearchQuery'
 
 export default eventHandler(async (event) => {
   try {
-    const session = (await getServerSession(event)) as any
-    if (!session) return sendRedirect(event, '/auth', 302)
+    const session = (await getAdminEntity(event)) as any
+    if (!session)
+      return sendRedirect(event, '/auth', 302)
 
     const { article, query } = getQuery(event)
-    if (!article || !query) return { found: false, page: -1, advert: false }
+    if (!article || !query)
+      return { found: false, page: -1, advert: false }
 
     return {
       found: false,
@@ -22,10 +23,11 @@ export default eventHandler(async (event) => {
     const result: any = await findPositionByQuery(
       query.toString().replaceAll(' ', '%20'),
       Number(article),
-      proxies
+      proxies,
     )
     return result
-  } catch (e) {
+  }
+  catch (e) {
     console.log(e)
 
     throw createError(e as string)

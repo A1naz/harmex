@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
-import { useOzonBuyoutStore } from '../../../stores/ozonBuyout'
 import type { Rule } from '@/data/buyout/rules'
+import { useOzonBuyoutStore } from '../../../stores/ozonBuyout'
 
 const props = defineProps({
   product: {
@@ -23,6 +22,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen', 'removeDiscount'])
+
+const { notify } = useNotification()
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
@@ -183,7 +184,9 @@ const productQuantityModel = computed({
             {{ size }}
           </option>
         </select>
-        <div v-else class="text-sm text-center ml-2">Нет</div>
+        <div v-else class="text-sm text-center ml-2">
+          Нет
+        </div>
       </div>
     </td>
     <td class="border-r border-base">
@@ -192,9 +195,15 @@ const productQuantityModel = computed({
           class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-[sm] appearance-none"
           @change="onSexChange"
         >
-          <option value="Нет">Нет</option>
-          <option value="male">Муж</option>
-          <option value="female">Жен</option>
+          <option value="Нет">
+            Нет
+          </option>
+          <option value="male">
+            Муж
+          </option>
+          <option value="female">
+            Жен
+          </option>
         </select>
       </div>
     </td>
@@ -225,7 +234,9 @@ const productQuantityModel = computed({
             v-model="productDateRangeModel"
             :start-date="startDate"
           />
-          <div v-else class="text-center">Выкуп в ближайшее время</div>
+          <div v-else class="text-center">
+            Выкуп в ближайшее время
+          </div>
         </div>
       </div>
     </td>
@@ -240,8 +251,8 @@ const productQuantityModel = computed({
           <span v-show="loading" class="loading loading-spinner" />
           <p
             v-if="!loading"
-            @click="$emit('pointModalOpen', index)"
             class="break-all whitespace-normal cursor-pointer text-primary"
+            @click="$emit('pointModalOpen', index)"
           >
             {{ product.adress }}
           </p>
@@ -269,7 +280,7 @@ const productQuantityModel = computed({
         >
           <span v-show="loading" class="loading loading-spinner" />
           <span v-if="!loading">Изменить </span>
-          
+
         </button> -->
       </div>
     </td>
@@ -289,25 +300,25 @@ const productQuantityModel = computed({
 
     <td class="w-[80px] border-r border-base">
       <div class="flex ">
-          <button
-            class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
-            @click="props.openDiscount(index, product.price)"
-            :class="{
-              'rounded-r-none': product.discountPrice && product.discountPrice !== product.price
-            }"
-          >
-            {{
-              product.discountPrice && product.discountPrice !== product.price ? product.discountPrice+' ₽' : 'Указать скидку'
-            }}
-          </button>
-          <button
-            v-if="product.discountPrice && product.discountPrice !== product.price"
-            class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1  btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
-            @click="$emit('removeDiscount', index)"
-          >
-            <Icon name="ep:close-bold" size="12" />
-          </button>
-        </div>
+        <button
+          class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+          :class="{
+            'rounded-r-none': product.discountPrice && product.discountPrice !== product.price,
+          }"
+          @click="props.openDiscount(index, product.price)"
+        >
+          {{
+            product.discountPrice && product.discountPrice !== product.price ? `${product.discountPrice} ₽` : 'Указать скидку'
+          }}
+        </button>
+        <button
+          v-if="product.discountPrice && product.discountPrice !== product.price"
+          class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1  btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+          @click="$emit('removeDiscount', index)"
+        >
+          <Icon name="ep:close-bold" size="12" />
+        </button>
+      </div>
     </td>
     <td class="border-r border-base w-[90px]">
       <div class="flex justify-end">

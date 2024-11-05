@@ -1,14 +1,15 @@
-import { Delivery } from '@/server/lib/models/ozon/Delivery'
 import { Buyout } from '@/server/lib/models/ozon/Buyout'
+import { Delivery } from '@/server/lib/models/ozon/Delivery'
 import { Review } from '@/server/lib/models/ozon/Review'
-import { DocuemntEnum } from '~/data/enums'
 import { v4 as uuid } from 'uuid'
+import { DocuemntEnum } from '~/data/enums'
 
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const {
     buyoutuuid,
@@ -46,7 +47,7 @@ export default eventHandler(async (event) => {
       message: 'Выкуп не найден',
     })
   }
-  
+
   const delivery = await Delivery.findOne({
     _id: deliveryid,
     idbuyout: buyout._id,
@@ -61,9 +62,9 @@ export default eventHandler(async (event) => {
 
   const images = photos.map((photo: any) =>
     photo.public.replace(
-      config.public.DOMAIN_API_IMAGES_URL + 'reviewImages/',
-      ''
-    )
+      `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/`,
+      '',
+    ),
   )
 
   const review = new Review({
@@ -89,7 +90,7 @@ export default eventHandler(async (event) => {
   const res = await review.save()
   delivery.reviewed = true
 
-  const saved = await delivery.save()
+  await delivery.save()
 
   await userLog(event, {
     documentType: DocuemntEnum.Review,

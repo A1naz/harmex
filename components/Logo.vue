@@ -1,4 +1,3 @@
-import { onMounted } from 'vue';
 <script setup lang="ts">
 const props = defineProps({
   width: {
@@ -10,11 +9,10 @@ const props = defineProps({
     default: '65px',
   },
 })
-const colorMode = useColorMode()
 </script>
 
 <template>
-  <NuxtLink href="/buyouts" class="-mb-3">
+  <NuxtLink to="/main" class="-mb-3">
     <!-- <nuxt-img
       v-show="$colorMode.value === 'light' || colorMode.unknown"
       src="/logo/logolight.svg"
@@ -31,8 +29,9 @@ const colorMode = useColorMode()
       alt=""
       srcset=""
     /> -->
-    marketmonstr
+    Sarafan
   </NuxtLink>
+  </nuxtlink>
 </template>
 
 <style scoped></style>

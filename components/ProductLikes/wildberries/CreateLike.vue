@@ -11,23 +11,15 @@ const amount = ref(0)
 const loadingUrl = ref(false)
 const url = ref('')
 const urlError = ref(false)
-const urlSuccess = ref('')
 const period = ref('3h')
-const { width, height } = useWindowSize()
 const productData = ref<any>(null)
 const creatingLike = ref(false)
-const search = reactive({
-  text: '',
-  loading: false,
-  error: false,
-  type: 'name',
-})
-const codeInput = ref()
 async function getProductLikes() {
   const { data, error } = await useFetch('/api/wildberries/productlikes/get', {
     method: 'GET',
   })
-  if (data.value) product_likes.value = data.value
+  if (data.value)
+    product_likes.value = data.value
   //   if (data.value) {
   //     product_likes.value = data.value.map(product => {
   //         if (product.url) {
@@ -39,12 +31,13 @@ async function getProductLikes() {
   //         return product;
   //     });
   // }
-  if (error.value)
+  if (error.value) {
     notify({
       type: 'error',
       title: 'Не удалось получить лайки',
       text: error.value.message,
     })
+  }
 }
 await getProductLikes()
 async function create() {
@@ -59,33 +52,32 @@ async function create() {
         period: period.value,
         productData: productData.value,
       },
-    }
+    },
   )
-  if (error.value){
+  if (error.value) {
     creatingLike.value = false
     return notify({
       type: 'error',
       title: 'Что-то пошло не так',
       text: error.value.message,
-    })}
+    })
+  }
   if (data.value) {
     creatingLike.value = false
     notify({ type: 'success', title: 'Успешно' })
     emit('create')
-    return navigateTo('/productlikes/wildberries')
+    emit('closeModal')
   }
-
-
 }
 async function sendUrl() {
-  const { data, error } = await useFetch(
+  const { data } = await useFetch(
     '/api/wildberries/productlikes/extract',
     {
       method: 'POST',
       body: {
         url: url.value,
       },
-    }
+    },
   )
   urlError.value = true
 
@@ -98,99 +90,40 @@ async function sendUrl() {
   loadingUrl.value = false
 }
 
-let timeout = null as NodeJS.Timeout | null
+let timeout = null as NodeJS.Timer | null
 async function changeUrl() {
-  if (url.value === '') return
+  if (url.value === '')
+    return
   loadingUrl.value = true
-  if (timeout) clearTimeout(timeout)
+  if (timeout)
+    clearTimeout(timeout)
   timeout = setTimeout(sendUrl, 2000)
 }
 function selectPeriod(event: any) {
   period.value = event.target.value
-}
-function getStatus(status: string) {
-  if (status === 'created') return 'Создан'
-  else if (status === 'work') return 'В работе'
-  else if (status === 'busy') return 'В работе'
-  else if (status === 'completed') return 'Завершен'
-  else if (status === 'nofunds') return 'Недостаточно средств'
 }
 function removeProduct() {
   productData.value = null
   url.value = ''
   amount.value = 0
 }
-onMounted(() => {})
-
-const reviewRemoveModalClose: any = ref(null)
-const idForRemove = ref('')
-function openRemoveReviewModal(id: any, name: any) {
-  idForRemove.value = id
-  reviewRemoveModalClose.value?.click()
-}
-
-async function deleteLike() {
-  const { data, error } = await useFetch(
-    '/api/wildberries/productlikes/delete',
-    {
-      method: 'DELETE',
-      body: {
-        id: idForRemove.value,
-      },
-    }
-  )
-
-  if (data.value) {
-    getProductLikes()
-  } else if (error.value) {
-    notify({
-      title: 'Что-то пошло не так',
-      text: error.value.data?.message,
-      type: 'error',
-      duration: 3000,
-    })
-  }
-}
-
-async function selectCreatePage(e: any) {
-  const target = e
-  if (target.value == '/productlikes/wildberries?modalShow=true') {
-    return
-  } else {
-    return navigateTo(target.value)
-  }
-}
 </script>
 
 <template>
   <div
     v-if="props.show === true"
-    @click="$emit('closeModal')"
+    :class="{ 'modal-open': props.show }"
     class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
+    @click="$emit('closeModal')"
   >
     <div
       class="flex flex-col bg-base-100 rounded-lg w-full max-w-sm gap-5 p-4"
       @click.stop
     >
-      <div class="flex justify-between">
-        <ProductLikesWildberriesCustomSelect
-          class="lg:flex"
-          :class="'sm:min-w-[120px]'"
-          :tabs="[
-            {
-              title: 'Лайки на товар/бренд',
-              value: '/productlikes/create/wildberries',
-            },
-            {
-              title: 'Лайки на отзыв',
-              value: '/likes/create/wildberries',
-            },
-          ]"
-          @change-value="selectCreatePage"
-        />
+      <div class="flex justify-end">
         <button
-          class="text-gray-500 hover:text-gray-700 self-end mb-5"
-          @click="navigateTo('/productlikes/wildberries')"
+          class="text-gray-500 hover:text-gray-700 self-end"
+          @click="$emit('closeModal')"
         >
           <Icon name="material-symbols:close-rounded" size="24" />
         </button>
@@ -199,7 +132,7 @@ async function selectCreatePage(e: any) {
         <div class="flex flex-wrap items-center gap-6 mb-2">
           <div class="relative w-full">
             <div>Вставьте ссылку:</div>
-            <div class="input-group w-full min-h-min md:min-h-[48px] mt-2">
+            <div class="join w-full min-h-min md:min-h-[48px] mt-2">
               <input
                 v-model="url"
                 :class="{
@@ -207,16 +140,16 @@ async function selectCreatePage(e: any) {
                 }"
                 :disabled="productData"
                 tabindex="0"
-                class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
+                class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg join-item"
                 placeholder="Введите ссылку"
                 type="text"
                 @input="changeUrl"
-              />
+              >
               <button
                 :class="{
                   'btn-disabled': !productData,
                 }"
-                class="btn btn-sm btn-ghost btn-circle bg-base-200 min-h-min md:min-h-[48px]"
+                class="btn btn-sm btn-ghost btn-circle bg-base-200 min-h-min md:min-h-[48px] join-item rounded-r-md"
                 @click="removeProduct"
               >
                 <span
@@ -235,7 +168,7 @@ async function selectCreatePage(e: any) {
               </button>
             </div>
           </div>
-          
+
           <div>
             <div>Период выполнения:</div>
             <select
@@ -243,12 +176,24 @@ async function selectCreatePage(e: any) {
               class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
               @change="selectPeriod"
             >
-              <option value="3h">3 часа</option>
-              <option value="12h">12 часов</option>
-              <option value="1day">1 день</option>
-              <option value="3days">3 дня</option>
-              <option value="7days">7 дней</option>
-              <option value="14days">14 дней</option>
+              <option value="3h">
+                3 часа
+              </option>
+              <option value="12h">
+                12 часов
+              </option>
+              <option value="1day">
+                1 день
+              </option>
+              <option value="3days">
+                3 дня
+              </option>
+              <option value="7days">
+                7 дней
+              </option>
+              <option value="14days">
+                14 дней
+              </option>
             </select>
           </div>
           <div>
@@ -319,7 +264,7 @@ async function selectCreatePage(e: any) {
             />
             <div class="article">
               <a
-              :href="`https://www.wildberries.ru/catalog/${productData.article}/detail.aspx`"
+                :href="`https://www.wildberries.ru/catalog/${productData.article}/detail.aspx`"
                 target="_blank"
                 class="text-sm text-primary link link-hover"
               >

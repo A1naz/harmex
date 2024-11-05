@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { model, Schema } from 'mongoose'
 import { User } from './User'
 
 const PartnerWithdrawModel = new Schema({

@@ -20,36 +20,10 @@ interface Item {
   purchaseSoon: boolean
 }
 
-const sorts = [
-  {
-    ruleId: 10,
-    sort: 'popular',
-  },
-  {
-    ruleId: 11,
-    sort: 'priceup',
-  },
-  {
-    ruleId: 12,
-    sort: 'pricedown',
-  },
-  {
-    ruleId: 13,
-    sort: 'newly',
-  },
-  {
-    ruleId: 14,
-    sort: 'benefit',
-  },
-  {
-    ruleId: 15,
-    sort: 'rate',
-  },
-]
-
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
   const query = getQuery(event)
@@ -64,9 +38,6 @@ export default eventHandler(async (event) => {
     message: '',
   }
   for (const item of products) {
-    const rules = item.rules.map((rule) => rule.id)
-    let sort = 'popular'
- 
     const curDate = new Date()
     curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))
     const firstDate = new Date(item.dateRange[0])
@@ -128,7 +99,6 @@ export default eventHandler(async (event) => {
     //   }
     // }
 
- 
     // const foundPoint = points.find((p: { a: string }) => p.a === item.adress)
 
     // if (!foundPoint) {

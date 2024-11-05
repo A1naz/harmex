@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { model, Schema } from 'mongoose'
 
 const confirmInnSchema = new Schema({
   phone: { type: String, required: true },
@@ -6,4 +6,4 @@ const confirmInnSchema = new Schema({
   date: { type: Date, default: new Date(Date.now()) },
 })
 
-export const ConfirmInn = model('confirmInn', confirmInnSchema,)
+export const ConfirmInn = model('confirmInn', confirmInnSchema)

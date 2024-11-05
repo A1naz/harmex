@@ -1,28 +1,11 @@
-import { getToken } from '#auth'
-import { User } from '../lib/models/User'
-
 export default eventHandler(async (event) => {
-  const token: any = await getToken({ event })
-
-  if (token && token.twoFaNeeded && event._path == '/api/user/client') {
-    const client: Client = {
-      email: token.email,
-      uuid: token.uuid,
-    }
-
-    return {
-      client,
-      status: 'ok',
-    }
+  const session = await getUserSession(event);
+  if(!session) {
+    return sendRedirect(event, '/auth', 302)
   }
-
+  
   if (
-    token &&
-    token.twoFaNeeded &&
-    !event._path?.includes('/2fa') &&
-    !event._path?.includes('/auth') &&
-    !event._path?.includes('/token') &&
-    !event._path?.includes('/register')
+    session.user?.isTwoFaEnabled && session.twoFaNeeded && !event._path?.includes('/2fa') && !event._path?.includes('/session')
   ) {
     return sendRedirect(event, '/2fa', 302)
   }

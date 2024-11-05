@@ -25,7 +25,8 @@ interface Item {
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
   const query = getQuery(event)
@@ -40,9 +41,9 @@ export default eventHandler(async (event) => {
     message: '',
   }
   // if (!balanceIsExist) {
-    // result.success = false
-    // result.message = `Недостаточно средств для совершения выкупа`
-    // return result
+  // result.success = false
+  // result.message = `Недостаточно средств для совершения выкупа`
+  // return result
   // }
 
   // if (!user.fizFace && !user.bik && !user.rs) {
@@ -51,7 +52,7 @@ export default eventHandler(async (event) => {
   // }
 
   for (const item of products) {
-    const rules = item.rules.map((rule) => rule.id)
+    const rules = item.rules.map(rule => rule.id)
     let sort = 'popular'
 
     const curDate = new Date()
@@ -63,11 +64,16 @@ export default eventHandler(async (event) => {
       result.message = `Дата ${item.article} не может быть меньше текущей по МСК`
     }
 
-    if (rules.includes(11)) sort = 'priceup'
-    if (rules.includes(12)) sort = 'pricedown'
-    if (rules.includes(13)) sort = 'newly'
-    if (rules.includes(14)) sort = 'benefit'
-    if (rules.includes(15)) sort = 'rate'
+    if (rules.includes(11))
+      sort = 'priceup'
+    if (rules.includes(12))
+      sort = 'pricedown'
+    if (rules.includes(13))
+      sort = 'newly'
+    if (rules.includes(14))
+      sort = 'benefit'
+    if (rules.includes(15))
+      sort = 'rate'
 
     if (rules.includes(5) || rules.includes(9)) {
       for (const query of item.searchQuery) {
@@ -115,7 +121,7 @@ export default eventHandler(async (event) => {
 
     const foundPoint = points.find(
       (p: any) =>
-        p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon
+        p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon,
     )
     if (!foundPoint) {
       result.success = false

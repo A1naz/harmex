@@ -1,17 +1,17 @@
-import ExcelJS from 'exceljs'
-import { Delivery } from '~/server/lib/models/ozon/Delivery'
-import { Buyout } from '~/server/lib/models/ozon/Buyout'
 import { Buyoutlog } from '~~/server/lib/models/wildberries/Buyoutlog'
+import ExcelJS from 'exceljs'
 import { DocuemntEnum } from '~/data/enums'
+import { Buyout } from '~/server/lib/models/ozon/Buyout'
+import { Delivery } from '~/server/lib/models/ozon/Delivery'
 
 const keys = Object.keys as <T>(obj: T) =>
 (keyof T extends infer U ? U extends string ? U : U extends number ? `${U}` : never : never)[]
 
 export default eventHandler(async (event) => {
   try {
-
     const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+    if (!user)
+      return sendRedirect(event, '/auth', 302)
 
     const runtimeConfig = useRuntimeConfig()
     const deliveries = await Delivery.find({ user }).sort({ _id: -1 })
@@ -21,13 +21,13 @@ export default eventHandler(async (event) => {
         message: 'Нет доставок для экспорта',
       })
     }
-    const buyoutsId = deliveries.map(item => item.idbuyout);
+    const buyoutsId = deliveries.map(item => item.idbuyout)
     const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
     const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
-    
-    const format = await Promise.all(  
+
+    const format = await Promise.all(
       deliveries.map(async (delivery, index) => {
-        const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf());
+        const buyout = buyouts.find(buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf())
         if (!buyout)
           return undefined
 
@@ -35,16 +35,15 @@ export default eventHandler(async (event) => {
         const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
         const currentstatus = delivery.statusdelivery?.length ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status : 'Неизвестно'
 
+        const statusDelivery = delivery.statusdelivery
 
-        const statusDelivery = delivery.statusdelivery; 
+        const arrivedDate = statusDelivery.find(item => item.status.includes('Ожидает получения до'))
+        const receivedDate = statusDelivery.find(item => item.status === 'Получен')
 
-        const arrivedDate = statusDelivery.find(item => item.status.includes('Ожидает получения до'));
-        const receivedDate = statusDelivery.find(item => item.status === 'Получен');
-        
         const foundLog = logs.find(
-          (item) =>
-            item.buyout.valueOf() === buyout._id.valueOf() &&
-            item.text.includes('Выкуп выполнен')
+          item =>
+            item.buyout.valueOf() === buyout._id.valueOf()
+            && item.text.includes('Выкуп выполнен'),
         )
         const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt)
         const place = index + 1
@@ -60,7 +59,7 @@ export default eventHandler(async (event) => {
           receiptcode: delivery.receiptcode ? delivery.receiptcode : '',
           currentstatus,
           article: delivery.article,
-          size: buyout.sizeparam == "0" ? "Нет" : buyout.sizeparam,
+          size: buyout.sizeparam == '0' ? 'Нет' : buyout.sizeparam,
           productname: buyout.product.name,
           finishDate,
           finishTime,
@@ -70,8 +69,8 @@ export default eventHandler(async (event) => {
           recipient: delivery.recipient,
           recipientphone: replaced,
           pricebuy: delivery.pricebuy,
-          arrivedDate: arrivedDate ? new Date(arrivedDate.date) : "-",
-          receivedDate: receivedDate ? new Date(receivedDate.date) : "-",
+          arrivedDate: arrivedDate ? new Date(arrivedDate.date) : '-',
+          receivedDate: receivedDate ? new Date(receivedDate.date) : '-',
           place: index + 1,
           fio: buyout.FIO,
         }
@@ -89,59 +88,59 @@ export default eventHandler(async (event) => {
       { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
       { header: 'Размер', key: 'size', width: 16, font: { bold: true } },
       { header: 'Название товара', key: 'productname', width: 48, font: { bold: true } },
-    {
-      header: 'Дата заказа',
-      key: 'finishDate',
-      width: 16,
-      font: { bold: true },
-    },
-    {
-      header: 'Время заказа',
-      key: 'finishTime',
-      width: 16,
-      font: { bold: true },
-    },
-    {
-      header: 'Дата прибытия',
-      key: 'arrivedDate',
-      width: 16,
-      font: { bold: true },
-    },
-    {
-      header: 'Дата забора',
-      key: 'receivedDate',
-      width: 16,
-      font: { bold: true },
-    },
-    { header: 'Статус', key: 'currentstatus', width: 24, font: { bold: true } },
-    { header: 'Сумма заказа', key: 'pricebuy', width: 16, font: { bold: true } },
-    { header: 'ID заказа', key: 'uuid', width: 40, font: { bold: true } },
-    { header: 'Поисковый запрос', key: 'seachquery', width: 32, font: { bold: true } },
-    { header: 'Адрес', key: 'point', width: 64, font: { bold: true } },
-    { header: 'Имя', key: 'recipient', width: 16, font: { bold: true } },
-    { header: 'Телефон', key: 'recipientphone', width: 16, font: { bold: true } },
-    { header: 'Код выдачи', key: 'receiptcode', width: 16, font: { bold: true } },
-    { header: 'ФИО', key: 'fio', width: 32, font: { bold: true } },
+      {
+        header: 'Дата заказа',
+        key: 'finishDate',
+        width: 16,
+        font: { bold: true },
+      },
+      {
+        header: 'Время заказа',
+        key: 'finishTime',
+        width: 16,
+        font: { bold: true },
+      },
+      {
+        header: 'Дата прибытия',
+        key: 'arrivedDate',
+        width: 16,
+        font: { bold: true },
+      },
+      {
+        header: 'Дата забора',
+        key: 'receivedDate',
+        width: 16,
+        font: { bold: true },
+      },
+      { header: 'Статус', key: 'currentstatus', width: 24, font: { bold: true } },
+      { header: 'Сумма заказа', key: 'pricebuy', width: 16, font: { bold: true } },
+      { header: 'ID заказа', key: 'uuid', width: 40, font: { bold: true } },
+      { header: 'Поисковый запрос', key: 'seachquery', width: 32, font: { bold: true } },
+      { header: 'Адрес', key: 'point', width: 64, font: { bold: true } },
+      { header: 'Имя', key: 'recipient', width: 16, font: { bold: true } },
+      { header: 'Телефон', key: 'recipientphone', width: 16, font: { bold: true } },
+      { header: 'Код выдачи', key: 'receiptcode', width: 16, font: { bold: true } },
+      { header: 'ФИО', key: 'fio', width: 32, font: { bold: true } },
     ]
     sheet.addRows(ready)
 
     for (const item of ready) {
       if (
-        !item?.receiptcodeqr ||
-        item?.receiptcodeqr?.length < 40 ||
-        item?.receiptcodeqr === 'undefined'
+        !item?.receiptcodeqr
+        || item?.receiptcodeqr?.length < 40
+        || item?.receiptcodeqr === 'undefined'
       ) {
         continue
       }
 
       if (
         item.receiptcodeqr.includes(
-          'data:image/png;base64,data:image/png;base64,'
+          'data:image/png;base64,data:image/png;base64,',
         )
       ) {
         item.receiptcodeqr = item.receiptcodeqr.replace(
           'data:image/png;base64,',
-          ''
+          '',
         )
       }
 
@@ -167,12 +166,12 @@ export default eventHandler(async (event) => {
     // export table
     const buffer = await workbook.xlsx.writeBuffer()
 
-    await userLog(event,
-        {
-            documentType: DocuemntEnum.Delivery,
-            documentId: '',
-            comment: 'Экспорт всех доставок XLS'
-        })
+    // await userLog(event,
+    //     {
+    //         documentType: DocuemntEnum.Delivery,
+    //         documentId: '',
+    //         comment: 'Экспорт всех доставок XLS'
+    //     })
 
     return buffer
   }

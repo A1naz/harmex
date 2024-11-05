@@ -21,7 +21,6 @@ export const menuDataList: MenuDataList[] = [
     { section: 'additional', path: "/partner", title: "Партнерка", icon: "mdi:handshake" },
     { section: 'additional', path: "/stats", title: "Статистика", icon: "mdi:google-analytics" },
     { section: 'additional', path: "/team", title: "Моя команда", icon: "fluent:people-team-16-filled" },
-    { section: 'additional', path: "https://t.me/+h1oxDt0S8ug3NmU6", title: "Telegram", icon: "bxl:telegram", external: true },
     // { section: 'bidder', path: "/campaigns", title: "Рекламные кампании", icon: "mdi:briefcase" },
 ]
 

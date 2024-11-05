@@ -1,6 +1,5 @@
-import { Schema, model } from 'mongoose'
+import { model, Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
-import { IUser } from '@/data/types'
 import { Tariff } from './Tariff'
 
 interface IUserSchema extends IUser, Document {}
@@ -30,6 +29,8 @@ const UserSchema = new Schema<IUserSchema>({
   firstName: { type: String, required: false },
   lastName: { type: String, required: false },
   email: { type: String, unique: false, required: false },
+  emailConfirmed: { type: Boolean, default: false },
+  phoneConfirmed: { type: Boolean, default: false },
   apiKeys: [
     {
       mp: { type: String, required: true },
@@ -45,7 +46,6 @@ const UserSchema = new Schema<IUserSchema>({
   acesses: [{ type: String, required: false }],
 
   roles: [{ type: String, ref: 'Role' }],
-  tariff: { type: Tariff.schema },
   MPTariffs: [
     {
       mp: { type: String },
@@ -56,19 +56,9 @@ const UserSchema = new Schema<IUserSchema>({
   twoFaSecret: { type: String, required: false },
   isTwoFaEnabled: { type: Boolean, default: false },
 
-  terminateSession: { type: Boolean, default: false },
-
   tabs: [{ type: String }],
-  newEmail: { type: String, required: false },
-  emailConfirmed: { type: Boolean, default: false },
-  telegram: { type: String, required: false },
-  telegramUserId: { type: String, required: false },
-  telegramUnlinkEmailSend: { type: Date, required: false },
-  tg2fa: { type: Boolean, required: false, default: false },
   balance: { type: Number, default: 0, required: true },
-  tariffBalance: { type: Number },
   registrationDate: { type: Date, default: Date.now },
-  post: { type: 'String' },
   newPassword: { type: String },
   landing: { type: String },
   ffEnabled: { type: Boolean, default: false },
@@ -84,12 +74,10 @@ const UserSchema = new Schema<IUserSchema>({
     },
   },
   fizFace: { type: Boolean, default: false },
+  quickAccesses: { type: [String], default: [] },
+  services: { type: [String], default: [] },
+  favourites: { type: [String], default: [] },
+  votedFor: { type: [String], default: [] },
 })
-
-// UserSchema.pre('save', function (next) {
-//   // Добавляем 3 часа к полю "date"
-//   this.registrationDate.setHours(this.registrationDate.getHours() + 3)
-//   next()
-// })
 
 export const User = model<IUserSchema>('User', UserSchema)

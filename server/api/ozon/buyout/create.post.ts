@@ -1,10 +1,10 @@
-import { v4 as uuid } from 'uuid'
 import type { Rule } from '@/data/buyout/rules'
 import { Buyout } from '@/server/lib/models/ozon/Buyout'
-import getPickpoints from '~/server/utils/ozon/getOzonPoints'
-import { userLog } from '~/server/utils/userLog'
+import { v4 as uuid } from 'uuid'
 import { DocuemntEnum } from '~/data/enums'
 import { getDisctrict } from '~/server/utils/getDisctrict'
+import getPickpoints from '~/server/utils/ozon/getOzonPoints'
+import { userLog } from '~/server/utils/userLog'
 
 interface Item {
   image: string
@@ -34,7 +34,8 @@ interface Item {
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   // if (!user.fizFace && !user.bik && !user.rs) {
   //   throw createError(
@@ -52,8 +53,8 @@ export default eventHandler(async (event) => {
     status: { $in: ['active', 'work', 'created'] },
   })
   const sum = activeBuyouts.reduce((acc, item) => {
-    const price =
-      parseInt(item.product.price) * (item.quantity - item.completed)
+    const price
+      = Number.parseInt(item.product.price) * (item.quantity - item.completed)
     return acc + price
   }, 0)
 
@@ -69,11 +70,11 @@ export default eventHandler(async (event) => {
   for await (const product of products) {
     if (product.searchQuery.length > 5) {
       throw createError(
-        `Для продукта ${product.article} указано больше 5 поисковых запросов`
+        `Для продукта ${product.article} указано больше 5 поисковых запросов`,
       )
     }
 
-    const rules = product.rules.map((rule) => rule.id)
+    const rules = product.rules.map(rule => rule.id)
     const searchQueries = product.searchQuery.map((item: any) => item.value)
 
     if (userTimezoneOffsetHours && userOffsetMinutes) {
@@ -86,23 +87,24 @@ export default eventHandler(async (event) => {
 
       if (!product.purchaseSoon) {
         date1.setHours(
-          date1.getHours()
+          date1.getHours(),
           //  + Number(userTimezoneOffsetHours)
         )
         date1.setMinutes(
-          date1.getMinutes()
+          date1.getMinutes(),
           //  + Number(userOffsetMinutes)
         )
 
         date2.setHours(
-          date2.getHours()
+          date2.getHours(),
           //  + Number(userTimezoneOffsetHours)
         )
         date2.setMinutes(
-          date2.getMinutes()
+          date2.getMinutes(),
           // + Number(userOffsetMinutes)
         )
-      } else {
+      }
+      else {
         date1.setHours(date1.getHours())
         date2.setHours(date2.getHours())
       }
@@ -113,7 +115,7 @@ export default eventHandler(async (event) => {
     let city, state
     ;({ city, state } = await getCityByGeo(
       product.pointCoordinates.lat.toString(),
-      product.pointCoordinates.lon.toString()
+      product.pointCoordinates.lon.toString(),
     ))
 
     const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
@@ -144,9 +146,7 @@ export default eventHandler(async (event) => {
       },
       uuid: uuid(),
       discount:
-        product.discountPrice !== product.price && product.discountPrice !== 0
-          ? true
-          : false,
+        !!(product.discountPrice !== product.price && product.discountPrice !== 0),
       discountPrice: product.discountPrice,
       // discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,

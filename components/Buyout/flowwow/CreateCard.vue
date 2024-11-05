@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
 const props = defineProps({
   product: {
     type: Object as any,
@@ -14,7 +13,8 @@ const props = defineProps({
     required: true,
   },
 })
-
+const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
+const { notify } = useNotification()
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
@@ -28,7 +28,6 @@ function copyBuyout() {
   store.createProducts.push(JSON.parse(item))
 }
 
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
 const store = useFlowwowBuyoutStore()
 const startDate = ref(new Date(Date.now()))
 
@@ -207,9 +206,15 @@ function setDeliveryDate(date: string, time: string) {
             class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
             @change="onSexChange"
           >
-            <option value="Нет">Нет</option>
-            <option value="male">Муж</option>
-            <option value="female">Жен</option>
+            <option value="Нет">
+              Нет
+            </option>
+            <option value="male">
+              Муж
+            </option>
+            <option value="female">
+              Жен
+            </option>
           </select>
         </div>
       </div>
@@ -243,7 +248,7 @@ function setDeliveryDate(date: string, time: string) {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/settings.svg"
                 alt="settings"
-              />
+              >
             </button>
           </div>
         </div>
@@ -283,7 +288,9 @@ function setDeliveryDate(date: string, time: string) {
                   : 'Выбрать'
               }}
             </button> -->
-            <div v-else class="text-center text-xs">Ближайшее время</div>
+            <div v-else class="text-center text-xs">
+              Ближайшее время
+            </div>
           </div>
         </div>
 
@@ -296,9 +303,9 @@ function setDeliveryDate(date: string, time: string) {
             <span v-show="loading" class="loading loading-spinner" />
 
             <p
-              @click="$emit('pointModalOpen', index)"
               v-if="!loading"
               class="truncate cursor-pointer text-primary"
+              @click="$emit('pointModalOpen', index)"
             >
               {{ product.adress }}
             </p>
@@ -322,13 +329,15 @@ function setDeliveryDate(date: string, time: string) {
         <div class="text-xs flex justify-start">
           <BuyoutFlowwowDatePicker
             :model-value="startDate"
-            @save-date="setDeliveryDate"
             :time-delivery="store.createProducts[index].deliveryPeriodTime"
+            @save-date="setDeliveryDate"
           />
         </div>
       </div>
       <div>
-        <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
+        <div class="text-md text-gray-500 mb-1">
+          Поисковые запросы:
+        </div>
         <div class="w-[60%] flex flex-col gap-2">
           <BuyoutFlowwowCreateSearchQueries
             :product-index="props.index"
@@ -343,15 +352,16 @@ function setDeliveryDate(date: string, time: string) {
 
       <div>
         <div class="w-[60%]">
-          <div class="text-md text-gray-500 mb-1">№ Квартиры:</div>
+          <div class="text-md text-gray-500 mb-1">
+            № Квартиры:
+          </div>
           <div class="w-full flex flex-col gap-2">
-            <label
-              ><input
-                v-model="product.appartmentNumber"
-                type="text"
-                placeholder="№ квартиры"
-                class="input bg-base-200 input-sm w-full rounded-xl"
-              />
+            <label><input
+              v-model="product.appartmentNumber"
+              type="text"
+              placeholder="№ квартиры"
+              class="input bg-base-200 input-sm w-full rounded-xl"
+            >
             </label>
           </div>
         </div>

@@ -1,14 +1,14 @@
 import fs from 'node:fs'
-import { getServerSession } from '#auth'
 import {
-  removeExtraPickpoints,
   createPickpointsFile,
+  removeExtraPickpoints,
 } from '~/server/utils/pickpoints'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
+  const session = (await getAdminEntity(event)) as any
 
-  if (!session) return sendRedirect(event, '/auth', 302)
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
 
   if (fs.existsSync('pvz/wildberriesPoints.json')) {
     const cached = fs.readFileSync('pvz/wildberriesPoints.json', 'utf8')
@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
     if (diff < 1000 * 60 * 60) {
       return sendStream(
         event,
-        fs.createReadStream('pvz/wildberriesPoints.json')
+        fs.createReadStream('pvz/wildberriesPoints.json'),
       )
     }
   }
@@ -26,7 +26,8 @@ export default eventHandler(async (event) => {
   if (fs.existsSync('pvz/wildberriesPoints.json')) {
     removeExtraPickpoints()
     return sendStream(event, fs.createReadStream('pvz/wildberriesPoints.json'))
-  } else {
+  }
+  else {
     await createPickpointsFile()
     return sendStream(event, fs.createReadStream('pvz/wildberriesPoints.json'))
   }

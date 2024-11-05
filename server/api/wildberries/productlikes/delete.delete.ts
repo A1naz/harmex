@@ -1,15 +1,15 @@
-﻿import { getServerSession } from '#auth'
-import { User } from '~~/server/lib/models/User'
+﻿import { User } from '~~/server/lib/models/User'
 import { ProductLike } from '~~/server/lib/models/wildberries/ProductLike'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
-
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
+  const session = ((await getUserSession(event)).user) as any
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
 
   const user = await User.findOne({ uuid: session.uuid })
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
   const id = body.id
@@ -31,11 +31,10 @@ export default eventHandler(async (event) => {
 
   await like.deleteOne()
 
-  await userLog(event,
-    {
-        documentType: DocuemntEnum.ProductsLike,
-        documentId: like._id,
-    })
+  await userLog(event, {
+    documentType: DocuemntEnum.ProductsLike,
+    documentId: like._id,
+  })
 
   return {
     status: 'ok',

@@ -1,6 +1,6 @@
+import fs from 'node:fs'
+import { DefaultPrices } from '@/server/lib/models/defaultPrices'
 import { User } from '@/server/lib/models/User'
-import { DefaultPrices } from '../lib/models/defaultPrices'
-import fs from 'fs'
 
 export default async function getTariffs(userTariffs: any) {
   if (!fs.existsSync('server/lib/files/defaultPrices.json')) {
@@ -11,15 +11,15 @@ export default async function getTariffs(userTariffs: any) {
       JSON.stringify({
         updatedAt: new Date(),
         values: newPrices.values,
-      })
+      }),
     )
 
     fs.readFileSync('server/lib/files/defaultPrices.json', 'utf8')
   }
 
-  let defaultPrices = fs.readFileSync(
+  const defaultPrices = fs.readFileSync(
     'server/lib/files/defaultPrices.json',
-    'utf8'
+    'utf8',
   )
 
   const parsed = JSON.parse(defaultPrices)
@@ -35,7 +35,7 @@ export default async function getTariffs(userTariffs: any) {
       JSON.stringify({
         updatedAt: new Date(),
         values: newPrices.values,
-      })
+      }),
     )
   }
 
@@ -45,7 +45,7 @@ export default async function getTariffs(userTariffs: any) {
       defaultTariffs.forEach((tariff: any) => {
         userTariffs.forEach((userTariff: any) => {
           if (userTariff.mp === tariff.mp) {
-            for (let key of Object.keys(tariff.prices)) {
+            for (const key of Object.keys(tariff.prices)) {
               if (userTariff.prices[key]) {
                 tariff.prices[key].value = userTariff.prices[key].value
                 if (userTariff.prices[key].type) {
@@ -61,12 +61,13 @@ export default async function getTariffs(userTariffs: any) {
       })
 
       return defaultTariffs
-    } else {
+    }
+    else {
       return defaultTariffs
     }
-  } catch (error) {
-    console.log('Ошибка при тарифах')
-    console.log(error)
+  }
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  catch (error) {
     return defaultTariffs
   }
 }

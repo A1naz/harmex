@@ -1,20 +1,21 @@
+import { SelectOptionsReviews } from '@/data/enums'
 import { Delivery } from '@/server/lib/models/avito/Delivery'
 import { ObjectId } from 'mongodb'
-import { SelectOptionsReviews } from '@/data/enums'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const { skip, limit, search } = getQuery(event)
 
   const pipeLine: any[] = [
     {
       $match: {
-        user: new ObjectId(user._id),
-        reviewed: { $ne: true },
+        'user': new ObjectId(user._id),
+        'reviewed': { $ne: true },
         'statusdelivery.status': 'Получено',
-        status: 'completed',
+        'status': 'completed',
       },
     },
     { $sort: { _id: -1 } },
@@ -75,17 +76,18 @@ export default eventHandler(async (event) => {
     { $sort: { countAvailable: -1 } },
   ]
 
-  const limitA = limit ? parseInt(limit.toString(), 10) : 1000
-  const skipA = skip ? parseInt(skip.toString(), 10) : 0
+  const limitA = limit ? Number.parseInt(limit.toString(), 10) : 1000
+  const skipA = skip ? Number.parseInt(skip.toString(), 10) : 0
   let searchParse = search ? JSON.parse(search?.toString()) : undefined
 
   if (Object.values(searchParse)[0] !== '') {
     if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
-      searchParse = { uuidbuyout: searchParse.uudidBuyout.replace('#', '') };
+      searchParse = { uuidbuyout: searchParse.uudidBuyout.replace('#', '') }
       pipeLine.splice(3, 0, { $match: { ...searchParse } }) // after $project
-    }  else {
+    }
+    else {
       if (Object.keys(searchParse)[0] === 'article') {
-        searchParse.article = Number(searchParse.article);
+        searchParse.article = Number(searchParse.article)
       }
       pipeLine.splice(1, 0, { $match: { ...searchParse } }) // after $match
     }
@@ -95,7 +97,8 @@ export default eventHandler(async (event) => {
   // if (limitA > 0) pipeLine.push({ $limit: limitA })
 
   const readyForReview = await Delivery.aggregate(pipeLine)
-  if (!readyForReview) return []
+  if (!readyForReview)
+    return []
 
   const soonForReview = await Delivery.aggregate([
     {
@@ -120,15 +123,16 @@ export default eventHandler(async (event) => {
   const sex = (genders: string[]): string => {
     for (const gen of genders) {
       if (gen !== null) {
-        let foundGen = genderMap.get(gen.toLowerCase())
-        if (foundGen) return foundGen
+        const foundGen = genderMap.get(gen.toLowerCase())
+        if (foundGen)
+          return foundGen
       }
     }
     return 'Нет'
   }
   const formated = readyForReview.map((deliveryForReview: any) => {
     const countSoon = soonForReview.filter(
-      (sfr) => sfr._id == deliveryForReview.article
+      sfr => sfr._id == deliveryForReview.article,
     )
     return {
       ...deliveryForReview,

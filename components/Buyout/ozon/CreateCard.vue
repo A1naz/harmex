@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
 const props = defineProps({
   product: {
     type: Object as any,
@@ -18,7 +17,8 @@ const props = defineProps({
     required: true,
   },
 })
-
+const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen', 'removeDiscount'])
+const { notify } = useNotification()
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
@@ -32,7 +32,6 @@ function copyBuyout() {
   store.createProducts.push(JSON.parse(item))
 }
 
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen', 'removeDiscount'])
 const store = useOzonBuyoutStore()
 const startDate = ref(new Date(Date.now()))
 
@@ -173,7 +172,7 @@ const productQuantityModel = computed({
               min="1"
               max="1000"
               class="input input-bordered input-sm w-full text-center"
-            />
+            >
             <div
               class="absolute right-0 btn btn-ghost btn-sm btn-square"
               @click="productQuantityModel++"
@@ -199,7 +198,9 @@ const productQuantityModel = computed({
                 {{ size }}
               </option>
             </select>
-            <div v-else class="text-sm text-center ml-2">Нет</div>
+            <div v-else class="text-sm text-center ml-2">
+              Нет
+            </div>
           </div>
         </div>
         <div class="flex flex-col">
@@ -208,9 +209,15 @@ const productQuantityModel = computed({
             class="select select-sm select-bordered w-15 appearance-none"
             @change="onSexChange"
           >
-            <option value="Нет">Нет</option>
-            <option value="male">Муж</option>
-            <option value="female">Жен</option>
+            <option value="Нет">
+              Нет
+            </option>
+            <option value="male">
+              Муж
+            </option>
+            <option value="female">
+              Жен
+            </option>
           </select>
         </div>
       </div>
@@ -246,7 +253,7 @@ const productQuantityModel = computed({
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/settings.svg"
                 alt="settings"
-              />
+              >
             </button>
           </div>
         </div>
@@ -286,7 +293,9 @@ const productQuantityModel = computed({
                   : 'Выбрать'
               }}
             </button> -->
-            <div v-else class="text-center text-xs">Ближайшее время</div>
+            <div v-else class="text-center text-xs">
+              Ближайшее время
+            </div>
           </div>
         </div>
         <div class="flex flex-col">
@@ -298,8 +307,8 @@ const productQuantityModel = computed({
             <span v-show="loading" class="loading loading-spinner" />
             <p
               v-if="!loading"
-              @click="$emit('pointModalOpen', index)"
               class="truncate cursor-pointer text-primary"
+              @click="$emit('pointModalOpen', index)"
             >
               {{ product.adress }}
             </p>
@@ -320,7 +329,9 @@ const productQuantityModel = computed({
       </div>
 
       <div>
-        <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
+        <div class="text-md text-gray-500 mb-1">
+          Поисковые запросы:
+        </div>
         <div class="w-[60%] flex flex-col gap-2">
           <BuyoutOzonCreateSearchQueries
             :product-index="props.index"
@@ -338,13 +349,13 @@ const productQuantityModel = computed({
         <div class="flex ">
           <button
             class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
-            @click="props.openDiscount(index, product.price)"
             :class="{
-              'rounded-r-none': product.discountPrice && product.discountPrice !== product.price
+              'rounded-r-none': product.discountPrice && product.discountPrice !== product.price,
             }"
+            @click="props.openDiscount(index, product.price)"
           >
             {{
-              product.discountPrice && product.discountPrice !== product.price ? product.discountPrice+' ₽' : 'Указать скидку'
+              product.discountPrice && product.discountPrice !== product.price ? `${product.discountPrice} ₽` : 'Указать скидку'
             }}
           </button>
           <button
@@ -431,7 +442,7 @@ const productQuantityModel = computed({
           />
         </div>
       </div> -->
-      <!-- 
+      <!--
       <div class="divider" /> -->
 
       <!-- <div class="flex gap-4 items-center">

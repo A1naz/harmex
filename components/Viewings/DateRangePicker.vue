@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useMainStore } from '~~/stores/main'
-import { useNotification } from '@kyvg/vue3-notification'
-import { AnyTxtRecord } from 'dns'
-const { notify } = useNotification()
+import { notify } from '@kyvg/vue3-notification'
 
 const props = defineProps({
   modelValue: {

@@ -1,12 +1,14 @@
-import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
 import { Buyout } from '~~/server/lib/models/wildberries/Buyout'
-import { DeliveryScreenshotRequest } from '~~/server/lib/models/DeliveryScreenshotRequest'
+import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
+import { DeliveryScreenshotRequest } from '~~/server/lib/models/wildberries/DeliveryScreenshotRequest'
 import { v4 as uuid } from 'uuid'
+
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const { article, mp, deliveryUuid } = await readBody(event)
 
@@ -44,7 +46,7 @@ export default eventHandler(async (event) => {
   let cycleCount = 0
   while (true) {
     cycleCount++
-    
+
     if (cycleCount > 590) {
       throw createError({
         statusCode: 404,
@@ -57,7 +59,7 @@ export default eventHandler(async (event) => {
     })
 
     if (foundRequest && foundRequest.status === 'accepted') {
-      return config.public.DOMAIN_API_IMAGES_URL +foundRequest.screenshot
+      return config.public.DOMAIN_API_IMAGES_URL + foundRequest.screenshot
     }
     if (foundRequest && foundRequest.status === 'rejected') {
       throw createError({
@@ -66,6 +68,6 @@ export default eventHandler(async (event) => {
       })
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 10000))
+    await new Promise(resolve => setTimeout(resolve, 10000))
   }
 })

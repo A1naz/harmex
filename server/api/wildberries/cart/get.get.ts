@@ -1,10 +1,10 @@
 import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { Cart } from '~~/server/lib/models/wildberries/Cart'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const {
     dateFilter,
@@ -16,7 +16,7 @@ export default eventHandler(async (event) => {
   } = getQuery(event)
 
   let carts = []
-  let searchQuery: { status?: any; $or?: any; createdDate?: any } = {}
+  let searchQuery: { status?: any, $or?: any, createdDate?: any } = {}
   if (type === 'article') {
     searchQuery = {
       $or: [{ article: { $regex: string, $options: 'i' } }],

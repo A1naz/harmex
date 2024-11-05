@@ -1,14 +1,14 @@
 ﻿import { v4 as uuid } from 'uuid'
-import { BuyoutTemplate } from '~/server/lib/models/ozon/BuyoutTemplate'
 import { DocuemntEnum } from '~/data/enums'
+import { BuyoutTemplate } from '~/server/lib/models/ozon/BuyoutTemplate'
 
 export default eventHandler(async (event) => {
-
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const query = getQuery(event)
-  
+
   const title: any = query.title
   const templateUuid = uuid()
   const templateTitle = title.length > 0 ? title : `Шаблон #${templateUuid}`
@@ -23,12 +23,11 @@ export default eventHandler(async (event) => {
     buyoutsArray: products,
   })
 
-  await userLog(event,
-    {
-        documentType: DocuemntEnum.Buyout,
-        documentId: templateUuid,
-        comment: 'создание шаблона'
-    })
+  await userLog(event, {
+    documentType: DocuemntEnum.Buyout,
+    documentId: templateUuid,
+    comment: 'создание шаблона',
+  })
 
   return {
     status: 'ok',

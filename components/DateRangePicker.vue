@@ -20,12 +20,14 @@ const { $dayjs } = useNuxtApp()
 const { width } = useWindowSize()
 
 function getFirstDate(dates: [Date | null, Date | null] | []) {
-  if (dates && dates[0]) return `${$dayjs(dates[0]).format('D MMMM HH:mm')}`
+  if (dates && dates[0])
+    return `${$dayjs(dates[0]).format('D MMMM HH:mm')}`
 
   return ''
 }
 function getSecondDate(dates: [Date | null, Date | null] | []) {
-  if (dates && dates[1]) return `${$dayjs(dates[1]).format('D MMMM HH:mm')}`
+  if (dates && dates[1])
+    return `${$dayjs(dates[1]).format('D MMMM HH:mm')}`
 
   return ''
 }
@@ -35,7 +37,7 @@ type updateTime = (time: number[], hours: boolean) => void
 function updateMonth(
   event: InputEvent,
   updateMonthYear: UpdateMonthYear,
-  year: number
+  year: number,
 ) {
   updateMonthYear(+(event.target as HTMLSelectElement).value, year)
 }
@@ -49,7 +51,7 @@ const hoursArray = computed(() => {
 
 const dates = computed({
   get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val),
+  set: val => emit('update:modelValue', val),
 })
 
 function handleTime(
@@ -57,9 +59,10 @@ function handleTime(
   value: number,
   hours = true,
   updateTime: updateTime,
-  time: any
+  time: any,
 ) {
-  if (index === 0) updateTime([value, time.hours[1]], true)
+  if (index === 0)
+    updateTime([value, time.hours[1]], true)
   else updateTime([time.hours[0], value], true)
 }
 </script>
@@ -68,7 +71,6 @@ function handleTime(
   <div>
     <VueDatePicker
       v-model="dates"
-      @update:model-value="$emit('select')"
       :max-date="startDate"
       range
       cancel-text=""
@@ -79,6 +81,7 @@ function handleTime(
       :time-picker-inline="true"
       :teleport-center="width < 1024"
       :teleport="false"
+      @update:model-value="$emit('select')"
       position="left"
     >
       <template #trigger>
@@ -142,7 +145,9 @@ function handleTime(
       <template #clock-icon>
         <div class="flex justify-center items-center gap-2">
           <Icon name="fluent:clock-24-regular" />
-          <div class="text-base-content">Указать время</div>
+          <div class="text-base-content">
+            Указать время
+          </div>
         </div>
       </template>
       <template #time-picker="{ time, updateTime }">

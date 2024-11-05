@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 const props = defineProps({
   product: {
     type: Object as any,

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core'
-import { notify } from '@kyvg/vue3-notification'
 import {
   email,
   helpers,
@@ -9,15 +8,16 @@ import {
   sameAs,
 } from '@vuelidate/validators'
 
+const { notify } = useNotification()
+
 definePageMeta({
-  colorMode: 'dark',
-  auth: {
-    unauthenticatedOnly: true,
-    navigateAuthenticatedTo: '/buyouts',
-  },
   title: 'Регистрация',
 })
 
+const timer = ref(60)
+const timerRunning = ref(false)
+const timerVisible = ref(false)
+const timerFinished = ref(false)
 const faceType = ref('fizFace')
 const confirmationCodeInput = ref<any>(null)
 const isInnConfirmed = ref(false)
@@ -29,8 +29,6 @@ const alertText = ref('')
 const route = useRoute()
 const alertType = ref('success')
 const referral = ref(route.query?.ref || null)
-const { width, height } = useWindowSize()
-const linkRef = ref(false)
 const formData = reactive({
   email: '',
   password: '',
@@ -55,8 +53,7 @@ const passwordConfirmInputType = ref('password')
 
 const referralFromLocal: any = ref('')
 async function linkFollow() {
-  // @ts-ignore
-  const { data, error }: any = await useFetch('/api/user/linkFollow', {
+  await useFetch('/api/user/linkFollow', {
     method: 'GET',
     query: {
       referral: formData.referral,
@@ -67,7 +64,7 @@ async function linkFollow() {
 
 onMounted(async () => {
   if (route.query?.ref && typeof route.query?.ref === 'string') {
-    if (route.query?.ref != localStorage.getItem('referralCode')) {
+    if (route.query?.ref !== localStorage.getItem('referralCode')) {
       setTimeout(() => {
         linkFollow()
       })
@@ -77,8 +74,8 @@ onMounted(async () => {
   referralFromLocal.value = localStorage.getItem('referralCode')
   const landingValue = localStorage.getItem('landing')
 
-  //@ts-ignore
-  if (landingValue) formData.landing = landingValue
+  if (landingValue)
+    formData.landing = landingValue
 
   formData.referral = referralFromLocal.value
 })
@@ -98,32 +95,32 @@ const rules = computed(() => {
       required: helpers.withMessage('Введите Р/С', required),
       minLength: helpers.withMessage('Р/С должен содержать 20 цифр', minLength(20)),
     },
-   name: {
+    name: {
       required: helpers.withMessage('Введите имя', required),
     },
-   lastname: {
+    lastname: {
       required: helpers.withMessage('Введите фамилию', required),
     },
     password: {
       required: helpers.withMessage('Введите пароль', required),
       minLength: helpers.withMessage(
         'Пароль должен быть длиннее 6 символов',
-        minLength(6)
+        minLength(6),
       ),
       containsNumber: helpers.withMessage(
         'Пароль должен содержать цифру',
-        (value: string) => /[0-9]/.test(value)
+        (value: string) => /\d/.test(value),
       ),
       englishLetters: helpers.withMessage(
         'Пароль должен состоять из английских букв',
-        (value: string) => /(?=.*[a-zA-Z])(?=.*[0-9])/.test(value)
+        (value: string) => /(?=.*[a-z])(?=.*\d)/i.test(value),
       ),
     },
     confirmPassword: {
       required: helpers.withMessage('Подтвердите пароль', required),
       sameAs: helpers.withMessage(
         'Пароли не совпадают',
-        sameAs(formData.password)
+        sameAs(formData.password),
       ),
     },
   }
@@ -134,10 +131,6 @@ const v$ = useVuelidate(rules, formData)
 async function submitForm() {
   v$.value.$validate()
 
-  console.log('v$.value.$errors', v$.value.$errors);
-  
-  console.log(faceType.value);
-  
   if (!v$.value.$errors.length || faceType.value === 'fizFace') {
     loading.value = true
     if (referralFromLocal.value && referralFromLocal.value.length > 0) {
@@ -145,9 +138,7 @@ async function submitForm() {
     }
 
     if (faceType.value === 'yurFace') {
-      console.log('yurFace')
-
-      const { data } = await useFetch('/api/auth/register', {
+      const { data }: any = await useFetch('/api/auth/register', {
         method: 'POST',
         body: JSON.stringify(formData),
         watch: false,
@@ -161,7 +152,8 @@ async function submitForm() {
         useTimeoutFn(() => {
           alert.value = false
         }, 3000)
-      } else {
+      }
+      else {
         localStorage.removeItem('referralCode')
         localStorage.removeItem('landing')
         alert.value = true
@@ -173,10 +165,9 @@ async function submitForm() {
         }, 3000)
       }
       loading.value = false
-    } else if (faceType.value === 'fizFace') {
-
-      // @ts-ignore
-      const { data } = await useFetch('/api/auth/registerFiz', {
+    }
+    else if (faceType.value === 'fizFace') {
+      const { data }: any = await useFetch('/api/auth/registerFiz', {
         method: 'POST',
         body: JSON.stringify(formData),
         watch: false,
@@ -190,7 +181,8 @@ async function submitForm() {
         useTimeoutFn(() => {
           alert.value = false
         }, 3000)
-      } else {
+      }
+      else {
         localStorage.removeItem('referralCode')
         localStorage.removeItem('landing')
         alert.value = true
@@ -222,7 +214,7 @@ async function checkInn() {
     method: 'GET',
     query: {
       inn: formData.orgInn,
-      phoneNumber: formData.phoneNumber.replace(/[\(\)\-\s]/g, ''),
+      phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ''),
     },
     watch: false,
   })
@@ -266,7 +258,7 @@ function clearFormData() {
 }
 
 async function sendConfirmCode() {
-  if (formData.phoneNumber.replace(/[\(\)\-\s]/g, '').length < 11) {
+  if (formData.phoneNumber.replace(/[()\-\s]/g, '').length < 11) {
     notify({
       title: 'Введите корректный номер',
     })
@@ -283,25 +275,26 @@ async function sendConfirmCode() {
   timerFinished.value = false
   startTimer()
 
-  const { data, error }: any = await useFetch(
+  const { data }: any = await useFetch(
     '/api/organization/confirmPhone',
     {
       method: 'POST',
       body: {
-        phoneNumber: formData.phoneNumber.replace(/[\(\)\-\s]/g, ''),
+        phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ''),
       },
       watch: false,
-    }
+    },
   )
 
-  if (data.value.status == 'ok') {
+  if (data.value.status === 'ok') {
     isCodeSent.value = true
     confirmationCodeInput.value.focus()
     notify({
       type: 'success',
       title: 'Код отправлен',
     })
-  } else {
+  }
+  else {
     notify({
       type: 'error',
       title: data.value.message,
@@ -310,16 +303,16 @@ async function sendConfirmCode() {
 }
 
 async function confirmCode() {
-  const { data, error }: any = await useFetch(
+  const { data }: any = await useFetch(
     '/api/organization/confirmPhone',
     {
       method: 'GET',
       params: {
-        phoneNumber: formData.phoneNumber.replace(/[\(\)\-\s]/g, ''),
+        phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ''),
         code: formData.verificationCode,
       },
       watch: false,
-    }
+    },
   )
   if (data.value) {
     notify({
@@ -329,7 +322,8 @@ async function confirmCode() {
 
     isCodeSent.value = false
     isNumberConfirmed.value = true
-  } else {
+  }
+  else {
     notify({
       type: 'error',
       title: 'Неверный код',
@@ -337,20 +331,16 @@ async function confirmCode() {
   }
 }
 
-const timer = ref(60)
-const timerRunning = ref(false)
-const timerVisible = ref(false)
-const timerFinished = ref(false)
-
 let interval: any
 
-const startTimer = () => {
+function startTimer() {
   timerRunning.value = true
   timerVisible.value = true
   interval = setInterval(() => {
     if (timer.value > 0) {
       timer.value--
-    } else {
+    }
+    else {
       clearInterval(interval)
       timerRunning.value = false
       timerFinished.value = true
@@ -359,500 +349,494 @@ const startTimer = () => {
   }, 1000)
 }
 
-const resend = () => {
-  timer.value = 60
-  timerFinished.value = false
-  startTimer()
+function togglePassword() {
+  passwordInputType.value
+    = passwordInputType.value === 'password' ? 'text' : 'password'
 }
-
-const togglePassword = () => {
-  passwordInputType.value =
-    passwordInputType.value === 'password' ? 'text' : 'password'
-}
-const toggleConfirmPassword = () => {
-  passwordConfirmInputType.value =
-    passwordConfirmInputType.value === 'password' ? 'text' : 'password'
+function toggleConfirmPassword() {
+  passwordConfirmInputType.value
+    = passwordConfirmInputType.value === 'password' ? 'text' : 'password'
 }
 </script>
 
 <template>
-  <Toast :type="alertType" style="z-index: 1000" :active="alert">
-    {{ alertText }}
-  </Toast>
-  <div
-    id="auth"
-    class="flex sm:items-center sm:justify-center overflow-y-auto max-h-[calc(100vh-10px)]"
-  >
-    <section
-      class="flex flex-col justify-center align-center w-full max-w-lg rounded-lg p-2 shadow-lg gap-3 mt-auto mx-auto"
+  <div>
+    <!-- <Toast :type="alertType" style="z-index: 1000" :active="alert">
+      {{ alertText }}
+    </Toast> -->
+    <div
+      id="auth"
+      class="flex sm:items-center sm:justify-center overflow-y-auto max-h-[calc(100vh-10px)]"
     >
-      <h3 class="font-bold text-xl mt-5 text-center">Создать аккаунт</h3>
-      <div class="w-full">
-        <div class="top-nav btm-nav-xs w-full flex justify-between">
-          <button
-            class="w-full"
-            :class="{
-              active: faceType == 'fizFace',
-            }"
-            @click="faceType = 'fizFace'"
-          >
-            Физическое лицо
-          </button>
-          <button
-            class="w-full"
-            :class="{
-              active: faceType == 'yurFace',
-            }"
-            @click="faceType = 'yurFace'"
-          >
-            Юридическое лицо
-          </button>
+      <section
+        class="flex flex-col justify-center align-center w-full max-w-lg rounded-lg p-2 shadow-lg gap-3 mt-auto mx-auto"
+      >
+        <h3 class="font-bold text-xl mt-5 text-center">
+          Создать аккаунт
+        </h3>
+        <div class="w-full">
+          <div class="top-nav btm-nav-xs w-full flex justify-between">
+            <button
+              class="w-full"
+              :class="{
+                active: faceType === 'fizFace',
+              }"
+              @click="faceType = 'fizFace'"
+            >
+              Физическое лицо
+            </button>
+            <button
+              disabled
+              class="w-full"
+              :class="{
+                active: faceType === 'yurFace',
+              }"
+              @click="faceType = 'yurFace'"
+            >
+              Юридическое лицо
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="px-5 pb-2">
-        <div class="relative">
-          <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-            Номер телефона
-          </label>
-          <div class="join w-full">
-            <input
-              :disabled="isCodeSent || isNumberConfirmed"
-              id="tnumber"
-              v-model="formData.phoneNumber"
-              name="tnumber"
-              class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              v-maska
-              data-maska="+7 (###) ###-##-##"
-              placeholder="+7 (___) ___-__-__"
-              required="true"
-              @keydown.enter="sendConfirmCode"
-            />
-            <button
-              v-if="!isCodeSent"
-              :disabled="isNumberConfirmed"
-              class="btn btn-sm xl:btn-md join-item rounded-r-full"
-              @click="sendConfirmCode"
-            >
-              Подтвердить
-            </button>
-            <button
-              v-else
-              :disabled="isNumberConfirmed"
-              class="btn btn-sm xl:btn-md join-item rounded-r-full"
-              @click=";(isCodeSent = false), (isNumberConfirmed = false)"
-            >
-              <IconCSS
-                class="w-12 h-12"
-                size="20"
-                name="fluent:backspace-24-regular"
-              />
-            </button>
-          </div>
-          <div class="flex">
-            <div class="hidden">{{ timer }}</div>
-            <span
-              class="text-md font-medium underline cursor-pointer ml-1 mt-1"
-              v-if="isCodeSent && !isNumberConfirmed"
-              @click="sendConfirmCode"
-              >Отправить код повторно</span
-            >
-          </div>
-          <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-            Код верфикации - озвученные цифры внутри звонка
-          </label>
-          <div class="join w-full">
-            <input
-              ref="confirmationCodeInput"
-              :disabled="isNumberConfirmed || !isCodeSent"
-              id="verificationCode"
-              v-model="formData.verificationCode"
-              type="text"
-              v-maska
-              data-maska="####"
-              name="verificationCode"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              placeholder=""
-              required="true"
-              @keydown.enter="confirmCode"
-            />
-            <button
-              :disabled="!isCodeSent || isNumberConfirmed"
-              class="btn btn-sm xl:btn-md join-item rounded-r-full"
-              @click="confirmCode"
-            >
-              Подтвердить
-            </button>
-          </div>
-
-          <div v-if="faceType == 'yurFace'">
-            <div>
-              <label class="block ml-1 my-1 text-sm font-medium">
-                ИНН организации
-              </label>
-              <div class="join w-full">
-                <input
-                  id="orgInn"
-                  :disabled="isInnConfirmed || !isNumberConfirmed"
-                  v-model="formData.orgInn"
-                  v-maska
-                  data-maska="#######################"
-                  name="orgInn"
-                  class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  placeholder="ИНН"
-                  required="true"
-                />
-                <button
-                  :disabled="isInnLoading || !isNumberConfirmed"
-                  v-if="!isInnConfirmed"
-                  class="btn btn-sm xl:btn-md join-item rounded-r-full"
-                  @click="checkInn"
-                >
-                  Найти
-                </button>
-                <button
-                  v-if="isInnConfirmed"
-                  class="btn join-item rounded-r-full"
-                  @click="clearFormData"
-                >
-                  <IconCSS size="24" name="fluent:backspace-24-regular" />
-                </button>
-              </div>
-
-              <label class="block ml-1 mb-2 my-1 text-sm font-medium"
-                >Форма организации
-              </label>
-              <input
-                id="orgKey"
-                v-model="formData.orgKey"
-                type="text"
-                name="org"
-                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-base-200"
-                placeholder="ИП/ООО"
-                required="true"
-                readonly
-              />
-              <label class="block ml-1 mb-2 my-1 text-sm font-medium">
-                Наименование организации
-              </label>
-              <input
-                id="orgName"
-                v-model="formData.orgName"
-                type="text"
-                name="orgName"
-                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-base-200"
-                placeholder=""
-                required="true"
-                readonly
-              />
-              <label class="block ml-1 mb-2 my-1 text-sm font-medium">
-                ОГРН(ОГРНИП)
-              </label>
-              <input
-                id="orgOgrn"
-                v-model="formData.orgOgrn"
-                type="number"
-                name="orgOgr"
-                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-base-200"
-                placeholder=""
-                required="true"
-                readonly
-              />
-
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-              БИК
-            </label>
-            <input
-              :disabled="!isInnConfirmed && faceType == 'yurFace'"
-              id="name"
-              v-model="formData.bik"
-              type="text"
-              name="bik"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              :class="{
-                'input-error': v$.bik.$error,
-              }"
-              @input="v$.bik.$touch"
-              placeholder="БИК"
-              required="true"
-            />
-
-            <div
-              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
-            >
-              {{ v$.bik?.$errors[0]?.$message }}
-            </div>
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-              Расчетный счёт
-            </label>
-            <input
-              :disabled="!isInnConfirmed && faceType == 'yurFace'"
-              id="rs"
-              v-model="formData.rs"
-              type="text"
-              name="rs"
-              v-maska
-              data-maska="####################"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              :class="{
-                'input-error': v$.rs.$error,
-              }"
-              @input="v$.rs.$touch"
-              placeholder="Р/С"
-              required="true"
-            />
-
-            <div
-              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
-            >
-              {{ v$.rs?.$errors[0]?.$message }}
-            </div>
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-              Имя
-            </label>
-            <input
-              :disabled="!isInnConfirmed && faceType == 'yurFace'"
-              id="name"
-              v-model="formData.name"
-              type="text"
-              name="name"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              :class="{
-                'input-error': v$.name.$error,
-              }"
-              @input="v$.name.$touch"
-              placeholder="Иван"
-              required="true"
-            />
-
-            <div
-              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
-            >
-              {{ v$.name?.$errors[0]?.$message }}
-            </div>
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-              Фамилия
-            </label>
-            <input
-              :disabled="!isInnConfirmed && faceType == 'yurFace'"
-              id="lastname"
-              v-model="formData.lastname"
-              type="text"
-              name="lastname"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              :class="{
-                'input-error': v$.lastname.$error,
-              }"
-              @input="v$.lastname.$touch"
-              placeholder="Иванов"
-              required="true"
-            />
-
-            <div
-              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
-            >
-              {{ v$.lastname?.$errors[0]?.$message }}
-            </div>
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-              Отчество
-            </label>
-            <input
-              :disabled="!isInnConfirmed && faceType == 'yurFace'"
-              id="name"
-              v-model="formData.middleName"
-              type="text"
-              name="middleName"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              placeholder="Иванович"
-            />
-            </div>
-          </div>
-
-          <div>
+        <div class="px-5 pb-2">
+          <div class="relative">
             <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
-              Email
+              Номер телефона
             </label>
-            <input
-              :disabled="!isInnConfirmed && faceType == 'yurFace'"
-              id="email"
-              v-model="formData.email"
-              type="email"
-              name="email"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              :class="{
-                'input-error': v$.email.$error,
-              }"
-              @input="v$.email.$touch"
-              placeholder="name@company.com"
-              required="true"
-            />
+            <div class="join w-full">
+              <input
+                id="tnumber"
+                v-model="formData.phoneNumber"
+                v-maska
+                :disabled="isCodeSent || isNumberConfirmed"
+                name="tnumber"
+                class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                data-maska="+7 (###) ###-##-##"
+                placeholder="+7 (___) ___-__-__"
+                required="true"
+                @keydown.enter="sendConfirmCode"
+              >
+              <button
+                v-if="!isCodeSent"
+                :disabled="isNumberConfirmed"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                @click="sendConfirmCode"
+              >
+                Подтвердить
+              </button>
+              <button
+                v-else
+                :disabled="isNumberConfirmed"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                @click=";(isCodeSent = false), (isNumberConfirmed = false)"
+              >
+                <IconCSS
+                  class="w-12 h-12"
+                  size="20"
+                  name="fluent:backspace-24-regular"
+                />
+              </button>
+            </div>
+            <div class="flex">
+              <div class="hidden">
+                {{ timer }}
+              </div>
+              <span
+                v-if="isCodeSent && !isNumberConfirmed"
+                class="text-md font-medium underline cursor-pointer ml-1 mt-1"
+                @click="sendConfirmCode"
+              >Отправить код повторно</span>
+            </div>
+            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+              Код верфикации - озвученные цифры внутри звонка
+            </label>
+            <div class="join w-full">
+              <input
+                id="verificationCode"
+                ref="confirmationCodeInput"
+                v-model="formData.verificationCode"
+                v-maska
+                :disabled="isNumberConfirmed || !isCodeSent"
+                type="text"
+                data-maska="####"
+                name="verificationCode"
+                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder=""
+                required="true"
+                @keydown.enter="confirmCode"
+              >
+              <button
+                :disabled="!isCodeSent || isNumberConfirmed"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                @click="confirmCode"
+              >
+                Подтвердить
+              </button>
+            </div>
 
-            <div
-              v-for="error of v$.email.$errors"
-              :key="error.$uid"
-              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
-            >
+            <div v-if="faceType === 'yurFace'">
+              <div>
+                <label class="block ml-1 my-1 text-sm font-medium">
+                  ИНН организации
+                </label>
+                <div class="join w-full">
+                  <input
+                    id="orgInn"
+                    v-model="formData.orgInn"
+                    v-maska
+                    :disabled="isInnConfirmed || !isNumberConfirmed"
+                    data-maska="#######################"
+                    name="orgInn"
+                    class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="ИНН"
+                    required="true"
+                  >
+                  <button
+                    v-if="!isInnConfirmed"
+                    :disabled="isInnLoading || !isNumberConfirmed"
+                    class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                    @click="checkInn"
+                  >
+                    Найти
+                  </button>
+                  <button
+                    v-if="isInnConfirmed"
+                    class="btn join-item rounded-r-full"
+                    @click="clearFormData"
+                  >
+                    <IconCSS size="24" name="fluent:backspace-24-regular" />
+                  </button>
+                </div>
+
+                <label class="block ml-1 mb-2 my-1 text-sm font-medium">Форма организации
+                </label>
+                <input
+                  id="orgKey"
+                  v-model="formData.orgKey"
+                  type="text"
+                  name="org"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-base-200"
+                  placeholder="ИП/ООО"
+                  required="true"
+                  readonly
+                >
+                <label class="block ml-1 mb-2 my-1 text-sm font-medium">
+                  Наименование организации
+                </label>
+                <input
+                  id="orgName"
+                  v-model="formData.orgName"
+                  type="text"
+                  name="orgName"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-base-200"
+                  placeholder=""
+                  required="true"
+                  readonly
+                >
+                <label class="block ml-1 mb-2 my-1 text-sm font-medium">
+                  ОГРН(ОГРНИП)
+                </label>
+                <input
+                  id="orgOgrn"
+                  v-model="formData.orgOgrn"
+                  type="number"
+                  name="orgOgr"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-base-200"
+                  placeholder=""
+                  required="true"
+                  readonly
+                >
+
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                  БИК
+                </label>
+                <input
+                  id="name"
+                  v-model="formData.bik"
+                  :disabled="!isInnConfirmed && faceType === 'yurFace'"
+                  type="text"
+                  name="bik"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  :class="{
+                    'input-error': v$.bik.$error,
+                  }"
+                  placeholder="БИК"
+                  required="true"
+                  @input="v$.bik.$touch"
+                >
+
+                <div
+                  class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                >
+                  {{ v$.bik?.$errors[0]?.$message }}
+                </div>
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                  Расчетный счёт
+                </label>
+                <input
+                  id="rs"
+                  v-model="formData.rs"
+                  v-maska
+                  :disabled="!isInnConfirmed && faceType === 'yurFace'"
+                  type="text"
+                  name="rs"
+                  data-maska="####################"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  :class="{
+                    'input-error': v$.rs.$error,
+                  }"
+                  placeholder="Р/С"
+                  required="true"
+                  @input="v$.rs.$touch"
+                >
+
+                <div
+                  class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                >
+                  {{ v$.rs?.$errors[0]?.$message }}
+                </div>
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                  Имя
+                </label>
+                <input
+                  id="name"
+                  v-model="formData.name"
+                  :disabled="!isInnConfirmed && faceType === 'yurFace'"
+                  type="text"
+                  name="name"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  :class="{
+                    'input-error': v$.name.$error,
+                  }"
+                  placeholder="Иван"
+                  required="true"
+                  @input="v$.name.$touch"
+                >
+
+                <div
+                  class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                >
+                  {{ v$.name?.$errors[0]?.$message }}
+                </div>
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                  Фамилия
+                </label>
+                <input
+                  id="lastname"
+                  v-model="formData.lastname"
+                  :disabled="!isInnConfirmed && faceType === 'yurFace'"
+                  type="text"
+                  name="lastname"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  :class="{
+                    'input-error': v$.lastname.$error,
+                  }"
+                  placeholder="Иванов"
+                  required="true"
+                  @input="v$.lastname.$touch"
+                >
+
+                <div
+                  class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                >
+                  {{ v$.lastname?.$errors[0]?.$message }}
+                </div>
+                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                  Отчество
+                </label>
+                <input
+                  id="name"
+                  v-model="formData.middleName"
+                  :disabled="!isInnConfirmed && faceType === 'yurFace'"
+                  type="text"
+                  name="middleName"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  placeholder="Иванович"
+                >
+              </div>
+            </div>
+
+            <div>
+              <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                Email
+              </label>
+              <input
+                id="email"
+                v-model="formData.email"
+                :disabled="!isInnConfirmed && faceType === 'yurFace'"
+                type="email"
+                name="email"
+                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                :class="{
+                  'input-error': v$.email.$error,
+                }"
+                placeholder="name@company.com"
+                required="true"
+                @input="v$.email.$touch"
+              >
+
+              <div
+                v-for="error of v$.email.$errors"
+                :key="error.$uid"
+                class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+              >
               <!-- <div class="error-msg">
                 {{ error.$message }}
               </div> -->
-            </div>
-          </div>
-
-          <div>
-            <label
-              for="password"
-              class="block ml-1 mt-1 mb-2 my-1text-sm font-medium"
-              >Пароль
-            </label>
-            <div class="flex relative">
-              <input
-                :disabled="!isInnConfirmed && faceType == 'yurFace'"
-                id="password"
-                v-model="formData.password"
-                :type="passwordInputType"
-                name="password"
-                placeholder="••••••••"
-                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                :class="{
-                  'input-error': v$.password.$error,
-                }"
-                required="true"
-                @change="v$.password.$touch"
-              />
-              <button
-                :disabled="!isInnConfirmed"
-                type="button"
-                class="absolute right-0 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
-                @click="togglePassword"
-              >
-                <IconCSS
-                  v-if="passwordInputType === 'password'"
-                  class="w-20 h-20"
-                  size="25"
-                  name="mdi:hide-outline"
-                />
-                <IconCSS
-                  v-else
-                  class="w-20 h-20"
-                  size="25"
-                  name="mdi:show-outline"
-                />
-              </button>
-            </div>
-
-            <div
-              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
-            >
-              {{ v$.password?.$errors[0]?.$message }}
-            </div>
-          </div>
-          <div class="pb-0">
-            <label
-              for="confirm-password"
-              class="block ml-1 mb-2 my-1 text-sm font-medium"
-              >Пароль еще раз
-            </label>
-            <div class="flex relative">
-              <input
-                :disabled="!isInnConfirmed && faceType == 'yurFace'"
-                id="confirm-password"
-                v-model="formData.confirmPassword"
-                :type="passwordConfirmInputType"
-                name="confirm-password"
-                placeholder="••••••••"
-                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                :class="{
-                  'input-error': v$.confirmPassword.$error,
-                }"
-                required="true"
-                @change="v$.confirmPassword.$touch"
-              />
-              <button
-                :disabled="!isInnConfirmed"
-                type="button"
-                class="absolute right-0 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
-                @click="toggleConfirmPassword"
-              >
-                <IconCSS
-                  v-if="passwordConfirmInputType === 'password'"
-                  class="w-20 h-20"
-                  size="25"
-                  name="mdi:hide-outline"
-                />
-                <IconCSS
-                  v-else
-                  class="w-20 h-20"
-                  size="25"
-                  name="mdi:show-outline"
-                />
-              </button>
-            </div>
-            <div
-              v-if="v$.confirmPassword.$errors"
-              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
-            >
-              <div class="error-msg">
-                {{ v$.confirmPassword?.$errors[0]?.$message }}
               </div>
             </div>
-          </div>
 
-          <div class="flex gap-2 mt-5 mb-2">
-            <input
-              type="checkbox"
-              class="checkbox checkbox-sm mt-1"
-              v-model="formData.checked"
-            />
-            <p
-              class="text-xs cursor-pointer"
-              @click="formData.checked = !formData.checked"
+            <div>
+              <label
+                for="password"
+                class="block ml-1 mt-1 mb-2 my-1text-sm font-medium"
+              >Пароль
+              </label>
+              <div class="flex relative">
+                <input
+                  id="password"
+                  v-model="formData.password"
+                  :disabled="!isInnConfirmed && faceType === 'yurFace'"
+                  :type="passwordInputType"
+                  name="password"
+                  placeholder="••••••••"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  :class="{
+                    'input-error': v$.password.$error,
+                  }"
+                  required="true"
+                  @change="v$.password.$touch"
+                >
+                <button
+                  :disabled="!isInnConfirmed"
+                  type="button"
+                  class="absolute right-0 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
+                  @click="togglePassword"
+                >
+                  <IconCSS
+                    v-if="passwordInputType === 'password'"
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:hide-outline"
+                  />
+                  <IconCSS
+                    v-else
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:show-outline"
+                  />
+                </button>
+              </div>
+
+              <div
+                class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+              >
+                {{ v$.password?.$errors[0]?.$message }}
+              </div>
+            </div>
+            <div class="pb-0">
+              <label
+                for="confirm-password"
+                class="block ml-1 mb-2 my-1 text-sm font-medium"
+              >Пароль еще раз
+              </label>
+              <div class="flex relative">
+                <input
+                  id="confirm-password"
+                  v-model="formData.confirmPassword"
+                  :disabled="!isInnConfirmed && faceType === 'yurFace'"
+                  :type="passwordConfirmInputType"
+                  name="confirm-password"
+                  placeholder="••••••••"
+                  class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  :class="{
+                    'input-error': v$.confirmPassword.$error,
+                  }"
+                  required="true"
+                  @change="v$.confirmPassword.$touch"
+                >
+                <button
+                  :disabled="!isInnConfirmed"
+                  type="button"
+                  class="absolute right-0 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
+                  @click="toggleConfirmPassword"
+                >
+                  <IconCSS
+                    v-if="passwordConfirmInputType === 'password'"
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:hide-outline"
+                  />
+                  <IconCSS
+                    v-else
+                    class="w-20 h-20"
+                    size="25"
+                    name="mdi:show-outline"
+                  />
+                </button>
+              </div>
+              <div
+                v-if="v$.confirmPassword.$errors"
+                class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+              >
+                <div class="error-msg">
+                  {{ v$.confirmPassword?.$errors[0]?.$message }}
+                </div>
+              </div>
+            </div>
+
+            <div class="flex gap-2 mt-5 mb-2">
+              <input
+                v-model="formData.checked"
+                type="checkbox"
+                class="checkbox checkbox-sm mt-1"
+              >
+              <p
+                class="text-xs cursor-pointer"
+                @click="formData.checked = !formData.checked"
+              >
+                Регистрируясь вы принимаете
+                <a target="_blank" href="/oferta.pdf" class="text-primary">Пользовательское соглашение</a>, и подтверждаете, что ознакомлены с
+                <a target="_blank" href="/conf_policy.pdf" class="text-primary">Политикой конфиденциальности</a>.
+              </p>
+            </div>
+          </div>
+          <div v-if="faceType === 'yurFace'" class="flex flex-col gap-0.5">
+            <button
+              :disabled="
+                !formData.checked || !isInnConfirmed || !isNumberConfirmed
+              "
+              class="btn btn-block btn-primary bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-2"
+              @click="submitForm"
             >
-              Регистрируясь вы принимаете
-              <a target="_blank" href="/oferta.pdf" class="text-primary"
-                >Пользовательское соглашение</a
-              >, и подтверждаете, что ознакомлены с
-              <a target="_blank" href="/conf_policy.pdf" class="text-primary"
-                >Политикой конфиденциальности</a
-              >.
+              <span v-show="loading" class="loading loading-spinner" />
+              Зарегистрироваться
+            </button>
+            <p class="login mt-2">
+              Уже есть аккаунт?
+              <NuxtLink href="/auth" class="text-primary">
+                <span class="underline">Войти</span>
+              </NuxtLink>
+            </p>
+          </div>
+          <div v-if="faceType === 'fizFace'" class="flex flex-col gap-0.5">
+            <button
+              :disabled="!formData.checked || !isNumberConfirmed"
+              class="btn btn-block btn-primary bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-2"
+              @click="submitForm"
+            >
+              <span v-show="loading" class="loading loading-spinner" />
+              Зарегистрироваться
+            </button>
+            <p class="login mt-2">
+              Уже есть аккаунт?
+              <NuxtLink href="/auth" class="text-primary">
+                <span class="underline">Войти</span>
+              </NuxtLink>
             </p>
           </div>
         </div>
-        <div class="flex flex-col gap-0.5" v-if="faceType == 'yurFace'">
-          <button
-            :disabled="
-              !formData.checked || !isInnConfirmed || !isNumberConfirmed
-            "
-            class="btn btn-block btn-primary bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-2"
-            @click="submitForm"
-          >
-            <span v-show="loading" class="loading loading-spinner" />
-            Зарегистрироваться
-          </button>
-          <p class="login mt-2">
-            Уже есть аккаунт?
-            <NuxtLink href="/auth" class="text-primary">
-              <span class="underline">Войти</span>
-            </NuxtLink>
-          </p>
-        </div>
-        <div class="flex flex-col gap-0.5" v-if="faceType == 'fizFace'">
-          <button
-            :disabled="!formData.checked || !isNumberConfirmed"
-            class="btn btn-block btn-primary bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-2"
-            @click="submitForm"
-          >
-            <span v-show="loading" class="loading loading-spinner" />
-            Зарегистрироваться
-          </button>
-          <p class="login mt-2">
-            Уже есть аккаунт?
-            <NuxtLink href="/auth" class="text-primary">
-              <span class="underline">Войти</span>
-            </NuxtLink>
-          </p>
-        </div>
-      </div>
-    </section>
-
+      </section>
+    </div>
   </div>
 </template>
 

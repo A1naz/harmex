@@ -5,192 +5,209 @@ interface IProps {
   resumeStatus: (item: any) => any
 }
 const props = defineProps<IProps>()
-const { $dayjs } = useNuxtApp()
 const emit = defineEmits(['logModal'])
+const { $dayjs } = useNuxtApp()
+function removeCart(index: number) {
 
-const removeCart = (index: number) => {
-  
 }
 </script>
 
 <template>
   <ClientOnly>
     <table class="table table-sm">
-        <thead>
-          <tr class="bg-primary bg-opacity-5">
-            <!-- <th class="text-center">№</th> -->
-            <th class="text-center">Фото</th>
-            <th class="text-center">Артикул</th>
-            <th class="text-center">Маркетплейс</th>
-            <th class="text-center">Размер</th>
-            <th class="text-center">Количество</th>
-            <th class="text-center">Ключевой запрос</th>
-            <th class="text-center">Статус</th>
-            <th class="text-center">Дата создания</th>
-            <th class="text-center">Дата завершения</th>
-            <th class="text-center">Инфо</th>
-            <!-- <th class="text-center"></th> -->
-          </tr>
-        </thead>
-        <tbody class="rounded-b-lg">
-          <tr
-            class="bg-base-100 border-b-0 rounded-b-lg"
-            v-for="(item, index) in carts"
-            :key="index"
+      <thead>
+        <tr class="bg-primary bg-opacity-5">
+          <!-- <th class="text-center">№</th> -->
+          <th class="text-center">
+            Фото
+          </th>
+          <th class="text-center">
+            Артикул
+          </th>
+          <th class="text-center">
+            Маркетплейс
+          </th>
+          <th class="text-center">
+            Размер
+          </th>
+          <th class="text-center">
+            Количество
+          </th>
+          <th class="text-center">
+            Ключевой запрос
+          </th>
+          <th class="text-center">
+            Статус
+          </th>
+          <th class="text-center">
+            Дата создания
+          </th>
+          <th class="text-center">
+            Дата завершения
+          </th>
+          <th class="text-center">
+            Инфо
+          </th>
+          <!-- <th class="text-center"></th> -->
+        </tr>
+      </thead>
+      <tbody class="rounded-b-lg">
+        <tr
+          v-for="(item, index) in carts"
+          :key="index"
+          class="bg-base-100 border-b-0 rounded-b-lg"
+        >
+          <!-- <td class="text-center border-x border-[#f9fafb]">{{ item.place }}</td> -->
+          <td
+            class="text-center border-r  border-[#f9fafb] mx-auto"
           >
-            <!-- <td class="text-center border-x border-primary border-opacity-5">{{ item.place }}</td> -->
-            <td
-              class="text-center border-r  border-primary border-opacity-5 mx-auto"
+            <div
+              style="width: 28px; height: 36px; border-radius: 4px"
+              class="mx-auto"
             >
-              <div
-                style="width: 28px; height: 36px; border-radius: 4px"
-                class="mx-auto"
-              >
-                <div class="dropdown dropdown-hover">
-                  <label tabindex="0">
-                    <nuxt-img
-                      class="rounded-lg z-0"
-                      alt=""
-                      loading="lazy"
-                      fit="fill"
-                      :src="item.image"
-                    />
-                  </label>
-                  <ul
-                    tabindex="0"
-                    class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
-                  >
-                    <nuxt-img
-                      class="rounded-lg z-[9999]"
-                      loading="lazy"
-                      fit="fill"
-                      :src="item.image"
-                    />
-                  </ul>
-                </div>
+              <div class="dropdown dropdown-hover">
+                <label tabindex="0">
+                  <nuxt-img
+                    class="rounded-lg z-0"
+                    alt=""
+                    loading="lazy"
+                    fit="fill"
+                    :src="item.image"
+                  />
+                </label>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-[1]"
+                >
+                  <nuxt-img
+                    class="rounded-lg z-[9999]"
+                    loading="lazy"
+                    fit="fill"
+                    :src="item.image"
+                  />
+                </ul>
               </div>
-            </td>
-            <td
-              class="text-center border-r border-primary border-opacity-5 text-base-content truncate"
-            >
-              <a
+            </div>
+          </td>
+          <td
+            class="text-center border-r border-[#f9fafb] text-base-content truncate"
+          >
+            <a
               :href="`https://www.wildberries.ru/catalog/${item.article}/detail.aspx`" target="_blank"
-                class="text-sm text-primary link link-hover"
-              >
-                {{ item.article }}
-              </a>
-            </td>
-            <td class="text-center border-r border-primary border-opacity-5">
-              Wildberries
-            </td>
-            <td
-              class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] truncate"
+              class="text-sm text-primary link link-hover"
             >
+              {{ item.article }}
+            </a>
+          </td>
+          <td class="text-center border-r border-[#f9fafb]">
+            Wildberries
+          </td>
+          <td
+            class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] truncate"
+          >
             {{ item.size == "none" ? "-" : item.size }}
-            </td>
-            <td class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] whitespace-normal break-words">
-              <div class="flex flex-col">
-                {{  item.amount  }}
-              </div>
-            </td>
+          </td>
+          <td class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] whitespace-normal break-words">
+            <div class="flex flex-col">
+              {{ item.amount }}
+            </div>
+          </td>
 
-            <td class="text-center border-r border-primary border-opacity-5 overflow-x-auto max-w-[250px] whitespace-normal break-words truncate">
-              <div class="flex flex-col">
-                {{  item.query  }}
-              </div>
-            </td>
+          <td class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] whitespace-normal break-words truncate">
+            <div class="flex flex-col">
+              {{ item.query }}
+            </div>
+          </td>
 
-            <td class="text-center  border-r border-primary border-opacity-5">
-              <div
-                :class="{
-                  ' text-red-500 rounded-full py-1 px-2  text-center':
-                    item.status === 'nofunds',
-                  'text-error rounded-full py-1 px-2  text-center':
+          <td class="text-center  border-r border-[#f9fafb]">
+            <div
+              :class="{
+                ' text-red-500 rounded-full py-1 px-2  text-center':
+                  item.status === 'nofunds',
+                'text-error rounded-full py-1 px-2  text-center':
                   item.status === 'spam',
-                  'bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'created',
-                  'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
-                    item.status === 'work' || item.status === 'busy',
-                  'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
-                    item.status === 'completed',
-                }"
-              >
-                {{ getStatus(item.status) }}
-               
-              </div>
-              <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
-                Возобновить  
-              </button>
-            </td>
-            <td class="text-center border-r border-primary border-opacity-5">
-              <div
-                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
-              >
-                {{ 
-                  $dayjs(item.createdDate).locale('ru').format(
-                    'D MMMM YYYY HH:mm'
-                  )
-                }}
-              </div>
-            </td>
-            <td class="text-center border-r border-primary border-opacity-5">
-              <div
-                v-if="item.endedDate"
-                class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
-              >
-              {{ 
-                $dayjs(item.endedDate).locale('ru').format(
-                  'D MMMM YYYY HH:mm'
-                ) 
+                'bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                  item.status === 'created',
+                'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
+                  item.status === 'work' || item.status === 'busy',
+                'bg-success text-base-content rounded-full py-0.5 px-2 text-center':
+                  item.status === 'completed',
+              }"
+            >
+              {{ getStatus(item.status) }}
+            </div>
+            <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
+              Возобновить
+            </button>
+          </td>
+          <td class="text-center border-r border-[#f9fafb]">
+            <div
+              class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+            >
+              {{
+                $dayjs(item.createdDate).locale('ru').format(
+                  'D MMMM YYYY HH:mm',
+                )
               }}
-              </div>
-              <div v-else>
-                Нет
-              </div>
-            </td>
-            <td
-                class="text-center whitespace-pre-wrap overflow-x-auto border-r border-primary border-opacity-5 w-[40px]"
+            </div>
+          </td>
+          <td class="text-center border-r border-[#f9fafb]">
+            <div
+              v-if="item.endedDate"
+              class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
+            >
+              {{
+                $dayjs(item.endedDate).locale('ru').format(
+                  'D MMMM YYYY HH:mm',
+                )
+              }}
+            </div>
+            <div v-else>
+              Нет
+            </div>
+          </td>
+          <td
+            class="text-center whitespace-pre-wrap overflow-x-auto border-r border-[#f9fafb] w-[40px]"
+          >
+            <div class="rounded-lg p-0.5 text-center">
+              <button
+                class="btn btn-primary btn-sm btn-square mb-2"
+                @click="$emit('logModal', item)"
               >
-                <div class="rounded-lg p-0.5 text-center">
-                  <button
-                    @click="$emit('logModal', item)"
-                    class="btn btn-primary btn-sm btn-square mb-2"
-                  >
-                    <svg
-                      data-v-f136eeaa=""
-                      data-v-a5d236d9=""
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      aria-hidden="true"
-                      role="img"
-                      class="icon"
-                      width="20px"
-                      height="20px"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                        d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
-                  </button>
-                </div>
-              </td>
-            <!-- <td class="text-center max-w-[60px]">
+                <svg
+                  data-v-f136eeaa=""
+                  data-v-a5d236d9=""
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  aria-hidden="true"
+                  role="img"
+                  class="icon"
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                    d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </td>
+          <!-- <td class="text-center max-w-[60px]">
               <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="removeCart(item.id)">
                 <IconCSS name="material-symbols:close" size="15" />
               </div>
               <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="">
                 <IconCSS name="fluent:copy-20-filled" size="15" />
               </div>
-            
-            </td> -->
-          </tr>
-        </tbody>
-    </table>
 
+            </td> -->
+        </tr>
+      </tbody>
+    </table>
 
     <!-- <DataTable class="bg-base-200 hidden lg:block" :value="carts">
       <Column field="place" header="№" />

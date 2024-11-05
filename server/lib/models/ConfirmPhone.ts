@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { model, Schema } from 'mongoose'
 
 const ConfirmPhoneSchema = new Schema({
   phone: { type: String, required: true },
@@ -7,4 +7,4 @@ const ConfirmPhoneSchema = new Schema({
   count: { type: Number, default: 1 },
 })
 
-export const ConfirmPhone = model('confirmPhone', ConfirmPhoneSchema,)
+export const ConfirmPhone = model('confirmPhone', ConfirmPhoneSchema)

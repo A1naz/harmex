@@ -2,7 +2,8 @@ import { View } from '~/server/lib/models/ozon/View'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const {
     dateFilter,
@@ -13,9 +14,7 @@ export default eventHandler(async (event) => {
     limit = 50,
   } = getQuery(event)
 
-  let questions = []
-
-  let searchQuery: { status?: any; $or?: any; createdDate?: any } = {}
+  let searchQuery: { status?: any, $or?: any, createdDate?: any } = {}
   if (type === 'article') {
     searchQuery = {
       $or: [{ article: { $regex: string, $options: 'i' } }],

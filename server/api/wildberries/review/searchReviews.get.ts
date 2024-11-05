@@ -1,30 +1,34 @@
 ﻿import { Delivery } from '@/server/lib/models/wildberries/Delivery'
 import { Review } from '@/server/lib/models/wildberries/Review'
-export default eventHandler(async (event) => {
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
-    
-    const { type, status, string } = getQuery(event)
+export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
+
+  const { type, status, string } = getQuery(event)
 
   let reviews: any = []
 
   if (type === 'article') {
-    if (!Number(string)) return []
+    if (!Number(string))
+      return []
     reviews = await Review.find({
       user: user._id,
-      status: status,
+      status,
       article: string,
     }).sort({
       createdAt: -1,
     })
-    if (!reviews) return []
-  } 
+    if (!reviews)
+      return []
+  }
 
   if (type === 'uuidReview') {
-    reviews = await Review.find({_id: string}).sort({createdAt: -1})
-    if (!reviews) return []
-  } 
+    reviews = await Review.find({ _id: string }).sort({ createdAt: -1 })
+    if (!reviews)
+      return []
+  }
 
   if (type === 'uuid') {
     const uuid = string?.toString().replaceAll('#', '')
@@ -36,14 +40,15 @@ export default eventHandler(async (event) => {
 
     reviews = await Review.find({
       user,
-      status: status,
+      status,
       delivery: { $in: deliveries },
     }).sort({
       createdAt: -1,
     })
   }
 
-  if (!reviews) return []
+  if (!reviews)
+    return []
 
   const format = await Promise.all(
     reviews.map(async (review: any) => {
@@ -59,11 +64,11 @@ export default eventHandler(async (event) => {
 
       const delivery = await Delivery.findOne({ _id: review.delivery })
       if (delivery) {
-        format['buyoutuuid'] = delivery.uuidbuyout
+        format.buyoutuuid = delivery.uuidbuyout
       }
 
       return format
-    })
+    }),
   )
-  return format.filter((item) => item !== undefined)
+  return format.filter(item => item !== undefined)
 })

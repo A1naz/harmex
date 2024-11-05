@@ -1,13 +1,13 @@
 import { Buyout } from '@/server/lib/models/ozon/Buyout'
-import { Delivery } from '~~/server/lib/models/Delivery'
+import { Delivery } from '~~/server/lib/models/ozon/Delivery'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
-
-    const body = await readBody(event)
+  const body = await readBody(event)
 
   const found = await Buyout.findOne({ uuid: body.uuid })
   if (!found) {
@@ -32,12 +32,11 @@ export default eventHandler(async (event) => {
   found.status = 'archived'
   await found.save()
 
-  await userLog(event,
-    {
-        documentType: DocuemntEnum.Buyout,
-        documentId: found.uuid,
-        comment: 'помещен в архив'
-    })
+  await userLog(event, {
+    documentType: DocuemntEnum.Buyout,
+    documentId: found.uuid,
+    comment: 'помещен в архив',
+  })
 
   return {
     status: 'ok',

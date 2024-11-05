@@ -1,17 +1,5 @@
 <script lang="ts" setup>
 import { YandexMap, YandexMarker } from 'vue-yandex-maps'
-import { notify } from '@kyvg/vue3-notification'
-
-const { height } = useWindowSize()
-const config = useRuntimeConfig()
-
-const settings = {
-  apiKey: config.public.YANDEX_MAPS_API_KEY || '', // Индивидуальный ключ API
-  lang: 'ru_RU', // Используемый язык
-  coordorder: 'latlong', // Порядок задания географических координат
-  debug: false, // Режим отладки
-  version: '2.1', // Версия Я.Карт
-}
 
 const props = defineProps({
   pickpoints: {
@@ -24,6 +12,19 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['callback', 'close'])
+
+const { height } = useWindowSize()
+const config = useRuntimeConfig()
+
+const settings = {
+  apiKey: config.public.YANDEX_MAPS_API_KEY || '', // Индивидуальный ключ API
+  lang: 'ru_RU', // Используемый язык
+  coordorder: 'latlong', // Порядок задания географических координат
+  debug: false, // Режим отладки
+  version: '2.1', // Версия Я.Карт
+}
+
 const map = ref(null) // ссылка на карту
 
 const marker = ref()
@@ -31,7 +32,6 @@ const name = ref('Custom')
 const loading = ref(false)
 const addressText = ref('Москва, улица Петровка, 5')
 const coordinates = ref([55.761438764655615, 37.617691166568456])
-const emit = defineEmits(['callback', 'close'])
 const error = ref('')
 const store = useMainStore()
 
@@ -39,7 +39,7 @@ function closeModal() {
   emit('close')
 }
 
-const onClick = (e: any) => {
+function onClick(e: any) {
   const objectId = e.get()
   coordinates.value = e.get('coords')
   getAddressText(e.get('coords')[0], e.get('coords')[1], '1')
@@ -66,10 +66,7 @@ async function getAddressText(lt: number, lg: number, id: string) {
   }
 }
 
-
-
-const handleAddress = (address: string, lt: number, lg: number) => {
-
+function handleAddress(address: string, lt: number, lg: number) {
   emit('callback', address, lt, lg)
 }
 </script>
@@ -87,9 +84,10 @@ const handleAddress = (address: string, lt: number, lg: number) => {
         <a
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           @click="closeModal"
-          >✕</a
-        >
-        <div class="title mb-2">Выберите адрес</div>
+        >✕</a>
+        <div class="title mb-2">
+          Выберите адрес
+        </div>
 
         <div class="flex justify-center">
           <!-- <div class="ml-2">Адрес: {{ addressText }}</div> -->
@@ -111,12 +109,12 @@ const handleAddress = (address: string, lt: number, lg: number) => {
           :settings="settings"
           :coordinates="coordinates"
           :controls="['searchControl', 'fullscreenControl']"
-          @click="onClick"
           :detailed-controls="{
             searchControl: {
               noPlacemark: true,
             },
           }"
+          @click="onClick"
         >
           <YandexMarker
             ref="marker"
@@ -131,16 +129,18 @@ const handleAddress = (address: string, lt: number, lg: number) => {
             <template #component>
               <BuyoutFlowwowCustomBalloon
                 v-model="addressText"
-                @callback="handleAddress"
                 :coordinates="coordinates"
+                @callback="handleAddress"
               />
             </template>
           </YandexMarker>
         </YandexMap>
       </div>
-      <button :disabled="addressText == 'Загрузка...'" class="btn btn-primary my-2 w-full" @click="handleAddress(addressText, coordinates[0], coordinates[1])">Выбрать Адрес</button>
+      <button :disabled="addressText == 'Загрузка...'" class="btn btn-primary my-2 w-full" @click="handleAddress(addressText, coordinates[0], coordinates[1])">
+        Выбрать Адрес
+      </button>
     </div>
-    <div class="modal-backdrop cursor-pointer" @click="closeModal"></div>
+    <div class="modal-backdrop cursor-pointer" @click="closeModal" />
   </div>
 </template>
 

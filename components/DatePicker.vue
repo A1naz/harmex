@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const props = defineProps({
   modelValue: {
     required: true,
@@ -10,8 +9,8 @@ const props = defineProps({
     default: 'small',
   },
 })
-const { $dayjs } = useNuxtApp()
 const emit = defineEmits(['update:modelValue'])
+const { $dayjs } = useNuxtApp()
 const colorMode = useColorMode()
 const { width } = useWindowSize()
 const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
@@ -21,7 +20,7 @@ type UpdateMonthYear = (month: number, year: number) => void
 function updateMonth(
   event: InputEvent,
   updateMonthYear: UpdateMonthYear,
-  year: number
+  year: number,
 ) {
   updateMonthYear(+(event.target as HTMLSelectElement).value, year)
 }
@@ -44,7 +43,6 @@ function handleDate(modelData: any) {
       select-text="Сохранить"
       @update:model-value="handleDate"
     >
-
       <template #trigger>
         <div class="flex w-full justify-end">
           <button
@@ -64,8 +62,7 @@ function handleDate(modelData: any) {
             <div class="flex justify-between">
               <span>Выбрано:</span>
               <span>
-                {{ $dayjs(internalModelValue).format('DD.MM.YYYY HH:mm') }}</span
-              >
+                {{ $dayjs(internalModelValue).format('DD.MM.YYYY HH:mm') }}</span>
             </div>
           </div>
           <button

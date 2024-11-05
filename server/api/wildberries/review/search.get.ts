@@ -1,12 +1,12 @@
-import { Delivery } from '@/server/lib/models/wildberries/Delivery'
 import { Buyout } from '@/server/lib/models/wildberries/Buyout'
+import { Delivery } from '@/server/lib/models/wildberries/Delivery'
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
-
-    const { type, string } = getQuery(event)
+  const { type, string } = getQuery(event)
 
   let readyForReview
 

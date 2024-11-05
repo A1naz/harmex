@@ -1,47 +1,48 @@
-import AWS from 'aws-sdk'
-import * as fs from 'fs'
+import { GetObjectCommand, PutObjectAclCommand, S3Client } from '@aws-sdk/client-s3'
+
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const { path }: any = getQuery(event)
 
   const bucket = 'ozonmpportal'
-  AWS.config.update({
-    accessKeyId: config.VK_ACCESS_KEY,
-    secretAccessKey: config.VK_SECRET_KEY,
+  const s3 = new S3Client({
+    region: 'ru-central1',
+    credentials: {
+      accessKeyId: config.VK_ACCESS_KEY,
+      secretAccessKey: config.VK_SECRET_KEY,
+    },
     endpoint: 'https://hb.vkcs.cloud',
   })
 
-  const params: AWS.S3.GetObjectRequest = {
-    Bucket: 'ozonmpportal',
-    Key: path,
-  }
-
-  const s3 = new AWS.S3()
-
-  s3.getObject(params, (err, data) => {
-    if (err) {
-      console.error('Ошибка при чтении объекта из S3:', err)
-      return
-    }
-
-    // Подготовка ACL для установки прав доступа
-    const aclParams: AWS.S3.PutObjectAclRequest = {
+  try {
+    // Получаем объект из S3
+    const getObjectParams = {
       Bucket: bucket,
       Key: path,
-      ACL: 'public-read', 
+    }
+    const getObjectCommand = new GetObjectCommand(getObjectParams)
+    await s3.send(getObjectCommand)
+
+    // Устанавливаем права доступа (ACL) для объекта
+    const aclParams = {
+      Bucket: bucket,
+      Key: path,
+      ACL: 'public-read',
     }
 
-  
-    s3.putObjectAcl(aclParams, (aclErr, aclData) => {
-      if (aclErr) {
-        console.error('Ошибка при установке ACL для объекта:', aclErr)
-        return
-      }
-    })
-  })
+    const putAclCommand = new PutObjectAclCommand(aclParams)
+    await s3.send(putAclCommand)
 
-  return {
-    status: 'ok',
+    return {
+      status: 'ok',
+    }
+  }
+  catch (err: any) {
+    console.error('Ошибка при работе с S3:', err)
+    return {
+      status: 'error',
+      message: err.message,
+    }
   }
 })

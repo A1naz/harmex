@@ -1,10 +1,11 @@
-import { View } from '~/server/lib/models/ozon/View'
 import { v4 as uuid } from 'uuid'
 import { DocuemntEnum } from '~/data/enums'
+import { View } from '~/server/lib/models/ozon/View'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const {
     article,

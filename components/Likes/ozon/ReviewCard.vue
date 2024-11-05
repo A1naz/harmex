@@ -40,7 +40,7 @@ const disabledMinusDislikes = computed(() => {
 function addLike() {
   emit('addLike', props.info.id, props.info.productArticle)
 }
-function removeLike() {  
+function removeLike() {
   emit('removeLike', props.info.id, props.info.productArticle)
 }
 
@@ -64,11 +64,11 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
     >
       <div class="flex flex-col px-6 gap-2 h-full w-full">
         <div
-        class="bg-base-300 rounded-md text-sm font-normal my-auto p-0.5 mt-1 mb-4 px-2 w-fit"
+          class="bg-base-300 rounded-md text-sm font-normal my-auto p-0.5 mt-1 mb-4 px-2 w-fit"
         >
           Ozon
         </div>
-       
+
         <div class="flex gap-1.5">
           <div class="photo">
             <div class="w-12 h-12 photo-container">
@@ -86,12 +86,12 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
             <div class="flex justify-between gap-4">
               <div class="relative w-full rounded-lg max-w-[85px] sm:max-w-[100px]">
                 <Rating
-                  class="text-yellow-400 gap-1 sm:gap-2 mt-0.5"
+                  class="flex flex-row items-center text-yellow-400 gap-1 sm:gap-2 mt-0.5"
                   :cancel="false"
                   :model-value="info.rating"
                 />
               </div>
-               <div class="date text-gray-500 text-sm w-full my-auto">
+              <div class="date text-gray-500 text-sm w-full my-auto">
                 {{ $dayjs(info.date).format('DD.MM.YYYY') }}
               </div>
             </div>
@@ -167,8 +167,8 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
           <!-- Карточка комментов -->
           <div
             v-for="comment in info.comments"
-            class="flex flex-col pl-7 gap-3 h-full w-full"
             v-if="info.comments.length"
+            class="flex flex-col pl-7 gap-3 h-full w-full"
           >
             <div class="flex gap-1 mt-5 -mb-2">
               <div class="photo">
@@ -234,8 +234,8 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                     <div class="relative flex items-center ml-auto">
                       <button
                         :disabled="
-                          comment.dislikes + comment.addDislikes <=
-                          comment.dislikes
+                          comment.dislikes + comment.addDislikes
+                            <= comment.dislikes
                         "
                         class="absolute left-0 btn btn-ghost btn-sm btn-square"
                         @click="

@@ -1,10 +1,10 @@
 import fs from 'node:fs'
-import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '~~/server/lib/helpers'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const params = event.context.params as any
   // const url = findProductCard(params.article)
@@ -22,43 +22,47 @@ export default eventHandler(async (event) => {
     `https://card.wb.ru/cards/detail?spp=0&regions=80,64,38,4,115,83,33,68,70,69,30,86,40,1,66,31,48,110,22&pricemarginCoeff=1.0&reg=0&appType=1&emp=0&locale=ru&lang=ru&curr=rub&couponsGeo=2,12,7,3,6,21&dest=12358289&nm=${params.article}`,
     {
       method: 'GET',
-    }
+    },
   )
   const priceData = rawData
   let sizes = []
 
-  if (priceData?.data?.products[0]?.sizes)
+  if (priceData?.data?.products[0]?.sizes) {
     sizes = priceData?.data?.products[0]?.sizes
       .filter((item: any) => item.stocks.length)
       .map((item: any) => item.origName)
-  else sizes = data?.sizes_table?.values.map((size: any) => size.tech_size)
+  }
+  else {
+    sizes = data?.sizes_table?.values.map((size: any) => size.tech_size)
+  }
 
-   if (!sizes || sizes.length === 0) {
+  if (!sizes || sizes.length === 0) {
     throw createError({
       statusCode: 400,
-      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
     })
   }
 
   fs.writeFileSync('sizes.json', JSON.stringify(sizes))
   const product = priceData?.data?.products.find(
-    (item: any) => item.id === Number(params.article)
+    (item: any) => item.id === Number(params.article),
   )
   const priceRaw = product?.salePriceU.toString()
   let instock = false
   if (!product) {
     throw createError({
       statusCode: 400,
-      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
     })
   }
   product.sizes.forEach((size: any) => {
-    if (size.stocks.length > 0) instock = true
+    if (size.stocks.length > 0)
+      instock = true
   })
   if (!priceRaw || !sizes) {
     throw createError({
       statusCode: 400,
-      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
     })
   }
   if (!instock) {
@@ -76,7 +80,7 @@ export default eventHandler(async (event) => {
   })
   const priceText = currency.format(price)
   const image = findImage(params.article)
-  
+
   const productInfo = rawData.data.products[0]
 
   return {
@@ -90,4 +94,3 @@ export default eventHandler(async (event) => {
     },
   }
 })
-

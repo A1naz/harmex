@@ -1,5 +1,5 @@
 ﻿<script lang="ts" setup>
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
 const props = defineProps({
   uuid: {
@@ -14,8 +14,8 @@ const props = defineProps({
   },
 })
 
-const uuid = toRef(props, 'uuid')
 const emit = defineEmits(['getTemplates', 'closeModal'])
+const uuid = toRef(props, 'uuid')
 const store = useWildberriesBuyoutStore()
 const opened = ref()
 
@@ -26,13 +26,14 @@ watch(
   () => props.opened,
   (newState) => {
     opened.value = newState
-  }
+  },
 )
 
 async function selectTemplate() {
   if (props.info.buyoutsArray.length <= 10) {
     store.createProducts = props.info.buyoutsArray
-  } else {
+  }
+  else {
     notify({
       title: 'За раз можно создать максимум 10 выкупов',
       text: 'Добавлены первые 10 выкупов',
@@ -60,11 +61,12 @@ async function deleteTemplate() {
   }
 }
 </script>
+
 <template>
   <div
     class="collapse collapse-arrow border border-base-100 bg-base-200 rounded-box z-0 overflow-hidden"
   >
-    <input type="checkbox" v-model="opened" />
+    <input v-model="opened" type="checkbox">
     <div
       class="collapse-title relative text-md font-medium flex flex-col md:justify-between md:flex-row"
     >
@@ -74,16 +76,12 @@ async function deleteTemplate() {
         </div>
       </div>
       <div class="flex z-10">
-        
-        <label @click="deleteTemplate" class="btn btn-sm text-red-400 z-10"
-          >Удалить</label
-        >
-        <nuxt-link to="/buyouts/create/wildberries">
+        <label class="btn btn-sm text-red-400 z-10" @click="deleteTemplate">Удалить</label>
+        <nuxt-link to="/wildberries/buyouts/create">
           <label
-            @click="selectTemplate"
             class="btn btn-sm btn-primary truncate mr-1 bg-opacity-20 border-none text-base-content"
-            >Добавить</label
-          >
+            @click="selectTemplate"
+          >Добавить</label>
         </nuxt-link>
       </div>
     </div>
@@ -93,11 +91,12 @@ async function deleteTemplate() {
       <BuyoutTemplateCard
         v-for="product in info.buyoutsArray"
         :product="product"
-      ></BuyoutTemplateCard>
+      />
     </div>
   </div>
   <!-- <BuyoutDeleteConfirmModal :uuid="uuid" @delete-template="deleteTemplate"></BuyoutDeleteConfirmModal> -->
 </template>
+
 <style scoped>
 
 </style>

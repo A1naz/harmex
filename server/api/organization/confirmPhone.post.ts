@@ -50,11 +50,12 @@ export default eventHandler(async (event) => {
     await isConfirmExist.save()
     if (isConfirmExist.count > 2) {
       data = await confirmViaHiCall(hiCallKey, phoneNumber)
-    } else {
+    }
+    else {
       data = await confirmViaZvonokApi(
         zvonokPublicKey,
         zvonokCampaignId,
-        phoneNumber
+        phoneNumber,
       )
     }
 
@@ -69,12 +70,13 @@ export default eventHandler(async (event) => {
     return {
       status: 'ok',
     }
-  } else {
+  }
+  else {
     try {
       data = await confirmViaZvonokApi(
         zvonokPublicKey,
         zvonokCampaignId,
-        phoneNumber
+        phoneNumber,
       )
 
       if (!data || !data.code || data.status === 'error') {
@@ -92,7 +94,9 @@ export default eventHandler(async (event) => {
       return {
         status: 'ok',
       }
-    } catch (e) {
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e)
 
       return {

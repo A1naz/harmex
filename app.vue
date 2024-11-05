@@ -1,95 +1,31 @@
-<script lang="ts" setup>
-import { useMainStore } from '@/stores/main'
-
-const colorMode = useColorMode()
-const { status, signIn, signOut } = useAuth()
-const store = useMainStore()
-const route = useRoute()
-const app = ref()
-
-// async function reSign() {
-//   const isReload = status.value === 'unauthenticated' ? true : false
-
-//   const { error, url } = await signIn('credentials', {
-//     redirect: false,
-//   })
-
-//   if (error) {
-//     await signOut({ redirect: false })
-//     window.location.href = 'https://auth.anykey.group/signIn?redirect=ozon'
-//   } else {
-//     if (isReload) {
-//       window.location.reload()
-//     }
-//   }
-// }
-
-// reSign()
-
-const { data: client, refresh } = useLazyAsyncData('client', () =>
-  $fetch('/api/user/client')
-)
-useIntervalFn(() => {
-  refresh()
-}, 1000 * 60)
-if (status.value === 'authenticated') await store.getClient()
-
-const accessChecker = computed(() => {
-  if (store.client.role == UserRoles.staff) {
-    return store.client.allowedPathes.find(
-      (acc) => acc.value == '/' + route.path.replace(/^\/([^\/]*).*$/, '$1')
-    )
-      ? true
-      : false
-  }
-  return true
-})
-
-watch(client, (newClient) => {
-  store.setClient(newClient?.client as Client)
-})
-</script>
+<script lang="ts" setup></script>
 
 <template>
-  <div ref="app">
-    <notifications
+  <div>
+    <NuxtNotifications
       position="top right"
       :max="2"
       :close-on-click="true"
       :pause-on-hover="true"
-    >
-      <template #body="props">
-        <div style="padding: 1rem; z-index: 1000">
-          <div class="notify-card">
-            <p class="notify-title">
-              {{ props.item.title }}
-            </p>
-            <div class="notify-text" v-html="props.item.text" />
-          </div>
-        </div>
-      </template>
-    </notifications>
-    <NuxtLayout>
-      <NuxtLoadingIndicator
-        :color="colorMode.value === 'light' ? '#296dff' : '#6467f2'"
-      />
-      <SeoKit />
-      <NuxtPage v-if="accessChecker" />
-      <Hero v-else />
-      <div class="my-12 md:hidden"></div>
+      :speed="500"
+    />
+    <NuxtLayout class="overflow-hidden">
+      <NuxtLoadingIndicator color="#296dff" />
+      <NuxtPage />
+      <div class="my-12 md:hidden" />
     </NuxtLayout>
   </div>
 </template>
 
 <style lang="css">
-@import '@/assets/style/datepicker.css';
+/* @import "@/assets/style/datepicker.css"; */
 
 .scroll-primary {
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 }
+
 body {
-  overflow: hidden;
-  font-family: 'Manrope', sans-serif;
+  font-family: "Inter", sans-serif;
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 }
 
@@ -174,6 +110,26 @@ input::-webkit-inner-spin-button {
 }
 
 .description {
-  @apply text-sm  font-light mt-1;
+  @apply text-sm font-light mt-1;
 }
+
+
+/* .myCustomBtn {
+  @apply btn btn-outline border-[#1b38ca] rounded-xl bg-white 
+         hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl
+         active:bg-[#1934bd] active:text-white;
+  &:hover {
+    box-shadow: 0 4px 15px rgb(207, 212, 226);
+  }
+}
+
+.myCustomBtnSm {
+  @apply btn btn-sm btn-outline border-[#1b38ca] rounded-xl bg-white 
+         hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl
+         active:bg-[#1934bd] active:text-white;
+  &:hover {
+    box-shadow: 0 4px 15px rgb(207, 212, 226);
+  }
+} */
+
 </style>

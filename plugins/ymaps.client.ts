@@ -1,7 +1,6 @@
-// plugins/yandex-map.client.js
-
-import plugin from 'vue-yandex-maps'
 import { defineNuxtPlugin } from 'nuxt/app'
+// plugins/yandex-map.client.js
+import plugin from 'vue-yandex-maps'
 
 const settings = {
   apiKey: '42f2d2d0-5650-479c-aca7-52277719fb42', // Индивидуальный ключ API

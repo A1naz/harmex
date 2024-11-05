@@ -1,9 +1,9 @@
 import { ConfirmPhone } from '~/server/lib/models/ConfirmPhone'
+import { User } from '~/server/lib/models/User'
 import {
   confirmViaHiCall,
   confirmViaZvonokApi,
 } from '~/server/utils/organization/confirmPhones'
-import { User } from '~/server/lib/models/User'
 
 const config = useRuntimeConfig()
 const hiCallKey = config.HI_CALL_KEY
@@ -20,12 +20,10 @@ export default eventHandler(async (event) => {
     })
   }
 
-  console.log(phoneNumber)
-
   const isUserExist = await User.findOne({
     phoneNumber,
   })
-  
+
   if (!isUserExist) {
     throw createError({
       statusCode: 404,
@@ -64,11 +62,12 @@ export default eventHandler(async (event) => {
     await isConfirmExist.save()
     if (isConfirmExist.count > 2) {
       data = await confirmViaHiCall(hiCallKey, phoneNumber)
-    } else {
+    }
+    else {
       data = await confirmViaZvonokApi(
         zvonokPublicKey,
         zvonokCampaignId,
-        phoneNumber
+        phoneNumber,
       )
     }
 
@@ -83,12 +82,13 @@ export default eventHandler(async (event) => {
     return {
       status: 'ok',
     }
-  } else {
+  }
+  else {
     try {
       data = await confirmViaZvonokApi(
         zvonokPublicKey,
         zvonokCampaignId,
-        phoneNumber
+        phoneNumber,
       )
 
       if (!data || !data.code || data.status === 'error') {
@@ -106,9 +106,9 @@ export default eventHandler(async (event) => {
       return {
         status: 'ok',
       }
-    } catch (e) {
-      console.log(e)
-
+    }
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    catch (e) {
       return {
         status: 'error',
         message: 'Не удалось отправить код',

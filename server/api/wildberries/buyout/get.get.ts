@@ -1,13 +1,14 @@
 import { Buyout } from '@/server/lib/models/wildberries/Buyout'
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const { status, limit, skip, dateFilter } = getQuery(event)
 
-//   const all = await Buyout.find({ user })
+  //   const all = await Buyout.find({ user })
   let buyouts
   if (status === 'all') {
     buyouts = await Buyout.find({ user, status: { $ne: 'completed' } })
@@ -32,13 +33,13 @@ export default eventHandler(async (event) => {
       .limit(limit as number)
   }
   else if (status === 'completedByAds') {
-    buyouts = await Buyout.find({ user, status: 'completed', rules: { $in: [ 8, 9 ] } })
-     .sort({
-       createdAt: -1,
-     })
-     .skip(skip as number)
-     .limit(limit as number)
- }
+    buyouts = await Buyout.find({ user, status: 'completed', rules: { $in: [8, 9] } })
+      .sort({
+        createdAt: -1,
+      })
+      .skip(skip as number)
+      .limit(limit as number)
+  }
   else if (status === 'canceled') {
     buyouts = await Buyout.find({ user, status: 'canceled' })
       .sort({
@@ -62,21 +63,24 @@ export default eventHandler(async (event) => {
       })
       .skip(skip as number)
       .limit(limit as number)
-  }else if (status === 'discountAwaiting') {
+  }
+  else if (status === 'discountAwaiting') {
     buyouts = await Buyout.find({ user, status: 'discountAwaiting' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }else if (status === 'completedByDiscount') {
+  }
+  else if (status === 'completedByDiscount') {
     buyouts = await Buyout.find({ user, status: 'completedByDiscount' })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
       .limit(limit as number)
-  }else if (status === 'nofunds') {
+  }
+  else if (status === 'nofunds') {
     buyouts = await Buyout.find({ user, status: 'nofunds' })
       .sort({
         createdAt: -1,

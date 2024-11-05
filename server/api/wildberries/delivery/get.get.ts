@@ -56,17 +56,13 @@ export default eventHandler(async (event) => {
   } else if (status === 'pickupReady') {
     deliveries = await Delivery.find({
       user,
-      statusdelivery: {
-        $elemMatch: {
-          $or: [
-            { status: 'Готов к выдаче' },
-            { status: 'Готов к получению' },
-            { status: { $regex: '^Готов к получению.*' } },
-            { status: { $regex: '^Готов к выдаче.*' } },
-          ],
-        },
-      },
       status: { $ne: 'completed' },
+      $expr: {
+        $in: [
+          { $arrayElemAt: ['$statusdelivery.status', -1] },
+          ['Готов к получению', 'Готов к выдаче', 'Ожидает получения'],
+        ],
+      },
     })
       .sort({
         _id: -1,
@@ -94,24 +90,9 @@ export default eventHandler(async (event) => {
 
       const phone = delivery.recipientphone
       const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
-      let isReady = false
-      if (delivery.statusdelivery?.length) {
-        for (const status of delivery.statusdelivery) {
-          if (
-            (status.status === 'Готов к выдаче' ||
-              status.status === 'Готов к получению') && delivery.status !== 'completed'
-          ) {
-            isReady = true
-            break
-          }
-        }
-      }
-      
       const currentstatus = delivery.statusdelivery?.length
-        ? isReady ? 'Готов к выдаче' :
-          delivery.statusdelivery[delivery.statusdelivery.length - 1].status
+        ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
         : 'Неизвестно'
-
       const statusupdated = delivery.statusdelivery?.length
         ? delivery.statusdelivery[delivery.statusdelivery.length - 1].date
         : new Date()

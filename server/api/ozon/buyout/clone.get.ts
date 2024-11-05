@@ -1,14 +1,15 @@
-import { Buyout } from '@/server/lib/models/ozon/Buyout'
-import { getServerSession } from '#auth'
 import { findImage, findProductCard } from '@/server/lib/helpers'
+import { Buyout } from '@/server/lib/models/ozon/Buyout'
+
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
+  const session = (await getAdminEntity(event)) as any
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
 
   const query = getQuery(event)
-  
+
   const buyout = await Buyout.findOne({ uuid: query.uuid })
   if (!buyout) {
     return createError({
@@ -17,7 +18,6 @@ export default eventHandler(async (event) => {
     })
   }
 
-  
   const article = buyout?.article
   const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
@@ -27,11 +27,11 @@ export default eventHandler(async (event) => {
       token: config.PARSER_TOKEN,
     },
   }).catch((e) => {
-    console.log(e);
-    
+    console.log(e)
+
     throw createError({
       statusCode: 404,
-      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.'
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
     })
   })
 
@@ -43,11 +43,11 @@ export default eventHandler(async (event) => {
   }
   return {
     image: data.image || '',
-    article: article,
+    article,
     name: data.name || '',
     sizes: data.sizes.length ? data.sizes : ['0'],
     price: data.price || 0,
-    priceText: data.price ? data.price + ' ₽' : '',
+    priceText: data.price ? `${data.price} ₽` : '',
     quantity: buyout.quantity,
     sex: buyout.gender,
     searchQuery: buyout.searchQuery.split(', '),

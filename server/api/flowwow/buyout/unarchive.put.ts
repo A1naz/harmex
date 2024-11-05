@@ -1,15 +1,15 @@
-import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import { Buyout } from '@/server/lib/models/flowwow/Buyout'
+import { User } from '@/server/lib/models/User'
 import { DocuemntEnum } from '~/data/enums'
-import * as fs from 'fs'
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
+  const session = (await getAdminEntity(event)) as any
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
 
   const user = await User.findOne({ uuid: session.uuid })
-  if (!user) return sendRedirect(event, '/auth', 302)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
 

@@ -1,13 +1,14 @@
-import { getServerSession } from '#auth'
 import request from 'request'
+
 const config = useRuntimeConfig()
 const proxy = config.CHANGING_PROXY
 const elPerPage = 50
 const apiKey = config.serverLoadApiKey
 
 export default eventHandler(async (event) => {
-  const session = (await getServerSession(event)) as any
-  if (!session) return sendRedirect(event, '/auth', 302)
+  const session = ((await getUserSession(event)).user) as any
+  if (!session)
+    return sendRedirect(event, '/auth', 302)
 
   const { article, limit, page } = getQuery(event)
 
@@ -18,7 +19,7 @@ export default eventHandler(async (event) => {
     })
   }
 
-  //@ts-ignore
+  // @ts-ignore
   const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     body: {
@@ -36,14 +37,12 @@ export default eventHandler(async (event) => {
     }
   }
 
-
-data.forEach((feedback: any) => {
+  data.forEach((feedback: any) => {
     feedback.answers.forEach((answers: any) => {
       answers.addLikes = 0
       answers.addDislikes = 0
     })
   })
-
 
   return {
     feedbacks: data,

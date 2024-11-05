@@ -1,25 +1,21 @@
 <script setup lang="ts">
-import { useNotification } from '@kyvg/vue3-notification'
-import { notify } from '@kyvg/vue3-notification'
-
 const props = defineProps({
   show: { type: Boolean },
   addProduct: {
     type: Function,
     required: true,
-  }
+  },
 })
 
-// const loading = ref(false)
+const emit = defineEmits(['closeModal'])
 
+// const loading = ref(false)
 
 // const qrCode = toRef(props, 'src')
 // const store = useOzonBuyoutStore()
 // const products = computed(() => store.createProducts)
 // const load = toRef(props, 'loading')
 const article = ref('')
-const emit = defineEmits(['closeModal'])
-
 // const productDiscountModel = computed({
 //   get() {
 //     return products.value.length ? products.value[props.index]?.discount : 0
@@ -50,8 +46,9 @@ const emit = defineEmits(['closeModal'])
 //   emit('closeModal')
 // }
 
-function addProduct(){
-  if(!article.value) return
+function addProduct() {
+  if (!article.value)
+    return
   props.addProduct(article.value)
   emit('closeModal')
 }
@@ -66,15 +63,17 @@ onKeyStroke('Escape', (e) => {
 <template>
   <div
     v-if="props.show === true"
-    @click="$emit('closeModal')"
     class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
+    @click="$emit('closeModal')"
   >
     <div
       class="flex flex-col bg-base-100 rounded-lg w-full max-w-[650px] lg:max-w-md gap-1 p-4"
       @click.stop
     >
       <div class="flex justify-between">
-        <div class="font-medium text-md">Введите ссылку на товар</div>
+        <div class="font-medium text-md">
+          Введите ссылку на товар
+        </div>
         <button
           class="text-gray-500 hover:text-gray-700 self-end mb-2"
           @click="$emit('closeModal')"
@@ -85,11 +84,11 @@ onKeyStroke('Escape', (e) => {
       <div class="bg-base-100 rounded-lg">
         <div class="w-full flex flex-col justify-center items-center">
           <input
-            type="text"
             v-model="article"
+            type="text"
             class="input input-sm lg:input-md w-full bg-base-300 bg-opacity-30 placeholder:text-base-content placeholder:text-opacity-50 text-gray-600 mt-2"
             placeholder="https://flowwow.com..."
-          />
+          >
         </div>
         <div class="flex gap-2 justify-end">
           <button

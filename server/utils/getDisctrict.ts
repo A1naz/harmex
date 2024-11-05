@@ -1,17 +1,16 @@
 const config = useRuntimeConfig()
-import axios from 'axios'
 
 export async function getDisctrict(address: string) {
   const url = 'https://cleaner.dadata.ru/api/v1/clean/address'
-  const token = 'Token ' + config.DADATA_TOKEN
+  const token = `Token ${config.DADATA_TOKEN}`
   const secret = config.DADATA_SECRET
 
-  var options: any = {
+  const options: any = {
     method: 'POST',
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      'Authorization': token,
       'X-Secret': secret,
     },
     body: JSON.stringify([address]),
@@ -21,12 +20,12 @@ export async function getDisctrict(address: string) {
   try {
     data = await new Promise((resolve, reject) =>
       fetch(url, options)
-        .then((res) => resolve(res.json()))
-        .catch((err) => reject(err))
+        .then(res => resolve(res.json()))
+        .catch(err => reject(err)),
     )
-  } catch (error) {
-    console.log(error);
-    
+  }
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  catch (error) {
     return {
       pointDistrict: '',
       pointRegion: '',

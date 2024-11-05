@@ -1,28 +1,28 @@
-import { ObjectId } from "mongodb"
-import { ReviewDraft } from "~/server/lib/models/ozon/ReviewDraft"
+import { ObjectId } from 'mongodb'
 import { DocuemntEnum } from '~/data/enums'
+import { ReviewDraft } from '~/server/lib/models/ozon/ReviewDraft'
 
 export default eventHandler(async (event) => {
+  const user: any = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+  const body = await readBody(event)
+  if (!body._id)
+    throw new Error('Неправильный запрос')
 
-    const body = await readBody(event)
-    if(!body._id) throw new Error('Неправильный запрос')
+  const res = await ReviewDraft.deleteOne(
+    {
+      user: new ObjectId(user._id),
+      _id: body._id,
+    },
+  )
 
-    const res = await ReviewDraft.deleteOne(
-        { 
-            user: new ObjectId(user._id),
-            _id: body._id 
-        }
-    )
-
-    await userLog(event,
-        {
-            documentType: DocuemntEnum.Review,
-            documentId: body._id ,
-            comment: 'Удален черновик'
-        })
+  await userLog(event, {
+    documentType: DocuemntEnum.Review,
+    documentId: body._id,
+    comment: 'Удален черновик',
+  })
 
   return res
 })

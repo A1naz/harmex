@@ -1,21 +1,22 @@
 import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
-import speakeasy from 'speakeasy'
-import qrcode from 'qrcode'
-import jwt from 'jsonwebtoken'
-import { getToken } from '#auth'
-const runtimeConfig = useRuntimeConfig()
-const nuxtAuthCookieName = runtimeConfig.SESSION_TOKEN
-const jwtSecret = runtimeConfig.SECRET
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  const userAuth = await getUserSession(event)
+
+  const foundedUser = await User.findOne({ uuid: userAuth.user?.uuid })
+
+  if (!foundedUser) return sendRedirect(event, '/auth', 302)
 
   const { changeTo } = getQuery(event)
-
-  user.isTwoFaEnabled = changeTo
-  await user.save()
+  
+  if (foundedUser.isTwoFaEnabled) {
+    foundedUser.isTwoFaEnabled = false;
+  } else {
+    foundedUser.isTwoFaEnabled = changeTo;
+  }
+  console.log(foundedUser.isTwoFaEnabled);
+  
+   await foundedUser.save()
 
   return {
     status: 'ok',

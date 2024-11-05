@@ -2,15 +2,16 @@
 import { useNotification } from '@kyvg/vue3-notification'
 import { UseImage } from '@vueuse/components'
 
-const config = useRuntimeConfig()
-
 const props = defineProps({
   review: {} as any,
   state: { type: Boolean, required: true },
   uuid: { type: String, required: true },
   deliveryid: { type: String, required: true },
 })
+
 const emit = defineEmits(['close', 'publish'])
+
+const config = useRuntimeConfig()
 
 const headers = useRequestHeaders(['cookie']) as HeadersInit
 const closeButton = ref<HTMLElement>()
@@ -69,7 +70,7 @@ function useDraft(draft: IReviewDraft) {
 }
 
 const defaultDelIndex = props.review.delivs.findIndex(
-  (rev: any) => rev.delivId == props.deliveryid
+  (rev: any) => rev.delivId == props.deliveryid,
 )
 const selectedDeliv = ref({
   deliveryid: props.review.delivs[defaultDelIndex].delivId,
@@ -82,12 +83,13 @@ async function uploadToS3(event: Event, index: number) {
   loadingIndex.value = index
   const fileList = (event.target! as HTMLInputElement).files
   const files = Array.from(fileList!)
-  if (!files) return
+  if (!files)
+    return
 
   if (
-    files[0] &&
-    files[0].name &&
-    files[0].name.toLowerCase().endsWith('.webp')
+    files[0]
+    && files[0].name
+    && files[0].name.toLowerCase().endsWith('.webp')
   ) {
     notify({
       title: 'Что-то пошло не так',
@@ -112,12 +114,12 @@ async function uploadToS3(event: Event, index: number) {
       duration: 3000,
     })
   }
-  if (data.value)
-  form.photos[index] = {
+  if (data.value) {
+    form.photos[index] = {
       url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
       public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
     }
-    
+  }
 
   setTimeout(() => {
     loadingIndex.value = null
@@ -157,7 +159,8 @@ async function publishReview() {
   const photos = form.photos
   for await (const photo of photos) {
     try {
-    } catch {
+    }
+    catch {
       notify({
         title: 'Что-то пошло не так',
         text: 'Не удалось загрузить все фото, попробуйте еще раз',
@@ -227,7 +230,7 @@ watch(
   () => props.uuid,
   (uuid) => {
     clearForm()
-  }
+  },
 )
 
 onMounted(() => {
@@ -236,7 +239,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <input id="review-modal" type="checkbox" class="modal-toggle" />
+  <input id="review-modal" type="checkbox" class="modal-toggle">
   <div
     ref="closeButton"
     :class="{
@@ -249,17 +252,20 @@ onMounted(() => {
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
         @click="$emit('close')"
-        >✕</label
-      >
+      >✕</label>
       <div class="flex flex-row justify-center -mt-4">
         <p class="text-xs text-gray-500 justify-self-center">
           - {{ review.article }} -
         </p>
       </div>
 
-      <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
+      <h3 class="text-xl font-bold mb-4">
+        Оставить отзыв
+      </h3>
 
-      <div class="pb-2 font-medium">Доставка:</div>
+      <div class="pb-2 font-medium">
+        Доставка:
+      </div>
       <select
         v-model="selectedDeliv"
         class="select w-full mb-4 bg-base-200 text-gray-500"
@@ -271,21 +277,23 @@ onMounted(() => {
           class="m-6"
         >
           {{
-            defaultDateShort(rev.updatedAt) +
-            ' - пол: ' +
-            rev.sex +
-            ' - размер: ' +
-            rev.sizeparam +
-            ' - цена: ' +
-            rev.pricebuy +
-            'р.'
+            `${defaultDateShort(rev.updatedAt)
+            } - пол: ${
+              rev.sex
+            } - размер: ${
+              rev.sizeparam
+            } - цена: ${
+              rev.pricebuy
+            }р.`
           }}
         </option>
       </select>
 
       <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-2 font-medium">Отзыв о товаре</div>
+          <div class="pb-2 font-medium">
+            Отзыв о товаре
+          </div>
 
           <textarea
             v-model="form.text"
@@ -300,16 +308,22 @@ onMounted(() => {
               class="mx-1 text-primary hover:underline hover:cursor-pointer"
               @click="useDraft(draft)"
             >
-              <p v-if="draft.draftName">{{ draft.draftName }}</p>
+              <p v-if="draft.draftName">
+                {{ draft.draftName }}
+              </p>
               <i v-else> {{ '<без названия>' }} </i>
             </button>
           </div>
 
-          <div class="text-error">{{ textValidError }}</div>
+          <div class="text-error">
+            {{ textValidError }}
+          </div>
         </div>
 
         <div>
-          <div class="font-medium">Рейтинг</div>
+          <div class="font-medium">
+            Рейтинг
+          </div>
           <div class="relative w-full py-6 bg-base-100 rounded-lg">
             <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
             <div class="rating absolute left-0 top-3 gap-2">
@@ -318,32 +332,32 @@ onMounted(() => {
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @input="form.rating = 1"
-              />
+              >
               <input
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @input="form.rating = 2"
-              />
+              >
               <input
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @input="form.rating = 3"
-              />
+              >
               <input
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @input="form.rating = 4"
-              />
+              >
               <input
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 checked
                 @input="form.rating = 5"
-              />
+              >
             </div>
           </div>
         </div>
@@ -351,9 +365,7 @@ onMounted(() => {
         <div>
           <div class="pb-2 font-medium">
             Запланировать отзыв
-            <span class="text-xs font-normal text-gray-500"
-              >(по Московскому времени)</span
-            >
+            <span class="text-xs font-normal text-gray-500">(по Московскому времени)</span>
           </div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
@@ -369,7 +381,9 @@ onMounted(() => {
           </div>
         </div>
         <div>
-          <div class="font-medium">Фото</div>
+          <div class="font-medium">
+            Фото
+          </div>
           <p class="mb-2 text-sm font-light text-gray-500">
             Разрешены фото в формате PNG, JPG.
           </p>
@@ -386,9 +400,7 @@ onMounted(() => {
                     class="absolute right-0 top-0 z-50"
                     @click="removePhoto(index)"
                   >
-                    <label for="photo" class="btn btn-sm btn-circle btn-ghost"
-                      >✕</label
-                    >
+                    <label for="photo" class="btn btn-sm btn-circle btn-ghost">✕</label>
                   </div>
 
                   <label
@@ -407,7 +419,7 @@ onMounted(() => {
                       accept="image/png, image/gif, image/jpeg"
                       class="hidden"
                       @change="(e: Event) => uploadToS3(e, index)"
-                    />
+                    >
                     <IconCSS
                       v-show="loadingIndex !== index"
                       name="material-symbols:add-photo-alternate-outline"
@@ -467,8 +479,7 @@ onMounted(() => {
             for="review-modal"
             class="btn btn-sm btn-ghost"
             @click="$emit('close')"
-            >Отмена</label
-          >
+          >Отмена</label>
           <button
             for="review-modal"
             class="btn btn-primary btn-sm bg-opacity-20 border-none text-base-content"

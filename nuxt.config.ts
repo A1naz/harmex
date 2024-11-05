@@ -1,23 +1,22 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import process from 'node:process'
 
-const baseUrl = '/'
-const description =
-  'Повысьте репутацию и продажи на маркетплейсах с MarketMonstr.'
+const baseUrl = process.env.NUXT_APP_BASE_URL || '/'
+const description = 'Harmex'
 
 export default defineNuxtConfig({
   app: {
     baseURL: baseUrl,
     head: {
       viewport: 'width=device-width,initial-scale=1',
-      title:
-        'Сервис самовыкупов MARKETMONSTR - Максимизируйте продвижение на МП',
+      title: 'Harmex',
       link: [{ rel: 'icon', href: '/favicon.png' }],
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
           'http-equiv': 'Content-Security-Policy',
-          content: 'upgrade-insecure-requests',
+          'content': 'upgrade-insecure-requests',
         },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: description },
@@ -36,33 +35,7 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
 
-  auth: {
-    origin: process.env.PUBLIC_SITE_URL || 'https://app.wbmp.pro',
-    enableGlobalAppMiddleware: true,
-    defaultProvider: 'credentials',
-  },
-
-  image: {
-    domains: [
-      'wb.ru',
-      'storage.yandexcloud.net',
-      'basket-10.wb.ru',
-      'basket-1.wb.ru',
-      'basket-2.wb.ru',
-      'basket-3.wb.ru',
-      'basket-4.wb.ru',
-      'basket-5.wb.ru',
-      'basket-6.wb.ru',
-      'basket-7.wb.ru',
-    ],
-  },
-
-  yandexMetrika: {
-    id: '95774883',
-  },
-  gtag: {
-    id: 'G-3CZQZ6GGTK',
-  },
+  image: {},
 
   lazyLoad: {
     // These are the default values
@@ -84,43 +57,58 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    compressPublicAssets: true,
-    prerender: {
-      crawlLinks: false,
-      routes: [],
-      ignore: ['/'],
-    },
     plugins: ['~/server/index.ts'],
   },
 
   modules: [
     'nuxt-lazy-load',
     '@nuxtjs/tailwindcss',
-    '@nuxt/image-edge',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     'nuxt-icon',
-    '@sidebase/nuxt-auth',
     '@vueuse/nuxt',
     'nuxt-security',
     '@nuxtjs/color-mode',
-    '@bg-dev/nuxt-s3',
-    '@nuxtjs/fontaine',
     '@sfxcode/nuxt-primevue',
-    '@nuxtjs/robots',
     '@morev/vue-transitions/nuxt',
-    '@sidebase/nuxt-pdf',
-    '@artmizu/yandex-metrika-nuxt',
-    'nuxt-gtag',
+    '@nuxt/fonts',
+    'nuxt-auth-utils',
+    '@nuxt/image',
+    'nuxt3-notifications',
+    '@nuxtjs/turnstile',
+    '@nuxt/scripts',
+    'radix-vue/nuxt',
+    'shadcn-nuxt',
+    '@nuxt/eslint',
+    '@bg-dev/nuxt-s3',
+    '@nuxtjs/i18n',
+    // '@nuxtjs/seo',
   ],
+  eslint: {
+    config: {
+      standalone: false, // <---
+    },
+  },
+
+  turnstile: {
+    siteKey: '0x4AAAAAAAw5ArLU136z91q_',
+  },
+
+  icon: {
+    sources: [
+      {
+        src: '~/assets/icons',
+        prefix: 'custom', // Префикс для кастомных иконок
+      },
+    ],
+  },
 
   css: [
     'primevue/resources/primevue.css',
     'primeicons/primeicons.css',
+    // '@/assets/style/css/customButton.css',
     '@vuepic/vue-datepicker/dist/main.css',
   ],
-
-  extends: ['nuxt-seo-kit'],
 
   s3: {
     client: {
@@ -140,13 +128,27 @@ export default defineNuxtConfig({
       },
     },
   },
+
   hooks: {
     close: () => {
       process.exit()
     },
   },
+
   build: {
     transpile: ['primevue', '@vuepic/vue-datepicker'],
+  },
+
+  shadcn: {
+    /**
+     * Prefix for all the imported component
+     */
+    prefix: 'sha',
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: './components/ui',
   },
 
   primevue: {
@@ -163,7 +165,7 @@ export default defineNuxtConfig({
   },
 
   imports: {
-    dirs: ['./stores', './data', './server/lib'],
+    dirs: ['./stores', './data', './server/lib', './server/lib/models'],
   },
 
   runtimeConfig: {
@@ -176,6 +178,9 @@ export default defineNuxtConfig({
       BOT_LOGIN: process.env.BOT_LOGIN,
       DOMAIN_API_IMAGES_URL: process.env.DOMAIN_API_IMAGES_URL,
       YANDEX_MAPS_API_KEY: process.env.YANDEX_MAPS_API_KEY,
+    },
+    turnstile: {
+      secretKey: '0x4AAAAAAAw5Ajel8a_CNjT4CGlB25Geh48',
     },
     VK_ACCESS_KEY: process.env.VK_ACCESS_KEY,
     VK_SECRET_KEY: process.env.VK_SECRET_KEY,
@@ -227,10 +232,28 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+
   experimental: {
     payloadExtraction: false,
-    inlineSSRStyles: false,
     renderJsonPayloads: true,
     typedPages: true,
   },
+
+  i18n: {
+    locales: [
+      { code: 'en', language: 'en-US', dir: 'ltr', file: 'en.json' },
+      { code: 'ru', language: 'ru-RU', dir: 'ltr', file: 'ru.json' },
+    ],
+    defaultLocale: 'ru',
+    langDir: 'locales',
+    lazy: true,
+  },
+  // robots: {
+  //   autoI18n: false,
+  // },
+
+  ssr: true,
+
+  compatibilityDate: '2024-10-04',
 })
+

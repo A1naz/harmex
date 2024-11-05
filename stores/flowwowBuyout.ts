@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia'
-import { notify } from '@kyvg/vue3-notification'
 import { rules } from '@/data/buyout/rules'
+import { notify } from '@kyvg/vue3-notification'
+import { defineStore } from 'pinia'
 
 export interface ISearchQueryChange {
   value: string
@@ -18,7 +18,7 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
     storage: persistedState.localStorage,
   },
   actions: {
-    async createTemplate(title: String, products: Array<any>) {
+    async createTemplate(title: string, products: Array<any>) {
       return { status: 'ok' }
     },
 
@@ -46,7 +46,7 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
         endDate.setHours(20, 0)
         const product = {
           ...productData,
-          searchQuery: productData.searchQuery.map((item) => ({
+          searchQuery: productData.searchQuery.map(item => ({
             value: item,
             error: false,
             loading: false,
@@ -118,7 +118,7 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
           priceText: product.priceText,
           rules: [],
           pointCoordinates: { lat: 0, lon: 0 },
-        })
+        }),
       )
       this.changeRule(true, this.createProducts.length - 1, 5)
     },
@@ -140,7 +140,7 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
       productIndex: number,
       error = false,
       loading = false,
-      message?: string
+      message?: string,
     ) {
       const query = this.createProducts[productIndex].searchQuery[index]
       query.error = error
@@ -150,10 +150,10 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
     changeSearchQuery(
       options: ISearchQueryChange,
       error = false,
-      loading = false
+      loading = false,
     ) {
-      const query =
-        this.createProducts[options.productIndex].searchQuery[
+      const query
+        = this.createProducts[options.productIndex].searchQuery[
           options.queryIndex
         ]
       query.value = options.value
@@ -171,16 +171,19 @@ export const useFlowwowBuyoutStore = defineStore('flowwowBuyout', {
     },
     changeRule(value: boolean, index: number, rule: number) {
       const rules = this.createProducts[index].rules
-      const finded = this.defaultRules.find((item) => item.id === rule)
-      if (!finded) return
+      const finded = this.defaultRules.find(item => item.id === rule)
+      if (!finded)
+        return
       if (value) {
         if (finded.id === 8) {
           rules.forEach((rule, index) => {
-            if (rule.id >= 10) rules.splice(index, 1)
+            if (rule.id >= 10)
+              rules.splice(index, 1)
           })
         }
         this.createProducts[index].rules.push(finded)
-      } else {
+      }
+      else {
         rules.splice(rules.indexOf(finded), 1)
       }
     },

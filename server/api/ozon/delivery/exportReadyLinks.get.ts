@@ -1,10 +1,10 @@
-import ExcelJS from 'exceljs'
-
 import type { Document } from 'mongoose'
-import { Delivery } from '~/server/lib/models/ozon/Delivery'
+
+import ExcelJS from 'exceljs'
+import { DocuemntEnum } from '~/data/enums'
 import { Buyout } from '~/server/lib/models/ozon/Buyout'
 import { Buyoutlog } from '~/server/lib/models/ozon/Buyoutlog'
-import { DocuemntEnum } from '~/data/enums'
+import { Delivery } from '~/server/lib/models/ozon/Delivery'
 
 const keys = Object.keys as <T>(obj: T) =>
 (keyof T extends infer U ? U extends string ? U : U extends number ? `${U}` : never : never)[]
@@ -27,8 +27,8 @@ async function getReady(user: Document) {
       const place = index + 1
       const finishDateHours = finishDate.getHours()
       const finishDateMinutes = finishDate.getMinutes()
-      const finishTime = `${finishDateHours.toString().padStart(2, '0')}:${finishDateMinutes.toString().padStart(2, '0')}`;      
-      
+      const finishTime = `${finishDateHours.toString().padStart(2, '0')}:${finishDateMinutes.toString().padStart(2, '0')}`
+
       const phone: any = delivery.recipientphone
       const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
       const currentstatus = delivery.statusdelivery?.length ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status : 'Неизвестно'
@@ -63,19 +63,20 @@ async function getReady(user: Document) {
       }
     }).filter(item => item !== undefined),
   )
-  
+
   return format
 }
 
 export default eventHandler(async (event) => {
   try {
     const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+    if (!user)
+      return sendRedirect(event, '/auth', 302)
 
     const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
     const ready = (await getReady(user)).filter(item => item !== undefined)
-    
+
     const sheet = workbook.addWorksheet('Готовы к выдаче', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
     })
@@ -116,12 +117,12 @@ export default eventHandler(async (event) => {
     // export table
     const buffer = await workbook.xlsx.writeBuffer()
 
-    await userLog(event,
-        {
-            documentType: DocuemntEnum.Delivery,
-            documentId: '',
-            comment: 'Экспорт доставок готовых к выдаче'
-        })
+    // await userLog(event,
+    //     {
+    //         documentType: DocuemntEnum.Delivery,
+    //         documentId: '',
+    //         comment: 'Экспорт доставок готовых к выдаче'
+    //     })
 
     return buffer
   }

@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
-const theme = useColorMode()
-const { width } = useWindowSize()
-
 const props = defineProps({
   info: {
     type: Object as any,
@@ -13,6 +9,7 @@ const props = defineProps({
     required: true,
   },
 })
+
 const emit = defineEmits([
   'callback',
   'remove',
@@ -23,11 +20,17 @@ const emit = defineEmits([
   'openLogModal',
   'removeBuyout',
 ])
+
+const { notify } = useNotification()
+
+const theme = useColorMode()
+const { width } = useWindowSize()
+
 const currency = useCurrency()
 const router = useRouter()
 function cloneBuyout() {
   router.push({
-    path: '/buyouts/create/ozon',
+    path: '/ozon/buyouts/create',
     query: {
       uuid: props.info.uuid,
     },
@@ -49,7 +52,8 @@ async function deleteBuyOut() {
       type: 'error',
       duration: 3000,
     })
-  } else {
+  }
+  else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно удален',
@@ -74,7 +78,8 @@ async function unpauseBuyout() {
       type: 'error',
       duration: 3000,
     })
-  } else {
+  }
+  else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно возобновлен',
@@ -99,7 +104,8 @@ async function unarchiveBuyout() {
       type: 'error',
       duration: 3000,
     })
-  } else {
+  }
+  else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно восстановлен',
@@ -124,7 +130,8 @@ async function archiveBuyout() {
       type: 'error',
       duration: 3000,
     })
-  } else {
+  }
+  else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно архивирован',
@@ -154,18 +161,34 @@ const getStatus = computed(() => {
       return 'Ожидание скидки'
     case 'discountGiven':
       return 'Скидка предоставлена'
+    default:
+      return 'Неизвестный статус'
   }
 })
+async function copyToClipboard(text: string) {
+  await navigator.clipboard.writeText(text)
+  notify({
+    title: 'Успешно',
+    text: 'Скопировано в буфер обмена',
+  })
+}
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-100 shadow-lg min-w-[320px]">
+  <div class="buyout-card card bg-base-100 shadow-lg min-w-[214px]">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-4 relative"
     >
+      <button
+        v-show="info.status === 'paused' || info.status === 'nofunds'"
+        class="btn btn-xs btn-neutral absolute left-3 top-3 "
+        @click="unpauseBuyout"
+      >
+        Возобновить
+      </button>
       <div class="dropdown dropdown-end absolute right-1 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
-          <Icon name="ph:dots-three-outline-vertical-fill" size="28" />
+          <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
         </label>
         <ul
           tabindex="0"
@@ -177,7 +200,7 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/info.svg"
                 alt="settings"
-              />
+              >
               О выкупе
             </a>
           </li>
@@ -187,15 +210,15 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/copy.svg"
                 alt="settings"
-              />
+              >
               Дублировать
             </a>
           </li>
           <li
             v-if="
-              info.status === 'archived' ||
-              info.status === 'active' ||
-              info.status === 'paused'
+              info.status === 'archived'
+                || info.status === 'active'
+                || info.status === 'paused'
             "
           >
             <a v-if="info.status !== 'archived'" @click="archiveBuyout">
@@ -203,7 +226,7 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/archive.svg"
                 alt="settings"
-              />
+              >
               Архивировать
             </a>
             <a v-else @click="unarchiveBuyout">
@@ -211,7 +234,7 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/archive.svg"
                 alt="settings"
-              />
+              >
               Убрать из архива
             </a>
           </li>
@@ -222,32 +245,31 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/delete.svg"
                 alt="settings"
-              />
+              >
               <label class="cursor-pointer">Удалить</label>
             </a>
           </li>
         </ul>
       </div>
 
-      <div class="truncate">
+      <!-- <div class="truncate">
         <div class="flex justify-between gap-1 items-center">
           <div class="flex gap-x-3 flex-wrap">
-            <span class="text-xs text-gray-500 py-1"
-              >Создан: {{ 
-                $dayjs(info.createdAt).locale('ru').format(
-                  'D MMMM YYYY HH:mm'
-                ) }}
+            <span class="text-[0.6rem] text-gray-500 py-1">Создан: {{
+              $dayjs(info.createdAt).locale('ru').format(
+                'D MMMM YYYY HH:mm',
+              ) }}
             </span>
             <div
               :class="{
                 'opacity-0':
-                  info.status !== 'active' &&
-                  info.status !== 'paused' &&
-                  info.status !== 'work' &&
-                  info.status !== 'busy' &&
-                  info.status !== 'archived',
+                  info.status !== 'active'
+                  && info.status !== 'paused'
+                  && info.status !== 'work'
+                  && info.status !== 'busy'
+                  && info.status !== 'archived',
               }"
-              class="text-xs rounded-2xl px-2 bg-[#f9f9f9] dark:bg-base-200 py-1"
+              class="text-xs text-[0.6rem] rounded-2xl px-2 bg-[#f9f9f9] dark:bg-base-200 py-1"
             >
               Выкуплено {{ info.completed }} шт.
             </div>
@@ -262,13 +284,14 @@ const getStatus = computed(() => {
         </div>
 
         <div class="flex gap-3 flex-wrap">
-          <h2 class="card-title mt-2" >Выкуп №{{ info.place }}</h2>
-         
+          <h2 class="card-title mt-2 text-[1.1rem] ">
+            Выкуп №{{ info.place }}
+          </h2>
 
           <a
             :href="`https://www.ozon.ru/product/${info.article}`"
             target="_blank"
-            class="text-base text-primary link link-hover mt-0 flex items-center"
+            class="text-base text-[0.85rem] text-primary link link-hover mt-0 flex items-center"
             :class="{
               'mt-2': width > 364,
             }"
@@ -277,29 +300,31 @@ const getStatus = computed(() => {
           </a>
         </div>
         <div
-            class="mt-2 rounded-2xl py-1.5 px-2 text-md flex items-center w-fit text-sm"
-            :class="{
-              ' bg-[#b5ffbc] dark:bg-success':
-                info.status === 'active' ||
-                info.status === 'work' ||
-                info.status === 'busy' ||
-                info.status === 'discountGiven',
-              'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
-                info.status === 'completed' || info.status === 'nofunds',
-              'text-base-content bg-yellow-300':
-                info.status === 'archived' ||
-                info.status === 'paused' ||
-                info.status === 'discountAwaiting',
-            }"
-          >
-            {{ getStatus }}
-          </div>
+          class="mt-2 rounded-2xl py-1.5 px-2 text-md flex items-center w-fit text-sm text-[0.725rem]"
+          :class="{
+            ' bg-[#b5ffbc] dark:bg-success':
+              info.status === 'active'
+              || info.status === 'work'
+              || info.status === 'busy'
+              || info.status === 'discountGiven',
+            'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+              info.status === 'completed' || info.status === 'nofunds',
+            'text-base-content bg-yellow-300':
+              info.status === 'archived'
+              || info.status === 'paused'
+              || info.status === 'discountAwaiting',
+          }"
+        >
+          {{ getStatus }}
+        </div>
 
-        <div class="flex justify-between mt-2"></div>
-      </div>
+        <div class="flex justify-between mt-2" />
+      </div> -->
 
-      <div class="flex gap-4 ">
-        <div class="flex-none my-auto" style="width: 120px; height: 120px">
+      <div class="flex gap-4 mt-6 truncate">
+        <div
+          class="flex-none my-auto" style="width: 90px; height: 90px"
+        >
           <nuxt-img
             class="rounded-xl h-full"
             width="150"
@@ -309,80 +334,119 @@ const getStatus = computed(() => {
             :src="info?.product?.image || '/logo/logocolor.svg'"
           />
         </div>
-        <div class="flex flex-col">
-          <div class="mb-2">
-            <div class="text-xs text-gray-500 truncate max-w-[150px]">
-              #{{ info.uuid }}
-            </div>
-            <div class="truncate text-bold max-w-[150px]">
-              {{ info.product?.name }}
-            </div>
-          </div>
-          <div class="flex flex-col gap-4">
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-1.5">
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Сумма: </span>
-              <div class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Артикул: </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                <a
+                  :href="`https://www.ozon.ru/product/${info.article}`"
+                  target="_blank"
+                  class="link link-hover"
+                >
+                  {{ info.article }}
+                </a>
+              </div>
+            </div>
+            <div class="flex gap-2 ">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Статус: </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] max-w-[150px] truncate"
+                :class="{
+                  ' bg-[#b5ffbc] dark:bg-success':
+                    info.status === 'active'
+                    || info.status === 'work'
+                    || info.status === 'busy'
+                    || info.status === 'discountGiven',
+                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                    info.status === 'completed' || info.status === 'nofunds',
+                  'text-base-content bg-yellow-300':
+                    info.status === 'archived'
+                    || info.status === 'paused'
+                    || info.status === 'discountAwaiting',
+                }"
+              >
+                {{ getStatus }}
+              </div>
+            </div>
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">ID заказа: </span>
+              <button class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate" @click="copyToClipboard(info.uuid)">
+                #{{ info.uuid }}
+              </button>
+            </div>
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Наименование: </span>
+              <div class="truncate text-[0.9rem] text-bold">
+                {{ info.product?.name }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Цена: </span>
+              <div class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm text-[0.725rem]">
                 {{ info.product?.priceText }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Количество: </span>
-              <div class="rounded-md py-0 px-2 bg-warning text-sm">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Количество: </span>
+              <div class="rounded-md py-0 px-2 bg-warning text-sm text-[0.725rem]">
                 {{ info.quantity }} шт.
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Сумма: </span>
+              <span class="text-sm text-gray-500 my-auto text-[0.725rem]">Скидка: </span>
               <div
-                class="rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm"
-              >
-                {{ currency.format(info.quantity * info.product?.price) }}
-              </div>
-            </div>
-            <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Скидка: </span>
-              <div
-                class="rounded-md py-0 px-2 bg-primary bg-opacity-20 text-sm"
+                class="text-[0.725rem] rounded-md py-0 px-2 bg-primary bg-opacity-20 text-sm"
               >
                 {{
                   info.discountPrice == info.product?.price
                     ? 'нет'
-                    : info.discountPrice + ' ₽'
+                    : `${info.discountPrice} ₽`
                 }}
               </div>
             </div>
+            <!-- <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Сумма: </span>
+              <div
+                class="rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm text-[0.725rem]"
+              >
+                {{ currency.format(info.quantity * info.product?.price) }}
+              </div>
+            </div> -->
             <div class="flex gap-2">
-              <span class="text-sm text-gray-500 my-auto">Категория: </span>
-              <div class="bg-base-300 rounded-md py-0 px-2 text-sm">Ozon</div>
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Источник: </span>
+              <div class="bg-base-300 rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                Ozon
+              </div>
             </div>
-            
           </div>
         </div>
       </div>
-      <div class="flex gap-2 ">
-        <span class="text-sm text-gray-500 my-auto">ФИО: </span>
-        <div class="rounded-md py-0 px-2 text-sm">{{ info.FIO ? info.FIO : '-' }}</div>
+      <div class="flex gap-1.5 -mt-2.5">
+        <span class="text-sm text-gray-500 my-auto text-[0.725rem]">ФИО: </span>
+        <div class="rounded-md py-0 px-2 text-sm">
+          {{ info.FIO ? info.FIO : '-' }}
+        </div>
       </div>
-      <div class="flex gap-2">
-        <span class="text-sm text-gray-500 my-auto"
-          >Дата запроса скидки:
+      <div class="flex gap-1.5 -mt-2.5">
+        <span class="text-sm text-gray-500 my-auto text-[0.725rem]">Дата запроса скидки:
         </span>
         <div class="rounded-md py-0 px-2 text-sm">
           {{
             info.discountRequestTime
-              ? moscowDate(info.discountRequestTime)
-                  .split('T')[0]
-                  .replaceAll('-', '.') +
-                ' ' +
+              ? `${moscowDate(info.discountRequestTime)
+                .split('T')[0]
+                .replaceAll('-', '.')
+              } ${
                 moscowDate(info.discountRequestTime)
                   .split('T')[1]
-                  .slice(0, 5)
+                  .slice(0, 5)}`
               : '-'
           }}
         </div>
       </div>
       <button
-        class="btn text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 dark:bg-primary dark:bg-opacity-50 dark:border-none btn-primary mt-auto"
+        class="btn mt-auto  btn-sm h-[2.5rem] text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 dark:bg-primary dark:bg-opacity-50 dark:border-none btn-primary"
         @click="$emit('openModal', index)"
       >
         Открыть
