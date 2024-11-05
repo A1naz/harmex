@@ -8,23 +8,23 @@ const route: any = useRoute()
 const id = route.params.id
 const loading = ref(true)
 const item = ref({} as any)
-const userInfo = ref([]) as any
+// const userInfo = ref([]) as any
 
-function getUser() {
-  const { data }: any = useFetch('/api/user/getCurrentUser', {
-    method: 'GET',
-    watch: false,
-  })
+// function getUser() {
+//   const { data }: any = useFetch('/api/user/getCurrentUser', {
+//     method: 'GET',
+//     watch: false,
+//   })
 
-  if (data.value) {
-    userInfo.value = data.value
-  }
-}
+//   if (data.value) {
+//     userInfo.value = data.value
+//   }
+// }
 
-if (user.value && user.value.fizFace === false) {
-  getUser()
-}
-getUser()
+// if (user.value && user.value.fizFace === false) {
+//   getUser()
+// }
+// getUser()
 
 // const sellLeaders = ref([] as any)
 
