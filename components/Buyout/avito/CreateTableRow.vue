@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
-import { useAvitoBuyoutStore } from '../../../stores/avitoBuyout'
 import type { Rule } from '@/data/buyout/rules'
+import { useAvitoBuyoutStore } from '../../../stores/avitoBuyout'
 
 const props = defineProps({
   product: {
@@ -19,6 +18,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
+
+const { notify } = useNotification()
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 
@@ -144,9 +145,15 @@ const productQuantityModel = computed({
           class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
           @change="onSexChange"
         >
-          <option value="Нет">Нет</option>
-          <option value="male">Муж</option>
-          <option value="female">Жен</option>
+          <option value="Нет">
+            Нет
+          </option>
+          <option value="male">
+            Муж
+          </option>
+          <option value="female">
+            Жен
+          </option>
         </select>
       </div>
     </td>
@@ -160,7 +167,7 @@ const productQuantityModel = computed({
           }}
         </div>
         <button
-       
+
           class="border-base-100 text-base-content text-opacity-40"
           @click="$emit('ruleModalOpen', index)"
         >
@@ -176,7 +183,9 @@ const productQuantityModel = computed({
             v-model="productDateRangeModel"
             :start-date="startDate"
           />
-          <div v-else class="text-center">Выкуп в ближайшее время</div>
+          <div v-else class="text-center">
+            Выкуп в ближайшее время
+          </div>
         </div>
       </div>
     </td>
@@ -192,8 +201,8 @@ const productQuantityModel = computed({
 
           <p
             v-if="!loading"
-            @click="$emit('pointModalOpen', index)"
             class="break-all whitespace-normal cursor-pointer text-primary"
+            @click="$emit('pointModalOpen', index)"
           >
             {{ product.adress }}
           </p>
@@ -215,14 +224,13 @@ const productQuantityModel = computed({
 
     <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
-        <label
-          ><input
-      
-            v-model="product.appartmentNumber"
-            type="text"
-            placeholder="№ квартиры"
-            class="input bg-base-200 input-sm w-full rounded-xl"
-          />
+        <label><input
+
+          v-model="product.appartmentNumber"
+          type="text"
+          placeholder="№ квартиры"
+          class="input bg-base-200 input-sm w-full rounded-xl"
+        >
         </label>
       </div>
     </td>

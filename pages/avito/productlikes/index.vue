@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification()
 
 definePageMeta({
   layout: 'app',
@@ -212,7 +212,7 @@ function updateSearchType(filter: any) {
       @create="getProductLikes()"
     />
 
-    <div class="breadcrumbs text-sm mt-8">
+    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">

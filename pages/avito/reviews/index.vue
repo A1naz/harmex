@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { SelectOptionsReviews as SelectOptions } from '@/data/enums'
-import { notify } from '@kyvg/vue3-notification'
+
+const { notify } = useNotification()
 
 definePageMeta({
   layout: 'app',
@@ -243,7 +244,7 @@ async function resumeStatus(item: any) {
 <template>
   <div>
     <div class="page-header">
-      <div class="breadcrumbs text-sm mt-8">
+      <div class="breadcrumbs text-sm mt-8 flex w-full justify-between">
         <ul class="font-medium text-[18px] text-[#909090]">
           <li class="cursor-pointer">
             <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">

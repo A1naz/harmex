@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { UseImage } from '@vueuse/components'
-import { Upload } from 'tus-js-client'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
-
-const config = useRuntimeConfig()
-const store = useMainStore()
+import { Upload } from 'tus-js-client'
 
 const props = defineProps({
   review: {} as any,
@@ -14,6 +11,8 @@ const props = defineProps({
   deliveryid: { type: String, required: true },
 })
 const emit = defineEmits(['close', 'publish'])
+const config = useRuntimeConfig()
+const store = useMainStore()
 
 const headers = useRequestHeaders(['cookie']) as HeadersInit
 const closeButton = ref<HTMLElement>()
@@ -76,7 +75,7 @@ function useDraft(draft: IReviewDraft) {
 }
 
 const defaultDelIndex = props.review.delivs.findIndex(
-  (rev: any) => rev.delivId == props.deliveryid
+  (rev: any) => rev.delivId == props.deliveryid,
 )
 const selectedDeliv = ref({
   deliveryid: props.review.delivs[defaultDelIndex].delivId,
@@ -111,9 +110,10 @@ async function checkVideo(file: any) {
           duration: 3000,
         })
         resolve(false)
-      } else if (
-        videoElement.videoWidth < 480 ||
-        videoElement.videoHeight < 480
+      }
+      else if (
+        videoElement.videoWidth < 480
+        || videoElement.videoHeight < 480
       ) {
         form.video = ''
         isUploading.value = false
@@ -124,9 +124,10 @@ async function checkVideo(file: any) {
           duration: 3000,
         })
         resolve(false)
-      } else if (
-        videoElement.videoWidth > 4100 ||
-        videoElement.videoHeight > 4100
+      }
+      else if (
+        videoElement.videoWidth > 4100
+        || videoElement.videoHeight > 4100
       ) {
         form.video = ''
         isUploading.value = false
@@ -137,7 +138,8 @@ async function checkVideo(file: any) {
           duration: 3000,
         })
         resolve(false)
-      } else {
+      }
+      else {
         resolve(true)
       }
     }
@@ -148,7 +150,8 @@ async function uploadToS3(event: Event, index: number) {
   loadingIndex.value = index
   const fileList = (event.target! as HTMLInputElement).files
   const files = Array.from(fileList!)
-  if (!files) return
+  if (!files)
+    return
   const img = new Image()
   img.src = URL.createObjectURL(files[0])
 
@@ -166,9 +169,9 @@ async function uploadToS3(event: Event, index: number) {
     }
 
     if (
-      files[0] &&
-      files[0].name &&
-      files[0].name.toLowerCase().endsWith('.webp')
+      files[0]
+      && files[0].name
+      && files[0].name.toLowerCase().endsWith('.webp')
     ) {
       notify({
         title: 'Что-то пошло не так',
@@ -194,11 +197,11 @@ async function uploadToS3(event: Event, index: number) {
       })
     }
     if (data.value) {
-      //@ts-ignore
+      // @ts-ignore
       await useFetch('/api/images/openForPublic', {
         method: 'GET',
         params: {
-          path: 'reviewImages/' + data.value[0].key,
+          path: `reviewImages/${data.value[0].key}`,
         },
       })
       form.photos[index] = {
@@ -261,23 +264,24 @@ async function publishReview() {
   const photos = form.photos
   for await (const photo of photos) {
     try {
-    } catch {
+    }
+    catch {
       notify({
         title: 'Что-то пошло не так',
         text: 'Не удалось загрузить все фото, попробуйте еще раз',
       })
     }
   }
-  //@ts-ignore
+  // @ts-ignore
   const { data, error } = await useFetch('/api/wildberries/review/publish', {
     method: 'POST',
     body: {
       ...form,
       videoKey:
-        'reviewVideos/' +
-        newFileId.value +
-        '.' +
-        filetype.value.replace('video/', ''),
+        `reviewVideos/${
+          newFileId.value
+        }.${
+          filetype.value.replace('video/', '')}`,
       deliveryid: selectedDeliv.value.deliveryid,
       buyoutuuid: selectedDeliv.value.uuid,
     },
@@ -339,7 +343,7 @@ watch(
   () => props.uuid,
   (uuid) => {
     clearForm()
-  }
+  },
 )
 
 onMounted(() => {
@@ -371,7 +375,8 @@ async function calculateHash(file: any) {
 
       if (currentChunk < chunks) {
         loadNextChunk()
-      } else {
+      }
+      else {
         const hashValue = hash.finalize().toString(CryptoJS.enc.Hex)
         resolve(hashValue)
       }
@@ -404,7 +409,8 @@ async function renameFile() {
           title: 'Успешно',
           text: 'Файл загружен',
         })
-      } else {
+      }
+      else {
         notify({
           title: 'Что-то пошло не так',
           text: 'Не удалось загрузить файл',
@@ -413,7 +419,7 @@ async function renameFile() {
       isUploading.value = false
     })
 }
-const handleFileChange = async (e: any) => {
+async function handleFileChange(e: any) {
   if (isUploading.value) {
     notify({
       title: 'Что-то пошло не так',
@@ -504,7 +510,7 @@ function convertToMoscowTime(dateString: any): Date {
 </script>
 
 <template>
-  <input id="review-modal" type="checkbox" class="modal-toggle" />
+  <input id="review-modal" type="checkbox" class="modal-toggle">
   <div
     ref="closeButton"
     :class="{
@@ -518,17 +524,20 @@ function convertToMoscowTime(dateString: any): Date {
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
         @click="$emit('close')"
-        >✕</label
-      >
+      >✕</label>
       <div class="flex flex-row justify-center -mt-4">
         <p class="text-xs text-gray-500 justify-self-center">
           - {{ review.article }} -
         </p>
       </div>
 
-      <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
+      <h3 class="text-xl font-bold mb-4">
+        Оставить отзыв
+      </h3>
 
-      <div class="pb-2 font-medium">Доставка:</div>
+      <div class="pb-2 font-medium">
+        Доставка:
+      </div>
       <select
         v-model="selectedDeliv"
         class="select w-full mb-4 bg-base-200 text-gray-500"
@@ -540,35 +549,41 @@ function convertToMoscowTime(dateString: any): Date {
           class="m-6"
         >
           {{
-            defaultDateShort(rev.updatedAt) +
-            ' - пол: ' +
-            rev.sex +
-            ' - размер: ' +
-            rev.sizeparam +
-            ' - цена: ' +
-            rev.pricebuy +
-            'р.'
+            `${defaultDateShort(rev.updatedAt)
+            } - пол: ${
+              rev.sex
+            } - размер: ${
+              rev.sizeparam
+            } - цена: ${
+              rev.pricebuy
+            }р.`
           }}
         </option>
       </select>
 
       <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-2 font-medium">Опишите достоинства</div>
+          <div class="pb-2 font-medium">
+            Опишите достоинства
+          </div>
 
           <textarea
             v-model="form.positive"
             class="textarea w-full textarea-md bg-base-200"
             placeholder="Например, хороший телефон"
           />
-          <div class="pb-2 font-medium">Опишите недостатки</div>
+          <div class="pb-2 font-medium">
+            Опишите недостатки
+          </div>
 
           <textarea
             v-model="form.negative"
             class="textarea w-full textarea-md bg-base-200"
             placeholder="Например, плохая камера"
           />
-          <div class="pb-2 font-medium">Поделитесь впечатлениями</div>
+          <div class="pb-2 font-medium">
+            Поделитесь впечатлениями
+          </div>
 
           <textarea
             v-model="form.text"
@@ -583,16 +598,22 @@ function convertToMoscowTime(dateString: any): Date {
               class="mx-1 text-primary hover:underline hover:cursor-pointer"
               @click="useDraft(draft)"
             >
-              <p v-if="draft.draftName">{{ draft.draftName }}</p>
+              <p v-if="draft.draftName">
+                {{ draft.draftName }}
+              </p>
               <i v-else> {{ '<без названия>' }} </i>
             </button>
           </div>
 
-          <div class="text-error">{{ textValidError }}</div>
+          <div class="text-error">
+            {{ textValidError }}
+          </div>
         </div>
 
         <div>
-          <div class="font-medium">Рейтинг</div>
+          <div class="font-medium">
+            Рейтинг
+          </div>
           <div class="relative w-full py-6 bg-base-100 rounded-lg">
             <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
             <div class="rating absolute left-0 top-3 gap-2">
@@ -601,32 +622,32 @@ function convertToMoscowTime(dateString: any): Date {
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              />
+              >
               <input
                 type="button"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              />
+              >
               <input
                 type="button"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              />
+              >
               <input
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @input="form.rating = 4"
-              />
+              >
               <input
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 checked
                 @input="form.rating = 5"
-              />
+              >
             </div>
           </div>
         </div>
@@ -634,9 +655,7 @@ function convertToMoscowTime(dateString: any): Date {
         <div>
           <div class="pb-2 font-medium">
             Запланировать отзыв
-            <span class="text-xs font-normal text-gray-500"
-              >(по Московскому времени)</span
-            >
+            <span class="text-xs font-normal text-gray-500">(по Московскому времени)</span>
           </div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
@@ -652,7 +671,9 @@ function convertToMoscowTime(dateString: any): Date {
           </div>
         </div>
         <div>
-          <div class="font-medium">Фото</div>
+          <div class="font-medium">
+            Фото
+          </div>
           <p class="mb-2 text-sm font-light text-gray-500">
             Разрешены фото в формате PNG, JPG.
           </p>
@@ -669,9 +690,7 @@ function convertToMoscowTime(dateString: any): Date {
                     class="absolute right-0 top-0 z-50"
                     @click="removePhoto(index)"
                   >
-                    <label for="photo" class="btn btn-sm btn-circle btn-ghost"
-                      >✕</label
-                    >
+                    <label for="photo" class="btn btn-sm btn-circle btn-ghost">✕</label>
                   </div>
 
                   <label
@@ -690,7 +709,7 @@ function convertToMoscowTime(dateString: any): Date {
                       accept="image/png, image/gif, image/jpeg"
                       class="hidden"
                       @change="(e: Event) => uploadToS3(e, index)"
-                    />
+                    >
                     <IconCSS
                       v-show="loadingIndex !== index"
                       name="material-symbols:add-photo-alternate-outline"
@@ -738,8 +757,8 @@ function convertToMoscowTime(dateString: any): Date {
         <div class="flex flex-col">
           <label class="">
             <div
-              class="flex justify-between h-16 cursor-pointer"
               v-if="store.client.username == 'test'"
+              class="flex justify-between h-16 cursor-pointer"
             >
               <div class="max-w-[240px]">
                 <span class="font-medium">Добавить видео (+25 рублей)</span>
@@ -748,9 +767,9 @@ function convertToMoscowTime(dateString: any): Date {
                   type="file"
                   class="w-[200px] sm:w-[400px] cursor-pointer"
                   accept="video/*"
-                  @change="handleFileChange($event)"
                   :class="{ hidden: !form.video }"
-                />
+                  @change="handleFileChange($event)"
+                >
               </div>
               <div>
                 <input
@@ -759,7 +778,7 @@ function convertToMoscowTime(dateString: any): Date {
                   class="checkbox checkbox-primary border-base-content"
                   style="pointer-events: none"
                   :checked="form.video !== ''"
-                />
+                >
 
                 <div
                   v-else
@@ -791,8 +810,7 @@ function convertToMoscowTime(dateString: any): Date {
             for="review-modal"
             class="btn btn-sm btn-ghost"
             @click="$emit('close')"
-            >Отмена</label
-          >
+          >Отмена</label>
           <button
             for="review-modal"
             class="btn btn-primary btn-sm bg-[#b2baff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"

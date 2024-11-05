@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
-
 const props = defineProps({
   info: {
     type: Object as any,
@@ -11,6 +9,7 @@ const props = defineProps({
     required: true,
   },
 })
+
 const emit = defineEmits([
   'callback',
   'remove',
@@ -21,6 +20,9 @@ const emit = defineEmits([
   'openLogModal',
   'removeBuyout',
 ])
+
+const { notify } = useNotification()
+
 const theme = useColorMode()
 const { width } = useWindowSize()
 

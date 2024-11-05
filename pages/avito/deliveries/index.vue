@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
-
 definePageMeta({
   layout: 'app',
   auth: true,
   title: 'Доставки',
 })
+
+const { notify } = useNotification()
 const openAll = ref(false)
 const route = useRoute()
 const router = useRouter()
@@ -255,7 +255,7 @@ const customLinks = filters.map(filter => ({
 
 <template>
   <div>
-    <div class="breadcrumbs text-sm mt-8">
+    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">

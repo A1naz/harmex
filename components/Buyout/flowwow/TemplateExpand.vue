@@ -1,6 +1,4 @@
 ﻿<script lang="ts" setup>
-import { notify } from '@kyvg/vue3-notification'
-
 const props = defineProps({
   uuid: {
     type: String,
@@ -15,6 +13,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['getTemplates', 'closeModal'])
+
+const { notify } = useNotification()
+
 const uuid = toRef(props, 'uuid')
 const store = useFlowwowBuyoutStore()
 const opened = ref()

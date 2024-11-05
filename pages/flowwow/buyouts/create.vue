@@ -136,7 +136,7 @@ async function openChecksModal() {
 
   let valid = true
   let errorMsg = ''
-  products.value.forEach((item: { deliveryPeriodDate: any; deliveryPeriodTime: any; dateRange: any[]; searchQuery: { value: any; }[]; selectedSize: string; }, _index: any) => {
+  products.value.forEach((item: { deliveryPeriodDate: any, deliveryPeriodTime: any, dateRange: any[], searchQuery: { value: any }[], selectedSize: string }, _index: any) => {
     if (!item.deliveryPeriodDate || !item.deliveryPeriodTime) {
       valid = false
       errorMsg = 'Не у всех товаров указаны дата и время доставки'
@@ -203,7 +203,7 @@ async function createBuyout() {
 }
 
 watch(products.value, (old, value) => {
-  value.forEach((item: { quantity: number; }, index: string | number) => {
+  value.forEach((item: { quantity: number }, index: string | number) => {
     if (item.quantity < 1)
       products.value[index].quantity = 1
 
@@ -336,7 +336,7 @@ function startTimer() {
 
 <template>
   <div>
-    <div class="breadcrumbs text-sm mt-8">
+    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">

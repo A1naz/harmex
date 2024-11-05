@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useNotification } from '@kyvg/vue3-notification'
+
 const props = defineProps({
   modelValue: {
     required: true,
@@ -14,9 +15,9 @@ const props = defineProps({
     default: 'small',
   },
 })
+const emit = defineEmits(['saveDate'])
 const { notify } = useNotification()
 const { $dayjs } = useNuxtApp()
-const emit = defineEmits(['saveDate'])
 const colorMode = useColorMode()
 const { width } = useWindowSize()
 const startDate = ref(new Date(Date.now() - 1000 * 60 * 60 * 24))
@@ -30,7 +31,7 @@ type UpdateMonthYear = (month: number, year: number) => void
 function updateMonth(
   event: InputEvent,
   updateMonthYear: UpdateMonthYear,
-  year: number
+  year: number,
 ) {
   updateMonthYear(+(event.target as HTMLSelectElement).value, year)
 }
@@ -75,7 +76,7 @@ function handleDate(modelData: any) {
   emit(
     'saveDate',
     `${$dayjs(date.value).format('DD.MM.YYYY')}`,
-    timeDelivery.value
+    timeDelivery.value,
   )
 }
 type updateTime = (time: number[], hours: boolean) => void
@@ -92,16 +93,17 @@ const hoursArray = computed(() => {
   return arr
 })
 
-const getInitialTimeValue = (timeHours: any, timeMinutes: any) => {
+function getInitialTimeValue(timeHours: any, timeMinutes: any) {
   const hours = timeHours < 10 ? `0${timeHours}` : timeHours
   const minutes = timeMinutes < 30 ? '00' : '30'
 
   let nextHours = timeHours
-  let nextMinutes = timeMinutes < 30 ? 30 : 0
+  const nextMinutes = timeMinutes < 30 ? 30 : 0
 
   if (timeMinutes >= 30) {
-    nextHours = parseInt(timeHours) + 1
-    if (nextHours === 24) nextHours = 0
+    nextHours = Number.parseInt(timeHours) + 1
+    if (nextHours === 24)
+      nextHours = 0
   }
 
   const nextHoursStr = nextHours < 10 ? `0${nextHours}` : nextHours
@@ -110,7 +112,7 @@ const getInitialTimeValue = (timeHours: any, timeMinutes: any) => {
   return `${hours}:${minutes}-${nextHoursStr}:${nextMinutesStr}`
 }
 
-const getNextTimeInterval = (timeString: string) => {
+function getNextTimeInterval(timeString: string) {
   const [start, end] = timeString.split('-')
   const [startHours, startMinutes] = start.split(':').map(Number)
   const [endHours, endMinutes] = end.split(':').map(Number)
@@ -125,9 +127,9 @@ const timeDelivery = ref(
   props.timeDelivery && props.timeDelivery !== ''
     ? props.timeDelivery
     : getInitialTimeValue(
-        `${$dayjs(date.value).format('HH')}`,
-        `${$dayjs(date.value).format('mm')}`
-      )
+      `${$dayjs(date.value).format('HH')}`,
+      `${$dayjs(date.value).format('mm')}`,
+    ),
 )
 
 const customSelect = ref()
@@ -185,14 +187,14 @@ function setTimeDelivery(data: any) {
         <div class="flex flex-col w-full justify-end">
           <div
             v-if="
-              props.timeDelivery &&
-              props.timeDelivery !== '' &&
-              timeDelivery !== ''
+              props.timeDelivery
+                && props.timeDelivery !== ''
+                && timeDelivery !== ''
             "
             class="flex justify-center items-center text-center"
           >
             {{ `${$dayjs(date).format('DD.MM.YYYY')}` }}
-            <br />
+            <br>
             {{ timeDelivery }}
           </div>
           <button
@@ -223,11 +225,11 @@ function setTimeDelivery(data: any) {
           <div class="flex items-center gap-2 px-2 pt-1">
             <CustomSelect
               ref="customSelect"
-              @change-value="setTimeDelivery"
-              :dropdownContainer="'w-full'"
-              :class="'w-full'"
+              dropdown-container="w-full"
+              class="w-full"
               :tabs="hoursArray"
               :status-text="timeDelivery"
+              @change-value="setTimeDelivery"
             />
           </div>
         </div>
