@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { notify } from '@kyvg/vue3-notification'
-
 definePageMeta({ auth: false, layout: 'app' })
 
 const { user } = useUserSession()
 
+const { notify } = useNotification()
 const menuItems = ref(['Маркетплейсы', 'Отели'])
 const selectedType = ref('Маркетплейсы')
 const socialNetworks = ref([])

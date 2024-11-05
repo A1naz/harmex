@@ -1,6 +1,6 @@
 <!-- eslint-disable unused-imports/no-unused-vars -->
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification()
 
 definePageMeta({
   layout: 'app',

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
-
 definePageMeta({
   layout: 'app',
   auth: true,
   title: 'Доставки',
 })
+
+const { notify } = useNotification()
 const openAll = ref(false)
 const route = useRoute()
 const router = useRouter()

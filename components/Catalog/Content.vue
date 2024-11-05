@@ -24,16 +24,15 @@ defineEmits(['setFavourites', 'vote'])
       <div
         v-for="(social, index) in items"
         :key="index"
-        class="card border rounded-lg shadow-md w-[360px] p-3 relative " :class="{
-          'bg-[#f5f7ff]': social.disabled,
-        }"
+        class="card border rounded-lg shadow-md w-[360px] p-3 relative "
       >
         <div class="flex w-full">
-          <div class="flex items-center justify-center relative w-[170px] h-[170px]">
-            <NuxtImg :src="social.mainImage" :alt="social.name" class="w-full" />
-            <!-- <div v-if="social.disabled" class="overlay">
-              Ожидается
-            </div> -->
+          <div class="flex items-center justify-center w-[170px] h-[170px] relative">
+            <NuxtImg
+              :src="social.mainImage"
+              :alt="social.name"
+              class="w-full"
+            />
           </div>
           <div class="pl-4">
             <button
@@ -73,16 +72,17 @@ defineEmits(['setFavourites', 'vote'])
               Смотреть все
               <Icon class="text-[#F72585] -mt-0.5" name="jam:arrow-right" size="18px" />
             </NuxtLink>
-            <button
-              v-else
-              class="text-[16px] absolute font-medium cursor-pointer bottom-2 hover:text-[#F72585]"
-              @click="$emit('vote', social.slug)"
-            >
-              Запросить
-              <Icon class="text-[#F72585] -mt-0.5" name="jam:arrow-right" size="18px" />
-            </button>
           </div>
         </div>
+        <button
+          v-if="social.disabled"
+          class="z-10 px-5 py-2 bg-[#48b752] text-xl text-white text-[16px] absolute font-medium cursor-pointer top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg hover:bg-[#3a9642] active:scale-95 active:shadow-md"
+          @click="$emit('vote', social.slug)"
+        >
+          Запросить
+        </button>
+
+        <div v-if="social.disabled" class="absolute inset-0 bg-black opacity-70 pointer-events-none rounded-lg" />
       </div>
     </div>
   </main>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { notify } = useNotification();
+const { notify } = useNotification()
 
 definePageMeta({
   layout: 'app',

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { SelectOptionsReviews as SelectOptions } from '@/data/enums'
-import { notify } from '@kyvg/vue3-notification'
+
+const { notify } = useNotification()
 
 definePageMeta({
   layout: 'app',

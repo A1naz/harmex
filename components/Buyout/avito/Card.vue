@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
-const theme = useColorMode()
-const { width } = useWindowSize()
-
 const props = defineProps({
   info: {
     type: Object as any,
@@ -23,6 +19,10 @@ const emit = defineEmits([
   'openLogModal',
   'removeBuyout',
 ])
+const { notify } = useNotification()
+const theme = useColorMode()
+const { width } = useWindowSize()
+
 const currency = useCurrency()
 const router = useRouter()
 function cloneBuyout() {
@@ -49,7 +49,8 @@ async function deleteBuyOut() {
       type: 'error',
       duration: 3000,
     })
-  } else {
+  }
+  else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно удален',
@@ -74,7 +75,8 @@ async function unpauseBuyout() {
       type: 'error',
       duration: 3000,
     })
-  } else {
+  }
+  else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно возобновлен',
@@ -99,7 +101,8 @@ async function unarchiveBuyout() {
       type: 'error',
       duration: 3000,
     })
-  } else {
+  }
+  else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно восстановлен',
@@ -124,7 +127,8 @@ async function archiveBuyout() {
       type: 'error',
       duration: 3000,
     })
-  } else {
+  }
+  else {
     notify({
       title: 'Успешно',
       text: 'Выкуп успешно архивирован',
@@ -173,7 +177,7 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/info.svg"
                 alt="settings"
-              />
+              >
               О выкупе
             </a>
           </li>
@@ -183,15 +187,15 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/copy.svg"
                 alt="settings"
-              />
+              >
               Дублировать
             </a>
           </li>
           <li
             v-if="
-              info.status === 'archived' ||
-              info.status === 'active' ||
-              info.status === 'paused'
+              info.status === 'archived'
+                || info.status === 'active'
+                || info.status === 'paused'
             "
           >
             <a v-if="info.status !== 'archived'" @click="archiveBuyout">
@@ -199,7 +203,7 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/archive.svg"
                 alt="settings"
-              />
+              >
               Архивировать
             </a>
             <a v-else @click="unarchiveBuyout">
@@ -207,7 +211,7 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/archive.svg"
                 alt="settings"
-              />
+              >
               Убрать из архива
             </a>
           </li>
@@ -218,7 +222,7 @@ const getStatus = computed(() => {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/delete.svg"
                 alt="settings"
-              />
+              >
               <label class="cursor-pointer">Удалить</label>
             </a>
           </li>
@@ -228,20 +232,19 @@ const getStatus = computed(() => {
       <div class="truncate">
         <div class="flex justify-between gap-1 items-center">
           <div class="flex gap-x-3 flex-wrap">
-            <span class="text-xs text-gray-500 py-1"
-              >Создан: {{ 
-                $dayjs(info.createdAt).locale('ru').format(
-                  'D MMMM YYYY HH:mm'
-                ) }}
+            <span class="text-xs text-gray-500 py-1">Создан: {{
+              $dayjs(info.createdAt).locale('ru').format(
+                'D MMMM YYYY HH:mm',
+              ) }}
             </span>
             <div
               :class="{
                 'opacity-0':
-                  info.status !== 'active' &&
-                  info.status !== 'paused' &&
-                  info.status !== 'work' &&
-                  info.status !== 'busy' &&
-                  info.status !== 'archived',
+                  info.status !== 'active'
+                  && info.status !== 'paused'
+                  && info.status !== 'work'
+                  && info.status !== 'busy'
+                  && info.status !== 'archived',
               }"
               class="text-xs rounded-2xl px-2 bg-base-200 py-1"
             >
@@ -258,12 +261,14 @@ const getStatus = computed(() => {
         </div>
 
         <div class="flex gap-3 flex-wrap">
-          <h2 class="card-title mt-2">Выкуп №{{ info.place }}</h2>
+          <h2 class="card-title mt-2">
+            Выкуп №{{ info.place }}
+          </h2>
           <div
             class="mt-2 rounded-2xl py-1.5 px-2 text-md flex items-center w-fit text-sm"
             :class="{
               'text-base-content bg-[#b5ffbc] dark:bg-green-600 ':
-                info.status === 'active' || info.status === 'work'  || info.status === 'busy',
+                info.status === 'active' || info.status === 'work' || info.status === 'busy',
               'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
                 info.status === 'completed' || info.status === 'nofunds',
               'text-base-content bg-yellow-300':
@@ -285,7 +290,7 @@ const getStatus = computed(() => {
           </a>
         </div>
 
-        <div class="flex justify-between mt-2"></div>
+        <div class="flex justify-between mt-2" />
       </div>
 
       <div class="flex gap-4">
@@ -331,7 +336,9 @@ const getStatus = computed(() => {
             </div>
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto">Категория: </span>
-              <div class="bg-base-300 rounded-md py-0 px-2 text-sm">Avito</div>
+              <div class="bg-base-300 rounded-md py-0 px-2 text-sm">
+                Avito
+              </div>
             </div>
           </div>
         </div>
