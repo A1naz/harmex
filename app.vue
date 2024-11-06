@@ -1,0 +1,114 @@
+<script lang="ts" setup></script>
+
+<template>
+  <div>
+    <NuxtNotifications
+      position="top right"
+      :max="2"
+      :close-on-click="true"
+      :pause-on-hover="true"
+      :speed="500"
+    />
+    <NuxtLayout class="overflow-hidden">
+      <NuxtLoadingIndicator color="#296dff" />
+      <NuxtPage />
+      <div class="my-12 md:hidden" />
+    </NuxtLayout>
+  </div>
+</template>
+
+<style lang="css">
+/* @import "@/assets/style/datepicker.css"; */
+
+/* .scroll-primary {
+  @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
+} */
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.notify-text {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  color: gray;
+}
+
+.notify-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.notify-card {
+  padding: 1rem;
+  background-color: #121212;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  width: 300px;
+  max-width: 100%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease-in-out;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s linear;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.pop-enter-active,
+.pop-leave-active {
+  transition: transform 0.4s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.4s linear;
+}
+
+.pop-enter,
+.pop-leave-to {
+  opacity: 0;
+  transform: scale(0.3) translateY(-50%);
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.1s;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  filter: blur(0.1rem);
+}
+
+.heading {
+  @apply text-xl font-bold mt-1;
+}
+
+.title {
+  @apply text-2xl font-bold mt-1;
+}
+
+.description {
+  @apply text-sm font-light mt-1;
+}
+</style>

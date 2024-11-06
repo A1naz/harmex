@@ -1,0 +1,9 @@
+.header {
+   padding: 20px 0;
+   &__logo {
+      display: inline-block;
+      @include sm {
+         width: 200px;
+      }
+   }
+}

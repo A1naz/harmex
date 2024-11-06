@@ -1,0 +1,171 @@
+* {
+   box-sizing: border-box;
+}
+
+html,
+body {
+	min-height: 100vh;
+   display: flex;
+   flex-direction: column;
+}
+
+:root {
+   --nato: 'Noto Sans';
+   --nunito: 'Nunito';
+}
+
+body {
+   font-family: var(--nunito);
+}
+
+img {
+   max-width: 100%;
+}
+
+.container {
+   width: 1230px;
+   max-width: 100%;
+   padding: 49px 50px;
+   margin: 0 auto;
+}
+
+.overlay {
+   background-color: rgba(0, 0, 0, 0.5);
+   backdrop-filter: blur(3px);
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 101;
+   display: none;
+}
+
+.h1 {
+   font-size: 32px;
+   line-height: 1.3;
+   font-weight: 700;
+   color: #292930;
+
+   @include sm {
+      font-size: 20px;
+   }
+}
+
+.h2 {
+   font-size: 20px;
+   line-height: 1.2;
+   font-weight: 500;
+   color: #292930;
+
+   @include sm {
+      font-size: 16px;
+   }
+}
+
+.subtitle {
+   font-family: var(--nato);
+   font-size: 16px;
+   line-height: 1.3;
+   color: #555555;
+   margin-bottom: 10px;
+}
+
+.mb-10 {
+   margin-bottom: 10px;
+}
+
+.btn-back {
+   width: 42px;
+   height: 30px;
+   box-shadow: 0px 0px 20px 0px #52535A1A;
+   background-color: #fff;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 10px;
+   transition: 0.3s;
+
+   &:hover {
+      background-color: #5a62ed;
+   }
+}
+
+.btn {
+   padding: 13px 80px;
+   text-decoration: none;
+   cursor: pointer;
+   border-radius: 6px;
+   font-size: 18px;
+   line-height: 1;
+   display: inline-block;
+   text-align: center;
+   border: none;
+   transition: 0.3s;
+
+   @include sm {
+      font-size: 14px;
+      padding: 10px 40px;
+   }
+
+   &--black {
+      color: #fff;
+      background-color: #292930;
+
+      &:hover {
+         background-color: #5a62ed;
+      }
+   }
+
+   &--blue {
+      color: #fff;
+      background-color: #6788F3;
+
+      &:hover {
+         background-color: #292930;
+      }
+   }
+}
+
+.w-100 {
+   width: 100%;
+}
+
+.error-list {
+   position: fixed;
+   top: 20px;
+   right: 20px;
+   z-index: 10;
+   text-align: right;
+   max-width: 330px;
+
+   &__item {
+      font-size: 14px;
+      line-height: 1.3;
+      color: #252525;
+      font-weight: 400;
+      padding: 10px 18px;
+      background-color: #FF7970;
+      border-radius: 10px;
+      display: none;
+
+      &.show {
+         display: inline-block;
+      }
+
+      &:not(:last-child) {
+         margin-bottom: 10px;
+      }
+   }
+}
+
+.nice-select {
+   width: 100%;
+   background-color: #ECECED;
+   border-radius: 10px;
+
+   .list {
+      left: auto;
+      right: 0;
+   }
+}

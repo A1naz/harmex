@@ -1,0 +1,102 @@
+﻿<script lang="ts" setup>
+const { notify } = useNotification();
+
+const props = defineProps({
+  uuid: {
+    type: String,
+  },
+  info: {
+    type: Object as any,
+    required: true,
+  },
+  opened: {
+    type: Boolean,
+  },
+})
+
+const emit = defineEmits(['getTemplates', 'closeModal'])
+const uuid = toRef(props, 'uuid')
+const store = useWildberriesBuyoutStore()
+const opened = ref()
+
+onMounted(async () => {
+  opened.value = props.opened
+})
+watch(
+  () => props.opened,
+  (newState) => {
+    opened.value = newState
+  },
+)
+
+async function selectTemplate() {
+  if (props.info.buyoutsArray.length <= 10) {
+    store.createProducts = props.info.buyoutsArray
+  }
+  else {
+    notify({
+      title: 'За раз можно создать максимум 10 выкупов',
+      text: 'Добавлены первые 10 выкупов',
+      type: 'error',
+    })
+    store.createProducts = props.info.buyoutsArray.slice(0, 10)
+  }
+  emit('closeModal')
+}
+
+async function deleteTemplate() {
+  const { data, error }: any = await useFetch('/api/buyout/deleteTemplate', {
+    method: 'DELETE',
+    params: { uuid: props.uuid },
+  })
+
+  if (data.value) {
+    notify({
+      title: 'Шаблон удален',
+      type: 'success',
+      duration: 3000,
+    })
+
+    emit('getTemplates', uuid.value)
+  }
+}
+</script>
+
+<template>
+  <div
+    class="collapse collapse-arrow border border-base-100 bg-base-200 rounded-box z-0 overflow-hidden"
+  >
+    <input v-model="opened" type="checkbox">
+    <div
+      class="collapse-title relative text-md font-medium flex flex-col md:justify-between md:flex-row"
+    >
+      <div>
+        <div>
+          {{ info.title }}
+        </div>
+      </div>
+      <div class="flex z-10">
+        <label class="btn btn-sm text-red-400 z-10" @click="deleteTemplate">Удалить</label>
+        <nuxt-link to="/wildberries/buyouts/create">
+          <label
+            class="btn btn-sm btn-primary truncate mr-1 bg-opacity-20 border-none text-base-content"
+            @click="selectTemplate"
+          >Добавить</label>
+        </nuxt-link>
+      </div>
+    </div>
+    <div
+      class="collapse-content flex items-center justify-center md:justify-start gap-2 max-h-[56rem] md:max-h-full flex-row space-x-2 overflow-x-auto"
+    >
+      <BuyoutTemplateCard
+        v-for="product in info.buyoutsArray"
+        :product="product"
+      />
+    </div>
+  </div>
+  <!-- <BuyoutDeleteConfirmModal :uuid="uuid" @delete-template="deleteTemplate"></BuyoutDeleteConfirmModal> -->
+</template>
+
+<style scoped>
+
+</style>

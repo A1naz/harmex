@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.myCustomBtn {
+  @apply btn btn-outline border-[#f95ca4] text-[#f95ca4] rounded-xl btn-sm text-[16px] hover:bg-white font-medium hover:text-[#f95ca4] hover:border-[#f95ca4] hover:shadow-xl active:bg-[#f95ca4] active:text-white;
+  &:hover {
+    box-shadow: 0 4px 15px rgb(207, 212, 226);
+  }
+}
