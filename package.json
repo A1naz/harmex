@@ -1,6 +1,5 @@
 {
   "private": true,
-  "packageManager": "bun@1.1.29",
   "scripts": {
   "build": "nuxt build",
     "dev": "bunx --bun nuxi dev --host",
@@ -8,7 +7,7 @@
     "tunnel": "bunx --bun nuxi dev --host --tunnel",
     "generate": "bunx --bun nuxi generate",
     "preview": "bunx --bun nuxi preview",
-    "postinstall": "bunx --bun nuxi prepare",
+    "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "update": "bunx --bun nuxi upgrade --force"
