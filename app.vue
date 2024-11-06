@@ -24,6 +24,24 @@
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 } */
 
+.myCustomBtnSm {
+  @apply btn btn-sm btn-outline border-[#1b38ca] rounded-xl bg-white 
+         hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl
+         active:bg-[#1934bd] active:text-white;
+  &:hover {
+    box-shadow: 0 4px 15px rgb(207, 212, 226);
+  }
+}
+
+.myCustomBtn {
+  @apply btn btn-outline border-[#1b38ca] rounded-xl bg-white 
+         hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl
+         active:bg-[#1934bd] active:text-white;
+  &:hover {
+    box-shadow: 0 4px 15px rgb(207, 212, 226);
+  }
+}
+
 body {
   font-family: "Inter", sans-serif;
 }
