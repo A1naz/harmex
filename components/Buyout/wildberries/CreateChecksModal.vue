@@ -1,4 +1,4 @@
-import { onMounted } from 'vue';
+
 <script setup lang="ts">
 const props = defineProps({
   state: {

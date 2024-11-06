@@ -1,6 +1,6 @@
 import { User } from '@/server/lib/models/User'
 import auth from '~~/server/utils/auth'
-import validator from 'validator'
+import bcrypt from 'bcrypt'
 
 export default eventHandler(async (event) => {
   const isAuth = await getUserSession(event)
@@ -37,7 +37,7 @@ export default eventHandler(async (event) => {
     return sendRedirect(event, '/auth', 302)
   }
 
-  const verify = Bun.password.verifySync(oldPassword, foundedUser.password)
+  const verify = bcrypt.compare(oldPassword, foundedUser.password)
 
   if (!verify) {
     throw createError({

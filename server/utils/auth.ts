@@ -127,5 +127,4 @@ export default {
   attempt,
   registerUser,
   changePassword,
-  updateSession,
 }
