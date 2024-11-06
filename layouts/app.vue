@@ -11,11 +11,11 @@ function toggleMenu() {
 
 const searchData = ref([]) as any
 const dataLoading = ref(false)
-async function search(searchQuery) {
+async function search(searchQuery: any) {
   dataLoading.value = true
 
   try {
-    const response = await $fetch(`/api/catalog/get`, {
+    const response: any = await $fetch(`/api/catalog/search`, {
       method: 'GET',
       query: {
         type: 'Маркетплейсы',
