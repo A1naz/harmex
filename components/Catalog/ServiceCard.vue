@@ -49,7 +49,7 @@ defineEmits(['setFavourites'])
       • 5.0
     </p>
     <NuxtLink :to="`/${item.slug}${item.items[index].path}`" class="btn bg-[#F5F7FF] w-full rounded-xl">
-      {{ item.unavailable ? 'Предзаказ' : 'Выбрать' }}
+      {{ item.unavailable ? 'Предзаказ' : 'Перейти' }}
     </NuxtLink>
   </div>
 </template>
