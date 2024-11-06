@@ -2,7 +2,7 @@
   "private": true,
   "packageManager": "bun@1.1.29",
   "scripts": {
-    "build": "bunx --bun nuxi build",
+  "build": "nuxt build",
     "dev": "bunx --bun nuxi dev --host",
     "https": "bunx --bun nuxi dev --https --host",
     "tunnel": "bunx --bun nuxi dev --host --tunnel",
