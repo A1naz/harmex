@@ -58,7 +58,6 @@ export default defineNuxtConfig({
 
   nitro: {
     plugins: ['~/server/index.ts'],
-    preset: 'bun',
   },
 
   modules: [
