@@ -1,0 +1,45 @@
+FROM oven/bun:latest
+
+RUN mkdir -p /usr/src/nuxt-app
+WORKDIR /usr/src/nuxt-app
+
+COPY . .
+
+# Define build arguments
+ARG MONGODB_URI
+ARG NAME
+ARG SECRET
+ARG PUBLIC_SITE_URL
+ARG NEXTAUTH_URL
+ARG privateKey
+ARG PORT
+ARG fkID
+ARG SESSION_TOKEN
+
+# Set environment variables
+ENV MONGODB_URI=${MONGODB_URI}
+ENV NAME=${NAME}
+ENV SECRET=${SECRET}
+ENV PUBLIC_SITE_URL=${PUBLIC_SITE_URL}
+ENV NEXTAUTH_URL=${NEXTAUTH_URL}
+ENV privateKey=${privateKey}
+ENV PORT=${PORT}
+ENV fkID=${fkID}
+ENV SESSION_TOKEN=${SESSION_TOKEN}
+
+# Install necessary packages
+RUN apk add --no-cache python3 make g++
+
+# Install dependencies and build the app with Bun
+RUN bun install
+RUN bun --bun run build
+
+# Set environment to production
+ENV NODE_ENV production
+ENV PORT 80
+
+# Expose the port the app will run on
+EXPOSE 80
+
+# Command to start the app
+ENTRYPOINT ["bun --bun", ".output/server/index.mjs"]
