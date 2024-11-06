@@ -5,7 +5,7 @@ import { createAllPickpoints } from '~/server/utils/pickpoints'
 export default async (_nitroApp: Nitro) => {
   const config = useRuntimeConfig()
 
-  try {
+  try { 
     if (config.env !== 'developer') {
       createAllPickpoints()
     }

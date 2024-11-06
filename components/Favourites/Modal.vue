@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { $ } from 'bun';
-
 defineProps({
   show: { type: Boolean, required: true },
   item: { type: Object, required: true },

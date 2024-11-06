@@ -29,36 +29,8 @@ export default defineNuxtConfig({
     },
   },
 
-  colorMode: {
-    preference: 'light',
-    dataValue: 'theme',
-    classSuffix: '',
-  },
-
-  image: {},
-
-  lazyLoad: {
-    // These are the default values
-    images: true,
-    videos: true,
-    audios: true,
-    iframes: true,
-    native: false,
-    directiveOnly: false,
-
-    // To remove class set value to false
-    loadingClass: 'isLoading',
-    loadedClass: 'isLoaded',
-    appendClass: 'lazyLoad',
-
-    observerConfig: {
-      // See IntersectionObserver documentation
-    },
-  },
-
   nitro: {
     plugins: ['~/server/index.ts'],
-    preset: 'bun',
   },
 
   modules: [
@@ -83,61 +55,25 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@bg-dev/nuxt-s3',
     '@nuxtjs/i18n',
-    // '@nuxtjs/seo',
-  ],
-  eslint: {
-    config: {
-      standalone: false, // <---
-    },
-  },
-
-  turnstile: {
-    siteKey: '0x4AAAAAAAw5ArLU136z91q_',
-  },
-
-  icon: {
-    sources: [
-      {
-        src: '~/assets/icons',
-        prefix: 'custom', // Префикс для кастомных иконок
-      },
-    ],
-  },
-
-  css: [
-    'primevue/resources/primevue.css',
-    'primeicons/primeicons.css',
-    '@/assets/style/css/customButton.css',
-    '@vuepic/vue-datepicker/dist/main.css',
   ],
 
-  s3: {
-    client: {
-      credentials: {
-        secretAccessKey: process.env.VK_SECRET_KEY || '',
-        accessKeyId: process.env.VK_ACCESS_KEY || '',
-      },
-      endpoint: 'https://hb.vkcs.cloud/reviewImages/',
-      region: 'ru-msk',
-    },
-    publicBucketUrl: `${process.env.PUBLIC_SITE_URL}/images/get/`,
-    bucket: 'ozonmpportal',
-    image: {
-      compression: {
-        maxSizeMB: 10,
-        maxWidthOrHeight: 4000,
-      },
-    },
-  },
+  lazyLoad: {
+    // These are the default values
+    images: true,
+    videos: true,
+    audios: true,
+    iframes: true,
+    native: false,
+    directiveOnly: false,
 
-  hooks: {
-    close: () => {
-      process.exit()
-    },
-  },
+    // To remove class set value to false
+    loadingClass: 'isLoading',
+    loadedClass: 'isLoaded',
+    appendClass: 'lazyLoad',
 
-  build: {
-    transpile: ['primevue', '@vuepic/vue-datepicker'],
+    observerConfig: {
+      // See IntersectionObserver documentation
+    },
   },
 
   shadcn: {
@@ -169,6 +105,101 @@ export default defineNuxtConfig({
     dirs: ['./stores', './data', './server/lib', './server/lib/models'],
   },
 
+  eslint: {
+    config: {
+      standalone: false, // <---
+    },
+  },
+
+  turnstile: {
+    siteKey: '0x4AAAAAAAw5ArLU136z91q_',
+  },
+
+  colorMode: {
+    preference: 'light',
+    dataValue: 'theme',
+    classSuffix: '',
+  },
+
+
+  icon: {
+    sources: [
+      {
+        src: '~/assets/icons',
+        prefix: 'custom', // Префикс для кастомных иконок
+      },
+    ],
+  },
+
+
+  css: [
+    'primevue/resources/primevue.css',
+    'primeicons/primeicons.css',
+    // '@/assets/style/css/customButton.css',
+    '@vuepic/vue-datepicker/dist/main.css',
+  ],
+
+
+  s3: {
+    client: {
+      credentials: {
+        secretAccessKey: process.env.VK_SECRET_KEY || '',
+        accessKeyId: process.env.VK_ACCESS_KEY || '',
+      },
+      endpoint: 'https://hb.vkcs.cloud/reviewImages/',
+      region: 'ru-msk',
+    },
+    publicBucketUrl: `${process.env.PUBLIC_SITE_URL}/images/get/`,
+    bucket: 'ozonmpportal',
+    image: {
+      compression: {
+        maxSizeMB: 10,
+        maxWidthOrHeight: 4000,
+      },
+    },
+  },
+
+  hooks: {
+    close: () => {
+      process.exit()
+    },
+  },
+
+  build: {
+    transpile: ['primevue', '@vuepic/vue-datepicker'],
+  },
+
+  security: {
+    rateLimiter: {
+      tokensPerInterval: 200,
+      interval: 'hour',
+      fireImmediately: false,
+    },
+    headers: false,
+    xssValidator: false,
+  },
+
+  devtools: {
+    enabled: true,
+  },
+
+  experimental: {
+    payloadExtraction: false,
+    renderJsonPayloads: true,
+    typedPages: true,
+  },
+
+  i18n: {
+    locales: [
+      { code: 'en', language: 'en-US', dir: 'ltr', file: 'en.json' },
+      { code: 'ru', language: 'ru-RU', dir: 'ltr', file: 'ru.json' },
+    ],
+    defaultLocale: 'ru',
+    langDir: 'locales',
+    lazy: true,
+  },
+
+
   runtimeConfig: {
     public: {
       siteName: process.env.NAME,
@@ -179,9 +210,6 @@ export default defineNuxtConfig({
       BOT_LOGIN: process.env.BOT_LOGIN,
       DOMAIN_API_IMAGES_URL: process.env.DOMAIN_API_IMAGES_URL,
       YANDEX_MAPS_API_KEY: process.env.YANDEX_MAPS_API_KEY,
-    },
-    turnstile: {
-      secretKey: '0x4AAAAAAAw5Ajel8a_CNjT4CGlB25Geh48',
     },
     VK_ACCESS_KEY: process.env.VK_ACCESS_KEY,
     VK_SECRET_KEY: process.env.VK_SECRET_KEY,
@@ -219,41 +247,6 @@ export default defineNuxtConfig({
     DADATA_SECRET: process.env.DADATA_SECRET,
     PARSER_TOKEN: process.env.PARSER_TOKEN,
   },
-
-  security: {
-    rateLimiter: {
-      tokensPerInterval: 200,
-      interval: 'hour',
-      fireImmediately: false,
-    },
-    headers: false,
-    xssValidator: false,
-  },
-
-  devtools: {
-    enabled: true,
-  },
-
-  experimental: {
-    payloadExtraction: false,
-    renderJsonPayloads: true,
-    typedPages: true,
-  },
-
-  i18n: {
-    locales: [
-      { code: 'en', language: 'en-US', dir: 'ltr', file: 'en.json' },
-      { code: 'ru', language: 'ru-RU', dir: 'ltr', file: 'ru.json' },
-    ],
-    defaultLocale: 'ru',
-    langDir: 'locales',
-    lazy: true,
-  },
-  // robots: {
-  //   autoI18n: false,
-  // },
-
   ssr: true,
-
-  compatibilityDate: '2024-10-04',
+  compatibilityDate: '2024-11-06',
 })

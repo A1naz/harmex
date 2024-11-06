@@ -1,4 +1,4 @@
-import fs from 'bun'
+import fs from 'node:fs'
 import { PVZ } from '~/server/lib/models/ozon/PVZ'
 
 // async function getRandomProxy(): Promise<string> {
@@ -10,16 +10,17 @@ import { PVZ } from '~/server/lib/models/ozon/PVZ'
 // }
 
 export async function removeExtraPickpoints() {
-  const cached = Bun.file('pvz/wildberriesPoints.json', { type: 'application/json' })
-  const parsed = await cached.json()
+  const cached = fs.readFileSync('pvz/wildberriesPoints.json', 'utf8')
+  const parsed = JSON.parse(cached)
 
-  // Обновление даты, чтобы не было зацикливаний
+  //Обновление даты, чтобы не было зацикливаний
   const cache = {
     updated: new Date(),
     points: parsed.points,
   }
-  Bun.write('pvz/wildberriesPoints.json', JSON.stringify(cache))
+  fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
 
+  //@ts-ignore
   const data: any = await $fetch(
     'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
     {
@@ -27,7 +28,7 @@ export async function removeExtraPickpoints() {
       headers: {
         'x-requested-with': 'XMLHttpRequest',
       },
-    },
+    }
   )
 
   // Удаление объектов с deleteMark >= 10
@@ -36,18 +37,17 @@ export async function removeExtraPickpoints() {
       const index = parsed.points.findIndex((el: any) => el.id === obj.id)
       if (index !== -1) {
         parsed.points.splice(index, 1)
-      }
-      else {
+      } else {
         parsed.points[index].deleteMark = 0
       }
     }
   })
 
-  // Добавление новых пвз, только прилетевших из вб
+  //Добавление новых пвз, только прилетевших из вб
   data[0].items.forEach((obj: any) => {
     if (obj.id) {
       const index = parsed.points.findIndex(
-        (el: any) => el.id === obj.id || el.a === obj.address,
+        (el: any) => el.id === obj.id || el.a === obj.address
       )
       if (index === -1 && obj.id) {
         parsed.points.push({
@@ -62,16 +62,15 @@ export async function removeExtraPickpoints() {
     }
   })
 
-  // Обновление deleteMark
+  //Обновление deleteMark
   parsed.points.forEach((obj: any) => {
     if (!obj.deleteMark) {
       obj.deleteMark = 0
     }
-    // Увеличиваем deleteMark, для points(ПВЗ), которые не прилетели из вб
+    //Увеличиваем deleteMark, для points(ПВЗ), которые не прилетели из вб
     if (!data[0].items.some((el: any) => el.id === obj.id)) {
       obj.deleteMark++
-    }
-    else {
+    } else {
       obj.deleteMark = 0
     }
   })
@@ -80,7 +79,7 @@ export async function removeExtraPickpoints() {
     updated: new Date(),
     points: parsed.points,
   }
-  Bun.write('pvz/wildberriesPoints.json', JSON.stringify(newCache))
+  fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(newCache))
 }
 
 export async function createPickpointsFile() {
@@ -91,7 +90,7 @@ export async function createPickpointsFile() {
       headers: {
         'x-requested-with': 'XMLHttpRequest',
       },
-    },
+    }
   )
 
   const points = data[0].items
@@ -110,7 +109,9 @@ export async function createPickpointsFile() {
     points: collection,
   }
 
-  Bun.write('pvz/wildberriesPoints.json', JSON.stringify(cache))
+  console.log('creating wildberriesPoints.json')
+  fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
+  return
 }
 
 export async function createOzonPickpointsFile() {
@@ -129,7 +130,8 @@ export async function createOzonPickpointsFile() {
     points: collection,
   }
 
-  Bun.write('pvz/ozonPoints.json', JSON.stringify(cache))
+  console.log('creating ozonPoints.json')
+  fs.writeFileSync('pvz/ozonPoints.json', JSON.stringify(cache))
 }
 
 export async function createAllPickpoints() {

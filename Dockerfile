@@ -1,7 +1,8 @@
-# Stage 1: Build Stage
-FROM oven/bun:latest AS build
+FROM node:19-alpine
 
-
+RUN mkdir -p /usr/src/nuxt-app
+WORKDIR /usr/src/nuxt-app
+COPY . .
 ARG NUXT_SESSION_PASSWORD
 ARG MONGODB_URI
 ARG NAME
@@ -90,39 +91,14 @@ ENV FLOWWOW_DB_URI=${FLOWWOW_DB_URI}
 ENV PARSER_TOKEN=${PARSER_TOKEN}
 ENV OZON_PVZ_DB_URI=${OZON_PVZ_DB_URI}
 
+RUN npm install -g pnpm
+RUN apk add --no-cache python3 make g++
+RUN pnpm install
+RUN pnpm run build
+ENV NODE_ENV production
+ENV PORT 80
 
-# Set working directory
-WORKDIR /usr/src/nuxt-app
+EXPOSE 80 
 
-# Copy package.json and lockfile to install dependencies first (cache layer)
-COPY package.json bun.lockb ./
+ENTRYPOINT ["node", ".output/server/index.mjs"]
 
-# Install dependencies
-RUN bun install
-RUN bun run postinstall
-
-# Copy the rest of the application files
-COPY . .
-
-# Build the app
-RUN bun --bun run build
-
-# Stage 2: Production Stage
-FROM oven/bun:latest AS production
-# Copy environment variables
-
-# Set environment to production
-ENV NODE_ENV=production
-
-# Set working directory
-WORKDIR /usr/src/nuxt-app
-
-# Copy only necessary files from build stage
-COPY --from=build /usr/src/nuxt-app/.output ./.output
-COPY --from=build /usr/src/nuxt-app/package.json ./
-
-# Expose the port the app will run on
-EXPOSE 80
-
-# Start the app
-ENTRYPOINT ["bun", "run", ".output/server/index.mjs"]

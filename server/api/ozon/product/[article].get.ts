@@ -8,8 +8,6 @@ export default eventHandler(async (event) => {
   const params = event.context.params as any
   const article = params.article
 
-  console.log(config.PARSER_TOKEN)
-
   const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     body: {
@@ -33,9 +31,6 @@ export default eventHandler(async (event) => {
       message: 'Товар не найден',
     })
   }
-
-  console.log(data);
-  
 
   return {
     product: {

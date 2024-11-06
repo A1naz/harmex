@@ -55,7 +55,7 @@ export default eventHandler(async (event) => {
     }
   }
 
-  const hashedPassword = await Bun.password.hash(password, 'bcrypt')
+  const hashedPassword = bcrypt.hashSync(password, 7)
 
   const newUsername = await createUsername(email)
 
@@ -79,7 +79,7 @@ export default eventHandler(async (event) => {
   try {
     await MailService.sendActivationMail(user.email, link)
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars
+
   catch (error) {
     return { status: 'error', error: 'Ошибка отправки письма.' }
   }

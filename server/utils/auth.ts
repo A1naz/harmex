@@ -2,6 +2,7 @@ import type { H3Event } from 'h3'
 import { User } from '~~/server/lib/models/User'
 import { v4 as uuid } from 'uuid'
 import { generateUniqueUsername } from './createUsername'
+import bcrypt from 'bcrypt'
 
 // Logs the user in as the given user model
 async function login(event: H3Event<Request>, user: IUser) {
@@ -31,7 +32,7 @@ async function registerUser(
     })
   }
   else {
-    const hashedPassword = await Bun.password.hash(password, 'bcrypt')
+    const hashedPassword = bcrypt.hashSync(password, 7)
     const username = await generateUniqueUsername()
     const user = await User.create({
       phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
@@ -65,7 +66,7 @@ async function changePassword(
       })
     }
 
-    const hashedPassword = await Bun.password.hash(newPassword, 'bcrypt')
+    const hashedPassword = bcrypt.hashSync(newPassword, 7)
     await User.updateOne(
       { phoneNumber: phoneNumber.replace(/[()\-\s]/g, '') },
       { $set: { password: hashedPassword } },
@@ -105,7 +106,7 @@ async function attempt(
     !foundUser
     || !foundUser.password
     // config.env !== "developer" &&
-    || !Bun.password.verifySync(password, foundUser.password, 'bcrypt')
+    || !bcrypt.compare(password, foundUser.password)
   ) {
     // return an error if the user is not found or the password doesn't match
     throw createError({
