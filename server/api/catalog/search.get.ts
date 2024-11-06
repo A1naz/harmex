@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
     : { }
 
   let services: any = await Service.find(query)
-    .select('-_id -__v')
+    .select('-_id name items.slug path items.title items.path path')
     .sort({ disabled: 1 })
 
   if (searchQuery) {

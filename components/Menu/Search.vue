@@ -100,7 +100,7 @@ function toFound(path: string) {
             <button
               v-for="service in item.items" :key="service.path"
               class="w-full bg-transparent text-[#909090] hover:text-black rounded-lg hover:bg-[#f5f7ff] border-white  py-2 px-4 "
-              @click="toFound(`/${item.slug}${service.path}`)"
+              @click="toFound(`/${item.name.toLowerCase()}${service.path}`)"
             >
               {{ `${item?.name} ${service.title}` }}
             </button>
