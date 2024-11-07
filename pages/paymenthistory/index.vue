@@ -19,8 +19,10 @@ const tableType = ref('general')
 const currentPage = ref(1)
 
 const headersForTable = ref<any>([])
+const loading = ref(false)
 
 async function getData() {
+  loading.value = true
   const { data } = await useFetch(
     '/api/finance/finance-data',
     /* @ts-ignore */
@@ -34,6 +36,7 @@ async function getData() {
     },
   )
   fetchedData.value = data.value
+  loading.value = false
 }
 getData()
 
@@ -50,6 +53,7 @@ getData()
 
 async function updateTableData() {
   tableData.value = []
+  loading.value = true
   await getData()
 
   switch (tableType.value) {
@@ -72,6 +76,7 @@ async function updateTableData() {
         orderId: item.orderId,
         comment: item.comment,
       }))
+      loading.value = false
       break
 
     case 'replenishment':
@@ -90,7 +95,8 @@ async function updateTableData() {
           orderId: item.orderId,
           comment: item.comment,
         }))
-      break
+      loading.value = false
+        break
 
     case 'expenses':
       headersForTable.value = [
@@ -110,7 +116,8 @@ async function updateTableData() {
           orderId: item.orderId,
           article: item.article,
         }))
-      break
+      loading.value = false
+        break
 
     case 'partner':
       headersForTable.value = [
@@ -128,7 +135,8 @@ async function updateTableData() {
           orderId: item.orderId,
           article: item.article,
         }))
-      break
+      loading.value = false
+        break
 
     case 'genealogy':
       headersForTable.value = [
@@ -142,7 +150,8 @@ async function updateTableData() {
           username: item.username,
           date: item.date,
         }))
-      break
+      loading.value = false
+        break
   }
 }
 
@@ -163,7 +172,7 @@ watch(() => currentPage.value, updateTableData)
     />
     <div class="divider bg- lg:divider-horizontal" />
 
-    <div class="flex flex-col gap-6 w-full lg:max-w-[60vw]">
+    <div class="flex flex-col gap-6 w-full flex-1">
       <div class="flex gap-4 items-center flex-wrap">
         <button
           v-for="(button, index) in buttonsLine" :key="index"
@@ -182,7 +191,8 @@ watch(() => currentPage.value, updateTableData)
           </div>
         </button>
       </div>
-      <FinanceTable :table-data="tableData" :headers="headersForTable" @swap-page="(page: number) => { currentPage = page }" />
+      <FinanceTable :table-data="tableData" :loading="loading" :headers="headersForTable" @swap-page="(page: number) => { currentPage = page }" />
+
     </div>
   </div>
 </template>

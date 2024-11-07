@@ -147,9 +147,9 @@ const transferModalShow = ref(false)
           >Доходность зависит от количества приглашенных пользователей</span>
         </div>
       </div>
-      <div class="background-div flex justify-center p-[14px]">
+      <div class="background-div flex justify-start">
         <div
-          class="bg-base-100 self-end ml-3 mb-10 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm"
+          class="bg-base-100 self-start ml-3 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm"
         >
           <div class="font-bold text-[0.9rem] whitespace-nowrap">
             {{ `${firstLevelReferrals} человек` }}
@@ -200,57 +200,18 @@ const transferModalShow = ref(false)
           <div
             class="bg-white rounded-lg px-[15px] py-2.5 border border-[#ededed]"
           >
-            <div class="flex mb-3 gap-2 flex-wrap">
-              <h3 class="flex my-auto">
-                Персональный промокод:
-              </h3>
-              <button
-                disabled
-                class="text-xs text-[#1B38CA] flex mt-auto mb-0.5"
-              >
-                Сгенерировать
-              </button>
-            </div>
-            <div
-              class="join bg-[#F7F7F7]] rounded-lg border border-none md:flex justify-between gap-2 items-center"
-            >
-              <div class="join-item bg-base-200 rounded-lg w-full flex gap-1">
-                <input
-                  type="text"
-                  placeholder="Введите промокод"
-                  class="input join-item w-full placeholder:text-[#909090] border-none bg-base-200"
-                  disabled
-                >
-
-                <button
-                  class="justify-end text-opacity-50 hover:text-opacity-100 m-3"
-                  disabled
-                >
-                  <IconCSS
-                    name="fluent:checkmark-square-24-regular"
-                    size="30"
-                    class="text-[#909090]"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="bg-white rounded-lg px-[15px] py-2.5 border border-[#ededed]"
-          >
             <h3 class="mb-1 sm:mb-3">
               QR-код:
             </h3>
             <div
-              class="join bg-white rounded-lg border border-none flex justify-between gap-2 items-center justify-self-end"
+              class="join bg-white rounded-lg border border-none flex justify-between gap-2 items-center justify-self-end w-full"
             >
-              <div class="join-item bg-[#F7F7F7] rounded-lg w-full flex gap-1">
+              <div class="join-item bg-[#F7F7F7] rounded-lg w-full flex gap-1 ">
                 <button
                   class="w-full text-[#1B38CA] hover:text-opacity-100 m-3 flex items-center gap-3"
                 >
                   <img
-                    class="w-8 h-8 rounded-none"
+                    class="w-6 h-6 rounded-none"
                     src="/icons/figma/finance/qrIcon.svg"
                     alt="qr"
                   >
@@ -277,18 +238,20 @@ const transferModalShow = ref(false)
 <style scoped>
 .background-div {
   width: 100%;
-  height: 200px;
+  height: 160px;
   background-image: url('/icons/figma/finance/graph.svg');
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center 50%;
+  background-position: top;
 }
+
 .backgroundMini-div {
   width: 100%;
   height: 200px;
   background-image: url('/icons/figma/finance/miniGraph.svg');
   background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center 50%;
+  background-size: contain;
+  background-position: center;
 }
+
 </style>
