@@ -319,6 +319,13 @@ async function copyToClipboard(text: string) {
         </div>
       </div>
     </div>
+    <div class="font-medium flex gap-1">
+      Забирайте товары в течение 
+      <span class="text-[#ff6666]">
+        5 дней
+      </span>
+      после прибытия на пвз!
+    </div>
     <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
       <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
         <div v-if="deliveries.length" class="export lg:absolute right-0 top-0">
