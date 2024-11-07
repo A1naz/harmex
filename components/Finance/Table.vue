@@ -16,17 +16,14 @@ const props = defineProps({
 
 const currentPage = ref(1)
 const itemsPerPage = ref(15)
-const totalPages = computed(() => Math.ceil(240 / itemsPerPage.value))
+const totalPages = 100
 
-const paginatedData = computed(() => {
-  return props.tableData
-})
 
 const displayPages = computed(() => {
   const pages = []
   const maxVisiblePages = 5
   let start = Math.max(currentPage.value - 2, 1)
-  let end = Math.min(start + maxVisiblePages - 1, totalPages.value)
+  let end = Math.min(start + maxVisiblePages - 1, totalPages)
 
   if (end - start + 1 < maxVisiblePages) {
     start = Math.max(end - maxVisiblePages + 1, 1)
@@ -61,7 +58,7 @@ function swapPage(swapTo: number) {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="row in paginatedData" :key="row.id" class="table-row">
+          <tr v-for="row in  props.tableData" :key="row.id" class="table-row">
             <td v-for="(header, index) in props.headers" :key="index" class="table-cell">
               <span >{{ row[header.value] }}</span>
             </td>
