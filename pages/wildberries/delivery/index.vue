@@ -282,6 +282,13 @@ function changeFilter(e: any) {
 
 <template>
   <div>
+    <div class="font-medium flex gap-1">
+      Забирайте товары в течение 
+      <span class="text-[#ff6666]">
+        5 дней
+      </span>
+      после прибытия на пвз!
+    </div>
     <div class="">
       <div class="flex lg:hidden mt-2">
         <div v-if="deliveries.length" class="export">

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Доставки',
 })
 

@@ -4,8 +4,8 @@ import { SelectOptionsReviews as SelectOptions } from '~/data/enums'
 const { notify } = useNotification()
 
 definePageMeta({
-  layout: 'app',
-  auth: true,
+  layout: 'app', 
+ middleware: 'auth',
   title: 'Отзывы Wildberries',
 })
 

@@ -5,7 +5,7 @@ const { notify } = useNotification()
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Отзывы Ozon',
 })
 

@@ -37,7 +37,7 @@ const lastItemDateRange = ref<any>([])
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Добавить выкупы Wildberries',
 })
 const isUserWarned: any = ref(false)

@@ -8,7 +8,7 @@ const feedbacksCount = ref(0)
 // const maxPage = computed(() => Math.ceil(feedbacksCount.value / limit.value))
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Добавить лайки',
 })
 const { notify } = useNotification()
