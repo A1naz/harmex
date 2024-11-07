@@ -68,19 +68,19 @@ function swapPage(swapTo: number) {
           </tr>
         </tbody>
       </table>
-      <div v-if="tableData.length === 0 && !loading">
+      <div v-if="tableData.length === 0 && !loading ">
         <Hero />
       </div>
       <div v-if="loading" class="flex w-full justify-center" >
         <span class="loading loading-spinner loading-lg bg-[#4960d3]"></span>
       </div>
     </div>
-    <div v-if="tableData.length > 0" class="pagination-controls flex items-center mt-auto">
+    <div class="pagination-controls flex items-center mt-auto mb-5">
       <button class="pagination-button flex items-center" :disabled="currentPage === 1" @click="swapPage(-1)">
         <Icon name="solar:alt-arrow-left-linear" size="24" />
       </button>
       
-      <button v-for="page in displayPages" :key="page" class="pagination-button" :class="{ active: currentPage === page }"
+      <button v-for="page in displayPages" :key="page" class="pagination-button" :class="{ active : currentPage === page }"
         @click="[currentPage = page, swapPage(0)]">
         {{ page }}
       </button>
@@ -99,11 +99,13 @@ function swapPage(swapTo: number) {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  min-height: 85vh;
 }
 
 .table-wrapper {
   overflow-x: auto;
   width: 60vw;
+  flex-grow: 1;
 }
 
 .finance-table {
