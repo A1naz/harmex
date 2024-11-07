@@ -96,7 +96,7 @@ async function updateEmail() {
           </div>
           <p
             class=" lg:mx-3"
-            :class="{ 'text-[#5ba270]': message === 'Почта успешно изменена', 'text-[#CC5F5F]': message !== 'Почта успешно изменена' }"
+            :class="{ 'text-[#5ba270]': isEmailSent, 'text-[#CC5F5F]': !isEmailSent }"
           >
             {{ message }}
           </p>
