@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  auth: true,
+  middleware: 'auth',
   title: 'Экспорт',
   colorMode: 'light',
 })

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { notify } from '@kyvg/vue3-notification'
 
-definePageMeta({ auth: false, layout: 'app' })
+definePageMeta({  middleware: 'auth', layout: 'app' })
 
 const { user } = useUserSession()
 const route: any = useRoute()

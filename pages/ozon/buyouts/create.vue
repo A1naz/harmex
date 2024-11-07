@@ -44,7 +44,7 @@ const products = computed(() => store.createProducts)
 
 definePageMeta({
   layout: 'app',
-  auth: true,
+  middleware: 'auth',
   title: 'Добавить выкупы Ozon',
 })
 const isUserWarned: any = ref(false)

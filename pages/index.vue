@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-definePageMeta({ layout: 'app' })
+definePageMeta({ layout: 'app', middleware: 'auth' })
 
 const { user } = useUserSession()
 
