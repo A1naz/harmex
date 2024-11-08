@@ -19,25 +19,23 @@ defineEmits(['setFavourites', 'vote'])
 
 <template>
   <main class="flex-1 mx-3">
-    <h1 class="text-2xl font-bold mb-6" />
     <div class="flex flex-wrap gap-5 w-full justify-start">
       <div
         v-for="(social, index) in items"
         :key="index"
-        class="card border rounded-lg shadow-md w-[360px] p-3 relative "
+        class="card border rounded-lg shadow-md w-[250px] p-3 relative "
       >
-        <div class="flex w-full">
-          <div class="flex items-center justify-center w-[170px] h-[170px] relative">
+        <div class="flex flex-col gap-2 w-full">
+          <div class="flex items-start justify-center w-full relative">
             <NuxtImg
               :src="social.mainImage"
               :alt="social.name"
               class="w-full"
             />
           </div>
-          <div class="pl-4">
             <button
               v-if="!social.disabled"
-              class="heart-btn absolute top-2 right-2"
+              class="heart-btn absolute top-3 right-4"
               @click="$emit('setFavourites', `/catalog/${social.slug}`)"
             >
               <IconCSS
@@ -53,25 +51,28 @@ defineEmits(['setFavourites', 'vote'])
                 size="20"
               />
             </button>
-            <h2 class="text-[15px] font-semibold">
+            <h2 class="text-[20px] font-semibold">
               {{ social.name }}
             </h2>
-            <p class="text-[13px] font-medium">
+           <div> 
+            <p class="text-[15px] font-normal">
               Доступные услуги:
             </p>
-            <ul class="text-sm text-[#909090] underline text-[13px]">
-              <li v-for="(service, i) in social.items.slice(0, 5)" :key="i">
+            <div class="flex flex-wrap gap-x-5 text-[#fe6601c2] text-[15px]">
+              <NuxtLink :to="social.disabled ? '' : `/${social.slug}${service.path}`" v-for="(service, i) in social.items.slice(0, 5)" :key="i">
+                <Icon name="clarity:paperclip-line" size="16" class="text-[#c2c2c2]" />
+
                 {{ service.title }}
-              </li>
-            </ul>
+              </NuxtLink>
+            </div>
+          </div>
+          <div  v-if="!social.disabled" class="flex w-full justify-center self-end mt-7">
             <NuxtLink
-              v-if="!social.disabled"
-              :to="`/catalog/${social.slug}`"
-              class="text-[16px] absolute font-medium cursor-pointer bottom-2 hover:text-[#F72585]"
-            >
-              Смотреть все
-              <Icon class="text-[#F72585] -mt-0.5" name="jam:arrow-right" size="18px" />
-            </NuxtLink>
+            :to="`/catalog/${social.slug}`"
+            class="text-[16px] w-[calc(100%-24px)] py-0.5 flex justify-center font-medium cursor-pointe absolute bottom-3 border border-1 border-gray-200 hover:text-[#F72585]"
+          >
+            Смотреть все
+          </NuxtLink>
           </div>
         </div>
         <button

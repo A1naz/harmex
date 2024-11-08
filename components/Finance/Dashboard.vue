@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
 
 const props = defineProps({
   balance: { type: Number, required: true },
@@ -14,6 +13,7 @@ const props = defineProps({
 })
 
 const currency = useCurrency()
+const { notify } = useNotification()
 
 async function copyToClipboard(text: string) {
   await navigator.clipboard.writeText(text)
@@ -39,6 +39,49 @@ const cards = [
 const modalShow = ref(false)
 const balanceModalShow = ref(false)
 const transferModalShow = ref(false)
+const qrCode = ref('')
+const qrLoading = ref(false)
+
+async function getQr() {
+  qrLoading.value = true
+  const { data }: any = await useFetch('/api/finance/getCode', {
+    method: 'GET',
+    query: {
+      refUrl: props.refUrl,
+    },
+  })
+  qrCode.value = data.value.qrCode
+  qrLoading.value = false
+}
+getQr()
+
+async function copyImageToClipboard(base64Image: any) {
+  try {
+    const binaryData = atob(base64Image.split(',')[1])
+    const arrayBuffer = new ArrayBuffer(binaryData.length)
+    const uint8Array = new Uint8Array(arrayBuffer)
+    for (let i = 0; i < binaryData.length; i++) {
+      uint8Array[i] = binaryData.charCodeAt(i)
+    }
+
+    const blob = new Blob([uint8Array], { type: 'image/png' })
+
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [blob.type]: blob,
+      }),
+    ])
+    useFetch('/api/partner/isShared', { method: 'GET' })
+    notify({
+      title: 'Изображение скопировано в буфер обмена',
+    })
+  } catch (error) {
+    // console.error('Ошибка при копировании изображения в буфер обмена:', error);
+    notify({
+      title: 'Ошибка при копировании изображения',
+    })
+  }
+}
 </script>
 
 <template>
@@ -47,60 +90,52 @@ const transferModalShow = ref(false)
       class="flex w-full bg-[#f5f7ff] rounded-lg drop-shadow-sm overflow-hidden"
     >
       <div class="flex flex-col w-full">
-        <div class="flex justify-between px-[20px] py-[15px] mb-10">
-          <div class="flex flex-col gap-[10px]">
+        <div class="flex justify-between px-[20px] py-[15px] mb-20">
+          <div class="flex flex-col gap-[6px]">
             <span class="text-lg font-semibold">Общий баланс</span>
             <span class="font-bold text-xl">
               {{ currency.format(props.balance) || 0 }}
             </span>
           </div>
-        </div>
-        <div class="backgroundMini-div flex justify-start p-[14px]">
-          <div
-            class="bg-transparent self-end mb-5 flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
-          >
-            <span class="text-lg font-semibold">Кошелек: {{ currency.format(props.balance) || 0 }}</span>
-            <span class="text-lg font-semibold">Партнерка: {{ currency.format(props.refBalance) || 0 }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="relative flex justify-center items-center">
-        <div
-          v-for="(card, index) in cards"
-          :class="
-            index !== 0
-              ? 'from-[#c5c5c5] to-[#dcdcdc] transform -translate-x-[76px] translate-y-0 z-0'
-              : 'from-[#dcdcdc] to-[#c5c5c5] z-10'
-          "
-          class="border-4 border-[#dcdcdc] absolute rounded-[4rem] w-[300px] h-[300px] bg-gradient-to-r shadow-lg flex flex-col justify-between items-start text-white px-[31px] pt-[33px] pb-[44px]"
-        >
-          <nuxt-img
-            class="w-20 h-20"
-            :src="`icons/figma/finance/${card.cardType}.svg`"
-          />
 
-          <div class="flex flex-col justify-start text-black">
-            <span class="text-lg tracking-wider">
-              {{ card.cardNumber }}
-            </span>
-            <span>{{ card.cardHolder }}</span>
+          <div class="flex gap-2 items-start p-1">
+            <nuxt-img width="40" src="/icons/figma/finance/mc.svg" />
+            <nuxt-img width="40" src="/icons/figma/finance/visa.svg" />
           </div>
+        </div>
+        <div class="flex justify-between p-[14px]">
+          <div
+            class="bg-transparent self-end flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
+          >
+            <span class=" font-normal">Партнерка</span>
+            <span class="text-lg font-semibold">{{ currency.format(props.refBalance) || 0 }}</span>
+
+          </div>
+          <div
+            class="bg-transparent self-end flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
+          >
+            <span class=" font-normal white">Кошелек</span>
+            <span class="text-lg font-semibold white">{{ currency.format(props.balance) || 0 }}</span>
+
+          </div>
+
+
         </div>
       </div>
     </div>
 
     <div class="flex gap-[5px] justify-center">
       <button
-        class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
+        class="btn btn-outline border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
         @click="modalShow = true"
       >
         <div class="flex items-center justify-center">
           <Icon
             name="solar:hand-money-linear"
-            class="text-[#1b38ca] group-active:text-white"
+            class="text-[#e46e46] group-active:text-white"
             size="22px"
           />
-          <span class="ml-3">Вывод</span>
+          <span class="ml-3 text-[#e46e46] group-active:text-white">Вывод</span>
         </div>
       </button>
 
@@ -119,42 +154,43 @@ const transferModalShow = ref(false)
       </button> -->
 
       <button
-        class="btn btn-outline border-[#1b38ca] bg-white hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl active:bg-[#1934bd] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
+        class="btn btn-outline border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
         @click="balanceModalShow = true"
       >
         <div class="flex items-center justify-center">
           <Icon
             name="solar:hand-money-linear"
-            class="text-[#1b38ca] group-active:text-white"
+            class="text-[#e46e46] group-active:text-white"
             size="22px"
           />
-          <span class="ml-3">Пополнение</span>
+          <span class="ml-3  text-[#e46e46] group-active:text-white">Пополнение</span>
         </div>
       </button>
     </div>
 
-    <div class="w-full bg-[#f5f7ff] rounded-lg drop-shadow-sm">
+    <div class="flex flex-col w-full  rounded-lg drop-shadow-sm bg-gradient-to-t border border-[#f0f0f0] from-[#f2f4fe] from-[5%] to-[#fefefe] min-h-[260px]">
       <div class="flex justify-between p-[14px]">
         <div class="flex flex-col gap-[10px]">
-          <span class="text-lg font-semibold">Партнерский счет</span>
+          <span class="text-lg font-normal">Партнерский счет</span>
           <span class="font-bold text-xl">
             {{ currency.format(props.refBalance) || 0 }}
           </span>
         </div>
-        <div class="flex w-2/5">
+        
+      </div>
+      <div class="flex p-[14px]">
           <span
-            class="text-sm text-center text-[#909090] flex-wrap whitespace-pre-wrap"
+            class="text-xs text-[0.8rem] text-center text-[#909090] flex-wrap whitespace-pre-wrap"
           >Доходность зависит от количества приглашенных пользователей</span>
         </div>
-      </div>
-      <div class="background-div flex justify-start">
+      <div class="flex justify-start mt-auto w-full">
         <div
-          class="bg-base-100 self-start ml-3 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm"
+          class="bg-base-100 self-start m-3 mt-0 gap-3 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm w-full border border-[#f0f0f0]"
         >
-          <div class="font-bold text-[0.9rem] whitespace-nowrap">
+          <div class="font-bold text-[0.9rem] whitespace-nowrap text-[#9e9e9e]">
             {{ `${firstLevelReferrals} человек` }}
           </div>
-          <div class="text-primary text-sm text-center">
+          <div class="text-primary text-[1rem] text-start text-[#71a7e5] font-bold">
             {{ `${firstLevelReferrals * 750} ₽` }}
           </div>
         </div>
@@ -162,7 +198,7 @@ const transferModalShow = ref(false)
     </div>
 
     <div class="flex flex-col gap-5 w-full">
-      <div class="bg-[#f5f7ff] rounded-lg px-5 flex flex-col gap-[18px] py-3">
+      <div class="bg-[#f2f3f5] rounded-lg px-5 flex flex-col gap-[18px] py-3">
         <div class="flex gap-2">
           <h2 class="text-lg font-bold">
             Партнерка
@@ -177,7 +213,7 @@ const transferModalShow = ref(false)
             </h3>
 
             <div
-              class="bg-[#F7F7F7] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto"
+              class="bg-[#f2f3f5] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto"
             >
               <span
                 class="cursor-pointer hover:underline truncate"
@@ -206,16 +242,21 @@ const transferModalShow = ref(false)
             <div
               class="join bg-white rounded-lg border border-none flex justify-between gap-2 items-center justify-self-end w-full"
             >
-              <div class="join-item bg-[#F7F7F7] rounded-lg w-full flex gap-1 ">
+              <div class="join-item bg-transparent rounded-lg w-full flex gap-1 ">
                 <button
-                  class="w-full text-[#1B38CA] hover:text-opacity-100 m-3 flex items-center gap-3"
+                  @click="copyImageToClipboard(qrCode)"
+                  class="w-full text-[#1B38CA] hover:text-opacity-100 flex items-center gap-3"
                 >
-                  <img
-                    class="w-6 h-6 rounded-none"
-                    src="/icons/figma/finance/qrIcon.svg"
-                    alt="qr"
-                  >
-                  <span class="white-space-nowrap text-sm text-[#1B38CA]">QR-код</span>
+                <NuxtImg
+                  v-if="!qrLoading"
+                  class="rounded-lg"
+                  height="200"
+                  width="200"
+                  :src="qrCode"
+                />
+                <div v-else class="w-full flex justify-center items-center">
+                  <span class="loading loading-dots loading-lg text-primary"></span>
+                </div>
                 </button>
               </div>
             </div>
