@@ -11,10 +11,10 @@ export default async function (page: number, user: any) {
     return {
       summ: el.summ,
       date: el.dataoperation.toISOString().split('T')[0],
-      source: 'Баланс',
-      service: el.type,
+      source: 'Пополнение',
+      service: 'Кошелек ',
       article: el.article,
-      orderId: el.basisoperation,
+      orderId: el._id,
       comment: el.comment,
     }
   })
