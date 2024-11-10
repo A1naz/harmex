@@ -9,7 +9,7 @@ defineEmits(['setFavourites'])
 </script>
 
 <template>
-  <div class="card border p-2.5 rounded-lg shadow-md text-center w-[201px] h-[295px]">
+  <div class="card border p-2.5 rounded-lg shadow-md text-center w-[201px]">
     <div>
       <NuxtImg :src="item.mainImage || 'null'" class="mx-auto rounded-xl" width="170px" height="105px" />
       <button
@@ -29,27 +29,21 @@ defineEmits(['setFavourites'])
           size="20"
         />
       </button>
+      
     </div>
     <div class="w-full text-start mt-3">
       <div class="badge bg-[#FCD1A1] text-[#653600] whitespace-nowrap relative text-[11.5px] text-start -ml-1">
-        {{ item.name }} {{ item.items[index].title }}
+        {{ item.items[index].title }}
       </div>
-      <p class="text-[16px] font-bold text-gray-800">
+      <p class="text-[16px] font-bold text-gray-800 mb-2">
         от {{ item.price }} ₽
       </p>
     </div>
-    <p class="truncate-text text-[#909090] mt-2 text-[14px] text-start">
-      Подписки на аккаунт можно увеличить ИИ
-    </p>
-    <p class="truncate-text text-[#212121] mb-1 text-[14px] text-start">
-      Продвинуто: 28 834
-      <span class="text-xl text-[#FF9966]">
-        <Icon name="mage:star-fill" size="16px" />
-      </span>
-      • 5.0
-    </p>
-    <NuxtLink :to="`/${item.slug}${item.items[index].path}`" class="btn bg-[#F5F7FF] w-full rounded-xl">
+    <a v-if="item.items[index].path.includes('https')" :href="`${item.items[index].path}`" target="_blank"  class="btn bg-[#F5F7FF] w-full rounded-xl">
       {{ item.unavailable ? 'Предзаказ' : 'Перейти' }}
+    </a>
+    <NuxtLink v-else :to="`/${item.slug}${item.items[index].path}`"  class="btn bg-[#F5F7FF] w-full rounded-xl">
+      {{ item.unavailable ? 'Предзаказ' : 'Перейти'  }}
     </NuxtLink>
   </div>
 </template>

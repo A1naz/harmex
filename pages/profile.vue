@@ -299,7 +299,7 @@ watch(() => persistStore.language, (newLanguage) => {
                 placeholder="Новый пароль" class="input input-bordered w-full"
               >
               <button class="btn btn-primary xl:w-40" @click="updatePassword">
-                "Изменить"
+                Изменить
               </button>
             </div>
           </div>

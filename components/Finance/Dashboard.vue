@@ -85,7 +85,7 @@ async function copyImageToClipboard(base64Image: any) {
 </script>
 
 <template>
-  <div class="w-full flex flex-col gap-[25px] max-w-[500px] mb-4">
+  <div class="w-full flex flex-col gap-[25px] max-w-[400px] mb-4">
     <div
       class="flex w-full bg-[#f5f7ff] rounded-lg drop-shadow-sm overflow-hidden"
     >
@@ -126,7 +126,7 @@ async function copyImageToClipboard(base64Image: any) {
 
     <div class="flex gap-[5px] justify-center">
       <button
-        class="btn btn-outline border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
+        class="btn btn-outline border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[50px] rounded-xl relative group"
         @click="modalShow = true"
       >
         <div class="flex items-center justify-center">
@@ -154,7 +154,7 @@ async function copyImageToClipboard(base64Image: any) {
       </button> -->
 
       <button
-        class="btn btn-outline border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[70px] rounded-xl relative group"
+        class="btn btn-outline border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[40px] rounded-xl relative group"
         @click="balanceModalShow = true"
       >
         <div class="flex items-center justify-center">

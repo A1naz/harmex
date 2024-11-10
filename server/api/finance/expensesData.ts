@@ -1,4 +1,5 @@
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
+import historyType from './historyType'
 
 export default async function (page: number, user: any) {
   const res = await paymenthistory
@@ -12,7 +13,7 @@ export default async function (page: number, user: any) {
       summ: el.summ,
       date: el.dataoperation.toISOString().split('T')[0],
       source: el.mp,
-      service: el.type,
+      service: historyType(el.type),
       article: el.article,
       orderId: el.basisoperation,
       comment: el.comment,

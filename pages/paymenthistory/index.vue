@@ -84,6 +84,7 @@ async function updateTableData() {
         { value: 'summ', label: 'Сумма' },
         { value: 'date', label: 'Дата' },
         { value: 'source', label: 'Источник' },
+        { value: 'service', label: 'Услуга' },
         { value: 'orderId', label: 'ID заказа' },
         { value: 'comment', label: 'Комментарий' },
       ]
@@ -94,6 +95,7 @@ async function updateTableData() {
           source: item.source,
           orderId: item.orderId,
           comment: item.comment,
+          service: item.service,
         }))
       loading.value = false
         break
@@ -164,7 +166,7 @@ watch(() => currentPage.value, updateTableData)
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row mt-8 gap-8">
+  <div class="flex flex-col sm:flex-row mt-8 gap-2">
     <FinanceDashboard
       :second-level-percent="10" :ref-balance="1300" :balance="5700" :ref-count="5"
       :second-level-referrals="1" :first-level-referrals="12" ref-url="http://localhost:8080/partner" :reward-percent="5"
