@@ -22,6 +22,14 @@ const walletError = ref({ title: 'Выберите счет списания', v
 const selectedWalletType = ref<string | null>('wallet')
 const amountRaw = ref(0)
 const partnerAgreement = ref(false)
+
+async function getPartnerAgreement() {
+  const { data }: any = await useFetch('/api/finance/partnerAgreement')
+  partnerAgreement.value = data.value
+}
+
+await getPartnerAgreement()
+
 const withdrawForm = ref({
   amount: currency.format(amountRaw.value),
   walletType: modalType.value,
@@ -146,9 +154,9 @@ function updateAmount(event: Event) {
           </div>
           <div v-else>
             Партнёрское соглашение не заключено
-            <NuxtLink to="" class="link link-primary" @click="partnerAgreement = true">
+            <NuxtLinkLocale class="link link-primary" to="/profile?partnerDetailsModal=true">
               Перейти
-            </NuxtLink>
+            </NuxtLinkLocale>
           </div>
           <div class="w-full flex justify-end">
             <button :disabled="!partnerAgreement" class="btn btn-primary" @click="modalType = 'finalForm'">

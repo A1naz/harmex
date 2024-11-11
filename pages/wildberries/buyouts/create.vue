@@ -1,6 +1,5 @@
 <script setup lang="tsx">
 import type { Rule } from '@/data/buyout/rules'
-import type { ISearchQueryChange } from '@/stores/wildberriesBuyout'
 import { rules } from '@/data/buyout/rules'
 import { useWindowSize } from '@vueuse/core'
 

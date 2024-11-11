@@ -3,41 +3,41 @@ import { ConfirmInn } from '~/server/lib/models/ConfirmInn'
 export default eventHandler(async (event) => {
   const { inn, phoneNumber }: any = getQuery(event)
 
-  if (inn.length < 10) {
-    throw createError({
-      statusCode: 400,
-      message: 'ИНН должен содержать 10 цифр',
-    })
-  }
+  // if (inn.length < 10) {
+  //   throw createError({
+  //     statusCode: 400,
+  //     message: 'ИНН должен содержать 10 цифр',
+  //   })
+  // }
 
-  const confirm = await ConfirmInn.findOne({
-    $or: [{ inn }, { phone: phoneNumber }],
-  })
+  // const confirm = await ConfirmInn.findOne({
+  //   $or: [{ inn }, { phone: phoneNumber }],
+  // })
 
-  if (confirm) {
-    const lastDate = new Date(confirm.date)
-    const currentDate = new Date()
-    const difference = Math.abs(currentDate.getTime() - lastDate.getTime())
+  // if (confirm) {
+  //   const lastDate = new Date(confirm.date)
+  //   const currentDate = new Date()
+  //   const difference = Math.abs(currentDate.getTime() - lastDate.getTime())
 
-    if (difference < 60000) {
-      return {
-        status: 'error',
-        error: 'С прошлого поиска прошло меньше минуты',
-      }
-    }
+  //   if (difference < 60000) {
+  //     return {
+  //       status: 'error',
+  //       error: 'С прошлого поиска прошло меньше минуты',
+  //     }
+  //   }
 
-    confirm.date = new Date()
-    await confirm.save()
-  }
-  else {
-    const newConfirm = new ConfirmInn({
-      inn,
-      phone: phoneNumber,
-      date: new Date(),
-    })
+  //   confirm.date = new Date()
+  //   await confirm.save()
+  // }
+  // else {
+  //   const newConfirm = new ConfirmInn({
+  //     inn,
+  //     phone: phoneNumber,
+  //     date: new Date(),
+  //   })
 
-    await newConfirm.save()
-  }
+  //   await newConfirm.save()
+  // }
 
   const rawData: any = await $fetch(
     `https://app.marketmonstr.pro/api/organization/getData?inn=${inn}`,

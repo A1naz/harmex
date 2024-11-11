@@ -1,8 +1,8 @@
 import type { H3Event } from 'h3'
 import { User } from '~~/server/lib/models/User'
+import bcrypt from 'bcrypt'
 import { v4 as uuid } from 'uuid'
 import { generateUniqueUsername } from './createUsername'
-import bcrypt from 'bcrypt'
 
 // Logs the user in as the given user model
 async function login(event: H3Event<Request>, user: IUser) {
