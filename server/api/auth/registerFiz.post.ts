@@ -1,5 +1,5 @@
 import MailService from '~~/server/lib/mailService.js'
-import { Referral } from '~~/server/lib/models/Referral'
+import { HarmexReferrals } from '~/server/lib/models/HarmexReferrals'
 import { User } from '~~/server/lib/models/User'
 import bcrypt from 'bcrypt'
 import { v4 as uuid } from 'uuid'
@@ -97,13 +97,13 @@ export default eventHandler(async (event) => {
       const refCount = inviter?.partner.refCount ?? 0
       inviter.partner.refCount = refCount + 1
 
-      const referralFound = await Referral.findOne({ user: inviter })
+      const referralFound = await HarmexReferrals.findOne({ user: inviter })
       if (referralFound) {
         referralFound.referrals.push({ user: user._id, date: new Date() })
         await referralFound.save()
       }
       else {
-        await Referral.create({
+        await HarmexReferrals.create({
           user: inviter,
           referrals: [{ user: user._id, date: new Date() }],
         })

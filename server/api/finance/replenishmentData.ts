@@ -1,11 +1,11 @@
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 
-export default async function (page: number, user: any) {
+export default async function (user: any, page?: number) {
   const res = await paymenthistory
     .find({ user: user._id, type: 'deposit' })
     .sort({ dataoperation: -1 })
-    .skip((page - 1) * 25)
-    .limit(25)
+    .skip(page ? (page - 1) * 25 : 0)
+    .limit(page ? 25 : 1000)
 
   const format = res.map((el: any) => {
     return {
