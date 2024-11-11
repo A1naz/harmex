@@ -17,22 +17,22 @@ export default defineEventHandler(async (event) => {
   switch (tableType) {
     case 'general':
     {
-      const data: any[] = await generalData(page, user)
+      const data: any[] = await generalData(user, page)
       return data
     }
     case 'replenishment':
     {
-      const data: any[] = await replenishmentData(page, user)
+      const data: any[] = await replenishmentData(user, page)
       return data
     }
     case 'expenses':
     {
-      const data: any[] = await expensesData(page, user)
+      const data: any[] = await expensesData(user, page)
       return data
     }
     case 'partner':
     {
-      const data: any[] = await partnerData(page, user)
+      const data: any[] = await partnerData(user, page)
       return data
     }
 
@@ -135,7 +135,6 @@ export default defineEventHandler(async (event) => {
         username: '+77777777777777',
         commission: formatNumber(2000),
       },
-      // Add more mock data as needed
     ]
   }
 

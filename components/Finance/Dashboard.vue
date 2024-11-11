@@ -71,7 +71,6 @@ async function copyImageToClipboard(base64Image: any) {
         [blob.type]: blob,
       }),
     ])
-    useFetch('/api/partner/isShared', { method: 'GET' })
     notify({
       title: 'Изображение скопировано в буфер обмена',
     })
@@ -89,18 +88,20 @@ async function copyImageToClipboard(base64Image: any) {
     <div
       class="flex w-full bg-[#f5f7ff] rounded-lg drop-shadow-sm overflow-hidden"
     >
-      <div class="flex flex-col w-full">
-        <div class="flex justify-between px-[20px] py-[15px] mb-20">
+      <div class="relative flex flex-col w-full">
+        <div class="absolute inset-0 w-full h-full bg-no-repeat bg-cover bg-[url('/icons/figma/finance/cardBg.jpeg')] transform scale-x-[-1]"></div>
+
+        <div class="flex justify-between px-[20px] py-[15px] mb-20 z-[2]">
           <div class="flex flex-col gap-[6px]">
             <span class="text-lg font-semibold">Общий баланс</span>
             <span class="font-bold text-xl">
-              {{ currency.format(props.balance) || 0 }}
+              {{ currency.format(props.balance + props.refBalance) || 0 }}
             </span>
           </div>
 
           <div class="flex gap-2 items-start p-1">
-            <nuxt-img width="40" src="/icons/figma/finance/mc.svg" />
-            <nuxt-img width="40" src="/icons/figma/finance/visa.svg" />
+            <nuxt-img width="45" src="/icons/figma/finance/mc.svg" />
+            <nuxt-img width="45" src="/icons/figma/finance/visa.svg" />
           </div>
         </div>
         <div class="flex justify-between p-[14px]">
@@ -108,7 +109,7 @@ async function copyImageToClipboard(base64Image: any) {
             class="bg-transparent self-end flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
           >
             <span class=" font-normal">Партнерка</span>
-            <span class="text-lg font-semibold">{{ currency.format(props.refBalance) || 0 }}</span>
+            <span class="text-lg font-semibold">{{ (props.refBalance || 0).toFixed(1) + " ₽" }}</span>
 
           </div>
           <div
@@ -173,14 +174,13 @@ async function copyImageToClipboard(base64Image: any) {
         <div class="flex flex-col gap-[10px]">
           <span class="text-lg font-normal">Партнерский счет</span>
           <span class="font-bold text-xl">
-            {{ currency.format(props.refBalance) || 0 }}
-          </span>
+            {{ (props.refBalance || 0).toFixed(1) + " ₽" }}  </span>
         </div>
         
       </div>
       <div class="flex p-[14px]">
           <span
-            class="text-xs text-[0.8rem] text-center text-[#909090] flex-wrap whitespace-pre-wrap"
+            class="text-xs text-[0.8rem] text-left text-[#909090] flex-wrap whitespace-pre-wrap"
           >Доходность зависит от количества приглашенных пользователей</span>
         </div>
       <div class="flex justify-start mt-auto w-full">
@@ -191,7 +191,7 @@ async function copyImageToClipboard(base64Image: any) {
             {{ `${firstLevelReferrals} человек` }}
           </div>
           <div class="text-primary text-[1rem] text-start text-[#71a7e5] font-bold">
-            {{ `${firstLevelReferrals * 750} ₽` }}
+            {{ (props.refBalance || 0).toFixed(1) + " ₽" }}
           </div>
         </div>
       </div>

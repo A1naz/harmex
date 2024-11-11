@@ -26,13 +26,14 @@ defineEmits(['setFavourites', 'vote'])
         class="card border rounded-lg shadow-md w-[250px] p-3 relative "
       >
         <div class="flex flex-col gap-2 w-full">
-          <div class="flex items-start justify-center w-full relative">
+          <div class="flex items-start justify-center w-full relative h-24 overflow-hidden rounded-lg">
             <NuxtImg
               :src="social.mainImage"
               :alt="social.name"
-              class="w-full"
-            />
+              class="w-full h-full object-cover"
+          />
           </div>
+
             <button
               v-if="!social.disabled"
               class="heart-btn absolute top-3 right-4"

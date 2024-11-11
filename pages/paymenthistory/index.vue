@@ -5,6 +5,8 @@ definePageMeta({
   middleware: 'auth',
 })
 
+const { user } = useUserSession()
+
 const buttonsLine: Array<{ label: string, value: string }> = [
   { label: 'Общее', value: 'general' },
   { label: 'Пополнение', value: 'replenishment' },
@@ -17,6 +19,11 @@ const tableData = ref<any>([])
 const fetchedData = ref<any>([])
 const tableType = ref('general')
 const currentPage = ref(1)
+const loadingExport = ref(false)
+const config = useRuntimeConfig()
+const refUrl = computed(
+  () => `${config.public.siteUrl}/register/?ref=${user.value.uuid || 'partner'}`
+)
 
 const headersForTable = ref<any>([])
 const loading = ref(false)
@@ -161,6 +168,42 @@ function changeTableType(type: string) {
   tableType.value = type
 }
 
+
+async function exportReadyXLS() {
+  loadingExport.value = true
+  const { data } = await useFetch('/api/finance/export', {
+    responseType: 'blob',
+    query: {tableType: tableType.value, page: 1,},
+  })
+  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
+  const fileLink = document.createElement('a')
+  fileLink.href = fileURL
+  fileLink.setAttribute('download', buttonsLine.find((item: any) => item.value === tableType.value).label + '.xlsx')
+  document.body.appendChild(fileLink)
+  fileLink.click()
+  loadingExport.value = false
+}
+
+const balanceForm = reactive({
+  userBalance: 0,
+  partnerBalance: 0,
+  refCount: 0,
+})
+
+async function getBalance() {
+  const { data }: any = await useFetch('/api/finance/getUserBalance', {
+    method: 'get',
+    watch: false
+  })
+  if(data.value){
+    balanceForm.userBalance = data.value.balance
+    balanceForm.partnerBalance = data.value.commissions
+    balanceForm.refCount = data.value.firstLevelReferralsCount
+  }
+}
+
+getBalance()
+
 watch(() => tableType.value, updateTableData, { immediate: true })
 watch(() => currentPage.value, updateTableData)
 </script>
@@ -168,8 +211,8 @@ watch(() => currentPage.value, updateTableData)
 <template>
   <div class="flex flex-col sm:flex-row mt-8 gap-2">
     <FinanceDashboard
-      :second-level-percent="10" :ref-balance="1300" :balance="5700" :ref-count="5"
-      :second-level-referrals="1" :first-level-referrals="12" ref-url="http://localhost:8080/partner" :reward-percent="5"
+      :second-level-percent="10" :ref-balance="balanceForm.partnerBalance" :balance="balanceForm.userBalance" :ref-count="balanceForm.refCount"
+      :second-level-referrals="0" :first-level-referrals="balanceForm.refCount" :ref-url="refUrl" :reward-percent="5"
       :ref-link="5"
     />
     <div class="divider bg- lg:divider-horizontal" />
@@ -186,10 +229,13 @@ watch(() => currentPage.value, updateTableData)
           </div>
         </button>
         <button
+          :disabled="loadingExport"
+          @click="exportReadyXLS"
           class="btn btn-sm btn-outline lg:ml-auto border-blue-800 bg-white hover:bg-white hover:text-black hover:border-blue-800 hover:shadow-xl active:bg-[#1934bd] active:text-white font-medium rounded-xl relative group"
         >
           <div class="flex items-center justify-center">
-            <Icon name="lucide:download" size="22px" />
+            <Icon v-if="!loadingExport" name="lucide:download" size="22px" />
+            <span v-else class="loading loading-spinner"/>
           </div>
         </button>
       </div>
