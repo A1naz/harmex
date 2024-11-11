@@ -10,6 +10,7 @@ declare module '#auth-utils' {
     username: string | undefined
     balance: number
     fizFace: boolean
+    orgInn: string | undefined
   }
 
   interface UserSession {

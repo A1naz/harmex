@@ -12,6 +12,7 @@ export default defineNitroPlugin(() => {
     if (!user) {
       throw createError({})
     }
+
     session.user = {
       uuid: user.uuid,
       phoneNumber: user.phoneNumber,
@@ -22,6 +23,7 @@ export default defineNitroPlugin(() => {
       username: user.username,
       balance: user.balance,
       fizFace: user.fizFace,
+      orgInn: user.orgInn,
     }
   })
 

@@ -5,6 +5,9 @@ definePageMeta({ title: 'Профиль', layout: 'app' })
 const { loggedIn, user, fetch, clear } = useUserSession()
 const { setLocale } = useI18n()
 const router = useRouter()
+const route = useRoute()
+const params = route.query
+
 if (!loggedIn || !user)
   router.push('/auth?redirect=/profile')
 async function logout() {
@@ -22,7 +25,9 @@ const { notify } = useNotification()
 const persistStore = usePersistedStore()
 const twoFaQRModal = ref<any>(null)
 const twoFaShow = ref(false)
+const partnerDetailsModal = ref(false)
 const isTwoFaEnabled = ref(user.value?.isTwoFaEnabled || false)
+const partnerAgreement = ref(false)
 
 async function openTwoFaQRModal() {
   if (!isTwoFaEnabled.value) {
@@ -56,12 +61,17 @@ const form = reactive({
   language: 'ru',
   wallet: 'rubles',
   username: '',
+  orgInn: '',
 })
 
 onMounted(() => {
+  form.orgInn = user.value?.orgInn || ''
   form.email = user.value?.email || ''
   form.phoneNumber = user.value?.phoneNumber || ''
   form.username = user.value?.username || ''
+  if (params.partnerDetailsModal) {
+    partnerDetailsModal.value = true
+  }
 })
 
 const docsArray = ref([
@@ -177,6 +187,13 @@ function swapLanguage(_e: any) {
 watch(() => persistStore.language, (newLanguage) => {
   setLocale(newLanguage)
 })
+
+async function getPartnerAgreement() {
+  const { data }: any = await useFetch('/api/finance/partnerAgreement')
+  partnerAgreement.value = data.value
+}
+
+await getPartnerAgreement()
 </script>
 
 <template>
@@ -284,6 +301,23 @@ watch(() => persistStore.language, (newLanguage) => {
           </div>
         </div>
 
+        <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
+          <div class="flex gap-3">
+            <h2 class="text-lg font-medium">
+              Партнерская программа
+            </h2>
+            <span v-if="!partnerAgreement" class="mt-1 underline text-[#1B38CA] text-sm cursor-pointer" @click="partnerDetailsModal = true">Заполнить реквизиты</span>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p class="text-xs font-medium text-blue-800">
+              {{ $t("ИНН") }}
+            </p>
+            <input
+              v-model="form.orgInn" readonly placeholder="-"
+              class="input input-bordered border-blue-800 w-full md:w-[243px]"
+            >
+          </div>
+        </div>
         <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
           <h2 class="text-lg font-medium">
             Пароль
@@ -432,6 +466,7 @@ watch(() => persistStore.language, (newLanguage) => {
       ref="twoFaQRModal" :show="twoFaShow" @close-with-turn-on="twoFaShow = false"
       @close="closeModal"
     />
+    <ProfilePartnerDetailsModal v-if="!partnerAgreement" :show="partnerDetailsModal" @close="partnerDetailsModal = false" />
   </div>
 </template>
 

@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
 import { Tariff } from './Tariff'
 
-interface IUserSchema extends IUser, Document {}
+interface IUserSchema extends IUser, Document { }
 
 const partnerSchema = new Schema({
   balance: { type: Number, default: 0 },
@@ -21,6 +21,7 @@ const UserSchema = new Schema<IUserSchema>({
   phoneNumber: { type: String },
 
   bankInfo: { type: Object, required: false },
+  ks: { type: String },
   rs: { type: String },
   bik: { type: String },
 
@@ -78,6 +79,7 @@ const UserSchema = new Schema<IUserSchema>({
   services: { type: [String], default: [] },
   favourites: { type: [String], default: [] },
   votedFor: { type: [String], default: [] },
+  isPartnerWithdrawAvailable: { type: Boolean, default: false },
 })
 
 export const User = model<IUserSchema>('User', UserSchema)
