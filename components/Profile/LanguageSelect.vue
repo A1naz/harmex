@@ -12,6 +12,7 @@ const languages: Language[] = [
 
 const store = usePersistedStore()
 const selectedLanguageCode = ref(store.language ?? languages[0].code)
+const triggerWidth = ref('')
 
 const selectedLanguage = computed(() => {
   return languages.find(language => language.code === selectedLanguageCode.value) || languages[0]
@@ -20,11 +21,22 @@ function updateLanguage(code: string) {
   store.language = code
   selectedLanguageCode.value = code
 }
+
+function setTriggerWidth() {
+  const trigger = document.querySelector('.select-trigger') as HTMLElement
+  if (trigger) {
+    triggerWidth.value = `${trigger.offsetWidth -5}px`
+  }
+}
+
+onMounted(setTriggerWidth)
+
+watch(selectedLanguageCode, setTriggerWidth)
 </script>
 
 <template>
   <SelectRoot v-model="selectedLanguageCode" @update:model-value="updateLanguage">
-    <SelectTrigger class="select select-primary items-center w-36">
+    <SelectTrigger class="select-trigger select items-center w-full flex-1">
       <SelectValue>
         <div class="flex items-center space-x-2">
           <NuxtImg :src="selectedLanguage.flag" class="w-6 h-4" />
@@ -33,7 +45,8 @@ function updateLanguage(code: string) {
       </SelectValue>
     </SelectTrigger>
     <SelectPortal>
-      <SelectContent position="popper" class="bg-white border border-gray-200 rounded-lg shadow-lg z-[100] w-36">
+      <SelectContent position="popper" class="bg-white border border-gray-200 rounded-lg shadow-lg z-[100] "         :style="{ width: triggerWidth }"
+      >
         <SelectItem
           v-for="language in languages" :key="language.code" :value="language.code"
           class="p-2 hover:bg-gray-100 cursor-pointer w-full hover:border-primary"

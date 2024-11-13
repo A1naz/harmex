@@ -113,37 +113,42 @@ defineExpose({
 <template>
   <div class="group dropdown relative" :class="dropdownContainerClass" @click="toggleDropdown" @click.stop>
     <div
-      class="btn btn-md flex flex-nowrap items-center justify-center border border-[#1b38ca] bg-white px-2 text-xs font-normal normal-case text-base-content hover:border-[#1b38ca] hover:bg-white hover:shadow-none"
+      class="btn btn-md w-full flex flex-nowrap flex-1 items-center justify-between px-2 text-xs font-normal normal-case text-base-content hover:bg-white hover:shadow-none"
       :class="customClass"
     >
-      <nuxt-img
-        v-if="tabs.length > 0 && tabFound && tabFound.images" :src="tabFound ? tabFound.images : ''"
-        class="h-6 w-6"
-      />
-      <span v-else>{{
-        reactiveStatusText ? reactiveStatusText : statusText
-      }}</span>
+      <div class="flex items-center gap-2">
+        <nuxt-img
+          v-if="tabs.length > 0 && tabFound && tabFound.images" :src="tabFound ? tabFound.images : ''"
+          class="h-4 w-6"
+        />
+        <span>{{
+          reactiveStatusText ? reactiveStatusText : statusText
+        }}</span>
+      </div>
 
       <Icon v-if="dropdownOpened" name="formkit:up" size="12" class="text-[#1b38ca]" />
       <Icon v-else name="formkit:down" size="12" class="text-[#909090]" />
     </div>
     <ul
       v-if="dropdownOpened" :class="uniqueClass"
-      class="absolute z-[1] mt-0.5 flex max-h-[300px] w-full flex-col gap-y-0.5 overflow-y-auto overflow-x-hidden rounded-lg bg-base-100 shadow-md"
+      class="absolute z-[1] mt-0.5 flex max-h-[300px] w-full flex-col gap-y-0.5 overflow-y-auto scroll-th overflow-x-hidden rounded-lg bg-base-100 shadow-md"
     >
       <li v-for="filter in tabs" v-if="tabs.length > 0" :key="filter.title">
         <button
-          v-if="
-            filter.title
-              !== (reactiveStatusText ? reactiveStatusText : statusText)
-          "
-          class="btn btn-ghost btn-xs h-[2rem] w-full items-center justify-center text-center text-xs text-[0.65rem] whitespace-normal font-normal normal-case leading-none hover:border hover:border-[#1b38ca] hover:bg-white"
+          
+          class="btn btn-ghost btn-xs h-[2rem] w-full items-center justify-between text-center text-xs text-[0.65rem] whitespace-normal font-normal normal-case leading-none hover:border hover:border-base-200 hover:bg-white"
           @click="updateValue(filter)"
         >
-          <nuxt-img v-if="filter && filter.images" :src="filter ? filter.images : ''" class="h-6 w-6" />
-          <p v-else>
-            {{ filter.title }}
-          </p>
+          <div class="flex gap-x-1 items-center">
+            <nuxt-img v-if="filter && filter.images" :src="filter ? filter.images : ''" class="h-6 w-6" />
+            <p>
+              {{ filter.title }}
+            </p>
+          </div>
+          <Icon 
+            v-if="filter.title === (reactiveStatusText ? reactiveStatusText : statusText) && (filter && filter.images) "  
+            name="material-symbols:check-circle" size="15" class="text-[#22c55d]" 
+          />
         </button>
       </li>
       <li v-for="filter in links" :key="filter.title" @click="updateText(filter.title)">
@@ -165,5 +170,22 @@ defineExpose({
 <style scoped>
 .btn{
   min-height: auto;
+}
+ul.scroll-th::-webkit-scrollbar {
+  width: 4px; 
+}
+
+ul.scroll-th::-webkit-scrollbar-thumb {
+  background-color: #909090; 
+  border-radius: 8px; 
+}
+
+ul.scroll-th::-webkit-scrollbar-track {
+  background: transparent; /* Цвет фона */
+}
+
+ul.scroll-th {
+  scrollbar-width: thin;
+  scrollbar-color: #909090 transparent;
 }
 </style>

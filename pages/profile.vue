@@ -200,38 +200,35 @@ await getPartnerAgreement()
   <div>
     <div>
       <div class="flex flex-col gap-8 py-6 md:gap-6 md:py-4">
-        <h1 class="text-xl font-semibold">
-          {{ $t("Профиль") }}
-        </h1>
-        <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
+        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
           <h2 class="text-lg font-medium">
             {{ $t("Контактные данные") }}
           </h2>
-          <div class="flex flex-col gap-6 md:flex-row">
-            <div class="flex flex-col gap-1">
-              <p class="text-xs font-medium text-blue-800">
+          <div class="flex flex-col gap-6 md:flex-row flex-wrap">
+            <div class="flex flex-col gap-1 flex-1">
+              <p class="text-xs font-medium text-base-content">
                 {{ $t("Логин") }}
               </p>
               <input
                 v-model="form.username" readonly placeholder="Логин"
-                class="input input-bordered border-blue-800 w-full"
+                class="input bg-base-100 w-full"
               >
             </div>
-            <div class="flex flex-col gap-1">
-              <p class="text-xs font-medium text-blue-800">
+            <div class="flex flex-col gap-1 flex-1">
+              <p class="text-xs font-medium text-base-content">
                 {{ $t("Номер телефона") }}
               </p>
               <input
                 v-model="form.phoneNumber" readonly placeholder="Номер телефона"
-                class="input input-bordered border-blue-800 w-full"
+                class="input bg-base-100 w-full"
               >
             </div>
-            <div class="flex flex-col gap-1 relative">
-              <p class="text-xs font-medium text-blue-800">
+            <div class="flex flex-col gap-1 flex-1 relative">
+              <p class="text-xs font-medium text-base-content">
                 {{ $t("Почта") }}
               </p>
               <label
-                class="input input-bordered border-blue-800 flex items-center justify-between relative bg-white"
+                class="input bg-base-100 flex items-center justify-between relative"
                 @click="emailConfirmModal = true"
               >
                 <input
@@ -259,9 +256,8 @@ await getPartnerAgreement()
                 Email не подтвержден
               </p>
             </div>
-            <div class="flex gap-2">
-              <div class="flex flex-col gap-1">
-                <p class="text-xs font-medium text-blue-800">
+            <div class="flex flex-col gap-1 flex-1">
+                <p class="text-xs font-medium text-base-content">
                   {{ $t("Язык") }}
                 </p>
                 <!-- <custom-select
@@ -280,15 +276,17 @@ await getPartnerAgreement()
                 /> -->
                 <ProfileLanguageSelect />
               </div>
-              <div class="flex flex-col gap-1">
-                <p class="text-xs font-medium text-blue-800">
+              
+            <div class="flex gap-2 flex-1">
+              <div class="flex flex-col gap-1 flex-1">
+                <p class="text-xs font-medium text-base-content">
                   {{ $t("Валюта") }}
                 </p>
                 <custom-select
                   :tabs="[
-                    { title: '₽', value: 'rubles' },
-                    { title: '$', value: 'dollar' },
-                    { title: '€', value: 'Euro' },
+                    { title: 'RUB', value: 'rubles', images: '/icons/figma/profile/rsFlag.svg',},
+                    { title: 'USD', value: 'dollar', images: '/icons/figma/profile/usaFlag.svg',},
+                    { title: 'EUR', value: 'Euro', images: '/icons/figma/profile/euro.svg', },
                   ]" @change-value="(e: any) => (form.wallet = e.value)"
                 />
               </div>
@@ -301,24 +299,44 @@ await getPartnerAgreement()
           </div>
         </div>
 
-        <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
+        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
           <div class="flex gap-3">
             <h2 class="text-lg font-medium">
-              Партнерская программа
+              Реквизиты
             </h2>
             <span v-if="!partnerAgreement" class="mt-1 underline text-[#1B38CA] text-sm cursor-pointer" @click="partnerDetailsModal = true">Заполнить реквизиты</span>
           </div>
-          <div class="flex flex-col gap-1">
-            <p class="text-xs font-medium text-blue-800">
+          <div class="flex flex-col gap-1 flex-1 w-full">
+            <p class="text-xs font-medium text-base-content">
               {{ $t("ИНН") }}
             </p>
             <input
               v-model="form.orgInn" readonly placeholder="-"
-              class="input input-bordered border-blue-800 w-full md:w-[243px]"
+              class="input bg-base-100 w-full"
             >
           </div>
         </div>
-        <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
+
+        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
+          <div class="flex gap-3">
+            <h2 class="text-lg font-medium">
+              Договор
+            </h2>
+          </div>
+          <div class="flex gap-2 p-3 justify-between text-primary w-full bg-secondary rounded-lg">
+            <div class="flex gap-2 items-center">
+              <Icon name="gg:file-document" size="24" />
+              <p class="font-medium">
+                {{ 'Договор проектной работы' }}
+              </p>
+            </div>
+            <button class=" btn btn-primary btn-sm rounded-full p-1 flex justify-center items-center">
+              <Icon name="material-symbols:download-sharp" size="24" />
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
           <h2 class="text-lg font-medium">
             Пароль
           </h2>
@@ -326,11 +344,11 @@ await getPartnerAgreement()
             <div v-if="user" class="flex flex-col gap-2.5 xl:flex-row">
               <input
                 v-model="passwordForm.oldPassword" :disabled="isCodeSent" type="password"
-                placeholder="Старый пароль" class="input input-bordered w-full"
+                placeholder="Старый пароль" class="input w-full"
               >
               <input
                 v-model="passwordForm.newPassword" :disabled="isCodeSent" type="password"
-                placeholder="Новый пароль" class="input input-bordered w-full"
+                placeholder="Новый пароль" class="input w-full"
               >
               <button class="btn btn-primary xl:w-40" @click="updatePassword">
                 Изменить
@@ -339,29 +357,43 @@ await getPartnerAgreement()
           </div>
         </div>
 
-        <div class="flex flex-col gap-[20px] rounded-lg bg-blue-50 p-4">
+        <div class="flex flex-col gap-[20px] rounded-lg bg-white p-4 ">
           <h2 class="text-[20px] font-[500]">
             Двухфакторная аутентификация
           </h2>
 
-          <div class="form-control">
+          <div class="form-control bg-secondary rounded-lg p-3">
             <label class="label cursor-pointer ">
-              <span class="label-text mr-4">Включить двухфакторную аутентификацию</span>
+              <div class="flex gap-3">
+                <nuxt-img src="/icons/figma/profile/2fa.svg" class="w-10 h-10" />
+                <div class="flex-col gap-1">
+                  <p class="text-sm font-medium">
+                    Усиленная защита аккаунта             
+                  </p>
+                  <p class="text-xs font-normal text-gray-500">
+                    Укрепите безопасность своего аккаунта
+                  </p>
+                </div>
+              </div>
 
-              <input v-model="isTwoFaEnabled" type="checkbox" class="toggle toggle-primary" @change="openTwoFaQRModal">
+              <div class="flex items-center gap-2">
+                <input v-model="isTwoFaEnabled" type="checkbox" class="toggle toggle-primary" @change="openTwoFaQRModal" />
+                <span class="hidden sm:inline text-xs">Включить</span>
+              </div>            
             </label>
           </div>
         </div>
 
-        <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
+        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
           <h2 class="text-lg font-medium">
             Чат-бот уведомлений
           </h2>
-          <div class="flex flex-col gap-6">
-            <div class="flex justify-between w-full">
-              <div class="flex gap-3">
+          <div class="flex flex-col gap-6  bg-secondary p-3">
+            <div class="flex flex-col justify-between w-full">
+              <div class="flex justify-between w-full">
+                <div class="flex gap-3">
                 <nuxt-img src="/icons/figma/profile/email.svg" class="w-10 h-10" />
-                <div class="flex flex-col gap-1">
+                <div class="flex flex-col gap-1 flex-1">
                   <p class="text-sm font-normal">
                     Уведомления Email
                   </p>
@@ -371,88 +403,91 @@ await getPartnerAgreement()
                 </div>
               </div>
               <div class="form-control">
-                <label class="label cursor-pointer flex gap-2 text-gray-500 text-xs p-0 lg:py-2 lg:px-1">
-                  <span class="hidden sm:inline">Включить все</span>
+                <label class="label cursor-pointer flex gap-5 text-gray-500 text-xs p-0 lg:py-2 lg:px-1">
                   <input
                     type="checkbox" class="toggle" :checked="emailAlerts.value"
                     @click="emailAlerts.value = !emailAlerts.value"
                   >
+                  <span class="hidden sm:inline">Включить все</span>
                 </label>
               </div>
-            </div>
-
-            <transition name="slide-fade">
-              <div v-if="emailAlerts.value" class="flex flex-col gap-3">
-                <div
-                  v-for="(item, index) in emailAlerts.arr" :key="index"
-                  class="flex justify-between items-center w-full p-2  bg-white border border-t-0 last:mb-8 rounded-t-none rounded-b-md"
-                >
-                  <span class="text-sm font-normal">{{ item.title }}</span>
-                  <label class="label cursor-pointer p-0">
-                    <input type="checkbox" class="toggle" :checked="item.value" @click="item.value = !item.value">
-                  </label>
-                </div>
               </div>
-            </transition>
-
-            <div class="flex justify-start w-full gap-3">
-              <nuxt-img src="/icons/figma/profile/tg.svg" class="w-10 h-10" />
-              <div class="flex gap-3 flex-col lg:flex-row lg:w-full">
-                <div class="flex gap-3">
-                  <div class="flex flex-col gap-1">
-                    <p class="text-sm font-normal">
-                      Telegram чат-бот
-                    </p>
-                    <p class="text-xs font-normal text-gray-500">
-                      Функции недоступны. Подключите Telegram-бот.
-                    </p>
+              <transition name="slide-fade">
+                <div v-if="emailAlerts.value" class="flex flex-col gap-3 self-end pl-12">
+                  <div
+                    v-for="(item, index) in emailAlerts.arr" :key="index"
+                    class="flex items-center w-full p-2 bg-transparent last:mb-8 gap-5 rounded-t-none rounded-b-md"
+                  >
+                    <label class="label cursor-pointer p-0">
+                      <input type="checkbox" class="toggle" :checked="item.value" @click="item.value = !item.value">
+                    </label>
+                    <span class="text-xs font-normal">{{ item.title }}</span>
                   </div>
                 </div>
-                <a href="#" class="flex items-center hover:text-blue-800 lg:ml-auto text-gray-500 text-xs">
-                  <span>Перейти в чат бот</span>
-                  <icon name="solar:arrow-right-linear" class="ml-1 w-4 h-4 transition-colors duration-200" />
-                </a>
-              </div>
-              <div class="ml-auto">
-                <div class="flex gap-4 items-center text-gray-500 text-xs">
+              </transition>
+            </div>
+
+            <div class="flex flex-col justify-start w-full gap-3 border border-none border-t border-[#e5e7eb]">
+              <div class="flex justify-start w-full gap-0 border border-none border-t border-[#e5e7eb]">
+                <nuxt-img src="/icons/figma/profile/tg.svg" class="w-10 h-10" />
+                <div class="flex gap-3 flex-col lg:flex-row lg:w-full">
+                  <div class="flex gap-3">
+                    <div class="flex flex-col gap-1 flex-1">
+                      <p class="text-sm font-normal">
+                        Telegram чат-бот
+                      </p>
+                      <p class="text-xs font-normal text-gray-500">
+                        Функции недоступны. Подключите Telegram-бот.
+                      </p>
+                    </div>
+                  </div>
+                  <a href="#" class="flex items-center hover:text-base-content lg:ml-auto text-gray-500 text-xs">
+                    <span>Перейти в чат бот</span>
+                    <icon name="solar:arrow-right-linear" class="ml-1 w-4 h-4 transition-colors duration-200" />
+                  </a>
+                </div>
+
+                <div class="ml-auto flex items-center gap-4 text-gray-500 text-xs flex-1">
                   <div class="form-control">
-                    <label class="label cursor-pointer gap-2 p-0 lg:py-2 lg:px-1">
-                      <span class="hidden sm:inline whitespace-nowrap">Включить все</span>
+                    <label class="label cursor-pointer gap-5 p-0 lg:py-2 lg:px-1">
                       <input
                         type="checkbox" class="toggle" :checked="tgAlerts.value"
                         @click="tgAlerts.value = !tgAlerts.value"
                       >
+                      <span class="hidden sm:inline whitespace-nowrap">Включить все</span>
                     </label>
                   </div>
                 </div>
               </div>
+              <transition name="slide-fade">
+                <div v-if="tgAlerts.value" class="flex flex-col flex-end self-end gap-3 pl-12">
+                  <div
+                    v-for="(item, index) in tgAlerts.arr" :key="index"
+                    class="flex gap-5 items-center w-full p-2 bg-transparent rounded-t-none rounded-b-md"
+                  >
+                    <label class="label cursor-pointer p-0">
+                      <input type="checkbox" class="toggle" :checked="item.value" @click="item.value = !item.value">
+                    </label>
+                    <span class="text-xs font-normal">{{ item.title }}</span>
+                  </div>
+                </div>
+              </transition>
             </div>
 
-            <transition name="slide-fade">
-              <div v-if="tgAlerts.value" class="flex flex-col gap-3">
-                <div
-                  v-for="(item, index) in tgAlerts.arr" :key="index"
-                  class="flex justify-between items-center w-full p-2 bg-white border border-t-0 rounded-t-none rounded-b-md"
-                >
-                  <span class="text-sm font-normal">{{ item.title }}</span>
-                  <label class="label cursor-pointer p-0">
-                    <input type="checkbox" class="toggle" :checked="item.value" @click="item.value = !item.value">
-                  </label>
-                </div>
-              </div>
-            </transition>
+            
+
           </div>
         </div>
 
-        <div class="flex flex-col gap-6 p-4 bg-blue-50 rounded-lg">
+        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
           <h2 class="text-lg font-medium">
             Документы
           </h2>
-          <div class="flex flex-col gap-6">
-            <div class="flex flex-col gap-2 text-sm text-gray-600">
+          <div class="flex flex-col gap-6 bg-secondary p-3 rounded-lg">
+            <div class="flex flex-col gap-2 text-sm">
               <a
                 v-for="(item, index) in docsArray" :key="index" :href="item.path"
-                class="underline hover:text-blue-800"
+                class="hover:text-base-content text-primary"
               >{{ item.title }}</a>
             </div>
           </div>

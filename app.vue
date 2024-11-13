@@ -24,6 +24,15 @@
   @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
 } */
 
+.myCustomBtnNavbar {
+  @apply btn btn-outline border-base-200 text-base-300 rounded-full p-3 bg-white 
+         hover:bg-white hover:text-black hover:border-base-200 hover:shadow-xl
+         active:bg-base-300 active:text-white;
+  &:hover {
+    box-shadow: 0 4px 15px rgb(207, 212, 226);
+  }
+}
+
 .myCustomBtnSm {
   @apply btn btn-sm btn-outline border-[#1b38ca] rounded-xl bg-white 
          hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl

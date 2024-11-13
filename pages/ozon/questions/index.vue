@@ -240,7 +240,7 @@ async function copyToClipboard(text: string) {
         </li>
       </ul>
       <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
-        <div class=" bg-white rounded-lg shadow-xs flex gap-2 items-center text-center ">
+        <div class=" bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center ">
           <div class="org-name font-semibold text-gray-800">
             {{ orgInfo.title.toUpperCase() }}
           </div>
@@ -320,7 +320,7 @@ async function copyToClipboard(text: string) {
               />
               <Icon
                 v-else
-                class="absolute right-0.5 p-2 my-auto text-gray-500"
+                class="absolute right-0.5 p-2 my-auto text-gray-500 " 
                 name="tabler:search"
                 size="35"
                 @click="codeInput.focus()"

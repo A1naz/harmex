@@ -74,11 +74,11 @@ function toFound(path: string) {
         v-model="searchQuery"
         type="text"
         placeholder="Поиск по услуге, категории, функционалу и справочнику"
-        class="input input-bordered w-full border-[#1B38CA] bg-white outline-none"
+        class="input input-bordered w-full border-base-200 bg-white outline-none"
         @input="onInput()"
         @focus="show = true"
       >
-      <Icon name="mynaui:search" size="25" class="-ml-12 bg-white rounded-lg" />
+      <Icon name="mynaui:search" size="25" class="-ml-12 bg-white rounded-lg text-base-300" />
     </label>
 
     <Transition name="slide-fade">
