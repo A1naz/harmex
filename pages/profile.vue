@@ -370,8 +370,8 @@ await getPartnerAgreement()
           </h2>
 
           <div class="form-control bg-secondary rounded-lg p-3">
-            <label class="label cursor-pointer ">
-              <div class="flex gap-3">
+            <label class="label cursor-pointer flex flex-col lg:flex-row ">
+              <div class="flex flex-col lg:flex-row gap-3 w-full">
                 <nuxt-img src="/icons/figma/profile/2fa.svg" class="w-10 h-10" />
                 <div class="flex-col gap-1">
                   <p class="text-sm font-medium">
@@ -383,9 +383,9 @@ await getPartnerAgreement()
                 </div>
               </div>
 
-              <div class="flex items-center gap-2">
+              <div class="flex mt-10 lg:mt-0 justify-start w-full lg:w-fit items-center gap-2">
                 <input v-model="isTwoFaEnabled" type="checkbox" class="toggle toggle-primary" @change="openTwoFaQRModal" />
-                <span class="hidden sm:inline text-xs">Включить</span>
+                <span class="text-xs">Включить</span>
               </div>            
             </label>
           </div>
@@ -397,46 +397,50 @@ await getPartnerAgreement()
           </h2>
           <div class="flex flex-col gap-6  bg-secondary p-3">
             <div class="flex flex-col justify-between w-full">
-              <div class="flex justify-between w-full">
-                <div class="flex gap-3">
-                <nuxt-img src="/icons/figma/profile/email.svg" class="w-10 h-10" />
-                <div class="flex flex-col gap-1 flex-1">
-                  <p class="text-sm font-normal">
-                    Уведомления Email
-                  </p>
-                  <p class="text-xs font-normal text-gray-500">
-                    Функции недоступны. Подключите уведомления Email
-                  </p>
-                </div>
-              </div>
-              <div class="form-control">
-                <label class="label cursor-pointer flex gap-5 text-gray-500 text-xs p-0 lg:py-2 lg:px-1">
-                  <input
-                    type="checkbox" class="toggle" :checked="emailAlerts.value"
-                    @click="emailAlerts.value = !emailAlerts.value"
-                  >
-                  <span class="hidden sm:inline">Включить все</span>
-                </label>
-              </div>
-              </div>
-              <transition name="slide-fade">
-                <div v-if="emailAlerts.value" class="flex flex-col gap-3 self-end pl-12">
-                  <div
-                    v-for="(item, index) in emailAlerts.arr" :key="index"
-                    class="flex items-center w-full p-2 bg-transparent last:mb-8 gap-5 rounded-t-none rounded-b-md"
-                  >
-                    <label class="label cursor-pointer p-0">
-                      <input type="checkbox" class="toggle" :checked="item.value" @click="item.value = !item.value">
-                    </label>
-                    <span class="text-xs font-normal">{{ item.title }}</span>
+              <div class="flex justify-between w-full flex-col lg:flex-row">
+                <div class="flex flex-col lg:flex-row gap-3">
+                  <nuxt-img src="/icons/figma/profile/email.svg" class="w-10 h-10" />
+                  <div class="flex flex-col gap-1 flex-1">
+                    <p class="text-sm font-normal">
+                      Уведомления Email
+                    </p>
+                    <p class="text-xs font-normal text-gray-500">
+                      Функции недоступны. Подключите уведомления Email
+                    </p>
                   </div>
                 </div>
-              </transition>
+              <div class="form-control">
+                <div
+                  class="flex items-center w-full pt-10 lg:pt-0 bg-transparent last:mb-8 gap-5 rounded-t-none rounded-b-md"
+                >
+                  <label class="label cursor-pointer gap-2 p-0 pb-2 lg:py-2 lg:px-2 items-center">
+                    <input
+                      type="checkbox" class="toggle checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]" :checked="emailAlerts.value"
+                      @click="emailAlerts.value = !emailAlerts.value"
+                    >                      
+                    <span class="text-xs font-normal">Включить все</span>
+                  </label>
+                  </div>
+                  <transition name="slide-fade">
+                    <div v-if="emailAlerts.value" class="flex flex-col gap-0 self-start lg:self-end">
+                      <div
+                        v-for="(item, index) in emailAlerts.arr" :key="index"
+                        class="flex items-center w-full p-2 pl-0 lg:pl-2  bg-transparent last:mb-8 gap-2 rounded-t-none rounded-b-md"
+                      >
+                        <label class="label cursor-pointer p-0">
+                          <input type="checkbox" class="toggle checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]" :checked="item.value" @click="item.value = !item.value">
+                        </label>
+                        <span class="text-xs font-normal">{{ item.title }}</span>
+                      </div>
+                    </div>
+                  </transition>
+                </div>
+              </div>
             </div>
 
             <div class="flex flex-col justify-start w-full gap-3 border border-none border-t border-[#e5e7eb]">
-              <div class="flex justify-start w-full gap-0 border border-none border-t border-[#e5e7eb]">
-                <nuxt-img src="/icons/figma/profile/tg.svg" class="w-10 h-10" />
+              <div class="flex flex-col lg:flex-row justify-start w-full gap-0 border border-none border-t border-[#e5e7eb]">
+                <nuxt-img src="/icons/figma/profile/tg.svg" class="w-10 h-10 mb-3 lg:mb-0" />
                 <div class="flex gap-3 flex-col lg:flex-row lg:w-full">
                   <div class="flex gap-3">
                     <div class="flex flex-col gap-1 flex-1">
@@ -448,37 +452,38 @@ await getPartnerAgreement()
                       </p>
                     </div>
                   </div>
-                  <a href="#" class="flex items-center hover:text-base-content lg:ml-auto text-gray-500 text-xs">
+                  <a href="#" class="flex items-start py-3 text-primary hover:text-base-content lg:ml-auto text-xs pt-10 lg:pt-3">
                     <span>Перейти в чат бот</span>
                     <icon name="solar:arrow-right-linear" class="ml-1 w-4 h-4 transition-colors duration-200" />
                   </a>
                 </div>
 
-                <div class="ml-auto flex items-center gap-4 text-gray-500 text-xs flex-1">
+                <div class="lg:ml-auto flex flex-col lg:items-center text-gray-500 text-xs flex-1">
                   <div class="form-control">
-                    <label class="label cursor-pointer gap-5 p-0 lg:py-2 lg:px-1">
+                    <label class="label flex justify-start cursor-pointer gap-2 p-0 pb-2  lg:py-2 lg:px-2 items-center">
                       <input
-                        type="checkbox" class="toggle" :checked="tgAlerts.value"
+                        type="checkbox" class="toggle checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]" :checked="tgAlerts.value"
                         @click="tgAlerts.value = !tgAlerts.value"
                       >
-                      <span class="hidden sm:inline whitespace-nowrap">Включить все</span>
+                      <span class="whitespace-nowrap text-black">Включить все</span>
                     </label>
                   </div>
+                  <transition name="slide-fade">
+                    <div v-if="tgAlerts.value" class="flex flex-col gap-0 flex-end self-start lg:self-end">
+                      <div
+                        v-for="(item, index) in tgAlerts.arr" :key="index"
+                        class="flex gap-2 items-center w-full pl-0 lg:pl-2 p-2 bg-transparent rounded-t-none rounded-b-md"
+                      >
+                        <label class="label cursor-pointer p-0">
+                          <input type="checkbox" class="toggle checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]" :checked="item.value" @click="item.value = !item.value">
+                        </label>
+                        <span class="text-xs font-normal">{{ item.title }}</span>
+                      </div>
+                    </div>
+                  </transition>
                 </div>
               </div>
-              <transition name="slide-fade">
-                <div v-if="tgAlerts.value" class="flex flex-col flex-end self-end gap-3 pl-12">
-                  <div
-                    v-for="(item, index) in tgAlerts.arr" :key="index"
-                    class="flex gap-5 items-center w-full p-2 bg-transparent rounded-t-none rounded-b-md"
-                  >
-                    <label class="label cursor-pointer p-0">
-                      <input type="checkbox" class="toggle" :checked="item.value" @click="item.value = !item.value">
-                    </label>
-                    <span class="text-xs font-normal">{{ item.title }}</span>
-                  </div>
-                </div>
-              </transition>
+              
             </div>
 
             

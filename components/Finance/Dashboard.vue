@@ -185,7 +185,7 @@ async function copyImageToClipboard(base64Image: any) {
         </div>
       <div class="flex justify-start mt-auto w-full">
         <div
-          class="bg-white self-start m-3 mt-0 gap-3 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm w-full border border-[#f0f0f0]"
+          class="bg-white self-start m-3 mt-0 gap-1 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm w-full border border-[#f0f0f0]"
         >
           <div class="font-bold text-[0.9rem] whitespace-nowrap text-[#9e9e9e]">
             {{ `${firstLevelReferrals} человек` }}
@@ -213,7 +213,7 @@ async function copyImageToClipboard(base64Image: any) {
             </h3>
 
             <div
-              class="bg-[#f2f3f5] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto"
+              class="bg-[#f2f3f5] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto items-center"
             >
               <span
                 class="cursor-pointer hover:underline truncate"
@@ -225,9 +225,9 @@ async function copyImageToClipboard(base64Image: any) {
                 @click="copyToClipboard(refUrl)"
               >
                 <IconCSS
-                  name="solar:copy-outline"
-                  size="30"
-                  class="text-[#909090]"
+                  name="clarity:copy-line"
+                  size="20"
+                  class="text-[#909090] scale-x-[-1]"
                 />
               </button>
             </div>
