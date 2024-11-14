@@ -208,7 +208,7 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div>
+  <div class="px-4 sm:px-16">
     <QuestionsWildberriesCreateQuest
       :show="modalShow"
       @close-modal="modalShow = false"

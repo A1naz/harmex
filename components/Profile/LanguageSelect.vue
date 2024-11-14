@@ -18,6 +18,7 @@ const selectedLanguage = computed(() => {
   return languages.find(language => language.code === selectedLanguageCode.value) || languages[0]
 })
 function updateLanguage(code: string) {
+  console.log('updateLanguage', code)
   store.language = code
   selectedLanguageCode.value = code
 }

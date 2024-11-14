@@ -20,6 +20,7 @@ const props = defineProps({
   },
   links: { type: Array as PropType<links[]>, default: () => [] },
   class: { type: String },
+  arrowsClass: { type: String },
   dropdownContainerClass: { type: String },
   statusText: { type: String },
 })
@@ -121,21 +122,21 @@ defineExpose({
           v-if="tabs.length > 0 && tabFound && tabFound.images" :src="tabFound ? tabFound.images : ''"
           class="h-4 w-6"
         />
-        <span>{{
+        <span>{{ 
           reactiveStatusText ? reactiveStatusText : statusText
         }}</span>
       </div>
-
-      <Icon v-if="dropdownOpened" name="formkit:up" size="12" class="text-[#1b38ca]" />
-      <Icon v-else name="formkit:down" size="12" class="text-[#909090]" />
+      <Icon v-if="dropdownOpened" name="formkit:up" size="12" class="text-[#1b38ca]"  :class="arrowsClass" />
+      <Icon v-else name="formkit:down" size="12" class="text-[#909090]" :class="arrowsClass" />
     </div>
     <ul
-      v-if="dropdownOpened" :class="uniqueClass"
-      class="absolute z-[1] mt-0.5 flex max-h-[300px] w-full flex-col gap-y-0.5 overflow-y-auto scroll-th overflow-x-hidden rounded-lg bg-base-100 shadow-md"
-    >
+      v-if="dropdownOpened" 
+      class="absolute z-[1] mt-0.5 flex max-h-[300px] w-full flex-col gap-y-0.5 overflow-y-auto scroll-th overflow-x-hidden rounded-lg shadow-md" 
+      :class="[uniqueClass, dropdownContainerClass ? 'bg-inherit' : 'bg-base-100']"
+      >
       <li v-for="filter in tabs" v-if="tabs.length > 0" :key="filter.title">
         <button
-          
+          v-if=" !(filter && filter.images) ? filter.title !== (reactiveStatusText ? reactiveStatusText : statusText) : true"
           class="btn btn-ghost btn-xs h-[2rem] w-full items-center justify-between text-center text-xs text-[0.65rem] whitespace-normal font-normal normal-case leading-none hover:border hover:border-base-200 hover:bg-white"
           @click="updateValue(filter)"
         >

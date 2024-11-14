@@ -27,6 +27,7 @@ const refUrl = computed(
 
 const headersForTable = ref<any>([])
 const loading = ref(false)
+const limit = ref(15)
 
 async function getData() {
   loading.value = true
@@ -38,6 +39,7 @@ async function getData() {
       query: {
         tableType: tableType.value,
         page: currentPage.value,
+        itemsPerPage: limit.value,
       },
       watch: false,
     },
@@ -209,29 +211,30 @@ watch(() => currentPage.value, updateTableData)
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row mt-8 gap-2">
+  <div class="flex flex-col sm:flex-row gap-2 overflow-x-auto">
     <FinanceDashboard
       :second-level-percent="10" :ref-balance="balanceForm.partnerBalance" :balance="balanceForm.userBalance" :ref-count="balanceForm.refCount"
       :second-level-referrals="0" :first-level-referrals="balanceForm.refCount" :ref-url="refUrl" :reward-percent="5"
       :ref-link="5"
     />
-    <div class="divider bg- lg:divider-horizontal" />
-
-    <div class="flex flex-col gap-6 w-full flex-1">
-      <div class="flex gap-4 items-center flex-wrap">
-        <button
+    <div class="flex flex-col gap-4 w-full flex-1 m-4 bg-white rounded-lg">
+      <div class="flex gap-4 justify-between items-center flex-wrap p-6 pb-0">
+        <div class="flex gap-4 items-center flex-wrap">
+          <button
           v-for="(button, index) in buttonsLine" :key="index"
-          class="btn btn-sm btn-outline border-blue-800 px-12 bg-white hover:bg-white hover:text-black hover:border-blue-800 hover:shadow-xl active:bg-[#1934bd] active:text-white font-medium rounded-xl relative group"
+          class="btn btn-sm btn-outline btn-primary bg-white  hover:bg-white hover:text-black active:text-white font-medium rounded-lg relative group"
+          :class="{ 'btn-active': button.value === tableType }"
           @click="changeTableType(button.value)"
         >
           <div class="flex items-center justify-center">
             {{ button.label }}
           </div>
         </button>
+        </div>
         <button
           :disabled="loadingExport"
           @click="exportReadyXLS"
-          class="btn btn-sm btn-outline lg:ml-auto border-blue-800 bg-white hover:bg-white hover:text-black hover:border-blue-800 hover:shadow-xl active:bg-[#1934bd] active:text-white font-medium rounded-xl relative group"
+          class="btn btn-sm btn-outline flex flex-shrink btn-primary bg-white hover:bg-white hover:text-black active:text-white font-medium rounded-lg relative group"
         >
           <div class="flex items-center justify-center">
             <Icon v-if="!loadingExport" name="lucide:download" size="22px" />
@@ -239,7 +242,7 @@ watch(() => currentPage.value, updateTableData)
           </div>
         </button>
       </div>
-      <FinanceTable :table-data="tableData" :loading="loading" :headers="headersForTable" @swap-page="(page: number) => { currentPage = page }" />
+      <FinanceTable :table-data="tableData" :loading="loading" :headers="headersForTable" @swap-page="(page: number, itemsPerPage: number) => { currentPage = page, limit = itemsPerPage }" />
 
     </div>
   </div>

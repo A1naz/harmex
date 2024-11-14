@@ -427,7 +427,7 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div>
+  <div class="px-4 sm:px-16">
     <div class="breadcrumbs text-sm mt-8 flex w-full justify-between flex-wrap-reverse">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
@@ -539,7 +539,7 @@ async function copyToClipboard(text: string) {
           (route.query.status === 'active' || !route.query.status)
             && activeBuyouts.length > 0
         "
-        class="flex justify-center py-2 rounded-lg px-2 mb-2 bg-base-200 border border-base-300"
+        class="flex justify-center py-2 rounded-lg px-2 mb-2 bg-base-100 border border-base-300"
       >
         <p
           v-if="availableBuyouts"

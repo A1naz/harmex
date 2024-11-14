@@ -205,7 +205,7 @@ function updateSearchType(filter: any) {
 </script>
 
 <template>
-  <div>
+  <div class="px-4 sm:px-16">
     <ProductLikesAvitoCreateLike
       :show="modalShow"
       @close-modal="modalShow = false"

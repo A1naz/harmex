@@ -417,7 +417,7 @@ function refreshElements() {
 </script>
 
 <template>
-  <div>
+  <div class="px-4 sm:px-16">
     <div class="breadcrumbs text-sm mt-8 flex w-full justify-between flex-wrap-reverse">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">

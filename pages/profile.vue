@@ -179,9 +179,24 @@ async function updatePassword() {
   passwordForm.newPassword = ''
 }
 
-function swapLanguage(_e: any) {
-  // form.language = e.value
-  // $switchLocale(e.value)
+const languageArr = ref([
+                    {
+                      title: 'Русский',
+                      value: 'ru',
+                      images: '/icons/figma/profile/rsFlag.svg',
+                    },
+                    {
+                      title: 'English',
+                      value: 'en',
+                      images: '/icons/figma/profile/usaFlag.svg',
+                    },
+                  ]) as any
+const selectedLanguageCode = ref(persistStore.language ?? 'ru')
+
+function updateLanguage(code: string) {
+  console.log('updateLanguage', code)
+  persistStore.language = code
+  selectedLanguageCode.value = code
 }
 
 watch(() => persistStore.language, (newLanguage) => {
@@ -197,7 +212,7 @@ await getPartnerAgreement()
 </script>
 
 <template>
-  <div>
+  <div class="px-4 sm:px-16">
     <div>
       <div class="flex flex-col gap-8 py-6 md:gap-6 md:py-4">
         <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
@@ -260,21 +275,13 @@ await getPartnerAgreement()
                 <p class="text-xs font-medium text-base-content">
                   {{ $t("Язык") }}
                 </p>
-                <!-- <custom-select
-                  :tabs="[
-                    {
-                      title: 'Русский',
-                      value: 'ru',
-                      images: '/icons/figma/profile/rsFlag.svg',
-                    },
-                    {
-                      title: 'English',
-                      value: 'en',
-                      images: '/icons/figma/profile/usaFlag.svg',
-                    },
-                  ]" @change-value="(e: any) => swapLanguage(e)"
-                /> -->
-                <ProfileLanguageSelect />
+                <custom-select
+                  :tabs="languageArr" 
+                  :status-text="languageArr.find((item: any) => item.value === selectedLanguageCode)?.title"
+                  @change-value="(e: any) => updateLanguage(e.value)
+                  "
+                />
+                <!-- <ProfileLanguageSelect /> -->
               </div>
               
             <div class="flex gap-2 flex-1">
