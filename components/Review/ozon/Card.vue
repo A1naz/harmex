@@ -32,7 +32,7 @@ function openBuyout() {
 
 <template>
   <div
-    class="rounded-lg bg-[#eff0ff] dark:bg-primary dark:bg-opacity-10 border-none text-base-content"
+    class="rounded-lg bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none text-base-content"
   >
     <div class="p-4 relative text-xl font-medium flex flex-col gap-2">
       <label
@@ -89,7 +89,7 @@ function openBuyout() {
             class="flex justify-between flex-wrap gap-2 items-center mt-2 mb-2"
           >
             <div
-              class="lg:m-0 text-xs bg-[#d3d6ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content rounded-md px-4 py-1.5"
+              class="lg:m-0 text-xs bg-[#ff5e34b3] border-none text-base-content rounded-md px-4 py-1.5"
             >
               Обновлено
               {{ $dayjs(updatedAt).locale('ru').format('D MMMM YYYY HH:mm') }}
@@ -127,7 +127,7 @@ function openBuyout() {
             <div class="flex-col justify-center gap-2 hidden lg:flex">
               <label
                 for="review-modal"
-                class="btn btn-sm btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content"
+                class="btn btn-sm btn-primary bg-[#ff5e34b3] border-none h-10 text-base-content"
                 @click="$emit('openModal', buyoutuuId, deliveryId)"
               >
                 Оставить отзыв (доступно: {{ countAllAvailable }})
@@ -145,7 +145,7 @@ function openBuyout() {
       <div class="flex flex-col justify-center gap-2 lg:hidden">
         <label
           for="review-modal"
-          class="btn btn-sm btn-primary dark:bg-primary bg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content"
+          class="btn btn-sm btn-primary иbg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content"
           @click="$emit('openModal', buyoutuuId, deliveryId)"
         >
           Оставить отзыв (доступно: {{ countAllAvailable }})
