@@ -299,7 +299,7 @@ async function selectCreatePage(e: any) {
               :class="{
                 'btn-disabled': !productData || amount <= 0,
               }"
-              class="btn w-full btn-primary dark:bg-primary bg-[#b2baff] border-none text-base-content"
+              class="btn w-full btn-primary border-none text-white"
               @click="create"
             >
               Добавить

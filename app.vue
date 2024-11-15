@@ -43,9 +43,9 @@
 }
 
 .myCustomBtn {
-  @apply btn btn-outline border-[#1b38ca] rounded-xl bg-white 
-         hover:bg-white hover:text-black hover:border-[#1b38ca] hover:shadow-xl
-         active:bg-[#1934bd] active:text-white;
+  @apply btn btn-outline border-primary rounded-xl bg-white 
+         hover:bg-white hover:text-black hover:border-primary hover:shadow-xl
+         active:bg-primary-content;
   &:hover {
     box-shadow: 0 4px 15px rgb(207, 212, 226);
   }

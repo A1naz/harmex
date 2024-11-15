@@ -199,6 +199,7 @@ function save() {
           >
             <p class="col-span-3 flex w-full items-center justify-center">
               Нет доступных функций
+              {{ props.accesses}}
             </p>
           </div>
         </div>
@@ -207,7 +208,7 @@ function save() {
         >
           <div />
           <label
-            class="btn w-full border bg-[#1B38CA] px-8 text-white hover:border-[#1B38CA] hover:bg-white hover:text-black"
+            class="btn w-full border bg-primary px-8 text-white hover:border-primary hover:bg-white hover:text-black"
             @click="save"
             >Сохранить</label
           >
