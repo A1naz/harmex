@@ -427,8 +427,8 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div class="px-4 sm:px-16">
-    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between flex-wrap-reverse">
+  <div class="px-4 sm:px-16 pt-8">
+    <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
@@ -463,7 +463,7 @@ async function copyToClipboard(text: string) {
         <div class="flex gap-2">
           <NuxtLink
             to="/flowwow/buyouts/create"
-            class="btn btn-primary bg-[#6675ff] dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
+            class="btn btn-primary dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
           >
             <Icon name="fluent:add-24-filled" size="12" />
             <span class="hidden lg:inline">Выкупы</span>

@@ -244,7 +244,7 @@ async function resumeStatus(item: any) {
 <template>
   <div class="px-4 sm:px-16">
     <div class="page-header">
-      <div class="breadcrumbs text-sm mt-8 flex w-full justify-between flex-wrap-reverse">
+      <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
         <ul class="font-medium text-[18px] text-[#909090]">
           <li class="cursor-pointer">
             <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">

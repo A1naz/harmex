@@ -253,8 +253,8 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div class="px-4 sm:px-16">
-    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between flex-wrap-reverse">
+  <div class="px-4 sm:px-16 pt-8">
+    <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
@@ -293,7 +293,7 @@ async function copyToClipboard(text: string) {
       <div class="flex gap-2 ">
         <button
 
-          class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
+          class="btn btn-primary dark:bg-primary border-none font-normal btn-sm"
           @click="modalShow = true"
           @click.stop
         >
@@ -341,7 +341,7 @@ async function copyToClipboard(text: string) {
               ref="codeInput"
               v-model="search.text"
               type="text"
-              class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+              class="input input-sm w-full bg-base-200 text-gray-500"
               placeholder="Поиск по лайкам"
               @input="onSearchInput()"
             >
@@ -371,7 +371,7 @@ async function copyToClipboard(text: string) {
         <!-- head -->
 
         <thead>
-          <tr class="bg-primary bg-opacity-5">
+          <tr class="bg-secondary">
             <!-- <th class="text-center">№</th> -->
             <th class="text-center rounded-tl-2xl">
               Фото
@@ -406,7 +406,7 @@ async function copyToClipboard(text: string) {
           <tr
             v-for="(item, index) in product_likes"
             :key="index"
-            class="bg-base-100 border-b-0"
+            class="bg-white border-b-0"
           >
             <td
               class="text-center border-r border-[#e8e8fd] mx-auto"
@@ -476,7 +476,7 @@ async function copyToClipboard(text: string) {
                     item.status === 'nofunds',
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'deleted' || item.status === 'canceled',
-                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                  'bg-info bg-opacity-20  text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
                     item.status === 'work' || item.status === 'busy',

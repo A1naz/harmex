@@ -208,14 +208,14 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div class="px-4 sm:px-16">
+  <div class="px-4 sm:px-16 pt-8">
     <QuestionsWildberriesCreateQuest
       :show="modalShow"
       @close-modal="modalShow = false"
       @create="getQuestions()"
     />
 
-    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between flex-wrap-reverse">
+    <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
@@ -248,7 +248,7 @@ async function copyToClipboard(text: string) {
       <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
         <div class="flex gap-2 ">
           <button
-            class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
+            class="btn btn-primary dark:bg-primary border-none font-normal btn-sm"
             @click="modalShow = true"
           >
             <Icon name="fluent:add-24-filled" size="17" />
@@ -296,7 +296,7 @@ async function copyToClipboard(text: string) {
                 ref="codeInput"
                 v-model="search.text"
                 type="text"
-                class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+                class="input input-sm w-full bg-base-200 text-gray-500"
                 placeholder="Поиск"
                 @input="onSearchInput()"
               >
@@ -320,7 +320,7 @@ async function copyToClipboard(text: string) {
       <ClientOnly>
         <table class="table table-sm">
           <thead>
-            <tr class="bg-primary bg-opacity-5">
+            <tr class="bg-secondary">
               <!-- <th class="text-center">№</th> -->
               <th class="text-center">
                 Фото
@@ -355,7 +355,7 @@ async function copyToClipboard(text: string) {
             <tr
               v-for="(item, index) in questions"
               :key="index"
-              class="bg-base-100 border-b-0 rounded-b-lg"
+              class="bg-white border-b-0 rounded-b-lg"
             >
               <!-- <td class="text-center border-x border-[#f9fafb]">{{ item.place }}</td> -->
               <td
@@ -425,7 +425,7 @@ async function copyToClipboard(text: string) {
                       item.status === 'nofunds' || item.status === 'archived',
                     'text-error rounded-full py-1 px-2  text-center':
                       item.status === 'spam',
-                    'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                    'bg-info bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
                       item.status === 'created',
                     'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
                       item.status === 'work' || item.status === 'busy',

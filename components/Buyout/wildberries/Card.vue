@@ -387,7 +387,7 @@ async function copyToClipboard(text: string) {
             </div> -->
             <div class="flex gap-2">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Источник: </span>
-              <div class="bg-base-300 rounded-md py-0 px-2 text-sm text-[0.725rem]">
+              <div class="bg-[#ced3d9] rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 Wildberries
               </div>
             </div>
@@ -395,7 +395,7 @@ async function copyToClipboard(text: string) {
         </div>
       </div>
       <button
-        class="btn  btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 dark:bg-primary dark:bg-opacity-50 dark:border-none btn-primary"
+        class="btn  btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
         @click="$emit('openModal', index)"
       >
         Открыть

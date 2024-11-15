@@ -368,7 +368,7 @@ function handleArticleChanged(
             v-model="article"
             type="number"
             placeholder="Артикул"
-            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            class="input input-sm w-full bg-base-200 text-gray-500"
             @keydown.enter="getProductReviews"
           />
           <button
