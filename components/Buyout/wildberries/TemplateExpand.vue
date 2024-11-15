@@ -31,7 +31,23 @@ watch(
 
 async function selectTemplate() {
   if (props.info.buyoutsArray.length <= 10) {
-    store.createProducts = props.info.buyoutsArray
+    const buyoutsArray = props.info.buyoutsArray
+    const startDate = new Date();
+    const endDate = new Date(startDate);
+    startDate.setHours(startDate.getHours() + 2)
+    endDate.setHours(endDate.getHours() + 2); 
+  
+    const updatedBuyoutsArray = buyoutsArray.map((item:any) => {
+      return {
+        ...item,
+        dateRange: [
+          startDate.toISOString(),
+          endDate.toISOString()
+        ]
+      };
+    });
+
+    store.createProducts = updatedBuyoutsArray;
   }
   else {
     notify({
