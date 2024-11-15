@@ -381,7 +381,7 @@ function startTimer() {
               ref="codeInput"
               v-model="article"
               placeholder="Ссылка на продукт"
-              class="input input-sm w-full mb-2 md:mb-0 bg-base-300 border-base-300 bg-opacity-30 border-opacity-30"
+              class="input input-sm w-full mb-2 md:mb-0 bg-base-200 border-base-200"
               @keydown.enter="addProduct"
             >
             <Icon
@@ -393,14 +393,14 @@ function startTimer() {
           </div>
           <div class="flex gap-2.5">
             <button
-              class="btn btn-primary bg-opacity-20 btn-sm normal-case border-none text-base-content font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+              class="btn btn-primary btn-sm normal-case border-none text-white font-normal "
               @click="addProduct"
             >
               Добавить
             </button>
             <label
               for="template-select-modal"
-              class="btn btn-sm btn-primary normal-case bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+              class="btn btn-sm btn-primary normal-case text-white mr-0 md:mr-1 mb-2 md:mb-0 font-normal "
               @click="getTemplates"
             >Шаблоны</label>
             <label
@@ -561,14 +561,14 @@ function startTimer() {
       >
         <div class="m-5">
           <label
-            class="btn btn-sm btn-primary normal-case border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+            class="btn btn-sm btn-primary normal-case border-none  mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal text-white"
             for="template-modal"
           >
             Шаблон
           </label>
 
           <button
-            class="btn btn-sm btn-primary normal-case border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+            class="btn btn-sm btn-primary normal-case border-none  mt-1 ml-2 font-normal text-white"
             :disabled="disabledCreateButton"
             @click="openChecksModal"
           >

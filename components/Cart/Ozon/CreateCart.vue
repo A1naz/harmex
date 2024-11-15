@@ -272,7 +272,7 @@ function removeProduct() {
           :class="{
             'btn-disabled': !productData || !query,
           }"
-          class="btn justify-start mt-3 w-full btn-primary dark:bg-primary bg-[#b2baff] hover:bg-[#6675FF] border-none text-base-content"
+          class="btn justify-start mt-3 w-full btn-primary  border-none text-white"
           @click="create"
         >
           <span class="mx-auto"> Добавить</span>

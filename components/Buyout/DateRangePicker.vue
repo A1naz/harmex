@@ -121,7 +121,7 @@ function selectDateInternal(date: any, selectDate: any) {
     >
       <template #trigger>
         <div
-          class="mx-auto text-sm flex justify-center items-center bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10 rounded-md p-1 mb-2 gap-1 px-5 cursor-pointer whitespace-nowrap flex-nowrap"
+          class="mx-auto text-sm flex justify-center items-center bg-[#F3E9DD] rounded-md p-1 mb-2 gap-1 px-5 cursor-pointer whitespace-nowrap flex-nowrap"
         >
           <div class="flex flex-col justify-center">
             <div class="text-xs">

@@ -203,7 +203,7 @@ function setTimeDelivery(data: any) {
               'btn-sm': size === 'small',
               'btn-md': size === 'medium',
             }"
-            class="btn btn-primary normal-case w-30 bg-[#b2baff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
+            class="btn btn-primary normal-case w-30 bg-[#F3E9DD] border-none text-base-content"
           >
             {{ date ? 'Добавить' : 'Выбрать' }}
           </button>
