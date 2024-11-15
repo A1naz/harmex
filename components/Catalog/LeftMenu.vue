@@ -36,7 +36,7 @@ function selectType(type: string) {
               size="25"
               class="mr-4"
               :class="{
-                'text-[#F72585]': selectedType === item,
+                'text-primary': selectedType === item,
               }"
             />
             <span class="font-medium text-sm">{{ item }}</span>
@@ -47,7 +47,7 @@ function selectType(type: string) {
               size="25"
               class="mr-4"
               :class="{
-                'text-[#F72585]': selectedType === item,
+                'text-primary': selectedType === item,
               }"
             />
           </div>

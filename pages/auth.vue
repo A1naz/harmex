@@ -113,7 +113,11 @@ async function login() {
     <section
       class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3"
     >
-      <h3 class="font-bold text-xl">
+      <h3 class="logo font-bold text-2xl text-center">
+        HARMEX
+        <span class=" text-blue-600 -ml-1">.</span>
+      </h3>
+      <h3 class="font-bold text-2xl text-center mb-4">
         Войдите в аккаунт
       </h3>
 
@@ -183,7 +187,6 @@ async function login() {
 
               Войти
             </button>
-
             <p class="mt-3 mb-1">
               Ещё не зарегистрированы?
               <NuxtLink href="/register" class="text-primary underline">
@@ -194,7 +197,14 @@ async function login() {
         </form>
       </div>
     </section>
+
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.logo {
+  font-family: 'Knewave', sans-serif;
+  font-size: 24px;
+}
+
+</style>
