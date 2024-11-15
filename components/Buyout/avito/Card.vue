@@ -344,7 +344,7 @@ const getStatus = computed(() => {
         </div>
       </div>
       <button
-        class="btn mt-2 text-[20px] rounded-2xl font-normal text-base-content bg-indigo-300 border-indigo-300 dark:bg-primary dark:bg-opacity-50 dark:border-none btn-primary"
+        class="btn mt-2 text-[20px] rounded-2xl font-normal text-base-content  btn-primary"
         @click="$emit('openModal', index)"
       >
         Открыть

@@ -231,8 +231,8 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div>
-    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between flex-wrap-reverse">
+  <div class="px-4 sm:px-16 pt-8">
+    <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
@@ -249,7 +249,7 @@ async function copyToClipboard(text: string) {
         </li>
       </ul>
       <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
-        <div class=" bg-white rounded-lg shadow-xs flex gap-2 items-center text-center ">
+        <div class=" bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center ">
           <div class="org-name font-semibold text-gray-800">
             {{ orgInfo.title.toUpperCase() }}
           </div>
@@ -271,7 +271,7 @@ async function copyToClipboard(text: string) {
       <div class="flex gap-2 ">
         <button
 
-          class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
+          class="btn btn-primary dark:bg-primary border-none font-normal btn-sm"
           @click="modalShow = true"
           @click.stop
         >
@@ -319,7 +319,7 @@ async function copyToClipboard(text: string) {
               ref="codeInput"
               v-model="search.text"
               type="text"
-              class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+              class="input input-sm w-full bg-base-200 text-gray-500"
               placeholder="Поиск по лайкам"
               @input="onSearchInput()"
             >
@@ -345,12 +345,11 @@ async function copyToClipboard(text: string) {
           <span class="loading loading-dots loading-lg text-primary" />
         </div>
       </div>
-
       <table v-else class="table table-sm">
         <!-- head -->
 
         <thead>
-          <tr class="bg-primary bg-opacity-5">
+          <tr class="bg-white">
             <!-- <th class="text-center">№</th> -->
             <th class="text-center rounded-tl-2xl">
               Фото
@@ -385,11 +384,11 @@ async function copyToClipboard(text: string) {
           <tr
             v-for="(item, index) in product_likes"
             :key="index"
-            class="bg-base-200 border-b-0 border-primary"
+            class="bg-white border-b-0 border-primary"
           >
             <!-- <td class="text-center border-x border-[#e8e8fd]">{{ item.place }}</td> -->
             <td
-              class="text-center border-r border-[#e8e8fd] mx-auto bg-base-100"
+              class="text-center border-r border-[#e8e8fd] mx-auto bg-white"
               :class="{ 'rounded-bl-2xl': index === product_likes.length - 1 }"
             >
               <div
@@ -426,14 +425,14 @@ async function copyToClipboard(text: string) {
               </div>
             </td>
             <td
-              class="text-center border-r border-[#e8e8fd] text-base-content truncate bg-base-100"
+              class="text-center border-r border-[#e8e8fd] text-base-content truncate bg-white"
             >
               <span class="whitespace-normal break-words max-w-[150px]">{{
                 item.name ? item.name : 'неизвестно'
               }}</span>
             </td>
             <td
-              class="text-center border-r border-[#e8e8fd] text-primary overflow-x-auto max-w-xs truncate bg-base-100"
+              class="text-center border-r border-[#e8e8fd] text-primary overflow-x-auto max-w-xs truncate bg-white"
             >
               <a
                 :href="item.url"
@@ -444,21 +443,21 @@ async function copyToClipboard(text: string) {
               </a>
             </td>
             <td
-              class="text-center border-r border-[#e8e8fd] bg-base-100"
+              class="text-center border-r border-[#e8e8fd] bg-white"
             >
               <div class="flex flex-col">
                 {{ item.type === 'brand' ? 'Лайк на бренд' : 'Лайк на товар' }}
               </div>
             </td>
             <td
-              class="text-center border-r border-[#e8e8fd] bg-base-100"
+              class="text-center border-r border-[#e8e8fd] bg-white"
             >
               <div class="flex flex-col">
                 {{ item.amount }}
               </div>
             </td>
 
-            <td class="text-center border-r border-[#e8e8fd] bg-base-100">
+            <td class="text-center border-r border-[#e8e8fd] bg-white">
               <div
                 :class="{
                   'text-red-500 rounded-full py-1 px-2  text-center':
@@ -466,7 +465,7 @@ async function copyToClipboard(text: string) {
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'deleted'
                     || item.status === 'canceled',
-                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                  'bg-info bg-opacity-20  text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
                     item.status === 'work' || item.status === 'busy',
@@ -482,7 +481,7 @@ async function copyToClipboard(text: string) {
               </button>
             </td>
             <td
-              class="text-center border-r border-[#e8e8fd] bg-base-100"
+              class="text-center border-r border-[#e8e8fd] bg-white"
             >
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
@@ -493,7 +492,7 @@ async function copyToClipboard(text: string) {
               </div>
             </td>
             <td
-              class="text-center border-r border-[#e8e8fd] bg-base-100"
+              class="text-center border-r border-[#e8e8fd] bg-white"
             >
               <div
                 v-if="item.endedDate"

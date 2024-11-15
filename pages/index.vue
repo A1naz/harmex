@@ -165,7 +165,7 @@ function quickAccessShow() {
 </script>
 
 <template>
-  <div class="mx-0 sm:mx-20">
+  <div class="mx-0 sm:mx-20 px-4 sm:px-16">
     <section class="mt-4 flex sm:block">
       <div v-if="accessesLoading" class="hero">
         <span class="loading loading-dots loading-lg text-primary" />

@@ -84,14 +84,14 @@ async function copyImageToClipboard(base64Image: any) {
 </script>
 
 <template>
-  <div class="w-full flex flex-col gap-[25px] max-w-[400px] mb-4">
+  <div class="w-full flex flex-col gap-4 max-w-[400px] mb-4 p-5 bg-white">
     <div
       class="flex w-full bg-[#f5f7ff] rounded-lg drop-shadow-sm overflow-hidden"
     >
       <div class="relative flex flex-col w-full">
         <div class="absolute inset-0 w-full h-full bg-no-repeat bg-cover bg-[url('/icons/figma/finance/cardBg.jpeg')] transform scale-x-[-1]"></div>
 
-        <div class="flex justify-between px-[20px] py-[15px] mb-20 z-[2]">
+        <div class="flex justify-between px-[20px] py-[15px] mb-10 z-[2]">
           <div class="flex flex-col gap-[6px]">
             <span class="text-lg font-semibold">Общий баланс</span>
             <span class="font-bold text-xl">
@@ -127,7 +127,7 @@ async function copyImageToClipboard(base64Image: any) {
 
     <div class="flex gap-[5px] justify-center">
       <button
-        class="btn btn-outline border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[50px] rounded-xl relative group"
+        class="btn btn-outline w-[49%] border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[50px] rounded-xl relative group"
         @click="modalShow = true"
       >
         <div class="flex items-center justify-center">
@@ -155,7 +155,7 @@ async function copyImageToClipboard(base64Image: any) {
       </button> -->
 
       <button
-        class="btn btn-outline border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[40px] rounded-xl relative group"
+        class="btn btn-outline w-[49%] border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[40px] rounded-xl relative group"
         @click="balanceModalShow = true"
       >
         <div class="flex items-center justify-center">
@@ -169,7 +169,7 @@ async function copyImageToClipboard(base64Image: any) {
       </button>
     </div>
 
-    <div class="flex flex-col w-full  rounded-lg drop-shadow-sm bg-gradient-to-t border border-[#f0f0f0] from-[#f2f4fe] from-[5%] to-[#fefefe] min-h-[260px]">
+    <div class="flex flex-col w-full  rounded-lg drop-shadow-sm bg-gradient-to-t border border-[#f0f0f0] from-[#f2f4fe] from-[5%] to-[#fefefe] ">
       <div class="flex justify-between p-[14px]">
         <div class="flex flex-col gap-[10px]">
           <span class="text-lg font-normal">Партнерский счет</span>
@@ -185,12 +185,12 @@ async function copyImageToClipboard(base64Image: any) {
         </div>
       <div class="flex justify-start mt-auto w-full">
         <div
-          class="bg-base-100 self-start m-3 mt-0 gap-3 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm w-full border border-[#f0f0f0]"
+          class="bg-white self-start m-3 mt-0 gap-1 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm w-full border border-[#f0f0f0]"
         >
           <div class="font-bold text-[0.9rem] whitespace-nowrap text-[#9e9e9e]">
             {{ `${firstLevelReferrals} человек` }}
           </div>
-          <div class="text-primary text-[1rem] text-start text-[#71a7e5] font-bold">
+          <div class="text-[1rem] text-start text-[#71a7e5] font-bold">
             {{ (props.refBalance || 0).toFixed(1) + " ₽" }}
           </div>
         </div>
@@ -198,7 +198,7 @@ async function copyImageToClipboard(base64Image: any) {
     </div>
 
     <div class="flex flex-col gap-5 w-full">
-      <div class="bg-[#f2f3f5] rounded-lg px-5 flex flex-col gap-[18px] py-3">
+      <div class="bg-[#f2f3f5] rounded-lg px-3 flex flex-col gap-[18px] py-3">
         <div class="flex gap-2">
           <h2 class="text-lg font-bold">
             Партнерка
@@ -213,7 +213,7 @@ async function copyImageToClipboard(base64Image: any) {
             </h3>
 
             <div
-              class="bg-[#f2f3f5] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto"
+              class="bg-[#f2f3f5] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto items-center"
             >
               <span
                 class="cursor-pointer hover:underline truncate"
@@ -225,9 +225,9 @@ async function copyImageToClipboard(base64Image: any) {
                 @click="copyToClipboard(refUrl)"
               >
                 <IconCSS
-                  name="solar:copy-outline"
-                  size="30"
-                  class="text-[#909090]"
+                  name="clarity:copy-line"
+                  size="20"
+                  class="text-[#909090] scale-x-[-1]"
                 />
               </button>
             </div>
@@ -250,8 +250,8 @@ async function copyImageToClipboard(base64Image: any) {
                 <NuxtImg
                   v-if="!qrLoading"
                   class="rounded-lg"
-                  height="200"
-                  width="200"
+                  height="100"
+                  width="100"
                   :src="qrCode"
                 />
                 <div v-else class="w-full flex justify-center items-center">

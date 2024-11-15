@@ -289,8 +289,8 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div>
-    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between flex-wrap-reverse">
+  <div class="px-4 sm:px-16 pt-8">
+    <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
@@ -307,7 +307,7 @@ async function copyToClipboard(text: string) {
         </li>
       </ul>
       <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
-        <div class=" bg-white rounded-lg shadow-xs flex gap-2 items-center text-center ">
+        <div class=" bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center ">
           <div class="org-name font-semibold text-gray-800">
             {{ orgInfo.title.toUpperCase() }}
           </div>

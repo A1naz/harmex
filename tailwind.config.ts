@@ -53,11 +53,11 @@ export default {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
+          DEFAULT: '#FF5E34',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
+          DEFAULT: '#f7f9fb',
           foreground: 'hsl(var(--secondary-foreground))',
         },
         destructive: {
@@ -112,12 +112,12 @@ export default {
     themes: [
       {
         light: {
-          'primary': '#4D66E3',
-          'primary-focus': '#334ED8',
+          'primary': '#FF5E34',
+          'primary-focus': '#CC4A28',
           'primary-content': '#FFFFFF',
 
-          'secondary': '#F72585',
-          'secondary-focus': '#F72585',
+          'secondary': '#f7f9fb',
+          'secondary-focus': '#f7f9fb',
           'secondary-content': '#ffffff',
 
           'accent': '#37cdbe',
@@ -128,9 +128,9 @@ export default {
           'neutral-focus': '#2a2e37',
           'neutral-content': '#ffffff',
 
-          'base-100': '#ffffff',
-          'base-200': '#f9fafb',
-          'base-300': '#ced3d9',
+          'base-100': '#f2f4f6',
+          'base-200': '#e6eaec',
+          'base-300': '#737373',
           'base-content': '#1e2734',
 
           '--custom': '#b2baff',

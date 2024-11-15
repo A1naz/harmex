@@ -16,7 +16,7 @@ function removeCart(index: number) {
   <ClientOnly>
     <table class="table table-sm">
       <thead>
-        <tr class="bg-primary bg-opacity-5">
+        <tr class="bg-secondary">
           <!-- <th class="text-center">№</th> -->
           <th class="text-center">
             Фото
@@ -55,7 +55,7 @@ function removeCart(index: number) {
         <tr
           v-for="(item, index) in carts"
           :key="index"
-          class="bg-base-100 border-b-0 rounded-b-lg"
+          class="bg-white border-b-0 rounded-b-lg"
         >
           <!-- <td class="text-center border-x border-[#f9fafb]">{{ item.place }}</td> -->
           <td

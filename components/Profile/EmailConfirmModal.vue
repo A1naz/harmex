@@ -66,28 +66,35 @@ async function updateEmail() {
   <input id="selectUser" type="checkbox" :checked="props.show" class="modal-toggle">
   <div class="modal z-[9999] cursor-pointer" @click="closeModal">
     <div
-      class="modal-box w-full cursor-auto rounded-[8px] border border-[#dee2e6] max-w-sm px-[10px] py-[30px] sm:w-9/12 sm:max-w-2xl sm:px-[58px]"
+      class="modal-box w-full cursor-auto rounded-[8px] border border-[#dee2e6] bg-white max-w-sm p-4 sm:w-9/12 sm:max-w-2xl"
       @click.stop
     >
       <form method="dialog">
-        <label class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2 bg-[#e5e5e5]" @click="closeModal">
+        <label class="btn btn-circle btn-ghost bg-transparent btn-sm absolute right-2 top-2 text-base-300 bg-[#e5e5e5]" @click="closeModal">
           ✕
         </label>
       </form>
 
       <div class="flex w-full flex-col gap-[72]">
-        <div class="flex flex-col gap-[15px]">
-          <h2 class="lg:text-center text-[16px] lg:text-[20px] font-[600]">
+        <div class="flex flex-col gap-5">
+          <div class="flex w-full justify-start items-center gap-3">
+            <div class="bg-base-100 px-1 rounded-md">            <Icon name="octicon:mail-24" size="24" class="text-[#6b7280]  w-5" />
+            </div>
+            <span class="text-[17x] font-[600]">Подтверждение почты для аккаунта</span>
+          </div>
+          <p class="lg:text-left text-[13px] font-[400]">
             Для подтверждения почты на платформе вам будет отправлено письмо со
-            ссылкой. Перейдите по ней, чтобы подтвердить и привязать почту к
+            ссылкой. 
+            <br>
+            Перейдите по ней, чтобы подтвердить и привязать почту к
             аккаунту.
-          </h2>
-          <div class="lg:mx-3 flex flex-col gap-[4px]">
-            <p class="text-[12px] font-[500]">
-              Введите ваш email
+          </p>
+          <div class=" flex flex-col gap-[4px]">
+            <p class="text-[15px] font-[500]">
+              Проверьте ваш Email
             </p>
             <input
-              v-model="formData.email" placeholder="exp@email.com" type="text" class="input input-bordered w-full"
+              v-model="formData.email" placeholder="exp@email.com" type="text" class="input bg-base-100 w-full"
               @blur="v$.email.$touch"
             >
             <div v-if="v$.email.$error" class="text-red-500 text-xs mt-1">
@@ -95,7 +102,7 @@ async function updateEmail() {
             </div>
           </div>
           <p
-            class=" lg:mx-3"
+            class=" "
             :class="{ 'text-[#5ba270]': isEmailSent, 'text-[#CC5F5F]': !isEmailSent }"
           >
             {{ message }}
@@ -103,14 +110,14 @@ async function updateEmail() {
         </div>
         <div class="mt-[20px] flex gap-[16px] lg:self-end justify-between lg:justify-end">
           <button
-            class="rounded-lg border border-[#595959] px-5 py-2 text-[#595959] hover:border-[#1b38ca] hover:bg-[#1b38ca] hover:bg-transparent hover:text-[#1b38ca] w-[45%] lg:w-auto"
+            class="rounded-lg border border-[#ebebec] px-5 py-2 text-black hover:border-primary hover:bg-primary hover:bg-transparent hover:text-primary w-[45%] lg:w-auto"
             @click="closeModal"
           >
             Отменить
           </button>
           <button
             :disabled="!formData.email || isEmailSending || v$.email.$invalid"
-            class="rounded-lg border border-[#1b38ca] bg-[#1b38ca] px-9 py-2 text-white hover:border-[#1b38ca] hover:bg-transparent hover:text-[#1b38ca] disabled:border-[#595959] disabled:bg-[#595959] disabled:hover:text-white w-[45%] lg:w-auto"
+            class="rounded-lg border border-primary bg-primary px-9 py-2 text-white hover:border-primary hover:bg-transparent hover:text-primary disabled:border-[#ebebec] disabled:bg-[#ebebec] disabled:hover:text-white w-[45%] lg:w-auto"
             @click="updateEmail"
           >
             Отправить

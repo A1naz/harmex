@@ -132,7 +132,7 @@ async function voteForMp(slug: string) {
 </script>
 
 <template>
-  <div class="flex mt-4">
+  <div class="flex pt-4 bg-white">
     <div class="left-menu">
       <CatalogLeftMenu v-model:selected-type="selectedType" :items="menuItems" />
     </div>

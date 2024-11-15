@@ -9,7 +9,7 @@ defineEmits(['setFavourites'])
 </script>
 
 <template>
-  <div class="card border p-2.5 rounded-lg shadow-md text-center w-[201px] h-[295px]">
+  <div class="card bg-secondary border p-2.5 rounded-lg shadow-md text-center w-[201px] h-[295px]">
     <div>
       <NuxtImg :src="item.mainImage || 'null'" class="mx-auto rounded-xl" width="170px" height="105px" />
       <button

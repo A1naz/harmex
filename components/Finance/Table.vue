@@ -16,7 +16,17 @@ const props = defineProps({
 
 const currentPage = ref(1)
 const itemsPerPage = ref(15)
+const paginations = ref([
+  { title: 'Показывать по 15', value: 15 },
+  { title: 'Показывать по 25', value: 25 },
+  { title: 'Показывать по 50', value: 50 },
+])
 const totalPages = 100
+
+function changePagination(value: number) {
+  itemsPerPage.value = value
+  swapPage(currentPage.value)
+}
 
 
 const displayPages = computed(() => {
@@ -37,21 +47,21 @@ const displayPages = computed(() => {
 
 function swapPage(swapTo: number) {
   currentPage.value += swapTo
-  emit('swapPage', currentPage.value)
+  emit('swapPage', currentPage.value, itemsPerPage.value)
 }
 </script>
 
 <template>
   <div class="finance-table-container">
-    <div class="table-wrapper ">
-      <table class="finance-table">
+    <div class="table-wrapper px-6">
+      <table class="finance-table border border-[#ebeef1]">
         <thead>
           <tr>
             <th v-for="(header, index) in props.headers" :key="index" scope="col" class="table-header">
               <div class="header-content">
                 <span>{{ header.label }}</span>
                 <button>
-                  <Icon name="octicon:filter-24" class="filter-icon" size="20px" />
+                  <Icon name="carbon:caret-down" class="filter-icon ml-2" size="15px" />
                 </button>
               </div>
             </th>
@@ -60,7 +70,7 @@ function swapPage(swapTo: number) {
         <tbody>
           <tr v-for="row in  props.tableData" :key="row.id" class="table-row">
             <td v-for="(header, index) in props.headers" :key="index" class="table-cell">
-              <span >{{ row[header.value] }}</span>
+              <span >{{ row[header.value] || '-' }}</span>
             </td>
           </tr>
         </tbody>
@@ -72,25 +82,29 @@ function swapPage(swapTo: number) {
         <span class="loading loading-spinner loading-lg bg-[#4960d3]"></span>
       </div>
     </div>
-    <div class="pagination-controls flex items-center mt-auto mb-5">
-      <button class="pagination-button flex items-center" :disabled="currentPage === 1" @click="swapPage(-1)">
-        <Icon name="solar:alt-arrow-left-linear" size="24" />
-      </button>
-      
-      <button v-for="page in displayPages" :key="page" class="pagination-button" :class="{ active : currentPage === page }"
-        @click="[currentPage = page, swapPage(0)]">
-        {{ page }}
-      </button>
-      
-      <button class="pagination-button flex items-center" :disabled="currentPage === totalPages" @click="swapPage(1)">
-        <Icon name="solar:alt-arrow-right-linear" size="24" />
-      </button>
+    <div class="pagination-controls flex justify-between mt-auto mb-5 border-t w-full py-3 px-4">
+      <custom-select :tabs="paginations" :class="'text-black bg-white'" :dropdownContainerClass="'bg-white'" :arrowsClass="'text-primary'" @change-value="(e:any) => changePagination(e.value)" />
+      <div class="flex justify-end gap-1">
+        <button class="btn btn-primary btn-xs font-normal px-0 flex items-center bg-transparent text-primary border-none hover:text-white shadow-none" :disabled="currentPage === 1" @click="swapPage(-1)">
+          <Icon name="solar:alt-arrow-left-linear" size="24" />
+        </button>
+        
+        <button v-for="page in displayPages" :key="page" class="btn btn-primary btn-xs bg-transparent text-black shadow-none border-none flex items-center hover:text-white" :class="{ active : currentPage === page }"
+          @click="[currentPage = page, swapPage(0)]">
+          {{ page }}
+        </button>
+        
+        <button class="btn btn-primary btn-xs p-0 bg-transparent text-primary border-none flex items-center hover:text-white shadow-none" :disabled="currentPage === totalPages" @click="swapPage(1)">
+          <Icon name="solar:alt-arrow-right-linear" size="24" />
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 
 <style scoped>
+
 .finance-table-container {
   display: flex;
   flex-direction: column;
@@ -101,21 +115,34 @@ function swapPage(swapTo: number) {
 
 .table-wrapper {
   overflow-x: auto;
-  width: 60vw;
+  width: 100%;
   flex-grow: 1;
 }
 
 .finance-table {
-  @apply table;
   width: 100%;
   table-layout: auto;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border: 1px solid #ebeef1;
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .table-header,
 .table-cell {
   padding: 0.5em;
-  text-align: center;
+  padding-left: 0.6em;
+  text-align: left;
   height: 55px;
+  border: 1px solid #ebeef1;
+}
+
+.table-row:nth-child(odd) {
+  background-color: #f4f6fa;
 }
 
 .header-content {
@@ -130,14 +157,13 @@ function swapPage(swapTo: number) {
 
 .pagination-controls {
   display: flex;
-  justify-content: center;
   align-items: center;
   margin-top: 1em;
   color: #8c8c8c;
 }
 
-.pagination-button {
-  background: none;
+/* .pagination-button {
+  background: "none";
   border: none;
   cursor: pointer;
   margin: 0 0.2em;
@@ -148,8 +174,8 @@ function swapPage(swapTo: number) {
 }
 
 .pagination-button.active {
-  @apply text-blue-800;
-}
+  color: #4960d3;
+} */
 
 @media (max-width: 640px) {
   .table-wrapper {
@@ -172,4 +198,5 @@ function swapPage(swapTo: number) {
     height: 2.5rem;
   }
 }
+
 </style>

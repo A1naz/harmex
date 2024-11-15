@@ -408,7 +408,7 @@ const changedCommentsLikes = computed(() => getAddedCommentsLikes())
 </script>
 
 <template>
-  <div>
+  <div class="px-4 sm:px-16">
     <!-- <h1 class="text-2xl font-bold mt-4">Добавить лайки</h1> -->
     <p class="font-light text-gray-500 mt-4 lg:text-sm">
       В целях безопасности все вопросы, на которых более 30 лайков или дизлайков,

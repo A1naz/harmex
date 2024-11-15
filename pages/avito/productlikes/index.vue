@@ -205,14 +205,14 @@ function updateSearchType(filter: any) {
 </script>
 
 <template>
-  <div>
+  <div class="px-4 sm:px-16">
     <ProductLikesAvitoCreateLike
       :show="modalShow"
       @close-modal="modalShow = false"
       @create="getProductLikes()"
     />
 
-    <div class="breadcrumbs text-sm mt-8 flex w-full justify-between flex-wrap-reverse">
+    <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
@@ -312,7 +312,7 @@ function updateSearchType(filter: any) {
         <!-- head -->
 
         <thead>
-          <tr class="bg-primary bg-opacity-5">
+          <tr class="bg-secondary">
             <!-- <th class="text-center">№</th> -->
             <th class="text-center rounded-tl-2xl">
               Фото
@@ -347,7 +347,7 @@ function updateSearchType(filter: any) {
           <tr
             v-for="(item, index) in product_likes"
             :key="index"
-            class="bg-base-100 border-b-0"
+            class="bg-white border-b-0"
           >
             <td
               class="text-center border-r border-[#e8e8fd] mx-auto" :class="{ 'rounded-bl-2xl': index === product_likes.length - 1 }"
@@ -422,7 +422,7 @@ function updateSearchType(filter: any) {
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'deleted'
                     || item.status === 'canceled',
-                  'bg-primary bg-opacity-20 text-base-content rounded-full py-1 px-2  text-center':
+                  'bg-info bg-opacity-20  text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
                     item.status === 'work' || item.status === 'busy',

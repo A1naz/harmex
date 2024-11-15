@@ -339,7 +339,7 @@ function handleArticleChanged(
 </script>
 
 <template>
-  <div>
+  <div class="px-4 sm:px-16">
     <!-- <h1 class="text-2xl font-bold mt-4">Добавить лайки</h1> -->
     <p class="font-light text-gray-500 mt-4 lg:text-sm">
       В целях безопасности все отзывы, на которых более 30 лайков или дизлайков,
@@ -368,7 +368,7 @@ function handleArticleChanged(
             v-model="article"
             type="number"
             placeholder="Артикул"
-            class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
+            class="input input-sm w-full bg-base-200 text-gray-500"
             @keydown.enter="getProductReviews"
           />
           <button
