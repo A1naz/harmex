@@ -458,7 +458,7 @@ function closeModal() {
           <div class="relative flex justify-end items-center flex-grow-0 md:w-80 gap-2.5 w-full">
             <input
               ref="codeInput" v-model="article" placeholder="Артикул"
-              class="input input-sm w-full mb-2 md:mb-0 bg-base-300 border-base-300 bg-opacity-30 border-opacity-30"
+              class="input input-sm w-full mb-2 md:mb-0 bg-base-200 border-base-200"
               @keydown.enter="addProduct"
             >
             <Icon
@@ -468,14 +468,14 @@ function closeModal() {
           </div>
           <div class="flex gap-2.5">
             <button
-              class="btn btn-primary btn-sm normal-case border-none text-base-content font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+              class="btn btn-primary btn-sm normal-case border-none text-white font-normal  hover:text-base-100"
               @click="addProduct"
             >
               Добавить
             </button>
             <label
               for="template-select-modal"
-              class="btn btn-sm btn-primary normal-case bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+              class="btn btn-sm btn-primary normal-case border-none text-white mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:text-base-100"
               @click="getTemplates"
             >Шаблоны</label>
             <label
@@ -525,7 +525,7 @@ function closeModal() {
         <div v-else class="products-table scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin">
           <table class="table table-xs w-full mt-4">
             <thead class="relative mb-2 text-sm text-base-content">
-              <tr class="bg-[#f1f2ff] dark:bg-primary dark:bg-opacity-10">
+              <tr class="bg-secondary dark:bg-opacity-10">
                 <!-- <th class="hidden 3xl:block">№</th> -->
                 <th class="w-12 text-center p-2 font-normal" @click="openInfoModal('picture')">
                   <!-- <IconCSS name="material-symbols:image-outline" size="20" /> -->
@@ -630,14 +630,14 @@ function closeModal() {
           >Удалить все</label
         > -->
           <label
-            class="btn btn-sm btn-primary normal-case border-none text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+            class="btn btn-sm btn-primary normal-case border-none text-white mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal"
             for="template-modal"
           >
             Шаблон
           </label>
 
           <button
-            class="btn btn-sm btn-primary normal-case border-none text-base-content mt-1 ml-2 font-normal bg-[#d8dcff] dark:bg-primary dark:bg-opacity-20 hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+            class="btn btn-sm btn-primary normal-case border-none text-white mt-1 ml-2 font-normal "
             :disabled="disabledCreateButton" @click="openChecksModal"
           >
             <!-- {{

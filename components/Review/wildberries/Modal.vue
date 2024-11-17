@@ -813,7 +813,7 @@ function convertToMoscowTime(dateString: any): Date {
           >Отмена</label>
           <button
             for="review-modal"
-            class="btn btn-primary btn-sm bg-[#b2baff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
+            class="btn btn-primary btn-sm border-none text-white"
             :disabled="!textValidation || isUploading || creatingReview"
             @click="publishReview"
           >

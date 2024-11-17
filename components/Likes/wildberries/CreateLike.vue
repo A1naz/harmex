@@ -405,7 +405,7 @@ async function selectCreatePage(e: any) {
           </div>
           <div class="w-full ml-auto self-end justify-end lg:w-40">
             <button
-              class="btn w-full btn-primary dark:bg-primary bg-[#b2baff] border-none text-base-content"
+              class="btn w-full btn-primary  border-none text-white"
               :disabled="btnDisabled"
               @click="getProductReviews"
             >
