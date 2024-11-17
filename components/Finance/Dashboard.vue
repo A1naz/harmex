@@ -105,13 +105,7 @@ async function copyImageToClipboard(base64Image: any) {
           </div>
         </div>
         <div class="flex justify-between p-[14px]">
-          <div
-            class="bg-transparent self-end flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
-          >
-            <span class=" font-normal">Партнерка</span>
-            <span class="text-lg font-semibold">{{ (props.refBalance || 0).toFixed(1) + " ₽" }}</span>
-
-          </div>
+    
           <div
             class="bg-transparent self-end flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
           >
