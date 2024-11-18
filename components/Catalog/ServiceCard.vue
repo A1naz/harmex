@@ -1,9 +1,35 @@
-<script setup>
+<script setup lang="ts">
 defineProps({
   item: { type: Object, required: true },
   favourites: { type: Array, default: () => [] },
   index: { default: 0 },
 })
+
+const { notify } = useNotification()
+
+async function vote(slug: string, mp: string) {
+  const response: any = await $fetch('/api/catalog/voteForService', {
+    method: 'POST',
+    query: {
+      slug,
+      mp
+    },
+  })
+  if (response.status === 'ok') {
+    notify({
+      type: 'success',
+      title: 'Успешно',
+      text: 'Вы успешно проголосовали за добавление маркетплейса',
+    })
+  }
+  else {
+    notify({
+      type: 'error',
+      title: 'Ошибка',
+      text: response.message,
+    })
+  }
+}
 
 defineEmits(['setFavourites'])
 </script>
@@ -31,7 +57,7 @@ defineEmits(['setFavourites'])
       class="btn bg-[#F5F7FF] w-full rounded-xl">
       Перейти
     </NuxtLink>
-    <button v-if="item.items[index].disabled"
+    <button v-if="item.items[index].disabled" @click="vote(`${item.items[index].path}`, item.slug)"
       class="z-10 px-5 py-2 bg-[#48b752] text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer -bottom-[5px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg hover:bg-[#3a9642] active:scale-95 active:shadow-md">
       Запросить
     </button>

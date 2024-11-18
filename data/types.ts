@@ -74,6 +74,7 @@ export interface IUser extends Entity {
   services: Array<string>
   favourites: Array<string>
   votedFor: Array<string>
+  votedForService: Array<object>
   isPartnerWithdrawAvailable: Boolean
   ks: string
 }

@@ -41,7 +41,6 @@ export default eventHandler(async (event) => {
   await services.save()
 
   return {
-    status: 'ok',
-    services,
+    status: 'ok'
   }
 })

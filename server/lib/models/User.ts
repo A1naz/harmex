@@ -79,6 +79,7 @@ const UserSchema = new Schema<IUserSchema>({
   services: { type: [String], default: [] },
   favourites: { type: [String], default: [] },
   votedFor: { type: [String], default: [] },
+  votedForService: { type: [Object], default: [] },
   isPartnerWithdrawAvailable: { type: Boolean, default: false },
 })
 
