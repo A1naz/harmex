@@ -1,5 +1,7 @@
 <!-- eslint-disable ts/ban-ts-comment -->
 <script lang="ts" setup>
+import { isNumber } from 'util';
+
 definePageMeta({
   layout: 'app',
   middleware: 'auth',
@@ -28,9 +30,11 @@ const refUrl = computed(
 const headersForTable = ref<any>([])
 const loading = ref(false)
 const limit = ref(15)
+const skip = ref(0)
 
 async function getData() {
   loading.value = true
+  skip.value = (currentPage.value - 1) * limit.value
   const { data } = await useFetch(
     '/api/finance/finance-data',
     /* @ts-ignore */
@@ -40,6 +44,7 @@ async function getData() {
         tableType: tableType.value,
         page: currentPage.value,
         itemsPerPage: limit.value,
+        skip: skip.value,
       },
       watch: false,
     },
@@ -208,6 +213,15 @@ getBalance()
 
 watch(() => tableType.value, updateTableData, { immediate: true })
 watch(() => currentPage.value, updateTableData)
+watch(
+  () => limit.value,
+  (newLimit: number) => {
+    if (Number.isFinite(newLimit)) {
+      skip.value = 0 
+      updateTableData()
+    }
+  }
+)
 </script>
 
 <template>
@@ -242,7 +256,13 @@ watch(() => currentPage.value, updateTableData)
           </div>
         </button>
       </div>
-      <FinanceTable :table-data="tableData" :loading="loading" :headers="headersForTable" @swap-page="(page: number, itemsPerPage: number) => { currentPage = page, limit = itemsPerPage }" />
+      <FinanceTable 
+        :table-data="tableData" 
+        :loading="loading" 
+        :headers="headersForTable" 
+        @swap-page="(page: number) => { currentPage = page}" 
+        @change-pagination="(itemsPerPage: number) => { limit = itemsPerPage}" 
+      />
 
     </div>
   </div>
