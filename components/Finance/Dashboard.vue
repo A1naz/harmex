@@ -185,7 +185,7 @@ async function copyImageToClipboard(base64Image: any) {
             {{ `${firstLevelReferrals} человек` }}
           </div>
           <div class="text-[1rem] text-start text-[#71a7e5] font-bold">
-            {{ (props.refBalance || 0).toFixed(1) + " ₽" }}
+           500 ₽
           </div>
         </div>
       </div>
