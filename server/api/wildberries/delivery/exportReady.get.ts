@@ -1,3 +1,5 @@
+import type { Document } from 'mongoose'
+
 import { Buyout } from '~~/server/lib/models/wildberries/Buyout'
 import { Buyoutlog } from '~~/server/lib/models/wildberries/Buyoutlog'
 import { Delivery } from '~~/server/lib/models/wildberries/Delivery'
@@ -14,49 +16,39 @@ const keys = Object.keys as <T>(
       : never
   : never)[]
 
-export default eventHandler(async (event) => {
-  try {
-    const user = await getAdminEntity(event)
-    if (!user)
-      return sendRedirect(event, '/auth', 302)
+async function getReady(user: Document) {
+  const deliveries = await Delivery.find({
+    user: user._id,
+    statusdelivery: {
+      $elemMatch: {
+        $or: [
+          { status: 'Готов к выдаче' },
+          { status: 'Готов к получению' },
+          { status: '^Заберите до.*' },
+          { status: { $regex: '^Готов к получению.*' } },
+          { status: { $regex: '^Готов к выдаче.*' } },
+          { status: { $regex: '^Заберите до.*' } },
+        ],
+      },
+    },
+    status: { $ne: 'completed' },
+  })
+  if (!deliveries.length) {
+    return []
+  }
+  const buyoutsId = deliveries.map(item => item.idbuyout)
+  const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
+  const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
 
-    const runtimeConfig = useRuntimeConfig()
-    const deliveries = await Delivery.find({ user }).sort({ _id: -1 })
-    if (!deliveries.length) {
-      throw createError({
-        statusCode: 400,
-        message: 'Нет доставок для экспорта',
-      })
-    }
-    const buyoutsId = deliveries.map(item => item.idbuyout)
-    const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
-    const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
-
-    const format = await Promise.all(
-      deliveries.map(async (delivery, index) => {
+  const format = await Promise.all(
+    deliveries
+      .map(async (delivery, index) => {
         const buyout = buyouts.find(
           buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf(),
         )
+
         if (!buyout)
           return undefined
-
-        const phone = delivery.recipientphone
-        const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
-        const currentstatus = delivery.statusdelivery?.length
-          ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
-          : 'Неизвестно'
-
-        const statusDelivery = delivery.statusdelivery
-
-        const arrivedDate = statusDelivery.find(
-          item =>
-            item.status === 'Готов к выдаче'
-            || item.status === 'Готов к получению',
-        )
-        const receivedDate = statusDelivery.find(
-          item => item.status === 'Получено' || item.status === 'Получен',
-        )
-
         const foundLog = logs.find(
           item =>
             item.buyout.valueOf() === buyout._id.valueOf()
@@ -70,92 +62,126 @@ export default eventHandler(async (event) => {
           .toString()
           .padStart(2, '0')}:${finishDateMinutes.toString().padStart(2, '0')}`
 
+        const phone: any = delivery.recipientphone
+        const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
+        const currentstatus = delivery.statusdelivery?.length
+          ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
+          : 'Неизвестно'
+        const statusupdated = delivery.statusdelivery?.length
+          ? new Date(
+            delivery.statusdelivery[delivery.statusdelivery.length - 1].date,
+          )
+          : new Date()
+        const deliveryDate = delivery.statusdelivery?.length
+          ? new Date(
+            delivery.statusdelivery?.find(
+              item =>
+                item.status === 'Готов к выдаче'
+                || item.status === 'Готов к получению',
+            )?.date,
+          )
+          : new Date()
+        const expireDate = new Date(
+          deliveryDate.getTime() + 1000 * 60 * 60 * 24 * 14,
+        )
         return {
+          index,
+          place,
+          uuid: buyout.uuid,
+          article: delivery.article,
+          pricebuy: delivery.pricebuy,
+          size: buyout.sizeparam,
+          point: delivery.point,
+          deliveryDate,
+          expireDate,
+          statusdelivery: delivery.statusdelivery,
+          currentstatus,
+          statusupdated,
+          productname: buyout.product.name,
+          productimage: buyout.product.image,
+          receiptcode: delivery.receiptcode ? delivery.receiptcode : undefined,
           receiptcodeqr: delivery.receiptcodeqr
             ? delivery.receiptcodeqr
             : undefined,
-          receiptcode: delivery.receiptcode ? delivery.receiptcode : '',
-          currentstatus,
-          article: delivery.article,
-          size: buyout.sizeparam == '0' ? 'Нет' : buyout.sizeparam,
-          productname: buyout.product.name,
+          recipient: delivery.recipient,
+          createdAt: new Date(buyout.createdAt),
+          recipientphone: replaced,
           finishDate,
           finishTime,
-          uuid: `#${buyout.uuid}`,
-          seachquery: buyout.searchQuery,
-          point: delivery.point,
-          recipient: delivery.recipient,
-          recipientphone: replaced,
-          pricebuy: delivery.pricebuy,
-          arrivedDate: arrivedDate ? new Date(arrivedDate.date) : '-',
-          receivedDate: receivedDate ? new Date(receivedDate.date) : '-',
-          place: index + 1,
+          updatedAt: new Date(delivery.updatedAt),
           key: buyout.ff ? 'Выкуп под ключ' : 'Выкуп',
         }
-      }),
-    )
+      })
+      .filter(item => item !== undefined),
+  )
 
+  return format
+}
+
+export default eventHandler(async (event) => {
+  try {
+    const user = await getAdminEntity(event)
+    if (!user)
+      return sendRedirect(event, '/auth', 302)
+
+    const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
-    const ready = format.filter(item => item)
-    const sheet = workbook.addWorksheet('Общая таблица', {
+    const ready = (await getReady(user)).filter(item => item !== undefined)
+
+    const sheet = workbook.addWorksheet('Готовы к выдаче', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
     })
 
     sheet.columns = [
-      { header: 'QR-код', key: 'receiptcode', width: 16, font: { bold: true } },
+      { header: 'Номер', key: 'place', font: { bold: true } },
+      { header: 'QR код', key: 'receiptcode', width: 24, font: { bold: true } },
+      {
+        header: 'Статус',
+        key: 'currentstatus',
+        width: 16,
+        font: { bold: true },
+      },
+      { header: 'Товар', key: 'productname', width: 48, font: { bold: true } },
       { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
       { header: 'Размер', key: 'size', width: 16, font: { bold: true } },
       {
-        header: 'Название товара',
-        key: 'productname',
-        width: 48,
-        font: { bold: true },
-      },
-      {
-        header: 'Дата заказа',
+        header: 'Дата создания заказа',
         key: 'finishDate',
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'Время заказа',
+        header: 'Время создания заказа',
         key: 'finishTime',
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'Дата прибытия',
-        key: 'arrivedDate',
+        header: 'Дата доставки в ПВЗ',
+        key: 'deliveryDate',
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'Дата забора',
-        key: 'receivedDate',
+        header: 'Дата окончания срока забора с ПВЗ',
+        key: 'expireDate',
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'Статус',
-        key: 'currentstatus',
-        width: 24,
-        font: { bold: true },
-      },
-      {
-        header: 'Сумма заказа',
-        key: 'pricebuy',
+        header: 'Код ПВЗ',
+        key: 'receiptcode',
         width: 16,
         font: { bold: true },
       },
-      { header: 'ID заказа', key: 'uuid', width: 40, font: { bold: true } },
+      { header: 'ID Выкупа', key: 'uuid', width: 16, font: { bold: true } },
+      { header: 'ПВЗ', key: 'point', width: 64, font: { bold: true } },
       {
-        header: 'Поисковый запрос',
-        key: 'seachquery',
-        width: 32,
+        header: 'Получатель',
+        key: 'recipient',
+        width: 16,
         font: { bold: true },
       },
-      { header: 'Адрес', key: 'point', width: 64, font: { bold: true } },
-      { header: 'Имя', key: 'recipient', width: 16, font: { bold: true } },
       {
         header: 'Телефон',
         key: 'recipientphone',
@@ -163,8 +189,8 @@ export default eventHandler(async (event) => {
         font: { bold: true },
       },
       {
-        header: 'Код выдачи',
-        key: 'receiptcode',
+        header: 'Дата обновления',
+        key: 'updatedAt',
         width: 16,
         font: { bold: true },
       },
@@ -175,7 +201,9 @@ export default eventHandler(async (event) => {
         font: { bold: true },
       },
     ]
+
     sheet.addRows(ready)
+    // add qr codes to sheet
 
     for (const item of ready) {
       if (
@@ -202,34 +230,23 @@ export default eventHandler(async (event) => {
         extension: 'png',
       })
       sheet.addImage(image, {
-        tl: { col: 0, row: item!.place },
+        tl: { col: 1.5, row: item!.place + 0.8 },
         ext: { width: 100, height: 100 },
       })
       sheet.getRow(item!.place + 1).height = 100
     }
-
-    const idCol = sheet.getColumn('uuid')
-
-    idCol.eachCell((cell, rowNumber) => {
-      cell.value = {
-        text: cell.value!.toString(),
-        hyperlink: `${
-          runtimeConfig.PUBLIC_SITE_URL
-        }/buyouts?uuid=${cell.value?.toString()}`,
-      }
-    })
-
     const buffer = await workbook.xlsx.writeBuffer()
 
     // await userLog(event, {
     //   documentType: DocuemntEnum.Delivery,
     //   documentId: '',
-    //   comment: 'Экспорт всех доставок XLS',
+    //   comment: 'Экспорт доставок готовых к выдаче',
     // })
 
     return buffer
   }
   catch (e) {
+    console.log(e)
     throw createError({
       statusCode: 500,
       message: 'Не удалось создать таблицу',

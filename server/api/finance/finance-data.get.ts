@@ -12,27 +12,27 @@ export default defineEventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/', 302)
 
-  const { tableType, page, itemsPerPage}: any = getQuery(event)
+  const { tableType, page, itemsPerPage, skip}: any = getQuery(event)
 
   switch (tableType) {
     case 'general':
     {
-      const data: any[] = await generalData(user, itemsPerPage, page)
+      const data: any[] = await generalData(user, itemsPerPage, page, skip)
       return data
     }
     case 'replenishment':
     {
-      const data: any[] = await replenishmentData(user, itemsPerPage, page)
+      const data: any[] = await replenishmentData(user, itemsPerPage, page, skip)
       return data
     }
     case 'expenses':
     {
-      const data: any[] = await expensesData(user, itemsPerPage, page)
+      const data: any[] = await expensesData(user, itemsPerPage, page, skip)
       return data
     }
     case 'partner':
     {
-      const data: any[] = await partnerData(user, itemsPerPage, page)
+      const data: any[] = await partnerData(user, itemsPerPage, page, skip)
       return data
     }
 

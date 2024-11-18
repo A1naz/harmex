@@ -96,16 +96,11 @@ function updateAmount(event: Event) {
       <!-- ///baseBalance form  -->
       <div v-if="modalType === 'baseBalance'">
         <div class="flex flex-col w-full justify-center gap-4">
-          <h1 class="text-2xl font-bold">
-            Вывод средств c личного кабинента
-            <div class="text-sm text-[#e04141] font-normal">
-              Вывод осуществляется в течение 14 дней с даты подачи заявки
-            </div>
-          </h1>
+
           
           <div>
             <div class="label">
-              <span class="label-text text-primary">Сумма вывода</span>
+              <span class="label-text text-base-content">Сумма вывода</span>
             </div>
             <input
               v-model.lazy="formattedAmount"
@@ -114,11 +109,18 @@ function updateAmount(event: Event) {
             >
           </div>
 
+          <h1 class="text-2xl font-bold">
+            Вывод средств c личного кабинента
+            <div class="text-sm text-base-content font-normal">
+              Вывод осуществляется в течение 14 дней с даты подачи заявки
+            </div>
+          </h1>
+
           <div class="agreement flex gap-2 items-center w-full">
             Пользовательское соглашение
-            <NuxtLink to="/agreement.pdf" class="link link-primary">
+            <button class="link link-primary">
               Скачать
-            </NuxtLink>
+            </button>
           </div>
           <div class="w-full flex justify-end">
             <button class="btn btn-primary" @click="modalType = 'finalForm'">
@@ -130,15 +132,10 @@ function updateAmount(event: Event) {
       <!-- ///partnerBalance form  -->
       <div v-if="modalType === 'partnerBalance'">
         <div class="flex flex-col w-full justify-center gap-4">
-          <h1 class="text-2xl font-bold">
-            Вывод средств c партнерской программы
-            <div class="text-sm text-[#e04141] font-normal">
-              Вывод осуществляется в течение 14 дней с даты подачи заявки
-            </div>
-          </h1>
+          
           <div>
             <div class="label">
-              <span class="label-text text-primary">Сумма вывода</span>
+              <span class="label-text text-base-content">Сумма вывода</span>
             </div>
             <input
               v-model.lazy="formattedAmount"
@@ -146,11 +143,19 @@ function updateAmount(event: Event) {
               placeholder="Введите сумму вывода" class="input input-primary w-full" @input="updateAmount"
             >
           </div>
+
+          <h1 class="text-2xl font-bold">
+            Вывод средств c партнерской программы
+            <div class="text-sm text-base-content font-normal">
+              Вывод осуществляется в течение 14 дней с даты подачи заявки
+            </div>
+          </h1>
+
           <div v-if="partnerAgreement" class="agreement flex gap-2 items-center w-full">
             Партнёрское соглашение
-            <NuxtLink to="/agreement.pdf" class="link link-primary">
+            <button class="link link-primary">
               Скачать
-            </NuxtLink>
+            </button>
           </div>
           <div v-else>
             Партнёрское соглашение не заключено

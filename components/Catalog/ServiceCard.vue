@@ -9,7 +9,7 @@ defineEmits(['setFavourites'])
 </script>
 
 <template>
-  <div class="card bg-secondary border p-2.5 rounded-lg shadow-md text-center w-[201px] h-[295px]">
+  <div class="card bg-secondary border p-2.5 rounded-lg shadow-md text-center w-[201px] h-[265px]">
     <div>
       <NuxtImg :src="item.mainImage || 'null'" class="mx-auto rounded-xl" width="170px" height="105px" />
       <button
@@ -31,14 +31,17 @@ defineEmits(['setFavourites'])
       </button>
     </div>
     <div class="w-full text-start mt-3">
-      <div class="badge bg-[#FCD1A1] text-[#653600] whitespace-nowrap relative text-[11.5px] text-start -ml-1">
-        {{ item.name }} {{ item.items[index].title }}
+      <div class="badge bg-[#FCD1A1] text-[#653600] whitespace-nowrap relative text-[15.5px] text-start -ml-1">
+        {{ item.items[index].title }}
       </div>
-      <p class="text-[16px] font-bold text-gray-800">
-        от {{ item.price }} ₽
+      <p class="text-[16px] font-semibold text-gray-800">
+        {{ item.price }} ₽
+      </p>
+      <p class="text-[16px] font-semibold text-gray-800">
+        10% от цены с СПП
       </p>
     </div>
-    <p class="truncate-text text-[#909090] mt-2 text-[14px] text-start">
+    <!-- <p class="truncate-text text-[#909090] mt-2 text-[14px] text-start">
       Подписки на аккаунт можно увеличить ИИ
     </p>
     <p class="truncate-text text-[#212121] mb-1 text-[14px] text-start">
@@ -47,8 +50,8 @@ defineEmits(['setFavourites'])
         <Icon name="mage:star-fill" size="16px" />
       </span>
       • 5.0
-    </p>
-    <NuxtLink :to="`/${item.slug}${item.items[index].path}`" class="btn bg-[#F5F7FF] w-full rounded-xl">
+    </p> -->
+    <NuxtLink :to="`/${item.slug}${item.items[index].path}`" class="btn bg-[#F5F7FF] w-full rounded-xl flex mt-auto">
       {{ item.unavailable ? 'Предзаказ' : 'Перейти' }}
     </NuxtLink>
   </div>
