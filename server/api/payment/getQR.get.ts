@@ -12,9 +12,8 @@ export default eventHandler(async (event) => {
   const purposeDate = `${dates[2]}.${dates[1]}.${dates[0]}`
   const paymentUuid = uuid()
   const purpose = `Пополнение баланса личного кабинета - "${user.username}", по агентскому договору "${user.uuid}" от ${purposeDate}г.`
-
   const data = `ST00012|Name=ИП Новиков Андрей Валерьевич|PersonalAcc=40802810401300014591|BankName=АО "АЛЬФА-БАНК"|BIC=044525593|CorrespAcc=30101810200000000593|Purpose=${purpose}|Sum=${
-    summ * 100
+    summ * 1.01 * 100
   }|PayeeINN=713602742755`
 
   const qrCode = await new Promise((resolve, reject) => {
