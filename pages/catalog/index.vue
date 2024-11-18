@@ -143,7 +143,7 @@ async function voteForMp(slug: string) {
       <div class="breadcrumbs text-sm ml-3">
         <ul class="font-medium text-[18px] text-[#909090]">
           <li v-if="!loading" class="cursor-pointer">
-            Каталог
+            Каталог Harmex
           </li>
         </ul>
       </div>
