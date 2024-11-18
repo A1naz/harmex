@@ -6,7 +6,7 @@ interface HeaderForTable {
   label: string
 }
 
-const emit = defineEmits(['swapPage'])
+const emit = defineEmits(['swapPage', 'changePagination'])
 
 const props = defineProps({
   tableData: { type: Array as () => Array<any>, default: () => [] },
@@ -25,7 +25,7 @@ const totalPages = 100
 
 function changePagination(value: number) {
   itemsPerPage.value = value
-  swapPage(currentPage.value)
+  emit('changePagination', itemsPerPage.value)
 }
 
 
@@ -89,8 +89,13 @@ function swapPage(swapTo: number) {
           <Icon name="solar:alt-arrow-left-linear" size="24" />
         </button>
         
-        <button v-for="page in displayPages" :key="page" class="btn btn-primary btn-xs bg-transparent text-black shadow-none border-none flex items-center hover:text-white" :class="{ active : currentPage === page }"
-          @click="[currentPage = page, swapPage(0)]">
+        <button
+          v-for="page in displayPages"
+          :key="page"
+          class="btn btn-primary btn-xs text-black shadow-none border-none flex items-center hover:text-white"
+          :class="{'text-white': currentPage === page, 'bg-transparent': currentPage !== page}"
+          @click="(currentPage = page, swapPage(0))"
+        >
           {{ page }}
         </button>
         

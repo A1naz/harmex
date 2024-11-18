@@ -1,8 +1,9 @@
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 import historyType from './historyType'
 
-export default async function(user: any, itemsPerPage?: number, page?: number) {
+export default async function(user: any, itemsPerPage?: number, page?: number, skip?: number) {
   const limit = itemsPerPage ? itemsPerPage : 25
+  const skipValue = skip ? skip : 25
   const res = await paymenthistory
     .find({ user: user._id })
     .sort({ dataoperation: -1 })

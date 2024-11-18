@@ -44,7 +44,7 @@ async function balanceUpdate() {
     notify({
       type: 'success',
       title: 'Успешно',
-      text: 'Ссылка успешно сгенерирована',
+      text: 'Реквизиты для пополнения кошелька созданы',
     })
   }
  
