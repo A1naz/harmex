@@ -8,7 +8,7 @@ const { notify } = useNotification()
 
 function closeModal() {
   summ.value = 0
-  form.value = 'addBalance'
+  form.value = 'choise'
   emit('close')
 }
 
@@ -16,7 +16,8 @@ const qrImage = ref('null')
 const loading = ref(false)
 const summ = ref(0)
 const summArr = [1000, 5000, 25000, 50000, 100000]
-const form = ref('addBalance')
+const form = ref('choise')
+const paymentType = ref('businessCard')
 
 
 async function balanceUpdate() {
@@ -66,6 +67,27 @@ async function balanceUpdate() {
           ✕
         </label>
       </form>
+      <div v-if="form == 'choise'" class="flex flex-col w-full gap-[72]">
+        <div class="flex flex-col w-full justify-center items-center gap-4">
+          <h1 class="text-2xl font-bold">
+            Вывод средств
+          </h1>
+          <div class="text-lg">
+            Выберите откуда вывести средства
+          </div>
+
+          <div class="flex flex-col gap-4 w-full">
+            <button class="btn btn-ghost bg-base-200 w-full hover:text-blue-500 hover:bg-blue-50 shadow-none drop-shadow-none" @click="[form = 'addBalance', paymentType = 'businessCard']">
+              <span class="text-base-content">Бизнес-карта</span>
+              <Icon class="ml-auto" name="tabler:arrow-right" size="24" />
+            </button>
+            <button class="btn btn-ghost bg-base-200 w-full hover:text-blue-500 hover:bg-blue-50" @click="[form = 'addBalance', paymentType = 'account']">
+              <span class="text-base-content">Выставить счет</span>
+              <Icon class="ml-auto " name="tabler:arrow-right" size="24" />
+            </button>
+          </div>
+        </div>
+          </div>
       <div v-if="form == 'addBalance'" class="flex flex-col w-full gap-[72]">
         <div class="flex flex-col w-full justify-center items-center gap-[15px] mb-[47px]">
           <h1 class="text-xl font-bold">Пополнение счета</h1>
@@ -101,7 +123,7 @@ async function balanceUpdate() {
           </button>
         </div>
       </div>
-      <div v-else class="flex flex-col w-full gap-[72]">
+      <div v-if="form == 'result'" class="flex flex-col w-full gap-[72]">
         <div class="flex flex-col w-full justify-center items-center gap-[20px]">
           <h1 class="text-xl font-bold">Пополнение счета</h1>
           <div class="flex gap-[20px] justify-start w-full">
