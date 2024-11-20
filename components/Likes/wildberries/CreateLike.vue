@@ -350,7 +350,7 @@ async function selectCreatePage(e: any) {
       </div>
       <div class="bg-base-100 rounded-lg">
         <div class="flex flex-wrap items-center gap-6 mb-2">
-          <div class="relative">
+          <div class="relative mt-2">
             <div>Вставьте артикул:</div>
             <div class="relative w-64 min-h-min md:min-h-[48px] mt-2">
               <input
@@ -360,7 +360,7 @@ async function selectCreatePage(e: any) {
                   'input-success': urlSuccess,
                 }"
                 tabindex="0"
-                class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg"
+                class="input w-full input-sm bg-base-200 h-[2.5rem] text-lg"
                 placeholder="Введите артикул"
                 type="number"
                 @keydown.enter="getProductReviews"
@@ -380,7 +380,7 @@ async function selectCreatePage(e: any) {
           <div>
             <div>Период выполнения:</div>
             <select
-              class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px] bg-base-200"
+              class="select w-44 select-sm h-[2.5rem] bg-base-200 mt-2"
               @change="selectPeriod"
             >
               <option value="3h">
@@ -405,7 +405,7 @@ async function selectCreatePage(e: any) {
           </div>
           <div class="w-full ml-auto self-end justify-end lg:w-40">
             <button
-              class="btn w-full btn-primary  border-none text-white"
+              class="btn btn-sm h-[2.5rem] w-full btn-primary border-none text-white"
               :disabled="btnDisabled"
               @click="getProductReviews"
             >

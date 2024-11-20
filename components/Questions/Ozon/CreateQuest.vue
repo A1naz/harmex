@@ -137,13 +137,13 @@ function removeProduct() {
                     'input-success': productData,
                   }"
                   :disabled="productData"
-                  tabindex="0" class="input join-item input-sm lg:input-md w-full bg-base-200 text-gray-500" placeholder="12312312" type="text" @input="changeUrl"
+                  tabindex="0" class="input join-item input-sm h-[2.5rem] w-full bg-base-200 text-gray-500" placeholder="12312312" type="text" @input="changeUrl"
                 >
                 <button
                   :class="{
                     'btn-disabled': !productData,
                   }"
-                  class="btn btn-ghost btn-sm join-item rounded-r-md lg:btn-md btn-circle bg-base-300" @click="removeProduct"
+                  class="btn btn-ghost btn-sm h-[2.5rem] join-item rounded-r-md btn-circle bg-base-300" @click="removeProduct"
                 >
                   <span v-show="loadingUrl" class="loading loading-spinner loading-xs p-2" />
 
@@ -156,7 +156,7 @@ function removeProduct() {
             </div>
             <div>
               <div>Пол:</div>
-              <select class="select select-sm lg:select-md w-full mt-2 bg-base-200 text-gray-500" @change="selectSex">
+              <select class="select select-sm h-[2.5rem] w-full mt-2 bg-base-200 text-gray-500" @change="selectSex">
                 <option value="male">
                   Мужской
                 </option>
@@ -167,8 +167,8 @@ function removeProduct() {
             </div>
             <div>
               <div>Дата публикации:</div>
-              <div class="relative w-full  lg:p-2 rounded-lg mt-2 bg-base-200 text-gray-500">
-                <div class="absolute left-3 top-1.5 lg:left-10 lg:top-3.5 text-sm">
+              <div class="relative w-full h-[2.5rem] lg:p-2 rounded-lg mt-2 bg-base-200 text-gray-500">
+                <div class="absolute left-3 top-2.5 lg:left-8 lg:top-3.5 text-sm">
                   {{ publishDate <= now ? 'Опубликовать сейчас'
                     : $dayjs(publishDate).format('DD.MM.YYYY HH:mm') }}
                 </div>
@@ -197,7 +197,7 @@ function removeProduct() {
         </div>
         <div class="flex justify-end gap-2">
           <button
-            class="btn btn-ghost hidden lg:flex w-full max-w-[calc(25%)] btn-primary"
+            class="btn btn-sm h-[2.5rem] btn-ghost hidden lg:flex w-full max-w-[calc(25%)] btn-primary"
             @click="$emit('closeModal')"
           >
             Отмена
@@ -206,7 +206,7 @@ function removeProduct() {
             :disabled="creating"
             :class="{
               'btn-disabled': !productData || !questionText,
-            }" class="btn w-full  lg:max-w-[calc(25%)] btn-primary border-none text-white"
+            }" class="btn btn-sm h-[2.5rem] w-full  lg:max-w-[calc(25%)] btn-primary border-none text-white"
             @click="create"
           >
             Добавить

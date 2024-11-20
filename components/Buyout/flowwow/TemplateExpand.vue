@@ -80,7 +80,7 @@ async function deleteTemplate() {
         <label class="btn btn-ghost btn-sm text-red-500 z-10" @click="deleteTemplate">Удалить</label>
         <nuxt-link to="/flowwow/buyouts/create">
           <label
-            class="btn btn-sm btn-ghost truncate mr-1 hover:bg-[#b2baff] hover:dark:bg-primary hover:dark:bg-opacity-20 border-none text-base-content"
+            class="btn btn-sm btn-primary truncate mr-1 border-none text-white"
             @click="selectTemplate"
           >Добавить</label>
         </nuxt-link>

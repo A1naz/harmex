@@ -140,7 +140,7 @@ function removeProduct() {
                 }"
                 :disabled="productData"
                 tabindex="0"
-                class="input w-full input-sm bg-base-200 min-h-min md:min-h-[48px] text-lg join-item"
+                class="input w-full input-sm bg-base-200 h-[2.5rem] text-lg join-item"
                 placeholder="Введите ссылку"
                 type="text"
                 @input="changeUrl"
@@ -149,7 +149,7 @@ function removeProduct() {
                 :class="{
                   'btn-disabled': !productData,
                 }"
-                class="btn btn-sm btn-ghost btn-circle bg-base-200 min-h-min md:min-h-[48px] join-item rounded-r-md"
+                class="btn btn-sm btn-ghost btn-circle bg-base-200 h-[2.5rem] join-item rounded-r-md"
                 @click="removeProduct"
               >
                 <span
@@ -173,7 +173,7 @@ function removeProduct() {
             <div>Период выполнения:</div>
             <select
               :disabled="!productData"
-              class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
+              class="select w-44 select-sm mt-2 h-[2.5rem]"
               @change="selectPeriod"
             >
               <option value="3h">
@@ -201,13 +201,13 @@ function removeProduct() {
             <div class="relative flex items-center justify-center ml-auto mt-2">
               <button
                 :disabled="amount <= 0"
-                class="absolute left-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
+                class="absolute left-0 btn btn-ghost btn-sm btn-square h-[2.5rem]"
                 @click="amount -= 10"
               >
                 <IconCSS size="16" name="ic:round-minus" />
               </button>
               <div
-                class="input-sm rounded-lg w-24 text-center bg-base-200 min-h-min md:min-h-[48px] md:pt-2.5 text-lg"
+                class="input-sm rounded-lg w-24 text-center bg-base-200 h-[2.5rem] md:pt-2.5 text-lg"
               >
                 {{ amount }}
               </div>
@@ -216,7 +216,7 @@ function removeProduct() {
                 :class="{
                   'btn-disabled': !productData,
                 }"
-                class="absolute right-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
+                class="absolute right-0 btn btn-ghost btn-sm btn-square h-[2.5rem]"
                 @click="amount += 10"
               >
                 <IconCSS size="16" name="ic:round-plus" />
@@ -244,7 +244,7 @@ function removeProduct() {
               :class="{
                 'btn-disabled': !productData || amount <= 0,
               }"
-              class="btn w-full btn-primary border-none text-white"
+              class="btn btn-sm h-[2.5rem] w-full btn-primary border-none text-white"
               @click="create"
             >
               Добавить

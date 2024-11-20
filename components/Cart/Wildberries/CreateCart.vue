@@ -134,7 +134,7 @@ function removeProduct() {
                 }"
                 :disabled="productData"
                 tabindex="0"
-                class="input input-sm lg:input-md w-full bg-base-200 text-gray-600 join-item"
+                class="input input-sm h-[2.5rem] w-full bg-base-200 text-gray-600 join-item"
                 placeholder="12312312"
                 type="number"
                 @input="changeUrl"
@@ -143,7 +143,7 @@ function removeProduct() {
                 :class="{
                   'btn-disabled': !productData,
                 }"
-                class="btn btn-ghost btn-sm lg:btn-md btn-circle bg-base-300 join-item rounded-md"
+                class="btn btn-ghost btn-sm h-[2.5rem] btn-circle bg-base-300 join-item rounded-md"
                 @click="removeProduct"
               >
                 <span
@@ -171,7 +171,7 @@ function removeProduct() {
               :disabled="!productData"
               placeholder="Носки"
               type="text"
-              class="input input-sm lg:input-md w-full bg-base-200 text-gray-600 mt-2"
+              class="input input-sm h-[2.5rem] w-full bg-base-200 text-gray-600 mt-2"
             >
           </div>
         </div>
@@ -183,7 +183,7 @@ function removeProduct() {
               </div>
               <select
                 :disabled="!productData?.sizes.length"
-                class="select select-sm lg:select-md bg-base-200 text-gray-600 w-full mt-2"
+                class="select select-sm h-[2.5rem] bg-base-200 text-gray-600 w-full mt-2"
                 @change="selectSize"
               >
                 <option v-if="!productData?.sizes.length" value="none">
@@ -209,7 +209,7 @@ function removeProduct() {
                     :class="{ 'bg-base-200 text-base-300': amount <= 0,
                               'text-primary': productData,
                     }"
-                    class="bg-base-200 absolute left-0 btn btn-ghost btn-sm btn-square min-h-min lg:min-h-[48px]"
+                    class="bg-base-200 absolute left-0 btn btn-ghost btn-sm btn-square h-[2.5rem]"
                     @click="amount -= 10"
                   >
                     <IconCSS size="16" name="ic:round-minus" />
@@ -218,7 +218,7 @@ function removeProduct() {
                     :class="{
                       'bg-base-200': !productData,
                     }"
-                    class="input-sm rounded-lg w-full min-h-min lg:min-h-[48px] lg:pt-2.5 text-center bg-base-100"
+                    class="input-sm rounded-lg w-full h-[2.5rem] lg:pt-2.5 text-center bg-base-100"
                   >
                     {{ amount }}
                   </div>
@@ -228,7 +228,7 @@ function removeProduct() {
                       'btn-disabled bg-base-200 ': !productData,
                       'text-primary': productData,
                     }"
-                    class="bg-base-200 absolute right-0 btn btn-ghost btn-sm btn-square min-h-min lg:min-h-[48px]"
+                    class="bg-base-200 absolute right-0 btn btn-ghost btn-sm btn-square h-[2.5rem]"
                     @click="amount += 10"
                   >
                     <IconCSS size="16" name="ic:round-plus" />
@@ -243,7 +243,7 @@ function removeProduct() {
             </div>
             <select
               :disabled="!productData"
-              class="select w-full select-sm lg:select-md bg-base-200 text-gray-600 mt-2"
+              class="select w-full select-sm h-[2.5rem] bg-base-200 text-gray-600 mt-2"
               @change="selectPeriod"
             >
               <option value="3h">
@@ -272,7 +272,7 @@ function removeProduct() {
           :class="{
             'btn-disabled': !productData || !query,
           }"
-          class="btn justify-start mt-3 w-full btn-primary border-none text-white"
+          class="btn btn-sm h-[2.5rem] justify-start mt-3 w-full btn-primary border-none text-white"
           @click="create"
         >
           <span class="mx-auto"> Добавить</span>

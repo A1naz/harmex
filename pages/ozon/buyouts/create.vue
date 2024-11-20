@@ -860,7 +860,7 @@ function closeModal() {
             <label for="template-modal" class="btn btn-ghost my-2 md:my-0 w-[30%]">Отмена</label>
 
             <button
-              class="btn btn-primary bg-[#bcc3ff] hover:bg-[#6675ff] dark:bg-opacity-20 dark:hover:bg-opacity-100 border-none text-base-content hover:text-base-content dark:bg-primary w-[30%]"
+              class="btn btn-primary  border-none hover:text-base-content dark:bg-primary text-white w-[30%]"
               :disabled="isCreatingTemplatesDisabled" @click="createTemplate"
             >
               Сохранить
