@@ -84,7 +84,7 @@ async function copyImageToClipboard(base64Image: any) {
 </script>
 
 <template>
-  <div class="w-full flex flex-col gap-4 max-w-[400px] mb-4 p-5 bg-white">
+  <div class="w-full flex flex-col gap-4 max-w-[350px] mb-0 p-5 bg-white">
     <div
       class="flex w-full bg-[#f5f7ff] rounded-lg drop-shadow-sm overflow-hidden"
     >
@@ -121,7 +121,7 @@ async function copyImageToClipboard(base64Image: any) {
 
     <div class="flex gap-[5px] justify-center">
       <button
-        class="btn btn-outline w-[49%] border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[50px] rounded-xl relative group"
+        class="btn btn-sm h-[2.5rem] btn-outline w-[49%] border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[50px] rounded-xl relative group"
         @click="modalShow = true"
       >
         <div class="flex items-center justify-center">
@@ -149,7 +149,7 @@ async function copyImageToClipboard(base64Image: any) {
       </button> -->
 
       <button
-        class="btn btn-outline w-[49%] border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[40px] rounded-xl relative group"
+        class="btn btn-sm h-[2.5rem] btn-outline w-[49%] border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[40px] rounded-xl relative group"
         @click="balanceModalShow = true"
       >
         <div class="flex items-center justify-center">
@@ -207,7 +207,7 @@ async function copyImageToClipboard(base64Image: any) {
             </h3>
 
             <div
-              class="bg-[#f2f3f5] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto items-center"
+              class="bg-[#f2f3f5] h-[2.5rem] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto items-center"
             >
               <span
                 class="cursor-pointer hover:underline truncate"

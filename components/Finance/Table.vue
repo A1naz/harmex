@@ -82,8 +82,8 @@ function swapPage(swapTo: number) {
         <span class="loading loading-spinner loading-lg bg-[#4960d3]"></span>
       </div>
     </div>
-    <div class="pagination-controls flex justify-between mt-auto mb-5 border-t w-full py-3 px-4">
-      <custom-select :tabs="paginations" :class="'text-black bg-white'" :dropdownContainerClass="'bg-white'" :arrowsClass="'text-primary'" @change-value="(e:any) => changePagination(e.value)" />
+    <div class="pagination-controls flex justify-between mt-auto mb-10 border-t w-full py-2 px-4 scroll-hidden">
+      <custom-select :tabs="paginations" :class="'text-black bg-white h-[2.5rem]'" :dropdownContainerClass="'bg-white'" :arrowsClass="'text-primary'" @change-value="(e:any) => changePagination(e.value)" />
       <div class="flex justify-end gap-1">
         <button class="btn btn-primary btn-xs font-normal px-0 flex items-center bg-transparent text-primary border-none hover:text-white shadow-none" :disabled="currentPage === 1" @click="swapPage(-1)">
           <Icon name="solar:alt-arrow-left-linear" size="24" />
@@ -128,26 +128,29 @@ function swapPage(swapTo: number) {
   width: 100%;
   table-layout: auto;
   border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -khtml-border-radius: 10px;
   border: 1px solid #ebeef1;
   overflow: hidden;
   border-collapse: separate;
   border-spacing: 0;
 }
 
-.table-header,
 .table-cell {
-  padding: 0.5em;
-  padding-left: 0.6em;
+  padding: 0.3em 0.4em;
   text-align: left;
-  height: 55px;
+  height: 40px;
   border: 1px solid #ebeef1;
+  font-size: 0.85rem;
 }
 
+.table-header{
+  padding: 0.3em 0.4em;
+  text-align: left;
+  height: 25px;
+  border: 1px solid #ebeef1;
+  font-size: 0.85rem;}
+
 .table-row:nth-child(odd) {
-  background-color: #f4f6fa;
+  background-color: #f8f9fb;
 }
 
 .header-content {
@@ -165,22 +168,13 @@ function swapPage(swapTo: number) {
   align-items: center;
   margin-top: 1em;
   color: #8c8c8c;
+  font-size: 0.9rem;
 }
 
-/* .pagination-button {
-  background: "none";
-  border: none;
-  cursor: pointer;
-  margin: 0 0.2em;
+.pagination-button {
+  width: 1.8rem;
+  height: 1.8rem;
 }
-
-.pagination-button:disabled {
-  cursor: not-allowed;
-}
-
-.pagination-button.active {
-  color: #4960d3;
-} */
 
 @media (max-width: 640px) {
   .table-wrapper {
@@ -196,11 +190,6 @@ function swapPage(swapTo: number) {
   .table-header,
   .table-cell {
     padding: 0.25em;
-  }
-
-  .pagination-button {
-    width: 2.5rem;
-    height: 2.5rem;
   }
 }
 
