@@ -215,7 +215,7 @@ await getPartnerAgreement()
   <div class="px-4 sm:px-16">
     <div>
       <div class="flex flex-col gap-8 py-6 md:gap-6 md:py-4">
-        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
+        <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
           <h2 class="text-lg font-medium">
             {{ $t("Контактные данные") }}
           </h2>
@@ -224,19 +224,19 @@ await getPartnerAgreement()
               <p class="text-xs font-medium text-base-content">
                 {{ $t("Логин") }}
               </p>
-              <input v-model="form.username" readonly placeholder="Логин" class="input bg-base-100 w-full">
+              <input v-model="form.username" readonly placeholder="Логин" class="input input-sm h-[2.5rem] bg-base-100 w-full">
             </div>
             <div class="flex flex-col gap-1 flex-1">
               <p class="text-xs font-medium text-base-content">
                 {{ $t("Номер телефона") }}
               </p>
-              <input v-model="form.phoneNumber" readonly placeholder="Номер телефона" class="input bg-base-100 w-full">
+              <input v-model="form.phoneNumber" readonly placeholder="Номер телефона" class="input input-sm h-[2.5rem] bg-base-100 w-full">
             </div>
             <div class="flex flex-col gap-1 flex-1 relative">
               <p class="text-xs font-medium text-base-content">
                 {{ $t("Почта") }}
               </p>
-              <label class="input bg-base-100 flex items-center justify-between relative"
+              <label class="input input-sm h-[2.5rem] bg-base-100 flex items-center justify-between relative"
                 @click="emailConfirmModal = true">
                 <input v-model="form.email" placeholder="Введите почту" readonly
                   class="flex-grow w-full text-ellipsis min-w-52">
@@ -261,10 +261,12 @@ await getPartnerAgreement()
               <p class="text-xs font-medium text-base-content">
                 {{ $t("Язык") }}
               </p>
-              <custom-select :tabs="languageArr"
+              <custom-select 
+                :tabs="languageArr"
                 :status-text="languageArr.find((item: any) => item.value === selectedLanguageCode)?.title"
-                @change-value="(e: any) => updateLanguage(e.value)
-                  " />
+                @change-value="(e: any) => updateLanguage(e.value)"
+                :class="'h-[2.5rem]'"
+              />
               <!-- <ProfileLanguageSelect /> -->
             </div>
 
@@ -273,14 +275,18 @@ await getPartnerAgreement()
                 <p class="text-xs font-medium text-base-content">
                   {{ $t("Валюта") }}
                 </p>
-                <custom-select :tabs="[
-                  { title: 'RUB', value: 'rubles', images: '/icons/figma/profile/rsFlag.svg', },
-                  { title: 'USD', value: 'dollar', images: '/icons/figma/profile/usaFlag.svg', },
-                  { title: 'EUR', value: 'Euro', images: '/icons/figma/profile/euro.svg', },
-                ]" @change-value="(e: any) => (form.wallet = e.value)" />
+                <custom-select 
+                  :tabs="[
+                    { title: 'RUB', value: 'rubles', images: '/icons/figma/profile/rsFlag.svg', },
+                    { title: 'USD', value: 'dollar', images: '/icons/figma/profile/usaFlag.svg', },
+                    { title: 'EUR', value: 'Euro', images: '/icons/figma/profile/euro.svg', },
+                  ]" 
+                  @change-value="(e: any) => (form.wallet = e.value)" 
+                  :class="'h-[2.5rem]'"
+                />
               </div>
               <div>
-                <button class="btn btn-primary mt-5" @click="logout">
+                <button class="btn btn-sm h-[2.5rem] btn-primary mt-5" @click="logout">
                   <Icon name="material-symbols:logout" size="24" />
                 </button>
               </div>
@@ -288,7 +294,7 @@ await getPartnerAgreement()
           </div>
         </div>
 
-        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
+        <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
           <div class="flex gap-3">
             <h2 class="text-lg font-medium">
               Реквизиты
@@ -300,25 +306,24 @@ await getPartnerAgreement()
             <p class="text-xs font-medium text-base-content">
               {{ $t("ИНН") }}
             </p>
-            <input v-model="form.orgInn" readonly placeholder="-" class="input bg-base-100 w-full">
+            <input v-model="form.orgInn" readonly placeholder="-" class="input input-sm h-[2.5rem] bg-base-100 w-full">
           </div>
         </div>
 
-        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
+        <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
           <div class="flex gap-3">
             <h2 class="text-lg font-medium">
               Документооборот
             </h2>
           </div>
-          <div class="flex gap-2 p-3 justify-between text-primary w-full bg-secondary rounded-lg">
+          <div class="flex gap-2 p-2 justify-between text-primary w-full bg-secondary rounded-lg">
             <div class="flex gap-2 items-center">
               <Icon name="gg:file-document" size="24" />
               <p class="font-medium">
                 Пользовательское соглашение
-
               </p>
             </div>
-            <div>
+            <div class="flex items-center">
               {{ user?.orgName }}
             </div>
             <button class=" btn btn-primary btn-sm rounded-full p-1 flex justify-center items-center">
@@ -327,30 +332,30 @@ await getPartnerAgreement()
           </div>
         </div>
 
-        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
+        <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
           <h2 class="text-lg font-medium">
             Пароль
           </h2>
           <div class="flex flex-col gap-2.5">
             <div v-if="user" class="flex flex-col gap-2.5 xl:flex-row">
               <input v-model="passwordForm.oldPassword" :disabled="isCodeSent" type="password"
-                placeholder="Старый пароль" class="input w-full">
+                placeholder="Старый пароль" class="input input-sm h-[2.5rem] w-full">
               <input v-model="passwordForm.newPassword" :disabled="isCodeSent" type="password"
-                placeholder="Новый пароль" class="input w-full">
-              <button class="btn btn-primary xl:w-40" @click="updatePassword">
+                placeholder="Новый пароль" class="input input-sm h-[2.5rem] w-full">
+              <button class="btn btn-sm h-[2.5rem] btn-primary xl:w-40" @click="updatePassword">
                 Изменить
               </button>
             </div>
           </div>
         </div>
 
-        <div class="flex flex-col gap-[20px] rounded-lg bg-white p-4 ">
-          <h2 class="text-[20px] font-[500]">
+        <div class="flex flex-col gap-4 rounded-lg bg-white p-4 ">
+          <h2 class="text-lg font-[500]">
             Двухфакторная аутентификация
           </h2>
 
           <div class="form-control bg-secondary rounded-lg p-3">
-            <label class="label cursor-pointer flex flex-col lg:flex-row ">
+            <label class="label cursor-pointer flex flex-col lg:flex-row">
               <div class="flex flex-col lg:flex-row gap-3 w-full">
                 <nuxt-img src="/icons/figma/profile/2fa.svg" class="w-10 h-10" />
                 <div class="flex-col gap-1">
@@ -364,7 +369,7 @@ await getPartnerAgreement()
               </div>
 
               <div class="flex mt-10 lg:mt-0 justify-start w-full lg:w-fit items-center gap-2">
-                <input v-model="isTwoFaEnabled" type="checkbox" class="toggle toggle-primary"
+                <input v-model="isTwoFaEnabled" type="checkbox" class="toggle toggle-sm toggle-primary"
                   @change="openTwoFaQRModal" />
                 <span class="text-xs">Включить</span>
               </div>
@@ -372,11 +377,11 @@ await getPartnerAgreement()
           </div>
         </div>
 
-        <div class="flex flex-col gap-6 p-4 bg-white rounded-lg">
+        <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
           <h2 class="text-lg font-medium">
             Чат-бот уведомлений
           </h2>
-          <div class="flex flex-col gap-6  bg-secondary p-3">
+          <div class="flex flex-col gap-3 bg-secondary p-4 rounded-lg">
             <div class="flex flex-col justify-between w-full">
               <div class="flex justify-between w-full flex-col lg:flex-row">
                 <div class="flex flex-col lg:flex-row gap-3">
@@ -392,10 +397,10 @@ await getPartnerAgreement()
                 </div>
                 <div class="form-control">
                   <div
-                    class="flex items-center w-full pt-10 lg:pt-0 bg-transparent last:mb-8 gap-5 rounded-t-none rounded-b-md">
+                    class="flex items-center w-full pt-10 lg:pt-0 bg-transparent gap-5 rounded-t-none rounded-b-md">
                     <label class="label cursor-pointer gap-2 p-0 pb-2 lg:py-2 lg:px-2 items-center">
                       <input type="checkbox"
-                        class="toggle checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]"
+                        class="toggle toggle-sm checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]"
                         :checked="emailAlerts.value" @click="emailAlerts.value = !emailAlerts.value">
                       <span class="text-xs font-normal">Включить все</span>
                     </label>
@@ -403,10 +408,10 @@ await getPartnerAgreement()
                   <transition name="slide-fade">
                     <div v-if="emailAlerts.value" class="flex flex-col gap-0 self-start lg:self-end">
                       <div v-for="(item, index) in emailAlerts.arr" :key="index"
-                        class="flex items-center w-full p-2 pl-0 lg:pl-2  bg-transparent last:mb-8 gap-2 rounded-t-none rounded-b-md">
+                        class="flex items-center w-full p-2 pl-0 lg:pl-2  bg-transparent  gap-2 rounded-t-none rounded-b-md">
                         <label class="label cursor-pointer p-0">
                           <input type="checkbox"
-                            class="toggle checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]"
+                            class="toggle toggle-sm checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]"
                             :checked="item.value" @click="item.value = !item.value">
                         </label>
                         <span class="text-xs font-normal">{{ item.title }}</span>
@@ -417,9 +422,11 @@ await getPartnerAgreement()
               </div>
             </div>
 
+            <div class="divider my-0" />
+
             <div class="flex flex-col justify-start w-full gap-3 border border-none border-t border-[#e5e7eb]">
               <div
-                class="flex flex-col lg:flex-row justify-start w-full gap-0 border border-none border-t border-[#e5e7eb]">
+                class="flex flex-col lg:flex-row justify-start w-full gap-3 border border-none border-t border-[#e5e7eb]">
                 <nuxt-img src="/icons/figma/profile/tg.svg" class="w-10 h-10 mb-3 lg:mb-0" />
                 <div class="flex gap-3 flex-col lg:flex-row lg:w-full">
                   <div class="flex gap-3">
@@ -443,7 +450,7 @@ await getPartnerAgreement()
                   <div class="form-control">
                     <label class="label flex justify-start cursor-pointer gap-2 p-0 pb-2  lg:py-2 lg:px-2 items-center">
                       <input type="checkbox"
-                        class="toggle checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]"
+                        class="toggle toggle-sm checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]"
                         :checked="tgAlerts.value" @click="tgAlerts.value = !tgAlerts.value">
                       <span class="whitespace-nowrap text-black">Включить все</span>
                     </label>
@@ -454,7 +461,7 @@ await getPartnerAgreement()
                         class="flex gap-2 items-center w-full pl-0 lg:pl-2 p-2 bg-transparent rounded-t-none rounded-b-md">
                         <label class="label cursor-pointer p-0">
                           <input type="checkbox"
-                            class="toggle checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]"
+                            class="toggle toggle-sm checked:border-primary checked:bg-white checked:[--tglbg:#FF5E34]"
                             :checked="item.value" @click="item.value = !item.value">
                         </label>
                         <span class="text-xs font-normal">{{ item.title }}</span>

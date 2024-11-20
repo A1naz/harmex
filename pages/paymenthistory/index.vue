@@ -225,7 +225,7 @@ watch(
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row gap-2 overflow-x-auto">
+  <div class="flex flex-col sm:flex-row gap-2 overflow-x-auto overflow-y-clip">
     <FinanceDashboard
       :second-level-percent="10" :ref-balance="balanceForm.partnerBalance" :balance="balanceForm.userBalance" :ref-count="balanceForm.refCount"
       :second-level-referrals="0" :first-level-referrals="balanceForm.refCount" :ref-url="refUrl" :reward-percent="5"

@@ -114,7 +114,7 @@ defineExpose({
 <template>
   <div class="group dropdown relative" :class="dropdownContainerClass" @click="toggleDropdown" @click.stop>
     <div
-      class="btn btn-md w-full flex flex-nowrap flex-1 items-center justify-between px-2 text-xs font-normal normal-case text-base-content hover:bg-white hover:shadow-none"
+      class="btn w-full flex flex-nowrap flex-1 items-center justify-between px-2 text-xs font-normal normal-case text-base-content hover:bg-white hover:shadow-none"
       :class="customClass"
     >
       <div class="flex items-center gap-2">

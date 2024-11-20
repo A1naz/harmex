@@ -47,14 +47,14 @@ async function search(searchQuery: any) {
     <input id="my-drawer" type="checkbox" class="drawer-toggle">
 
     <div ref="drawerContent" style="z-index: 9999" class="drawer-content w-full">
-      <div class="drawerShadow flex w-full items-center gap-2 px-8 sm:px-0 h-[75px] bg-white  border border-b border-[#ebebeb] justify-center">
+      <div class="drawerShadow flex w-full items-center gap-2 px-8 sm:px-0 h-[65px] bg-white  border border-b border-[#ebebeb] justify-center">
         <div class="lg:px-16 flex w-full relative gap-2">
           <NuxtLinkLocale to="/" class="sm:flex hidden cursor-pointer items-center">
             <nuxt-img src="/img/HARMEX.svg" width="150px" />
           </NuxtLinkLocale>
           <NuxtLinkLocale
             to="/catalog"
-            class="btn btn-primary text-[#fff] sm:flex text-[16px] ml-2 hidden rounded-[10px] pr-8 font-medium"
+            class="btn btn-sm h-[2.5rem] btn-primary text-[#fff] sm:flex text-[16px] ml-2 hidden rounded-[10px] pr-8 font-medium"
           >
             <label :class="{ opened: isOpen }" aria-label="Main Menu" class="cursor-pointer -mr-2 -ml-2">
               <svg width="50" height="30" viewBox="0 0 100 100">
@@ -77,7 +77,7 @@ async function search(searchQuery: any) {
           </NuxtLinkLocale>
           <MenuSearch :data="searchData" :loading="dataLoading" @search="search" />
           <div class="sm:flex hidden ml-5">
-            <NuxtLinkLocale to="/paymenthistory" class="myCustomBtnNavbar rounded-full">
+            <NuxtLinkLocale to="/paymenthistory" class="myCustomBtnNavbar rounded-full flex justify-center items-center text-xs">
               <Icon name="solar:wallet-linear" size="24" />
               {{ user?.balance ? currency.format(user.balance) : '' }}
             </NuxtLinkLocale>
@@ -90,7 +90,7 @@ async function search(searchQuery: any) {
           </div>
           <NuxtLinkLocale
             to="/catalog"
-            class="btn bg-[#7209b7] hover:bg-[#9235ff] text-[#fff] flex text-[16px] ml-2 rounded-[10px] pr-8 font-medium sm:hidden"
+            class="btn btn-sm h-[2.5rem] bg-[#7209b7] hover:bg-[#9235ff] text-[#fff] flex text-[16px] ml-2 rounded-[10px] pr-8 font-medium sm:hidden justify-center items-center"
           >
             <label :class="{ opened: isOpen }" aria-label="Main Menu" class="cursor-pointer -mr-8 -ml-4 sm:hidden">
               <svg width="50" height="30" viewBox="0 0 100 100">

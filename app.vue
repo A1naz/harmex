@@ -25,7 +25,7 @@
 } */
 
 .myCustomBtnNavbar {
-  @apply btn btn-outline border-base-200 text-base-300 rounded-full p-3 bg-white 
+  @apply btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white 
          hover:bg-white hover:text-black hover:border-base-200 hover:shadow-xl
          active:bg-base-300 active:text-white;
   &:hover {
