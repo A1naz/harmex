@@ -48,6 +48,7 @@ const currentTab = ref<string>('')
 const skip = ref<number>(0)
 const limit = computed(() => (currentTab.value === 'available' ? 1000 : 50))
 const loading = ref(false)
+const balanceModalShow = ref(false)
 
 const searchType = ref<SelectOptions>(SelectOptions.article)
 const searchText = ref('')
@@ -406,7 +407,7 @@ async function copyToClipboard(text: string) {
 
       <ReviewOzonModal
         v-if="modalOpen" :review="selectedArticle" :deliveryid="selectedDelivery" :state="modalOpen"
-        :uuid="selectedUUID" @publish="goToPublished" @close="closeModal"
+        :uuid="selectedUUID" @publish="goToPublished" @close="closeModal" @not-enough-money="balanceModalShow = true"
       />
 
       <!-- Put this part before </body> tag -->
@@ -443,6 +444,7 @@ async function copyToClipboard(text: string) {
       </div>
     </div>
     <LogModal :info="selectedReview" :state="logModal" @close="logModal = false" />
+    <ReviewOzonBalanceModal :show="balanceModalShow" @close="balanceModalShow = false" />
   </div>
 </template>
 

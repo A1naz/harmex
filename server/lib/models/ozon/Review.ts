@@ -13,8 +13,6 @@ const ReviewSchema = new Schema({
   images: { type: Array, required: false },
   status: { type: String, required: true, enum: ['created', 'waiting', 'working', 'published', 'canceled', 'nofunds', 'deleting', 'deleted'] },
   recipientphone: { type: String, required: true },
-  positive: { type: String, required: false },
-  negative: { type: String, required: false },
   videoKey: { type: String, required: false },
   originalVideoName: { type: String, required: false },
   isVideoEnabled: { type: Boolean, required: false },

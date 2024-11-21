@@ -1,36 +1,91 @@
-import { Buyout as ozonBuyout } from '../lib/models/ozon/Buyout'
 import { User } from '../lib/models/User'
+import { DefaultPrices } from '@/server/lib/models/defaultPrices'
 import { Buyout as wildberriesBuyout } from '../lib/models/wildberries/Buyout'
+import { Buyout as ozonBuyout } from '../lib/models/ozon/Buyout'
+import { Review as wildberriesReview } from '../lib/models/wildberries/Review'
+import { Review as ozonReview } from '../lib/models/ozon/Review'
 
-export async function checkBalance(user: any, buyouts: any) {
-  try {
-    // const userFound = await User.findOne({ user })
-    if (!user)
-      return false
+export const checkBalance = async (user: any, products: any, service: string = 'buyouts') => {
+    try {
+        // const userFound = await User.findOne({ user })
+        if (!user) return false
 
-    // const ozon = await ozonBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
-    const wildberries = await wildberriesBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
+        let totalPrice = 0
+        let wildberries = []
+        let ozon = []
 
-    const all = [
-      // ...ozon.map((item: any) => ({ ...item.toObject(), mp: 'ozon' })),
-      ...wildberries.map((item: any) => ({ ...item.toObject(), mp: 'wildberries' })),
-    ]
+        switch (service) {
+            case 'reviews':
+                const pricesDocument = await DefaultPrices.findOne(
+                    { "values.mp": { $in: ["ozon", "wildberries"] } },
+                    { "values": 1 }
+                );
 
-    const balanceActiveBuyouts = all.reduce((acc: number, item: any) => {
-      return acc + (Number.parseFloat(item.product.price) || 0)
-    }, 0)
+                if (!pricesDocument || !pricesDocument.values) {
+                    console.log("Prices document not found");
+                    return false;
+                }
 
-    const currentBuyoutsSumm = buyouts.reduce((acc: number, item: any) => {
-      return acc + (item.price ? Number.parseFloat(item.price) : Number.parseFloat(item.product.price)) || 0
-    }, 0)
+                const pricesMap = pricesDocument?.values.reduce((acc: any, item: any) => {
+                    acc[item.mp] = item.prices?.review?.value || 0;
+                    return acc;
+                }, {});
 
-    const totalPrice = balanceActiveBuyouts + currentBuyoutsSumm
+                const ozonPrice = pricesMap["ozon"] || 0;
+                const wildberriesPrice = pricesMap["wildberries"] || 0;
 
-    // console.log('Total', totalPrice, 'balance', user.balance)
-    return user.balance >= totalPrice
-  }
-  catch (e: any) {
-    console.error(e)
-    return false
-  }
+                totalPrice = products.mp === "ozon" ? ozonPrice : wildberriesPrice;
+
+                if (products.video !== '') {
+                    totalPrice += 25;
+                }
+
+                ozon = await ozonReview.find({
+                    user: user._id,
+                    status: { $in: ['created', 'working', 'waiting', 'work'] },
+                }).select('uuid isVideoEnabled');
+
+
+                wildberries = await wildberriesReview.find({
+                    user: user._id,
+                    status: { $in: ['created', 'working', 'waiting', 'work'] },
+                }).select('uuid isVideoEnabled');
+
+
+                const balanceActiveReviews = ozon.reduce((acc, item) => acc + (item.isVideoEnabled ? ozonPrice + 25 : ozonPrice), 0) +
+                            wildberries.reduce((acc, item) => acc + (item.isVideoEnabled ? wildberriesPrice + 25 : wildberriesPrice), 0);
+
+
+                totalPrice += balanceActiveReviews;
+
+                console.log('totalPrice', totalPrice)
+
+                return user.balance >= totalPrice;
+
+            default:
+                // const ozon = await ozonBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
+                wildberries = await wildberriesBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
+
+                const all = [
+                    // ...ozon.map((item: any) => ({ ...item.toObject(), mp: 'ozon' })),
+                    ...wildberries.map((item: any) => ({ ...item.toObject(), mp: 'wildberries' }))
+                ]
+
+                const balanceActiveBuyouts = all.reduce((acc: number, item: any) => {
+                    return acc + (parseFloat(item.product.price) || 0)
+                }, 0)
+
+                const currentBuyoutsSumm = products.reduce((acc: number, item: any) => {
+                    return acc + (item.price ? parseFloat(item.price) : parseFloat(item.product.price)) || 0
+                }, 0)
+
+
+                totalPrice = balanceActiveBuyouts + currentBuyoutsSumm
+                // console.log('Total', totalPrice, 'balance', user.balance)
+                return user.balance >= totalPrice
+        }
+    } catch (e: any) {
+        console.error(e)
+        return false
+    }
 }
