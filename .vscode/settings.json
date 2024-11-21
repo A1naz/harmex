@@ -9,7 +9,6 @@
   "window.zoomLevel": 0.7,
   "typescript.tsdk": "./node_modules/typescript/lib",
   // Disable the default formatter, use eslint instead
-  "prettier.enable": false,
   "editor.formatOnSave": false,
   "editor.parameterHints.enabled": false,
   
