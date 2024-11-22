@@ -10,6 +10,5 @@ export default defineEventHandler(async (event) => {
     throw createError({ status: 400, message: 'Пароли не совпадают' })
   }
   await auth.changePassword(event, { phoneNumber, newPassword })
-
   return 'success'
 })
