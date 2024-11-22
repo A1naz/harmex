@@ -4,6 +4,7 @@ const currency = useCurrency()
 const drawerContent: any = ref(null)
 
 const isOpen = ref(false)
+const modalOpen = ref(false)
 
 function toggleMenu() {
   isOpen.value = !isOpen.value
@@ -40,6 +41,11 @@ async function search(searchQuery: any) {
     dataLoading.value = false
   }
 }
+onMounted(() => {
+  if (user?.value && user.value.balance !== undefined && user.value.balance < 0) {
+    modalOpen.value = true;
+  }
+})
 </script>
 
 <template>
@@ -119,6 +125,7 @@ async function search(searchQuery: any) {
       </div>
       <!-- Page content here -->
     </div>
+    <NotEnoughtBalance :show="modalOpen" @close="modalOpen = false" />
   </div>
 </template>
 
