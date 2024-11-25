@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import { PVZ } from '~/server/lib/models/ozon/PVZ'
+import { PVZ as WBPVZ } from '~/server/lib/models/wildberries/PVZ'
 
 // async function getRandomProxy(): Promise<string> {
 //   const allProxies: any = await ProxySearchQuery.find()
@@ -83,33 +84,13 @@ export async function removeExtraPickpoints() {
 }
 
 export async function createPickpointsFile() {
-  const data: any = await $fetch(
-    'https://static-basket-01.wb.ru/vol0/data/all-poo-fr-v9.json',
-    {
-      method: 'GET',
-      headers: {
-        'x-requested-with': 'XMLHttpRequest',
-      },
-    }
-  )
-
-  const points = data[0].items
-  const collection = points.map((point: any) => {
-    return {
-      id: point.id,
-      lt: point.coordinates[0],
-      lg: point.coordinates[1],
-      w: point.workTime,
-      a: point.address,
-    }
-  })
+  const points: any = await WBPVZ.find()
 
   const cache = {
     updated: new Date(),
-    points: collection,
+    points: points,
   }
 
-  console.log('creating wildberriesPoints.json')
   fs.writeFileSync('pvz/wildberriesPoints.json', JSON.stringify(cache))
   return
 }
