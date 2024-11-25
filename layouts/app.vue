@@ -2,6 +2,7 @@
 const { loggedIn, user } = useUserSession()
 const currency = useCurrency()
 const drawerContent: any = ref(null)
+const favouritesModal = ref(false)
 
 const isOpen = ref(false)
 
@@ -50,7 +51,7 @@ async function search(searchQuery: any) {
       <div
         class="drawerShadow flex w-full items-center gap-2 px-8 sm:px-0 h-[65px] bg-white  border border-b border-[#ebebeb] justify-center">
         <div class="lg:px-16 flex w-full relative gap-2">
-          <NuxtLinkLocale to="/" class="sm:flex hidden cursor-pointer items-center">
+          <NuxtLinkLocale to="/catalog" class="sm:flex hidden cursor-pointer items-center">
             <nuxt-img src="/img/HARMEX.svg" width="150px" />
           </NuxtLinkLocale>
           <NuxtLinkLocale to="/catalog"
@@ -78,8 +79,8 @@ async function search(searchQuery: any) {
               <Icon name="solar:wallet-linear" size="24" />
               {{ user?.balance ? currency.format(user.balance) : '' }}
             </NuxtLinkLocale>
-            <button class="myCustomBtnNavbar ml-2">
-              <Icon name="fluent:shopping-bag-24-regular" size="24" />
+            <button @click="favouritesModal = true" class="myCustomBtnNavbar ml-2">
+              <Icon name="tabler:heart" size="24" />
             </button>
             <NuxtLinkLocale :to="loggedIn ? '/profile' : '/auth'" class="myCustomBtnNavbar ml-2">
               <Icon name="gg:profile" size="24" />
@@ -107,6 +108,7 @@ async function search(searchQuery: any) {
 
       <div class="">
         <slot />
+        <FavouritesUserFavourites v-model:show="favouritesModal" />
       </div>
       <!-- Page content here -->
     </div>

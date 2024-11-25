@@ -6,7 +6,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { summ, faceType }: any = getQuery(event)
+  const { summ, faceType, email }: any = getQuery(event)
 
   const dates = new Date().toISOString().slice(0, 10).split('-')
   const purposeDate = `${dates[2]}.${dates[1]}.${dates[0]}`
@@ -29,6 +29,7 @@ export default eventHandler(async (event) => {
   await PaymentIntend.create({
     user: user._id,
     summ: Number(summ),
+    email: email,
     paymentUuid,
     type: 'balance',
     dataoperation: new Date(),

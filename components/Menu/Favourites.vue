@@ -20,19 +20,10 @@ defineProps({
       </NuxtLink>
     </div> -->
     <div class="flex flex-wrap justify-center">
-      <Nuxt-link
-        v-for="item in items"
-        :key="item.id"
-        :to="item.path"
-        class="bg-white text-[14px] w-[110px] h-[125px] ml-8 mt-5 rounded-xl mb-[15px]"
-      >
+      <Nuxt-link v-for="item in items" :key="item.id" :to="item.path"
+        class="bg-white text-[14px] w-[110px] h-[125px] ml-8 mt-5 rounded-xl mb-[15px]">
         <div class="mt-[5px] flex justify-center">
-          <NuxtImg
-            :src="item.image"
-            width="95px"
-            height="75px"
-            class="rounded-xl"
-          />
+          <NuxtImg :src="item.image" width="95px" height="75px" class="rounded-xl" />
         </div>
         <div class="text-sm font-medium ml-[5px]">
           {{ item.title }}

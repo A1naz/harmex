@@ -8,6 +8,7 @@ const { notify } = useNotification()
 
 function closeModal() {
   summ.value = 0
+  email.value = ''
   form.value = 'addBalance'
   emit('close')
 }
@@ -15,6 +16,7 @@ function closeModal() {
 const qrImage = ref('null')
 const loading = ref(false)
 const summ = ref(0)
+const email = ref('')
 const summArr = [1000, 5000, 25000, 50000, 100000]
 const form = ref('addBalance')
 
@@ -25,6 +27,7 @@ async function balanceUpdate() {
     method: 'GET',
     params: {
       summ: summ.value,
+      email: email.value,
       faceType: 'yurFace'
     }
   })
@@ -73,6 +76,9 @@ async function balanceUpdate() {
             <span>{{ 'Сумма пополнения' }}</span>
             <input type="number" class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
               placeholder="Введите сумму пополнения" v-model="summ" />
+            <span>{{ 'Введите почту для отправки чека' }}</span>
+            <input type="text" class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
+              placeholder="example@example.com" v-model="email" />
           </div>
           <div class="flex gap-[3px] justify-center w-full ">
             <button @click="summ = item" v-for="item in summArr"
