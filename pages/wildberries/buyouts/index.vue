@@ -256,31 +256,32 @@ const filters = [
     optionValue: 'completed',
     params: '?status=completed',
     queryStatus: 'completed',
-  },
-  {
-    title: 'Выкуп с рекламы',
-    optionValue: 'completedByAds',
-    params: '?status=completedByAds',
-    queryStatus: 'completedByAds',
-  },
-  {
-    title: 'Ожидает скидку',
-    optionValue: 'discountAwaiting',
-    params: '?status=discountAwaiting',
-    queryStatus: 'discountAwaiting',
-  },
-  {
-    title: 'Выкуп по скидке',
-    optionValue: 'completedByDiscount',
-    params: '?status=completedByDiscount',
-    queryStatus: 'completedByDiscount',
-  },
-  {
-    title: 'Недостаточно средств',
-    optionValue: 'nofunds',
-    params: '?status=nofunds',
-    queryStatus: 'nofunds',
-  },
+  }
+  // ,
+  // {
+  //   title: 'Выкуп с рекламы',
+  //   optionValue: 'completedByAds',
+  //   params: '?status=completedByAds',
+  //   queryStatus: 'completedByAds',
+  // },
+  // {
+  //   title: 'Ожидает скидку',
+  //   optionValue: 'discountAwaiting',
+  //   params: '?status=discountAwaiting',
+  //   queryStatus: 'discountAwaiting',
+  // },
+  // {
+  //   title: 'Выкуп по скидке',
+  //   optionValue: 'completedByDiscount',
+  //   params: '?status=completedByDiscount',
+  //   queryStatus: 'completedByDiscount',
+  // },
+  // {
+  //   title: 'Недостаточно средств',
+  //   optionValue: 'nofunds',
+  //   params: '?status=nofunds',
+  //   queryStatus: 'nofunds',
+  // },
 ]
 
 watch(targetIsVisible, async (isVisible) => {

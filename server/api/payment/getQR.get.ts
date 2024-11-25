@@ -1,6 +1,11 @@
 import qrcode from 'qrcode'
 import { PaymentIntend } from '~~/server/lib/models/PaymentIntend'
 import { v4 as uuid } from 'uuid'
+import numberToText from './numberToWords'
+const input = 29.00;
+const output = numberToText(input);
+console.log(output);
+
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)

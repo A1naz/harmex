@@ -47,26 +47,21 @@ async function search(searchQuery: any) {
     <input id="my-drawer" type="checkbox" class="drawer-toggle">
 
     <div ref="drawerContent" style="z-index: 9999" class="drawer-content w-full">
-      <div class="drawerShadow flex w-full items-center gap-2 px-8 sm:px-0 h-[65px] bg-white  border border-b border-[#ebebeb] justify-center">
+      <div
+        class="drawerShadow flex w-full items-center gap-2 px-8 sm:px-0 h-[65px] bg-white  border border-b border-[#ebebeb] justify-center">
         <div class="lg:px-16 flex w-full relative gap-2">
           <NuxtLinkLocale to="/" class="sm:flex hidden cursor-pointer items-center">
             <nuxt-img src="/img/HARMEX.svg" width="150px" />
           </NuxtLinkLocale>
-          <NuxtLinkLocale
-            to="/catalog"
-            class="btn btn-sm h-[2.5rem] btn-primary text-[#fff] sm:flex text-[16px] ml-2 hidden rounded-[10px] pr-8 font-medium"
-          >
+          <NuxtLinkLocale to="/catalog"
+            class="btn btn-sm h-[2.5rem] btn-primary text-[#fff] sm:flex text-[16px] ml-2 hidden rounded-[10px] pr-8 font-medium">
             <label :class="{ opened: isOpen }" aria-label="Main Menu" class="cursor-pointer -mr-2 -ml-2">
               <svg width="50" height="30" viewBox="0 0 100 100">
-                <path
-                  class="line line1"
-                  d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"
-                />
+                <path class="line line1"
+                  d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
                 <path class="line line2" d="M 20,50 H 80" />
-                <path
-                  class="line line3"
-                  d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"
-                />
+                <path class="line line3"
+                  d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
               </svg>
             </label>
             Каталог
@@ -77,7 +72,9 @@ async function search(searchQuery: any) {
           </NuxtLinkLocale>
           <MenuSearch :data="searchData" :loading="dataLoading" @search="search" />
           <div class="sm:flex hidden ml-5">
-            <NuxtLinkLocale to="/paymenthistory" class="myCustomBtnNavbar rounded-full flex justify-center items-center text-xs">
+            <NuxtLinkLocale to="/paymenthistory" class="btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white 
+         hover:bg-white hover:border-base-200 hover:shadow-xl
+         active:bg-base-300 active:text-white  flex justify-center items-center text-xs hover:text-primary">
               <Icon name="solar:wallet-linear" size="24" />
               {{ user?.balance ? currency.format(user.balance) : '' }}
             </NuxtLinkLocale>
@@ -88,21 +85,15 @@ async function search(searchQuery: any) {
               <Icon name="gg:profile" size="24" />
             </NuxtLinkLocale>
           </div>
-          <NuxtLinkLocale
-            to="/catalog"
-            class="btn btn-sm h-[2.5rem] bg-[#7209b7] hover:bg-[#9235ff] text-[#fff] flex text-[16px] ml-2 rounded-[10px] pr-8 font-medium sm:hidden justify-center items-center"
-          >
+          <NuxtLinkLocale to="/catalog"
+            class="btn btn-sm h-[2.5rem] bg-[#7209b7] hover:bg-[#9235ff] text-[#fff] flex text-[16px] ml-2 rounded-[10px] pr-8 font-medium sm:hidden justify-center items-center">
             <label :class="{ opened: isOpen }" aria-label="Main Menu" class="cursor-pointer -mr-8 -ml-4 sm:hidden">
               <svg width="50" height="30" viewBox="0 0 100 100">
-                <path
-                  class="line line1"
-                  d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"
-                />
+                <path class="line line1"
+                  d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
                 <path class="line line2" d="M 20,50 H 80" />
-                <path
-                  class="line line3"
-                  d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"
-                />
+                <path class="line line3"
+                  d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
               </svg>
             </label>
           </NuxtLinkLocale>
