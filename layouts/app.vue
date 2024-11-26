@@ -3,6 +3,7 @@ const { loggedIn, user } = useUserSession()
 const currency = useCurrency()
 const drawerContent: any = ref(null)
 const favouritesModal = ref(false)
+const notificationsModal = ref(true)
 
 const isOpen = ref(false)
 
@@ -109,6 +110,7 @@ async function search(searchQuery: any) {
       <div class="">
         <slot />
         <FavouritesUserFavourites v-model:show="favouritesModal" />
+        <NotificationsModal v-model:show="notificationsModal" />
       </div>
       <!-- Page content here -->
     </div>
