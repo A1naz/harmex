@@ -31,6 +31,9 @@ export default defineNuxtConfig({
 
   nitro: {
     plugins: ['~/server/index.ts'],
+    experimental: {
+      websocket: true
+    }
   },
 
   modules: [

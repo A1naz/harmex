@@ -10,44 +10,29 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:show"]);
 
+const config = useRuntimeConfig();
+
+const { status, data, send, open, close } = useWebSocket(
+  "ws://localhost:3080/api/websocket"
+);
+
+const history = ref<string[]>([]);
+watch(data, (newValue) => {
+  history.value.push(`server: ${newValue}`);
+});
+
+const message = ref("");
+function sendData() {
+  history.value.push(`client: ${message.value}`);
+  send(message.value);
+  message.value = "";
+}
+
 onKeyStroke("Escape", (e) => {
   e.preventDefault();
   emit("update:show", false);
 });
 
-const notifications = ref<any>([]);
-import { v4 as uuid } from "uuid";
-const message = ref<string>("");
-
-const { $socket }: any = useNuxtApp();
-
-onMounted(() => {
-  $socket.onopen = () => {
-    $socket.send(user.value.uuid);
-  };
-
-  $socket.onmessage = ({ data }: any) => {
-    console.log("data", data);
-    message.value = data;
-  };
-  $socket.onclose = function () {
-    console.log("disconnected");
-  };
-});
-
-const sendMessage = () => {
-  fetch("/api/notifications/stream", {
-    method: "POST",
-    body: JSON.stringify({
-      message: Math.random(),
-      sender: user.value.uuid,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("sent");
-    });
-};
 </script>
 
 <template class="overflow-hidden">
@@ -62,15 +47,14 @@ const sendMessage = () => {
         <div
           class="h-screen w-full grid place-items-center bg-gray-200 dark:bg-black"
         >
-          <span class="flex flex-col items-centers space-y-4">
-            <span>{{ message }} 1</span>
-            <button
-              @click="sendMessage"
-              class="bg-purple-500 text-gray-50 font-semibold px-5 py-2 rounded-lg"
-            >
-              Click me to send random number
-            </button>
-          </span>
+          <h1>WebSocket - let's go!</h1>
+          <form @submit.prevent="sendData">
+            <input v-model="message" />
+            <button type="submit">Send</button>
+          </form>
+          <div>
+            <p v-for="entry in history">{{ entry }}</p>
+          </div>
         </div>
       </div>
     </div>
