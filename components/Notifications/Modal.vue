@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useEventSource } from '@vueuse/core'
+import { useEventSource } from "@vueuse/core";
+const { user }: any = useUserSession();
 
 const props = defineProps({
   show: {
@@ -15,21 +16,38 @@ onKeyStroke("Escape", (e) => {
 });
 
 const notifications = ref<any>([]);
-const eventSource = ref<EventSource>();
+import { v4 as uuid } from "uuid";
+const message = ref<string>("");
 
-const init = () => {
-  eventSource.value = new EventSource("/api/sse");
+const { $socket }: any = useNuxtApp();
 
-  eventSource.value.addEventListener("connected", (data) => {
-    console.log("sse: connected", data);
-  });
+onMounted(() => {
+  $socket.onopen = () => {
+    $socket.send(user.value.uuid);
+  };
+
+  $socket.onmessage = ({ data }: any) => {
+    console.log("data", data);
+    message.value = data;
+  };
+  $socket.onclose = function () {
+    console.log("disconnected");
+  };
+});
+
+const sendMessage = () => {
+  fetch("/api/notifications/stream", {
+    method: "POST",
+    body: JSON.stringify({
+      message: Math.random(),
+      sender: user.value.uuid,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("sent");
+    });
 };
-
-onMounted(init);
-
-onBeforeUnmount(() => {
-  eventSource.value?.close();
-})
 </script>
 
 <template class="overflow-hidden">
@@ -41,12 +59,18 @@ onBeforeUnmount(() => {
   >
     <div v-if="show" class="modal-box max-w-md max-h-[90%] p-0">
       <div class="cursor-auto" @click.stop>
-        <div v-if="notifications && notifications.length">
-          <ul>
-            <li v-for="notification in notifications" :key="notification.id">
-              {{ notification.message }}
-            </li>
-          </ul>
+        <div
+          class="h-screen w-full grid place-items-center bg-gray-200 dark:bg-black"
+        >
+          <span class="flex flex-col items-centers space-y-4">
+            <span>{{ message }} 1</span>
+            <button
+              @click="sendMessage"
+              class="bg-purple-500 text-gray-50 font-semibold px-5 py-2 rounded-lg"
+            >
+              Click me to send random number
+            </button>
+          </span>
         </div>
       </div>
     </div>
