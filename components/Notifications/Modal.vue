@@ -1,37 +1,162 @@
 <script setup lang="ts">
-import { useEventSource } from "@vueuse/core";
-const { user }: any = useUserSession();
+const emit = defineEmits(["update:show"]);
+const notifications = ref<any>([]);
+const lastGetDate = ref(new Date("2000-01-01"));
+const store = useMainStore();
 
 const props = defineProps({
-  show: {
-    type: Boolean,
-    required: true,
-  },
+  show: { type: Boolean },
 });
-const emit = defineEmits(["update:show"]);
-const notifications = ref([])
 
-onKeyStroke("Escape", (e) => {
-  e.preventDefault();
+async function getNotifications() {
+  const { data }: any = await useFetch("/api/notifications/get", {
+    method: "GET",
+    params: { lastGetDate: lastGetDate.value },
+    watch: false,
+  });
+
+  lastGetDate.value = new Date(Date.now());
+  notifications.value.push(...(data.value as any));
+}
+
+getNotifications();
+
+onMounted(() => {
+  setInterval(() => {
+    getNotifications();
+  }, 60000);
+});
+
+async function seenNotification(notification: any) {
+  if (!notification.isReaded) {
+    useLazyFetch("/api/notifications/seen", {
+      method: "POST",
+      params: { uuid: notification.uuid },
+      watch: false,
+    });
+  }
+}
+
+async function removeSelectedNotifications() {
+  notifications.value = notifications.value.filter((n: any) => !n.isChecked);
+
+  if (notifications.value.length === 0) {
+    return;
+  }
+
+  useLazyFetch("/api/notifications/remove", {
+    method: "POST",
+    params: { uuids: notifications.value.map((n: any) => n.uuid) },
+    watch: false,
+  });
   emit("update:show", false);
+}
+
+const unreadNotificationsLength = computed(() => {
+  return notifications.value.filter((n: any) => !n.isReaded).length;
 });
 
+store.notificationsLength = computed(() => {
+  return unreadNotificationsLength.value;
+});
+
+const isAllChecked = computed(() => {
+  return notifications.value.every((n: any) => n.isChecked);
+});
+
+const checkAll = () => {
+  if (!isAllChecked.value) {
+    notifications.value.map((n: any) => (n.isChecked = true));
+  } else {
+    notifications.value.map((n: any) => (n.isChecked = false));
+  }
+};
+
+const modalContent = ref<HTMLDivElement | null>(null);
+
+onMounted(() => {
+  document.addEventListener("click", (e) => {
+    if (modalContent.value?.contains(e.target as Node) || props.show !== true) return;
+    emit("update:show", false);
+  });
+});
 </script>
 
-<template class="overflow-hidden">
-  <div
-    id="notificationsModal"
-    :class="{ 'modal-open': show }"
-    class="modal cursor-pointer"
-    @click="$emit('update:show', false)"
-  >
-    <div v-if="show" class="modal-box max-w-md p-0">
-      <div class="cursor-auto" @click.stop>
-        <div
-          class="w-full grid place-items-center"
+<template>
+  <div class="modal-overlay" v-if="show" ref="modalContent">
+    <div
+      class="max-w-xl cursor-auto bg-white px-1 w-[450px]"
+      style="max-height: 700px; overflow-y: auto"
+    >
+      <div class="flex justify-between text-[16px] font-medium mt-4">
+        <p>Оповещения ({{ unreadNotificationsLength }})</p>
+        <p
+          class="text-[14px] text-red-400 cursor-pointer mr-2"
+          @click="removeSelectedNotifications"
+          v-if="notifications.some((n: any) => n.isChecked)"
         >
-          <div>
+          Удалить выбранные
+        </p>
+      </div>
+      <div class="divider"></div>
+      <div class="form-control -ml-1"  v-if="notifications.length > 0">
+        <label class="label cursor-pointer flex justify-start">
+          <input
+            type="checkbox"
+            :checked="isAllChecked"
+            @click="checkAll"
+            class="checkbox checkbox-primary mr-2"
+          />
+          <span class="label-text">Выбрать все</span>
+        </label>
+      </div>
+      <div
+        v-for="notification of notifications"
+        :key="notification.uuid"
+        class="flex"
+      >
+        <input
+          type="checkbox"
+          class="checkbox mt-8 checkbox-primary"
+          :checked="notification.isChecked"
+          @change="notification.isChecked = !notification.isChecked"
+          style="z-index: 9999"
+        />
+        <div
+          class="collapse rounded-box border-[#eff0ff]"
+          :class="{
+            'bg-[#f9faff]': !notification.isReaded,
+            'bg-white': notification.isReaded,
+          }"
+        >
+          <input
+            type="checkbox"
+            @change="
+              [seenNotification(notification), (notification.isReaded = true)]
+            "
+          />
 
+          <div class="collapse-title">
+            <div class="flex mx-2 my-2 gap-2">
+              <div class="btn btn-circle border-2">
+                <Icon name="fluent:info-24-filled" size="26" />
+              </div>
+              <div class="flex flex-col flex-wrap w-full">
+                <div class="font-medium flex justify-between w-full">
+                  Новости
+                  <div class="text-xs">
+                    {{ $dayjs(notification.date).fromNow() }}
+                  </div>
+                </div>
+                <p class="title-message">
+                  {{ notification.text }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="collapse-content mx-4 w-full whitespace-pre-line">
+            {{ notification.text }}
           </div>
         </div>
       </div>
@@ -40,7 +165,25 @@ onKeyStroke("Escape", (e) => {
 </template>
 
 <style scoped>
-#buyoutInfoModal {
+.title-message {
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+  width: 300px;
+}
+::-webkit-scrollbar {
+  height: 8px;
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
+  border-radius: 4px;
 }
 </style>

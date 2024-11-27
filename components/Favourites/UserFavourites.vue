@@ -150,7 +150,7 @@ function closeModal() {
         </label>
       </form>
 
-      <div class="w-full bg-[#f5f7ff] rounded-xl pt-5">
+      <div class="w-full rounded-xl pt-5">
         <div class="flex flex-wrap justify-center">
           <div class="w-full font-semibold text-[20px] text-center">Избранное</div>
           <Nuxt-link
@@ -167,7 +167,7 @@ function closeModal() {
                 class="rounded-xl"
               />
             </div>
-            <div class="text-sm font-medium ml-[5px]">
+            <div class="text-sm font-medium text-center mt-0.5">
               {{ item.title }}
             </div>
           </Nuxt-link>

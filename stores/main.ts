@@ -13,6 +13,7 @@ export const useMainStore = defineStore('main', {
     faqModal: false,
     swapAccountModal: false,
     twoFaQRModal: false,
+    notificationsLength: 0
   }),
   actions: {
     checkTelegramId() {

@@ -5,7 +5,10 @@ const notificationSchema = new Schema({
         user: { type: Schema.Types.ObjectId, ref: 'User' },
         uuid: { type: String },
         forAll: { type: Boolean, default: false },
+        isReaded: { type: Boolean },
         readUser: { type: Array },
+        isRemoved: { type: Boolean },
+        removedUser: { type: Array },
         date: { type: Date, default: new Date(Date.now()) },
         expireDate: { type: Date },
 })
