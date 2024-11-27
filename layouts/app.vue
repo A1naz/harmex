@@ -3,7 +3,7 @@ const { loggedIn, user } = useUserSession()
 const currency = useCurrency()
 const drawerContent: any = ref(null)
 const favouritesModal = ref(false)
-const notificationsModal = ref(true)
+const notificationsModal = ref(false)
 
 const isOpen = ref(false)
 
