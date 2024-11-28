@@ -5,7 +5,6 @@ export default defineEventHandler(async (event) => {
         if (!user) return sendRedirect(event, '/auth', 302)
 
         const { uuid }: any = getQuery(event)
-        console.log(uuid)
 
         const notification = await Notification.findOne({ uuid })
 

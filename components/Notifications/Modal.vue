@@ -38,18 +38,19 @@ async function seenNotification(notification: any) {
 }
 
 async function removeSelectedNotifications() {
-  notifications.value = notifications.value.filter((n: any) => !n.isChecked);
+  const selectedNotifications = notifications.value.filter(
+    (n: any) => n.isChecked
+  );
+  console.log(selectedNotifications);
 
-  if (notifications.value.length === 0) {
-    return;
-  }
-
-  useLazyFetch("/api/notifications/remove", {
+  await useFetch("/api/notifications/remove", {
     method: "POST",
-    params: { uuids: notifications.value.map((n: any) => n.uuid) },
+    params: { uuids: selectedNotifications.map((n: any) => n.uuid) },
     watch: false,
   });
-  emit("update:show", false);
+  
+  
+  notifications.value = notifications.value.filter((n: any) => !n.isChecked);
 }
 
 const unreadNotificationsLength = computed(() => {
@@ -76,7 +77,8 @@ const modalContent = ref<HTMLDivElement | null>(null);
 
 onMounted(() => {
   document.addEventListener("click", (e) => {
-    if (modalContent.value?.contains(e.target as Node) || props.show !== true) return;
+    if (modalContent.value?.contains(e.target as Node) || props.show !== true)
+      return;
     emit("update:show", false);
   });
 });
@@ -90,6 +92,7 @@ onMounted(() => {
     >
       <div class="flex justify-between text-[16px] font-medium mt-4">
         <p>Оповещения ({{ unreadNotificationsLength }})</p>
+
         <p
           class="text-[14px] text-red-400 cursor-pointer mr-2"
           @click="removeSelectedNotifications"
@@ -99,7 +102,7 @@ onMounted(() => {
         </p>
       </div>
       <div class="divider"></div>
-      <div class="form-control -ml-1"  v-if="notifications.length > 0">
+      <div class="form-control -ml-1" v-if="notifications.length > 0">
         <label class="label cursor-pointer flex justify-start">
           <input
             type="checkbox"
@@ -143,7 +146,7 @@ onMounted(() => {
               </div>
               <div class="flex flex-col flex-wrap w-full">
                 <div class="font-medium flex justify-between w-full">
-                  Новости
+                  {{ notification.category }}
                   <div class="text-xs">
                     {{ $dayjs(notification.date).fromNow() }}
                   </div>
