@@ -17,6 +17,7 @@ export interface StateMain {
   faqModal: boolean
   swapAccountModal: boolean
   twoFaQRModal: boolean
+  notificationsLength: number
 }
 
 export interface IUser extends Entity {
