@@ -27,6 +27,15 @@ export default eventHandler(async (event) => {
       message: 'no article or reviews',
     })
   }
+  const balanceIsExist = await checkBalance(user, {article, amount: likes + dislikes,mp: 'wildberries'}, 'likes')
+
+  if(!balanceIsExist){
+    throw createError({
+      statusCode: 400,
+      message:
+        `Недостаточно средств для публикаций лайков на отзывы`,
+    })
+  }
   // const image = findImage(Number(article))
 
   comments.forEach((comment: any) => {

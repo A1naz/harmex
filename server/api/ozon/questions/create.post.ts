@@ -16,6 +16,15 @@ export default eventHandler(async (event) => {
       message: 'Текст вопроса должен быть длиннее 10 символов и короче 1000',
     })
   }
+  const balanceIsExist = await checkBalance(user, {article, mp: 'ozon'}, 'questions')
+
+  if(!balanceIsExist){
+    throw createError({
+      statusCode: 400,
+      message:
+        `Недостаточно средств для публикации вопроса`,
+    })
+  }
   const date = new Date(publishDate) < new Date() ? new Date() : publishDate
   const created = new Question({
     user,

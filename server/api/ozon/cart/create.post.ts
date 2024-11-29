@@ -15,6 +15,16 @@ export default eventHandler(async (event) => {
     })
   }
   
+  const balanceIsExist = await checkBalance(user, {article, amount, mp: 'ozon'}, 'cart')
+
+  if(!balanceIsExist){
+    throw createError({
+      statusCode: 400,
+      message:
+        `Недостаточно средств для создания корзин`,
+    })
+  }
+  
 
   const { image, name } = productData
   const created = new Cart({

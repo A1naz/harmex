@@ -18,6 +18,16 @@ export default eventHandler(async (event) => {
   } = await readBody(event)
   const { image } = productData
 
+  const balanceIsExist = await checkBalance(user, {article, amount, mp: 'wildberries'}, 'viewings')
+
+  if(!balanceIsExist){
+    throw createError({
+      statusCode: 400,
+      message:
+        `Недостаточно средств для совершения просмотра`,
+    })
+  }
+
   const created = new View({
     user,
     dateStart,

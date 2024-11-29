@@ -1,91 +1,253 @@
 import { User } from '../lib/models/User'
 import { DefaultPrices } from '@/server/lib/models/defaultPrices'
-import { Buyout as wildberriesBuyout } from '../lib/models/wildberries/Buyout'
-import { Buyout as ozonBuyout } from '../lib/models/ozon/Buyout'
-import { Review as wildberriesReview } from '../lib/models/wildberries/Review'
-import { Review as ozonReview } from '../lib/models/ozon/Review'
+import { Buyout as wildberriesBuyout } from '../lib/models/wildberries/Buyout';
+import { Buyout as ozonBuyout } from '../lib/models/ozon/Buyout';
+import { Review as wildberriesReview } from '../lib/models/wildberries/Review';
+import { Review as ozonReview } from '../lib/models/ozon/Review';
+import { View as ozonView } from '../lib/models/ozon/View';
+import { View as wildberriesView } from '../lib/models/wildberries/View';
+import { Question as ozonQuestion } from '../lib/models/ozon/Question';
+import { Question as wildberriesQuestion } from '../lib/models/wildberries/Question';
+import { Cart as ozonCart } from '../lib/models/ozon/Cart';
+import { Cart as wildberriesCart } from '../lib/models/wildberries/Cart';
+import { Like as ozonLike } from '../lib/models/ozon/Like';
+import { Like as wildberriesLike } from '../lib/models/wildberries/Like';
+import { ProductLike as ozonProductLike } from '../lib/models/ozon/ProductLike';
+import { ProductLike as wildberriesProductLike } from '../lib/models/wildberries/ProductLike';
+import { QuestionLike as ozonQuestionLike } from '../lib/models/ozon/QuestionLikes';
 
-export const checkBalance = async (user: any, products: any, service: string = 'buyouts') => {
-    try {
-        // const userFound = await User.findOne({ user })
-        if (!user) return false
+async function getPricesMap() {
+    const pricesDocument = await DefaultPrices.findOne(
+        { "values.mp": { $in: ["ozon", "wildberries"] } },
+        { "values": 1 }
+    );
 
-        let totalPrice = 0
-        let wildberries = []
-        let ozon = []
+    if (!pricesDocument?.values) {
+        console.log("Prices document not found");
+        return {};
+    }
 
-        switch (service) {
-            case 'reviews':
-                const pricesDocument = await DefaultPrices.findOne(
-                    { "values.mp": { $in: ["ozon", "wildberries"] } },
-                    { "values": 1 }
-                );
+    return pricesDocument.values.reduce((acc, item) => {
+        acc[item.mp] = {
+            review: item.prices?.review?.value || 0,
+            buyouts: item.prices?.buyout?.value || 0,
+            viewings: item.prices?.viewing?.value || 0,
+            question: item.prices?.questionProduct?.value || 0,
+            cart: item.prices?.cart?.value || 0,
+            likes: item.prices?.likeReview?.value || 0,
+            productlikes: item.prices?.likeProduct?.value || 0
+        };
+        return acc;
+    }, {});
+};
 
-                if (!pricesDocument || !pricesDocument.values) {
-                    console.log("Prices document not found");
-                    return false;
-                }
-
-                const pricesMap = pricesDocument?.values.reduce((acc: any, item: any) => {
-                    acc[item.mp] = item.prices?.review?.value || 0;
-                    return acc;
-                }, {});
-
-                const ozonPrice = pricesMap["ozon"] || 0;
-                const wildberriesPrice = pricesMap["wildberries"] || 0;
-
-                totalPrice = products.mp === "ozon" ? ozonPrice : wildberriesPrice;
-
-                if (products.video !== '') {
-                    totalPrice += 25;
-                }
-
-                ozon = await ozonReview.find({
-                    user: user._id,
-                    status: { $in: ['created', 'working', 'waiting', 'work'] },
-                }).select('uuid isVideoEnabled');
-
-
-                wildberries = await wildberriesReview.find({
-                    user: user._id,
-                    status: { $in: ['created', 'working', 'waiting', 'work'] },
-                }).select('uuid isVideoEnabled');
-
-
-                const balanceActiveReviews = ozon.reduce((acc, item) => acc + (item.isVideoEnabled ? ozonPrice + 25 : ozonPrice), 0) +
-                            wildberries.reduce((acc, item) => acc + (item.isVideoEnabled ? wildberriesPrice + 25 : wildberriesPrice), 0);
-
-
-                totalPrice += balanceActiveReviews;
-
-                console.log('totalPrice', totalPrice)
-
-                return user.balance >= totalPrice;
-
-            default:
-                // const ozon = await ozonBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
-                wildberries = await wildberriesBuyout.find({ user: user._id, status: { $in: ['work', 'active'] } }).select('uuid product')
-
-                const all = [
-                    // ...ozon.map((item: any) => ({ ...item.toObject(), mp: 'ozon' })),
-                    ...wildberries.map((item: any) => ({ ...item.toObject(), mp: 'wildberries' }))
-                ]
-
-                const balanceActiveBuyouts = all.reduce((acc: number, item: any) => {
-                    return acc + (parseFloat(item.product.price) || 0)
-                }, 0)
-
-                const currentBuyoutsSumm = products.reduce((acc: number, item: any) => {
-                    return acc + (item.price ? parseFloat(item.price) : parseFloat(item.product.price)) || 0
-                }, 0)
-
-
-                totalPrice = balanceActiveBuyouts + currentBuyoutsSumm
-                // console.log('Total', totalPrice, 'balance', user.balance)
-                return user.balance >= totalPrice
-        }
-    } catch (e: any) {
-        console.error(e)
-        return false
+function getCurrentProductSumm (product: any, prices: any, service:any) {
+    
+    if(!prices || !product || !service) return 0
+    if(service === 'reviews'){
+        return product.video && product.video !== '' ? prices.review + 25 : prices.review  || 0
+    }else if(service === 'questions'){
+        return prices.question
+    }else {
+        return product.amount ? prices[service] * product.amount : prices[service]
     }
 }
+
+export const checkBalance = async (user: any, products: any, service = 'buyouts') => {
+    try {
+        // console.log('checkBalance')
+        if (!user) return false;
+
+        let totalPrice = 0;
+        const pricesMap = await getPricesMap();
+
+        const [
+            // ozonBuyoutSum,
+            wildberriesBuyoutSum, ozonReviewSum,
+            wildberriesReviewSum, ozonViewSum, wildberriesViewSum,
+            ozonQuestionSum, wildberriesQuestionSum, ozonCartSum,
+            wildberriesCartSum, ozonLikeReviewSum, wildberriesLikeReviewSum,
+            ozonLikeProductSum, wildberriesLikeProductSum, ozonQuestionLikeSum
+        ] = await Promise.all([
+            // Buyouts
+            // ozonBuyout.aggregate([{ $match: { user: user._id, status: { $in: ['work', 'active'] } } }, { $project: { price: { $toDouble: "$product.price" } } }, { $group: { _id: null, total: { $sum: "$price" } } }]),
+            wildberriesBuyout.aggregate([{ $match: { user: user._id, status: { $in: ['work', 'active'] } } }, { $project: { price: { $toDouble: "$product.price" } } }, { $group: { _id: null, total: { $sum: "$price" } } }]),
+            ozonReview.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'working', 'waiting', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: {
+                            $sum: {
+                                $add: [
+                                    pricesMap["ozon"].review,
+                                    { $cond: [{ $eq: ["$isVideoEnabled", true] }, 25, 0] }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]),
+            wildberriesReview.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'working', 'waiting', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: {
+                            $sum: {
+                                $add: [
+                                    pricesMap["wildberries"].review,
+                                    { $cond: [{ $eq: ["$isVideoEnabled", true] }, 25, 0] }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]),
+        
+            // Views
+            ozonView.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: [pricesMap["ozon"].viewings, "$amount"] } }
+                    }
+                }
+            ]),
+            wildberriesView.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: [pricesMap["wildberries"].viewings, "$amount"] } }
+                    }
+                }
+            ]),
+        
+            // Questions (без умножения на `amount`)
+            ozonQuestion.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: pricesMap["ozon"].question }
+                    }
+                }
+            ]),
+            wildberriesQuestion.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: pricesMap["wildberries"].question }
+                    }
+                }
+            ]),
+        
+            // Carts
+            ozonCart.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: [pricesMap["ozon"].cart, "$amount"] } }
+                    }
+                }
+            ]),
+            wildberriesCart.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: [pricesMap["wildberries"].cart, "$amount"] } }
+                    }
+                }
+            ]),
+        
+            // Likes (Review)
+            ozonLike.aggregate([
+                { $match: { user: user._id, type: "review", status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: [pricesMap["ozon"].likes, "$amount"] } }
+                    }
+                }
+            ]),
+            wildberriesLike.aggregate([
+                { $match: { user: user._id, type: "review", status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: [pricesMap["wildberries"].likes, "$amount"] } }
+                    }
+                }
+            ]),
+        
+            // Likes (Product)
+            ozonProductLike.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: [pricesMap["ozon"].productlikes, "$amount"] } }
+                    }
+                }
+            ]),
+            wildberriesProductLike.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: [pricesMap["wildberries"].productlikes, "$amount"] } }
+                    }
+                }
+            ]),
+
+            ozonQuestionLike.aggregate([
+                { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
+                { $group: { _id: null, total: { $sum: pricesMap["ozon"].likes } } }
+            ]),
+        ]);
+
+        const balanceActive =
+            // (ozonBuyoutSum[0]?.total || 0) +
+            (wildberriesBuyoutSum[0]?.total || 0) +
+            (ozonReviewSum[0]?.total || 0) +
+            (wildberriesReviewSum[0]?.total || 0) +
+            (ozonViewSum[0]?.total || 0) +
+            (wildberriesViewSum[0]?.total || 0) +
+            (ozonQuestionSum[0]?.total || 0) +
+            (wildberriesQuestionSum[0]?.total || 0) +
+            (ozonCartSum[0]?.total || 0) +
+            (wildberriesCartSum[0]?.total || 0) +
+            (ozonLikeReviewSum[0]?.total || 0) +
+            (wildberriesLikeReviewSum[0]?.total || 0) +
+            (ozonLikeProductSum[0]?.total || 0) +
+            (wildberriesLikeProductSum[0]?.total || 0) +
+            (ozonQuestionLikeSum[0]?.total || 0)
+
+        // console.log('ozonBuyoutSum', ozonBuyoutSum, 'wildberriesBuyoutSum', wildberriesBuyoutSum);
+        // console.log('ozonReviewSum', ozonReviewSum, 'wildberriesReviewSum', wildberriesReviewSum);
+        // console.log('ozonViewSum', ozonViewSum, pricesMap["ozon"].viewings, 'wildberriesViewSum', wildberriesViewSum, pricesMap["wildberries"].viewings);
+        // console.log('ozonQuestionSum', ozonQuestionSum, pricesMap["ozon"].question, 'wildberriesQuestionSum', wildberriesQuestionSum, pricesMap["wildberries"].question);
+        // console.log('ozonCartSum', ozonCartSum, pricesMap["ozon"].cart, 'wildberriesCartSum', wildberriesCartSum, pricesMap["wildberries"].cart);
+        // console.log('ozonLikeReviewSum', ozonLikeReviewSum, pricesMap["ozon"].likes, 'wildberriesLikeReviewSum', wildberriesLikeReviewSum, pricesMap["wildberries"].likes);
+        // console.log('ozonLikeProductSum', ozonLikeProductSum, pricesMap["ozon"].productlikes, 'wildberriesLikeProductSum', wildberriesLikeProductSum, pricesMap["wildberries"].productlikes);
+        // console.log('ozonQuestionLikeSum', ozonQuestionLikeSum, pricesMap["ozon"].likes);
+
+        let currentProductSumm = service === 'buyouts' ? products.reduce((acc:any, item:any) => {
+            return acc + (item.price ? parseFloat(item.price) : parseFloat(item.product.price)) || 0;
+        }, 0) :  getCurrentProductSumm(products, pricesMap[products.mp], service) || 0
+        // console.log('currentProductSumm', currentProductSumm);
+        
+        totalPrice += balanceActive + currentProductSumm ;
+
+        // console.log('Total Price:', totalPrice);
+        return user.balance >= totalPrice;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+};
