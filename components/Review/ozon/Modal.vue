@@ -11,7 +11,7 @@ const props = defineProps({
   uuid: { type: String, required: true },
   deliveryid: { type: String, required: true },
 })
-const emit = defineEmits(['close', 'publish'])
+const emit = defineEmits(['close', 'publish', 'notEnoughMoney'])
 const config = useRuntimeConfig()
 const store = useMainStore()
 const headers = useRequestHeaders(['cookie']) as HeadersInit
@@ -32,8 +32,6 @@ const inputs: any = {
 
 const form = reactive({
   text: '',
-  positive: '',
-  negative: '',
   rating: 5,
   date: now.value,
   photos: [
@@ -549,23 +547,6 @@ function convertToMoscowTime(dateString: any): Date {
 
       <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-2 font-medium">
-            Достоинства:
-          </div>
-
-          <textarea
-            v-model="form.positive"
-            class="textarea w-full textarea-md bg-base-200"
-            placeholder="Напишите свое мнение"
-          />
-          <div class="pb-2 font-medium">
-            Недостатки:
-          </div>
-          <textarea
-            v-model="form.negative"
-            class="textarea w-full textarea-md bg-base-200"
-            placeholder="Напишите свое мнение"
-          />
           <div class="pb-2 font-medium">
             Комментарий:
           </div>

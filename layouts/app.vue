@@ -6,7 +6,8 @@ const favouritesModal = ref(false);
 const notificationsModal = ref(false);
 const store = useMainStore();
 
-const isOpen = ref(false);
+const isOpen = ref(false)
+const modalOpen = ref(false)
 
 function toggleMenu() {
   isOpen.value = !isOpen.value;
@@ -50,6 +51,11 @@ function openNotificationsModal() {
     }, 50);
   }
 }
+onMounted(() => {
+  if (user?.value && user.value.balance !== undefined && user.value.balance < 0) {
+    modalOpen.value = true;
+  }
+})
 </script>
 
 <template>
@@ -187,6 +193,7 @@ function openNotificationsModal() {
       </div>
       <!-- Page content here -->
     </div>
+    <NotEnoughtBalance :show="modalOpen" @close="modalOpen = false" />
   </div>
 </template>
 

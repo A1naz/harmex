@@ -18,8 +18,6 @@ export default eventHandler(async (event) => {
     text,
     photos,
     date,
-    positive,
-    negative,
     videoKey,
     video,
   } = await readBody(event)
@@ -40,6 +38,17 @@ export default eventHandler(async (event) => {
         'В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд',
     })
   }
+
+  const balanceIsExist = await checkBalance(user, {buyoutuuid, video, mp: 'ozon'}, 'reviews')
+
+  if(!balanceIsExist){
+    throw createError({
+      statusCode: 400,
+      message:
+        `Недостаточно средств для совершения отзыва`,
+    })
+  }
+
   const buyout = await Buyout.findOne({ uuid: buyoutuuid })
   if (!buyout) {
     return createError({
@@ -78,8 +87,6 @@ export default eventHandler(async (event) => {
     images,
     status: 'waiting',
     recipientphone: delivery.recipientphone,
-    positive,
-    negative,
     videoKey: videoKey !== 'reviewVideos/.' ? videoKey : '',
     originalVideoName: video,
     isVideoEnabled: video !== '',
