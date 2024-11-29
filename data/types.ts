@@ -78,6 +78,7 @@ export interface IUser extends Entity {
   votedForService: Array<object>
   isPartnerWithdrawAvailable: Boolean
   ks: string
+  paymentEmail: string
 }
 
 export interface IUserLogs extends Entity {

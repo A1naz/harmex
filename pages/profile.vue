@@ -7,6 +7,7 @@ const { setLocale } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const params = route.query
+const config = useRuntimeConfig()
 
 if (!loggedIn || !user)
   router.push('/auth?redirect=/profile')
@@ -324,11 +325,11 @@ await getPartnerAgreement()
               </p>
             </div>
             <div class="flex items-center">
-              {{ user?.orgName }}
+              ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ
             </div>
-            <button class=" btn btn-primary btn-sm rounded-full p-1 flex justify-center items-center">
+            <a class=" btn btn-primary btn-sm rounded-full p-1 flex justify-center items-center" target="_blank" :href="config.public.siteUrl + '/api/docs/get'">
               <Icon name="material-symbols:download-sharp" size="24" />
-            </button>
+            </a>
           </div>
         </div>
 
