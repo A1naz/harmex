@@ -25,6 +25,7 @@ const UserSchema = new Schema<IUserSchema>({
   rs: { type: String },
   bik: { type: String },
 
+  paymentEmail: { type: String },
   isBanned: { type: Boolean, default: false },
   username: { type: String, unique: true, required: true },
   firstName: { type: String, required: false },

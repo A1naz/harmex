@@ -146,9 +146,11 @@ async function submitForm() {
       result.value = data
       loading.value = false
       if (data.value!.status === 'error') {
-        alert.value = true
-        alertType.value = 'error'
-        alertText.value = data.value!.error as string
+        notify({
+          type: 'error',
+          title: data.value!.error as string,
+          duration: 3000,
+        })
         useTimeoutFn(() => {
           alert.value = false
         }, 3000)
@@ -156,9 +158,11 @@ async function submitForm() {
       else {
         localStorage.removeItem('referralCode')
         localStorage.removeItem('landing')
-        alert.value = true
-        alertType.value = 'success'
-        alertText.value = 'Пользователь зарегистрирован.'
+        notify({
+          type: 'success',
+          title: 'Пользователь зарегистрирован.',
+          duration: 3000,
+        })
         useTimeoutFn(() => {
           alert.value = false
           navigateTo('/auth?confirmed=false')
@@ -175,9 +179,11 @@ async function submitForm() {
       result.value = data
       loading.value = false
       if (data.value!.status === 'error') {
-        alert.value = true
-        alertType.value = 'error'
-        alertText.value = data.value!.error as string
+        notify({
+          type: 'error',
+          title: data.value!.error as string,
+          duration: 3000,
+        })
         useTimeoutFn(() => {
           alert.value = false
         }, 3000)
@@ -185,9 +191,11 @@ async function submitForm() {
       else {
         localStorage.removeItem('referralCode')
         localStorage.removeItem('landing')
-        alert.value = true
-        alertType.value = 'success'
-        alertText.value = 'Пользователь зарегистрирован.'
+        notify({
+          type: 'success',
+          title: 'Пользователь зарегистрирован.',
+          duration: 3000,
+        })
         useTimeoutFn(() => {
           alert.value = false
           navigateTo('/auth?confirmed=false')
@@ -386,7 +394,6 @@ function toggleConfirmPassword() {
               Физическое лицо
             </button>
             <button
-              disabled
               class="w-full"
               :class="{
                 active: faceType === 'yurFace',

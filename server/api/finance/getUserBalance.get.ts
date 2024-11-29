@@ -9,31 +9,9 @@ export default defineEventHandler(async (event) => {
 
     const userRefAcc = await Referral.findOne({ user }) || { referrals: [] }
   
-    const comissions = await PartnerPaymentHistory.aggregate([
-      { $match: { user: user._id } },
-      {
-        $group: {
-          _id: '$referral',
-          summ: { $sum: '$amount' },
-        },
-      },
-    ])
   
-  
-    const referralUsers = userRefAcc.referrals.map((referral) =>
-      referral.user.toString()
-    )
     const refIds = userRefAcc?.referrals.map((el: any) => el.user)
 
   
-    const firstLevelComissions = comissions.reduce(
-      (sum:any, comission:any) => {
-        if (referralUsers.includes(comission._id.toString())) {
-          sum += comission.summ
-        }
-        return sum
-      },
-      0
-    )
-    return {balance: user.balance, commissions: firstLevelComissions, firstLevelReferralsCount: refIds.length}
+    return {balance: user.balance, commissions: user.partner.balance, firstLevelReferralsCount: refIds.length}
 })
