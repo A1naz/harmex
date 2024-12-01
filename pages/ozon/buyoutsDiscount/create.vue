@@ -426,8 +426,8 @@ function closeModal() {
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink to="/ozon/buyouts" class="cursor-pointer text-[#909090]">
-            Выкупы
+          <NuxtLink to="/ozon/buyoutsDiscount" class="cursor-pointer text-[#909090]">
+            Выкупы по скидке
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">
@@ -589,12 +589,19 @@ function closeModal() {
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
+                <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
+                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                  <div class="text-center">
+                    <span> Скидка </span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                  </div>
+                </th>
                 <th class="text-base-content" />
               </tr>
             </thead>
 
             <tbody>
-              <BuyoutOzonCreateTableRow
+              <BuyoutOzonCreateTableRowDiscount
                 v-for="(product, index) in products"
                 :key="`${index}_${refreshKey}`" :product="product" :index="index"
                 :open-discount="openDiscount" :loading="!pickpoints?.length"
@@ -671,6 +678,28 @@ function closeModal() {
                   <input
                     v-model="products[selectedRuleProductIndex].purchaseSoon" type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
+                  >
+                </div>
+              </div>
+              <div
+                v-if="rule.id === 1 && mainStore.client.ffEnabled"
+                class="label cursor-pointer flex gap-4 items-start justify-between"
+              >
+                <span class="label-text">{{ 'Выкуп под ключ ' }}</span>
+                <div class="flex gap-4">
+                  <input
+                    v-model="products[selectedRuleProductIndex].key" type="checkbox"
+                    class="checkbox checkbox-primary border-base-content" @click="
+                    ;[
+                                            refreshElements(),
+                                            (products[selectedRuleProductIndex].adress = ''),
+                                            (products[selectedRuleProductIndex].dateRange = [
+                                                new Date().setHours(new Date().getHours()),
+
+                                                new Date().setHours(new Date().getHours()),
+                                            ]),
+                                        ]
+                    "
                   >
                 </div>
               </div>

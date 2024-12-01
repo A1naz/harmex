@@ -293,6 +293,43 @@ const productQuantityModel = computed({
       </div>
     </td>
 
+    <td class="w-[80px] border-r border-base">
+      <div class="flex">
+        <button
+          class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+          :class="{
+            'rounded-r-none':
+              product.discountPrice && product.discountPrice !== product.price,
+          }"
+          @click="props.openDiscount(index, product.price)"
+        >
+          {{
+            product.discountPrice && product.discountPrice !== product.price
+              ? `${product.discountPrice} ₽`
+              : "Указать скидку"
+          }}
+        </button>
+        <button
+          v-if="
+            product.discountPrice && product.discountPrice !== product.price
+          "
+          class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1 btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+          @click="$emit('removeDiscount', index)"
+        >
+          <Icon name="ep:close-bold" size="12" />
+        </button>
+      </div>
+    </td>
+    <td class="w-[20px] border-r border-base">
+      <div class="flex">
+        <input
+          type="checkbox"
+          :checked="product.FBS"
+          @click="product.FBS ? (product.FBS = false) : (product.FBS = true)"
+          class="checkbox checkbox-primary"
+        />
+      </div>
+    </td>
     <td class="border-r border-base w-[90px]">
       <div class="flex justify-end">
         <div
