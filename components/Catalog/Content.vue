@@ -14,6 +14,10 @@ defineProps({
   },
 });
 
+function getServices(items: Array<any>) {
+  return items.filter((items:any) => !items.disabled &&( items.path == "/buyouts" || items.path == "/deliveries" || items.path == "/reviews"));
+}
+
 defineEmits(["setFavourites", "vote"]);
 </script>
 
@@ -70,7 +74,7 @@ defineEmits(["setFavourites", "vote"]);
             <div class="flex flex-wrap gap-x-5 text-[#fe6601c2] text-[15px]">
               <NuxtLink
                 :to="social.disabled ? '' : `/${social.slug}${service.path}`"
-                v-for="(service, i) in social.items.slice(0, 5)"
+                v-for="(service, i) in getServices(social.items)"
                 :key="i"
               >
                 <Icon

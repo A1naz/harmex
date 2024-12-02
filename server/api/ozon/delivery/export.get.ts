@@ -13,8 +13,20 @@ export default eventHandler(async (event) => {
     if (!user)
       return sendRedirect(event, '/auth', 302)
 
+    const { dateRange }: any = getQuery(event)
+
+    let trueDateRange = {}
+    if (dateRange) {
+      trueDateRange = {
+        updatedAt: {
+          $gte: new Date(JSON.parse(dateRange[0])).setHours(0, 0, 0, 0),
+          $lt: new Date(JSON.parse(dateRange[1])).setHours(23, 59, 0, 0),
+        },
+      }
+    }
+
     const runtimeConfig = useRuntimeConfig()
-    const deliveries = await Delivery.find({ user }).sort({ _id: -1 })
+    const deliveries = await Delivery.find({ user, ...trueDateRange }).sort({ _id: -1 })
     if (!deliveries.length) {
       throw createError({
         statusCode: 400,

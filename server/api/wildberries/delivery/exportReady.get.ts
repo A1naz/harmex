@@ -16,8 +16,9 @@ const keys = Object.keys as <T>(
       : never
   : never)[]
 
-async function getReady(user: Document) {
+async function getReady(user: Document, dateRange: any) {
   const deliveries = await Delivery.find({
+    ...dateRange,
     user: user._id,
     statusdelivery: {
       $elemMatch: {
@@ -119,6 +120,17 @@ async function getReady(user: Document) {
 }
 
 export default eventHandler(async (event) => {
+  const { dateRange }: any = getQuery(event)
+
+  let trueDateRange = {}
+  if (dateRange) {
+    trueDateRange = {
+      updatedAt: {
+        $gte: new Date(JSON.parse(dateRange[0])).setHours(0, 0, 0, 0),
+        $lt: new Date(JSON.parse(dateRange[1])).setHours(23, 59, 0, 0),
+      },
+    }
+  }
   try {
     const user = await getAdminEntity(event)
     if (!user)
@@ -126,7 +138,7 @@ export default eventHandler(async (event) => {
 
     const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
-    const ready = (await getReady(user)).filter(item => item !== undefined)
+    const ready = (await getReady(user, trueDateRange)).filter(item => item !== undefined)
 
     const sheet = workbook.addWorksheet('Готовы к выдаче', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
