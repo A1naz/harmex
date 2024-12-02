@@ -25,6 +25,7 @@ export default defineNitroPlugin(() => {
       fizFace: user.fizFace,
       orgInn: user.orgInn,
       orgName: user.orgName,
+      ffEnabled: user.ffEnabled
     }
   })
 

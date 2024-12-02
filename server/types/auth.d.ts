@@ -12,6 +12,7 @@ declare module '#auth-utils' {
     fizFace: boolean
     orgInn: string | undefined
     orgName: string | undefined
+    ffEnabled: boolean
   }
 
   interface UserSession {

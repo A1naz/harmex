@@ -14,6 +14,7 @@ async function login(event: H3Event<Request>, user: IUser) {
       isTwoFaEnabled: user.isTwoFaEnabled,
       phoneNumber: user.phoneNumber || '',
       acesses: user.acesses,
+      ffEnabled: user.ffEnabled
     },
     twoFaNeeded: user.isTwoFaEnabled,
     loggedInAt: new Date(),

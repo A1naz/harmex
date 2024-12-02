@@ -129,7 +129,7 @@ export default eventHandler(async (event) => {
       pointCoordinates: product.pointCoordinates,
       point_city: city,
       point_state: state,
-      pointId: Number(product.pointId),
+      pointId: product.pointId ? Number(product.pointId) : 0,
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,
@@ -154,6 +154,8 @@ export default eventHandler(async (event) => {
       ff: product.key || false,
       pointRegion,
       pointDistrict,
+      FBS: product.FBS,
+      addressInfo: product.addressInfo,
     })
 
     await buyout.save()
