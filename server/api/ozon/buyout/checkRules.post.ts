@@ -21,6 +21,8 @@ interface Item {
     lat: number
     lon: number
   }
+  FBS: boolean
+  addressInfo: any
 }
 
 export default eventHandler(async (event) => {
@@ -119,14 +121,22 @@ export default eventHandler(async (event) => {
       // }
     }
 
-    const foundPoint = points.find(
-      (p: any) =>
-        p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon,
-    )
-    if (!foundPoint) {
-      result.success = false
-      result.message = `ПВЗ ${item.adress} не найдено`
-      return result
+    if (!item.FBS) {
+
+      const foundPoint = points.find(
+        (p: any) =>
+          p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon
+      )
+      if (!foundPoint) {
+        result.success = false
+        result.message = `ПВЗ ${item.adress} не найдено`
+        return result
+      }
+    } else if (item.FBS) {
+      if (!item.addressInfo || !item.addressInfo.apartment) {
+        result.success = false
+        result.message = `Необходимо заполнить все поля адреса для товара ${item.article}`
+      }
     }
   }
 
