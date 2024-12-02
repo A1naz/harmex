@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // import { notify } from "@kyvg/vue3-notification";
 
-definePageMeta({ title: 'Профиль', layout: 'app' })
+definePageMeta({ title: 'Профиль', layout: 'app', middleware: 'auth' })
 const { loggedIn, user, fetch, clear } = useUserSession()
 const { setLocale } = useI18n()
 const router = useRouter()
