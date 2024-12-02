@@ -802,8 +802,8 @@ function toggleConfirmPassword() {
                 @click="formData.checked = !formData.checked"
               >
                 Регистрируясь вы принимаете
-                <a target="_blank" href="/oferta.pdf" class="text-primary">Пользовательское соглашение</a>, и подтверждаете, что ознакомлены с
-                <a target="_blank" href="/conf_policy.pdf" class="text-primary">Политикой конфиденциальности</a>.
+                <a target="_blank" href="/docs/oferta.pdf" class="text-primary">Пользовательское соглашение</a>, и подтверждаете, что ознакомлены с
+                <a target="_blank" href="/docs/conf_policy.pdf" class="text-primary">Политикой конфиденциальности</a>.
               </p>
             </div>
           </div>
