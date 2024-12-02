@@ -9,7 +9,7 @@ export interface ISearchQueryChangeOzon {
   productIndex: number
 }
 
-export const useOzonBuyoutStore = defineStore('ozonBuyoutDiscount', {
+export const useOzonBuyoutStoreDiscount = defineStore('ozonBuyoutDiscount', {
   state: () => ({
     createProducts: [] as any[],
     selectedItem: null as number | null,

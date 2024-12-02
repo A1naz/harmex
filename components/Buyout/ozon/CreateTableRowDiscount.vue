@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Rule } from "@/data/buyout/rules";
-import { useOzonBuyoutStore } from "../../../stores/ozonBuyout";
 
 const props = defineProps({
   product: {
@@ -32,7 +31,7 @@ const { notify } = useNotification();
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 
-const store = useOzonBuyoutStore();
+const store = useOzonBuyoutStoreDiscount();
 
 function copyBuyout() {
   if (store.createProducts.length >= 10) {

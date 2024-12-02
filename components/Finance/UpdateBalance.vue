@@ -65,6 +65,7 @@ const isEmail = computed(() => {
 onMounted(() => {
   email.value = user.value?.email;
 });
+const showTooltip = ref(false);
 </script>
 
 <template>
@@ -150,12 +151,30 @@ onMounted(() => {
               {{ summ }} ₽
             </div>
           </div>
+
           <div class="flex flex-col gap-[10px] w-full justify-start">
             <div
-              class="flex flex-col rounded-[10px] leading-4 px-[13px] py-[7px] bg-[#f6f6f6]"
+            @mouseover="showTooltip = true"
+ @mouseleave="showTooltip = false"
+              class="flex flex-col rounded-[10px] leading-4 px-[13px] py-[7px] bg-[#f6f6f6] cursor-pointer"
+              data-tip
             >
-              <span class="text-sm">Получатель платежа:</span>
-              <span class="font-semibold">ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ</span>
+            <div class="relative group inline-block">
+              <div class="flex flex-col">
+
+                <span class="text-sm">Получатель платежа:</span>
+                <span class="font-semibold">ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ</span>
+              </div>
+              
+              <div v-if="showTooltip" class="absolute left-1/2 -translate-x-1/2 mt-2 w-max rounded bg-gray-800 text-white text-sm p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 whitespace-pre-wrap">
+Наименование банка ПРИВОЛЖСКИЙ Ф-Л ПАО "ПРОМСВЯЗЬБАНК"
+    <br> БИК 042202803</br>
+    <br> Корреспондентский счёт 30101810700000000803</br>
+    <br> Счёт получателя 40802810903000164001</br>
+    <br> Наименование получателя ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ</br>
+    <br> ИНН 644651000810</br>
+  </div>
+  </div>
             </div>
             <div
               class="flex flex-col rounded-[10px] leading-4 px-[13px] py-[7px] bg-[#f6f6f6]"
@@ -209,4 +228,8 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+[data-tip] {
+  white-space: pre-wrap; /* Поддержка переноса строк */
+}
+</style>

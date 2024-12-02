@@ -8,7 +8,7 @@ export interface ISearchQueryChangeOzon {
   productIndex: number
 }
 
-export const useOzonBuyoutStore = defineStore('ozonBuyoutFBS', {
+export const useOzonBuyoutStoreRealFBS = defineStore('ozonBuyoutFBS', {
   state: () => ({
     createProducts: [] as any[],
     selectedItem: null as number | null,
