@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     head: {
       viewport: 'width=device-width,initial-scale=1',
       title: 'Harmex',
-      link: [{ rel: 'icon', href: '/favicon.png' }],
+      link: [{ rel: 'icon', href: '/favicon.svg' }],
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },

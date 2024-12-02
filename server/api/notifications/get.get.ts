@@ -2,7 +2,7 @@ import { Notification } from '~~/server/lib/models/Notification'
 
 export default defineEventHandler(async (event) => {
         const user = await getAdminEntity(event)
-        if (!user) return sendRedirect(event, '/auth', 302)
+        if (!user) return []
 
         const { lastGetDate }: any = getQuery(event)
 
