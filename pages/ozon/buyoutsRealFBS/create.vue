@@ -11,6 +11,7 @@ const currency = useCurrency()
 const isCreateButtonDisabled = ref(false)
 const { width } = useWindowSize()
 const modalOpenFF = ref(false)
+const modalOpenFBS = ref(false)
 const { notify } = useNotification()
 const mainStore = useMainStore()
 const refreshKey = ref(1)
@@ -40,6 +41,16 @@ const openAll = ref(false)
 const templateTitle = ref('')
 const templates = ref<any>([])
 const products = computed(() => store.createProducts)
+
+const addressForm = reactive({
+  apartment: '',
+  entrance:'',
+  floor: '',
+  intercom: '',
+  comment: '',
+  nameLastName: '',
+  phone: '',
+})
 
 definePageMeta({
   layout: 'app',
@@ -409,6 +420,13 @@ function closeModal() {
   modalOpen.value = false
   modalOpenFF.value = false
 }
+
+function handleAddressFBS(address: string, lt: number, lg: number) {
+  console.log(address, lt, lg)
+  modalOpenFBS.value = false
+
+  store.handleAddressFBS(address, lt, lg, addressForm)
+}
 </script>
 
 <template>
@@ -426,8 +444,8 @@ function closeModal() {
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink to="/ozon/buyouts" class="cursor-pointer text-[#909090]">
-            Выкупы
+          <NuxtLink to="/ozon/buyoutsRealFBS" class="cursor-pointer text-[#909090]">
+            Выкупы Real FBS
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">
@@ -589,6 +607,13 @@ function closeModal() {
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
+                <th class="min-w-40 font-normal" @click="openInfoModal('adress')">
+                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                  <div class="text-center">
+                    <span> Скидка </span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                  </div>
+                </th>
                 <th class="text-base-content" />
               </tr>
             </thead>
@@ -613,6 +638,8 @@ function closeModal() {
           @callback="(address: any) => handleAddress(address.a, address.lt, address.lg, address.id)"
           @close="closeModal"
         />
+        <BuyoutOzonSelectFBSPointModal v-if="modalOpenFBS" :state="modalOpenFBS" :pickpoints="[]"
+        @callback="handleAddressFBS" @close="closeModal" v-model:addressInfo="addressForm" />
       </ClientOnly>
       <div v-show="products.length" class="mt-6 md:flex justify-start lg:justify-end">
         <div class="m-5">
@@ -671,6 +698,28 @@ function closeModal() {
                   <input
                     v-model="products[selectedRuleProductIndex].purchaseSoon" type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
+                  >
+                </div>
+              </div>
+              <div
+                v-if="rule.id === 1 && mainStore.client.ffEnabled"
+                class="label cursor-pointer flex gap-4 items-start justify-between"
+              >
+                <span class="label-text">{{ 'Выкуп под ключ ' }}</span>
+                <div class="flex gap-4">
+                  <input
+                    v-model="products[selectedRuleProductIndex].key" type="checkbox"
+                    class="checkbox checkbox-primary border-base-content" @click="
+                    ;[
+                                            refreshElements(),
+                                            (products[selectedRuleProductIndex].adress = ''),
+                                            (products[selectedRuleProductIndex].dateRange = [
+                                                new Date().setHours(new Date().getHours()),
+
+                                                new Date().setHours(new Date().getHours()),
+                                            ]),
+                                        ]
+                    "
                   >
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import type { Item } from '@/data/buyout/createProduct'
+
 import { rules } from '@/data/buyout/rules'
 import { notify } from '@kyvg/vue3-notification'
 import { defineStore } from 'pinia'
@@ -9,9 +9,9 @@ export interface ISearchQueryChangeOzon {
   productIndex: number
 }
 
-export const useOzonBuyoutStore = defineStore('ozonBuyout', {
+export const useOzonBuyoutStoreDiscount = defineStore('ozonBuyoutDiscount', {
   state: () => ({
-    createProducts: [] as Item[],
+    createProducts: [] as any[],
     selectedItem: null as number | null,
     defaultRules: rules,
   }),
@@ -41,7 +41,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
         return
       }
       if (data.value) {
-        const productData = data.value as unknown as Item
+        const productData = data.value as unknown as any
         const startDate = new Date()
         const endDate = new Date()
         startDate.setHours(9, 0)
@@ -83,7 +83,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
         })
       }
 
-      const product = (data.value as any).product as unknown as Item
+      const product = (data.value as any).product as unknown as any
 
       const curDate = new Date()
       const startDate = new Date()
