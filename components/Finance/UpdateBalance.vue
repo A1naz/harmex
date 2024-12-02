@@ -89,19 +89,19 @@ const showTooltip = ref(false);
         >
           <h1 class="text-xl font-bold">Пополнение счета</h1>
           <div class="flex flex-col gap-[4px] justify-start w-full">
-            <span>{{ "Сумма пополнения" }}</span>
-            <input
-              type="number"
-              class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
-              placeholder="Введите сумму пополнения"
-              v-model="summ"
-            />
             <span>{{ "Введите почту для отправки чека" }}</span>
             <input
               type="text"
               class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
               placeholder="example@example.com"
               v-model="email"
+            />
+            <span>{{ "Сумма пополнения" }}</span>
+            <input
+              type="number"
+              class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
+              placeholder="Введите сумму пополнения"
+              v-model="summ"
             />
           </div>
           <div class="flex gap-[3px] justify-center w-full">
@@ -130,7 +130,7 @@ const showTooltip = ref(false);
           <button
             :disabled="!summ || loading || !isEmail || summ < 250"
             @click="balanceUpdate"
-            class="py-2 px-9 disabled:hover:text-white border rounded-lg disabled:bg-[#595959] disabled:border-[#595959] text-white bg-[#1b38ca] border-[#1b38ca] hover:bg-transparent hover:text-[#1b38ca] hover:border-[#1b38ca]"
+            class="py-2 px-9 btn btn-primary border rounded-lg  "
           >
             Далее
           </button>

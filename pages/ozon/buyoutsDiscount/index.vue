@@ -437,7 +437,7 @@ async function copyToClipboard(text: string) {
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">
-          Выкупы по скидке
+          Выкупы
         </li>
       </ul>
       <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
@@ -458,7 +458,7 @@ async function copyToClipboard(text: string) {
       <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
         <div class="flex gap-2">
           <NuxtLink
-            to="/ozon/buyoutsDiscount/create"
+            to="/ozon/buyouts/create"
             class="btn btn-primary dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
           >
             <Icon name="fluent:add-24-filled" size="12" />
