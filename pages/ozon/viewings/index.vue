@@ -263,9 +263,8 @@ async function copyToClipboard(text: string) {
       <div class="flex relative gap-3 lg:gap-4 flex-col lg:flex-row w-full lg:w-full">
         <div class="flex gap-2">
           <button
-            :disabled="store.client.username !== 'test'"
             class="btn btn-primary dark:bg-primary border-none font-normal btn-sm"
-            @click="navigateTo(`/viewings/create/`)"
+            @click="modalShow = true"
           >
             <Icon name="fluent:add-24-filled" size="17" />
             <span class="hidden lg:flex">Просмотр</span>
@@ -331,9 +330,6 @@ async function copyToClipboard(text: string) {
           </div>
         </div>
       </div>
-    </div>
-    <div v-if="store.client.username !== 'test'" class="text-red-500 ml-1 mt-1">
-      Функционал временно недоступен
     </div>
 
     <div v-if="viewings.length && !loading" class="mt-4 rounded-lg">
