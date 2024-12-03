@@ -130,7 +130,7 @@ const showTooltip = ref(false);
           <button
             :disabled="!summ || loading || !isEmail || summ < 250"
             @click="balanceUpdate"
-            class="py-2 px-9 disabled:hover:text-white border rounded-lg disabled:bg-[#595959] disabled:border-[#595959] text-white bg-[#1b38ca] border-[#1b38ca] hover:bg-transparent hover:text-[#1b38ca] hover:border-[#1b38ca]"
+            class="py-2 px-9 btn btn-sm h-[2.5rem] disabled:text-white border rounded-lg disabled:bg-[#595959] disabled:border-[#595959] text-white bg-primary border-primary hover:bg-white hover:text-primary hover:border-primary"
           >
             Далее
           </button>
@@ -146,7 +146,7 @@ const showTooltip = ref(false);
               "Оплата заказа" + " #" + paymentUuid
             }}</span>
             <div
-              class="px-[5px] rounded-[5px] min-w-[70px] h-[25px] text-white bg-[#1b38ca] text-[0.95rem] flex items-center"
+              class="px-[5px] rounded-[5px] min-w-[70px] h-[25px] text-white bg-primary text-[0.95rem] flex justify-center items-center"
             >
               {{ summ }} ₽
             </div>
@@ -155,7 +155,7 @@ const showTooltip = ref(false);
           <div class="flex flex-col gap-[10px] w-full justify-start">
             <div
             @mouseover="showTooltip = true"
- @mouseleave="showTooltip = false"
+            @mouseleave="showTooltip = false"
               class="flex flex-col rounded-[10px] leading-4 px-[13px] py-[7px] bg-[#f6f6f6] cursor-pointer"
               data-tip
             >
@@ -167,14 +167,14 @@ const showTooltip = ref(false);
               </div>
               
               <div v-if="showTooltip" class="absolute left-1/2 -translate-x-1/2 mt-2 w-max rounded bg-gray-800 text-white text-sm p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 whitespace-pre-wrap">
-Наименование банка ПРИВОЛЖСКИЙ Ф-Л ПАО "ПРОМСВЯЗЬБАНК"
-    <br> БИК 042202803</br>
-    <br> Корреспондентский счёт 30101810700000000803</br>
-    <br> Счёт получателя 40802810903000164001</br>
-    <br> Наименование получателя ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ</br>
-    <br> ИНН 644651000810</br>
-  </div>
-  </div>
+              Наименование банка ПРИВОЛЖСКИЙ Ф-Л ПАО "ПРОМСВЯЗЬБАНК"
+                  <br> БИК 042202803</br>
+                  <br> Корреспондентский счёт 30101810700000000803</br>
+                  <br> Счёт получателя 40802810903000164001</br>
+                  <br> Наименование получателя ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ</br>
+                  <br> ИНН 644651000810</br>
+                </div>
+                </div>
             </div>
             <div
               class="flex flex-col rounded-[10px] leading-4 px-[13px] py-[7px] bg-[#f6f6f6]"
@@ -213,10 +213,10 @@ const showTooltip = ref(false);
             <span class="text-[0.825rem]"
               >Ваши личные данные будут использоваться для обработки ваших
               заказов и других целей, описанных в нашей
-              <a class="text-[#1b38ca] link no-underline hover:underline"
+              <a class="text-primary link no-underline hover:underline"
                 >политике конфидециальности</a
               >, продолжая вы соглашаетесь с условиями<a
-                class="text-[#1b38ca] link no-underline hover:underline"
+                class="text-primary link no-underline hover:underline"
               >
                 оферты</a
               >.</span

@@ -13,6 +13,8 @@ const autoTarget = ref(true)
 const loading = ref(true)
 const codeInputMob = ref()
 const loadingExport = ref(false)
+const dateRange = ref([])
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
 const status = computed(() => route.query?.status || 'all')
 const search = reactive({
   text: '',
@@ -75,6 +77,9 @@ getDeliveries()
 async function exportReadyXLS() {
   loadingExport.value = true
   const { data } = await useFetch('/api/ozon/delivery/exportReady', {
+    params: {
+      dateRange: dateRange.value.length > 0 ? dateRange.value : null,
+    },
     responseType: 'blob',
   })
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
@@ -91,6 +96,9 @@ async function exportReadyUntilPenaltyXLS() {
   const { data, error } = await useFetch(
     '/api/ozon/delivery/exportReadyUntilPenalty',
     {
+      params: {
+        dateRange: dateRange.value.length > 0 ? dateRange.value : null,
+      },
       responseType: 'blob',
     },
   )
@@ -118,13 +126,17 @@ async function exportReadyUntilPenaltyXLS() {
 async function exportXLS() {
   loadingExport.value = true
   const { data, error } = await useFetch('/api/ozon/delivery/export', {
+    params: {
+      dateRange: dateRange.value.length > 0 ? dateRange.value : null,
+    },
     responseType: 'blob',
   })
   if (error.value) {
+    console.log(error.value)
     notify({
       type: 'error',
       title: 'Что-то пошло не так',
-      text: 'Не удалось экспортировать данные',
+      text: 'Не удалось экспортировать данные' + error.value,
     })
     loadingExport.value = false
     return
@@ -350,29 +362,56 @@ async function copyToClipboard(text: string) {
     <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
       <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
         <div v-if="deliveries.length" class="export lg:absolute right-0 top-0">
-          <button
-            v-if="loadingExport"
-            disabled
-            class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
-          >
-            <span
-              class="loading loading-spinner loading-sm text-primary"
-            />
-          </button>
-          <div v-else class="dropdown lg:dropdown-end z-10">
-            <label
-              tabindex="0"
-              class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
-            >XLS</label>
-            <ul
-              tabindex="0"
-              class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-1"
+          <div v-if="loadingExport" class="flex flex-nowrap items-center gap-2 lg:gap-3">
+            <DateRangePicker class="w-46" v-model="dateRange" :start-date="startDate" @reset="dateRange = []">
+              <button :disabled="loadingExport" class="btn btn-sm btn-primary bg-[#eff0ff] border-none dark:bg-primary dark:bg-opacity-20 text-base-content min-w-2xl">
+                {{
+                  dateRange.length > 1
+                    ? `${$dayjs(dateRange[0]).format('DD.MM.YYYY')} - ${$dayjs(
+                      dateRange[1]
+                    ).format('DD.MM.YYYY')}`
+                    : 'Выбрать даты'
+                }}
+              </button>
+            </DateRangePicker>
+            <button
+              disabled
+              class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
             >
-              <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
+              <span
+                class="loading loading-spinner loading-sm text-primary"
+              />
+            </button>
+          </div>
+          
+          
+          <div v-else class="flex flex-nowrap items-center gap-2 lg:gap-3">
+            <DateRangePicker class="w-46" v-model="dateRange" :start-date="startDate" @reset="dateRange = []">
+              <button class="btn btn-sm btn-primary bg-[#eff0ff] border-none dark:bg-primary dark:bg-opacity-20 text-base-content min-w-2xl">
+                {{
+                  dateRange.length > 1
+                    ? `${$dayjs(dateRange[0]).format('DD.MM.YYYY')} - ${$dayjs(
+                      dateRange[1]
+                    ).format('DD.MM.YYYY')}`
+                    : 'Выбрать даты'
+                }}
+              </button>
+            </DateRangePicker>
+            <div class="dropdown lg:dropdown-end z-10 flex flex-nowrap items-center gap-2 lg:gap-3">
+              <label
+                tabindex="0"
+                class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
+              >XLS</label>
+              <ul
+                tabindex="0"
+                class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
+              >
+                <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
-              <li><a @click="exportXLS">Общая таблица Excel</a></li>
-              <li><a @click="exportReadyUntilPenaltyXLS">До штрафа</a></li>
-            </ul>
+                <li><a @click="exportXLS">Общая таблица Excel</a></li>
+                <li><a @click="exportReadyUntilPenaltyXLS">До штрафа</a></li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="w-full flex gap-1 lg:gap-2 ">
@@ -393,7 +432,10 @@ async function copyToClipboard(text: string) {
               @change-value="updateSearchType"
             />
           </div>
-          <div class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]">
+          <div 
+            class="absolute right-0 top-0 lg:w-fit lg:static"
+            :class="dateRange.length > 0 ? 'w-[calc(100%-240px)] lg:mr-[240px]' : 'w-[calc(100%-180px)] lg:mr-[190px]'"
+          >
             <label class="w-full flex bg-[#ececed] rounded-lg items-center">
               <input
                 ref="codeInputMob"

@@ -16,8 +16,8 @@ const keys = Object.keys as <T>(
     : never
   : never)[]
 
-async function getReady(user: Document) {
-  const deliveries = await Delivery.find({ user }).sort({ _id: -1 })
+async function getReady(user: Document, dateRange: any) {
+  const deliveries = await Delivery.find({ ...dateRange, user }).sort({ _id: -1 })
   const filtered = deliveries.filter((item) => {
     const currentstatus = item.statusdelivery?.length
       ? item.statusdelivery[item.statusdelivery.length - 1].status
@@ -109,13 +109,24 @@ async function getReady(user: Document) {
 }
 
 export default eventHandler(async (event) => {
+  const { dateRange }: any = getQuery(event)
+
+  let trueDateRange = {}
+  if (dateRange) {
+    trueDateRange = {
+      updatedAt: {
+        $gte: new Date(JSON.parse(dateRange[0])).setHours(0, 0, 0, 0),
+        $lt: new Date(JSON.parse(dateRange[1])).setHours(23, 59, 0, 0),
+      },
+    }
+  }
   try {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
     const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
-    const ready = (await getReady(user)).filter((item) => item !== undefined)
+    const ready = (await getReady(user, trueDateRange)).filter((item) => item !== undefined)
 
     const sheet = workbook.addWorksheet('Готовы к выдаче', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
