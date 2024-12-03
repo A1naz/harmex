@@ -72,7 +72,7 @@ onMounted(() => {
       >
         <div class="lg:px-16 flex w-full relative gap-2">
           <NuxtLinkLocale
-            to="/catalog"
+            to="/catalog?introductionModal=true"
             class="sm:flex hidden cursor-pointer items-center"
           >
             <nuxt-img src="/img/HARMEX.svg" width="150px" />

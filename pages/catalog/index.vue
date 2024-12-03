@@ -6,6 +6,8 @@ const { user } = useUserSession()
 const { notify } = useNotification()
 const menuItems = ref(['Маркетплейсы', 'Отели'])
 const selectedType = ref('Маркетплейсы')
+const introductionModal = ref(false)
+const route = useRoute()
 const socialNetworks = ref([])
 const loading = ref(true)
 
@@ -129,12 +131,18 @@ async function voteForMp(slug: string) {
   }
   voteLoading.value = false
 }
+
+onMounted(() => {
+  if (route.query.introductionModal) {
+    introductionModal.value = true
+  }
+})
 </script>
 
 <template>
   <div class="flex pt-4 bg-white">
     <div class="left-menu">
-      <CatalogLeftMenu v-model:selected-type="selectedType" :items="menuItems" />
+      <CatalogLeftMenu v-model:selected-type="selectedType" :items="menuItems" v-model:introduction-modal="introductionModal" />
     </div>
     <div v-if="loading" class="hero -mt-80 text-[#bdc8fc]">
       <span class="loading loading-dots loading-lg text-primary" />

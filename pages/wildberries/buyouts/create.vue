@@ -29,7 +29,7 @@ const loadingTemplates = ref(false);
 const openAll = ref(false);
 const templateTitle = ref("");
 const templates = ref<any>([]);
-const modalShow = ref(false);
+// const modalShow = ref(false);
 const codeInput = ref();
 const refreshKey = ref(1);
 const lastItemDateRange = ref<any>([]);
@@ -41,8 +41,8 @@ definePageMeta({
 });
 const isUserWarned: any = ref(false);
 onMounted(() => {
-  isUserWarned.value = localStorage.getItem("isUserWarned") === "true";
-  if (products.value.length === 0 && !route.query.uuid) modalShow.value = true;
+  // isUserWarned.value = localStorage.getItem("isUserWarned") === "true";
+  // if (products.value.length === 0 && !route.query.uuid) modalShow.value = true;
 });
 
 // products.value.forEach((product: any, i: number) => {
@@ -955,11 +955,6 @@ function refreshElements() {
         </div>
       </div>
     </div>
-    <BuyoutWildberriesCreateModal
-      :show="modalShow"
-      :add-product="modalAddProduct"
-      @close-modal="modalShow = false"
-    />
   </div>
 </template>
 

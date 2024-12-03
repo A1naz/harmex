@@ -98,11 +98,11 @@ async function login() {
     if (session.value.user?.isTwoFaEnabled && session.value?.twoFaNeeded) {
       return navigateTo('/2fa')
     }
-    else if (params?.redirect as string) {
+    else if (params?.redirect as string && params.redirect !== '/') {
       return navigateTo(params.redirect as string)
     }
     else {
-      return navigateTo('/profile')
+      return navigateTo('/catalog?introductionModal=true')
     }
   }
 }

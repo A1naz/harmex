@@ -6,16 +6,20 @@ const props = defineProps({
   },
   selectedType: {
     type: String,
-    default: 'Маркетплейсы',
+    default: "Маркетплейсы",
   },
-})
+  introductionModal: {
+    type: Boolean,
+    default: false,
+  }
+});
 
-const emit = defineEmits(['update:selectedType'])
+const emit = defineEmits(["update:selectedType", "update:introductionModal"]);
 
-const selectedType = toRef(props, 'selectedType')
+const selectedType = toRef(props, "selectedType");
 
 function selectType(type: string) {
-  emit('update:selectedType', type)
+  emit("update:selectedType", type);
 }
 </script>
 
@@ -24,6 +28,29 @@ function selectType(type: string) {
     class="w-[260px] h-screen py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
   >
     <ul class="mt-4 cursor-pointer">
+      <li>
+        <a
+          @click="emit('update:introductionModal', true)"
+          class="flex justify-between p-2 text-[##909090] rounded-lg w-[240px]"
+        >
+          <div>
+            <Icon
+              name="iconamoon:menu-burger-horizontal-fill"
+              size="25"
+              class="mr-4"
+            />
+            <span class="font-medium text-sm">Введение</span>
+          </div>
+          <div>
+            <Icon
+              name="material-symbols-light:keyboard-arrow-right"
+              size="25"
+              class="mr-4"
+            />
+          </div>
+        </a>
+      </li>
+
       <li v-for="item in items" :key="item">
         <a
           class="flex justify-between p-2 text-[##909090] rounded-lg w-[240px]"
@@ -54,5 +81,10 @@ function selectType(type: string) {
         </a>
       </li>
     </ul>
+
+    <IntroductionModal
+      :show="introductionModal"
+      @close="emit('update:introductionModal', false)"
+    />
   </div>
 </template>

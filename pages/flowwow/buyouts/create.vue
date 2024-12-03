@@ -16,7 +16,7 @@ const loadingTemplates = ref(false)
 const openAll = ref(false)
 const templateTitle = ref('')
 const templates = ref<any>([])
-const modalShow = ref(false)
+// const modalShow = ref(false)
 const codeInput = ref()
 
 definePageMeta({
@@ -32,8 +32,8 @@ const products = computed(() => store.createProducts)
 onMounted(() => {
   isUserWarned.value
     = localStorage.getItem('isUserWarned') === 'true'
-  if (products.value.length === 0 && !route.query.uuid)
-    modalShow.value = true
+  // if (products.value.length === 0 && !route.query.uuid)
+    // modalShow.value = true
 })
 
 const isWarningChecked = ref(false)
@@ -836,11 +836,6 @@ function startTimer() {
         </div>
       </div>
     </div>
-    <BuyoutFlowwowCreateModal
-      :show="modalShow"
-      :add-product="modalAddProduct"
-      @close-modal="modalShow = false"
-    />
   </div>
 </template>
 

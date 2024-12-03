@@ -33,7 +33,7 @@ const article = ref<string>();
 const discountModal = ref(false);
 const currentProductIndex = ref(0);
 const currentProductPrice = ref(0);
-const modalShow = ref(false);
+// const modalShow = ref(false);
 const codeInput = ref();
 
 const loadingTemplates = ref(false);
@@ -50,7 +50,7 @@ definePageMeta({
 const isUserWarned: any = ref(false);
 onMounted(() => {
   isUserWarned.value = localStorage.getItem("isUserWarned") === "true";
-  if (products.value.length === 0 && !route.query.uuid) modalShow.value = true;
+  // if (products.value.length === 0 && !route.query.uuid) modalShow.value = true;
 });
 
 // products.value.forEach((product: any, i: number) => {
@@ -1038,11 +1038,7 @@ const addressForm = reactive({
       :price="currentProductPrice"
       @close-modal="discountModal = false"
     />
-    <BuyoutOzonCreateModal
-      :show="modalShow"
-      :add-product="modalAddProduct"
-      @close-modal="modalShow = false"
-    />
+
   </div>
 </template>
 
