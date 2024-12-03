@@ -8,7 +8,7 @@ const keys = Object.keys as <T>(obj: T) =>
 (keyof T extends infer U ? U extends string ? U : U extends number ? `${U}` : never : never)[]
 
 export default eventHandler(async (event) => {
-  try {
+
     const user = await getAdminEntity(event)
     if (!user)
       return sendRedirect(event, '/auth', 302)
@@ -27,6 +27,7 @@ export default eventHandler(async (event) => {
 
     const runtimeConfig = useRuntimeConfig()
     const deliveries = await Delivery.find({ user, ...trueDateRange }).sort({ _id: -1 })
+
     if (!deliveries.length) {
       throw createError({
         statusCode: 400,
@@ -186,11 +187,5 @@ export default eventHandler(async (event) => {
     //     })
 
     return buffer
-  }
-  catch (e) {
-    throw createError({
-      statusCode: 500,
-      message: 'Не удалось создать таблицу',
-    })
-  }
+  
 })

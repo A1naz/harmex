@@ -15,7 +15,7 @@ const keys = Object.keys as <T>(
   : never)[]
 
 export default eventHandler(async (event) => {
-  try {
+
     const user = await getAdminEntity(event)
     if (!user)
       return sendRedirect(event, '/auth', 302)
@@ -240,11 +240,5 @@ export default eventHandler(async (event) => {
     // })
 
     return buffer
-  }
-  catch (e) {
-    throw createError({
-      statusCode: 500,
-      message: 'Не удалось создать таблицу',
-    })
-  }
+  
 })
