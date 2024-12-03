@@ -296,7 +296,7 @@ async function copyToClipboard(text: string) {
 </script>
 
 <template>
-  <div class="px-4 sm:px-16 pt-8">
+  <div class="px-4 sm:px-16 pt-8 min-h-80">
     <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
@@ -333,7 +333,7 @@ async function copyToClipboard(text: string) {
         <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
           <div class="export lg:absolute right-0 top-0">
             <ExportXls
-              api="/api/avito/review/export"
+              api="/api/wildberries/review/export"
               file-name="MARKETMONSTR Доступные отзывы"
               :is-visible="true"
             />
@@ -382,6 +382,8 @@ async function copyToClipboard(text: string) {
           </div>
         </div>
       </div>
+      <div style="min-height: 500px; ">
+
       <div v-if="reviews && reviews.length > 0" class="mt-6">
         <div
           v-if="currentTab === 'available'"
@@ -425,6 +427,7 @@ async function copyToClipboard(text: string) {
         <span class="loading loading-dots loading-lg text-primary" />
       </div>
       <Hero v-else />
+    </div>
 
       <ReviewWildberriesModal
         v-if="modalOpen"

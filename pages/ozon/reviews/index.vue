@@ -377,13 +377,13 @@ async function copyToClipboard(text: string) {
           </div>
         </div>
       </div>
-
-      <div v-if="reviews && reviews.length > 0" class="mt-6">
-        <div v-if="currentTab === 'available'" class="cards grid grid-cols-1 gap-4">
-          <ReviewOzonCard
+      <div style="min-height: 500px; ">
+        <div v-if="reviews && reviews.length > 0" class="mt-6">
+          <div v-if="currentTab === 'available'" class="cards grid grid-cols-1 gap-4">
+            <ReviewOzonCard
             v-for="(review, index) of reviews" :key="index" :index="index" :info="review"
             @open-modal="(b: string, d: string) => openModal(review, b, d)"
-          />
+            />
         </div>
         <div v-else class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4">
           <ReviewOzonPublishedCard
@@ -402,6 +402,7 @@ async function copyToClipboard(text: string) {
         <span class="loading loading-dots loading-lg text-primary" />
       </div>
       <Hero v-else />
+    </div>  
 
       <ReviewOzonModal
         v-if="modalOpen" :review="selectedArticle" :deliveryid="selectedDelivery" :state="modalOpen"

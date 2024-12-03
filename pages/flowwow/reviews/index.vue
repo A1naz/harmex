@@ -411,7 +411,7 @@ async function copyToClipboard(text: string) {
       </div>
 
     </div> -->
-
+    <div style="min-height: 500px; ">
     <div v-if="reviews && reviews.length > 0" class="mt-6">
       <div
         v-if="currentTab === 'available'"
@@ -455,6 +455,7 @@ async function copyToClipboard(text: string) {
       <span class="loading loading-dots loading-lg text-primary" />
     </div>
     <Hero v-else />
+  </div>
 
     <ReviewFlowwowModal
       v-if="modalOpen"
