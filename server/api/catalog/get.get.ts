@@ -21,6 +21,7 @@ export default eventHandler(async (event) => {
       }
     }
 
+    console.log(services)
     return {
       status: 'ok',
       services,

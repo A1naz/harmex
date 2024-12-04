@@ -253,13 +253,13 @@ async function resumeStatus(item: any) {
               <label v-if="photo" for="reviewImageModal">
                 <div
                   class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-16 h-16 hover:bg-base-200 rounded-lg flex-none"
-                  @click="() => emit('openImage', `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`)"
+                  @click="() => emit('openImage', photo.startsWith('http') ? photo : `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`)"
                 >
                   <div class="absolute inset-0">
-                    <UseImage :src="`${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`">
+                    <UseImage :src="photo.startsWith('http') ? photo : `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`">
                       <template #default>
                         <nuxt-img
-                          :src="`${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`"
+                          :src="photo.startsWith('http') ? photo : `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`"
                           class="w-full h-full object-contain rounded-lg"
                           loading="lazy"
                         />

@@ -13,7 +13,6 @@ export default eventHandler(async (event) => {
       list: false,
       read: true,
       update: true,
-    },
-    publicRead: true,
+    }
   })
 })

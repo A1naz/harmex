@@ -139,17 +139,13 @@ export default defineNuxtConfig({
     '@vuepic/vue-datepicker/dist/main.css',
   ],
 
-
   s3: {
-    client: {
-      credentials: {
-        secretAccessKey: process.env.VK_SECRET_KEY || '',
-        accessKeyId: process.env.VK_ACCESS_KEY || '',
-      },
-      endpoint: 'https://hb.vkcs.cloud/reviewImages/',
-      region: 'ru-msk',
-    },
-    publicBucketUrl: `${process.env.PUBLIC_SITE_URL}/images/get/`,
+    driver: 's3',
+    secretAccessKey:process.env.VK_SECRET_KEY || '',
+    accessKeyId: process.env.VK_ACCESS_KEY || '',
+    endpoint: 'https://hb.vkcs.cloud',
+    region: 'ru-msk',
+    // publicBucketUrl: `${process.env.PUBLIC_SITE_URL}/images/get/`,
     bucket: 'ozonmpportal',
     image: {
       compression: {
@@ -158,6 +154,22 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  // s3: {
+  //   // driver: 's3',
+  //   secretAccessKey: process.env.VK_SECRET_KEY || '',
+  //   accessKeyId: process.env.VK_ACCESS_KEY || '',
+  //   endpoint: 'https://hb.vkcs.cloud/reviewImages/',
+  //   region: 'ru-msk',
+  //   // publicBucketUrl: `${process.env.PUBLIC_SITE_URL}/images/get/`,
+  //   bucket: 'ozonmpportal',
+  //   image: {
+  //     compression: {
+  //       maxSizeMB: 10,
+  //       maxWidthOrHeight: 4000,
+  //     },
+  //   },
+  // },
 
   hooks: {
     close: () => {
@@ -248,4 +260,5 @@ export default defineNuxtConfig({
     PARSER_TOKEN: process.env.PARSER_TOKEN,
   },
   compatibilityDate: '2024-11-06',
+  ssr: true,
 })

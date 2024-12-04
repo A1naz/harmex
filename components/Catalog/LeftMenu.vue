@@ -54,7 +54,7 @@ function selectType(type: string) {
       <li v-for="item in items" :key="item">
         <a
           class="flex justify-between p-2 text-[##909090] rounded-lg w-[240px]"
-          :class="{ 'bg-[#f5f7ff] text-[#212121]': selectedType === item }"
+          :class="{ 'bg-[#fce9e1] text-[#e86b35]': selectedType === item }"
           @click="selectType(item)"
         >
           <div>
@@ -73,9 +73,7 @@ function selectType(type: string) {
               name="material-symbols-light:keyboard-arrow-right"
               size="25"
               class="mr-4"
-              :class="{
-                'text-primary': selectedType === item,
-              }"
+ 
             />
           </div>
         </a>

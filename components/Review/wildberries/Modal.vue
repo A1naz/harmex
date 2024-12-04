@@ -3,6 +3,7 @@ import { UseImage } from '@vueuse/components'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 import { Upload } from 'tus-js-client'
+import { v4 as uuid } from "uuid";
 
 const props = defineProps({
   review: {} as any,
@@ -17,7 +18,7 @@ const store = useMainStore()
 const headers = useRequestHeaders(['cookie']) as HeadersInit
 const closeButton = ref<HTMLElement>()
 const { notify } = useNotification()
-const { upload, getPublicUrl, remove } = useS3Object()
+const { upload, remove } = useS3Object();
 const creatingReview = ref(false)
 const now = useNow()
 const { restrictUrl } = useValidation()
@@ -147,73 +148,63 @@ async function checkVideo(file: any) {
 }
 
 async function uploadToS3(event: Event, index: number) {
-  loadingIndex.value = index
-  const fileList = (event.target! as HTMLInputElement).files
-  const files = Array.from(fileList!)
-  if (!files)
-    return
-  const img = new Image()
-  img.src = URL.createObjectURL(files[0])
+  console.log("uploadToS3");
+  loadingIndex.value = index;
+  const fileList = (event.target! as HTMLInputElement).files;
+  const file = (event.target! as HTMLInputElement).files[0];
 
-  img.onload = async function () {
-    if (img.width < 337 || img.height < 450) {
-      notify({
-        title: 'Ошибка',
-        text: 'Размер изображения должен быть не менее 337px по ширине и 450px по высоте',
-        type: 'error',
-        duration: 3000,
-      })
+  const files = Array.from(fileList!);
+  if (!files) return;
 
-      loadingIndex.value = null
-      return
-    }
+  if (
+    files[0] &&
+    files[0].name &&
+    files[0].name.toLowerCase().endsWith(".webp")
+  ) {
+    notify({
+      title: "Что-то пошло не так",
+      text: "Нельзя загружать вебпикчи",
+      type: "error",
+      duration: 3000,
+    });
 
-    if (
-      files[0]
-      && files[0].name
-      && files[0].name.toLowerCase().endsWith('.webp')
-    ) {
-      notify({
-        title: 'Что-то пошло не так',
-        text: 'Нельзя загружать вебпикчи',
-        type: 'error',
-        duration: 3000,
-      })
-
-      loadingIndex.value = null
-      return
-    }
-
-    const { data, error } = await upload({
-      files,
-      url: null,
-    })
-    if (error.value) {
-      notify({
-        title: 'Что-то пошло не так',
-        text: 'Не удалось загрузить фото',
-        type: 'error',
-        duration: 3000,
-      })
-    }
-    if (data.value) {
-      // @ts-ignore
-      await useFetch('/api/images/openForPublic', {
-        method: 'GET',
-        params: {
-          path: `reviewImages/${data.value[0].key}`,
-        },
-      })
-      form.photos[index] = {
-        url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
-        public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
-      }
-    }
-
-    setTimeout(() => {
-      loadingIndex.value = null
-    }, 1500)
+    loadingIndex.value = null;
+    return;
   }
+
+  const fileName = "reviewImages/" + uuid();
+  console.log(fileName);
+  const result = await upload(file, {
+    key: fileName,
+  });
+
+  if (!result) {
+    notify({
+      title: "Что-то пошло не так",
+      text: "Не удалось загрузить фото",
+      type: "error",
+      duration: 3000,
+    });
+    return;
+  }
+  console.log(result);
+  console.log(result);
+  //@ts-ignore
+  await useFetch("/api/images/openForPublic", {
+    method: "GET",
+    params: {
+      path: result.split("query/")[1],
+    },
+  });
+
+  form.photos[index] = {
+    url: `https://ozonmpportal.hb.vkcs.cloud/${result.split("query/")[1]}`,
+    public: `https://ozonmpportal.hb.vkcs.cloud/${result.split("query/")[1]}`,
+  };
+
+  setTimeout(() => {
+    loadingIndex.value = null;
+  }, 1500);
 }
 const uploadProgress = ref('')
 const isUploading = ref(false)
@@ -309,34 +300,13 @@ async function publishReview() {
 }
 
 async function removePhoto(index: number) {
-  const fileInput = inputs[`file${(index + 1) as 1 | 2 | 3 | 4 | 5}`]
-  fileInput.value = null
-  loadingIndex.value = index
-  const url = form.photos[index].url
+  const fileInput = inputs[`file${(index + 1) as 1 | 2 | 3 | 4 | 5}`];
+  fileInput.value = null;
 
   form.photos[index] = {
-    url: '',
-    public: '',
-  }
-  const { data, error } = await remove({
-    url,
-  })
-  if (error.value) {
-    notify({
-      title: 'Что-то пошло не так',
-      text: 'Не удалось удалить фото',
-      type: 'error',
-      duration: 3000,
-    })
-    return
-  }
-  if (data.value) {
-    form.photos[index] = {
-      url: '',
-      public: '',
-    }
-  }
-  loadingIndex.value = null
+    url: "",
+    public: "",
+  };
 }
 
 watch(

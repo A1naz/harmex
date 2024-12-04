@@ -141,17 +141,17 @@ onMounted(() => {
 
 <template>
   <div class="flex pt-4 bg-white">
-    <div class="left-menu">
+    <div class="left-menu sm:ml-3">
       <CatalogLeftMenu v-model:selected-type="selectedType" :items="menuItems" v-model:introduction-modal="introductionModal" />
     </div>
     <div v-if="loading" class="hero -mt-80 text-[#bdc8fc]">
       <span class="loading loading-dots loading-lg text-primary" />
     </div>
     <div class="px-10">
-      <div class="breadcrumbs text-sm ml-3">
+      <div class="breadcrumbs text-sm ml-3 mb-5">
         <ul class="font-medium text-[18px] text-[#909090]">
           <li v-if="!loading" class="cursor-pointer">
-            Каталог Harmex
+            {{selectedType}}
           </li>
         </ul>
       </div>

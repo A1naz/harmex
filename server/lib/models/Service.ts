@@ -17,6 +17,7 @@ export interface IService extends Document {
   disabled: boolean
   slug: string
   votes: number
+  backgroundColor: string
 }
 
 // Mongoose Schema for Service
@@ -34,6 +35,7 @@ const ServiceSchema = new Schema<IService>({
   disabled: { type: Boolean, default: false },
   slug: { type: String, required: false },
   votes: { type: Number, default: 0 },
+  backgroundColor: { type: String, default: '#ffffff' },
 })
 
 // Mongoose Model for Service

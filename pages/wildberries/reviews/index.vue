@@ -125,21 +125,9 @@ const selectedDelivery = ref('')
 const modalOpen = ref(false)
 const selectedArticle = ref<any>({})
 
-async function getDrafts(art: any) {
-  const res = await getData('/wildberries/review/drafts', {
-    search: { article: { $in: ['', art] } },
-  })
-  if (res && res.length > 0) {
-    selectedArticle.value = {
-      ...selectedArticle.value,
-      drafts: res,
-    }
-  }
-}
 
 function openModal(review: any, uuid: string, deliveryid: string) {
   selectedArticle.value = review
-  getDrafts(review.article)
   selectedUUID.value = uuid
   selectedDelivery.value = deliveryid
   modalOpen.value = true
@@ -445,7 +433,7 @@ async function copyToClipboard(text: string) {
       <label for="reviewImageModal" class="modal cursor-pointer">
         <label
           for=""
-          class="modal-box min-w-0 max-w-5xl max-h-[80vh] p-0 overflow-hidden"
+          class="modal-box min-w-0  p-0 overflow-hidden"
         >
           <label
             for="reviewImageModal"
@@ -454,7 +442,7 @@ async function copyToClipboard(text: string) {
           <nuxt-img
             v-if="openedPhoto"
             fit="contain"
-            class="object-contain m-auto max-h-[80vh]"
+            class="object-contain m-auto"
             :src="openedPhoto || ''"
             loading="lazy"
           />

@@ -22,6 +22,8 @@ export default eventHandler(async (event) => {
     })
   })
 
+  console.log(data)
+
   return {
     product: {
       slug: data.slug || '',

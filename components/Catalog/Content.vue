@@ -15,7 +15,13 @@ defineProps({
 });
 
 function getServices(items: Array<any>) {
-  return items.filter((items:any) => !items.disabled &&( items.path == "/buyouts" || items.path == "/deliveries" || items.path == "/reviews"));
+  return items.filter(
+    (items: any) =>
+      !items.disabled &&
+      (items.path == "/buyouts" ||
+        items.path == "/deliveries" ||
+        items.path == "/reviews")
+  );
 }
 
 defineEmits(["setFavourites", "vote"]);
@@ -27,20 +33,36 @@ defineEmits(["setFavourites", "vote"]);
       <div
         v-for="(social, index) in items"
         :key="index"
-        class="card border rounded-lg shadow-md w-[250px] p-3 relative"
+        class="card border rounded-lg shadow-md w-[236px] p-3 relative bg-[#fafbff]"
       >
         <div class="flex flex-col gap-2 w-full">
           <div
-            class="flex items-start justify-center w-full relative h-24 overflow-hidden rounded-lg cursor-pointer"
+            @click="
+              social.disabled ? '' : navigateTo(`/catalog/${social.slug}`)
+            "
+            class="flex items-start justify-center w-full relative overflow-hidden rounded-lg cursor-pointer h-[83px]"
+            :class="{
+              'bg-[#8d1293]': social.backgroundColor == '#8d1293',
+              'bg-[#0a49f3]': social.backgroundColor == '#0a49f3',
+              'bg-[#0596b2]': social.backgroundColor == '#0596b2',
+              'bg-[#007732]': social.backgroundColor == '#007732',
+              'bg-[#fff131]': social.backgroundColor == '#fff131',
+              'bg-[#fe1b01]': social.backgroundColor == '#fe1b01',
+            }"
           >
-            <NuxtImg
+            <div
+              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-[24px] font-medium"
+            >
+              {{ social.name }}
+            </div>
+            <!-- <NuxtImg
               :src="social.mainImage"
               :alt="social.name"
               class="w-full h-full object-cover cursor-pointer"
               @click="
                 social.disabled ? '' : navigateTo(`/catalog/${social.slug}`)
               "
-            />
+            /> -->
           </div>
 
           <button
@@ -61,47 +83,38 @@ defineEmits(["setFavourites", "vote"]);
               size="20"
             />
           </button>
-          <h2
-            class="text-[20px] font-semibold cursor-pointer"
-            @click="
-              social.disabled ? '' : navigateTo(`/catalog/${social.slug}`)
-            "
-          >
-            {{ social.name }}
-          </h2>
+
           <div>
-            <p class="text-[15px] font-normal">Доступные услуги:</p>
-            <div class="flex flex-wrap gap-x-5 text-[#fe6601c2] text-[15px]">
+            <p class="text-[15px] font-normal mb-1">Доступные услуги:</p>
+            <div class="flex gap-x-1 text-[#fe6601c2] text-[15px]">
               <NuxtLink
                 :to="social.disabled ? '' : `/${social.slug}${service.path}`"
                 v-for="(service, i) in getServices(social.items)"
                 :key="i"
               >
-                <Icon
-                  name="clarity:paperclip-line"
-                  size="16"
-                  class="text-[#c2c2c2]"
-                />
-
-                {{ service.title }}
+                <div
+                  class="badge bg-[#ede9fe] rounded-md text-[#4338ca] h-[20px] text-[12px] font-medium"
+                >
+                  {{ service.title }}
+                </div>
               </NuxtLink>
             </div>
           </div>
-          <div
-            v-if="!social.disabled"
-            class="flex w-full justify-center self-end mt-7"
-          >
+          <div class="flex w-full justify-center self-end mt-2">
             <NuxtLink
-              :to="`/catalog/${social.slug}`"
-              class="text-[16px] w-[calc(100%-24px)] py-0.5 flex justify-center font-medium cursor-pointe absolute bottom-3 border border-1 border-gray-200 hover:text-[#F72585]"
+              :to="social.disabled ? '' : `/catalog/${social.slug}`"
+              class="text-[15px] w-full btn btn-primary btn-sm"
+              :class="{
+                'cursor-default': social.disabled,
+              }"
             >
-              Смотреть все
+              Перейти
             </NuxtLink>
           </div>
         </div>
         <button
           v-if="social.disabled"
-          class="px-5 py-2 bg-[#48b752] text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg hover:bg-[#3a9642] active:scale-95 active:shadow-md"
+          class="px-5 py-2 bg-[#e86b35] text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg hover:bg-[#3a9642] active:scale-95 active:shadow-md"
           style="z-index: 10"
           @click="$emit('vote', social.slug)"
         >

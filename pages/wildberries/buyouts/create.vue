@@ -689,6 +689,7 @@ function refreshElements() {
                 }}</span>
                 <div class="flex gap-4">
                   <input
+                  :disabled="products[selectedRuleProductIndex].key"
                     v-model="products[selectedRuleProductIndex].purchaseSoon"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
@@ -702,6 +703,7 @@ function refreshElements() {
                 <span class="label-text">{{ "Выкуп под ключ " }}</span>
                 <div class="flex gap-4">
                   <input
+                  :disabled="products[selectedRuleProductIndex].purchaseSoon"
                     v-model="products[selectedRuleProductIndex].key"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"

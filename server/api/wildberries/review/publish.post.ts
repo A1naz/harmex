@@ -73,13 +73,6 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const images = photos.map((photo: any) =>
-    photo.public.replace(
-      `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/`,
-      '',
-    ),
-  )
-
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
@@ -90,7 +83,7 @@ export default eventHandler(async (event) => {
     date,
     user,
     delivery,
-    images,
+    images: photos.map((photo: any) => photo.public),
     status: 'waiting',
     recipientphone: delivery.recipientphone,
     videoKey: videoKey !== 'reviewVideos/.' ? videoKey : '',
