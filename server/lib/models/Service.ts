@@ -18,6 +18,7 @@ export interface IService extends Document {
   slug: string
   votes: number
   backgroundColor: string
+  type: string
 }
 
 // Mongoose Schema for Service
@@ -36,6 +37,7 @@ const ServiceSchema = new Schema<IService>({
   slug: { type: String, required: false },
   votes: { type: Number, default: 0 },
   backgroundColor: { type: String, default: '#ffffff' },
+  type: { type: String },
 })
 
 // Mongoose Model for Service

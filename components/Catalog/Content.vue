@@ -29,11 +29,11 @@ defineEmits(["setFavourites", "vote"]);
 
 <template>
   <main class="flex-1 mx-3">
-    <div class="flex flex-wrap gap-5 w-full justify-start">
+    <div class="flex flex-wrap  gap-y-5 gap-x-[25px] w-full justify-start">
       <div
         v-for="(social, index) in items"
         :key="index"
-        class="card border rounded-lg shadow-md w-[236px] p-3 relative bg-[#fafbff]"
+        class="card border rounded-lg shadow-md md:w-[236px] w-full p-3 relative bg-[#fafbff]"
       >
         <div class="flex flex-col gap-2 w-full">
           <div
@@ -41,17 +41,10 @@ defineEmits(["setFavourites", "vote"]);
               social.disabled ? '' : navigateTo(`/catalog/${social.slug}`)
             "
             class="flex items-start justify-center w-full relative overflow-hidden rounded-lg cursor-pointer h-[83px]"
-            :class="{
-              'bg-[#8d1293]': social.backgroundColor == '#8d1293',
-              'bg-[#0a49f3]': social.backgroundColor == '#0a49f3',
-              'bg-[#0596b2]': social.backgroundColor == '#0596b2',
-              'bg-[#007732]': social.backgroundColor == '#007732',
-              'bg-[#fff131]': social.backgroundColor == '#fff131',
-              'bg-[#fe1b01]': social.backgroundColor == '#fe1b01',
-            }"
+            :style="{ backgroundColor: social.backgroundColor }"
           >
             <div
-              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-[24px] font-medium"
+              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-[24px] font-medium whitespace-nowrap"
             >
               {{ social.name }}
             </div>

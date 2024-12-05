@@ -1,135 +1,139 @@
 <script lang="ts" setup>
-definePageMeta({  middleware: 'auth', layout: 'app' })
+definePageMeta({ middleware: "auth", layout: "app" });
 
-const { user } = useUserSession()
+const { user } = useUserSession();
 
-const { notify } = useNotification()
-const menuItems = ref(['Маркетплейсы', 'Отели'])
-const selectedType = ref('Маркетплейсы')
-const introductionModal = ref(false)
-const route = useRoute()
-const socialNetworks = ref([])
-const loading = ref(true)
+const { notify } = useNotification();
+const menuItems = ref([
+  "Маркетплейсы",
+  "Интернет-магазины",
+  "Отели",
+  "Доски объявлений",
+  "Медицина",
+  "Карты",
+  "Услуги",
+]);
+const selectedType = ref("Маркетплейсы");
+const introductionModal = ref(false);
+const route = useRoute();
+const socialNetworks = ref([]);
+const loading = ref(true);
 
 async function getServices() {
-  loading.value = true
-  const { data }: any = await useFetch('/api/catalog/get', {
-    method: 'GET',
+  loading.value = true;
+  const { data }: any = await useFetch("/api/catalog/get", {
+    method: "GET",
     params: {
       type: selectedType.value,
     },
-  })
+  });
 
   if (data.value) {
-    socialNetworks.value = data.value.services
+    socialNetworks.value = data.value.services;
   }
-  loading.value = false
+  loading.value = false;
 }
 
-getServices()
-const bouncedGet = useDebounceFn(getServices, 250)
+getServices();
+const bouncedGet = useDebounceFn(getServices, 250);
 watch(selectedType, () => {
-  bouncedGet()
-})
+  getServices();
+});
 
-const favourites = ref([]) as any
-const loadingFavourites = ref(true)
+const favourites = ref([]) as any;
+const loadingFavourites = ref(true);
 async function getFavourites() {
   try {
-    const response: any = await $fetch('/api/user/favourites', {
-      method: 'GET',
-    })
+    const response: any = await $fetch("/api/user/favourites", {
+      method: "GET",
+    });
     if (response?.favouritesPaths) {
-      favourites.value = response.favouritesPaths
+      favourites.value = response.favouritesPaths;
     }
-  }
-  catch (err: any) {
+  } catch (err: any) {
     notify({
-      type: 'error',
-      title: 'Ошибка загрузки избранного',
+      type: "error",
+      title: "Ошибка загрузки избранного",
       text: err.message,
-    })
-  }
-  finally {
-    loadingFavourites.value = false
+    });
+  } finally {
+    loadingFavourites.value = false;
   }
 }
-getFavourites()
+getFavourites();
 
 async function setFavourites(path: string) {
   if (!user.value) {
     notify({
-      type: 'error',
-      title: 'Необходима авторизация',
-    })
-    return
+      type: "error",
+      title: "Необходима авторизация",
+    });
+    return;
   }
   try {
-    loadingFavourites.value = true
+    loadingFavourites.value = true;
     if (favourites.value.includes(path)) {
-      favourites.value = favourites.value.filter((item: string) => item !== path)
-    }
-    else {
+      favourites.value = favourites.value.filter(
+        (item: string) => item !== path
+      );
+    } else {
       if (favourites.value.length >= 10) {
-        favourites.value.shift()
+        favourites.value.shift();
       }
-      favourites.value.push(path)
+      favourites.value.push(path);
     }
 
-    await $fetch('/api/user/setFavourite', {
-      method: 'POST',
+    await $fetch("/api/user/setFavourite", {
+      method: "POST",
       body: {
         favourites: favourites.value,
       },
-    })
+    });
     notify({
-      type: 'success',
-      title: 'Избранное обновлено',
-    })
-  }
-  catch (err: any) {
+      type: "success",
+      title: "Избранное обновлено",
+    });
+  } catch (err: any) {
     notify({
-      type: 'error',
-      title: 'Ошибка при обновлении избранного',
+      type: "error",
+      title: "Ошибка при обновлении избранного",
       text: err.message,
-    })
-  }
-  finally {
-    loadingFavourites.value = false
+    });
+  } finally {
+    loadingFavourites.value = false;
   }
 }
 
-const voteLoading = ref(false)
+const voteLoading = ref(false);
 async function voteForMp(slug: string) {
   if (!user.value) {
     notify({
-      type: 'error',
-      title: 'Необходима авторизация',
-    })
-    return
+      type: "error",
+      title: "Необходима авторизация",
+    });
+    return;
   }
-  voteLoading.value = true
-  const response: any = await $fetch('/api/catalog/vote', {
-    method: 'POST',
+  voteLoading.value = true;
+  const response: any = await $fetch("/api/catalog/vote", {
+    method: "POST",
     query: {
       slug,
     },
-  })
-  if (response.status === 'ok') {
+  });
+  if (response.status === "ok") {
     notify({
-      type: 'success',
-      title: 'Успешно',
-      text: 'Вы успешно проголосовали за добавление маркетплейса',
-    })
-  }
-  else {
+      type: "success",
+      title: "Успешно",
+      text: "Вы успешно проголосовали за добавление маркетплейса",
+    });
+  } else {
     notify({
-      type: 'error',
-      title: 'Ошибка',
+      type: "error",
+      title: "Ошибка",
       text: response.message,
-    })
+    });
   }
-  voteLoading.value = false
+  voteLoading.value = false;
 }
 
 const isChecked = ref(false);
@@ -150,27 +154,53 @@ onMounted(() => {
   // if (route.query.introductionModal) {
   //   introductionModal.value = true
   // }
-})
+});
 </script>
 
 <template>
   <div class="flex pt-4 bg-white">
-    <div class="left-menu sm:ml-3">
-      <CatalogLeftMenu v-model:selected-type="selectedType" :items="menuItems" v-model:introduction-modal="introductionModal" v-model:is-checked="isChecked"  @introduction-modal-checkbox-toggle="toggleCheckbox" />
+    <div class="left-menu sm:block sm:ml-3 -ml-10 hidden">
+      <CatalogLeftMenu
+        v-model:selected-type="selectedType"
+        :items="menuItems"
+        v-model:introduction-modal="introductionModal"
+        v-model:is-checked="isChecked"
+      />
     </div>
     <div v-if="loading" class="hero -mt-80 text-[#bdc8fc]">
       <span class="loading loading-dots loading-lg text-primary" />
     </div>
-    <div class="px-10">
-      <div class="breadcrumbs text-sm ml-3 mb-5">
-        <ul class="font-medium text-[18px] text-[#909090]">
-          <li v-if="!loading" class="cursor-pointer">
-            {{selectedType}}
-          </li>
-        </ul>
+    <div class="md:px-10 px-0 sm:mr-0 mr-3 w-full">
+      <div class="flex justify-between">
+        <div class="breadcrumbs text-sm ml-3 mb-5">
+          <ul class="font-medium text-[18px] text-[#909090]">
+            <li v-if="!loading" class="cursor-pointer">
+              {{ selectedType }}
+            </li>
+          </ul>
+        </div>
+        <div
+          class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
+          @click="introductionModal = true"
+        >
+          Введение
+          <Icon name="material-symbols:info-outline" size="24" class="ml-1" />
+        </div>
       </div>
-      <CatalogContent v-if="!loading" :items="socialNetworks" :favourites="favourites" @vote="voteForMp" @set-favourites="setFavourites" />
+      <CatalogContent
+        v-if="!loading"
+        :items="socialNetworks"
+        :favourites="favourites"
+        @vote="voteForMp"
+        @set-favourites="setFavourites"
+      />
     </div>
+    <IntroductionModal
+      :show="introductionModal"
+      :is-checked="isChecked"
+      @close="introductionModal = false"
+      @checkbox-toggle="toggleCheckbox"
+    />
   </div>
 </template>
 
