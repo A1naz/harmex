@@ -42,10 +42,10 @@ export default eventHandler(async (event) => {
     curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))
     const firstDate = new Date(item.dateRange[0])
 
-    if (!item.purchaseSoon && firstDate < curDate) {
-      result.success = false
-      result.message = `Дата ${item.article} не может быть меньше текущей по МСК`
-    }
+    // if (!item.purchaseSoon && firstDate < curDate) {
+    //   result.success = false
+    //   result.message = `Дата ${item.article} не может быть меньше текущей по МСК`
+    // }
 
     // if (rules.includes(11)) sort = 'priceup'
     // if (rules.includes(12)) sort = 'pricedown'
