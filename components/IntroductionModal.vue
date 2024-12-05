@@ -23,7 +23,7 @@ function closeModal() {
     <Transition>
       <div
         v-if="props.show"
-        class="modal-box rounded-[8px] w-full max-w-xl cursor-auto border p-4 sm:p-8 border-[#dee2e6]"
+        class="modal-box rounded-[8px] w-full max-w-4xl cursor-auto border p-4 sm:p-8 border-[#dee2e6]"
         @click.stop
       >
         <form method="dialog">

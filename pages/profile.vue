@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 // import { notify } from "@kyvg/vue3-notification";
+import MenuBuilder from '~/server/utils/menuBuilder'
+import { MenuEnums } from '~/data/menu/types'
 
 definePageMeta({ title: 'Профиль', layout: 'app', middleware: 'auth' })
 const { loggedIn, user, fetch, clear } = useUserSession()
@@ -210,6 +212,87 @@ async function getPartnerAgreement() {
 }
 
 await getPartnerAgreement()
+
+const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions() || []
+
+const { getData } = useApi()
+const myTeam = ref([]) as any
+
+async function getMyTeam() {
+  const res = await getData('/team/get')
+  if (res && res.length > 0) {
+    myTeam.value = res
+  }
+}
+await getMyTeam()
+
+const saveError = ref('')
+const btnSaveLoading = ref(false)
+const currentUser = ref({}) as any
+const modalConfirm = ref(false)
+const teamModal = ref(false)
+
+async function saveUser(selectedUser: any){
+  console.log('saveUser', selectedUser)
+  saveError.value = ''
+  btnSaveLoading.value = true
+  let endpoint = ''
+
+  const userData: any = {
+    username: selectedUser.username,
+    firstName: selectedUser.firstName,
+    lastName: selectedUser.lastName,
+    phoneNumber: selectedUser.phoneNumber,
+    newPassword: selectedUser.newPassword,
+    allowedPathes: selectedUser.allowedPathes ?
+      (selectedUser.allowedPathes.length == multiOptions.length
+        ? [MenuEnums.fullAccess]
+        : selectedUser.allowedPathes.map((path: any) => {
+            return path.value
+          })) : '',
+    // tariff: store.client.tariff,
+    post: selectedUser.post ? selectedUser.post : '',
+  }
+
+  if (selectedUser.uuid) {
+    userData.uuid = selectedUser.uuid
+    endpoint = '/api/team/update'
+  } else {
+    userData.password = selectedUser.password
+    endpoint = '/api/team/register'
+  }
+
+  const { error } = await useFetch(endpoint, {
+    method: 'POST',
+    body: userData,
+  })
+  if (error.value) {
+    saveError.value = error.value
+      ? error.value.data.message
+      : 'Повторите попытку'
+  } else {
+    await getMyTeam()
+    teamModal.value = false
+    currentUser.value = {}
+    saveError.value = ''
+  }
+  btnSaveLoading.value = false
+}
+
+function openConfirmModal(uuid: string) {
+  currentUser.value = {
+    ...myTeam.value.find((user: any) => user.uuid == uuid),
+  }
+  modalConfirm.value = true
+}
+
+function openEditModal(isCreate: boolean, uuid?: string) {
+  saveError.value = ''
+  currentUser.value = isCreate
+    ? {}
+    : { ...myTeam.value.find((user: any) => user.uuid == uuid) }
+  teamModal.value = true
+}
 </script>
 
 <template>
@@ -350,6 +433,123 @@ await getPartnerAgreement()
           </div>
         </div>
 
+        <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
+          <div class="flex gap-2 justify-between w-full">
+            <h2 class="text-lg font-medium">
+              Команда
+            </h2>
+            <button class="btn btn-sm h-[2.5rem] btn-primary xl:w-40" @click="teamModal = true">
+                Добавить сотрудника
+            </button>
+          </div>
+          <div class="w-full">
+            <div class="finance-table-container">
+              <div class="table-wrapper">
+                <table class="finance-table border border-[#ebeef1]">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Логин</span>
+                        </div>
+                      </th>
+                      <th
+                        scope="col"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Номер телефона</span>
+                        </div>
+                      </th>
+                      
+                      <th
+                        scope="col"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Должности</span>
+                        </div>
+                      </th>
+                      <th
+                        scope="col"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Разрешения</span>
+                        </div>
+                      </th>
+                      <th
+                        scope="col"
+                        colspan="2"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Функционал</span>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="row in myTeam" :key="row.id" class="table-row">
+                      <td class="table-cell">{{ row.username }}</td>
+                      <td class="table-cell">
+                        <span
+                          class="rounded-md py-2 font-medium"
+                        >
+                          {{ row.phoneNumber }}
+                        </span>
+                      </td>
+                      <td class="table-cell">{{ row.post }}</td>
+                      <td class="table-cell">
+                        <div
+                          v-if="row.allowedPathes.length == multiOptions.length"
+                          class="text-sm p-1 rounded-2xl bg-success text-green-400 bg-opacity-50 border-none text-center flex w-full justify-center"
+                        >
+                          Полный доступ
+                        </div>
+                        <div
+                          v-else
+                          class="flex flex-wrap justify-center gap-2"
+                        >
+                          <div
+                            v-for="(itm, index) in row.allowedPathes"
+                            :key="index"
+                            class="text-sm py-1 px-2 rounded-2xl bg-primary bg-opacity-20 border-none text-primary basis-[calc(33.333%-0.5rem)]"
+                          >
+                            {{ itm.name }}
+                          </div>
+                        </div>
+                      </td>
+                      <td class="table-cell">
+                        <button class="btn btn-sm bg-base-100" @click="openEditModal(false, row.uuid)">
+                          <Icon name="material-symbols:edit-outline-rounded" size="20" />
+                          
+                        </button>
+                      </td>
+                      <td class="table-cell w-fit">
+                        <button class="btn btn-sm bg-base-100 text-[#D32F2F]" @click="openConfirmModal(row.uuid)">
+                          <Icon name="material-symbols:delete-outline" size="20" />
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- <div v-if="myTeam.length === 0 && !loading">
+                  <Hero />
+                </div>
+                <div v-if="loading" class="flex w-full justify-center">
+                  <span
+                    class="loading loading-spinner loading-lg bg-[#4960d3]"
+                  ></span>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="flex flex-col gap-4 rounded-lg bg-white p-4 ">
           <h2 class="text-lg font-[500]">
             Двухфакторная аутентификация
@@ -474,8 +674,6 @@ await getPartnerAgreement()
 
             </div>
 
-
-
           </div>
         </div>
 
@@ -498,6 +696,15 @@ await getPartnerAgreement()
       @close="closeModal" />
     <ProfilePartnerDetailsModal v-if="!partnerAgreement" :show="partnerDetailsModal"
       @close="partnerDetailsModal = false" />
+    <ProfileTeamEditModal :modelValue="currentUser" :state="teamModal" :multiOptions="multiOptions" @close="teamModal = false" @save="saveUser" :saveError="saveError" :btnSaveLoading="btnSaveLoading" />
+    <ProfileTeamConfirmModal
+      :state="modalConfirm"
+      :titleModal="'Вы уверены что хотите удалить сотрудника?'"
+      :sub-descr="''"
+      :descr="currentUser.firstName + ' ' + currentUser.lastName"
+      :btnSaveLoading="btnSaveLoading"
+      @click="closeConfirm"
+    />
   </div>
 </template>
 
@@ -514,5 +721,99 @@ await getPartnerAgreement()
 .slide-fade-leave-to {
   transform: translateX(20px);
   opacity: 0;
+}
+
+.finance-table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  max-height: 550px;
+}
+
+.finance-table {
+  width: 100%;
+  table-layout: auto;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border: 1px solid #ebeef1;
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-header,
+.table-cell {
+  padding: 0.5em;
+  padding-left: 0.6em;
+  text-align: left;
+  height: 55px;
+  border: 1px solid #ebeef1;
+  text-align: center;
+}
+
+.table-row:nth-child(odd) {
+  background-color: #f4f6fa;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-icon {
+  color: #7f7f7f;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  margin-top: 1em;
+  color: #8c8c8c;
+}
+
+/* .pagination-button {
+  background: "none";
+  border: none;
+  cursor: pointer;
+  margin: 0 0.2em;
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+}
+
+.pagination-button.active {
+  color: #4960d3;
+} */
+
+@media (max-width: 640px) {
+  .table-wrapper {
+    width: 100%;
+  }
+
+  .finance-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .table-header,
+  .table-cell {
+    padding: 0.25em;
+  }
+
+  .pagination-button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 </style>
