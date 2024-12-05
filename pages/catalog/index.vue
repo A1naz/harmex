@@ -132,17 +132,31 @@ async function voteForMp(slug: string) {
   voteLoading.value = false
 }
 
+const isChecked = ref(false);
+
+function toggleCheckbox() {
+  isChecked.value = !isChecked.value;
+  localStorage.setItem("welcomeModal", isChecked.value.toString());
+}
+
 onMounted(() => {
-  if (route.query.introductionModal) {
-    introductionModal.value = true
+  const storedValue = localStorage.getItem("welcomeModal");
+
+  isChecked.value = storedValue === "true";
+
+  if ((storedValue && !isChecked.value) || !storedValue) {
+    introductionModal.value = true;
   }
+  // if (route.query.introductionModal) {
+  //   introductionModal.value = true
+  // }
 })
 </script>
 
 <template>
   <div class="flex pt-4 bg-white">
     <div class="left-menu sm:ml-3">
-      <CatalogLeftMenu v-model:selected-type="selectedType" :items="menuItems" v-model:introduction-modal="introductionModal" />
+      <CatalogLeftMenu v-model:selected-type="selectedType" :items="menuItems" v-model:introduction-modal="introductionModal" v-model:is-checked="isChecked"  @introduction-modal-checkbox-toggle="toggleCheckbox" />
     </div>
     <div v-if="loading" class="hero -mt-80 text-[#bdc8fc]">
       <span class="loading loading-dots loading-lg text-primary" />

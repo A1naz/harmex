@@ -11,10 +11,14 @@ const props = defineProps({
   introductionModal: {
     type: Boolean,
     default: false,
-  }
+  },
+  isChecked: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const emit = defineEmits(["update:selectedType", "update:introductionModal"]);
+const emit = defineEmits(["update:selectedType", "update:introductionModal","introductionModalCheckboxToggle"]);
 
 const selectedType = toRef(props, "selectedType");
 
@@ -82,7 +86,9 @@ function selectType(type: string) {
 
     <IntroductionModal
       :show="introductionModal"
+      :is-checked="props.isChecked"
       @close="emit('update:introductionModal', false)"
+      @checkbox-toggle="emit('introductionModalCheckboxToggle')"
     />
   </div>
 </template>
