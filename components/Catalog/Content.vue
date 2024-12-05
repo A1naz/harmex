@@ -114,7 +114,7 @@ defineEmits(["setFavourites", "vote"]);
         </div>
         <button
           v-if="social.disabled"
-          class="px-5 py-2 bg-[#e86b35] text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg hover:bg-[#3a9642] active:scale-95 active:shadow-md"
+          class="px-5 py-2 bg-[#e86b35] text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:bg-primary"
           style="z-index: 10"
           @click="$emit('vote', social.slug)"
         >
