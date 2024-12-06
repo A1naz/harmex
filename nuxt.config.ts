@@ -259,6 +259,5 @@ export default defineNuxtConfig({
     DADATA_SECRET: process.env.DADATA_SECRET,
     PARSER_TOKEN: process.env.PARSER_TOKEN,
   },
-  compatibilityDate: '2024-11-06',
-  ssr: true,
+  compatibilityDate: '2024-11-06'
 })
