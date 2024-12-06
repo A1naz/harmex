@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 // import { notify } from "@kyvg/vue3-notification";
+import MenuBuilder from '~/server/utils/menuBuilder'
+import { MenuEnums } from '~/data/menu/types'
 
 definePageMeta({ title: 'Профиль', layout: 'app', middleware: 'auth' })
 const { loggedIn, user, fetch, clear } = useUserSession()
 const { setLocale } = useI18n()
+const { width } = useWindowSize()
 const router = useRouter()
 const route = useRoute()
 const params = route.query
@@ -23,12 +26,14 @@ async function logout() {
 // });
 
 const { notify } = useNotification()
+const { getData } = useApi()
 const persistStore = usePersistedStore()
 const twoFaQRModal = ref<any>(null)
 const twoFaShow = ref(false)
 const partnerDetailsModal = ref(false)
 const isTwoFaEnabled = ref(user.value?.isTwoFaEnabled || false)
 const partnerAgreement = ref(false)
+const myTeam = ref([]) as any
 
 async function openTwoFaQRModal() {
   if (!isTwoFaEnabled.value) {
@@ -195,7 +200,6 @@ const languageArr = ref([
 const selectedLanguageCode = ref(persistStore.language ?? 'ru')
 
 function updateLanguage(code: string) {
-  console.log('updateLanguage', code)
   persistStore.language = code
   selectedLanguageCode.value = code
 }
@@ -210,6 +214,109 @@ async function getPartnerAgreement() {
 }
 
 await getPartnerAgreement()
+
+const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions() || []
+const accesses = MenuBuilder.filteredAccess(user.value.acesses)
+
+async function getMyTeam() {
+  const res = await getData('/team/get')
+  if (res && res.length > 0) {
+    myTeam.value = res
+  }
+}
+await getMyTeam()
+
+const saveError = ref('')
+const btnSaveLoading = ref(false)
+const currentUser = ref({}) as any
+const modalConfirm = ref(false)
+const teamModal = ref(false)
+
+async function closeConfirm (isConfirmed: boolean) {
+  saveError.value = ''
+  btnSaveLoading.value = true
+  if (isConfirmed) {
+    const { error } = await useFetch('/api/team/delete', {
+      method: 'DELETE',
+      body: currentUser.value,
+    })
+    if (error.value) {
+      saveError.value = error.value
+        ? error.value.data.message
+        : 'Повторите попытку'
+    } else {
+      notify({ type: 'success', title: 'Успешно', text: `Пользователь ${currentUser.value.username} удален` })
+      await getMyTeam()
+      saveError.value = ''
+      currentUser.value = {}
+      modalConfirm.value = false
+    }
+  } else {
+    saveError.value = ''
+    currentUser.value = {}
+    modalConfirm.value = false
+  }
+  btnSaveLoading.value = false
+}
+
+async function saveUser(selectedUser: any){
+  saveError.value = ''
+  btnSaveLoading.value = true
+  let endpoint = ''
+
+  const userData: any = {
+    username: selectedUser.username,
+    firstName: selectedUser.firstName,
+    lastName: selectedUser.lastName,
+    phoneNumber: selectedUser.phoneNumber,
+    newPassword: selectedUser.newPassword,
+    allowedPathes: selectedUser.allowedPathes ?
+      (selectedUser.allowedPathes.length == multiOptions.length
+        ? [MenuEnums.fullAccess]
+        : selectedUser.allowedPathes.map((path: any) => {
+            return path.value
+          })) : '',
+    post: selectedUser.post ? selectedUser.post : '',
+  }
+
+  if (selectedUser.uuid) {
+    userData.uuid = selectedUser.uuid
+    endpoint = '/api/team/update'
+  } else {
+    userData.password = selectedUser.password
+    endpoint = '/api/team/register'
+  }
+  const { error } = await useFetch(endpoint, {
+    method: 'POST',
+    body: userData,
+  })
+  if (error.value) {
+    saveError.value = error.value
+      ? error.value.data.message
+      : 'Повторите попытку'
+  } else {
+    await getMyTeam()
+    teamModal.value = false
+    currentUser.value = {}
+    saveError.value = ''
+  }
+  btnSaveLoading.value = false
+}
+
+function openConfirmModal(uuid: string) {
+  currentUser.value = {
+    ...myTeam.value.find((user: any) => user.uuid == uuid),
+  }
+  modalConfirm.value = true
+}
+
+function openEditModal(isCreate: boolean, uuid?: string) {
+  saveError.value = ''
+  currentUser.value = isCreate
+    ? {}
+    : { ...myTeam.value.find((user: any) => user.uuid == uuid) }
+  teamModal.value = true
+}
 </script>
 
 <template>
@@ -350,6 +457,206 @@ await getPartnerAgreement()
           </div>
         </div>
 
+        <div v-if="user && (user.acesses.includes('/team') || user.acesses.includes('fullAccess') || ((!user.acesses || !user.acesses.length)))" class="flex flex-col gap-4 p-4 bg-white rounded-lg">
+          <div class="flex gap-2 justify-between w-full">
+            <h2 class="text-lg font-medium">
+              Команда
+            </h2>
+            <button class="btn btn-sm h-[2.5rem] btn-primary xl:w-40" @click="[teamModal = true, currentUser = {}]">
+                Добавить сотрудника
+            </button>
+          </div>
+          <div class="w-full">
+            <div v-if="width > 768" class="finance-table-container">
+              <div class="table-wrapper">
+                <table class="finance-table border border-[#ebeef1]">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Логин</span>
+                        </div>
+                      </th>
+                      <th
+                        scope="col"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Номер телефона</span>
+                        </div>
+                      </th>
+                      
+                      <th
+                        scope="col"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Должности</span>
+                        </div>
+                      </th>
+                      <th
+                        scope="col"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Разрешения</span>
+                        </div>
+                      </th>
+                      <th
+                        scope="col"
+                        colspan="2"
+                        class="table-header text-[14px]"
+                      >
+                        <div class="header-content">
+                          <span>Функционал</span>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="row in myTeam" :key="row.id" class="table-row">
+                      <td class="table-cell">{{ row.username }}</td>
+                      <td class="table-cell">
+                        <span
+                          class="rounded-md py-2 font-medium"
+                        >
+                          {{ row.phoneNumber }}
+                        </span>
+                      </td>
+                      <td class="table-cell">{{ row.post }}</td>
+                      <td class="table-cell">
+                        <div v-if="row.allowedPathes.length == multiOptions.length" class="flex w-full justify-center">
+                          <div
+                            class="text-sm py-1 px-2 rounded-2xl bg-success text-green-400 bg-opacity-50 border-none text-center flex justify-center basis-[calc(33.333%-0.5rem)]"
+                          >
+                            Полный доступ
+                          </div>
+                        </div>
+                        <div
+                          v-else
+                          class="flex flex-wrap justify-center gap-2"
+                        >
+                          <div
+                            v-for="(itm, index) in row.allowedPathes"
+                            :key="index"
+                            class="text-sm py-1 px-2 rounded-2xl bg-primary bg-opacity-20 border-none text-primary basis-[calc(33.333%-0.5rem)]"
+                          >
+                            {{ itm.name }}
+                          </div>
+                        </div>
+                      </td>
+                      <td class="table-cell">
+                        <button class="btn btn-sm bg-base-100" @click="openEditModal(false, row.uuid)">
+                          <Icon name="material-symbols:edit-outline-rounded" size="20" />
+                          
+                        </button>
+                      </td>
+                      <td class="table-cell w-fit">
+                        <button class="btn btn-sm bg-base-100 text-[#D32F2F]" @click="openConfirmModal(row.uuid)">
+                          <Icon name="material-symbols:delete-outline" size="20" />
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- <div v-if="myTeam.length === 0 && !loading">
+                  <Hero />
+                </div>
+                <div v-if="loading" class="flex w-full justify-center">
+                  <span
+                    class="loading loading-spinner loading-lg bg-[#4960d3]"
+                  ></span>
+                </div> -->
+              </div>
+            </div>
+            <div class="md:hidden" v-if="myTeam && myTeam.length">
+              <div class="w-full h-full overflow-x-auto">
+                <ul class="w-full flex gap-2">
+                  <li
+                    v-for="(item, index) in myTeam"
+                    :key="index"
+                    class="flex-shrink-0 w-full sm:w-[calc(50%-0.5rem)]"
+                  >
+                    <div
+                      tabindex="0"
+                      class="flex flex-col justify-start relative bg-base-100 rounded-box px-5 py-4 flex-1 "
+                    >
+                      <div class="dropdown dropdown-end absolute right-1 top-2 z-10">
+                        <label tabindex="0" class="btn btn-sm btn-square btn-ghost ">
+                          <Icon name="ph:dots-three-outline-vertical-fill" class="text-primary" size="20" />
+                        </label>
+                        <ul
+                          tabindex="0"
+                          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+                        >
+                          <li class="hover:bg-[#d4d8ff] dark:hover:bg-primary dark:hover:bg-opacity-10 rounded-lg">
+                            <a @click="openEditModal(false, item.uuid)">
+                              <Icon name="tabler:user-edit" size="20" />Изменить
+                            </a>
+                          </li>
+                          <li class="hover:bg-[#d4d8ff] dark:hover:bg-primary dark:hover:bg-opacity-10 rounded-lg">
+                            <a @click="openConfirmModal(item.uuid)">
+                              <Icon name="fluent:delete-24-regular" size="20" />Удалить
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="font-medium">
+                        <div class="flex flex-col flex-wrap gap-5">
+                          <div class="text-primary">
+                            @{{ item.username }}
+                          </div>
+
+                          <div class="flex flex-col text-lg gap-2">
+                            <span>Номер телефона:</span>
+                            <span>
+                              {{
+                                '+' + item.phoneNumber.slice(1, 2) +
+                                " (" + item.phoneNumber.slice(2, 5) +
+                                ") " + item.phoneNumber.slice(5, 8) +
+                                "-" + item.phoneNumber.slice(8, 10) +
+                                "-" + item.phoneNumber.slice(10, 12)
+                              }}
+                            </span>
+                          </div>
+                          <div class="flex flex-col">
+                            <dt class="mb-2 text-sm">Разрешения:</dt>
+                            <dd class="font-semibold">
+                              <div
+                                class="flex flex-wrap gap-1 overflow-y-hidden sm:overflow-y-auto sm:h-[60px] align-center items-center"
+                              >
+                                <div
+                                  v-if="item.allowedPathes.length == multiOptions.length"
+                                  class="text-sm p-1 rounded-2xl bg-success text-green-400 bg-opacity-50 w-fit border-none"
+                                >
+                                  Полный доступ
+                                </div>
+                                <div
+                                  v-else
+                                  v-for="(itm, index) in item.allowedPathes"
+                                  :key="index"
+                                  class="text-sm py-1 px-2 rounded-2xl bg-primary bg-opacity-20 border-none text-primary"
+                                >
+                                  {{ itm.name }}
+                                </div>
+                              </div>
+                            </dd>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+            <Hero v-else />
+          </div>
+        </div>
+
         <div class="flex flex-col gap-4 rounded-lg bg-white p-4 ">
           <h2 class="text-lg font-[500]">
             Двухфакторная аутентификация
@@ -474,8 +781,6 @@ await getPartnerAgreement()
 
             </div>
 
-
-
           </div>
         </div>
 
@@ -498,6 +803,15 @@ await getPartnerAgreement()
       @close="closeModal" />
     <ProfilePartnerDetailsModal v-if="!partnerAgreement" :show="partnerDetailsModal"
       @close="partnerDetailsModal = false" />
+    <ProfileTeamEditModal :modelValue="currentUser" :state="teamModal" :multiOptions="multiOptions" @close="teamModal = false" @save="saveUser" :saveError="saveError" :btnSaveLoading="btnSaveLoading" />
+    <ProfileTeamConfirmModal
+      :state="modalConfirm"
+      :titleModal="'Вы уверены что хотите удалить сотрудника?'"
+      :sub-descr="''"
+      :descr="currentUser.username"
+      :btnSaveLoading="btnSaveLoading"
+      @click="closeConfirm"
+    />
   </div>
 </template>
 
@@ -514,5 +828,99 @@ await getPartnerAgreement()
 .slide-fade-leave-to {
   transform: translateX(20px);
   opacity: 0;
+}
+
+.finance-table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  max-height: 550px;
+}
+
+.finance-table {
+  width: 100%;
+  table-layout: auto;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border: 1px solid #ebeef1;
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-header,
+.table-cell {
+  padding: 0.5em;
+  padding-left: 0.6em;
+  text-align: left;
+  height: 55px;
+  border: 1px solid #ebeef1;
+  text-align: center;
+}
+
+.table-row:nth-child(odd) {
+  background-color: #f4f6fa;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-icon {
+  color: #7f7f7f;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  margin-top: 1em;
+  color: #8c8c8c;
+}
+
+/* .pagination-button {
+  background: "none";
+  border: none;
+  cursor: pointer;
+  margin: 0 0.2em;
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+}
+
+.pagination-button.active {
+  color: #4960d3;
+} */
+
+@media (max-width: 640px) {
+  .table-wrapper {
+    width: 100%;
+  }
+
+  .finance-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .table-header,
+  .table-cell {
+    padding: 0.25em;
+  }
+
+  .pagination-button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 </style>

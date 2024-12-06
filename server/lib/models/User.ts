@@ -82,6 +82,7 @@ const UserSchema = new Schema<IUserSchema>({
   votedFor: { type: [String], default: [] },
   votedForService: { type: [Object], default: [] },
   isPartnerWithdrawAvailable: { type: Boolean, default: false },
+  post: { type: String },
 })
 
 export const User = model<IUserSchema>('User', UserSchema)
