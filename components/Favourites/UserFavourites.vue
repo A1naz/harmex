@@ -152,20 +152,30 @@ function closeModal() {
 
       <div class="w-full rounded-xl pt-5">
         <div class="flex flex-wrap justify-center">
-          <div class="w-full font-semibold text-[20px] text-center">Избранное</div>
+          <div class="w-full font-semibold text-[20px] text-center">
+            Избранное
+          </div>
           <Nuxt-link
             v-for="item in userFavourites"
             :key="item.id"
             :to="item.path"
             class="bg-white text-[14px] w-[110px] h-[125px] ml-2 mt-5 rounded-xl mb-2"
           >
-            <div class="mt-[5px] flex justify-center">
-              <NuxtImg
+            <div
+              class="flex justify-center h-[75px] w-full rounded-xl"
+              :style="{ backgroundColor: item.backgroundColor }"
+            >
+              <div
+                class="flex items-center justify-center font-medium text-center text-white h-auto w-auto"
+              >
+                {{ item.name }}
+              </div>
+              <!-- <NuxtImg
                 :src="item.image"
                 width="95px"
                 height="75px"
                 class="rounded-xl"
-              />
+              /> -->
             </div>
             <div class="text-sm font-medium text-center mt-0.5">
               {{ item.title }}
