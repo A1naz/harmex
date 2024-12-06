@@ -530,7 +530,7 @@ async function copyToClipboard(text: string) {
     </div>
 
     <div v-if="buyouts.length > 0">
-      <div
+      <!-- <div
         v-if="
           (route.query.status === 'active' || !route.query.status)
             && activeBuyouts.length > 0
@@ -562,7 +562,7 @@ async function copyToClipboard(text: string) {
           Недостаточно средств для совершения выкупа, пополните баланс.
         </p>
       </div>
-      <div v-else class="px-2 py-4 mb-2" />
+      <div v-else class="px-2 py-4 mb-2" /> -->
       <div>
         <div
           group

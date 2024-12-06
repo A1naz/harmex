@@ -69,7 +69,7 @@ onMounted(() => {
     <div
       ref="drawerContent"
       style="z-index: 9999"
-      class="drawer-content w-full"
+      class="drawer-content w-full min-h-screen"
     >
       <div
         class="drawerShadow flex w-full items-center gap-2 px-8 sm:px-0 h-[65px] bg-white border border-b border-[#ebebeb] justify-center"

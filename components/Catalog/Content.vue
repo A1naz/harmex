@@ -29,7 +29,7 @@ defineEmits(["setFavourites", "vote"]);
 
 <template>
   <main class="flex-1 mx-3">
-    <div class="flex flex-wrap  gap-y-5 gap-x-[25px] w-full justify-start">
+    <div class="flex flex-wrap  gap-y-5 gap-x-[7px] w-full justify-start">
       <div
         v-for="(social, index) in items"
         :key="index"

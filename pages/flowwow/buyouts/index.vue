@@ -514,7 +514,7 @@ async function copyToClipboard(text: string) {
                 type="text"
                 class="input input-sm border-none bg-transparent  dark:bg-base-300 dark:bg-opacity-40 w-full lg:w-11/12"
                 placeholder="артикул, id, наименование товара"
-                @input="onSearchInput()"
+                @input="onSearchInput"
               >
               <span
                 v-if="search.loading"
@@ -534,7 +534,7 @@ async function copyToClipboard(text: string) {
     </div>
 
     <div v-if="buyouts.length > 0">
-      <div
+      <!-- <div
         v-if="
           (route.query.status === 'active' || !route.query.status)
             && activeBuyouts.length > 0
@@ -565,8 +565,8 @@ async function copyToClipboard(text: string) {
         >
           Недостаточно средств для совершения выкупа, пополните баланс.
         </p>
-      </div>
-      <div v-else class="px-2 py-4 mb-2" />
+      </div> -->
+      <!-- <div v-else class="px-2 py-4 mb-2" /> -->
       <div>
         <TransitionSlide
           group

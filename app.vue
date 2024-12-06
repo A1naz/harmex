@@ -51,8 +51,13 @@
   }
 }
 
+html {
+  height: 100%;
+
+}
 body {
   font-family: "Inter", sans-serif;
+  height: 100%;
 }
 
 .notify-text {

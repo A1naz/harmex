@@ -96,7 +96,7 @@ const productQuantityModel = computed({
           border-radius: 4px;
         "
       >
-        <div class="dropdown dropdown-hover">
+        <div class="dropdown dropdown-hover dropdown-right">
           <label tabindex="0">
             <nuxt-img
               class="rounded-lg"
