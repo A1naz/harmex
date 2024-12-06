@@ -141,7 +141,7 @@ export default defineNuxtConfig({
 
   s3: {
     driver: 's3',
-    secretAccessKey:process.env.VK_SECRET_KEY || '',
+    secretAccessKey: process.env.VK_SECRET_KEY || '',
     accessKeyId: process.env.VK_ACCESS_KEY || '',
     endpoint: 'https://hb.vkcs.cloud',
     region: 'ru-msk',
