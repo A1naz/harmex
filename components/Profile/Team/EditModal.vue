@@ -17,10 +17,8 @@ watch(
   () => props.modelValue,
   () => {
     if(!props.btnSaveLoading){
-      console.log('change', props.modelValue)
       form.username = props.modelValue.username || '',
       form.phoneNumber = props.modelValue.phoneNumber || '',
-      console.log('props.modelValue.allowedPathes', props.modelValue.allowedPathes)
       form.allowedPathes = props.modelValue.allowedPathes ? props.modelValue.allowedPathes.map((item: any) => item.value) : [],
       form.post = props.modelValue.post 
     }
