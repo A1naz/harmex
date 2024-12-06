@@ -200,7 +200,6 @@ const languageArr = ref([
 const selectedLanguageCode = ref(persistStore.language ?? 'ru')
 
 function updateLanguage(code: string) {
-  console.log('updateLanguage', code)
   persistStore.language = code
   selectedLanguageCode.value = code
 }
@@ -261,7 +260,6 @@ async function closeConfirm (isConfirmed: boolean) {
 }
 
 async function saveUser(selectedUser: any){
-  console.log('saveUser', selectedUser)
   saveError.value = ''
   btnSaveLoading.value = true
   let endpoint = ''
@@ -288,7 +286,6 @@ async function saveUser(selectedUser: any){
     userData.password = selectedUser.password
     endpoint = '/api/team/register'
   }
-  console.log('endpoint', endpoint)
   const { error } = await useFetch(endpoint, {
     method: 'POST',
     body: userData,
@@ -325,7 +322,6 @@ function openEditModal(isCreate: boolean, uuid?: string) {
 <template>
   <div class="px-4 sm:px-16">
     <div>
-      {{accesses}}
       <div class="flex flex-col gap-8 py-6 md:gap-6 md:py-4">
         <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
           <h2 class="text-lg font-medium">
@@ -462,7 +458,6 @@ function openEditModal(isCreate: boolean, uuid?: string) {
         </div>
 
         <div v-if="user && (user.acesses.includes('/team') || user.acesses.includes('fullAccess') || ((!user.acesses || !user.acesses.length)))" class="flex flex-col gap-4 p-4 bg-white rounded-lg">
-          {{ user }}
           <div class="flex gap-2 justify-between w-full">
             <h2 class="text-lg font-medium">
               Команда
