@@ -6,6 +6,7 @@ import { MenuEnums } from '~/data/menu/types'
 definePageMeta({ title: 'Профиль', layout: 'app', middleware: 'auth' })
 const { loggedIn, user, fetch, clear } = useUserSession()
 const { setLocale } = useI18n()
+const { width } = useWindowSize()
 const router = useRouter()
 const route = useRoute()
 const params = route.query
@@ -216,6 +217,7 @@ async function getPartnerAgreement() {
 await getPartnerAgreement()
 
 const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions() || []
+const accesses = MenuBuilder.filteredAccess(user.value.acesses)
 
 async function getMyTeam() {
   const res = await getData('/team/get')
@@ -323,6 +325,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
 <template>
   <div class="px-4 sm:px-16">
     <div>
+      {{accesses}}
       <div class="flex flex-col gap-8 py-6 md:gap-6 md:py-4">
         <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
           <h2 class="text-lg font-medium">
@@ -458,7 +461,8 @@ function openEditModal(isCreate: boolean, uuid?: string) {
           </div>
         </div>
 
-        <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
+        <div v-if="user && (user.acesses.includes('/team') || user.acesses.includes('fullAccess') || ((!user.acesses || !user.acesses.length)))" class="flex flex-col gap-4 p-4 bg-white rounded-lg">
+          {{ user }}
           <div class="flex gap-2 justify-between w-full">
             <h2 class="text-lg font-medium">
               Команда
@@ -468,7 +472,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
             </button>
           </div>
           <div class="w-full">
-            <div class="finance-table-container">
+            <div v-if="width > 768" class="finance-table-container">
               <div class="table-wrapper">
                 <table class="finance-table border border-[#ebeef1]">
                   <thead>
@@ -573,6 +577,88 @@ function openEditModal(isCreate: boolean, uuid?: string) {
                 </div> -->
               </div>
             </div>
+            <div class="md:hidden" v-if="myTeam && myTeam.length">
+              <div class="w-full h-full overflow-x-auto">
+                <ul class="w-full flex gap-2">
+                  <li
+                    v-for="(item, index) in myTeam"
+                    :key="index"
+                    class="flex-shrink-0 w-full sm:w-[calc(50%-0.5rem)]"
+                  >
+                    <div
+                      tabindex="0"
+                      class="flex flex-col justify-start relative bg-base-100 rounded-box px-5 py-4 flex-1 "
+                    >
+                      <div class="dropdown dropdown-end absolute right-1 top-2 z-10">
+                        <label tabindex="0" class="btn btn-sm btn-square btn-ghost ">
+                          <Icon name="ph:dots-three-outline-vertical-fill" class="text-primary" size="20" />
+                        </label>
+                        <ul
+                          tabindex="0"
+                          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+                        >
+                          <li class="hover:bg-[#d4d8ff] dark:hover:bg-primary dark:hover:bg-opacity-10 rounded-lg">
+                            <a @click="openEditModal(false, item.uuid)">
+                              <Icon name="tabler:user-edit" size="20" />Изменить
+                            </a>
+                          </li>
+                          <li class="hover:bg-[#d4d8ff] dark:hover:bg-primary dark:hover:bg-opacity-10 rounded-lg">
+                            <a @click="openConfirmModal(item.uuid)">
+                              <Icon name="fluent:delete-24-regular" size="20" />Удалить
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="font-medium">
+                        <div class="flex flex-col flex-wrap gap-5">
+                          <div class="text-primary">
+                            @{{ item.username }}
+                          </div>
+
+                          <div class="flex flex-col text-lg gap-2">
+                            <span>Номер телефона:</span>
+                            <span>
+                              {{
+                                '+' + item.phoneNumber.slice(1, 2) +
+                                " (" + item.phoneNumber.slice(2, 5) +
+                                ") " + item.phoneNumber.slice(5, 8) +
+                                "-" + item.phoneNumber.slice(8, 10) +
+                                "-" + item.phoneNumber.slice(10, 12)
+                              }}
+                            </span>
+                          </div>
+                          <div class="flex flex-col">
+                            <dt class="mb-2 text-sm">Разрешения:</dt>
+                            <dd class="font-semibold">
+                              <div
+                                class="flex flex-wrap gap-1 overflow-y-hidden sm:overflow-y-auto sm:h-[60px] align-center items-center"
+                              >
+                                <div
+                                  v-if="item.allowedPathes.length == multiOptions.length"
+                                  class="text-sm p-1 rounded-2xl bg-success text-green-400 bg-opacity-50 w-fit border-none"
+                                >
+                                  Полный доступ
+                                </div>
+                                <div
+                                  v-else
+                                  v-for="(itm, index) in item.allowedPathes"
+                                  :key="index"
+                                  class="text-sm py-1 px-2 rounded-2xl bg-primary bg-opacity-20 border-none text-primary"
+                                >
+                                  {{ itm.name }}
+                                </div>
+                              </div>
+                            </dd>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+            <Hero v-else />
           </div>
         </div>
 

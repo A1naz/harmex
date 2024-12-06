@@ -34,7 +34,7 @@ export default eventHandler(async (event) => {
   if (!phoneNumber || !password) {
     throw createError({
       statusCode: 400,
-      message: 'Пропущен phoneNumber или password',
+      message: 'Пропущен номер телефона или пароль',
     })
   }
 
@@ -91,7 +91,7 @@ export default eventHandler(async (event) => {
   if (findUsername) {
     throw createError({
       statusCode: 400,
-      message: 'Пользователь с таким username уже существует.',
+      message: 'Пользователь с таким логином уже существует.',
     })
   }
 
