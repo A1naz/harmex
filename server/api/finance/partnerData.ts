@@ -8,7 +8,7 @@ export default async function (user: any, itemsPerPage?: number, page?: number, 
   const format = res.map((el: any) => {
     return {
       summ: el.amount,
-      date: el.date.toISOString().split('T')[0],
+      date: el.date,
       source: el.type,
       service: 'Вывод с партнерки',
     }

@@ -9,7 +9,7 @@ const { user } = useUserSession();
 
 function closeModal() {
   summ.value = 500;
-  email.value = "";
+  email.value = user.value?.email;
   form.value = "addBalance";
   emit("close");
 }

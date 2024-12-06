@@ -113,6 +113,13 @@ function getServices(items: Array<any>) {
             </a>
             <button
               class="btn btn-outline btn-sm btn-square border-[#d8d8d8] text-[#909090] mt-1 ml-1"
+              @click="
+                navigateTo(`https://t.me/${social.telegram}`, {
+                  open: {
+                    target: '_blank',
+                  },
+                })
+              "
             >
               <Icon size="24" class="my-1 mx-1" name="ic:sharp-telegram" />
             </button>
