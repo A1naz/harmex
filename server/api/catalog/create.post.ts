@@ -8,10 +8,16 @@ export default eventHandler(async (event) => {
     uuid: v4(),
     name: body.name,
     items: body.items,
-    mainImage: body.mainImage,
+    slug: body.slug,
+    description: '',
+    mainImage: 'null',
     images: [],
     video: 'null',
     price: body.price,
+    backgroundColor: '#' + body.backgroundColor,
+    type: body.type,
+    disabled: true
+
   })
 
   return {

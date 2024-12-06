@@ -1,53 +1,52 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 
 interface HeaderForTable {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
-const emit = defineEmits(['swapPage', 'changePagination'])
+const emit = defineEmits(["swapPage", "changePagination"]);
 
 const props = defineProps({
   tableData: { type: Array as () => Array<any>, default: () => [] },
   headers: { type: Array as () => Array<HeaderForTable>, default: () => [] },
   loading: { type: Boolean, default: true },
-})
+});
 
-const currentPage = ref(1)
-const itemsPerPage = ref(15)
+const currentPage = ref(1);
+const itemsPerPage = ref(15);
 const paginations = ref([
-  { title: 'Показывать по 15', value: 15 },
-  { title: 'Показывать по 25', value: 25 },
-  { title: 'Показывать по 50', value: 50 },
-])
-const totalPages = 100
+  { title: "Показывать по 15", value: 15 },
+  { title: "Показывать по 25", value: 25 },
+  { title: "Показывать по 50", value: 50 },
+]);
+const totalPages = 100;
 
 function changePagination(value: number) {
-  itemsPerPage.value = value
-  emit('changePagination', itemsPerPage.value)
+  itemsPerPage.value = value;
+  emit("changePagination", itemsPerPage.value);
 }
 
-
 const displayPages = computed(() => {
-  const pages = []
-  const maxVisiblePages = 5
-  let start = Math.max(currentPage.value - 2, 1)
-  let end = Math.min(start + maxVisiblePages - 1, totalPages)
+  const pages = [];
+  const maxVisiblePages = 5;
+  let start = Math.max(currentPage.value - 2, 1);
+  let end = Math.min(start + maxVisiblePages - 1, totalPages);
 
   if (end - start + 1 < maxVisiblePages) {
-    start = Math.max(end - maxVisiblePages + 1, 1)
+    start = Math.max(end - maxVisiblePages + 1, 1);
   }
 
   for (let i = start; i <= end; i++) {
-    pages.push(i)
+    pages.push(i);
   }
-  return pages
-})
+  return pages;
+});
 
 function swapPage(swapTo: number) {
-  currentPage.value += swapTo
-  emit('swapPage', currentPage.value, itemsPerPage.value)
+  currentPage.value += swapTo;
+  emit("swapPage", currentPage.value, itemsPerPage.value);
 }
 </script>
 
@@ -57,49 +56,82 @@ function swapPage(swapTo: number) {
       <table class="finance-table border border-[#ebeef1]">
         <thead>
           <tr>
-            <th v-for="(header, index) in props.headers" :key="index" scope="col" class="table-header">
+            <th
+              v-for="(header, index) in props.headers"
+              :key="index"
+              scope="col"
+              class="table-header"
+            >
               <div class="header-content">
                 <span>{{ header.label }}</span>
                 <button>
-                  <Icon name="carbon:caret-down" class="filter-icon ml-2" size="15px" />
+                  <Icon
+                    name="carbon:caret-down"
+                    class="filter-icon ml-2"
+                    size="15px"
+                  />
                 </button>
               </div>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="row in  props.tableData" :key="row.id" class="table-row">
-            <td v-for="(header, index) in props.headers" :key="index" class="table-cell">
-              <span >{{ row[header.value] || '-' }}</span>
+          <tr v-for="row in props.tableData" :key="row.id" class="table-row">
+            <td
+              v-for="(header, index) in props.headers"
+              :key="index"
+              class="table-cell"
+            >
+              <span v-if="header.value !== 'date'">{{ row[header.value] || "-" }}</span>
+              <span v-if="header.value == 'date'">{{ $dayjs(row[header.value]).format("DD.MM.YYYY HH:mm") || "-" }}</span>
             </td>
           </tr>
         </tbody>
       </table>
-      <div v-if="tableData.length === 0 && !loading ">
+      <div v-if="tableData.length === 0 && !loading">
         <Hero />
       </div>
-      <div v-if="loading" class="flex w-full justify-center" >
+      <div v-if="loading" class="flex w-full justify-center">
         <span class="loading loading-spinner loading-lg bg-[#4960d3]"></span>
       </div>
     </div>
-    <div class="pagination-controls flex justify-between mt-auto mb-10 border-t w-full py-2 px-4 scroll-hidden">
-      <custom-select :tabs="paginations" :class="'text-black bg-white h-[2.5rem]'" :dropdownContainerClass="'bg-white'" :arrowsClass="'text-primary'" @change-value="(e:any) => changePagination(e.value)" />
+    <div
+      class="pagination-controls flex justify-between mt-auto mb-10 border-t w-full py-2 px-4 scroll-hidden"
+    >
+      <custom-select
+        :tabs="paginations"
+        :class="'text-black bg-white h-[2.5rem]'"
+        :dropdownContainerClass="'bg-white'"
+        :arrowsClass="'text-primary'"
+        @change-value="(e:any) => changePagination(e.value)"
+      />
       <div class="flex justify-end gap-1">
-        <button class="btn btn-primary btn-xs font-normal px-0 flex items-center bg-transparent text-primary border-none hover:text-white shadow-none" :disabled="currentPage === 1" @click="swapPage(-1)">
+        <button
+          class="btn btn-primary btn-xs font-normal px-0 flex items-center bg-transparent text-primary border-none hover:text-white shadow-none"
+          :disabled="currentPage === 1"
+          @click="swapPage(-1)"
+        >
           <Icon name="solar:alt-arrow-left-linear" size="24" />
         </button>
-        
+
         <button
           v-for="page in displayPages"
           :key="page"
           class="btn btn-primary btn-xs text-black shadow-none border-none flex items-center hover:text-white"
-          :class="{'text-white': currentPage === page, 'bg-transparent': currentPage !== page}"
-          @click="(currentPage = page, swapPage(0))"
+          :class="{
+            'text-white': currentPage === page,
+            'bg-transparent': currentPage !== page,
+          }"
+          @click="(currentPage = page), swapPage(0)"
         >
           {{ page }}
         </button>
-        
-        <button class="btn btn-primary btn-xs p-0 bg-transparent text-primary border-none flex items-center hover:text-white shadow-none" :disabled="currentPage === totalPages" @click="swapPage(1)">
+
+        <button
+          class="btn btn-primary btn-xs p-0 bg-transparent text-primary border-none flex items-center hover:text-white shadow-none"
+          :disabled="currentPage === totalPages"
+          @click="swapPage(1)"
+        >
           <Icon name="solar:alt-arrow-right-linear" size="24" />
         </button>
       </div>
@@ -107,9 +139,7 @@ function swapPage(swapTo: number) {
   </div>
 </template>
 
-
 <style scoped>
-
 .finance-table-container {
   display: flex;
   flex-direction: column;
@@ -142,12 +172,13 @@ function swapPage(swapTo: number) {
   font-size: 0.85rem;
 }
 
-.table-header{
+.table-header {
   padding: 0.3em 0.4em;
   text-align: left;
   height: 25px;
   border: 1px solid #ebeef1;
-  font-size: 0.85rem;}
+  font-size: 0.85rem;
+}
 
 .table-row:nth-child(odd) {
   background-color: #f8f9fb;
@@ -192,5 +223,4 @@ function swapPage(swapTo: number) {
     padding: 0.25em;
   }
 }
-
 </style>

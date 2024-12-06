@@ -73,6 +73,7 @@ function onRuleChange(event: Event, index: number, rule: number) {
 }
 
 function handleAddress(address: string, lt: number, lg: number) {
+  modalOpen.value = false
   store.handleAddress(address, lt, lg)
 }
 function openInfoModal(type: string) {
@@ -198,7 +199,7 @@ async function createBuyout() {
     })
 
     store.createProducts = []
-    navigateTo({ path: '/buyouts/flowwow' })
+    navigateTo({ path: '/flowwow/buyouts' })
   }
 }
 

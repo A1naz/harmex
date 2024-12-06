@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
         path: servicePath,
         title: service.name,
         image: service.mainImage,
+        backgroundColor: service.backgroundColor
       }
     }
 
@@ -44,6 +45,8 @@ export default defineEventHandler(async (event) => {
           path: itemPath,
           title: item.title,
           image: service.mainImage,
+          name: service.name,
+          backgroundColor: service.backgroundColor
         }
       }
     })

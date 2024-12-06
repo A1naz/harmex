@@ -38,16 +38,16 @@ export default eventHandler(async (event) => {
   const params = getQuery(event)
   const { userTimezoneOffsetHours, userOffsetMinutes } = params
 
-  const activeBuyouts = await Buyout.find({
-    user,
-    status: { $in: ['active', 'work', 'created'] },
-  })
-  const sum = activeBuyouts.reduce((acc, item) => {
-    //@ts-ignore
-    const price =
-      parseInt(item.product.price) * (item.quantity - item.completed)
-    return acc + price
-  }, 0)
+  // const activeBuyouts = await Buyout.find({
+  //   user,
+  //   status: { $in: ['active', 'work', 'created'] },
+  // })
+  // const sum = activeBuyouts.reduce((acc, item) => {
+  //   //@ts-ignore
+  //   const price =
+  //     parseInt(item.product.price) * (item.quantity - item.completed)
+  //   return acc + price
+  // }, 0)
 
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
@@ -114,7 +114,7 @@ export default eventHandler(async (event) => {
     }
 
     const buyout = new Buyout({
-      article: product.article,
+      article: product.article || 0,
       url: product.url,
       slug: product.slug,
       appartmentNumber: product.appartmentNumber,

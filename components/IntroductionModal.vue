@@ -4,8 +4,14 @@ import { email, helpers, required } from "@vuelidate/validators";
 
 const props = defineProps({
   show: { type: Boolean, required: true },
+  isChecked: { type: Boolean, required: true },
 });
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "checkboxToggle"]);
+
+function toggleCheckbox() {
+  emit("checkboxToggle");
+}
+
 function closeModal() {
   emit("close");
 }
@@ -23,48 +29,101 @@ function closeModal() {
     <Transition>
       <div
         v-if="props.show"
-        class="modal-box rounded-[8px] w-full max-w-4xl cursor-auto border p-4 sm:p-8 border-[#dee2e6]"
+        class="modal-box rounded-[8px] w-full lg:max-w-5xl md:max-w-2xl sm:max-w-lg cursor-auto border p-3 sm:p-5 border-[#dee2e6]"
         @click.stop
       >
         <form method="dialog">
           <label
-            class="btn btn-sm btn-circle btn-ghost bg-[#e5e5e5] absolute right-2 top-2"
+            class="btn btn-sm btn-circle btn-ghost bg-transparent absolute right-2 top-2 text-[#9ca3af] text-xl"
             @click="closeModal"
           >
             ✕
           </label>
         </form>
-        <h3 class="text-xl font-bold mb-2">Введение</h3>
-        <p class="mb-2 text-[17px]">С чего начать?</p>
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-1">
+          Добро пожаловать на платформу Harmex! 👋
+        </h3>
+        <p class="mb-2 text-[17px]">
+          Мы рады, что вы с нами! Чтобы начать, ознакомьтесь с простым
+          чек-листом действий:
+        </p>
 
-        <p class="mb-2 italic">Добро пожаловать на платформу Harmex! 👋</p>
-        <p class="mb-1 mt-1 text-[16px]">✅ Ваш старт на платформе</p>
-        <p class="mb-2 italic">
-          Ознакомьтесь с функционалом: «видео-обзор платформы ниже за 30
-          секунд», в нем вы найдете инструкции по работе с платформой. Пополните
-          баланс: без этого вы не сможете активировать услуги. Выберите нужные
-          услуги: настройте самовыкупы, управление отзывами или другие функции.
-          Запустите первый заказ: следите за результатами в режиме реального
-          времени. Контролируйте финансы: отчетность всегда под рукой в личном
-          кабинете. Партнерская программа для каждого! За каждую рекомендацию
-          платим от 500 RUB
+        <p class="mt-1.5 text-[16px] flex items-center gap-1 text-[#4b5563]">
+          <Icon
+            name="emojione-v1:white-heavy-check-mark"
+            class="rounded-[2px]"
+          />
+          Ваш старт на платформе
         </p>
-        <p class="mb-1 mt-1 text-[16px]">⚠️ Условия работы</p>
-        <p class="mb-2 italic">
-          Все услуги активируются только при положительном балансе. Заказ услуг
-          с отрицательным балансом может привести к блокировке функционала
-          согласно Пользовательскому соглашению. Пополнения с Понедельника по
-          Пятницу с 07:00 до 19:00. Переводы, сделанные в выходные, начисляются
-          в Понедельник до 09:00. Финансовые средства зачисляются на баланс от
-          3х минут до 72 часов. Каждая платформа имеет свои уникальные
-          особенности работы с рейтингом, и мы готовы помочь вам справиться с
-          любыми трудностями. Просим отнестись с пониманием — мы прикладываем
-          максимум усилий, чтобы добиться наилучших результатов для вашего
-          успеха.
+        <ol class="list-decimal ml-6 mb-4 text-[#4b5563]">
+          <li>
+            Ознакомьтесь с функционалом: «видео-обзор платформы ниже за 30
+            секунд», в нем вы найдете инструкции по работе с платформой.
+          </li>
+          <li>
+            Пополните баланс: без этого вы не сможете активировать услуги.
+          </li>
+          <li>
+            Выберите нужные услуги: настройте самовыкупы, управление отзывами
+            или другие функции.
+          </li>
+          <li>
+            Запустите первый заказ: следите за результатами в режиме реального
+            времени.
+          </li>
+          <li>
+            Контролируйте финансы: отчетность всегда под рукой в личном
+            кабинете.
+          </li>
+          <li>
+            Партнерская программа для каждого! За каждую рекомендацию платим от
+            500 RUB.
+          </li>
+        </ol>
+        <p class="mt-1.5 text-[16px] flex items-center gap-1 text-[#4b5563]">
+          <Icon name="emojione-v1:warning" class="w-4 h-4" /> Условия работы
         </p>
-        <p class="mb-2 italic">
-          Если возникнут вопросы, наша поддержка всегда готова помочь! 🎯 Удачных продаж!
+        <ul class="list-disc ml-6 text-[#4b5563]">
+          <li>Все услуги активируются только при положительном балансе.</li>
+          <li>
+            Заказ услуг с отрицательным балансом может привести к блокировке
+            функционала согласно Пользовательскому соглашению.
+          </li>
+          <li>Пополнения с Понедельника по Пятницу с 07:00 до 19:00.</li>
+          <li>
+            Переводы, сделанные в выходные, начисляются в Понедельник до 09:00.
+          </li>
+          <li>
+            Финансовые средства зачисляются на баланс от 3х минут до 72 часов.
+          </li>
+          <li>
+            Каждая платформа имеет свои уникальные особенности работы с
+            рейтингом, и мы готовы помочь вам справиться с любыми трудностями.
+            Просим отнестись с пониманием — мы прикладываем максимум усилий,
+            чтобы добиться наилучших результатов для вашего успеха.
+          </li>
+        </ul>
+        <p class="mb-2 text-[#4b5563] flex items-center gap-1">
+          Если возникнут вопросы, наша поддержка всегда готова помочь!
+          <Icon name="noto:bullseye" class="w-4 h-4" /> Удачных продаж!
         </p>
+        <div class="flex justify-between mt-8">
+          <div class="flex items-center gap-2">
+            <input
+              id="checkbox"
+              type="checkbox"
+              class="checkbox checkbox-primary"
+              :checked="isChecked"
+              @change="toggleCheckbox"
+            />
+            <label for="checkbox" class="text-sm text-gray-600 cursor-pointer">
+              Больше не показывать это сообщение
+            </label>
+          </div>
+          <button class="btn btn-sm h-[2.5rem] btn-primary" @click="closeModal">
+            Понятно
+          </button>
+        </div>
       </div>
     </Transition>
   </div>

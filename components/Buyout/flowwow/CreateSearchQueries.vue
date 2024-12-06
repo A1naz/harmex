@@ -1,53 +1,55 @@
 <script setup lang="ts">
-import type { SearchQuery } from '@/data/buyout/createProduct'
-import { rules } from '~/data/buyout/rules'
+import type { SearchQuery } from "@/data/buyout/createProduct";
+import { rules } from "~/data/buyout/rules";
 
 interface Props {
-  queries: SearchQuery[]
-  article: number
-  productIndex: number
-  rules: []
+  queries: SearchQuery[];
+  article: number;
+  productIndex: number;
+  rules: [];
 }
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const sorts = [
   {
     ruleId: 10,
-    sort: 'popular',
+    sort: "popular",
   },
   {
     ruleId: 11,
-    sort: 'priceup',
+    sort: "priceup",
   },
   {
     ruleId: 12,
-    sort: 'pricedown',
+    sort: "pricedown",
   },
   {
     ruleId: 13,
-    sort: 'newly',
+    sort: "newly",
   },
   {
     ruleId: 14,
-    sort: 'benefit',
+    sort: "benefit",
   },
   {
     ruleId: 15,
-    sort: 'rate',
+    sort: "rate",
   },
-]
+];
 
-const emit = defineEmits(['update', 'add', 'remove'])
-const store = useFlowwowBuyoutStore()
+const emit = defineEmits(["update", "add", "remove"]);
+const store = useFlowwowBuyoutStore();
 async function findSearchQuery(value: string) {
-  let sortType = 'popular'
-  props.rules.forEach((rule: any) => {
-    sorts.forEach((sort: any) => {
-      if (rule.id === sort.ruleId) {
-        sortType = sort.sort
-      }
-    })
-  })
+  let sortType = "popular";
+  if (props.rules && props.rules.length > 0) {
+    props.rules.forEach((rule: any) => {
+      sorts.forEach((sort: any) => {
+        if (rule.id === sort.ruleId) {
+          sortType = sort.sort;
+        }
+      });
+    });
+  }
 
   // const { data, error } = await useFetch('/api/product/getSearchPosition', {
   //   query: {
@@ -57,17 +59,17 @@ async function findSearchQuery(value: string) {
   //   },
   // })
   return {
-      found: false,
-      page: -1,
-      advert: false,
-    }
+    found: false,
+    page: -1,
+    advert: false,
+  };
 }
-const findSearchQueryDebounced = useDebounceFn(findSearchQuery, 1000)
+const findSearchQueryDebounced = useDebounceFn(findSearchQuery, 1000);
 
-const queries = computed(() => props.queries)
+const queries = computed(() => props.queries);
 
 async function onInput(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery(
     {
       value: newValue,
@@ -76,7 +78,7 @@ async function onInput(event: Event, index: number) {
     },
     false,
     false
-  )
+  );
 
   // if (!newValue) return
   // store.changeSearchQueryStatus(index, props.productIndex, false, true)
@@ -105,20 +107,18 @@ async function onInput(event: Event, index: number) {
   //     store.changeSearchQueryStatus(index, props.productIndex, true, false)
   //   }
   // }
-  store.changeSearchQueryStatus(index, props.productIndex, false, false, ``)
-
-
+  store.changeSearchQueryStatus(index, props.productIndex, false, false, ``);
 }
 
 onMounted(async () => {
   for (let i = 0; i < props.queries.length; i++) {
-    if (!props.queries[i].value) continue
-    const result = await findSearchQuery(props.queries[i].value)
-    if (!result) continue
+    if (!props.queries[i].value) continue;
+    const result = await findSearchQuery(props.queries[i].value);
+    if (!result) continue;
     // if (!result.found)
-      // store.changeSearchQueryStatus(i, props.productIndex, true, false)
+    // store.changeSearchQueryStatus(i, props.productIndex, true, false)
   }
-})
+});
 </script>
 
 <template>

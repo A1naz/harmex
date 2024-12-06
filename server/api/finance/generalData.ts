@@ -13,7 +13,7 @@ export default async function(user: any, itemsPerPage?: number, page?: number, s
   const format = res.map((el: any) => {
     return {
       summ: el.summ ? el.summ : 0,
-      date: el.dataoperation.toISOString().split('T')[0],
+      date: el.dataoperation,
       source: el.mp ? el.mp : '-',
       service: historyType(el.type),
       article: el.article ? el.article : '-',

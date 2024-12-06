@@ -35,20 +35,32 @@ defineEmits(["setFavourites"]);
 
 <template>
   <div
-    class="card bg-secondary border p-2.5 rounded-lg shadow-md text-center w-[201px] h-[252px]"
+    class="card bg-secondary border p-2.5 rounded-lg shadow-md text-center sm:w-[201px] w-full h-[228px]"
   >
     <div>
-      <NuxtImg
-        :src="item.mainImage || 'null'"
-        class="mx-auto rounded-xl cursor-pointer"
-        width="170px"
-        height="105px"
+      <div
         @click="
           item.items[index].disabled
             ? ''
             : navigateTo(`/${item.slug}${item.items[index].path}`)
         "
-      />
+        class="flex items-start justify-center w-full relative overflow-hidden rounded-lg cursor-pointer h-[83px]"
+        :style="{ backgroundColor: item.backgroundColor }"
+      >
+        <div
+          class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-[24px] font-medium text-center"
+        >
+          {{ item.name }}
+        </div>
+        <!-- <NuxtImg
+              :src="social.mainImage"
+              :alt="social.name"
+              class="w-full h-full object-cover cursor-pointer"
+              @click="
+                social.disabled ? '' : navigateTo(`/catalog/${social.slug}`)
+              "
+            /> -->
+      </div>
       <button
         v-if="!item.items[index].disabled"
         class="heart-btn absolute top-3 right-5"
