@@ -1,5 +1,6 @@
-<script lang="ts" setup>
-defineProps({
+whitespa
+<script setup lang="ts">
+const props = defineProps({
   items: {
     type: Array as () => Array<any>,
     default: () => [],
@@ -8,11 +9,9 @@ defineProps({
     type: Array as () => Array<any>,
     default: () => [],
   },
-  type: {
-    type: String,
-    default: "Маркетплейсы",
-  },
 });
+
+const emit = defineEmits(["setFavourites", "vote"]);
 
 function getServices(items: Array<any>) {
   return items.filter(
@@ -23,13 +22,10 @@ function getServices(items: Array<any>) {
         items.path == "/reviews")
   );
 }
-
-defineEmits(["setFavourites", "vote"]);
 </script>
-
 <template>
   <main class="flex-1 mx-3">
-    <div class="flex flex-wrap  gap-y-5 gap-x-[25px] w-full justify-start">
+    <div class="flex flex-wrap gap-y-5 gap-x-[25px] w-full justify-start">
       <div
         v-for="(social, index) in items"
         :key="index"
@@ -66,7 +62,7 @@ defineEmits(["setFavourites", "vote"]);
             <IconCSS
               v-if="favourites.includes(`/catalog/${social.slug}`)"
               name="solar:heart-bold"
-              class="text-[#1b38ca]"
+              class="text-[#353742]"
               size="21"
             />
             <IconCSS
@@ -77,72 +73,52 @@ defineEmits(["setFavourites", "vote"]);
             />
           </button>
 
-          <div>
-            <p class="text-[15px] font-normal mb-1">Доступные услуги:</p>
-            <div class="flex gap-x-1 text-[#fe6601c2] text-[15px]">
-              <NuxtLink
-                :to="social.disabled ? '' : `/${social.slug}${service.path}`"
-                v-for="(service, i) in getServices(social.items)"
-                :key="i"
-              >
-                <div
-                  class="badge bg-[#ede9fe] rounded-md text-[#4338ca] h-[20px] text-[12px] font-medium"
-                >
-                  {{ service.title }}
-                </div>
-              </NuxtLink>
+          <div class="flex font-bold text-[12px] whitespace-nowrap">
+            Организация:
+            {{ social.organization }}
+          </div>
+          <div class="flex text-[12px] whitespace-nowrap">
+            ИНН:
+            {{ social.INN }}
+          </div>
+          <div class="flex text-[12px] whitespace-nowrap">
+            Локация:
+            {{ social.location }}
+          </div>
+          <div class="flex text-[12px] whitespace-nowrap">
+            Промокод:
+            {{ social.promoCode }}
+          </div>
+          <div class="text-[12px] flex flex-col">
+            Услуги:
+            <div
+              class="badge bg-[#ede9fe] rounded-md text-[#4338ca] h-[40px] w-full text-[12px] font-semibold text-start mt-1"
+            >
+              <span class="w-full text-start">
+                {{ social.description }}
+              </span>
             </div>
           </div>
-          <div class="flex w-full justify-center self-end mt-2">
-            <NuxtLink
-              :to="social.disabled ? '' : `/catalog/${social.slug}`"
-              class="text-[15px] w-full btn btn-primary btn-sm"
+
+          <div class="flex justify-between w-full">
+            <a
+              :href="`tel:${social.phoneNumber.replaceAll(' ', '')}`"
+              class="text-[14px] btn btn-primary btn-sm flex justify-between mt-1 sm:w-[180px] w-[84%]"
               :class="{
                 'cursor-default': social.disabled,
               }"
             >
-              Перейти
-            </NuxtLink>
+              {{ social.phoneNumber }}
+              <Icon name="ic:round-phone" size="22" class="mr-1" />
+            </a>
+            <button
+              class="btn btn-outline btn-sm btn-square border-[#d8d8d8] text-[#909090] mt-1 ml-1"
+            >
+              <Icon size="24" class="my-1 mx-1" name="ic:sharp-telegram" />
+            </button>
           </div>
         </div>
-        <button
-          v-if="social.disabled"
-          class="px-5 py-2 bg-[#e86b35] text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:bg-primary"
-          style="z-index: 10"
-          @click="$emit('vote', social.slug)"
-        >
-          Запросить
-        </button>
-
-        <div
-          v-if="social.disabled"
-          class="absolute inset-0 bg-black opacity-70 pointer-events-none rounded-lg"
-        />
       </div>
     </div>
   </main>
 </template>
-
-<style scoped>
-.overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-45deg);
-  font-size: 36px;
-  color: rgba(0, 0, 0, 0.35);
-  font-weight: bold;
-  white-space: nowrap;
-  z-index: 10;
-  pointer-events: none;
-}
-
-.heart-outline {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.card:hover .heart-outline {
-  opacity: 1;
-}
-</style>

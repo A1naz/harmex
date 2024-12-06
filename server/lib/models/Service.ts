@@ -2,27 +2,7 @@ import type { Document } from 'mongoose'
 import { model, Schema } from 'mongoose'
 import { v4 as uuid } from 'uuid'
 
-// Interface for Service document
-export interface IService extends Document {
-  uuid: string
-  name: string
-  items: Array<any> // You can define a more specific type for items if known
-  mainImage: string
-  images: Array<string> // Assuming images is an array of image URLs (strings)
-  video?: string
-  price: number
-  rating: number
-  advanced: number
-  description: string
-  disabled: boolean
-  slug: string
-  votes: number
-  backgroundColor: string
-  type: string
-}
-
-// Mongoose Schema for Service
-const ServiceSchema = new Schema<IService>({
+const ServiceSchema = new Schema({
   uuid: { type: String, unique: true, required: true, default: uuid() },
   name: { type: String, required: true },
   items: { type: [], default: [] }, // Mixed type for array
@@ -38,7 +18,12 @@ const ServiceSchema = new Schema<IService>({
   votes: { type: Number, default: 0 },
   backgroundColor: { type: String, default: '#ffffff' },
   type: { type: String },
+  organization: { type: String},
+  promoCode: { type: String},
+  location: { type: String},
+  INN: { type: String},
+  phoneNumber: { type: String},
 })
 
 // Mongoose Model for Service
-export const Service = model<IService>('Service', ServiceSchema)
+export const Service = model('Service', ServiceSchema)

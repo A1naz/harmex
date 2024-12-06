@@ -3,7 +3,6 @@ import { Service } from '~/server/lib/models/Service'
 export default eventHandler(async (event) => {
   const { type } = getQuery(event)
 
-console.log(type);
   const services: any = await Service.find({ type })
     .select('-_id -__v')
     .sort({ disabled: 1 })

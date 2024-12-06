@@ -188,9 +188,16 @@ onMounted(() => {
         </div>
       </div>
       <CatalogContent
-        v-if="!loading"
+        v-if="!loading && selectedType !== 'Услуги'"
         :items="socialNetworks"
         :favourites="favourites"
+        @vote="voteForMp"
+        @set-favourites="setFavourites"
+      />
+      <CatalogServices
+        v-if="!loading && selectedType === 'Услуги'"
+        :favourites="favourites"
+        :items="socialNetworks"
         @vote="voteForMp"
         @set-favourites="setFavourites"
       />
