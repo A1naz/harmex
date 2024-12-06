@@ -25,12 +25,14 @@ async function logout() {
 // });
 
 const { notify } = useNotification()
+const { getData } = useApi()
 const persistStore = usePersistedStore()
 const twoFaQRModal = ref<any>(null)
 const twoFaShow = ref(false)
 const partnerDetailsModal = ref(false)
 const isTwoFaEnabled = ref(user.value?.isTwoFaEnabled || false)
 const partnerAgreement = ref(false)
+const myTeam = ref([]) as any
 
 async function openTwoFaQRModal() {
   if (!isTwoFaEnabled.value) {
@@ -215,9 +217,6 @@ await getPartnerAgreement()
 
 const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions() || []
 
-const { getData } = useApi()
-const myTeam = ref([]) as any
-
 async function getMyTeam() {
   const res = await getData('/team/get')
   if (res && res.length > 0) {
@@ -231,6 +230,33 @@ const btnSaveLoading = ref(false)
 const currentUser = ref({}) as any
 const modalConfirm = ref(false)
 const teamModal = ref(false)
+
+async function closeConfirm (isConfirmed: boolean) {
+  saveError.value = ''
+  btnSaveLoading.value = true
+  if (isConfirmed) {
+    const { error } = await useFetch('/api/team/delete', {
+      method: 'DELETE',
+      body: currentUser.value,
+    })
+    if (error.value) {
+      saveError.value = error.value
+        ? error.value.data.message
+        : 'Повторите попытку'
+    } else {
+      notify({ type: 'success', title: 'Успешно', text: `Пользователь ${currentUser.value.username} удален` })
+      await getMyTeam()
+      saveError.value = ''
+      currentUser.value = {}
+      modalConfirm.value = false
+    }
+  } else {
+    saveError.value = ''
+    currentUser.value = {}
+    modalConfirm.value = false
+  }
+  btnSaveLoading.value = false
+}
 
 async function saveUser(selectedUser: any){
   console.log('saveUser', selectedUser)
@@ -250,7 +276,6 @@ async function saveUser(selectedUser: any){
         : selectedUser.allowedPathes.map((path: any) => {
             return path.value
           })) : '',
-    // tariff: store.client.tariff,
     post: selectedUser.post ? selectedUser.post : '',
   }
 
@@ -261,7 +286,7 @@ async function saveUser(selectedUser: any){
     userData.password = selectedUser.password
     endpoint = '/api/team/register'
   }
-
+  console.log('endpoint', endpoint)
   const { error } = await useFetch(endpoint, {
     method: 'POST',
     body: userData,
@@ -438,7 +463,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
             <h2 class="text-lg font-medium">
               Команда
             </h2>
-            <button class="btn btn-sm h-[2.5rem] btn-primary xl:w-40" @click="teamModal = true">
+            <button class="btn btn-sm h-[2.5rem] btn-primary xl:w-40" @click="[teamModal = true, currentUser = {}]">
                 Добавить сотрудника
             </button>
           </div>
@@ -504,11 +529,12 @@ function openEditModal(isCreate: boolean, uuid?: string) {
                       </td>
                       <td class="table-cell">{{ row.post }}</td>
                       <td class="table-cell">
-                        <div
-                          v-if="row.allowedPathes.length == multiOptions.length"
-                          class="text-sm p-1 rounded-2xl bg-success text-green-400 bg-opacity-50 border-none text-center flex w-full justify-center"
-                        >
-                          Полный доступ
+                        <div v-if="row.allowedPathes.length == multiOptions.length" class="flex w-full justify-center">
+                          <div
+                            class="text-sm py-1 px-2 rounded-2xl bg-success text-green-400 bg-opacity-50 border-none text-center flex justify-center basis-[calc(33.333%-0.5rem)]"
+                          >
+                            Полный доступ
+                          </div>
                         </div>
                         <div
                           v-else
@@ -701,7 +727,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
       :state="modalConfirm"
       :titleModal="'Вы уверены что хотите удалить сотрудника?'"
       :sub-descr="''"
-      :descr="currentUser.firstName + ' ' + currentUser.lastName"
+      :descr="currentUser.username"
       :btnSaveLoading="btnSaveLoading"
       @click="closeConfirm"
     />

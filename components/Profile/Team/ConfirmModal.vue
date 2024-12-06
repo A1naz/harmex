@@ -6,7 +6,6 @@ defineProps({
   titleModal: { type: String, required: true },
   subDescr: { type: String, required: false },
   descr: { type: String, required: false },
-  index: { type: Number, required: true },
   state: { type: Boolean, required: true },
   btnSaveLoading: { type: Boolean, required: true },
   saveError: { type: String, required: false }
@@ -22,7 +21,7 @@ defineEmits(['click'])
     :class="{ 'modal-open': state }" 
     class="modal"
   >
-    <div v-if="state" class="modal-box max-w-[300px] px-3 py-5">
+    <div v-if="state" class="modal-box max-w-[450px] px-3 py-5">
       <div class="">
         <a v-if="!route.path.startsWith('/team')" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="$emit('click', false)">✕</a>
         <div class="text-xl font-semibold">
@@ -43,11 +42,11 @@ defineEmits(['click'])
         <div class="flex w-full gap-6">
 
             <button 
-                  class="btn btn-sm btn-ghost w-[45%]" 
+                  class="btn btn-sm btn-ghost w-[45%] border-[#909090]" 
                   @click="$emit('click', false)"
                   >Отмена</button>
             <button 
-                class="btn btn-sm btn-primary bg-[#ebedff] dark:bg-primary dark:bg-opacity-10 text-base-content border-none w-[45%]" 
+                class="btn btn-sm btn-primary bg-primary dark:bg-opacity-10 text-white border-none w-[45%]" 
                 :loading="btnSaveLoading"
                 @click="$emit('click', true)"
                 >Удалить</button>

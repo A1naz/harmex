@@ -16,11 +16,12 @@ const emit = defineEmits(['update:modelValue', 'save', 'close'])
 watch(
   () => props.modelValue,
   () => {
-    if(!props.btnSaveLoading && !props.saveError){
+    if(!props.btnSaveLoading){
       console.log('change', props.modelValue)
       form.username = props.modelValue.username || '',
       form.phoneNumber = props.modelValue.phoneNumber || '',
-      form.allowedPathes = props.modelValue.allowedPathes.map((item: any) => item.value) || [],
+      console.log('props.modelValue.allowedPathes', props.modelValue.allowedPathes)
+      form.allowedPathes = props.modelValue.allowedPathes ? props.modelValue.allowedPathes.map((item: any) => item.value) : [],
       form.post = props.modelValue.post 
     }
   }
@@ -84,7 +85,7 @@ function save() {
           >✕</a
         >
         <div class="text-lg font-bold mb-5">
-          {{ modelValue.length && modelValue.length > 0 ? 'Редактировать сотрудника' : 'Добавить сотрудника' }}
+          {{ modelValue.uuid ? 'Редактировать сотрудника' : 'Добавить сотрудника' }}
         </div>
 
         <div v-if="modelValue.uuid" class="text-xs text-gray-500">
@@ -128,7 +129,7 @@ function save() {
                       .join(', ')
                     }"
                   >
-                    <span class="text-sm truncate">{{  multiOptions
+                    <span class="text-sm truncate">{{ multiOptions.length === form.allowedPathes.length ? 'Полный доступ' :  multiOptions
                       .filter(el => form.allowedPathes.includes(el.value))
                       .map(el => el.name)
                       .join(', ') || 'Разрешения'}}
@@ -185,6 +186,9 @@ function save() {
                     tabindex="0" 
                     role="button" 
                     class="h-[2.5rem] py-3 px-2.5 border border-[#d8d8d8] rounded-lg flex items-center w-full justify-between bg-base-100 border-none"
+                    :class="{
+                      'text-[#9ca3af]': !selectOptions.find(el => el.value === form.post)?.text
+                    }"
                   >
                     <span class="text-sm">{{ selectOptions.find(el => el.value === form.post)?.text || 'Должность'}}</span>
                     <div class="flex flex-col ml-5">
@@ -238,6 +242,7 @@ function save() {
           <button
             class="btn btn-sm btn-primary text-white border-none m-1 sm:px-10 w-1/3 h-[2.5rem]"
             label="Сохранить"
+            :disabled="btnSaveLoading"
             @click="save()"
           >
             Сохранить
