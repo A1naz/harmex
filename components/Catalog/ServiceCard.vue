@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import MenuBuilder from '~/server/utils/menuBuilder'
+const { user } = useUserSession()
+
 defineProps({
   item: { type: Object, required: true },
   favourites: { type: Array, default: () => [] },
@@ -6,6 +9,7 @@ defineProps({
 });
 
 const { notify } = useNotification();
+const accesses = MenuBuilder.filteredAccess(user?.value?.acesses || []).allowedPathes
 
 async function vote(slug: string, mp: string) {
   const response: any = await $fetch("/api/catalog/voteForService", {
@@ -30,6 +34,13 @@ async function vote(slug: string, mp: string) {
   }
 }
 
+function checkAccess(items: any) {
+  const found = accesses.some((access: any) => items.path.includes('likes') ? access.value === '/productlikes' : access.value === items.path)
+  console.log('found', found, items.path) 
+
+  return accesses.length === 0 ? true : found
+}
+
 defineEmits(["setFavourites"]);
 </script>
 
@@ -40,7 +51,7 @@ defineEmits(["setFavourites"]);
     <div>
       <div
         @click="
-          item.items[index].disabled
+          item.items[index].disabled || !checkAccess(item.items[index])
             ? ''
             : navigateTo(`/${item.slug}${item.items[index].path}`)
         "
@@ -62,7 +73,7 @@ defineEmits(["setFavourites"]);
             /> -->
       </div>
       <button
-        v-if="!item.items[index].disabled"
+        v-if="!item.items[index].disabled && checkAccess(item.items[index])"
         class="heart-btn absolute top-3 right-5"
         @click="
           $emit('setFavourites', `/${item.slug}${item.items[index].path}`)
@@ -89,7 +100,7 @@ defineEmits(["setFavourites"]);
       <div
         class="badge bg-[#FCD1A1] text-[#653600] whitespace-nowrap relative text-[11.5px] text-start -ml-1 cursor-pointer"
         @click="
-          item.items[index].disabled
+          item.items[index].disabled || !checkAccess(item.items[index])
             ? ''
             : navigateTo(`/${item.slug}${item.items[index].path}`)
         "
@@ -102,7 +113,7 @@ defineEmits(["setFavourites"]);
     </div>
     <NuxtLink
       v-if="!item.items[index].disabled"
-      :to="`/${item.slug}${item.items[index].path}`"
+      :to="checkAccess(item.items[index]) ? `/${item.slug}${item.items[index].path}` : ``"
       class="btn bg-[#F5F7FF] w-full rounded-xl"
     >
       Перейти
@@ -114,9 +125,15 @@ defineEmits(["setFavourites"]);
     >
       Запросить
     </button>
+    <span
+      v-if="!checkAccess(item.items[index])"
+      class="z-10 px-5 py-2 text-lg rounded-lg text-white text-[16px] absolute font-medium bottom-[50px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out whitespace-nowrap"
+    >
+      Нет доступа
+    </span>
 
     <div
-      v-if="item.items[index].disabled"
+      v-if="item.items[index].disabled || !checkAccess(item.items[index])"
       class="absolute inset-0 bg-black opacity-70 pointer-events-none rounded-lg"
     />
   </div>

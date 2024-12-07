@@ -216,7 +216,6 @@ async function getPartnerAgreement() {
 await getPartnerAgreement()
 
 const multiOptions: OptionsMulti[] = MenuBuilder.pathOptions() || []
-const accesses = MenuBuilder.filteredAccess(user.value.acesses)
 
 async function getMyTeam() {
   const res = await getData('/team/get')
