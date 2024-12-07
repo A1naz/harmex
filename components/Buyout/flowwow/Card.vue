@@ -311,6 +311,7 @@ async function copyToClipboard(text: string) {
       </div> -->
 
       <div class="flex gap-3 w-full  truncate mt-6">
+        
         <div class="flex-none" style="width: 80px; height: 124px; margin-top: auto; margin-bottom: auto">
           <nuxt-img
             class="rounded-xl h-full "
@@ -324,14 +325,14 @@ async function copyToClipboard(text: string) {
         <div class="flex flex-col w-full">
           <div class="flex flex-col gap-1.5">
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Артикул: </span>
-              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Ссылка: </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem] underline text-primary">
                 <a
-                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+                  :href="info.url"
                   target="_blank"
                   class="link link-hover"
                 >
-                  {{ info.article }}
+                  {{ info.url }}
                 </a>
               </div>
             </div>
@@ -356,6 +357,7 @@ async function copyToClipboard(text: string) {
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto">ID заказа: </span>
               <button class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate" @click="copyToClipboard(info.uuid)">
                 #{{ info.uuid }}
+             
               </button>
             </div>
             <div class="flex gap-2 w-2/3">
