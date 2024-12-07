@@ -216,7 +216,7 @@ function daysToPenalty(statusdelivery: any[]) {
                     target="_blank" class="text-base-content text-xs link link-hover w-52 lg:w-76 break-all"
                     :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
                     >
-                    {{ info.point }}
+                    {{ info.point }}  {{ info.appartmentNumber ? ', кв. ' + info.appartmentNumber : '' }}
                 </a>
             </div>
 

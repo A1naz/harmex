@@ -104,9 +104,11 @@ export default eventHandler(async (event) => {
         recipient: delivery.recipient,
         recipientphone: replaced,
         updatedAt: delivery.updatedAt,
+        appartmentNumber: buyout.appartmentNumber,
       }
     })
   )
+
   const filtered = format.filter(Boolean)
   return filtered
 })
