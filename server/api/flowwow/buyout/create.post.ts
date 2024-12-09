@@ -28,6 +28,7 @@ interface Item {
   url: string
   appartmentNumber: string
   slug: string
+  deliveryType: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -142,8 +143,9 @@ export default eventHandler(async (event) => {
       ff: product.key || false,
       pointRegion: 'Московская область',
       pointDistrict: 'Московская область',
-      deliveryPeriodTime: product.deliveryPeriodTime,
-      deliveryPeriodDate: product.deliveryPeriodDate,
+      deliveryType: product.deliveryType ? product.deliveryType : 'courier',
+      // deliveryPeriodTime: product.deliveryPeriodTime,
+      // deliveryPeriodDate: product.deliveryPeriodDate,
     })
 
     await buyout.save()

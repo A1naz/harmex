@@ -8,163 +8,159 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-})
+});
 
 const emit = defineEmits([
-  'callback',
-  'remove',
-  'openModal',
-  'archive',
-  'unarchive',
-  'unpause',
-  'openLogModal',
-  'removeBuyout',
-])
+  "callback",
+  "remove",
+  "openModal",
+  "archive",
+  "unarchive",
+  "unpause",
+  "openLogModal",
+  "removeBuyout",
+]);
 
-const { notify } = useNotification()
+const { notify } = useNotification();
 
-const theme = useColorMode()
-const { width } = useWindowSize()
+const theme = useColorMode();
+const { width } = useWindowSize();
 
-const currency = useCurrency()
-const router = useRouter()
+const currency = useCurrency();
+const router = useRouter();
 function cloneBuyout() {
   router.push({
-    path: '/flowwow/buyouts/create',
+    path: "/flowwow/buyouts/create",
     query: {
       uuid: props.info.uuid,
     },
-  })
+  });
 }
 
 async function deleteBuyOut() {
-  const { data, error } = await useFetch('/api/flowwow/buyout/delete', {
-    method: 'DELETE',
+  const { data, error } = await useFetch("/api/flowwow/buyout/delete", {
+    method: "DELETE",
     body: {
       uuid: props.info.uuid,
     },
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-  })
+    headers: useRequestHeaders(["cookie"]) as HeadersInit,
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-  }
-  else {
+    });
+  } else {
     notify({
-      title: 'Успешно',
-      text: 'Выкуп успешно удален',
-      type: 'success',
+      title: "Успешно",
+      text: "Выкуп успешно удален",
+      type: "success",
       duration: 3000,
-    })
-    emit('remove', props.info.uuid)
+    });
+    emit("remove", props.info.uuid);
   }
 }
 async function unpauseBuyout() {
-  const { data, error } = await useFetch('/api/flowwow/buyout/unpause', {
-    method: 'PUT',
+  const { data, error } = await useFetch("/api/flowwow/buyout/unpause", {
+    method: "PUT",
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-  })
+    headers: useRequestHeaders(["cookie"]) as HeadersInit,
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-  }
-  else {
+    });
+  } else {
     notify({
-      title: 'Успешно',
-      text: 'Выкуп успешно возобновлен',
-      type: 'success',
+      title: "Успешно",
+      text: "Выкуп успешно возобновлен",
+      type: "success",
       duration: 3000,
-    })
-    emit('unpause', props.info.uuid)
+    });
+    emit("unpause", props.info.uuid);
   }
 }
 async function unarchiveBuyout() {
-  const { data, error } = await useFetch('/api/flowwow/buyout/unarchive', {
-    method: 'PUT',
+  const { data, error } = await useFetch("/api/flowwow/buyout/unarchive", {
+    method: "PUT",
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-  })
+    headers: useRequestHeaders(["cookie"]) as HeadersInit,
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-  }
-  else {
+    });
+  } else {
     notify({
-      title: 'Успешно',
-      text: 'Выкуп успешно восстановлен',
-      type: 'success',
+      title: "Успешно",
+      text: "Выкуп успешно восстановлен",
+      type: "success",
       duration: 3000,
-    })
-    emit('unarchive', props.info.uuid)
+    });
+    emit("unarchive", props.info.uuid);
   }
 }
 async function archiveBuyout() {
-  const { data, error } = await useFetch('/api/flowwow/buyout/archive', {
-    method: 'PUT',
+  const { data, error } = await useFetch("/api/flowwow/buyout/archive", {
+    method: "PUT",
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-  })
+    headers: useRequestHeaders(["cookie"]) as HeadersInit,
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-  }
-  else {
+    });
+  } else {
     notify({
-      title: 'Успешно',
-      text: 'Выкуп успешно архивирован',
-      type: 'success',
+      title: "Успешно",
+      text: "Выкуп успешно архивирован",
+      type: "success",
       duration: 3000,
-    })
-    emit('archive', props.info.uuid)
+    });
+    emit("archive", props.info.uuid);
   }
 }
 const getStatus = computed(() => {
   switch (props.info.status) {
-    case 'active':
-      return 'Активный'
-    case 'work':
-      return 'В работе'
-    case 'busy':
-      return 'В работе'
-    case 'completed':
-      return 'Завершен'
-    case 'archived':
-      return 'В архиве'
-    case 'paused':
-      return 'Пауза'
-    case 'nofunds':
-      return 'Недостаточно средств'
+    case "active":
+      return "Активный";
+    case "work":
+      return "В работе";
+    case "busy":
+      return "В работе";
+    case "completed":
+      return "Завершен";
+    case "archived":
+      return "В архиве";
+    case "paused":
+      return "Пауза";
+    case "nofunds":
+      return "Недостаточно средств";
   }
-})
+});
 async function copyToClipboard(text: string) {
-  await navigator.clipboard.writeText(text)
+  await navigator.clipboard.writeText(text);
   notify({
-    title: 'Успешно',
-    text: 'Скопировано в буфер обмена',
-  })
+    title: "Успешно",
+    text: "Скопировано в буфер обмена",
+  });
 }
 </script>
 
@@ -175,7 +171,7 @@ async function copyToClipboard(text: string) {
     >
       <button
         v-show="info.status === 'paused' || info.status === 'nofunds'"
-        class="btn btn-xs btn-neutral absolute left-3 top-3 "
+        class="btn btn-xs btn-neutral absolute left-3 top-3"
         @click="unpauseBuyout"
       >
         Возобновить
@@ -194,7 +190,7 @@ async function copyToClipboard(text: string) {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/info.svg"
                 alt="settings"
-              >
+              />
               О выкупе
             </a>
           </li>
@@ -204,15 +200,15 @@ async function copyToClipboard(text: string) {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/copy.svg"
                 alt="settings"
-              >
+              />
               Дублировать
             </a>
           </li>
           <li
             v-if="
-              info.status === 'archived'
-                || info.status === 'active'
-                || info.status === 'paused'
+              info.status === 'archived' ||
+              info.status === 'active' ||
+              info.status === 'paused'
             "
           >
             <a v-if="info.status !== 'archived'" @click="archiveBuyout">
@@ -220,7 +216,7 @@ async function copyToClipboard(text: string) {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/archive.svg"
                 alt="settings"
-              >
+              />
               Архивировать
             </a>
             <a v-else @click="unarchiveBuyout">
@@ -228,7 +224,7 @@ async function copyToClipboard(text: string) {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/archive.svg"
                 alt="settings"
-              >
+              />
               Убрать из архива
             </a>
           </li>
@@ -239,7 +235,7 @@ async function copyToClipboard(text: string) {
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/delete.svg"
                 alt="settings"
-              >
+              />
               <label class="cursor-pointer">Удалить</label>
             </a>
           </li>
@@ -310,14 +306,19 @@ async function copyToClipboard(text: string) {
         />
       </div> -->
 
-      <div class="flex gap-3 w-full  truncate mt-6">
-        
-        <div class="flex-none" style="width: 80px; height: 124px; margin-top: auto; margin-bottom: auto">
+      <div class="flex gap-3 w-full truncate mt-6">
+        <div
+          class="flex-none mt-1"
+          style="
+            width: 80px;
+            height: 100px;
+            margin-bottom: auto;
+          "
+        >
           <nuxt-img
-            class="rounded-xl h-full "
-            width="120"
-            height="150"
-            format="webp"
+            class="rounded-xl h-full"
+            width="100"
+            fit="outside"
             loading="lazy"
             :src="info?.product?.image || '/logo/logocolor.svg'"
           />
@@ -325,25 +326,28 @@ async function copyToClipboard(text: string) {
         <div class="flex flex-col w-full">
           <div class="flex flex-col gap-1.5">
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Ссылка: </span>
-              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem] underline text-primary">
-                <a
-                  :href="info.url"
-                  target="_blank"
-                  class="link link-hover"
-                >
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Ссылка:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] underline text-primary"
+              >
+                <a :href="info.url" target="_blank" class="link link-hover">
                   {{ info.url }}
                 </a>
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Статус: </span>
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Статус:
+              </span>
               <div
-                class="rounded-md py-0 px-2 text-sm text-[0.725rem]" :class="{
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
+                :class="{
                   'text-base-content bg-[#b5ffbc] dark:bg-green-600 ':
-                    info.status === 'active'
-                    || info.status === 'work'
-                    || info.status === 'busy',
+                    info.status === 'active' ||
+                    info.status === 'work' ||
+                    info.status === 'busy',
                   'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
                     info.status === 'completed' || info.status === 'nofunds',
                   'text-base-content bg-yellow-300':
@@ -354,27 +358,41 @@ async function copyToClipboard(text: string) {
               </div>
             </div>
             <div class="flex gap-2 w-2/3">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">ID заказа: </span>
-              <button class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate" @click="copyToClipboard(info.uuid)">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >ID заказа:
+              </span>
+              <button
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
+                @click="copyToClipboard(info.uuid)"
+              >
                 #{{ info.uuid }}
-             
               </button>
             </div>
             <div class="flex gap-2 w-2/3">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Наименование: </span>
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Наименование:
+              </span>
               <div class="truncate text-[0.9rem] text-bold">
                 {{ info.product?.name }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Цена: </span>
-              <div class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm text-[0.725rem]">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Цена:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm text-[0.725rem]"
+              >
                 {{ info.product?.priceText }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Количество: </span>
-              <div class="rounded-md py-0 px-2 bg-warning text-sm text-[0.725rem]">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Количество:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 bg-warning text-sm text-[0.725rem]"
+              >
                 {{ info.quantity }} шт.
               </div>
             </div>
@@ -387,16 +405,26 @@ async function copyToClipboard(text: string) {
               </div>
             </div> -->
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Источник: </span>
-              <div class="bg-[#ced3d9] rounded-md py-0 px-2 text-sm text-[0.725rem]">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Источник:
+              </span>
+              <div
+                class="bg-[#ced3d9] rounded-md py-0 px-2 text-sm text-[0.725rem]"
+              >
                 Flowwow
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="flex gap-1.5 -mt-2.5">
+        <span class="text-sm text-gray-500 my-auto text-[0.725rem]">ФИО: </span>
+        <div class="rounded-md py-0 px-2 text-sm">
+          {{ info.FIO ? info.FIO : "-" }}
+        </div>
+      </div>
       <button
-        class="btn  btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white  btn-primary"
+        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
         @click="$emit('openModal', index)"
       >
         Открыть

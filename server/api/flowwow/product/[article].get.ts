@@ -22,6 +22,8 @@ export default eventHandler(async (event) => {
     })
   })
 
+
+  console.log(data)
   return {
     product: {
       slug: data.slug || '',
@@ -29,6 +31,7 @@ export default eventHandler(async (event) => {
       article: data.article,
       url: article,
       name: data.name || '',
+      parameters: data.parameters && data.parameters.length ? data.parameters : ['0'],
       sizes: ['0'],
       price: Number(data.price.replaceAll(' ', '')) || 0,
       priceText: data.price ? data.price + ' ₽' : '',
