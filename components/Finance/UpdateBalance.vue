@@ -213,9 +213,10 @@ const showTooltip = ref(false);
             <span class="text-[0.825rem]"
               >Ваши личные данные будут использоваться для обработки ваших
               заказов и других целей, описанных в нашей
-              <a class="text-primary link no-underline hover:underline"
+              <a target="_blank" href="/docs/conf_policy.pdf"  class="text-primary link no-underline hover:underline"
                 >политике конфидециальности</a
               >, продолжая вы соглашаетесь с условиями<a
+              target="_blank" href="/docs/oferta.pdf" 
                 class="text-primary link no-underline hover:underline"
               >
                 оферты</a
