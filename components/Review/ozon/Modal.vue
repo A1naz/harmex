@@ -193,7 +193,7 @@ async function uploadToS3(event: Event, index: number) {
   });
 
   form.photos[index] = {
-    url: `https://ozonmpportal.hb.vkcs.cloud/${result.split("query/")[1]}`,
+    url: `${result.replace("/api/s3/query/reviewImages/", "")}`,
     public: `https://ozonmpportal.hb.vkcs.cloud/${result.split("query/")[1]}`,
   };
 

@@ -72,7 +72,6 @@ export default eventHandler(async (event) => {
     })
   }
 
-
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
@@ -81,7 +80,7 @@ export default eventHandler(async (event) => {
     date,
     user,
     delivery,
-    images: photos.map((photo: any) => photo.public),
+    images: photos.map((photo: any) => photo.url),
     status: 'waiting',
     recipientphone: delivery.recipientphone,
     videoKey: videoKey !== 'reviewVideos/.' ? videoKey : '',
