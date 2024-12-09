@@ -175,6 +175,12 @@ onKeyStroke("Escape", (e) => {
                   getGender || "Нет"
                 }}</span>
               </div>
+              <div v-if="info.FIO" class="flex flex-wrap gap-2">
+                <span class="text-sm text-gray-500 my-auto">ФИО: </span>
+                <div class="rounded-md py-0 text-sm">
+                  {{ info.FIO }}
+                </div>
+              </div>
               <div>
                 <span class="text-sm text-gray-500 mr-2">Дата выкупов: </span>
                 <span
