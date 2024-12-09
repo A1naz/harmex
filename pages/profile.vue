@@ -522,7 +522,13 @@ function openEditModal(isCreate: boolean, uuid?: string) {
                         <span
                           class="rounded-md py-2 font-medium"
                         >
-                          {{ row.phoneNumber }}
+                          {{
+                            '+' + row.phoneNumber.slice(1, 2) +
+                            " (" + row.phoneNumber.slice(2, 5) +
+                            ") " + row.phoneNumber.slice(5, 8) +
+                            "-" + row.phoneNumber.slice(8, 10) +
+                            "-" + row.phoneNumber.slice(10, 12)
+                          }}
                         </span>
                       </td>
                       <td class="table-cell">{{ row.post }}</td>

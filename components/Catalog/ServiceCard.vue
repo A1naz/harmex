@@ -36,7 +36,6 @@ async function vote(slug: string, mp: string) {
 
 function checkAccess(items: any) {
   const found = accesses.some((access: any) => items.path.includes('likes') ? access.value === '/productlikes' : access.value === items.path)
-  console.log('found', found, items.path) 
 
   return accesses.length === 0 ? true : found
 }
