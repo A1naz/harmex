@@ -74,9 +74,6 @@ importers:
       '@vuepic/vue-datepicker':
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.12(typescript@5.6.3))
-      '@vuesax-alpha/icons-vue':
-        specifier: 0.0.2-beta.12
-        version: 0.0.2-beta.12(vue@3.5.12(typescript@5.6.3))
       '@vueuse/components':
         specifier: ^9.13.0
         version: 9.13.0(vue@3.5.12(typescript@5.6.3))
@@ -2856,11 +2853,6 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       vue: '>=3.2.0'
-
-  '@vuesax-alpha/icons-vue@0.0.2-beta.12':
-    resolution: {integrity: sha512-uQ9/lVEtitCOb3P8wqj78wFRN8rGJsPgW7JaMth9vJFNqoV2fhu1dAjTu1KuR81uCCKy8mK4tvTOmcj61aVmSg==}
-    peerDependencies:
-      vue: ^3.2.0
 
   '@vueuse/components@9.13.0':
     resolution: {integrity: sha512-UJ8PjQ4SGb2rsVIy9vhEc6aCu+3+2cc+xEfGNX8/M1NKIuL2Vo6c2Kc2fYFaRzWZkP8HWXu+IcwvnAzL44IEFA==}
@@ -11584,10 +11576,6 @@ snapshots:
     dependencies:
       date-fns: 2.30.0
       date-fns-tz: 1.3.8(date-fns@2.30.0)
-      vue: 3.5.12(typescript@5.6.3)
-
-  '@vuesax-alpha/icons-vue@0.0.2-beta.12(vue@3.5.12(typescript@5.6.3))':
-    dependencies:
       vue: 3.5.12(typescript@5.6.3)
 
   '@vueuse/components@9.13.0(vue@3.5.12(typescript@5.6.3))':

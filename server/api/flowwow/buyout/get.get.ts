@@ -137,6 +137,7 @@ export default eventHandler(async (event) => {
       key: buyout.key,
       appartmentNumber: buyout.appartmentNumber,
       url: buyout.url,
+      FIO: buyout.FIO,
     }
   })
   return format

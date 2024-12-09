@@ -345,7 +345,7 @@ const codeInput = ref()
 
 const customLinks = filters.map(filter => ({
   title: filter.title,
-  slot: '/buyouts/ozon',
+  slot: '/ozon/buyouts',
   query: filter.params,
 }))
 

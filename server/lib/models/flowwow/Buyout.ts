@@ -52,6 +52,7 @@ const BuyoutSchema = new Schema({
   deliveryPeriodDate: { type: String, required: false, default: '' },
   deliveryType: { type: String, required: false, default: '' },
   completed: { type: Number, required: false, default: 0 },
+  FIO: { type: String, required: false, default: '' },
   data5: { type: {}, default: '' },
   data6: { type: {}, default: '' },
   data7: { type: {}, default: '' },
