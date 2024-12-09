@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import MenuBuilder from '~/server/utils/menuBuilder'
+const { user } = useUserSession()
+
 defineProps({
   items: {
     type: Array as () => Array<any>,
@@ -14,14 +17,13 @@ defineProps({
   },
 });
 
+const accesses = MenuBuilder.filteredAccess(user?.value?.acesses || []).allowedPathes
+
 function getServices(items: Array<any>) {
-  return items.filter(
-    (items: any) =>
-      !items.disabled &&
-      (items.path == "/buyouts" ||
-        items.path == "/deliveries" ||
-        items.path == "/reviews")
-  );
+  const allowedPaths = ["/buyouts", "/deliveries", "/reviews"];
+  const found = items.filter((item: any) => !item.disabled && allowedPaths.includes(item.path));
+
+  return accesses.length === 0 ? found : found.filter((item: any) => accesses.some((access: any) => access.value === item.path));
 }
 
 defineEmits(["setFavourites", "vote"]);
