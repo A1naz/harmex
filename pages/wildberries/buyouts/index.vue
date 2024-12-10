@@ -1,262 +1,248 @@
 <script setup lang="ts">
-const { notify } = useNotification()
+const { notify } = useNotification();
 
 definePageMeta({
-  layout: 'app',
-  title: 'Выкупы',
-  middleware: 'auth',
-})
-const route = useRoute()
-const buyouts = ref([]) as any
-const modal = ref(false)
-const logModal = ref(false)
-const removeModal = ref(false)
-const selectedBuyout = ref<any>({})
-const selectedIndex = ref(-1)
-const storeMain = useMainStore()
-const selectedPlace = ref(-1)
-const status = computed(() => route.query?.status || 'all')
-const loading = ref(false)
-const mpStore = useMPStore()
+  layout: "app",
+  title: "Выкупы",
+  middleware: "auth",
+});
+const route = useRoute();
+const buyouts = ref([]) as any;
+const modal = ref(false);
+const logModal = ref(false);
+const removeModal = ref(false);
+const selectedBuyout = ref<any>({});
+const selectedIndex = ref(-1);
+const storeMain = useMainStore();
+const selectedPlace = ref(-1);
+const status = computed(() => route.query?.status || "all");
+const loading = ref(false);
+const mpStore = useMPStore();
 
-const dateFilter = ref('all')
-const autoTarget = ref(true)
+const dateFilter = ref("all");
+const autoTarget = ref(true);
 const search = reactive({
-  text: '',
+  text: "",
   loading: false,
   error: false,
-  type: 'article',
-})
+  type: "article",
+});
 function openModal(index: number) {
-  selectedIndex.value = index
-  selectedPlace.value = buyouts.value.length - index
-  selectedBuyout.value = buyouts.value[index]
-  modal.value = true
+  selectedIndex.value = index;
+  selectedPlace.value = buyouts.value.length - index;
+  selectedBuyout.value = buyouts.value[index];
+  modal.value = true;
 }
 function openRemoveModal(index: number) {
-  selectedIndex.value = index
-  selectedPlace.value = buyouts.value.length - index
-  selectedBuyout.value = buyouts.value[index]
-  removeModal.value = true
+  selectedIndex.value = index;
+  selectedPlace.value = buyouts.value.length - index;
+  selectedBuyout.value = buyouts.value[index];
+  removeModal.value = true;
 }
 function openLogModal(index: number) {
-  selectedIndex.value = index
-  selectedPlace.value = buyouts.value.length - index
-  selectedBuyout.value = buyouts.value[index]
-  logModal.value = true
+  selectedIndex.value = index;
+  selectedPlace.value = buyouts.value.length - index;
+  selectedBuyout.value = buyouts.value[index];
+  logModal.value = true;
 }
-const target = ref(null)
-const targetIsVisible = ref(false)
-const skip = ref(50)
-const end = ref(false)
+const target = ref(null);
+const targetIsVisible = ref(false);
+const skip = ref(50);
+const end = ref(false);
 async function getBuyouts() {
-  loading.value = true
-  const { data } = await useFetch(() => '/api/wildberries/buyout/get', {
-    method: 'GET',
+  loading.value = true;
+  const { data } = await useFetch(() => "/api/wildberries/buyout/get", {
+    method: "GET",
     query: {
-      status: status.value ?? 'all',
+      status: status.value ?? "all",
       dateFilter: dateFilter.value,
       limit: 50,
     },
     watch: false,
-  })
-  buyouts.value = data.value
-  loading.value = false
+  });
+  buyouts.value = data.value;
+  loading.value = false;
 }
 
 // await getBuyouts()
 
 async function removeBuyout() {
-  const { error }: any = await useFetch(
-    '/api/wildberries/buyout/delete',
-    {
-      method: 'DELETE',
-      body: {
-        uuid: selectedBuyout.value.uuid,
-      },
-      headers: useRequestHeaders(['cookie']) as HeadersInit,
+  const { error }: any = await useFetch("/api/wildberries/buyout/delete", {
+    method: "DELETE",
+    body: {
+      uuid: selectedBuyout.value.uuid,
     },
-  )
+    headers: useRequestHeaders(["cookie"]) as HeadersInit,
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-  }
-  else {
-    removeModal.value = false
+    });
+  } else {
+    removeModal.value = false;
     notify({
-      title: 'Успешно',
-      text: 'Выкуп успешно удален',
-      type: 'success',
+      title: "Успешно",
+      text: "Выкуп успешно удален",
+      type: "success",
       duration: 3000,
-    })
-    buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== selectedBuyout.value.uuid)
+    });
+    buyouts.value = buyouts.value.filter(
+      (buyout: any) => buyout.uuid !== selectedBuyout.value.uuid
+    );
   }
 }
 function archiveBuyout(uuid: string) {
   buyouts.value = buyouts.value.map((buyout: any) => {
-    if (buyout.uuid === uuid)
-      buyout.status = 'archived'
+    if (buyout.uuid === uuid) buyout.status = "archived";
 
-    return buyout
-  })
+    return buyout;
+  });
   if (
-    route.query.status
-    && route.query?.status !== 'archived'
-    && route.query?.status !== 'all'
+    route.query.status &&
+    route.query?.status !== "archived" &&
+    route.query?.status !== "all"
   ) {
-    buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid)
+    buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid);
   }
 }
 
 function unarchiveBuyout(uuid: string) {
   buyouts.value = buyouts.value.map((buyout: any) => {
-    if (buyout.uuid === uuid)
-      buyout.status = 'active'
+    if (buyout.uuid === uuid) buyout.status = "active";
 
-    return buyout
-  })
+    return buyout;
+  });
   if (
-    route.query.status
-    && route.query?.status !== 'active'
-    && route.query?.status !== 'all'
+    route.query.status &&
+    route.query?.status !== "active" &&
+    route.query?.status !== "all"
   ) {
-    buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid)
+    buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid);
   }
 }
 function unpauseBuyout(uuid: string) {
   buyouts.value = buyouts.value.map((buyout: any) => {
-    if (buyout.uuid === uuid)
-      buyout.status = 'active'
+    if (buyout.uuid === uuid) buyout.status = "active";
 
-    return buyout
-  })
+    return buyout;
+  });
   if (
-    route.query.status
-    && route.query?.status !== 'active'
-    && route.query?.status !== 'all'
+    route.query.status &&
+    route.query?.status !== "active" &&
+    route.query?.status !== "all"
   ) {
-    buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid)
+    buyouts.value = buyouts.value.filter((buyout: any) => buyout.uuid !== uuid);
   }
 }
 
 async function selectFilterDate(e: any) {
-  const target = e
-  dateFilter.value = target.value
-  skip.value = 50
-  end.value = false
-  const { data } = await useFetch('/api/wildberries/buyout/get', {
-    method: 'GET',
+  const target = e;
+  dateFilter.value = target.value;
+  skip.value = 50;
+  end.value = false;
+  const { data } = await useFetch("/api/wildberries/buyout/get", {
+    method: "GET",
     query: {
-      status: status.value || 'all',
+      status: status.value || "all",
       dateFilter: dateFilter.value,
       limit: 50,
     },
     watch: false,
-  })
-  buyouts.value = data.value
+  });
+  buyouts.value = data.value;
 }
 async function findBuyouts(value: string, type: string) {
   if (!value) {
-    autoTarget.value = true
-    search.loading = false
-    getBuyouts()
-    return
+    autoTarget.value = true;
+    search.loading = false;
+    getBuyouts();
+    return;
   }
-  const { data } = await useFetch('/api/wildberries/buyout/search', {
+  const { data } = await useFetch("/api/wildberries/buyout/search", {
     query: {
       string: value,
       type,
     },
     watch: false,
-  })
-  if (data.value)
-    buyouts.value = data.value
+  });
+  if (data.value) buyouts.value = data.value;
 
-  search.loading = false
+  search.loading = false;
 }
 
-const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
+const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000);
 
 async function onSearchInput() {
-  autoTarget.value = false
-  search.loading = true
-  findBuyoutsDebounced(search.text, search.type)
+  autoTarget.value = false;
+  search.loading = true;
+  findBuyoutsDebounced(search.text, search.type);
 }
 
 const activeBuyouts = computedEager(() => {
-  if (!buyouts.value.length)
-    return []
+  if (!buyouts.value.length) return [];
   const result = buyouts.value.filter(
-    (buyout: any) => buyout.status === 'active',
-  )
-  return result
-})
+    (buyout: any) => buyout.status === "active"
+  );
+  return result;
+});
 const availableBuyouts = computedEager(() => {
-  if (!activeBuyouts.value.length)
-    return null
-  let balance = storeMain.client.balance
-  let result = 0
+  if (!activeBuyouts.value.length) return null;
+  let balance = storeMain.client.balance;
+  let result = 0;
   activeBuyouts.value.forEach((buyout: any) => {
-    balance -= buyout.product.price * buyout.quantity
-    if (balance >= 0)
-      result++
-  })
-  return result
-})
+    balance -= buyout.product.price * buyout.quantity;
+    if (balance >= 0) result++;
+  });
+  return result;
+});
 const neededDeposit = computedEager(() => {
-  let result = 0
-  let sum = 0
+  let result = 0;
+  let sum = 0;
   activeBuyouts.value.forEach((buyout: any) => {
-    sum += buyout.product.price * buyout.quantity
-  })
-  if (sum > storeMain.client.balance)
-    result = sum - storeMain.client.balance
+    sum += buyout.product.price * buyout.quantity;
+  });
+  if (sum > storeMain.client.balance) result = sum - storeMain.client.balance;
 
-  return result
-})
+  return result;
+});
 const formatAvailable = computedEager(() => {
-  if (!availableBuyouts.value)
-    return ''
-  const str = availableBuyouts.value.toString()
-  const lastNumber = Number(str[str.length - 1])
-  if (Number(str) > 10 && Number(str) < 20)
-    return 'выкупов'
-  if (lastNumber === 1)
-    return 'выкуп'
-  if (lastNumber > 1 && lastNumber < 5)
-    return 'выкупа'
-  else return 'выкупов'
-})
+  if (!availableBuyouts.value) return "";
+  const str = availableBuyouts.value.toString();
+  const lastNumber = Number(str[str.length - 1]);
+  if (Number(str) > 10 && Number(str) < 20) return "выкупов";
+  if (lastNumber === 1) return "выкуп";
+  if (lastNumber > 1 && lastNumber < 5) return "выкупа";
+  else return "выкупов";
+});
 
 const filters = [
   {
-    title: 'Все выкупы',
-    optionValue: 'all',
-    params: '',
+    title: "Все выкупы",
+    optionValue: "all",
+    params: "",
     queryStatus: undefined,
   },
   {
-    title: 'В архиве',
-    optionValue: 'archived',
-    params: '?status=archived',
-    queryStatus: 'archived',
+    title: "В архиве",
+    optionValue: "archived",
+    params: "?status=archived",
+    queryStatus: "archived",
   },
   {
-    title: 'На паузе',
-    optionValue: 'paused',
-    params: '?status=paused',
-    queryStatus: 'paused',
+    title: "На паузе",
+    optionValue: "paused",
+    params: "?status=paused",
+    queryStatus: "paused",
   },
   {
-    title: 'Завершенные',
-    optionValue: 'completed',
-    params: '?status=completed',
-    queryStatus: 'completed',
-  }
+    title: "Завершенные",
+    optionValue: "completed",
+    params: "?status=completed",
+    queryStatus: "completed",
+  },
   // ,
   // {
   //   title: 'Выкуп с рекламы',
@@ -282,139 +268,138 @@ const filters = [
   //   params: '?status=nofunds',
   //   queryStatus: 'nofunds',
   // },
-]
+];
 
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && buyouts.value.length >= 50) {
-    if (end.value)
-      return
-    const { data } = await useFetch('/api/wildberries/buyout/get', {
-      method: 'GET',
+    if (end.value) return;
+    const { data } = await useFetch("/api/wildberries/buyout/get", {
+      method: "GET",
       query: {
-        status: route.query?.status || 'all',
+        status: route.query?.status || "all",
         limit: 50,
         dateFilter: dateFilter.value,
         skip: skip.value,
       },
       watch: false,
-    })
+    });
     if ((data.value as any).length === 0) {
-      end.value = true
-      return
+      end.value = true;
+      return;
     }
-    buyouts.value = [...buyouts.value, ...(data.value as any)]
-    skip.value += 50
+    buyouts.value = [...buyouts.value, ...(data.value as any)];
+    skip.value += 50;
   }
-})
+});
 watch(
   () => status.value,
   async () => {
-    skip.value = 50
-    end.value = false
-    const { data } = await useFetch('/api/wildberries/buyout/get', {
-      method: 'GET',
+    skip.value = 50;
+    end.value = false;
+    const { data } = await useFetch("/api/wildberries/buyout/get", {
+      method: "GET",
       query: {
-        status: status.value || 'all',
+        status: status.value || "all",
         dateFilter: dateFilter.value,
         limit: 50,
       },
       watch: false,
-    })
-    buyouts.value = data.value
+    });
+    buyouts.value = data.value;
   },
-  { deep: true, immediate: true },
-)
+  { deep: true, immediate: true }
+);
 
 onMounted(async () => {
   if (route.query?.uuid) {
-    const uuid = route.query?.uuid
+    const uuid = route.query?.uuid;
     if (buyouts.value) {
       const index = buyouts.value!.findIndex(
-        (buyout: any) => buyout.uuid === uuid,
-      )
+        (buyout: any) => buyout.uuid === uuid
+      );
       if (index !== -1) {
-        openModal(index)
-      }
-      else {
-        const { data } = await useFetch(
-          '/api/wildberries/buyout/getOne',
-          {
-            method: 'GET',
-            query: { uuid },
-            watch: false,
-          },
-        )
+        openModal(index);
+      } else {
+        const { data } = await useFetch("/api/wildberries/buyout/getOne", {
+          method: "GET",
+          query: { uuid },
+          watch: false,
+        });
         if (data.value) {
-          buyouts.value = [data.value, ...buyouts.value]
-          openModal(0)
+          buyouts.value = [data.value, ...buyouts.value];
+          openModal(0);
         }
       }
     }
   }
-})
+});
 
-getBuyouts()
+getBuyouts();
 
 const statusText = computed(() => {
-  return filters.find((el: any) => el.queryStatus === route.query.status)?.title
-})
+  return filters.find((el: any) => el.queryStatus === route.query.status)
+    ?.title;
+});
 
-const dropdownOpened = ref<boolean>(false)
+const dropdownOpened = ref<boolean>(false);
 
 function handleBodyClick(event: MouseEvent) {
-  const dropdown = document.querySelector('.dropdown')
+  const dropdown = document.querySelector(".dropdown");
   if (dropdown && !dropdown.contains(event.target as Node)) {
-    dropdownOpened.value = false
+    dropdownOpened.value = false;
   }
 }
 
 onMounted(() => {
-  document.body.addEventListener('click', handleBodyClick)
-})
+  document.body.addEventListener("click", handleBodyClick);
+});
 
 onUnmounted(() => {
-  document.body.removeEventListener('click', handleBodyClick)
-})
+  document.body.removeEventListener("click", handleBodyClick);
+});
 
-const codeInput = ref()
+const codeInput = ref();
 
 function updateSearchType(filter: any) {
-  search.type = filter.value
+  search.type = filter.value;
 }
 async function changeMP(e: any) {
-  mpStore.changeMp(e.value, 'buyouts', route.query?.status ? `?status=${route.query.status}` : '')
+  mpStore.changeMp(
+    e.value,
+    "buyouts",
+    route.query?.status ? `?status=${route.query.status}` : ""
+  );
 }
-const customLinks = filters.map(filter => ({
+const customLinks = filters.map((filter) => ({
   title: filter.title,
-  slot: '/wildberries/buyouts',
+  slot: "/wildberries/buyouts",
   query: filter.params,
-}))
+}));
 
-const orgInfo = ref({}) as any
-const isVisible = ref(false)
-const router = useRouter()
+const orgInfo = ref({}) as any;
+const isVisible = ref(false);
+const router = useRouter();
 
 async function getOrgInfo() {
-  const currentPath = router.currentRoute.value.path
+  const currentPath = router.currentRoute.value.path;
 
-  const pathSegments = currentPath.split('/').filter(Boolean)
+  const pathSegments = currentPath.split("/").filter(Boolean);
 
-  const mp = pathSegments[0]
-  const serviceType = `/${pathSegments[1]}`
+  const mp = pathSegments[0];
+  const serviceType = `/${pathSegments[1]}`;
 
-  const { data }: any = await useFetch('/api/catalog/getOrgInfo', {
-    method: 'GET',
+  const { data }: any = await useFetch("/api/catalog/getOrgInfo", {
+    method: "GET",
     query: {
       serviceType,
       mp,
     },
-  })
+  });
 
-  if (!data.value)
-    return
-  orgInfo.value = data.value.orgInfo
+  if (!data.value) return;
+  orgInfo.value = data.value.orgInfo;
 }
-getOrgInfo()
+getOrgInfo();
 
 const isChecked = ref(false);
 const manualModal = ref(false);
@@ -442,21 +427,23 @@ onMounted(() => {
   const platform = "wildberries";
   const type = "buyout";
   isChecked.value = modalState[platform]?.[type] || false;
-  manualModal.value = !isChecked.value
+  manualModal.value = !isChecked.value;
 });
 
 async function copyToClipboard(text: string) {
-  await navigator.clipboard.writeText(text)
+  await navigator.clipboard.writeText(text);
   notify({
-    title: 'Успешно',
-    text: 'Скопировано в буфер обмена',
-  })
+    title: "Успешно",
+    text: "Скопировано в буфер обмена",
+  });
 }
 </script>
 
 <template>
   <div class="px-4 sm:px-16 pt-8">
-    <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
+    <div
+      class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
+    >
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
@@ -464,29 +451,37 @@ async function copyToClipboard(text: string) {
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink to="/catalog/wildberries" class="cursor-pointer text-[#909090]">
+          <NuxtLink
+            to="/catalog/wildberries"
+            class="cursor-pointer text-[#909090]"
+          >
             Wildberries
           </NuxtLink>
         </li>
-        <li class="cursor-pointer text-[#1e2734]">
-          Выкупы
-        </li>
+        <li class="cursor-pointer text-[#1e2734]">Выкупы</li>
       </ul>
       <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
-        <div class=" bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center ">
+        <div
+          class="bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center"
+        >
           <div class="org-name font-semibold text-gray-800">
             {{ orgInfo.title.toUpperCase() }}
           </div>
 
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
-          <button class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]" @click="copyToClipboard(`https://app.harmex.ru/register?uuid`)">
+          <button
+            class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
+            @click="copyToClipboard(`https://app.harmex.ru/register?uuid`)"
+          >
             <Icon name="ph:share-fat-fill" size="20" />
           </button>
         </div>
       </div>
     </div>
-    <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
-      <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
+    <div class="flex justify-start lg:justify-between mb-4 items-center mt-4">
+      <div
+        class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
+      >
         <div class="flex gap-2">
           <NuxtLink
             to="/wildberries/buyouts/create"
@@ -495,19 +490,21 @@ async function copyToClipboard(text: string) {
             <Icon name="fluent:add-24-filled" size="25" />
           </NuxtLink>
         </div>
-        <div class="w-full flex gap-1 lg:gap-2 ">
-          <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+        <div class="w-full flex gap-1 lg:gap-2">
+          <div class="flex gap-1 lg:gap-3 flex-nowrap whitespace-nowrap">
             <!-- <span><CustomSelect
               class="h-[2rem]  lg:min-w-[120px]"
               status-text="Wildberries"
               :tabs="storeMain.client.username === 'test' ? mpStore.sortMp('buyouts') : mpStore.sortMp('buyouts', true)"
               @change-value="changeMP"
             /></span> -->
-            <span><CustomSelect
-              class="h-[2rem]  min-w-[95px]"
-              :status-text="statusText"
-              :links="customLinks"
-            /> </span>
+            <span
+              ><CustomSelect
+                class="h-[2rem] min-w-[95px]"
+                :status-text="statusText"
+                :links="customLinks"
+              />
+            </span>
             <button
               @click="manualModal = true"
               class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
@@ -538,16 +535,18 @@ async function copyToClipboard(text: string) {
               @change-value="updateSearchType"
             /> -->
           </div>
-          <div class="absolute right-0 top-0 w-[calc(100%-55px)] lg:w-fit lg:static">
+          <div
+            class="absolute right-0 top-0 w-[calc(100%-55px)] lg:w-fit lg:static"
+          >
             <label class="w-full flex bg-[#ececed] rounded-lg items-center">
               <input
                 ref="codeInput"
                 v-model="search.text"
                 type="text"
-                class="input input-sm border-none bg-transparent  dark:bg-base-300 dark:bg-opacity-40 w-full lg:w-11/12"
+                class="input input-sm border-none bg-transparent dark:bg-base-300 dark:bg-opacity-40 w-full lg:w-11/12"
                 placeholder="артикул, id, наименование товара"
                 @input="onSearchInput()"
-              >
+              />
               <span
                 v-if="search.loading"
                 class="loading loading-spinner loading-xs flex justify-end p-2"
@@ -650,98 +649,108 @@ async function copyToClipboard(text: string) {
       :show="manualModal"
       @close="manualModal = false"
       :is-checked="isChecked"
-      @checkbox-toggle="toggleCheckbox" 
+      @checkbox-toggle="toggleCheckbox"
     >
       <h3 class="text-xl font-bold mb-2 flex items-center gap-1">
         Как создать заказ на выкуп товара?
       </h3>
       <p class="mb-2 text-[17px]">
-        Выкуп товара на <span class="font-semibold">маркетплейсе Wildberries</span>  происходит автоматически, без вашего прямого участия.
+        Выкуп товара на
+        <span class="font-semibold">маркетплейсе Wildberries</span> происходит
+        автоматически, без вашего прямого участия.
       </p>
 
       <p class="mt-1.5 text-[16px] flex items-center gap-1 text-[#4b5563]">
-        Чтобы мы исполнили услугу, выполните простые рекомендации:
+        Чтобы заказать услугу, выполните простые рекомендации:
       </p>
       <ol class="list-decimal ml-6 mb-4 text-[#4b5563]">
-        <li>
-          Нажмите на кнопку “+”
-        </li>
-       <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout1.png" />
-        <li>
-          Введите артикул
-        </li>
-        <li>
-          Нажмите кнопку “Добавить”
-        </li>
+        <li>Нажмите на кнопку “+”</li>
+        <nuxt-img
+          alt="image"
+          class="flex mx-auto w-full px-4"
+          src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout1.png"
+        />
+        <li>Введите артикул</li>
+        <li>Нажмите кнопку “Добавить”</li>
         <li>
           Заполните данные по заявке
           <ul class="list-disc ml-6 text-[#4b5563]">
             <li>Размер</li>
-            <li>
-              Пол
-            </li>
-            <li>Поведенческие факторы
-            </li>
-            <li>
-              Планируемое время заказа
-            </li>
-            <li>
-              Адрес ПВЗ
-            </li>
-            <li>
-              Поисковый запрос
-            </li>
+            <li>Пол</li>
+            <li>Поведенческие факторы</li>
+            <li>Планируемое время заказа</li>
+            <li>Адрес ПВЗ</li>
+            <li>Поисковый запрос</li>
           </ul>
         </li>
-        <li>
-          Проверьте заполненные данные
-        </li>
-        <li>
-          Нажмите кнопку Создать
-        </li>
-        <li>
-          После проверки AI нажмите Создать
-        </li>
-        <li>
-          Отслеживайте исполнение заказа в разрезе Статусов
-        </li>
+        <li>Проверьте заполненные данные</li>
+        <li>Нажмите кнопку Создать</li>
+        <li>После проверки AI нажмите Создать</li>
+        <li>Отслеживайте исполнение заказа в разрезе Статусов</li>
       </ol>
-      <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2.png" />
+      <nuxt-img
+        alt="image"
+        class="flex mx-auto w-full px-4"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2.png"
+      />
 
-      <p class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]">
+      <p
+        class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]"
+      >
         Примечания:
       </p>
       <ol class="list-decimal ml-6 mb-4 text-[#4b5563] flex flex-col gap-1">
         <li>
-          Создание заказов неограниченно. При этом, в моменте создания, количество заявок на заказ ограничено 10 ед., через проверки на корректность введенных вами данных. Просто продолжайте создавать заявки по 10 ед.
+          Создание заказов неограниченно. В моменте создания, количество заявок
+          на заказ ограничено 10 ед., через проверки на корректность введенных
+          данных. Просто продолжайте создавать заявки по 10 ед.
         </li>
         <li>
-          В целях безопасного совершения покупок, каждая заявка проверяется перед созданием по более 25 критериям. Некорректные заявки не пройдут центр безопасности.
+          В целях безопасного совершения покупок, каждая заявка проверяется
+          перед созданием по более 25 критериям. Некорректные заявки не пройдут
+          центр безопасности.
         </li>
         <li>
-          Создавайте шаблоны заявок для быстрого наполнения и отправки на исполнение.
+          Создавайте шаблоны заявок для быстрого наполнения и отправки на
+          исполнение.
         </li>
         <li>
-          Планируйте заявки на выкуп не с 09.00 до 20.00, а в диапазоне 60-90 минут, чтобы наш планировщик исполнял в точное время, а не когда есть свободное окно, т.к. могут пройти ваши заказы одновременно. Пример: 1-я заявка с 09.00 до 10.00; 2-я заявка с 12.00 до 14.00.
+          Планируйте заявки на выкуп не с 09.00 до 20.00, а в диапазоне 60-90
+          минут, чтобы наш планировщик исполнял в точное время, а не когда есть
+          свободное окно, т.к. могут пройти ваши заказы одновременно. Пример:
+          1-я заявка с 09.00 до 10.00; 2-я заявка с 12.00 до 14.00.
         </li>
         <li>
-          Время создания заявки и исполнения фиксируется по часовому поясу заказчика.
+          Время создания заявки и исполнения фиксируется по часовому поясу
+          заказчика.
         </li>
         <li>
-          Покупка товара осуществляются только по СПП, но расчет БЕЗ СПП в связи с волатильностью цен.
+          Покупка товара осуществляются только по СПП, но расчет БЕЗ СПП в связи
+          с волатильностью цен.
         </li>
       </ol>
       <p class="text-[#4b5563] font-semibold">Статусы Выкупов:</p>
       <ul class="flex flex-col text-[#4b5563] gap-1">
-        <li> <span class="font-semibold">Активен</span> - покупка товара находится в поиске свободного слота/окна для перехода к действиям
+        <li>
+          <span class="font-semibold">Активен</span> - покупка товара находится
+          в поиске свободного слота/окна для перехода к действиям
         </li>
-        <li> <span class="font-semibold">В работе</span> - покупка товара перешла в стадию осуществления заказа
+        <li>
+          <span class="font-semibold">В работе</span> - покупка товара перешла в
+          стадию осуществления заказа
         </li>
-        <li> <span class="font-semibold">Завершен</span> - покупка товара была осуществлена с дальнейшим переходом в меню Доставка (доставка на ПВЗ) и Финансы (точная дата и время покупки, а так же финансовые операции)
+        <li>
+          <span class="font-semibold">Завершен</span> - покупка товара была
+          осуществлена с дальнейшим переходом в меню Доставка (доставка на ПВЗ)
+          и Финансы (точная дата и время покупки, а так же финансовые операции)
         </li>
-        <li> <span class="font-semibold">В архиве</span> - покупка товара не может осуществиться по ошибке. Проверьте причину нажав на 3 точки - О выкупе
+        <li>
+          <span class="font-semibold">В архиве</span> -покупка товара не может
+          осуществиться по ошибке. Проверьте причину нажав на 3 точки - О выкупе
         </li>
-        <li> <span class="font-semibold">На паузе</span> - покупка товара не может осуществиться по причине недостатка на балансе финансовых средств
+        <li>
+          <span class="font-semibold">На паузе</span> - покупка товара не может
+          осуществиться по причине недостатка на балансе финансовых средств
         </li>
       </ul>
     </ManualModal>

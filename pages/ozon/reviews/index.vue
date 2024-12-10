@@ -552,8 +552,8 @@ async function copyToClipboard(text: string) {
           Нажмите кнопку Опубликовать
         </li>
       </ol>
-     <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews2.png" />
-      <p class="text-[#4b5563] font-semibold">Статусы Отзывов: </p>
+     <nuxt-img alt="image" class="flex mx-auto w-[350px] px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews2.png" />
+      <p class="text-[#4b5563] font-semibold mt-2">Статусы Отзывов: </p>
       <ul class="flex flex-col text-[#4b5563] gap-1">
         <li> <span class="font-semibold">Опубликован</span> -  прошел модерацию маркетплейса и опубликован в списке Отзывов. Списание за оказанную услугу найдете в меню Финансы
         </li>
