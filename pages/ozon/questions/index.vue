@@ -265,8 +265,7 @@ async function copyToClipboard(text: string) {
             class="btn btn-primary dark:bg-primary border-none font-normal btn-sm"
             @click="modalShow = true"
           >
-            <Icon name="fluent:add-24-filled" size="17" />
-            <span class="hidden lg:flex">Вопрос</span>
+            <Icon name="fluent:add-24-filled" size="25" />
           </button>
         </div>
         <div class="w-full flex gap-2 lg:gap-2 ">

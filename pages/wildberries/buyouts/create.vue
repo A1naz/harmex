@@ -169,14 +169,14 @@ async function openChecksModal() {
         productCountsByAddress[`${item.adress}:${item.article} `] =
           (productCountsByAddress[`${item.adress}:${item.article} `] || 0) +
           item.quantity;
-        if (
-          Math.ceil(productCountsByAddress[`${item.adress}:${item.article} `]) /
-            daysBetween >
-          3
-        ) {
-          closeWarningModal.value?.click();
-          return;
-        }
+        // if (
+        //   Math.ceil(productCountsByAddress[`${item.adress}:${item.article} `]) /
+        //     daysBetween >
+        //   3
+        // ) {
+        //   closeWarningModal.value?.click();
+        //   return;
+        // }
       }
     }
   }
@@ -460,38 +460,18 @@ function refreshElements() {
           <div class="flex gap-2.5">
             <button
               class="btn btn-primary text-white hover:text-base-100 btn-sm normal-case border-none font-normal"
+              :disabled="!article || article == ''"
               @click="addProduct"
             >
               Добавить
             </button>
             <label
               for="template-select-modal"
-              class="btn btn-sm btn-primary normal-case border-none text-white mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-[#6675ff] dark:hover:bg-primary hover:text-base-100"
+              class="btn btn-sm btn-primary normal-case border-none bg-base-200 text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-primary hover:text-base-100"
               @click="getTemplates"
               >Шаблоны</label
             >
-
-            <label
-              v-if="store.createProducts.length > 0"
-              class="btn btn-sm text-red-400 bg-base-200 normal-case flex md:hidden"
-              for="removeAllModelCreateProducts"
-              >Удалить все</label
-            >
           </div>
-        </div>
-        <div class="flex self-end">
-          <label
-            v-if="store.createProducts.length > 0"
-            class="btn btn-sm text-red-400 bg-base-200 normal-case self-end hidden md:flex"
-            for="removeAllModelCreateProducts"
-            >Удалить все</label
-          >
-          <!-- <label
-        v-if="store.createProducts.length > 0"
-        class="btn btn-sm btn-error bg-red-400 normal-case mt-6 mr-2 hidden md:flex"
-        for="removeAllModelCreateProducts"
-        >Удалить все</label
-        > -->
         </div>
       </div>
       <div class="flex gap-2 mt-4">
@@ -640,7 +620,7 @@ function refreshElements() {
           >Удалить все</label
         > -->
           <label
-            class="btn btn-sm btn-primary normal-case border-none text-white mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal"
+            class="btn btn-sm btn-primary normal-case border-none bg-base-200 text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal"
             for="template-modal"
           >
             Шаблон

@@ -351,37 +351,19 @@ function startTimer() {
           <div class="flex gap-2.5">
             <button
               class="btn btn-primary btn-sm normal-case border-none text-white font-normal"
+              :disabled="!article || article == ''"
               @click="addProduct"
             >
               Добавить
             </button>
             <label
               for="template-select-modal"
-              class="btn btn-sm btn-primary normal-case text-white mr-0 md:mr-1 mb-2 md:mb-0 font-normal"
+              class="btn btn-sm btn-primary normal-case bg-base-200 border-none text-base-content hover:text-white mr-0 md:mr-1 mb-2 md:mb-0 font-normal"
               @click="getTemplates"
               >Шаблоны</label
             >
-            <label
-              v-if="store.createProducts.length > 0"
-              class="btn btn-sm text-red-400 bg-base-200 normal-case flex md:hidden"
-              for="removeAllModelCreateProducts"
-              >Удалить все</label
-            >
+
           </div>
-        </div>
-        <div class="flex self-end">
-          <label
-            v-if="store.createProducts.length > 0"
-            class="btn btn-sm text-red-400 bg-base-200 normal-case self-end hidden md:flex"
-            for="removeAllModelCreateProducts"
-            >Удалить все</label
-          >
-          <!-- <label
-        v-if="store.createProducts.length > 0"
-        class="btn btn-sm btn-error bg-red-400 normal-case mt-6 mr-2 hidden md:flex"
-        for="removeAllModelCreateProducts"
-        >Удалить все</label
-        > -->
         </div>
       </div>
       <div class="flex gap-2 mt-4">
@@ -525,7 +507,7 @@ function startTimer() {
       >
         <div class="m-5">
           <label
-            class="btn btn-sm btn-primary normal-case border-none mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal text-white"
+            class="btn btn-sm btn-primary normal-case bg-base-200 text-base-content border-none mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal "
             for="template-modal"
           >
             Шаблон
