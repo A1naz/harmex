@@ -274,6 +274,35 @@ async function getOrgInfo() {
 }
 getOrgInfo()
 
+const isChecked = ref(false);
+const manualModal = ref(false);
+
+function toggleCheckbox() {
+  const platform = "wildberries";
+  const type = "reviews";
+  const storedValue = localStorage.getItem("modalState");
+  const modalState = storedValue ? JSON.parse(storedValue) : {};
+
+  if (!modalState[platform]) {
+    modalState[platform] = {};
+  }
+  modalState[platform][type] = !modalState[platform][type];
+
+  localStorage.setItem("modalState", JSON.stringify(modalState));
+
+  isChecked.value = modalState[platform][type];
+}
+
+onMounted(() => {
+  const storedValue = localStorage.getItem("modalState");
+  const modalState = storedValue ? JSON.parse(storedValue) : {};
+
+  const platform = "wildberries";
+  const type = "reviews";
+  isChecked.value = modalState[platform]?.[type] || false;
+  manualModal.value = !isChecked.value
+});
+
 async function copyToClipboard(text: string) {
   await navigator.clipboard.writeText(text)
   notify({
@@ -336,6 +365,12 @@ async function copyToClipboard(text: string) {
                 @change-value="changeTab"
               />
               </span>
+              <button
+                @click="manualModal = true"
+                class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
+              >
+                <Icon name="line-md:question" size="15" />
+              </button>
             </div>
             <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
               <CustomSelect
@@ -476,6 +511,60 @@ async function copyToClipboard(text: string) {
         </div>
       </div>
     </div>
+    <ManualModal
+      :show="manualModal"
+      @close="manualModal = false"
+      :is-checked="isChecked"
+      @checkbox-toggle="toggleCheckbox" 
+    >
+      <h3 class="text-xl font-bold mb-2 flex items-center gap-1">
+        Как опубликовать отзыв?
+      </h3>
+      <p class="mb-2 text-[17px]">
+        Для публикации отзывов на выполненные заказы, используйте меню Отзывы.
+      </p>
+
+      <p class="mb-2 text-[17px]">
+        В данном меню вы можете запланировать публикацию отзывов на недели и месяцы вперед для поддержания рейтинга и перекрытия негативных отзывов.
+      </p>
+
+     <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews1.png" />
+
+      <p class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]">
+        Чтобы опубликовать отзыв, выполните простые рекомендации:
+      </p>
+      <ol class="list-decimal ml-6 mb-4 text-[#4b5563] flex flex-col gap-1">
+        <li>
+          Перейдите в меню Отзывы
+        </li>
+        <li>
+          Выберите доступный отзыв
+        </li>
+        <li>
+          Выберите нужный заказ
+        </li>
+        <li>
+          Заполните поля данными
+        </li>
+        <li>
+          Запланируйте дату и время публикации
+        </li>
+        <li>
+          Нажмите кнопку Опубликовать
+        </li>
+      </ol>
+     <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews2.png" />
+      <p class="text-[#4b5563] font-semibold">Статусы Отзывов: </p>
+      <ul class="flex flex-col text-[#4b5563] gap-1">
+        <li> <span class="font-semibold">Опубликован</span> -  прошел модерацию маркетплейса и опубликован в списке Отзывов. Списание за оказанную услугу найдете в меню Финансы
+        </li>
+        <li> <span class="font-semibold">Отменен </span> - не прошел модерацию маркетплейса и убран из списка в Ожидании. Услуга не оплачиваемая 
+        </li>
+        <li> <span class="font-semibold">В работе</span> - проходит модерацию маркетплейса и ожидает решения по публикации
+        </li>
+        <li> <span class="font-semibold">Активен</span> - взят в работу и ищет свое окно для прохождения процедуры публикации отзыва        </li>
+      </ul>
+    </ManualModal>
     <LogModal
       :info="selectedReview"
       :state="logModal"

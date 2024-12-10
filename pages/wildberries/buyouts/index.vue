@@ -416,6 +416,35 @@ async function getOrgInfo() {
 }
 getOrgInfo()
 
+const isChecked = ref(false);
+const manualModal = ref(false);
+
+function toggleCheckbox() {
+  const platform = "wildberries";
+  const type = "buyout";
+  const storedValue = localStorage.getItem("modalState");
+  const modalState = storedValue ? JSON.parse(storedValue) : {};
+
+  if (!modalState[platform]) {
+    modalState[platform] = {};
+  }
+  modalState[platform][type] = !modalState[platform][type];
+
+  localStorage.setItem("modalState", JSON.stringify(modalState));
+
+  isChecked.value = modalState[platform][type];
+}
+
+onMounted(() => {
+  const storedValue = localStorage.getItem("modalState");
+  const modalState = storedValue ? JSON.parse(storedValue) : {};
+
+  const platform = "wildberries";
+  const type = "buyout";
+  isChecked.value = modalState[platform]?.[type] || false;
+  manualModal.value = !isChecked.value
+});
+
 async function copyToClipboard(text: string) {
   await navigator.clipboard.writeText(text)
   notify({
@@ -463,8 +492,7 @@ async function copyToClipboard(text: string) {
             to="/wildberries/buyouts/create"
             class="btn btn-primary dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
           >
-            <Icon name="fluent:add-24-filled" size="12" />
-            <span class="hidden lg:inline">Выкупы</span>
+            <Icon name="fluent:add-24-filled" size="25" />
           </NuxtLink>
         </div>
         <div class="w-full flex gap-1 lg:gap-2 ">
@@ -480,6 +508,12 @@ async function copyToClipboard(text: string) {
               :status-text="statusText"
               :links="customLinks"
             /> </span>
+            <button
+              @click="manualModal = true"
+              class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
+            >
+              <Icon name="line-md:question" size="15" />
+            </button>
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
             <CustomSelect
@@ -504,7 +538,7 @@ async function copyToClipboard(text: string) {
               @change-value="updateSearchType"
             /> -->
           </div>
-          <div class="absolute right-0 top-0 w-[calc(100%-40px)] lg:w-fit lg:static">
+          <div class="absolute right-0 top-0 w-[calc(100%-55px)] lg:w-fit lg:static">
             <label class="w-full flex bg-[#ececed] rounded-lg items-center">
               <input
                 ref="codeInput"
@@ -612,6 +646,105 @@ async function copyToClipboard(text: string) {
       @remove="removeBuyout"
       @close="removeModal = false"
     />
+    <ManualModal
+      :show="manualModal"
+      @close="manualModal = false"
+      :is-checked="isChecked"
+      @checkbox-toggle="toggleCheckbox" 
+    >
+      <h3 class="text-xl font-bold mb-2 flex items-center gap-1">
+        Как создать заказ на выкуп товара?
+      </h3>
+      <p class="mb-2 text-[17px]">
+        Выкуп товара на <span class="font-semibold">маркетплейсе Wildberries</span>  происходит автоматически, без вашего прямого участия.
+      </p>
+
+      <p class="mt-1.5 text-[16px] flex items-center gap-1 text-[#4b5563]">
+        Чтобы мы исполнили услугу, выполните простые рекомендации:
+      </p>
+      <ol class="list-decimal ml-6 mb-4 text-[#4b5563]">
+        <li>
+          Нажмите на кнопку “+”
+        </li>
+       <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout1.png" />
+        <li>
+          Введите артикул
+        </li>
+        <li>
+          Нажмите кнопку “Добавить”
+        </li>
+        <li>
+          Заполните данные по заявке
+          <ul class="list-disc ml-6 text-[#4b5563]">
+            <li>Размер</li>
+            <li>
+              Пол
+            </li>
+            <li>Поведенческие факторы
+            </li>
+            <li>
+              Планируемое время заказа
+            </li>
+            <li>
+              Адрес ПВЗ
+            </li>
+            <li>
+              Поисковый запрос
+            </li>
+          </ul>
+        </li>
+        <li>
+          Проверьте заполненные данные
+        </li>
+        <li>
+          Нажмите кнопку Создать
+        </li>
+        <li>
+          После проверки AI нажмите Создать
+        </li>
+        <li>
+          Отслеживайте исполнение заказа в разрезе Статусов
+        </li>
+      </ol>
+      <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2.png" />
+
+      <p class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]">
+        Примечания:
+      </p>
+      <ol class="list-decimal ml-6 mb-4 text-[#4b5563] flex flex-col gap-1">
+        <li>
+          Создание заказов неограниченно. При этом, в моменте создания, количество заявок на заказ ограничено 10 ед., через проверки на корректность введенных вами данных. Просто продолжайте создавать заявки по 10 ед.
+        </li>
+        <li>
+          В целях безопасного совершения покупок, каждая заявка проверяется перед созданием по более 25 критериям. Некорректные заявки не пройдут центр безопасности.
+        </li>
+        <li>
+          Создавайте шаблоны заявок для быстрого наполнения и отправки на исполнение.
+        </li>
+        <li>
+          Планируйте заявки на выкуп не с 09.00 до 20.00, а в диапазоне 60-90 минут, чтобы наш планировщик исполнял в точное время, а не когда есть свободное окно, т.к. могут пройти ваши заказы одновременно. Пример: 1-я заявка с 09.00 до 10.00; 2-я заявка с 12.00 до 14.00.
+        </li>
+        <li>
+          Время создания заявки и исполнения фиксируется по часовому поясу заказчика.
+        </li>
+        <li>
+          Покупка товара осуществляются только по СПП, но расчет БЕЗ СПП в связи с волатильностью цен.
+        </li>
+      </ol>
+      <p class="text-[#4b5563] font-semibold">Статусы Выкупов:</p>
+      <ul class="flex flex-col text-[#4b5563] gap-1">
+        <li> <span class="font-semibold">Активен</span> - покупка товара находится в поиске свободного слота/окна для перехода к действиям
+        </li>
+        <li> <span class="font-semibold">В работе</span> - покупка товара перешла в стадию осуществления заказа
+        </li>
+        <li> <span class="font-semibold">Завершен</span> - покупка товара была осуществлена с дальнейшим переходом в меню Доставка (доставка на ПВЗ) и Финансы (точная дата и время покупки, а так же финансовые операции)
+        </li>
+        <li> <span class="font-semibold">В архиве</span> - покупка товара не может осуществиться по ошибке. Проверьте причину нажав на 3 точки - О выкупе
+        </li>
+        <li> <span class="font-semibold">На паузе</span> - покупка товара не может осуществиться по причине недостатка на балансе финансовых средств
+        </li>
+      </ul>
+    </ManualModal>
   </div>
 </template>
 

@@ -328,19 +328,34 @@ const productQuantityModel = computed({
         </div>
       </div>
 
-      <div>
-        <div class="text-md text-gray-500 mb-1">
-          Поисковые запросы:
-        </div>
-        <div class="w-[60%] flex flex-col gap-2">
-          <BuyoutOzonCreateSearchQueries
-            :product-index="props.index"
-            :article="product.article"
-            :queries="product.searchQuery"
-            @update="productSearchQueryUpdate"
-            @add="addSearchQuery"
-            @remove="removeSearchQuery"
-          />
+      <div class="flex">
+        <div>
+          <div class="text-md text-gray-500 mb-1">
+            Поисковые запросы:
+          </div>
+          <div class="w-[60%] flex flex-col gap-2">
+            <BuyoutOzonCreateSearchQueries
+              :product-index="props.index"
+              :article="product.article"
+              :queries="product.searchQuery"
+              @update="productSearchQueryUpdate"
+              @add="addSearchQuery"
+              @remove="removeSearchQuery"
+            />
+          </div>
+          </div>
+        <div>
+          <div class="text-md text-gray-500 mb-1">
+            RealFBS
+          </div>
+          <div class="flex justify-center">
+            <input
+              type="checkbox"
+              :checked="product.FBS"
+              @click="product.FBS ? (product.FBS = false) : (product.FBS = true)"
+              class="checkbox checkbox-primary"
+            />
+          </div>
         </div>
       </div>
 

@@ -321,7 +321,7 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td class="w-[20px] border-r border-base">
-      <div class="flex">
+      <div class="flex justify-center">
         <input
           type="checkbox"
           :checked="product.FBS"

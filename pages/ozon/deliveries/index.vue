@@ -312,6 +312,35 @@ async function getOrgInfo() {
 }
 getOrgInfo()
 
+const isChecked = ref(false);
+const manualModal = ref(false);
+
+function toggleCheckbox() {
+  const platform = "ozon";
+  const type = "deliveries";
+  const storedValue = localStorage.getItem("modalState");
+  const modalState = storedValue ? JSON.parse(storedValue) : {};
+
+  if (!modalState[platform]) {
+    modalState[platform] = {};
+  }
+  modalState[platform][type] = !modalState[platform][type];
+
+  localStorage.setItem("modalState", JSON.stringify(modalState));
+
+  isChecked.value = modalState[platform][type];
+}
+
+onMounted(() => {
+  const storedValue = localStorage.getItem("modalState");
+  const modalState = storedValue ? JSON.parse(storedValue) : {};
+
+  const platform = "ozon";
+  const type = "deliveries";
+  isChecked.value = modalState[platform]?.[type] || false;
+  manualModal.value = !isChecked.value
+});
+
 async function copyToClipboard(text: string) {
   await navigator.clipboard.writeText(text)
   notify({
@@ -421,6 +450,12 @@ async function copyToClipboard(text: string) {
               :status-text="statusText"
               :links="customLinks"
             /> </span>
+            <button
+              @click="manualModal = true"
+              class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
+            >
+              <Icon name="line-md:question" size="15" />
+            </button>
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
             <CustomSelect
@@ -521,6 +556,60 @@ async function copyToClipboard(text: string) {
       :state="statusModal"
       @close="statusModal = false"
     />
+    <ManualModal
+      :show="manualModal"
+      @close="manualModal = false"
+      :is-checked="isChecked"
+      @checkbox-toggle="toggleCheckbox" 
+    >
+      <h3 class="text-xl font-bold mb-2 flex items-center gap-1">
+        Как получить заказ на ПВЗ?
+      </h3>
+      <p class="mb-2 text-[17px]">
+        Осуществление получения товаров на ПВЗ доступно с помощью меню Доставки
+      </p>
+
+      <p class="mb-2 text-[17px]">
+        В данном меню вы в режиме реального времени, сможете отслеживать статусы по все доставкам
+      </p>
+
+      <p class="mb-2 text-[17px]">
+        Чтобы получить Готовые к выдаче товары на ПВЗ, используйте функционал выгрузки файлов с Актуальными Qr-кодами и данными.
+      </p>
+
+      <p class="mb-2 text-[17px]">
+        Доступно 2 варианта выгрузки: <span class="font-semibold">Готовы к выдаче в PDF и Excel-файле </span>
+      </p>
+
+      <p class="mb-2 text-[17px]">
+        Для сверки данных всех доставок в разрезе промежутка времени, используйте Excel-файл под названием “Общая таблица Excel”
+      </p>
+
+     <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/deliveries1.png" />
+      <p class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]">
+        Примечания:
+      </p>
+      <ol class="list-decimal ml-6 mb-4 text-[#4b5563] flex flex-col gap-1">
+        <li>
+          Получайте товары “Готовы к выдаче” в течение 5 дней с дня прибытия на ПВЗ. Необходимо для соблюдения всех параметров поведенческой активности на маркетплейсах и не менее 4х покупок месяц одним нашим аккаунтом.        </li>
+        <li>
+          В случаях задержки товаров в получении на ПВЗ более 5-ти дней, мы вынуждены накладывать санкции в размере 25 р./ед.
+        </li>
+        <li>
+          При Отмененных доставках обратитесь в службу заботы для возврата финансовых средств на ваш Кошелек в меню Финансы.
+        </li>
+      </ol>
+      <p class="text-[#4b5563] font-semibold">Статусы Доставок:      </p>
+      <ul class="flex flex-col text-[#4b5563] gap-1">
+        <li> <span class="font-semibold">В пути</span> - товар находится в пути на ПВЗ
+        </li>
+        <li> <span class="font-semibold">Готов к выдаче / получению </span> - товар находится на ПВЗ и готов к получению
+        </li>
+        <li> <span class="font-semibold">Отменен</span> - покупка была отменена на ПВЗ или магазином или маркетплейсом с возвратом на склад
+        </li>
+        <li> <span class="font-semibold">Получено</span> - товар был получен на ПВЗ и передан курьеру / ответственному лицу  </li>
+      </ul>
+    </ManualModal>
     <div
       ref="target"
       class="flex justify-center items-center"

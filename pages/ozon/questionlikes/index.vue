@@ -289,8 +289,7 @@ async function copyToClipboard(text: string) {
           to="/ozon/questionlikes/create"
           class="btn btn-primary dark:bg-primary border-none font-normal btn-sm"
         >
-          <Icon name="fluent:add-24-filled" size="24" />
-          <span class="hidden lg:flex">Лайки</span>
+          <Icon name="fluent:add-24-filled" size="25" />
         </NuxtLink>
       </div>
       <div class="w-full flex gap-2 lg:gap-2 ">
