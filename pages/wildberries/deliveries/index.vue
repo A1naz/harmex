@@ -579,7 +579,7 @@ async function copyToClipboard(text: string) {
         Для сверки данных всех доставок в разрезе промежутка времени, используйте Excel-файл под названием “Общая таблица Excel”
       </p>
 
-      <nuxt-img alt="image" class="flex mx-auto w-1/2" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/deliveries1.png" />
+     <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/deliveries1.png" />
       <p class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]">
         Примечания:
       </p>

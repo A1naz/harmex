@@ -567,7 +567,7 @@ async function copyToClipboard(text: string) {
         В данном меню вы можете запланировать публикацию отзывов на недели и месяцы вперед для поддержания рейтинга и перекрытия негативных отзывов.
       </p>
 
-      <nuxt-img alt="image" class="flex mx-auto w-1/2" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews1.png" />
+     <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews1.png" />
 
       <p class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]">
         Чтобы опубликовать отзыв, выполните простые рекомендации:
@@ -592,7 +592,7 @@ async function copyToClipboard(text: string) {
           Нажмите кнопку Опубликовать
         </li>
       </ol>
-      <nuxt-img alt="image" class="flex mx-auto w-1/2" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews2.png" />
+     <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews2.png" />
       <p class="text-[#4b5563] font-semibold">Статусы Отзывов: </p>
       <ul class="flex flex-col text-[#4b5563] gap-1">
         <li> <span class="font-semibold">Опубликован</span> -  прошел модерацию маркетплейса и опубликован в списке Отзывов. Списание за оказанную услугу найдете в меню Финансы
