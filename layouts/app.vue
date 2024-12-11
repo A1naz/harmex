@@ -62,6 +62,27 @@ onMounted(() => {
 });
 
 const modalStore = useModalStore();
+const menuItems = ref([
+  "Маркетплейсы",
+  "Интернет-магазины",
+  "Отели",
+  "Доски объявлений",
+  "Медицина",
+  "Карты",
+  "Услуги",
+]);
+
+watch(() => modalStore.selectedCatalog, () => {
+  isOpen.value = false
+})
+
+watch(isOpen, (newValue: boolean) => {
+  if (newValue) {
+    document.body.style.overflow = 'hidden'; // Отключить скролл
+  } else {
+    document.body.style.overflow = ''; // Включить скролл
+  }
+});
 </script>
 
 <template>
@@ -76,7 +97,7 @@ const modalStore = useModalStore();
       <div
         class="drawerShadow flex w-full items-center gap-2 px-8 sm:px-0 h-[65px] bg-white border border-b border-[#ebebeb] justify-center"
       >
-        <div class="lg:px-16 flex w-full relative gap-2">
+        <div class="lg:px-16 sm:flex hidden w-full relative gap-2">
           <NuxtLinkLocale
             to="/catalog?introductionModal=true"
             class="sm:flex hidden cursor-pointer items-center"
@@ -106,19 +127,12 @@ const modalStore = useModalStore();
             </label>
             Каталог
           </NuxtLinkLocale>
-
-          <NuxtLinkLocale
-            to="/catalog?introductionModal=true"
-            class="flex items-center sm:hidden -mr-2 -ml-1.5"
-          >
-            <nuxt-img src="/img/H.svg" width="30px" />
-          </NuxtLinkLocale>
           <MenuSearch
-            :data="searchData"
-            :loading="dataLoading"
-            @search="search"
-          />
-          <div class="sm:flex hidden ml-5">
+              :data="searchData"
+              :loading="dataLoading"
+              @search="search"
+            />
+          <div class="sm:flex hidden mr-12 ml-4">
             <NuxtLinkLocale
               to="/paymenthistory"
               class="btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white hover:bg-white hover:border-base-200 hover:shadow-xl active:bg-base-300 active:text-white flex justify-center items-center text-xs hover:text-primary"
@@ -126,12 +140,11 @@ const modalStore = useModalStore();
               <Icon name="solar:wallet-linear" size="24" />
               {{ user?.balance ? currency.format(user.balance) : "" }}
 
-              <div class="btn -mt-1 btn-sm btn-circle btn-outline border-[#e6eaec] btn-primary" @click="modalStore.payment = true">
-                <Icon
-                  name="ic:round-plus"
-                  size="24"
-                  
-                />
+              <div
+                class="btn -mt-1 btn-sm btn-circle btn-outline border-[#e6eaec] btn-primary"
+                @click="modalStore.payment = true"
+              >
+                <Icon name="ic:round-plus" size="24" />
               </div>
             </NuxtLinkLocale>
             <button
@@ -172,20 +185,52 @@ const modalStore = useModalStore();
               <Icon name="gg:profile" size="24" />
             </NuxtLinkLocale>
           </div>
-          <NuxtLinkLocale to="/catalog" class="sm:hidden block ml-2">
-            <button class="btn btn-circle btn-outline border-[#e5e9eb]">
-              <Icon name="ic:round-menu" />
-            </button>
-          </NuxtLinkLocale>
+        </div>
+        <div class="sm:hidden h-[100%] pt-2" style="overflow-y: none">
+          <div class="lg:px-16 flex w-full gap-2 ">
+            <NuxtLinkLocale
+              to="/catalog?introductionModal=true"
+              class="flex items-center sm:hidden -mr-2 -ml-1.5"
+            >
+              <nuxt-img src="/img/H.svg" width="30px" />
+            </NuxtLinkLocale>
+            <MenuSearch
+              :data="searchData"
+              :loading="dataLoading"
+              @search="search"
+            />
+            <NuxtLinkLocale      @click="isOpen = !isOpen" to="/catalog" class="sm:hidden block ml-2 -mt-1 -mr-2">
+              <button v-if="!isOpen" class="btn btn-circle btn-outline border-[#e5e9eb]">
+                <Icon name="ic:round-menu" size="24" />
+              </button>
+              <button v-else class="btn btn-circle btn-outline border-[#e5e9eb]">
+                <Icon name="ic:round-close" size="24" />
+              </button>
+            </NuxtLinkLocale>
+          </div>
+          <div
+          v-if="isOpen"
+            class="top-[60px] w-full absolute -ml-6"
+            style="z-index: 99"
+          >
+          <div class="bg-white -pt-5">
+            
+            <MenuCatalog
+            v-model:selected-type="modalStore.selectedCatalog"
+            :items="menuItems"
+            />
+          </div>
+            <div class="h-[9999px] bg-opacity-10 backdrop-blur-[3px]" style="z-index: 99" @click="isOpen = false"></div> 
+          </div>
         </div>
       </div>
-      <div
+      <!-- <div
         v-if="isOpen"
-        class="w-full top-[85px] h-[100%] bg-white"
+        class="w-full top-[85px] h-[100%]"
         style="z-index: 99"
       >
         <div class="hero text-3xl mt-10">Тут будут элементы меню</div>
-      </div>
+      </div> -->
 
       <div class="">
         <slot />
@@ -246,4 +291,5 @@ const modalStore = useModalStore();
 .drawerShadow {
   box-shadow: 0px 2px 10px rgb(186, 189, 220);
 }
+
 </style>

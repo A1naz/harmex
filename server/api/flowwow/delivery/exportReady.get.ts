@@ -24,7 +24,8 @@ async function getReady(user: Document, dateRange: any) {
       : 'Неизвестно'
     return (
       currentstatus === 'Готов к выдаче' ||
-      currentstatus === 'Готов к получению'
+      currentstatus === 'Готов к получению' ||
+      currentstatus === 'Доставлен'
     )
   })
   const buyoutsId = filtered.map((item) => item.idbuyout)

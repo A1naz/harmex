@@ -47,7 +47,7 @@ export default eventHandler(async (event) => {
   )
   const filtered = format.filter((item) => {
     if (item)
-      return item!.currentstatus === 'Готов к выдаче' || item!.currentstatus === 'Готов к получению'
+      return item!.currentstatus === 'Готов к выдаче' || item!.currentstatus === 'Готов к получению' || item!.currentstatus === 'Доставлен'
     else
       return false
   })

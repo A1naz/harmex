@@ -1,4 +1,8 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+onMounted(() => {
+  document.body.style.overflow = "hidden";
+});
+</script>
 
 <template>
   <div>
@@ -17,12 +21,8 @@
   </div>
 </template>
 
-<style lang="css">
+<style lang="scss">
 /* @import "@/assets/style/datepicker.css"; */
-
-/* .scroll-primary {
-  @apply scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin;
-} */
 
 .myCustomBtnNavbar {
   @apply btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white 
@@ -53,7 +53,6 @@
 
 html {
   height: 100%;
-
 }
 body {
   font-family: "Inter", sans-serif;
