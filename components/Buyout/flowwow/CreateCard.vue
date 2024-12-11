@@ -339,7 +339,7 @@ function setDeliveryDate(date: string, time: string) {
           <option value="courier">
             Курьер
           </option>
-          <option value="self" disabled>
+          <option value="self">
             Самовывоз
           </option>
         </select>
