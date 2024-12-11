@@ -6,6 +6,7 @@ defineProps({
 const emit = defineEmits(["close"]);
 const { notify } = useNotification();
 const { user } = useUserSession();
+const bankDetails: any = ref({});
 
 function closeModal() {
   summ.value = 500;
@@ -46,6 +47,7 @@ async function balanceUpdate() {
     qrImage.value = data.value.qrCode;
     paymentUuid.value = data.value.uuid;
     loading.value = false;
+    bankDetails.value = data.value.bankDetails;
     notify({
       type: "success",
       title: "Успешно",
@@ -63,7 +65,7 @@ const isEmail = computed(() => {
 });
 
 onMounted(() => {
-  email.value = user.value?.email;
+  email.value = user.value?.email ? user.value?.email : "";
 });
 const showTooltip = ref(false);
 </script>
@@ -163,16 +165,16 @@ const showTooltip = ref(false);
               <div class="flex flex-col">
 
                 <span class="text-sm">Получатель платежа:</span>
-                <span class="font-semibold">ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ</span>
+                <span class="font-semibold">{{bankDetails.IP}}</span>
               </div>
               
               <div v-if="showTooltip" class="absolute left-1/2 -translate-x-1/2 mt-2 w-max rounded bg-gray-800 text-white text-sm p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 whitespace-pre-wrap">
               Наименование банка ПРИВОЛЖСКИЙ Ф-Л ПАО "ПРОМСВЯЗЬБАНК"
-                  <br> БИК 042202803</br>
-                  <br> Корреспондентский счёт 30101810700000000803</br>
-                  <br> Счёт получателя 40802810903000164001</br>
-                  <br> Наименование получателя ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ</br>
-                  <br> ИНН 644651000810</br>
+                  <br> БИК {{ bankDetails.BIC }}</br>
+                  <br> Корреспондентский счёт {{ bankDetails.CS }}</br>
+                  <br> Счёт получателя {{ bankDetails.RS }}</br>
+                  <br> Наименование получателя {{ bankDetails.IP }}</br>
+                  <br> ИНН {{ bankDetails.INN }}</br>
                 </div>
                 </div>
             </div>
