@@ -248,7 +248,7 @@ watch(isOpen, (newValue: boolean) => {
         <div class="hero text-3xl mt-10">Тут будут элементы меню</div>
       </div> -->
 
-      <div class="">
+      <div>
         <slot />
         <FavouritesUserFavourites v-model:show="favouritesModal" />
         <div
@@ -266,12 +266,12 @@ watch(isOpen, (newValue: boolean) => {
               <Icon name="solar:wallet-linear" size="24" />
               {{ user?.balance ? user.balance + " рублей" : "" }}
 
-              <div
+              <button
                 class="btn -mt-1 btn-sm btn-circle btn-outline border-[#e6eaec] btn-primary"
                 @click="modalStore.payment = true"
               >
                 <Icon name="ic:round-plus" size="24" />
-              </div>
+              </button>
             </NuxtLinkLocale>
 
             <button
@@ -280,8 +280,8 @@ watch(isOpen, (newValue: boolean) => {
             >
               <Icon name="tabler:heart" size="24" />
             </button>
+
             <div
-              <div
               class="btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white hover:bg-white hover:text-black hover:border-base-200 hover:shadow-xl ml-btn ml-2"
               :class="{ 'text-primary': notificationsModal }"
               @click="openNotificationsModal"
