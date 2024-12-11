@@ -169,7 +169,7 @@ const showTooltip = ref(false);
               </div>
               
               <div v-if="showTooltip" class="absolute left-1/2 -translate-x-1/2 mt-2 w-max rounded bg-gray-800 text-white text-sm p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 whitespace-pre-wrap">
-              Наименование банка ПРИВОЛЖСКИЙ Ф-Л ПАО "ПРОМСВЯЗЬБАНК"
+                  <br> БИК {{ bankDetails.NameBank }}</br>
                   <br> БИК {{ bankDetails.BIC }}</br>
                   <br> Корреспондентский счёт {{ bankDetails.CS }}</br>
                   <br> Счёт получателя {{ bankDetails.RS }}</br>

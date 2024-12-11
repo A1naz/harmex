@@ -60,6 +60,8 @@ onMounted(() => {
     modalOpen.value = true;
   }
 });
+
+const modalStore = useModalStore();
 </script>
 
 <template>
@@ -123,6 +125,14 @@ onMounted(() => {
             >
               <Icon name="solar:wallet-linear" size="24" />
               {{ user?.balance ? currency.format(user.balance) : "" }}
+
+              <div class="btn -mt-1 btn-sm btn-circle btn-outline border-[#e6eaec] btn-primary" @click="modalStore.payment = true">
+                <Icon
+                  name="ic:round-plus"
+                  size="24"
+                  
+                />
+              </div>
             </NuxtLinkLocale>
             <button
               @click="favouritesModal = true"

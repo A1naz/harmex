@@ -37,7 +37,7 @@ const cards = [
 ]
 
 const modalShow = ref(false)
-const balanceModalShow = ref(false)
+const modalStore = useModalStore()
 const transferModalShow = ref(false)
 const qrCode = ref('')
 const qrLoading = ref(false)
@@ -150,7 +150,7 @@ async function copyImageToClipboard(base64Image: any) {
 
       <button
         class="btn btn-sm h-[2.5rem] btn-outline w-[49%] border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[40px] rounded-xl relative group"
-        @click="balanceModalShow = true"
+        @click="modalStore.payment = true"
       >
         <div class="flex items-center justify-center">
           <Icon
@@ -261,8 +261,8 @@ async function copyImageToClipboard(base64Image: any) {
   </div>
   <FinanceWithdrawModal :show="modalShow" @close="modalShow = false" />
   <FinanceUpdateBalance
-    :show="balanceModalShow"
-    @close="balanceModalShow = false"
+    :show="modalStore.payment"
+    @close="modalStore.payment = false"
   />
   <FinanceTransferModal
     :show="transferModalShow"

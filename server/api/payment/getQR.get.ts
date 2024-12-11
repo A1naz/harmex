@@ -24,40 +24,40 @@ export default eventHandler(async (event) => {
     })
   }
 
-const dates = new Date().toISOString().slice(0, 10).split('-')
-const purposeDate = `${dates[2]}.${dates[1]}.${dates[0]}`
-const paymentUuid = uuid()
-const purpose = `Пополнение баланса личного кабинета - "${user.username}", по договору "${user.uuid}" от ${purposeDate}г.`
-const data = `ST00012|Name=${bank.bankDetails.IP}|PersonalAcc=${bank.bankDetails.RS}|BankName=${bank.bankDetails.NameBank}|BIC=${bank.bankDetails.BIC}|CorrespAcc=${bank.bankDetails.CS}|Purpose=${purpose}|Sum=${summ * 100}|PayeeINN=${bank.bankDetails.INN}`
+  const dates = new Date().toISOString().slice(0, 10).split('-')
+  const purposeDate = `${dates[2]}.${dates[1]}.${dates[0]}`
+  const paymentUuid = uuid()
+  const purpose = `Пополнение баланса личного кабинета - "${user.username}", по договору "${user.uuid}" от ${purposeDate}г.`
+  const data = `ST00012|Name=${bank.bankDetails.IP}|PersonalAcc=${bank.bankDetails.RS}|BankName=${bank.bankDetails.NameBank}|BIC=${bank.bankDetails.BIC}|CorrespAcc=${bank.bankDetails.CS}|Purpose=${purpose}|Sum=${summ * 100}|PayeeINN=${bank.bankDetails.INN}`
 
-const qrCode = await new Promise((resolve, reject) => {
-  qrcode.toDataURL(data, (err: any, data: any) => {
-    if (err) {
-      reject(err)
-    } else {
-      resolve(data)
-    }
+  const qrCode = await new Promise((resolve, reject) => {
+    qrcode.toDataURL(data, (err: any, data: any) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(data)
+      }
+    })
   })
-})
 
-// await PaymentIntend.create({
-//   user: user._id,
-//   summ: Number(summ),
-//   email: email,
-//   paymentUuid,
-//   type: 'balance',
-//   dataoperation: new Date(),
-//   comment: purpose,
-//   faceType,
-// })
+  // await PaymentIntend.create({
+  //   user: user._id,
+  //   summ: Number(summ),
+  //   email: email,
+  //   paymentUuid,
+  //   type: 'balance',
+  //   dataoperation: new Date(),
+  //   comment: purpose,
+  //   faceType,
+  // })
 
-userFromDB.paymentEmail = email
-await userFromDB.save()
+  userFromDB.paymentEmail = email
+  await userFromDB.save()
 
-return {
-  bankDetails: bank.bankDetails,
-  qrCode,
-  uuid: paymentUuid,
-  purpose,
-}
+  return {
+    bankDetails: bank.bankDetails,
+    qrCode,
+    uuid: paymentUuid,
+    purpose,
+  }
 })
