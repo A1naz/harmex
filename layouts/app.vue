@@ -251,7 +251,58 @@ watch(isOpen, (newValue: boolean) => {
       <div class="">
         <slot />
         <FavouritesUserFavourites v-model:show="favouritesModal" />
-   
+        <div
+          class="sm:hidden fixed bottom-0 left-0 right-0 w-full bg-white"
+          style="z-index: 100"
+          @click="isOpen = false"
+        >
+          <ul
+            class="menu menu-horizontal w-full flex flex-nowrap justify-between"
+          >
+            <NuxtLinkLocale
+              to="/paymenthistory"
+              class="btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white hover:bg-white hover:border-base-200 hover:shadow-xl active:bg-base-300 active:text-white flex justify-center items-center text-xs hover:text-primary ml-2"
+            >
+              <Icon name="solar:wallet-linear" size="24" />
+              {{ user?.balance ? user.balance + " рублей" : "" }}
+
+              <div
+                class="btn -mt-1 btn-sm btn-circle btn-outline border-[#e6eaec] btn-primary"
+                @click="modalStore.payment = true"
+              >
+                <Icon name="ic:round-plus" size="24" />
+              </div>
+            </NuxtLinkLocale>
+
+            <button
+              @click="favouritesModal = true"
+              class="myCustomBtnNavbar ml-2 text-base-300"
+            >
+              <Icon name="tabler:heart" size="24" />
+            </button>
+            <div
+              <div
+              class="btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white hover:bg-white hover:text-black hover:border-base-200 hover:shadow-xl ml-btn ml-2"
+              :class="{ 'text-primary': notificationsModal }"
+              @click="openNotificationsModal"
+            >
+              <Icon name="pajamas:notifications" size="24" />
+              <span
+                class="badge badge-sm indicator -mt-[8px] -mr-4 text-primary font-medium"
+                v-if="store.notificationsLength"
+              >
+                {{ store.notificationsLength }}
+              </span>
+            </div>
+
+            <NuxtLinkLocale
+              :to="loggedIn ? '/profile' : '/auth'"
+              class="myCustomBtnNavbar ml-2 text-base-300 mr-2"
+            >
+              <Icon name="gg:profile" size="24" />
+            </NuxtLinkLocale>
+          </ul>
+        </div>
       </div>
       <!-- Page content here -->
     </div>
