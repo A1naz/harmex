@@ -92,9 +92,9 @@ async function login() {
       loading.value = false
     })
   if (response === 'success') {
+    location.reload()
     await fetch()
     loading.value = false
-
     if (session.value.user?.isTwoFaEnabled && session.value?.twoFaNeeded) {
       return navigateTo('/2fa')
     }

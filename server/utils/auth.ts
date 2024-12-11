@@ -9,11 +9,16 @@ async function login(event: H3Event<Request>, user: IUser) {
   await replaceUserSession(event, {
     user: {
       uuid: user.uuid,
+      phoneNumber: user.phoneNumber,
       email: user.email ? user.email : '',
       emailConfirmed: user.emailConfirmed,
       isTwoFaEnabled: user.isTwoFaEnabled,
-      phoneNumber: user.phoneNumber || '',
       acesses: user.acesses,
+      username: user.username,
+      balance: user.balance,
+      fizFace: user.fizFace,
+      orgInn: user.orgInn,
+      orgName: user.orgName,
       ffEnabled: user.ffEnabled
     },
     twoFaNeeded: user.isTwoFaEnabled,
