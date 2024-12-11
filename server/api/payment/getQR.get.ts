@@ -55,6 +55,7 @@ userFromDB.paymentEmail = email
 await userFromDB.save()
 
 return {
+  bankDetails: bank.bankDetails,
   qrCode,
   uuid: paymentUuid,
   purpose,
