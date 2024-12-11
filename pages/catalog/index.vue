@@ -13,7 +13,7 @@ const menuItems = ref([
   "Карты",
   "Услуги",
 ]);
-const selectedType = ref("Маркетплейсы");
+const modalStore = useModalStore();
 const introductionModal = ref(false);
 const route = useRoute();
 const socialNetworks = ref([]);
@@ -24,7 +24,7 @@ async function getServices() {
   const { data }: any = await useFetch("/api/catalog/get", {
     method: "GET",
     params: {
-      type: selectedType.value,
+      type: modalStore.selectedCatalog,
     },
   });
 
@@ -36,9 +36,7 @@ async function getServices() {
 
 getServices();
 const bouncedGet = useDebounceFn(getServices, 250);
-watch(selectedType, () => {
-  getServices();
-});
+
 
 const favourites = ref([]) as any;
 const loadingFavourites = ref(true);
@@ -155,13 +153,17 @@ onMounted(() => {
   //   introductionModal.value = true
   // }
 });
+
+watch(() => modalStore.selectedCatalog, () => {
+  getServices();
+});
 </script>
 
 <template>
   <div class="flex pt-4 bg-white">
     <div class="left-menu sm:block sm:ml-3 -ml-10 hidden">
       <CatalogLeftMenu
-        v-model:selected-type="selectedType"
+        v-model:selected-type="modalStore.selectedCatalog"
         :items="menuItems"
         v-model:introduction-modal="introductionModal"
         v-model:is-checked="isChecked"
@@ -175,7 +177,7 @@ onMounted(() => {
         <div class="breadcrumbs text-sm ml-3 mb-5">
           <ul class="font-medium text-[18px] text-[#909090]">
             <li v-if="!loading" class="cursor-pointer">
-              {{ selectedType }}
+              {{ modalStore.selectedCatalog }}
             </li>
           </ul>
         </div>
@@ -188,14 +190,14 @@ onMounted(() => {
         </div>
       </div>
       <CatalogContent
-        v-if="!loading && selectedType !== 'Услуги'"
+        v-if="!loading && modalStore.selectedCatalog !== 'Услуги'"
         :items="socialNetworks"
         :favourites="favourites"
         @vote="voteForMp"
         @set-favourites="setFavourites"
       />
       <CatalogServices
-        v-if="!loading && selectedType === 'Услуги'"
+        v-if="!loading && modalStore.selectedCatalog === 'Услуги'"
         :favourites="favourites"
         :items="socialNetworks"
         @vote="voteForMp"

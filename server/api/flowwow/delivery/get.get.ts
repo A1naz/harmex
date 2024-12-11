@@ -51,7 +51,7 @@ export default eventHandler(async (event) => {
       })
       .splice((skip as number) ? (skip as number) : 0, limit as number)
   } else if (status === 'pickupReady') {
-    const response = await Delivery.find({ user, status: 'active' }).sort({
+    const response = await Delivery.find({ user, status: 'completed' }).sort({
       _id: -1,
     })
 
@@ -59,7 +59,7 @@ export default eventHandler(async (event) => {
       .filter(
         (delivery, index) =>
           delivery.statusdelivery[delivery.statusdelivery.length - 1].status ==
-          'Готов к выдаче'
+          'Доставлен'
       )
       .splice(skip as number, limit as number)
   } else {
