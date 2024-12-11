@@ -233,6 +233,7 @@ export default defineNuxtConfig({
     OZON_DB_URI: process.env.OZON_DB_URI,
     FLOWWOW_DB_URI: process.env.FLOWWOW_DB_URI,
     OZON_PVZ_DB_URI: process.env.OZON_PVZ_DB_URI,
+    BANK_DB_URI: process.env.BANK_DB_URI,
     SECRET: process.env.SECRET,
     smtpHost: process.env.smtpHost,
     smtpPort: process.env.smtpPort,
