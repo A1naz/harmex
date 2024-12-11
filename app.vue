@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-onMounted(() => {
-  document.body.style.overflow = "hidden";
-});
+
 </script>
 
 <template>
