@@ -72,15 +72,18 @@ const menuItems = ref([
   "Услуги",
 ]);
 
-watch(() => modalStore.selectedCatalog, () => {
-  isOpen.value = false
-})
+watch(
+  () => modalStore.selectedCatalog,
+  () => {
+    isOpen.value = false;
+  }
+);
 
 watch(isOpen, (newValue: boolean) => {
   if (newValue) {
-    document.body.style.overflow = 'hidden'; // Отключить скролл
+    document.body.style.overflow = "hidden"; // Отключить скролл
   } else {
-    document.body.style.overflow = ''; // Включить скролл
+    document.body.style.overflow = ""; // Включить скролл
   }
 });
 </script>
@@ -128,10 +131,10 @@ watch(isOpen, (newValue: boolean) => {
             Каталог
           </NuxtLinkLocale>
           <MenuSearch
-              :data="searchData"
-              :loading="dataLoading"
-              @search="search"
-            />
+            :data="searchData"
+            :loading="dataLoading"
+            @search="search"
+          />
           <div class="sm:flex hidden mr-12 ml-4">
             <NuxtLinkLocale
               to="/paymenthistory"
@@ -187,7 +190,7 @@ watch(isOpen, (newValue: boolean) => {
           </div>
         </div>
         <div class="sm:hidden h-[100%] pt-2" style="overflow-y: none">
-          <div class="lg:px-16 flex w-full gap-2 ">
+          <div class="lg:px-16 flex w-full gap-2">
             <NuxtLinkLocale
               to="/catalog?introductionModal=true"
               class="flex items-center sm:hidden -mr-2 -ml-1.5"
@@ -199,28 +202,41 @@ watch(isOpen, (newValue: boolean) => {
               :loading="dataLoading"
               @search="search"
             />
-            <NuxtLinkLocale      @click="isOpen = !isOpen" to="/catalog" class="sm:hidden block ml-2 -mt-1 -mr-2">
-              <button v-if="!isOpen" class="btn btn-circle btn-outline border-[#e5e9eb]">
+            <NuxtLinkLocale
+              @click="isOpen = !isOpen"
+              to="/catalog"
+              class="sm:hidden block ml-2 -mt-1 -mr-2"
+            >
+              <button
+                v-if="!isOpen"
+                class="btn btn-circle btn-outline border-[#e5e9eb]"
+              >
                 <Icon name="ic:round-menu" size="24" />
               </button>
-              <button v-else class="btn btn-circle btn-outline border-[#e5e9eb]">
+              <button
+                v-else
+                class="btn btn-circle btn-outline border-[#e5e9eb]"
+              >
                 <Icon name="ic:round-close" size="24" />
               </button>
             </NuxtLinkLocale>
           </div>
           <div
-          v-if="isOpen"
+            v-if="isOpen"
             class="top-[60px] w-full absolute -ml-6"
             style="z-index: 99"
           >
-          <div class="bg-white -pt-5">
-            
-            <MenuCatalog
-            v-model:selected-type="modalStore.selectedCatalog"
-            :items="menuItems"
-            />
-          </div>
-            <div class="h-[9999px] bg-opacity-10 backdrop-blur-[3px]" style="z-index: 99" @click="isOpen = false"></div> 
+            <div class="bg-white -pt-5">
+              <MenuCatalog
+                v-model:selected-type="modalStore.selectedCatalog"
+                :items="menuItems"
+              />
+            </div>
+            <div
+              class="h-[9999px] bg-opacity-10 backdrop-blur-[3px]"
+              style="z-index: 99"
+              @click="isOpen = false"
+            ></div>
           </div>
         </div>
       </div>
@@ -235,6 +251,7 @@ watch(isOpen, (newValue: boolean) => {
       <div class="">
         <slot />
         <FavouritesUserFavourites v-model:show="favouritesModal" />
+   
       </div>
       <!-- Page content here -->
     </div>
@@ -291,5 +308,4 @@ watch(isOpen, (newValue: boolean) => {
 .drawerShadow {
   box-shadow: 0px 2px 10px rgb(186, 189, 220);
 }
-
 </style>
