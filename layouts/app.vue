@@ -189,7 +189,7 @@ watch(isOpen, (newValue: boolean) => {
             </NuxtLinkLocale>
           </div>
         </div>
-        <div class="sm:hidden h-[100%] pt-2" style="overflow-y: none">
+        <div class="sm:hidden h-[100%] pt-2 w-full" style="overflow-y: none">
           <div class="lg:px-16 flex w-full gap-2">
             <NuxtLinkLocale
               to="/catalog?introductionModal=true"
@@ -226,7 +226,7 @@ watch(isOpen, (newValue: boolean) => {
             class="top-[60px] w-full absolute -ml-6"
             style="z-index: 99"
           >
-            <div class="bg-white -pt-5">
+            <div class="bg-white -pt-5 w-full">
               <MenuCatalog
                 v-model:selected-type="modalStore.selectedCatalog"
                 :items="menuItems"

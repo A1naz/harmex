@@ -156,6 +156,7 @@ function closeModal() {
             Избранное
           </div>
           <Nuxt-link
+            @click="closeModal"
             v-for="item in userFavourites"
             :key="item.id"
             :to="item.path"

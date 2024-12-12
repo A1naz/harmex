@@ -224,7 +224,7 @@ watch(
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row gap-2 overflow-x-auto overflow-y-clip">
+  <div class="flex flex-col sm:flex-row sm:items-start items-center justify-center gap-2 overflow-x-hidden sm:overflow-x-auto overflow-y-clip w-full">
     <FinanceDashboard
       :second-level-percent="10"
       :ref-balance="balanceForm.partnerBalance"
