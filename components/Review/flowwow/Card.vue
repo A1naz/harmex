@@ -28,7 +28,7 @@ const countSoonAvailable = props.info.countSoon
 const sex = props.info.delivs[delIndex].sex
 
 function openBuyout() {
-  router.push(`/buyouts/flowwow?uuid=${buyoutuuId}`)
+  router.push(`/flowwow/buyouts?uuid=${buyoutuuId}`)
 }
 </script>
 

@@ -1,5 +1,6 @@
 import { findImage, findProductCard } from '@/server/lib/helpers'
 import { Buyout } from '@/server/lib/models/flowwow/Buyout'
+const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
   const session = (await getAdminEntity(event)) as any
@@ -14,72 +15,32 @@ export default eventHandler(async (event) => {
       message: 'Выкуп не найден',
     })
   }
-  const url = `https://card.wb.ru/cards/detail?appType=0&curr=rub&nm=${buyout.article}`
-  const article = buyout?.article
-  const dataWB: any = await $fetch(url, {
-    method: 'GET',
-  })
 
-  const rawData: any = await $fetch(
-    `https://card.wb.ru/cards/detail?spp=0&regions=80,64,38,4,115,83,33,68,70,69,30,86,40,1,66,31,48,110,22&pricemarginCoeff=1.0&reg=0&appType=1&emp=0&locale=ru&lang=ru&curr=rub&couponsGeo=2,12,7,3,6,21&dest=12358289&nm=${article}`,
-    {
-      method: 'GET',
+  const data: any = await $fetch('http://95.163.249.133:3000', {
+    method: 'POST',
+    body: {
+      type: 'flowwowProduct',
+      url: buyout.url,
+      token: config.PARSER_TOKEN,
     },
-  )
-
-  const productInfo = rawData.data.products[0]
-  const priceData = rawData
-
-  let sizes = []
-
-  if (priceData?.data?.products[0]?.sizes) {
-    sizes = priceData?.data?.products[0]?.sizes
-      .filter((item: any) => item.stocks.length)
-      .map((item: any) => item.origName)
-  }
-  else {
-    sizes = productInfo?.sizes_table?.values.map((size: any) => size.tech_size)
-  }
-
-  const product = priceData?.data?.products.find(
-    (item: any) => item.id === Number(article),
-  )
-  const priceRaw = product?.salePriceU.toString()
-  let instock = false
-  product.sizes.forEach((size: any) => {
-    if (size.stocks.length > 0)
-      instock = true
-  })
-
-  if (!priceRaw || !sizes) {
-    return createError({
-      statusCode: 400,
-      message: 'Не удалось получить данные о товаре',
+  }).catch((e) => {
+    throw createError({
+      statusCode: 404,
+      message:
+        'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
     })
-  }
-  if (!instock) {
-    return createError({
-      statusCode: 400,
-      message: 'Товара нет в наличии',
-    })
-  }
-  const price = priceRaw?.substring(0, priceRaw.length - 2)
-  const currency = new Intl.NumberFormat('ru-RU', {
-    style: 'currency',
-    currency: 'RUB',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
   })
-  const priceText = currency.format(price)
-  const image = findImage(article)
 
   return {
-    image,
-    article: (buyout.article as number),
-    name: `${productInfo.brand} / ${productInfo.name}` || '',
-    sizes: (sizes as number[] | string[]) || [],
-    price: (price as number) || 0,
-    priceText: (priceText as string) || '',
+    image: data.image || '',
+    article: data.article,
+    slug: data.slug || '',
+    url: buyout.url || '',
+    name: data.name || '',
+    parameters: data.parameters && data.parameters.length ? data.parameters : ['0'],
+    sizes: ['0'],
+    price: Number(data.price.replaceAll(' ', '')) || 0,
+    priceText: data.price ? data.price + ' ₽' : '',
     quantity: buyout.quantity,
     sex: buyout.gender,
     searchQuery: buyout.searchQuery.split(', '),
@@ -87,5 +48,8 @@ export default eventHandler(async (event) => {
     dateRange: [buyout.dateStart, buyout.dateEnd],
     selectedSize: buyout.sizeparam,
     rules: buyout.rules,
+    appartmentNumber: buyout.appartmentNumber,
+    purchaseSoon: buyout.purchaseSoon,
+    deliveryType: buyout.deliveryType,
   }
 })

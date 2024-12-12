@@ -11,10 +11,10 @@ export default eventHandler(async (event) => {
   const pipeLine: any[] = [
     {
       $match: {
-        user: new ObjectId(user._id),
+        user: user._id,
         reviewed: { $ne: true },
         'statusdelivery.status': {
-          $regex: 'Получен',
+          $regex: '^(Получен|Доставлен|Получено)$',
         },
         status: 'completed',
       },
@@ -85,7 +85,7 @@ export default eventHandler(async (event) => {
     if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
       searchParse = { uuidbuyout: searchParse.uudidBuyout.replace('#', '') };
       pipeLine.splice(3, 0, { $match: { ...searchParse } }) // after $project
-    }  else {
+    } else {
       if (Object.keys(searchParse)[0] === 'article') {
         searchParse.article = Number(searchParse.article);
       }
@@ -123,7 +123,7 @@ export default eventHandler(async (event) => {
   const sex = (genders: string[]): string => {
     // for (const gen of genders) {
     //   console.log(gen);
-      
+
     //   let foundGen = genderMap.get(gen.toLowerCase())
     //   if (foundGen) return foundGen
     // }

@@ -20,7 +20,7 @@ const opened = ref()
 const qrCode = ref(null)
 
 function openBuyout() {
-  router.push(`/buyouts/flowwow?uuid=${props.info.uuid}`)
+  router.push(`/flowwow/buyouts?uuid=${props.info.uuid}`)
 }
 onMounted(async () => {
   opened.value = props.state
