@@ -29,6 +29,7 @@ interface Item {
   appartmentNumber: string
   slug: string
   deliveryType: string
+  nameOrganization: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -144,6 +145,7 @@ export default eventHandler(async (event) => {
       pointRegion: 'Московская область',
       pointDistrict: 'Московская область',
       deliveryType: product.deliveryType ? product.deliveryType : 'courier',
+      nameOrganization: product.nameOrganization,
       // deliveryPeriodTime: product.deliveryPeriodTime,
       // deliveryPeriodDate: product.deliveryPeriodDate,
     })

@@ -35,6 +35,7 @@ export default eventHandler(async (event) => {
       sizes: ['0'],
       price: Number(data.price.replaceAll(' ', '')) || 0,
       priceText: data.price ? data.price + ' ₽' : '',
+      nameOrganization: data.nameOrganization || '',
     },
   }
 })

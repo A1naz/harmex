@@ -37,6 +37,7 @@ export default eventHandler(async (event) => {
     slug: data.slug || '',
     url: buyout.url || '',
     name: data.name || '',
+    nameOrganization: data.nameOrganization || '',
     parameters: data.parameters && data.parameters.length ? data.parameters : ['0'],
     sizes: ['0'],
     price: Number(data.price.replaceAll(' ', '')) || 0,
