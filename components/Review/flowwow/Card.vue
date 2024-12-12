@@ -74,13 +74,13 @@ function openBuyout() {
           <div class="flex justify-between flex-wrap">
             <div class="flex gap-2.5">
               <span> {{ productname }} </span>
-              <a
+              <!-- <a
                 :href="`https://www.flowwow.ru/${article}`"
                 target="_blank"
                 class="text-sm mt-1.5 text-primary link link-hover"
               >
                 {{ article }}
-              </a>
+              </a> -->
              
             </div>
             <label
