@@ -8,46 +8,47 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-})
-const { width } = useWindowSize()
-const emit = defineEmits(['openModal'])
-const router = useRouter()
+});
+const { width } = useWindowSize();
+const emit = defineEmits(["openModal"]);
+const router = useRouter();
 
-const delIndex = 0
-const deliveryId = props.info.delivs[delIndex].delivId
-const buyoutuuId = props.info.delivs[delIndex].buyoutId
-const article = props.info.article
-const productimage = props.info.productimage[delIndex]
-const productname = props.info.productname[delIndex]
-const updatedAt = props.info.lastUpdated
-const size = props.info.delivs[delIndex].sizeparam
-const countAllAvailable = props.info.countAvailable
+const delIndex = 0;
+const deliveryId = props.info.delivs[delIndex].delivId;
+const buyoutuuId = props.info.delivs[delIndex].buyoutId;
+const article = props.info.article;
+const productimage = props.info.productimage[delIndex];
+const productname = props.info.productname[delIndex];
+const updatedAt = props.info.lastUpdated;
+const size = props.info.delivs[delIndex].sizeparam;
+const countAllAvailable = props.info.countAvailable;
 const countSoonAvailable = props.info.countSoon
   ? props.info.countSoon
-  : undefined
-const sex = props.info.delivs[delIndex].sex
+  : undefined;
+const sex = props.info.delivs[delIndex].sex;
 
 function openBuyout() {
-  router.push(`/buyouts?uuid=${buyoutuuId}`)
+  router.push(`/buyouts?uuid=${buyoutuuId}`);
 }
 </script>
 
 <template>
-  <div class="rounded-lg bg-primary bg-opacity-10 border-none text-base-content">
+  <div
+    class="rounded-lg bg-primary bg-opacity-10 border-none text-base-content"
+  >
     <div class="p-4 relative text-xl font-medium flex flex-col gap-2">
       <label
-              class="text-[0.6rem] self-start link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate lg:hidden "
-              @click="openBuyout"
-              >#{{ buyoutuuId }}</label
-            >
+        class="text-[0.6rem] self-start link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate lg:hidden"
+        @click="openBuyout"
+        >#{{ buyoutuuId }}</label
+      >
       <div class="flex gap-4">
-        
         <a
           class=""
           :href="`https://www.ozon.ru/product/${info.article}`"
           target="_blank"
         >
-          <div class="dropdown dropdown-hover ">
+          <div class="dropdown dropdown-hover">
             <label tabindex="0">
               <nuxt-img
                 width="36"
@@ -81,58 +82,68 @@ function openBuyout() {
               >
                 {{ article }}
               </a>
-             
             </div>
             <label
-              class="text-[0.6rem] self-end link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate hidden lg:block "
+              class="text-[0.6rem] self-end link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate hidden lg:block"
               @click="openBuyout"
               >#{{ buyoutuuId }}</label
             >
           </div>
-          <div class="flex justify-between flex-wrap gap-2 items-center mt-2 mb-2">
-            <div class="lg:m-0 text-xs bg-primary bg-opacity-20 border-none text-base-content rounded-md px-4 py-1.5">
+          <div
+            class="flex justify-between flex-wrap gap-2 items-center mt-2 mb-2"
+          >
+            <div
+              class="lg:m-0 text-xs bg-primary bg-opacity-20 border-none text-base-content rounded-md px-4 py-1.5"
+            >
               Обновлено {{ defaultDate(updatedAt) }}
             </div>
           </div>
-        <div class="flex justify-between flex-wrap gap-2 items-center mt-1">
-        <div class="flex gap-4 text-sm">
-          <div class="text-gray-500">Пол: 
-            <span class="rounded-lg bg-red-400 bg-opacity-60 p-1 text-base-content py-0.5 ml-1">{{ sex }}</span>
-            
-          </div>
-          <div class="text-gray-500">Размер: 
-            <span class="rounded-lg bg-red-400 bg-opacity-60 p-1 text-base-content py-0.5 ml-1">{{ size === 'none' ? 'Нет' : size }}</span>
-          </div>
-        </div>
+          <div class="flex justify-between flex-wrap gap-2 items-center mt-1">
+            <div class="flex gap-4 text-sm">
+              <div class="text-gray-500">
+                Пол:
+                <span
+                  class="rounded-lg bg-red-400 bg-opacity-60 p-1 text-base-content py-0.5 ml-1"
+                  >{{ sex }}</span
+                >
+              </div>
+              <div class="text-gray-500">
+                Размер:
+                <span
+                  class="rounded-lg bg-red-400 bg-opacity-60 p-1 text-base-content py-0.5 ml-1"
+                  >{{ size === "none" ? "Нет" : size }}</span
+                >
+              </div>
+            </div>
 
-        <div class="flex-col justify-center gap-2 hidden lg:flex">
-          <label
-            for="review-modal"
-            class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content"
-            @click="$emit('openModal', buyoutuuId, deliveryId)"
-            >Оставить отзыв (доступно: {{ countAllAvailable }})
-          </label>
-          <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
-            Скоро будет доступно еще {{ countSoonAvailable }}
+            <div class="flex-col justify-center gap-2 hidden lg:flex">
+              <label
+                for="review-modal"
+                class="btn btn-sm btn-primary"
+                @click="$emit('openModal', buyoutuuId, deliveryId)"
+                >Оставить отзыв (доступно: {{ countAllAvailable }})
+              </label>
+              <div
+                v-if="countSoonAvailable"
+                class="text-xs text-warning mx-auto"
+              >
+                Скоро будет доступно еще {{ countSoonAvailable }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      </div>
-      
-        
       </div>
       <div class="flex flex-col justify-center gap-2 lg:hidden">
-          <label
-            for="review-modal"
-            class="btn btn-sm btn-primary bg-opacity-20 border-none h-10 text-base-content "
-            @click="$emit('openModal', buyoutuuId, deliveryId)"
-            >Оставить отзыв (доступно: {{ countAllAvailable }})
-          </label>
-          <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
-            Скоро будет доступно еще {{ countSoonAvailable }}
-          </div>
+        <label
+          for="review-modal"
+          class="btn btn-sm btn-primary h-10"
+          @click="$emit('openModal', buyoutuuId, deliveryId)"
+          >Оставить отзыв (доступно: {{ countAllAvailable }})
+        </label>
+        <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
+          Скоро будет доступно еще {{ countSoonAvailable }}
         </div>
-      
+      </div>
     </div>
   </div>
 </template>

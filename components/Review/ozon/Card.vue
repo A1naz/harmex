@@ -127,7 +127,7 @@ function openBuyout() {
             <div class="flex-col justify-center gap-2 hidden lg:flex">
               <label
                 for="review-modal"
-                class="btn btn-sm btn-primary bg-[#ff5e34b3] border-none h-10 text-base-content"
+                class="btn btn-sm btn-primary"
                 @click="$emit('openModal', buyoutuuId, deliveryId)"
               >
                 Оставить отзыв (доступно: {{ countAllAvailable }})
@@ -145,7 +145,7 @@ function openBuyout() {
       <div class="flex flex-col justify-center gap-2 lg:hidden">
         <label
           for="review-modal"
-          class="btn btn-sm btn-primary иbg-[#b2baff] dark:bg-opacity-20 border-none h-10 text-base-content"
+         class="btn btn-sm btn-primary h-10"
           @click="$emit('openModal', buyoutuuId, deliveryId)"
         >
           Оставить отзыв (доступно: {{ countAllAvailable }})

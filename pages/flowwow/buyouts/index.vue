@@ -655,7 +655,7 @@ async function copyToClipboard(text: string) {
       :is-checked="isChecked"
       @checkbox-toggle="toggleCheckbox" 
     >
-      <h3 class="text-xl font-bold mb-2 flex items-center gap-1">
+      <h3 class="text-xl font-bold mb-2 flex items-center gap-1 pr-4">
         Как создать заказ на выкуп товара?
       </h3>
       <p class="mb-2 text-[17px]">

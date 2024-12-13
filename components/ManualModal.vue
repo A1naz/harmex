@@ -48,12 +48,9 @@ function closeModal() {
               @change="toggleCheckbox"
             />
             <label for="checkbox" class="text-sm text-gray-600 cursor-pointer">
-              Больше не показывать это сообщение
+              Больше не показывать
             </label>
           </div>
-          <button class="btn btn-sm h-[2.5rem] btn-primary" @click="closeModal">
-            Понятно
-          </button>
         </div>
       </div>
     </Transition>

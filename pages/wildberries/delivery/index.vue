@@ -282,7 +282,7 @@ function changeFilter(e: any) {
 
 <template>
   <div>
-    <div class="font-medium flex gap-1">
+    <div class="font-medium gap-1 mt-4">
       Забирайте товары в течение 
       <span class="text-[#ff6666]">
         5 дней

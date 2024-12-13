@@ -378,7 +378,7 @@ async function copyToClipboard(text: string) {
             <div
               class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"
             >
-              <label class="w-full flex bg-[#ececed] rounded-lg items-center">
+              <label class="w-full flex bg-[#ececed] rounded-lg items-center justify-between">
                 <input
                   v-model="searchText"
                   type="text"

@@ -107,7 +107,7 @@ defineEmits(["setFavourites"]);
         {{ item.items[index].title }}
       </div>
       <p class="text-[16px] font-bold text-gray-800 my-2">
-        {{ item.items[index].price }} ₽
+        {{ item.items[index].price ? item.items[index].price  + ' ₽' : '&nbsp;' }}
       </p>
     </div>
     <NuxtLink

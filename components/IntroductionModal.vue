@@ -44,7 +44,7 @@ function closeModal() {
             ✕
           </label>
         </form>
-        <h3 class="text-xl font-bold mb-2 flex items-center gap-1">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-1 pr-3">
           Добро пожаловать на Harmex! 👋
         </h3>
         <p class="text-[17px]">Мы рады, что вы с нами!</p>
@@ -114,7 +114,7 @@ function closeModal() {
         </p>
         <p class="mt-2">☑️ Если возникнут вопросы, наша поддержка всегда готова помочь!</p>
 
-        <div class="flex justify-between mt-8">
+        <div class="sm:flex flex-col justify-between mt-8 mb-2">
           <div class="flex items-center gap-2">
             <input
               id="checkbox"
@@ -124,12 +124,9 @@ function closeModal() {
               @change="toggleCheckbox"
             />
             <label for="checkbox" class="text-sm text-gray-600 cursor-pointer">
-              Больше не показывать это сообщение
+              Больше не показывать
             </label>
           </div>
-          <button class="btn btn-sm h-[2.5rem] btn-primary" @click="closeModal">
-            Понятно
-          </button>
         </div>
       </div>
     </Transition>
