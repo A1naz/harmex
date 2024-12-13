@@ -37,6 +37,14 @@ export default eventHandler(async (event) => {
     success: true,
     message: '',
   }
+
+  const balanceIsExist = await checkBalance(user, products)
+  if (!balanceIsExist) {
+    result.success = false
+    result.message = `Недостаточно средств для совершения выкупа`
+    return result
+  }
+
   for (const item of products) {
     const curDate = new Date()
     curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))

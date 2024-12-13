@@ -12,6 +12,7 @@ const currency = useCurrency();
 const isCreateButtonDisabled = ref(false);
 const { width } = useWindowSize();
 const modalOpenFF = ref(false);
+const promoModal = ref(false);
 const modalOpenFBS = ref(false)
 const { notify } = useNotification();
 const refreshKey = ref(1);
@@ -365,6 +366,11 @@ function openDiscount(productIndex: number, price: number) {
   currentProductPrice.value = price;
   discountModal.value = true;
 }
+function openPromo(productIndex: number, price: number) {
+  currentProductIndex.value = productIndex;
+  currentProductPrice.value = price;
+  promoModal.value = true;
+}
 function modalAddProduct(changedArticle: any) {
   article.value = changedArticle;
   addProduct();
@@ -387,6 +393,10 @@ function startTimer() {
 
 function removeDiscount(index: number) {
   store.createProducts[index].discountPrice = store.createProducts[index].price;
+}
+function removePromo(index: number) {
+  console.log(index)
+  store.createProducts[index].promoCode = '';
 }
 function refreshElements() {
   // eslint-disable-next-line eqeqeq
@@ -519,6 +529,7 @@ const addressForm = reactive({
             :product="product"
             :index="index"
             :open-discount="openDiscount"
+             :open-promo="openPromo"
             @point-modal-open="pointModalOpen"
             @rule-modal-open="ruleModalOpen"
             @remove-discount="removeDiscount"
@@ -626,10 +637,12 @@ const addressForm = reactive({
                 :product="product"
                 :index="index"
                 :open-discount="openDiscount"
+                :open-promo="openPromo"
                 :loading="!pickpoints?.length"
                 @rule-modal-open="ruleModalOpen"
                 @point-modal-open="pointModalOpen"
                 @remove-discount="removeDiscount"
+                @removePromo="removePromo"
               />
             </tbody>
           </table>
@@ -1020,6 +1033,12 @@ const addressForm = reactive({
       :index="currentProductIndex"
       :price="currentProductPrice"
       @close-modal="discountModal = false"
+    />
+    <BuyoutOzonPromoModal
+      :show="promoModal"
+      :index="currentProductIndex"
+      :price="currentProductPrice"
+      @close-modal="promoModal = false"
     />
 
   </div>

@@ -14,8 +14,7 @@ const ReviewSchema = new Schema({
   date: { type: Date, required: true },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   delivery: { type: Schema.Types.ObjectId, ref: 'Delivery', required: true },
-  idDelivery: { type: Schema.Types.ObjectId, ref: 'Delivery', required: true },
-  
+  idDelivery: { type: String },
   // images: { type: Array, required: false },
   status: {
     type: String,

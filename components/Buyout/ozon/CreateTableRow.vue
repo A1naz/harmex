@@ -15,6 +15,10 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  openPromo: {
+    type: Function,
+    required: true,
+  },
   loading: {
     type: Boolean,
     required: true,
@@ -26,6 +30,7 @@ const emit = defineEmits([
   "pointModalOpen",
   "ruleModalOpen",
   "removeDiscount",
+  "removePromo",
 ]);
 
 const { notify } = useNotification();
@@ -264,19 +269,6 @@ const productQuantityModel = computed({
           <span v-show="loading" class="loading loading-spinner" />
           <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
         </button>
-        <!-- <button
-          v-if="product.adress"
-          :disabled="loading"
-          :class="{
-            'btn-outline': product.adress,
-          }"
-          class="btn btn-primary btn-sm normal-case w-full"
-          @click="$emit('pointModalOpen', index)"
-        >
-          <span v-show="loading" class="loading loading-spinner" />
-          <span v-if="!loading">Изменить </span>
-
-        </button> -->
       </div>
     </td>
 
@@ -294,13 +286,10 @@ const productQuantityModel = computed({
     </td>
 
     <td class="w-[80px] border-r border-base">
-      <div class="flex">
+      <div class="flex justify-between">
         <button
-          class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
-          :class="{
-            'rounded-r-none':
-              product.discountPrice && product.discountPrice !== product.price,
-          }"
+          :disabled="product.promoCode || product.promoCode.length > 1"
+          class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
           @click="props.openDiscount(index, product.price)"
         >
           {{
@@ -313,8 +302,26 @@ const productQuantityModel = computed({
           v-if="
             product.discountPrice && product.discountPrice !== product.price
           "
-          class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1 btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
           @click="$emit('removeDiscount', index)"
+        >
+          <Icon name="ep:close-bold" size="12" />
+        </button>
+      </div>
+      <div class="flex justify-between mt-1">
+        <button
+          :disabled="
+            product.discountPrice && product.discountPrice !== product.price
+          "
+          class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          @click="props.openPromo(index, product.price)"
+        >
+          {{ product.promoCode ? `${product.promoCode}` : "Указать промокод" }}
+        </button>
+        <button
+          v-if="product.promoCode"
+          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          @click="$emit('removePromo', index)"
         >
           <Icon name="ep:close-bold" size="12" />
         </button>

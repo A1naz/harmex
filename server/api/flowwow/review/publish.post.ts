@@ -78,7 +78,7 @@ export default eventHandler(async (event) => {
     date,
     user,
     delivery,
-    idDelivery: delivery._id,
+    idDelivery: delivery.idDelivery,
     status: 'waiting',
     recipientphone: delivery.recipientphone,
     uuid: uuid(),

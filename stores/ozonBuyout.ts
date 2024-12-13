@@ -116,6 +116,7 @@ export const useOzonBuyoutStore = defineStore('ozonBuyout', {
           pointCoordinates: { lat: 0, lon: 0 },
           discountRequestPrice: product.price,
           discountPrice: product.price,
+          promoCode: '',
           addressInfo: {
 
           }

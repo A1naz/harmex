@@ -31,6 +31,9 @@ interface Item {
   discount: boolean
   discountRequestPrice: number
   discountPrice: number
+  promoCode: string
+  addressInfo: any
+  FBS: boolean
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -52,7 +55,7 @@ export default eventHandler(async (event) => {
     user,
     status: { $in: ['active', 'work', 'created'] },
   })
-  const sum = activeBuyouts.reduce((acc, item) => {
+  const sum = activeBuyouts.reduce((acc, item: any) => {
     const price
       = Number.parseInt(item.product.price) * (item.quantity - item.completed)
     return acc + price
@@ -120,8 +123,6 @@ export default eventHandler(async (event) => {
 
     const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
 
-    console.log(product.discountPrice)
-
     const buyout = new Buyout({
       article: product.article,
       searchQuery: searchQueries.join(', '),
@@ -156,10 +157,12 @@ export default eventHandler(async (event) => {
       pointDistrict,
       FBS: product.FBS,
       addressInfo: product.addressInfo,
+      promocode: product.promoCode,
+      isPromocodeEnabled: product.promoCode && product.promoCode !== '' ? true : false,
     })
 
     await buyout.save()
-
+ 
     await userLog(event, {
       documentType: DocuemntEnum.Buyout,
       documentId: buyout.uuid,
