@@ -533,6 +533,7 @@ const addressForm = reactive({
             @point-modal-open="pointModalOpen"
             @rule-modal-open="ruleModalOpen"
             @remove-discount="removeDiscount"
+            @removePromo="removePromo"
           />
         </div>
         <div

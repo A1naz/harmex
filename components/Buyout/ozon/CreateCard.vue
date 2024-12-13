@@ -12,72 +12,82 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  openPromo: {
+    type: Function,
+    required: true,
+  },
   loading: {
     type: Boolean,
     required: true,
   },
-})
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen', 'removeDiscount'])
-const { notify } = useNotification()
+});
+const emit = defineEmits([
+  "callback",
+  "pointModalOpen",
+  "ruleModalOpen",
+  "removeDiscount",
+  "removePromo",
+]);
+const { notify } = useNotification();
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
-      title: 'За раз можно создать максимум 10 выкупов',
-      type: 'error',
-    })
-    return
+      title: "За раз можно создать максимум 10 выкупов",
+      type: "error",
+    });
+    return;
   }
 
-  const item = JSON.stringify(store.createProducts[props.index])
-  store.createProducts.push(JSON.parse(item))
+  const item = JSON.stringify(store.createProducts[props.index]);
+  store.createProducts.push(JSON.parse(item));
 }
 
-const store = useOzonBuyoutStore()
-const startDate = ref(new Date(Date.now()))
+const store = useOzonBuyoutStore();
+const startDate = ref(new Date(Date.now()));
 
 async function deleteBuyOut() {
-  store.removeProduct(props.index)
+  store.removeProduct(props.index);
 }
 function onSizeChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSize(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSize(target.value, props.index);
 }
 function onSexChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSex(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSex(target.value, props.index);
 }
 
 function removeSearchQuery(index: number) {
-  store.removeSearchQuery(props.index, index)
+  store.removeSearchQuery(props.index, index);
 }
 function addSearchQuery() {
-  store.addSearchQuery(props.index)
+  store.addSearchQuery(props.index);
 }
 function productSearchQueryUpdate(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery({
     value: newValue,
     queryIndex: props.index,
     productIndex: index,
-  })
+  });
 }
 const productDateRangeModel = computed({
   get() {
-    return props.product.dateRange
+    return props.product.dateRange;
   },
   set(newValue: unknown[]) {
-    store.changeDateRange(newValue, props.index)
+    store.changeDateRange(newValue, props.index);
   },
-})
+});
 
 const productQuantityModel = computed({
   get() {
-    return props.product.quantity
+    return props.product.quantity;
   },
   set(newValue: number) {
-    store.changeQuantity(newValue, props.index)
+    store.changeQuantity(newValue, props.index);
   },
-})
+});
 </script>
 
 <template>
@@ -172,7 +182,7 @@ const productQuantityModel = computed({
               min="1"
               max="1000"
               class="input input-bordered input-sm w-full text-center"
-            >
+            />
             <div
               class="absolute right-0 btn btn-ghost btn-sm btn-square"
               @click="productQuantityModel++"
@@ -198,9 +208,7 @@ const productQuantityModel = computed({
                 {{ size }}
               </option>
             </select>
-            <div v-else class="text-sm text-center ml-2">
-              Нет
-            </div>
+            <div v-else class="text-sm text-center ml-2">Нет</div>
           </div>
         </div>
         <div class="flex flex-col">
@@ -209,15 +217,9 @@ const productQuantityModel = computed({
             class="select select-sm select-bordered w-15 appearance-none"
             @change="onSexChange"
           >
-            <option value="Нет">
-              Нет
-            </option>
-            <option value="male">
-              Муж
-            </option>
-            <option value="female">
-              Жен
-            </option>
+            <option value="Нет">Нет</option>
+            <option value="male">Муж</option>
+            <option value="female">Жен</option>
           </select>
         </div>
       </div>
@@ -241,8 +243,8 @@ const productQuantityModel = computed({
             <div class="text-sm">
               {{
                 product.rules.length
-                  ? product.rules.map((rule: Rule) => rule.id).join(', ')
-                  : ''
+                  ? product.rules.map((rule: Rule) => rule.id).join(", ")
+                  : ""
               }}
             </div>
             <button
@@ -253,7 +255,7 @@ const productQuantityModel = computed({
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/settings.svg"
                 alt="settings"
-              >
+              />
             </button>
           </div>
         </div>
@@ -293,9 +295,7 @@ const productQuantityModel = computed({
                   : 'Выбрать'
               }}
             </button> -->
-            <div v-else class="text-center text-xs">
-              Ближайшее время
-            </div>
+            <div v-else class="text-center text-xs">Ближайшее время</div>
           </div>
         </div>
         <div class="flex flex-col">
@@ -330,9 +330,7 @@ const productQuantityModel = computed({
 
       <div class="flex">
         <div>
-          <div class="text-md text-gray-500 mb-1">
-            Поисковые запросы:
-          </div>
+          <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
           <div class="w-[60%] flex flex-col gap-2">
             <BuyoutOzonCreateSearchQueries
               :product-index="props.index"
@@ -343,16 +341,16 @@ const productQuantityModel = computed({
               @remove="removeSearchQuery"
             />
           </div>
-          </div>
+        </div>
         <div>
-          <div class="text-md text-gray-500 mb-1">
-            RealFBS
-          </div>
+          <div class="text-md text-gray-500 mb-1">RealFBS</div>
           <div class="flex justify-center">
             <input
               type="checkbox"
               :checked="product.FBS"
-              @click="product.FBS ? (product.FBS = false) : (product.FBS = true)"
+              @click="
+                product.FBS ? (product.FBS = false) : (product.FBS = true)
+              "
               class="checkbox checkbox-primary"
             />
           </div>
@@ -361,22 +359,60 @@ const productQuantityModel = computed({
 
       <div class="flex">
         <span class="text-md text-gray-500 mr-3 my-auto">Скидка: </span>
-        <div class="flex ">
+        <div class="flex">
           <button
+            :disabled="
+              product.promoCode && product.promoCode !== '' ? true : false
+            "
             class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
             :class="{
-              'rounded-r-none': product.discountPrice && product.discountPrice !== product.price,
+              'rounded-r-none':
+                product.discountPrice &&
+                product.discountPrice !== product.price,
             }"
             @click="props.openDiscount(index, product.price)"
           >
             {{
-              product.discountPrice && product.discountPrice !== product.price ? `${product.discountPrice} ₽` : 'Указать скидку'
+              product.discountPrice && product.discountPrice !== product.price
+                ? `${product.discountPrice} ₽`
+                : "Указать скидку"
             }}
           </button>
           <button
-            v-if="product.discountPrice && product.discountPrice !== product.price"
-            class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1  btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            v-if="
+              product.discountPrice && product.discountPrice !== product.price
+            "
+            class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1 btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
             @click="$emit('removeDiscount', index)"
+          >
+            <Icon name="ep:close-bold" size="12" />
+          </button>
+        </div>
+      </div>
+      <div class="flex">
+        <span class="text-md text-gray-500 mr-3 my-auto">Промокод: </span>
+        <div class="flex">
+          <button
+            :disabled="
+              product.discountPrice && product.discountPrice !== product.price
+            "
+            class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            :class="{
+              'rounded-r-none': product.promoCode,
+            }"
+            @click="props.openPromo(index, product.price)"
+          >
+            {{
+              product.promoCode ? `${product.promoCode}` : "Указать промокод"
+            }}
+          </button>
+          <button
+            v-if="product.promoCode"
+            :disabled="
+              product.discountPrice && product.discountPrice !== product.price
+            "
+            class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1 btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            @click="$emit('removePromo', index)"
           >
             <Icon name="ep:close-bold" size="12" />
           </button>

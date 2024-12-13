@@ -284,11 +284,10 @@ const productQuantityModel = computed({
         />
       </div>
     </td>
-
     <td class="w-[80px] border-r border-base">
       <div class="flex justify-between">
         <button
-          :disabled="product.promoCode || product.promoCode.length > 1"
+          :disabled="product.promoCode && product.promoCode !== '' ? true : false"
           class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
           @click="props.openDiscount(index, product.price)"
         >
