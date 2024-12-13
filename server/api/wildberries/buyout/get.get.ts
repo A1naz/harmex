@@ -6,15 +6,28 @@ export default eventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/auth', 302)
 
-  const { status, limit, skip, dateFilter } = getQuery(event)
+  const { status, limit, skip, dateFilter }: any = getQuery(event)
 
   //   const all = await Buyout.find({ user })
   let buyouts
   if (status === 'all') {
-    buyouts = await Buyout.find({ user, status: { $ne: 'completed' } })
+    let completed: any = []
+    let notCompleted: any = []
+    notCompleted = await Buyout.find({ user, status: { $ne: 'completed' } })
       .sort({ createdAt: -1 })
       .skip(skip as number)
       .limit(limit as number)
+
+    if (notCompleted.length < limit) {
+
+      completed = await Buyout.find({ user, status: 'completed' })
+        .sort({ createdAt: -1 })
+        .skip(skip as number)
+        .limit(limit as number)
+    }
+
+    buyouts = [...notCompleted, ...completed]
+
   }
   else if (status === 'active') {
     buyouts = await Buyout.find({ user, status: 'active' })
@@ -113,7 +126,7 @@ export default eventHandler(async (event) => {
   const format = buyouts.map((buyout) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
     return {
-    //   place: buyout.place ? buyout.place : place + 1,
+      //   place: buyout.place ? buyout.place : place + 1,
       place: buyout.place,
       uuid: buyout.uuid,
       article: buyout.article,

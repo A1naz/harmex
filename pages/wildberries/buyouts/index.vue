@@ -47,6 +47,11 @@ function openLogModal(index: number) {
 }
 const target = ref(null);
 const targetIsVisible = ref(false);
+
+const { stop } = useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  targetIsVisible.value = isIntersecting;
+});
+
 const skip = ref(50);
 const end = ref(false);
 async function getBuyouts() {
@@ -271,6 +276,7 @@ const filters = [
 ];
 
 watch(targetIsVisible, async (isVisible) => {
+  console.log("isVisible", isVisible);
   if (isVisible && autoTarget.value && buyouts.value.length >= 50) {
     if (end.value) return;
     const { data } = await useFetch("/api/wildberries/buyout/get", {
@@ -616,7 +622,7 @@ async function copyToClipboard(text: string) {
           />
         </div>
       </div>
-      <div ref="target" class="p-2 w-full col-span-1 h-40 md:h-10" />
+      <div ref="target" class="p-2 w-full col-span-1 h-40" />
     </div>
 
     <Hero v-else-if="!loading" />

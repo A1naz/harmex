@@ -376,6 +376,9 @@ async function removeBuyout() {
 
 const orgInfo = ref({}) as any;
 const isVisible = ref(false);
+const { stop } = useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  targetIsVisible.value = isIntersecting;
+});
 const router = useRouter();
 
 async function getOrgInfo() {

@@ -2,18 +2,32 @@ import { Buyout } from '@/server/lib/models/ozon/Buyout'
 
 export default eventHandler(async (event) => {
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event)
+  if (!user) return sendRedirect(event, '/auth', 302)
 
   const { status, limit, skip, dateFilter } = getQuery(event)
 
-//   const all = await Buyout.find({ user })
+  //   const all = await Buyout.find({ user })
   let buyouts
   if (status === 'all') {
-    buyouts = await Buyout.find({ user, status: { $ne: 'completed' } })
+
+    let completed: any = []
+    let notCompleted: any = []
+    notCompleted = await Buyout.find({ user, status: { $ne: 'completed' } })
       .sort({ createdAt: -1 })
       .skip(skip as number)
       .limit(limit as number)
+
+    if (notCompleted.length < limit) {
+
+      completed = await Buyout.find({ user, status: 'completed' })
+        .sort({ createdAt: -1 })
+        .skip(skip as number)
+        .limit(limit as number)
+    }
+
+    buyouts = [...notCompleted, ...completed]
+
   }
   else if (status === 'active') {
     buyouts = await Buyout.find({ user, status: 'active' })
@@ -32,13 +46,13 @@ export default eventHandler(async (event) => {
       .limit(limit as number)
   }
   else if (status === 'completedByAds') {
-    buyouts = await Buyout.find({ user, status: 'completed', rules: { $in: [ 8, 9 ] } })
-     .sort({
-       createdAt: -1,
-     })
-     .skip(skip as number)
-     .limit(limit as number)
- }
+    buyouts = await Buyout.find({ user, status: 'completed', rules: { $in: [8, 9] } })
+      .sort({
+        createdAt: -1,
+      })
+      .skip(skip as number)
+      .limit(limit as number)
+  }
   else if (status === 'canceled') {
     buyouts = await Buyout.find({ user, status: 'canceled' })
       .sort({
@@ -86,7 +100,7 @@ export default eventHandler(async (event) => {
       })
       .skip(skip as number)
       .limit(limit as number)
-  }else if (status === 'nofunds') {
+  } else if (status === 'nofunds') {
     buyouts = await Buyout.find({ user, status: 'nofunds' })
       .sort({
         createdAt: -1,
@@ -119,7 +133,7 @@ export default eventHandler(async (event) => {
   const format = buyouts.map((buyout) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
     return {
-    //   place: buyout.place ? buyout.place : place + 1,
+      //   place: buyout.place ? buyout.place : place + 1,
       place: buyout.place,
       uuid: buyout.uuid,
       article: buyout.article,
