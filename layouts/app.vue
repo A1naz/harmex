@@ -105,11 +105,11 @@ watch(isOpen, (newValue: boolean) => {
             to="/catalog?introductionModal=true"
             class="sm:flex hidden cursor-pointer items-center"
           >
-            <nuxt-img src="/img/HARMEX.svg" width="150px" />
+            <nuxt-img src="/img/HARMEX.svg" width="180px" />
           </NuxtLinkLocale>
           <NuxtLinkLocale
             to="/catalog"
-            class="btn btn-sm h-[2.5rem] btn-primary text-[#fff] sm:flex text-[16px] ml-2 hidden rounded-[10px] pr-8 font-medium"
+            class="btn btn-sm h-[2.5rem] btn-primary text-[#fff] sm:flex text-[16px] ml-0.5 hidden rounded-[10px] pr-8 font-medium"
           >
             <label
               :class="{ opened: isOpen }"
@@ -193,9 +193,9 @@ watch(isOpen, (newValue: boolean) => {
           <div class="lg:px-16 flex w-full gap-2">
             <NuxtLinkLocale
               to="/catalog?introductionModal=true"
-              class="flex items-center sm:hidden -mr-2 -ml-1.5"
+              class="flex items-center sm:hidden -mr-5 -ml-4"
             >
-              <nuxt-img src="/img/H.svg" width="30px" />
+              <nuxt-img src="/img/HARMEX.svg" width="130px" />
             </NuxtLinkLocale>
             <MenuSearch
               :data="searchData"
