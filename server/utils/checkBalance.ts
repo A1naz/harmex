@@ -41,14 +41,14 @@ async function getPricesMap() {
     }, {});
 };
 
-function getCurrentProductSumm (product: any, prices: any, service:any) {
-    
-    if(!prices || !product || !service) return 0
-    if(service === 'reviews'){
-        return product.video && product.video !== '' ? prices.review + 25 : prices.review  || 0
-    }else if(service === 'questions'){
+function getCurrentProductSumm(product: any, prices: any, service: any) {
+
+    if (!prices || !product || !service) return 0
+    if (service === 'reviews') {
+        return product.video && product.video !== '' ? prices.review + 25 : prices.review || 0
+    } else if (service === 'questions') {
         return prices.question
-    }else {
+    } else {
         return product.amount ? prices[service] * product.amount : prices[service]
     }
 }
@@ -104,7 +104,7 @@ export const checkBalance = async (user: any, products: any, service = 'buyouts'
                     }
                 }
             ]),
-        
+
             // Views
             ozonView.aggregate([
                 { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
@@ -124,7 +124,7 @@ export const checkBalance = async (user: any, products: any, service = 'buyouts'
                     }
                 }
             ]),
-        
+
             // Questions (без умножения на `amount`)
             ozonQuestion.aggregate([
                 { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
@@ -144,7 +144,7 @@ export const checkBalance = async (user: any, products: any, service = 'buyouts'
                     }
                 }
             ]),
-        
+
             // Carts
             ozonCart.aggregate([
                 { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
@@ -164,7 +164,7 @@ export const checkBalance = async (user: any, products: any, service = 'buyouts'
                     }
                 }
             ]),
-        
+
             // Likes (Review)
             ozonLike.aggregate([
                 { $match: { user: user._id, type: "review", status: { $in: ['created', 'work'] } } },
@@ -184,7 +184,7 @@ export const checkBalance = async (user: any, products: any, service = 'buyouts'
                     }
                 }
             ]),
-        
+
             // Likes (Product)
             ozonProductLike.aggregate([
                 { $match: { user: user._id, status: { $in: ['created', 'work'] } } },
@@ -237,12 +237,15 @@ export const checkBalance = async (user: any, products: any, service = 'buyouts'
         // console.log('ozonLikeProductSum', ozonLikeProductSum, pricesMap["ozon"].productlikes, 'wildberriesLikeProductSum', wildberriesLikeProductSum, pricesMap["wildberries"].productlikes);
         // console.log('ozonQuestionLikeSum', ozonQuestionLikeSum, pricesMap["ozon"].likes);
 
-        let currentProductSumm = service === 'buyouts' ? products.reduce((acc:any, item:any) => {
-            return acc + (item.price ? parseFloat(item.price) : parseFloat(item.product.price)) || 0;
-        }, 0) :  getCurrentProductSumm(products, pricesMap[products.mp], service) || 0
+        let currentProductSumm =
+            service === 'buyouts' ?
+                products.reduce((acc: any, item: any) => {
+                    return acc + (item.price ? parseFloat(item.price) : parseFloat(item.product.price)) || 0;
+                }, 0) :
+                getCurrentProductSumm(products, pricesMap[products.mp], service) || 0
         // console.log('currentProductSumm', currentProductSumm);
-        
-        totalPrice += balanceActive + currentProductSumm ;
+
+        totalPrice += balanceActive + currentProductSumm;
 
         // console.log('Total Price:', totalPrice);
         return user.balance >= totalPrice;
