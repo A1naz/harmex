@@ -15,8 +15,7 @@ export default eventHandler(async (event) => {
       .sort({ _id: -1 })
       .skip(skip as number)
       .limit(limit as number)
-      console.log(user._id)
-      console.log(deliveries.length)
+
   } else if (status === 'active') {
     deliveries = await Delivery.find({ user, status: 'active' })
       .sort({
