@@ -114,7 +114,6 @@ async function login() {
     >
       <h3 class="logo font-bold text-2xl text-center">
         HARMEX
-        <span class=" text-blue-600 -ml-1">.</span>
       </h3>
       <h3 class="font-bold text-2xl text-center mb-4">
         Войдите в аккаунт
@@ -202,8 +201,8 @@ async function login() {
 
 <style scoped>
 .logo {
-  font-family: 'Knewave', sans-serif;
-  font-size: 24px;
+  font-family: 'Kanit', semibold;
+  font-size: 32px;
 }
 
 </style>
