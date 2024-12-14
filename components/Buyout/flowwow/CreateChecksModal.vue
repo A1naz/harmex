@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 const props = defineProps({
   state: {
@@ -8,40 +7,40 @@ const props = defineProps({
   isCreateButtonDisabled: {
     type: Boolean,
   },
-})
+});
 
-const isCreateButtonDisabled = toRef(props, 'isCreateButtonDisabled')
+const isCreateButtonDisabled = toRef(props, "isCreateButtonDisabled");
 
-const emit = defineEmits(['close', 'create'])
-const store = useFlowwowBuyoutStore()
-const message = ref('')
-const loading = ref(false)
-const success = ref(false)
+const emit = defineEmits(["close", "create"]);
+const store = useFlowwowBuyoutStore();
+const message = ref("");
+const loading = ref(false);
+const success = ref(false);
 async function checkBuyouts() {
-  loading.value = true
-  const userOffsetMinutes = new Date().getTimezoneOffset()
-  const userTimezoneOffsetHours = -userOffsetMinutes / 60
-  const { data, error } = await useFetch('/api/flowwow/buyout/checkRules', {
-    method: 'POST',
+  loading.value = true;
+  const userOffsetMinutes = new Date().getTimezoneOffset();
+  const userTimezoneOffsetHours = -userOffsetMinutes / 60;
+  const { data, error } = await useFetch("/api/flowwow/buyout/checkRules", {
+    method: "POST",
     body: JSON.stringify(store.createProducts),
     query: {
       userTimezoneOffsetHours: userTimezoneOffsetHours - 3,
     },
-  })
+  });
   if (error.value) {
-    success.value = false
-    message.value = 'Произошла ошибка при проверке'
+    success.value = false;
+    message.value = "Произошла ошибка при проверке";
   }
   if (data.value) {
-    if (data.value.success) success.value = true
+    if (data.value.success) success.value = true;
 
-    message.value = data.value.message
+    message.value = data.value.message;
   }
-  loading.value = false
+  loading.value = false;
 }
 onMounted(async () => {
-  checkBuyouts()
-})
+  checkBuyouts();
+});
 </script>
 
 <template>
@@ -52,7 +51,7 @@ onMounted(async () => {
     }"
     class="modal"
   >
-    <div class="modal-box max-w-lg" :class="{'max-w-sm' : success} ">
+    <div class="modal-box max-w-lg" :class="{ 'max-w-sm': success }">
       <h3 class="font-semibold text-lg mb-2">Проверяем выкупы по правилам</h3>
       <a
         class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -61,20 +60,23 @@ onMounted(async () => {
       >
       <div class="flex mt-1 gap-2">
         <span
-        v-if="!loading"
-        :class="{
-          'text-base-100 bg-red-500 bg-opacity-90': !success,
-          'text-base-content bg-success': success,
-        }"
-        class="text-md my-auto rounded-2xl py-0.5 text-xs px-2"
-        >{{ success ? 'Успешно' : 'Ошибка' }}
-        </span
-      >
+          v-if="!loading"
+          :class="{
+            'text-base-100 bg-red-500 bg-opacity-90': !success,
+            'text-base-content bg-success': success,
+          }"
+          class="text-md my-auto rounded-2xl py-0.5 text-xs px-2"
+          >{{ success ? "Успешно" : "Ошибка" }}
+        </span>
         <span v-if="loading" class="loading loading-spinner loading-lg" />
         <span v-else class="text-xs my-auto">{{ message }}</span>
       </div>
       <div class="flex justify-around items-center mt-2">
-        <button v-if="!loading" class="btn btn-ghost btn-sm h-[2.5rem] w-[49%] font-normal" @click="emit('close')">
+        <button
+          v-if="!loading"
+          class="btn btn-ghost btn-sm h-[2.5rem] w-[49%] font-normal"
+          @click="emit('close')"
+        >
           Закрыть
         </button>
         <button
@@ -86,7 +88,11 @@ onMounted(async () => {
           Создать
         </button>
         <button
-          :disabled="isCreateButtonDisabled"
+          :disabled="
+            isCreateButtonDisabled ||
+            (!success &&
+              message == 'Недостаточно средств для совершения выкупа')
+          "
           v-if="!success && !loading"
           class="btn btn-sm h-[2.5rem] btn-primary bg-opacity-20 text-base-content border-none w-[49%] font-normal"
           @click="emit('create')"
