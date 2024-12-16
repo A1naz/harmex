@@ -89,7 +89,7 @@ export default eventHandler(async (event) => {
       return {
         // place: place + 1,
         uuid: buyout.uuid,
-        article: delivery.article,
+        article: buyout.url,
         pricebuy: delivery.pricebuy,
         size: buyout.sizeparam,
         point: delivery.point,

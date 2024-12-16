@@ -287,8 +287,10 @@ const productQuantityModel = computed({
     <td class="w-[80px] border-r border-base">
       <div class="flex justify-between">
         <button
-          :disabled="product.promoCode && product.promoCode !== '' ? true : false"
-          class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          :disabled="
+            product.promoCode && product.promoCode !== '' ? true : false
+          "
+          class="w-full text-center btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
           @click="props.openDiscount(index, product.price)"
         >
           {{
@@ -301,7 +303,7 @@ const productQuantityModel = computed({
           v-if="
             product.discountPrice && product.discountPrice !== product.price
           "
-          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 btn-square text-base-content font-normal hover:text-primary whitespace-nowrap -ml-6"
           @click="$emit('removeDiscount', index)"
         >
           <Icon name="ep:close-bold" size="12" />
@@ -312,14 +314,14 @@ const productQuantityModel = computed({
           :disabled="
             product.discountPrice && product.discountPrice !== product.price
           "
-          class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          class="w-full text-center btn btn-ghost dark:border-[#51535a] border-base-300 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
           @click="props.openPromo(index, product.price)"
         >
           {{ product.promoCode ? `${product.promoCode}` : "Указать промокод" }}
         </button>
         <button
           v-if="product.promoCode"
-          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 -ml-6 btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
           @click="$emit('removePromo', index)"
         >
           <Icon name="ep:close-bold" size="12" />

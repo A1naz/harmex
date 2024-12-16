@@ -1,5 +1,6 @@
 import { Review } from '~~/server/lib/models/flowwow/Review'
 import { Delivery } from '~/server/lib/models/flowwow/Delivery'
+import { Buyout } from '~/server/lib/models/flowwow/Buyout'
 import { ObjectId } from 'mongodb'
 import { SelectOptionsReviews } from '@/data/enums'
 
@@ -45,15 +46,20 @@ export default eventHandler(async (event) => {
     }
 
     const deliveries = await Delivery.find({ _id: { $in: reviews.map((rev: any) => rev.delivery) } })
-    
+    const buyouts = await Buyout.find({ _id: { $in: deliveries.map((delivery: any) => delivery.idbuyout) } })
+
     let format = await Promise.all(
         reviews.map(async (review: any) => {
+
             const format: any = {
                 id: review._id,
-                article: review.article,
                 name: review.name,
-                text: review.text,
-                rating: review.rating,
+                publicComment: review.publicComment,
+                hiddenComment: review.hiddenComment,
+                conformityRating: review.conformityRating,
+                valuePerMoneyRating: review.valuePerMoneyRating,
+                serviceRating: review.serviceRating,
+                deliveryRating: review.deliveryRating,
                 images: review.images,
                 date: review.date,
                 status: review.status,
@@ -61,8 +67,14 @@ export default eventHandler(async (event) => {
             }
 
             const delivery = deliveries.find((delivery: any) => delivery._id.valueOf() == review.delivery.valueOf())
+
             if (delivery) {
                 format['buyoutuuid'] = delivery.uuidbuyout
+
+                const foundBuyout = buyouts.find((buyout: any) => buyout.uuid == delivery.uuidbuyout)
+
+                format['article'] = foundBuyout ? foundBuyout.url : ''
+
             }
 
             return format
