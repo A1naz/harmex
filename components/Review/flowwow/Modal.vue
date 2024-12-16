@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useNotification } from '@kyvg/vue3-notification'
 import { UseImage } from '@vueuse/components'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'

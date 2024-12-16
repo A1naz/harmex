@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useNotification } from '@kyvg/vue3-notification'
 
 const props = defineProps({
   show: { type: Boolean, required: true },
