@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 const props = defineProps({
   product: {
     type: Object as any,
@@ -13,68 +13,68 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
+});
 
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
-      title: 'За раз можно создать максимум 10 выкупов',
-      type: 'error',
-    })
-    return
+      title: "За раз можно создать максимум 10 выкупов",
+      type: "error",
+    });
+    return;
   }
 
-  const item = JSON.stringify(store.createProducts[props.index])
-  store.createProducts.push(JSON.parse(item))
+  const item = JSON.stringify(store.createProducts[props.index]);
+  store.createProducts.push(JSON.parse(item));
 }
 
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
-const store = useWildberriesBuyoutStore()
-const startDate = ref(new Date(Date.now()))
+const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
+const store = useWildberriesBuyoutStore();
+const startDate = ref(new Date(Date.now()));
 
 async function deleteBuyOut() {
-  store.removeProduct(props.index)
+  store.removeProduct(props.index);
 }
 function onSizeChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSize(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSize(target.value, props.index);
 }
 function onSexChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSex(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSex(target.value, props.index);
 }
 
 function removeSearchQuery(index: number) {
-  store.removeSearchQuery(props.index, index)
+  store.removeSearchQuery(props.index, index);
 }
 function addSearchQuery() {
-  store.addSearchQuery(props.index)
+  store.addSearchQuery(props.index);
 }
 function productSearchQueryUpdate(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery({
     value: newValue,
     queryIndex: props.index,
     productIndex: index,
-  })
+  });
 }
 const productDateRangeModel = computed({
   get() {
-    return props.product.dateRange
+    return props.product.dateRange;
   },
   set(newValue: unknown[]) {
-    store.changeDateRange(newValue, props.index)
+    store.changeDateRange(newValue, props.index);
   },
-})
+});
 
 const productQuantityModel = computed({
   get() {
-    return props.product.quantity
+    return props.product.quantity;
   },
   set(newValue: number) {
-    store.changeQuantity(newValue, props.index)
+    store.changeQuantity(newValue, props.index);
   },
-})
+});
 </script>
 
 <template>
@@ -226,8 +226,8 @@ const productQuantityModel = computed({
             <div class="text-sm">
               {{
                 product.rules.length
-                  ? product.rules.map((rule: Rule) => rule.id).join(', ')
-                  : ''
+                  ? product.rules.map((rule: Rule) => rule.id).join(", ")
+                  : ""
               }}
             </div>
             <button

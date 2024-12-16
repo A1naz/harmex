@@ -1,34 +1,33 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
 const props = defineProps({
   show: { type: Boolean, required: true },
-})
+});
 
-const emit = defineEmits(['closeModal', 'create'])
-const product_likes = ref([]) as any
-const amount = ref(0)
-const loadingUrl = ref(false)
-const url = ref('')
-const urlError = ref(false)
-const urlSuccess = ref('')
-const period = ref('3h')
-const creatingLike = ref(false)
-const { width, height } = useWindowSize()
-const productData = ref<any>(null)
+const emit = defineEmits(["closeModal", "create"]);
+const product_likes = ref([]) as any;
+const amount = ref(0);
+const loadingUrl = ref(false);
+const url = ref("");
+const urlError = ref(false);
+const urlSuccess = ref("");
+const period = ref("3h");
+const creatingLike = ref(false);
+const { width, height } = useWindowSize();
+const productData = ref<any>(null);
 const search = reactive({
-  text: '',
+  text: "",
   loading: false,
   error: false,
-  type: 'name',
-})
-const codeInput = ref()
+  type: "name",
+});
+const codeInput = ref();
 async function getProductLikes() {
-  const { data, error } = await useFetch('/api/avito/productlikes/get', {
-    method: 'GET',
-  })
-  if (data.value)
-    product_likes.value = data.value
+  const { data, error } = await useFetch("/api/avito/productlikes/get", {
+    method: "GET",
+  });
+  if (data.value) product_likes.value = data.value;
   //   if (data.value) {
   //     product_likes.value = data.value.map(product => {
   //         if (product.url) {
@@ -42,127 +41,116 @@ async function getProductLikes() {
   // }
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Не удалось получить лайки',
+      type: "error",
+      title: "Не удалось получить лайки",
       text: error.value.message,
-    })
+    });
   }
 }
-await getProductLikes()
+await getProductLikes();
 async function create() {
-  creatingLike.value = true
-  const { data, error } = await useFetch('/api/avito/productlikes/create', {
-    method: 'POST',
+  creatingLike.value = true;
+  const { data, error } = await useFetch("/api/avito/productlikes/create", {
+    method: "POST",
     body: {
       url: url.value,
       amount: amount.value,
       period: period.value,
       productData: productData.value,
     },
-  })
+  });
   if (error.value) {
-    creatingLike.value = false
+    creatingLike.value = false;
     return notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
+      type: "error",
+      title: "Что-то пошло не так",
       text: error.value.message,
-    })
+    });
   }
   if (data.value) {
-    creatingLike.value = false
-    notify({ type: 'success', title: 'Успешно' })
-    emit('create')
-    emit('closeModal')
+    creatingLike.value = false;
+    notify({ type: "success", title: "Успешно" });
+    emit("create");
+    emit("closeModal");
   }
 }
 async function sendUrl() {
   // @ts-ignore
   const { data, error }: any = await useFetch(
-    '/api/avito/productlikes/extract',
+    "/api/avito/productlikes/extract",
     {
-      method: 'POST',
+      method: "POST",
       body: {
         url: url.value,
       },
-    },
-  )
+    }
+  );
 
   if (data.value) {
-    productData.value = data.value
-    urlError.value = false
+    productData.value = data.value;
+    urlError.value = false;
   }
-  if (error.value)
-    urlError.value = true
+  if (error.value) urlError.value = true;
 
-  loadingUrl.value = false
+  loadingUrl.value = false;
 }
 
-let timeout = null as NodeJS.Timeout | null
+let timeout = null as NodeJS.Timeout | null;
 async function changeUrl() {
-  if (url.value === '')
-    return
-  loadingUrl.value = true
-  if (timeout)
-    clearTimeout(timeout)
-  timeout = setTimeout(sendUrl, 2000)
+  if (url.value === "") return;
+  loadingUrl.value = true;
+  if (timeout) clearTimeout(timeout);
+  timeout = setTimeout(sendUrl, 2000);
 }
 function selectPeriod(event: any) {
-  period.value = event.target.value
+  period.value = event.target.value;
 }
 function getStatus(status: string) {
-  if (status === 'created')
-    return 'Создан'
-  else if (status === 'work')
-    return 'В работе'
-  else if (status === 'busy')
-    return 'В работе'
-  else if (status === 'completed')
-    return 'Завершен'
-  else if (status === 'nofunds')
-    return 'Недостаточно средств'
+  if (status === "created") return "Создан";
+  else if (status === "work") return "В работе";
+  else if (status === "busy") return "В работе";
+  else if (status === "completed") return "Завершен";
+  else if (status === "nofunds") return "Недостаточно средств";
 }
 function removeProduct() {
-  productData.value = null
-  url.value = ''
-  amount.value = 0
+  productData.value = null;
+  url.value = "";
+  amount.value = 0;
 }
-onMounted(() => {})
+onMounted(() => {});
 
-const reviewRemoveModalClose: any = ref(null)
-const idForRemove = ref('')
+const reviewRemoveModalClose: any = ref(null);
+const idForRemove = ref("");
 function openRemoveReviewModal(id: any, name: any) {
-  idForRemove.value = id
-  reviewRemoveModalClose.value?.click()
+  idForRemove.value = id;
+  reviewRemoveModalClose.value?.click();
 }
 
 async function deleteLike() {
-  const { data, error } = await useFetch('/api/avito/productlikes/delete', {
-    method: 'DELETE',
+  const { data, error } = await useFetch("/api/avito/productlikes/delete", {
+    method: "DELETE",
     body: {
       id: idForRemove.value,
     },
-  })
+  });
 
   if (data.value) {
-    getProductLikes()
-  }
-  else if (error.value) {
+    getProductLikes();
+  } else if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
+    });
   }
 }
 
 async function selectCreatePage(e: any) {
-  const target = e
-  if (target.value == '/productlikes/avito?modalShow=true') {
-
-  }
-  else {
-    return navigateTo(target.value)
+  const target = e;
+  if (target.value == "/productlikes/avito?modalShow=true") {
+  } else {
+    return navigateTo(target.value);
   }
 }
 </script>
@@ -179,7 +167,7 @@ async function selectCreatePage(e: any) {
     >
       <div class="flex justify-end">
         <button
-          class="text-gray-500 hover:text-gray-700 self-end "
+          class="text-gray-500 hover:text-gray-700 self-end"
           @click="$emit('closeModal')"
         >
           <Icon name="material-symbols:close-rounded" size="24" />
@@ -201,7 +189,7 @@ async function selectCreatePage(e: any) {
                 placeholder="Введите ссылку"
                 type="text"
                 @input="changeUrl"
-              >
+              />
               <button
                 :class="{
                   'btn-disabled': !productData,
@@ -259,24 +247,12 @@ async function selectCreatePage(e: any) {
               class="select w-44 select-sm mt-2 min-h-min md:min-h-[48px]"
               @change="selectPeriod"
             >
-              <option value="3h">
-                3 часа
-              </option>
-              <option value="12h">
-                12 часов
-              </option>
-              <option value="1day">
-                1 день
-              </option>
-              <option value="3days">
-                3 дня
-              </option>
-              <option value="7days">
-                7 дней
-              </option>
-              <option value="14days">
-                14 дней
-              </option>
+              <option value="3h">3 часа</option>
+              <option value="12h">12 часов</option>
+              <option value="1day">1 день</option>
+              <option value="3days">3 дня</option>
+              <option value="7days">7 дней</option>
+              <option value="14days">14 дней</option>
             </select>
           </div>
           <div

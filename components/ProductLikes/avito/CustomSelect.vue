@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
-const route = useRoute()
+const route = useRoute();
 
 interface tabs {
-  title: string
-  value: string | number
+  title: string;
+  value: string | number;
 }
 interface links {
-  title: string
-  slot: string
-  query: string
+  title: string;
+  slot: string;
+  query: string;
 }
 
 const props = defineProps({
@@ -32,53 +32,53 @@ const props = defineProps({
   // modelValue: {
 
   // }
-})
+});
 
-const reactiveStatusText = toRef(props, 'statusText')
+const reactiveStatusText = toRef(props, "statusText");
 
-const customClass = props.class || ''
+const customClass = props.class || "";
 
-const emit = defineEmits(['changeText', 'changeValue'])
+const emit = defineEmits(["changeText", "changeValue"]);
 
-const dropdownOpened = ref<boolean>(false)
+const dropdownOpened = ref<boolean>(false);
 
 const handleBodyClick = (event: MouseEvent) => {
-  const dropdown = document.querySelector('.dropdown')
+  const dropdown = document.querySelector(".dropdown");
   if (dropdown && !dropdown.contains(event.target as Node)) {
-    dropdownOpened.value = false
+    dropdownOpened.value = false;
   }
-}
+};
 
 const statusText = ref<String>(
   reactiveStatusText.value
     ? reactiveStatusText.value
     : props.category
-    ? 'Выберите категорию'
+    ? "Выберите категорию"
     : props.rangesConfig[0] || props.tabs[0]?.title || props.links[0]?.title
-)
+);
 
 function updateText(filter: string) {
-  statusText.value = filter
+  statusText.value = filter;
 
-  emit('changeText', filter)
+  emit("changeText", filter);
 }
 
 function updateValue(filter: any) {
-  statusText.value = filter.title
-  emit('changeValue', filter)
+  statusText.value = filter.title;
+  emit("changeValue", filter);
 }
 
 onMounted(() => {
-  document.body.addEventListener('click', handleBodyClick)
-})
+  document.body.addEventListener("click", handleBodyClick);
+});
 
 onUnmounted(() => {
-  document.body.removeEventListener('click', handleBodyClick)
-})
+  document.body.removeEventListener("click", handleBodyClick);
+});
 
 defineExpose({
   updateText,
-})
+});
 </script>
 
 <template>

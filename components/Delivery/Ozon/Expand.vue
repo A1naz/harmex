@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
 const props = defineProps({
   info: {
@@ -9,45 +9,43 @@ const props = defineProps({
   state: {
     type: Boolean,
   },
-})
-const emit = defineEmits(['openModal', 'openStatusModal', 'openPenaltyModal'])
-const currency = useCurrency()
-const router = useRouter()
-const opened = ref()
+});
+const emit = defineEmits(["openModal", "openStatusModal", "openPenaltyModal"]);
+const currency = useCurrency();
+const router = useRouter();
+const opened = ref();
 function openBuyout() {
-  router.push(`/ozon/buyouts?uuid=${props.info.uuid}`)
+  router.push(`/ozon/buyouts?uuid=${props.info.uuid}`);
 }
 onMounted(async () => {
-  opened.value = props.state
-})
+  opened.value = props.state;
+});
 watch(
   () => props.state,
   (newState) => {
-    opened.value = newState
-  },
-)
+    opened.value = newState;
+  }
+);
 function daysToPenalty(statusdelivery: any[]) {
-  const item = statusdelivery.find(item => item.status)
-  if (!item)
-    return
+  const item = statusdelivery.find((item) => item.status);
+  if (!item) return;
 
-  const updatedAt = new Date(item.date)
-  const penaltyDay = new Date(updatedAt.getTime() + 7 * 24 * 60 * 60 * 1000)
-  const now = new Date()
-  const timeLeft = penaltyDay.getTime() - now.getTime()
+  const updatedAt = new Date(item.date);
+  const penaltyDay = new Date(updatedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const now = new Date();
+  const timeLeft = penaltyDay.getTime() - now.getTime();
 
   if (timeLeft < 0) {
-    return 'Получение со штрафом!'
-  }
-  else {
-    const days = Math.round(timeLeft / 1000 / 60 / 60 / 24)
-    return `До штрафа осталось: ${days} д.`
+    return "Получение со штрафом!";
+  } else {
+    const days = Math.round(timeLeft / 1000 / 60 / 60 / 24);
+    return `До штрафа осталось: ${days} д.`;
   }
 }
 
 function copyToClipboard(text: string) {
-  navigator.clipboard.writeText(text)
-  notify({ text: 'Скопировано в буфер обмена', type: 'success' })
+  navigator.clipboard.writeText(text);
+  notify({ text: "Скопировано в буфер обмена", type: "success" });
 }
 </script>
 
@@ -55,7 +53,7 @@ function copyToClipboard(text: string) {
   <div
     class="collapse collapse-arrow border bg-[#F3E9DD] rounded-box z-0 overflow-hidden border-[#eff0ff] dark:border-primary dark:border-opacity-10"
   >
-    <input v-model="opened" type="checkbox">
+    <input v-model="opened" type="checkbox" />
 
     <div
       class="collapse-title relative text-xl font-medium bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10"
@@ -75,8 +73,8 @@ function copyToClipboard(text: string) {
               <span> Доставка </span>
               <div
                 v-if="
-                  info.currentstatus === 'Готов к выдаче'
-                    && info.statusdelivery.length > 1
+                  info.currentstatus === 'Готов к выдаче' &&
+                  info.statusdelivery.length > 1
                 "
                 class="text-s link bg-[#FF6666] dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"
                 style="min-width: fit-content"
@@ -127,7 +125,7 @@ function copyToClipboard(text: string) {
             <div class="mt-2 lg:m-0 text-xs text-primary font-normal">
               Обновлено
               {{
-                $dayjs(info.updatedAt).locale('ru').format('D MMMM YYYY HH:mm')
+                $dayjs(info.updatedAt).locale("ru").format("D MMMM YYYY HH:mm")
               }}
             </div>
           </div>
@@ -178,7 +176,8 @@ function copyToClipboard(text: string) {
 
               <span
                 class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content"
-              >{{ info.size === 'none' ? 'Не указан' : info.size }}</span>
+                >{{ info.size === "none" ? "Не указан" : info.size }}</span
+              >
             </div>
           </div>
 
@@ -188,11 +187,12 @@ function copyToClipboard(text: string) {
 
               <span
                 class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content"
-              >{{
-                info.discountPrice == info.product?.price
-                  ? '%'
-                  : `${info.discountPrice} ₽`
-              }}</span>
+                >{{
+                  info.discountPrice == info.product?.price
+                    ? "%"
+                    : `${info.discountPrice} ₽`
+                }}</span
+              >
             </div>
           </div>
         </div>
@@ -203,17 +203,13 @@ function copyToClipboard(text: string) {
       <div class="receipt flex gap-4 lg:gap-8 items-center flex-wrap">
         <div class="flex gap-2 md:gap-10 lg:gap-10">
           <div class="lg:mr-10 text-primary text-xs">
-            <div class="text-sm text-gray-500 mb-1">
-              Получатель:
-            </div>
+            <div class="text-sm text-gray-500 mb-1">Получатель:</div>
             {{ info.recipient }} {{ info.recipientphone }}
           </div>
 
           <div class="text-primary text-xs">
-            <div class="text-sm text-gray-500 mb-1">
-              Код получения:
-            </div>
-            {{ info?.receiptcode ? info?.receiptcode : 'Товар не доставлен' }}
+            <div class="text-sm text-gray-500 mb-1">Код получения:</div>
+            {{ info?.receiptcode ? info?.receiptcode : "Товар не доставлен" }}
           </div>
 
           <div v-if="info.receiptcodeqr" class="flex justify-end">
@@ -224,7 +220,7 @@ function copyToClipboard(text: string) {
                 emit(
                   'openModal',
                   parseInt(info.receiptcode),
-                  info.receiptcodeqr,
+                  info.receiptcodeqr
                 )
               "
             >
@@ -235,9 +231,7 @@ function copyToClipboard(text: string) {
         </div>
 
         <div class="w-76">
-          <div class="text-sm text-gray-500">
-            Адрес:
-          </div>
+          <div class="text-sm text-gray-500">Адрес:</div>
           <a
             target="_blank"
             class="text-base-content text-xs link link-hover w-52 lg:w-76 break-all"

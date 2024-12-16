@@ -1,81 +1,78 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
 const props = defineProps({
   show: { type: Boolean, required: true },
-})
+});
 
-const emit = defineEmits(['closeModal', 'create'])
-const amount = ref(0)
-const loadingUrl = ref(false)
-const url = ref('')
-const period = ref('3h')
-const productData = ref<any>(null)
-const urlError = ref(false)
-const creatingLike = ref(false)
+const emit = defineEmits(["closeModal", "create"]);
+const amount = ref(0);
+const loadingUrl = ref(false);
+const url = ref("");
+const period = ref("3h");
+const productData = ref<any>(null);
+const urlError = ref(false);
+const creatingLike = ref(false);
 
 async function create() {
-  creatingLike.value = true
-  const { data, error } = await useFetch('/api/ozon/productlikes/create', {
-    method: 'POST',
+  creatingLike.value = true;
+  const { data, error } = await useFetch("/api/ozon/productlikes/create", {
+    method: "POST",
     body: {
       url: url.value,
       amount: amount.value,
       period: period.value,
       productData: productData.value,
     },
-  })
+  });
   if (error.value) {
-    creatingLike.value = false
+    creatingLike.value = false;
     return notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
+      type: "error",
+      title: "Что-то пошло не так",
       text: error.value.message,
-    })
+    });
   }
   if (data.value) {
-    creatingLike.value = false
-    notify({ type: 'success', title: 'Успешно' })
-    emit('create')
-    emit('closeModal')
+    creatingLike.value = false;
+    notify({ type: "success", title: "Успешно" });
+    emit("create");
+    emit("closeModal");
     // getProductLikes()
   }
 
-  removeProduct()
+  removeProduct();
 }
 async function sendUrl() {
-  const { data, error } = await useFetch('/api/ozon/productlikes/extract', {
-    method: 'POST',
+  const { data, error } = await useFetch("/api/ozon/productlikes/extract", {
+    method: "POST",
     body: {
       url: url.value,
     },
-  })
+  });
   if (data.value) {
-    productData.value = data.value
-    urlError.value = false
+    productData.value = data.value;
+    urlError.value = false;
   }
-  if (error.value)
-    urlError.value = true
+  if (error.value) urlError.value = true;
 
-  loadingUrl.value = false
+  loadingUrl.value = false;
 }
 
-let timeout = null as NodeJS.Timer | null
+let timeout = null as NodeJS.Timer | null;
 async function changeUrl() {
-  if (url.value === '')
-    return
-  loadingUrl.value = true
-  if (timeout)
-    clearTimeout(timeout)
-  timeout = setTimeout(sendUrl, 2000)
+  if (url.value === "") return;
+  loadingUrl.value = true;
+  if (timeout) clearTimeout(timeout);
+  timeout = setTimeout(sendUrl, 2000);
 }
 function selectPeriod(event: any) {
-  period.value = event.target.value
+  period.value = event.target.value;
 }
 function removeProduct() {
-  productData.value = null
-  url.value = ''
-  amount.value = 0
+  productData.value = null;
+  url.value = "";
+  amount.value = 0;
 }
 </script>
 
@@ -115,12 +112,12 @@ function removeProduct() {
                 placeholder="Введите ссылку"
                 type="text"
                 @input="changeUrl"
-              >
+              />
               <button
                 :class="{
                   'btn-disabled': !productData,
                 }"
-                class="btn btn-sm btn-ghost btn-circle bg-base-200 h-[2.5rem] join-item  rounded-r-md"
+                class="btn btn-sm btn-ghost btn-circle bg-base-200 h-[2.5rem] join-item rounded-r-md"
                 @click="removeProduct"
               >
                 <span
@@ -173,24 +170,12 @@ function removeProduct() {
               class="select select-sm h-[2.5rem] w-44 mt-2"
               @change="selectPeriod"
             >
-              <option value="3h">
-                3 часа
-              </option>
-              <option value="12h">
-                12 часов
-              </option>
-              <option value="1day">
-                1 день
-              </option>
-              <option value="3days">
-                3 дня
-              </option>
-              <option value="7days">
-                7 дней
-              </option>
-              <option value="14days">
-                14 дней
-              </option>
+              <option value="3h">3 часа</option>
+              <option value="12h">12 часов</option>
+              <option value="1day">1 день</option>
+              <option value="3days">3 дня</option>
+              <option value="7days">7 дней</option>
+              <option value="14days">14 дней</option>
             </select>
           </div>
           <div

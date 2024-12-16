@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { notify } from "@kyvg/vue3-notification";
-
 const props = defineProps({
   info: {
     type: Object as any,
@@ -21,9 +19,6 @@ watch(
 );
 </script>
 
-<template>
- 
-</template>
+<template></template>
 
-<style scoped>
-</style>
+<style scoped></style>

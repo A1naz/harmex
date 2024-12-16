@@ -1,5 +1,5 @@
 ﻿<script lang="ts" setup>
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
 const props = defineProps({
   uuid: {
@@ -12,52 +12,54 @@ const props = defineProps({
   opened: {
     type: Boolean,
   },
-})
+});
 
-const emit = defineEmits(['getTemplates', 'closeModal'])
-const uuid = toRef(props, 'uuid')
-const store = useWildberriesBuyoutStore()
-const opened = ref()
+const emit = defineEmits(["getTemplates", "closeModal"]);
+const uuid = toRef(props, "uuid");
+const store = useWildberriesBuyoutStore();
+const opened = ref();
 
 onMounted(async () => {
-  opened.value = props.opened
-})
+  opened.value = props.opened;
+});
 watch(
   () => props.opened,
   (newState) => {
-    opened.value = newState
-  },
-)
+    opened.value = newState;
+  }
+);
 
 async function selectTemplate() {
   if (props.info.buyoutsArray.length <= 10) {
-    store.createProducts = props.info.buyoutsArray
-  }
-  else {
+    store.createProducts = props.info.buyoutsArray;
+  } else {
     notify({
-      title: 'За раз можно создать максимум 10 выкупов',
-      text: 'Добавлены первые 10 выкупов',
-      type: 'error',
-    })
-    store.createProducts = props.info.buyoutsArray.slice(0, 10)
+      title: "За раз можно создать максимум 10 выкупов",
+      text: "Добавлены первые 10 выкупов",
+      type: "error",
+    });
+    store.createProducts = props.info.buyoutsArray.slice(0, 10);
   }
-  emit('closeModal')
+  emit("closeModal");
 }
 
 async function deleteTemplate() {
-  const { data, error }: any = await useFetch('/api/wildberries/buyout/deleteTemplate', {
-    method: 'DELETE',
-    params: { uuid: props.uuid },
-  })
+  const { data, error }: any = await useFetch(
+    "/api/wildberries/buyout/deleteTemplate",
+    {
+      method: "DELETE",
+      params: { uuid: props.uuid },
+    }
+  );
 
   if (data.value) {
     notify({
-      title: 'Шаблон удален',
-      type: 'success',
+      title: "Шаблон удален",
+      type: "success",
       duration: 3000,
-    })
+    });
 
-    emit('getTemplates', uuid.value)
+    emit("getTemplates", uuid.value);
   }
 }
 </script>
@@ -66,7 +68,7 @@ async function deleteTemplate() {
   <div
     class="collapse collapse-arrow bg-primary bg-opacity-5 rounded-box z-0 overflow-hidden"
   >
-    <input v-model="opened" type="checkbox">
+    <input v-model="opened" type="checkbox" />
     <div
       class="collapse-title relative text-md font-medium flex flex-col md:justify-between md:flex-row"
     >
@@ -76,12 +78,17 @@ async function deleteTemplate() {
         </div>
       </div>
       <div class="flex z-10 gap-3">
-        <label class="btn btn-ghost btn-sm text-red-500 z-10" @click="deleteTemplate">Удалить</label>
+        <label
+          class="btn btn-ghost btn-sm text-red-500 z-10"
+          @click="deleteTemplate"
+          >Удалить</label
+        >
         <nuxt-link to="/wildberries/buyouts/create">
           <label
             class="btn btn-sm btn-primary truncate mr-1 border-none text-white"
             @click="selectTemplate"
-          >Добавить</label>
+            >Добавить</label
+          >
         </nuxt-link>
       </div>
     </div>

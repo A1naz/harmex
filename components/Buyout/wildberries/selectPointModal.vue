@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { loadYmap } from 'vue-yandex-maps'
-import { notify } from '@kyvg/vue3-notification'
+import { loadYmap } from "vue-yandex-maps";
+const { notify } = useNotification();
 
-const { height } = useWindowSize()
-const config = useRuntimeConfig()
+const { height } = useWindowSize();
+const config = useRuntimeConfig();
 
 const props = defineProps({
   pickpoints: {
@@ -14,101 +14,101 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
-const emit = defineEmits(['callback', 'close'])
-const store = useMainStore()
+});
+const emit = defineEmits(["callback", "close"]);
+const store = useMainStore();
 
 function closeModal() {
-  emit('close')
+  emit("close");
 }
-const loading = ref(false)
-const map = ref()
+const loading = ref(false);
+const map = ref();
 function handleSelect(address: string) {
   if (props.pickpoints.findIndex((item: any) => item.a === address) === -1) {
     return notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: 'Этот пункт выдачи не найден',
-    })
+      type: "error",
+      title: "Что-то пошло не так",
+      text: "Этот пункт выдачи не найден",
+    });
   }
 
-  let pointStore = localStorage.getItem('wildberriesPointStore')
-  if (!pointStore) pointStore = ''
+  let pointStore = localStorage.getItem("wildberriesPointStore");
+  if (!pointStore) pointStore = "";
 
-  const arr = pointStore.trim().split('--').reverse()
-  if (arr[0] === '') arr.shift()
-  if (arr.length > 20) arr.shift()
-  arr.push(address)
-  const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('wildberriesPointStore', unique.join('--'))
-  emit('callback', { a: address })
-  closeModal()
+  const arr = pointStore.trim().split("--").reverse();
+  if (arr[0] === "") arr.shift();
+  if (arr.length > 20) arr.shift();
+  arr.push(address);
+  const unique = [...new Set(arr)].reverse();
+  localStorage.setItem("wildberriesPointStore", unique.join("--"));
+  emit("callback", { a: address });
+  closeModal();
 }
 
 function handleDelete(address: string) {
-  let pointStore = localStorage.getItem('wildberriesPointStore')
-  if (!pointStore) pointStore = ''
-  const arr = pointStore.trim().split('--').reverse()
-  arr.splice(arr.indexOf(address), 1)
-  const unique = [...new Set(arr)].reverse()
-  localStorage.setItem('wildberriesPointStore', unique.join('--'))
-  emit('callback', address)
-  lastPoints.value = unique
+  let pointStore = localStorage.getItem("wildberriesPointStore");
+  if (!pointStore) pointStore = "";
+  const arr = pointStore.trim().split("--").reverse();
+  arr.splice(arr.indexOf(address), 1);
+  const unique = [...new Set(arr)].reverse();
+  localStorage.setItem("wildberriesPointStore", unique.join("--"));
+  emit("callback", address);
+  lastPoints.value = unique;
 }
 
 const lastPoints = ref(
-  localStorage.getItem('wildberriesPointStore')?.split('--')
-)
-const presetCluster = 'islands#violetClusterIcons'
+  localStorage.getItem("wildberriesPointStore")?.split("--")
+);
+const presetCluster = "islands#violetClusterIcons";
 
 const originalBounds = ref([
   [55.72435065000997, 37.421310551334145],
   [55.79133523378151, 37.83844769733026],
-])
+]);
 
 const settings = {
-  apiKey: config.public.YANDEX_MAPS_API_KEY || '', // Индивидуальный ключ API
-  lang: 'ru_RU', // Используемый язык
-  coordorder: 'latlong', // Порядок задания географических координат
+  apiKey: config.public.YANDEX_MAPS_API_KEY || "", // Индивидуальный ключ API
+  lang: "ru_RU", // Используемый язык
+  coordorder: "latlong", // Порядок задания географических координат
   debug: false, // Режим отладки
-  version: '2.1', // Версия Я.Карт
-}
-const error = ref()
+  version: "2.1", // Версия Я.Карт
+};
+const error = ref();
 
 onMounted(async () => {
   try {
-    loading.value = true
-    await loadYmap(settings)
-    await ymaps.ready
-    const myMap = new ymaps.Map('ymap', {
+    loading.value = true;
+    await loadYmap(settings);
+    await ymaps.ready;
+    const myMap = new ymaps.Map("ymap", {
       center: [55.76, 37.64],
       zoom: 7,
       controls: [],
-    })
-    map.value = myMap
+    });
+    map.value = myMap;
     const searchControl = new ymaps.control.SearchControl({
       options: {
-        provider: 'yandex#map',
+        provider: "yandex#map",
         noPlacemark: true,
       },
-    })
-    searchControl.events.add('resultselect', (event: any) => {
-      if (!event.get('skip') && searchControl.getResultsCount()) {
-        const geoObjectsArray = searchControl.getResultsArray()
+    });
+    searchControl.events.add("resultselect", (event: any) => {
+      if (!event.get("skip") && searchControl.getResultsCount()) {
+        const geoObjectsArray = searchControl.getResultsArray();
         geoObjectsArray.forEach((marker: any) => {
           marker.options.set({
             hasBalloon: false,
-            preset: 'islands#violetDotIconWithCaption',
+            preset: "islands#violetDotIconWithCaption",
             iconOffset: [0, -25],
-          })
+          });
           marker.properties.set({
             iconCaption: marker.properties._data.name,
-          })
-        })
+          });
+        });
       }
-    })
-    myMap.controls.add(searchControl)
-    myMap.setBounds(originalBounds.value)
+    });
+    myMap.controls.add(searchControl);
+    myMap.setBounds(originalBounds.value);
     const objectManager = new ymaps.ObjectManager({
       // Включаем кластеризацию.
       clusterize: true,
@@ -116,56 +116,56 @@ onMounted(async () => {
       clusterHasBalloon: false,
       // Опции геообъектов задаются с префиксом 'geoObject'.
       geoObjectOpenBalloonOnClick: false,
-    })
+    });
 
     // Опции можно задавать напрямую в дочерние коллекции.
     objectManager.clusters.options.set({
       preset: presetCluster,
       hintContentLayout:
-        ymaps.templateLayoutFactory.createClass('Группа объектов'),
-    })
+        ymaps.templateLayoutFactory.createClass("Группа объектов"),
+    });
     const iconLayout = ymaps.templateLayoutFactory.createClass(
-      '<div>$[properties.iconContent]</div>'
-    )
+      "<div>$[properties.iconContent]</div>"
+    );
     const collection = {
-      type: 'FeatureCollection',
+      type: "FeatureCollection",
       features: props.pickpoints.map((point: any, index: number) => {
         return {
-          type: 'Feature',
+          type: "Feature",
           id: index,
           geometry: {
-            type: 'Point',
+            type: "Point",
             coordinates: [point.lt, point.lg],
             radius: 1000,
           },
           properties: {
-            iconContent: 'WB',
+            iconContent: "WB",
             data: {
               a: point.a,
               w: point.w,
             },
           },
           options: {
-            iconColor: '#8d297f',
-            iconLayout: 'default#image',
-            iconImageHref: '/img/pin-map.svg',
+            iconColor: "#8d297f",
+            iconLayout: "default#image",
+            iconImageHref: "/img/pin-map.svg",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
             iconShadow: true,
           },
-        }
+        };
       }),
-    }
+    };
 
-    objectManager.add(collection)
+    objectManager.add(collection);
 
     // Добавляем коллекцию на карту.
-    myMap.geoObjects.add(objectManager)
+    myMap.geoObjects.add(objectManager);
 
-    objectManager.objects.events.add('click', (e: any) => {
-      const objectId = e.get('objectId')
-      const obj = objectManager.objects.getById(objectId)
+    objectManager.objects.events.add("click", (e: any) => {
+      const objectId = e.get("objectId");
+      const obj = objectManager.objects.getById(objectId);
 
       const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
         `<div class="card rounded-lg">
@@ -180,47 +180,47 @@ onMounted(async () => {
         {
           // First, we call the "build" method of the parent class.
           build() {
-            myBalloonContentLayout.superclass.build.call(this)
+            myBalloonContentLayout.superclass.build.call(this);
             this._element
-              .querySelector('.selectPoint')
-              .addEventListener('click', this.select)
+              .querySelector(".selectPoint")
+              .addEventListener("click", this.select);
           },
           clear() {
             this._element
-              .querySelector('.selectPoint')
-              .removeEventListener('click', this.select)
-            myBalloonContentLayout.superclass.clear.call(this)
+              .querySelector(".selectPoint")
+              .removeEventListener("click", this.select);
+            myBalloonContentLayout.superclass.clear.call(this);
           },
           select: () => {
-            handleSelect(obj.properties.data.a)
+            handleSelect(obj.properties.data.a);
           },
         }
-      )
+      );
       // set this layout as a custom balloon content layout
       objectManager.objects.setObjectOptions(objectId, {
         balloonContentLayout: myBalloonContentLayout,
         balloonPanelMaxMapArea: 0,
-      })
-      objectManager.objects.balloon.open(objectId)
-    })
+      });
+      objectManager.objects.balloon.open(objectId);
+    });
     // создаем кастомный балун
-    objectManager.objects.events.add('balloonopen', (e: any) => {
-      const objectId = e.get('objectId')
-      const geoObject = objectManager.objects.getById(objectId)
-    })
-    loading.value = false
+    objectManager.objects.events.add("balloonopen", (e: any) => {
+      const objectId = e.get("objectId");
+      const geoObject = objectManager.objects.getById(objectId);
+    });
+    loading.value = false;
   } catch (e) {
-    loading.value = false
+    loading.value = false;
     // eslint-disable-next-line no-console
-    console.log(e)
-    error.value = 'Не удалось загрузить карту'
+    console.log(e);
+    error.value = "Не удалось загрузить карту";
   }
-})
+});
 
-onKeyStroke('Escape', (e) => {
-  e.preventDefault()
-  emit('close')
-})
+onKeyStroke("Escape", (e) => {
+  e.preventDefault();
+  emit("close");
+});
 </script>
 
 <template>

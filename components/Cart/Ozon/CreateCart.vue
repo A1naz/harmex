@@ -1,42 +1,44 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
 const props = defineProps({
   show: { type: Boolean, required: true },
-})
+});
 
-const emit = defineEmits(['closeModal', 'create'])
+const emit = defineEmits(["closeModal", "create"]);
 
-const { width } = useWindowSize()
+const { width } = useWindowSize();
 
-const carts = ref([]) as any
-const amount = ref(0)
-const loadingUrl = ref(false)
-const period = ref('3h')
-const query = ref('')
-const article = ref('')
-const size = ref('none')
-const creatingCart = ref(false)
+const carts = ref([]) as any;
+const amount = ref(0);
+const loadingUrl = ref(false);
+const period = ref("3h");
+const query = ref("");
+const article = ref("");
+const size = ref("none");
+const creatingCart = ref(false);
 
-const productData = ref<any>(null)
-const urlError = ref(false)
+const productData = ref<any>(null);
+const urlError = ref(false);
 async function getCarts() {
-  const { data, error } = await useFetch('/api/ozon/cart/get', { method: 'GET', watch: false })
-  if (data.value)
-    carts.value = data.value
+  const { data, error } = await useFetch("/api/ozon/cart/get", {
+    method: "GET",
+    watch: false,
+  });
+  if (data.value) carts.value = data.value;
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Не удалось получить лайки',
+      type: "error",
+      title: "Не удалось получить лайки",
       text: error.value.message,
-    })
+    });
   }
 }
-await getCarts()
+await getCarts();
 async function create() {
-  creatingCart.value = true
-  const { data, error } = await useFetch('/api/ozon/cart/create', {
-    method: 'POST',
+  creatingCart.value = true;
+  const { data, error } = await useFetch("/api/ozon/cart/create", {
+    method: "POST",
     body: {
       amount: amount.value,
       article: article.value,
@@ -46,60 +48,56 @@ async function create() {
       period: period.value,
     },
     watch: false,
-  })
+  });
   if (error.value) {
-    creatingCart.value = false
+    creatingCart.value = false;
     return notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
+      type: "error",
+      title: "Что-то пошло не так",
       text: error.value.message,
-    })
+    });
   }
   if (data.value) {
-    creatingCart.value = false
-    notify({ type: 'success', title: 'Успешно' })
-    removeProduct()
-    emit('create')
+    creatingCart.value = false;
+    notify({ type: "success", title: "Успешно" });
+    removeProduct();
+    emit("create");
   }
 }
 async function getProductInfo() {
-  if (!article.value)
-    return
+  if (!article.value) return;
 
   const { data, error } = await useFetch(`/api/ozon/product/${article.value}`, {
-    method: 'GET',
-  })
+    method: "GET",
+  });
   if ((data.value as any)?.product) {
-    productData.value = (data.value as any).product
+    productData.value = (data.value as any).product;
     if (productData.value?.sizes && productData.value.sizes.length > 0) {
-      size.value = productData.value.sizes[0]
+      size.value = productData.value.sizes[0];
     }
-    urlError.value = false
+    urlError.value = false;
   }
-  if (error.value)
-    urlError.value = true
+  if (error.value) urlError.value = true;
 
-  loadingUrl.value = false
+  loadingUrl.value = false;
 }
-let timeout = null as NodeJS.Timer | null
+let timeout = null as NodeJS.Timer | null;
 async function changeUrl() {
-  if (article.value === '')
-    return
-  loadingUrl.value = true
-  if (timeout)
-    clearTimeout(timeout)
-  timeout = setTimeout(getProductInfo, 2000)
+  if (article.value === "") return;
+  loadingUrl.value = true;
+  if (timeout) clearTimeout(timeout);
+  timeout = setTimeout(getProductInfo, 2000);
 }
 function selectPeriod(event: any) {
-  period.value = event.target.value
+  period.value = event.target.value;
 }
 function selectSize(event: any) {
-  size.value = event.target.value
+  size.value = event.target.value;
 }
 function removeProduct() {
-  productData.value = null
-  article.value = ''
-  amount.value = 0
+  productData.value = null;
+  article.value = "";
+  amount.value = 0;
 }
 </script>
 
@@ -110,21 +108,23 @@ function removeProduct() {
     :class="{ 'modal-open': props.show }"
     @click="$emit('closeModal')"
   >
-    <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-sm gap-3 px-4 py-2" @click.stop>
+    <div
+      class="flex flex-col bg-base-100 rounded-lg w-full max-w-sm gap-3 px-4 py-2"
+      @click.stop
+    >
       <div class="flex justify-between">
-        <div class="font-bold text-xl">
-          Добавить корзину
-        </div>
-        <button class="text-gray-600 hover:text-gray-700 self-end mb-2" @click="$emit('closeModal')">
+        <div class="font-bold text-xl">Добавить корзину</div>
+        <button
+          class="text-gray-600 hover:text-gray-700 self-end mb-2"
+          @click="$emit('closeModal')"
+        >
           <Icon name="material-symbols:close-rounded" size="24" />
         </button>
       </div>
-      <div class=" bg-base-100 rounded-lg">
+      <div class="bg-base-100 rounded-lg">
         <div class="flex items-center gap-3 mb-2 flex-wrap">
           <div class="relative w-full">
-            <div class="font-medium ">
-              Артикул:
-            </div>
+            <div class="font-medium">Артикул:</div>
             <div class="join w-full mt-2">
               <input
                 v-model="article"
@@ -138,7 +138,7 @@ function removeProduct() {
                 placeholder="12312312"
                 type="number"
                 @input="changeUrl"
-              >
+              />
               <button
                 :class="{
                   'btn-disabled': !productData,
@@ -163,24 +163,20 @@ function removeProduct() {
             </div>
           </div>
           <div class="w-full">
-            <div class="font-medium ">
-              Ключевой запрос:
-            </div>
+            <div class="font-medium">Ключевой запрос:</div>
             <input
               v-model="query"
               :disabled="!productData"
               placeholder="Носки"
               type="text"
               class="input input-sm h-[2.5rem] w-full bg-base-200 text-gray-600 mt-2"
-            >
+            />
           </div>
         </div>
         <div class="mt-4 flex gap-3 items-start flex-wrap flex-col">
           <div class="w-full flex gap-2.5">
             <div class="w-full">
-              <div class="font-medium ">
-                Размер:
-              </div>
+              <div class="font-medium">Размер:</div>
               <select
                 :disabled="!productData?.sizes.length"
                 class="select select-sm h-[2.5rem] bg-base-200 text-gray-600 w-full mt-2"
@@ -194,20 +190,22 @@ function removeProduct() {
                   :key="index"
                   :value="size"
                 >
-                  {{ size == '0' ? 'Без размера' : size }}
+                  {{ size == "0" ? "Без размера" : size }}
                 </option>
               </select>
             </div>
-            <div class="gap-4 flex flex-col" :class="{ 'flex-wrap-reverse': width <= 300 }">
+            <div
+              class="gap-4 flex flex-col"
+              :class="{ 'flex-wrap-reverse': width <= 300 }"
+            >
               <div class="">
-                <div class="font-medium ">
-                  Количество:
-                </div>
+                <div class="font-medium">Количество:</div>
                 <div class="relative flex items-center ml-auto mt-2">
                   <button
                     :disabled="amount <= 0"
-                    :class="{ 'bg-base-200 text-base-300': amount <= 0,
-                              'text-primary': productData,
+                    :class="{
+                      'bg-base-200 text-base-300': amount <= 0,
+                      'text-primary': productData,
                     }"
                     class="bg-base-200 absolute left-0 btn btn-ghost btn-sm btn-square h-[2.5rem]"
                     @click="amount -= 10"
@@ -238,32 +236,18 @@ function removeProduct() {
             </div>
           </div>
           <div class="flex flex-col w-full">
-            <div class="font-medium ">
-              Период выполнения:
-            </div>
+            <div class="font-medium">Период выполнения:</div>
             <select
               :disabled="!productData"
               class="select w-full select-sm h-[2.5rem] bg-base-200 text-gray-600 mt-2"
               @change="selectPeriod"
             >
-              <option value="3h">
-                3 часа
-              </option>
-              <option value="12h">
-                12 часов
-              </option>
-              <option value="1day">
-                1 день
-              </option>
-              <option value="3days">
-                3 дня
-              </option>
-              <option value="7days">
-                7 дней
-              </option>
-              <option value="14days">
-                14 дней
-              </option>
+              <option value="3h">3 часа</option>
+              <option value="12h">12 часов</option>
+              <option value="1day">1 день</option>
+              <option value="3days">3 дня</option>
+              <option value="7days">7 дней</option>
+              <option value="14days">14 дней</option>
             </select>
           </div>
         </div>
@@ -272,7 +256,7 @@ function removeProduct() {
           :class="{
             'btn-disabled': !productData || !query,
           }"
-          class="btn btn-sm h-[2.5rem] justify-start mt-3 w-full btn-primary  border-none text-white"
+          class="btn btn-sm h-[2.5rem] justify-start mt-3 w-full btn-primary border-none text-white"
           @click="create"
         >
           <span class="mx-auto"> Добавить</span>

@@ -1,105 +1,105 @@
 <script setup lang="ts">
-const qrCode = ref('null')
-const twoFaSecret = ref('')
-const loading = ref(true)
-const isCodeSaved = ref(false)
-const code = ref('')
-const isCodeConfirmed = ref(false)
-import { notify } from '@kyvg/vue3-notification'
+const qrCode = ref("null");
+const twoFaSecret = ref("");
+const loading = ref(true);
+const isCodeSaved = ref(false);
+const code = ref("");
+const isCodeConfirmed = ref(false);
+const { notify } = useNotification();
 
 const props = defineProps({
   show: { type: Boolean, required: true, default: false },
-})
+});
 
 async function getQr() {
-  if (twoFaSecret.value == '') {
-    const { data }: any = await useFetch('/api/2fa/getCode')
-    qrCode.value = data.value.qrCode
-    twoFaSecret.value = data.value.secret
+  if (twoFaSecret.value == "") {
+    const { data }: any = await useFetch("/api/2fa/getCode");
+    qrCode.value = data.value.qrCode;
+    twoFaSecret.value = data.value.secret;
 
-    loading.value = false
+    loading.value = false;
   }
 }
 
 function clear() {
-  qrCode.value = 'null'
-  twoFaSecret.value = ''
-  loading.value = true
-  isCodeSaved.value = false
-  code.value = ''
-  isCodeConfirmed.value = false
+  qrCode.value = "null";
+  twoFaSecret.value = "";
+  loading.value = true;
+  isCodeSaved.value = false;
+  code.value = "";
+  isCodeConfirmed.value = false;
 }
 
 async function copyToClipboard(text: string) {
-  await navigator.clipboard.writeText(text)
+  await navigator.clipboard.writeText(text);
   notify({
-    title: 'Код скопирован в буфер обмена',
-  })
+    title: "Код скопирован в буфер обмена",
+  });
 }
 
 async function turnOnTwoFa() {
-  const { data }: any = await useFetch('/api/2fa/turnOnOff', {
-    method: 'GET',
+  const { data }: any = await useFetch("/api/2fa/turnOnOff", {
+    method: "GET",
     query: {
       changeTo: true,
     },
-  })
+  });
   if (data.value) {
     notify({
-      title: 'Двухфакторная аутентификация включена',
-    })
-    emit('closeWithTurnOn')
+      title: "Двухфакторная аутентификация включена",
+    });
+    emit("closeWithTurnOn");
   }
 }
 
 async function confirm2fa() {
-  await confirm2faDebounced()
+  await confirm2faDebounced();
 }
 
 async function findSearchQuery() {
   if (
     isCodeConfirmed.value ||
     !code.value ||
-    code.value.replaceAll(' ', '').length < 6
+    code.value.replaceAll(" ", "").length < 6
   ) {
-    return
+    return;
   }
 
-  const { data, error }: any = await useFetch('/api/2fa/confirm', {
-    method: 'GET',
+  const { data, error }: any = await useFetch("/api/2fa/confirm", {
+    method: "GET",
     params: {
-      code: code.value.replaceAll(' ', ''),
+      code: code.value.replaceAll(" ", ""),
     },
-  })
+  });
 
   if (data.value) {
-    isCodeConfirmed.value = data.value.status
+    isCodeConfirmed.value = data.value.status;
 
     if (!isCodeConfirmed.value) {
       notify({
-        title: 'Неверный код',
-      })
+        title: "Неверный код",
+      });
     } else {
       notify({
-        title: 'Код подтвержден',
-      })
+        title: "Код подтвержден",
+      });
     }
   }
 }
 
-const confirm2faDebounced = useDebounceFn(findSearchQuery, 300)
+const confirm2faDebounced = useDebounceFn(findSearchQuery, 300);
 
-const { show } = toRefs(props)
+const { show } = toRefs(props);
 
 watch(show, (newVal) => {
   if (newVal) {
-    getQr()
+    getQr();
   }
-})
+});
 
-const emit = defineEmits(['close', 'closeWithTurnOn'])
+const emit = defineEmits(["close", "closeWithTurnOn"]);
 
-defineExpose({ getQr, clear })
+defineExpose({ getQr, clear });
 </script>
 
 <template>

@@ -1,37 +1,42 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
 const props = defineProps({
   show: { type: Boolean, required: true },
-})
+});
 
-const emit = defineEmits(['closeModal', 'create'])
+const emit = defineEmits(["closeModal", "create"]);
 
-const questions = ref([]) as any
-const amount = ref(0)
-const now = useNow()
-const publishDate = ref(now.value)
-const loadingUrl = ref(false)
-const questionText = ref('')
-const article = ref('')
-const sex = ref('male')
-const productData = ref<any>(null)
-const anonim = ref(false)
-const urlError = ref(false)
-const creating = ref(false)
+const questions = ref([]) as any;
+const amount = ref(0);
+const now = useNow();
+const publishDate = ref(now.value);
+const loadingUrl = ref(false);
+const questionText = ref("");
+const article = ref("");
+const sex = ref("male");
+const productData = ref<any>(null);
+const anonim = ref(false);
+const urlError = ref(false);
+const creating = ref(false);
 async function getQuestions() {
-  const { data, error } = await useFetch('/api/ozon/questions/get', { method: 'GET' })
-  if (data.value)
-    questions.value = data.value
+  const { data, error } = await useFetch("/api/ozon/questions/get", {
+    method: "GET",
+  });
+  if (data.value) questions.value = data.value;
   if (error.value)
-    notify({ type: 'error', title: 'Не удалось получить лайки', text: error.value.message })
+    notify({
+      type: "error",
+      title: "Не удалось получить лайки",
+      text: error.value.message,
+    });
 }
-await getQuestions()
+await getQuestions();
 async function create() {
-  creating.value = true
+  creating.value = true;
 
-  const { data, error } = await useFetch('/api/ozon/questions/create', {
-    method: 'POST',
+  const { data, error } = await useFetch("/api/ozon/questions/create", {
+    method: "POST",
     body: {
       article: article.value,
       publishDate: publishDate.value,
@@ -40,58 +45,54 @@ async function create() {
       questionText: questionText.value,
       anonim: anonim.value,
     },
-  })
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-    creating.value = false
-    return
+    });
+    creating.value = false;
+    return;
   }
   // notify({ type: 'error', title: 'Что-то пошло не так', text: error.value.message })
   if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    removeProduct()
-    publishDate.value = now.value
-    creating.value = false
-    emit('create')
+    notify({ type: "success", title: "Успешно" });
+    removeProduct();
+    publishDate.value = now.value;
+    creating.value = false;
+    emit("create");
   }
 }
 async function getProductInfo() {
-  if (!article.value)
-    return
+  if (!article.value) return;
 
   const { data, error } = await useFetch(`/api/ozon/product/${article.value}`, {
-    method: 'GET',
-  })
+    method: "GET",
+  });
   if ((data.value as any)?.product) {
-    productData.value = (data.value as any).product
-    urlError.value = false
+    productData.value = (data.value as any).product;
+    urlError.value = false;
   }
-  if (error.value)
-    urlError.value = true
+  if (error.value) urlError.value = true;
 
-  loadingUrl.value = false
+  loadingUrl.value = false;
 }
-let timeout = null as NodeJS.Timer | null
+let timeout = null as NodeJS.Timer | null;
 async function changeUrl() {
-  if (article.value === '')
-    return
-  loadingUrl.value = true
-  if (timeout)
-    clearTimeout(timeout)
-  timeout = setTimeout(getProductInfo, 2000)
+  if (article.value === "") return;
+  loadingUrl.value = true;
+  if (timeout) clearTimeout(timeout);
+  timeout = setTimeout(getProductInfo, 2000);
 }
 function selectSex(event: any) {
-  sex.value = event.target.value
+  sex.value = event.target.value;
 }
 function removeProduct() {
-  productData.value = null
-  article.value = ''
-  amount.value = 0
+  productData.value = null;
+  article.value = "";
+  amount.value = 0;
 }
 
 // function convertToMoscowTime(dateString: any): Date {
@@ -115,18 +116,22 @@ function removeProduct() {
     class="modalCustom fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"
     @click="$emit('closeModal')"
   >
-    <div class="flex flex-col bg-base-100 rounded-lg w-full max-w-[690px] gap-5 p-4" @click.stop>
+    <div
+      class="flex flex-col bg-base-100 rounded-lg w-full max-w-[690px] gap-5 p-4"
+      @click.stop
+    >
       <div class="flex justify-between">
-        <div class="font-medium text-lg">
-          Добавить вопрос
-        </div>
-        <button class="text-gray-500 hover:text-gray-700 self-end mb-2" @click="$emit('closeModal')">
+        <div class="font-medium text-lg">Добавить вопрос</div>
+        <button
+          class="text-gray-500 hover:text-gray-700 self-end mb-2"
+          @click="$emit('closeModal')"
+        >
           <Icon name="material-symbols:close-rounded" size="24" />
         </button>
       </div>
-      <div class=" bg-base-100 rounded-lg">
+      <div class="bg-base-100 rounded-lg">
         <div class="flex mb-2 flex-col gap-4">
-          <div class="flex gap-4 flex-col lg:flex-row sm:flex-wrap ">
+          <div class="flex gap-4 flex-col lg:flex-row sm:flex-wrap">
             <div>
               <div>Артикул:</div>
               <div class="join w-full mt-2">
@@ -137,59 +142,89 @@ function removeProduct() {
                     'input-success': productData,
                   }"
                   :disabled="productData"
-                  tabindex="0" class="input join-item input-sm h-[2.5rem] w-full bg-base-200 text-gray-500" placeholder="12312312" type="text" @input="changeUrl"
-                >
+                  tabindex="0"
+                  class="input join-item input-sm h-[2.5rem] w-full bg-base-200 text-gray-500"
+                  placeholder="12312312"
+                  type="text"
+                  @input="changeUrl"
+                />
                 <button
                   :class="{
                     'btn-disabled': !productData,
                   }"
-                  class="btn btn-ghost btn-sm h-[2.5rem] join-item rounded-r-md btn-circle bg-base-300" @click="removeProduct"
+                  class="btn btn-ghost btn-sm h-[2.5rem] join-item rounded-r-md btn-circle bg-base-300"
+                  @click="removeProduct"
                 >
-                  <span v-show="loadingUrl" class="loading loading-spinner loading-xs p-2" />
+                  <span
+                    v-show="loadingUrl"
+                    class="loading loading-spinner loading-xs p-2"
+                  />
 
                   <!-- Insert a backspace svg -->
                   <div v-if="!loadingUrl">
-                    <IconCSS v-if="productData" class="w-6 h-6" name="fluent:backspace-24-regular" />
+                    <IconCSS
+                      v-if="productData"
+                      class="w-6 h-6"
+                      name="fluent:backspace-24-regular"
+                    />
                   </div>
                 </button>
               </div>
             </div>
             <div>
               <div>Пол:</div>
-              <select class="select select-sm h-[2.5rem] w-full mt-2 bg-base-200 text-gray-500" @change="selectSex">
-                <option value="male">
-                  Мужской
-                </option>
-                <option value="female">
-                  Женский
-                </option>
+              <select
+                class="select select-sm h-[2.5rem] w-full mt-2 bg-base-200 text-gray-500"
+                @change="selectSex"
+              >
+                <option value="male">Мужской</option>
+                <option value="female">Женский</option>
               </select>
             </div>
             <div>
               <div>Дата публикации:</div>
-              <div class="relative w-full h-[2.5rem] lg:p-2 rounded-lg mt-2 bg-base-200 text-gray-500">
-                <div class="absolute left-3 top-2.5 lg:left-8 lg:top-3.5 text-sm">
-                  {{ publishDate <= now ? 'Опубликовать сейчас'
-                    : $dayjs(publishDate).format('DD.MM.YYYY HH:mm') }}
+              <div
+                class="relative w-full h-[2.5rem] lg:p-2 rounded-lg mt-2 bg-base-200 text-gray-500"
+              >
+                <div
+                  class="absolute left-3 top-2.5 lg:left-8 lg:top-3.5 text-sm"
+                >
+                  {{
+                    publishDate <= now
+                      ? "Опубликовать сейчас"
+                      : $dayjs(publishDate).format("DD.MM.YYYY HH:mm")
+                  }}
                 </div>
-                <div class="w-48 lg:opacity-0 cursor-pointer ml-auto" style="z-index: 9999999">
-                  <DatePicker v-model="publishDate" timezone="Europe/Moscow" class="w-40" />
+                <div
+                  class="w-48 lg:opacity-0 cursor-pointer ml-auto"
+                  style="z-index: 9999999"
+                >
+                  <DatePicker
+                    v-model="publishDate"
+                    timezone="Europe/Moscow"
+                    class="w-40"
+                  />
                 </div>
               </div>
             </div>
           </div>
           <div class="flex flex-col justify-start gap-1 w-full">
             <div>Вопрос к товару:</div>
-            <textarea v-model="questionText" rows="1" class="textarea w-full py-0 h-4 mt-2 bg-base-200 text-gray-500" />
+            <textarea
+              v-model="questionText"
+              rows="1"
+              class="textarea w-full py-0 h-4 mt-2 bg-base-200 text-gray-500"
+            />
             <label class="label py-0">
-              <span class="label-text-alt">От 10 до 1000 символов</span></label>
+              <span class="label-text-alt">От 10 до 1000 символов</span></label
+            >
           </div>
           <div class="flex gap-2">
             <input
               v-model="anonim"
               type="checkbox"
               class="checkbox checkbox-primary border-base-content"
-            >
+            />
             <span class="text-sm cursor-pointer" @click="anonim = !anonim">
               Добавить вопрос анонимно
             </span>
@@ -206,7 +241,8 @@ function removeProduct() {
             :disabled="creating"
             :class="{
               'btn-disabled': !productData || !questionText,
-            }" class="btn btn-sm h-[2.5rem] w-full  lg:max-w-[calc(25%)] btn-primary border-none text-white"
+            }"
+            class="btn btn-sm h-[2.5rem] w-full lg:max-w-[calc(25%)] btn-primary border-none text-white"
             @click="create"
           >
             Добавить
@@ -215,10 +251,15 @@ function removeProduct() {
         <div v-if="productData" class="productinfo mt-4">
           <div>Информация о товаре:</div>
           <div class="flex gap-4 mt-2 items-start">
-            <nuxt-img width="32" class="rounded-lg object-contain w-8" :src="productData.image" />
+            <nuxt-img
+              width="32"
+              class="rounded-lg object-contain w-8"
+              :src="productData.image"
+            />
             <div class="article">
               <a
-                :href="`https://www.ozon.ru/product/${productData.article}`" target="_blank"
+                :href="`https://www.ozon.ru/product/${productData.article}`"
+                target="_blank"
                 class="text-sm text-primary link link-hover"
               >
                 {{ productData.article }}

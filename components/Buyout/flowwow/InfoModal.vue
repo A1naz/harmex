@@ -17,6 +17,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["close"]);
 const theme = useColorMode();
+const { notify } = useNotification();
 const currency = useCurrency();
 const store = useMainStore();
 const getStatus = computed(() => {
@@ -102,7 +103,11 @@ onKeyStroke("Escape", (e) => {
               <div>
                 <span class="text-sm text-gray-500 mr-2 my-auto">Ссылка: </span>
                 <span class="rounded-md py-0 px-2 text-sm">
-                  <a :href="info.url" target="_blank" class="link link-hover underline text-primary">
+                  <a
+                    :href="info.url"
+                    target="_blank"
+                    class="link link-hover underline text-primary"
+                  >
                     {{ info.url }}
                   </a>
                 </span>
@@ -125,7 +130,7 @@ onKeyStroke("Escape", (e) => {
                   class="rounded-md py-0 px-2 text-sm cursor-pointer"
                   @click="copyToClipboard(info.uuid)"
                 >
-                  {{ info.uuid }}
+                  #{{ info.uuid }}
                 </label>
               </div>
 
@@ -164,9 +169,11 @@ onKeyStroke("Escape", (e) => {
                 >
               </div>
               <div>
-                <span class="text-sm text-gray-500 mr-2">Размер: </span>
+                <span class="text-sm text-gray-500 mr-2">Параметр: </span>
                 <span class="bg-base-200 rounded-md py-0 px-2 text-sm">{{
-                  info.sizeparam === "none" ? "Не указан" : info.sizeparam
+                  info.selectedParameter === "0"
+                    ? "Не указан"
+                    : info.selectedParameter
                 }}</span>
               </div>
               <div>

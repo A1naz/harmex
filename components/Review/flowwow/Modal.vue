@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { UseImage } from '@vueuse/components'
-import axios from 'axios'
-import CryptoJS from 'crypto-js'
-import { Upload } from 'tus-js-client'
-import { isUnparsedNode } from 'typescript'
+import { UseImage } from "@vueuse/components";
+import axios from "axios";
+import CryptoJS from "crypto-js";
+import { Upload } from "tus-js-client";
+import { v4 as uuid } from "uuid";
 
 const props = defineProps({
   review: {} as any,
   state: { type: Boolean, required: true },
   uuid: { type: String, required: true },
   deliveryid: { type: String, required: true },
-})
-const emit = defineEmits(['close', 'publish'])
-const config = useRuntimeConfig()
-const store = useMainStore()
+});
+const emit = defineEmits(["close", "publish"]);
+const config = useRuntimeConfig();
+const store = useMainStore();
 
-const headers = useRequestHeaders(['cookie']) as HeadersInit
-const closeButton = ref<HTMLElement>()
-const { notify } = useNotification()
-const { upload, getPublicUrl, remove } = useS3Object()
-const creatingReview = ref(false)
-const now = useNow()
-const { restrictUrl } = useValidation()
+const headers = useRequestHeaders(["cookie"]) as HeadersInit;
+const closeButton = ref<HTMLElement>();
+const { notify } = useNotification();
+const { upload, remove } = useS3Object();
+const creatingReview = ref(false);
+const now = useNow();
+const { restrictUrl } = useValidation();
 
 const inputs: any = {
   file1: ref(),
@@ -29,11 +29,11 @@ const inputs: any = {
   file3: ref(),
   file4: ref(),
   file5: ref(),
-}
+};
 
 const form = reactive({
-  publicComment: '',
-  hiddenComment: '',
+  publicComment: "",
+  hiddenComment: "",
   valuePerMoneyRating: 5,
   serviceRating: 5,
   deliveryRating: 5,
@@ -41,421 +41,395 @@ const form = reactive({
   date: now.value,
   photos: [
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
   ],
-  video: '',
-})
+  video: "",
+});
 
 const textValidation = computed(() => {
-  return restrictUrl(form.publicComment)
-})
+  return restrictUrl(form.publicComment);
+});
 const textValidError = computed(() => {
   return textValidation.value
-    ? ''
-    : 'В тексте присутствуют запрещенные символы (нельзя указывать ссылки)'
-})
+    ? ""
+    : "В тексте присутствуют запрещенные символы (нельзя указывать ссылки)";
+});
 
 function useDraft(draft: IReviewDraft) {
-  form.publicComment = draft.publicComment
+  form.publicComment = draft.publicComment;
 }
 
 const defaultDelIndex = props.review.delivs.findIndex(
-  (rev: any) => rev.delivId == props.deliveryid,
-)
+  (rev: any) => rev.delivId == props.deliveryid
+);
 const selectedDeliv = ref({
   deliveryid: props.review.delivs[defaultDelIndex].delivId,
   uuid: props.review.delivs[defaultDelIndex].buyoutId,
-})
+});
 
-const loadingIndex = ref(null) as Ref<number | null>
+const loadingIndex = ref(null) as Ref<number | null>;
 
 async function checkVideo(file: any) {
   return new Promise((resolve) => {
-    const videoElement = document.createElement('video')
-    videoElement.src = URL.createObjectURL(file)
+    const videoElement = document.createElement("video");
+    videoElement.src = URL.createObjectURL(file);
 
     if (file.size > 500 * 1024 * 1024) {
       // Если размер файла превышает 500 МБ
       notify({
-        title: 'Ошибка',
-        text: 'Максимальный размер видео должен быть 500 МБ',
-      })
-      resolve(false)
-      return
+        title: "Ошибка",
+        text: "Максимальный размер видео должен быть 500 МБ",
+      });
+      resolve(false);
+      return;
     }
 
     videoElement.onloadedmetadata = () => {
       if (videoElement.duration > 600) {
-        form.video = ''
-        isUploading.value = false
+        form.video = "";
+        isUploading.value = false;
         notify({
-          title: 'Ошибка',
-          text: 'Видео слишком длинное. Максимальная длительность: 10 минут',
-          type: 'error',
+          title: "Ошибка",
+          text: "Видео слишком длинное. Максимальная длительность: 10 минут",
+          type: "error",
           duration: 3000,
-        })
-        resolve(false)
-      }
-      else if (
-        videoElement.videoWidth < 480
-        || videoElement.videoHeight < 480
+        });
+        resolve(false);
+      } else if (
+        videoElement.videoWidth < 480 ||
+        videoElement.videoHeight < 480
       ) {
-        form.video = ''
-        isUploading.value = false
+        form.video = "";
+        isUploading.value = false;
         notify({
-          title: 'Ошибка',
-          text: 'Минимальный размер видео должен быть 480x480',
-          type: 'error',
+          title: "Ошибка",
+          text: "Минимальный размер видео должен быть 480x480",
+          type: "error",
           duration: 3000,
-        })
-        resolve(false)
-      }
-      else if (
-        videoElement.videoWidth > 4100
-        || videoElement.videoHeight > 4100
+        });
+        resolve(false);
+      } else if (
+        videoElement.videoWidth > 4100 ||
+        videoElement.videoHeight > 4100
       ) {
-        form.video = ''
-        isUploading.value = false
+        form.video = "";
+        isUploading.value = false;
         notify({
-          title: 'Ошибка',
-          text: 'Максимальный размер видео должен быть 4100x4100',
-          type: 'error',
+          title: "Ошибка",
+          text: "Максимальный размер видео должен быть 4100x4100",
+          type: "error",
           duration: 3000,
-        })
-        resolve(false)
+        });
+        resolve(false);
+      } else {
+        resolve(true);
       }
-      else {
-        resolve(true)
-      }
-    }
-  })
+    };
+  });
 }
 
 async function uploadToS3(event: Event, index: number) {
-  loadingIndex.value = index
-  const fileList = (event.target! as HTMLInputElement).files
-  const files = Array.from(fileList!)
-  if (!files)
-    return
-  const img = new Image()
-  img.src = URL.createObjectURL(files[0])
+  console.log("uploadToS3");
+  loadingIndex.value = index;
+  const fileList = (event.target! as HTMLInputElement).files;
+  const file = (event.target! as HTMLInputElement).files[0];
 
-  img.onload = async function () {
-    if (img.width < 337 || img.height < 450) {
-      notify({
-        title: 'Ошибка',
-        text: 'Размер изображения должен быть не менее 337px по ширине и 450px по высоте',
-        type: 'error',
-        duration: 3000,
-      })
+  const files = Array.from(fileList!);
+  if (!files) return;
 
-      loadingIndex.value = null
-      return
-    }
+  if (
+    files[0] &&
+    files[0].name &&
+    files[0].name.toLowerCase().endsWith(".webp")
+  ) {
+    notify({
+      title: "Что-то пошло не так",
+      text: "Нельзя загружать вебпикчи",
+      type: "error",
+      duration: 3000,
+    });
 
-    if (
-      files[0]
-      && files[0].name
-      && files[0].name.toLowerCase().endsWith('.webp')
-    ) {
-      notify({
-        title: 'Что-то пошло не так',
-        text: 'Нельзя загружать вебпикчи',
-        type: 'error',
-        duration: 3000,
-      })
-
-      loadingIndex.value = null
-      return
-    }
-
-    const { data, error } = await upload({
-      files,
-      url: null,
-    })
-    if (error.value) {
-      notify({
-        title: 'Что-то пошло не так',
-        text: 'Не удалось загрузить фото',
-        type: 'error',
-        duration: 3000,
-      })
-    }
-    if (data.value) {
-      // @ts-ignore
-      await useFetch('/api/images/openForPublic', {
-        method: 'GET',
-        params: {
-          path: `reviewImages/${data.value[0].key}`,
-        },
-      })
-      form.photos[index] = {
-        url: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
-        public: `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${data.value[0].key}`,
-      }
-    }
-
-    setTimeout(() => {
-      loadingIndex.value = null
-    }, 1500)
+    loadingIndex.value = null;
+    return;
   }
+
+  const fileName = "reviewImages/" + uuid();
+  console.log(fileName);
+  const result = await upload(file, {
+    key: fileName,
+  });
+
+  if (!result) {
+    notify({
+      title: "Что-то пошло не так",
+      text: "Не удалось загрузить фото",
+      type: "error",
+      duration: 3000,
+    });
+    return;
+  }
+  console.log(result);
+  console.log(result);
+  //@ts-ignore
+  await useFetch("/api/images/openForPublic", {
+    method: "GET",
+    params: {
+      path: result.split("query/")[1],
+    },
+  });
+
+  form.photos[index] = {
+    url: `${result.replace("/api/s3/query/reviewImages/", "")}`,
+    public: `https://ozonmpportal.hb.vkcs.cloud/${result.split("query/")[1]}`,
+  };
+
+  setTimeout(() => {
+    loadingIndex.value = null;
+  }, 1500);
 }
-const uploadProgress = ref('')
-const isUploading = ref(false)
-const fileHash = ref<any>('')
-const filetype = ref('')
-const newFileId = ref('')
+const uploadProgress = ref("");
+const isUploading = ref(false);
+const fileHash = ref<any>("");
+const filetype = ref("");
+const newFileId = ref("");
 
 async function clearForm() {
-  form.date = new Date()
-  form.publicComment = ''
-  form.valuePerMoneyRating = 5
-  form.serviceRating = 5
-  form.conformityRating = 5
-  form.deliveryRating = 5
+  form.date = new Date();
+  form.publicComment = "";
+  form.valuePerMoneyRating = 5;
+  form.serviceRating = 5;
+  form.conformityRating = 5;
+  form.deliveryRating = 5;
 
-  loadingIndex.value = null
-  isUploading.value = false
-  uploadProgress.value = ''
-  fileHash.value = ''
-  filetype.value = ''
-  newFileId.value = ''
-  form.video = ''
-  filetype.value = ''
+  loadingIndex.value = null;
+  isUploading.value = false;
+  uploadProgress.value = "";
+  fileHash.value = "";
+  filetype.value = "";
+  newFileId.value = "";
+  form.video = "";
+  filetype.value = "";
 
   form.photos = [
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
     {
-      url: '',
-      public: '',
+      url: "",
+      public: "",
     },
-  ]
+  ];
 }
 
 async function publishReview() {
-  creatingReview.value = true
-  const photos = form.photos
-  for await (const photo of photos) {
-    try {
-    }
-    catch {
-      notify({
-        title: 'Что-то пошло не так',
-        text: 'Не удалось загрузить все фото, попробуйте еще раз',
-      })
-    }
-  }
+  creatingReview.value = true;
+
   // @ts-ignore
-  const { data, error } = await useFetch('/api/flowwow/review/publish', {
-    method: 'POST',
+  const { data, error } = await useFetch("/api/flowwow/review/publish", {
+    method: "POST",
     body: {
       ...form,
-      videoKey:
-        `reviewVideos/${
-          newFileId.value
-        }.${
-          filetype.value.replace('video/', '')}`,
+      videoKey: `reviewVideos/${newFileId.value}.${filetype.value.replace(
+        "video/",
+        ""
+      )}`,
       deliveryid: selectedDeliv.value.deliveryid,
       buyoutuuid: selectedDeliv.value.uuid,
     },
     headers,
-  })
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-    creatingReview.value = false
-    return
+    });
+    creatingReview.value = false;
+    return;
   }
   notify({
-    title: 'Успешно',
-    text: 'Отзыв успешно опубликован',
-    type: 'success',
+    title: "Успешно",
+    text: "Отзыв успешно опубликован",
+    type: "success",
     duration: 3000,
-  })
-  creatingReview.value = false
-  emit('close')
-  emit('publish')
+  });
+  creatingReview.value = false;
+  emit("close");
+  emit("publish");
 }
 
 async function removePhoto(index: number) {
-  const fileInput = inputs[`file${(index + 1) as 1 | 2 | 3 | 4 | 5}`]
-  fileInput.value = null
-  loadingIndex.value = index
-  const url = form.photos[index].url
+  const fileInput = inputs[`file${(index + 1) as 1 | 2 | 3 | 4 | 5}`];
+  fileInput.value = null;
+  loadingIndex.value = index;
+  const url = form.photos[index].url;
 
   form.photos[index] = {
-    url: '',
-    public: '',
-  }
+    url: "",
+    public: "",
+  };
   const { data, error } = await remove({
     url,
-  })
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
-      text: 'Не удалось удалить фото',
-      type: 'error',
+      title: "Что-то пошло не так",
+      text: "Не удалось удалить фото",
+      type: "error",
       duration: 3000,
-    })
-    return
+    });
+    return;
   }
   if (data.value) {
     form.photos[index] = {
-      url: '',
-      public: '',
-    }
+      url: "",
+      public: "",
+    };
   }
-  loadingIndex.value = null
+  loadingIndex.value = null;
 }
 
 watch(
   () => props.uuid,
   (uuid) => {
-    clearForm()
-  },
-)
+    clearForm();
+  }
+);
 
 onMounted(() => {
-  clearForm()
-})
+  clearForm();
+});
 function ratingAlert() {
   notify({
-    title: 'Что-то пошло не так',
-    text: 'В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд',
-    type: 'error',
+    title: "Что-то пошло не так",
+    text: "В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд",
+    type: "error",
     duration: 3000,
-  })
+  });
 }
 
 async function calculateHash(file: any) {
   return new Promise((resolve, reject) => {
-    const chunkSize = 5 * 1024 * 1024
-    const chunks = Math.ceil(file.size / chunkSize)
-    let currentChunk = 0
-    const hash = CryptoJS.algo.SHA256.create()
+    const chunkSize = 5 * 1024 * 1024;
+    const chunks = Math.ceil(file.size / chunkSize);
+    let currentChunk = 0;
+    const hash = CryptoJS.algo.SHA256.create();
 
-    const fileReader = new FileReader()
+    const fileReader = new FileReader();
 
     fileReader.onload = function (e: any) {
       // @ts-ignore
-      const wordArray = CryptoJS.lib.WordArray.create(e.target.result)
-      hash.update(wordArray)
-      currentChunk++
+      const wordArray = CryptoJS.lib.WordArray.create(e.target.result);
+      hash.update(wordArray);
+      currentChunk++;
 
       if (currentChunk < chunks) {
-        loadNextChunk()
+        loadNextChunk();
+      } else {
+        const hashValue = hash.finalize().toString(CryptoJS.enc.Hex);
+        resolve(hashValue);
       }
-      else {
-        const hashValue = hash.finalize().toString(CryptoJS.enc.Hex)
-        resolve(hashValue)
-      }
-    }
+    };
 
     fileReader.onerror = function (e) {
-      reject(e)
-    }
+      reject(e);
+    };
 
     function loadNextChunk() {
-      const start = currentChunk * chunkSize
-      const end = Math.min(start + chunkSize, file.size)
-      const chunk = file.slice(start, end)
-      fileReader.readAsArrayBuffer(chunk)
+      const start = currentChunk * chunkSize;
+      const end = Math.min(start + chunkSize, file.size);
+      const chunk = file.slice(start, end);
+      fileReader.readAsArrayBuffer(chunk);
     }
 
-    loadNextChunk()
-  })
+    loadNextChunk();
+  });
 }
 
 async function renameFile() {
   axios
-    .post('https://videos.ozonmp.ru/api/renameFile', {
+    .post("https://videos.ozonmp.ru/api/renameFile", {
       fileName: newFileId.value,
-      type: filetype.value.replace('video/', ''),
+      type: filetype.value.replace("video/", ""),
     })
     .then((response) => {
-      if (response.data.status === 'success') {
+      if (response.data.status === "success") {
         notify({
-          title: 'Успешно',
-          text: 'Файл загружен',
-        })
-      }
-      else {
+          title: "Успешно",
+          text: "Файл загружен",
+        });
+      } else {
         notify({
-          title: 'Что-то пошло не так',
-          text: 'Не удалось загрузить файл',
-        })
+          title: "Что-то пошло не так",
+          text: "Не удалось загрузить файл",
+        });
       }
-      isUploading.value = false
-    })
+      isUploading.value = false;
+    });
 }
 async function handleFileChange(e: any) {
   if (isUploading.value) {
     notify({
-      title: 'Что-то пошло не так',
-      text: 'Дождитесь окончания загрузки',
-    })
-    return
+      title: "Что-то пошло не так",
+      text: "Дождитесь окончания загрузки",
+    });
+    return;
   }
 
-  const file = e.target.files[0]
+  const file = e.target.files[0];
 
-  if (!file || !file.type.includes('video')) {
-    form.video = ''
-    return
+  if (!file || !file.type.includes("video")) {
+    form.video = "";
+    return;
   }
 
-  const isVideoEnabled = await checkVideo(file)
+  const isVideoEnabled = await checkVideo(file);
   if (!isVideoEnabled) {
-    form.video = ''
-    return
+    form.video = "";
+    return;
   }
 
-  const hash = await calculateHash(file)
+  const hash = await calculateHash(file);
 
-  isUploading.value = true
-  fileHash.value = hash
-  filetype.value = file.type
-  form.video = file.name
+  isUploading.value = true;
+  fileHash.value = hash;
+  filetype.value = file.type;
+  form.video = file.name;
 
   const upload: any = new Upload(file, {
-    endpoint: 'https://videos.ozonmp.ru/uploads',
+    endpoint: "https://videos.ozonmp.ru/uploads",
     // urlStorage: urlStorage.data,
     retryDelays: [0, 1000, 3000, 5000],
     metadata: {
@@ -465,21 +439,21 @@ async function handleFileChange(e: any) {
     },
     chunkSize: 5 * 1024 * 1024,
     onProgress: (bytesUploaded, bytesTotal) => {
-      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(0)
-      uploadProgress.value = percentage
-      isUploading.value = true
+      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(0);
+      uploadProgress.value = percentage;
+      isUploading.value = true;
     },
     onError: (error) => {
-      isUploading.value = false
+      isUploading.value = false;
     },
     onSuccess: async () => {
-      newFileId.value = upload.url.split('/')[upload.url.split('/').length - 1]
+      newFileId.value = upload.url.split("/")[upload.url.split("/").length - 1];
 
       setTimeout(async () => {
-        await renameFile()
-      }, 1000)
+        await renameFile();
+      }, 1000);
     },
-  })
+  });
 
   // await axios.post('http://localhost/api/getUrlStorage', {fileHash: hash}).then((previousUploads) => {
   //     if (previousUploads.data.length > 0) {
@@ -487,36 +461,36 @@ async function handleFileChange(e: any) {
   //     }
 
   //   })
-  upload.start()
+  upload.start();
 }
 
 async function check(hash: any) {
-  await renameFile()
+  await renameFile();
 }
 
 async function test() {
-  const res = await useFetch('https://videos.ozonmp.ru/', {
-    method: 'GET',
-  })
+  const res = await useFetch("https://videos.ozonmp.ru/", {
+    method: "GET",
+  });
 }
 
 function convertToMoscowTime(dateString: any): Date {
-  const date = new Date(dateString)
+  const date = new Date(dateString);
 
-  const utcOffset = date.getTimezoneOffset() / 60
+  const utcOffset = date.getTimezoneOffset() / 60;
 
-  date.setHours(date.getHours() + utcOffset)
+  date.setHours(date.getHours() + utcOffset);
 
-  const moscowOffset = 3
+  const moscowOffset = 3;
 
-  date.setHours(date.getHours() + moscowOffset)
+  date.setHours(date.getHours() + moscowOffset);
 
-  return date
+  return date;
 }
 </script>
 
 <template>
-  <input id="review-modal" type="checkbox" class="modal-toggle">
+  <input id="review-modal" type="checkbox" class="modal-toggle" />
   <div
     ref="closeButton"
     :class="{
@@ -530,20 +504,17 @@ function convertToMoscowTime(dateString: any): Date {
         for="review-modal"
         class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
         @click="$emit('close')"
-      >✕</label>
+        >✕</label
+      >
       <div class="flex flex-row justify-center -mt-4">
         <p class="text-xs text-gray-500 justify-self-center">
           - {{ review.article }} -
         </p>
       </div>
 
-      <h3 class="text-xl font-bold mb-4">
-        Оставить отзыв
-      </h3>
+      <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
 
-      <div class="pb-2 font-medium">
-        Доставка:
-      </div>
+      <div class="pb-2 font-medium">Доставка:</div>
       <select
         v-model="selectedDeliv"
         class="select w-full mb-4 bg-base-200 text-gray-500"
@@ -555,23 +526,16 @@ function convertToMoscowTime(dateString: any): Date {
           class="m-6"
         >
           {{
-            `${defaultDateShort(rev.updatedAt)
-            } - пол: ${
-              rev.sex
-            } - размер: ${
+            `${defaultDateShort(rev.updatedAt)} - пол: ${rev.sex} - размер: ${
               rev.sizeparam
-            } - цена: ${
-              rev.pricebuy
-            }р.`
+            } - цена: ${rev.pricebuy}р.`
           }}
         </option>
       </select>
 
       <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-2 font-medium">
-            Скрытый комментарий
-          </div>
+          <div class="pb-2 font-medium">Скрытый комментарий</div>
 
           <textarea
             v-model="form.hiddenComment"
@@ -584,9 +548,7 @@ function convertToMoscowTime(dateString: any): Date {
           </div>
         </div>
         <div class="w-full">
-          <div class="pb-2 font-medium">
-            Публичный отзыв
-          </div>
+          <div class="pb-2 font-medium">Публичный отзыв</div>
 
           <textarea
             v-model="form.publicComment"
@@ -600,9 +562,7 @@ function convertToMoscowTime(dateString: any): Date {
         </div>
 
         <div>
-          <div class="font-medium">
-            Соответствие
-          </div>
+          <div class="font-medium">Соответствие</div>
           <div class="relative w-full py-6 bg-base-100 rounded-lg">
             <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
             <div class="rating absolute left-0 top-3 gap-2">
@@ -611,37 +571,35 @@ function convertToMoscowTime(dateString: any): Date {
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="button"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="button"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 @input="form.conformityRating = 4"
-              >
+              />
               <input
                 type="radio"
                 name="rating-2"
                 class="mask mask-star-2 bg-yellow-400"
                 checked
                 @input="form.conformityRating = 5"
-              >
+              />
             </div>
           </div>
-          <div class="font-medium">
-            Цена/Качество
-          </div>
+          <div class="font-medium">Цена/Качество</div>
           <div class="relative w-full py-6 bg-base-100 rounded-lg">
             <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
             <div class="rating absolute left-0 top-3 gap-2">
@@ -650,37 +608,35 @@ function convertToMoscowTime(dateString: any): Date {
                 name="rating-3"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="button"
                 name="rating-3"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="button"
                 name="rating-3"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="radio"
                 name="rating-3"
                 class="mask mask-star-2 bg-yellow-400"
                 @input="form.valuePerMoneyRating = 4"
-              >
+              />
               <input
                 type="radio"
                 name="rating-3"
                 class="mask mask-star-2 bg-yellow-400"
                 checked
                 @input="form.valuePerMoneyRating = 5"
-              >
+              />
             </div>
           </div>
-          <div class="font-medium">
-            Сервис
-          </div>
+          <div class="font-medium">Сервис</div>
           <div class="relative w-full py-6 bg-base-100 rounded-lg">
             <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
             <div class="rating absolute left-0 top-3 gap-2">
@@ -689,37 +645,35 @@ function convertToMoscowTime(dateString: any): Date {
                 name="rating-4"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="button"
                 name="rating-4"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="button"
                 name="rating-4"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="radio"
                 name="rating-4"
                 class="mask mask-star-2 bg-yellow-400"
                 @input="form.serviceRating = 4"
-              >
+              />
               <input
                 type="radio"
                 name="rating-4"
                 class="mask mask-star-2 bg-yellow-400"
                 checked
                 @input="form.serviceRating = 5"
-              >
+              />
             </div>
           </div>
-          <div class="font-medium">
-            Доставка
-          </div>
+          <div class="font-medium">Доставка</div>
           <div class="relative w-full py-6 bg-base-100 rounded-lg">
             <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
             <div class="rating absolute left-0 top-3 gap-2">
@@ -728,32 +682,32 @@ function convertToMoscowTime(dateString: any): Date {
                 name="rating-5"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="button"
                 name="rating-5"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="button"
                 name="rating-5"
                 class="mask mask-star-2 bg-yellow-400"
                 @click="ratingAlert"
-              >
+              />
               <input
                 type="radio"
                 name="rating-5"
                 class="mask mask-star-2 bg-yellow-400"
                 @input="form.deliveryRating = 4"
-              >
+              />
               <input
                 type="radio"
                 name="rating-5"
                 class="mask mask-star-2 bg-yellow-400"
                 checked
                 @input="form.deliveryRating = 5"
-              >
+              />
             </div>
           </div>
         </div>
@@ -761,14 +715,16 @@ function convertToMoscowTime(dateString: any): Date {
         <div>
           <div class="pb-2 font-medium">
             Запланировать отзыв
-            <span class="text-xs font-normal text-gray-500">(по Московскому времени)</span>
+            <span class="text-xs font-normal text-gray-500"
+              >(по Московскому времени)</span
+            >
           </div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
               {{
                 form.date <= now
-                  ? 'Опубликовать сейчас'
-                  : $dayjs(form.date).format('DD.MM.YYYY HH:mm')
+                  ? "Опубликовать сейчас"
+                  : $dayjs(form.date).format("DD.MM.YYYY HH:mm")
               }}
             </div>
             <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
@@ -901,6 +857,79 @@ function convertToMoscowTime(dateString: any): Date {
           </label>
         </div> -->
       </div>
+
+      <div class="mt-2">
+        <div class="font-medium">Фото</div>
+        <p class="mb-2 text-sm font-light text-gray-500">
+          Разрешены фото в формате PNG, JPG.
+        </p>
+        <ClientOnly>
+          <div
+            class="flex gap-2 items-center overflow-x-scroll flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]"
+          >
+            <div v-for="(photo, index) of form.photos" :key="index">
+              <div
+                class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none"
+              >
+                <div
+                  v-if="photo.url"
+                  class="absolute right-0 top-0 z-50"
+                  @click="removePhoto(index)"
+                >
+                  <label for="photo" class="btn btn-sm btn-circle btn-ghost"
+                    >✕</label
+                  >
+                </div>
+
+                <label
+                  v-show="!photo.public"
+                  class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer"
+                >
+                  <div
+                    v-show="loadingIndex === index"
+                    class="absolute inset-0 flex items-center justify-center"
+                  >
+                    <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                  </div>
+                  <input
+                    :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)"
+                    type="file"
+                    accept="image/png, image/gif, image/jpeg"
+                    class="hidden"
+                    @change="(e: Event) => uploadToS3(e, index)"
+                  />
+                  <IconCSS
+                    v-show="loadingIndex !== index"
+                    name="material-symbols:add-photo-alternate-outline"
+                    class="text-base-content bg-primary"
+                    size="30"
+                  />
+                </label>
+
+                <div v-show="photo.public" class="absolute inset-0">
+                  <UseImage :src="photo.public">
+                    <template #default>
+                      <nuxt-img
+                        :src="photo.public"
+                        fit="contain"
+                        class="w-full h-full object-contain rounded-lg"
+                        loading="lazy"
+                      />
+                    </template>
+                    <template #loading>
+                      <div
+                        class="absolute inset-0 flex items-center justify-center"
+                      >
+                        <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                      </div>
+                    </template>
+                  </UseImage>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ClientOnly>
+      </div>
       <div class="modal-action justify-between">
         <div>
           <button
@@ -916,7 +945,8 @@ function convertToMoscowTime(dateString: any): Date {
             for="review-modal"
             class="btn btn-sm btn-ghost"
             @click="$emit('close')"
-          >Отмена</label>
+            >Отмена</label
+          >
           <button
             for="review-modal"
             class="btn btn-primary btn-sm border-none text-white"
@@ -932,18 +962,18 @@ function convertToMoscowTime(dateString: any): Date {
 </template>
 
 <style scoped>
-input[type='file']::file-selector-button {
+input[type="file"]::file-selector-button {
   display: none;
 }
 
-input[type='file']::-webkit-file-upload-button {
+input[type="file"]::-webkit-file-upload-button {
   display: block;
   width: 0;
   height: 0;
   margin-left: -100%;
 }
 
-input[type='file']::-ms-browse {
+input[type="file"]::-ms-browse {
   display: none;
 }
 </style>

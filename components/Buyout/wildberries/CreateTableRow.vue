@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
-import { useWildberriesBuyoutStore } from '../../../stores/wildberriesBuyout'
-import type { Rule } from '@/data/buyout/rules'
+const { notify } = useNotification();
+import { useWildberriesBuyoutStore } from "../../../stores/wildberriesBuyout";
+import type { Rule } from "@/data/buyout/rules";
 
 const props = defineProps({
   product: {
@@ -16,69 +16,69 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
+});
 
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
+const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
 
-const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 
-const store = useWildberriesBuyoutStore()
+const store = useWildberriesBuyoutStore();
 
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
-      title: 'За раз можно создать максимум 10 выкупов',
-      type: 'error',
-    })
-    return
+      title: "За раз можно создать максимум 10 выкупов",
+      type: "error",
+    });
+    return;
   }
 
-  const item = JSON.stringify(store.createProducts[props.index])
-  store.createProducts.push(JSON.parse(item))
+  const item = JSON.stringify(store.createProducts[props.index]);
+  store.createProducts.push(JSON.parse(item));
 }
 async function deleteBuyOut() {
-  store.removeProduct(props.index)
+  store.removeProduct(props.index);
 }
 function onSizeChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSize(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSize(target.value, props.index);
 }
 function onSexChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSex(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSex(target.value, props.index);
 }
 
 function removeSearchQuery(index: number) {
-  store.removeSearchQuery(props.index, index)
+  store.removeSearchQuery(props.index, index);
 }
 function addSearchQuery() {
-  store.addSearchQuery(props.index)
+  store.addSearchQuery(props.index);
 }
 function productSearchQueryUpdate(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery({
     value: newValue,
     queryIndex: index,
     productIndex: props.index,
-  })
+  });
 }
 const productDateRangeModel = computed({
   get() {
-    return props.product.dateRange
+    return props.product.dateRange;
   },
   set(newValue: unknown[]) {
-    store.changeDateRange(newValue, props.index)
+    store.changeDateRange(newValue, props.index);
   },
-})
+});
 
 const productQuantityModel = computed({
   get() {
-    return props.product.quantity
+    return props.product.quantity;
   },
   set(newValue: number) {
-    store.changeQuantity(newValue, props.index)
+    store.changeQuantity(newValue, props.index);
   },
-})
+});
 </script>
 
 <template>
@@ -199,8 +199,8 @@ const productQuantityModel = computed({
         <div class="my-auto">
           {{
             product.rules.length
-              ? product.rules.map((rule: Rule) => rule.id).join(', ')
-              : ''
+              ? product.rules.map((rule: Rule) => rule.id).join(", ")
+              : ""
           }}
         </div>
         <button
@@ -214,8 +214,6 @@ const productQuantityModel = computed({
     <td class="border-r border-base">
       <div class="flex items-center mt-2">
         <div class="w-full">
-          
-
           <BuyoutDateRangePicker
             v-if="!product.purchaseSoon"
             v-model="productDateRangeModel"

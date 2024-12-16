@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { UseImage } from "@vueuse/components";
-import { notify } from "@kyvg/vue3-notification";
+
 const router = useRouter();
 const config = useRuntimeConfig();
 

@@ -14,6 +14,7 @@ export default eventHandler(async (event) => {
     deliveryid,
     serviceRating,
     deliveryRating,
+    photos,
     valuePerMoneyRating,
     conformityRating,
     publicComment,
@@ -79,6 +80,7 @@ export default eventHandler(async (event) => {
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
+    images: photos.map((photo: any) => photo.url),
     serviceRating,
     deliveryRating,
     valuePerMoneyRating,
