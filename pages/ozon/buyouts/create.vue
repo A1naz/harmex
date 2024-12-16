@@ -740,7 +740,7 @@ const addressForm = reactive({
                   />
                 </div>
               </div>
-              <div
+              <!-- <div
                 v-if="rule.id === 1 && user?.ffEnabled"
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
@@ -764,7 +764,7 @@ const addressForm = reactive({
                     "
                   />
                 </div>
-              </div>
+              </div> -->
               <span
                 v-if="rule.id === 1"
                 class="text-[#AA4A44] text-sm font-bold"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Rule } from '@/data/buyout/rules'
-import { useFlowwowBuyoutStore } from '../../../stores/flowwowBuyout'
+import type { Rule } from "@/data/buyout/rules";
+import { useFlowwowBuyoutStore } from "../../../stores/flowwowBuyout";
 
 const props = defineProps({
   product: {
@@ -15,75 +15,75 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
+});
 
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
+const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
 
-const { notify } = useNotification()
+const { notify } = useNotification();
 
-const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 
-const store = useFlowwowBuyoutStore()
+const store = useFlowwowBuyoutStore();
 
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
-      title: 'За раз можно создать максимум 10 выкупов',
-      type: 'error',
-    })
-    return
+      title: "За раз можно создать максимум 10 выкупов",
+      type: "error",
+    });
+    return;
   }
 
-  const item = JSON.stringify(store.createProducts[props.index])
-  store.createProducts.push(JSON.parse(item))
+  const item = JSON.stringify(store.createProducts[props.index]);
+  store.createProducts.push(JSON.parse(item));
 }
 async function deleteBuyOut() {
-  store.removeProduct(props.index)
+  store.removeProduct(props.index);
 }
 function onSizeChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSize(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSize(target.value, props.index);
 }
 function onSexChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSex(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSex(target.value, props.index);
 }
 
 function removeSearchQuery(index: number) {
-  store.removeSearchQuery(props.index, index)
+  store.removeSearchQuery(props.index, index);
 }
 function addSearchQuery() {
-  store.addSearchQuery(props.index)
+  store.addSearchQuery(props.index);
 }
 function productSearchQueryUpdate(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery({
     value: newValue,
     queryIndex: index,
     productIndex: props.index,
-  })
+  });
 }
 const productDateRangeModel = computed({
   get() {
-    return props.product.dateRange
+    return props.product.dateRange;
   },
   set(newValue: unknown[]) {
-    store.changeDateRange(newValue, props.index)
+    store.changeDateRange(newValue, props.index);
   },
-})
+});
 
 const productQuantityModel = computed({
   get() {
-    return props.product.quantity
+    return props.product.quantity;
   },
   set(newValue: number) {
-    store.changeQuantity(newValue, props.index)
+    store.changeQuantity(newValue, props.index);
   },
-})
+});
 
 function setDeliveryDate(date: string, time: string) {
-  store.createProducts[props.index].deliveryPeriodDate = date
-  store.createProducts[props.index].deliveryPeriodTime = time
+  store.createProducts[props.index].deliveryPeriodDate = date;
+  store.createProducts[props.index].deliveryPeriodTime = time;
 }
 </script>
 
@@ -192,17 +192,27 @@ function setDeliveryDate(date: string, time: string) {
       <div class="w-20 2xl:w-full">
         <select
           class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+          v-model="product.selectedParameter"
+        >
+          <option
+            v-for="parameter in product.parameters"
+            :key="parameter"
+            :value="parameter"
+          >
+            {{ parameter }}
+          </option>
+        </select>
+      </div>
+    </td>
+    <td class="border-r border-base">
+      <div class="w-20 2xl:w-full">
+        <select
+          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
           @change="onSexChange"
         >
-          <option value="Нет">
-            Нет
-          </option>
-          <option value="male">
-            Муж
-          </option>
-          <option value="female">
-            Жен
-          </option>
+          <option value="Нет">Нет</option>
+          <option value="male">Муж</option>
+          <option value="female">Жен</option>
         </select>
       </div>
     </td>
@@ -211,8 +221,8 @@ function setDeliveryDate(date: string, time: string) {
         <div class="my-auto">
           {{
             product.rules.length
-              ? product.rules.map((rule: Rule) => rule.id).join(', ')
-              : ''
+              ? product.rules.map((rule: Rule) => rule.id).join(", ")
+              : ""
           }}
         </div>
         <button
@@ -266,9 +276,7 @@ function setDeliveryDate(date: string, time: string) {
             v-model="productDateRangeModel"
             :start-date="startDate"
           /> -->
-          <div v-else class="text-center">
-            Выкуп в ближайшее время
-          </div>
+          <div v-else class="text-center">Выкуп в ближайшее время</div>
           <!-- <button
             v-else
             disabled
@@ -303,27 +311,24 @@ function setDeliveryDate(date: string, time: string) {
             @save-date="setDeliveryDate"
           /> -->
           <select
-          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
-          v-model="store.createProducts[props.index].deliveryType"
-        >
-          <option value="courier">
-            Курьер
-          </option>
-          <option value="self">
-            Самовывоз
-          </option>
-        </select>
+            class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+            v-model="store.createProducts[props.index].deliveryType"
+          >
+            <option value="courier">Курьер</option>
+            <option value="self">Самовывоз</option>
+          </select>
         </div>
       </div>
     </td>
     <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
-        <label><input
-          v-model="product.appartmentNumber"
-          type="text"
-          placeholder="№ квартиры"
-          class="input bg-base-200 input-sm w-full rounded-xl"
-        >
+        <label
+          ><input
+            v-model="product.appartmentNumber"
+            type="text"
+            placeholder="№ квартиры"
+            class="input bg-base-200 input-sm w-full rounded-xl"
+          />
         </label>
       </div>
     </td>

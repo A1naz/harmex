@@ -30,6 +30,7 @@ interface Item {
   slug: string
   deliveryType: string
   nameOrganization: string
+  selectedParameter: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -146,6 +147,7 @@ export default eventHandler(async (event) => {
       pointDistrict: 'Московская область',
       deliveryType: product.deliveryType ? product.deliveryType : 'courier',
       nameOrganization: product.nameOrganization,
+      selectedParameter: product.selectedParameter,
       // deliveryPeriodTime: product.deliveryPeriodTime,
       // deliveryPeriodDate: product.deliveryPeriodDate,
     })

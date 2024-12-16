@@ -333,7 +333,7 @@ function setDeliveryDate(date: string, time: string) {
             @save-date="setDeliveryDate"
           /> -->
           <select
-          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+          class="select select-sm w-full bg-base-200 bg-opacity-40 max-w-sm appearance-none"
           v-model="store.createProducts[props.index].deliveryType"
         >
           <option value="courier">
@@ -341,6 +341,28 @@ function setDeliveryDate(date: string, time: string) {
           </option>
           <option value="self">
             Самовывоз
+          </option>
+        </select>
+        </div>
+      </div>
+      <div class="flex gap-5">
+        <span class="text-md text-gray-500 mb-2">Параметры: </span>
+        <div class="text-xs flex justify-start">
+          <!-- <BuyoutFlowwowDatePicker
+            :model-value="startDate"
+            :time-delivery="store.createProducts[index].deliveryPeriodTime"
+            @save-date="setDeliveryDate"
+          /> -->
+          <select
+          class="select select-sm w-full bg-base-200 bg-opacity-40 max-w-sm appearance-none"
+          v-model="store.createProducts[props.index].selectedParameter"
+        >
+        <option
+            v-for="parameter in product.parameters"
+            :key="parameter"
+            :value="parameter"
+          >
+            {{ parameter }}
           </option>
         </select>
         </div>

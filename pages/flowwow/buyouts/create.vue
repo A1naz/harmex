@@ -419,6 +419,11 @@ function startTimer() {
                   </div>
                 </th>
 
+                <th class="font-normal" >
+                  <div class="text-center">
+                    <span> параметры </span>
+                  </div>
+                </th>
                 <th class="font-normal" @click="openInfoModal('sex')">
                   <div class="text-center">
                     <span> Пол </span>
