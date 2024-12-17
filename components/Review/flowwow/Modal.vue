@@ -73,10 +73,6 @@ const textValidError = computed(() => {
     : "В тексте присутствуют запрещенные символы (нельзя указывать ссылки)";
 });
 
-function useDraft(draft: IReviewDraft) {
-  form.publicComment = draft.publicComment;
-}
-
 const defaultDelIndex = props.review.delivs.findIndex(
   (rev: any) => rev.delivId == props.deliveryid
 );

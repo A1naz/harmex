@@ -3,7 +3,7 @@ import { User } from '~~/server/lib/models/User'
 import bcrypt from 'bcrypt'
 import { v4 as uuid } from 'uuid'
 import { generateUniqueUsername } from './createUsername'
-
+const config = useRuntimeConfig()
 // Logs the user in as the given user model
 async function login(event: H3Event<Request>, user: IUser) {
   await replaceUserSession(event, {
@@ -106,13 +106,17 @@ async function attempt(
     phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
   })
 
-  // console.log(foundUser)
+  if (!foundUser) {
+    throw createError({
+      statusCode: 401,
+      message: 'Неверный логин или пароль.',
+    })
+  }
 
+  const isPasswordCorrect = await bcrypt.compare(password, foundUser.password)
   if (
-    !foundUser
-    || !foundUser.password
-    // config.env !== "developer" &&
-    || !bcrypt.compare(password, foundUser.password)
+    !isPasswordCorrect
+    // && config.env !== "developer"
   ) {
     // return an error if the user is not found or the password doesn't match
     throw createError({
