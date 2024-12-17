@@ -37,9 +37,10 @@ export default eventHandler(async (event) => {
     return sendRedirect(event, '/auth', 302)
   }
 
-  const verify = bcrypt.compare(oldPassword, foundedUser.password)
+  const verify = await bcrypt.compare(oldPassword, foundedUser.password)
 
   if (!verify) {
+
     throw createError({
       statusCode: 400,
       message: 'Старый пароль не совпадает',
