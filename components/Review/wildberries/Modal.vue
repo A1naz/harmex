@@ -691,7 +691,7 @@ function convertToMoscowTime(dateString: any): Date {
                         <div
                           class="absolute inset-0 flex items-center justify-center"
                         >
-                        <Icon
+                          <Icon
                             name="mdi:loading"
                             class="h-8 w-8 animate-spin"
                           />
