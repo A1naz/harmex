@@ -291,7 +291,7 @@ onMounted(() => {
   const platform = "ozon";
   const type = "reviews";
   isChecked.value = modalState[platform]?.[type] || false;
-  manualModal.value = !isChecked.value
+  manualModal.value = !isChecked.value;
 });
 
 async function copyToClipboard(text: string) {
@@ -378,7 +378,9 @@ async function copyToClipboard(text: string) {
             <div
               class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"
             >
-              <label class="w-full flex bg-[#ececed] rounded-lg items-center justify-between">
+              <label
+                class="w-full flex bg-[#ececed] rounded-lg items-center justify-between"
+              >
                 <input
                   v-model="searchText"
                   type="text"
@@ -466,10 +468,7 @@ async function copyToClipboard(text: string) {
       <input id="reviewImageModal" type="checkbox" class="modal-toggle" />
 
       <label for="reviewImageModal" class="modal cursor-pointer">
-        <label
-          for=""
-          class="modal-box p-0 overflow-hidden"
-        >
+        <label for="" class="modal-box p-0 overflow-hidden">
           <label
             for="reviewImageModal"
             class="btn btn-sm btn-ghost btn-circle absolute right-2 top-2"
@@ -514,7 +513,7 @@ async function copyToClipboard(text: string) {
       :show="manualModal"
       @close="manualModal = false"
       :is-checked="isChecked"
-      @checkbox-toggle="toggleCheckbox" 
+      @checkbox-toggle="toggleCheckbox"
     >
       <h3 class="text-xl font-bold mb-2 flex items-center gap-1">
         Как опубликовать отзыв?
@@ -524,44 +523,53 @@ async function copyToClipboard(text: string) {
       </p>
 
       <p class="mb-2 text-[17px]">
-        В данном меню вы можете запланировать публикацию отзывов на недели и месяцы вперед для поддержания рейтинга и перекрытия негативных отзывов.
+        В данном меню вы можете запланировать публикацию отзывов на недели и
+        месяцы вперед для поддержания рейтинга и перекрытия негативных отзывов.
       </p>
 
-     <nuxt-img alt="image" class="flex mx-auto w-full px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews1.png" />
+      <nuxt-img
+        alt="image"
+        class="flex mx-auto w-full px-4"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews1.png"
+      />
 
-      <p class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]">
+      <p
+        class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]"
+      >
         Чтобы опубликовать отзыв, выполните простые рекомендации:
       </p>
       <ol class="list-decimal ml-6 mb-4 text-[#4b5563] flex flex-col gap-1">
-        <li>
-          Перейдите в меню Отзывы
-        </li>
-        <li>
-          Выберите доступный отзыв
-        </li>
-        <li>
-          Выберите нужный заказ
-        </li>
-        <li>
-          Заполните поля данными
-        </li>
-        <li>
-          Запланируйте дату и время публикации
-        </li>
-        <li>
-          Нажмите кнопку Опубликовать
-        </li>
+        <li>Перейдите в меню Отзывы</li>
+        <li>Выберите доступный отзыв</li>
+        <li>Выберите нужный заказ</li>
+        <li>Заполните поля данными</li>
+        <li>Запланируйте дату и время публикации</li>
+        <li>Нажмите кнопку Опубликовать</li>
       </ol>
-     <nuxt-img alt="image" class="flex mx-auto w-[350px] px-4" src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews2.png" />
-      <p class="text-[#4b5563] font-semibold mt-2">Статусы Отзывов: </p>
+      <nuxt-img
+        alt="image"
+        class="flex mx-auto w-[350px] px-4"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/reviews2.png"
+      />
+      <p class="text-[#4b5563] font-semibold mt-2">Статусы Отзывов:</p>
       <ul class="flex flex-col text-[#4b5563] gap-1">
-        <li> <span class="font-semibold">Опубликован</span> -  прошел модерацию маркетплейса и опубликован в списке Отзывов. Списание за оказанную услугу найдете в меню Финансы
+        <li>
+          <span class="font-semibold">Опубликован</span> - прошел модерацию
+          маркетплейса и опубликован в списке Отзывов. Списание за оказанную
+          услугу найдете в меню Финансы
         </li>
-        <li> <span class="font-semibold">Отменен </span> - не прошел модерацию маркетплейса и убран из списка в Ожидании. Услуга не оплачиваемая 
+        <li>
+          <span class="font-semibold">Отменен </span> - не прошел модерацию
+          маркетплейса и убран из списка в Ожидании. Услуга не оплачиваемая
         </li>
-        <li> <span class="font-semibold">В работе</span> - проходит модерацию маркетплейса и ожидает решения по публикации
+        <li>
+          <span class="font-semibold">В работе</span> - проходит модерацию
+          маркетплейса и ожидает решения по публикации
         </li>
-        <li> <span class="font-semibold">Активен</span> - взят в работу и ищет свое окно для прохождения процедуры публикации отзыва        </li>
+        <li>
+          <span class="font-semibold">Активен</span> - взят в работу и ищет свое
+          окно для прохождения процедуры публикации отзыва
+        </li>
       </ul>
     </ManualModal>
     <LogModal
