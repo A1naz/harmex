@@ -1,257 +1,334 @@
-<script setup lang="ts">
-import { useVuelidate } from '@vuelidate/core'
-import { and, email, helpers, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
+<script lang="ts" setup>
+import { useVuelidate } from "@vuelidate/core";
+import {
+  email,
+  helpers,
+  minLength,
+  required,
+  sameAs,
+} from "@vuelidate/validators";
 
-const { clear } = useUserSession()
+const { notify } = useNotification();
 
 definePageMeta({
-  auth: {
-    unauthenticatedOnly: false,
-    navigateAuthenticatedTo: '/buyouts',
-  },
-  title: 'Вход',
-})
-const { notify } = useNotification()
+  colorMode: "dark",
+  auth: false,
+  title: "Смена пароля",
+});
+const name = useRuntimeConfig().NAME;
 
-const router = useRouter()
-
-const codeSended = ref(false)
-const resendCodeDisabled = ref(false)
-const resendCodeText = ref('Подтвердить')
-const resendCodeTimer = ref(60)
-const { counter, reset, pause, resume } = useInterval(1000, {
-  controls: true,
-  immediate: false,
-})
-
-watch(counter, (newValue) => {
-  if (newValue < 60) {
-    resendCodeTimer.value = 60 - newValue
-    resendCodeText.value = `Подтвердить (${resendCodeTimer.value})`
-  }
-  else {
-    pause()
-    resendCodeText.value = 'Подтвердить'
-    resendCodeDisabled.value = false
-  }
-})
-
-const loading = ref(false)
+const isCodeSent = ref(false);
+const confirmationCodeInput = ref<any>(null);
+const isNumberConfirmed = ref(false);
+const router = useRouter();
 
 const formData = reactive({
-  phoneNumber: '',
-  newPassword: '',
-  repeatPassword: '',
-  code: '',
-})
-
+  email: "",
+  password: "",
+  confirmPassword: "",
+  verificationCode: "",
+});
+const alert = reactive({
+  show: false,
+  message: "",
+  type: "success",
+});
 const rules = computed(() => {
   return {
-    phoneNumber: {
-      required: helpers.withMessage('Введите номер телефона', required),
-      minLength: helpers.withMessage('Неверный номер телефона', minLength(18)),
-      maxLength: helpers.withMessage('Неверный номер телефона', maxLength(18)),
-    },
-    newPassword: {
-      required: helpers.withMessage('Введите пароль', required),
+    email: {},
+    password: {
+      required: helpers.withMessage("Введите пароль", required),
       minLength: helpers.withMessage(
-        'Пароль должен быть длиннее 6 символов',
-        minLength(6),
+        "Пароль должен быть длиннее 6 символов",
+        minLength(6)
       ),
     },
-    repeatPassword: {
-      required: helpers.withMessage('Введите пароль еще раз', required),
-      sameAs: helpers.withMessage('Пароли не совпадают', sameAs(formData.newPassword)),
+    confirmPassword: {
+      required: helpers.withMessage("Подтвердите пароль", required),
+      sameAs: helpers.withMessage(
+        "Пароли не совпадают",
+        sameAs(formData.password)
+      ),
     },
-    code: {
-      required: helpers.withMessage('Введите код', required),
-    },
-  }
-})
+  };
+});
 
-const v$ = useVuelidate(rules, formData)
-function startCodeTimer() {
-  codeSended.value = true
-  resendCodeDisabled.value = true
-  resendCodeText.value = 'Подтвердить (60)'
-  resendCodeTimer.value = 60
-  reset()
-  resume()
-}
-async function sendCode() {
-  const valid = await v$.value.phoneNumber.$validate()
-  if (!valid)
-    return
-  loading.value = true
+const v$ = useVuelidate(rules, formData);
 
-  const response = await $fetch('/api/auth/sendCode', {
-    method: 'POST',
-    body: {
-      type: 'resetPassword',
-      phoneNumber: formData.phoneNumber,
-    },
-  }).catch((err) => {
+async function submitForm() {
+  v$.value.$validate();
+  const { error } = await useFetch("/api/user/changePasswordSend", {
+    method: "POST",
+    body: formData,
+  });
+  if (error.value) {
     notify({
-      type: 'error',
-      title: 'Ошибка отправки кода',
-      text: err.data.message || err.message,
-    })
-    if (err.status === 400) {
-      startCodeTimer()
+      type: "error",
+      title: error.value.data.message,
+    });
+  } else {
+    router.push("/auth?passwordChanged=true");
+  }
+}
+
+async function sendConfirmCode() {
+  if (formData.email.replace(/[\(\)\-\s]/g, "").length < 11) {
+    notify({
+      title: "Введите корректный номер",
+    });
+    return;
+  }
+  //@ts-ignore
+  const { data, error }: any = await useFetch(
+    "/api/organization/confirmPhoneForReset",
+    {
+      method: "POST",
+      body: {
+        phoneNumber: formData.email.replace(/[\(\)\-\s]/g, ""),
+      },
     }
-  }).finally(() => {
-    loading.value = false
-  })
-  if (response) {
-    startCodeTimer()
+  );
+
+  if (data && data.value && data.value.status == "ok") {
+    isCodeSent.value = true;
+    confirmationCodeInput.value.focus();
     notify({
-      type: 'success',
-      title: 'Код отправлен',
-      text: 'На ваш номер отправлен код подтверждения',
-    })
-    formData.code = response
+      type: "success",
+      title: "Код отправлен",
+    });
+  } else if (error.value) {
+    console.log(error.value);
+
+    notify({
+      type: "error",
+      title: error.value.data.message,
+    });
   }
 }
 
-async function resetPassword() {
-  if (!formData.code || !codeSended.value) {
+async function confirmCode() {
+  const { data, error }: any = await useFetch(
+    "/api/organization/confirmPhone",
+    {
+      method: "GET",
+      params: {
+        phoneNumber: formData.email.replace(/[\(\)\-\s]/g, ""),
+        code: formData.verificationCode,
+      },
+    }
+  );
+  if (data.value) {
     notify({
-      type: 'error',
-      title: 'Потвердите номер телефона',
-    })
-    return
-  }
-  const valid = await v$.value.$validate()
-  if (!valid)
-    return
-  loading.value = true
-  const response = await $fetch('/api/auth/resetPassword', {
-    method: 'POST',
-    body: {
-      phoneNumber: formData.phoneNumber,
-      newPassword: formData.newPassword,
-      repeatPassword: formData.repeatPassword,
-      code: formData.code,
-    },
-  }).catch((err) => {
+      type: "success",
+      title: "Код подтвержден",
+    });
+
+    isCodeSent.value = false;
+    isNumberConfirmed.value = true;
+  } else {
     notify({
-      type: 'error',
-      title: 'Ошибка',
-      text: err.data.message || err.message,
-    })
-  }).finally(() => {
-    loading.value = false
-  })
-  if (response === 'success') {
-    await clear()
-    notify({
-      type: 'success',
-      title: 'Пароль успешно изменен.',
-    })
-    router.push('/auth')
+      type: "error",
+      title: "Неверный код",
+    });
   }
 }
 
-const passwordShow = ref(false)
-const inputType = ref(passwordShow.value ? 'text' : 'password')
-function togglePassword() {
-  passwordShow.value = !passwordShow.value
-  inputType.value = passwordShow.value ? 'text' : 'password'
-}
+const passwordInputType = ref("password");
+const passwordConfirmInputType = ref("password");
+
+const togglePassword = () => {
+  passwordInputType.value =
+    passwordInputType.value === "password" ? "text" : "password";
+};
+const toggleConfirmPassword = () => {
+  passwordConfirmInputType.value =
+    passwordConfirmInputType.value === "password" ? "text" : "password";
+};
 </script>
 
 <template>
-  <div id="resetPassword" class="flex sm:items-center sm:justify-center h-screen">
-    <section
-      class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3"
+  <section>
+    <div
+      class="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0"
     >
-      <h3 class="font-bold text-xl">
-        Восстановление пароля
-      </h3>
-
-      <div class="box flex flex-col gap-3">
-        <form class="flex flex-col gap-3" @submit.prevent="resetPassword">
-          <div class="flex flex-col gap-1">
-            <label>Номер телефона</label>
-            <label class="input input-bordered flex items-center justify-between p-0 pl-4">
-              <input
-                v-model="formData.phoneNumber" v-maska :disabled="codeSended" data-maska="+7 (###) ###-##-##"
-                placeholder="+7 (___) ___-__-__" required="true"
-              >
-              <button
-                :disabled="codeSended && resendCodeDisabled" class="btn btn-ghost shadow-none hover:shadow-none"
-                @click.prevent="sendCode"
-              > {{ resendCodeText }}
-              </button>
-            </label>
-            <div v-if="v$.phoneNumber.$error" class="text-red-500 text-xs mt-1">
-              {{ v$.phoneNumber.$errors[0].$message }}
-            </div>
-          </div>
-          <div v-if="codeSended" class="flex flex-col gap-1">
-            <label>Код потверждения</label>
-            <label class="input input-bordered flex items-center justify-between p-0 pl-4">
-              <input v-model="formData.code" placeholder="1234" required="true">
-            </label>
-            <div v-if="v$.code.$error" class="text-red-500 text-xs mt-1">
-              {{ v$.code.$errors[0].$message }}
-            </div>
-          </div>
-          <div class="flex flex-col gap-1">
-            <label>Новый пароль </label>
-            <div class="flex flex-col gap-0.5">
-              <label class="input input-bordered w-full flex">
-                <input
-                  id="password" v-model="formData.newPassword" :type="inputType" name="password"
-                  placeholder="••••••••" required="true" class="w-full"
-                >
-                <button type="button" class="hover:text-primary w-1/12" @click="togglePassword">
-                  <IconCSS v-if="passwordShow" class="w-20 h-20" size="25" name="mdi:hide-outline" />
-                  <IconCSS v-else class="w-20 h-20" size="25" name="mdi:show-outline" />
-                </button>
-              </label>
-            </div>
-            <div v-if="v$.newPassword.$error" class="text-red-500 text-xs mt-1">
-              {{ v$.newPassword.$errors[0].$message }}
-            </div>
-            <label>Новый пароль еще раз</label>
-            <div class="flex flex-col gap-0.5">
-              <label class="input input-bordered w-full flex">
-                <input
-                  id="repeatPassword" v-model="formData.repeatPassword" :type="inputType" name="repeatPassword"
-                  placeholder="••••••••" required="true" class="w-full"
-                >
-                <button type="button" class="hover:text-primary w-1/12" @click="togglePassword">
-                  <IconCSS v-if="passwordShow" class="w-20 h-20" size="25" name="mdi:hide-outline" />
-                  <IconCSS v-else class="w-20 h-20" size="25" name="mdi:show-outline" />
-                </button>
-              </label>
-            </div>
-            <div v-if="v$.repeatPassword.$error" class="text-red-500 text-xs mt-1">
-              {{ v$.repeatPassword.$errors[0].$message }}
-            </div>
-          </div>
-          <div class="flex flex-col gap-0.5">
-            <button
-              type="submit"
-              class="btn btn-primary w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+      <div
+        class="card w-full p-6 rounded-lg shadow-lg md:mt-0 sm:max-w-md sm:p-8"
+      >
+        <h2
+          class="mb-1 text-xl font-bold leading-tight tracking-tight md:text-2xl"
+        >
+          Смена пароля
+        </h2>
+        <form class="mt-4 space-y-4 lg:mt-5 md:space-y-5 relative" action="#">
+          <div>
+            <label for="email" class="block mb-2 text-sm font-medium"
+              >Номер телефона</label
             >
-              <span v-show="loading" class="loading loading-spinner" />
-
-              Сменить пароль
-            </button>
-
-            <p class="mt-3 mb-1">
-              Вспомнили пароль?
-              <NuxtLink href="/auth" class="text-primary underline">
-                Войти
-              </NuxtLink>
-            </p>
+            <div class="join w-full">
+              <input
+                id="email"
+                v-model="formData.email"
+                name="email"
+                class="input join-item xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                :class="{
+                  'input-error': v$.email.$error,
+                }"
+                v-maska
+                data-maska="+7 (###) ###-##-##"
+                placeholder="+7 (___) ___-__-__"
+              />
+              <button
+                v-if="!isCodeSent"
+                class="btn join-item"
+                @click.prevent="sendConfirmCode"
+              >
+                Подтвердить
+              </button>
+            </div>
+            <div
+              v-for="error of v$.email.$errors"
+              :key="error.$uid"
+              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+            >
+              <div class="error-msg">
+                {{ error.$message }}
+              </div>
+            </div>
+            <label
+              for="email"
+              class="block mb-2 ml-1 my-1 text-sm font-medium mt-5"
+            >
+              Код верификации с звонка
+            </label>
+            <div class="join w-full">
+              <input
+                ref="confirmationCodeInput"
+                :disabled="isNumberConfirmed || !isCodeSent"
+                id="verificationCode"
+                v-model="formData.verificationCode"
+                type="number"
+                name="verificationCode"
+                class="input join-item xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder=""
+                required="true"
+                @keydown.enter="confirmCode"
+              />
+              <button
+                :disabled="!isCodeSent || isNumberConfirmed"
+                class="btn join-item"
+                @click.prevent="confirmCode"
+              >
+                <IconCSS size="27" name="mdi:check" />
+              </button>
+            </div>
           </div>
+          <div>
+            <label for="password" class="block mb-2 text-sm font-medium"
+              >Новый пароль</label
+            >
+
+            <div class="flex join">
+              <input
+                id="password"
+                v-model="formData.password"
+                :type="passwordInputType"
+                name="password"
+                class="input join-item xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                :class="{
+                  'input-error': v$.password.$error,
+                }"
+                placeholder="••••••••"
+                :disabled="!isNumberConfirmed"
+              />
+              <button
+                :disabled="!isNumberConfirmed"
+                type="button"
+                class="hover:text-primary w-1/12 join-item rounded-r-lg"
+                @click="togglePassword"
+              >
+                <IconCSS
+                  v-if="passwordInputType !== 'password'"
+                  class="w-20 h-20"
+                  size="25"
+                  name="mdi:hide-outline"
+                />
+                <IconCSS
+                  v-else
+                  class="w-20 h-20"
+                  size="25"
+                  name="mdi:show-outline"
+                />
+              </button>
+            </div>
+            <div
+              v-for="error of v$.password.$errors"
+              :key="error.$uid"
+              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+            >
+              <div class="error-msg">
+                {{ error.$message }}
+              </div>
+            </div>
+          </div>
+          <div class="pb-4">
+            <label for="confirm-password" class="block mb-2 text-sm font-medium"
+              >Подтвердите пароль</label
+            >
+
+            <div class="flex join">
+              <input
+                id="confirm-password"
+                v-model="formData.confirmPassword"
+                :type="passwordConfirmInputType"
+                class="input join-item xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-r-none"
+                :class="{
+                  'input-error': v$.confirmPassword.$error,
+                }"
+                name="confirm-password"
+                placeholder="••••••••"
+                :disabled="!isNumberConfirmed"
+              />
+              <button
+                :disabled="!isNumberConfirmed"
+                type="button"
+                class="hover:text-primary w-1/12 join-item rounded-r-lg"
+                @click="toggleConfirmPassword"
+              >
+                <IconCSS
+                  v-if="passwordConfirmInputType !== 'password'"
+                  class="w-20 h-20"
+                  size="25"
+                  name="mdi:hide-outline"
+                />
+                <IconCSS
+                  v-else
+                  class="w-20 h-20"
+                  size="25"
+                  name="mdi:show-outline"
+                />
+              </button>
+            </div>
+            <div
+              v-if="v$.confirmPassword.$errors"
+              class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+            >
+              <div class="error-msg">
+                {{ v$.confirmPassword?.$errors[0]?.$message }}
+              </div>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary block w-full"
+            @click.prevent="submitForm"
+            :disabled="!isNumberConfirmed"
+          >
+            Сменить пароль
+          </button>
         </form>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
 <style scoped></style>
