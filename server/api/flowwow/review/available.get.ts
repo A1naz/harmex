@@ -143,5 +143,7 @@ export default eventHandler(async (event) => {
     }
   })
 
-  return formated
+  return {
+    availableReviews: formated
+  }
 })

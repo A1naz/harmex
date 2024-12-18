@@ -79,7 +79,9 @@ export default eventHandler(async (event) => {
     format = format.filter(rev => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout])
   }
 
-  return format
+  return {
+    reviews: format
+  }
 })
 
 // refactor all this

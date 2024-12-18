@@ -26,6 +26,7 @@ const target = ref(null);
 const targetIsVisible = ref(false);
 
 const tabs = [
+  { value: "all", name: "Все отзывы" },
   { value: "published", name: "Опубликованные" },
   { value: "available", name: "Доступные" },
   { value: "work", name: "В работе" },
@@ -51,11 +52,16 @@ const searchType = ref<SelectOptions>(SelectOptions.article);
 const searchText = ref("");
 
 const endpoint = computed(() =>
-  currentTab.value === "available" ? "available" : "published"
+  currentTab.value === "available"
+    ? "available"
+    : currentTab.value === "all"
+    ? "all"
+    : "published"
 );
 
 const isFetch = ref(true);
 const reviews = ref<any>([]);
+const availableReviews = ref<any>([]);
 async function fetchData() {
   isFetch.value = true;
   const response: any[] = await $fetch(`/api/ozon/review/${endpoint.value}`, {
@@ -71,7 +77,12 @@ async function fetchData() {
     },
   });
   if (response) {
-    reviews.value = [...reviews.value, ...response];
+    if (response.reviews) {
+      reviews.value = [...reviews.value, ...response.reviews];
+    }
+    if (response.availableReviews) {
+      availableReviews.value = response.availableReviews;
+    }
     if (response.length < limit.value) end.value = true;
   }
   isFetch.value = false;
@@ -120,6 +131,7 @@ function closeModal() {
 function goToPublished() {
   closeModal();
   reviews.value = [];
+  availableReviews.value = [];
   skip.value = 0;
   end.value = false;
   fetchData();
@@ -409,13 +421,19 @@ async function copyToClipboard(text: string) {
         </div>
       </div>
       <div style="min-height: 500px">
-        <div v-if="reviews && reviews.length > 0" class="mt-6">
+        <div
+          v-if="
+            (reviews && reviews.length > 0) ||
+            (availableReviews && availableReviews.length > 0)
+          "
+          class="mt-6"
+        >
           <div
-            v-if="currentTab === 'available'"
+            v-if="currentTab === 'available' || currentTab === 'all'"
             class="cards grid grid-cols-1 gap-4"
           >
             <ReviewOzonCard
-              v-for="(review, index) of reviews"
+              v-for="(review, index) of availableReviews"
               :key="index"
               :index="index"
               :info="review"
@@ -423,7 +441,11 @@ async function copyToClipboard(text: string) {
             />
           </div>
           <div
-            v-else
+            class="mt-2 mb-5 divider"
+            v-if="currentTab == 'all' && availableReviews.length"
+          ></div>
+          <div
+            v-if="currentTab !== 'available'"
             class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
           >
             <ReviewOzonPublishedCard
@@ -451,7 +473,7 @@ async function copyToClipboard(text: string) {
         >
           <span class="loading loading-dots loading-lg text-primary" />
         </div>
-        <Hero v-else />
+        <Hero v-if="!reviews.length && !isFetch && !availableReviews.length" />
       </div>
 
       <ReviewOzonModal
