@@ -56,13 +56,21 @@ export default eventHandler(async (event) => {
   } else if (status === 'pickupReady') {
     deliveries = await Delivery.find({
       user,
-      status: { $ne: 'completed' },
-      $expr: {
-        $in: [
-          { $arrayElemAt: ['$statusdelivery.status', -1] },
-          ['Готов к получению', 'Готов к выдаче', 'Ожидает получения'],
-        ],
+      statusdelivery: {
+        $elemMatch: {
+          $or: [
+            { status: 'Готов к выдаче' },
+            { status: 'Готов к получению' },
+            { status: '^Заберите до.*' },
+            { status: '^Получите до.*' },
+            { status: { $regex: '^Готов к получению.*' } },
+            { status: { $regex: '^Готов к выдаче.*' } },
+            { status: { $regex: '^Заберите до.*' } },
+            { status: { $regex: '^Получите до.*' } },
+          ],
+        },
       },
+      status: { $ne: 'completed' },
     })
       .sort({
         _id: -1,
