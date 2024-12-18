@@ -23,6 +23,7 @@ const props = defineProps({
   arrowsClass: { type: String },
   dropdownContainerClass: { type: String },
   statusText: { type: String },
+  width: { type: String },
 });
 
 const emit = defineEmits(["changeText", "changeValue"]);
@@ -107,6 +108,7 @@ defineExpose({
 });
 
 const dropdownWidth = computed(() => {
+  if (props.width) return parseInt(props.width);
   let length = 0;
   props.tabs.forEach((tab) => {
     if (tab.title.length > length) length = tab.title.length;

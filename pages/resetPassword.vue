@@ -13,7 +13,7 @@ const { notify } = useNotification();
 definePageMeta({
   colorMode: "dark",
   auth: false,
-  title: "Смена пароля",
+  title: "Восстановление пароля",
 });
 const name = useRuntimeConfig().NAME;
 
@@ -151,25 +151,24 @@ const toggleConfirmPassword = () => {
     <div
       class="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0"
     >
-      <div
-        class="card w-full p-6 rounded-lg shadow-lg md:mt-0 sm:max-w-md sm:p-8"
-      >
+      <div class="card w-full p-6 rounded-lg shadow-lg max-w-md lg:max-w-lg">
         <h2
           class="mb-1 text-xl font-bold leading-tight tracking-tight md:text-2xl"
         >
-          Смена пароля
+          Восстановление пароля
         </h2>
         <form class="mt-4 space-y-4 lg:mt-5 md:space-y-5 relative" action="#">
           <div>
             <label for="email" class="block mb-2 text-sm font-medium"
               >Номер телефона</label
             >
-            <div class="join w-full">
+            <label
+              class="input input-bordered flex items-center justify-between p-0 pl-4"
+            >
               <input
                 id="email"
                 v-model="formData.email"
                 name="email"
-                class="input join-item xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 :class="{
                   'input-error': v$.email.$error,
                 }"
@@ -179,12 +178,12 @@ const toggleConfirmPassword = () => {
               />
               <button
                 v-if="!isCodeSent"
-                class="btn join-item"
+                class="btn btn-ghost shadow-none hover:shadow-none"
                 @click.prevent="sendConfirmCode"
               >
                 Подтвердить
               </button>
-            </div>
+            </label>
             <div
               v-for="error of v$.email.$errors"
               :key="error.$uid"
@@ -198,42 +197,41 @@ const toggleConfirmPassword = () => {
               for="email"
               class="block mb-2 ml-1 my-1 text-sm font-medium mt-5"
             >
-              Код верификации с звонка
+              Код подтверждения
             </label>
-            <div class="join w-full">
+            <label class="input input-bordered w-full flex justify-end">
               <input
                 ref="confirmationCodeInput"
                 :disabled="isNumberConfirmed || !isCodeSent"
                 id="verificationCode"
                 v-model="formData.verificationCode"
                 type="number"
+                class="w-full"
                 name="verificationCode"
-                class="input join-item xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder=""
                 required="true"
                 @keydown.enter="confirmCode"
               />
               <button
                 :disabled="!isCodeSent || isNumberConfirmed"
-                class="btn join-item"
+                class="hover:text-primary hover:cursor-pointer flex items-center"
                 @click.prevent="confirmCode"
               >
                 <IconCSS size="27" name="mdi:check" />
               </button>
-            </div>
+            </label>
           </div>
           <div>
             <label for="password" class="block mb-2 text-sm font-medium"
               >Новый пароль</label
             >
 
-            <div class="flex join">
+            <label class="input input-bordered w-full flex justify-end">
               <input
                 id="password"
                 v-model="formData.password"
                 :type="passwordInputType"
                 name="password"
-                class="input join-item xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                class="w-full"
                 :class="{
                   'input-error': v$.password.$error,
                 }"
@@ -259,7 +257,7 @@ const toggleConfirmPassword = () => {
                   name="mdi:show-outline"
                 />
               </button>
-            </div>
+            </label>
             <div
               v-for="error of v$.password.$errors"
               :key="error.$uid"
@@ -275,12 +273,12 @@ const toggleConfirmPassword = () => {
               >Подтвердите пароль</label
             >
 
-            <div class="flex join">
+            <label class="input input-bordered w-full flex justify-end">
               <input
                 id="confirm-password"
                 v-model="formData.confirmPassword"
                 :type="passwordConfirmInputType"
-                class="input join-item xl:input-md sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-r-none"
+                class="w-full"
                 :class="{
                   'input-error': v$.confirmPassword.$error,
                 }"
@@ -307,7 +305,7 @@ const toggleConfirmPassword = () => {
                   name="mdi:show-outline"
                 />
               </button>
-            </div>
+            </label>
             <div
               v-if="v$.confirmPassword.$errors"
               class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
@@ -325,6 +323,12 @@ const toggleConfirmPassword = () => {
           >
             Сменить пароль
           </button>
+          <p class="mt-3 mb-1">
+            Вспомнили пароль?
+            <NuxtLinkLocale to="/auth" class="text-primary underline">
+              Войти
+            </NuxtLinkLocale>
+          </p>
         </form>
       </div>
     </div>

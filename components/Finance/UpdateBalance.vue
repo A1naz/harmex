@@ -148,9 +148,9 @@ const showTooltip = ref(false);
               "Оплата заказа" + " #" + paymentUuid
             }}</span>
             <div
-              class="px-[5px] rounded-[5px] min-w-[70px] h-[25px] text-white bg-primary text-[0.95rem] flex justify-center items-center"
+              class="badge badge-primary min-w-auto h-[25px] min-w-[130px]"
             >
-              {{ summ }} ₽
+              {{ summ +  ' ₽' }}
             </div>
           </div>
 

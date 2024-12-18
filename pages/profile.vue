@@ -411,6 +411,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
                 :status-text="languageArr.find((item: any) => item.value === selectedLanguageCode)?.title"
                 @change-value="(e: any) => updateLanguage(e.value)"
                 :class="'h-[2.5rem]'"
+                :width="200"
               />
               <!-- <ProfileLanguageSelect /> -->
             </div>
@@ -440,6 +441,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
                   ]"
                   @change-value="(e: any) => (form.wallet = e.value)"
                   :class="'h-[2.5rem]'"
+                  :width="200"
                 />
               </div>
               <div>
