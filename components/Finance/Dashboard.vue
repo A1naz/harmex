@@ -121,16 +121,16 @@ async function copyImageToClipboard(base64Image: any) {
 
     <div class="flex gap-[5px] justify-center">
       <button
-        class="btn btn-sm h-[2.5rem] btn-outline w-[49%] border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[50px] rounded-xl relative group"
+        class="btn btn-sm h-[2.5rem] btn-outline w-[49%] border-[#71a7e5] bg-[#71a7e5] hover:bg-white  hover:border-[#71a7e5] hover:shadow-xl active:bg-white text-[14px] font-medium px-[50px] rounded-xl relative group"
         @click="modalShow = true"
       >
         <div class="flex items-center justify-center">
           <Icon
             name="solar:hand-money-linear"
-            class="text-[#e46e46] group-active:text-white"
+            class="text-white group-hover:text-[#71a7e5] group-active:text-[#71a7e5]"
             size="22px"
           />
-          <span class="ml-3 text-[#e46e46] group-active:text-white">Вывод</span>
+          <span class="ml-3 text-white group-hover:text-[#71a7e5]  group-active:text-[#71a7e5]">Вывод</span>
         </div>
       </button>
 
@@ -149,16 +149,16 @@ async function copyImageToClipboard(base64Image: any) {
       </button> -->
 
       <button
-        class="btn btn-sm h-[2.5rem] btn-outline w-[49%] border-[#e46e46] bg-white hover:bg-white hover:text-black hover:border-[#e46e46] hover:shadow-xl active:bg-[#e46e46] active:text-white text-[14px] font-medium px-[40px] rounded-xl relative group"
+        class="btn btn-sm h-[2.5rem] btn-outline w-[49%] border-[#71a7e5] bg-[#71a7e5] hover:bg-white  hover:border-[#71a7e5] hover:shadow-xl active:bg-white text-[14px] font-medium px-[50px] rounded-xl relative group"
         @click="modalStore.payment = true"
       >
         <div class="flex items-center justify-center">
           <Icon
             name="solar:hand-money-linear"
-            class="text-[#e46e46] group-active:text-white"
+            class="text-white group-hover:text-[#71a7e5] group-active:text-[#71a7e5]"
             size="22px"
           />
-          <span class="ml-3  text-[#e46e46] group-active:text-white">Пополнение</span>
+          <span class="ml-3 text-white group-hover:text-[#71a7e5] group-active:text-[#71a7e5]">Пополнение</span>
         </div>
       </button>
     </div>

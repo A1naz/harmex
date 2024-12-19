@@ -114,7 +114,7 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       html2pdf.js:
-        specifier: ^0.10.2
+        specifier: ^0.10.1
         version: 0.10.2
       jsonwebtoken:
         specifier: ^9.0.2
@@ -236,7 +236,7 @@ importers:
         version: 1.2.1(@pinia/nuxt@0.5.5(magicast@0.3.5)(rollup@4.24.4)(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3))(webpack-sources@3.2.3))(magicast@0.3.5)(pinia@2.2.6(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3)))(rollup@4.24.4)(webpack-sources@3.2.3)
       '@sfxcode/nuxt-primevue':
         specifier: ^1.4.2
-        version: 1.4.2(esbuild@0.23.1)(magicast@0.3.5)(rollup@4.24.4)(tailwindcss@3.4.14)(typescript@5.6.3)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))(vue@3.5.12(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.96.1(esbuild@0.23.1))
+        version: 1.4.2(esbuild@0.23.1)(magicast@0.3.5)(rollup@4.24.4)(tailwindcss@3.4.14)(typescript@5.6.3)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))(vue@3.5.12(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.96.1(esbuild@0.23.1))
       '@types/bun':
         specifier: ^1.1.12
         version: 1.1.13
@@ -9155,11 +9155,11 @@ snapshots:
       '@formkit/core': 1.6.7
       '@formkit/utils': 1.6.7
 
-  '@formkit/nuxt@1.2.2(esbuild@0.23.1)(magicast@0.3.5)(rollup@4.24.4)(tailwindcss@3.4.14)(typescript@5.6.3)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))(webpack-sources@3.2.3)(webpack@5.96.1(esbuild@0.23.1))':
+  '@formkit/nuxt@1.2.2(esbuild@0.23.1)(magicast@0.3.5)(rollup@4.24.4)(tailwindcss@3.4.14)(typescript@5.6.3)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))(webpack-sources@3.2.3)(webpack@5.96.1(esbuild@0.23.1))':
     dependencies:
       '@formkit/core': 1.2.2
       '@formkit/i18n': 1.2.2
-      '@formkit/vue': 1.2.2(tailwindcss@3.4.14)(typescript@5.6.3)
+      '@formkit/vue': 1.2.2(tailwindcss@3.4.14)(typescript@5.6.3)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))
       '@nuxt/kit': 3.14.159(magicast@0.3.5)(rollup@4.24.4)(webpack-sources@3.2.3)
       chokidar: 3.6.0
       nuxi: 3.15.0
@@ -9200,17 +9200,19 @@ snapshots:
       '@formkit/utils': 1.6.7
       '@formkit/validation': 1.6.7
 
-  '@formkit/themes@1.2.2(tailwindcss@3.4.14)':
+  '@formkit/themes@1.2.2(tailwindcss@3.4.14)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))':
     dependencies:
       '@formkit/core': 1.2.2
     optionalDependencies:
       tailwindcss: 3.4.14
+      unocss: 0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))
 
-  '@formkit/themes@1.6.7(tailwindcss@3.4.14)':
+  '@formkit/themes@1.6.7(tailwindcss@3.4.14)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))':
     dependencies:
       '@formkit/core': 1.6.7
     optionalDependencies:
       tailwindcss: 3.4.14
+      unocss: 0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))
 
   '@formkit/utils@1.2.2': {}
 
@@ -9228,7 +9230,7 @@ snapshots:
       '@formkit/observer': 1.6.7
       '@formkit/utils': 1.6.7
 
-  '@formkit/vue@1.2.2(tailwindcss@3.4.14)(typescript@5.6.3)':
+  '@formkit/vue@1.2.2(tailwindcss@3.4.14)(typescript@5.6.3)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))':
     dependencies:
       '@formkit/core': 1.2.2
       '@formkit/dev': 1.2.2
@@ -9236,7 +9238,7 @@ snapshots:
       '@formkit/inputs': 1.2.2
       '@formkit/observer': 1.2.2
       '@formkit/rules': 1.2.2
-      '@formkit/themes': 1.2.2(tailwindcss@3.4.14)
+      '@formkit/themes': 1.2.2(tailwindcss@3.4.14)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))
       '@formkit/utils': 1.2.2
       '@formkit/validation': 1.2.2
       vue: 3.5.12(typescript@5.6.3)
@@ -9246,7 +9248,7 @@ snapshots:
       - unocss
       - windicss
 
-  '@formkit/vue@1.6.7(tailwindcss@3.4.14)(vue@3.5.12(typescript@5.6.3))':
+  '@formkit/vue@1.6.7(tailwindcss@3.4.14)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))(vue@3.5.12(typescript@5.6.3))':
     dependencies:
       '@formkit/core': 1.6.7
       '@formkit/dev': 1.6.7
@@ -9254,7 +9256,7 @@ snapshots:
       '@formkit/inputs': 1.6.7
       '@formkit/observer': 1.6.7
       '@formkit/rules': 1.6.7
-      '@formkit/themes': 1.6.7(tailwindcss@3.4.14)
+      '@formkit/themes': 1.6.7(tailwindcss@3.4.14)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))
       '@formkit/utils': 1.6.7
       '@formkit/validation': 1.6.7
       vue: 3.5.12(typescript@5.6.3)
@@ -10458,11 +10460,11 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.24.4':
     optional: true
 
-  '@sfxcode/formkit-primevue@1.11.3(tailwindcss@3.4.14)(vue@3.5.12(typescript@5.6.3))':
+  '@sfxcode/formkit-primevue@1.11.3(tailwindcss@3.4.14)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))(vue@3.5.12(typescript@5.6.3))':
     dependencies:
       '@formkit/addons': 1.6.7
       '@formkit/i18n': 1.6.7
-      '@formkit/vue': 1.6.7(tailwindcss@3.4.14)(vue@3.5.12(typescript@5.6.3))
+      '@formkit/vue': 1.6.7(tailwindcss@3.4.14)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))(vue@3.5.12(typescript@5.6.3))
       primeicons: 7.0.0
       primevue: 3.53.0(vue@3.5.12(typescript@5.6.3))
       vue: 3.5.12(typescript@5.6.3)
@@ -10471,11 +10473,11 @@ snapshots:
       - unocss
       - windicss
 
-  '@sfxcode/nuxt-primevue@1.4.2(esbuild@0.23.1)(magicast@0.3.5)(rollup@4.24.4)(tailwindcss@3.4.14)(typescript@5.6.3)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))(vue@3.5.12(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.96.1(esbuild@0.23.1))':
+  '@sfxcode/nuxt-primevue@1.4.2(esbuild@0.23.1)(magicast@0.3.5)(rollup@4.24.4)(tailwindcss@3.4.14)(typescript@5.6.3)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))(vue@3.5.12(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.96.1(esbuild@0.23.1))':
     dependencies:
-      '@formkit/nuxt': 1.2.2(esbuild@0.23.1)(magicast@0.3.5)(rollup@4.24.4)(tailwindcss@3.4.14)(typescript@5.6.3)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))(webpack-sources@3.2.3)(webpack@5.96.1(esbuild@0.23.1))
+      '@formkit/nuxt': 1.2.2(esbuild@0.23.1)(magicast@0.3.5)(rollup@4.24.4)(tailwindcss@3.4.14)(typescript@5.6.3)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0))(webpack-sources@3.2.3)(webpack@5.96.1(esbuild@0.23.1))
       '@nuxt/kit': 3.14.159(magicast@0.3.5)(rollup@4.24.4)(webpack-sources@3.2.3)
-      '@sfxcode/formkit-primevue': 1.11.3(tailwindcss@3.4.14)(vue@3.5.12(typescript@5.6.3))
+      '@sfxcode/formkit-primevue': 1.11.3(tailwindcss@3.4.14)(unocss@0.62.4(@unocss/webpack@0.62.4(rollup@4.24.4)(webpack@5.96.1(esbuild@0.23.1)))(postcss@8.4.47)(rollup@4.24.4)(vite@5.4.10(@types/node@20.17.6)(sass@1.80.6)(terser@5.36.0)))(vue@3.5.12(typescript@5.6.3))
       primeicons: 6.0.1
       primevue: 3.53.0(vue@3.5.12(typescript@5.6.3))
     transitivePeerDependencies:

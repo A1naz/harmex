@@ -15,6 +15,7 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['update:modelValue', 'select'])
+const  { notify } = useNotification()
 const colorMode = useColorMode()
 const { $dayjs } = useNuxtApp()
 const { width } = useWindowSize()
@@ -65,6 +66,17 @@ function handleTime(
     updateTime([value, time.hours[1]], true)
   else updateTime([time.hours[0], value], true)
 }
+
+function handleSelectDate(internalModelValue: [Date | null, Date | null] | [], selectDate: Function) {
+  if (internalModelValue.length === 2 && internalModelValue[0] && internalModelValue[1]) {
+    selectDate(); 
+  } else {
+    notify({
+    type: "error",
+    title: "Выберите 2 даты для применения фильтра",
+  });
+  }
+}
 </script>
 
 <template>
@@ -101,7 +113,7 @@ function handleTime(
           </div>
           <button
             class="btn btn-primary btn-sm block normal-case"
-            @click="selectDate"
+            @click="handleSelectDate(internalModelValue, selectDate)"
           >
             {{ saveButton }}
           </button>

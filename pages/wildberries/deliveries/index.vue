@@ -449,6 +449,11 @@ async function copyToClipboard(text: string) {
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
+                <li>
+                  <NuxtLink :to="`/wildberries/deliveries/export${dateRange.length ? '?dateRange=' + dateRange.map(date => new Date(date).toISOString()).join(',') : ''}`">
+                    Готовы к выдаче PDF
+                  </NuxtLink>
+                </li>
                 <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
                 <li><a @click="exportXLS">Общая таблица Excel</a></li>

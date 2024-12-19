@@ -83,6 +83,11 @@ const skip = ref(50)
 const end = ref(false)
 const { data, error } = await useFetch(`/api/flowwow/delivery/getReady`, {
   method: 'GET',
+  params: {
+    dateRange: route.query?.dateRange
+      ? route.query.dateRange.split(',').map(date => new Date(date)) 
+      : null,
+  },
   headers: useRequestHeaders(['cookie']) as HeadersInit,
 })
 
