@@ -272,6 +272,15 @@ watch(
             </button>
           </DateRangePicker>
           <button
+            v-if="dateRange.length"
+            @click="dateRange = []"
+            class="btn btn-sm btn-outline btn-square flex flex-shrink btn-primary bg-white hover:bg-white hover:text-black active:text-white font-medium rounded-lg relative group"
+          >
+            <div class="flex items-center justify-center">
+              <Icon name="material-symbols:close-rounded" size="22px" />
+            </div>
+          </button>
+          <button
             :disabled="loadingExport"
             @click="exportReadyXLS"
             class="btn btn-sm btn-outline flex flex-shrink btn-primary bg-white hover:bg-white hover:text-black active:text-white font-medium rounded-lg relative group"

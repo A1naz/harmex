@@ -6,6 +6,7 @@ import expensesData from './expensesData'
 import generalData from './generalData'
 import partnerData from './partnerData'
 import replenishmentData from './replenishmentData'
+import genealogyData from './genealogyData'
 
 function formatNumber(value: number): string {
   return value.toLocaleString('ru-RU')
@@ -59,117 +60,19 @@ const tableColumns = {
   ],
 }
 
-async function fetchData(type: string, user: any) {
+async function fetchData(type: string, user: any, dateRange?: any) {
+
   switch (type) {
     case 'general':
-      return await generalData(user)
+      return await generalData(user, 100000, 0, 0, dateRange)
     case 'replenishment':
-      return await replenishmentData(user)
+      return await replenishmentData(user, 100000, 0, 0, dateRange)
     case 'expenses':
-      return await expensesData(user)
+      return await expensesData(user, 100000, 0, 0, dateRange)
     case 'partner':
-      return await partnerData(user)
+      return await partnerData(user, 100000, 0, 0, dateRange)
     case 'genealogy':
-      return [
-        {
-          summ: formatNumber(25000),
-          date: '2022-01-01',
-          executionDate: '2022-01-02',
-          mp: 'wildberries',
-          service: 'Выкуп',
-          article: 12345,
-          orderId: '12345',
-          comment: 'Комментарий',
-          history: true,
-          source: 'Кошелек',
-          username: '+77777777777777',
-          commission: formatNumber(2000),
-        },
-        {
-          summ: formatNumber(25000),
-          date: '2022-01-01',
-          executionDate: '2022-01-02',
-          mp: 'wildberries',
-          service: 'Выкуп',
-          article: 12345,
-          orderId: '12345',
-          comment: 'Комментарий',
-          history: true,
-          source: 'Кошелек',
-          username: '+77777777777777',
-          commission: 2000,
-        },
-        {
-          summ: formatNumber(25000),
-          date: '2022-01-01',
-          executionDate: '2022-01-02',
-          mp: 'wildberries',
-          service: 'Выкуп',
-          article: 12345,
-          orderId: '12345',
-          comment: 'Комментарий',
-          history: true,
-          source: 'Кошелек',
-          username: '+77777777777777',
-          commission: formatNumber(2000),
-        },
-        {
-          summ: formatNumber(25000),
-          date: '2022-01-01',
-          executionDate: '2022-01-02',
-          mp: 'wildberries',
-          service: 'Выкуп',
-          article: 12345,
-          orderId: '12345',
-          comment: 'Комментарий',
-          history: true,
-          source: 'Кошелек',
-          username: '+77777777777777',
-          commission: formatNumber(2000),
-        },
-        {
-          summ: formatNumber(25000),
-          date: '2022-01-01',
-          executionDate: '2022-01-02',
-          mp: 'wildberries',
-          service: 'Выкуп',
-          article: 12345,
-          orderId: '12345',
-          comment: 'Комментарий',
-          history: true,
-          source: 'Кошелек',
-          username: '+77777777777777',
-          commission: formatNumber(2000),
-        },
-        {
-          summ: formatNumber(25000000),
-          date: '2022-01-01',
-          executionDate: '2022-01-02',
-          mp: 'wildberries',
-          service: 'Выкуп',
-          article: 12345,
-          orderId: '12345',
-          comment: 'Комментарий',
-          history: true,
-          source: 'Кошелек',
-          username: '+77777777777777',
-          commission: formatNumber(2000),
-        },
-        {
-          summ: formatNumber(25000),
-          date: '2022-01-01',
-          executionDate: '2022-01-02',
-          mp: 'wildberries',
-          service: 'Выкуп',
-          article: 12345,
-          orderId: '12345',
-          comment: 'Комментарий',
-          history: true,
-          source: 'Кошелек',
-          username: '+77777777777777',
-          commission: formatNumber(2000),
-        },
-      ]
+      return await genealogyData(user, 100000, 0, 0)
     default:
       return []
   }
@@ -179,11 +82,32 @@ export default defineEventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { tableType, page = 1 }: any = getQuery(event)
+  const { tableType, page = 1, dateRange }: any = getQuery(event)
+
+  let trueDateRange = {}
+  if (dateRange) {
+    trueDateRange = {
+      $or: [
+        {
+          dataoperation: {
+            $gte: new Date(JSON.parse(dateRange[0])).setHours(0, 0, 0, 0),
+            $lt: new Date(JSON.parse(dateRange[1])).setHours(23, 59, 0, 0),
+          },
+        },
+        {
+          date: {
+            $gte: new Date(JSON.parse(dateRange[0])).setHours(0, 0, 0, 0),
+            $lt: new Date(JSON.parse(dateRange[1])).setHours(23, 59, 0, 0),
+          },
+        },
+      ],
+    };
+
+  }
 
   try {
-    const data: any[] = await fetchData(tableType, user)
-    const columns:any = tableColumns[tableType] || tableColumns.general
+    const data: any[] = await fetchData(tableType, user, trueDateRange)
+    const columns: any = tableColumns[tableType] || tableColumns.general
 
     const workbook = new ExcelJS.Workbook()
     const sheet = workbook.addWorksheet('Таблица', {
