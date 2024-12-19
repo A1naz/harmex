@@ -133,6 +133,7 @@ export default eventHandler(async (event) => {
       },
     }
   }
+
   try {
     const user = await getAdminEntity(event)
     if (!user)

@@ -322,6 +322,15 @@ function openEditModal(isCreate: boolean, uuid?: string) {
     : { ...myTeam.value.find((user: any) => user.uuid == uuid) };
   teamModal.value = true;
 }
+
+function copyText(text: string) {
+  navigator.clipboard.writeText(text);
+  notify({
+    type: "success",
+    title: "Успешно",
+    text: "Логин скопирован",
+  });
+}
 </script>
 
 <template>
@@ -337,12 +346,26 @@ function openEditModal(isCreate: boolean, uuid?: string) {
               <p class="text-xs font-medium text-base-content">
                 {{ $t("Логин") }}
               </p>
-              <input
-                v-model="form.username"
-                readonly
-                placeholder="Логин"
-                class="input input-sm h-[2.5rem] bg-base-100 w-full"
-              />
+              <label
+                class="input input-sm h-[2.5rem] bg-base-100 flex items-center justify-between relative"
+              >
+                <input
+                  v-model="form.username"
+                  readonly
+                  placeholder="Логин"
+                  class="flex-grow w-full text-ellipsis min-w-52"
+                />
+                <button
+                  class="flex items-center justify-center mx-2 text-base-300 hover:text-primary"
+                  @click="copyText(form.username)"
+                >
+                  <icon
+                    v-if="!user?.emailConfirmed"
+                    name="material-symbols:content-copy"
+                    size="24"
+                  />
+                </button>
+              </label>
             </div>
             <div class="flex flex-col gap-1 flex-1">
               <p class="text-xs font-medium text-base-content">
@@ -411,7 +434,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
                 :status-text="languageArr.find((item: any) => item.value === selectedLanguageCode)?.title"
                 @change-value="(e: any) => updateLanguage(e.value)"
                 :class="'h-[2.5rem]'"
-                :width="200"
+                :width="'200'"
               />
               <!-- <ProfileLanguageSelect /> -->
             </div>
@@ -441,7 +464,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
                   ]"
                   @change-value="(e: any) => (form.wallet = e.value)"
                   :class="'h-[2.5rem]'"
-                  :width="200"
+                  :width="'200'"
                 />
               </div>
               <div>

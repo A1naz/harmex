@@ -79,12 +79,22 @@ const { stop } = useIntersectionObserver(
     targetIsVisible.value = isIntersecting
   },
 )
+
+const startDate = new Date('2024-12-01T14:02:00.000Z').getTime();
+const endDate = new Date('2024-12-02T14:02:00.000Z').getTime();
 const skip = ref(50)
 const end = ref(false)
-const { data, error } = await useFetch(`/api/${mpStore.selectedMP || 'wildberries'}/delivery/getReady`, {
+const { data, error } = await useFetch(`/api/wildberries/delivery/getReady`, {
   method: 'GET',
+  params: {
+    dateRange: route.query?.dateRange
+      ? route.query.dateRange.split(',').map(date => new Date(date)) 
+      : null,
+  },
   headers: useRequestHeaders(['cookie']) as HeadersInit,
 })
+
+console.log('date:   ',route.query?.dateRange ? route.query.dateRange : null)
 
 onMounted(async () => {
   deliveries.value = data.value

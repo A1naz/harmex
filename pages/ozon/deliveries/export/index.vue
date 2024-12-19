@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'auth',
+  auth: true,
   title: 'Экспорт',
   colorMode: 'light',
 })
@@ -60,7 +60,10 @@ async function exportToFile() {
       worker = worker.get('pdf').then((pdf: any) => {
         progress.value += 1
         pdf.addPage()
-      }).from(page).toContainer().toCanvas().toPdf()
+      }).from(page)
+        .toContainer()
+        .toCanvas()
+        .toPdf()
     })
   }
   return worker.save()
@@ -81,8 +84,13 @@ const { stop } = useIntersectionObserver(
 )
 const skip = ref(50)
 const end = ref(false)
-const { data, error } = await useFetch(`/api/${mpStore.selectedMP || 'wildberries'}/delivery/getReady`, {
+const { data, error } = await useFetch(`/api/ozon/delivery/getReady`, {
   method: 'GET',
+  params: {
+    dateRange: route.query?.dateRange
+      ? route.query.dateRange.split(',').map(date => new Date(date)) 
+      : null,
+  },
   headers: useRequestHeaders(['cookie']) as HeadersInit,
 })
 
@@ -93,13 +101,14 @@ onMounted(async () => {
   }) as ArrayBuffer
   font.value = response
   setTimeout(() => {
-    deliveries.value = data.value
-  }, 1000)
+    deliveries.value = data.value;
+  }, 1000);
 })
 </script>
 
 <template>
   <div class="overflow-auto">
+    <progress class="progress progress-primary w-full fixed" :value="progress" :max="max" />
     <div class="flex">
       <button
         class="btn m-2 mt-4" @click="exportToFile"
@@ -157,7 +166,7 @@ onMounted(async () => {
       <div class="hero-content text-center flex justify-center items-center h-80">
         <div class="max-w-md">
           <h1 class="text-3xl font-bold">
-            Здесь ничего нет
+            Здесь ничего нет 
           </h1>
         </div>
       </div>

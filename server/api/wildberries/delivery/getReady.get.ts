@@ -7,7 +7,17 @@ export default eventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/auth', 302)
 
-  const all = await Delivery.find({ user }).sort({ _id: -1 }).limit(500)
+  const { dateRange }: any = getQuery(event)
+  let trueDateRange = {}
+  if (dateRange) {
+    trueDateRange = {
+      updatedAt: {
+        $gte: new Date(JSON.parse(dateRange[0])).setHours(0, 0, 0, 0),
+        $lt: new Date(JSON.parse(dateRange[1])).setHours(23, 59, 0, 0),
+      },
+    }
+  }
+  const all = await Delivery.find({ ...trueDateRange, user }).sort({ _id: -1 }).limit(500)
 
   const buyoutsId = all.map(item => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
@@ -49,7 +59,7 @@ export default eventHandler(async (event) => {
 
   const filtered = format.filter((item) => {
     if (item)
-      return item!.currentstatus === 'Готов к выдаче' || item!.currentstatus === 'Готов к получению'
+      return item!.currentstatus === 'Готов к выдаче' || item!.currentstatus === 'Готов к получению' || item!.currentstatus.includes('Получите до') || item!.currentstatus.includes('Заберите до')
     else
       return false
   })
