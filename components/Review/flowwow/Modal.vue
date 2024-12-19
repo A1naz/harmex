@@ -483,6 +483,25 @@ function convertToMoscowTime(dateString: any): Date {
 
   return date;
 }
+
+const isMouseDownOnOverlay = ref(false);
+
+const handleMouseDown = (event: any) => {
+  // Проверяем, был ли клик на пустой области (не внутри модалки)
+  if (event.target.classList.contains("modal")) {
+    isMouseDownOnOverlay.value = true;
+  } else {
+    isMouseDownOnOverlay.value = false;
+  }
+};
+
+const handleMouseUp = (event: any) => {
+  // Если мousedown был на overlay и mouseup также на overlay, закрываем модалку
+  if (isMouseDownOnOverlay.value && event.target.classList.contains("modal")) {
+    isMouseDownOnOverlay.value = false; // Сбрасываем флаг
+    emit("close"); // Отправляем событие закрытия
+  }
+};
 </script>
 
 <template>
@@ -493,7 +512,8 @@ function convertToMoscowTime(dateString: any): Date {
       'modal-open': state,
     }"
     class="modal overflow-x-hidden cursor-pointer"
-    @click="$emit('close')"
+    @mousedown="handleMouseDown"
+    @mouseup="handleMouseUp"
   >
     <div class="modal-box z-50 max-w-xl sm:w-xs w-xl cursor-auto" @click.stop>
       <label
