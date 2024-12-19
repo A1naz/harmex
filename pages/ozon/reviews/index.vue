@@ -103,6 +103,7 @@ function onSearchInput(_val: any) {
     return;
   }
   reviews.value = [];
+  availableReviews.value = [];
   skip.value = 0;
   end.value = false;
   // loading.value= true

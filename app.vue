@@ -1,6 +1,4 @@
-<script lang="ts" setup>
-
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <div>
@@ -20,7 +18,7 @@
 </template>
 
 <style lang="scss">
-/* @import "@/assets/style/datepicker.css"; */
+@import "@/assets/style/datepicker.css";
 
 .myCustomBtnNavbar {
   @apply btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white 

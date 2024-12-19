@@ -8,7 +8,8 @@ definePageMeta({
 });
 
 const { user } = useUserSession();
-
+const dateRange = ref([]);
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 const buttonsLine: Array<{ label: string; value: string }> = [
   { label: "Общее", value: "general" },
   { label: "Пополнение", value: "replenishment" },
@@ -175,7 +176,7 @@ async function exportReadyXLS() {
   loadingExport.value = true;
   const { data } = await useFetch("/api/finance/export", {
     responseType: "blob",
-    query: { tableType: tableType.value, page: 1 },
+    query: { tableType: tableType.value, page: 1, dateRange: dateRange.value },
   });
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
   const fileLink = document.createElement("a");
@@ -224,7 +225,9 @@ watch(
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row sm:items-start items-center justify-center gap-2 overflow-x-hidden sm:overflow-x-auto overflow-y-clip w-full">
+  <div
+    class="flex flex-col sm:flex-row sm:items-start items-center justify-center gap-2 overflow-x-hidden sm:overflow-x-auto overflow-y-clip w-full"
+  >
     <FinanceDashboard
       :second-level-percent="10"
       :ref-balance="balanceForm.partnerBalance"
@@ -251,16 +254,34 @@ watch(
             </div>
           </button>
         </div>
-        <button
-          :disabled="loadingExport"
-          @click="exportReadyXLS"
-          class="btn btn-sm btn-outline flex flex-shrink btn-primary bg-white hover:bg-white hover:text-black active:text-white font-medium rounded-lg relative group"
-        >
-          <div class="flex items-center justify-center">
-            <Icon v-if="!loadingExport" name="lucide:download" size="22px" />
-            <span v-else class="loading loading-spinner" />
-          </div>
-        </button>
+        <div class="flex gap-1">
+          <DateRangePicker
+            class="w-46 -mt-1"
+            v-model="dateRange"
+            :start-date="startDate"
+            @reset="dateRange = []"
+          >
+            <button class="btn btn-sm mt-1 btn-primary border-none min-w-2xl">
+              {{
+                dateRange.length > 1
+                  ? `${$dayjs(dateRange[0]).format("DD.MM.YYYY")} - ${$dayjs(
+                      dateRange[1]
+                    ).format("DD.MM.YYYY")}`
+                  : "Выбрать даты"
+              }}
+            </button>
+          </DateRangePicker>
+          <button
+            :disabled="loadingExport"
+            @click="exportReadyXLS"
+            class="btn btn-sm btn-outline flex flex-shrink btn-primary bg-white hover:bg-white hover:text-black active:text-white font-medium rounded-lg relative group"
+          >
+            <div class="flex items-center justify-center">
+              <Icon v-if="!loadingExport" name="lucide:download" size="22px" />
+              <span v-else class="loading loading-spinner" />
+            </div>
+          </button>
+        </div>
       </div>
       <FinanceTable
         :table-data="tableData"
