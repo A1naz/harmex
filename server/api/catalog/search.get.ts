@@ -1,7 +1,7 @@
 import { Service } from '~/server/lib/models/Service';
 
 function searchOrb(search: any): any {
-  let queryString = typeof search === 'string' ? search : JSON.stringify(search);
+  let queryString = typeof search === 'string' ? search : JSON.stringify(search.toLowerCase());
 
   const replacements: { [key: string]: string } = {
       'флау': 'flowwow',
