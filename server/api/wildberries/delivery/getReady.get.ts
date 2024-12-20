@@ -17,7 +17,24 @@ export default eventHandler(async (event) => {
       },
     }
   }
-  const all = await Delivery.find({ ...trueDateRange, user }).sort({ _id: -1 }).limit(500)
+  const all = await Delivery.find({
+    ...trueDateRange, user: user._id,
+    statusdelivery: {
+      $elemMatch: {
+        $or: [
+          { status: 'Готов к выдаче' },
+          { status: 'Готов к получению' },
+          { status: '^Заберите до.*' },
+          { status: '^Получите до.*' },
+          { status: { $regex: '^Готов к получению.*' } },
+          { status: { $regex: '^Готов к выдаче.*' } },
+          { status: { $regex: '^Заберите до.*' } },
+          { status: { $regex: '^Получите до.*' } },
+        ],
+      },
+    },
+    status: { $ne: 'completed' },
+  }).sort({ _id: -1 }).limit(500)
 
   const buyoutsId = all.map(item => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
@@ -59,7 +76,7 @@ export default eventHandler(async (event) => {
 
   const filtered = format.filter((item) => {
     if (item)
-      return item!.currentstatus === 'Готов к выдаче' || item!.currentstatus === 'Готов к получению' || item!.currentstatus.includes('Получите до') || item!.currentstatus.includes('Заберите до')
+      return item
     else
       return false
   })
@@ -70,5 +87,6 @@ export default eventHandler(async (event) => {
     else
       points[item!.point] = [item]
   })
+
   return points
 })
