@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas-pro';
+
 definePageMeta({
   auth: true,
   title: 'Экспорт',
@@ -32,42 +35,49 @@ const modalInfo = reactive({
   code: 0,
 })
 async function exportToFile() {
-  progress.value = 0
-  const options = {
-    margin: 0,
-    filename: `Готовы к выдаче ${mpStore.selectedMP.charAt(0).toUpperCase() + mpStore.selectedMP.slice(1)}.pdf`,
-    html2canvas: {
-      scale: 1.5,
-      letterRendering: true,
-      windowWidth: 1920,
-      windowHeight: 1080,
-    },
-    jsPDF: {
-      unit: 'px',
-      hotfixes: ['px_scaling'],
-      format: 'a4',
-      orientation: 'l',
-    },
-  }
-  const pages = Array.from(pdfSection.value!.querySelectorAll('div[aria-label^="pdf-page-"]'))
-  max.value = pages.length - 1
-  let worker = $html2pdf()
-    .set(options)
-    .from(pages[0])
-  worker = worker.toPdf()
-  if (pages.length > 1) {
-    pages.slice(1).forEach((page, index) => {
-      worker = worker.get('pdf').then((pdf: any) => {
-        progress.value += 1
-        pdf.addPage()
-      }).from(page)
-        .toContainer()
-        .toCanvas()
-        .toPdf()
+  progress.value = 0;
+
+  const pages = Array.from(pdfSection.value!.querySelectorAll('div[aria-label^="pdf-page-"]'));
+  const totalPages = pages.length;
+  max.value = totalPages;
+
+  const pdf = new jsPDF({ unit: 'px', format: 'a4', orientation: 'landscape' });
+
+  // Массив для хранения изображений и данных
+  const imagesData = await Promise.all(
+    pages.map((page, index) => {
+      return html2canvas(page, { scale: 1.5, useCORS: true }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const imgProps = pdf.getImageProperties(imgData);
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        return { imgData, pdfWidth, pdfHeight, index };
+      });
     })
-  }
-  return worker.save()
+  );
+
+  // Сортировка изображений по индексу (если это необходимо)
+  imagesData.sort((a, b) => a.index - b.index);
+
+  // Добавляем страницы в PDF в правильном порядке
+  imagesData.forEach((data, index) => {
+    if (index > 0) {
+      pdf.addPage();
+    }
+    pdf.addImage(data.imgData, 'PNG', 0, 0, data.pdfWidth, data.pdfHeight);
+    
+    // Обновление прогресса
+    progress.value = Math.round(((index + 1) / totalPages) * 100);
+  });
+
+  // Сохраняем PDF после того, как все страницы добавлены
+  pdf.save('Готовы к выдаче Ozon.pdf');
 }
+
+
+
 const modal = ref(false)
 function openModal(code: number, src: string) {
   modalInfo.src = src
