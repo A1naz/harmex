@@ -6,25 +6,25 @@ export default eventHandler(async (event) => {
     return sendRedirect(event, '/auth', 302)
   }
   
-  // if (
-  //   session.user?.isTwoFaEnabled && session.twoFaNeeded && !event._path?.includes('/2fa') && !event._path?.includes('/session')
-  // ) {
-  //   return sendRedirect(event, '/2fa', 302)
-  // }
-  // const accesses = MenuBuilder.filteredAccess(session.user?.acesses || []).allowedPathes.map((path) => path.value)
-  // if(accesses.length === 0) return 
+  if (
+    session.user?.isTwoFaEnabled && session.twoFaNeeded && !event._path?.includes('/2fa') && !event._path?.includes('/session')
+  ) {
+    return sendRedirect(event, '/2fa', 302)
+  }
+  const accesses = MenuBuilder.filteredAccess(session.user?.acesses || []).allowedPathes.map((path) => path.value)
+  if(accesses.length === 0) return 
 
-  // const controlPaths = MenuBuilder.pathOptions().map((path) => path.value)
+  const controlPaths = MenuBuilder.pathOptions().map((path) => path.value)
 
-  // const currentPath = event._path;
+  const currentPath = event._path;
 
-  // if (currentPath && controlPaths.some((control) => currentPath.includes(control))) {
+  if (currentPath && controlPaths.some((control) => currentPath.includes(control))) {
 
-  //   if (!accesses.some((control) => currentPath.includes(control))) {
-  //     return sendRedirect(event, '/catalog', 302);
-  //   }
+    if (!accesses.some((control) => currentPath.includes(control))) {
+      return sendRedirect(event, '/catalog', 302);
+    }
 
-  // } else {
-  //   return
-  // }
+  } else {
+    return
+  }
 })
