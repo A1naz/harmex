@@ -18,18 +18,7 @@ export default eventHandler(async (event) => {
     }
   }
 
-  const all = await Delivery.find({
-    ...trueDateRange, user,
-    status: { $ne: 'completed' },
-    statusdelivery: {
-      $elemMatch: {
-        $or: [
-          { status: '^Ожидает получения.*' },
-          { status: { $regex: '^Ожидает получения.*' } },
-        ],
-      },
-    },
-  }).sort({ _id: -1 })
+  const all = await Delivery.find({ ...trueDateRange, user }).sort({ _id: -1 })
 
   const buyoutsId = all.map(item => item.idbuyout)
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
