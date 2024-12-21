@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const props = defineProps({
   balance: { type: Number, required: true },
   refBalance: { type: Number, required: true },
@@ -10,75 +9,75 @@ const props = defineProps({
   refUrl: { type: String, required: true },
   rewardPercent: { type: Number, required: true },
   refLink: { type: Number, required: true },
-})
+});
 
-const currency = useCurrency()
-const { notify } = useNotification()
+const currency = useCurrency();
+const { notify } = useNotification();
 
 async function copyToClipboard(text: string) {
-  await navigator.clipboard.writeText(text)
+  await navigator.clipboard.writeText(text);
   notify({
-    title: 'Успешно',
-    text: 'Скопировано в буфер обмена',
-  })
+    title: "Успешно",
+    text: "Скопировано в буфер обмена",
+  });
 }
 
 const cards = [
   {
-    cardType: 'visa',
-    cardNumber: '1234 5678 9012 3456',
-    cardHolder: 'Иванов Иван',
+    cardType: "visa",
+    cardNumber: "1234 5678 9012 3456",
+    cardHolder: "Иванов Иван",
   },
   {
-    cardType: 'mc',
-    cardNumber: '1234 5678 9012 3456',
-    cardHolder: 'Иванов Иван',
+    cardType: "mc",
+    cardNumber: "1234 5678 9012 3456",
+    cardHolder: "Иванов Иван",
   },
-]
+];
 
-const modalShow = ref(false)
-const modalStore = useModalStore()
-const transferModalShow = ref(false)
-const qrCode = ref('')
-const qrLoading = ref(false)
+const modalShow = ref(false);
+const modalStore = useModalStore();
+const transferModalShow = ref(false);
+const qrCode = ref("");
+const qrLoading = ref(false);
 
 async function getQr() {
-  qrLoading.value = true
-  const { data }: any = await useFetch('/api/finance/getCode', {
-    method: 'GET',
+  qrLoading.value = true;
+  const { data }: any = await useFetch("/api/finance/getCode", {
+    method: "GET",
     query: {
       refUrl: props.refUrl,
     },
-  })
-  qrCode.value = data.value.qrCode
-  qrLoading.value = false
+  });
+  qrCode.value = data.value.qrCode;
+  qrLoading.value = false;
 }
-getQr()
+getQr();
 
 async function copyImageToClipboard(base64Image: any) {
   try {
-    const binaryData = atob(base64Image.split(',')[1])
-    const arrayBuffer = new ArrayBuffer(binaryData.length)
-    const uint8Array = new Uint8Array(arrayBuffer)
+    const binaryData = atob(base64Image.split(",")[1]);
+    const arrayBuffer = new ArrayBuffer(binaryData.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
     for (let i = 0; i < binaryData.length; i++) {
-      uint8Array[i] = binaryData.charCodeAt(i)
+      uint8Array[i] = binaryData.charCodeAt(i);
     }
 
-    const blob = new Blob([uint8Array], { type: 'image/png' })
+    const blob = new Blob([uint8Array], { type: "image/png" });
 
     await navigator.clipboard.write([
       new ClipboardItem({
         [blob.type]: blob,
       }),
-    ])
+    ]);
     notify({
-      title: 'Изображение скопировано в буфер обмена',
-    })
+      title: "Изображение скопировано в буфер обмена",
+    });
   } catch (error) {
     // console.error('Ошибка при копировании изображения в буфер обмена:', error);
     notify({
-      title: 'Ошибка при копировании изображения',
-    })
+      title: "Ошибка при копировании изображения",
+    });
   }
 }
 </script>
@@ -89,7 +88,9 @@ async function copyImageToClipboard(base64Image: any) {
       class="flex w-full bg-[#f5f7ff] rounded-lg drop-shadow-sm overflow-hidden"
     >
       <div class="relative flex flex-col w-full">
-        <div class="absolute inset-0 w-full h-full bg-no-repeat bg-cover bg-[url('/icons/figma/finance/cardBg.jpeg')] transform scale-x-[-1]"></div>
+        <div
+          class="absolute inset-0 w-full h-full bg-no-repeat bg-cover bg-[url('/icons/figma/finance/cardBg.jpeg')] transform scale-x-[-1]"
+        ></div>
 
         <div class="flex justify-between px-[20px] py-[15px] mb-10 z-[2]">
           <div class="flex flex-col gap-[6px]">
@@ -105,32 +106,26 @@ async function copyImageToClipboard(base64Image: any) {
           </div>
         </div>
         <div class="flex justify-between p-[14px]">
-    
           <div
             class="bg-transparent self-end flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
           >
-            <span class=" font-normal white">Кошелек</span>
-            <span class="text-lg font-semibold white">{{ currency.format(props.balance) || 0 }}</span>
-
+            <span class="font-normal white">Кошелек</span>
+            <span class="text-lg font-semibold white">{{
+              currency.format(props.balance) || 0
+            }}</span>
           </div>
-
-
         </div>
       </div>
     </div>
 
     <div class="flex gap-[5px] justify-center">
       <button
-        class="btn btn-sm h-[2.5rem] btn-outline w-[49%] border-[#71a7e5] bg-[#71a7e5] hover:bg-white  hover:border-[#71a7e5] hover:shadow-xl active:bg-white text-[14px] font-medium px-[50px] rounded-xl relative group"
+        class="btn btn-sm h-[2.5rem] w-[49%] text-[14px] font-medium px-[50px] rounded-xl relative group btn-neutral"
         @click="modalShow = true"
       >
         <div class="flex items-center justify-center">
-          <Icon
-            name="solar:hand-money-linear"
-            class="text-white group-hover:text-[#71a7e5] group-active:text-[#71a7e5]"
-            size="22px"
-          />
-          <span class="ml-3 text-white group-hover:text-[#71a7e5]  group-active:text-[#71a7e5]">Вывод</span>
+          <Icon name="solar:hand-money-linear" class="text-white" size="22px" />
+          <span class="ml-3">Вывод</span>
         </div>
       </button>
 
@@ -149,34 +144,33 @@ async function copyImageToClipboard(base64Image: any) {
       </button> -->
 
       <button
-        class="btn btn-sm h-[2.5rem] btn-outline w-[49%] border-[#71a7e5] bg-[#71a7e5] hover:bg-white  hover:border-[#71a7e5] hover:shadow-xl active:bg-white text-[14px] font-medium px-[50px] rounded-xl relative group"
+        class="btn btn-sm h-[2.5rem] w-[49%] text-[14px] font-medium px-[50px] rounded-xl relative group btn-neutral"
         @click="modalStore.payment = true"
       >
         <div class="flex items-center justify-center">
-          <Icon
-            name="solar:hand-money-linear"
-            class="text-white group-hover:text-[#71a7e5] group-active:text-[#71a7e5]"
-            size="22px"
-          />
-          <span class="ml-3 text-white group-hover:text-[#71a7e5] group-active:text-[#71a7e5]">Пополнение</span>
+          <Icon name="solar:hand-money-linear" size="22px" />
+          <span class="ml-3">Пополнение</span>
         </div>
       </button>
     </div>
 
-    <div class="flex flex-col w-full  rounded-lg drop-shadow-sm bg-gradient-to-t border border-[#f0f0f0] from-[#f2f4fe] from-[5%] to-[#fefefe] ">
+    <div
+      class="flex flex-col w-full rounded-lg drop-shadow-sm bg-gradient-to-t border border-[#f0f0f0] from-[#f2f4fe] from-[5%] to-[#fefefe]"
+    >
       <div class="flex justify-between p-[14px]">
         <div class="flex flex-col gap-[10px]">
           <span class="text-lg font-normal">Партнерский счет</span>
           <span class="font-bold text-xl">
-            {{ (props.refBalance || 0).toFixed(1) + " ₽" }}  </span>
+            {{ (props.refBalance || 0).toFixed(1) + " ₽" }}
+          </span>
         </div>
-        
       </div>
       <div class="flex p-[14px]">
-          <span
-            class="text-xs text-[0.8rem] text-left text-[#909090] flex-wrap whitespace-pre-wrap"
-          >Доходность зависит от количества приглашенных пользователей</span>
-        </div>
+        <span
+          class="text-xs text-[0.8rem] text-left text-[#909090] flex-wrap whitespace-pre-wrap"
+          >Доходность зависит от количества приглашенных пользователей</span
+        >
+      </div>
       <div class="flex justify-start mt-auto w-full">
         <div
           class="bg-white self-start m-3 mt-0 gap-1 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg drop-shadow-sm w-full border border-[#f0f0f0]"
@@ -184,9 +178,7 @@ async function copyImageToClipboard(base64Image: any) {
           <div class="font-bold text-[0.9rem] whitespace-nowrap text-[#9e9e9e]">
             {{ `${firstLevelReferrals} человек` }}
           </div>
-          <div class="text-[1rem] text-start text-[#71a7e5] font-bold">
-           500 ₽
-          </div>
+          <div class="text-[1rem] text-start text-black font-bold">500 ₽</div>
         </div>
       </div>
     </div>
@@ -194,17 +186,13 @@ async function copyImageToClipboard(base64Image: any) {
     <div class="flex flex-col gap-5 w-full">
       <div class="bg-[#f2f3f5] rounded-lg px-3 flex flex-col gap-[18px] py-3">
         <div class="flex gap-2">
-          <h2 class="text-lg font-bold">
-            Партнерка
-          </h2>
+          <h2 class="text-lg font-bold">Партнерка</h2>
         </div>
         <div class="flex flex-col gap-[15px]">
           <div
             class="bg-white rounded-lg px-[15px] py-2.5 border border-[#ededed]"
           >
-            <h3 class="mb-3">
-              Реферальная ссылка
-            </h3>
+            <h3 class="mb-3">Реферальная ссылка</h3>
 
             <div
               class="bg-[#f2f3f5] h-[2.5rem] rounded-lg p-3 flex gap-1 w-full justify-between self-end mt-auto items-center"
@@ -212,7 +200,7 @@ async function copyImageToClipboard(base64Image: any) {
               <span
                 class="cursor-pointer hover:underline truncate"
                 @click="copyToClipboard(refUrl)"
-              >{{ refUrl }}
+                >{{ refUrl }}
               </span>
               <button
                 class="text-primary text-opacity-50 hover:text-opacity-100"
@@ -230,27 +218,29 @@ async function copyImageToClipboard(base64Image: any) {
           <div
             class="bg-white rounded-lg px-[15px] py-2.5 border border-[#ededed]"
           >
-            <h3 class="mb-1 sm:mb-3">
-              QR-код:
-            </h3>
+            <h3 class="mb-1 sm:mb-3">QR-код:</h3>
             <div
               class="join bg-white rounded-lg border border-none flex justify-between gap-2 items-center justify-self-end w-full"
             >
-              <div class="join-item bg-transparent rounded-lg w-full flex gap-1 ">
+              <div
+                class="join-item bg-transparent rounded-lg w-full flex gap-1"
+              >
                 <button
                   @click="copyImageToClipboard(qrCode)"
                   class="w-full text-[#1B38CA] hover:text-opacity-100 flex items-center gap-3"
                 >
-                <NuxtImg
-                  v-if="!qrLoading"
-                  class="rounded-lg"
-                  height="100"
-                  width="100"
-                  :src="qrCode"
-                />
-                <div v-else class="w-full flex justify-center items-center">
-                  <span class="loading loading-dots loading-lg text-primary"></span>
-                </div>
+                  <NuxtImg
+                    v-if="!qrLoading"
+                    class="rounded-lg"
+                    height="100"
+                    width="100"
+                    :src="qrCode"
+                  />
+                  <div v-else class="w-full flex justify-center items-center">
+                    <span
+                      class="loading loading-dots loading-lg text-primary"
+                    ></span>
+                  </div>
                 </button>
               </div>
             </div>
@@ -274,7 +264,7 @@ async function copyImageToClipboard(base64Image: any) {
 .background-div {
   width: 100%;
   height: 160px;
-  background-image: url('/icons/figma/finance/graph.svg');
+  background-image: url("/icons/figma/finance/graph.svg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
@@ -283,10 +273,9 @@ async function copyImageToClipboard(base64Image: any) {
 .backgroundMini-div {
   width: 100%;
   height: 200px;
-  background-image: url('/icons/figma/finance/miniGraph.svg');
+  background-image: url("/icons/figma/finance/miniGraph.svg");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
 }
-
 </style>

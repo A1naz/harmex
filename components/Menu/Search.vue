@@ -2,52 +2,52 @@
 const props = defineProps({
   data: { type: Array<any>, required: true, default: () => [] },
   loading: { type: Boolean, required: true },
-})
+});
 
-const emit = defineEmits(['closeModal', 'search'])
-const show = ref(false)
-const loadingData = toRef(props, 'loading')
-const searchCompleted = ref(false)
+const emit = defineEmits(["closeModal", "search"]);
+const show = ref(false);
+const loadingData = toRef(props, "loading");
+const searchCompleted = ref(false);
 
 const isVisible = computed(() => {
   return (
-    props.data.length > 0
-    && !props.loading
-    && show.value
-    && searchQuery.value.trim() !== ''
-    && searchCompleted.value
-  )
-})
+    props.data.length > 0 &&
+    !props.loading &&
+    show.value &&
+    searchQuery.value.trim() !== "" &&
+    searchCompleted.value
+  );
+});
 
-const searchInput = useDebounceFn(search, 500)
-const searchQuery = ref('')
+const searchInput = useDebounceFn(search, 500);
+const searchQuery = ref("");
 
 function onInput() {
-  searchCompleted.value = false
-  searchInput()
+  searchCompleted.value = false;
+  searchInput();
 }
 
 function search() {
-  if (searchQuery.value == '' || searchQuery.value.trim() == '') {
-    return
+  if (searchQuery.value == "" || searchQuery.value.trim() == "") {
+    return;
   }
-  searchCompleted.value = false
-  emit('search', searchQuery.value)
+  searchCompleted.value = false;
+  emit("search", searchQuery.value);
 }
 
 watch(loadingData, (newVal) => {
   if (!newVal) {
-    searchCompleted.value = true
+    searchCompleted.value = true;
   }
-})
+});
 
 function close() {
-  show.value = false
+  show.value = false;
 }
 
 function toFound(path: string) {
-  close()
-  navigateTo(path)
+  close();
+  navigateTo(path);
 }
 </script>
 
@@ -56,18 +56,22 @@ function toFound(path: string) {
     <div
       v-if="isVisible || (show && searchCompleted && searchQuery.trim() !== '')"
       class="fixed inset-0 z-[9998]"
-      :class="isVisible || (show && searchCompleted && searchQuery.trim() !== '')
-        ? 'bg-black bg-opacity-10 backdrop-blur-[1px]'
-        : ''"
+      :class="
+        isVisible || (show && searchCompleted && searchQuery.trim() !== '')
+          ? 'bg-black bg-opacity-10 backdrop-blur-[1px]'
+          : ''
+      "
       @click="close"
     />
   </Transition>
 
   <div
     class="flex flex-col items-center gap-2 w-full ml-4 relative"
-    :class="isVisible || (show && searchCompleted && searchQuery.trim() !== '')
-      ? 'z-[9998]'
-      : ''"
+    :class="
+      isVisible || (show && searchCompleted && searchQuery.trim() !== '')
+        ? 'z-[9998]'
+        : ''
+    "
   >
     <label class="flex items-center gap-2 w-full ml-4">
       <input
@@ -77,13 +81,19 @@ function toFound(path: string) {
         class="input input-sm h-[2.5rem] input-bordered w-full border-base-200 bg-white outline-none"
         @input="onInput()"
         @focus="show = true"
-      >
-      <Icon name="mynaui:search" size="25" class="-ml-10 bg-white rounded-lg text-base-300" />
+      />
+      <Icon
+        name="mynaui:search"
+        size="25"
+        class="-ml-10 bg-white rounded-lg text-base-300"
+      />
     </label>
 
     <Transition name="slide-fade">
       <div
-        v-if="isVisible || (show && searchCompleted && searchQuery.trim() !== '')"
+        v-if="
+          isVisible || (show && searchCompleted && searchQuery.trim() !== '')
+        "
         class="flex flex-col absolute w-[98%] ml-4"
         style="top: calc(100% + 0.5rem)"
       >
@@ -98,8 +108,9 @@ function toFound(path: string) {
             class="border transition w-full border-none"
           >
             <button
-              v-for="service in item.items" :key="service.path"
-              class="w-full bg-transparent text-[#909090] hover:text-black rounded-lg hover:bg-[#f5f7ff] border-white  py-2 px-4 "
+              v-for="service in item.items"
+              :key="service.path"
+              class="w-full bg-transparent text-[#909090] hover:text-black rounded-lg hover:bg-[#f5f7ff] border-white py-2 px-4"
               @click="toFound(`/${item.name.toLowerCase()}${service.path}`)"
             >
               {{ `${item?.name} ${service.title}` }}
@@ -107,8 +118,8 @@ function toFound(path: string) {
           </div>
 
           <button
-            class="text-secondary bg-white hover:text-black rounded-lg hover:bg-[#f5f7ff] py-1 px-4 border border-white transition w-full"
-            @click=";[(show = false), navigateTo('/catalog')]"
+            class="bg-white hover:text-black rounded-lg hover:bg-[#f5f7ff] py-1 px-4 border border-white transition w-full"
+            @click="[(show = false), navigateTo('/catalog')];"
           >
             Смотреть все
           </button>
