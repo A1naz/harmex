@@ -54,9 +54,7 @@ class MenuBuilder {
             }
           }
         }
-        else {
-          console.warn(`Did not find ${acc} in menuDataList`)
-        }
+
       })
 
       return { menu, allowedPathes }

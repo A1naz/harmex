@@ -224,7 +224,7 @@ async function getMyTeam() {
     myTeam.value = res;
   }
 }
-await getMyTeam();
+getMyTeam();
 
 const saveError = ref("");
 const btnSaveLoading = ref(false);
