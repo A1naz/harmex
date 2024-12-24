@@ -23,6 +23,8 @@ async function login(event: H3Event<Request>, user: IUser) {
     },
     twoFaNeeded: user.isTwoFaEnabled,
     loggedInAt: new Date(),
+  }, {
+    maxAge: 60 * 60 * 24 * 30,
   })
 }
 
