@@ -73,9 +73,23 @@ async function addProduct() {
   article.value = "";
 }
 
-function ruleModalOpen(index: number) {
+async function ruleModalOpen(index: number) {
+  if (user.ffEnabled) {
+    if (
+      // eslint-disable-next-line eqeqeq
+      products.value[index].dateRange[0] != lastItemDateRange.value[0] ||
+      // eslint-disable-next-line eqeqeq
+      products.value[index].dateRange[1] != lastItemDateRange.value[1]
+    ) {
+      lastItemDateRange.value = products.value[index].dateRange;
+      await getFFPickpoints(products.value[index].dateRange[0] || new Date());
+    }
+  }
+
   ruleModal.value = true;
   selectedRuleProductIndex.value = index;
+
+  await getFFPickpoints(products.value[index].dateRange[0] || new Date());
 }
 // function removeSearchQuery(index: number, place: number) {
 //   store.removeSearchQuery(index, place)
@@ -677,13 +691,22 @@ function refreshElements() {
                 </div>
               </div>
               <div
-                v-if="rule.id === 1 && user.ffEnabled"
+                v-if="
+                  rule.id === 1 &&
+                  user.ffEnabled &&
+                  ffPickpoints &&
+                  ffPickpoints.length
+                "
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
                 <span class="label-text">{{ "Выкуп под ключ " }}</span>
                 <div class="flex gap-4">
                   <input
-                    :disabled="products[selectedRuleProductIndex].purchaseSoon"
+                    :disabled="
+                      products[selectedRuleProductIndex].purchaseSoon ||
+                      !ffPickpoints ||
+                      !ffPickpoints.length
+                    "
                     v-model="products[selectedRuleProductIndex].key"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
