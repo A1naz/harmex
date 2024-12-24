@@ -51,6 +51,7 @@ export default eventHandler(async (event) => {
         productimage: '$buyout.product.image',
         gender: ['$data8', '$buyout.gender'],
         sizeparam: '$buyout.sizeparam',
+        url: '$buyout.url',
       },
     },
     {
@@ -61,6 +62,7 @@ export default eventHandler(async (event) => {
         countAvailable: { $sum: 1 },
         productimage: { $addToSet: '$productimage' },
         productname: { $addToSet: '$productname' },
+        url: { $addToSet: '$url' },
         delivs: {
           $push: {
             delivId: '$_id',
