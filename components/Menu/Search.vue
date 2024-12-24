@@ -77,7 +77,7 @@ function toFound(path: string) {
       <input
         v-model="searchQuery"
         type="text"
-        placeholder="Поиск по услуге, категории, функционалу и справочнику"
+        placeholder="Найти на хармекс"
         class="input input-sm h-[2.5rem] input-bordered w-full border-base-200 bg-white outline-none"
         @input="onInput()"
         @focus="show = true"
@@ -119,7 +119,7 @@ function toFound(path: string) {
 
           <button
             class="bg-white hover:text-black rounded-lg hover:bg-[#f5f7ff] py-1 px-4 border border-white transition w-full"
-            @click="[(show = false), navigateTo('/catalog')];"
+            @click="[(show = false), navigateTo('/catalog')]"
           >
             Смотреть все
           </button>

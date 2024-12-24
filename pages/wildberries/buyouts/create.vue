@@ -626,7 +626,7 @@ function refreshElements() {
         v-show="products.length"
         class="mt-6 md:flex justify-start lg:justify-end"
       >
-        <div class="m-5">
+        <div class="m-5 mb-20">
           <!-- <label
           v-if="store.createProducts.length > 0"
           class="btn btn-sm btn-error bg-red-400 normal-case mt-1 ml-0 md:mt-0 md:ml-2 z-0"

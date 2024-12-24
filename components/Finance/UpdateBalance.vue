@@ -106,11 +106,11 @@ const showTooltip = ref(false);
               v-model="email"
             />
           </div>
-          <div class="flex gap-[3px] justify-center w-full">
+          <div class="flex gap-[3px] w-full sm:justify-between flex-wrap flex-col md:flex-row justify-center">
             <button
               @click="summ = item"
               v-for="item in summArr"
-              class="px-[10px] border hover:bg-transparent hover:border-[#595959] hover:text-[#595959] rounded-[10px] py-1.5 bg-[#302e37] text-white"
+              class="px-[14px] rounded-[10px] btn btn-sm py-1.5 mt-2 md:mt-0 btn-neutral text-white"
             >
               {{ item }} ₽
             </button>

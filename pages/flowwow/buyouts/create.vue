@@ -4,7 +4,7 @@ import { rules } from "@/data/buyout/rules";
 import { useNotification } from "@kyvg/vue3-notification";
 import { useWindowSize } from "@vueuse/core";
 
-const closeWarningModal = true
+const closeWarningModal = true;
 const closeTemplateModal = ref(null) as Ref<HTMLLabelElement | null>;
 const closeTemplateSelectModal = ref(null) as Ref<HTMLLabelElement | null>;
 const currency = useCurrency();
@@ -221,7 +221,6 @@ onKeyStroke("Escape", (e) => {
   infoModal.value?.close();
 });
 
-
 const isCreatingTemplatesDisabled = ref(false);
 async function createTemplate() {
   isCreatingTemplatesDisabled.value = true;
@@ -362,7 +361,6 @@ function startTimer() {
               @click="getTemplates"
               >Шаблоны</label
             >
-
           </div>
         </div>
       </div>
@@ -419,7 +417,7 @@ function startTimer() {
                   </div>
                 </th>
 
-                <th class="font-normal" >
+                <th class="font-normal">
                   <div class="text-center">
                     <span> параметры </span>
                   </div>
@@ -510,9 +508,9 @@ function startTimer() {
         v-show="products.length"
         class="mt-6 md:flex justify-start lg:justify-end"
       >
-        <div class="m-5">
+        <div class="m-5 mb-20">
           <label
-            class="btn btn-sm btn-primary normal-case bg-base-200 text-base-content border-none mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal "
+            class="btn btn-sm btn-primary normal-case bg-base-200 text-base-content border-none mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal"
             for="template-modal"
           >
             Шаблон

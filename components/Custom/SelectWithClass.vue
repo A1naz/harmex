@@ -1,0 +1,231 @@
+<script setup lang="ts">
+import { v4 as uuidv4 } from "uuid";
+
+interface tabs {
+  title: string;
+  value: string | number;
+  images?: string;
+}
+interface links {
+  title: string;
+  value?: string | undefined;
+  slot?: string | undefined;
+  query?: string | undefined;
+}
+
+const props = defineProps({
+  tabs: {
+    type: Array as PropType<Array<tabs>>,
+    default: () => [],
+  },
+  links: { type: Array as PropType<links[]>, default: () => [] },
+  class: { type: String },
+  arrowsClass: { type: String },
+  dropdownContainerClass: { type: String },
+  statusText: { type: String },
+});
+
+const emit = defineEmits(["changeText", "changeValue"]);
+
+const reactiveStatusText = toRef(props, "statusText");
+
+const customClass = props.class || "";
+
+const dropdownOpened = ref<boolean>(false);
+const store = usePersistedStore();
+const isDropdownOpened = computed(() => {
+  return store.activeDropdown === uniqueClass.value;
+});
+
+function handleBodyClick(event: MouseEvent) {
+  const dropdown = document.querySelector(`.${uniqueClass.value}`);
+
+  if (dropdown && !dropdown.contains(event.target as Node))
+    dropdownOpened.value = false;
+}
+
+const statusText = ref<string>(
+  props.statusText
+    ? props.statusText
+    : reactiveStatusText.value
+    ? reactiveStatusText.value
+    : props.tabs[0]?.title || props.links[0]?.title
+);
+watch(
+  () => reactiveStatusText.value,
+  (newVal) => {
+    statusText.value = newVal ?? "";
+  }
+);
+
+function updateText(filter: string) {
+  statusText.value = filter;
+
+  emit("changeText", filter);
+}
+
+function updateValue(filter: any) {
+  statusText.value = filter.title;
+  emit("changeValue", filter);
+}
+
+const tabFound = computed(() => {
+  return (
+    props.tabs.find(
+      (tab) => tab.title === (reactiveStatusText.value || statusText.value)
+    ) || props.tabs[0]
+  );
+});
+
+function toggleDropdown() {
+  if (store.activeDropdown !== uniqueClass.value)
+    store.activeDropdown = uniqueClass.value;
+
+  if (dropdownOpened.value) dropdownOpened.value = false;
+  else dropdownOpened.value = true;
+}
+
+onMounted(() => {
+  uniqueClass.value = `dropdown-${uuidv4()}`;
+  document.body.addEventListener("click", handleBodyClick);
+});
+
+onUnmounted(() => {
+  document.body.removeEventListener("click", handleBodyClick);
+});
+
+const uniqueClass = ref<string>("");
+
+watch(isDropdownOpened, (newValue) => {
+  if (newValue) dropdownOpened.value = true;
+  else dropdownOpened.value = false;
+});
+
+defineExpose({
+  updateText,
+  updateValue,
+});
+</script>
+
+<template>
+  <div
+    class="group dropdown relative"
+    :class="dropdownContainerClass"
+    @click="toggleDropdown"
+    @click.stop
+  >
+    <div
+      class="btn flex flex-1 items-center justify-between px-2 text-xs font-normal normal-case text-base-content hover:bg-white hover:shadow-none"
+      :class="customClass"
+    >
+      <div class="flex items-center gap-2">
+        <nuxt-img
+          v-if="tabs.length > 0 && tabFound && tabFound.images"
+          :src="tabFound ? tabFound.images : ''"
+          class="h-4 w-6"
+        />
+        <span>{{ reactiveStatusText ? reactiveStatusText : statusText }}</span>
+      </div>
+      <Icon
+        v-if="dropdownOpened"
+        name="formkit:up"
+        size="12"
+        class="text-[#1b38ca]"
+        :class="arrowsClass"
+      />
+      <Icon
+        v-else
+        name="formkit:down"
+        size="12"
+        class="text-[#909090]"
+        :class="arrowsClass"
+      />
+    </div>
+    <ul
+      v-if="dropdownOpened"
+      class="absolute z-[1] mt-0.5 flex max-h-[300px] flex-col gap-y-0.5 overflow-y-auto scroll-th overflow-x-hidden rounded-lg shadow-md"
+      :style="{ width: dropdownWidth + 'px' }"
+      :class="[
+        uniqueClass,
+        dropdownContainerClass ? 'bg-inherit' : 'bg-base-100',
+      ]"
+    >
+      <li v-for="filter in tabs" v-if="tabs.length > 0" :key="filter.title">
+        <button
+          v-if="
+            !(filter && filter.images)
+              ? filter.title !==
+                (reactiveStatusText ? reactiveStatusText : statusText)
+              : true
+          "
+          class="btn btn-ghost btn-xs h-[2rem] w-full items-center justify-between text-center text-xs text-[0.65rem] whitespace-normal font-normal normal-case leading-none hover:border hover:border-base-200 hover:bg-white"
+          @click="updateValue(filter)"
+        >
+          <div class="flex gap-x-1 items-center">
+            <nuxt-img
+              v-if="filter && filter.images"
+              :src="filter ? filter.images : ''"
+              class="h-6 w-6"
+            />
+            <p>
+              {{ filter.title }}
+            </p>
+          </div>
+          <Icon
+            v-if="
+              filter.title ===
+                (reactiveStatusText ? reactiveStatusText : statusText) &&
+              filter &&
+              filter.images
+            "
+            name="material-symbols:check-circle"
+            size="15"
+            class="text-[#22c55d]"
+          />
+        </button>
+      </li>
+      <li
+        v-for="filter in links"
+        :key="filter.title"
+        @click="updateText(filter.title)"
+      >
+        <NuxtLink
+          :to="
+            (filter.slot ? filter.slot : `/${filter.value}`) +
+            (filter.query ? filter.query : '')
+          "
+          :external="false"
+          class="btn btn-ghost btn-xs h-[2rem] items-center justify-start text-left text-xs font-normal normal-case leading-none hover:bg-primary hover:bg-opacity-20"
+          :style="{ width: dropdownWidth + 'px' }"
+        >
+          <span>
+            {{ filter.title }}
+          </span>
+        </NuxtLink>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<style scoped>
+.btn {
+  min-height: auto;
+}
+ul.scroll-th::-webkit-scrollbar {
+  width: 4px;
+}
+
+ul.scroll-th::-webkit-scrollbar-thumb {
+  background-color: #909090;
+  border-radius: 8px;
+}
+
+ul.scroll-th::-webkit-scrollbar-track {
+  background: transparent; /* Цвет фона */
+}
+
+ul.scroll-th {
+  scrollbar-width: thin;
+  scrollbar-color: #909090 transparent;
+}
+</style>

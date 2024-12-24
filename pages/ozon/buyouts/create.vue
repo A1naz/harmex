@@ -13,7 +13,7 @@ const isCreateButtonDisabled = ref(false);
 const { width } = useWindowSize();
 const modalOpenFF = ref(false);
 const promoModal = ref(false);
-const modalOpenFBS = ref(false)
+const modalOpenFBS = ref(false);
 const { notify } = useNotification();
 const refreshKey = ref(1);
 const isWarningChecked = ref(false);
@@ -251,27 +251,24 @@ async function getPickpoints() {
 }
 
 async function pointModalOpen(index: number) {
-  if (!pickpoints.value) loading.value = true
+  if (!pickpoints.value) loading.value = true;
 
-  store.selectedItem = index
-
-
+  store.selectedItem = index;
 
   if (products.value[index].FBS === true) {
-    modalOpenFBS.value = true
-  } else
-  if (products.value[index].key) {
+    modalOpenFBS.value = true;
+  } else if (products.value[index].key) {
     if (
       products.value[index].dateRange[0] != lastItemDateRange.value[0] ||
       products.value[index].dateRange[1] != lastItemDateRange.value[1]
     ) {
-      lastItemDateRange.value = products.value[index].dateRange
-      await getFFPickpoints(products.value[index].dateRange[0] || new Date())
+      lastItemDateRange.value = products.value[index].dateRange;
+      await getFFPickpoints(products.value[index].dateRange[0] || new Date());
     }
 
-    modalOpenFF.value = true
+    modalOpenFF.value = true;
   } else {
-    modalOpen.value = true
+    modalOpen.value = true;
   }
 }
 
@@ -395,8 +392,8 @@ function removeDiscount(index: number) {
   store.createProducts[index].discountPrice = store.createProducts[index].price;
 }
 function removePromo(index: number) {
-  console.log(index)
-  store.createProducts[index].promoCode = '';
+  console.log(index);
+  store.createProducts[index].promoCode = "";
 }
 function refreshElements() {
   // eslint-disable-next-line eqeqeq
@@ -406,25 +403,25 @@ function refreshElements() {
 function closeModal() {
   modalOpen.value = false;
   modalOpenFF.value = false;
-  modalOpenFBS.value = false
+  modalOpenFBS.value = false;
 }
 
 function handleAddressFBS(address: string, lt: number, lg: number) {
-  console.log(address, lt, lg)
-  modalOpenFBS.value = false
+  console.log(address, lt, lg);
+  modalOpenFBS.value = false;
 
-  store.handleAddressFBS(address, lt, lg, addressForm)
+  store.handleAddressFBS(address, lt, lg, addressForm);
 }
 
 const addressForm = reactive({
-  apartment: '',
-  entrance:'',
-  floor: '',
-  intercom: '',
-  comment: '',
-  nameLastName: '',
-  phone: '',
-})
+  apartment: "",
+  entrance: "",
+  floor: "",
+  intercom: "",
+  comment: "",
+  nameLastName: "",
+  phone: "",
+});
 </script>
 
 <template>
@@ -529,7 +526,7 @@ const addressForm = reactive({
             :product="product"
             :index="index"
             :open-discount="openDiscount"
-             :open-promo="openPromo"
+            :open-promo="openPromo"
             @point-modal-open="pointModalOpen"
             @rule-modal-open="ruleModalOpen"
             @remove-discount="removeDiscount"
@@ -675,7 +672,7 @@ const addressForm = reactive({
         v-show="products.length"
         class="mt-6 md:flex justify-start lg:justify-end"
       >
-        <div class="m-5">
+        <div class="m-5 mb-20">
           <!-- <label
           v-if="store.createProducts.length > 0"
           class="btn btn-sm btn-error bg-red-400 normal-case mt-1 ml-0 md:mt-0 md:ml-2 z-0"
@@ -1041,7 +1038,6 @@ const addressForm = reactive({
       :price="currentProductPrice"
       @close-modal="promoModal = false"
     />
-
   </div>
 </template>
 

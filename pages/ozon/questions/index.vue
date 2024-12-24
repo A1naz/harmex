@@ -1,56 +1,53 @@
 <script setup lang="ts">
-const { notify } = useNotification()
+const { notify } = useNotification();
 
 definePageMeta({
-  layout: 'app',
-  middleware: 'auth',
-  title: 'Вопросы',
-})
-const questions = ref([]) as any
-const amount = ref(0)
-const sortPage = ref('all')
-const sortPageDate = ref('')
-const article = ref('')
-const productData = ref<any>(null)
-const modalShow = ref<boolean>(false)
-const route = useRoute()
-const router = useRouter()
-const logModal = ref(false)
+  layout: "app",
+  middleware: "auth",
+  title: "Вопросы",
+});
+const questions = ref([]) as any;
+const amount = ref(0);
+const sortPage = ref("all");
+const sortPageDate = ref("");
+const article = ref("");
+const productData = ref<any>(null);
+const modalShow = ref<boolean>(false);
+const route = useRoute();
+const router = useRouter();
+const logModal = ref(false);
 const selectedQuest = ref({
-  uuid: '',
-})
+  uuid: "",
+});
 
 const search = reactive({
-  text: '',
+  text: "",
   loading: false,
   error: false,
-  type: 'article',
-})
-const codeInput = ref()
+  type: "article",
+});
+const codeInput = ref();
 
-const loading = ref(false)
-const limit = ref(50)
-const skip = ref(0)
-const end = ref(false)
-const target = ref(null)
-const targetIsVisible = ref(false)
+const loading = ref(false);
+const limit = ref(50);
+const skip = ref(0);
+const end = ref(false);
+const target = ref(null);
+const targetIsVisible = ref(false);
 // eslint-disable-next-line unused-imports/no-unused-vars
-const { stop } = useIntersectionObserver(
-  target,
-  ([{ isIntersecting }]) => {
-    targetIsVisible.value = isIntersecting
-  },
-)
+const { stop } = useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  targetIsVisible.value = isIntersecting;
+});
 watch(targetIsVisible, async (isVisible) => {
   if (!end.value && isVisible && questions.value.length >= limit.value) {
-    await getQuestions()
+    await getQuestions();
   }
-})
+});
 
 async function getQuestions() {
-  modalShow.value = false
-  const { data, error } = await useFetch('/api/ozon/questions/get', {
-    method: 'GET',
+  modalShow.value = false;
+  const { data, error } = await useFetch("/api/ozon/questions/get", {
+    method: "GET",
     query: {
       statusQuery: sortPage.value,
       dateFilter: sortPageDate.value,
@@ -59,171 +56,168 @@ async function getQuestions() {
       limit: limit.value,
       skip: skip.value,
     },
-  })
+  });
   if ((data.value as any)?.length === 0) {
-    loading.value = false
-    end.value = true
-    return
+    loading.value = false;
+    end.value = true;
+    return;
   }
   if (data.value) {
-    questions.value = [...questions.value, ...(data.value! as any)]
-    loading.value = false
+    questions.value = [...questions.value, ...(data.value! as any)];
+    loading.value = false;
   }
 
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Не удалось получить вопросы',
+      type: "error",
+      title: "Не удалось получить вопросы",
       text: error.value.message,
-    })
+    });
   }
-  skip.value += limit.value
-  loading.value = false
+  skip.value += limit.value;
+  loading.value = false;
 }
-await getQuestions()
+await getQuestions();
 function getStatus(status: string) {
-  if (status === 'created') {
-    return 'Создан'
-  }
-  else if (status === 'work') {
-    return 'В работе'
-  }
-  else if (status === 'busy') {
-    return 'В работе'
-  }
-  else if (status === 'completed') {
-    return 'Завершен'
-  }
-  else if (status === 'nofunds') {
-    return 'Недостаточно средств'
-  }
-  else if (status === 'archived') {
-    return 'Архивирован'
-  }
-  else if (status === 'spam') {
-    return 'Определен как спам'
+  if (status === "created") {
+    return "Создан";
+  } else if (status === "work") {
+    return "В работе";
+  } else if (status === "busy") {
+    return "В работе";
+  } else if (status === "completed") {
+    return "Завершен";
+  } else if (status === "nofunds") {
+    return "Недостаточно средств";
+  } else if (status === "archived") {
+    return "Архивирован";
+  } else if (status === "spam") {
+    return "Определен как спам";
   }
 }
 
 async function resumeStatus(item: any) {
-  const { data, error } = await useFetch('/api/ozon/questions/resume', {
-    method: 'POST',
+  const { data, error } = await useFetch("/api/ozon/questions/resume", {
+    method: "POST",
     body: {
       item,
     },
     watch: false,
-  })
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-    return
+    });
+    return;
   }
   if (data.value) {
     notify({
-      type: 'success',
-      title: 'Успешно',
-      text: 'Вопрос успешно возвращен в работу',
+      type: "success",
+      title: "Успешно",
+      text: "Вопрос успешно возвращен в работу",
       duration: 3000,
-    })
-    selectFilterDate({ value: sortPage.value })
+    });
+    selectFilterDate({ value: sortPage.value });
   }
 }
 
 function removeProduct() {
-  productData.value = null
-  article.value = ''
-  amount.value = 0
+  productData.value = null;
+  article.value = "";
+  amount.value = 0;
 }
 onMounted(() => {
   if (route.query.modalShow) {
-    modalShow.value = route.query.modalShow === 'true'
-    const query = { ...route.query }
-    delete query.modalShow
-    router.push({ query })
+    modalShow.value = route.query.modalShow === "true";
+    const query = { ...route.query };
+    delete query.modalShow;
+    router.push({ query });
   }
-})
+});
 
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
-    sortPageDate.value = e.value
+    sortPageDate.value = e.value;
+  } else {
+    sortPage.value = e.value;
   }
-  else {
-    sortPage.value = e.value
-  }
-  loading.value = true
-  questions.value = []
-  skip.value = 0
-  end.value = false
-  await getQuestions()
+  loading.value = true;
+  questions.value = [];
+  skip.value = 0;
+  end.value = false;
+  await getQuestions();
 }
 
 async function findBuyouts(value: string, type: string) {
-  questions.value = []
-  skip.value = 0
-  end.value = false
+  questions.value = [];
+  skip.value = 0;
+  end.value = false;
   if (!value) {
-    search.loading = false
-    await getQuestions()
-    return
+    search.loading = false;
+    await getQuestions();
+    return;
   }
-  loading.value = true
-  await getQuestions()
+  loading.value = true;
+  await getQuestions();
 
-  search.loading = false
+  search.loading = false;
 }
 
-const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
+const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000);
 
 async function onSearchInput() {
-  search.loading = true
-  findBuyoutsDebounced(search.text, search.type)
+  search.loading = true;
+  findBuyoutsDebounced(search.text, search.type);
 }
 
 function updateSearchType(filter: any) {
-  search.type = filter.value
+  search.type = filter.value;
 }
 
-const orgInfo = ref({}) as any
-const isVisible = ref(false)
+const orgInfo = ref({}) as any;
+const isVisible = ref(false);
 
 async function getOrgInfo() {
-  const currentPath = router.currentRoute.value.path
+  const currentPath = router.currentRoute.value.path;
 
-  const pathSegments = currentPath.split('/').filter(Boolean)
+  const pathSegments = currentPath.split("/").filter(Boolean);
 
-  const mp = pathSegments[0]
-  const serviceType = `/${pathSegments[1]}`
+  const mp = pathSegments[0];
+  const serviceType = `/${pathSegments[1]}`;
 
-  const { data }: any = await useFetch('/api/catalog/getOrgInfo', {
-    method: 'GET',
+  const { data }: any = await useFetch("/api/catalog/getOrgInfo", {
+    method: "GET",
     query: {
       serviceType,
       mp,
     },
-  })
+  });
 
-  if (!data.value)
-    return
-  orgInfo.value = data.value.orgInfo
+  if (!data.value) return;
+  orgInfo.value = data.value.orgInfo;
 }
-getOrgInfo()
+getOrgInfo();
 
 async function copyToClipboard(text: string) {
-  await navigator.clipboard.writeText(text)
+  await navigator.clipboard.writeText(text);
   notify({
-    title: 'Успешно',
-    text: 'Скопировано в буфер обмена',
-  })
+    title: "Успешно",
+    text: "Ссылка на услугу скопирована",
+  });
 }
+
+const config = useRuntimeConfig();
+const siteUrl = config.public.siteUrl;
 </script>
 
 <template>
   <div class="px-4 sm:px-16 pt-8">
-    <div class="breadcrumbs text-sm  flex w-full justify-between flex-wrap-reverse">
+    <div
+      class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
+    >
       <ul class="font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
@@ -235,18 +229,21 @@ async function copyToClipboard(text: string) {
             Ozon
           </NuxtLink>
         </li>
-        <li class="cursor-pointer text-[#1e2734]">
-          Вопросы
-        </li>
+        <li class="cursor-pointer text-[#1e2734]">Вопросы</li>
       </ul>
       <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
-        <div class=" bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center ">
+        <div
+          class="bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center"
+        >
           <div class="org-name font-semibold text-gray-800">
             {{ orgInfo.title.toUpperCase() }}
           </div>
 
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
-          <button class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]" @click="copyToClipboard(`https://app.harmex.ru/register?uuid`)">
+          <button
+            class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
+            @click="copyToClipboard(`${siteUrl}/ozon/questions`)"
+          >
             <Icon name="ph:share-fat-fill" size="20" />
           </button>
         </div>
@@ -258,9 +255,11 @@ async function copyToClipboard(text: string) {
       @create="getQuestions"
     />
 
-    <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
-      <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
-        <div class="flex gap-2 ">
+    <div class="flex justify-start lg:justify-between mb-4 items-center mt-4">
+      <div
+        class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
+      >
+        <div class="flex gap-2">
           <button
             class="btn btn-primary dark:bg-primary border-none font-normal btn-sm"
             @click="modalShow = true"
@@ -268,12 +267,11 @@ async function copyToClipboard(text: string) {
             <Icon name="fluent:add-24-filled" size="25" />
           </button>
         </div>
-        <div class="w-full flex gap-2 lg:gap-2 ">
-          <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+        <div class="w-full flex gap-2 lg:gap-2">
+          <div class="flex gap-1 lg:gap-3 flex-nowrap whitespace-nowrap">
             <span>
               <CustomSelect
                 class="flexx sm:min-w-[120px] h-[2rem]"
-
                 :tabs="[
                   { title: 'Все вопросы', value: 'all' },
                   { title: 'Активные', value: 'created' },
@@ -303,7 +301,9 @@ async function copyToClipboard(text: string) {
               @change-value="updateSearchType"
             />
           </div>
-          <div class="absolute right-0 top-0 w-[calc(100%-45px)] lg:w-fit lg:static">
+          <div
+            class="absolute right-0 top-0 w-[calc(100%-45px)] lg:w-fit lg:static"
+          >
             <div class="relative justify-end flex-grow-0 w-full">
               <input
                 ref="codeInput"
@@ -312,14 +312,14 @@ async function copyToClipboard(text: string) {
                 class="input input-sm w-full bg-base-200 text-gray-500"
                 placeholder="Поиск"
                 @input="onSearchInput()"
-              >
+              />
               <span
                 v-if="search.loading"
                 class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
               />
               <Icon
                 v-else
-                class="absolute right-0.5 p-2 my-auto text-gray-500 " 
+                class="absolute right-0.5 p-2 my-auto text-gray-500"
                 name="tabler:search"
                 size="35"
                 @click="codeInput.focus()"
@@ -334,36 +334,18 @@ async function copyToClipboard(text: string) {
       <ClientOnly>
         <table class="table table-sm">
           <thead>
-            <tr class="bg-secondary ">
+            <tr class="bg-secondary">
               <!-- <th class="text-center">№</th> -->
-              <th class="text-center">
-                Фото
-              </th>
-              <th class="text-center">
-                Артикул
-              </th>
-              <th class="text-center">
-                Маркетплейс
-              </th>
-              <th class="text-center">
-                Пол
-              </th>
-              <th class="text-center">
-                Вопрос
-              </th>
+              <th class="text-center">Фото</th>
+              <th class="text-center">Артикул</th>
+              <th class="text-center">Маркетплейс</th>
+              <th class="text-center">Пол</th>
+              <th class="text-center">Вопрос</th>
 
-              <th class="text-center">
-                Статус
-              </th>
-              <th class="text-center">
-                Дата создания
-              </th>
-              <th class="text-center">
-                Дата публикации
-              </th>
-              <th class="text-center">
-                Инфо
-              </th>
+              <th class="text-center">Статус</th>
+              <th class="text-center">Дата создания</th>
+              <th class="text-center">Дата публикации</th>
+              <th class="text-center">Инфо</th>
             </tr>
           </thead>
           <tbody class="rounded-b-lg">
@@ -373,9 +355,7 @@ async function copyToClipboard(text: string) {
               class="bg-white border-b-0 rounded-b-lg"
             >
               <!-- <td class="text-center border-x border-[#f9fafb]">{{ item.place }}</td> -->
-              <td
-                class="text-center border-r border-[#f9fafb] mx-auto"
-              >
+              <td class="text-center border-r border-[#f9fafb] mx-auto">
                 <div
                   style="width: 40px; height: 40px; border-radius: 4px"
                   class="mx-auto"
@@ -423,7 +403,7 @@ async function copyToClipboard(text: string) {
               <td
                 class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] truncate"
               >
-                {{ item.gender === 'male' ? 'М' : 'Ж' }}
+                {{ item.gender === "male" ? "М" : "Ж" }}
               </td>
               <td
                 class="text-center border-r border-[#f9fafb] overflow-x-auto max-w-[250px] whitespace-normal break-words"
@@ -470,7 +450,7 @@ async function copyToClipboard(text: string) {
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
                   <!-- {{ defaultDateShort(item.createdDate) }} -->
-                  {{ $dayjs(item.createdDate).format('DD.MM.YYYY') }}
+                  {{ $dayjs(item.createdDate).format("DD.MM.YYYY") }}
                 </div>
               </td>
               <td class="text-center border-r border-[#f9fafb]">
@@ -479,7 +459,7 @@ async function copyToClipboard(text: string) {
                   class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
                 >
                   <!-- {{ defaultDateShort(item.publishDate) }} -->
-                  {{ $dayjs(item.publishDate).format('DD.MM.YYYY') }}
+                  {{ $dayjs(item.publishDate).format("DD.MM.YYYY") }}
                 </div>
               </td>
               <td
@@ -488,7 +468,7 @@ async function copyToClipboard(text: string) {
                 <div class="rounded-lg p-0.5 text-center">
                   <button
                     class="btn btn-primary btn-sm btn-square mb-2"
-                    @click=";[(selectedQuest = item), (logModal = true)]"
+                    @click="[(selectedQuest = item), (logModal = true)]"
                   >
                     <svg
                       data-v-f136eeaa=""
@@ -531,7 +511,11 @@ async function copyToClipboard(text: string) {
     >
       <span class="loading loading-dots loading-lg text-primary" />
     </div>
-    <LogModal :info="selectedQuest" :state="logModal" @close="logModal = false" />
+    <LogModal
+      :info="selectedQuest"
+      :state="logModal"
+      @close="logModal = false"
+    />
   </div>
 </template>
 

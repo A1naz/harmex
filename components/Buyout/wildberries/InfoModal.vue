@@ -225,18 +225,18 @@ onKeyStroke("Escape", (e) => {
               <div>
                 <span class="text-sm text-gray-500 mr-2">Дата выкупов: </span>
                 <span
-                  class="rounded-md py-0 pr-2 text-sm flex gap-1 justify-start"
+                  class="rounded-md py-0 pr-2 text-sm flex gap-1 justify-start flex-wrap"
                 >
                   <div class="text-sm">
                     {{
-                      `с ${$dayjs(info.dateStart)
+                      `${$dayjs(info.dateStart)
                         .locale("ru")
                         .format("D.MM.YY HH:mm")} -`
                     }}
                   </div>
                   <div class="text-sm">
                     {{
-                      `по ${$dayjs(info.dateEnd)
+                      `${$dayjs(info.dateEnd)
                         .locale("ru")
                         .format("D.MM.YY HH:mm")}`
                     }}

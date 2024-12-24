@@ -429,12 +429,11 @@ function copyText(text: string) {
               <p class="text-xs font-medium text-base-content">
                 {{ $t("Язык") }}
               </p>
-              <custom-select
+              <custom-select-with-class
                 :tabs="languageArr"
                 :status-text="languageArr.find((item: any) => item.value === selectedLanguageCode)?.title"
                 @change-value="(e: any) => updateLanguage(e.value)"
                 :class="'h-[2.5rem]'"
-                :width="'200'"
               />
               <!-- <ProfileLanguageSelect /> -->
             </div>
@@ -444,7 +443,7 @@ function copyText(text: string) {
                 <p class="text-xs font-medium text-base-content">
                   {{ $t("Валюта") }}
                 </p>
-                <custom-select
+                <custom-select-with-class
                   :tabs="[
                     {
                       title: 'RUB',

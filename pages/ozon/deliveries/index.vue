@@ -340,9 +340,12 @@ async function copyToClipboard(text: string) {
   await navigator.clipboard.writeText(text);
   notify({
     title: "Успешно",
-    text: "Скопировано в буфер обмена",
+    text: "Ссылка на услугу скопирована",
   });
 }
+
+const config = useRuntimeConfig();
+const siteUrl = config.public.siteUrl;
 </script>
 
 <template>
@@ -374,7 +377,7 @@ async function copyToClipboard(text: string) {
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
           <button
             class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
-            @click="copyToClipboard(`https://app.harmex.ru/register?uuid`)"
+            @click="copyToClipboard(`${siteUrl}/ozon/deliveries`)"
           >
             <Icon name="ph:share-fat-fill" size="20" />
           </button>
@@ -454,9 +457,18 @@ async function copyToClipboard(text: string) {
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
                 <li>
-                  <NuxtLink :to="`/ozon/deliveries/export${dateRange.length ? '?dateRange=' + dateRange.map(date => new Date(date).toISOString()).join(',') : ''}`">
+                  <NuxtLink
+                    :to="`/ozon/deliveries/export${
+                      dateRange.length
+                        ? '?dateRange=' +
+                          dateRange
+                            .map((date) => new Date(date).toISOString())
+                            .join(',')
+                        : ''
+                    }`"
+                  >
                     Готовы к выдаче PDF
-                  </NuxtLink>             
+                  </NuxtLink>
                 </li>
                 <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li>
 
@@ -479,7 +491,7 @@ async function copyToClipboard(text: string) {
               @click="manualModal = true"
               class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
             >
-              <Icon name="line-md:question" size="15" />
+              <Icon name="ci:info" size="24" />
             </button>
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
