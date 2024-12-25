@@ -73,8 +73,12 @@ export function findImage(input: string) {
   else if (vol >= 2046 && vol <= 2191) {
     host = '//basket-14.wb.ru'
   }
-  else {
+  else if (vol >= 2192 && vol <= 2405) {
     host = '//basket-15.wbbasket.ru'
+  } else if (vol >= 2406 && vol <= 2621) {
+    host = '//basket-16.wbbasket.ru'
+  } else {
+    host = '//basket-17.wbbasket.ru'
   }
 
   return `https:${host}/vol${vol}/part${part}/${nm}/images/big/1.webp`
@@ -86,9 +90,8 @@ export function findProductCard(article: number) {
   const n = Math.floor(t / 1e5)
   const a = p(n, c)
 
-  const result = `https://basket-${
-    (a as number) < 10 ? `0${a}` : a
-  }.wb.ru/vol${n}/part${Math.floor(article / 1e3)}/${article}/info/ru/card.json`
+  const result = `https://basket-${(a as number) < 10 ? `0${a}` : a
+    }.wb.ru/vol${n}/part${Math.floor(article / 1e3)}/${article}/info/ru/card.json`
 
   return result
 }
