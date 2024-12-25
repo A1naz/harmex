@@ -7,7 +7,7 @@ definePageMeta({
   middleware: "auth",
 });
 
-const { user } = useUserSession();
+const { user }: any = useUserSession();
 const dateRange = ref([]);
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 const buttonsLine: Array<{ label: string; value: string }> = [
@@ -16,6 +16,14 @@ const buttonsLine: Array<{ label: string; value: string }> = [
   { label: "Расходы", value: "expenses" },
   { label: "Партнерка", value: "partner" },
   { label: "Генеалогия", value: "genealogy" },
+];
+
+const tableTypes: Array<{ title: string; value: string; images: string }> = [
+  { title: "Общее", value: "general", images: "null" },
+  { title: "Пополнение", value: "replenishment", images: "null" },
+  { title: "Расходы", value: "expenses", images: "null" },
+  { title: "Партнерка", value: "partner", images: "null" },
+  { title: "Генеалогия", value: "genealogy", images: "null" },
 ];
 
 const tableData = ref<any>([]);
@@ -222,6 +230,27 @@ watch(
     }
   }
 );
+const totalPages = 100;
+
+function swapPage(swapTo: number) {
+  currentPage.value += swapTo;
+}
+
+const displayPages = computed(() => {
+  const pages = [];
+  const maxVisiblePages = 5;
+  let start = Math.max(currentPage.value - 2, 1);
+  let end = Math.min(start + maxVisiblePages - 1, totalPages);
+
+  if (end - start + 1 < maxVisiblePages) {
+    start = Math.max(end - maxVisiblePages + 1, 1);
+  }
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i);
+  }
+  return pages;
+});
 </script>
 
 <template>
@@ -239,7 +268,9 @@ watch(
       :reward-percent="5"
       :ref-link="5"
     />
-    <div class="flex flex-col gap-4 w-full flex-1 m-4 bg-white rounded-lg">
+    <div
+      class="sm:flex flex-col gap-4 w-full flex-1 m-4 bg-white rounded-lg hidden"
+    >
       <div class="flex gap-4 justify-between items-center flex-wrap p-6 pb-0">
         <div class="flex gap-4 items-center flex-wrap">
           <button
@@ -300,5 +331,72 @@ watch(
         @change-pagination="(itemsPerPage: number) => { limit = itemsPerPage}"
       />
     </div>
+    <div class="gap-4 w-full flex-1 m-4 bg-white rounded-lg md:hidden">
+      <div class="flex flex-col w-full pr-8 ml-4">
+        <custom-select-with-class
+          :tabs="tableTypes"
+          @change-value="(e: any) => tableType = e.value"
+          :class="'h-[2.5rem] w-full border-[#e86b35] bg-[#ffffff]'"
+        />
+        <div class="w-full">
+          <div
+            class="max-w-md mx-auto bg-gray-100 border border-gray-300 rounded-lg p-4 mt-2"
+            v-for="(item, index) in tableData"
+          >
+            <div
+              class="grid grid-cols-2 gap-y-2 my-2 border-b pb-2"
+              v-for="header in headersForTable"
+            >
+              <div class="font-semibold text-gray-700">
+                {{ header.label }}
+              </div>
+              <div class="font-semibold text-gray-700 truncate">
+                <span v-if="header.value !== 'date'">{{
+                  item[header.value] || "-"
+                }}</span>
+                <span v-if="header.value == 'date'">{{
+                  $dayjs(item[header.value]).format("DD.MM.YYYY HH:mm") || "-"
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="pagination-controls flex justify-between mt-auto mb-10 border-t w-full py-2 px-4 scroll-hidden md:hidden"
+    >
+      <div class="flex justify-center w-full gap-1">
+        <button
+          class="btn btn-primary btn-xs font-normal px-0 flex items-center bg-transparent text-primary border-none hover:text-white shadow-none"
+          :disabled="currentPage === 1"
+          @click="swapPage(-1)"
+        >
+          <Icon name="solar:alt-arrow-left-linear" size="24" />
+        </button>
+
+        <button
+          v-for="page in displayPages"
+          :key="page"
+          class="btn btn-primary btn-xs text-black shadow-none border-none flex items-center hover:text-white"
+          :class="{
+            'text-white': currentPage === page,
+            'bg-transparent': currentPage !== page,
+          }"
+          @click="(currentPage = page), swapPage(0)"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          class="btn btn-primary btn-xs p-0 bg-transparent text-primary border-none flex items-center hover:text-white shadow-none"
+          :disabled="currentPage === totalPages"
+          @click="swapPage(1)"
+        >
+          <Icon name="solar:alt-arrow-right-linear" size="24" />
+        </button>
+      </div>
+    </div>
   </div>
 </template>
+<style scoped></style>

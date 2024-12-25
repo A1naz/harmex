@@ -24,6 +24,7 @@ const paginations = ref([
 const totalPages = 100;
 
 function changePagination(value: number) {
+  console.log(value);
   itemsPerPage.value = value;
   emit("changePagination", itemsPerPage.value);
 }
@@ -82,8 +83,12 @@ function swapPage(swapTo: number) {
               :key="index"
               class="table-cell"
             >
-              <span v-if="header.value !== 'date'">{{ row[header.value] || "-" }}</span>
-              <span v-if="header.value == 'date'">{{ $dayjs(row[header.value]).format("DD.MM.YYYY HH:mm") || "-" }}</span>
+              <span v-if="header.value !== 'date'">{{
+                row[header.value] || "-"
+              }}</span>
+              <span v-if="header.value == 'date'">{{
+                $dayjs(row[header.value]).format("DD.MM.YYYY HH:mm") || "-"
+              }}</span>
             </td>
           </tr>
         </tbody>

@@ -120,7 +120,12 @@ defineExpose({
     >
       <div class="flex items-center gap-2">
         <nuxt-img
-          v-if="tabs.length > 0 && tabFound && tabFound.images"
+          v-if="
+            tabs.length > 0 &&
+            tabFound &&
+            tabFound.image &&
+            tabFound.image !== 'null'
+          "
           :src="tabFound ? tabFound.images : ''"
           class="h-4 w-6"
         />
@@ -143,8 +148,7 @@ defineExpose({
     </div>
     <ul
       v-if="dropdownOpened"
-      class="absolute z-[1] mt-0.5 flex max-h-[300px] flex-col gap-y-0.5 overflow-y-auto scroll-th overflow-x-hidden rounded-lg shadow-md"
-      :style="{ width: dropdownWidth + 'px' }"
+      class="absolute z-[1] mt-0.5 flex max-h-[300px] flex-col gap-y-0.5 overflow-y-auto scroll-th overflow-x-hidden rounded-lg shadow-md w-full"
       :class="[
         uniqueClass,
         dropdownContainerClass ? 'bg-inherit' : 'bg-base-100',
@@ -163,7 +167,7 @@ defineExpose({
         >
           <div class="flex gap-x-1 items-center">
             <nuxt-img
-              v-if="filter && filter.images"
+              v-if="filter && filter.images && filter.images !== 'null'"
               :src="filter ? filter.images : ''"
               class="h-6 w-6"
             />

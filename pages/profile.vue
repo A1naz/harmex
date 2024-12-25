@@ -634,7 +634,7 @@ function copyText(text: string) {
                           class="flex w-full justify-center"
                         >
                           <div
-                            class="text-sm py-1 px-2 rounded-2xl bg-success text-green-400 bg-opacity-50 border-none text-center flex justify-center basis-[calc(33.333%-0.5rem)]"
+                            class="text-sm py-1 px-2 rounded-2xl font-semibold bg-success bg-opacity-50 border-none text-center flex justify-center basis-[calc(33.333%-0.5rem)]"
                           >
                             Полный доступ
                           </div>
