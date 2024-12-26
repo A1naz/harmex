@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import MenuBuilder from '~/server/utils/menuBuilder'
-const { user } = useUserSession()
+import MenuBuilder from "~/server/utils/menuBuilder";
+const { user } = useUserSession();
 
 defineProps({
   item: { type: Object, required: true },
@@ -9,7 +9,9 @@ defineProps({
 });
 
 const { notify } = useNotification();
-const accesses = MenuBuilder.filteredAccess(user?.value?.acesses || []).allowedPathes
+const accesses = MenuBuilder.filteredAccess(
+  user?.value?.acesses || []
+).allowedPathes;
 
 async function vote(slug: string, mp: string) {
   const response: any = await $fetch("/api/catalog/voteForService", {
@@ -35,9 +37,13 @@ async function vote(slug: string, mp: string) {
 }
 
 function checkAccess(items: any) {
-  const found = accesses.some((access: any) => items.path.includes('likes') ? access.value === '/productlikes' : access.value === items.path)
+  const found = accesses.some((access: any) =>
+    items.path.includes("likes")
+      ? access.value === "/productlikes"
+      : access.value === items.path
+  );
 
-  return accesses.length === 0 ? true : found
+  return accesses.length === 0 ? true : found;
 }
 
 defineEmits(["setFavourites"]);
@@ -106,13 +112,23 @@ defineEmits(["setFavourites"]);
       >
         {{ item.items[index].title }}
       </div>
-      <p class="text-[16px] font-bold text-gray-800 my-2">
-        {{ item.items[index].price ? item.items[index].price  + ' ₽' : '&nbsp;' }}
+      <p class="text-[16px] font-bold text-gray-800 my-2 ml-1">
+        {{
+          item.items[index].priceText
+            ? item.items[index].priceText
+            : item.items[index].price
+            ? item.items[index].price + " ₽"
+            : "&nbsp;"
+        }}
       </p>
     </div>
     <NuxtLink
       v-if="!item.items[index].disabled"
-      :to="checkAccess(item.items[index]) ? `/${item.slug}${item.items[index].path}` : ``"
+      :to="
+        checkAccess(item.items[index])
+          ? `/${item.slug}${item.items[index].path}`
+          : ``
+      "
       class="btn bg-[#F5F7FF] w-full rounded-xl"
     >
       Перейти

@@ -35,6 +35,10 @@ async function create() {
   }
   if (data.value) {
     creatingLike.value = false;
+    creatingLike.value = false;
+    url.value = "";
+    amount.value = 0;
+    productData.value = null;
     notify({ type: "success", title: "Успешно" });
     emit("create");
     emit("closeModal");
