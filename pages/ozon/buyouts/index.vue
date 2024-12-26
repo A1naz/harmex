@@ -616,7 +616,7 @@ const siteUrl = config.public.siteUrl;
       <p class="mt-1.5 text-[16px] flex items-center gap-1 text-[#4b5563]">
         Чтобы мы исполнили услугу, выполните простые рекомендации:
       </p>
-      <ol class="list-decimal ml-6 mb-4 text-[#4b5563]">
+      <ol class="list-decimal ml-6 mb-1 text-[#4b5563]">
         <li>Нажмите на кнопку “+”</li>
         <nuxt-img
           alt="image"
@@ -641,12 +641,34 @@ const siteUrl = config.public.siteUrl;
         <li>После проверки AI нажмите Создать</li>
         <li>Отслеживайте исполнение заказа в разрезе Статусов</li>
       </ol>
+      <p class="font-semibold mt-1">Обращаем внимание!</p>
+      <p>
+        Существует 4 инструмента для выкупа товара: покупка по полной цене, по
+        скидке, по промокоду и RealFBS.
+      </p>
+
+      <ol class="list-decimal ml-6 text-[#4b5563]">
+        <li>
+          Выкуп по полной цене совершается без заполнения колонки Скидка и
+          RealFBS.
+        </li>
+        <li>Комбинированный выкуп - выкуп FealFBS по скидке или промокоду.</li>
+      </ol>
+      <p class="my-1">
+        В случае добавления дополнительного функционала - скидка, промокод или
+        RealFBS заполните необходимые данные.
+      </p>
       <nuxt-img
         alt="image"
         class="flex mx-auto w-full px-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2.png"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/ozon/buyout2.png"
       />
 
+      <p
+        class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]"
+      >
+        После Завершения заказа, заберите товар с ПВЗ используя меню Доставка!
+      </p>
       <p
         class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]"
       >

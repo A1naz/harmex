@@ -702,7 +702,11 @@ const siteUrl = config.public.siteUrl;
         class="flex mx-auto w-full px-4"
         src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2.png"
       />
-
+      <p
+        class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]"
+      >
+        После Завершения заказа, заберите товар с ПВЗ используя меню Доставка!
+      </p>
       <p
         class="mt-1.5 text-[16px] font-semibold flex items-center gap-1 text-[#4b5563]"
       >
