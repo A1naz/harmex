@@ -1,262 +1,257 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'app',
-  middleware: 'auth',
-  title: 'Доставки',
-})
+  layout: "app",
+  middleware: "auth",
+  title: "Доставки",
+});
 
-const { notify } = useNotification()
-const openAll = ref(false)
-const route = useRoute()
-const router = useRouter()
-const deliveries = ref([]) as any
-const autoTarget = ref(true)
-const loading = ref(true)
-const codeInputMob = ref()
-const loadingExport = ref(false)
-const status = computed(() => route.query?.status || 'all')
+const { notify } = useNotification();
+const openAll = ref(false);
+const route = useRoute();
+const router = useRouter();
+const deliveries = ref([]) as any;
+const autoTarget = ref(true);
+const loading = ref(true);
+const codeInputMob = ref();
+const loadingExport = ref(false);
+const status = computed(() => route.query?.status || "all");
 const search = reactive({
-  text: '',
+  text: "",
   loading: false,
   error: false,
-  type: 'article',
-})
+  type: "article",
+});
 
 const modalInfo = reactive({
-  src: '',
+  src: "",
   code: 0,
-})
-const modal = ref(false)
-const statusModal = ref(false)
-const penaltyModal = ref(false)
-const currentStatusdDelivery = ref<any[]>([])
+});
+const modal = ref(false);
+const statusModal = ref(false);
+const penaltyModal = ref(false);
+const currentStatusdDelivery = ref<any[]>([]);
 function openModal(code: number, src: string) {
-  modalInfo.src = src
-  modalInfo.code = code
-  modal.value = true
+  modalInfo.src = src;
+  modalInfo.code = code;
+  modal.value = true;
 }
 function openStatusModal(statusdelivery: any[]) {
-  currentStatusdDelivery.value = statusdelivery
-  statusModal.value = true
+  currentStatusdDelivery.value = statusdelivery;
+  statusModal.value = true;
 }
-const target = ref(null)
-const targetIsVisible = ref(false)
+const target = ref(null);
+const targetIsVisible = ref(false);
 // eslint-disable-next-line unused-imports/no-unused-vars
-const { stop } = useIntersectionObserver(
-  target,
-  ([{ isIntersecting }]) => {
-    targetIsVisible.value = isIntersecting
-  },
-)
-const skip = ref(50)
-const end = ref(false)
+const { stop } = useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  targetIsVisible.value = isIntersecting;
+});
+const skip = ref(50);
+const end = ref(false);
 async function getDeliveries() {
-  loading.value = true
-  const { data } = await useFetch('/api/avito/delivery/get', {
-    method: 'GET',
+  loading.value = true;
+  const { data } = await useFetch("/api/avito/delivery/get", {
+    method: "GET",
     query: {
-      status: status.value ?? 'all',
+      status: status.value ?? "all",
       limit: 50,
     },
-  })
-  deliveries.value = data.value
-  loading.value = false
+  });
+  deliveries.value = data.value;
+  loading.value = false;
 }
-getDeliveries()
+getDeliveries();
 
 async function exportReadyXLS() {
-  loadingExport.value = true
-  const { data } = await useFetch('/api/avito/delivery/exportReady', {
-    responseType: 'blob',
-  })
-  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
-  const fileLink = document.createElement('a')
-  fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Готовы к выдаче Avito.xlsx')
-  document.body.appendChild(fileLink)
-  fileLink.click()
-  loadingExport.value = false
+  loadingExport.value = true;
+  const { data } = await useFetch("/api/avito/delivery/exportReady", {
+    responseType: "blob",
+  });
+  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
+  const fileLink = document.createElement("a");
+  fileLink.href = fileURL;
+  fileLink.setAttribute("download", "Готовы к выдаче Avito.xlsx");
+  document.body.appendChild(fileLink);
+  fileLink.click();
+  loadingExport.value = false;
 }
 
 async function exportReadyUntilPenaltyXLS() {
-  loadingExport.value = true
+  loadingExport.value = true;
   const { data, error } = await useFetch(
-    '/api/avito/delivery/exportReadyUntilPenalty',
+    "/api/avito/delivery/exportReadyUntilPenalty",
     {
-      responseType: 'blob',
-    },
-  )
+      responseType: "blob",
+    }
+  );
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: 'Не удалось экспортировать данные',
-    })
-    loadingExport.value = false
-    return
+      type: "error",
+      title: "Что-то пошло не так",
+      text: "Не удалось экспортировать данные",
+    });
+    loadingExport.value = false;
+    return;
   }
-  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
-  const fileLink = document.createElement('a')
-  fileLink.href = fileURL
-  fileLink.setAttribute(
-    'download',
-    'Готовы к выдаче Avito до штрафа.xlsx',
-  )
-  document.body.appendChild(fileLink)
-  fileLink.click()
-  loadingExport.value = false
+  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
+  const fileLink = document.createElement("a");
+  fileLink.href = fileURL;
+  fileLink.setAttribute("download", "Готовы к выдаче Avito до штрафа.xlsx");
+  document.body.appendChild(fileLink);
+  fileLink.click();
+  loadingExport.value = false;
 }
 async function exportXLS() {
-  loadingExport.value = true
-  const { data, error } = await useFetch('/api/avito/delivery/export', {
-    responseType: 'blob',
-  })
+  loadingExport.value = true;
+  const { data, error } = await useFetch("/api/avito/delivery/export", {
+    responseType: "blob",
+  });
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: 'Не удалось экспортировать данные',
-    })
-    loadingExport.value = false
-    return
+      type: "error",
+      title: "Что-то пошло не так",
+      text: "Не удалось экспортировать данные",
+    });
+    loadingExport.value = false;
+    return;
   }
-  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
-  const fileLink = document.createElement('a')
-  fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Общая таблица Avito.xlsx')
-  document.body.appendChild(fileLink)
-  fileLink.click()
-  loadingExport.value = false
+  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
+  const fileLink = document.createElement("a");
+  fileLink.href = fileURL;
+  fileLink.setAttribute("download", "Общая таблица Avito.xlsx");
+  document.body.appendChild(fileLink);
+  fileLink.click();
+  loadingExport.value = false;
 }
 
 async function findDeliveries(value: string, type: string) {
   if (!value) {
-    autoTarget.value = true
-    await getDeliveries()
-    search.loading = false
-    return
+    autoTarget.value = true;
+    await getDeliveries();
+    search.loading = false;
+    return;
   }
-  const { data } = await useFetch('/api/avito/delivery/search', {
+  const { data } = await useFetch("/api/avito/delivery/search", {
     query: {
       string: value,
       type,
     },
-  })
-  if (data.value)
-    deliveries.value = data.value
+  });
+  if (data.value) deliveries.value = data.value;
 
-  search.loading = false
+  search.loading = false;
 }
 
-const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000)
+const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000);
 
 async function onSearchInput() {
-  autoTarget.value = false
-  search.loading = true
-  findDeliveriesDebounced(search.text, search.type)
+  autoTarget.value = false;
+  search.loading = true;
+  findDeliveriesDebounced(search.text, search.type);
 }
 
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && deliveries.value.length >= 50) {
-    if (end.value)
-      return
-    const { data } = await useFetch('/api/avito/delivery/get', {
-      method: 'GET',
+    if (end.value) return;
+    const { data } = await useFetch("/api/avito/delivery/get", {
+      method: "GET",
       query: {
-        status: route.query?.status || 'all',
+        status: route.query?.status || "all",
         limit: 50,
         skip: skip.value ? skip.value : 0,
       },
-    })
+    });
     if ((data.value as any)?.length === 0) {
-      end.value = true
-      return
+      end.value = true;
+      return;
     }
-    deliveries.value = [...deliveries.value, ...(data.value! as any)]
-    skip.value += 50
+    deliveries.value = [...deliveries.value, ...(data.value! as any)];
+    skip.value += 50;
   }
-})
+});
 
 watch(
   () => status.value,
   async () => {
-    skip.value = 50
-    end.value = false
-    const { data } = await useFetch('/api/avito/delivery/get', {
-      method: 'GET',
+    skip.value = 50;
+    end.value = false;
+    const { data } = await useFetch("/api/avito/delivery/get", {
+      method: "GET",
       query: {
-        status: status.value ?? 'all',
+        status: status.value ?? "all",
         limit: 50,
       },
-    })
-    deliveries.value = data.value
+    });
+    deliveries.value = data.value;
   },
-  { deep: true, immediate: true },
-)
+  { deep: true, immediate: true }
+);
 
 const filters = [
   {
-    title: 'Все доставки',
-    optionValue: 'all',
-    params: '',
+    title: "Все доставки",
+    optionValue: "all",
+    params: "",
     queryStatus: undefined,
   },
   {
-    title: 'Активные',
-    optionValue: 'active',
-    params: '?status=active',
-    queryStatus: 'active',
+    title: "Активные",
+    optionValue: "active",
+    params: "?status=active",
+    queryStatus: "active",
   },
   {
-    title: 'Завершенные',
-    optionValue: 'completed',
-    params: '?status=completed',
-    queryStatus: 'completed',
+    title: "Завершенные",
+    optionValue: "completed",
+    params: "?status=completed",
+    queryStatus: "completed",
   },
   {
-    title: 'В пути',
-    optionValue: 'onTheWay',
-    params: '?status=onTheWay',
-    queryStatus: 'onTheWay',
+    title: "В пути",
+    optionValue: "onTheWay",
+    params: "?status=onTheWay",
+    queryStatus: "onTheWay",
   },
   {
-    title: 'Готовы к выдаче',
-    optionValue: 'pickupReady',
-    params: '?status=pickupReady',
-    queryStatus: 'pickupReady',
+    title: "Готовы к выдаче",
+    optionValue: "pickupReady",
+    params: "?status=pickupReady",
+    queryStatus: "pickupReady",
   },
   {
-    title: 'Отмененные',
-    optionValue: 'canceled',
-    params: '?status=canceled',
-    queryStatus: 'canceled',
+    title: "Отмененные",
+    optionValue: "canceled",
+    params: "?status=canceled",
+    queryStatus: "canceled",
   },
   {
-    title: 'В архиве',
-    optionValue: 'archived',
-    params: '?status=archived',
-    queryStatus: 'archived',
+    title: "В архиве",
+    optionValue: "archived",
+    params: "?status=archived",
+    queryStatus: "archived",
   },
-]
+];
 const statusText = computed(() => {
-  return filters.find((el: any) => el.queryStatus === route.query.status)?.title
-})
+  return filters.find((el: any) => el.queryStatus === route.query.status)
+    ?.title;
+});
 
 function updateSearchType(filter: any) {
-  search.type = filter.value
+  search.type = filter.value;
 }
 
-const customLinks = filters.map(filter => ({
+const customLinks = filters.map((filter) => ({
   title: filter.title,
-  slot: '/avito/deliveries',
+  slot: "/avito/deliveries",
   query: filter.params,
-}))
+}));
 </script>
 
 <template>
   <div class="px-4 sm:px-16 pt-8">
-    <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
-      <ul class="font-medium text-[18px] text-[#909090]">
+    <div
+      class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
+    >
+      <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
             Маркетплейсы
@@ -267,28 +262,27 @@ const customLinks = filters.map(filter => ({
             Avito
           </NuxtLink>
         </li>
-        <li class="cursor-pointer text-[#1e2734]">
-          Доставки
-        </li>
+        <li class="cursor-pointer text-[#1e2734]">Доставки</li>
       </ul>
     </div>
-    <div class="flex justify-start lg:justify-between  mb-4 items-center mt-4">
-      <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full">
+    <div class="flex justify-start lg:justify-between mb-4 items-center mt-4">
+      <div
+        class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
+      >
         <div v-if="deliveries.length" class="export lg:absolute right-0 top-0">
           <button
             v-if="loadingExport"
             disabled
             class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
           >
-            <span
-              class="loading loading-spinner loading-sm text-primary"
-            />
+            <span class="loading loading-spinner loading-sm text-primary" />
           </button>
           <div v-else class="dropdown lg:dropdown-end z-10">
             <label
               tabindex="0"
               class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
-            >XLS</label>
+              >XLS</label
+            >
             <ul
               tabindex="0"
               class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-1"
@@ -300,13 +294,15 @@ const customLinks = filters.map(filter => ({
             </ul>
           </div>
         </div>
-        <div class="w-full flex gap-1 lg:gap-2 ">
-          <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
-            <span><CustomSelect
-              class="h-[2rem]  min-w-[95px]"
-              :status-text="statusText"
-              :links="customLinks"
-            /> </span>
+        <div class="w-full flex gap-1 lg:gap-2">
+          <div class="flex gap-1 lg:gap-3 flex-nowrap whitespace-nowrap">
+            <span
+              ><CustomSelect
+                class="h-[2rem] min-w-[95px]"
+                :status-text="statusText"
+                :links="customLinks"
+              />
+            </span>
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
             <CustomSelect
@@ -318,7 +314,9 @@ const customLinks = filters.map(filter => ({
               @change-value="updateSearchType"
             />
           </div>
-          <div class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]">
+          <div
+            class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"
+          >
             <label class="w-full flex bg-[#ececed] rounded-lg items-center">
               <input
                 ref="codeInputMob"
@@ -327,7 +325,7 @@ const customLinks = filters.map(filter => ({
                 class="input input-sm bg-transparent rounded-r-none w-full"
                 placeholder="Поиск"
                 @input="onSearchInput()"
-              >
+              />
               <span
                 v-if="search.loading"
                 class="loading loading-spinner loading-xs flex justify-end p-2"
@@ -371,7 +369,7 @@ const customLinks = filters.map(filter => ({
           <li
             v-for="(delivery, index) of deliveries.slice(
               0,
-              Math.ceil(deliveries.length / 2),
+              Math.ceil(deliveries.length / 2)
             )"
             :key="index"
             class="overflow-visible z-0"
@@ -388,7 +386,7 @@ const customLinks = filters.map(filter => ({
         <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
           <li
             v-for="(delivery, index) of deliveries.slice(
-              Math.ceil(deliveries.length / 2),
+              Math.ceil(deliveries.length / 2)
             )"
             :key="index"
             class="overflow-visible z-0"

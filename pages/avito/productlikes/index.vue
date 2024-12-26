@@ -1,53 +1,50 @@
 <script setup lang="ts">
-const { notify } = useNotification()
+const { notify } = useNotification();
 
 definePageMeta({
-  layout: 'app',
-  middleware: 'auth',
-  title: 'Лайки на товар/бренд',
-})
+  layout: "app",
+  middleware: "auth",
+  title: "Лайки на товар/бренд",
+});
 
-const router = useRouter()
-const route = useRoute()
-const product_likes = ref([]) as any
-const sortPage = ref('all')
-const sortPageDate = ref('')
-const loading = ref(false)
-const modalShow = ref<boolean>(false)
-const logModal = ref(false)
+const router = useRouter();
+const route = useRoute();
+const product_likes = ref([]) as any;
+const sortPage = ref("all");
+const sortPageDate = ref("");
+const loading = ref(false);
+const modalShow = ref<boolean>(false);
+const logModal = ref(false);
 const selectedLike = ref({
-  uuid: '',
-})
+  uuid: "",
+});
 
 const search = reactive({
-  text: '',
+  text: "",
   loading: false,
   error: false,
-  type: 'name',
-})
-const codeInput = ref()
+  type: "name",
+});
+const codeInput = ref();
 
-const limit = ref(50)
-const skip = ref(0)
-const end = ref(false)
-const target = ref(null)
-const targetIsVisible = ref(false)
+const limit = ref(50);
+const skip = ref(0);
+const end = ref(false);
+const target = ref(null);
+const targetIsVisible = ref(false);
 // eslint-disable-next-line unused-imports/no-unused-vars
-const { stop } = useIntersectionObserver(
-  target,
-  ([{ isIntersecting }]) => {
-    targetIsVisible.value = isIntersecting
-  },
-)
+const { stop } = useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  targetIsVisible.value = isIntersecting;
+});
 watch(targetIsVisible, async (isVisible) => {
   if (!end.value && isVisible && product_likes.value.length >= limit.value) {
-    await getProductLikes()
+    await getProductLikes();
   }
-})
+});
 async function getProductLikes() {
-  modalShow.value = false
+  modalShow.value = false;
   const { data, error } = await useFetch(`/api/avito/productlikes/get`, {
-    method: 'GET',
+    method: "GET",
     query: {
       statusQuery: sortPage.value,
       dateFilter: sortPageDate.value,
@@ -56,151 +53,140 @@ async function getProductLikes() {
       limit: limit.value,
       skip: skip.value,
     },
-  })
+  });
   if ((data.value as any)?.length === 0) {
-    loading.value = false
-    end.value = true
-    return
+    loading.value = false;
+    end.value = true;
+    return;
   }
   if (data.value) {
-    product_likes.value = [...product_likes.value, ...(data.value! as any)]
-    loading.value = false
+    product_likes.value = [...product_likes.value, ...(data.value! as any)];
+    loading.value = false;
   }
 
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Не удалось получить лайки',
+      type: "error",
+      title: "Не удалось получить лайки",
       text: error.value.message,
-    })
+    });
   }
-  skip.value += limit.value
-  loading.value = false
+  skip.value += limit.value;
+  loading.value = false;
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Не удалось получить лайки',
+      type: "error",
+      title: "Не удалось получить лайки",
       text: error.value.message,
-    })
+    });
   }
 }
-await getProductLikes()
+await getProductLikes();
 
 function getStatus(status: string) {
-  if (status === 'created')
-    return 'Создан'
-  else if (status === 'work')
-    return 'В работе'
-  else if (status === 'busy')
-    return 'В работе'
-  else if (status === 'completed')
-    return 'Завершен'
-  else if (status === 'nofunds')
-    return 'Недостаточно средств'
-  else if (status === 'canceled')
-    return 'Отменен'
+  if (status === "created") return "Создан";
+  else if (status === "work") return "В работе";
+  else if (status === "busy") return "В работе";
+  else if (status === "completed") return "Завершен";
+  else if (status === "nofunds") return "Недостаточно средств";
+  else if (status === "canceled") return "Отменен";
 }
 
 async function resumeStatus(item: any) {
   const { data, error } = await useFetch(`/api/avito/productlikes/resume`, {
-    method: 'POST',
+    method: "POST",
     body: {
       item,
     },
     watch: false,
-  })
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-    return
+    });
+    return;
   }
   if (data.value) {
     notify({
-      type: 'success',
-      title: 'Успешно',
-      text: 'Лайк на товар/бренд  успешно возвращен в работу',
+      type: "success",
+      title: "Успешно",
+      text: "Лайк на товар/бренд  успешно возвращен в работу",
       duration: 3000,
-    })
-    selectFilterDate({ value: sortPage.value })
+    });
+    selectFilterDate({ value: sortPage.value });
   }
 }
 
 onMounted(() => {
   if (route.query.modalShow) {
-    modalShow.value = route.query.modalShow === 'true'
-    const query = { ...route.query }
-    delete query.modalShow
-    router.push({ query })
+    modalShow.value = route.query.modalShow === "true";
+    const query = { ...route.query };
+    delete query.modalShow;
+    router.push({ query });
   }
-})
+});
 
-const reviewRemoveModalClose: any = ref(null)
-const idForRemove = ref('')
+const reviewRemoveModalClose: any = ref(null);
+const idForRemove = ref("");
 async function deleteLike() {
-  const { data, error } = await useFetch(
-    `/api/avito/productlikes/delete`,
-    {
-      method: 'DELETE',
-      body: {
-        id: idForRemove.value,
-      },
+  const { data, error } = await useFetch(`/api/avito/productlikes/delete`, {
+    method: "DELETE",
+    body: {
+      id: idForRemove.value,
     },
-  )
+  });
 
   if (data.value) {
-    getProductLikes()
-  }
-  else if (error.value) {
+    getProductLikes();
+  } else if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
+    });
   }
 }
 
 async function selectFilterDate(e: any, date?: boolean) {
   if (date) {
-    sortPageDate.value = e.value
+    sortPageDate.value = e.value;
+  } else {
+    sortPage.value = e.value;
   }
-  else {
-    sortPage.value = e.value
-  }
-  loading.value = true
-  product_likes.value = []
-  skip.value = 0
-  end.value = false
-  await getProductLikes()
+  loading.value = true;
+  product_likes.value = [];
+  skip.value = 0;
+  end.value = false;
+  await getProductLikes();
 }
 
 async function findBuyouts(value: string) {
-  product_likes.value = []
-  skip.value = 0
-  end.value = false
+  product_likes.value = [];
+  skip.value = 0;
+  end.value = false;
   if (!value) {
-    search.loading = false
-    await getProductLikes()
-    return
+    search.loading = false;
+    await getProductLikes();
+    return;
   }
-  loading.value = true
-  await getProductLikes()
+  loading.value = true;
+  await getProductLikes();
 
-  search.loading = false
+  search.loading = false;
 }
 
-const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000)
+const findBuyoutsDebounced = useDebounceFn(findBuyouts, 1000);
 
 async function onSearchInput() {
-  search.loading = true
-  findBuyoutsDebounced(search.text, search.type)
+  search.loading = true;
+  findBuyoutsDebounced(search.text, search.type);
 }
 function updateSearchType(filter: any) {
-  search.type = filter.value
+  search.type = filter.value;
 }
 </script>
 
@@ -212,8 +198,10 @@ function updateSearchType(filter: any) {
       @create="getProductLikes()"
     />
 
-    <div class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse">
-      <ul class="font-medium text-[18px] text-[#909090]">
+    <div
+      class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
+    >
+      <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
             Маркетплейсы
@@ -224,16 +212,15 @@ function updateSearchType(filter: any) {
             Avito
           </NuxtLink>
         </li>
-        <li class="cursor-pointer text-[#1e2734]">
-          Лайки на товар
-        </li>
+        <li class="cursor-pointer text-[#1e2734]">Лайки на товар</li>
       </ul>
     </div>
 
-    <div class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full mt-4">
-      <div class="flex gap-2 ">
+    <div
+      class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full mt-4"
+    >
+      <div class="flex gap-2">
         <button
-
           class="btn btn-primary dark:bg-primary bg-[#6675ff] border-none font-normal btn-sm"
           @click="modalShow = true"
           @click.stop
@@ -242,8 +229,8 @@ function updateSearchType(filter: any) {
           <span class="hidden lg:flex">Лайки</span>
         </button>
       </div>
-      <div class="w-full flex gap-2 lg:gap-2 ">
-        <div class="flex gap-1  lg:gap-3 flex-nowrap whitespace-nowrap">
+      <div class="w-full flex gap-2 lg:gap-2">
+        <div class="flex gap-1 lg:gap-3 flex-nowrap whitespace-nowrap">
           <span>
             <CustomSelect
               class="flex sm:min-w-[120px] h-[2rem]"
@@ -276,7 +263,9 @@ function updateSearchType(filter: any) {
             @change-value="updateSearchType"
           />
         </div>
-        <div class="absolute right-0 top-0 w-[calc(100%-55px)] lg:w-fit lg:static">
+        <div
+          class="absolute right-0 top-0 w-[calc(100%-55px)] lg:w-fit lg:static"
+        >
           <div class="relative justify-end flex-grow-0 w-full">
             <input
               ref="codeInput"
@@ -285,7 +274,7 @@ function updateSearchType(filter: any) {
               class="input input-sm w-full bg-base-300 bg-opacity-40 text-gray-500"
               placeholder="Поиск по лайкам"
               @input="onSearchInput()"
-            >
+            />
             <span
               v-if="search.loading"
               class="absolute right-2 top-2 loading loading-spinner loading-xs p-2"
@@ -314,33 +303,15 @@ function updateSearchType(filter: any) {
         <thead>
           <tr class="bg-secondary">
             <!-- <th class="text-center">№</th> -->
-            <th class="text-center rounded-tl-2xl">
-              Фото
-            </th>
-            <th class="text-center">
-              Название
-            </th>
-            <th class="text-center">
-              Ссылка
-            </th>
-            <th class="text-center">
-              Тип
-            </th>
-            <th class="text-center">
-              Количество
-            </th>
-            <th class="text-center">
-              Статус
-            </th>
-            <th class="text-center">
-              Дата создания
-            </th>
-            <th class="text-center">
-              Дата завершения
-            </th>
-            <th class="text-center rounded-tr-2xl ">
-              Инфо
-            </th>
+            <th class="text-center rounded-tl-2xl">Фото</th>
+            <th class="text-center">Название</th>
+            <th class="text-center">Ссылка</th>
+            <th class="text-center">Тип</th>
+            <th class="text-center">Количество</th>
+            <th class="text-center">Статус</th>
+            <th class="text-center">Дата создания</th>
+            <th class="text-center">Дата завершения</th>
+            <th class="text-center rounded-tr-2xl">Инфо</th>
           </tr>
         </thead>
         <tbody>
@@ -350,7 +321,8 @@ function updateSearchType(filter: any) {
             class="bg-white border-b-0"
           >
             <td
-              class="text-center border-r border-[#e8e8fd] mx-auto" :class="{ 'rounded-bl-2xl': index === product_likes.length - 1 }"
+              class="text-center border-r border-[#e8e8fd] mx-auto"
+              :class="{ 'rounded-bl-2xl': index === product_likes.length - 1 }"
             >
               <div
                 style="width: 28px; height: 36px; border-radius: 4px"
@@ -358,7 +330,6 @@ function updateSearchType(filter: any) {
               >
                 <div v-if="item.image !== ''" class="dropdown dropdown-hover">
                   <label tabindex="0">
-
                     <nuxt-img
                       class="rounded-lg z-0"
                       alt=""
@@ -366,7 +337,6 @@ function updateSearchType(filter: any) {
                       fit="fill"
                       :src="item.image"
                     />
-
                   </label>
                   <ul
                     tabindex="0"
@@ -380,16 +350,14 @@ function updateSearchType(filter: any) {
                     />
                   </ul>
                 </div>
-                <div v-else class="text-center">
-                  no image
-                </div>
+                <div v-else class="text-center">no image</div>
               </div>
             </td>
             <td
               class="text-center border-r border-[#e8e8fd] text-base-content truncate"
             >
               <span class="whitespace-normal break-words max-w-[150px]">{{
-                item.name ? item.name : 'неизвестно'
+                item.name ? item.name : "неизвестно"
               }}</span>
             </td>
             <td
@@ -405,7 +373,7 @@ function updateSearchType(filter: any) {
             </td>
             <td class="text-center border-r border-[#e8e8fd]">
               <div class="flex flex-col">
-                {{ item.type === 'brand' ? 'Лайк на бренд' : 'Лайк на товар' }}
+                {{ item.type === "brand" ? "Лайк на бренд" : "Лайк на товар" }}
               </div>
             </td>
             <td class="text-center border-r border-[#e8e8fd]">
@@ -420,8 +388,7 @@ function updateSearchType(filter: any) {
                   'text-red-500 rounded-full py-1 px-2  text-center':
                     item.status === 'nofunds',
                   'bg-error text-base-content rounded-full py-1 px-2  text-center':
-                    item.status === 'deleted'
-                    || item.status === 'canceled',
+                    item.status === 'deleted' || item.status === 'canceled',
                   'bg-info bg-opacity-20  text-base-content rounded-full py-1 px-2  text-center':
                     item.status === 'created',
                   'bg-success text-base-content rounded-full py-0.5 px-1.5 text-center':
@@ -433,7 +400,11 @@ function updateSearchType(filter: any) {
               >
                 {{ getStatus(item.status) }}
               </div>
-              <button v-if="item.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(item)">
+              <button
+                v-if="item.status === 'nofunds'"
+                class="btn btn-ghost btn-sm btn-square text-base-content hover:text-primary w-full rounded-full mt-1 border-[#6675ff] dark:border-primary dark:border-opacity-20"
+                @click="resumeStatus(item)"
+              >
                 Возобновить
               </button>
             </td>
@@ -441,19 +412,18 @@ function updateSearchType(filter: any) {
               <div
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ $dayjs(item.createdDate).format(
-                  'DD.MM.YYYY',
-                ) }}
+                {{ $dayjs(item.createdDate).format("DD.MM.YYYY") }}
               </div>
             </td>
-            <td class="text-center border-r border-[#e8e8fd]" :class="{ 'rounded-br-2xl': index === product_likes.length - 1 }">
+            <td
+              class="text-center border-r border-[#e8e8fd]"
+              :class="{ 'rounded-br-2xl': index === product_likes.length - 1 }"
+            >
               <div
                 v-if="item.endedDate"
                 class="bg-primary bg-opacity-10 rounded-lg p-0.5 text-center"
               >
-                {{ $dayjs(item.endedDate).format(
-                  'DD.MM.YYYY',
-                ) }}
+                {{ $dayjs(item.endedDate).format("DD.MM.YYYY") }}
               </div>
             </td>
             <td
@@ -463,7 +433,7 @@ function updateSearchType(filter: any) {
               <div class="rounded-lg p-0.5 text-center">
                 <button
                   class="btn btn-primary btn-sm btn-square mb-2"
-                  @click=";[(selectedLike = item), (logModal = true)]"
+                  @click="[(selectedLike = item), (logModal = true)]"
                 >
                   <svg
                     data-v-f136eeaa=""
@@ -494,7 +464,7 @@ function updateSearchType(filter: any) {
     </div>
 
     <Hero v-else />
-    <input id="reviewRemoveModal" type="checkbox" class="modal-toggle">
+    <input id="reviewRemoveModal" type="checkbox" class="modal-toggle" />
     <div class="modal">
       <div class="modal-box max-w-xs">
         <h3 class="font-normal text-lg text-center">
@@ -506,16 +476,22 @@ function updateSearchType(filter: any) {
             ref="reviewRemoveModalClose"
             for="reviewRemoveModal"
             class="btn btn-primary"
-          >Отмена</label>
+            >Отмена</label
+          >
           <label
             for="reviewRemoveModal"
             class="btn btn-error text-white"
             @click="deleteLike"
-          >Удалить</label>
+            >Удалить</label
+          >
         </div>
       </div>
     </div>
-    <LogModal :info="selectedLike" :state="logModal" @close="logModal = false" />
+    <LogModal
+      :info="selectedLike"
+      :state="logModal"
+      @close="logModal = false"
+    />
   </div>
 </template>
 

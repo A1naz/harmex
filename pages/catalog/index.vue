@@ -177,7 +177,9 @@ watch(
     <div class="md:px-10 px-0 sm:mr-0 mr-3 w-full">
       <div class="flex justify-between">
         <div class="breadcrumbs text-sm ml-3 mb-5">
-          <ul class="font-medium text-[18px] text-[#909090]">
+          <ul
+            class="text-sm sm:text-base font-medium text-[18px] text-[#909090]"
+          >
             <li v-if="!loading" class="cursor-pointer">
               {{ modalStore.selectedCatalog }}
             </li>
