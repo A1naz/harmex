@@ -104,16 +104,14 @@ function toFound(path: string) {
         >
           <div
             v-for="item in data"
-            :key="item.slug"
+            :key="item.path"
             class="border transition w-full border-none"
           >
             <button
-              v-for="service in item.items"
-              :key="service.path"
               class="w-full bg-transparent text-[#909090] hover:text-black rounded-lg hover:bg-[#f5f7ff] border-white py-2 px-4"
-              @click="toFound(`/${item.name.toLowerCase()}${service.path}`)"
+              @click="navigateTo(item.path), close()"
             >
-              {{ `${item?.name} ${service.title}` }}
+              {{ `${item.title}` }}
             </button>
           </div>
 

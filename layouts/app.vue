@@ -19,20 +19,23 @@ async function search(searchQuery: any) {
   dataLoading.value = true;
 
   try {
-    const response: any = await $fetch(`/api/catalog/search`, {
+    const { data, error } = await useFetch(`/api/catalog/search`, {
       method: "GET",
       query: {
         type: "Маркетплейсы",
-        searchQuery: searchQuery || "",
+        query: searchQuery || "",
       },
       watch: false,
     });
 
-    if (response.status === "ok") {
-      searchData.value = response.services;
-    } else {
-      console.error(response.error);
-      searchData.value = [];
+    if (data.value) {
+      searchData.value = data.value;
+    } else if (error.value) {
+      notify({
+        type: "error",
+        title: "Ошибка",
+        text: error.value.message,
+      });
     }
   } catch (error) {
     console.error("Ошибка при запросе:", error);
