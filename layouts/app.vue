@@ -251,7 +251,7 @@ watch(isOpen, (newValue: boolean) => {
         <div class="hero text-3xl mt-10">Тут будут элементы меню</div>
       </div> -->
 
-      <div>
+      <div class="mb-28">
         <slot />
         <FavouritesUserFavourites v-model:show="favouritesModal" />
         <div

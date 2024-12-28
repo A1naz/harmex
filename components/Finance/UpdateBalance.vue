@@ -20,7 +20,7 @@ const paymentUuid = ref("null");
 const loading = ref(false);
 const summ = ref(500);
 const email = ref("");
-const summArr = [1000, 5000, 25000, 50000, 100000];
+const summArr = [5000, 25000, 50000, 100000];
 const form = ref("addBalance");
 
 async function balanceUpdate() {
@@ -91,13 +91,6 @@ const showTooltip = ref(false);
         >
           <h1 class="text-xl font-bold">Пополнение счета</h1>
           <div class="flex flex-col gap-[4px] justify-start w-full">
-            <span>{{ "Сумма пополнения" }}</span>
-            <input
-              type="number"
-              class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
-              placeholder="Введите сумму пополнения"
-              v-model="summ"
-            />
             <span>{{ "Введите почту для отправки чека" }}</span>
             <input
               type="text"
@@ -105,12 +98,19 @@ const showTooltip = ref(false);
               placeholder="example@example.com"
               v-model="email"
             />
+            <span>{{ "Сумма пополнения" }}</span>
+            <input
+              type="number"
+              class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
+              placeholder="Введите сумму пополнения"
+              v-model="summ"
+            />
           </div>
           <div class="flex gap-[3px] w-full sm:justify-between flex-wrap flex-col md:flex-row justify-center">
             <button
               @click="summ = item"
               v-for="item in summArr"
-              class="px-[14px] rounded-[10px] btn btn-sm py-1.5 mt-2 md:mt-0 btn-neutral text-white"
+              class="px-[28px] rounded-[10px] btn btn-sm py-1.5 mt-0.5 md:mt-0 btn-neutral text-white"
             >
               {{ item }} ₽
             </button>
@@ -201,16 +201,17 @@ const showTooltip = ref(false);
                   техническую поддержку портала.
                 </li>
               </ol>
-              <div
-                class="flex flex-col w-full max-w-[200px] gap-[20px] items-end"
-              >
-                <NuxtImg :src="qrImage" class="w-[197px] h-[187px]" />
-                <span class="text-[#cc5f5f] leading-4 text-xs"
-                  >Не изменяйте данные, иначе платеж не будет зачислен</span
-                >
-              </div>
+       
             </div>
           </div>
+          <div
+              class="flex flex-col w-full gap-[20px] items-center justify-center"
+            >
+              <NuxtImg :src="qrImage" class="w-[200px] h-[200px]" />
+              <span class="text-[#cc5f5f] text-xs"
+                >Не изменяйте данные, иначе платеж не будет зачислен</span
+              >
+            </div>
           <div>
             <span class="text-[0.825rem]"
               >Ваши личные данные будут использоваться для обработки ваших
@@ -218,7 +219,7 @@ const showTooltip = ref(false);
               <a target="_blank" href="/docs/conf_policy.pdf"  class="text-primary link no-underline hover:underline"
                 >политике конфидециальности</a
               >, продолжая вы соглашаетесь с условиями<a
-              target="_blank" href="/docs/oferta.pdf" 
+              target="_blank" :href="bankDetails.docName ? `/docs/${bankDetails.docName}.pdf` : '/docs/oferta.pdf'"  
                 class="text-primary link no-underline hover:underline"
               >
                 оферты</a

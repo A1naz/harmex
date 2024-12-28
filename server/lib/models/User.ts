@@ -47,6 +47,8 @@ const UserSchema = new Schema<IUserSchema>({
   uuidCompany: { type: String, unique: false },
   acesses: [{ type: String, required: false }],
 
+  lastOrgInfo: { type: Object, required: false },
+
   roles: [{ type: String, ref: 'Role' }],
   MPTariffs: [
     {

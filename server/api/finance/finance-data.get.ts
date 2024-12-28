@@ -9,6 +9,7 @@ function formatNumber(value: number): string {
 }
 
 export default defineEventHandler(async (event) => {
+
   const user = await getAdminEntity(event)
   if (!user)
     return sendRedirect(event, '/', 302)

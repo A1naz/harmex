@@ -13,6 +13,8 @@ declare module '#auth-utils' {
     orgInn: string | undefined
     orgName: string | undefined
     ffEnabled: boolean
+    orgIP: string | undefined
+    docName: string | undefined
   }
 
   interface UserSession {

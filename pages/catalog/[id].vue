@@ -38,6 +38,11 @@ async function getService() {
 
   if (data.value) {
     item.value = data.value.service;
+    item.value.items = item.value.items.sort((a: any, b: any) => {
+      const disabledA = a.disabled ?? false; // Если нет поля disabled, то считать как false
+      const disabledB = b.disabled ?? false;
+      return disabledA - disabledB;
+    });
     loading.value = false;
   }
 }

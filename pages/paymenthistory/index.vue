@@ -333,15 +333,54 @@ const displayPages = computed(() => {
     </div>
     <div class="gap-4 w-full flex-1 m-4 bg-white rounded-lg md:hidden">
       <div class="flex flex-col w-full pr-8 ml-4">
-        <custom-select-with-class
-          :tabs="tableTypes"
-          @change-value="(e: any) => tableType = e.value"
-          :class="'h-[2.5rem] w-full border-[#e86b35] bg-[#ffffff]'"
-        />
+        <div class="flex flex-row justify-between">
+          <div class="flex flex-col w-full mr-1">
+            <custom-select-with-class
+              :tabs="tableTypes"
+              @change-value="(e: any) => tableType = e.value"
+              :class="'h-[2.5rem] w-full border-[#e86b35] bg-[#ffffff]'"
+            />
+          </div>
+          <div class="flex gap-1 justify-end mt-2">
+            <DateRangePicker
+              class="w-46 -mt-1"
+              v-model="dateRange"
+              :start-date="startDate"
+              @reset="dateRange = []"
+            >
+              <button
+                class="div w-[48px] h-[40px] -mt-1 border-primary border-[1px] rounded-[6px]"
+              >
+                <Icon
+                  name="solar:calendar-linear"
+                  class="text-primary"
+                  size="22px"
+                />
+              </button>
+            </DateRangePicker>
+
+            <button
+              :disabled="loadingExport"
+              @click="exportReadyXLS"
+              class="div w-[48px] h-[40px] -mt-2 border-primary border-[1px] rounded-[6px]"
+            >
+              <div class="flex items-center justify-center">
+                <Icon
+                  v-if="!loadingExport"
+                  class="text-primary"
+                  name="ic:round-download"
+                  size="22px"
+                />
+                <span v-else class="loading loading-spinner text-primary" />
+              </div>
+            </button>
+          </div>
+        </div>
         <div class="w-full">
           <div
             class="max-w-md mx-auto bg-gray-100 border border-gray-300 rounded-lg p-4 mt-2"
             v-for="(item, index) in tableData"
+            v-if="tableData && tableData.length"
           >
             <div
               class="grid grid-cols-2 gap-y-2 my-2 border-b pb-2"
@@ -357,6 +396,17 @@ const displayPages = computed(() => {
                 <span v-if="header.value == 'date'">{{
                   $dayjs(item[header.value]).format("DD.MM.YYYY HH:mm") || "-"
                 }}</span>
+              </div>
+            </div>
+          </div>
+          <div v-else-if="!loading">
+            <div class="hero">
+              <div
+                class="hero-content text-center flex justify-center items-center h-48"
+              >
+                <div class="max-w-md">
+                  <h1 class="text-2xl font-bold">Здесь ничего нет</h1>
+                </div>
               </div>
             </div>
           </div>

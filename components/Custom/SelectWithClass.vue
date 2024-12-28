@@ -200,7 +200,6 @@ defineExpose({
           "
           :external="false"
           class="btn btn-ghost btn-xs h-[2rem] items-center justify-start text-left text-xs font-normal normal-case leading-none hover:bg-primary hover:bg-opacity-20"
-          :style="{ width: dropdownWidth + 'px' }"
         >
           <span>
             {{ filter.title }}

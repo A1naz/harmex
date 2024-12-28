@@ -354,6 +354,7 @@ function copyText(text: string) {
                   readonly
                   placeholder="Логин"
                   class="flex-grow w-full text-ellipsis min-w-52"
+                  @click="copyText(form.username)"
                 />
                 <button
                   class="flex items-center justify-center mx-2 text-base-300 hover:text-primary"
@@ -506,15 +507,26 @@ function copyText(text: string) {
             <h2 class="text-lg font-medium">Документооборот</h2>
           </div>
           <div
-            class="flex gap-2 p-2 justify-between text-primary w-full bg-secondary rounded-lg"
+            class="flex flex-col sm:flex-row gap-2 p-2 justify-between text-primary w-full bg-secondary rounded-lg"
           >
             <div class="flex gap-2 items-center">
               <Icon name="gg:file-document" size="24" />
-              <p class="font-medium">Пользовательское соглашение</p>
+              <p class="font-medium sm:text-sm text-xs">
+                Пользовательское соглашение
+              </p>
             </div>
-            <div class="flex items-center">ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ</div>
+            <div class="flex items-center sm:text-md text-sm">
+              {{ user.orgIP }}
+              <a
+                class="btn btn-primary btn-sm rounded-full p-1 ml-3 justify-center items-center sm:hidden flex"
+                target="_blank"
+                :href="config.public.siteUrl + '/api/docs/get'"
+              >
+                <Icon name="material-symbols:download-sharp" size="24" />
+              </a>
+            </div>
             <a
-              class="btn btn-primary btn-sm rounded-full p-1 flex justify-center items-center"
+              class="btn btn-primary btn-sm rounded-full p-1 justify-center items-center hidden sm:flex"
               target="_blank"
               :href="config.public.siteUrl + '/api/docs/get'"
             >
@@ -544,6 +556,11 @@ function copyText(text: string) {
               <button
                 class="btn btn-sm h-[2.5rem] btn-primary xl:w-40"
                 @click="updatePassword"
+                :disabled="
+                  !passwordForm.oldPassword ||
+                  !passwordForm.newPassword
+                    | (passwordForm.newPassword.length < 6)
+                "
               >
                 Изменить
               </button>
@@ -564,7 +581,7 @@ function copyText(text: string) {
           <div class="flex gap-2 justify-between w-full">
             <h2 class="text-lg font-medium">Команда</h2>
             <button
-              class="btn btn-sm h-[2.5rem] btn-primary xl:w-40"
+              class="btn btn-sm text-[#c2c4c9] h-[2.5rem] hover:btn-primary xl:w-40"
               @click="[(teamModal = true), (currentUser = {})]"
             >
               Добавить сотрудника

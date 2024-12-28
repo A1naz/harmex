@@ -2,6 +2,7 @@ import { disables } from '@antfu/eslint-config'
 import { Service } from '~/server/lib/models/Service'
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
   const { serviceType, mp } = getQuery(event)
 
   const services = await Service.findOne({ slug: mp })
@@ -15,7 +16,7 @@ export default eventHandler(async (event) => {
     }
   }
 
-  const orgInfo = services.items.find(item => item.path === serviceType).orgInfo || {}
+  const orgInfo = user && user.lastOrgInfo ? user.lastOrgInfo : services.items.find(item => item.path === serviceType).orgInfo || {}
 
   return {
     status: 'ok',

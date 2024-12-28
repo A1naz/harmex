@@ -51,11 +51,29 @@ export default eventHandler(async (event) => {
   //   faceType,
   // })
 
+
+  let docName = ''
+  if (user.fizFace) {
+    docName = 'ofertaFiz' + bank.nameOrganization
+  } else if (user.orgKey === 'ООО') {
+    docName = 'ofertaOOO' + bank.nameOrganization
+  } else if (user.orgKey === 'ИП') {
+    docName = 'ofertaIP' + bank.nameOrganization
+  }
+
   userFromDB.paymentEmail = email
+  userFromDB.lastOrgInfo = {
+    title: bank.bankDetails.nameCompany,
+    orgInn: bank.bankDetails.INN,
+    orgName: bank.bankDetails.IP,
+    registerDate: new Date("2024-02-14T13:39:58.307+00:00"),
+    nameOrganization: bank.nameOrganization,
+    docName: docName,
+  }
   await userFromDB.save()
 
   return {
-    bankDetails: bank.bankDetails,
+    bankDetails: { ...bank.bankDetails, docName },
     qrCode,
     uuid: paymentUuid,
     purpose,

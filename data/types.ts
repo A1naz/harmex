@@ -79,6 +79,7 @@ export interface IUser extends Entity {
   isPartnerWithdrawAvailable: Boolean
   ks: string
   paymentEmail: string
+  lastOrgInfo: object
 }
 
 export interface IUserLogs extends Entity {

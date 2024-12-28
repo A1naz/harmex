@@ -22,7 +22,7 @@ export default eventHandler(async (event) => {
   if (user.fizFace) {
 
     doc = await patchDocument(
-      fs.readFileSync('server/docs/templates/ofertaFiz.docx'),
+      fs.readFileSync(`server/docs/templates/${user.lastOrgInfo && user.lastOrgInfo.docName ? user.lastOrgInfo.docName : 'ofertaFIZ'}.docx`),
       {
         patches: {
           username: {
@@ -113,7 +113,7 @@ export default eventHandler(async (event) => {
       })
 
     doc = await patchDocument(
-      fs.readFileSync('server/docs/templates/ofertaOOO.docx'),
+      fs.readFileSync(`server/docs/templates/${user.lastOrgInfo && user.lastOrgInfo.docName ? user.lastOrgInfo.docName : 'ofertaOOO'}.docx`),
       {
         patches: {
           ogrn: {
@@ -359,7 +359,7 @@ export default eventHandler(async (event) => {
       })
 
     doc = await patchDocument(
-      fs.readFileSync('server/docs/templates/ofertaIP.docx'),
+      fs.readFileSync(`server/docs/templates/${user.lastOrgInfo && user.lastOrgInfo.docName ? user.lastOrgInfo.docName : 'ofertaIP'}.docx`),
       {
         patches: {
           ogrn: {

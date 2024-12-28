@@ -174,7 +174,7 @@ watch(
     <!-- <div v-if="loading" class="hero -mt-80 text-[#bdc8fc]">
       <span class="loading loading-dots loading-lg text-primary" />
     </div> -->
-    <div class="md:px-10 px-0 sm:mr-0 mr-3 w-full">
+    <div class="md:px-10 px-0 sm:mr-0 mr-3 w-full mb-12">
       <div class="flex justify-between">
         <div class="breadcrumbs text-sm ml-3 mb-5">
           <ul
