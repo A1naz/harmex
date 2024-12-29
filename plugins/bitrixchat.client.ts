@@ -26,6 +26,7 @@ function inject(w: Window & typeof globalThis, d: Document, u: string) {
         mainButton.style.bottom = '10px';
         mainButton.style.right = '10px';
       }
+
     }
   });
 }

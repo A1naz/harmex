@@ -106,13 +106,16 @@ const showTooltip = ref(false);
               v-model="summ"
             />
           </div>
-          <div class="flex gap-[3px] w-full sm:justify-between flex-wrap flex-col md:flex-row justify-center">
+          <div class="flex gap-[3px] w-full flex-nowrap flex-row justify-between">
             <button
               @click="summ = item"
               v-for="item in summArr"
-              class="px-[28px] rounded-[10px] btn btn-sm py-1.5 mt-0.5 md:mt-0 btn-neutral text-white"
+              class="md:px-6 rounded-[10px] btn btn-sm py-1.5 mt-0.5 md:mt-0 btn-neutral text-white"
             >
-              {{ item }} ₽
+              {{ item }} <span class="hidden md:inline">
+
+                ₽
+              </span>
             </button>
           </div>
         </div>
@@ -168,7 +171,7 @@ const showTooltip = ref(false);
                 <span class="font-semibold">{{bankDetails.IP}}</span>
               </div>
               
-              <div v-if="showTooltip" class="absolute left-1/2 -translate-x-1/2 mt-2 w-max rounded bg-gray-800 text-white text-sm p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 whitespace-pre-wrap">
+              <div v-if="showTooltip" class="absolute left-1/2 text-xs md:text-sm -translate-x-1/2 mt-2 w-max rounded bg-gray-800 text-white p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 whitespace-pre-wrap">
                   <br> БИК {{ bankDetails.NameBank }}</br>
                   <br> БИК {{ bankDetails.BIC }}</br>
                   <br> Корреспондентский счёт {{ bankDetails.CS }}</br>

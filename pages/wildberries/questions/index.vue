@@ -283,12 +283,6 @@ const siteUrl = config.public.siteUrl;
               ]"
               @change-value="selectFilterDate($event, true)"
             />
-
-            <CustomSelect
-              class="bg-[#f4f4f4] h-[2rem]"
-              :tabs="[{ title: 'Артикул', value: 'article' }]"
-              @change-value="updateSearchType"
-            />
           </div>
           <div
             class="absolute right-0 top-0 w-[calc(100%-45px)] lg:w-fit lg:static"
@@ -299,7 +293,7 @@ const siteUrl = config.public.siteUrl;
                 v-model="search.text"
                 type="text"
                 class="input input-sm w-full bg-base-200 text-gray-500"
-                placeholder="Поиск"
+                placeholder="Поиск по артикулу"
                 @input="onSearchInput()"
               />
               <span

@@ -9,24 +9,21 @@ export default eventHandler(async (event) => {
 
   const { type, string } = getQuery(event)
 
-  const all = await Delivery.find({ user })
+  console.log('string: ', string)
   let deliveries
-
-  if (type === 'uuid') {
+  if (string) {
     const uuid = string?.toString().replaceAll('#', '')
-    deliveries = await Delivery.find({ user, uuidbuyout: uuid }).sort({
-      _id: -1,
-    })
-  }
-  else if (type === 'article') {
     deliveries = await Delivery.find({
       user,
-      article: { $in: [Number(string), string?.toString()] },
+      $or: [
+        { uuidbuyout: uuid },
+        { article: Number(string) },
+        { article: string },
+      ]
     }).sort({
       _id: -1,
     })
-  }
-  else {
+  } else {
     deliveries = await Delivery.find({ user }).sort({
       _id: -1,
     })
@@ -45,10 +42,6 @@ export default eventHandler(async (event) => {
       if (!buyout)
         return null
 
-      const place = all.findIndex(
-        item => item._id.toString() === delivery._id.toString(),
-      )
-
       const phone = delivery.recipientphone
       const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
       const currentstatus = delivery.statusdelivery?.length
@@ -60,7 +53,6 @@ export default eventHandler(async (event) => {
         )
         : new Date()
       return {
-        place: place + 1,
         uuid: buyout.uuid,
         article: delivery.article,
         pricebuy: delivery.pricebuy,

@@ -162,7 +162,7 @@ async function onSearchInput() {
 }
 
 watch(targetIsVisible, async (isVisible) => {
-  if (isVisible && autoTarget.value && deliveries.value.length >= 50) {
+  if (isVisible && autoTarget.value) {
     if (end.value) return;
     const { data } = await useFetch("/api/flowwow/delivery/get", {
       method: "GET",
@@ -339,58 +339,48 @@ const siteUrl = config.public.siteUrl;
       <div
         class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
       >
-        <div v-if="deliveries.length" class="export lg:absolute right-0 top-0">
-          <div
-            v-if="loadingExport"
-            class="flex flex-nowrap items-center gap-2 lg:gap-3"
-          >
+        <div class="export lg:absolute right-0 top-0">
+          <div class="flex flex-nowrap items-center gap-1 lg:gap-3">
+            <div
+              class="absolute right-0 top-0 lg:w-fit lg:static w-[calc(100%-110px)]"
+            >
+              <label class="w-full flex bg-[#ececed] rounded-lg items-center">
+                <input
+                  ref="codeInputMob"
+                  v-model="search.text"
+                  type="text"
+                  class="input input-sm bg-transparent rounded-r-none w-full"
+                  placeholder="Поиск по uuid"
+                  @input="onSearchInput()"
+                />
+                <span
+                  v-if="search.loading"
+                  class="loading loading-spinner loading-xs flex justify-end p-2"
+                />
+                <Icon
+                  v-else
+                  class="text-[#8f8e93] flex justify-end pr-2"
+                  name="tabler:search"
+                  size="30"
+                  @click="codeInputMob.focus()"
+                />
+              </label>
+            </div>
             <DateRangePicker
+              v-if="deliveries.length"
               class="w-46"
               v-model="dateRange"
               :start-date="startDate"
               @reset="dateRange = []"
             >
               <button
-                :disabled="loadingExport"
-                class="btn btn-sm btn-primary bg-[#eff0ff] border-none dark:bg-primary dark:bg-opacity-20 text-base-content min-w-2xl"
+                class="div w-[48px] h-[32px] bg-[#eff0ff] border-[1px] rounded-[6px]"
               >
-                {{
-                  dateRange.length > 1
-                    ? `${$dayjs(dateRange[0]).format("DD.MM.YYYY")} - ${$dayjs(
-                        dateRange[1]
-                      ).format("DD.MM.YYYY")}`
-                    : "Выбрать даты"
-                }}
-              </button>
-            </DateRangePicker>
-            <button
-              disabled
-              class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
-            >
-              <span class="loading loading-spinner loading-sm text-primary" />
-            </button>
-          </div>
-
-          <div v-else class="flex flex-nowrap items-center gap-2 lg:gap-3">
-            <DateRangePicker
-              class="w-46"
-              v-model="dateRange"
-              :start-date="startDate"
-              @reset="dateRange = []"
-            >
-              <button
-                class="btn btn-sm btn-primary bg-[#eff0ff] border-none dark:bg-primary dark:bg-opacity-20 text-base-content min-w-2xl"
-              >
-                {{
-                  dateRange.length > 1
-                    ? `${$dayjs(dateRange[0]).format("DD.MM.YYYY")} - ${$dayjs(
-                        dateRange[1]
-                      ).format("DD.MM.YYYY")}`
-                    : "Выбрать даты"
-                }}
+                <Icon name="solar:calendar-linear" class="-mt-1" size="22px" />
               </button>
             </DateRangePicker>
             <div
+              v-if="!loadingExport && deliveries.length"
               class="dropdown lg:dropdown-end z-10 flex flex-nowrap items-center gap-2 lg:gap-3"
             >
               <label
@@ -404,7 +394,7 @@ const siteUrl = config.public.siteUrl;
               >
                 <li>
                   <NuxtLink
-                    :to="`/flowwow/deliveries/export${
+                    :to="`/ozon/deliveries/export${
                       dateRange.length
                         ? '?dateRange=' +
                           dateRange
@@ -422,6 +412,13 @@ const siteUrl = config.public.siteUrl;
                 <li><a @click="exportReadyUntilPenaltyXLS">До штрафа</a></li>
               </ul>
             </div>
+            <button
+              v-else-if="loadingExport"
+              disabled
+              class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
+            >
+              <span class="loading loading-spinner loading-sm text-primary" />
+            </button>
           </div>
         </div>
         <div class="w-full flex gap-1 lg:gap-2">
@@ -433,46 +430,6 @@ const siteUrl = config.public.siteUrl;
                 :links="customLinks"
               />
             </span>
-          </div>
-          <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
-            <CustomSelect
-              class="h-[2rem] bg-[#f4f4f4]"
-              :tabs="[
-                { title: 'Артикул', value: 'article' },
-                { title: 'ID выкупа', value: 'uuid' },
-              ]"
-              @change-value="updateSearchType"
-            />
-          </div>
-          <div
-            class="absolute right-0 top-0 lg:w-fit lg:static"
-            :class="
-              dateRange.length > 0
-                ? 'w-[calc(100%-240px)] lg:mr-[240px]'
-                : 'w-[calc(100%-180px)] lg:mr-[190px]'
-            "
-          >
-            <label class="w-full flex bg-[#ececed] rounded-lg items-center">
-              <input
-                ref="codeInputMob"
-                v-model="search.text"
-                type="text"
-                class="input input-sm bg-transparent rounded-r-none w-full"
-                placeholder="Поиск"
-                @input="onSearchInput()"
-              />
-              <span
-                v-if="search.loading"
-                class="loading loading-spinner loading-xs flex justify-end p-2"
-              />
-              <Icon
-                v-else
-                class="text-[#8f8e93] flex justify-end pr-2"
-                name="tabler:search"
-                size="30"
-                @click="codeInputMob.focus()"
-              />
-            </label>
           </div>
         </div>
       </div>

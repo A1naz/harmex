@@ -112,7 +112,6 @@ export default eventHandler(async (event) => {
     const deliveriesAvailable = await Delivery.find(filter)
       .select('_id article updatedAt pricebuy idbuyout uuidbuyout data8')
       .sort({ _id: -1 })
-  
       .lean()
   
     const buyoutIds = deliveriesAvailable.map(delivery => delivery.idbuyout)

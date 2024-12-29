@@ -7,6 +7,7 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const { status, limit, skip } = getQuery(event)
+  console.log(limit, skip)
 
   // const all = await Delivery.find({ user })
   let deliveries

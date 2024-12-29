@@ -554,7 +554,7 @@ function copyText(text: string) {
                 class="input input-sm h-[2.5rem] w-full"
               />
               <button
-                class="btn btn-sm h-[2.5rem] btn-primary xl:w-40"
+                class="btn btn-sm btn-outline h-[2.5rem] btn-primary xl:w-40"
                 @click="updatePassword"
                 :disabled="
                   !passwordForm.oldPassword ||
@@ -581,7 +581,7 @@ function copyText(text: string) {
           <div class="flex gap-2 justify-between w-full">
             <h2 class="text-lg font-medium">Команда</h2>
             <button
-              class="btn btn-sm text-[#c2c4c9] h-[2.5rem] hover:btn-primary xl:w-40"
+              class="btn btn-sm btn-outline h-[2.5rem] btn-primary xl:w-40"
               @click="[(teamModal = true), (currentUser = {})]"
             >
               Добавить сотрудника

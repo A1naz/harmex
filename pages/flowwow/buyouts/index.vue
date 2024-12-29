@@ -516,7 +516,7 @@ const siteUrl = config.public.siteUrl;
               @click="manualModal = true"
               class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
             >
-              <Icon name="si:info-fill" size="24" />
+              <Icon name="ci:info" size="24" />
             </button>
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
