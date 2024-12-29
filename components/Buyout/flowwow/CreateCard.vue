@@ -12,72 +12,72 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
-const { notify } = useNotification()
+});
+const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
+const { notify } = useNotification();
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
-      title: 'За раз можно создать максимум 10 выкупов',
-      type: 'error',
-    })
-    return
+      title: "За раз можно создать максимум 10 выкупов",
+      type: "error",
+    });
+    return;
   }
 
-  const item = JSON.stringify(store.createProducts[props.index])
-  store.createProducts.push(JSON.parse(item))
+  const item = JSON.stringify(store.createProducts[props.index]);
+  store.createProducts.push(JSON.parse(item));
 }
 
-const store = useFlowwowBuyoutStore()
-const startDate = ref(new Date(Date.now()))
+const store = useFlowwowBuyoutStore();
+const startDate = ref(new Date(Date.now()));
 
 async function deleteBuyOut() {
-  store.removeProduct(props.index)
+  store.removeProduct(props.index);
 }
 function onSizeChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSize(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSize(target.value, props.index);
 }
 function onSexChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSex(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSex(target.value, props.index);
 }
 
 function removeSearchQuery(index: number) {
-  store.removeSearchQuery(props.index, index)
+  store.removeSearchQuery(props.index, index);
 }
 function addSearchQuery() {
-  store.addSearchQuery(props.index)
+  store.addSearchQuery(props.index);
 }
 function productSearchQueryUpdate(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery({
     value: newValue,
     queryIndex: props.index,
     productIndex: index,
-  })
+  });
 }
 const productDateRangeModel = computed({
   get() {
-    return props.product.dateRange
+    return props.product.dateRange;
   },
   set(newValue: unknown[]) {
-    store.changeDateRange(newValue, props.index)
+    store.changeDateRange(newValue, props.index);
   },
-})
+});
 
 const productQuantityModel = computed({
   get() {
-    return props.product.quantity
+    return props.product.quantity;
   },
   set(newValue: number) {
-    store.changeQuantity(newValue, props.index)
+    store.changeQuantity(newValue, props.index);
   },
-})
+});
 
 function setDeliveryDate(date: string, time: string) {
-  store.createProducts[props.index].deliveryPeriodDate = date
-  store.createProducts[props.index].deliveryPeriodTime = time
+  store.createProducts[props.index].deliveryPeriodDate = date;
+  store.createProducts[props.index].deliveryPeriodTime = time;
 }
 </script>
 
@@ -206,16 +206,32 @@ function setDeliveryDate(date: string, time: string) {
             class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
             @change="onSexChange"
           >
-            <option value="Нет">
-              Нет
-            </option>
-            <option value="male">
-              Муж
-            </option>
-            <option value="female">
-              Жен
-            </option>
+            <option value="Нет">Нет</option>
+            <option value="male">Муж</option>
+            <option value="female">Жен</option>
           </select>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-md text-gray-500 mb-1">Правила: </span>
+          <div class="w-full flex items-center justify-center gap-2">
+            <div class="text-sm">
+              {{
+                product.rules.length
+                  ? product.rules.map((rule: any) => rule.id).join(", ")
+                  : ""
+              }}
+            </div>
+            <button
+              class="border-base-100"
+              @click="$emit('ruleModalOpen', index)"
+            >
+              <Icon
+                class="w-5 h-5"
+                name="solar:settings-outline"
+                alt="settings"
+              />
+            </button>
+          </div>
         </div>
       </div>
       <!-- <div class="flex justify-between items-center">
@@ -230,28 +246,6 @@ function setDeliveryDate(date: string, time: string) {
         </select>
       </div> -->
       <div class="flex justify-start gap-5">
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-1">Правила: </span>
-          <div class="w-full flex items-center justify-center gap-2">
-            <div class="text-sm">
-              {{
-                product.rules.length
-                  ? product.rules.map((rule: any) => rule.id).join(', ')
-                  : ''
-              }}
-            </div>
-            <button
-              class="border-base-100"
-              @click="$emit('ruleModalOpen', index)"
-            >
-              <img
-                class="w-5 h-5"
-                src="/icons/figma/buyouts/settings.svg"
-                alt="settings"
-              >
-            </button>
-          </div>
-        </div>
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-2">Дата выкупов: </span>
           <div>
@@ -288,9 +282,7 @@ function setDeliveryDate(date: string, time: string) {
                   : 'Выбрать'
               }}
             </button> -->
-            <div v-else class="text-center text-xs">
-              Ближайшее время
-            </div>
+            <div v-else class="text-center text-xs">Ближайшее время</div>
           </div>
         </div>
 
@@ -298,7 +290,7 @@ function setDeliveryDate(date: string, time: string) {
           <span class="text-md text-gray-500 mb-2">Адрес: </span>
           <div
             v-if="product.adress"
-            class="text-xs h-10 w-full truncate max-w-[80px]"
+            class="text-xs h-10 w-full truncate max-w-[150px]"
           >
             <span v-show="loading" class="loading loading-spinner" />
 
@@ -333,16 +325,12 @@ function setDeliveryDate(date: string, time: string) {
             @save-date="setDeliveryDate"
           /> -->
           <select
-          class="select select-sm w-full bg-base-200 bg-opacity-40 max-w-sm appearance-none"
-          v-model="store.createProducts[props.index].deliveryType"
-        >
-          <option value="courier">
-            Курьер
-          </option>
-          <option value="self">
-            Самовывоз
-          </option>
-        </select>
+            class="select select-sm w-full bg-base-200 bg-opacity-40 max-w-sm appearance-none"
+            v-model="store.createProducts[props.index].deliveryType"
+          >
+            <option value="courier">Курьер</option>
+            <option value="self">Самовывоз</option>
+          </select>
         </div>
       </div>
       <div class="flex gap-5">
@@ -354,48 +342,45 @@ function setDeliveryDate(date: string, time: string) {
             @save-date="setDeliveryDate"
           /> -->
           <select
-          class="select select-sm w-full bg-base-200 bg-opacity-40 max-w-sm appearance-none"
-          v-model="store.createProducts[props.index].selectedParameter"
-        >
-        <option
-            v-for="parameter in product.parameters"
-            :key="parameter"
-            :value="parameter"
+            class="select select-sm w-full bg-base-200 bg-opacity-40 max-w-sm appearance-none"
+            v-model="store.createProducts[props.index].selectedParameter"
           >
-            {{ parameter }}
-          </option>
-        </select>
-        </div>
-      </div>
-      <div>
-        <div class="text-md text-gray-500 mb-1">
-          Поисковые запросы:
-        </div>
-        <div class="w-[60%] flex flex-col gap-2">
-          <BuyoutFlowwowCreateSearchQueries
-            :product-index="props.index"
-            :article="product.article"
-            :queries="product.searchQuery"
-            @update="productSearchQueryUpdate"
-            @add="addSearchQuery"
-            @remove="removeSearchQuery"
-          />
+            <option
+              v-for="parameter in product.parameters"
+              :key="parameter"
+              :value="parameter"
+            >
+              {{ parameter }}
+            </option>
+          </select>
         </div>
       </div>
 
       <div>
         <div class="w-[60%]">
-          <div class="text-md text-gray-500 mb-1">
-            № Квартиры:
-          </div>
+          <div class="text-md text-gray-500 mb-1">№ Квартиры:</div>
           <div class="w-full flex flex-col gap-2">
-            <label><input
-              v-model="product.appartmentNumber"
-              type="text"
-              placeholder="№ квартиры"
-              class="input bg-base-200 input-sm w-full rounded-xl"
-            >
+            <label
+              ><input
+                v-model="product.appartmentNumber"
+                type="text"
+                placeholder="№ квартиры"
+                class="input bg-base-200 input-sm w-full rounded-xl"
+              />
             </label>
+          </div>
+        </div>
+        <div>
+          <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
+          <div class="w-full flex flex-col gap-2">
+            <BuyoutFlowwowCreateSearchQueries
+              :product-index="props.index"
+              :article="product.article"
+              :queries="product.searchQuery"
+              @update="productSearchQueryUpdate"
+              @add="addSearchQuery"
+              @remove="removeSearchQuery"
+            />
           </div>
         </div>
         <div class="w-[60%] flex flex-col gap-2">

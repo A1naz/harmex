@@ -208,18 +208,7 @@ const productQuantityModel = computed({
           </select>
         </div>
       </div>
-      <!-- <div class="flex justify-between items-center">
-        <span>Пол:</span>
-        <select
-          class="select select-sm select-bordered w-32 appearance-none"
-          @change="onSexChange"
-        >
-          <option value="Нет">Нет</option>
-          <option value="male">Муж</option>
-          <option value="female">Жен</option>
-        </select>
-      </div> -->
-      <div class="flex justify-start gap-5">
+      <div class="flex justify-between items-center">
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-1">Правила: </span>
           <div class="w-full flex items-center justify-center gap-2">
@@ -234,14 +223,16 @@ const productQuantityModel = computed({
               class="border-base-100"
               @click="$emit('ruleModalOpen', index)"
             >
-              <img
+              <Icon
                 class="w-5 h-5"
-                src="/icons/figma/buyouts/settings.svg"
+                name="solar:settings-outline"
                 alt="settings"
               />
             </button>
           </div>
         </div>
+      </div>
+      <div class="flex justify-start gap-5">
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-2">Дата выкупов: </span>
           <div>
@@ -285,7 +276,7 @@ const productQuantityModel = computed({
           <span class="text-md text-gray-500 mb-2">Адрес: </span>
           <div
             v-if="product.adress"
-            class="text-xs h-10 w-full truncate max-w-[80px]"
+            class="text-xs h-10 w-full truncate max-w-[150px]"
           >
             <span v-show="loading" class="loading loading-spinner" />
             <p
@@ -312,7 +303,7 @@ const productQuantityModel = computed({
       </div>
       <div>
         <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
-        <div class="w-[60%] flex flex-col gap-2">
+        <div class="w-full flex flex-col gap-2">
           <BuyoutWildberriesCreateSearchQueries
             :product-index="props.index"
             :article="product.article"

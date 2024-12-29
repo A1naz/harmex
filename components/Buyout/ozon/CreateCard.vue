@@ -222,6 +222,28 @@ const productQuantityModel = computed({
             <option value="female">Жен</option>
           </select>
         </div>
+        <div class="flex flex-col">
+          <span class="text-md text-gray-500 mb-1">Правила: </span>
+          <div class="w-full flex items-center justify-center gap-2">
+            <div class="text-sm">
+              {{
+                product.rules.length
+                  ? product.rules.map((rule: Rule) => rule.id).join(", ")
+                  : ""
+              }}
+            </div>
+            <button
+              class="border-base-100"
+              @click="$emit('ruleModalOpen', index)"
+            >
+              <Icon
+                class="w-5 h-5"
+                name="solar:settings-outline"
+                alt="settings"
+              />
+            </button>
+          </div>
+        </div>
       </div>
       <!-- <div class="flex justify-between items-center">
         <span>Пол:</span>
@@ -237,28 +259,6 @@ const productQuantityModel = computed({
       <div
         class="flex justify-start gap-3 md:gap-2 flex-wrap sm:flex-wrap-nowrap"
       >
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-1">Правила: </span>
-          <div class="w-full flex items-center justify-center gap-2">
-            <div class="text-sm">
-              {{
-                product.rules.length
-                  ? product.rules.map((rule: Rule) => rule.id).join(", ")
-                  : ""
-              }}
-            </div>
-            <button
-              class="border-base-100"
-              @click="$emit('ruleModalOpen', index)"
-            >
-              <img
-                class="w-5 h-5"
-                src="/icons/figma/buyouts/settings.svg"
-                alt="settings"
-              />
-            </button>
-          </div>
-        </div>
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-2">Дата выкупов: </span>
           <div>
@@ -302,7 +302,7 @@ const productQuantityModel = computed({
           <span class="text-md text-gray-500 mb-2">Адрес: </span>
           <div
             v-if="product.adress"
-            class="text-xs h-10 w-full truncate max-w-[80px]"
+            class="text-xs h-10 w-full truncate max-w-[150px]"
           >
             <span v-show="loading" class="loading loading-spinner" />
             <p
@@ -327,36 +327,6 @@ const productQuantityModel = computed({
           </button>
         </div>
       </div>
-
-      <div class="flex">
-        <div>
-          <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
-          <div class="w-[60%] flex flex-col gap-2">
-            <BuyoutOzonCreateSearchQueries
-              :product-index="props.index"
-              :article="product.article"
-              :queries="product.searchQuery"
-              @update="productSearchQueryUpdate"
-              @add="addSearchQuery"
-              @remove="removeSearchQuery"
-            />
-          </div>
-        </div>
-        <div>
-          <div class="text-md text-gray-500 mb-1">RealFBS</div>
-          <div class="flex justify-center">
-            <input
-              type="checkbox"
-              :checked="product.FBS"
-              @click="
-                product.FBS ? (product.FBS = false) : (product.FBS = true)
-              "
-              class="checkbox checkbox-primary"
-            />
-          </div>
-        </div>
-      </div>
-
       <div class="flex">
         <span class="text-md text-gray-500 mr-3 my-auto">Скидка: </span>
         <div class="flex">
@@ -416,6 +386,32 @@ const productQuantityModel = computed({
           >
             <Icon name="ep:close-bold" size="12" />
           </button>
+        </div>
+      </div>
+      <div class="flex">
+        <div class="text-md text-gray-500 mb-1">RealFBS</div>
+        <div class="flex justify-center">
+          <input
+            type="checkbox"
+            :checked="product.FBS"
+            @click="product.FBS ? (product.FBS = false) : (product.FBS = true)"
+            class="checkbox checkbox-primary ml-8"
+          />
+        </div>
+      </div>
+      <div class="flex">
+        <div class="w-full">
+          <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
+          <div class="w-full flex flex-col gap-2">
+            <BuyoutOzonCreateSearchQueries
+              :product-index="props.index"
+              :article="product.article"
+              :queries="product.searchQuery"
+              @update="productSearchQueryUpdate"
+              @add="addSearchQuery"
+              @remove="removeSearchQuery"
+            />
+          </div>
         </div>
       </div>
       <!-- <div class="flex justify-between items-center">
