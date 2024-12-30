@@ -58,6 +58,7 @@ async function create() {
     notify({ type: "success", title: "Успешно" });
     removeProduct();
     publishDate.value = now.value;
+    questionText.value = "";
     creating.value = false;
     emit("create");
   }

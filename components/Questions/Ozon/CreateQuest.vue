@@ -62,6 +62,7 @@ async function create() {
     removeProduct();
     publishDate.value = now.value;
     creating.value = false;
+    questionText.value = "";
     emit("create");
   }
 }
