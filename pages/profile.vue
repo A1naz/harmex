@@ -581,10 +581,10 @@ function copyText(text: string) {
           <div class="flex gap-2 justify-between w-full">
             <h2 class="text-lg font-medium">Команда</h2>
             <button
-              class="btn btn-sm btn-outline h-[2.5rem] btn-primary xl:w-40"
+              class="btn btn-sm btn-outline h-[2rem] btn-primary mr-1"
               @click="[(teamModal = true), (currentUser = {})]"
             >
-              Добавить сотрудника
+              <Icon name="fluent:add-24-filled" size="20" />
             </button>
           </div>
           <div class="w-full">
@@ -803,7 +803,15 @@ function copyText(text: string) {
                 </ul>
               </div>
             </div>
-            <Hero v-else />
+            <div class="hero" v-else>
+              <div
+                class="hero-content text-center flex justify-center items-center h-40"
+              >
+                <div class="max-w-md">
+                  <h1 class="text-3xl font-bold">Добавьте сотрудников</h1>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user)
     return sendRedirect(event, '/', 302)
-
+  
   const { tableType, page, itemsPerPage, skip }: any = getQuery(event)
 
   switch (tableType) {

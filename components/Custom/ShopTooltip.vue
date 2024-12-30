@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from "uuid";
 
 const props = defineProps({
   visible: {
@@ -10,53 +10,56 @@ const props = defineProps({
     type: Object as any,
     required: true,
   },
-})
+});
 
-const isVisible = ref(props.visible)
-const { $dayjs } = useNuxtApp()
-watch(() => props.visible, (newValue) => {
-  isVisible.value = newValue
-})
+const isVisible = ref(props.visible);
+const { $dayjs } = useNuxtApp();
+watch(
+  () => props.visible,
+  (newValue) => {
+    isVisible.value = newValue;
+  }
+);
 
-const tooltipPosition = ref({ top: 0, left: 0 })
-const tooltipButton = ref<HTMLElement | null>(null)
-const hideTooltipTimeout = ref<NodeJS.Timer | null>(null)
+const tooltipPosition = ref({ top: 0, left: 0 });
+const tooltipButton = ref<HTMLElement | null>(null);
+const hideTooltipTimeout = ref<NodeJS.Timer | null>(null);
 
 function showTooltip() {
-  isVisible.value = true
+  isVisible.value = true;
   if (tooltipButton.value) {
-    const buttonRect = tooltipButton.value.getBoundingClientRect()
+    const buttonRect = tooltipButton.value.getBoundingClientRect();
 
     nextTick(() => {
-      const tooltipElement = document.querySelector('.tooltip-class')
-      const tooltipWidth = tooltipElement ? tooltipElement.offsetWidth : 0
+      const tooltipElement = document.querySelector(".tooltip-class");
+      const tooltipWidth = tooltipElement ? tooltipElement.offsetWidth : 0;
 
       tooltipPosition.value = {
         top: buttonRect.bottom + 10,
-        left: buttonRect.left + (buttonRect.width / 2) - (tooltipWidth / 2) - 2,
-      }
-    })
+        left: buttonRect.left + buttonRect.width / 2 - tooltipWidth / 2 - 2,
+      };
+    });
   }
 }
 
 function hideTooltip() {
   if (hideTooltipTimeout.value) {
-    clearTimeout(hideTooltipTimeout.value)
+    clearTimeout(hideTooltipTimeout.value);
   }
 
   hideTooltipTimeout.value = setTimeout(() => {
-    isVisible.value = false
-  }, 500)
+    isVisible.value = false;
+  }, 500);
 }
 
 function onMouseEnterTooltip() {
   if (hideTooltipTimeout.value) {
-    clearTimeout(hideTooltipTimeout.value)
+    clearTimeout(hideTooltipTimeout.value);
   }
 }
 
 function onMouseLeaveTooltip() {
-  hideTooltip()
+  hideTooltip();
 }
 </script>
 
@@ -74,20 +77,25 @@ function onMouseLeaveTooltip() {
     <Transition>
       <div
         v-if="isVisible"
-        :style="{ top: `${tooltipPosition.top}px`, left: `${tooltipPosition.left}px` }"
-        class="tooltip-class fixed bg-white shadow-lg text-black text-sm px-[15px] py-[12.5px] rounded-lg z-50 whitespace-nowrap flex flex-col justify-start text-left"
+        :style="{
+          top: `${tooltipPosition.top}px`,
+          left: `${tooltipPosition.left}px`,
+        }"
+        class="tooltip-class fixed bg-white shadow-lg text-black text-xs md:text-sm px-[15px] py-[12.5px] rounded-lg z-50 whitespace-nowrap flex flex-col justify-start text-left ml-5"
         @mouseenter="onMouseEnterTooltip"
-
         @mouseleave="onMouseLeaveTooltip"
       >
         <div
-          class="absolute top-[-9px] left-1/2 w-[20px] h-[30px] rounded-[3px] rotate-45 bg-white transform -translate-x-1/2"
+          class="absolute top-[-9px] left-20 w-[20px] h-[30px] rounded-[3px] rotate-45 bg-white transform -translate-x-1/2"
         />
-        <p class="relative z-10 ">
+        <p class="relative z-10">
           {{ info.orgName }}
         </p>
-        <p>ИНН: {{ info.orgInn }} </p>
-        <p>На Harmex с {{ $dayjs(info.registerDate).locale('ru').format('D MMMM YYYY') }}  </p>
+        <p>ИНН: {{ info.orgInn }}</p>
+        <p>
+          На Harmex с
+          {{ $dayjs(info.registerDate).locale("ru").format("D MMMM YYYY") }}
+        </p>
       </div>
     </Transition>
   </div>

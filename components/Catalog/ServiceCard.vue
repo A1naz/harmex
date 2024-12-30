@@ -136,7 +136,7 @@ defineEmits(["setFavourites"]);
     <button
       v-if="item.items[index].disabled"
       @click="vote(`${item.items[index].path}`, item.slug)"
-      class="z-10 px-5 py-2 bg-[#48b752] text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer -bottom-[5px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg hover:bg-[#3a9642] active:scale-95 active:shadow-md"
+      class="z-10 px-5 py-2 bg-primary text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer -bottom-[5px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 active:shadow-md"
     >
       Запросить
     </button>

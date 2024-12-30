@@ -7,6 +7,8 @@ const emit = defineEmits(["close"]);
 const { notify } = useNotification();
 const { user } = useUserSession();
 const bankDetails: any = ref({});
+const currency = useCurrency()
+const {width} = useWindowSize()
 
 function closeModal() {
   summ.value = 500;
@@ -112,9 +114,9 @@ const showTooltip = ref(false);
               v-for="item in summArr"
               class="md:px-6 rounded-[10px] btn btn-sm py-1.5 mt-0.5 md:mt-0 btn-neutral text-white"
             >
-              {{ item }} <span class="hidden md:inline">
+              {{ currency.format(item) }} <span class="hidden md:inline">
 
-                ₽
+        
               </span>
             </button>
           </div>

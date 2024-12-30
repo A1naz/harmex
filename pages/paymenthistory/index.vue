@@ -390,12 +390,38 @@ const displayPages = computed(() => {
                 {{ header.label }}
               </div>
               <div class="font-semibold text-gray-700 truncate">
-                <span v-if="header.value !== 'date'">{{
-                  item[header.value] || "-"
-                }}</span>
                 <span v-if="header.value == 'date'">{{
                   $dayjs(item[header.value]).format("DD.MM.YYYY HH:mm") || "-"
                 }}</span>
+                <a
+                  class="link text-primary"
+                  v-else-if="
+                    item[header.value] &&
+                    item[header.value].includes('EXTERNALHREF||')
+                  "
+                  :href="item[header.value].split('||')[1]"
+                  target="_blank"
+                  >{{
+                    item[header.value].split("||")[
+                      item[header.value].split("||").length - 1
+                    ] || "-"
+                  }}</a
+                >
+                <NuxtLink
+                  class="link text-primary"
+                  v-else-if="
+                    item[header.value] &&
+                    item[header.value].includes('NUXTLINK||')
+                  "
+                  :to="item[header.value].split('||')[1]"
+                >
+                  {{
+                    item[header.value].split("||")[
+                      item[header.value].split("||").length - 1
+                    ] || "-"
+                  }}
+                </NuxtLink>
+                <span v-else>{{ item[header.value] || "-" }}</span>
               </div>
             </div>
           </div>

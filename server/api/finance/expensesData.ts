@@ -1,5 +1,7 @@
 import { paymenthistory } from '~/server/lib/models/Paymenthistory'
 import historyType from './historyType'
+import getMPLink from '~/server/utils/getExternalLink'
+import getBuyoutLink from '~/server/utils/getBuyoutLink'
 
 export default async function (user: any, itemsPerPage?: number, page?: number, skip?: number, dateRange?: any) {
   const limit = itemsPerPage ? itemsPerPage : 25
@@ -16,8 +18,8 @@ export default async function (user: any, itemsPerPage?: number, page?: number, 
       date: el.dataoperation,
       source: el.mp,
       service: historyType(el.type),
-      article: el.article,
-      orderId: el.basisoperation,
+      article: el.mp && el.article && (el.mp == 'ozon' || el.mp == 'wildberries') ? getMPLink(el.mp, el.article) + '||' + el.article : el.article ? el.article : '-',
+      orderId: el.mp && el.basisoperation && el.basisoperation.includes('Выкуп #') && (el.mp == 'wildberries' || el.mp == 'ozon') ? getBuyoutLink(el.mp, el.basisoperation.replace('Выкуп #', '')) : el.basisoperation,
       comment: el.comment,
     }
   })

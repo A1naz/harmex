@@ -116,6 +116,7 @@ async function attempt(
   }
 
   const isPasswordCorrect = await bcrypt.compare(password, foundUser.password)
+
   if (
     !isPasswordCorrect
     // && config.env !== "developer"

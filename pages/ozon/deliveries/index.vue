@@ -420,7 +420,6 @@ const siteUrl = config.public.siteUrl;
               </label>
             </div>
             <DateRangePicker
-              v-if="deliveries.length"
               class="w-46"
               v-model="dateRange"
               :start-date="startDate"
@@ -433,7 +432,7 @@ const siteUrl = config.public.siteUrl;
               </button>
             </DateRangePicker>
             <div
-              v-if="!loadingExport && deliveries.length"
+              v-if="!loadingExport"
               class="dropdown lg:dropdown-end z-10 flex flex-nowrap items-center gap-2 lg:gap-3"
             >
               <label

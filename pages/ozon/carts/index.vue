@@ -275,7 +275,7 @@ const siteUrl = config.public.siteUrl;
             />
           </div>
           <div
-            class="absolute right-0 top-0 w-[calc(100%-45px)] lg:w-fit lg:static"
+            class="absolute right-0 top-0 w-[calc(100%-58px)] lg:w-fit lg:static"
           >
             <div class="relative justify-end flex-grow-0 w-full">
               <input

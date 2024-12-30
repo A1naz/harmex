@@ -83,12 +83,37 @@ function swapPage(swapTo: number) {
               :key="index"
               class="table-cell"
             >
-              <span v-if="header.value !== 'date'">{{
-                row[header.value] || "-"
-              }}</span>
               <span v-if="header.value == 'date'">{{
                 $dayjs(row[header.value]).format("DD.MM.YYYY HH:mm") || "-"
               }}</span>
+              <a
+                class="link text-primary"
+                v-else-if="
+                  row[header.value] &&
+                  row[header.value].includes('EXTERNALHREF||')
+                "
+                :href="row[header.value].split('||')[1]"
+                target="_blank"
+                >{{
+                  row[header.value].split("||")[
+                    row[header.value].split("||").length - 1
+                  ] || "-"
+                }}</a
+              >
+              <NuxtLink
+                class="link text-primary"
+                v-else-if="
+                  row[header.value] && row[header.value].includes('NUXTLINK||')
+                "
+                :to="row[header.value].split('||')[1]"
+              >
+                {{
+                  row[header.value].split("||")[
+                    row[header.value].split("||").length - 1
+                  ] || "-"
+                }}
+              </NuxtLink>
+              <span v-else>{{ row[header.value] || "-" }}</span>
             </td>
           </tr>
         </tbody>
