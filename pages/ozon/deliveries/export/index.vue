@@ -110,11 +110,7 @@ onMounted(async () => {
   <div class="overflow-auto">
     <progress class="progress progress-primary w-full fixed" :value="progress" :max="max" />
     <div class="flex">
-      <button
-        class="btn m-2 mt-4" @click="exportToFile"
-      >
-        Скачать PDF
-      </button>
+      
     </div>
     <div v-if="deliveries" ref="pdfSection" class="h-[90vh]">
       <h1 class="text-3xl font-bold text-center p-4 bg-purple-700 text-white">
