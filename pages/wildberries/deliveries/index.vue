@@ -444,7 +444,7 @@ const siteUrl = config.public.siteUrl;
               >
                 <li>
                   <NuxtLink
-                    :to="`/ozon/deliveries/export${
+                    :to="`/wildberries/deliveries/export${
                       dateRange.length
                         ? '?dateRange=' +
                           dateRange

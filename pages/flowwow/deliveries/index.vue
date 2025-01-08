@@ -388,7 +388,7 @@ const siteUrl = config.public.siteUrl;
               >
                 <li>
                   <NuxtLink
-                    :to="`/ozon/deliveries/export${
+                    :to="`/flowwow/deliveries/export${
                       dateRange.length
                         ? '?dateRange=' +
                           dateRange
