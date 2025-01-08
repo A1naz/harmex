@@ -332,7 +332,9 @@ async function copyToClipboard(text: string) {
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                 >Артикул:
               </span>
-              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
+              >
                 <a
                   :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
                   target="_blank"

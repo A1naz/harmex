@@ -358,7 +358,7 @@ function setDeliveryDate(date: string, time: string) {
 
       <div>
         <div class="w-[60%]">
-          <div class="text-md text-gray-500 mb-1">№ Квартиры:</div>
+          <div class="text-md text-gray-500 mb-1">Введите №:</div>
           <div class="w-full flex flex-col gap-2">
             <label
               ><input

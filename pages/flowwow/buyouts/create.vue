@@ -419,7 +419,7 @@ function startTimer() {
 
                 <th class="font-normal">
                   <div class="text-center">
-                    <span> параметры </span>
+                    <span>Параметры </span>
                   </div>
                 </th>
                 <th class="font-normal" @click="openInfoModal('sex')">
@@ -453,7 +453,7 @@ function startTimer() {
                   @click="openInfoModal('apartmentNumber')"
                 >
                   <div class="flex justify-center items-center gap-1">
-                    <span>№ Квартиры</span>
+                    <span>№ квартиры</span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>

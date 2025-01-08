@@ -326,7 +326,7 @@ function setDeliveryDate(date: string, time: string) {
           ><input
             v-model="product.appartmentNumber"
             type="text"
-            placeholder="№ квартиры"
+            placeholder="Введите №"
             class="input bg-base-200 input-sm w-full rounded-xl"
           />
         </label>
@@ -338,7 +338,7 @@ function setDeliveryDate(date: string, time: string) {
       >
         <div
           v-if="product.adress"
-          class="text-xs h-10 w-full break-all text-center"
+          class="text-xs h-10 w-full break-all text-center mt-5"
         >
           <span v-show="loading" class="loading loading-spinner" />
 
