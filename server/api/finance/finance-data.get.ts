@@ -13,23 +13,44 @@ export default defineEventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user)
     return sendRedirect(event, '/', 302)
-  
-  const { tableType, page, itemsPerPage, skip }: any = getQuery(event)
 
+  const { tableType, page, itemsPerPage, skip, searchInput, dateRange }: any = getQuery(event)
+  
+  let trueDateRange = {}
+  if (dateRange) {
+    trueDateRange = {
+      $or: [
+        {
+          dataoperation: {
+            $gte: new Date(JSON.parse(dateRange[0])).setHours(0, 0, 0, 0),
+            $lt: new Date(JSON.parse(dateRange[1])).setHours(23, 59, 0, 0),
+          },
+        },
+        {
+          date: {
+            $gte: new Date(JSON.parse(dateRange[0])).setHours(0, 0, 0, 0),
+            $lt: new Date(JSON.parse(dateRange[1])).setHours(23, 59, 0, 0),
+          },
+        },
+      ],
+    };
+    
+  }
+  
   switch (tableType) {
     case 'general':
       {
-        const data: any[] = await generalData(user, itemsPerPage, page, skip)
+        const data: any[] = await generalData(user, itemsPerPage, page, skip, trueDateRange, searchInput)
         return data
       }
     case 'replenishment':
       {
-        const data: any[] = await replenishmentData(user, itemsPerPage, page, skip)
+        const data: any[] = await replenishmentData(user, itemsPerPage, page, skip, trueDateRange, searchInput)
         return data
       }
     case 'expenses':
       {
-        const data: any[] = await expensesData(user, itemsPerPage, page, skip)
+        const data: any[] = await expensesData(user, itemsPerPage, page, skip, trueDateRange, searchInput)
         return data
       }
     case 'partner':

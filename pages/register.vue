@@ -1,369 +1,359 @@
 <script lang="ts" setup>
-import { useVuelidate } from '@vuelidate/core'
+import { useVuelidate } from "@vuelidate/core";
 import {
   email,
   helpers,
   minLength,
   required,
   sameAs,
-} from '@vuelidate/validators'
+} from "@vuelidate/validators";
 
-const { notify } = useNotification()
+const { notify } = useNotification();
 
 definePageMeta({
-  title: 'Регистрация',
-})
+  title: "Регистрация",
+});
 
-const timer = ref(60)
-const timerRunning = ref(false)
-const timerVisible = ref(false)
-const timerFinished = ref(false)
-const faceType = ref('fizFace')
-const confirmationCodeInput = ref<any>(null)
-const isInnConfirmed = ref(false)
-const isInnLoading = ref(false)
-const isCodeSent = ref(false)
-const isNumberConfirmed = ref(false)
-const alert = ref(false)
-const alertText = ref('')
-const route = useRoute()
-const alertType = ref('success')
-const referral = ref(route.query?.ref || null)
+const timer = ref(60);
+const timerRunning = ref(false);
+const timerVisible = ref(false);
+const timerFinished = ref(false);
+const faceType = ref("fizFace");
+const confirmationCodeInput = ref<any>(null);
+const isInnConfirmed = ref(false);
+const isInnLoading = ref(false);
+const isCodeSent = ref(false);
+const isNumberConfirmed = ref(false);
+const alert = ref(false);
+const alertText = ref("");
+const route = useRoute();
+const alertType = ref("success");
+const referral = ref(route.query?.ref || null);
 const formData = reactive({
-  email: '',
-  password: '',
-  confirmPassword: '',
-  orgKey: '',
-  orgName: '',
-  orgOgrn: '',
-  orgInn: '',
-  lastname: '',
-  name: '',
-  middleName: '',
-  phoneNumber: '',
-  verificationCode: '',
+  email: "",
+  password: "",
+  confirmPassword: "",
+  orgKey: "",
+  orgName: "",
+  orgOgrn: "",
+  orgInn: "",
+  lastname: "",
+  name: "",
+  middleName: "",
+  phoneNumber: "",
+  verificationCode: "",
   checked: false,
   referral,
-  landing: '',
-  bik: '',
-  rs: '',
-})
-const passwordInputType = ref('password')
-const passwordConfirmInputType = ref('password')
+  landing: "",
+  bik: "",
+  rs: "",
+});
+const passwordInputType = ref("password");
+const passwordConfirmInputType = ref("password");
 
-const referralFromLocal: any = ref('')
+const referralFromLocal: any = ref("");
 async function linkFollow() {
-  await useFetch('/api/user/linkFollow', {
-    method: 'GET',
+  await useFetch("/api/user/linkFollow", {
+    method: "GET",
     query: {
       referral: formData.referral,
     },
     watch: false,
-  })
+  });
 }
 
 onMounted(async () => {
-  if (route.query?.ref && typeof route.query?.ref === 'string') {
-    if (route.query?.ref !== localStorage.getItem('referralCode')) {
+  if (route.query?.ref && typeof route.query?.ref === "string") {
+    if (route.query?.ref !== localStorage.getItem("referralCode")) {
       setTimeout(() => {
-        linkFollow()
-      })
+        linkFollow();
+      });
     }
-    localStorage.setItem('referralCode', route.query?.ref)
+    localStorage.setItem("referralCode", route.query?.ref);
   }
-  referralFromLocal.value = localStorage.getItem('referralCode')
-  const landingValue = localStorage.getItem('landing')
+  referralFromLocal.value = localStorage.getItem("referralCode");
+  const landingValue = localStorage.getItem("landing");
 
-  if (landingValue)
-    formData.landing = landingValue
+  if (landingValue) formData.landing = landingValue;
 
-  formData.referral = referralFromLocal.value
-})
+  formData.referral = referralFromLocal.value;
+});
 
-const result = ref()
-const loading = ref(false)
+const result = ref();
+const loading = ref(false);
 const rules = computed(() => {
   return {
     email: {
-      required: helpers.withMessage('Введите email', required),
-      email: helpers.withMessage('Введите корректный email', email),
+      required: helpers.withMessage("Введите email", required),
+      email: helpers.withMessage("Введите корректный email", email),
     },
     bik: {
-      required: helpers.withMessage('Введите БИК', required),
+      required: helpers.withMessage("Введите БИК", required),
     },
     rs: {
-      required: helpers.withMessage('Введите Р/С', required),
-      minLength: helpers.withMessage('Р/С должен содержать 20 цифр', minLength(20)),
+      required: helpers.withMessage("Введите Р/С", required),
+      minLength: helpers.withMessage(
+        "Р/С должен содержать 20 цифр",
+        minLength(20)
+      ),
     },
     name: {
-      required: helpers.withMessage('Введите имя', required),
+      required: helpers.withMessage("Введите имя", required),
     },
     lastname: {
-      required: helpers.withMessage('Введите фамилию', required),
+      required: helpers.withMessage("Введите фамилию", required),
     },
     password: {
-      required: helpers.withMessage('Введите пароль', required),
+      required: helpers.withMessage("Введите пароль", required),
       minLength: helpers.withMessage(
-        'Пароль должен быть длиннее 6 символов',
-        minLength(6),
+        "Пароль должен быть длиннее 6 символов",
+        minLength(6)
       ),
       containsNumber: helpers.withMessage(
-        'Пароль должен содержать цифру',
-        (value: string) => /\d/.test(value),
+        "Пароль должен содержать цифру",
+        (value: string) => /\d/.test(value)
       ),
       englishLetters: helpers.withMessage(
-        'Пароль должен состоять из английских букв',
-        (value: string) => /(?=.*[a-z])(?=.*\d)/i.test(value),
+        "Пароль должен состоять из английских букв",
+        (value: string) => /(?=.*[a-z])(?=.*\d)/i.test(value)
       ),
     },
     confirmPassword: {
-      required: helpers.withMessage('Подтвердите пароль', required),
+      required: helpers.withMessage("Подтвердите пароль", required),
       sameAs: helpers.withMessage(
-        'Пароли не совпадают',
-        sameAs(formData.password),
+        "Пароли не совпадают",
+        sameAs(formData.password)
       ),
     },
-  }
-})
+  };
+});
 
-const v$ = useVuelidate(rules, formData)
+const v$ = useVuelidate(rules, formData);
 
 async function submitForm() {
-  v$.value.$validate()
+  v$.value.$validate();
 
-  if (!v$.value.$errors.length || faceType.value === 'fizFace') {
-    loading.value = true
+  if (!v$.value.$errors.length || faceType.value === "fizFace") {
+    loading.value = true;
     if (referralFromLocal.value && referralFromLocal.value.length > 0) {
-      formData.referral = referralFromLocal.value
+      formData.referral = referralFromLocal.value;
     }
 
-    if (faceType.value === 'yurFace') {
-      const { data }: any = await useFetch('/api/auth/register', {
-        method: 'POST',
+    if (faceType.value === "yurFace") {
+      const { data }: any = await useFetch("/api/auth/register", {
+        method: "POST",
         body: JSON.stringify(formData),
         watch: false,
-      })
-      result.value = data
-      loading.value = false
-      if (data.value!.status === 'error') {
+      });
+      result.value = data;
+      loading.value = false;
+      if (data.value!.status === "error") {
         notify({
-          type: 'error',
+          type: "error",
           title: data.value!.error as string,
           duration: 3000,
-        })
+        });
         useTimeoutFn(() => {
-          alert.value = false
-        }, 3000)
-      }
-      else {
-        localStorage.removeItem('referralCode')
-        localStorage.removeItem('landing')
+          alert.value = false;
+        }, 3000);
+      } else {
+        localStorage.removeItem("referralCode");
+        localStorage.removeItem("landing");
         notify({
-          type: 'success',
-          title: 'Пользователь зарегистрирован.',
+          type: "success",
+          title: "Пользователь зарегистрирован.",
           duration: 3000,
-        })
+        });
         useTimeoutFn(() => {
-          alert.value = false
-          navigateTo('/auth?confirmed=false')
-        }, 3000)
+          alert.value = false;
+          navigateTo("/auth?confirmed=false");
+        }, 3000);
       }
-      loading.value = false
-    }
-    else if (faceType.value === 'fizFace') {
-      const { data }: any = await useFetch('/api/auth/registerFiz', {
-        method: 'POST',
+      loading.value = false;
+    } else if (faceType.value === "fizFace") {
+      const { data }: any = await useFetch("/api/auth/registerFiz", {
+        method: "POST",
         body: JSON.stringify(formData),
         watch: false,
-      })
-      result.value = data
-      loading.value = false
-      if (data.value!.status === 'error') {
+      });
+      result.value = data;
+      loading.value = false;
+      if (data.value!.status === "error") {
         notify({
-          type: 'error',
+          type: "error",
           title: data.value!.error as string,
           duration: 3000,
-        })
+        });
         useTimeoutFn(() => {
-          alert.value = false
-        }, 3000)
-      }
-      else {
-        localStorage.removeItem('referralCode')
-        localStorage.removeItem('landing')
+          alert.value = false;
+        }, 3000);
+      } else {
+        localStorage.removeItem("referralCode");
+        localStorage.removeItem("landing");
         notify({
-          type: 'success',
-          title: 'Пользователь зарегистрирован.',
+          type: "success",
+          title: "Пользователь зарегистрирован.",
           duration: 3000,
-        })
+        });
         useTimeoutFn(() => {
-          alert.value = false
-          navigateTo('/auth?confirmed=false')
-        }, 3000)
+          alert.value = false;
+          navigateTo("/auth?confirmed=false");
+        }, 3000);
       }
-      loading.value = false
+      loading.value = false;
     }
 
-    loading.value = false
+    loading.value = false;
   }
 }
 
 async function checkInn() {
   if (formData.orgInn.length < 10) {
     notify({
-      title: 'ИНН должен содержать 10 цифр',
-    })
-    return
+      title: "ИНН должен содержать 10 цифр",
+    });
+    return;
   }
 
-  isInnLoading.value = true
+  isInnLoading.value = true;
 
-  const { data, error }: any = await useFetch('/api/organization/checkInn', {
-    method: 'GET',
+  const { data, error }: any = await useFetch("/api/organization/checkInn", {
+    method: "GET",
     query: {
       inn: formData.orgInn,
-      phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ''),
+      phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ""),
     },
     watch: false,
-  })
+  });
 
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
-      text: 'Данные не получены',
-    })
+      title: "Что-то пошло не так",
+      text: "Данные не получены",
+    });
   }
 
   if (data.value) {
-    if (data.value.status === 'error') {
+    if (data.value.status === "error") {
       notify({
-        title: 'Что-то пошло не так',
+        title: "Что-то пошло не так",
         text: data.value.error,
-      })
-      isInnLoading.value = false
-      return
+      });
+      isInnLoading.value = false;
+      return;
     }
 
-    isInnConfirmed.value = true
-    formData.orgKey = data.value.orgKey
-    formData.orgName = data.value.orgName
-    formData.orgOgrn = data.value.orgOgrn
-    formData.orgInn = data.value.orgInn
-    formData.name = data.value.name
-    formData.lastname = data.value.lastname
-    formData.middleName = data.value.middleName
+    isInnConfirmed.value = true;
+    formData.orgKey = data.value.orgKey;
+    formData.orgName = data.value.orgName;
+    formData.orgOgrn = data.value.orgOgrn;
+    formData.orgInn = data.value.orgInn;
+    formData.name = data.value.name;
+    formData.lastname = data.value.lastname;
+    formData.middleName = data.value.middleName;
   }
 
-  isInnLoading.value = false
+  isInnLoading.value = false;
 }
 
 function clearFormData() {
-  isInnConfirmed.value = false
-  formData.orgInn = ''
-  formData.orgKey = ''
-  formData.orgName = ''
-  formData.orgOgrn = ''
+  isInnConfirmed.value = false;
+  formData.orgInn = "";
+  formData.orgKey = "";
+  formData.orgName = "";
+  formData.orgOgrn = "";
 }
 
 async function sendConfirmCode() {
-  if (formData.phoneNumber.replace(/[()\-\s]/g, '').length < 11) {
+  if (formData.phoneNumber.replace(/[()\-\s]/g, "").length < 11) {
     notify({
-      title: 'Введите корректный номер',
-    })
-    return
+      title: "Введите корректный номер",
+    });
+    return;
   }
 
   if (timerRunning.value) {
     notify({
       title: `Следующая попытка будет доступна через ${timer.value} сек.`,
-    })
-    return
+    });
+    return;
   }
-  timer.value = 60
-  timerFinished.value = false
-  startTimer()
+  timer.value = 60;
+  timerFinished.value = false;
+  startTimer();
 
-  const { data }: any = await useFetch(
-    '/api/organization/confirmPhone',
-    {
-      method: 'POST',
-      body: {
-        phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ''),
-      },
-      watch: false,
+  const { data }: any = await useFetch("/api/organization/confirmPhone", {
+    method: "POST",
+    body: {
+      phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ""),
     },
-  )
+    watch: false,
+  });
 
-  if (data.value.status === 'ok') {
-    isCodeSent.value = true
-    confirmationCodeInput.value.focus()
+  if (data.value.status === "ok") {
+    isCodeSent.value = true;
+    confirmationCodeInput.value.focus();
     notify({
-      type: 'success',
-      title: 'Код отправлен',
-    })
-  }
-  else {
+      type: "success",
+      title: "Код отправлен",
+    });
+  } else {
     notify({
-      type: 'error',
+      type: "error",
       title: data.value.message,
-    })
+    });
   }
 }
 
 async function confirmCode() {
-  const { data }: any = await useFetch(
-    '/api/organization/confirmPhone',
-    {
-      method: 'GET',
-      params: {
-        phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ''),
-        code: formData.verificationCode,
-      },
-      watch: false,
+  const { data }: any = await useFetch("/api/organization/confirmPhone", {
+    method: "GET",
+    params: {
+      phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ""),
+      code: formData.verificationCode,
     },
-  )
+    watch: false,
+  });
   if (data.value) {
     notify({
-      type: 'success',
-      title: 'Код подтвержден',
-    })
+      type: "success",
+      title: "Код подтвержден",
+    });
 
-    isCodeSent.value = false
-    isNumberConfirmed.value = true
-  }
-  else {
+    isCodeSent.value = false;
+    isNumberConfirmed.value = true;
+  } else {
     notify({
-      type: 'error',
-      title: 'Неверный код',
-    })
+      type: "error",
+      title: "Неверный код",
+    });
   }
 }
 
-let interval: any
+let interval: any;
 
 function startTimer() {
-  timerRunning.value = true
-  timerVisible.value = true
+  timerRunning.value = true;
+  timerVisible.value = true;
   interval = setInterval(() => {
     if (timer.value > 0) {
-      timer.value--
+      timer.value--;
+    } else {
+      clearInterval(interval);
+      timerRunning.value = false;
+      timerFinished.value = true;
+      timer.value = 60;
     }
-    else {
-      clearInterval(interval)
-      timerRunning.value = false
-      timerFinished.value = true
-      timer.value = 60
-    }
-  }, 1000)
+  }, 1000);
 }
 
 function togglePassword() {
-  passwordInputType.value
-    = passwordInputType.value === 'password' ? 'text' : 'password'
+  passwordInputType.value =
+    passwordInputType.value === "password" ? "text" : "password";
 }
 function toggleConfirmPassword() {
-  passwordConfirmInputType.value
-    = passwordConfirmInputType.value === 'password' ? 'text' : 'password'
+  passwordConfirmInputType.value =
+    passwordConfirmInputType.value === "password" ? "text" : "password";
 }
 </script>
 
@@ -379,9 +369,7 @@ function toggleConfirmPassword() {
       <section
         class="flex flex-col justify-center align-center w-full max-w-lg rounded-lg p-2 shadow-lg gap-3 mt-auto mx-auto"
       >
-        <h3 class="font-bold text-xl mt-5 text-center">
-          Создать аккаунт
-        </h3>
+        <h3 class="font-bold text-xl mt-5 text-center">Создать аккаунт</h3>
         <div class="w-full">
           <div class="top-nav btm-nav-xs w-full flex justify-between">
             <button
@@ -421,7 +409,7 @@ function toggleConfirmPassword() {
                 placeholder="+7 (___) ___-__-__"
                 required="true"
                 @keydown.enter="sendConfirmCode"
-              >
+              />
               <button
                 v-if="!isCodeSent"
                 :disabled="isNumberConfirmed"
@@ -434,7 +422,7 @@ function toggleConfirmPassword() {
                 v-else
                 :disabled="isNumberConfirmed"
                 class="btn btn-sm xl:btn-md join-item rounded-r-full"
-                @click=";(isCodeSent = false), (isNumberConfirmed = false)"
+                @click="(isCodeSent = false), (isNumberConfirmed = false);"
               >
                 <IconCSS
                   class="w-12 h-12"
@@ -451,7 +439,8 @@ function toggleConfirmPassword() {
                 v-if="isCodeSent && !isNumberConfirmed"
                 class="text-md font-medium underline cursor-pointer ml-1 mt-1"
                 @click="sendConfirmCode"
-              >Отправить код повторно</span>
+                >Отправить код повторно</span
+              >
             </div>
             <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
               Код верфикации - озвученные цифры внутри звонка
@@ -470,7 +459,7 @@ function toggleConfirmPassword() {
                 placeholder=""
                 required="true"
                 @keydown.enter="confirmCode"
-              >
+              />
               <button
                 :disabled="!isCodeSent || isNumberConfirmed"
                 class="btn btn-sm xl:btn-md join-item rounded-r-full"
@@ -496,7 +485,7 @@ function toggleConfirmPassword() {
                     class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     placeholder="ИНН"
                     required="true"
-                  >
+                  />
                   <button
                     v-if="!isInnConfirmed"
                     :disabled="isInnLoading || !isNumberConfirmed"
@@ -514,7 +503,8 @@ function toggleConfirmPassword() {
                   </button>
                 </div>
 
-                <label class="block ml-1 mb-2 my-1 text-sm font-medium">Форма организации
+                <label class="block ml-1 mb-2 my-1 text-sm font-medium"
+                  >Форма организации
                 </label>
                 <input
                   id="orgKey"
@@ -525,7 +515,7 @@ function toggleConfirmPassword() {
                   placeholder="ИП/ООО"
                   required="true"
                   readonly
-                >
+                />
                 <label class="block ml-1 mb-2 my-1 text-sm font-medium">
                   Наименование организации
                 </label>
@@ -538,7 +528,7 @@ function toggleConfirmPassword() {
                   placeholder=""
                   required="true"
                   readonly
-                >
+                />
                 <label class="block ml-1 mb-2 my-1 text-sm font-medium">
                   ОГРН(ОГРНИП)
                 </label>
@@ -551,9 +541,12 @@ function toggleConfirmPassword() {
                   placeholder=""
                   required="true"
                   readonly
-                >
+                />
 
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                <label
+                  for="email"
+                  class="block mb-2 ml-1 my-1 text-sm font-medium"
+                >
                   БИК
                 </label>
                 <input
@@ -569,14 +562,17 @@ function toggleConfirmPassword() {
                   placeholder="БИК"
                   required="true"
                   @input="v$.bik.$touch"
-                >
+                />
 
                 <div
                   class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
                 >
                   {{ v$.bik?.$errors[0]?.$message }}
                 </div>
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                <label
+                  for="email"
+                  class="block mb-2 ml-1 my-1 text-sm font-medium"
+                >
                   Расчетный счёт
                 </label>
                 <input
@@ -594,14 +590,17 @@ function toggleConfirmPassword() {
                   placeholder="Р/С"
                   required="true"
                   @input="v$.rs.$touch"
-                >
+                />
 
                 <div
                   class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
                 >
                   {{ v$.rs?.$errors[0]?.$message }}
                 </div>
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                <label
+                  for="email"
+                  class="block mb-2 ml-1 my-1 text-sm font-medium"
+                >
                   Имя
                 </label>
                 <input
@@ -617,14 +616,17 @@ function toggleConfirmPassword() {
                   placeholder="Иван"
                   required="true"
                   @input="v$.name.$touch"
-                >
+                />
 
                 <div
                   class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
                 >
                   {{ v$.name?.$errors[0]?.$message }}
                 </div>
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                <label
+                  for="email"
+                  class="block mb-2 ml-1 my-1 text-sm font-medium"
+                >
                   Фамилия
                 </label>
                 <input
@@ -640,14 +642,17 @@ function toggleConfirmPassword() {
                   placeholder="Иванов"
                   required="true"
                   @input="v$.lastname.$touch"
-                >
+                />
 
                 <div
                   class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
                 >
                   {{ v$.lastname?.$errors[0]?.$message }}
                 </div>
-                <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+                <label
+                  for="email"
+                  class="block mb-2 ml-1 my-1 text-sm font-medium"
+                >
                   Отчество
                 </label>
                 <input
@@ -658,12 +663,15 @@ function toggleConfirmPassword() {
                   name="middleName"
                   class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Иванович"
-                >
+                />
               </div>
             </div>
 
             <div>
-              <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+              <label
+                for="email"
+                class="block mb-2 ml-1 my-1 text-sm font-medium"
+              >
                 Email
               </label>
               <input
@@ -679,14 +687,14 @@ function toggleConfirmPassword() {
                 placeholder="name@company.com"
                 required="true"
                 @input="v$.email.$touch"
-              >
+              />
 
               <div
                 v-for="error of v$.email.$errors"
                 :key="error.$uid"
                 class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
               >
-              <!-- <div class="error-msg">
+                <!-- <div class="error-msg">
                 {{ error.$message }}
               </div> -->
               </div>
@@ -696,7 +704,7 @@ function toggleConfirmPassword() {
               <label
                 for="password"
                 class="block ml-1 mt-1 mb-2 my-1text-sm font-medium"
-              >Пароль
+                >Пароль
               </label>
               <div class="flex relative">
                 <input
@@ -712,7 +720,7 @@ function toggleConfirmPassword() {
                   }"
                   required="true"
                   @change="v$.password.$touch"
-                >
+                />
                 <button
                   :disabled="!isInnConfirmed"
                   type="button"
@@ -744,7 +752,7 @@ function toggleConfirmPassword() {
               <label
                 for="confirm-password"
                 class="block ml-1 mb-2 my-1 text-sm font-medium"
-              >Пароль еще раз
+                >Пароль еще раз
               </label>
               <div class="flex relative">
                 <input
@@ -760,7 +768,7 @@ function toggleConfirmPassword() {
                   }"
                   required="true"
                   @change="v$.confirmPassword.$touch"
-                >
+                />
                 <button
                   :disabled="!isInnConfirmed"
                   type="button"
@@ -796,14 +804,21 @@ function toggleConfirmPassword() {
                 v-model="formData.checked"
                 type="checkbox"
                 class="checkbox checkbox-sm mt-1"
-              >
+              />
               <p
                 class="text-xs cursor-pointer"
                 @click="formData.checked = !formData.checked"
               >
                 Регистрируясь вы принимаете
-                <a target="_blank" href="/docs/oferta.pdf" class="text-primary">Пользовательское соглашение</a>, и подтверждаете, что ознакомлены с
-                <a target="_blank" href="/docs/conf_policy.pdf" class="text-primary">Политикой конфиденциальности</a>.
+                <a target="_blank" href="/docs/oferta.pdf" class="text-primary"
+                  >Пользовательское соглашение</a
+                >, и подтверждаете, что ознакомлены с
+                <a
+                  target="_blank"
+                  href="/docs/conf_policy.pdf"
+                  class="text-primary"
+                  >Политикой конфиденциальности</a
+                >.
               </p>
             </div>
           </div>

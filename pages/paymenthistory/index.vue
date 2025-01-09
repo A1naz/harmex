@@ -9,6 +9,7 @@ definePageMeta({
 
 const { user }: any = useUserSession();
 const dateRange = ref([]);
+const searchInput = ref("");
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 const buttonsLine: Array<{ label: string; value: string }> = [
   { label: "Общее", value: "general" },
@@ -42,6 +43,7 @@ const limit = ref(15);
 const skip = ref(0);
 
 async function getData() {
+  fetchedData.value = [];
   loading.value = true;
   skip.value = (currentPage.value - 1) * limit.value;
   const { data } = await useFetch(
@@ -54,6 +56,8 @@ async function getData() {
         page: currentPage.value,
         itemsPerPage: limit.value,
         skip: skip.value,
+        searchInput: searchInput.value,
+        dateRange: dateRange.value,
       },
       watch: false,
     }
@@ -251,6 +255,24 @@ const displayPages = computed(() => {
   }
   return pages;
 });
+
+watchDebounced(
+  () => searchInput.value,
+  () => {
+    currentPage.value = 1;
+    updateTableData();
+  },
+  { debounce: 800 }
+);
+
+watchDebounced(
+  () => dateRange.value,
+  () => {
+    currentPage.value = 1;
+    updateTableData();
+  },
+  { debounce: 800 }
+);
 </script>
 
 <template>
@@ -286,20 +308,25 @@ const displayPages = computed(() => {
           </button>
         </div>
         <div class="flex gap-1">
+          <label class="input input-sm input-bordered flex items-center gap-2">
+            <input
+              type="text"
+              class="grow"
+              placeholder="Id, артикул"
+              v-model="searchInput"
+            />
+            <Icon name="mynaui:search" size="22px" />
+          </label>
           <DateRangePicker
             class="w-46 -mt-1"
             v-model="dateRange"
             :start-date="startDate"
             @reset="dateRange = []"
           >
-            <button class="btn btn-sm mt-1 btn-primary border-none min-w-2xl">
-              {{
-                dateRange.length > 1
-                  ? `${$dayjs(dateRange[0]).format("DD.MM.YYYY")} - ${$dayjs(
-                      dateRange[1]
-                    ).format("DD.MM.YYYY")}`
-                  : "Выбрать даты"
-              }}
+            <button
+              class="div w-[48px] h-[32px] border-primary mt-1 border-[1px] text-primary rounded-[6px]"
+            >
+              <Icon name="solar:calendar-linear" class="-mt-1" size="22px" />
             </button>
           </DateRangePicker>
           <button
