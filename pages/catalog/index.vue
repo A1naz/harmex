@@ -11,6 +11,8 @@ const menuItems = ref([
   "Доски объявлений",
   "Медицина",
   "Карты",
+  "Стриминг",
+  "Блоггинг",
   "Услуги",
 ]);
 const modalStore = useModalStore();

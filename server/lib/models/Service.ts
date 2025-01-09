@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid'
 
 const ServiceSchema = new Schema({
   uuid: { type: String, unique: true, required: true, default: uuid() },
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: false },
   items: { type: [], default: [] }, // Mixed type for array
   mainImage: { type: String, required: true },
   images: { type: [String], default: [] }, // Array of strings for images
