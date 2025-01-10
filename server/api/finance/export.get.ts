@@ -64,11 +64,11 @@ async function fetchData(type: string, user: any, dateRange?: any) {
 
   switch (type) {
     case 'general':
-      return await generalData(user, 100000, 0, 0, dateRange)
+      return await generalData(user, 100000, 0, 0, dateRange, '')
     case 'replenishment':
-      return await replenishmentData(user, 100000, 0, 0, dateRange)
+      return await replenishmentData(user, 100000, 0, 0, dateRange, '')
     case 'expenses':
-      return await expensesData(user, 100000, 0, 0, dateRange)
+      return await expensesData(user, 100000, 0, 0, dateRange, '')
     case 'partner':
       return await partnerData(user, 100000, 0, 0, dateRange)
     case 'genealogy':
