@@ -2,10 +2,10 @@ import ExcelJS from 'exceljs'
 import { DocuemntEnum } from '~/data/enums'
 import { Buyout } from '~/server/lib/models/ozon/Buyout'
 import { Delivery } from '~/server/lib/models/ozon/Delivery'
-import expensesData from './expensesData'
-import generalData from './generalData'
+import expensesData from './export/expensesData'
+import generalData from './export/generalData'
 import partnerData from './partnerData'
-import replenishmentData from './replenishmentData'
+import replenishmentData from './export/replenishmentData'
 import genealogyData from './genealogyData'
 
 function formatNumber(value: number): string {
