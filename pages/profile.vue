@@ -781,7 +781,7 @@ function copyText(text: string) {
                                     item.allowedPathes.length ==
                                     multiOptions.length
                                   "
-                                  class="text-sm p-1 rounded-2xl bg-success text-green-400 bg-opacity-50 w-fit border-none"
+                                  class="text-sm p-1 rounded-2xl bg-success bg-opacity-50 w-fit border-none"
                                 >
                                   Полный доступ
                                 </div>
