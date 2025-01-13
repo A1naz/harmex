@@ -57,6 +57,8 @@ export default eventHandler(async (event) => {
         article: review.article,
         name: review.name,
         text: review.text,
+        positive: review.positive,
+        negative: review.negative,
         rating: review.rating,
         images: review.images,
         date: review.date,
