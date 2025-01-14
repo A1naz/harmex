@@ -609,7 +609,7 @@ const siteUrl = config.public.siteUrl;
       </h3>
       <p class="mb-2 text-[17px]">
         Выкуп товара на
-        <span class="font-semibold">маркетплейсе Wildberries</span> происходит
+        <span class="font-semibold">маркетплейсе Ozon</span> происходит
         автоматически, без вашего прямого участия.
       </p>
 

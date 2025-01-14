@@ -111,10 +111,7 @@ async function exportReadyUntilPenaltyXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
   const fileLink = document.createElement("a");
   fileLink.href = fileURL;
-  fileLink.setAttribute(
-    "download",
-    "Готовы к выдаче Wildberries до штрафа.xlsx"
-  );
+  fileLink.setAttribute("download", "Готовы к выдаче Ozon до штрафа.xlsx");
   document.body.appendChild(fileLink);
   fileLink.click();
   loadingExport.value = false;
@@ -560,8 +557,8 @@ const siteUrl = config.public.siteUrl;
     >
       <p class="mb-5 text-xl font-semibold">Как получить товар на ПВЗ</p>
       <p>
-        Для получения товаров с пункта выдачи заказов (ПВЗ) на маркетплейсе
-        Wildberries используйте меню <strong>"Доставка"</strong>.
+        Для получения товаров с пункта выдачи заказов (ПВЗ) на маркетплейсе Ozon
+        используйте меню <strong>"Доставка"</strong>.
       </p>
       <p class="mt-4">
         Это меню позволяет отслеживать статусы всех доставок в режиме реального
