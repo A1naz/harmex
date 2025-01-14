@@ -95,6 +95,7 @@ ENV BANK_DB_URI=${BANK_DB_URI}
 
 RUN npm install -g pnpm
 RUN apk add --no-cache python3 make g++
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN pnpm install
 RUN pnpm run build
 ENV NODE_ENV production
