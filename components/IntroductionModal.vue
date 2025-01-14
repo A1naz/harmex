@@ -52,7 +52,7 @@ const config = useRuntimeConfig();
           <strong>Ознакомьтесь с “Обзором кабинета” за 60 секунд.</strong>
         </p>
         <p><strong>1 -</strong> каталог услуг платформы.</p>
-        <p><strong>2 -</strong>быстрый поиск услуг.</p>
+        <p><strong>2 -</strong> быстрый поиск услуг.</p>
         <p>
           <strong>3 -</strong> раздел Финансы, который предоставляет функционал
           управления финансовыми операциями (пополнение, расходы, вывод,
@@ -106,8 +106,7 @@ const config = useRuntimeConfig();
               <li>
                 <p class="ml-9">
                   • Введите сумму пополнения и ваш
-                  <strong> Email </strong>
-                  .
+                  <strong> Email.</strong>
                 </p>
               </li>
             </ul>
@@ -123,8 +122,7 @@ const config = useRuntimeConfig();
               <li>
                 <p class="ml-9">
                   • Сканируйте предоставленный
-                  <strong> QR-код </strong>
-                  .
+                  <strong> QR-код.</strong>
                 </p>
               </li>
               <li>
