@@ -884,17 +884,6 @@ const siteUrl = config.public.siteUrl;
             <strong>часовому поясу заказчика</strong>.
           </li>
         </ol>
-        <p><strong> 6. Покупка товара </strong></p>
-        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
-          <li>
-            Покупка товара осуществляется только по
-            <strong>СПП (Специальной Программе Партнерства).</strong>
-          </li>
-          <li>
-            Однако расчет происходит <strong> без учета СПП</strong> из-за
-            волатильности цен.
-          </li>
-        </ol>
       </div>
 
       <p class="divider"></p>

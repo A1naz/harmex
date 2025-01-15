@@ -31,7 +31,7 @@ export default async function (user: any, itemsPerPage?: number, page?: number, 
           el.article ?
             el.article :
             '-',
-      orderId: el.mp && el.basisoperation && el.basisoperation.includes('Выкуп #') && (el.mp == 'wildberries' || el.mp == 'ozon' || el.mp == 'flowwow') ? getBuyoutLink(el.mp, el.basisoperation.replace('Выкуп #', '')) : el.basisoperation,
+      orderId: getBuyoutLink(el.mp, el.basisoperation.replace('Выкуп #', ''), el.type),
       comment: el.comment,
     }
   })

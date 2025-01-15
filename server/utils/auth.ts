@@ -111,7 +111,7 @@ async function attempt(
   if (!foundUser) {
     throw createError({
       statusCode: 401,
-      message: 'Неверный логин или пароль.',
+      message: 'Неверный номер телефона или пароль.',
     })
   }
 

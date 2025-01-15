@@ -81,12 +81,12 @@ function onMouseLeaveTooltip() {
           top: `${tooltipPosition.top}px`,
           left: `${tooltipPosition.left}px`,
         }"
-        class="tooltip-class fixed bg-white shadow-lg text-black text-xs md:text-sm px-[15px] py-[12.5px] rounded-lg z-50 whitespace-nowrap flex flex-col justify-start text-left ml-5"
+        class="tooltip-class fixed bg-white shadow-lg text-black text-xs md:text-sm px-[15px] py-[12.5px] rounded-lg z-50 whitespace-nowrap flex flex-col justify-start text-left sm:-ml-10 ml-5"
         @mouseenter="onMouseEnterTooltip"
         @mouseleave="onMouseLeaveTooltip"
       >
         <div
-          class="absolute top-[-9px] left-20 w-[20px] h-[30px] rounded-[3px] rotate-45 bg-white transform -translate-x-1/2"
+          class="absolute hidden top-[-9px] left-20 w-[20px] h-[30px] rounded-[3px] rotate-45 bg-white transform sm:-mr-20 -translate-x-1/2"
         />
         <p class="relative z-10">
           {{ info.orgName }}

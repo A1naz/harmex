@@ -8,38 +8,38 @@ export default async function (user: any, itemsPerPage?: number, page?: number, 
   const limit = itemsPerPage ? itemsPerPage : 25
   const skipValue = skip ? skip : 25
   const res = await paymenthistory
-    .find({ user: user._id, ...dateRange, 
+    .find({
+      user: user._id, ...dateRange,
       $or: [
         { basisoperation: { $regex: searchInput, $options: 'i' } },
         { article: Number.isNaN(Number(searchInput)) ? 0 : Number(searchInput) },
       ]
-     })
+    })
     .sort({ dataoperation: -1 })
-  .skip(page ? (page - 1) * limit : 0)
-  .limit(page ? limit : 100000)
+    .skip(page ? (page - 1) * limit : 0)
+    .limit(page ? limit : 100000)
 
 
-const format = await Promise.all(
-  res.map(async (el: any) => {
-    return {
-      summ: el.summ ? el.summ : 0,
-      date: el.dataoperation,
-      source: el.mp ? el.mp : '-',
-      service: historyType(el.type),
-      article: (el.mp && el.article && (el.mp == 'ozon' || el.mp == 'wildberries')) ?
-        await getMPLink(el.mp, el.article) + '||' + el.article :
-        (el.mp && el.mp == 'flowwow') ?
-          await getMPLink(el.mp, el.basisoperation) :
-          el.article ?
-            el.article :
-            '-',
-      orderId: el.mp && el.basisoperation && el.basisoperation.includes('Выкуп #') && (el.mp == 'wildberries' || el.mp == 'ozon' || el.mp == 'flowwow') ?
-        getBuyoutLink(el.mp, el.basisoperation.replace('Выкуп #', '')) : el.basisoperation,
-      comment: el.comment,
-    }
-  })
-)
+  const format = await Promise.all(
+    res.map(async (el: any) => {
+      return {
+        summ: el.summ ? el.summ : 0,
+        date: el.dataoperation,
+        source: el.mp ? el.mp : '-',
+        service: historyType(el.type),
+        article: (el.mp && el.article && (el.mp == 'ozon' || el.mp == 'wildberries')) ?
+          await getMPLink(el.mp, el.article) + '||' + el.article :
+          (el.mp && el.mp == 'flowwow') ?
+            await getMPLink(el.mp, el.basisoperation) :
+            el.article ?
+              el.article :
+              '-',
+        orderId: getBuyoutLink(el.mp, el.basisoperation.replace('Выкуп #', ''), el.type),
+        comment: el.comment,
+      }
+    })
+  )
 
 
-return format
+  return format
 }

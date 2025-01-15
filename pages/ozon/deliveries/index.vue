@@ -566,7 +566,7 @@ const siteUrl = config.public.siteUrl;
         инструкция с учетом всех нюансов.
       </p>
       <p class="divider"></p>
-      <p>Отслеживание статусов доставок</p>
+      <p>Отслеживание статусов <strong>доставок</strong></p>
       <ul class="list-disc ml-10">
         <li class="mt-1">
           Перейдите в меню <strong>"Доставка"</strong> в вашем личном кабинете
@@ -594,7 +594,7 @@ const siteUrl = config.public.siteUrl;
         </li>
       </ul>
       <p class="divider"></p>
-      <p>Получение товаров, готовых к выдаче</p>
+      <p>Получение товаров, <strong>готовых к выдаче</strong></p>
       <ul class="list-disc ml-10">
         <li class="mt-1">
           Для получения товаров, которые имеют статус

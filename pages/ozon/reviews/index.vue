@@ -587,7 +587,7 @@ const siteUrl = config.public.siteUrl;
       </p>
       <ul class="list-decimal ml-10">
         <li class="mt-1">
-          <strong>Выберите доступный отзыв</strong>
+          <strong>Выберите доступный <strong>отзыв</strong></strong>
           <ul class="list-disc ml-6">
             <li class="mt-1">
               В меню <strong>"Отзывы"</strong> найдите заказ, по которому хотите
