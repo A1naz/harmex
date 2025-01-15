@@ -129,12 +129,40 @@ async function resumeStatus(item: any) {
   }
 }
 
+async function getUuid(id: string) {
+  const { data, error } = await useFetch("/api/wildberries/viewings/getUuid", {
+    params: {
+      id,
+    },
+    watch: false,
+  });
+
+  if (error.value) {
+    notify({
+      title: "Что-то пошло не так",
+      text: error.value?.data?.message,
+      type: "error",
+      duration: 3000,
+    });
+    return;
+  }
+  if (data.value) {
+    selectedQuest.value = {
+      uuid: data.value,
+    };
+    logModal.value = true;
+  }
+}
+
 onMounted(() => {
   if (route.query.modalShow) {
     modalShow.value = route.query.modalShow === "true";
     const query = { ...route.query };
     delete query.modalShow;
     router.push({ query });
+  }
+  if (route.query.id) {
+    getUuid(route.query.id as string);
   }
 });
 

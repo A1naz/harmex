@@ -14,58 +14,56 @@ const props = defineProps({
   },
   saveButton: {
     type: String,
-    default: 'Скачать',
+    default: "Скачать",
     required: false,
   },
   isVisible: {
     type: Boolean,
     required: true,
   },
-})
+});
 
-const exportDates = ref<Date[]>([])
-const btnLoading = ref(false)
+const exportDates = ref<Date[]>([]);
+const btnLoading = ref(false);
 
 const expDatesVModel = computed({
   get: () => exportDates.value,
-  set: val => exportDates.value = val,
-})
+  set: (val) => (exportDates.value = val),
+});
 
 function prepareColummns(): any[] {
-  const cols: any[] = []
+  const cols: any[] = [];
   if (props.configColumns) {
     for (let i = 0; i < props.configColumns.length; i++) {
-      cols.push(
-        {
-          header: props.configColumns[i].header,
-          key: props.configColumns[i].field,
-          font: { bold: true },
-          width: 25,
-        },
-      )
+      cols.push({
+        header: props.configColumns[i].header,
+        key: props.configColumns[i].field,
+        font: { bold: true },
+        width: 25,
+      });
     }
-    return cols
+    return cols;
   }
-  return cols
+  return cols;
 }
 
 async function exportToXLS() {
-  btnLoading.value = true
+  btnLoading.value = true;
   const { data } = await useFetch(props.api, {
-    method: 'POST',
+    method: "POST",
     body: {
       exportDates: expDatesVModel.value,
       columns: prepareColummns(),
     },
-    responseType: 'blob',
-  })
-  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
-  const fileLink = document.createElement('a')
-  fileLink.href = fileURL
-  fileLink.setAttribute('download', `${props.fileName}.xlsx`)
-  document.body.appendChild(fileLink)
-  fileLink.click()
-  btnLoading.value = false
+    responseType: "blob",
+  });
+  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
+  const fileLink = document.createElement("a");
+  fileLink.href = fileURL;
+  fileLink.setAttribute("download", `${props.fileName}.xlsx`);
+  document.body.appendChild(fileLink);
+  fileLink.click();
+  btnLoading.value = false;
 }
 </script>
 
