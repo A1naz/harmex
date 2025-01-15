@@ -198,15 +198,17 @@ watch(
 );
 
 onMounted(() => {
-  if (route.query?.idReview && route.query?.idReview.length > 0) {
-    // const idReview = route.query?.idReview
-    // if (idReview && typeof idReview == 'string') {
-    //   currentTab.value = 'published'
-    //   searchType.value = SelectOptions.idReview
-    //   searchText.value = idReview
-    // }
-  } else if (route.query.status) {
+  if (route.query.status) {
     currentTab.value = route.query.status.toString();
+  }
+
+  if (route.query?.uuid && route.query?.uuid.length > 0) {
+    const uuidReview = route.query?.uuid;
+    if (uuidReview && typeof uuidReview == "string") {
+      // currentTab.value = 'published'
+      searchType.value = SelectOptions.idReview;
+      searchText.value = uuidReview;
+    }
   } else {
     currentTab.value = "available";
     router.push("/wildberries/reviews?status=available");

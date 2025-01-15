@@ -10,6 +10,7 @@ export default eventHandler(async (event) => {
                 return sendRedirect(event, '/auth', 302)
 
         const { skip, limit, tab, search } = getQuery(event)
+        console.log(search, tab)
 
         let searchParse = search ? JSON.parse(search?.toString()) : {}
 
