@@ -11,6 +11,7 @@ const paymenthistorySchema = new Schema({
   comment: { type: String },
   refRewarded: { type: Boolean, default: false },
   mp: { type: String },
+  nameOrganization: { type: String },
 })
 
 export const paymenthistory = model('paymenthistory', paymenthistorySchema)

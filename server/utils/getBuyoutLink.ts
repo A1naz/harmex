@@ -1,5 +1,5 @@
 function getServiceLink(type: string, mp: string, uuid: string) {
-        console.log(type)
+        
         switch (type) {
                 // case 'likeProduct': return 'productlikes'
                 case 'viewing': return `NUXTLINK||/${mp}/viewings?id=${uuid}||${uuid}`

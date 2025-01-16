@@ -273,6 +273,12 @@ watchDebounced(
   },
   { debounce: 800 }
 );
+
+const searchPlaceHolder = computed(() => {
+  if (tableType.value === "replenishment") {
+    return "id, ИП";
+  } else return "id, артикул";
+});
 </script>
 
 <template>
@@ -312,7 +318,7 @@ watchDebounced(
             <input
               type="text"
               class="grow"
-              placeholder="Id, артикул"
+              :placeholder="searchPlaceHolder"
               v-model="searchInput"
             />
             <Icon name="mynaui:search" size="22px" />
