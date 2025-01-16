@@ -22,8 +22,13 @@ export default eventHandler(async (event) => {
     })
   })
 
+  if (data.error) {
+    throw createError({
+      statusCode: 404,
+      message: data.message
+    })
+  }
 
-  console.log(data)
   return {
     product: {
       slug: data.slug || '',
