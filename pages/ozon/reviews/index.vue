@@ -197,7 +197,7 @@ onMounted(() => {
     }
   } else {
     currentTab.value = "available";
-    router.push("/wildberries/reviews?status=available");
+    router.push("/ozon/reviews?status=available");
   }
   fetchData();
 });
