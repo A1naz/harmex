@@ -164,8 +164,8 @@ watch(
 </script>
 
 <template>
-  <div class="flex pt-4 bg-white">
-    <div class="left-menu sm:block sm:ml-3 -ml-10 hidden">
+  <div class="flex pt-4">
+    <div class="left-menu sm:block sm:ml-3 mr-6 -ml-10 hidden">
       <CatalogLeftMenu
         v-model:selected-type="modalStore.selectedCatalog"
         :items="menuItems"

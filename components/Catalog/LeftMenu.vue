@@ -21,11 +21,12 @@ const selectedType = toRef(props, "selectedType");
 function selectType(type: string) {
   emit("update:selectedType", type);
 }
+const { height } = useWindowSize();
 </script>
 
 <template>
   <div
-    class="w-[260px] h-screen py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
+    class="w-[260px] absolute h-screen overflow-hidden py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
   >
     <ul class="mt-4 cursor-pointer">
       <li v-for="item in items" :key="item">
@@ -50,7 +51,6 @@ function selectType(type: string) {
               name="material-symbols-light:keyboard-arrow-right"
               size="25"
               class="mr-4"
- 
             />
           </div>
         </a>
