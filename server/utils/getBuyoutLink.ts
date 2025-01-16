@@ -12,8 +12,8 @@ function getServiceLink(type: string, mp: string, uuid: string) {
 }
 
 export default function getBuyoutLink(mp: string, uuid: string, type: string = 'buyout') {
-        if (type == 'buyout') {
-                return `NUXTLINK||/${mp}/buyouts?uuid=${uuid}||Выкуп #${uuid}`
+        if (type == 'buyout' || type == 'buyouts service' || type == 'buyouts') {
+                return `NUXTLINK||/${mp}/buyouts?uuid=${uuid.replace('Выкуп #', '')}||Выкуп #${uuid}`
         } else {
                 const serviceLink = getServiceLink(type, mp, uuid)
                 if (!serviceLink) return uuid
