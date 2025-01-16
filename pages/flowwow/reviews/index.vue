@@ -63,8 +63,20 @@ const endpoint = computed(() =>
 const isFetch = ref(true);
 const reviews = ref<any>([]);
 const availableReviews = ref<any>([]);
+
+function containsOnlyNumbers(str) {
+  return /^[0-9]+$/.test(str);
+}
+
 async function fetchData() {
   isFetch.value = true;
+
+  searchType.value = containsOnlyNumbers(searchText.value)
+    ? SelectOptions.article
+    : searchText.value.length >= 35
+    ? SelectOptions.uuidBuyout
+    : SelectOptions.idReview;
+
   const response: any = await $fetch(`/api/flowwow/review/${endpoint.value}`, {
     method: "GET",
     params: {
@@ -73,7 +85,11 @@ async function fetchData() {
       tab: currentTab.value,
       search:
         searchText.value.length > 0
-          ? { [searchType.value]: searchText.value }
+          ? {
+              [searchType.value]: searchText.value
+                .replaceAll(" ", "")
+                .replace("#", ""),
+            }
           : {},
     },
   });
@@ -211,8 +227,8 @@ onMounted(() => {
   } else if (route.query.status) {
     currentTab.value = route.query.status.toString();
   } else {
-    currentTab.value = "available";
-    router.push("/flowwow/reviews?status=available");
+    currentTab.value = "all";
+    router.push("/flowwow/reviews?status=all");
   }
   fetchData();
 });
@@ -410,11 +426,11 @@ const siteUrl = config.public.siteUrl;
             </button>
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
-            <CustomSelect
+            <!-- <CustomSelect
               class="h-[2rem] bg-[#f4f4f4]"
               :tabs="searchOptions.map((el: any) => ({ title: el.name, value: el.value }))"
               @change-value="(e: any) => (searchType = e.value)"
-            />
+            /> -->
           </div>
           <div
             class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"

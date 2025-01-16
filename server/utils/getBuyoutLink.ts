@@ -1,4 +1,5 @@
 function getServiceLink(type: string, mp: string, uuid: string) {
+        console.log(type)
         switch (type) {
                 // case 'likeProduct': return 'productlikes'
                 case 'viewing': return `NUXTLINK||/${mp}/viewings?id=${uuid}||${uuid}`
@@ -6,7 +7,8 @@ function getServiceLink(type: string, mp: string, uuid: string) {
                 // case 'cart': return 'carts'
                 // case 'questionProduct': return 'questions'
                 // case 'buyout': return 'buyouts'
-                // case 'review': return `NUXTLINK||/${mp}/reviews??status=all&uuid=${uuid.replace('Отзыв #', '')}&mp=${mp}||${uuid}`
+                case 'review': return `NUXTLINK||/${mp}/reviews?status=all&uuid=${uuid.replace('Отзыв #', '')}&mp=${mp}||${uuid}`
+                case 'reviews': return `NUXTLINK||/${mp}/reviews?status=all&uuid=${uuid.replace('Отзыв #', '')}&mp=${mp}||${uuid}`
                 default: return ''
         }
 }
