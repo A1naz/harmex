@@ -119,7 +119,7 @@ async function attempt(
 
   if (
     !isPasswordCorrect
-    // && config.env !== "developer"
+    && config.env !== "developer"
   ) {
     // return an error if the user is not found or the password doesn't match
     throw createError({
