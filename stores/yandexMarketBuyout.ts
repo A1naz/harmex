@@ -190,6 +190,7 @@ export const useYandexMarketBuyoutStore = defineStore('yandexMarketBuyout', {
       this.createProducts.splice(index, 1)
     },
     handleAddress(address: string, lt: number, lg: number, id: number) {
+      console.log(address, lt, lg, id)
       const index = this.selectedItem!
       this.createProducts[index].adress = address
       this.createProducts[index].pointId = id
@@ -197,6 +198,15 @@ export const useYandexMarketBuyoutStore = defineStore('yandexMarketBuyout', {
         lat: lt,
         lon: lg,
       }
+    },
+    handleAddressCourier(address: string, lt: number, lg: number, addressInfo: any) {
+      const index = this.selectedItem!
+      this.createProducts[index].adress = address
+      this.createProducts[index].pointCoordinates = {
+        lat: lt,
+        lon: lg,
+      }
+      this.createProducts[index].addressInfo = addressInfo
     },
   },
 })

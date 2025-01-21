@@ -164,7 +164,13 @@ function closeModal() {
 
 function openCourierModal() {
   closeModal();
+  store.createProducts[store.selectedItem].isCourier = true;
   modalOpenCourier.value = true;
+}
+function openPickpointModal() {
+  closeModal();
+  store.createProducts[store.selectedItem].isCourier = false;
+  modalOpen.value = true;
 }
 
 async function openChecksModal() {
@@ -327,18 +333,23 @@ async function pointModalOpen(index: number) {
 
   store.selectedItem = index;
 
-  if (products.value[index].key) {
-    if (
-      // eslint-disable-next-line eqeqeq
-      products.value[index].dateRange[0] != lastItemDateRange.value[0] ||
-      // eslint-disable-next-line eqeqeq
-      products.value[index].dateRange[1] != lastItemDateRange.value[1]
-    ) {
-      lastItemDateRange.value = products.value[index].dateRange;
-      await getFFPickpoints(products.value[index].dateRange[0] || new Date());
-    }
+  // if (products.value[index].key) {
+  //   if (
+  //     // eslint-disable-next-line eqeqeq
+  //     products.value[index].dateRange[0] != lastItemDateRange.value[0] ||
+  //     // eslint-disable-next-line eqeqeq
+  //     products.value[index].dateRange[1] != lastItemDateRange.value[1]
+  //   ) {
+  //     lastItemDateRange.value = products.value[index].dateRange;
+  //     await getFFPickpoints(products.value[index].dateRange[0] || new Date());
+  //   }
 
-    modalOpenFF.value = true;
+  //   modalOpenFF.value = true;
+  // } else {
+  //   modalOpen.value = true;
+  // }
+  if (products.value[index].isCourier) {
+    modalOpenCourier.value = true;
   } else {
     modalOpen.value = true;
   }
@@ -422,6 +433,23 @@ function refreshElements() {
   // eslint-disable-next-line eqeqeq
   refreshKey.value == 1 ? (refreshKey.value = 0) : (refreshKey.value = 1);
 }
+
+function handleAddressCourier(address: string, lt: number, lg: number) {
+  console.log(address, lt, lg);
+  modalOpenCourier.value = false;
+
+  store.handleAddressCourier(address, lt, lg, addressForm);
+}
+
+const addressForm = reactive({
+  apartment: "",
+  entrance: "",
+  floor: "",
+  intercom: "",
+  comment: "",
+  nameLastName: "",
+  phone: "",
+});
 </script>
 
 <template>
@@ -627,8 +655,10 @@ function refreshElements() {
           v-if="modalOpenCourier"
           :state="modalOpenCourier"
           :pickpoints="ffPickpoints"
-          @callback="handleAddress"
+          v-model:addressInfo="addressForm"
+          @callback="handleAddressCourier"
           @close="closeModal"
+          @openPickpointModal="openPickpointModal"
         />
       </ClientOnly>
       <div
@@ -969,7 +999,11 @@ function refreshElements() {
         </div>
       </div>
     </div>
-    modalOpenCourier: {{ modalOpenCourier }}
+    {{
+      store.createProducts[0] && store.createProducts[0].pointCoordinates
+        ? store.createProducts[0].pointCoordinates
+        : ""
+    }}
   </div>
 </template>
 

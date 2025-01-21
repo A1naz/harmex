@@ -2,17 +2,17 @@
 defineProps({
   modelValue: {
     type: String,
-    default: '',
+    default: "",
   },
   coordinates: {
     type: Array,
     default: () => {
-      return [55.761438764655615, 37.617691166568456]
+      return [55.761438764655615, 37.617691166568456];
     },
-  }
-})
+  },
+});
 
-defineEmits(['update:modelValue', 'callback'])
+defineEmits(["update:modelValue", "callback"]);
 </script>
 
 <template class="h-[200px]">
@@ -22,13 +22,13 @@ defineEmits(['update:modelValue', 'callback'])
       <div class="text-sm">{{ modelValue }}</div>
     </div>
     <div class="flex justify-center w-full">
-      <button
+      <!-- <button
         @click="$emit('callback', modelValue, coordinates[0], coordinates[1])"
-        class="selectPoint flex justify-center btn btn-primary hover:bg-primary w-full"
+        class="selectPoint flex justify-center btn btn-primary hover:bg-primary w-full absolute top-28"
         :disabled="!modelValue || modelValue == 'Загрузка...'"
       >
         Выбрать
-      </button>
+      </button> -->
     </div>
   </div>
 </template>

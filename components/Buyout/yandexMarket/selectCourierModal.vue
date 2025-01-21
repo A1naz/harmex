@@ -32,8 +32,8 @@ const marker = ref();
 const name = ref("Custom");
 const loading = ref(false);
 const addressText = ref("Москва, улица Петровка, 5");
-const coordinates = ref([55.761438764655615, 37.617691166568456]);
-const emit = defineEmits(["callback", "close"]);
+const coordinates = ref([55.74435065000997, 37.621310551334145]);
+const emit = defineEmits(["callback", "close", "openPickpointModal"]);
 const error = ref("");
 const isDisabled = computed(() => {
   return !props.addressInfo.apartment;
@@ -73,6 +73,10 @@ async function getAddressText(lt: number, lg: number, id: string) {
 const handleAddress = (address: string, lt: number, lg: number) => {
   emit("callback", address, lt, lg);
 };
+
+function openPickpointModal() {
+  emit("openPickpointModal");
+}
 </script>
 
 <template>
@@ -90,6 +94,22 @@ const handleAddress = (address: string, lt: number, lg: number) => {
           @click="closeModal"
           >✕</a
         >
+        <div class="join">
+          <input
+            class="join-item btn"
+            type="radio"
+            name="options"
+            aria-label="Пункт выдачи"
+            @click="openPickpointModal"
+          />
+          <input
+            class="join-item btn"
+            type="radio"
+            name="options"
+            aria-label="Курьер"
+            checked="checked"
+          />
+        </div>
         <div class="title mb-2">Выберите адрес</div>
 
         <div class="flex justify-center">
@@ -197,9 +217,9 @@ const handleAddress = (address: string, lt: number, lg: number) => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .yandex-container {
-  height: 75vh;
+  height: 55vh;
   width: 100%;
   border-radius: 20px;
   /* Установите желаемый радиус скругления углов */

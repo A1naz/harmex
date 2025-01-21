@@ -21,13 +21,21 @@ const store = useMainStore();
 function closeModal() {
   emit("close");
 }
-function openCourierModal() {
-  emit("openCourierModal");
-}
 const loading = ref(false);
 const map = ref();
+const addressText = ref("sadsd");
+const lastAddress = ref({
+  lt: 0,
+  lg: 0,
+  id: "",
+});
 function handleSelect(address: string) {
-  if (props.pickpoints.findIndex((item: any) => item.a === address) === -1) {
+  if (
+    props.pickpoints.findIndex(
+      (item: any) =>
+        item.lt === lastAddress.value.lt && item.lg === lastAddress.value.lg
+    ) === -1
+  ) {
     return notify({
       type: "error",
       title: "Что-то пошло не так",
@@ -35,33 +43,58 @@ function handleSelect(address: string) {
     });
   }
 
-  let pointStore = localStorage.getItem("yandexMarketPointStore");
-  if (!pointStore) pointStore = "";
+  let pointStore: any = localStorage.getItem("ozonPointStore");
 
-  const arr = pointStore.trim().split("--").reverse();
-  if (arr[0] === "") arr.shift();
-  if (arr.length > 20) arr.shift();
-  arr.push(address);
-  const unique = [...new Set(arr)].reverse();
-  localStorage.setItem("yandexMarketPointStore", unique.join("--"));
-  emit("callback", { a: address });
+  const arr = JSON.parse(pointStore) || [];
+
+  if (arr.length > 20) arr.splice(arr.length - 1, 1);
+  if (
+    !arr.find(
+      (el: any) =>
+        el.lt === lastAddress.value.lt && el.lg === lastAddress.value.lg
+    )
+  ) {
+    arr.unshift({
+      address,
+      lt: lastAddress.value.lt,
+      lg: lastAddress.value.lg,
+      id: lastAddress.value.id,
+    });
+  }
+
+  localStorage.setItem("ozonPointStore", JSON.stringify(arr));
+  emit(
+    "callback",
+    address,
+    lastAddress.value.lt,
+    lastAddress.value.lg,
+    lastAddress.value.id
+  );
   closeModal();
 }
 
-function handleDelete(address: string) {
-  let pointStore = localStorage.getItem("yandexMarketPointStore");
-  if (!pointStore) pointStore = "";
-  const arr = pointStore.trim().split("--").reverse();
-  arr.splice(arr.indexOf(address), 1);
-  const unique = [...new Set(arr)].reverse();
-  localStorage.setItem("yandexMarketPointStore", unique.join("--"));
-  emit("callback", address);
-  lastPoints.value = unique;
+function handleDelete(address: any) {
+  let pointStore: any = localStorage.getItem("ozonPointStore");
+  const arr = JSON.parse(pointStore) || [];
+  arr.splice(
+    arr.indexOf(arr.find((el: any) => el.address === address.address)),
+    1
+  );
+  localStorage.setItem("ozonPointStore", JSON.stringify(arr));
+  emit(
+    "callback",
+    address.address,
+    lastAddress.value.lt,
+    lastAddress.value.lg,
+    lastAddress.value.id
+  );
+  lastPoints.value = JSON.parse(localStorage.getItem("ozonPointStore") || "[]");
 }
 
 const lastPoints = ref(
-  localStorage.getItem("yandexMarketPointStore")?.split("--")
+  JSON.parse(localStorage.getItem("ozonPointStore") || "[]")
 );
+
 const presetCluster = "islands#orangeClusterIcons";
 
 const originalBounds = ref([
@@ -142,14 +175,16 @@ onMounted(async () => {
             radius: 1000,
           },
           properties: {
-            iconContent: "Yandex Market",
+            iconContent: "OZON",
             data: {
-              a: point.a,
-              w: point.w,
+              lt: point.lt,
+              lg: point.lg,
+              a: "Загрузка...",
+              id: point.id,
             },
           },
           options: {
-            iconColor: "#ffe332",
+            iconColor: "#0340e9",
             iconLayout: "default#image",
             iconImageHref:
               "https://avatars.mds.yandex.net/get-marketcms/475644/img-0ec60a9f-2803-4ab0-8408-ed0dd2cbec79.png/optimize",
@@ -167,16 +202,23 @@ onMounted(async () => {
     // Добавляем коллекцию на карту.
     myMap.geoObjects.add(objectManager);
 
-    objectManager.objects.events.add("click", (e: any) => {
+    objectManager.objects.events.add("click", async (e: any) => {
       const objectId = e.get("objectId");
       const obj = objectManager.objects.getById(objectId);
+
+      await getAddressText(
+        obj.properties.data.lt,
+        obj.properties.data.lg,
+        obj.properties.data.id
+      );
+
+      obj.properties.data.a = addressText.value;
 
       const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
         `<div class="card rounded-lg">
           <div>
-            <div class="text-lg font-semibold">Пункт выдачи Yandex Market</div>
-            <div class="text-sm">${obj.properties.data.a}</div>
-            <div class="text-sm">${obj.properties.data.w}</div>
+            <div class="text-lg font-semibold">Пункт выдачи OZON</div>
+            <div class="text-sm">${addressText.value}</div>
             <a class="selectPoint mt-4 flex justify-center btn btn-primary hover:bg-primary">Выбрать</a>
           </div>
         </div>
@@ -208,14 +250,16 @@ onMounted(async () => {
       objectManager.objects.balloon.open(objectId);
     });
     // создаем кастомный балун
-    objectManager.objects.events.add("balloonopen", (e: any) => {
+    objectManager.objects.events.add("balloonopen", async (e: any) => {
       const objectId = e.get("objectId");
-      const geoObject = objectManager.objects.getById(objectId);
+      const geoObject: any = objectManager.objects.getById(objectId);
+
+      // objectManager.objects.balloon.close()
+      // objectManager.objects.balloon.open(objectId)
     });
     loading.value = false;
   } catch (e) {
     loading.value = false;
-    // eslint-disable-next-line no-console
     console.log(e);
     error.value = "Не удалось загрузить карту";
   }
@@ -225,6 +269,31 @@ onKeyStroke("Escape", (e) => {
   e.preventDefault();
   emit("close");
 });
+
+async function getAddressText(lt: number, lg: number, id: string) {
+  addressText.value = "Загрузка...";
+
+  // @ts-ignore
+  const { data, error }: any = await useFetch(`/api/ozon/buyout/addressText`, {
+    method: "GET",
+    params: {
+      lt,
+      lg,
+    },
+  });
+  if (data.value) {
+    addressText.value = data.value;
+    lastAddress.value = { lt, lg, id };
+    return addressText.value;
+  } else {
+    addressText.value = "Нет данных";
+    return addressText.value;
+  }
+}
+
+function openCourierModal() {
+  emit("openCourierModal");
+}
 </script>
 
 <template>
@@ -294,9 +363,14 @@ onKeyStroke("Escape", (e) => {
                 <button
                   :key="index"
                   class="btn pvz text-xs rounded-none h-16 rounded-l-md p-2 flex w-10/12 text-left"
-                  @click="handleSelect(item)"
+                  @click="
+                    [
+                      (lastAddress = { lt: item.lt, lg: item.lg, id: item.id }),
+                      handleSelect(item.address),
+                    ]
+                  "
                 >
-                  {{ item }}
+                  {{ item.address }}
                 </button>
                 <button
                   class="btn btn-square rounded-none rounded-r-md h-16"

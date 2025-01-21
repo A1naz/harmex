@@ -411,6 +411,15 @@ function handleAddressFBS(address: string, lt: number, lg: number) {
   modalOpenFBS.value = false;
 
   store.handleAddressFBS(address, lt, lg, addressForm);
+  addressForm = {
+    apartment: "",
+    entrance: "",
+    floor: "",
+    intercom: "",
+    comment: "",
+    nameLastName: "",
+    phone: "",
+  };
 }
 
 const addressForm = reactive({
