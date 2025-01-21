@@ -10,6 +10,7 @@ export async function getCityByGeo(
       url(latitude, longitude),
       { method: 'GET' },
     )
+
     const city = data.address.city
       ? data.address.city
       : data.address.town

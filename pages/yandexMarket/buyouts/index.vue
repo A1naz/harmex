@@ -514,12 +514,12 @@ const siteUrl = config.public.siteUrl;
                 :links="customLinks"
               />
             </span>
-            <button
+            <!-- <button
               @click="manualModal = true"
               class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
             >
               <Icon name="ci:info" size="24" />
-            </button>
+            </button> -->
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
             <CustomSelect

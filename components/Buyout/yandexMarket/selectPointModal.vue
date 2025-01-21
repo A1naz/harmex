@@ -311,7 +311,7 @@ function openCourierModal() {
           @click="closeModal"
           >✕</a
         >
-        <div class="join">
+        <!-- <div class="join">
           <input
             class="join-item btn"
             type="radio"
@@ -326,7 +326,7 @@ function openCourierModal() {
             aria-label="Курьер"
             @click="openCourierModal"
           />
-        </div>
+        </div> -->
         <div class="title mb-2">Выберите ПВЗ</div>
         <div
           v-if="loading"

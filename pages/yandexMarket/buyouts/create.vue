@@ -74,22 +74,22 @@ async function addProduct() {
 }
 
 async function ruleModalOpen(index: number) {
-  if (user.ffEnabled) {
-    if (
-      // eslint-disable-next-line eqeqeq
-      products.value[index].dateRange[0] != lastItemDateRange.value[0] ||
-      // eslint-disable-next-line eqeqeq
-      products.value[index].dateRange[1] != lastItemDateRange.value[1]
-    ) {
-      lastItemDateRange.value = products.value[index].dateRange;
-      await getFFPickpoints(products.value[index].dateRange[0] || new Date());
-    }
-  }
+  // if (user.ffEnabled) {
+  //   if (
+  //     // eslint-disable-next-line eqeqeq
+  //     products.value[index].dateRange[0] != lastItemDateRange.value[0] ||
+  //     // eslint-disable-next-line eqeqeq
+  //     products.value[index].dateRange[1] != lastItemDateRange.value[1]
+  //   ) {
+  //     lastItemDateRange.value = products.value[index].dateRange;
+  //     await getFFPickpoints(products.value[index].dateRange[0] || new Date());
+  //   }
+  // }
 
   ruleModal.value = true;
   selectedRuleProductIndex.value = index;
 
-  await getFFPickpoints(products.value[index].dateRange[0] || new Date());
+  // await getFFPickpoints(products.value[index].dateRange[0] || new Date());
 }
 // function removeSearchQuery(index: number, place: number) {
 //   store.removeSearchQuery(index, place)
@@ -130,8 +130,8 @@ function onRuleChange(event: Event, index: number, rule: number) {
 //   store.removeProduct(index)
 // }
 
-function handleAddress(address: any) {
-  store.handleAddress(address.a, address.lt, address.lg, address.id);
+function handleAddress(address: string, lt: number, lg: number, id: string) {
+  store.handleAddress(address, lt, lg, id);
 }
 function openInfoModal(type: string) {
   infoType.value = type;
@@ -151,7 +151,7 @@ const totalQuantity = computed(() => {
 });
 
 const pickpoints = shallowRef();
-const ffPickpoints = shallowRef();
+// const ffPickpoints = shallowRef();
 const modalOpen = ref(false);
 const modalOpenFF = ref(false);
 const modalOpenCourier = ref(false);
@@ -309,24 +309,24 @@ async function getPickpoints() {
     });
   }
 }
-async function getFFPickpoints(date: Date = new Date()) {
-  try {
-    const data = await $fetch("/api/yandexMarket/ff/userPickpoints", {
-      method: "GET",
-      query: {
-        date: new Date(date).toISOString(),
-      },
-    });
-    ffPickpoints.value = (data as any).points;
-  } catch (e: any) {
-    notify({
-      title: "Что-то пошло не так",
-      text: e?.message,
-      type: "error",
-      duration: 3000,
-    });
-  }
-}
+// async function getFFPickpoints(date: Date = new Date()) {
+//   try {
+//     const data = await $fetch("/api/yandexMarket/ff/userPickpoints", {
+//       method: "GET",
+//       query: {
+//         date: new Date(date).toISOString(),
+//       },
+//     });
+//     ffPickpoints.value = (data as any).points;
+//   } catch (e: any) {
+//     notify({
+//       title: "Что-то пошло не так",
+//       text: e?.message,
+//       type: "error",
+//       duration: 3000,
+//     });
+//   }
+// }
 
 async function pointModalOpen(index: number) {
   if (!pickpoints.value) loading.value = true;
@@ -651,7 +651,7 @@ const addressForm = reactive({
           @close="closeModal"
           @openCourierModal="openCourierModal"
         />
-        <BuyoutYandexMarketSelectCourierModal
+        <!-- <BuyoutYandexMarketSelectCourierModal
           v-if="modalOpenCourier"
           :state="modalOpenCourier"
           :pickpoints="ffPickpoints"
@@ -659,7 +659,7 @@ const addressForm = reactive({
           @callback="handleAddressCourier"
           @close="closeModal"
           @openPickpointModal="openPickpointModal"
-        />
+        /> -->
       </ClientOnly>
       <div
         v-show="products.length"
@@ -705,13 +705,14 @@ const addressForm = reactive({
           <label for="" class="modal-box relative" @click.stop>
             <label
               for="ruleModal"
-              class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              class="btn btn-sm btn-circle btn-ghost absolute right-6 top-2"
               @click="ruleModal = false"
               >✕</label
             >
             <h3 class="font-bold text-lg mb-2">
               Выберите нужные правила для этого выкупа
             </h3>
+
             <div v-for="rule of defaultRules" :key="rule.id" class="">
               <div
                 v-if="rule.id === 1"
@@ -729,23 +730,14 @@ const addressForm = reactive({
                   />
                 </div>
               </div>
-              <div
-                v-if="
-                  rule.id === 1 &&
-                  user.ffEnabled &&
-                  ffPickpoints &&
-                  ffPickpoints.length
-                "
+              <!-- <div
+                v-if="rule.id === 1 && user?.ffEnabled"
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
                 <span class="label-text">{{ "Выкуп под ключ " }}</span>
                 <div class="flex gap-4">
                   <input
-                    :disabled="
-                      products[selectedRuleProductIndex].purchaseSoon ||
-                      !ffPickpoints ||
-                      !ffPickpoints.length
-                    "
+                  :disabled="products[selectedRuleProductIndex].purchaseSoon"
                     v-model="products[selectedRuleProductIndex].key"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
@@ -754,30 +746,54 @@ const addressForm = reactive({
                         refreshElements(),
                         (products[selectedRuleProductIndex].adress = ''),
                         (products[selectedRuleProductIndex].dateRange = [
-                          new Date().setHours(new Date().getHours() + 3),
+                          new Date().setHours(new Date().getHours()),
 
-                          new Date().setHours(new Date().getHours() + 3),
+                          new Date().setHours(new Date().getHours()),
                         ]),
                       ]
                     "
                   />
                 </div>
+              </div> -->
+              <span
+                v-if="rule.id === 1"
+                class="text-[#AA4A44] text-sm font-bold"
+              >
+                Функционал по добавлению правил временно недоступен
+              </span>
+              <!-- <div
+              v-if="rule.id === 1"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
+            >
+              <span class="label-text"
+                >{{ 'Выкуп под ключ ' }}</span
+              >
+              <div class="flex gap-4">
+
+                <input
+                  type="checkbox"
+                  v-model="products[selectedRuleProductIndex].key"
+                  class="checkbox checkbox-primary border-base-content"
+                />
               </div>
+            </div> -->
               <div
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
                 <span class="label-text"
                   >{{ rule.id }}. {{ rule.description }}</span
                 >
+
                 <input
                   :disabled="
-                    !!store.createProducts[selectedRuleProductIndex].rules.find(
-                      (item) =>
-                        item.category === rule.category && item.id !== rule.id
-                    ) ||
-                    !!store.createProducts[selectedRuleProductIndex].rules.find(
-                      (item) => item.id === rule?.relies
-                    )
+                    // !!store.createProducts[selectedRuleProductIndex].rules.find(
+                    //   (item) =>
+                    //     item.category === rule.category && item.id !== rule.id
+                    // ) ||
+                    // !!store.createProducts[selectedRuleProductIndex].rules.find(
+                    //   (item) => item.id === rule?.relies
+                    // )
+                    true
                   "
                   type="checkbox"
                   class="checkbox checkbox-primary border-base-content"
@@ -999,11 +1015,6 @@ const addressForm = reactive({
         </div>
       </div>
     </div>
-    {{
-      store.createProducts[0] && store.createProducts[0].pointCoordinates
-        ? store.createProducts[0].pointCoordinates
-        : ""
-    }}
   </div>
 </template>
 

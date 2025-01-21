@@ -16,6 +16,10 @@ interface Item {
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
+  pointCoordinates: {
+    lat: number
+    lon: number
+  }
 }
 
 export default eventHandler(async (event) => {
@@ -102,9 +106,17 @@ export default eventHandler(async (event) => {
     //     }
     //   }
     // }
-
-    const foundPoint = points.find((p: { a: string }) => p.a === item.adress)
-
+    console.log(item.adress)
+  
+    const foundPoint = points.find(
+      (p: any) =>
+        p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon
+    )
+    if (!foundPoint) {
+      result.success = false
+      result.message = `ПВЗ ${item.adress} не найдено`
+      return result
+    }
     if (!foundPoint) {
       result.success = false
       result.message = `ПВЗ ${item.adress} не найдено`
