@@ -1,5 +1,5 @@
 import type { Rule } from '@/data/buyout/rules'
-import { Buyout } from '@/server/lib/models/wildberries/Buyout'
+import { Buyout } from '@/server/lib/models/yandexMarket/Buyout'
 import { userLog } from '@/server/utils/userLog'
 import getPickpoints from '@/server/utils/wildberries/getPoints'
 import { v4 as uuid } from 'uuid'

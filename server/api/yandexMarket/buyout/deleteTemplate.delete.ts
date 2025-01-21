@@ -1,6 +1,6 @@
 ﻿import { DocuemntEnum } from '~/data/enums'
 import { User } from '~/server/lib/models/User'
-import { BuyoutTemplate } from '~/server/lib/models/wildberries/BuyoutTemplate'
+import { BuyoutTemplate } from '@/server/lib/models/yandexMarket/BuyoutTemplate'
 
 export default eventHandler(async (event) => {
   const session = (await getAdminEntity(event)) as any

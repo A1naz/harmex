@@ -347,7 +347,7 @@ async function getAddressText(lt: number, lg: number, id: string) {
                     [
                       (lastAddress = { lt: item.lt, lg: item.lg, id: item.id }),
                       handleSelect(item.address),
-                    ];
+                    ]
                   "
                 >
                   {{ item.address }}

@@ -1,4 +1,4 @@
-﻿import { BuyoutTemplate } from '~/server/lib/models/wildberries/BuyoutTemplate'
+﻿import { BuyoutTemplate } from '@/server/lib/models/yandexMarket/BuyoutTemplate'
 
 export default eventHandler(async (event) => {
 

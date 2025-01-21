@@ -1,6 +1,6 @@
 import * as fs from 'node:fs'
 import { User } from '@/server/lib/models/User'
-import { Buyout } from '@/server/lib/models/wildberries/Buyout'
+import { Buyout } from '@/server/lib/models/yandexMarket/Buyout'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {

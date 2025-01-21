@@ -1,4 +1,4 @@
-﻿import { Buyout } from '@/server/lib/models/wildberries/Buyout'
+﻿import { Buyout } from '@/server/lib/models/yandexMarket/Buyout'
 import { User } from '~/server/lib/models/User'
 
 export default eventHandler(async (event) => {

@@ -1,5 +1,5 @@
 import { findImage, findProductCard } from '@/server/lib/helpers'
-import { Buyout } from '@/server/lib/models/wildberries/Buyout'
+import { Buyout } from '@/server/lib/models/yandexMarket/Buyout'
 
 export default eventHandler(async (event) => {
   const session = await getAdminEntity(event)

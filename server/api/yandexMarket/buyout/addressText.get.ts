@@ -1,5 +1,5 @@
 import { User } from '@/server/lib/models/User'
-import { Buyoutlog } from '@/server/lib/models/wildberries/Buyoutlog'
+import { Buyoutlog } from '@/server/lib/models/yandexMarket/Buyoutlog'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)

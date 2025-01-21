@@ -63,10 +63,10 @@ async function addProduct() {
   const string = article.value.toString().trim();
   if (string.includes(",")) {
     const articles = string.split(",");
-    for (const item of articles) await store.addProduct(Number(item));
+    for (const item of articles) await store.addProduct(item);
     loading.value = false;
   } else {
-    store.addProduct(Number(article.value)).finally(() => {
+    store.addProduct(article.value).finally(() => {
       loading.value = false;
     });
   }
@@ -154,9 +154,17 @@ const pickpoints = shallowRef();
 const ffPickpoints = shallowRef();
 const modalOpen = ref(false);
 const modalOpenFF = ref(false);
+const modalOpenCourier = ref(false);
+
 function closeModal() {
   modalOpen.value = false;
   modalOpenFF.value = false;
+  modalOpenCourier.value = false;
+}
+
+function openCourierModal() {
+  closeModal();
+  modalOpenCourier.value = true;
 }
 
 async function openChecksModal() {
@@ -460,7 +468,7 @@ function refreshElements() {
             <input
               ref="codeInput"
               v-model="article"
-              placeholder="Артикул"
+              placeholder="Ссылка на продукт"
               class="input input-sm w-full mb-2 md:mb-0 bg-base-200 border-base-200"
               @keydown.enter="addProduct"
             />
@@ -613,10 +621,11 @@ function refreshElements() {
           :pickpoints="pickpoints"
           @callback="handleAddress"
           @close="closeModal"
+          @openCourierModal="openCourierModal"
         />
-        <BuyoutYandexMarketSelectFFPointModal
-          v-if="modalOpenFF"
-          :state="modalOpenFF"
+        <BuyoutYandexMarketSelectCourierModal
+          v-if="modalOpenCourier"
+          :state="modalOpenCourier"
           :pickpoints="ffPickpoints"
           @callback="handleAddress"
           @close="closeModal"
@@ -960,6 +969,7 @@ function refreshElements() {
         </div>
       </div>
     </div>
+    modalOpenCourier: {{ modalOpenCourier }}
   </div>
 </template>
 

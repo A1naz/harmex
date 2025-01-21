@@ -123,7 +123,7 @@ const productQuantityModel = computed({
                 {{ product.name }}
               </p>
               <a
-                :href="`https://www.wildberries.ru/catalog/${product.article}/detail.aspx`"
+                :href="product.url"
                 target="_blank"
                 class="text-sm text-primary link link-hover"
               >

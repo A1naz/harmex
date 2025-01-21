@@ -62,7 +62,7 @@ export const useYandexMarketBuyoutStore = defineStore('yandexMarketBuyout', {
     clearProducts() {
       this.createProducts = []
     },
-    async addProduct(article: number) {
+    async addProduct(article: string) {
       if (this.createProducts.length >= 10) {
         notify({
           title: 'За раз можно создать максимум 10 выкупов',
@@ -72,7 +72,7 @@ export const useYandexMarketBuyoutStore = defineStore('yandexMarketBuyout', {
       }
 
       const { data, error } = await useFetch(
-        `/api/yandexMarket/product/${article}`,
+        `/api/yandexMarket/product/get?article=${article}`,
         {
           method: 'GET',
         },
@@ -105,6 +105,7 @@ export const useYandexMarketBuyoutStore = defineStore('yandexMarketBuyout', {
           image: product.image,
           name: product.name,
           article: product.article,
+          url: product.url,
           price: product.price,
           quantity: 1,
           sex: 'Нет',

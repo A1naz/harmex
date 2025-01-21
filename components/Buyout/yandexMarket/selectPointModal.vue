@@ -15,11 +15,14 @@ const props = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(["callback", "close"]);
+const emit = defineEmits(["callback", "close", "openCourierModal"]);
 const store = useMainStore();
 
 function closeModal() {
   emit("close");
+}
+function openCourierModal() {
+  emit("openCourierModal");
 }
 const loading = ref(false);
 const map = ref();
@@ -59,7 +62,7 @@ function handleDelete(address: string) {
 const lastPoints = ref(
   localStorage.getItem("yandexMarketPointStore")?.split("--")
 );
-const presetCluster = "islands#violetClusterIcons";
+const presetCluster = "islands#orangeClusterIcons";
 
 const originalBounds = ref([
   [55.72435065000997, 37.421310551334145],
@@ -98,7 +101,7 @@ onMounted(async () => {
         geoObjectsArray.forEach((marker: any) => {
           marker.options.set({
             hasBalloon: false,
-            preset: "islands#violetDotIconWithCaption",
+            preset: "islands#orangeClusterIcons",
             iconOffset: [0, -25],
           });
           marker.properties.set({
@@ -139,16 +142,17 @@ onMounted(async () => {
             radius: 1000,
           },
           properties: {
-            iconContent: "WB",
+            iconContent: "Yandex Market",
             data: {
               a: point.a,
               w: point.w,
             },
           },
           options: {
-            iconColor: "#ffd976",
+            iconColor: "#ffe332",
             iconLayout: "default#image",
-            iconImageHref: "/img/pin-map.svg",
+            iconImageHref:
+              "https://avatars.mds.yandex.net/get-marketcms/475644/img-0ec60a9f-2803-4ab0-8408-ed0dd2cbec79.png/optimize",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
@@ -238,6 +242,22 @@ onKeyStroke("Escape", (e) => {
           @click="closeModal"
           >✕</a
         >
+        <div class="join">
+          <input
+            class="join-item btn"
+            type="radio"
+            name="options"
+            aria-label="Пункт выдачи"
+            checked="checked"
+          />
+          <input
+            class="join-item btn"
+            type="radio"
+            name="options"
+            aria-label="Курьер"
+            @click="openCourierModal"
+          />
+        </div>
         <div class="title mb-2">Выберите ПВЗ</div>
         <div
           v-if="loading"
