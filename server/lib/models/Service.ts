@@ -24,6 +24,7 @@ const ServiceSchema = new Schema({
   INN: { type: String},
   phoneNumber: { type: String},
   telegram: { type: String},
+  test: { type: Boolean, default: false },
 })
 
 // Mongoose Model for Service

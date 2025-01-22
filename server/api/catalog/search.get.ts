@@ -28,6 +28,16 @@ const replacements = generateReplacements({
         'вайлберис': 'wildberries',
         'вб': 'wildberries',
         'wb': 'wildberries',
+        'яндекс': 'yandexmarket',
+        'маркет': 'yandexmarket',
+        "яндекс маркет": 'yandexmarket',
+        "маркет яндекс": 'yandexmarket',
+        "яндексмаркет": 'yandexmarket',
+        "маркетяндекс": 'yandexmarket',
+        "yandex market": 'yandexmarket',
+        "market yandex": 'yandexmarket',
+        "ym": 'yandexmarket',
+        "ям": 'yandexmarket',
 })
 
 export default defineEventHandler(async (event) => {
@@ -36,14 +46,19 @@ export default defineEventHandler(async (event) => {
         const words = query.split(' ')
 
         for (let i = 0; i < words.length; i++) {
+                
                 if (replacements[words[i]]) {
+                      
+                      
+                        
                         const mp = replacements[words[i]]
                         words.splice(i, 1)
                         words.unshift(mp)
+                     
                 }
         }
         const phrase = words.join('')
-
+   
         const regex = new RegExp(phrase.trim().split(/\s+/).join('|'), 'i');
 
         const found = await Search.find(

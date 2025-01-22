@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import MenuBuilder from '~/server/utils/menuBuilder'
-const { user } = useUserSession()
+import MenuBuilder from "~/server/utils/menuBuilder";
+const { user } = useUserSession();
 
 defineProps({
   items: {
@@ -17,13 +17,21 @@ defineProps({
   },
 });
 
-const accesses = MenuBuilder.filteredAccess(user?.value?.acesses || []).allowedPathes
+const accesses = MenuBuilder.filteredAccess(
+  user?.value?.acesses || []
+).allowedPathes;
 
 function getServices(items: Array<any>) {
   const allowedPaths = ["/buyouts", "/deliveries", "/reviews"];
-  const found = items.filter((item: any) => !item.disabled && allowedPaths.includes(item.path));
+  const found = items.filter(
+    (item: any) => !item.disabled && allowedPaths.includes(item.path)
+  );
 
-  return accesses.length === 0 ? found : found.filter((item: any) => accesses.some((access: any) => access.value === item.path));
+  return accesses.length === 0
+    ? found
+    : found.filter((item: any) =>
+        accesses.some((access: any) => access.value === item.path)
+      );
 }
 
 defineEmits(["setFavourites", "vote"]);
@@ -31,7 +39,7 @@ defineEmits(["setFavourites", "vote"]);
 
 <template>
   <main class="flex-1 mx-3">
-    <div class="flex flex-wrap  gap-y-5 gap-x-[7px] w-full justify-start">
+    <div class="flex flex-wrap gap-y-5 gap-x-[7px] w-full justify-start">
       <div
         v-for="(social, index) in items"
         :key="index"
@@ -40,7 +48,10 @@ defineEmits(["setFavourites", "vote"]);
         <div class="flex flex-col gap-2 w-full">
           <div
             @click="
-              social.disabled ? '' : navigateTo(`/catalog/${social.slug}`)
+              social.disabled &&
+              (user.username !== 'test' || social.test !== true)
+                ? ''
+                : navigateTo(`/catalog/${social.slug}`)
             "
             class="flex items-start justify-center w-full relative overflow-hidden rounded-lg cursor-pointer h-[83px]"
             :style="{ backgroundColor: social.backgroundColor }"
@@ -97,10 +108,17 @@ defineEmits(["setFavourites", "vote"]);
           </div>
           <div class="flex w-full justify-center self-end mt-2">
             <NuxtLink
-              :to="social.disabled ? '' : `/catalog/${social.slug}`"
+              :to="
+                social.disabled &&
+                (user.username !== 'test' || social.test !== true)
+                  ? ''
+                  : `/catalog/${social.slug}`
+              "
               class="text-[15px] w-full btn btn-primary btn-sm"
               :class="{
-                'cursor-default': social.disabled,
+                'cursor-default':
+                  social.disabled &&
+                  (user.username !== 'test' || social.test !== true),
               }"
             >
               Перейти
@@ -108,7 +126,10 @@ defineEmits(["setFavourites", "vote"]);
           </div>
         </div>
         <button
-          v-if="social.disabled"
+          v-if="
+            social.disabled &&
+            (user.username !== 'test' || social.test !== true)
+          "
           class="px-5 py-2 bg-[#e86b35] text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:bg-primary"
           style="z-index: 10"
           @click="$emit('vote', social.slug)"
@@ -117,7 +138,10 @@ defineEmits(["setFavourites", "vote"]);
         </button>
 
         <div
-          v-if="social.disabled"
+          v-if="
+            social.disabled &&
+            (user.username !== 'test' || social.test !== true)
+          "
           class="absolute inset-0 bg-black opacity-70 pointer-events-none rounded-lg"
         />
       </div>
