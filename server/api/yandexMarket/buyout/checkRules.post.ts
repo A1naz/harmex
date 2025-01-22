@@ -1,5 +1,5 @@
 import type { Rule } from '@/data/buyout/rules'
-import getPickpoints from '@/server/utils/wildberries/getPoints'
+import getPickpoints from '@/server/utils/yandexMarket/getPoints'
 
 interface Item {
   image: string

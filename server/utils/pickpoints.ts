@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import { PVZ } from '~/server/lib/models/ozon/PVZ'
 import { PVZ as WBPVZ } from '~/server/lib/models/wildberries/PVZ'
+import { PVZ as YMPVZ } from '~/server/lib/models/yandexMarket/PVZ'
 
 // async function getRandomProxy(): Promise<string> {
 //   const allProxies: any = await ProxySearchQuery.find()
@@ -115,7 +116,29 @@ export async function createOzonPickpointsFile() {
   fs.writeFileSync('pvz/ozonPoints.json', JSON.stringify(cache))
 }
 
+export async function createYandexMarketPickpointsFile() {
+  const points: any = await YMPVZ.find()
+
+  const collection = points.map((point: any) => {
+    return {
+      id: point.pointId,
+      lt: point.coordinates.lat,
+      lg: point.coordinates.lon,
+    }
+  })
+
+  const cache = {
+    updated: new Date(),
+    points: collection,
+  }
+
+  console.log('creating YandexMarketPoints.json')
+  fs.writeFileSync('pvz/yandexMarketPoints.json', JSON.stringify(cache))
+}
+
+
 export async function createAllPickpoints() {
   createPickpointsFile()
   createOzonPickpointsFile()
+  createYandexMarketPickpointsFile()
 }

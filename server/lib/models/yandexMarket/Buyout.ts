@@ -10,6 +10,7 @@ const ProductSchema = new Schema({
   image: { type: String, required: true },
 })
 const BuyoutSchema = new Schema({
+  url: { type: String, required: false, text: true },
   searchQuery: { type: String, text: true, default: '' },
   sizeparam: { type: String, required: true, text: true },
   quantity: { type: Number, required: true, text: true, max: 50 },

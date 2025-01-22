@@ -311,8 +311,8 @@ async function copyToClipboard(text: string) {
         <div
           class="flex-none"
           style="
-            width: 80px;
-            height: 124px;
+            width: 100px;
+            height: 100px;
             margin-top: auto;
             margin-bottom: auto;
           "
@@ -335,11 +335,7 @@ async function copyToClipboard(text: string) {
               <div
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
               >
-                <a
-                  :href="`https://www.yandexMarket.ru/catalog/${info.article}/detail.aspx`"
-                  target="_blank"
-                  class="link link-hover"
-                >
+                <a :href="info.url" target="_blank" class="link link-hover">
                   {{ info.article }}
                 </a>
               </div>

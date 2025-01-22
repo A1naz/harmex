@@ -130,6 +130,7 @@ export default eventHandler(async (event) => {
       place: buyout.place,
       uuid: buyout.uuid,
       article: buyout.article,
+      url: buyout.url,
       searchQuery: buyout.searchQuery,
       point: buyout.point,
       dateStart: buyout.dateStart,

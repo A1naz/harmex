@@ -125,11 +125,11 @@ onKeyStroke("Escape", (e) => {
           </div> -->
 
           <div class="flex gap-3 mt-2 items-center">
-            <div class="flex-none" style="width: 100px; height: 150px">
+            <div class="flex-none" style="width: 100px; height: 100px">
               <nuxt-img
                 class="rounded-xl h-full"
                 width="100"
-                height="150"
+                height="100"
                 :src="info?.product?.image || '/logo/logocolor.svg'"
                 loading="lazy"
               />

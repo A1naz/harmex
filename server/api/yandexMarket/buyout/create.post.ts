@@ -28,6 +28,7 @@ interface Item {
     lat: number
     lon: number
   }
+  url: string
 }
 export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event)
@@ -123,6 +124,7 @@ export default eventHandler(async (event) => {
       ff: product.key || false,
       pointId: product.pointId,
       pointCoordinates: product.pointCoordinates,
+      url: product.url
     })
 
     await buyout.save()

@@ -3,7 +3,7 @@ import { rules } from '@/data/buyout/rules'
 import { notify } from '@kyvg/vue3-notification'
 import { defineStore } from 'pinia'
 
-export interface ISearchQueryChange {
+interface ISearchQueryChange {
   value: string
   queryIndex: number
   productIndex: number
