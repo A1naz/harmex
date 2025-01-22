@@ -141,7 +141,7 @@ async function setFavourites(path: string) {
       <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer" @click="navigateToCatalog">Маркетплейсы</li>
         <li class="text-[#212121]">
-          {{ id[0].toUpperCase() + id.slice(1) }}
+          {{ item.name }}
         </li>
       </ul>
     </div>
