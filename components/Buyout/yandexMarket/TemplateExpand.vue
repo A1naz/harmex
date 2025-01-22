@@ -83,7 +83,7 @@ async function deleteTemplate() {
           @click="deleteTemplate"
           >Удалить</label
         >
-        <nuxt-link to="/yandexMarket/buyouts/create">
+        <nuxt-link to="/ym/buyouts/create">
           <label
             class="btn btn-sm btn-primary truncate mr-1 border-none text-white"
             @click="selectTemplate"

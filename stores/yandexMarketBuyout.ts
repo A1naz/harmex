@@ -117,6 +117,10 @@ export const useYandexMarketBuyoutStore = defineStore('yandexMarketBuyout', {
           priceText: product.priceText,
           rules: [],
           pointCoordinates: { lat: 0, lon: 0 },
+          promoCode: '',
+          addressInfo: {
+
+          }
         }),
       )
       // this.changeRule(true, this.createProducts.length - 1, 5)

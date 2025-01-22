@@ -15,9 +15,18 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  openPromo: {
+    type: Function,
+    required: true,
+  },
 });
 
-const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
+const emit = defineEmits([
+  "callback",
+  "pointModalOpen",
+  "ruleModalOpen",
+  "removePromo",
+]);
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 
@@ -277,6 +286,23 @@ const productQuantityModel = computed({
           @add="addSearchQuery"
           @remove="removeSearchQuery"
         />
+      </div>
+    </td>
+    <td class="w-[140px] border-r border-base">
+      <div class="flex justify-between mt-1 mx-5">
+        <button
+          class="w-full text-center btn btn-ghost dark:border-[#51535a] border-base-300 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap px-1"
+          @click="props.openPromo(index, product.price)"
+        >
+          {{ product.promoCode ? `${product.promoCode}` : "Указать промокод" }}
+        </button>
+        <button
+          v-if="product.promoCode"
+          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 ml-[1px] btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          @click="$emit('removePromo', index)"
+        >
+          <Icon name="ep:close-bold" size="12" />
+        </button>
       </div>
     </td>
     <td class="border-r border-base w-[90px]">

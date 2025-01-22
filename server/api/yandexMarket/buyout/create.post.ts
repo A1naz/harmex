@@ -28,7 +28,8 @@ interface Item {
     lat: number
     lon: number
   }
-  url: string
+  url: string,
+  promocode: string
 }
 export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event)
@@ -124,7 +125,9 @@ export default eventHandler(async (event) => {
       ff: product.key || false,
       pointId: product.pointId,
       pointCoordinates: product.pointCoordinates,
-      url: product.url
+      url: product.url,
+      promocode: product.promoCode,
+      isPromocodeEnabled: product.promoCode && product.promoCode !== '' ? true : false,
     })
 
     await buyout.save()

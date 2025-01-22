@@ -223,6 +223,12 @@ onKeyStroke("Escape", (e) => {
                 }}</span>
               </div>
               <div>
+                <span class="text-sm text-gray-500 mr-2">Промокод: </span>
+                <span class="rounded-md py-0 px-2 text-sm">{{
+                  info.promocode
+                }}</span>
+              </div>
+              <div>
                 <span class="text-sm text-gray-500 mr-2">Дата выкупов: </span>
                 <span
                   class="rounded-md py-0 pr-2 text-sm flex gap-1 justify-start flex-wrap"

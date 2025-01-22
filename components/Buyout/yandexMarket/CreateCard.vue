@@ -13,6 +13,10 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  openPromo: {
+    type: Function,
+    required: true,
+  },
 });
 
 function copyBuyout() {
@@ -302,6 +306,29 @@ const productQuantityModel = computed({
         </div>
       </div>
       <div>
+        <div class="flex">
+          <span class="text-md text-gray-500 mr-3 my-auto">Промокод: </span>
+          <div class="flex">
+            <button
+              class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+              :class="{
+                'rounded-r-none': product.promoCode,
+              }"
+              @click="props.openPromo(index, product.price)"
+            >
+              {{
+                product.promoCode ? `${product.promoCode}` : "Указать промокод"
+              }}
+            </button>
+            <button
+              v-if="product.promoCode"
+              class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1 btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+              @click="$emit('removePromo', index)"
+            >
+              <Icon name="ep:close-bold" size="12" />
+            </button>
+          </div>
+        </div>
         <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
         <div class="w-full flex flex-col gap-2">
           <BuyoutYandexMarketCreateSearchQueries

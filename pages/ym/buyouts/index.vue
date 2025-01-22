@@ -378,7 +378,7 @@ async function changeMP(e: any) {
 }
 const customLinks = filters.map((filter) => ({
   title: filter.title,
-  slot: "/yandexMarket/buyouts",
+  slot: "/ym/buyouts",
   query: filter.params,
 }));
 
@@ -411,7 +411,7 @@ const isChecked = ref(false);
 const manualModal = ref(false);
 
 function toggleCheckbox() {
-  const platform = "yandexMarket";
+  const platform = "ym";
   const type = "buyout";
   const storedValue = localStorage.getItem("modalState");
   const modalState = storedValue ? JSON.parse(storedValue) : {};
@@ -430,7 +430,7 @@ onMounted(() => {
   const storedValue = localStorage.getItem("modalState");
   const modalState = storedValue ? JSON.parse(storedValue) : {};
 
-  const platform = "yandexMarket";
+  const platform = "ym";
   const type = "buyout";
   isChecked.value = modalState[platform]?.[type] || false;
   manualModal.value = !isChecked.value;
@@ -460,10 +460,7 @@ const siteUrl = config.public.siteUrl;
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink
-            to="/catalog/yandexMarket"
-            class="cursor-pointer text-[#909090]"
-          >
+          <NuxtLink to="/catalog/ym" class="cursor-pointer text-[#909090]">
             Yandex Market
           </NuxtLink>
         </li>
@@ -480,7 +477,7 @@ const siteUrl = config.public.siteUrl;
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
           <button
             class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
-            @click="copyToClipboard(`${siteUrl}/yandexMarket/buyouts`)"
+            @click="copyToClipboard(`${siteUrl}/ym/buyouts`)"
           >
             <Icon name="ph:share-fat-fill" size="20" />
           </button>
@@ -493,7 +490,7 @@ const siteUrl = config.public.siteUrl;
       >
         <div class="flex gap-2">
           <NuxtLink
-            to="/yandexMarket/buyouts/create"
+            to="/ym/buyouts/create"
             class="btn btn-primary dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
           >
             <Icon name="fluent:add-24-filled" size="25" />

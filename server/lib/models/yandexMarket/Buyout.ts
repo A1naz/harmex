@@ -35,6 +35,8 @@ const BuyoutSchema = new Schema({
   purchaseSoon: { type: Boolean, required: false, default: false },
   ff: { type: Boolean, required: false, default: false },
   completed: { type: Number, required: false, default: 0 },
+  promocode: { type: String, required: false },
+  isPromocodeEnabled: { type: Boolean, required: false, default: false },
   data5: { type: {}, default: '' },
   data6: { type: {}, default: '' },
   data7: { type: {}, default: '' },

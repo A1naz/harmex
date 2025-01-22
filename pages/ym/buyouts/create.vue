@@ -33,6 +33,10 @@ const templates = ref<any>([]);
 const codeInput = ref();
 const refreshKey = ref(1);
 const lastItemDateRange = ref<any>([]);
+const promoModal = ref(false);
+
+const currentProductIndex = ref(0);
+const currentProductPrice = ref(0);
 
 definePageMeta({
   layout: "app",
@@ -282,7 +286,7 @@ async function createBuyout() {
     });
 
     store.createProducts = [];
-    navigateTo({ path: "/yandexMarket/buyouts" });
+    navigateTo({ path: "/ym/buyouts" });
   }
 }
 
@@ -450,6 +454,17 @@ const addressForm = reactive({
   nameLastName: "",
   phone: "",
 });
+
+function openPromo(productIndex: number, price: number) {
+  currentProductIndex.value = productIndex;
+  currentProductPrice.value = price;
+  promoModal.value = true;
+}
+
+function removePromo(index: number) {
+  console.log(index);
+  store.createProducts[index].promoCode = "";
+}
 </script>
 
 <template>
@@ -464,18 +479,12 @@ const addressForm = reactive({
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink
-            to="/catalog/yandexMarket"
-            class="cursor-pointer text-[#909090]"
-          >
+          <NuxtLink to="/catalog/ym" class="cursor-pointer text-[#909090]">
             Yandex Market
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink
-            to="/yandexMarket/buyouts"
-            class="cursor-pointer text-[#909090]"
-          >
+          <NuxtLink to="/ym/buyouts" class="cursor-pointer text-[#909090]">
             Выкупы
           </NuxtLink>
         </li>
@@ -515,12 +524,12 @@ const addressForm = reactive({
             >
               Добавить
             </button>
-            <label
+            <!-- <label
               for="template-select-modal"
               class="btn btn-sm btn-primary normal-case border-none bg-base-200 text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-primary hover:text-base-100"
               @click="getTemplates"
               >Шаблоны</label
-            >
+            > -->
           </div>
         </div>
       </div>
@@ -548,6 +557,8 @@ const addressForm = reactive({
             :index="index"
             @point-modal-open="pointModalOpen"
             @rule-modal-open="ruleModalOpen"
+            :open-promo="openPromo"
+            @removePromo="removePromo"
           />
         </div>
         <div
@@ -625,6 +636,12 @@ const addressForm = reactive({
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
+                <th class="font-normal text-base-content">
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Промокод</span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+                  </div>
+                </th>
 
                 <th class="text-base-content" />
               </tr>
@@ -639,6 +656,8 @@ const addressForm = reactive({
                 :loading="!pickpoints?.length"
                 @rule-modal-open="ruleModalOpen"
                 @point-modal-open="pointModalOpen"
+                :open-promo="openPromo"
+                @removePromo="removePromo"
               />
             </tbody>
           </table>
@@ -672,12 +691,12 @@ const addressForm = reactive({
           for="removeAllModelCreateProducts"
           >Удалить все</label
         > -->
-          <label
+          <!-- <label
             class="btn btn-sm btn-primary normal-case border-none bg-base-200 text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal"
             for="template-modal"
           >
             Шаблон
-          </label>
+          </label> -->
 
           <button
             class="btn btn-sm btn-primary normal-case border-none text-white mt-1 ml-2 font-normal"
@@ -1015,6 +1034,12 @@ const addressForm = reactive({
         </div>
       </div>
     </div>
+    <BuyoutYandexMarketPromoModal
+      :show="promoModal"
+      :index="currentProductIndex"
+      :price="currentProductPrice"
+      @close-modal="promoModal = false"
+    />
   </div>
 </template>
 

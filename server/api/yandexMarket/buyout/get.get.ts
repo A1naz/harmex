@@ -145,6 +145,7 @@ export default eventHandler(async (event) => {
       product: buyout.product,
       purchaseSoon: buyout.purchaseSoon,
       key: buyout.key,
+      promocode: buyout.promocode,
     }
   })
   return format
