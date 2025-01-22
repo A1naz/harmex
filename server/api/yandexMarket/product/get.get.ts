@@ -7,12 +7,12 @@ export default eventHandler(async (event) => {
 
   const params = event.context.params as any
   const article = getQuery(event).article || params.article
-  
+
   const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     body: {
       type: 'yandexProduct',
-      url: article,
+      url: 'https://market.yandex.ru/pr/' + article,
       token: config.PARSER_TOKEN,
     },
   }).catch((e) => {
@@ -31,12 +31,12 @@ export default eventHandler(async (event) => {
       message: 'Товар не найден',
     })
   }
-  
+
   return {
     product: {
       image: data.image || '',
-      article: data.article || '',
-      url: article,
+      article: article,
+      url: 'https://market.yandex.ru/pr/' + article,
       name: data.name || '',
       sizes: data.sizes.length ? data.sizes : ['0'],
       price: data.price || 0,

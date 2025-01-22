@@ -67,10 +67,10 @@ async function addProduct() {
   const string = article.value.toString().trim();
   if (string.includes(",")) {
     const articles = string.split(",");
-    for (const item of articles) await store.addProduct(item);
+    for (const item of articles) await store.addProduct(Number(item));
     loading.value = false;
   } else {
-    store.addProduct(article.value).finally(() => {
+    store.addProduct(Number(article.value)).finally(() => {
       loading.value = false;
     });
   }
@@ -505,9 +505,9 @@ function removePromo(index: number) {
             <input
               ref="codeInput"
               v-model="article"
-              placeholder="Ссылка на продукт"
+              placeholder="артикул"
               class="input input-sm w-full mb-2 md:mb-0 bg-base-200 border-base-200"
-              @keydown.enter="addProduct"
+              @keydown.enter="Number(item)"
             />
             <Icon
               class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
