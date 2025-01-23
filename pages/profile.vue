@@ -523,11 +523,10 @@ function copyText(text: string) {
                 target="_blank"
                 :href="
                   config.public.siteUrl +
-                  '/docs/' +
+                  '/api/docs/getSigned?fileName=' +
                   'oferta' +
                   user.docType +
-                  'BallIP' +
-                  '.pdf'
+                  'BallIP'
                 "
               >
                 <Icon name="material-symbols:download-sharp" size="24" />
@@ -538,11 +537,10 @@ function copyText(text: string) {
               target="_blank"
               :href="
                 config.public.siteUrl +
-                '/docs/' +
+                '/api/docs/getSigned?fileName=' +
                 'oferta' +
                 user.docType +
-                'BallIP' +
-                '.pdf'
+                'BallIP'
               "
             >
               <Icon name="material-symbols:download-sharp" size="24" />
@@ -565,11 +563,10 @@ function copyText(text: string) {
                 target="_blank"
                 :href="
                   config.public.siteUrl +
-                  '/docs/' +
+                  '/api/docs/getSigned?fileName=' +
                   'oferta' +
                   user.docType +
-                  'BalashovIP' +
-                  '.pdf'
+                  'BalashovIP'
                 "
               >
                 <Icon name="material-symbols:download-sharp" size="24" />
@@ -580,11 +577,10 @@ function copyText(text: string) {
               target="_blank"
               :href="
                 config.public.siteUrl +
-                '/docs/' +
+                '/api/docs/getSigned?fileName=' +
                 'oferta' +
                 user.docType +
-                'BalashovIP' +
-                '.pdf'
+                'BalashovIP'
               "
             >
               <Icon name="material-symbols:download-sharp" size="24" />
@@ -607,11 +603,10 @@ function copyText(text: string) {
                 target="_blank"
                 :href="
                   config.public.siteUrl +
-                  '/docs/' +
+                  '/api/docs/getSigned?fileName=' +
                   'oferta' +
                   user.docType +
-                  'FilushovIP' +
-                  '.pdf'
+                  'FilushovIP'
                 "
               >
                 <Icon name="material-symbols:download-sharp" size="24" />
@@ -622,11 +617,10 @@ function copyText(text: string) {
               target="_blank"
               :href="
                 config.public.siteUrl +
-                '/docs/' +
+                '/api/docs/getSigned?fileName=' +
                 'oferta' +
                 user.docType +
-                'FilushovIP' +
-                '.pdf'
+                'FilushovIP'
               "
             >
               <Icon name="material-symbols:download-sharp" size="24" />

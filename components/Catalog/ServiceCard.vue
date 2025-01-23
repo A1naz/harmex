@@ -64,9 +64,9 @@ defineEmits(["setFavourites"]);
         :style="{ backgroundColor: item.backgroundColor }"
       >
         <div
-          class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-[24px] font-medium text-center"
+          class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-[19px] font-medium text-center whitespace-nowrap"
         >
-          {{ item.name }}
+          {{ item.items[index].title }}
         </div>
         <!-- <NuxtImg
               :src="social.mainImage"

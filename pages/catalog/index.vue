@@ -191,6 +191,7 @@ watch(
           class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
           @click="introductionModal = true"
         >
+          Введение
           <Icon name="material-symbols:info-outline" size="24" class="ml-1" />
         </div>
       </div>
