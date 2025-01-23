@@ -26,6 +26,7 @@ export default defineNitroPlugin(() => {
       orgInn: user.orgInn,
       orgName: user.orgName,
       ffEnabled: user.ffEnabled,
+      docType: user.fizFace ? 'Fiz' : user.orgKey === 'ИП' ? 'IP' : 'OOO',
       orgIP: user.lastOrgInfo ? user.lastOrgInfo.orgName : 'ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ',
       docName: user.lastOrgInfo ? user.lastOrgInfo.docName : 'oferta',
     }

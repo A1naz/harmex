@@ -15,6 +15,7 @@ declare module '#auth-utils' {
     ffEnabled: boolean
     orgIP: string | undefined
     docName: string | undefined
+    docType: string | undefined
   }
 
   interface UserSession {

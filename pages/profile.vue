@@ -516,11 +516,19 @@ function copyText(text: string) {
               </p>
             </div>
             <div class="flex items-center sm:text-md text-sm">
-              {{ user.orgIP }}
+              ИП БАЛЬ ЕЛЕНА ЮРЬЕВНА
+
               <a
                 class="btn btn-primary btn-sm rounded-full p-1 ml-3 justify-center items-center sm:hidden flex"
                 target="_blank"
-                :href="config.public.siteUrl + '/api/docs/get'"
+                :href="
+                  config.public.siteUrl +
+                  '/docs/' +
+                  'oferta' +
+                  user.docType +
+                  'BallIp' +
+                  '.pdf'
+                "
               >
                 <Icon name="material-symbols:download-sharp" size="24" />
               </a>
@@ -528,7 +536,98 @@ function copyText(text: string) {
             <a
               class="btn btn-primary btn-sm rounded-full p-1 justify-center items-center hidden sm:flex"
               target="_blank"
-              :href="config.public.siteUrl + '/api/docs/get'"
+              :href="
+                config.public.siteUrl +
+                '/docs/' +
+                'oferta' +
+                user.docType +
+                'BallIp' +
+                '.pdf'
+              "
+            >
+              <Icon name="material-symbols:download-sharp" size="24" />
+            </a>
+          </div>
+          <div
+            class="flex flex-col sm:flex-row gap-2 p-2 justify-between text-primary w-full bg-secondary rounded-lg"
+          >
+            <div class="flex gap-2 items-center">
+              <Icon name="gg:file-document" size="24" />
+              <p class="font-medium sm:text-sm text-xs">
+                Пользовательское соглашение
+              </p>
+            </div>
+            <div class="flex items-center sm:text-md text-sm">
+              ИП БАЛАШОВ АНДРЕЙ ЮРЬЕВИЧ
+
+              <a
+                class="btn btn-primary btn-sm rounded-full p-1 ml-3 justify-center items-center sm:hidden flex"
+                target="_blank"
+                :href="
+                  config.public.siteUrl +
+                  '/docs/' +
+                  'oferta' +
+                  user.docType +
+                  'BalashovIP' +
+                  '.pdf'
+                "
+              >
+                <Icon name="material-symbols:download-sharp" size="24" />
+              </a>
+            </div>
+            <a
+              class="btn btn-primary btn-sm rounded-full p-1 justify-center items-center hidden sm:flex"
+              target="_blank"
+              :href="
+                config.public.siteUrl +
+                '/docs/' +
+                'oferta' +
+                user.docType +
+                'BalashovIP' +
+                '.pdf'
+              "
+            >
+              <Icon name="material-symbols:download-sharp" size="24" />
+            </a>
+          </div>
+          <div
+            class="flex flex-col sm:flex-row gap-2 p-2 justify-between text-primary w-full bg-secondary rounded-lg"
+          >
+            <div class="flex gap-2 items-center">
+              <Icon name="gg:file-document" size="24" />
+              <p class="font-medium sm:text-sm text-xs">
+                Пользовательское соглашение
+              </p>
+            </div>
+            <div class="flex items-center sm:text-md text-sm">
+              ИП ФИЛЮШОВ НИКИТА АНТОНОВИЧ
+
+              <a
+                class="btn btn-primary btn-sm rounded-full p-1 ml-3 justify-center items-center sm:hidden flex"
+                target="_blank"
+                :href="
+                  config.public.siteUrl +
+                  '/docs/' +
+                  'oferta' +
+                  user.docType +
+                  'FilushovIP' +
+                  '.pdf'
+                "
+              >
+                <Icon name="material-symbols:download-sharp" size="24" />
+              </a>
+            </div>
+            <a
+              class="btn btn-primary btn-sm rounded-full p-1 justify-center items-center hidden sm:flex"
+              target="_blank"
+              :href="
+                config.public.siteUrl +
+                '/docs/' +
+                'oferta' +
+                user.docType +
+                'FilushovIP' +
+                '.pdf'
+              "
             >
               <Icon name="material-symbols:download-sharp" size="24" />
             </a>
