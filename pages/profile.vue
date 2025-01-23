@@ -526,7 +526,7 @@ function copyText(text: string) {
                   '/docs/' +
                   'oferta' +
                   user.docType +
-                  'BallIp' +
+                  'BallIP' +
                   '.pdf'
                 "
               >
@@ -541,7 +541,7 @@ function copyText(text: string) {
                 '/docs/' +
                 'oferta' +
                 user.docType +
-                'BallIp' +
+                'BallIP' +
                 '.pdf'
               "
             >
