@@ -61,7 +61,15 @@ const config = useRuntimeConfig();
         <p>
           <strong>4 -</strong> быстрое пополнение по Qr-коду личного баланса.
         </p>
-        <p><strong>5 -</strong> раздел Профиль для безопасности данных.</p>
+        <p>
+          <strong>5 -</strong> в разделе
+          <NuxtLink to="/profile" class="link text-primary font-semibold"
+            >Профиль</NuxtLink
+          >
+          вы найдете: ID пользователя "логин", документы, дополнительные меры
+          безопасности "2FA", добавите команду в личный кабинет с правами
+          доступа.
+        </p>
         <p><strong>6 - </strong>раздел Обзор кабинета.</p>
         <p>
           <strong>7 -</strong> быстрый доступ к популярным услугам и всем
