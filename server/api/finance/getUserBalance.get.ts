@@ -1,5 +1,4 @@
-import { paymenthistory } from '~/server/lib/models/Paymenthistory'
-import { PartnerPaymentHistory } from '~/server/lib/models/PartnerPaymentHistory'
+
 import { HarmexReferrals as Referral } from '~/server/lib/models/HarmexReferrals'
 
 export default defineEventHandler(async (event) => {
@@ -9,9 +8,17 @@ export default defineEventHandler(async (event) => {
 
     const userRefAcc = await Referral.findOne({ user }) || { referrals: [] }
 
-
     const refIds = userRefAcc?.referrals.map((el: any) => el.user)
 
 
-    return { balance: user.balance, commissions: user.partner.balance, firstLevelReferralsCount: refIds.length }
+    return {
+        balance: user.balance,
+        commissions: user.partner.balance,
+        firstLevelReferralsCount: refIds.length,
+        rewardSumm: userRefAcc?.partnerRewardType ?
+            userRefAcc?.partnerRewardType === 'service' ?
+                userRefAcc?.partnerServiceRewardSum + ' ₽'
+                : userRefAcc?.rewardPercent + ' % со всех услуг'
+            : '500 ₽'
+    }
 })

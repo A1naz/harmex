@@ -207,6 +207,7 @@ const balanceForm = reactive({
   userBalance: 0,
   partnerBalance: 0,
   refCount: 0,
+  rewardSumm: "500 ₽",
 });
 
 async function getBalance() {
@@ -218,6 +219,7 @@ async function getBalance() {
     balanceForm.userBalance = data.value.balance;
     balanceForm.partnerBalance = data.value.commissions;
     balanceForm.refCount = data.value.firstLevelReferralsCount;
+    balanceForm.rewardSumm = data.value.rewardSumm;
   }
 }
 
@@ -292,6 +294,7 @@ const searchPlaceHolder = computed(() => {
       :ref-count="balanceForm.refCount"
       :second-level-referrals="0"
       :first-level-referrals="balanceForm.refCount"
+      :rewardSumm="balanceForm.rewardSumm"
       :ref-url="refUrl"
       :reward-percent="5"
       :ref-link="5"

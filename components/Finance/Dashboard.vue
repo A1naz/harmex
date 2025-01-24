@@ -6,6 +6,7 @@ const props = defineProps({
   secondLevelReferrals: { type: Number, required: true },
   firstLevelReferrals: { type: Number, required: true },
   secondLevelPercent: { type: Number, required: true },
+  rewardSumm: { type: Number, required: true },
   refUrl: { type: String, required: true },
   rewardPercent: { type: Number, required: true },
   refLink: { type: Number, required: true },
@@ -178,7 +179,9 @@ async function copyImageToClipboard(base64Image: any) {
           <div class="font-bold text-[0.9rem] whitespace-nowrap text-[#9e9e9e]">
             {{ `${firstLevelReferrals} человек` }}
           </div>
-          <div class="text-[1rem] text-start text-black font-bold">500 ₽</div>
+          <div class="text-[1rem] text-start text-black font-bold">
+            {{ rewardSumm }}
+          </div>
         </div>
       </div>
     </div>

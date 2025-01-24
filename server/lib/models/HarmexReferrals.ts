@@ -9,6 +9,9 @@ const ref = new Schema({
 const ReferralModel = new Schema({
   user: { type: Schema.Types.ObjectId, ref: User, required: true, unique: true },
   referrals: [ref],
+  rewardPercent: { type: Number, default: 5 },
+  partnerServiceRewardSum: { type: Number, default: 500 },
+  partnerRewardType: { type: String, default: 'service' },
 })
 
 export const HarmexReferrals = model('HarmexReferrals', ReferralModel)
