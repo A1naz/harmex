@@ -47,6 +47,7 @@ const config = useRuntimeConfig();
         <p class="mt-2 text-xl">
           <strong>Добро пожаловать на Harmex!</strong>👋
         </p>
+
         <p class="mb-5">Мы рады, что вы с нами!</p>
         <p class="text-xl mb-1">
           <strong>Ознакомьтесь с “Обзором кабинета” за 60 секунд.</strong>
@@ -91,6 +92,18 @@ const config = useRuntimeConfig();
           src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/2_1.png"
           class="mx-1 my-2"
         />
+
+        <video
+          controls
+          poster="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/videoTitle.png"
+          class="my-6 w-full"
+        >
+          <source
+            src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/video.mp4"
+            type="video/mp4"
+          />
+          Ваш браузер не поддерживает видео.
+        </video>
 
         <p>
           Чтобы начать, ознакомьтесь с простым
