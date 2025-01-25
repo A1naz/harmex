@@ -668,7 +668,17 @@ const siteUrl = config.public.siteUrl;
         <span class="font-semibold">маркетплейсе Wildberries</span> происходит
         автоматически, без вашего прямого участия.
       </p>
-
+      <video
+        controls
+        poster="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/buyoutsVideoTitle.png"
+        class="my-6 w-full"
+      >
+        <source
+          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/buyoutsVideo.mp4"
+          type="video/mp4"
+        />
+        Ваш браузер не поддерживает видео.
+      </video>
       <p class="my-4 text-[16px] flex items-center gap-1 text-[#4b5563]">
         Чтобы оформить заказ, следуйте простым шагам:
       </p>
