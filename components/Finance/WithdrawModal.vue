@@ -66,6 +66,7 @@ async function createPartnerWithdraw() {
     body: {
       amount: amountRaw.value,
     },
+    watch: false,
   });
   if (data.value && data.value.status === "ok") {
     modalType.value = "finalForm";
@@ -86,6 +87,7 @@ async function createBalanceWithdraw() {
       amount: amountRaw.value,
       info: cardNumberInn,
     },
+    watch: false,
   });
   if (data.value && data.value.status === "ok") {
     modalType.value = "finalForm";
