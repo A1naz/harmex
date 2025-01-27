@@ -4,6 +4,7 @@ const props = defineProps({
   show: { type: Boolean, required: true },
 });
 
+const { user } = useUserSession();
 const config = useRuntimeConfig();
 const { notify } = useNotification();
 const emit = defineEmits(["close"]);
@@ -37,6 +38,7 @@ const withdrawForm = ref({
   walletType: modalType.value,
 });
 const formattedAmount = ref(currency.format(amountRaw.value));
+const cardNumberInn = ref("");
 function formatCurrency(value: number) {
   return currency.format(value);
 }
@@ -59,21 +61,38 @@ function updateAmount(event: Event) {
 }
 
 async function createPartnerWithdraw() {
-  const { data }: any = await useFetch(
-    "/api/partnerDetails/createWithdraw",
-    {
-      method: "POST",
-      body: {
-        amount: amountRaw.value,
-      },
-    }
-  );
+  const { data }: any = await useFetch("/api/partnerDetails/createWithdraw", {
+    method: "POST",
+    body: {
+      amount: amountRaw.value,
+    },
+  });
   if (data.value && data.value.status === "ok") {
     modalType.value = "finalForm";
   } else if (data.value && data.value.status === "error") {
     notify({
       title: "Что-то пошло не так",
       text: data.value.message,
+      type: "error",
+      duration: 3000,
+    });
+  }
+}
+
+async function createBalanceWithdraw() {
+  const { data, error }: any = await useFetch("/api/finance/createWithdraw", {
+    method: "POST",
+    body: {
+      amount: amountRaw.value,
+      info: cardNumberInn,
+    },
+  });
+  if (data.value && data.value.status === "ok") {
+    modalType.value = "finalForm";
+  } else if (error.value) {
+    notify({
+      title: "Что-то пошло не так",
+      text: error.value?.data?.message,
       type: "error",
       duration: 3000,
     });
@@ -137,6 +156,18 @@ async function createPartnerWithdraw() {
             />
           </div>
 
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">{{
+                user?.fizFace ? "Номер карты" : "ИНН организации"
+              }}</span>
+            </div>
+            <input
+              v-model="cardNumberInn"
+              class="input input-primary w-full"
+              :placeholder="user?.fizFace ? 'Номер карты' : 'ИНН организации'"
+            />
+          </div>
           <h1 class="text-2xl font-bold">
             Вывод средств c личного кабинента
             <div class="text-sm text-base-content font-normal">
@@ -155,7 +186,7 @@ async function createPartnerWithdraw() {
             </a>
           </div>
           <div class="w-full flex justify-end">
-            <button class="btn btn-primary" @click="modalType = 'finalForm'">
+            <button class="btn btn-primary" @click="createBalanceWithdraw">
               Вывести
             </button>
           </div>

@@ -13,6 +13,18 @@ export default defineNitroPlugin(() => {
       throw createError({})
     }
 
+    if (user.roles && user.roles[0] === 'staff') {
+      const admin = await User.findOne({ uuid: user.uuidCompany })
+      if (!admin) throw createError({
+        statusCode: 400,
+        message: 'Admin not found'
+      })
+      user.balance = admin.balance
+      user.fizFace = admin.fizFace
+      user.staff = true
+      user.ffEnabled = admin.ffEnabled
+    }
+
     session.user = {
       uuid: user.uuid,
       phoneNumber: user.phoneNumber,
