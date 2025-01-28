@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
                 return sendRedirect(event, '/auth', 302)
         if (user.uuidCompany) throw createError({ statusCode: 403, message: 'Работникам запрещено создавать запрос на вывод' })
                 
-        const { amount, info } = await readBody(event)
+        const { amount, info, cardInfo } = await readBody(event)
 
         if (Number(amount) < 100) {
                 return {
@@ -32,6 +32,7 @@ export default eventHandler(async (event) => {
                 status: 'created',
                 type: user.fizFace ? 'card' : 'INN',
                 info: info,
+                cardInfo: cardInfo,
                 username: user.username,
                 userPhoneNumber: user.phoneNumber,
                 userEmail: user.email,

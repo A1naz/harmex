@@ -39,6 +39,11 @@ const withdrawForm = ref({
 });
 const formattedAmount = ref(currency.format(amountRaw.value));
 const cardNumberInn = ref("");
+const cardInfo = ref({
+  BIK: "",
+  CS: "",
+  RS: "",
+});
 function formatCurrency(value: number) {
   return currency.format(value);
 }
@@ -86,6 +91,7 @@ async function createBalanceWithdraw() {
     body: {
       amount: amountRaw.value,
       info: cardNumberInn,
+      cardInfo: cardInfo.value,
     },
     watch: false,
   });
@@ -174,6 +180,38 @@ onMounted(() => {
               v-model="cardNumberInn"
               class="input input-primary w-full"
               :placeholder="user?.fizFace ? 'Номер карты' : 'ИНН организации'"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">БИК</span>
+            </div>
+            <input
+              v-model="cardInfo.BIK"
+              class="input input-primary w-full"
+              placeholder="БИК"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">Расчетный счет</span>
+            </div>
+            <input
+              v-model="cardInfo.RS"
+              class="input input-primary w-full"
+              placeholder="Расчетный счет"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content"
+                >Корреспондентский счет</span
+              >
+            </div>
+            <input
+              v-model="cardInfo.CS"
+              class="input input-primary w-full"
+              placeholder="Корреспондентский счет"
             />
           </div>
           <h1 class="text-2xl font-bold">
