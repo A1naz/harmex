@@ -43,6 +43,9 @@ const cardInfo = ref({
   BIK: "",
   CS: "",
   RS: "",
+  bankName: "",
+  orgName: "",
+  FIO: "",
 });
 function formatCurrency(value: number) {
   return currency.format(value);
@@ -156,7 +159,7 @@ onMounted(() => {
       </div>
       <!-- ///baseBalance form  -->
       <div v-if="modalType === 'baseBalance'">
-        <div class="flex flex-col w-full justify-center gap-4">
+        <div class="flex flex-col w-full justify-center gap-1.5">
           <div>
             <div class="label">
               <span class="label-text text-base-content">Сумма вывода</span>
@@ -212,6 +215,40 @@ onMounted(() => {
               v-model="cardInfo.CS"
               class="input input-primary w-full"
               placeholder="Корреспондентский счет"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content"
+                >Наименование банка</span
+              >
+            </div>
+            <input
+              v-model="cardInfo.bankName"
+              class="input input-primary w-full"
+              placeholder="Наименование банка"
+            />
+          </div>
+          <div class="-mt-2" v-if="!user.fizFace">
+            <div class="label">
+              <span class="label-text text-base-content"
+                >Наименование организации</span
+              >
+            </div>
+            <input
+              v-model="cardInfo.orgName"
+              class="input input-primary w-full"
+              placeholder="Наименование организации"
+            />
+          </div>
+          <div class="-mt-2" v-if="user.fizFace">
+            <div class="label">
+              <span class="label-text text-base-content">ФИО</span>
+            </div>
+            <input
+              v-model="cardInfo.FIO"
+              class="input input-primary w-full"
+              placeholder="ФИО"
             />
           </div>
           <h1 class="text-2xl font-bold">
