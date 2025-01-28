@@ -91,15 +91,21 @@ async function createBalanceWithdraw() {
   });
   if (data.value && data.value.status === "ok") {
     modalType.value = "finalForm";
-  } else if (error.value) {
+  } else if (data.value && data.value.status === "error") {
+    console.log(error.value);
     notify({
       title: "Что-то пошло не так",
-      text: error.value?.data?.message,
+      text: data.value.message,
       type: "error",
       duration: 3000,
     });
   }
 }
+onMounted(() => {
+  if (!user.value.fizFace && user.value?.orgInn) {
+    cardNumberInn.value = user.value?.orgInn;
+  }
+});
 </script>
 
 <template>

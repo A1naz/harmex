@@ -10,7 +10,7 @@ export default eventHandler(async (event) => {
                 
         const { amount, info } = await readBody(event)
 
-        if (Number(amount) < 5000) {
+        if (Number(amount) < 100) {
                 return {
                         status: 'error',
                         message: 'Минимальная сумма вывода - 5000 руб.',
