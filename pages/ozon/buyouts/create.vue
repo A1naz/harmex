@@ -771,12 +771,12 @@ const addressForm = reactive({
                   />
                 </div>
               </div> -->
-              <span
+              <!-- <span
                 v-if="rule.id === 1"
                 class="text-[#AA4A44] text-sm font-bold"
               >
                 Функционал по добавлению правил временно недоступен
-              </span>
+              </span> -->
               <!-- <div
               v-if="rule.id === 1"
               class="label cursor-pointer flex gap-4 items-start justify-between"
@@ -802,14 +802,14 @@ const addressForm = reactive({
 
                 <input
                   :disabled="
-                    // !!store.createProducts[selectedRuleProductIndex].rules.find(
-                    //   (item) =>
-                    //     item.category === rule.category && item.id !== rule.id
-                    // ) ||
-                    // !!store.createProducts[selectedRuleProductIndex].rules.find(
-                    //   (item) => item.id === rule?.relies
-                    // )
-                    true
+                    !!store.createProducts[selectedRuleProductIndex].rules.find(
+                      (item) =>
+                        item.category === rule.category && item.id !== rule.id
+                    ) ||
+                    !!store.createProducts[selectedRuleProductIndex].rules.find(
+                      (item) => item.id === rule?.relies
+                    ) ||
+                    rule.disabled
                   "
                   type="checkbox"
                   class="checkbox checkbox-primary border-base-content"
