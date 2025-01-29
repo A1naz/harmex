@@ -28,7 +28,7 @@ const currency = useCurrency();
 const router = useRouter();
 function cloneBuyout() {
   router.push({
-    path: "/yandexMarket/buyouts/create",
+    path: "/ym/buyouts/create",
     query: {
       uuid: props.info.uuid,
     },

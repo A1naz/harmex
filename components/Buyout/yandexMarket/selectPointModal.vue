@@ -43,7 +43,7 @@ function handleSelect(address: string) {
     });
   }
 
-  let pointStore: any = localStorage.getItem("ozonPointStore");
+  let pointStore: any = localStorage.getItem("yandexMarketPointStore");
 
   const arr = JSON.parse(pointStore) || [];
 
@@ -62,7 +62,7 @@ function handleSelect(address: string) {
     });
   }
 
-  localStorage.setItem("ozonPointStore", JSON.stringify(arr));
+  localStorage.setItem("yandexMarketPointStore", JSON.stringify(arr));
   emit(
     "callback",
     address,
@@ -74,13 +74,13 @@ function handleSelect(address: string) {
 }
 
 function handleDelete(address: any) {
-  let pointStore: any = localStorage.getItem("ozonPointStore");
+  let pointStore: any = localStorage.getItem("yandexMarketPointStore");
   const arr = JSON.parse(pointStore) || [];
   arr.splice(
     arr.indexOf(arr.find((el: any) => el.address === address.address)),
     1
   );
-  localStorage.setItem("ozonPointStore", JSON.stringify(arr));
+  localStorage.setItem("yandexMarketPointStore", JSON.stringify(arr));
   emit(
     "callback",
     address.address,
@@ -88,11 +88,13 @@ function handleDelete(address: any) {
     lastAddress.value.lg,
     lastAddress.value.id
   );
-  lastPoints.value = JSON.parse(localStorage.getItem("ozonPointStore") || "[]");
+  lastPoints.value = JSON.parse(
+    localStorage.getItem("yandexMarketPointStore") || "[]"
+  );
 }
 
 const lastPoints = ref(
-  JSON.parse(localStorage.getItem("ozonPointStore") || "[]")
+  JSON.parse(localStorage.getItem("yandexMarketPointStore") || "[]")
 );
 
 const presetCluster = "islands#orangeClusterIcons";
@@ -175,7 +177,7 @@ onMounted(async () => {
             radius: 1000,
           },
           properties: {
-            iconContent: "OZON",
+            iconContent: "YM",
             data: {
               lt: point.lt,
               lg: point.lg,
@@ -217,7 +219,7 @@ onMounted(async () => {
       const myBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
         `<div class="card rounded-lg">
           <div>
-            <div class="text-lg font-semibold">Пункт выдачи OZON</div>
+            <div class="text-lg font-semibold">Пункт выдачи Yandex Market</div>
             <div class="text-sm">${addressText.value}</div>
             <a class="selectPoint mt-4 flex justify-center btn btn-primary hover:bg-primary">Выбрать</a>
           </div>

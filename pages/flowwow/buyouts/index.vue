@@ -605,6 +605,7 @@ const siteUrl = config.public.siteUrl;
           class="cards grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] h-full"
         >
           <BuyoutFlowwowCard
+            class="max-w-[400px]"
             v-for="(buyout, index) of buyouts"
             :key="buyout.uuid"
             :index="index"
