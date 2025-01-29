@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { notify } = useNotification();
-const theme = useColorMode()
-const { width } = useWindowSize()
+const theme = useColorMode();
+const { width } = useWindowSize();
 
 const props = defineProps({
   info: {
@@ -12,145 +12,145 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-})
+});
 const emit = defineEmits([
-  'callback',
-  'remove',
-  'openModal',
-  'archive',
-  'unarchive',
-  'unpause',
-  'openLogModal',
-])
-const currency = useCurrency()
-const router = useRouter()
+  "callback",
+  "remove",
+  "openModal",
+  "archive",
+  "unarchive",
+  "unpause",
+  "openLogModal",
+]);
+const currency = useCurrency();
+const router = useRouter();
 function cloneBuyout() {
   router.push({
-    path: '/buyouts/create',
+    path: "/buyouts/create",
     query: {
       uuid: props.info.uuid,
     },
-  })
+  });
 }
 
 async function deleteBuyOut() {
-  const { data, error } = await useFetch('/api/buyout/delete', {
-    method: 'DELETE',
+  const { data, error } = await useFetch("/api/buyout/delete", {
+    method: "DELETE",
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-  })
+    headers: useRequestHeaders(["cookie"]) as HeadersInit,
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
+    });
   } else {
     notify({
-      title: 'Успешно',
-      text: 'Выкуп успешно удален',
-      type: 'success',
+      title: "Успешно",
+      text: "Выкуп успешно удален",
+      type: "success",
       duration: 3000,
-    })
-    emit('remove', props.info.uuid)
+    });
+    emit("remove", props.info.uuid);
   }
 }
 async function unpauseBuyout() {
-  const { data, error } = await useFetch('/api/buyout/unpause', {
-    method: 'PUT',
+  const { data, error } = await useFetch("/api/buyout/unpause", {
+    method: "PUT",
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-  })
+    headers: useRequestHeaders(["cookie"]) as HeadersInit,
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
+    });
   } else {
     notify({
-      title: 'Успешно',
-      text: 'Выкуп успешно возобновлен',
-      type: 'success',
+      title: "Успешно",
+      text: "Выкуп успешно возобновлен",
+      type: "success",
       duration: 3000,
-    })
-    emit('unpause', props.info.uuid)
+    });
+    emit("unpause", props.info.uuid);
   }
 }
 async function unarchiveBuyout() {
-  const { data, error } = await useFetch('/api/buyout/unarchive', {
-    method: 'PUT',
+  const { data, error } = await useFetch("/api/buyout/unarchive", {
+    method: "PUT",
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-  })
+    headers: useRequestHeaders(["cookie"]) as HeadersInit,
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
+    });
   } else {
     notify({
-      title: 'Успешно',
-      text: 'Выкуп успешно восстановлен',
-      type: 'success',
+      title: "Успешно",
+      text: "Выкуп успешно восстановлен",
+      type: "success",
       duration: 3000,
-    })
-    emit('unarchive', props.info.uuid)
+    });
+    emit("unarchive", props.info.uuid);
   }
 }
 async function archiveBuyout() {
-  const { data, error } = await useFetch('/api/buyout/archive', {
-    method: 'PUT',
+  const { data, error } = await useFetch("/api/buyout/archive", {
+    method: "PUT",
     body: JSON.stringify({
       uuid: props.info.uuid,
     }),
-    headers: useRequestHeaders(['cookie']) as HeadersInit,
-  })
+    headers: useRequestHeaders(["cookie"]) as HeadersInit,
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
+    });
   } else {
     notify({
-      title: 'Успешно',
-      text: 'Выкуп успешно архивирован',
-      type: 'success',
+      title: "Успешно",
+      text: "Выкуп успешно архивирован",
+      type: "success",
       duration: 3000,
-    })
-    emit('archive', props.info.uuid)
+    });
+    emit("archive", props.info.uuid);
   }
 }
 const getStatus = computed(() => {
   switch (props.info.status) {
-    case 'active':
-      return 'Активный'
-    case 'work':
-      return 'В работе'
-    case 'busy':
-      return 'В работе'
-    case 'completed':
-      return 'Завершен'
-    case 'archived':
-      return 'В архиве'
-    case 'paused':
-      return 'Пауза'
-    case 'nofunds':
-      return 'Недостаточно средств'
+    case "active":
+      return "Активный";
+    case "work":
+      return "В работе";
+    case "busy":
+      return "В работе";
+    case "completed":
+      return "Завершен";
+    case "archived":
+      return "В архиве";
+    case "paused":
+      return "Пауза";
+    case "nofunds":
+      return "Недостаточно средств";
   }
-})
+});
 </script>
 
 <template>
@@ -237,9 +237,13 @@ const getStatus = computed(() => {
             class="mt-2 rounded-2xl py-1 px-2"
             :class="{
               'bg-success ':
-                (info.status === 'active' || info.status === 'work'|| info.status === 'busy'),
+                info.status === 'active' ||
+                info.status === 'work' ||
+                info.status === 'busy',
               'text-green-200 bg-green-600 ':
-                (info.status === 'active' || info.status === 'work' || info.status === 'busy') &&
+                (info.status === 'active' ||
+                  info.status === 'work' ||
+                  info.status === 'busy') &&
                 theme.value === 'dark',
               'text-red-200 bg-red-700':
                 (info.status === 'completed' || info.status === 'nofunds') &&
@@ -263,7 +267,7 @@ const getStatus = computed(() => {
             target="_blank"
             class="text-base text-primary link link-hover mt-0"
             :class="{
-              'mt-3' : width > 364
+              'mt-3': width > 364,
             }"
           >
             {{ info.article }}
@@ -330,17 +334,17 @@ const getStatus = computed(() => {
     <div class="modal backdrop-filter backdrop-blur-sm">
       <div class="modal-box max-w-xs">
         <h3 class="font-bold text-md">
-          Вы уверенны что хотите удалить выкуп № {{ info.place }} ?
+          Вы уверены что хотите удалить выкуп № {{ info.place }} ?
         </h3>
         <div class="modal-action flex justify-around">
           <label
             :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-            class="btn px-6"
+            class="btn btn-primary px-6"
             >Отмена</label
           >
           <label
             :for="`removeAllModelCreateProducts:${props.info.uuid}`"
-            class="btn btn-primary px-6"
+            class="btn px-6"
             @click="deleteBuyOut"
             >Удалить</label
           >

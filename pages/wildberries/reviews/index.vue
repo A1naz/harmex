@@ -542,7 +542,7 @@ const siteUrl = config.public.siteUrl;
       <div class="modal">
         <div class="modal-box max-w-xs py-6 px-3">
           <h3 class="font-bold text-xl">
-            Вы уверенны что хотите удалить отзыв?
+            Вы уверены что хотите удалить отзыв?
           </h3>
           <p class="py-2.5">Стоимость услуги 100 рублей!</p>
           <div class="flex justify-between">

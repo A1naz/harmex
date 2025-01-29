@@ -943,7 +943,7 @@ function refreshElements() {
     <div class="modal backdrop-filter backdrop-blur-sm">
       <div class="modal-box max-w-xs">
         <h3 class="font-normal text-lg">
-          Вы уверенны что хотите удалить все товары?
+          Вы уверены что хотите удалить все товары?
         </h3>
         <div class="modal-action flex justify-around">
           <label
