@@ -11,7 +11,7 @@ const rules: Rule[] = [{ id: 1, description: 'Добавление 1 товар�
   { id: 4, description: 'Находиться в карточке товара не менее 60 секунд, изучать карточку', category: 2 },
   { id: 5, description: 'Не выкупать если товар не найден в поисковой выдаче', category: 3 },
   { id: 6, description: 'Выкупать только по будням, не выкупать в выходные дни', category: 4 },
-  { id: 7, description: 'Выкупать только в выходные дни', category: 4, disabled: true },
+  { id: 7, description: 'Выкупать только в выходные дни', category: 4 },
   { id: 8, description: 'Выкупать только с рекламы, если реклама не найдена - не выкупать', category: 5,disabled: true },
   { id: 9, description: 'Выкупать с рекламы, если реклама не найдена - выкупать с поиска', category: 5, disabled: true },
   { id: 10, description: 'Использовать сортировку в поиске "Популярные"', category: 6, relies: 8 },
