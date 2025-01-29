@@ -16,7 +16,7 @@ export default eventHandler(async (event) => {
       message: 'not found',
     })
   }
-  if (found.status === 'work') {
+  if (found.status !== 'active') {
     throw createError({
       statusCode: 404,
       message: 'Выкуп, принятый в работу архивировать нельзя.',
