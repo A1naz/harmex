@@ -487,41 +487,47 @@ const siteUrl = config.public.siteUrl;
     </div>
 
     <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
-      <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
-        <li
-          v-for="(delivery, index) of deliveries.slice(
-            0,
-            Math.ceil(deliveries.length / 2)
-          )"
-          :key="index"
-          class="overflow-visible z-0"
-        >
-          <DeliveryYandexMarketExpand
-            :state="openAll"
-            :info="delivery"
-            @open-modal="openModal"
-            @open-status-modal="openStatusModal"
-            @open-penalty-modal="penaltyModal = true"
-          />
-        </li>
-      </ul>
-      <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
-        <li
-          v-for="(delivery, index) of deliveries.slice(
-            Math.ceil(deliveries.length / 2)
-          )"
-          :key="index"
-          class="overflow-visible z-0"
-        >
-          <DeliveryYandexMarketExpand
-            :state="openAll"
-            :info="delivery"
-            @open-modal="openModal"
-            @open-status-modal="openStatusModal"
-            @open-penalty-modal="penaltyModal = true"
-          />
-        </li>
-      </ul>
+      <div
+        group
+        tag="ul"
+        class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3"
+      >
+        <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
+          <li
+            v-for="(delivery, index) of deliveries.slice(
+              0,
+              Math.ceil(deliveries.length / 2)
+            )"
+            :key="index"
+            class="overflow-visible z-0"
+          >
+            <DeliveryYandexMarketExpand
+              :state="openAll"
+              :info="delivery"
+              @open-modal="openModal"
+              @open-status-modal="openStatusModal"
+              @open-penalty-modal="penaltyModal = true"
+            />
+          </li>
+        </ul>
+        <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
+          <li
+            v-for="(delivery, index) of deliveries.slice(
+              Math.ceil(deliveries.length / 2)
+            )"
+            :key="index"
+            class="overflow-visible z-0"
+          >
+            <DeliveryYandexMarketExpand
+              :state="openAll"
+              :info="delivery"
+              @open-modal="openModal"
+              @open-status-modal="openStatusModal"
+              @open-penalty-modal="penaltyModal = true"
+            />
+          </li>
+        </ul>
+      </div>
       <DeliveryYandexMarketQrModal
         v-if="modal"
         :code="modalInfo.code"
@@ -717,7 +723,6 @@ const siteUrl = config.public.siteUrl;
         <li>В случае проблем с доставкой сразу обращайтесь в службу заботы.</li>
       </ul>
     </ManualModal>
-    {{ deliveries }}1
     <div
       ref="target"
       class="flex justify-center items-center"

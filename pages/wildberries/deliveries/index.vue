@@ -492,7 +492,7 @@ const siteUrl = config.public.siteUrl;
     </div>
 
     <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
-      <TransitionSlide
+      <div
         group
         tag="ul"
         class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3"
@@ -532,7 +532,7 @@ const siteUrl = config.public.siteUrl;
             />
           </li>
         </ul>
-      </TransitionSlide>
+      </div>
       <DeliveryWildberriesQrModal
         v-if="modal"
         :code="modalInfo.code"

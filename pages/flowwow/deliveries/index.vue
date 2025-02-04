@@ -446,7 +446,7 @@ const siteUrl = config.public.siteUrl;
       <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
     </div> -->
     <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
-      <TransitionSlide
+      <div
         group
         tag="ul"
         class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3"
@@ -490,7 +490,7 @@ const siteUrl = config.public.siteUrl;
           ref="target"
           class="flex justify-center items-center h-40 md:h-10"
         />
-      </TransitionSlide>
+      </div>
       <DeliveryFlowwowQrModal
         v-if="modal"
         :code="modalInfo.code"
