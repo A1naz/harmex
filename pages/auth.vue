@@ -1,81 +1,80 @@
 <!-- eslint-disable @typescript-eslint/no-use-before-define -->
 <script lang="ts" setup>
-import { useVuelidate } from '@vuelidate/core'
-import { helpers, maxLength, minLength, required } from '@vuelidate/validators'
+import { useVuelidate } from "@vuelidate/core";
+import { helpers, maxLength, minLength, required } from "@vuelidate/validators";
 
-const { session, fetch } = useUserSession()
-const route = useRoute()
-const params = route.query
+const { session, fetch } = useUserSession();
+const route = useRoute();
+const params = route.query;
 
 definePageMeta({
-  title: 'Вход',
-})
+  title: "Вход",
+});
 
-const { notify } = useNotification()
-const loading = ref(false)
+const { notify } = useNotification();
+const loading = ref(false);
 const formData = reactive({
-  phoneNumber: '',
-  password: '',
-})
+  phoneNumber: "",
+  password: "",
+});
 
 onMounted(async () => {
   if (params?.emailConfirmed) {
     notify({
-      type: 'success',
-      title: 'Email успешно подтвержден!',
+      type: "success",
+      title: "Email успешно подтвержден!",
       duration: 3000,
-    })
+    });
   }
   if (params?.passwordChanged) {
     notify({
-      type: 'success',
-      title: 'Пароль успешно изменен!',
+      type: "success",
+      title: "Пароль успешно изменен!",
       duration: 3000,
-    })
+    });
   }
   if (params?.confirmed) {
     notify({
-      type: 'info',
+      type: "info",
       title:
-        'Письмо для подтверждения было отправлено на указанный email. (Проверьте папку Спам)',
+        "Письмо для подтверждения было отправлено на указанный email. (Проверьте папку Спам)",
       duration: 3000,
-    })
+    });
   }
-})
+});
 
-const passwordShow = ref(false)
-const inputType = ref(passwordShow.value ? 'text' : 'password')
+const passwordShow = ref(false);
+const inputType = ref(passwordShow.value ? "text" : "password");
 function togglePassword() {
-  passwordShow.value = !passwordShow.value
-  inputType.value = passwordShow.value ? 'text' : 'password'
+  passwordShow.value = !passwordShow.value;
+  inputType.value = passwordShow.value ? "text" : "password";
 }
 
 const rules = computed(() => {
   return {
     phoneNumber: {
-      required: helpers.withMessage('Введите номер телефона', required),
-      minLength: helpers.withMessage('Неверный номер телефона', minLength(18)),
-      maxLength: helpers.withMessage('Неверный номер телефона', maxLength(18)),
+      required: helpers.withMessage("Введите номер телефона", required),
+      minLength: helpers.withMessage("Неверный номер телефона", minLength(18)),
+      maxLength: helpers.withMessage("Неверный номер телефона", maxLength(18)),
     },
     password: {
-      required: helpers.withMessage('Введите пароль', required),
+      required: helpers.withMessage("Введите пароль", required),
       minLength: helpers.withMessage(
-        'Пароль должен быть длиннее 6 символов',
-        minLength(6),
+        "Пароль должен быть длиннее 6 символов",
+        minLength(6)
       ),
     },
-  }
-})
+  };
+});
 
-const v$ = useVuelidate(rules, formData)
+const v$ = useVuelidate(rules, formData);
 
 async function login() {
-  const valid = await v$.value.$validate()
-  if (!valid)
-    return
-  loading.value = true
-  const response = await $fetch('/api/auth/login', {
-    method: 'POST',
+  const valid = await v$.value.$validate();
+  if (!valid) return;
+  loading.value = true;
+  const response = await $fetch("/api/auth/login", {
+    method: "POST",
     body: {
       phoneNumber: formData.phoneNumber,
       password: formData.password,
@@ -83,25 +82,23 @@ async function login() {
   })
     .catch((err) => {
       notify({
-        type: 'error',
-        title: 'Не удалось войти',
+        type: "error",
+        title: "Не удалось войти",
         text: err.data.message || err.message,
-      })
+      });
     })
     .finally(() => {
-      loading.value = false
-    })
-  if (response === 'success') {
-    await fetch()
-    loading.value = false
+      loading.value = false;
+    });
+  if (response === "success") {
+    await fetch();
+    loading.value = false;
     if (session.value.user?.isTwoFaEnabled && session.value?.twoFaNeeded) {
-      return navigateTo('/2fa')
-    }
-    else if (params?.redirect as string && params.redirect !== '/') {
-      return navigateTo(params.redirect as string)
-    }
-    else {
-      return navigateTo('/catalog?introductionModal=true')
+      return navigateTo("/2fa");
+    } else if ((params?.redirect as string) && params.redirect !== "/") {
+      return navigateTo(params.redirect as string);
+    } else {
+      return navigateTo("/catalog?introductionModal=true");
     }
   }
 }
@@ -112,17 +109,13 @@ async function login() {
     <section
       class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3"
     >
-      <h3 class="logo font-bold text-2xl text-center">
-        HARMEX
-      </h3>
-      <h3 class="font-bold text-2xl text-center mb-4">
-        Войдите в аккаунт
-      </h3>
+      <h3 class="logo font-bold text-2xl text-center">HARMEX</h3>
+      <h3 class="font-bold text-2xl text-center mb-4">Войдите ваш в аккаунт</h3>
 
       <div class="box flex flex-col gap-3">
         <form class="flex flex-col gap-3" @submit.prevent="login">
           <div class="flex flex-col gap-1">
-            <label>Номер телефона </label>
+            <label>Ваш номер телефона </label>
             <input
               v-model="formData.phoneNumber"
               v-maska
@@ -130,9 +123,12 @@ async function login() {
               placeholder="+7 (___) ___-__-__"
               required="true"
               class="input input-bordered"
-            >
+            />
             <div v-if="v$.phoneNumber.$error" class="text-red-500 text-xs mt-1">
               {{ v$.phoneNumber.$errors[0].$message }}
+            </div>
+            <div class="text-xs text-gray-500">
+              Сохраните данные, чтобы всегда были под рукой
             </div>
           </div>
           <div class="flex flex-col gap-1">
@@ -147,7 +143,7 @@ async function login() {
                   placeholder="••••••••"
                   required="true"
                   class="w-full"
-                >
+                />
                 <button
                   type="button"
                   class="hover:text-primary w-1/12"
@@ -168,8 +164,11 @@ async function login() {
                 </button>
               </label>
               <NuxtLink class="text-primary my-1" href="/resetPassword">
-                Забыли пароль?
+                Не помните пароль?
               </NuxtLink>
+            </div>
+            <div class="text-xs text-gray-500">
+              Вопросы? Нужна помощь? Служба заботы рядом. Напишите нам в чат.
             </div>
             <div v-if="v$.password.$error" class="text-red-500 text-xs mt-1">
               {{ v$.password.$errors[0].$message }}
@@ -185,6 +184,7 @@ async function login() {
 
               Войти
             </button>
+
             <p class="mt-3 mb-1">
               Ещё не зарегистрированы?
               <NuxtLink href="/register" class="text-primary underline">
@@ -195,14 +195,12 @@ async function login() {
         </form>
       </div>
     </section>
-
   </div>
 </template>
 
 <style scoped>
 .logo {
-  font-family: 'Kanit', semibold;
+  font-family: "Kanit", semibold;
   font-size: 32px;
 }
-
 </style>
