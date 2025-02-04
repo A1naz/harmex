@@ -365,9 +365,9 @@ const siteUrl = config.public.siteUrl;
         <div
           class="bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center"
         >
-          <div class="org-name font-semibold text-gray-800">
+          <!-- <div class="org-name font-semibold text-gray-800">
             {{ orgInfo.title.toUpperCase() }}
-          </div>
+          </div> -->
 
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
           <button
@@ -725,7 +725,7 @@ const siteUrl = config.public.siteUrl;
         <li>В случае проблем с доставкой сразу обращайтесь в службу заботы.</li>
       </ul>
     </ManualModal>
-    {{ deliveries }}
+    {{ deliveries }}1
     <div
       ref="target"
       class="flex justify-center items-center"
