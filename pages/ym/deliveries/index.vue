@@ -73,7 +73,7 @@ async function getDeliveries() {
   deliveries.value = data.value;
   loading.value = false;
 }
-getDeliveries();
+await getDeliveries();
 
 async function exportReadyXLS() {
   loadingExport.value = true;
@@ -179,8 +179,6 @@ async function onSearchInput() {
 // }
 
 watch(targetIsVisible, async (isVisible) => {
-  console.log(deliveries.value.length);
-  console.log(end.value);
   if (isVisible && autoTarget.value) {
     if (end.value) return;
     const { data } = await useFetch("/api/yandexMarket/delivery/get", {
@@ -365,9 +363,9 @@ const siteUrl = config.public.siteUrl;
         <div
           class="bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center"
         >
-          <!-- <div class="org-name font-semibold text-gray-800">
+          <div class="org-name font-semibold text-gray-800">
             {{ orgInfo.title.toUpperCase() }}
-          </div> -->
+          </div>
 
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
           <button
@@ -489,7 +487,7 @@ const siteUrl = config.public.siteUrl;
     </div>
 
     <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
-      <TransitionSlide
+      <!-- <TransitionSlide
         group
         tag="ul"
         class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3"
@@ -529,7 +527,7 @@ const siteUrl = config.public.siteUrl;
             />
           </li>
         </ul>
-      </TransitionSlide>
+      </TransitionSlide> -->
       <DeliveryYandexMarketQrModal
         v-if="modal"
         :code="modalInfo.code"
