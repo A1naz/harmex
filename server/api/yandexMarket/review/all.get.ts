@@ -90,7 +90,7 @@ export default eventHandler(async (event) => {
     const filter: any = {
       'user': new ObjectId(user._id),
       'reviewed': { $ne: true },
-      'statusdelivery.status': { $regex: 'Получен' },
+      'statusdelivery.status': { $regex: 'Уже у вас' },
       'status': 'completed',
     }
   
