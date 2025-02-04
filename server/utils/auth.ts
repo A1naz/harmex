@@ -1,6 +1,6 @@
 import type { H3Event } from 'h3'
 import { User } from '~~/server/lib/models/User'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { v4 as uuid } from 'uuid'
 import { generateUniqueUsername } from './createUsername'
 const config = useRuntimeConfig()
@@ -115,7 +115,7 @@ async function attempt(
     })
   }
 
-  const isPasswordCorrect = await bcrypt.compare(password, foundUser.password)
+  const isPasswordCorrect = await bcrypt.compareSync(password, foundUser.password)
 
   if (
     !isPasswordCorrect

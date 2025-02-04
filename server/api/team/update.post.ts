@@ -1,7 +1,7 @@
 import validator from 'validator'
 import { User } from '@/server/lib/models/User'
 import MailService from '~~/server/lib/mailService.js'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {

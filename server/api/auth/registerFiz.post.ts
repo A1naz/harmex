@@ -1,7 +1,7 @@
 import MailService from '~~/server/lib/mailService.js'
 import { HarmexReferrals } from '~/server/lib/models/HarmexReferrals'
 import { User } from '~~/server/lib/models/User'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { v4 as uuid } from 'uuid'
 import validator from 'validator'
 import { createUsername } from '~/server/utils/createUsernameFromMail'
