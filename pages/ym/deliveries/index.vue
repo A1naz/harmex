@@ -725,6 +725,7 @@ const siteUrl = config.public.siteUrl;
         <li>В случае проблем с доставкой сразу обращайтесь в службу заботы.</li>
       </ul>
     </ManualModal>
+    {{ deliveries }}
     <div
       ref="target"
       class="flex justify-center items-center"

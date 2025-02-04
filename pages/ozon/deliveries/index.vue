@@ -505,13 +505,13 @@ const siteUrl = config.public.siteUrl;
             :key="index"
             class="overflow-visible z-0"
           >
-            <DeliveryOzonExpand
+            <!-- <DeliveryOzonExpand
               :state="openAll"
               :info="delivery"
               @open-modal="openModal"
               @open-status-modal="openStatusModal"
               @open-penalty-modal="penaltyModal = true"
-            />
+            /> -->
           </li>
         </ul>
         <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
@@ -522,13 +522,13 @@ const siteUrl = config.public.siteUrl;
             :key="index"
             class="overflow-visible z-0"
           >
-            <DeliveryOzonExpand
+            <!-- <DeliveryOzonExpand
               :state="openAll"
               :info="delivery"
               @open-modal="openModal"
               @open-status-modal="openStatusModal"
               @open-penalty-modal="penaltyModal = true"
-            />
+            /> -->
           </li>
         </ul>
       </TransitionSlide>
