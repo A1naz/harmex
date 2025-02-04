@@ -262,5 +262,5 @@ export default defineNuxtConfig({
     PARSER_TOKEN: process.env.PARSER_TOKEN,
   },
   compatibilityDate: '2024-11-06',
-  ssr: true
+  ssr: false
 })

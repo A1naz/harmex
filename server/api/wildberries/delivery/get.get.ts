@@ -120,7 +120,7 @@ export default eventHandler(async (event) => {
         receiptcode: delivery.receiptcode ? delivery.receiptcode : undefined,
         receiptcodeqr: delivery.receiptcodeqr
           ? delivery.receiptcodeqr
-          : undefined,
+          : "null",
         recipient: delivery.recipient,
         recipientphone: replaced,
         updatedAt: delivery.updatedAt,

@@ -61,7 +61,7 @@ function copyToClipboard(text: string) {
       <div class="flex gap-4">
         <nuxt-img
           fit="contain"
-          :src="info?.productimage"
+          :src="info?.productimage ? info?.productimage : 'null'"
           width="50"
           loading="lazy"
           class="rounded-lg transition-opacity ease-in-out duration-200 hidden lg:block"
