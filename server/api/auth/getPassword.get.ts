@@ -10,6 +10,5 @@ export default eventHandler(async (event) => {
                 strict: true,
         })
 
-        console.log(password)
         return password
 })
