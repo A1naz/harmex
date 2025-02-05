@@ -92,6 +92,7 @@ async function unarchiveBuyout() {
       uuid: props.info.uuid,
     }),
     headers: useRequestHeaders(["cookie"]) as HeadersInit,
+    watch: false,
   });
   if (error.value) {
     notify({
@@ -110,6 +111,14 @@ async function unarchiveBuyout() {
     emit("unarchive", props.info.uuid);
   }
 }
+
+const confirmModal = ref(false);
+const confirmModalFunction = ref(() => {});
+function unarchiveBuyoutConfirm() {
+  confirmModalFunction.value = unarchiveBuyout;
+  confirmModal.value = true;
+}
+
 async function archiveBuyout() {
   const { data, error } = await useFetch("/api/yandexMarket/buyout/archive", {
     method: "PUT",
@@ -220,7 +229,7 @@ async function copyToClipboard(text: string) {
               />
               Архивировать
             </a>
-            <a v-else @click="unarchiveBuyout">
+            <a v-else @click="unarchiveBuyoutConfirm">
               <img
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/archive.svg"
@@ -427,6 +436,12 @@ async function copyToClipboard(text: string) {
         Открыть
       </button>
     </div>
+    <StaticConfirmModal
+      v-model:state="confirmModal"
+      title="Подтвердите действие"
+      description="Вы действительно хотите разархивировать выкуп?"
+      :confirmFunction="confirmModalFunction"
+    />
   </div>
 </template>
 

@@ -30,19 +30,19 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const cached = fs.readFileSync('pvz/wildberriesPoints.json', 'utf8')
-  const parsed = JSON.parse(cached)
+  // const cached = fs.readFileSync('pvz/yandexMarketPoints.json', 'utf8')
+  // const parsed = JSON.parse(cached)
 
   // eslint-disable-next-line eqeqeq
-  const isPVZExist = parsed.points.findIndex((el: any) => el.a == found.point)
+  // const isPVZExist = parsed.points.findIndex((el: any) => el.a == found.point)
 
   // eslint-disable-next-line eqeqeq
-  if (isPVZExist == -1) {
-    throw createError({
-      statusCode: 400,
-      message: 'ПВЗ недоступно',
-    })
-  }
+  // if (isPVZExist == -1) {
+  //   throw createError({
+  //     statusCode: 400,
+  //     message: 'ПВЗ недоступно',
+  //   })
+  // }
 
   found.status = 'active'
   await found.save()

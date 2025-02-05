@@ -167,11 +167,11 @@ async function login() {
                 Не помните пароль?
               </NuxtLink>
             </div>
-            <div class="text-xs text-gray-500">
-              Вопросы? Нужна помощь? Служба заботы рядом. Напишите нам в чат.
-            </div>
             <div v-if="v$.password.$error" class="text-red-500 text-xs mt-1">
               {{ v$.password.$errors[0].$message }}
+            </div>
+            <div class="text-xs text-gray-500">
+              Нужна помощь? Служба заботы рядом. Напишите нам в чат.
             </div>
           </div>
 
