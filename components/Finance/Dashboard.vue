@@ -12,6 +12,8 @@ const props = defineProps({
   refLink: { type: Number, required: true },
 });
 
+const { user } = useUserSession();
+
 const currency = useCurrency();
 const { notify } = useNotification();
 
@@ -97,7 +99,7 @@ async function copyImageToClipboard(base64Image: any) {
           <div class="flex flex-col gap-[6px]">
             <span class="text-lg font-semibold">Общий баланс</span>
             <span class="font-bold text-xl">
-              {{ currency.format(props.balance + props.refBalance) || 0 }}
+              {{ currency.format(user.balance + props.refBalance) || 0 }}
             </span>
           </div>
 

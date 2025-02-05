@@ -144,6 +144,19 @@ const toggleConfirmPassword = () => {
   passwordConfirmInputType.value =
     passwordConfirmInputType.value === "password" ? "text" : "password";
 };
+
+async function generatePassword() {
+  const { data, error }: any = await useFetch("/api/auth/getPassword", {
+    method: "GET",
+    watch: false,
+  });
+  if (data.value) {
+    formData.password = data.value;
+    formData.confirmPassword = data.value;
+    passwordInputType.value = "text";
+    passwordConfirmInputType.value = "text";
+  }
+}
 </script>
 
 <template>
@@ -152,15 +165,14 @@ const toggleConfirmPassword = () => {
       class="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0"
     >
       <div class="card w-full p-6 rounded-lg shadow-lg max-w-md lg:max-w-lg">
-        <h2
-          class="mb-1 text-xl font-bold leading-tight tracking-tight md:text-2xl"
-        >
+        <h3 class="logo font-bold text-2xl text-center">HARMEX</h3>
+        <h3 class="font-bold text-2xl text-center mb-4">
           Восстановление пароля
-        </h2>
+        </h3>
         <form class="mt-4 space-y-4 lg:mt-5 md:space-y-5 relative" action="#">
           <div>
             <label for="email" class="block mb-2 text-sm font-medium"
-              >Номер телефона</label
+              >Ваш номер телефона</label
             >
             <label
               class="input input-bordered flex items-center justify-between p-0 pl-4"
@@ -193,11 +205,14 @@ const toggleConfirmPassword = () => {
                 {{ error.$message }}
               </div>
             </div>
+            <div class="text-xs text-gray-500">
+              Нажмите подтвердить для получения звонка
+            </div>
             <label
               for="email"
               class="block mb-2 ml-1 my-1 text-sm font-medium mt-5"
             >
-              Код подтверждения
+              Введите код верификации
             </label>
             <label class="input input-bordered w-full flex justify-end">
               <input
@@ -219,11 +234,15 @@ const toggleConfirmPassword = () => {
                 <IconCSS size="27" name="mdi:check" />
               </button>
             </label>
+            <div class="text-xs text-gray-500">
+              Примите звонок и введите озвученные цифры. Не поступил звонок?
+              Повторить
+            </div>
           </div>
           <div>
             <label for="password" class="block mb-2 text-sm font-medium"
-              >Новый пароль</label
-            >
+              >Установите безопасный пароль
+            </label>
 
             <label class="input input-bordered w-full flex justify-end">
               <input
@@ -256,6 +275,14 @@ const toggleConfirmPassword = () => {
                   size="25"
                   name="mdi:show-outline"
                 />
+              </button>
+              <button
+                :disabled="!isNumberConfirmed"
+                type="button"
+                class="hover:text-primary w-1/12 join-item rounded-r-lg"
+                @click="generatePassword"
+              >
+                <IconCSS class="w-20 h-20" size="25" name="fe:random" />
               </button>
             </label>
             <div
@@ -314,6 +341,9 @@ const toggleConfirmPassword = () => {
                 {{ v$.confirmPassword?.$errors[0]?.$message }}
               </div>
             </div>
+          </div>
+          <div class="text-xs -mt-2 text-gray-500">
+            Нужна помощь? Служба заботы рядом. Напишите нам в чат.
           </div>
           <button
             type="submit"
