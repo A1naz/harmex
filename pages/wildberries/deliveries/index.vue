@@ -383,8 +383,8 @@ const siteUrl = config.public.siteUrl;
       </div>
     </div>
     <div class="font-medium gap-1 mt-4">
-      Забирайте товары в течение
-      <span class="text-[#ff6666]"> 5 дней! </span>
+      <span class="text-[#ff6666]"> 5 дней </span>
+      на получение
     </div>
     <div class="flex justify-start lg:justify-between mb-4 items-center mt-4">
       <div
