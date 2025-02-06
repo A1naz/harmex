@@ -642,7 +642,6 @@ const siteUrl = config.public.siteUrl;
             <li>Адрес пункта выдачи заказов (ПВЗ).</li>
             <li>Поисковый запрос.</li>
             <li>Выкуп по Скидке или Промокоду (если необходимо)</li>
-            <li>Выкуп по модели RealFBS (если необходимо)</li>
           </ul>
         </li>
         <li>Проверьте заполненные данные</li>
@@ -660,7 +659,7 @@ const siteUrl = config.public.siteUrl;
         количествах, минимизируя ваше участие.
       </p>
       <p class="mt-4">
-        Для выкупа товара на Ozon, доступны 4 основных инструмента. Каждый из
+        Для выкупа товара на Ozon, доступны 3 основных инструмента. Каждый из
         них имеет свои особенности и применяется в зависимости от целей и
         стратегии продвижения. Ниже приведено подробное описание каждого
         инструмента, а также инструкции по их использованию.
@@ -683,7 +682,7 @@ const siteUrl = config.public.siteUrl;
       <ul class="list-disc ml-10">
         <li>
           При создании заявки на выкуп .
-          <strong>не заполняйте колонки "Скидка" и "RealFBS"</strong>
+          <strong>не заполняйте колонку "Скидка"</strong>
         </li>
         <li>
           Просто укажите артикул товара, количество и другие необходимые данные.
@@ -693,8 +692,7 @@ const siteUrl = config.public.siteUrl;
       <ul class="list-disc ml-10">
         <li>
           Вы хотите выкупить 10 единиц товара по полной цене. В заявке
-          указываете только артикул и количество, оставляя поля "Скидка" и
-          "RealFBS" пустыми.
+          указываете только артикул и количество, оставляя поле "Скидка" пустым.
         </li>
       </ul>
       <p class="divider"></p>
@@ -754,7 +752,7 @@ const siteUrl = config.public.siteUrl;
         </li>
       </ul>
       <p class="divider"></p>
-      <p class="ml-6 font-bold">4. Выкуп через RealFBS</p>
+      <!-- <p class="ml-6 font-bold">4. Выкуп через RealFBS</p>
       <p class="mt-4 mb-1 ml-6">Описание</p>
       <ul class="list-disc ml-10">
         <li>
@@ -785,8 +783,8 @@ const siteUrl = config.public.siteUrl;
           артикул, количество и данные вашего склада.
         </li>
       </ul>
-      <p class="divider"></p>
-      <p class="ml-6 font-bold">5. Комбинированный выкуп</p>
+      <p class="divider"></p> -->
+      <!-- <p class="ml-6 font-bold">4. Комбинированный выкуп</p>
       <p class="mt-4 mb-1 ml-6">Описание</p>
       <ul class="list-disc ml-10">
         <li>
@@ -816,7 +814,7 @@ const siteUrl = config.public.siteUrl;
           заявке указываете артикул, количество, данные вашего склада и скидку
           15%.
         </li>
-      </ul>
+      </ul> -->
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-4"

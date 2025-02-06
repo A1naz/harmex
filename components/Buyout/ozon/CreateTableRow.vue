@@ -328,7 +328,7 @@ const productQuantityModel = computed({
         </button>
       </div>
     </td>
-    <td class="w-[20px] border-r border-base">
+    <!-- <td class="w-[20px] border-r border-base">
       <div class="flex justify-center">
         <input
           type="checkbox"
@@ -337,7 +337,7 @@ const productQuantityModel = computed({
           class="checkbox checkbox-primary"
         />
       </div>
-    </td>
+    </td> -->
     <td class="border-r border-base w-[90px]">
       <div class="flex justify-end">
         <div

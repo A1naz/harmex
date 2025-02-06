@@ -626,13 +626,13 @@ const addressForm = reactive({
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-                <th class="font-normal">
-                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <!-- <th class="font-normal">
+        
                   <div class="text-center">
                     <span> RealFBS </span>
-                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+               
                   </div>
-                </th>
+                </th> -->
                 <th class="text-base-content" />
               </tr>
             </thead>

@@ -388,7 +388,7 @@ const productQuantityModel = computed({
           </button>
         </div>
       </div>
-      <div class="flex">
+      <!-- <div class="flex">
         <div class="text-md text-gray-500 mb-1">RealFBS</div>
         <div class="flex justify-center">
           <input
@@ -398,7 +398,7 @@ const productQuantityModel = computed({
             class="checkbox checkbox-primary ml-8"
           />
         </div>
-      </div>
+      </div> -->
       <div class="flex">
         <div class="w-full">
           <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
