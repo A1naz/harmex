@@ -552,11 +552,27 @@ const siteUrl = config.public.siteUrl;
     <div v-if="buyouts.length > 0">
       <div>
         <div
+          v-if="buyouts.length > 3"
           group
           class="cards grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] h-full"
         >
           <BuyoutOzonCard
             class="max-w-[400px]"
+            v-for="(buyout, index) of buyouts"
+            :key="buyout.uuid"
+            :index="index"
+            :info="buyout"
+            @unarchive="unarchiveBuyout"
+            @archive="archiveBuyout"
+            @open-modal="openModal"
+            @remove-buyout="openRemoveModal"
+            @unpause="unpauseBuyout"
+            @open-log-modal="openLogModal"
+          />
+        </div>
+        <div v-else group class="flex flex-wrap gap-x-4 gap-y-3">
+          <BuyoutOzonCard
+            class="max-w-full sm:max-w-[320px]"
             v-for="(buyout, index) of buyouts"
             :key="buyout.uuid"
             :index="index"

@@ -605,6 +605,7 @@ const siteUrl = config.public.siteUrl;
       </div>
       <div v-else class="px-2 py-4 mb-2" /> -->
       <div
+        v-if="buyouts.length > 3"
         group
         class="cards grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] h-full"
       >
@@ -612,6 +613,25 @@ const siteUrl = config.public.siteUrl;
           v-for="(buyout, index) of buyouts"
           :key="buyout.uuid"
           class="max-w-[400px]"
+        >
+          <BuyoutYandexMarketCard
+            :key="Date.now() + index"
+            :index="index"
+            :info="buyout"
+            @unarchive="unarchiveBuyout"
+            @archive="archiveBuyout"
+            @open-modal="openModal"
+            @remove-buyout="openRemoveModal"
+            @unpause="unpauseBuyout"
+            @open-log-modal="openLogModal"
+          />
+        </div>
+      </div>
+      <div v-else group class="flex flex-wrap gap-x-4 gap-y-3">
+        <div
+          v-for="(buyout, index) of buyouts"
+          :key="buyout.uuid"
+          class="max-w-full sm:max-w-[320px]"
         >
           <BuyoutYandexMarketCard
             :key="Date.now() + index"

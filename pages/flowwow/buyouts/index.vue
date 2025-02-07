@@ -566,59 +566,41 @@ const siteUrl = config.public.siteUrl;
     </div>
 
     <div v-if="buyouts.length > 0">
-      <!-- <div
-        v-if="
-          (route.query.status === 'active' || !route.query.status)
-            && activeBuyouts.length > 0
-        "
-        class="flex justify-center py-2 rounded-lg px-2 mb-2 bg-base-100 border border-base-300"
+      <div
+        v-if="buyouts.length > 3"
+        group
+        class="cards grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] h-full"
       >
-        <p
-          v-if="availableBuyouts"
-          :class="{
-            'text-green-500': availableBuyouts === activeBuyouts.length,
-          }"
-          class="text-sm"
-        >
-          {{
-            availableBuyouts === activeBuyouts.length
-              ? 'Баланса хватит на все выкупы'
-              : `Баланса хватит на ${availableBuyouts} ${formatAvailable} из ${activeBuyouts.length}.`
-          }}
-          <span v-if="neededDeposit > 0">{{
-            `Пополните баланс на ${Math.round(
-              neededDeposit,
-            )} для выполнения всех выкупов.`
-          }}</span>
-        </p>
-        <p
-          v-if="availableBuyouts === 0 && activeBuyouts.length > 0"
-          class="text-center text-orange-400 text-sm"
-        >
-          Недостаточно средств для совершения выкупа, пополните баланс.
-        </p>
-      </div> -->
-      <!-- <div v-else class="px-2 py-4 mb-2" /> -->
-      <div>
-        <TransitionSlide
-          group
-          class="cards grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] h-full"
-        >
-          <BuyoutFlowwowCard
-            class="max-w-[400px]"
-            v-for="(buyout, index) of buyouts"
-            :key="buyout.uuid"
-            :index="index"
-            :info="buyout"
-            @unarchive="unarchiveBuyout"
-            @archive="archiveBuyout"
-            @open-modal="openModal"
-            @remove-buyout="openRemoveModal"
-            @unpause="unpauseBuyout"
-            @open-log-modal="openLogModal"
-          />
-        </TransitionSlide>
+        <BuyoutFlowwowCard
+          class="max-w-[400px]"
+          v-for="(buyout, index) of buyouts"
+          :key="buyout.uuid"
+          :index="index"
+          :info="buyout"
+          @unarchive="unarchiveBuyout"
+          @archive="archiveBuyout"
+          @open-modal="openModal"
+          @remove-buyout="openRemoveModal"
+          @unpause="unpauseBuyout"
+          @open-log-modal="openLogModal"
+        />
       </div>
+      <div class="flex flex-wrap gap-x-4 gap-y-3" v-else>
+        <BuyoutFlowwowCard
+          class="max-w-full sm:max-w-[320px]"
+          v-for="(buyout, index) of buyouts"
+          :key="buyout.uuid"
+          :index="index"
+          :info="buyout"
+          @unarchive="unarchiveBuyout"
+          @archive="archiveBuyout"
+          @open-modal="openModal"
+          @remove-buyout="openRemoveModal"
+          @unpause="unpauseBuyout"
+          @open-log-modal="openLogModal"
+        />
+      </div>
+
       <div ref="target" class="p-2 w-full col-span-1 h-40 md:h-10" />
     </div>
 
