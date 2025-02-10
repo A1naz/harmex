@@ -77,6 +77,19 @@ const productQuantityModel = computed({
     store.changeQuantity(newValue, props.index);
   },
 });
+
+const { $dayjs } = useNuxtApp();
+
+function getFirstDate(dates: [Date | null, Date | null] | []) {
+  if (dates && dates[0]) return `${$dayjs(dates[0]).format("DD.MM")}`;
+
+  return "";
+}
+function getSecondDate(dates: [Date | null, Date | null] | []) {
+  if (dates && dates[1]) return `${$dayjs(dates[1]).format("DD.MM")}`;
+
+  return "";
+}
 </script>
 
 <template>
@@ -133,55 +146,33 @@ const productQuantityModel = computed({
         </div>
       </div>
     </td>
-    <td class="border-r border-base text-center">
-      <div class="text-sm text-center w-full">
-        {{ product.priceText }}
-      </div>
-    </td>
-    <!-- <td class="border-r border-base">
-      <div class="relative flex items-center flex-grow-0 w-full">
-        <div
-          class="absolute left-0 btn btn-ghost btn-sm btn-square"
-          @click="productQuantityModel--"
-        >
-          <IconCSS size="16" name="ic:round-minus" />
-        </div>
-        <input
-          v-model="productQuantityModel"
-          type="number"
-          min="1"
-          max="1000"
-          class="input input-sm w-full text-center bg-base-300 bg-opacity-40"
-        />
-        <div
-          class="absolute right-0 btn btn-ghost btn-sm btn-square"
-          @click="productQuantityModel++"
-        >
-          <IconCSS size="16" name="ic:round-plus" />
-        </div>
-      </div>
-    </td> -->
-    <td class="border-r border-base">
-      <div class="w-20 2xl:w-full flex items-center">
+    <td class="border-r border-base max-w-80">
+      <div class="flex items-center">
         <select
-          v-if="product.sizes.length"
-          class="select select-sm w-full bg-base-300 bg-opacity-40"
+          v-if="product.roomsData.length"
+          class="select select-sm max-w-lg bg-base-300 bg-opacity-40"
           @change="onSizeChange"
         >
           <option
-            v-for="size in product.sizes"
-            :key="size"
-            :selected="product.selectedSize === size"
-            :value="size"
+            v-for="size in product.roomsData"
+            :key="size.name"
+            :selected="product.selectedSize === size.price + '|' + size.name"
+            :value="size.price + '|' + size.name"
           >
-            {{ size }}
+            {{ size.price }} {{ size.name }}
           </option>
         </select>
         <div v-else class="text-sm text-center ml-2">Нет</div>
       </div>
     </td>
-    <td class="border-r border-base">
-      <div class="w-20 2xl:w-full">
+    <td class="border-r border-base text-center">
+      <div class="text-sm text-center w-full">
+        {{ product.priceText }}
+      </div>
+    </td>
+
+    <td class="border-r border-base w-20">
+      <div class="w-20">
         <select
           class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
           @change="onSexChange"
@@ -209,66 +200,18 @@ const productQuantityModel = computed({
         </button>
       </div>
     </td>
-    <td class="border-r border-base">
-      <div class="flex items-center mt-2">
-        <div class="w-full">
-          <BuyoutDateRangePicker
-            v-if="!product.purchaseSoon"
-            v-model="productDateRangeModel"
-            :start-date="startDate"
-          />
-          <div v-else class="text-center">Выкуп в ближайшее время</div>
+    <td class="border-r border-base w-10">
+      <div class="text-center text-sm mt-2">
+        <div>
+          {{ getFirstDate(productDateRangeModel) }} -
+          {{ getSecondDate(productDateRangeModel) }}
         </div>
-      </div>
-    </td>
-    <td class="break-all max-w-[300px] border-r border-base">
-      <div
-        class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden justify-center"
-      >
-        <div
-          v-if="product.adress"
-          class="text-xs max-h-18 w-full break-all text-center"
-        >
-          <span v-show="loading" class="loading loading-spinner" />
-          <p
-            v-if="!loading"
-            @click="$emit('pointModalOpen', index)"
-            class="break-all whitespace-normal cursor-pointer text-primary"
-          >
-            {{ product.adress }}
-          </p>
-        </div>
-        <button
-          v-if="!product.adress"
-          :disabled="loading"
-          :class="{
-            'btn-outline': product.adress,
-          }"
-          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10 border-none w-fit"
-          @click="$emit('pointModalOpen', index)"
-        >
-          <span v-show="loading" class="loading loading-spinner" />
-          <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
-        </button>
-        <!-- <button
-          v-if="product.adress"
-          :disabled="loading"
-          :class="{
-            'btn-outline': product.adress,
-          }"
-          class="btn btn-primary btn-sm normal-case w-full"
-          @click="$emit('pointModalOpen', index)"
-        >
-          <span v-show="loading" class="loading loading-spinner" />
-          <span v-if="!loading">Изменить </span>
-          
-        </button> -->
       </div>
     </td>
 
     <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
-        <BuyoutWildberriesCreateSearchQueries
+        <BuyoutOzonHotelsCreateSearchQueries
           :product-index="props.index"
           :article="product.article"
           :queries="product.searchQuery"

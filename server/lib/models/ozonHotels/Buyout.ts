@@ -26,6 +26,7 @@ const BuyoutSchema = new Schema({
   dateEnd: { type: Date, required: true },
   product: { type: ProductSchema, required: true },
   rules: { type: Array, required: true, default: [] },
+  url: { type: String, required: false, text: true },
   status: {
     type: String,
     required: true,

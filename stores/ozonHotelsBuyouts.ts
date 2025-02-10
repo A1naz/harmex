@@ -61,7 +61,7 @@ export const useOzonHotelsBuyoutStore = defineStore('ozonHotelsBuyout', {
     clearProducts() {
       this.createProducts = []
     },
-    async addProduct(article: number) {
+    async addProduct(article: string, dateRange: Array<any>) {
       if (this.createProducts.length >= 10) {
         notify({
           title: 'За раз можно создать максимум 10 выкупов',
@@ -70,10 +70,15 @@ export const useOzonHotelsBuyoutStore = defineStore('ozonHotelsBuyout', {
         return
       }
 
+      const link = `${article.split('?')[0]}?checkIn=${dateRange[0].toISOString().split("T")[0]}&checkOut=${dateRange[1].toISOString().split("T")[0]}`
+      //@ts-ignore
       const { data, error } = await useFetch(
-        `/api/ozonHotels/product/${article}`,
+        `/api/ozonHotels/product/get`,
         {
           method: 'GET',
+          query: {
+            link,
+          },
         },
       )
       if (error.value) {
@@ -104,17 +109,18 @@ export const useOzonHotelsBuyoutStore = defineStore('ozonHotelsBuyout', {
           image: product.image,
           name: product.name,
           article: product.article,
+          url: link,
           price: product.price,
           quantity: 1,
           sex: 'Нет',
-          sizes: product?.sizes,
-          dateRange: [startDate, endDate],
+          sizes: ['0'],
+          dateRange,
           adress: '',
+          roomsData: product?.roomsData ? product.roomsData : [],
           searchQuery: [{ value: '', loading: false, error: false }],
-          selectedSize: product.sizes[0] ?? 'none',
+          selectedSize: 'none',
           priceText: product.priceText,
           rules: [],
-          pointCoordinates: { lat: 0, lon: 0 },
         }),
       )
       this.changeRule(true, this.createProducts.length - 1, 5)
@@ -151,7 +157,7 @@ export const useOzonHotelsBuyoutStore = defineStore('ozonHotelsBuyout', {
     ) {
       const query
         = this.createProducts[options.productIndex].searchQuery[
-          options.queryIndex
+        options.queryIndex
         ]
       query.value = options.value
       query.error = error
@@ -162,6 +168,9 @@ export const useOzonHotelsBuyoutStore = defineStore('ozonHotelsBuyout', {
     },
     changeSize(value: string | number, index: number) {
       this.createProducts[index].selectedSize = value
+      this.createProducts[index].priceText = value.split('|')[0]
+      console.log(value.split('|')[0].replaceAll(' ', '').replace('₽', ''))
+      this.createProducts[index].price = Number(value.split('|')[0].replaceAll(' ', '').replace('₽', '').replaceAll(' ', ''))
     },
     changeSex(value: string, index: number) {
       this.createProducts[index].sex = value

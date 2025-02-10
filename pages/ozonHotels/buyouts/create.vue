@@ -49,18 +49,13 @@ async function addProduct() {
   if (!article.value) return;
   loading.value = true;
   const string = article.value.toString().trim();
-  if (string.includes(",")) {
-    const articles = string.split(",");
-    for (const item of articles) await store.addProduct(item);
+
+  store.addProduct(article.value, dateRange.value).finally(() => {
     loading.value = false;
-  } else {
-    store.addProduct(Number(article.value)).finally(() => {
-      loading.value = false;
-    });
-  }
+  });
+
   article.value = "";
 }
-
 async function ruleModalOpen(index: number) {
   ruleModal.value = true;
   selectedRuleProductIndex.value = index;
@@ -103,10 +98,6 @@ async function openChecksModal() {
   let valid = true;
   let errorMsg = "";
   products.value.forEach((item: any) => {
-    if (!item.adress) {
-      valid = false;
-      errorMsg = "Не у всех товаров указан адрес доставки";
-    }
     if (!item.dateRange[0] || !item.dateRange[1]) {
       valid = false;
       errorMsg = "Не у всех товаров указаны даты выкупов";
@@ -121,12 +112,6 @@ async function openChecksModal() {
     const maxDate = new Date(item.dateRange[1]);
     const minDay = minDate.getDate();
     const maxDay = maxDate.getDate();
-
-    // eslint-disable-next-line eqeqeq
-    if (item.key && minDay != maxDay) {
-      valid = false;
-      errorMsg = `Выберите точную дату для выкупа под ключ ${item.article}`;
-    }
   });
 
   if (!valid) {
@@ -194,12 +179,12 @@ onKeyStroke("Escape", (e) => {
 const { $dayjs } = useNuxtApp();
 
 function getFirstDate(dates: [Date | null, Date | null] | []) {
-  if (dates && dates[0]) return `${$dayjs(dates[0]).format("D MMMM")}`;
+  if (dates && dates[0]) return `${$dayjs(dates[0]).format("DD.MM")}`;
 
   return "";
 }
 function getSecondDate(dates: [Date | null, Date | null] | []) {
-  if (dates && dates[1]) return `${$dayjs(dates[1]).format("D MMMM")}`;
+  if (dates && dates[1]) return `${$dayjs(dates[1]).format("DD.MM")}`;
 
   return "";
 }
@@ -213,7 +198,7 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
       <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
-            Маркетплейсы
+            Отели
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
@@ -229,7 +214,7 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
             to="/ozonHotels/buyouts"
             class="cursor-pointer text-[#909090]"
           >
-            Выкупы
+            Брони
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">Создать</li>
@@ -339,6 +324,14 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
                   Фото
                 </th>
                 <th class="w-36 3xl:w-48 text-center font-normal">Название</th>
+
+                <th class="font-normal">
+                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                  <div class="text-center">
+                    <span> Номер </span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                  </div>
+                </th>
                 <th
                   class="text-center font-normal"
                   @click="openInfoModal('price')"
@@ -348,22 +341,13 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-
-                <th class="font-normal" @click="openInfoModal('size')">
-                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
-                  <div class="text-center">
-                    <span> Размер </span>
-                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
-                  </div>
-                </th>
-                <th class="font-normal" @click="openInfoModal('sex')">
+                <th class="font-normal">
                   <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
                     <span> Пол </span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-
                 <th class="font-normal" @click="openInfoModal('rules')">
                   <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
@@ -374,21 +358,21 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
                 <th class="font-normal" @click="openInfoModal('dates')">
                   <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
-                    <span> Даты выкупов </span>
+                    <span> Даты бронирования </span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
 
-                <th
+                <!-- <th
                   class="min-w-40 font-normal"
                   @click="openInfoModal('adress')"
                 >
-                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+          
                   <div class="text-center">
                     <span> Адрес </span>
-                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+        
                   </div>
-                </th>
+                </th> -->
                 <th
                   class="font-normal text-base-content"
                   @click="openInfoModal('search')"
@@ -428,12 +412,12 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
           for="removeAllModelCreateProducts"
           >Удалить все</label
         > -->
-          <label
+          <!-- <label
             class="btn btn-sm btn-primary normal-case border-none bg-base-200 text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal"
             for="template-modal"
           >
             Шаблон
-          </label>
+          </label> -->
 
           <button
             class="btn btn-sm btn-primary normal-case border-none text-white mt-1 ml-2 font-normal"
@@ -577,8 +561,6 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
         @close="checksModal = false"
       />
     </div>
-    {{ dateRange[0].toISOString().split("T")[0] }} -
-    {{ dateRange[1].toISOString().split("T")[0] }}
   </div>
 </template>
 

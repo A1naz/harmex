@@ -21,14 +21,9 @@ interface Item {
   rules: Rule[]
   purchaseSoon: boolean
   key: boolean
-  pointCoordinates: {
-    lat: number
-    lon: number
-  }
-  pointId: string
-  discount: boolean
-  discountRequestPrice: number
-  discountPrice: number
+  // discount: boolean
+  // discountRequestPrice: number
+  // discountPrice: number
   promoCode: string
   addressInfo: any
   FBS: boolean
@@ -113,27 +108,17 @@ export default eventHandler(async (event) => {
       product.dateRange = [date1, date2]
     }
 
-    let city, state
-    ;({ city, state } = await getCityByGeo(
-      product.pointCoordinates.lat.toString(),
-      product.pointCoordinates.lon.toString(),
-    ))
-
-
     const buyout = new Buyout({
       article: product.article,
       searchQuery: searchQueries.join(', '),
-      point: product.adress,
-      pointCoordinates: product.pointCoordinates,
-      point_city: city,
-      point_state: state,
-      pointId: product.pointId ? Number(product.pointId) : 0,
+      point: '',
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,
       quantity: product.quantity,
       gender: product.sex,
       status: 'active',
+      url: product.url,
       user,
       rules,
       product: {
@@ -143,15 +128,7 @@ export default eventHandler(async (event) => {
         image: product.image,
       },
       uuid: uuid(),
-      discount:
-        !!(product.discountPrice !== product.price && product.discountPrice !== 0),
-      discountPrice: product.discountPrice,
-      // discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
-      purchaseSoon: product.purchaseSoon,
-      ff: product.key || false,
-      FBS: product.FBS,
-      addressInfo: product.addressInfo,
       promocode: product.promoCode,
       isPromocodeEnabled: product.promoCode && product.promoCode !== '' ? true : false,
     })
@@ -164,5 +141,9 @@ export default eventHandler(async (event) => {
     })
   }
 
+  throw createError({
+    statusCode: 200,
+    message: 'ok',
+  })
   return { status: 'ok' }
 })

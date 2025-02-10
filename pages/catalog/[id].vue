@@ -139,7 +139,9 @@ async function setFavourites(path: string) {
       class="breadcrumbs text-sm flex justify-between w-full overflow-y-hidden"
     >
       <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
-        <li class="cursor-pointer" @click="navigateToCatalog">Маркетплейсы</li>
+        <li class="cursor-pointer" @click="navigateToCatalog">
+          {{ item.type }}
+        </li>
         <li class="text-[#212121]">
           {{ item.name }}
         </li>

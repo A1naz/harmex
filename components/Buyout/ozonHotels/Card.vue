@@ -179,13 +179,13 @@ async function copyToClipboard(text: string) {
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-3 relative"
     >
-      <button
+      <!-- <button
         v-show="info.status === 'paused' || info.status === 'nofunds'"
         class="btn btn-xs btn-neutral absolute left-3 top-3"
         @click="unpauseBuyout"
       >
         Возобновить
-      </button>
+      </button> -->
       <div class="dropdown dropdown-end absolute -right-1 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
           <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
@@ -204,7 +204,7 @@ async function copyToClipboard(text: string) {
               О выкупе
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a @click="cloneBuyout">
               <img
                 class="w-5 h-5"
@@ -213,7 +213,7 @@ async function copyToClipboard(text: string) {
               />
               Дублировать
             </a>
-          </li>
+          </li> -->
           <li
             v-if="
               info.status === 'archived' ||

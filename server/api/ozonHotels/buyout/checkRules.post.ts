@@ -12,17 +12,10 @@ interface Item {
   sizes: number[] | string[]
   sex: string
   searchQuery: any[]
-  adress: string
   dateRange: [Date, Date]
   selectedSize: number | string
   rules: Rule[]
   purchaseSoon: boolean
-  pointCoordinates: {
-    lat: number
-    lon: number
-  }
-  FBS: boolean
-  addressInfo: any
 }
 
 export default eventHandler(async (event) => {
@@ -40,12 +33,6 @@ export default eventHandler(async (event) => {
   const result = {
     success: true,
     message: '',
-  }
-  const balanceIsExist = await checkBalance(user, products)
-  if (!balanceIsExist) {
-  result.success = false
-  result.message = `Недостаточно средств для совершения выкупа`
-  return result
   }
 
   // if (!user.fizFace && !user.bik && !user.rs) {
@@ -121,23 +108,6 @@ export default eventHandler(async (event) => {
       // }
     }
 
-    if (!item.FBS) {
-
-      const foundPoint = points.find(
-        (p: any) =>
-          p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon
-      )
-      if (!foundPoint) {
-        result.success = false
-        result.message = `ПВЗ ${item.adress} не найдено`
-        return result
-      }
-    } else if (item.FBS) {
-      if (!item.addressInfo || !item.addressInfo.apartment) {
-        result.success = false
-        result.message = `Необходимо заполнить все поля адреса для товара ${item.article}`
-      }
-    }
   }
 
   return result
