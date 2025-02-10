@@ -21,12 +21,12 @@ const { $dayjs } = useNuxtApp();
 const { width } = useWindowSize();
 
 function getFirstDate(dates: [Date | null, Date | null] | []) {
-  if (dates && dates[0]) return `${$dayjs(dates[0]).format("D MMMM HH:mm")}`;
+  if (dates && dates[0]) return `${$dayjs(dates[0]).format("D MMMM")}`;
 
   return "";
 }
 function getSecondDate(dates: [Date | null, Date | null] | []) {
-  if (dates && dates[1]) return `${$dayjs(dates[1]).format("D MMMM HH:mm")}`;
+  if (dates && dates[1]) return `${$dayjs(dates[1]).format("D MMMM")}`;
 
   return "";
 }
@@ -53,17 +53,6 @@ const dates = computed({
   set: (val) => emit("update:modelValue", val),
 });
 
-function handleTime(
-  index: number,
-  value: number,
-  hours = true,
-  updateTime: updateTime,
-  time: any
-) {
-  if (index === 0) updateTime([value, time.hours[1]], true);
-  else updateTime([time.hours[0], value], true);
-}
-
 function handleSelectDate(
   internalModelValue: [Date | null, Date | null] | [],
   selectDate: Function
@@ -87,12 +76,12 @@ function handleSelectDate(
   <div>
     <VueDatePicker
       v-model="dates"
-      :max-date="startDate"
       range
       cancel-text=""
       select-text="Сохранить"
       locale="ru"
-      :prevent-min-max-navigation="true"
+      :min-date="startDate"
+      :prevent-min-max-navigation="false"
       :dark="colorMode.value === 'dark'"
       :time-picker-inline="true"
       :teleport-center="width < 1024"
@@ -162,35 +151,6 @@ function handleSelectDate(
         <div class="flex justify-center items-center gap-2">
           <Icon name="fluent:clock-24-regular" />
           <div class="text-base-content">Указать время</div>
-        </div>
-      </template>
-      <template #time-picker="{ time, updateTime }">
-        <div class="custom-time-picker-component">
-          <span class="text-center px-2">Укажите часы</span>
-          <div class="flex items-center gap-2 px-2 pt-1">
-            <select
-              class="select select-sm w-full"
-              :value="time.hours[0]"
-              @change="
-                handleTime(0, +$event.target.value, true, updateTime, time)
-              "
-            >
-              <option v-for="h in hoursArray" :key="h.value" :value="h.value">
-                {{ h.text }}
-              </option>
-            </select>
-            <select
-              class="select select-sm w-full"
-              :value="time.hours[1]"
-              @change="
-                handleTime(1, +$event.target.value, true, updateTime, time)
-              "
-            >
-              <option v-for="h in hoursArray" :key="h.value" :value="h.value">
-                {{ h.text }}
-              </option>
-            </select>
-          </div>
         </div>
       </template>
     </VueDatePicker>
