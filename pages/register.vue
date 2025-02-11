@@ -382,10 +382,10 @@ async function generatePassword() {
       <section
         class="flex flex-col justify-center align-center w-full max-w-lg rounded-lg p-2 shadow-lg gap-3 mt-auto mx-auto"
       >
-        <h3 class="font-bold text-xl mt-5 text-center">
+        <h3 class="text-xl mt-5 font-bold text-center">
           Создайте ваш аккаунт на Harmex
         </h3>
-        <h1 class="font-bold text-center">
+        <h1 class="text-center text-gray-500 text-xs">
           Выберите удобный способ регистрации и оплаты перед началом действий...
         </h1>
         <div class="w-full">

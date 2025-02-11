@@ -184,6 +184,7 @@ async function generatePassword() {
                 :class="{
                   'input-error': v$.email.$error,
                 }"
+                class="min-w-10"
                 v-maska
                 data-maska="+7 (###) ###-##-##"
                 placeholder="+7 (___) ___-__-__"
@@ -236,7 +237,7 @@ async function generatePassword() {
             </label>
             <div class="text-xs text-gray-500">
               Примите звонок и введите озвученные цифры. Не поступил звонок?
-              Повторить
+              Повторите запрос на звонок.
             </div>
           </div>
           <div>
