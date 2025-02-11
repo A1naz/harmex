@@ -110,7 +110,7 @@ async function login() {
       class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3"
     >
       <h3 class="logo font-bold text-2xl text-center">HARMEX</h3>
-      <h3 class="font-bold text-2xl text-center mb-4">Войдите ваш в аккаунт</h3>
+      <h3 class="font-bold text-2xl text-center mb-4">Войдите в ваш аккаунт</h3>
 
       <div class="box flex flex-col gap-3">
         <form class="flex flex-col gap-3" @submit.prevent="login">
@@ -132,7 +132,7 @@ async function login() {
             </div>
           </div>
           <div class="flex flex-col gap-1">
-            <label>Пароль </label>
+            <label>Введите ваш пароль </label>
             <div class="flex flex-col gap-0.5">
               <label class="input input-bordered w-full flex">
                 <input

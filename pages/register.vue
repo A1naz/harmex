@@ -491,7 +491,7 @@ async function generatePassword() {
             </div>
             <div class="text-xs text-gray-500 mb-2 ml-1">
               Примите звонок и введите озвученные цифры. Не поступил звонок?
-              Повторить
+              Повторите запрос на звонок.
             </div>
             <div v-if="faceType === 'yurFace'">
               <div>
