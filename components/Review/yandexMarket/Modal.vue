@@ -14,6 +14,7 @@ const props = defineProps({
 const emit = defineEmits(["close", "publish"]);
 const config = useRuntimeConfig();
 const store = useMainStore();
+const { user } = useUserSession();
 
 const headers = useRequestHeaders(["cookie"]) as HeadersInit;
 const closeButton = ref<HTMLElement>();
@@ -363,7 +364,7 @@ async function calculateHash(file: any) {
 
 async function renameFile() {
   axios
-    .post("https://videos.ozonmp.ru/api/renameFile", {
+    .post("https://videos.videos.harmex.ru/api/renameFile", {
       fileName: newFileId.value,
       type: filetype.value.replace("video/", ""),
     })
@@ -412,7 +413,7 @@ async function handleFileChange(e: any) {
   form.video = file.name;
 
   const upload: any = new Upload(file, {
-    endpoint: "https://videos.ozonmp.ru/uploads",
+    endpoint: "https://videos.videos.harmex.ru/uploads",
     // urlStorage: urlStorage.data,
     retryDelays: [0, 1000, 3000, 5000],
     metadata: {
@@ -449,12 +450,6 @@ async function handleFileChange(e: any) {
 
 async function check(hash: any) {
   await renameFile();
-}
-
-async function test() {
-  const res = await useFetch("https://videos.ozonmp.ru/", {
-    method: "GET",
-  });
 }
 
 function convertToMoscowTime(dateString: any): Date {
@@ -727,7 +722,7 @@ const handleMouseUp = (event: any) => {
         <div class="flex flex-col">
           <label class="">
             <div
-              v-if="store.client.username == 'test'"
+              v-if="user.username == 'test'"
               class="flex justify-between h-16 cursor-pointer"
             >
               <div class="max-w-[240px]">

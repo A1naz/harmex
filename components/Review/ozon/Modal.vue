@@ -361,7 +361,7 @@ async function calculateHash(file: any) {
 
 async function renameFile() {
   axios
-    .post("https://videos.ozonmp.ru/api/renameFile", {
+    .post("https://videos.videos.harmex.ru/api/renameFile", {
       fileName: newFileId.value,
       type: filetype.value.replace("video/", ""),
     })
@@ -410,7 +410,7 @@ async function handleFileChange(e: any) {
   form.video = file.name;
 
   const upload: any = new Upload(file, {
-    endpoint: "https://videos.ozonmp.ru/uploads",
+    endpoint: "https://videos.videos.harmex.ru/uploads",
     // urlStorage: urlStorage.data,
     retryDelays: [0, 1000, 3000, 5000],
     metadata: {
@@ -447,12 +447,6 @@ async function handleFileChange(e: any) {
 
 async function check(hash: any) {
   await renameFile();
-}
-
-async function test() {
-  const res = await useFetch("https://videos.ozonmp.ru/", {
-    method: "GET",
-  });
 }
 
 function convertToMoscowTime(dateString: any): Date {
