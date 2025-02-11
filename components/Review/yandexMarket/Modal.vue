@@ -133,7 +133,7 @@ async function checkVideo(file: any) {
         isUploading.value = false;
         notify({
           title: "Ошибка",
-          text: "Максимальный размер видео должен быть 4100x4100",
+          text: "Максимальное разрешение видео должно быть 4100x4100",
           type: "error",
           duration: 3000,
         });

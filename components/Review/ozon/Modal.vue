@@ -129,7 +129,7 @@ async function checkVideo(file: any) {
         isUploading.value = false;
         notify({
           title: "Ошибка",
-          text: "Максимальный размер видео должен быть 4100x4100",
+          text: "Максимальное разрешение видео должно быть 4100x4100",
           type: "error",
           duration: 3000,
         });
@@ -700,10 +700,7 @@ const handleMouseUp = (event: any) => {
         </div>
         <div class="flex flex-col">
           <label class="">
-            <div
-              v-if="user.username == 'test'"
-              class="flex justify-between h-16 cursor-pointer"
-            >
+            <div class="flex justify-between h-16 cursor-pointer">
               <div class="max-w-[240px]">
                 <span class="font-medium">Добавить видео (+25 рублей)</span>
                 <input
