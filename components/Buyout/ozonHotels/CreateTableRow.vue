@@ -15,6 +15,10 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  openPromo: {
+    type: Function,
+    required: true,
+  },
 });
 
 const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
@@ -146,27 +150,25 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
         </div>
       </div>
     </td>
-    <td class="border-r border-base max-w-80">
-      <div class="flex items-center">
-        <select
-          v-if="product.roomsData.length"
-          class="select select-sm max-w-lg bg-base-300 bg-opacity-40"
-          @change="onSizeChange"
+    <td class="border-r border-base">
+      <select
+        v-if="product.roomsData.length"
+        class="select select-sm w-full bg-base-300 bg-opacity-40"
+        @change="onSizeChange"
+      >
+        <option
+          v-for="size in product.roomsData"
+          :key="size.name"
+          :selected="product.selectedSize === size.price + '|' + size.name"
+          :value="size.price + '|' + size.name"
         >
-          <option
-            v-for="size in product.roomsData"
-            :key="size.name"
-            :selected="product.selectedSize === size.price + '|' + size.name"
-            :value="size.price + '|' + size.name"
-          >
-            {{ size.price }} {{ size.name }}
-          </option>
-        </select>
-        <div v-else class="text-sm text-center ml-2">Нет</div>
-      </div>
+          {{ size.price }} {{ size.name }}
+        </option>
+      </select>
+      <div v-else class="text-sm text-center ml-2">Нет</div>
     </td>
     <td class="border-r border-base text-center">
-      <div class="text-sm text-center w-full">
+      <div class="text-sm text-center w-full text-nowrap">
         {{ product.priceText }}
       </div>
     </td>
@@ -219,6 +221,23 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
           @add="addSearchQuery"
           @remove="removeSearchQuery"
         />
+      </div>
+    </td>
+    <td class="w-[140px] border-r border-base">
+      <div class="flex justify-between mt-1 mx-5">
+        <button
+          class="w-full text-center btn btn-ghost dark:border-[#51535a] border-base-300 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap px-1"
+          @click="props.openPromo(index, product.price)"
+        >
+          {{ product.promoCode ? `${product.promoCode}` : "Указать промокод" }}
+        </button>
+        <button
+          v-if="product.promoCode"
+          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 ml-[1px] btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          @click="$emit('removePromo', index)"
+        >
+          <Icon name="ep:close-bold" size="12" />
+        </button>
       </div>
     </td>
     <td class="border-r border-base w-[90px]">

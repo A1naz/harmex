@@ -32,7 +32,12 @@ function copyBuyout() {
   store.createProducts.push(JSON.parse(item));
 }
 
-const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
+const emit = defineEmits([
+  "callback",
+  "pointModalOpen",
+  "ruleModalOpen",
+  "removePromo",
+]);
 const store = useYandexMarketBuyoutStore();
 const startDate = ref(new Date(Date.now()));
 

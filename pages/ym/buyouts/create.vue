@@ -383,6 +383,7 @@ async function pointModalOpen(index: number) {
 onMounted(async () => {
   getPickpoints();
   if (route.query.uuid) {
+    startTimer();
     loading.value = true;
     await store.cloneBuyout(route.query.uuid.toString());
     loading.value = false;

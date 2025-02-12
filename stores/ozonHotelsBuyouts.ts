@@ -121,6 +121,7 @@ export const useOzonHotelsBuyoutStore = defineStore('ozonHotelsBuyout', {
           selectedSize: 'none',
           priceText: product.priceText,
           rules: [],
+          promoCode: '',
         }),
       )
       this.changeRule(true, this.createProducts.length - 1, 5)

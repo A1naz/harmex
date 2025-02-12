@@ -9,6 +9,10 @@ const currency = useCurrency();
 const isCreateButtonDisabled = ref(false);
 const { width } = useWindowSize();
 
+const timer = ref(40);
+const timerRunning = ref(false);
+const timerFinished = ref(false);
+let interval: any;
 const disabledCreateButton = ref(false);
 const ruleModal = ref(false);
 const selectedRuleProductIndex = ref(0);
@@ -36,6 +40,21 @@ onMounted(() => {});
 
 const loading = ref(false);
 
+function startTimer() {
+  timer.value = 40;
+  timerRunning.value = true;
+
+  interval = setInterval(() => {
+    if (timer.value > 0 && loading.value) {
+      timer.value--;
+    } else {
+      clearInterval(interval);
+      timerRunning.value = false;
+      timerFinished.value = true;
+    }
+  }, 1000);
+}
+
 async function addProduct() {
   if (!dateRange.value || !dateRange.value.length) {
     notify({
@@ -47,6 +66,7 @@ async function addProduct() {
   }
 
   if (!article.value) return;
+  startTimer();
   loading.value = true;
   const string = article.value.toString().trim();
 
@@ -188,6 +208,21 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
 
   return "";
 }
+
+const currentProductIndex = ref(0);
+const currentProductPrice = ref(0);
+const promoModal = ref(false);
+function openPromo(productIndex: number, price: number) {
+  currentProductIndex.value = productIndex;
+  currentProductPrice.value = price;
+
+  promoModal.value = true;
+}
+
+function removePromo(index: number) {
+  console.log(index);
+  store.createProducts[index].promoCode = "";
+}
 </script>
 
 <template>
@@ -226,6 +261,18 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
       Создайте новые выкупы. Введите артикулы товаров и заполните необходимые
       данные.
     </p> -->
+      <div
+        v-if="loading"
+        style="background-color: rgb(37, 37, 42); opacity: 80%; z-index: 9999"
+        class="fixed z-[50] top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center"
+      >
+        <span class="text-white text-2xl text-center">
+          До получения продукта осталось приблизительно {{ timer }} сек.
+        </span>
+        <div class="ease-linear rounded-full mb-4">
+          <Icon name="mdi:loading" class="h-20 w-20 animate-spin text-white" />
+        </div>
+      </div>
       <div class="flex flex-col md:flex-row md:justify-between">
         <div class="mt-6 md:flex items-center gap-2.5 w-full">
           <div
@@ -304,6 +351,8 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
             :loading="false"
             :product="product"
             :index="index"
+            :open-promo="openPromo"
+            @removePromo="removePromo"
             @point-modal-open="false"
             @rule-modal-open="ruleModalOpen"
           />
@@ -383,6 +432,13 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
                   </div>
                 </th>
 
+                <th class="font-normal text-base-content">
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Промокод</span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+                  </div>
+                </th>
+
                 <th class="text-base-content" />
               </tr>
             </thead>
@@ -394,6 +450,8 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
                 :product="product"
                 :index="index"
                 :loading="false"
+                :open-promo="openPromo"
+                @removePromo="removePromo"
                 @rule-modal-open="ruleModalOpen"
                 @point-modal-open="false"
               />
@@ -561,6 +619,12 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
         @close="checksModal = false"
       />
     </div>
+    <BuyoutOzonHotelsPromoModal
+      :show="promoModal"
+      :index="currentProductIndex"
+      :price="currentProductPrice"
+      @close-modal="promoModal = false"
+    />
   </div>
 </template>
 

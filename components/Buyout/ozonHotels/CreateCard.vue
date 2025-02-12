@@ -13,6 +13,10 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  openPromo: {
+    type: Function,
+    required: true,
+  },
 });
 
 function copyBuyout() {
@@ -28,7 +32,12 @@ function copyBuyout() {
   store.createProducts.push(JSON.parse(item));
 }
 
-const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
+const emit = defineEmits([
+  "callback",
+  "pointModalOpen",
+  "ruleModalOpen",
+  "removePromo",
+]);
 const store = useOzonHotelsBuyoutStore();
 const startDate = ref(new Date(Date.now()));
 
@@ -75,6 +84,19 @@ const productQuantityModel = computed({
     store.changeQuantity(newValue, props.index);
   },
 });
+
+const { $dayjs } = useNuxtApp();
+
+function getFirstDate(dates: [Date | null, Date | null] | []) {
+  if (dates && dates[0]) return `${$dayjs(dates[0]).format("DD.MM")}`;
+
+  return "";
+}
+function getSecondDate(dates: [Date | null, Date | null] | []) {
+  if (dates && dates[1]) return `${$dayjs(dates[1]).format("DD.MM")}`;
+
+  return "";
+}
 </script>
 
 <template>
@@ -208,6 +230,24 @@ const productQuantityModel = computed({
           </select>
         </div>
       </div>
+
+      <div class="flex justify-between items-center w-full">
+        <select
+          v-if="product.roomsData.length"
+          class="select select-sm bg-base-300 w-full bg-opacity-40"
+          @change="onSizeChange"
+        >
+          <option
+            v-for="size in product.roomsData"
+            :key="size.name"
+            :selected="product.selectedSize === size.price + '|' + size.name"
+            :value="size.price + '|' + size.name"
+          >
+            {{ size.price }} {{ size.name }}
+          </option>
+        </select>
+        <div v-else class="text-sm text-center ml-2">Нет</div>
+      </div>
       <div class="flex justify-between items-center">
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-1">Правила: </span>
@@ -231,73 +271,34 @@ const productQuantityModel = computed({
             </button>
           </div>
         </div>
-      </div>
-      <div class="flex justify-start gap-5">
         <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-2">Дата выкупов: </span>
-          <div>
-            <!-- <div
-                v-if="!product.purchaseSoon"
-                v-show="product.dateRange[1] && product.dateRange[0]"
-                class="text-sm flex flex-col justify-center items-start mb-2"
-              >
-                <div>
-                  {{
-                    `${defaultDateShort(product.dateRange[0])} - ${defaultDateShort(
-                      product.dateRange[1]
-                    )}`
-                  }}
-                </div>
-              </div> -->
-
-            <BuyoutDateRangePicker
-              v-if="!product.purchaseSoon"
-              v-model="productDateRangeModel"
-              :start-date="startDate"
-            />
-            <!-- <button
-              v-else
-              disabled
-              :class="{
-                'btn-outline': product.dateRange[0] && product.dateRange[1],
-              }"
-              class="btn btn-primary btn-sm normal-case w-full"
-            >
-              {{
-                product.dateRange[0] && product.dateRange[1]
-                  ? 'Изменить'
-                  : 'Выбрать'
-              }}
-            </button> -->
-            <div v-else class="text-center text-xs">Ближайшее время</div>
+          <span class="text-md text-gray-500 mb-1">Даты бронирования: </span>
+          <div class="w-full flex items-center justify-center gap-2">
+            {{ getFirstDate(productDateRangeModel) }} -
+            {{ getSecondDate(productDateRangeModel) }}
           </div>
         </div>
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-2">Адрес: </span>
-          <div
-            v-if="product.adress"
-            class="text-xs h-10 w-full truncate max-w-[150px]"
-          >
-            <span v-show="loading" class="loading loading-spinner" />
-            <p
-              v-if="!loading"
-              @click="$emit('pointModalOpen', index)"
-              class="truncate cursor-pointer text-primary"
-            >
-              {{ product.adress }}
-            </p>
-          </div>
+      </div>
+      <div class="flex">
+        <span class="text-md text-gray-500 mr-3 my-auto">Промокод: </span>
+        <div class="flex">
           <button
-            v-if="!product.adress"
-            :disabled="loading"
+            class="w-fit max-w-[150px] truncate btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
             :class="{
-              'btn-outline': product.adress,
+              'rounded-r-none': product.promoCode,
             }"
-            class="btn btn-sm normal-case rounded-full p-1 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10 w-fit mx-auto"
-            @click="$emit('pointModalOpen', index)"
+            @click="props.openPromo(index, product.price)"
           >
-            <span v-show="loading" class="loading loading-spinner" />
-            <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
+            {{
+              product.promoCode ? `${product.promoCode}` : "Указать промокод"
+            }}
+          </button>
+          <button
+            v-if="product.promoCode"
+            class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1 btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            @click="$emit('removePromo', index)"
+          >
+            <Icon name="ep:close-bold" size="12" />
           </button>
         </div>
       </div>

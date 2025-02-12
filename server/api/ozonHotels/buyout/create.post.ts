@@ -141,9 +141,5 @@ export default eventHandler(async (event) => {
     })
   }
 
-  throw createError({
-    statusCode: 200,
-    message: 'ok',
-  })
   return { status: 'ok' }
 })
