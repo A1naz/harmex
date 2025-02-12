@@ -6,45 +6,44 @@ export default eventHandler(async (event) => {
     return sendRedirect(event, '/auth', 302)
 
   const { link } = getQuery(event)
-  console.log(link)
 
-  // const data: any = await $fetch('http://95.163.249.133:3000', {
-  //   method: 'POST',
-  //   body: {
-  //     type: 'ozonHotels',
-  //     url: link,
-  //     token: config.PARSER_TOKEN,
-  //   },
-  // }).catch((e) => {
-  //   // eslint-disable-next-line no-console
-  //   console.log(e)
+  const data: any = await $fetch('http://95.163.249.133:3000', {
+    method: 'POST',
+    body: {
+      type: 'ozonHotels',
+      url: link,
+      token: config.PARSER_TOKEN,
+    },
+  }).catch((e) => {
+    // eslint-disable-next-line no-console
+    console.log(e)
 
-  //   throw createError({
-  //     statusCode: 404,
-  //     message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
-  //   })
-  // })
+    throw createError({
+      statusCode: 404,
+      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
+    })
+  })
 
-  const data = {
-    article: '1102120416',
-    roomsData:
-      [{
-        name: 'Номер «Стандарт» с отдельным входом — «Игора. Времена года»',
-        price: '8 800 ₽'
-      },
-      {
-        name:
-          'Номер "Студия" с отдельным входом для маломобильных групп населения - "Игора. Времена года."',
-        price: '19 000 ₽'
-      },
-      {
-        name: 'Номер «Студия» с отдельным входом — «Игора. Времена года»',
-        price: '19 000 ₽'
-      }],
-    image:
-      'https://ir-3.ozone.ru/s3/hotels-widget-api-2/operators_dir/wc1000/ozonhotels_6489861140000_638638986591292551b7958915a6ce.jpg',
-    name: 'Игора. Времена Года Отель, 4*'
-  }
+  // const data = {
+  //   article: '1102120416',
+  //   roomsData:
+  //     [{
+  //       name: 'Номер «Стандарт» с отдельным входом — «Игора. Времена года»',
+  //       price: '8 800 ₽'
+  //     },
+  //     {
+  //       name:
+  //         'Номер "Студия" с отдельным входом для маломобильных групп населения - "Игора. Времена года."',
+  //       price: '19 000 ₽'
+  //     },
+  //     {
+  //       name: 'Номер «Студия» с отдельным входом — «Игора. Времена года»',
+  //       price: '19 000 ₽'
+  //     }],
+  //   image:
+  //     'https://ir-3.ozone.ru/s3/hotels-widget-api-2/operators_dir/wc1000/ozonhotels_6489861140000_638638986591292551b7958915a6ce.jpg',
+  //   name: 'Игора. Времена Года Отель, 4*'
+  // }
 
   if (!data || !data.roomsData || !data.roomsData.length) {
     return createError({
