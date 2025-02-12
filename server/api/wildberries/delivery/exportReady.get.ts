@@ -10,10 +10,10 @@ const keys = Object.keys as <T>(
   obj: T
 ) => (keyof T extends infer U
   ? U extends string
-    ? U
-    : U extends number
-      ? `${U}`
-      : never
+  ? U
+  : U extends number
+  ? `${U}`
+  : never
   : never)[]
 
 async function getReady(user: Document, dateRange: any) {
@@ -80,7 +80,9 @@ async function getReady(user: Document, dateRange: any) {
             delivery.statusdelivery?.find(
               item =>
                 item.status === 'Готов к выдаче'
-                || item.status === 'Готов к получению',
+                || item.status === 'Готов к получению'
+                || item.status.includes('Заберите до')
+                || item.status.includes('Получите до'),
             )?.date,
           )
           : new Date()
