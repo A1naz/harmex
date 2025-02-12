@@ -77,8 +77,12 @@ export function findImage(input: string) {
     host = '//basket-15.wbbasket.ru'
   } else if (vol >= 2406 && vol <= 2621) {
     host = '//basket-16.wbbasket.ru'
-  } else {
+  } else if (vol >= 2622 && vol <= 2838) {
     host = '//basket-17.wbbasket.ru'
+  } else if (vol >= 2839 && vol <= 3054) {
+    host = '//basket-18.wbbasket.ru'
+  } else {
+    host = '//basket-19.wbbasket.ru'
   }
 
   return `https:${host}/vol${vol}/part${part}/${nm}/images/big/1.webp`

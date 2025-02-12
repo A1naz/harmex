@@ -6,7 +6,7 @@ export default eventHandler(async (event) => {
     return sendRedirect(event, '/auth', 302)
 
   const { link } = getQuery(event)
-
+  console.log(link)
   const data: any = await $fetch('http://95.163.249.133:3000', {
     method: 'POST',
     body: {
@@ -51,6 +51,8 @@ export default eventHandler(async (event) => {
       message: 'Номер(а) не найден(ы)',
     })
   }
+
+  console.log(data)
 
   return {
     product: {
