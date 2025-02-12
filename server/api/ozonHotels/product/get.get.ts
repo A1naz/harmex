@@ -11,7 +11,7 @@ export default eventHandler(async (event) => {
     method: 'POST',
     body: {
       type: 'ozonHotels',
-      url: link,
+      url: link + "&Dlts=1",
       token: config.PARSER_TOKEN,
     },
   }).catch((e) => {
