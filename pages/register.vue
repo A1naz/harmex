@@ -382,18 +382,24 @@ async function generatePassword() {
       <section
         class="flex flex-col justify-center align-center w-full max-w-lg rounded-lg p-2 shadow-lg gap-3 mt-auto mx-auto"
       >
-        <h3 class="text-xl mt-5 font-bold text-center">
-          Создайте ваш аккаунт на Harmex
+        <h3 class="text-xl mt-5 font-bold flex">
+          <a href="https://harmex.ru" class="btn btn-ghost btn-sm">
+            <IconCSS name="tabler:arrow-left" size="20" />
+          </a>
+          <div class="w-full text-center -ml-10">
+            Создайте ваш аккаунт на Harmex
+          </div>
         </h3>
         <h1 class="text-center text-gray-500 text-xs">
           Выберите удобный способ регистрации и оплаты перед началом действий...
         </h1>
         <div class="w-full">
-          <div class="top-nav btm-nav-xs w-full flex justify-between">
+          <div class="btm-nav-xs w-full flex justify-between">
             <button
               class="w-full"
               :class="{
                 active: faceType === 'fizFace',
+                'text-primary': faceType === 'fizFace',
               }"
               @click="faceType = 'fizFace'"
             >
@@ -403,6 +409,7 @@ async function generatePassword() {
               class="w-full"
               :class="{
                 active: faceType === 'yurFace',
+                'text-primary': faceType === 'yurFace',
               }"
               @click="faceType = 'yurFace'"
             >
