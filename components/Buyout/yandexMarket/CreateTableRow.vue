@@ -175,7 +175,7 @@ const productQuantityModel = computed({
       <div class="w-20 2xl:w-full flex items-center">
         <select
           v-if="product.sizes.length"
-          class="select select-sm w-full bg-base-300 bg-opacity-40"
+          class="select select-sm w-full bg-[#F3E9DD]"
           @change="onSizeChange"
         >
           <option
@@ -193,7 +193,7 @@ const productQuantityModel = computed({
     <td class="border-r border-base">
       <div class="w-20 2xl:w-full">
         <select
-          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+          class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
           @change="onSexChange"
         >
           <option value="Нет">Нет</option>
@@ -231,7 +231,7 @@ const productQuantityModel = computed({
         </div>
       </div>
     </td>
-    <td class="break-all max-w-[300px] border-r border-base">
+    <td class="break-all max-w-[170px] border-r border-base">
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden justify-center"
       >
@@ -254,7 +254,7 @@ const productQuantityModel = computed({
           :class="{
             'btn-outline': product.adress,
           }"
-          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10 border-none w-fit"
+          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none w-fit"
           @click="$emit('pointModalOpen', index)"
         >
           <span v-show="loading" class="loading loading-spinner" />
@@ -289,16 +289,26 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td class="w-[140px] border-r border-base">
-      <div class="flex justify-between mt-1 mx-5">
+      <div class="flex justify-center mt-1">
         <button
-          class="w-full text-center btn btn-ghost dark:border-[#51535a] border-base-300 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap px-1"
+          v-if="!product.promoCode"
+          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
           @click="props.openPromo(index, product.price)"
         >
-          {{ product.promoCode ? `${product.promoCode}` : "Указать промокод" }}
+          <Icon
+            v-if="!product.promoCode"
+            name="fluent:add-24-filled"
+            size="20"
+          />
         </button>
+        <span
+          @click="props.openPromo(index, product.price)"
+          class="break-all whitespace-nowrap cursor-pointer text-primary mt-2"
+          >{{ product.promoCode }}</span
+        >
         <button
           v-if="product.promoCode"
-          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 ml-[1px] btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          class="btn btn-sm normal-case rounded-full ml-0.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none w-fit h-fit"
           @click="$emit('removePromo', index)"
         >
           <Icon name="ep:close-bold" size="12" />

@@ -167,7 +167,7 @@ const productQuantityModel = computed({
       <div class="w-20 2xl:w-full flex items-center">
         <select
           v-if="product.sizes.length"
-          class="select select-sm w-full bg-base-300 bg-opacity-40"
+          class="select select-sm w-full bg-[#F3E9DD]"
           @change="onSizeChange"
         >
           <option
@@ -185,7 +185,7 @@ const productQuantityModel = computed({
     <td class="border-r border-base">
       <div class="w-20 2xl:w-full">
         <select
-          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+          class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
           @change="onSexChange"
         >
           <option value="Нет">Нет</option>
@@ -223,7 +223,7 @@ const productQuantityModel = computed({
         </div>
       </div>
     </td>
-    <td class="break-all max-w-[300px] border-r border-base">
+    <td class="break-all max-w-[170px] border-r border-base">
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden justify-center"
       >
@@ -246,7 +246,7 @@ const productQuantityModel = computed({
           :class="{
             'btn-outline': product.adress,
           }"
-          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10 border-none w-fit"
+          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none w-fit"
           @click="$emit('pointModalOpen', index)"
         >
           <span v-show="loading" class="loading loading-spinner" />
@@ -281,7 +281,7 @@ const productQuantityModel = computed({
       </div>
     </td>
     <td class="border-r border-base w-[90px]">
-      <div class="flex justify-end">
+      <div class="flex justify-center">
         <div
           class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="deleteBuyOut"

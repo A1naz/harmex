@@ -191,7 +191,7 @@ function setDeliveryDate(date: string, time: string) {
     <td class="border-r border-base">
       <div class="w-20 2xl:w-full">
         <select
-          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+          class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
           v-model="product.selectedParameter"
         >
           <option
@@ -207,7 +207,7 @@ function setDeliveryDate(date: string, time: string) {
     <td class="border-r border-base">
       <div class="w-20 2xl:w-full">
         <select
-          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+          class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
           @change="onSexChange"
         >
           <option value="Нет">Нет</option>
@@ -311,7 +311,7 @@ function setDeliveryDate(date: string, time: string) {
             @save-date="setDeliveryDate"
           /> -->
           <select
-            class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+            class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
             v-model="store.createProducts[props.index].deliveryType"
           >
             <option value="courier">Курьер</option>
@@ -356,7 +356,7 @@ function setDeliveryDate(date: string, time: string) {
           :class="{
             'btn-outline': product.adress,
           }"
-          class="btn btn-sm normal-case rounded-full p-1 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10"
+          class="btn btn-sm normal-case rounded-full p-1 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10"
           @click="$emit('pointModalOpen', index)"
         >
           <span v-show="loading" class="loading loading-spinner" />

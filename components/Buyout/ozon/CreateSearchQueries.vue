@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import type { SearchQuery } from '@/data/buyout/createProduct'
+import type { SearchQuery } from "@/data/buyout/createProduct";
 
 interface Props {
-  queries: SearchQuery[]
-  article: number
-  productIndex: number
+  queries: SearchQuery[];
+  article: number;
+  productIndex: number;
 }
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
-const emit = defineEmits(['update', 'add', 'remove'])
-const store = useOzonBuyoutStore()
+const emit = defineEmits(["update", "add", "remove"]);
+const store = useOzonBuyoutStore();
 async function findSearchQuery(value: string) {
-  const { data, error } = await useFetch('/api/product/getSearchPosition', {
+  const { data, error } = await useFetch("/api/product/getSearchPosition", {
     query: {
       article: props.article,
       query: value,
     },
-  })
-  return data.value
+  });
+  return data.value;
 }
-const findSearchQueryDebounced = useDebounceFn(findSearchQuery, 1000)
+const findSearchQueryDebounced = useDebounceFn(findSearchQuery, 1000);
 
-const queries = computed(() => props.queries)
+const queries = computed(() => props.queries);
 
 async function onInput(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery(
     {
       value: newValue,
@@ -33,10 +33,10 @@ async function onInput(event: Event, index: number) {
     },
     false,
     false
-  )
+  );
 
-  if (!newValue) return
-  store.changeSearchQueryStatus(index, props.productIndex, false, true)
+  if (!newValue) return;
+  store.changeSearchQueryStatus(index, props.productIndex, false, true);
 
   // const result = await findSearchQueryDebounced(props.queries[index].value)
 
@@ -64,7 +64,7 @@ async function onInput(event: Event, index: number) {
 //   }
 // })
 
-const isAddBtnDisabled = computed(() => props.queries.length >= 5)
+const isAddBtnDisabled = computed(() => props.queries.length >= 5);
 </script>
 
 <template>
@@ -81,7 +81,7 @@ const isAddBtnDisabled = computed(() => props.queries.length >= 5)
             'input-error': query.error,
           }"
           type="text"
-          placeholder="Поисковый запрос"
+          placeholder="Куртка белая"
           class="input input-bordered input-sm w-full"
           @input="onInput($event, index)"
       /></label>

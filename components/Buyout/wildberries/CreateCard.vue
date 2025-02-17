@@ -181,7 +181,7 @@ const productQuantityModel = computed({
           <div class="flex items-center m-1">
             <select
               v-if="product.sizes.length"
-              class="select select-sm border-none bg-base-200 w-full rounded-xl"
+              class="select select-sm border-none bg-[#F3E9DD] w-full rounded-xl"
               @change="onSizeChange"
             >
               <option
@@ -199,7 +199,7 @@ const productQuantityModel = computed({
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-1">Пол: </span>
           <select
-            class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
+            class="select select-sm border-none bg-[#F3E9DD] rounded-xl w-15 appearance-none"
             @change="onSexChange"
           >
             <option value="Нет">Нет</option>
@@ -293,7 +293,7 @@ const productQuantityModel = computed({
             :class="{
               'btn-outline': product.adress,
             }"
-            class="btn btn-sm normal-case rounded-full p-1 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10 w-fit mx-auto"
+            class="btn btn-sm normal-case rounded-full p-1 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 w-fit mx-auto"
             @click="$emit('pointModalOpen', index)"
           >
             <span v-show="loading" class="loading loading-spinner" />

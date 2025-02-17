@@ -539,7 +539,7 @@ function removePromo(index: number) {
             <input
               ref="codeInput"
               v-model="article"
-              placeholder="артикул"
+              placeholder="Введите артикул"
               class="input input-sm w-full mb-2 md:mb-0 bg-base-200 border-base-200"
               @keydown.enter="Number(item)"
             />

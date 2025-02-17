@@ -203,7 +203,7 @@ function setDeliveryDate(date: string, time: string) {
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-1">Пол: </span>
           <select
-            class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
+            class="select select-sm border-none bg-[#F3E9DD] rounded-xl w-15 appearance-none"
             @change="onSexChange"
           >
             <option value="Нет">Нет</option>
@@ -325,7 +325,7 @@ function setDeliveryDate(date: string, time: string) {
             @save-date="setDeliveryDate"
           /> -->
           <select
-            class="select select-sm w-full bg-base-200 bg-opacity-40 max-w-sm appearance-none"
+            class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
             v-model="store.createProducts[props.index].deliveryType"
           >
             <option value="courier">Курьер</option>
@@ -342,7 +342,7 @@ function setDeliveryDate(date: string, time: string) {
             @save-date="setDeliveryDate"
           /> -->
           <select
-            class="select select-sm w-full bg-base-200 bg-opacity-40 max-w-sm appearance-none"
+            class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
             v-model="store.createProducts[props.index].selectedParameter"
           >
             <option

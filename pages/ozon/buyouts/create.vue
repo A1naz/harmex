@@ -484,7 +484,7 @@ const addressForm = reactive({
             <input
               ref="codeInput"
               v-model="article"
-              placeholder="Артикул"
+              placeholder="Введите артикул"
               class="input input-sm w-full mb-2 md:mb-0 bg-base-200 border-base-200"
               @keydown.enter="addProduct"
             />
@@ -619,10 +619,17 @@ const addressForm = reactive({
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
-                <th class="min-w-40 font-normal">
+                <th class="min-w-30 font-normal">
                   <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
                     <span> Скидка </span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                  </div>
+                </th>
+                <th class="min-w-30 font-normal">
+                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                  <div class="text-center">
+                    <span> Промокод </span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>

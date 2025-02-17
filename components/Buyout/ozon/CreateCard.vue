@@ -196,7 +196,7 @@ const productQuantityModel = computed({
           <div class="flex items-center m-1">
             <select
               v-if="product.sizes.length"
-              class="select select-sm select-bordered w-full"
+              class="select select-sm w-full bg-[#F3E9DD]"
               @change="onSizeChange"
             >
               <option
@@ -214,7 +214,7 @@ const productQuantityModel = computed({
         <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-1">Пол: </span>
           <select
-            class="select select-sm select-bordered w-15 appearance-none"
+            class="select select-sm w-15 appearance-none bg-[#F3E9DD]"
             @change="onSexChange"
           >
             <option value="Нет">Нет</option>
@@ -319,7 +319,7 @@ const productQuantityModel = computed({
             :class="{
               'btn-outline': product.adress,
             }"
-            class="btn btn-sm normal-case rounded-full p-1 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10 w-fit mx-auto"
+            class="btn btn-sm normal-case rounded-full p-1 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 w-fit mx-auto"
             @click="$emit('pointModalOpen', index)"
           >
             <span v-show="loading" class="loading loading-spinner" />
@@ -329,30 +329,32 @@ const productQuantityModel = computed({
       </div>
       <div class="flex">
         <span class="text-md text-gray-500 mr-3 my-auto">Скидка: </span>
-        <div class="flex">
+        <div class="flex justify-center">
           <button
+            v-if="
+              !product.discountPrice || product.discountPrice == product.price
+            "
             :disabled="
               product.promoCode && product.promoCode !== '' ? true : false
             "
-            class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
-            :class="{
-              'rounded-r-none':
-                product.discountPrice &&
-                product.discountPrice !== product.price,
-            }"
+            class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
             @click="props.openDiscount(index, product.price)"
           >
-            {{
-              product.discountPrice && product.discountPrice !== product.price
-                ? `${product.discountPrice} ₽`
-                : "Указать скидку"
-            }}
+            <Icon name="fluent:add-24-filled" size="20" />
           </button>
+          <span
+            @click="props.openDiscount(index, product.price)"
+            v-if="
+              product.discountPrice && product.discountPrice !== product.price
+            "
+            class="break-all whitespace-nowrap cursor-pointer text-primary mt-1 mr-1"
+            >{{ product.discountPrice }} ₽</span
+          >
           <button
             v-if="
               product.discountPrice && product.discountPrice !== product.price
             "
-            class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1 btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
             @click="$emit('removeDiscount', index)"
           >
             <Icon name="ep:close-bold" size="12" />
@@ -361,27 +363,29 @@ const productQuantityModel = computed({
       </div>
       <div class="flex">
         <span class="text-md text-gray-500 mr-3 my-auto">Промокод: </span>
-        <div class="flex">
+        <div class="flex justify-center mt-1">
           <button
+            v-if="!product.promoCode"
             :disabled="
               product.discountPrice && product.discountPrice !== product.price
             "
-            class="w-fit btn btn-ghost dark:border-[#51535a] border-base-300 px-1.5 btn-sm btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
-            :class="{
-              'rounded-r-none': product.promoCode,
-            }"
+            class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
             @click="props.openPromo(index, product.price)"
           >
-            {{
-              product.promoCode ? `${product.promoCode}` : "Указать промокод"
-            }}
+            <Icon
+              v-if="!product.promoCode"
+              name="fluent:add-24-filled"
+              size="20"
+            />
           </button>
+          <span
+            @click="props.openPromo(index, product.price)"
+            class="break-all whitespace-nowrap cursor-pointer text-primary mt-2 mr-1"
+            >{{ product.promoCode }}</span
+          >
           <button
             v-if="product.promoCode"
-            :disabled="
-              product.discountPrice && product.discountPrice !== product.price
-            "
-            class="w-fit btn btn-ghost btn-sm border-base-300 rounded-l-none px-1 btn-square text-base-content mx-auto flex justify-center items-center font-normal hover:text-primary whitespace-nowrap"
+            class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none w-fit h-fit"
             @click="$emit('removePromo', index)"
           >
             <Icon name="ep:close-bold" size="12" />

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { YandexMap, YandexMarker } from 'vue-yandex-maps'
+import { YandexMap, YandexMarker } from "vue-yandex-maps";
 
 const props = defineProps({
   pickpoints: {
@@ -10,64 +10,64 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
+});
 
-const emit = defineEmits(['callback', 'close'])
+const emit = defineEmits(["callback", "close"]);
 
-const { height } = useWindowSize()
-const config = useRuntimeConfig()
+const { height } = useWindowSize();
+const config = useRuntimeConfig();
 
 const settings = {
-  apiKey: config.public.YANDEX_MAPS_API_KEY || '', // Индивидуальный ключ API
-  lang: 'ru_RU', // Используемый язык
-  coordorder: 'latlong', // Порядок задания географических координат
+  apiKey: config.public.YANDEX_MAPS_API_KEY || "", // Индивидуальный ключ API
+  lang: "ru_RU", // Используемый язык
+  coordorder: "latlong", // Порядок задания географических координат
   debug: false, // Режим отладки
-  version: '2.1', // Версия Я.Карт
-}
+  version: "2.1", // Версия Я.Карт
+};
 
-const map = ref(null) // ссылка на карту
+const map = ref(null); // ссылка на карту
 
-const marker = ref()
-const name = ref('Custom')
-const loading = ref(false)
-const addressText = ref('Москва, улица Петровка, 5')
-const coordinates = ref([55.761438764655615, 37.617691166568456])
-const error = ref('')
-const store = useMainStore()
+const marker = ref();
+const name = ref("Custom");
+const loading = ref(false);
+const addressText = ref("Москва, улица Петровка, 5");
+const coordinates = ref([55.761438764655615, 37.617691166568456]);
+const error = ref("");
+const store = useFlowwowBuyoutStore();
 
 function closeModal() {
-  emit('close')
+  emit("close");
 }
 
 function onClick(e: any) {
-  const objectId = e.get()
-  coordinates.value = e.get('coords')
-  getAddressText(e.get('coords')[0], e.get('coords')[1], '1')
+  const objectId = e.get();
+  coordinates.value = e.get("coords");
+  getAddressText(e.get("coords")[0], e.get("coords")[1], "1");
 }
 
-onKeyStroke('Escape', (e) => {
-  e.preventDefault()
-  emit('close')
-})
+onKeyStroke("Escape", (e) => {
+  e.preventDefault();
+  emit("close");
+});
 
 async function getAddressText(lt: number, lg: number, id: string) {
-  addressText.value = 'Загрузка...'
+  addressText.value = "Загрузка...";
 
   // @ts-ignore
   const { data, error }: any = await useFetch(`/api/ozon/buyout/addressText`, {
-    method: 'GET',
+    method: "GET",
     params: {
       lt,
       lg,
     },
-  })
+  });
   if (data.value) {
-    addressText.value = data.value
+    addressText.value = data.value;
   }
 }
 
 function handleAddress(address: string, lt: number, lg: number) {
-  emit('callback', address, lt, lg)
+  emit("callback", address, lt, lg);
 }
 </script>
 
@@ -84,10 +84,9 @@ function handleAddress(address: string, lt: number, lg: number) {
         <a
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           @click="closeModal"
-        >✕</a>
-        <div class="title mb-2">
-          Выберите адрес
-        </div>
+          >✕</a
+        >
+        <div class="title mb-2">Выберите адрес</div>
 
         <div class="flex justify-center">
           <!-- <div class="ml-2">Адрес: {{ addressText }}</div> -->
@@ -136,7 +135,21 @@ function handleAddress(address: string, lt: number, lg: number) {
           </YandexMarker>
         </YandexMap>
       </div>
-      <button :disabled="addressText == 'Загрузка...'" class="btn btn-primary my-2 w-full" @click="handleAddress(addressText, coordinates[0], coordinates[1])">
+      <div class="w-full flex flex-col gap-2 my-3">
+        <label
+          ><input
+            v-model="store.createProducts[store.selectedItem].appartmentNumber"
+            type="text"
+            placeholder="Введите № квартиры"
+            class="input bg-base-200 w-full rounded-xl"
+          />
+        </label>
+      </div>
+      <button
+        :disabled="addressText == 'Загрузка...'"
+        class="btn btn-primary my-2 w-full"
+        @click="handleAddress(addressText, coordinates[0], coordinates[1])"
+      >
         Выбрать Адрес
       </button>
     </div>

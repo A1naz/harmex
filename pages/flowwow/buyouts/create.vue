@@ -336,7 +336,7 @@ function startTimer() {
             <input
               ref="codeInput"
               v-model="article"
-              placeholder="Ссылка на продукт"
+              placeholder="Введите ссылку на продукт"
               class="input input-sm w-full mb-2 md:mb-0 bg-base-200 border-base-200"
               @keydown.enter="addProduct"
             />
@@ -448,15 +448,7 @@ function startTimer() {
                     <span> Тип доставки </span>
                   </div>
                 </th>
-                <th
-                  class="font-normal text-base-content w-32"
-                  @click="openInfoModal('apartmentNumber')"
-                >
-                  <div class="flex justify-center items-center gap-1">
-                    <span>№ квартиры</span>
-                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
-                  </div>
-                </th>
+
                 <th
                   class="min-w-40 font-normal"
                   @click="openInfoModal('adress')"

@@ -137,7 +137,7 @@ const isAddBtnDisabled = computed(() => props.queries.length >= 5);
             'input-error': query.error,
           }"
           type="text"
-          placeholder="Поисковый запрос"
+          placeholder="Куртка белая"
           class="input bg-base-200 input-sm w-full rounded-xl"
           @input="onInput($event, index)"
         />
