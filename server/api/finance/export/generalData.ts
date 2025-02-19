@@ -5,6 +5,7 @@ import getBuyoutLink from '~/server/utils/getBuyoutLink'
 
 export default async function (user: any, itemsPerPage?: number, page?: number, skip?: number, dateRange?: any, searchInput?: any) {
 
+  console.log(dateRange)
   const limit = itemsPerPage ? itemsPerPage : 25
   const skipValue = skip ? skip : 25
   const res = await paymenthistory
