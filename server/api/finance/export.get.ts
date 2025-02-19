@@ -61,7 +61,7 @@ const tableColumns = {
 }
 
 async function fetchData(type: string, user: any, dateRange?: any) {
-console.log(type)
+  console.log(type)
   switch (type) {
     case 'general':
       return await generalData(user, 100000, 0, 0, dateRange, '')
@@ -85,16 +85,25 @@ export default defineEventHandler(async (event) => {
   const { tableType, page = 1, dateRange }: any = getQuery(event)
 
   let trueDateRange = {}
-  const date1 = new Date(JSON.parse(dateRange[0]))
-  date1.setHours(0, 0, 0, 0)
-  const date2 = new Date(JSON.parse(dateRange[1]))
-  date2.setHours(23, 59, 0, 0)
-
+  
   if (dateRange) {
+    
+    const date1 = new Date(JSON.parse(dateRange[0]))
+    date1.setHours(0, 0, 0, 0)
+    const date2 = new Date(JSON.parse(dateRange[1]))
+    date2.setHours(23, 59, 0, 0)
+    
     trueDateRange = {
       dataoperation: {
         $lte: date2,
         $gte: date1,
+      },
+    }
+  } else {
+    trueDateRange = {
+      dataoperation: {
+        $lte: new Date(),
+        $gte: new Date(new Date('2020-01-01')),
       },
     }
   }

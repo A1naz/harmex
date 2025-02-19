@@ -15,22 +15,32 @@ export default defineEventHandler(async (event) => {
     return sendRedirect(event, '/', 302)
 
   const { tableType, page, itemsPerPage, skip, searchInput, dateRange }: any = getQuery(event)
-  
-  const date1 = new Date(JSON.parse(dateRange[0]))
-  date1.setHours(0, 0, 0, 0)
-  const date2 = new Date(JSON.parse(dateRange[1]))
-  date2.setHours(23, 59, 0, 0)
 
-  let trueDateRange = {}
+
+  let trueDateRange = {
+  }
   if (dateRange) {
+    const date1 = new Date(JSON.parse(dateRange[0]))
+    date1.setHours(0, 0, 0, 0)
+    const date2 = new Date(JSON.parse(dateRange[1]))
+    date2.setHours(23, 59, 0, 0)
+
+
     trueDateRange = {
       dataoperation: {
         $lte: date2,
         $gte: date1,
       },
     }
+  } else {
+    trueDateRange = {
+      dataoperation: {
+        $lte: new Date(),
+        $gte: new Date(new Date('2020-01-01')),
+      },
+    }
   }
-  
+
   switch (tableType) {
     case 'general':
       {
