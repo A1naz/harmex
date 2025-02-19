@@ -394,7 +394,18 @@ async function handleFileChange(e: any) {
 
   const file = e.target.files[0];
 
-  if (!file || !file.type.includes("video")) {
+  if (!file) {
+    form.video = "";
+    return;
+  }
+
+  const allowedFormats = ["video/mp4", "video/avi", "video/mpeg"];
+
+  if (!allowedFormats.includes(file.type)) {
+    notify({
+      title: "Неверный формат",
+      text: "Разрешены только файлы MP4, AVI и MPG",
+    });
     form.video = "";
     return;
   }
@@ -724,7 +735,7 @@ const handleMouseUp = (event: any) => {
                   :disabled="isUploading || form.video !== ''"
                   type="file"
                   class="w-[200px] sm:w-[400px] cursor-pointer"
-                  accept="video/*"
+                  accept="video/mp4, video/x-msvideo, video/mpeg"
                   :class="{ hidden: !form.video }"
                   @change="handleFileChange($event)"
                 />

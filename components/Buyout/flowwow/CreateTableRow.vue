@@ -136,7 +136,7 @@ function setDeliveryDate(date: string, time: string) {
             target="_blank"
             class="text-sm text-primary link link-hover text-center"
           >
-            {{ product.article }}
+            {{ product.url }}
           </a>
         </div>
       </div>
@@ -320,18 +320,7 @@ function setDeliveryDate(date: string, time: string) {
         </div>
       </div>
     </td>
-    <td class="border-r border-base">
-      <div class="w-full flex flex-col gap-2">
-        <label
-          ><input
-            v-model="product.appartmentNumber"
-            type="text"
-            placeholder="Введите №"
-            class="input bg-base-200 input-sm w-full rounded-xl"
-          />
-        </label>
-      </div>
-    </td>
+
     <td class="break-all max-w-[300px] border-r border-base">
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden justify-center"
@@ -390,7 +379,7 @@ function setDeliveryDate(date: string, time: string) {
         />
       </div>
     </td>
-    <td class="border-r border-base">
+    <!-- <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
         <BuyoutFlowwowCreateSearchQueriesRegion
           :product-index="props.index"
@@ -399,9 +388,9 @@ function setDeliveryDate(date: string, time: string) {
           @update="productSearchQueryUpdate"
           @add="addSearchQuery"
           @remove="removeSearchQuery"
-        />
+        />  
       </div>
-    </td>
+    </td> -->
     <td class="border-r border-base w-[90px]">
       <div class="flex justify-end">
         <div
