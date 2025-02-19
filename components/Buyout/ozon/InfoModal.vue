@@ -137,15 +137,6 @@ onKeyStroke("Escape", (e) => {
           </div> -->
 
           <div class="flex gap-3 mt-2 items-center">
-            <div class="flex-none" style="width: 150px; height: 150px">
-              <nuxt-img
-                class="rounded-xl h-full"
-                width="150"
-                height="150"
-                :src="info?.product?.image || '/logo/logocolor.svg'"
-                loading="lazy"
-              />
-            </div>
             <div class="flex flex-col truncate gap-1">
               <div>
                 <span class="text-sm text-gray-500 mr-2 my-auto"
@@ -158,24 +149,26 @@ onKeyStroke("Escape", (e) => {
                 >
               </div>
 
-              <div>
-                <span class="text-sm text-gray-500 mr-2 my-auto"
-                  >Артикул:
+              <div class="flex gap-2">
+                <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                  >Статус:
                 </span>
-                <span class="rounded-md py-0 px-2 text-sm">
-                  {{ info.article }}
-                </span>
+                <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                  {{ getStatus }}
+                </div>
               </div>
-
-              <div class="w-full whitespace-normal">
-                <span class="text-sm text-gray-500 mr-2 my-auto"
-                  >Наименование:
+              <div class="flex gap-2" v-if="info.executionTime">
+                <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                  >Выполнено:
                 </span>
-                <span class="rounded-md py-0 px-2 text-sm">
-                  {{ info.product?.name }}
-                </span>
+                <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                  {{
+                    $dayjs(info.executionTime)
+                      .locale("ru")
+                      .format("D.MM.YY, HH:mm")
+                  }}
+                </div>
               </div>
-
               <div class="w-full truncate">
                 <span class="text-sm text-gray-500 mr-2 my-auto"
                   >ID заказа:
@@ -188,14 +181,22 @@ onKeyStroke("Escape", (e) => {
                 </label>
               </div>
 
-              <!-- <div>
-                <span class="text-sm text-gray-500 mr-2 my-auto">Цена: </span>
-                <a
-                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
-                  class="text-sm text-primary link link-hover"
-                >{{ info.product?.priceText
-                }}</a>
-              </div> -->
+              <div>
+                <span class="text-sm text-gray-500 mr-2 my-auto">Товар: </span>
+                <span class="rounded-md py-0 px-2 text-sm text-primary">
+                  {{ info.article }}
+                </span>
+              </div>
+
+              <div class="w-full whitespace-normal">
+                <span class="text-sm text-gray-500 mr-2 my-auto"
+                  >Название:
+                </span>
+                <span class="rounded-md py-0 px-2 text-sm">
+                  {{ info.product?.name }}
+                </span>
+              </div>
+
               <div>
                 <span class="text-sm text-gray-500 mr-2 my-auto"
                   >Количество:
@@ -224,7 +225,7 @@ onKeyStroke("Escape", (e) => {
               </div>
               <div>
                 <span class="text-sm text-gray-500 mr-2">Размер: </span>
-                <span class="bg-base-200 rounded-md py-0 px-2 text-sm">{{
+                <span class="rounded-md py-0 px-2 text-sm">{{
                   info.sizeparam === "none" ? "Не указан" : info.sizeparam
                 }}</span>
               </div>
@@ -235,23 +236,21 @@ onKeyStroke("Escape", (e) => {
                 }}</span>
               </div>
               <div>
-                <span class="text-sm text-gray-500 mr-2">Промокод: </span>
-                <span class="rounded-md py-0 px-2 text-sm">{{
-                  info.promocode
-                }}</span>
+                <span class="text-sm text-gray-500 mr-2">Площадка: </span>
+                <span class="rounded-md py-0 px-2 text-sm">Ozon</span>
               </div>
 
-              <div v-if="info.FIO" class="flex flex-wrap gap-2">
-                <span class="text-sm text-gray-500 my-auto">ФИО: </span>
-                <div class="rounded-md py-0 text-sm">
-                  {{ info.FIO }}
-                </div>
-              </div>
-              <div v-if="info.discountRequestTime" class="flex flex-wrap gap-2">
-                <span class="text-sm text-gray-500 my-auto"
-                  >Дата запроса скидки:
+              <div class="mt-5">
+                <span class="text-sm text-gray-500 mr-2">ФИО: </span>
+                <span class="rounded-md py-0 px-2 text-sm">
+                  {{ info.FIO ? info.FIO : "-" }}
                 </span>
-                <div class="rounded-md py-0 text-sm">
+              </div>
+              <div>
+                <span class="text-sm text-gray-500 mr-2"
+                  >Скидка запрошена:
+                </span>
+                <span class="rounded-md py-0 px-2 text-sm">
                   {{
                     info.discountRequestTime
                       ? `${moscowDate(info.discountRequestTime)
@@ -261,10 +260,45 @@ onKeyStroke("Escape", (e) => {
                         )
                           .split("T")[1]
                           .slice(0, 5)}`
-                      : ""
+                      : "-"
                   }}
-                </div>
+                </span>
               </div>
+              <!-- <div>
+                <span class="text-sm text-gray-500 mr-2 my-auto">Цена: </span>
+                <a
+                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
+                  class="text-sm text-primary link link-hover"
+                >{{ info.product?.priceText
+                }}</a>
+              </div> -->
+              <div>
+                <span class="text-sm text-gray-500 mr-2 my-auto"
+                  >Количество:
+                </span>
+                <span class="rounded-md py-0 px-2 text-sm"
+                  >{{ info.quantity }} ед.</span
+                >
+              </div>
+              <div>
+                <span class="text-sm text-gray-500 mr-2 my-auto">Цена: </span>
+                <span class="rounded-md py-0 px-2 text-sm">{{
+                  currency.format(info.quantity * info.product?.price)
+                }}</span>
+              </div>
+              <div>
+                <span class="text-sm text-gray-500 mr-2 my-auto"
+                  >Тип услуги:
+                </span>
+                <span class="rounded-md py-0 px-2 text-sm">{{
+                  info.promocode
+                    ? "Выкуп по промокоду"
+                    : info.discountRequestTime
+                    ? "Выкуп по скидке"
+                    : "Выкуп"
+                }}</span>
+              </div>
+
               <div>
                 <span class="text-sm text-gray-500 mr-2">Дата выкупов: </span>
                 <span
@@ -286,6 +320,24 @@ onKeyStroke("Escape", (e) => {
                   </div>
                 </span>
               </div>
+              <div v-if="info.discountRequestTime" class="flex flex-wrap gap-2">
+                <span class="text-sm text-gray-500 my-auto"
+                  >Дата запроса скидки:
+                </span>
+                <div class="rounded-md py-0 text-sm">
+                  {{
+                    info.discountRequestTime
+                      ? `${moscowDate(info.discountRequestTime)
+                          .split("T")[0]
+                          .replaceAll("-", ".")} ${moscowDate(
+                          info.discountRequestTime
+                        )
+                          .split("T")[1]
+                          .slice(0, 5)}`
+                      : ""
+                  }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -294,23 +346,23 @@ onKeyStroke("Escape", (e) => {
         <div class="divider" /> -->
 
         <div
-          class="flex flex-col gap-2 mt-2 justify-center p-5 bg-[#f2f4ff] dark:bg-primary dark:bg-opacity-10"
+          class="flex flex-col gap-2 -mt-10 justify-center p-5 bg-[#f2f4ff] dark:bg-primary dark:bg-opacity-10"
         >
           <div class="flex justify-between" />
 
           <div
-            class="flex items-start justify-between flex-col md:flex-row gap-2"
+            class="flex items-start justify-between flex-col md:flex-row gap-2 mt-5"
           >
             <div class="flex items-start flex-col">
               <span class="text-md font-bold mb-1">Поисковый запрос:</span>
-              <span class="text-sm">{{ info.searchQuery }}</span>
+              <span class="text-sm text-gray-500">{{ info.searchQuery }}</span>
             </div>
           </div>
           <div class="flex items-start flex-col">
             <span class="text-md font-bold mb-1">Адрес:</span>
             <a
               target="_blank"
-              class="text-sm link link-hover truncate max-w-[90%] whitespace-normal"
+              class="text-sm link link-hover truncate text-gray-500 max-w-[90%] whitespace-normal"
               :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
             >
               {{ info.point }}
@@ -320,10 +372,10 @@ onKeyStroke("Escape", (e) => {
             <span class="text-md font-bold mb-1">Правила:</span>
             <div class="text-sm">
               <template v-if="!info.rules.length">
-                <span>Не выбраны</span>
+                <span class="text-gray-500">Не выбраны</span>
               </template>
               <template v-else>
-                <ul class="list-disc list-inside">
+                <ul class="list-disc list-inside text-gray-500">
                   <li v-for="rule in info.rules" :key="rule.id">
                     {{ rules.find((r) => r.id === rule).description }}
                   </li>

@@ -172,6 +172,8 @@ async function copyToClipboard(text: string) {
     text: "Скопировано в буфер обмена",
   });
 }
+
+const { $dayjs } = useNuxtApp();
 </script>
 
 <template>
@@ -252,70 +254,6 @@ async function copyToClipboard(text: string) {
         </ul>
       </div>
 
-      <!-- <div  class="truncate -mt-4">
-        <div class="flex justify-between gap-1 items-center">
-          <div class="flex gap-x-2 flex-nowrap">
-            <span class="text-[0.6rem] text-gray-500 py-1">Создан: {{ defaultDate(info.createdAt) }}
-            </span>
-            <div
-              :class="{
-                'opacity-0':
-                  info.status !== 'active'
-                  && info.status !== 'paused'
-                  && info.status !== 'work'
-                  && info.status !== 'archived',
-              }"
-              class="text-[0.6rem] rounded-2xl px-2 bg-base-200 py-1"
-            >
-              Выкуплено {{ info.completed }} шт.
-            </div>
-            <button
-              class="btn btn-sm btn-neutral"
-              @click="unpauseBuyout"
-            >
-              Возобновить
-            </button>
-          </div>
-        </div>
-
-        <div class="flex gap-2 flex-nowrap">
-          <h2 class="card-title text-[1.1rem] mt-2">
-            Выкуп №{{ info.place }}
-          </h2>
-          <div
-            class="mt-2 rounded-2xl py-0.5 px-2 text-md flex items-center w-fit text-sm text-[0.725rem]"
-            :class="{
-              'text-base-content bg-[#b5ffbc] dark:bg-green-600 ':
-                info.status === 'active'
-                || info.status === 'work'
-                || info.status === 'busy',
-              'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
-                info.status === 'completed' || info.status === 'nofunds',
-              'text-base-content bg-yellow-300':
-                info.status === 'archived' || info.status === 'paused',
-            }"
-          >
-            {{ getStatus }}
-          </div>
-
-          <a
-            :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
-            target="_blank"
-            class="text-base text-[0.85rem] text-primary link link-hover mt-0 flex items-center"
-            :class="{
-              'mt-2': width > 364,
-            }"
-          >
-            {{ info.article }}
-          </a>
-        </div>
-
-        <div
-
-          class="flex justify-between mt-2"
-        />
-      </div> -->
-
       <div class="flex gap-3 w-full truncate mt-6">
         <div
           class="flex-none"
@@ -339,38 +277,26 @@ async function copyToClipboard(text: string) {
           <div class="flex flex-col gap-1.5">
             <div class="flex gap-2">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Артикул:
+                >Создано:
               </span>
-              <div
-                class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
-              >
-                <a
-                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
-                  target="_blank"
-                  class="link link-hover"
-                >
-                  {{ info.article }}
-                </a>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.createdAt).format("DD.MM.YYYY") }}
               </div>
             </div>
             <div class="flex gap-2">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                 >Статус:
               </span>
-              <div
-                class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
-                :class="{
-                  'text-base-content bg-[#b5ffbc] dark:bg-green-600 ':
-                    info.status === 'active' ||
-                    info.status === 'work' ||
-                    info.status === 'busy',
-                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
-                    info.status === 'completed' || info.status === 'nofunds',
-                  'text-base-content bg-yellow-300':
-                    info.status === 'archived' || info.status === 'paused',
-                }"
-              >
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 {{ getStatus }}
+              </div>
+            </div>
+            <div class="flex gap-2" v-if="info.executionTime">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Выполнено:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.executionTime).format("DD.MM.YYYY") }}
               </div>
             </div>
             <div class="flex gap-2 w-2/3">
@@ -384,9 +310,26 @@ async function copyToClipboard(text: string) {
                 #{{ info.uuid }}
               </button>
             </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Товар:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
+              >
+                <a
+                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+                  target="_blank"
+                  class="link link-hover"
+                >
+                  {{ info.article }}
+                </a>
+              </div>
+            </div>
+
             <div class="flex gap-2 w-2/3">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Наименование:
+                >Название:
               </span>
               <div class="truncate text-[0.9rem] text-bold">
                 {{ info.product?.name }}
@@ -396,37 +339,15 @@ async function copyToClipboard(text: string) {
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                 >Цена:
               </span>
-              <div
-                class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm text-[0.725rem]"
-              >
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 {{ info.product?.priceText }}
               </div>
             </div>
             <div class="flex gap-2">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Количество:
+                >Площадка:
               </span>
-              <div
-                class="rounded-md py-0 px-2 bg-warning text-sm text-[0.725rem]"
-              >
-                {{ info.quantity }} шт.
-              </div>
-            </div>
-            <!-- <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Сумма: </span>
-              <div
-                class="rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm text-[0.725rem]"
-              >
-                {{ currency.format(info.quantity * info.product?.price) }}
-              </div>
-            </div> -->
-            <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Источник:
-              </span>
-              <div
-                class="bg-[#ced3d9] rounded-md py-0 px-2 text-sm text-[0.725rem]"
-              >
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 Wildberries
               </div>
             </div>
@@ -437,7 +358,7 @@ async function copyToClipboard(text: string) {
         class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
         @click="$emit('openModal', index)"
       >
-        Открыть
+        Детали
       </button>
     </div>
     <StaticConfirmModal

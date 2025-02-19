@@ -1,4 +1,5 @@
 import { Buyout } from '@/server/lib/models/ozon/Buyout'
+import { paymenthistory } from '@/server/lib/models/Paymenthistory'
 
 export default eventHandler(async (event) => {
 
@@ -130,8 +131,16 @@ export default eventHandler(async (event) => {
       buyouts = buyouts.filter(item => new Date(item.createdAt) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 7))
       break
   }
+
+  const buyoutUuids = buyouts.map((buyout) => 'Выкуп #' + buyout.uuid)
+  const history = await paymenthistory.find({ basisoperation: { $in: buyoutUuids } })
+
   const format = buyouts.map((buyout) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
+
+
+    const historyItem = history.find(item => item.basisoperation === 'Выкуп #' + buyout.uuid)
+
     return {
       //   place: buyout.place ? buyout.place : place + 1,
       place: buyout.place,
@@ -156,8 +165,12 @@ export default eventHandler(async (event) => {
       key: buyout.key,
       FIO: buyout.FIO,
       discountRequestTime: buyout.discountRequestTime,
-      promocode: buyout.promocode
+      promocode: buyout.promocode,
+      executionTime: historyItem ? historyItem.dataoperation : null,
     }
   })
+
+  console.log(format)
+
   return format
 })

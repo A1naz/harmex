@@ -341,41 +341,33 @@ async function copyToClipboard(text: string) {
           <div class="flex flex-col gap-1.5">
             <div class="flex gap-2">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Артикул:
+                >Создано:
               </span>
               <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
-                <a
-                  :href="`https://www.ozon.ru/product/${info.article}`"
-                  target="_blank"
-                  class="link link-hover"
-                >
-                  {{ info.article }}
-                </a>
+                {{ $dayjs(info.createdAt).format("DD.MM.YYYY") }}
               </div>
             </div>
+
             <div class="flex gap-2">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                 >Статус:
               </span>
               <div
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] max-w-[150px] truncate"
-                :class="{
-                  ' bg-[#b5ffbc] dark:bg-success':
-                    info.status === 'active' ||
-                    info.status === 'work' ||
-                    info.status === 'busy' ||
-                    info.status === 'discountGiven',
-                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
-                    info.status === 'completed' || info.status === 'nofunds',
-                  'text-base-content bg-yellow-300':
-                    info.status === 'archived' ||
-                    info.status === 'paused' ||
-                    info.status === 'discountAwaiting',
-                }"
               >
                 {{ getStatus }}
               </div>
             </div>
+
+            <div class="flex gap-2" v-if="info.executionTime">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Выполнено:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.executionTime).format("DD.MM.YYYY") }}
+              </div>
+            </div>
+
             <div class="flex gap-2 w-2/3">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                 >ID заказа:
@@ -387,9 +379,27 @@ async function copyToClipboard(text: string) {
                 #{{ info.uuid }}
               </button>
             </div>
+
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Товар:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
+              >
+                <a
+                  :href="`https://www.ozon.ru/product/${info.article}`"
+                  target="_blank"
+                  class="link link-hover"
+                >
+                  {{ info.article }}
+                </a>
+              </div>
+            </div>
+
             <div class="flex gap-2 w-2/3">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Наименование:
+                >Название:
               </span>
               <div class="truncate text-[0.9rem] text-bold">
                 {{ info.product?.name }}
@@ -400,27 +410,18 @@ async function copyToClipboard(text: string) {
                 >Цена:
               </span>
               <div
-                class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm text-[0.725rem]"
+                class="rounded-md py-0 px-2 dark:bg-success text-sm text-[0.725rem]"
               >
                 {{ info.product?.priceText }}
               </div>
             </div>
-            <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Количество:
-              </span>
-              <div
-                class="rounded-md py-0 px-2 bg-warning text-sm text-[0.725rem]"
-              >
-                {{ info.quantity }} шт.
-              </div>
-            </div>
+
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
                 >Скидка:
               </span>
               <div
-                class="text-[0.725rem] rounded-md py-0 px-2 bg-primary bg-opacity-20 text-sm"
+                class="text-[0.725rem] rounded-md py-0 px-2 bg-opacity-20 text-sm"
               >
                 {{
                   info.discountPrice == info.product?.price
@@ -429,6 +430,16 @@ async function copyToClipboard(text: string) {
                     ? `${info.discountPrice} ₽`
                     : "нет"
                 }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
+                >Площадка:
+              </span>
+              <div
+                class="text-[0.725rem] rounded-md py-0 px-2 bg-opacity-20 text-sm"
+              >
+                OZON
               </div>
             </div>
             <!-- <div class="flex gap-2">
@@ -460,7 +471,7 @@ async function copyToClipboard(text: string) {
       </div>
       <div class="flex gap-1.5 -mt-2.5">
         <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
-          >Дата запроса скидки:
+          >Скидка запрошена:
         </span>
         <div class="rounded-md py-0 px-2 text-sm">
           {{
@@ -478,7 +489,7 @@ async function copyToClipboard(text: string) {
         class="btn mt-auto btn-sm h-[2.5rem] text-[20px] rounded-2xl font-normal text-white btn-primary"
         @click="$emit('openModal', index)"
       >
-        Открыть
+        Детали
       </button>
     </div>
     <StaticConfirmModal
