@@ -165,5 +165,7 @@ export default eventHandler(async (event) => {
       deliveryType: buyout.deliveryType
     }
   })
+
+
   return format
 })

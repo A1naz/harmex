@@ -160,5 +160,6 @@ export default eventHandler(async (event) => {
       financePrice: historyItem ? historyItem.summ : null,
     }
   })
+
   return format
 })
