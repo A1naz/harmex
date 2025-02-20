@@ -1,4 +1,5 @@
 import { Buyout } from '@/server/lib/models/flowwow/Buyout'
+import { paymenthistory } from '@/server/lib/models/Paymenthistory'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -128,8 +129,14 @@ export default eventHandler(async (event) => {
       )
       break
   }
+
+  const buyoutUuids = buyouts.map((buyout) => 'Выкуп #' + buyout.uuid)
+  const history = await paymenthistory.find({ basisoperation: { $in: buyoutUuids } })
+
   const format = buyouts.map((buyout) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
+    const historyItem = history.find(item => item.basisoperation === 'Выкуп #' + buyout.uuid)
+
     return {
       //   place: buyout.place ? buyout.place : place + 1,
       place: buyout.place,
@@ -153,6 +160,9 @@ export default eventHandler(async (event) => {
       appartmentNumber: buyout.appartmentNumber,
       url: buyout.url,
       FIO: buyout.FIO,
+      executionTime: historyItem ? historyItem.dataoperation : null,
+      financePrice: historyItem ? historyItem.summ : null,
+      deliveryType: buyout.deliveryType
     }
   })
   return format

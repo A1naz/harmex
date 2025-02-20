@@ -67,7 +67,7 @@ onKeyStroke("Escape", (e) => {
             </div>
           </div>
         </div>
-        <Hero v-else />
+        <Hero class="text-gray-500" v-else />
       </div>
     </div>
   </div>
