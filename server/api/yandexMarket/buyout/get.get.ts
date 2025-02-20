@@ -156,6 +156,8 @@ export default eventHandler(async (event) => {
       purchaseSoon: buyout.purchaseSoon,
       key: buyout.key,
       promocode: buyout.promocode,
+      executionTime: historyItem ? historyItem.dataoperation : null,
+      financePrice: historyItem ? historyItem.summ : null,
     }
   })
   return format
