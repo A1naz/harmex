@@ -127,7 +127,7 @@ export default eventHandler(async (event) => {
 
 
   const buyoutUuids = buyouts.map((buyout) => 'Выкуп #' + buyout.uuid)
-  const history = await paymenthistory.find({ basisoperation: { $in: buyoutUuids } })
+  const history = await paymenthistory.find({ basisoperation: { $in: buyoutUuids }, type: 'buyouts service' })
 
   const format = buyouts.map((buyout) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
@@ -153,6 +153,7 @@ export default eventHandler(async (event) => {
       purchaseSoon: buyout.purchaseSoon,
       key: buyout.key,
       executionTime: historyItem ? historyItem.dataoperation : null,
+      financePrice: historyItem ? historyItem.summ : null,
     }
   })
 

@@ -7,6 +7,7 @@ definePageMeta({
   middleware: "auth",
 });
 
+const params = useRoute().query;
 const { user }: any = useUserSession();
 const dateRange = ref([]);
 const searchInput = ref("");
@@ -280,6 +281,12 @@ const searchPlaceHolder = computed(() => {
   if (tableType.value === "replenishment") {
     return "id, ИП";
   } else return "id, артикул";
+});
+
+onMounted(() => {
+  if (params.uuid) {
+    searchInput.value = params.uuid;
+  }
 });
 </script>
 

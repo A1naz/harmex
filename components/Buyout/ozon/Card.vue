@@ -442,24 +442,6 @@ async function copyToClipboard(text: string) {
                 OZON
               </div>
             </div>
-            <!-- <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Сумма: </span>
-              <div
-                class="rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm text-[0.725rem]"
-              >
-                {{ currency.format(info.quantity * info.product?.price) }}
-              </div>
-            </div> -->
-            <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Источник:
-              </span>
-              <div
-                class="bg-[#ced3d9] rounded-md py-0 px-2 text-sm text-[0.725rem]"
-              >
-                Ozon
-              </div>
-            </div>
           </div>
         </div>
       </div>

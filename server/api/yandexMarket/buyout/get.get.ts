@@ -1,4 +1,5 @@
 import { Buyout } from '@/server/lib/models/yandexMarket/Buyout'
+import { paymenthistory } from '@/server/lib/models/Paymenthistory'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -123,8 +124,17 @@ export default eventHandler(async (event) => {
       buyouts = buyouts.filter(item => new Date(item.createdAt) > new Date(Date.now() - 1000 * 60 * 60 * 24 * 7))
       break
   }
+
+
+  const buyoutUuids = buyouts.map((buyout) => 'Выкуп #' + buyout.uuid)
+  const history = await paymenthistory.find({ basisoperation: { $in: buyoutUuids }, type: 'buyouts service' })
+
   const format = buyouts.map((buyout) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
+
+    const historyItem = history.find(item => item.basisoperation === 'Выкуп #' + buyout.uuid)
+
+    
     return {
       //   place: buyout.place ? buyout.place : place + 1,
       place: buyout.place,

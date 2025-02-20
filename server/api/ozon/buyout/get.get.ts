@@ -167,10 +167,9 @@ export default eventHandler(async (event) => {
       discountRequestTime: buyout.discountRequestTime,
       promocode: buyout.promocode,
       executionTime: historyItem ? historyItem.dataoperation : null,
+      financePrice: historyItem ? historyItem.summ : null,
     }
   })
-
-  console.log(format)
 
   return format
 })

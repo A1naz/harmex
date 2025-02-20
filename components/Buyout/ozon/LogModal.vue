@@ -12,23 +12,23 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
-const emit = defineEmits(['close'])
-const currency = useCurrency()
-const store = useMainStore()
-const logs = ref<any[]>([])
-const { data, error } = await useFetch('/api/ozon/tasks/getLogs', {
-  method: 'GET',
+});
+const emit = defineEmits(["close"]);
+const currency = useCurrency();
+const store = useMainStore();
+const logs = ref<any[]>([]);
+const { data, error } = await useFetch("/api/ozon/tasks/getLogs", {
+  method: "GET",
   query: {
     uuid: props.info.uuid,
   },
-})
-if (data.value) logs.value = data.value
+});
+if (data.value) logs.value = data.value;
 
-onKeyStroke('Escape', (e) => {
-  e.preventDefault()
-  emit('close')
-})
+onKeyStroke("Escape", (e) => {
+  e.preventDefault();
+  emit("close");
+});
 </script>
 
 <template>
@@ -63,11 +63,11 @@ onKeyStroke('Escape', (e) => {
               {{ log.text }}
             </div>
             <div class="logDate">
-              {{ $dayjs(log.date).format('D MMMM HH:mm') }}
+              {{ $dayjs(log.date).format("D MMMM HH:mm") }}
             </div>
           </div>
         </div>
-        <Hero v-else />
+        <Hero class="text-gray-500" v-else />
       </div>
     </div>
   </div>
