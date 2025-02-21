@@ -353,6 +353,19 @@ async function copyToClipboard(text: string) {
                 >Статус:
               </span>
               <div
+                :class="{
+                  ' bg-[#b5ffbc] dark:bg-success':
+                    info.status === 'active' ||
+                    info.status === 'work' ||
+                    info.status === 'busy' ||
+                    info.status === 'discountGiven',
+                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                    info.status === 'completed' || info.status === 'nofunds',
+                  'text-base-content bg-yellow-300':
+                    info.status === 'archived' ||
+                    info.status === 'paused' ||
+                    info.status === 'discountAwaiting',
+                }"
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] max-w-[150px] truncate"
               >
                 {{ getStatus }}

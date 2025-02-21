@@ -107,7 +107,23 @@ onKeyStroke("Escape", (e) => {
                   <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                     >Статус:
                   </span>
-                  <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                  <div
+                    class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
+                    :class="{
+                      ' bg-[#b5ffbc] dark:bg-success':
+                        info.status === 'active' ||
+                        info.status === 'work' ||
+                        info.status === 'busy' ||
+                        info.status === 'discountGiven',
+                      'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                        info.status === 'completed' ||
+                        info.status === 'nofunds',
+                      'text-base-content bg-yellow-300':
+                        info.status === 'archived' ||
+                        info.status === 'paused' ||
+                        info.status === 'discountAwaiting',
+                    }"
+                  >
                     {{ getStatus }}
                   </div>
                 </div>
