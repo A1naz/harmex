@@ -601,7 +601,7 @@ function removePromo(index: number) {
         >
           <table class="table table-xs w-full mt-4">
             <thead class="relative mb-2 text-sm text-base-content">
-              <tr class="bg-secondary">
+              <tr class="bg-[#f3e9dd]">
                 <!-- <th class="hidden 3xl:block">№</th> -->
                 <th
                   class="w-12 text-center p-2 font-normal"

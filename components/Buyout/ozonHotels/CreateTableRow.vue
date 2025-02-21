@@ -153,7 +153,7 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
     <td class="border-r border-base">
       <select
         v-if="product.roomsData.length"
-        class="select select-sm w-full bg-base-300 bg-opacity-40"
+        class="select select-sm w-full bg-[#f3e9dd]"
         @change="onSizeChange"
       >
         <option
@@ -176,7 +176,7 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
     <td class="border-r border-base w-20">
       <div class="w-20">
         <select
-          class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+          class="select select-sm w-full bg-[#f3e9dd] max-w-sm appearance-none"
           @change="onSexChange"
         >
           <option value="Нет">Нет</option>

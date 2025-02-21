@@ -548,7 +548,7 @@ const addressForm = reactive({
         >
           <table class="table table-xs w-full mt-4">
             <thead class="relative mb-2 text-sm text-base-content">
-              <tr class="bg-secondary dark:bg-opacity-10">
+              <tr class="bg-[#f3e9dd] dark:bg-opacity-10">
                 <!-- <th class="hidden 3xl:block">№</th> -->
                 <th
                   class="w-12 text-center p-2 font-normal"
