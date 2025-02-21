@@ -142,7 +142,7 @@ function setDeliveryDate(date: string, time: string) {
       </div>
     </td>
     <td class="border-r border-base text-center">
-      <div class="text-sm text-center w-full">
+      <div class="text-sm text-center w-full text-nowrap">
         {{ product.priceText }}
       </div>
     </td>

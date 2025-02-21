@@ -400,45 +400,41 @@ function startTimer() {
               <tr class="bg-[#f1f2ff] dark:bg-primary dark:bg-opacity-10">
                 <!-- <th class="hidden 3xl:block">№</th> -->
                 <th
-                  class="w-12 text-center p-2 font-normal text-primary"
+                  class="w-12 text-center p-2 font-normal"
                   @click="openInfoModal('picture')"
                 >
                   <!-- <IconCSS name="material-symbols:image-outline" size="20" /> -->
                   Фото
                 </th>
-                <th class="w-36 3xl:w-48 text-center font-normal text-primary">
-                  Название
-                </th>
+                <th class="w-36 3xl:w-48 text-center font-normal">Название</th>
                 <th
                   class="text-center font-normal"
                   @click="openInfoModal('price')"
                 >
-                  <div
-                    class="flex w-full items-center justify-center text-primary"
-                  >
+                  <div class="flex w-full items-center justify-center">
                     <span> Цена </span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
 
                 <th class="font-normal">
-                  <div class="text-center text-primary">
+                  <div class="text-center">
                     <span>Параметры </span>
                   </div>
                 </th>
                 <th class="font-normal" @click="openInfoModal('sex')">
-                  <div class="text-center text-primary">
+                  <div class="text-center">
                     <span> Пол </span>
                   </div>
                 </th>
 
                 <th class="font-normal" @click="openInfoModal('rules')">
-                  <div class="text-center text-primary">
+                  <div class="text-center">
                     <span> Правила </span>
                   </div>
                 </th>
                 <th class="font-normal" @click="openInfoModal('dates')">
-                  <div class="text-center text-primary">
+                  <div class="text-center">
                     <span> Даты выкупов </span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
@@ -448,7 +444,7 @@ function startTimer() {
                   class="min-w-40 font-normal"
                   @click="openInfoModal('adress')"
                 >
-                  <div class="text-center text-primary">
+                  <div class="text-center">
                     <span> Тип доставки </span>
                   </div>
                 </th>
@@ -458,7 +454,7 @@ function startTimer() {
                   @click="openInfoModal('adress')"
                 >
                   <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
-                  <div class="text-center text-primary">
+                  <div class="text-center">
                     <span> Адрес </span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
@@ -467,9 +463,7 @@ function startTimer() {
                   class="font-normal text-base-content"
                   @click="openInfoModal('search')"
                 >
-                  <div
-                    class="flex justify-center items-center gap-1 text-primary"
-                  >
+                  <div class="flex justify-center items-center gap-1">
                     <span>Поисковые запросы</span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
