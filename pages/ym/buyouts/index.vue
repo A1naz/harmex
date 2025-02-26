@@ -7,6 +7,7 @@ definePageMeta({
   middleware: "auth",
 });
 const route = useRoute();
+const { user } = useUserSession();
 const buyouts = ref([]) as any;
 const modal = ref(false);
 const logModal = ref(false);
@@ -488,7 +489,7 @@ const siteUrl = config.public.siteUrl;
       <div
         class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
       >
-        <div class="flex gap-2">
+        <div class="flex gap-2" v-if="user.username === 'test'">
           <NuxtLink
             to="/ym/buyouts/create"
             class="btn btn-primary dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
