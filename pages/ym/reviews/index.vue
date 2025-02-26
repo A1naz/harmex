@@ -399,12 +399,12 @@ const siteUrl = config.public.siteUrl;
                   @change-value="changeTab"
                 />
               </span>
-              <!-- <button
+              <button
                 @click="manualModal = true"
                 class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
               >
                 <Icon name="ci:info" size="24" />
-              </button> -->
+              </button>
             </div>
             <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
               <!-- <CustomSelect
@@ -781,7 +781,7 @@ const siteUrl = config.public.siteUrl;
       </ul>
       <p class="divider"></p>
       <p class="my-4"><strong>Рекомендации</strong></p>
-      <ul class="list-decimal ml-10">
+      <ul class="list-disc ml-10">
         <li>
           Публикуйте отзывы регулярно, чтобы поддерживать высокий рейтинг
           товара.

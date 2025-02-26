@@ -511,12 +511,12 @@ const siteUrl = config.public.siteUrl;
                 :links="customLinks"
               />
             </span>
-            <!-- <button
+            <button
               @click="manualModal = true"
               class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
             >
               <Icon name="ci:info" size="24" />
-            </button> -->
+            </button>
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
             <CustomSelect
@@ -721,12 +721,25 @@ const siteUrl = config.public.siteUrl;
         </li>
         <li>Проверьте заполненные данные</li>
         <li>Нажмите кнопку Создать</li>
-        <li>После проверки AI нажмите Создать</li>
-        <li>Отслеживайте исполнение заказа в разрезе Статусов</li>
+        <li>
+          После проверки искусственным интеллектом (AI) подтвердите создание
+          заказа, нажав <strong>"Создать"</strong> еще раз.
+        </li>
+        <li>
+          Отслеживайте выполнение заказа через раздел
+          <strong> "Выкупы"</strong>.
+        </li>
       </ol>
       <p>
         Этот процесс позволяет легко и быстро организовать выкуп товара в любых
         количествах, минимизируя ваше участие.
+      </p>
+      <p>
+        Для выкупа товара на Yandex market, доступны
+        <strong> 2 основных</strong> инструмента. Каждый из них имеет свои
+        особенности и применяется в зависимости от целей и стратегии
+        продвижения. Ниже приведено подробное описание каждого инструмента, а
+        также инструкции по их использованию.
       </p>
       <nuxt-img
         alt=""
@@ -804,17 +817,6 @@ const siteUrl = config.public.siteUrl;
           <li>
             Время создания и исполнения заявки фиксируется по
             <strong>часовому поясу заказчика</strong>.
-          </li>
-        </ol>
-        <p><strong> 6. Покупка товара </strong></p>
-        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
-          <li>
-            Покупка товара осуществляется только по
-            <strong>СПП (Специальной Программе Партнерства).</strong>
-          </li>
-          <li>
-            Однако расчет происходит <strong> без учета СПП</strong> из-за
-            волатильности цен.
           </li>
         </ol>
       </div>
