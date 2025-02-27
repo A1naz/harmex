@@ -124,6 +124,7 @@ export default eventHandler(async (event) => {
         recipient: delivery.recipient,
         recipientphone: replaced,
         updatedAt: delivery.updatedAt,
+        gender: buyout.gender,
       }
     })
   )

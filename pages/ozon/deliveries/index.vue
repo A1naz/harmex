@@ -40,10 +40,13 @@ const modal = ref(false);
 const statusModal = ref(false);
 const penaltyModal = ref(false);
 const currentStatusdDelivery = ref<any[]>([]);
-function openModal(code: number, src: string) {
-  modalInfo.src = src;
-  modalInfo.code = code;
+const selectedDelivery = ref<any>();
+const selectedIndex = ref(-1);
+function openModal(index: number) {
+  selectedIndex.value = index;
+  selectedDelivery.value = deliveries.value[index];
   modal.value = true;
+  // logModal.value = true;
 }
 function openStatusModal(statusdelivery: any[]) {
   currentStatusdDelivery.value = statusdelivery;
@@ -492,51 +495,48 @@ const siteUrl = config.public.siteUrl;
 
     <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
       <div
+        v-if="deliveries.length > 3"
         group
-        tag="ul"
-        class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3"
+        class="cards grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] h-full"
       >
-        <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
-          <li
-            v-for="(delivery, index) of deliveries.slice(
-              0,
-              Math.ceil(deliveries.length / 2)
-            )"
-            :key="index"
-            class="overflow-visible z-0"
-          >
-            <DeliveryOzonExpand
-              :state="openAll"
-              :info="delivery"
-              @open-modal="openModal"
-              @open-status-modal="openStatusModal"
-              @open-penalty-modal="penaltyModal = true"
-            />
-          </li>
-        </ul>
-        <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
-          <li
-            v-for="(delivery, index) of deliveries.slice(
-              Math.ceil(deliveries.length / 2)
-            )"
-            :key="index"
-            class="overflow-visible z-0"
-          >
-            <DeliveryOzonExpand
-              :state="openAll"
-              :info="delivery"
-              @open-modal="openModal"
-              @open-status-modal="openStatusModal"
-              @open-penalty-modal="penaltyModal = true"
-            />
-          </li>
-        </ul>
+        <div
+          v-for="(delivery, index) of deliveries"
+          :key="delivery.uuid"
+          class="max-w-[400px]"
+        >
+          <DeliveryOzonExpand
+            :state="openAll"
+            :info="delivery"
+            @open-modal="openModal"
+            :index="index"
+            @open-status-modal="openStatusModal"
+            @open-penalty-modal="penaltyModal = true"
+          />
+        </div>
       </div>
-      <DeliveryQrModal
+      <div v-else group class="flex flex-wrap gap-x-4 gap-y-3">
+        <div
+          v-for="(delivery, index) of deliveries"
+          :key="delivery.uuid"
+          class="max-w-full sm:max-w-[320px]"
+        >
+          <DeliveryOzonExpand
+            :state="openAll"
+            :info="delivery"
+            :index="index"
+            @open-modal="openModal"
+            @open-status-modal="openStatusModal"
+            @open-penalty-modal="penaltyModal = true"
+          />
+        </div>
+      </div>
+
+      <!-- <DeliveryWildberriesQrModal
         v-if="modal"
         :code="modalInfo.code"
         :src="modalInfo.src"
-      />
+        :info="currentDelivery"
+      /> -->
     </div>
     <Hero v-else-if="!loading" />
     <div v-else class="w-full mt-5 flex justify-center items-center">
@@ -548,6 +548,13 @@ const siteUrl = config.public.siteUrl;
       :statusdelivery="currentStatusdDelivery"
       :state="statusModal"
       @close="statusModal = false"
+    />
+    <DeliveryOzonInfoModal
+      v-if="modal"
+      :info="selectedDelivery"
+      :state="modal"
+      :index="selectedIndex"
+      @close="modal = false"
     />
     <ManualModal
       :show="manualModal"

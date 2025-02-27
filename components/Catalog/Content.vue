@@ -121,7 +121,7 @@ defineEmits(["setFavourites", "vote"]);
                   (user.username !== 'test' || social.test !== true),
               }"
             >
-              Перейти
+              Все услуги
             </NuxtLink>
           </div>
         </div>

@@ -34,7 +34,12 @@ watch(
   }
 );
 function daysToPenalty(statusdelivery: any[]) {
-  const item = statusdelivery.find((item) => item.status === "Готов к выдаче");
+  const item = statusdelivery.find(
+    (item) =>
+      item.status === "Готов к выдаче" ||
+      item.status === "Готов к получению" ||
+      item.status.includes("Получите до")
+  );
   if (!item) return;
 
   const updatedAt = new Date(item.date);
@@ -54,191 +59,181 @@ function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text);
   notify({ text: "Скопировано в буфер обмена", type: "success" });
 }
+
+const { $dayjs } = useNuxtApp();
 </script>
 
 <template>
-  <div
-    class="collapse collapse-arrow border bg-[#F3E9DD] rounded-box z-0 overflow-hidden border-[#eff0ff]"
-  >
-    <input v-model="opened" type="checkbox" />
+  <div class="buyout-card card bg-base-100 shadow-lg min-w-[214px]">
+    <div
+      class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-3 relative"
+    >
+      <div class="dropdown dropdown-end absolute -right-1 top-2">
+        <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
+          <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
+        </label>
+      </div>
 
-    <div class="collapse-title relative text-xl font-medium bg-[#F3E9DD]">
-      <div class="flex gap-4">
-        <nuxt-img
-          fit="contain"
-          :src="info?.productimage ? info?.productimage : 'null'"
-          width="36"
-          loading="lazy"
-          class="rounded-lg transition-opacity ease-in-out duration-200 hidden lg:block"
-        />
+      <div class="flex gap-3 w-full truncate mt-6">
+        <div
+          class="flex-none"
+          style="
+            width: 80px;
+            height: 124px;
+            margin-top: auto;
+            margin-bottom: auto;
+          "
+        >
+          <nuxt-img
+            class="rounded-xl h-full"
+            width="120"
+            height="150"
+            format="webp"
+            loading="lazy"
+            :src="info?.productimage ? info?.productimage : 'null'"
+          />
+        </div>
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-1.5">
+            <div
+              v-if="
+                (info.currentstatus === 'Готов к выдаче' ||
+                  info.currentstatus === 'Готов к получению' ||
+                  info.currentstatus.includes('Получите до')) &&
+                info.statusdelivery.length > 1
+              "
+              class="text-s link bg-[#FF6666] w-fit dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"
+              @click="emit('openPenaltyModal')"
+            >
+              <IconCSS name="ph:warning-circle-light" size="25" />
 
-        <div class="w-full">
-          <div class="flex justify-between flex-wrap lg:flex-nowrap gap-1">
-            <div class="flex gap-1">
-              <span> Доставка </span>
+              <span class="mr-1 my-auto">{{
+                daysToPenalty(info.statusdelivery)
+              }}</span>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Актуальность:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.updatedAt).format("DD.MM.YYYY") }}
+              </div>
+            </div>
+            <div
+              class="flex gap-2 cursor-pointer"
+              @click="emit('openStatusModal', info.statusdelivery)"
+            >
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Статус:
+              </span>
               <div
-                v-if="
-                  info.currentstatus === 'Готов к выдаче' &&
-                  info.statusdelivery.length > 1
-                "
-                class="text-s link bg-[#FF6666] dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"
-                style="min-width: fit-content"
-                @click="emit('openPenaltyModal')"
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
+                :class="{
+                  'dark:text-base-content text-red bg-[#fecaca] dark:bg-red-700':
+                    info.currentstatus === 'Готов к выдаче' &&
+                    info.statusdelivery.length > 1,
+                }"
               >
-                <IconCSS name="ph:warning-circle-light" size="25" />
-
-                <span class="mr-1 my-auto">{{
-                  daysToPenalty(info.statusdelivery)
-                }}</span>
+                {{ info.currentstatus }}
+              </div>
+            </div>
+            <div class="flex gap-2" v-if="info.currentstatus === 'Получен'">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Получено:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.updatedAt).format("DD.MM.YYYY") }}
+              </div>
+            </div>
+            <div class="flex gap-2" v-if="info.executionTime">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Выполнено:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.executionTime).format("DD.MM.YYYY") }}
+              </div>
+            </div>
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >ID доставки:
+              </span>
+              <button
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
+                @click="copyToClipboard(info.uuid)"
+              >
+                #{{ info.uuid }}
+              </button>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Товар:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
+              >
+                <a
+                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+                  target="_blank"
+                  class="link link-hover"
+                >
+                  {{ info.article }}
+                </a>
               </div>
             </div>
 
-            <label
-              class="text-[0.6rem] sm:text-[0.8rem] lg:text-xs break-all z-10"
-              style="white-space: nowrap"
-              @click="openBuyout"
-            >
-              <span class="link link-hover hover:text-primary">
-                #{{ info.uuid }}
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Название:
               </span>
-              <IconCSS
-                class="hover:text-primary cursor-pointer ml-2"
-                name="solar:copy-bold"
-                size="25"
-                @click.stop
-                @click="copyToClipboard(info.uuid)"
-              />
-            </label>
-          </div>
-
-          <div class="flex justify-between flex-wrap gap-1 items-center">
+              <div class="truncate text-[0.9rem] text-bold">
+                {{ info.productname }}
+              </div>
+            </div>
             <div class="flex gap-2">
-              <button
-                class="text-xs font-normal btn btn-xs btn-primary bg-[#ff5e34b3] border-none text-base-content rounded-md z-10 mt-1 px-3"
-                @click="emit('openStatusModal', info.statusdelivery)"
-              >
-                <span class="font-semibold"> Статус:</span>
-                <span>{{ info.currentstatus }} </span>
-              </button>
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Цена:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ currency.format(info.pricebuy) }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Адрес:
+              </span>
               <div
-                class="dark:bg-base-300 bg-[#d8d8d8] rounded-md text-sm font-normal my-auto p-0.5 mt-1 px-2"
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] link-hover"
               >
+                <a
+                  target="_blank"
+                  :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
+                >
+                  {{ info.point }}
+                </a>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Площадка:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 Wildberries
               </div>
             </div>
-
-            <div class="mt-2 lg:m-0 text-xs text-primary font-normal">
-              Обновлено
-              {{
-                $dayjs(info.updatedAt).locale("ru").format("D MMMM YYYY HH:mm")
-              }}
+            <div class="flex gap-2 h-5" v-if="info.currentstatus !== 'Получен'">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]"></div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="collapse-content bg-[#F3E9DD]">
-      <div class="product flex flex-col gap-4 lg:gap-8 flex-wrap">
-        <div class="flex flex-col">
-          <div>
-            <!-- <div class="text-sm text-gray-500 ">
-                        Название
-                    </div> -->
-            <div>
-              {{ info.productname }}
-            </div>
-          </div>
-          <div>
-            <!-- <div class="text-sm text-gray-500">
-                    Артикул
-                </div> -->
-            <a
-              :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
-              target="_blank"
-              class="text-primary link link-hover text-sm"
-            >
-              {{ info.article }}
-            </a>
-          </div>
-        </div>
-        <div class="flex gap-10">
-          <div class="flex">
-            <div class="text-sm text-gray-500">
-              <span>Цена: </span>
-
-              <span class="ml-2 rounded-md bg-success p-1 text-base-content">{{
-                currency.format(info.pricebuy)
-              }}</span>
-            </div>
-          </div>
-
-          <div class="flex">
-            <div class="text-sm text-gray-500">
-              <span>Размер: </span>
-
-              <span
-                class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content"
-                >{{ info.size === "none" ? "Не указан" : info.size }}</span
-              >
-            </div>
-          </div>
-
-          <!-- <div class="flex">
-                    <div class="text-sm text-gray-500">
-                        <span>Размер: </span>
-
-                        <span class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content">{{ '%' }}</span>
-                    </div>
-
-                </div> -->
-        </div>
-      </div>
-
-      <div class="divider my-2" />
-
-      <div class="receipt flex gap-4 lg:gap-4 items-center flex-wrap">
-        <div class="flex gap-2 md:gap-10 lg:gap-10">
-          <div class="lg:mr-10 text-primary text-xs">
-            <div class="text-sm text-gray-500 mb-1">Получатель:</div>
-            {{ info.recipient }} {{ info.recipientphone }}
-          </div>
-
-          <div class="text-primary text-xs">
-            <div class="text-sm text-gray-500 mb-1">Код получения:</div>
-            {{ info?.receiptcode ? info?.receiptcode : "Товар не доставлен" }}
-          </div>
-
-          <div v-if="info.receiptcodeqr" class="flex justify-end">
-            <label
-              for="qr-modal"
-              class="btn btn-primary btn-xs flex bg-opacity-20 border-opacity-5 text-primary hover:text-white rounded-md gap-2"
-              @click="
-                emit(
-                  'openModal',
-                  parseInt(info.receiptcode),
-                  info.receiptcodeqr,
-                  info
-                )
-              "
-            >
-              <Icon name="material-symbols:qr-code" size="24" />
-              <span class="hidden lg:block">QR-код</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="w-76">
-          <div class="text-sm text-gray-500">Адрес:</div>
-          <a
-            target="_blank"
-            class="text-base-content text-xs link link-hover w-52 lg:w-76 break-all"
-            :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
-          >
-            {{ info.point }}
-          </a>
-        </div>
-      </div>
+      <button
+        class="btn btn-sm h-[2.5rem] text-[20px] mt-2 rounded-2xl font-normal text-white btn-primary"
+        @click="$emit('openModal', index)"
+      >
+        Детали
+      </button>
     </div>
   </div>
 </template>
