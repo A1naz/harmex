@@ -232,7 +232,7 @@ onKeyStroke("Escape", (e) => {
                 class="w-full flex flex-col -pl-4 pb-5 -mt-1 pt-4 justify-center items-center border-[18px] rounded-xl border-white bg-white"
               >
                 <NuxtImg
-                  class="bg-white"
+                  class="bg-white mb-40 sm:mb-0"
                   :alt="'Нет кода'"
                   :src="info.receiptcodeqr ? info.receiptcodeqr : 'null'"
                   @click.stop
