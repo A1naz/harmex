@@ -100,7 +100,7 @@ onKeyStroke("Escape", (e) => {
                     class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
                     :class="{
                       'dark:text-base-content text-red bg-[#fecaca] dark:bg-red-700':
-                        info.currentstatus.includes('Ожидает получения') &&
+                        info.currentstatus === 'Готов к выдаче' &&
                         info.statusdelivery.length > 1,
                     }"
                   >
@@ -139,7 +139,7 @@ onKeyStroke("Escape", (e) => {
                     class="rounded-md py-0 px-2 text-sm cursor-pointer text-primary"
                   >
                     <a
-                      :href="`https://www.ozon.ru/product/${info.article}`"
+                      :href="info.article"
                       target="_blank"
                       class="link link-hover"
                     >
@@ -180,7 +180,7 @@ onKeyStroke("Escape", (e) => {
                     >Площадка:
                   </span>
                   <label class="rounded-md py-0 px-2 text-sm cursor-pointer">
-                    Ozon
+                    Flowwow
                   </label>
                 </div>
               </div>
@@ -218,16 +218,6 @@ onKeyStroke("Escape", (e) => {
                     </a>
                   </label>
                 </div>
-              </div>
-              <div
-                class="w-full flex flex-col -pl-4 pb-5 -mt-1 pt-4 justify-center items-center border-[18px] rounded-xl border-white bg-white"
-              >
-                <NuxtImg
-                  class="bg-white w-4/5"
-                  :alt="'Нет кода'"
-                  :src="info.receiptcodeqr ? info.receiptcodeqr : 'null'"
-                  @click.stop
-                />
               </div>
             </div>
           </div>
