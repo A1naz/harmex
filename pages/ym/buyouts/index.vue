@@ -742,30 +742,91 @@ const siteUrl = config.public.siteUrl;
         продвижения. Ниже приведено подробное описание каждого инструмента, а
         также инструкции по их использованию.
       </p>
+      <p class="mt-3 ml-8"><strong>1. Выкуп по полной цене</strong></p>
+      <p>Описание</p>
+      <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+        <li>
+          Это стандартный способ выкупа товара, при котором покупка
+          осуществляется
+          <strong>без скидок, промокодов или дополнительных условий </strong>.
+        </li>
+        <li>
+          Подходит для ситуаций, когда нужно быстро увеличить продажи и улучшить
+          позиции товара в рейтинге при минимальных вложениях в продвижение.
+        </li>
+      </ol>
+      <p class="-mt-3">Как использовать</p>
+      <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+        <li>
+          При создании заявки на выкуп
+          <strong>не заполняйте колонку "Промокод" </strong>.
+        </li>
+        <li>
+          Просто укажите артикул товара, количество и другие необходимые данные.
+        </li>
+      </ol>
+      <p class="-mt-3">Пример</p>
+      <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+        <li>
+          Вы хотите выкупить 10 единиц товара по полной цене. В заявке
+          указываете только артикул и количество, оставляя поле "Скидка"
+          пустыми.
+        </li>
+      </ol>
+      <p class="mt-3 ml-8"><strong>2. Выкуп по промокоду</strong></p>
+      <div class="ml-4 mt-1">
+        <p>Описание</p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Этот способ позволяет выкупить товар с использованием
+            <strong> промокода</strong>, что также снижает затраты.
+          </li>
+          <li>
+            Промокоды могут быть предоставлены маркетплейсом или сгенерированы
+            вами (если такая возможность доступна).
+          </li>
+        </ol>
+        <p class="-mt-3">Как использовать</p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            При создании заявки заполните колонку <strong>"Промокод"</strong>,
+            указав действующий промокод.
+          </li>
+          <li>Убедитесь, что промокод активен и применим к вашему товару.</li>
+        </ol>
+        <p class="-mt-3">Пример</p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Вы хотите выкупить 10 единиц товара с промокодом "SUMMER20". В
+            заявке указываете артикул, количество и промокод "SUMMER20".
+          </li>
+        </ol>
+      </div>
       <nuxt-img
         alt=""
-        class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2_1.png"
+        class="flex mx-auto w-full px-4 mt-2"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/ym/1.png"
       />
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-2"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2_2.png"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/ym/2.png"
       />
-      <p class="my-4">
+      <p>
         После того как заявка на выкуп товара получит статус
         <strong>"Завершен"</strong>, вам нужно будет забрать товар с пункта
-        выдачи заказов (ПВЗ) используя меню
-        <strong> Доставка.</strong>
+        выдачи заказов (ПВЗ) используя меню <strong>Доставка</strong>
       </p>
-      <p>В меню Финансы, ознакомьтесь с фактическими операциями:</p>
-      <ol class="list-item ml-4 mb-4 text-[#4b5563]">
+      <p class="my-3">
+        В меню Финансы, ознакомьтесь с фактическими операциями:
+      </p>
+      <ol class="list-item ml-4 mb-2 text-[#4b5563]">
         <li class="mt-2">- списание средств на покупку товара.</li>
         <li>- списание средств за услуги платформы.</li>
         <li>- дата и время фактического исполнения.</li>
         <li>- ID вашей заявки на услугу.</li>
       </ol>
-      <p class="divider"></p>
+      <div class="divider"></div>
       <p><strong>Примечания по созданию заказов</strong></p>
       <div class="ml-4 mt-4">
         <p><strong> 1. Количество заявок </strong></p>
@@ -821,7 +882,6 @@ const siteUrl = config.public.siteUrl;
           </li>
         </ol>
       </div>
-
       <p class="divider"></p>
       <p><strong>Статусы выкупов</strong></p>
       <div class="ml-4 mt-4">
