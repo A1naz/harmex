@@ -384,10 +384,10 @@ const siteUrl = config.public.siteUrl;
         </div>
       </div>
     </div>
-    <div class="font-medium gap-1 mt-4">
+    <!-- <div class="font-medium gap-1 mt-4">
       Забирайте товары в течение
       <span class="text-[#ff6666]"> 5 дней! </span>
-    </div>
+    </div> -->
     <div class="flex justify-start lg:justify-between mb-4 items-center mt-4">
       <div
         class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
@@ -426,7 +426,7 @@ const siteUrl = config.public.siteUrl;
               @reset="dateRange = []"
             >
               <button
-                class="div w-[48px] h-[32px] bg-[#eff0ff] border-[1px] rounded-[6px]"
+                class="div w-[48px] h-[32px] bg-[#fc7c5b] text-white border-[1px] rounded-[6px]"
               >
                 <Icon name="solar:calendar-linear" class="-mt-1" size="22px" />
               </button>
@@ -437,7 +437,7 @@ const siteUrl = config.public.siteUrl;
             >
               <label
                 tabindex="0"
-                class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
+                class="btn btn-sm btn-primary bg-[#fc7c5b] text-white border-none"
                 >XLS</label
               >
               <ul

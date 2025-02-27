@@ -370,7 +370,7 @@ const siteUrl = config.public.siteUrl;
               @reset="dateRange = []"
             >
               <button
-                class="div w-[48px] h-[32px] bg-[#eff0ff] border-[1px] rounded-[6px]"
+                class="div w-[48px] h-[32px] bg-[#fc7c5b] text-white border-[1px] rounded-[6px]"
               >
                 <Icon name="solar:calendar-linear" class="-mt-1" size="22px" />
               </button>
@@ -381,7 +381,7 @@ const siteUrl = config.public.siteUrl;
             >
               <label
                 tabindex="0"
-                class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
+                class="btn btn-sm btn-primary bg-[#fc7c5b] text-white border-none"
                 >XLS</label
               >
               <ul

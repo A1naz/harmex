@@ -38,7 +38,7 @@ function daysToPenalty(statusdelivery: any[]) {
     (item) =>
       item.status === "Готов к выдаче" ||
       item.status === "Готов к получению" ||
-      item.status.includes("Получите до")
+      item.status.includes("Доставлен")
   );
   if (!item) return;
 
@@ -64,7 +64,7 @@ const { $dayjs } = useNuxtApp();
 </script>
 
 <template>
-  <div class="buyout-card card bg-base-100 shadow-lg min-w-[214px]">
+  <div class="buyout-card card bg-base-100 shadow-lg min-w-[214px] h-[340px]">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-3 relative"
     >
@@ -113,13 +113,35 @@ const { $dayjs } = useNuxtApp();
               <div
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
                 :class="{
-                  'dark:text-base-content text-red bg-[#fecaca] dark:bg-red-700':
-                    info.currentstatus === 'Готов к выдаче' &&
+                  'bg-orange-200':
+                    info.currentstatus.includes('Готов к выдаче') &&
+                    info.statusdelivery.length > 1,
+                  'bg-green-200':
+                    info.currentstatus.includes('Получен') &&
+                    info.statusdelivery.length > 1,
+                  'bg-red-200':
+                    info.currentstatus.includes('Возврат') &&
                     info.statusdelivery.length > 1,
                 }"
               >
                 {{ info.currentstatus }}
               </div>
+            </div>
+            <div
+              v-if="
+                (info.currentstatus === 'Готов к выдаче' ||
+                  info.currentstatus === 'Готов к получению' ||
+                  info.currentstatus.includes('Доставлен')) &&
+                info.statusdelivery.length > 1
+              "
+              class="text-s link bg-[#FF6666] w-fit dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"
+              @click="emit('openPenaltyModal')"
+            >
+              <IconCSS name="ph:warning-circle-light" size="25" />
+
+              <span class="mr-1 my-auto">{{
+                daysToPenalty(info.statusdelivery)
+              }}</span>
             </div>
             <div class="flex gap-2" v-if="info.currentstatus === 'Получен'">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
@@ -203,13 +225,13 @@ const { $dayjs } = useNuxtApp();
           </div>
         </div>
       </div>
-      <button
-        class="btn btn-sm h-[2.5rem] text-[20px] mt-2 rounded-2xl font-normal text-white btn-primary"
-        @click="$emit('openModal', index)"
-      >
-        Детали
-      </button>
     </div>
+    <button
+      class="btn btn-sm h-[2.5rem] mb-3 text-[20px] mx-4 mt-2 rounded-2xl font-normal text-white btn-primary"
+      @click="$emit('openModal', index)"
+    >
+      Детали
+    </button>
   </div>
 </template>
 

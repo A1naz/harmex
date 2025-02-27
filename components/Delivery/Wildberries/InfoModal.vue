@@ -99,8 +99,17 @@ onKeyStroke("Escape", (e) => {
                   <div
                     class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
                     :class="{
-                      'dark:text-base-content text-red bg-[#fecaca] dark:bg-red-700':
-                        info.currentstatus === 'Готов к выдаче' &&
+                      'bg-orange-200':
+                        (info.currentstatus === 'Готов к выдаче' ||
+                          info.currentstatus === 'Готов к получению' ||
+                          info.currentstatus.includes('Получите до') ||
+                          info.currentstatus.includes('Заберите до')) &&
+                        info.statusdelivery.length > 1,
+                      'bg-green-200':
+                        info.currentstatus.includes('Получен') &&
+                        info.statusdelivery.length > 1,
+                      'bg-red-200':
+                        info.currentstatus.includes('Возврат') &&
                         info.statusdelivery.length > 1,
                     }"
                   >

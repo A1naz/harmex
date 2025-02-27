@@ -1,29 +1,29 @@
 <script setup lang="ts">
-const { notify } = useNotification()
+const { notify } = useNotification();
 
 definePageMeta({
-  layout: 'app',
-  middleware: 'auth',
-  title: 'Доставки',
-})
+  layout: "app",
+  middleware: "auth",
+  title: "Доставки",
+});
 
-const mpStore = useMPStore()
-const openAll = ref(false)
-const route = useRoute()
-const store = useMainStore()
-const deliveries = ref([]) as any
-const autoTarget = ref(true)
-const codeInput = ref()
-const codeInputMob = ref()
-const loadingExport = ref(false)
-const status = computed(() => route.query?.status || 'all')
-const loading = ref(false)
+const mpStore = useMPStore();
+const openAll = ref(false);
+const route = useRoute();
+const store = useMainStore();
+const deliveries = ref([]) as any;
+const autoTarget = ref(true);
+const codeInput = ref();
+const codeInputMob = ref();
+const loadingExport = ref(false);
+const status = computed(() => route.query?.status || "all");
+const loading = ref(false);
 const search = ref<any>({
-  text: '',
+  text: "",
   loading: false,
   error: false,
-  type: 'article',
-})
+  type: "article",
+});
 
 // function selectStatus(e: Event) {
 //   const target = e.target as HTMLSelectElement
@@ -35,139 +35,135 @@ const search = ref<any>({
 //   })
 // }
 const modalInfo = reactive({
-  src: '',
+  src: "",
   code: 0,
-})
-const modal = ref(false)
-const statusModal = ref(false)
-const penaltyModal = ref(false)
-const currentStatusdDelivery = ref<any[]>([])
-const currentDelivery = ref<any>()
+});
+const modal = ref(false);
+const statusModal = ref(false);
+const penaltyModal = ref(false);
+const currentStatusdDelivery = ref<any[]>([]);
+const currentDelivery = ref<any>();
 function openModal(code: number, src: string, info: any) {
-  modalInfo.src = src
-  modalInfo.code = code
-  modal.value = true
-  currentDelivery.value = info
+  modalInfo.src = src;
+  modalInfo.code = code;
+  modal.value = true;
+  currentDelivery.value = info;
 }
 function openStatusModal(statusdelivery: any[]) {
-  currentStatusdDelivery.value = statusdelivery
-  statusModal.value = true
+  currentStatusdDelivery.value = statusdelivery;
+  statusModal.value = true;
 }
-const target = ref(null)
-const targetIsVisible = ref(false)
+const target = ref(null);
+const targetIsVisible = ref(false);
 
 // eslint-disable-next-line unused-imports/no-unused-vars
-const { stop } = useIntersectionObserver(
-  target,
-  ([{ isIntersecting }]) => {
-    targetIsVisible.value = isIntersecting
-  },
-)
-const skip = ref(50)
-const end = ref(false)
+const { stop } = useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  targetIsVisible.value = isIntersecting;
+});
+const skip = ref(50);
+const end = ref(false);
 async function getDeliveries() {
-  loading.value = true
-  const { data } = await useFetch('/api/wildberries/delivery/get', {
-    method: 'GET',
+  loading.value = true;
+  const { data } = await useFetch("/api/wildberries/delivery/get", {
+    method: "GET",
     query: {
-      status: status.value ?? 'all',
+      status: status.value ?? "all",
       limit: 50,
     },
-  })
-  deliveries.value = data.value
-  loading.value = false
+  });
+  deliveries.value = data.value;
+  loading.value = false;
 }
-getDeliveries()
+getDeliveries();
 
 async function exportReadyXLS() {
-  loadingExport.value = true
-  const { data } = await useFetch('/api/wildberries/delivery/exportReady', {
-    responseType: 'blob',
-  })
-  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
-  const fileLink = document.createElement('a')
-  fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Готовы к выдаче Wildberries.xlsx')
-  document.body.appendChild(fileLink)
-  fileLink.click()
-  loadingExport.value = false
+  loadingExport.value = true;
+  const { data } = await useFetch("/api/wildberries/delivery/exportReady", {
+    responseType: "blob",
+  });
+  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
+  const fileLink = document.createElement("a");
+  fileLink.href = fileURL;
+  fileLink.setAttribute("download", "Готовы к выдаче Wildberries.xlsx");
+  document.body.appendChild(fileLink);
+  fileLink.click();
+  loadingExport.value = false;
 }
 async function exportXLS() {
-  loadingExport.value = true
-  const { data, error } = await useFetch('/api/wildberries/delivery/export', {
-    responseType: 'blob',
-  })
+  loadingExport.value = true;
+  const { data, error } = await useFetch("/api/wildberries/delivery/export", {
+    responseType: "blob",
+  });
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: 'Не удалось экспортировать данные',
-    })
-    loadingExport.value = false
-    return
+      type: "error",
+      title: "Что-то пошло не так",
+      text: "Не удалось экспортировать данные",
+    });
+    loadingExport.value = false;
+    return;
   }
-  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
-  const fileLink = document.createElement('a')
-  fileLink.href = fileURL
-  fileLink.setAttribute('download', 'Общая таблица Wildberries.xlsx')
-  document.body.appendChild(fileLink)
-  fileLink.click()
-  loadingExport.value = false
+  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
+  const fileLink = document.createElement("a");
+  fileLink.href = fileURL;
+  fileLink.setAttribute("download", "Общая таблица Wildberries.xlsx");
+  document.body.appendChild(fileLink);
+  fileLink.click();
+  loadingExport.value = false;
 }
 async function exportReadyUntilPenaltyXLS() {
-  loadingExport.value = true
+  loadingExport.value = true;
   const { data, error } = await useFetch(
-    '/api/wildberries/delivery/exportReadyUntilPenalty',
+    "/api/wildberries/delivery/exportReadyUntilPenalty",
     {
-      responseType: 'blob',
-    },
-  )
+      responseType: "blob",
+    }
+  );
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: 'Не удалось экспортировать данные',
-    })
-    loadingExport.value = false
-    return
+      type: "error",
+      title: "Что-то пошло не так",
+      text: "Не удалось экспортировать данные",
+    });
+    loadingExport.value = false;
+    return;
   }
-  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]))
-  const fileLink = document.createElement('a')
-  fileLink.href = fileURL
+  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
+  const fileLink = document.createElement("a");
+  fileLink.href = fileURL;
   fileLink.setAttribute(
-    'download',
-    'Готовы к выдаче Wildberries до штрафа.xlsx',
-  )
-  document.body.appendChild(fileLink)
-  fileLink.click()
-  loadingExport.value = false
+    "download",
+    "Готовы к выдаче Wildberries до штрафа.xlsx"
+  );
+  document.body.appendChild(fileLink);
+  fileLink.click();
+  loadingExport.value = false;
 }
 
 async function findDeliveries(value: string, type: string) {
   if (!value) {
-    autoTarget.value = true
-    await getDeliveries()
-    search.value.loading = false
-    return
+    autoTarget.value = true;
+    await getDeliveries();
+    search.value.loading = false;
+    return;
   }
-  const { data } = await useFetch('/api/wildberries/delivery/search', {
+  const { data } = await useFetch("/api/wildberries/delivery/search", {
     query: {
       string: value,
       type,
     },
-  })
-  if (data.value)
-    deliveries.value = data.value
+  });
+  if (data.value) deliveries.value = data.value;
 
-  search.value.loading = false
+  search.value.loading = false;
 }
 
-const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000)
+const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000);
 
 async function onSearchInput() {
-  autoTarget.value = false
-  search.value.loading = true
-  findDeliveriesDebounced(search.value.text, search.value.type)
+  autoTarget.value = false;
+  search.value.loading = true;
+  findDeliveriesDebounced(search.value.text, search.value.type);
 }
 
 // function openInfoModal() {
@@ -176,78 +172,77 @@ async function onSearchInput() {
 
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value && deliveries.value.length >= 50) {
-    if (end.value)
-      return
-    const { data } = await useFetch('/api/wildberries/delivery/get', {
-      method: 'GET',
+    if (end.value) return;
+    const { data } = await useFetch("/api/wildberries/delivery/get", {
+      method: "GET",
       query: {
-        status: route.query?.status || 'all',
+        status: route.query?.status || "all",
         limit: 50,
         skip: skip.value,
       },
-    })
+    });
     if ((data.value as any)?.length === 0) {
-      end.value = true
-      return
+      end.value = true;
+      return;
     }
-    deliveries.value = [...deliveries.value, ...(data.value! as any)]
-    skip.value += 50
+    deliveries.value = [...deliveries.value, ...(data.value! as any)];
+    skip.value += 50;
   }
-})
+});
 
 watch(
   () => status.value,
   async () => {
-    skip.value = 50
-    end.value = false
-    const { data } = await useFetch('/api/wildberries/delivery/get', {
-      method: 'GET',
+    skip.value = 50;
+    end.value = false;
+    const { data } = await useFetch("/api/wildberries/delivery/get", {
+      method: "GET",
       query: {
-        status: status.value ?? 'all',
+        status: status.value ?? "all",
         limit: 50,
       },
-    })
-    deliveries.value = data.value
+    });
+    deliveries.value = data.value;
   },
-  { deep: true, immediate: true },
-)
+  { deep: true, immediate: true }
+);
 
 const filters = [
   {
-    title: 'Все доставки',
-    optionValue: 'all',
-    params: '',
+    title: "Все доставки",
+    optionValue: "all",
+    params: "",
     queryStatus: undefined,
   },
   {
-    title: 'Активные',
-    optionValue: 'active',
-    params: '?status=active',
-    queryStatus: 'active',
+    title: "Активные",
+    optionValue: "active",
+    params: "?status=active",
+    queryStatus: "active",
   },
   {
-    title: 'Завершенные',
-    optionValue: 'completed',
-    params: '?status=completed',
-    queryStatus: 'completed',
+    title: "Завершенные",
+    optionValue: "completed",
+    params: "?status=completed",
+    queryStatus: "completed",
   },
   {
-    title: 'В пути',
-    optionValue: 'onTheWay',
-    params: '?status=onTheWay',
-    queryStatus: 'onTheWay',
+    title: "В пути",
+    optionValue: "onTheWay",
+    params: "?status=onTheWay",
+    queryStatus: "onTheWay",
   },
   {
-    title: 'Готовы к выдаче',
-    optionValue: 'pickupReady',
-    params: '?status=pickupReady',
-    queryStatus: 'pickupReady',
+    title: "Готовы к выдаче",
+    optionValue: "pickupReady",
+    params: "?status=pickupReady",
+    queryStatus: "pickupReady",
   },
   {
-    title: 'Отмененные',
-    optionValue: 'canceled',
-    params: '?status=canceled',
-    queryStatus: 'canceled',
+    title: "Отмененные",
+    optionValue: "canceled",
+    params: "?status=canceled",
+    queryStatus: "canceled",
   },
   // {
   //   title: 'В архиве',
@@ -255,40 +250,41 @@ const filters = [
   //   params: '?status=archived',
   //   queryStatus: 'archived',
   // },
-]
+];
 
-const customLinks = filters.map(filter => ({
+const customLinks = filters.map((filter) => ({
   title: filter.title,
-  slot: '/wildberries/delivery',
+  slot: "/wildberries/delivery",
   query: filter.params,
-}))
+}));
 
 const statusText = computed(() => {
-  return filters.find((el: any) => el.queryStatus === route.query.status)?.title
-})
+  return filters.find((el: any) => el.queryStatus === route.query.status)
+    ?.title;
+});
 
 function updateSearchType(filter: any) {
-  search.value.type = filter.value
+  search.value.type = filter.value;
 }
 
 function changeFilter(e: any) {
   mpStore.changeMp(
     e.value,
-    'delivery',
-    route.query?.status ? `?status=${route.query.status}` : '',
-  )
+    "delivery",
+    route.query?.status ? `?status=${route.query.status}` : ""
+  );
 }
 </script>
 
 <template>
   <div>
-    <div class="font-medium gap-1 mt-4">
+    <!-- <div class="font-medium gap-1 mt-4">
       Забирайте товары в течение 
       <span class="text-[#ff6666]">
         5 дней
       </span>
       после прибытия на пвз!
-    </div>
+    </div> -->
     <div class="">
       <div class="flex lg:hidden mt-2">
         <div v-if="deliveries.length" class="export">
@@ -297,15 +293,14 @@ function changeFilter(e: any) {
             disabled
             class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
           >
-            <span
-              class="loading loading-spinner loading-sm text-primary"
-            />
+            <span class="loading loading-spinner loading-sm text-primary" />
           </button>
           <div v-else class="dropdown">
             <label
               tabindex="0"
               class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content mr-2"
-            >XLS</label>
+              >XLS</label
+            >
             <ul
               tabindex="0"
               class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10"
@@ -330,7 +325,7 @@ function changeFilter(e: any) {
             class="input input-sm bg-base-300 bg-opacity-40 rounded-r-none w-full"
             placeholder="Поиск"
             @input="onSearchInput()"
-          >
+          />
           <div
             class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
             @click="codeInputMob.focus()"
@@ -346,7 +341,6 @@ function changeFilter(e: any) {
       <div class="flex gap-2 mt-2 lg:hidden">
         <CustomSelect
           class="h-[2rem] lg:hidden min-w-[100px]"
-
           :status-text="statusText"
           :links="customLinks"
         />
@@ -364,7 +358,6 @@ function changeFilter(e: any) {
         <div class="flex gap-2">
           <CustomSelect
             class="h-[2rem] hidden lg:flex min-w-[100px]"
-
             :status-text="statusText"
             :links="customLinks"
           />
@@ -390,7 +383,7 @@ function changeFilter(e: any) {
                   class="input input-sm bg-base-300 w-[134px] bg-opacity-40 rounded-r-none"
                   placeholder="Поиск"
                   @input="onSearchInput()"
-                >
+                />
                 <div
                   class="hover:bg-base-300 bg-base-300 bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
                   @click="codeInput.focus()"
@@ -415,15 +408,14 @@ function changeFilter(e: any) {
               disabled
               class="btn btn-sm btn-primary bg-opacity-20 border-none text-base-content mr-2"
             >
-              <span
-                class="loading loading-spinner loading-sm text-primary"
-              />
+              <span class="loading loading-spinner loading-sm text-primary" />
             </button>
             <div v-else class="dropdown dropdown-end z-10">
               <label
                 tabindex="0"
                 class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content m-1"
-              >XLS</label>
+                >XLS</label
+              >
               <ul
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
@@ -456,7 +448,7 @@ function changeFilter(e: any) {
           <li
             v-for="(delivery, index) of deliveries.slice(
               0,
-              Math.ceil(deliveries.length / 2),
+              Math.ceil(deliveries.length / 2)
             )"
             :key="index"
             class="overflow-visible z-0"
@@ -473,7 +465,7 @@ function changeFilter(e: any) {
         <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
           <li
             v-for="(delivery, index) of deliveries.slice(
-              Math.ceil(deliveries.length / 2),
+              Math.ceil(deliveries.length / 2)
             )"
             :key="index"
             class="overflow-visible z-0"
