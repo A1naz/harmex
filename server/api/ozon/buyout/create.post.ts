@@ -83,6 +83,7 @@ export default eventHandler(async (event) => {
       )
     }
 
+
     const rules = product.rules.map(rule => rule.id)
     const searchQueries = product.searchQuery.map((item: any) => item.value)
 
