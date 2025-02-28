@@ -77,6 +77,12 @@ export default eventHandler(async (event) => {
       )
     }
 
+    if (product.discountPrice <= 0) {
+      throw createError(
+        `Для продукта ${product.article} указана некорректная цена скидки`,
+      )
+    }
+
     const rules = product.rules.map(rule => rule.id)
     const searchQueries = product.searchQuery.map((item: any) => item.value)
 
@@ -116,10 +122,10 @@ export default eventHandler(async (event) => {
     }
 
     let city, state
-    ;({ city, state } = await getCityByGeo(
-      product.pointCoordinates.lat.toString(),
-      product.pointCoordinates.lon.toString(),
-    ))
+      ; ({ city, state } = await getCityByGeo(
+        product.pointCoordinates.lat.toString(),
+        product.pointCoordinates.lon.toString(),
+      ))
 
     const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
 
@@ -162,7 +168,7 @@ export default eventHandler(async (event) => {
     })
 
     await buyout.save()
- 
+
     await userLog(event, {
       documentType: DocuemntEnum.Buyout,
       documentId: buyout.uuid,

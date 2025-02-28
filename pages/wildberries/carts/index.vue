@@ -19,6 +19,7 @@ const search = reactive({
   error: false,
   type: "article",
 });
+const manualModal = ref(false);
 const codeInput = ref();
 const carts = ref([]) as any;
 const amount = ref(0);
@@ -317,6 +318,12 @@ const siteUrl = config.public.siteUrl;
               />
             </span>
           </div>
+          <!-- <button
+            @click="manualModal = true"
+            class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
+          >
+            <Icon name="ci:info" size="24" />
+          </button> -->
           <div class="flex lg:ml-auto gap-2 lg:gap-3">
             <CustomSelect
               class="h-[2rem] bg-[#f4f4f4] sm:min-w-[120px]"
