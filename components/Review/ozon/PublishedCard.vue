@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
-import { UseImage } from '@vueuse/components'
+import { notify } from "@kyvg/vue3-notification";
+import { UseImage } from "@vueuse/components";
 
 const props = defineProps({
   info: {
@@ -11,53 +11,54 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-})
+});
 const emit = defineEmits([
-  'callback',
-  'remove',
-  'openModal',
-  'openImage',
-  'removeReview',
-  'resumeStatus',
-  'logModal',
-])
-const router = useRouter()
-const config = useRuntimeConfig()
+  "callback",
+  "remove",
+  "openModal",
+  "openImage",
+  "removeReview",
+  "resumeStatus",
+  "logModal",
+  "infoModal",
+]);
+const router = useRouter();
+const config = useRuntimeConfig();
 
-const { $dayjs } = useNuxtApp()
-onMounted(() => {})
+const { $dayjs } = useNuxtApp();
+onMounted(() => {});
 const getStatus = computed(() => {
   switch (props.info.status) {
-    case 'created':
-      return 'Создан'
-    case 'waiting':
-      return 'В очереди'
-    case 'working':
-      return 'В работе'
-    case 'busy':
-      return 'В работе'
-    case 'published':
-      return 'Опубликован'
-    case 'canceled':
-      return 'Отменен'
-    case 'nofunds':
-      return 'Недостаточно средств'
-    case 'deleted':
-      return 'Удален'
-    case 'deleting':
-      return 'На удалении'
+    case "created":
+      return "Создан";
+    case "waiting":
+      return "В очереди";
+    case "working":
+      return "В работе";
+    case "busy":
+      return "В работе";
+    case "published":
+      return "Опубликован";
+    case "canceled":
+      return "Отменен";
+    case "nofunds":
+      return "Недостаточно средств";
+    case "deleted":
+      return "Удален";
+    case "deleting":
+      return "На удалении";
   }
-})
+});
 
 function openBuyout() {
-  router.push(`/ozon/buyouts?uuid=${props.info.buyoutuuid}`)
+  router.push(`/ozon/buyouts?uuid=${props.info.buyoutuuid}`);
 }
 
 function removeReview() {
-  emit('removeReview', props.info.id)
+  emit("removeReview", props.info.id);
 }
 async function resumeStatus(item: any) {
-  emit('resumeStatus', item)
+  emit("resumeStatus", item);
 }
 </script>
 
@@ -66,231 +67,146 @@ async function resumeStatus(item: any) {
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
     >
-      <div class="flex justify-between">
-        <span class="text-sm my-auto">{{ defaultDate(info.date) }}</span>
-        <div class="flex gap-1">
-          <button
-            class="btn btn-sm btn-ghost btn-circle hover:text-primary"
-            @click="emit('logModal', info)"
-          >
-            <svg
-              data-v-f136eeaa=""
-              data-v-a5d236d9=""
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              aria-hidden="true"
-              role="img"
-              class="icon"
-              width="20px"
-              height="20px"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                fill-rule="evenodd"
-                d="M4 7h8.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-2.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2m0 8h2.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-8.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
-          <button
-            v-if="info.status === 'published'"
-            class="btn btn-sm btn-ghost btn-circle hover:text-primary"
-            @click="emit('removeReview', info.id)"
-          >
-            <Icon name="heroicons-outline:trash" size="30" class="" />
-          </button>
+      <div class="flex gap-3 w-full truncate mt-6">
+        <div
+          class="flex-none"
+          style="
+            width: 80px;
+            height: 80px;
+            margin-top: auto;
+            margin-bottom: auto;
+          "
+        >
+          <nuxt-img
+            class="rounded-xl h-full"
+            width="120"
+            height="150"
+            format="webp"
+            loading="lazy"
+            :src="info?.product?.image || '/logo/logocolor.svg'"
+          />
         </div>
-      </div>
-      <div class="flex gap-1">
-        <span
-          :class="{
-            'bg-success bg-opacity-50 text-green-500':
-              info.status === 'working' || info.status === 'published' || info.status === 'busy',
-            'bg-[#F8C68A] text-[#D67500]':
-              info.status === 'waiting'
-              || info.status === 'created',
-            'bg-[#F8C68A]  text-red-500':
-              info.status === 'nofunds',
-            'bg-[#FF685E] text-[#9C0A00]':
-              info.status === 'canceled'
-              || info.status === 'deleted'
-              || info.status === 'deleting',
-          }"
-          class="text-black p-1.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
-        >{{ getStatus }}
-        </span>
-        <button v-if="info.status === 'nofunds'" class="btn btn-ghost btn-sm btn-square my-2.5 text-base-content hover:text-primary w-fit p-1.5 px-4 rounded-full border-[#6675ff] dark:border-primary dark:border-opacity-20" @click="resumeStatus(info)">
-          Возобновить
-        </button>
-      </div>
-      <div class="flex justify-between item gap-2 mb-2 flex-wrap">
-        <h2 v-if="info.draftName" class="card-title">
-          {{ info.draftName }}
-        </h2>
-        <div v-else class="flex gap-3">
-          <h2 class="card-title text-2xl font-bold">
-            Отзыв
-          </h2>
-          <div
-            class="bg-base-300 rounded-md text-md font-normal my-auto p-0.5 mt-1 px-2"
-          >
-            Ozon
-          </div>
-        </div>
-      </div>
-      <label
-        class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate "
-        @click="openBuyout"
-      >#{{ info.buyoutuuid }}</label>
-      <div class="flex flex-col gap-4">
-        <div class="flex flex-col">
-          <div class="relative w-full rounded-lg">
-            <div class="truncate">
-              {{ info.name }}
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-1.5">
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Создано:
+              </span>
+              <button
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
+              >
+                {{ $dayjs(info.date).format("DD.MM.YYYY HH:mm") }}
+              </button>
             </div>
-            <a
-              :href="`https://www.ozon.ru/product/${info.article}`"
-              target="_blank"
-              class="text-sm text-primary link link-hover"
-            >
-              {{ info.article }}
-            </a>
-          </div>
-        </div>
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Статус:
+              </span>
+              <button class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                <span
+                  :class="{
+                    'bg-success bg-opacity-50 text-green-500':
+                      info.status === 'working' ||
+                      info.status === 'published' ||
+                      info.status === 'busy',
+                    'bg-[#F8C68A] text-[#D67500]':
+                      info.status === 'waiting' || info.status === 'created',
+                    'bg-[#F8C68A]  text-red-500': info.status === 'nofunds',
+                    'bg-[#FF685E] text-[#9C0A00]':
+                      info.status === 'canceled' ||
+                      info.status === 'deleted' ||
+                      info.status === 'deleting',
+                  }"
+                  class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
+                  >{{ getStatus }}
+                </span>
+              </button>
+            </div>
+            <div class="flex gap-2 w-2/3" v-if="info.completedDate">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Выполнено:
+              </span>
+              <button
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
+              >
+                {{ $dayjs(info.completedDate).format("DD.MM.YYYY HH:mm") }}
+              </button>
+            </div>
 
-        <div>
-          <div class="font-bold">
-            Рейтинг
-          </div>
-          <div class="relative w-full rounded-lg">
-            <div class="rating gap-2">
-              <input
-                type="radio"
-                disabled
-                :checked="info.rating === 1"
-                :name="`rating${index}`"
-                class="mask mask-star-2 bg-yellow-400"
-              >
-              <input
-                type="radio"
-                disabled
-                :checked="info.rating === 2"
-                :name="`rating${index}`"
-                class="mask mask-star-2 bg-yellow-400"
-              >
-              <input
-                type="radio"
-                disabled
-                :checked="info.rating === 3"
-                :name="`rating${index}`"
-                class="mask mask-star-2 bg-yellow-400"
-              >
-              <input
-                type="radio"
-                disabled
-                :checked="info.rating === 4"
-                :name="`rating${index}`"
-                class="mask mask-star-2 bg-yellow-400"
-              >
-              <input
-                type="radio"
-                disabled
-                :checked="info.rating === 5"
-                :name="`rating${index}`"
-                class="mask mask-star-2 bg-yellow-400"
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >ID:
+              </span>
+              <label
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] link-hover hover:text-primary truncate"
+                @click="openBuyout"
+                >#{{ info.buyoutuuid }}</label
               >
             </div>
-          </div>
-        </div>
-        <div class="w-full">
-          <div class="font-bold">
-            Отзыв о товаре
-          </div>
-          <div
-            class="w-full bg-base-100 h-auto overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-100 scrollbar-thin"
-          >
-            {{ info.text }}
-          </div>
-        </div>
-        <div class="w-full">
-          <div class="font-bold">
-            Достоинства
-          </div>
-          <div
-            class="w-full bg-base-100 h-auto overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-100 scrollbar-thin"
-          >
-            {{ info.positive }}
-          </div>
-        </div>
-        <div class="w-full">
-          <div class="font-bold">
-            Недостатки
-          </div>
-          <div
-            class="w-full bg-base-100 h-auto overflow-y-auto scrollbar-thumb-primary scrollbar-track-base-100 scrollbar-thin"
-          >
-            {{ info.negative }}
-          </div>
-        </div>
-        <!-- <div>
-          <div class="font-bold">Дата отзыва</div>
-          <div class="relative w-full rounded-lg">
-            <div>
-              {{ defaultDate(info.date) }}
-            </div>
-          </div>
-        </div> -->
-        <div>
-          <div class="font-bold pb-1">
-            Фото
-          </div>
-
-          <div
-            class="flex gap-2 items-center overflow-x-auto flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]"
-          >
-            <div v-for="(photo, i) of info.images" :key="i">
-              <label v-if="photo" for="reviewImageModal">
-                <div
-                  class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-16 h-16 hover:bg-base-200 rounded-lg flex-none"
-                  @click="() => emit('openImage', photo.startsWith('http') ? photo : `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`)"
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Товар:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
+              >
+                <a
+                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+                  target="_blank"
+                  class="link link-hover"
                 >
-                  <div class="absolute inset-0">
-                    <UseImage :src="photo.startsWith('http') ? photo : `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`">
-                      <template #default>
-                        <nuxt-img
-                          :src="photo.startsWith('http') ? photo : `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`"
-                          class="w-full h-full object-contain rounded-lg"
-                          loading="lazy"
-                        />
-                      </template>
-                      <template #loading>
-                        <div
-                          class="absolute inset-0 flex items-center justify-center"
-                        >
-                          <Icon
-                            name="mdi:loading"
-                            class="loader ease-linear h-8 w-8 animate-spin"
-                          />
-                        </div>
-                      </template>
-                      <template #error>
-                        <div
-                          class="absolute inset-0 flex items-center justify-center"
-                        >
-                          <div class="text-red-500 text-center">
-                            Ошибка загрузки
-                          </div>
-                        </div>
-                      </template>
-                    </UseImage>
-                  </div>
-                </div>
-              </label>
+                  {{ info.article }}
+                </a>
+              </div>
+            </div>
+
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Название:
+              </span>
+              <div class="truncate text-[0.9rem] text-bold">
+                {{ info.product?.name }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Пол:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ info.gender }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Цена:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ info.product?.priceText }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Площадка:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                Wildberries
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="flex gap-2 w-2/3" v-if="!info.completedDate">
+        <span class="text-sm text-[0.725rem] text-gray-500 my-auto"> </span>
+        <button
+          class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate h-5"
+        ></button>
+      </div>
+      <button
+        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
+        @click="emit('infoModal', info)"
+      >
+        Детали
+      </button>
     </div>
   </div>
 </template>

@@ -1,44 +1,43 @@
-import type { Rule } from '@/data/buyout/rules'
-import { Buyout } from '@/server/lib/models/ozon/Buyout'
-import { v4 as uuid } from 'uuid'
-import { DocuemntEnum } from '~/data/enums'
-import { getDisctrict } from '~/server/utils/getDisctrict'
-import getPickpoints from '~/server/utils/ozon/getOzonPoints'
-import { userLog } from '~/server/utils/userLog'
+import type { Rule } from "@/data/buyout/rules";
+import { Buyout } from "@/server/lib/models/ozon/Buyout";
+import { v4 as uuid } from "uuid";
+import { DocuemntEnum } from "~/data/enums";
+import { getDisctrict } from "~/server/utils/getDisctrict";
+import getPickpoints from "~/server/utils/ozon/getOzonPoints";
+import { userLog } from "~/server/utils/userLog";
 
 interface Item {
-  image: string
-  name: string
-  article: number
-  price: number
-  priceText: string
-  quantity: number
-  sizes: number[] | string[]
-  sex: string
-  searchQuery: any[]
-  adress: string
-  dateRange: [Date, Date]
-  newDateRange: [Date, Date]
-  selectedSize: number | string
-  rules: Rule[]
-  purchaseSoon: boolean
-  key: boolean
+  image: string;
+  name: string;
+  article: number;
+  price: number;
+  priceText: string;
+  quantity: number;
+  sizes: number[] | string[];
+  sex: string;
+  searchQuery: any[];
+  adress: string;
+  dateRange: [Date, Date];
+  newDateRange: [Date, Date];
+  selectedSize: number | string;
+  rules: Rule[];
+  purchaseSoon: boolean;
+  key: boolean;
   pointCoordinates: {
-    lat: number
-    lon: number
-  }
-  pointId: string
-  discount: boolean
-  discountRequestPrice: number
-  discountPrice: number
-  promoCode: string
-  addressInfo: any
-  FBS: boolean
+    lat: number;
+    lon: number;
+  };
+  pointId: string;
+  discount: boolean;
+  discountRequestPrice: number;
+  discountPrice: number;
+  promoCode: string;
+  addressInfo: any;
+  FBS: boolean;
 }
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
   // if (!user.fizFace && !user.bik && !user.rs) {
   //   throw createError(
@@ -46,93 +45,91 @@ export default eventHandler(async (event) => {
   //   )
   // }
 
-  const body = await readBody(event)
-  const last = await Buyout.findOne({ user }).sort({ _id: -1 })
-  const params = getQuery(event)
-  const { userTimezoneOffsetHours, userOffsetMinutes } = params
+  const body = await readBody(event);
+  const last = await Buyout.findOne({ user }).sort({ _id: -1 });
+  const params = getQuery(event);
+  const { userTimezoneOffsetHours, userOffsetMinutes } = params;
 
   const activeBuyouts = await Buyout.find({
     user,
-    status: { $in: ['active', 'work', 'created'] },
-  })
+    status: { $in: ["active", "work", "created"] },
+  });
   const sum = activeBuyouts.reduce((acc, item: any) => {
-    const price
-      = Number.parseInt(item.product.price) * (item.quantity - item.completed)
-    return acc + price
-  }, 0)
+    const price =
+      Number.parseInt(item.product.price) * (item.quantity - item.completed);
+    return acc + price;
+  }, 0);
 
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
 
   // const { points } = await getPickpoints()
 
-  const products: Item[] = body
+  const products: Item[] = body;
   if (products.length > 10) {
-    throw createError('Можно создать максимум 10 выкупов за раз')
+    throw createError("Можно создать максимум 10 выкупов за раз");
   }
   for await (const product of products) {
     if (product.searchQuery.length > 5) {
       throw createError(
-        `Для продукта ${product.article} указано больше 5 поисковых запросов`,
-      )
+        `Для продукта ${product.article} указано больше 5 поисковых запросов`
+      );
     }
 
     if (product.discountPrice <= 0) {
       throw createError(
-        `Для продукта ${product.article} указана некорректная цена скидки`,
-      )
+        `Для продукта ${product.article} указана некорректная цена скидки`
+      );
     }
 
-
-    const rules = product.rules.map(rule => rule.id)
-    const searchQueries = product.searchQuery.map((item: any) => item.value)
+    const rules = product.rules.map((rule) => rule.id);
+    const searchQueries = product.searchQuery.map((item: any) => item.value);
 
     if (userTimezoneOffsetHours && userOffsetMinutes) {
       const date1 = product.purchaseSoon
         ? new Date()
-        : new Date(product.dateRange[0])
+        : new Date(product.dateRange[0]);
       const date2 = product.purchaseSoon
         ? new Date()
-        : new Date(product.dateRange[1])
+        : new Date(product.dateRange[1]);
 
       if (!product.purchaseSoon) {
         date1.setHours(
-          date1.getHours(),
+          date1.getHours()
           //  + Number(userTimezoneOffsetHours)
-        )
+        );
         date1.setMinutes(
-          date1.getMinutes(),
+          date1.getMinutes()
           //  + Number(userOffsetMinutes)
-        )
+        );
 
         date2.setHours(
-          date2.getHours(),
+          date2.getHours()
           //  + Number(userTimezoneOffsetHours)
-        )
+        );
         date2.setMinutes(
-          date2.getMinutes(),
+          date2.getMinutes()
           // + Number(userOffsetMinutes)
-        )
-      }
-      else {
-        date1.setHours(date1.getHours())
-        date2.setHours(date2.getHours())
+        );
+      } else {
+        date1.setHours(date1.getHours());
+        date2.setHours(date2.getHours());
       }
 
-      product.dateRange = [date1, date2]
+      product.dateRange = [date1, date2];
     }
 
-    let city, state
-      ; ({ city, state } = await getCityByGeo(
-        product.pointCoordinates.lat.toString(),
-        product.pointCoordinates.lon.toString(),
-      ))
+    let city, state;
+    ({ city, state } = await getCityByGeo(
+      product.pointCoordinates.lat.toString(),
+      product.pointCoordinates.lon.toString()
+    ));
 
-    const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
+    const { pointRegion, pointDistrict } = await getDisctrict(product.adress);
 
     const buyout = new Buyout({
       article: product.article,
-      searchQuery: searchQueries.join(', '),
+      searchQuery: searchQueries.join(", "),
       point: product.adress,
       pointCoordinates: product.pointCoordinates,
       point_city: city,
@@ -143,7 +140,7 @@ export default eventHandler(async (event) => {
       sizeparam: product.selectedSize,
       quantity: product.quantity,
       gender: product.sex,
-      status: 'active',
+      status: "active",
       user,
       rules,
       product: {
@@ -153,8 +150,9 @@ export default eventHandler(async (event) => {
         image: product.image,
       },
       uuid: uuid(),
-      discount:
-        !!(product.discountPrice !== product.price && product.discountPrice !== 0),
+      discount: !!(
+        product.discountPrice !== product.price && product.discountPrice !== 0
+      ),
       discountPrice: product.discountPrice,
       // discountRequestPrice: product.discountRequestPrice,
       place: last ? last.place + 1 : 1,
@@ -165,16 +163,17 @@ export default eventHandler(async (event) => {
       FBS: product.FBS,
       addressInfo: product.addressInfo,
       promocode: product.promoCode,
-      isPromocodeEnabled: product.promoCode && product.promoCode !== '' ? true : false,
-    })
+      isPromocodeEnabled:
+        product.promoCode && product.promoCode !== "" ? true : false,
+    });
 
-    await buyout.save()
+    await buyout.save();
 
     await userLog(event, {
       documentType: DocuemntEnum.Buyout,
       documentId: buyout.uuid,
-    })
+    });
   }
 
-  return { status: 'ok' }
-})
+  return { status: "ok" };
+});

@@ -725,9 +725,7 @@ const handleMouseUp = (event: any) => {
         <div>
           <div class="pb-2 font-medium">
             Запланировать отзыв
-            <span class="text-xs font-normal text-gray-500"
-              >(по Московскому времени)</span
-            >
+    
           </div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">

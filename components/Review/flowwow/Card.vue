@@ -33,119 +33,94 @@ function openBuyout() {
 </script>
 
 <template>
-  <div
-    class="rounded-lg bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none text-base-content"
-  >
-    <div class="p-4 relative text-xl font-medium flex flex-col gap-2">
-      <label
-        class="text-[0.6rem] self-start link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate lg:hidden"
-        @click="openBuyout"
-        >#{{ buyoutuuId }}</label
-      >
-      <div class="flex gap-4">
-        <a
-          class=""
-          :href="
-            info.url && info.url[0]
-              ? info.url[0]
-              : `https://www.flowwow.ru/${article}`
+  <div class="card bg-base-100 shadow-lg min-w-[214px]">
+    <div
+      class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-3 relative"
+    >
+      <div class="flex gap-3 w-full truncate mt-6">
+        <div
+          class="flex-none"
+          style="
+            width: 80px;
+            height: 124px;
+            margin-top: auto;
+            margin-bottom: auto;
           "
-          target="_blank"
         >
-          <div class="dropdown dropdown-hover">
-            <label tabindex="0">
-              <nuxt-img
-                width="36"
-                class="rounded-lg"
-                loading="lazy"
-                fit="fill"
-                :src="productimage"
-              />
-            </label>
-            <ul
-              tabindex="0"
-              class="dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52 z-10"
-            >
-              <nuxt-img
-                class="rounded-lg"
-                loading="lazy"
-                fit="fill"
-                :src="productimage"
-              />
-            </ul>
-          </div>
-        </a>
-        <div class="w-full">
-          <div class="flex justify-between flex-wrap">
-            <div class="flex gap-2.5">
-              <span> {{ productname }} </span>
-              <!-- <a
-                :href="`https://www.flowwow.ru/${article}`"
-                target="_blank"
-                class="text-sm mt-1.5 text-primary link link-hover"
+          <nuxt-img
+            class="rounded-xl h-full"
+            width="120"
+            height="150"
+            format="webp"
+            loading="lazy"
+            :src="productimage || '/logo/logocolor.svg'"
+          />
+        </div>
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-1.5">
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Товар:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
               >
-                {{ article }}
-              </a> -->
-            </div>
-            <label
-              class="text-[0.6rem] self-end link link-hover sm:text-[0.8rem] lg:text-xs text-gray-500 hover:text-primary truncate hidden lg:block"
-              @click="openBuyout"
-              >#{{ buyoutuuId }}</label
-            >
-          </div>
-          <div
-            class="flex justify-between flex-wrap gap-2 items-center mt-2 mb-2"
-          >
-            <div
-              class="lg:m-0 text-xs bg-[#ff5e34b3] border-none text-base-content rounded-md px-4 py-1.5"
-            >
-              Обновлено
-              {{ $dayjs(updatedAt).locale("ru").format("D MMMM YYYY HH:mm") }}
-            </div>
-          </div>
-          <div class="flex justify-between flex-wrap gap-2 items-center mt-1">
-            <div class="flex gap-4 text-sm">
-              <div class="text-gray-500">
-                Пол:
-                <span
-                  class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F] px-1 text-base-content py-0.5 ml-1"
-                  >{{ sex }}</span
+                <a
+                  :href="
+                    info.url && info.url[0]
+                      ? info.url[0]
+                      : `https://www.flowwow.ru/${article}`
+                  "
+                  target="_blank"
+                  class="link link-hover"
                 >
-              </div>
-              <div class="text-gray-500">
-                Размер:
-                <span
-                  class="rounded-md bg-[#FDD5C9] dark:bg-[#9C4F4F] px-1 text-base-content py-0.5 ml-1"
-                  >{{ size === "none" ? "Нет" : size }}</span
-                >
+                  {{ info.article }}
+                </a>
               </div>
             </div>
 
-            <div class="flex-col justify-center gap-2 hidden lg:flex">
-              <label
-                for="review-modal"
-                class="btn btn-md text-lg btn-primary"
-                @click="$emit('openModal', buyoutuuId, deliveryId)"
-                >Оставить отзыв (доступно: {{ countAllAvailable }})
-              </label>
-              <!-- <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
-            Скоро будет доступно еще {{ countSoonAvailable }}
-          </div> -->
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Название:
+              </span>
+              <div class="truncate text-[0.9rem] text-bold">
+                {{ productname }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Статус:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                Доступно
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Площадка:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                Flowwow
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Количество:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ countAllAvailable }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="flex flex-col justify-center gap-2 lg:hidden">
-        <label
-          for="review-modal"
-          class="btn btn-sm btn-primary h-10"
-          @click="$emit('openModal', buyoutuuId, deliveryId)"
-          >Оставить отзыв (доступно: {{ countAllAvailable }})
-        </label>
-        <!-- <div v-if="countSoonAvailable" class="text-xs text-warning mx-auto">
-            Скоро будет доступно еще {{ countSoonAvailable }}
-          </div> -->
-      </div>
+      <label
+        for="review-modal"
+        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
+        @click="$emit('openModal', buyoutuuId, deliveryId)"
+      >
+        Создать заявку
+      </label>
     </div>
   </div>
 </template>

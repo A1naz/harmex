@@ -18,6 +18,7 @@ const mpStore = useMPStore();
 const router = useRouter();
 
 const logModal = ref(false);
+const infoModal = ref(false);
 const selectedReview = ref({
   uuid: "",
 });
@@ -452,7 +453,7 @@ const siteUrl = config.public.siteUrl;
         >
           <div
             v-if="currentTab === 'available' || currentTab === 'all'"
-            class="cards grid grid-cols-1 gap-4"
+          class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
           >
             <ReviewOzonCard
               v-for="(review, index) of availableReviews"
@@ -468,7 +469,7 @@ const siteUrl = config.public.siteUrl;
           ></div>
           <div
             v-if="currentTab !== 'available'"
-            class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
+            class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
           >
             <ReviewOzonPublishedCard
               v-for="(review, index) of reviews"
@@ -480,6 +481,7 @@ const siteUrl = config.public.siteUrl;
               @resume-status="resumeStatus"
               @get-review="fetchData()"
               @log-modal="(item: any) => [(selectedReview = item), (logModal = true)]"
+              @info-modal="(item: any) => [(selectedReview = item), (infoModal = true)]"
             />
           </div>
 
@@ -766,6 +768,11 @@ const siteUrl = config.public.siteUrl;
       :info="selectedReview"
       :state="logModal"
       @close="logModal = false"
+    />
+    <ReviewOzonInfoModal
+      :info="selectedReview"
+      :state="infoModal"
+      @close="infoModal = false"
     />
   </div>
 </template>

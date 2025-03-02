@@ -1,53 +1,63 @@
-import { SelectOptionsReviews } from '@/data/enums'
-import { Review } from '~~/server/lib/models/ozon/Review'
-import { ObjectId } from 'mongodb'
-import { Delivery } from '~/server/lib/models/ozon/Delivery'
+import { SelectOptionsReviews } from "@/data/enums";
+import { Review } from "~~/server/lib/models/ozon/Review";
+import { ObjectId } from "mongodb";
+import { Delivery } from "~/server/lib/models/ozon/Delivery";
+import { Buyout } from "~/server/lib/models/ozon/Buyout";
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { skip, limit, tab, search } = getQuery(event)
+  const { skip, limit, tab, search } = getQuery(event);
 
-  let searchParse = search ? JSON.parse(search?.toString()) : {}
+  let searchParse = search ? JSON.parse(search?.toString()) : {};
 
-  if (Object.values(searchParse)[0] !== '') {
+  if (Object.values(searchParse)[0] !== "") {
     // eslint-disable-next-line eqeqeq
     if (Object.keys(searchParse)[0] == SelectOptionsReviews.idReview) {
-      searchParse = { _id: new ObjectId(searchParse[SelectOptionsReviews.idReview]) }
+      searchParse = {
+        _id: new ObjectId(searchParse[SelectOptionsReviews.idReview]),
+      };
     }
   }
 
-  let reviews: any = []
-  let query: any = { user }
+  let reviews: any = [];
+  let query: any = { user };
 
   if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
-    query = Object.assign(query, searchParse)
+    query = Object.assign(query, searchParse);
   }
 
-  if (tab === 'all') {
+  if (tab === "all") {
     reviews = await Review.find(query)
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
-      .limit((limit as number) || 0)
-  }
-  else if (tab === 'work') {
-    query = Object.assign(query, { status: { $in: ['created', 'working', 'waiting', 'work'] } })
+      .limit((limit as number) || 0);
+  } else if (tab === "work") {
+    query = Object.assign(query, {
+      status: { $in: ["created", "working", "waiting", "work"] },
+    });
     reviews = await Review.find(query)
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
-      .limit((limit as number) || 0)
-  }
-  else if (tab) {
-    query = Object.assign(query, { status: tab.toString() })
+      .limit((limit as number) || 0);
+  } else if (tab) {
+    query = Object.assign(query, { status: tab.toString() });
     reviews = await Review.find(query)
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
-      .limit((limit as number) || 0)
+      .limit((limit as number) || 0);
   }
 
-  const deliveries = await Delivery.find({ _id: { $in: reviews.map((rev: any) => rev.delivery) } })
+  const deliveries = await Delivery.find({
+    _id: { $in: reviews.map((rev: any) => rev.delivery) },
+  });
+
+  const buyouts = await Buyout.find({
+    _id: { $in: deliveries.map((del: any) => del.idbuyout) },
+  });
+
+
   let format = await Promise.all(
     reviews.map(async (review: any) => {
       const format: any = {
@@ -55,6 +65,7 @@ export default eventHandler(async (event) => {
         article: review.article,
         name: review.name,
         text: review.text,
+        sex: review.sex,
         positive: review.positive,
         negative: review.negative,
         rating: review.rating,
@@ -62,27 +73,38 @@ export default eventHandler(async (event) => {
         date: review.date,
         status: review.status,
         uuid: review.uuid,
-      }
+      };
 
       // eslint-disable-next-line eqeqeq
-      const delivery = deliveries.find((delivery: any) => delivery._id.valueOf() == review.delivery.valueOf())
+      const delivery = deliveries.find(
+        (delivery: any) => delivery._id.valueOf() == review.delivery.valueOf()
+      );
       if (delivery) {
-        format.buyoutuuid = delivery.uuidbuyout
+        format.buyoutuuid = delivery.uuidbuyout;
+        const buyout = buyouts.find(
+          (buyout: any) => buyout._id.valueOf() == delivery.idbuyout.valueOf()
+        );
+        if (buyout) {
+          format.product = buyout.product;
+          format.gender = buyout.gender
+        }
       }
 
-      return format
-    }),
-  )
+      return format;
+    })
+  );
 
   // eslint-disable-next-line eqeqeq
   if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
     // eslint-disable-next-line eqeqeq
-    format = format.filter(rev => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout])
+    format = format.filter(
+      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout]
+    );
   }
 
   return {
-    reviews: format
-  }
-})
+    reviews: format,
+  };
+});
 
 // refactor all this

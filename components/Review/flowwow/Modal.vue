@@ -536,9 +536,9 @@ const handleMouseUp = (event: any) => {
           class="m-6"
         >
           {{
-            `${defaultDateShort(rev.updatedAt)} - пол: ${rev.sex} - размер: ${
-              rev.sizeparam
-            } - цена: ${rev.pricebuy}р.`
+            `${defaultDateShort(rev.updatedAt)} ${
+              rev.sex == "Нет" ? "" : " - пол: " + rev.sex
+            } - размер: ${rev.sizeparam} - цена: ${rev.pricebuy}р.`
           }}
         </option>
       </select>
@@ -571,164 +571,45 @@ const handleMouseUp = (event: any) => {
           </div>
         </div>
 
-        <div>
-          <div class="font-medium">Соответствие</div>
-          <div class="relative w-full py-6 bg-base-100 rounded-lg">
-            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
-            <div class="rating absolute left-0 top-3 gap-2">
-              <input
-                type="button"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.conformityRating = 4"
-              />
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                checked
-                @input="form.conformityRating = 5"
-              />
-            </div>
+        <div class="font-medium w-full justify-start gap-2 flex flex-row">
+          <div>Соответствие</div>
+
+          <div class="flex items-center text-sm">
+            <span v-for="star in 5" :key="star" class="text-yellow-600">
+              <Icon name="mdi:star" />
+            </span>
           </div>
-          <div class="font-medium">Цена/Качество</div>
-          <div class="relative w-full py-6 bg-base-100 rounded-lg">
-            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
-            <div class="rating absolute left-0 top-3 gap-2">
-              <input
-                type="button"
-                name="rating-3"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-3"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-3"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="radio"
-                name="rating-3"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.valuePerMoneyRating = 4"
-              />
-              <input
-                type="radio"
-                name="rating-3"
-                class="mask mask-star-2 bg-yellow-400"
-                checked
-                @input="form.valuePerMoneyRating = 5"
-              />
-            </div>
+        </div>
+        <div class="font-medium w-full justify-start gap-2 flex flex-row">
+          <div>Цена/качество</div>
+
+          <div class="flex items-center text-sm">
+            <span v-for="star in 5" :key="star" class="text-yellow-600">
+              <Icon name="mdi:star" />
+            </span>
           </div>
-          <div class="font-medium">Сервис</div>
-          <div class="relative w-full py-6 bg-base-100 rounded-lg">
-            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
-            <div class="rating absolute left-0 top-3 gap-2">
-              <input
-                type="button"
-                name="rating-4"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-4"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-4"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="radio"
-                name="rating-4"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.serviceRating = 4"
-              />
-              <input
-                type="radio"
-                name="rating-4"
-                class="mask mask-star-2 bg-yellow-400"
-                checked
-                @input="form.serviceRating = 5"
-              />
-            </div>
+        </div>
+        <div class="font-medium w-full justify-start gap-2 flex flex-row">
+          <div>Сервис</div>
+
+          <div class="flex items-center text-sm">
+            <span v-for="star in 5" :key="star" class="text-yellow-600">
+              <Icon name="mdi:star" />
+            </span>
           </div>
-          <div class="font-medium">Доставка</div>
-          <div class="relative w-full py-6 bg-base-100 rounded-lg">
-            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
-            <div class="rating absolute left-0 top-3 gap-2">
-              <input
-                type="button"
-                name="rating-5"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-5"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-5"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="radio"
-                name="rating-5"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.deliveryRating = 4"
-              />
-              <input
-                type="radio"
-                name="rating-5"
-                class="mask mask-star-2 bg-yellow-400"
-                checked
-                @input="form.deliveryRating = 5"
-              />
-            </div>
+        </div>
+        <div class="font-medium w-full justify-start gap-2 flex flex-row">
+          <div>Доставка</div>
+
+          <div class="flex items-center text-sm">
+            <span v-for="star in 5" :key="star" class="text-yellow-600">
+              <Icon name="mdi:star" />
+            </span>
           </div>
         </div>
 
         <div>
-          <div class="pb-2 font-medium">
-            Запланировать отзыв
-            <span class="text-xs font-normal text-gray-500"
-              >(по Московскому времени)</span
-            >
-          </div>
+          <div class="pb-2 font-medium">Запланировать отзыв </div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
               {{

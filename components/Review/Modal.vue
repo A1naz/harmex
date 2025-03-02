@@ -305,53 +305,18 @@ onMounted(() => {
           </div>
         </div>
 
-        <div>
-          <div class="font-medium">Рейтинг</div>
-          <div class="relative w-full py-6 bg-base-100 rounded-lg">
-            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
-            <div class="rating absolute left-0 top-3 gap-2">
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 1"
-              />
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 2"
-              />
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 3"
-              />
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 4"
-              />
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                checked
-                @input="form.rating = 5"
-              />
+        <div class="font-medium w-full justify-start gap-2 flex flex-row">
+          <div>Рейтинг</div>
+
+            <div class="flex items-center text-sm">
+            <span v-for="star in 5" :key="star" class="text-yellow-600">
+              <Icon name="mdi:star" />
+            </span>
             </div>
-          </div>
         </div>
 
         <div>
-          <div class="pb-2 font-medium">
-            Запланировать отзыв
-            <span class="text-xs font-normal text-gray-500"
-              >(по Московскому времени)</span
-            >
-          </div>
+          <div class="pb-2 font-medium">Запланировать отзыв</div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
               {{

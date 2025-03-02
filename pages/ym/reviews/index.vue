@@ -456,7 +456,7 @@ const siteUrl = config.public.siteUrl;
         >
           <div
             v-if="currentTab === 'available' || currentTab === 'all'"
-            class="cards grid grid-cols-1 gap-4"
+            class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
           >
             <ReviewYandexMarketCard
               v-for="(review, index) of availableReviews"

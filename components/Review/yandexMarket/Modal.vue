@@ -85,6 +85,8 @@ const selectedDeliv = ref({
 });
 
 const loadingIndex = ref(null) as Ref<number | null>;
+const videoThumbnail = ref<string | null>(null);
+const videoInput = ref<HTMLInputElement | null>(null);
 
 async function checkVideo(file: any) {
   return new Promise((resolve) => {
@@ -374,6 +376,7 @@ async function renameFile() {
           title: "Успешно",
           text: "Файл загружен",
         });
+        uploadProgress.value = "Файл загружен";
       } else {
         notify({
           title: "Что-то пошло не так",
@@ -423,6 +426,8 @@ async function handleFileChange(e: any) {
   fileHash.value = hash;
   filetype.value = file.type;
   form.video = file.name;
+
+  videoThumbnail.value = await generateVideoThumbnail(file);
 
   const upload: any = new Upload(file, {
     endpoint: "https://videos.videos.harmex.ru/uploads",
@@ -496,6 +501,37 @@ const handleMouseUp = (event: any) => {
     emit("close"); // Отправляем событие закрытия
   }
 };
+
+async function clearVideo() {
+  form.video = "";
+  isUploading.value = false;
+  uploadProgress.value = "";
+  fileHash.value = "";
+  filetype.value = "";
+  newFileId.value = "";
+  videoThumbnail.value = null;
+  if (videoInput.value) {
+    videoInput.value.value = "";
+  }
+}
+
+async function generateVideoThumbnail(file: File) {
+  return new Promise<string>((resolve) => {
+    const videoElement = document.createElement("video");
+    videoElement.src = URL.createObjectURL(file);
+    videoElement.currentTime = 1; // Capture the thumbnail at 1 second
+
+    videoElement.onloadeddata = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = videoElement.videoWidth;
+      canvas.height = videoElement.videoHeight;
+      const context = canvas.getContext("2d");
+      context?.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      const thumbnail = canvas.toDataURL("image/png");
+      resolve(thumbnail);
+    };
+  });
+}
 </script>
 
 <template>
@@ -536,9 +572,9 @@ const handleMouseUp = (event: any) => {
           class="m-6"
         >
           {{
-            `${defaultDateShort(rev.updatedAt)} - пол: ${rev.sex} - размер: ${
-              rev.sizeparam
-            } - цена: ${rev.pricebuy}р.`
+            `${defaultDateShort(rev.updatedAt)} ${
+              rev.sex == "Нет" ? "" : " - пол: " + rev.sex
+            } - размер: ${rev.sizeparam} - цена: ${rev.pricebuy}р.`
           }}
         </option>
       </select>
@@ -586,53 +622,18 @@ const handleMouseUp = (event: any) => {
           </div>
         </div>
 
-        <div>
-          <div class="font-medium">Рейтинг</div>
-          <div class="relative w-full py-6 bg-base-100 rounded-lg">
-            <!-- <div class="absolute left-3 top-3 text-gray-400">Оценка</div> -->
-            <div class="rating absolute left-0 top-3 gap-2">
-              <input
-                type="button"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="button"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @click="ratingAlert"
-              />
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 4"
-              />
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                checked
-                @input="form.rating = 5"
-              />
+        <div class="font-medium w-full justify-start gap-2 flex flex-row">
+          <div>Рейтинг</div>
+
+            <div class="flex items-center text-sm">
+            <span v-for="star in 5" :key="star" class="text-yellow-600">
+              <Icon name="mdi:star" />
+            </span>
             </div>
-          </div>
         </div>
 
         <div>
-          <div class="pb-2 font-medium">
-            Запланировать отзыв
-            <span class="text-xs font-normal text-gray-500"
-              >(по Московскому времени)</span
-            >
-          </div>
+          <div class="pb-2 font-medium">Запланировать отзыв</div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
               {{
@@ -732,44 +733,80 @@ const handleMouseUp = (event: any) => {
           </ClientOnly>
         </div>
         <div class="flex flex-col">
-          <label class="">
+          <div class="font-medium">Видео</div>
+          <p class="mb-2 text-sm font-light text-gray-500">
+            Разрешены видео в формате MP4, AVI, MPG.
+          </p>
+          <ClientOnly>
             <div
-              v-if="user.username == 'test'"
-              class="flex justify-between h-16 cursor-pointer"
+              class="flex gap-2 items-center flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200"
             >
-              <div class="max-w-[240px]">
-                <span class="font-medium">Добавить видео (+25 рублей)</span>
-                <input
-                  :disabled="isUploading || form.video !== ''"
-                  type="file"
-                  class="w-[200px] sm:w-[400px] cursor-pointer"
-                  accept="video/mp4, video/x-msvideo, video/mpeg"
-                  :class="{ hidden: !form.video }"
-                  @change="handleFileChange($event)"
-                />
-              </div>
-              <div>
-                <input
-                  v-if="!isUploading"
-                  type="checkbox"
-                  class="checkbox checkbox-primary border-base-content"
-                  style="pointer-events: none"
-                  :checked="form.video !== ''"
-                />
-
+              <div
+                class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none"
+              >
                 <div
-                  v-else
-                  class="radial-progress text-primary"
-                  :style="{
-                    '--value': uploadProgress,
-                  }"
-                  role="progressbar"
+                  v-if="form.video"
+                  class="absolute right-0 top-0 z-50"
+                  @click="clearVideo"
                 >
-                  {{ uploadProgress }}%
+                  <label for="video" class="btn btn-sm btn-circle btn-ghost"
+                    >✕</label
+                  >
+                </div>
+                <label
+                  v-show="!form.video"
+                  class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer"
+                >
+                  <div
+                    v-show="isUploading"
+                    class="absolute inset-0 flex items-center justify-center"
+                  >
+                    <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                  </div>
+                  <input
+                    ref="videoInput"
+                    type="file"
+                    accept="video/mp4, video/x-msvideo, video/mpeg"
+                    class="hidden"
+                    @change="handleFileChange($event)"
+                  />
+                  <IconCSS
+                    v-show="!isUploading"
+                    name="material-symbols:video-camera-back-add-outline-rounded"
+                    class="text-base-content bg-primary"
+                    size="32"
+                  />
+                </label>
+                <div
+                  v-show="form.video"
+                  class="absolute inset-0 flex items-center justify-center"
+                >
+                  <div
+                    v-if="uploadProgress !== 'Файл загружен'"
+                    class="radial-progress text-primary"
+                    :style="{ '--value': uploadProgress }"
+                    role="progressbar"
+                  >
+                    {{ uploadProgress + "%" }}
+                  </div>
+                  <div
+                    v-else
+                    class="absolute inset-0 flex items-center justify-center"
+                    :style="{
+                      backgroundImage: `url(${videoThumbnail})`,
+                      backgroundSize: 'cover',
+                    }"
+                  >
+                    <div
+                      class="text-white bg-black bg-opacity-50 h-full p-2 rounded text-center"
+                    >
+                      <div class="mt-6">Файл загружен</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </label>
+          </ClientOnly>
         </div>
       </div>
       <div class="modal-action justify-between">
