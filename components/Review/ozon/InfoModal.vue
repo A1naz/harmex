@@ -141,7 +141,7 @@ const { $dayjs } = useNuxtApp();
                   <span class="text-sm text-gray-500 mr-2 my-auto">ID: </span>
                   <label
                     class="rounded-md py-0 px-2 text-sm cursor-pointer"
-                    @click="navigateTo('/buyouts?uuid=' + info.buyoutuuid)"
+                    @click="navigateTo('/ozon/buyouts?uuid=' + info.buyoutuuid)"
                   >
                     #{{ info.buyoutuuid }}
                   </label>
