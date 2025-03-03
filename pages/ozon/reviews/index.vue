@@ -381,7 +381,7 @@ const siteUrl = config.public.siteUrl;
         >
           <div class="export lg:absolute right-0 top-0">
             <ExportXls
-              api="/api/avito/review/export"
+              api="/api/ozon/review/export"
               file-name="MARKETMONSTR Доступные отзывы"
               :is-visible="true"
             />

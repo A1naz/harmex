@@ -1,48 +1,103 @@
-import ExcelJS from 'exceljs'
-import { Review } from '~/server/lib/models/flowwow/Review'
-import { DocuemntEnum } from '~/data/enums'
+import ExcelJS from "exceljs";
+import { Review } from "~/server/lib/models/flowwow/Review";
+import { DocuemntEnum } from "~/data/enums";
+import { Delivery } from "~/server/lib/models/flowwow/Delivery";
+
+const getStatus = (status: string) => {
+  switch (status) {
+    case "created":
+      return "Создан";
+    case "working":
+      return "В работе";
+    case "waiting":
+      return "Ожидание";
+    case "work":
+      return "В работе";
+    case "published":
+      return "Опубликован";
+    case "canceled":
+      return "Отменен";
+    case "nofunds":
+      return "Недостаточно средств";
+    case "deleting":
+      return "Удаление";
+    case "deleted":
+      return "Удален";
+    case "available":
+      return "Доступен";
+    default:
+      return status;
+  }
+};
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-    const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+  const { exportDates } = await readBody(event);
 
-    const { exportDates } = await readBody(event)
+  const startDate = new Date(exportDates[0]);
+  const endDate = new Date(exportDates[1]);
 
-    const startDate = new Date(exportDates[0])
-    const endDate = new Date(exportDates[1])
-
-    const reviews = await Review.find({
+  const reviews = await Review.find({
     user,
     date: {
-        $gt: startDate,
-        $lt: endDate,
-    }
-    }).sort({ _id: -1 })
+      $gt: startDate,
+      $lt: endDate,
+    },
+  }).sort({ _id: -1 });
 
-    const workbook = new ExcelJS.Workbook()
+  const availableReviews = await Delivery.find({
+    user,
+    reviewed: { $ne: true },
+    "statusdelivery.status": {
+      $regex: "^(Получен|Доставлен|Получено)$",
+    },
+    status: "completed",
+  }).sort({ _id: -1 });
 
-    const sheet = workbook.addWorksheet('Отзывы', {
+  const format = reviews.map((review: any) => {
+    return {
+      _id: review._id,
+      date: review.date,
+      status: getStatus(review.status),
+      text: review.text,
+      rating: review.rating,
+    };
+  });
+
+  for (const delivery of availableReviews) {
+    format.push({
+      _id: delivery._id,
+      date: "",
+      status: "Доступен",
+      text: "",
+      rating: "",
+    });
+  }
+
+  const workbook = new ExcelJS.Workbook();
+
+  const sheet = workbook.addWorksheet("Отзывы", {
     headerFooter: { firstHeader: `Всего записей: ${reviews.length}` },
-    })
+  });
 
-    sheet.columns = [
-        { header: 'ID отзыва', key: '_id', font: { bold: true }, width: 25 },
-        { header: 'Дата публикации', key: 'date', font: { bold: true }, width: 16 },
-        { header: 'Статус', key: 'status', font: { bold: true }, width: 16 },
-        { header: 'Текст', key: 'text', font: { bold: true }, width: 16 },
-        { header: 'Рейтинг', key: 'rating', font: { bold: true }, width: 16 },
-    ]
+  sheet.columns = [
+    { header: "ID отзыва", key: "_id", font: { bold: true }, width: 25 },
+    { header: "Дата публикации", key: "date", font: { bold: true }, width: 16 },
+    { header: "Статус", key: "status", font: { bold: true }, width: 16 },
+    { header: "Текст", key: "text", font: { bold: true }, width: 16 },
+    { header: "Рейтинг", key: "rating", font: { bold: true }, width: 16 },
+  ];
 
-    sheet.addRows(reviews)
-    const buffer = await workbook.xlsx.writeBuffer()
+  sheet.addRows(format);
+  const buffer = await workbook.xlsx.writeBuffer();
 
-    await userLog(event,
-        {
-            documentType: DocuemntEnum.Review,
-            documentId: '',
-            comment: 'Экспорт отзывов'
-        })
+  await userLog(event, {
+    documentType: DocuemntEnum.Review,
+    documentId: "",
+    comment: "Экспорт отзывов",
+  });
 
-    return buffer
-})
+  return buffer;
+});

@@ -1,6 +1,34 @@
 import ExcelJS from 'exceljs'
 import { DocuemntEnum } from '~/data/enums'
 import { Review } from '~/server/lib/models/ozon/Review'
+import { Delivery } from "~/server/lib/models/ozon/Delivery";
+
+const getStatus = (status: string) => {
+  switch (status) {
+    case "created":
+      return "Создан";
+    case "working":
+      return "В работе";
+    case "waiting":
+      return "Ожидание";
+    case "work":
+      return "В работе";
+    case "published":
+      return "Опубликован";
+    case "canceled":
+      return "Отменен";
+    case "nofunds":
+      return "Недостаточно средств";
+    case "deleting":
+      return "Удаление";
+    case "deleted":
+      return "Удален";
+    case "available":
+      return "Доступен";
+    default:
+      return status;
+  }
+};
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -20,6 +48,34 @@ export default eventHandler(async (event) => {
     },
   }).sort({ _id: -1 })
 
+    const availableReviews = await Delivery.find({
+      user,
+      reviewed: { $ne: true },
+      'statusdelivery.status': { $regex: 'Получен' },
+      status: "completed",
+    }).sort({ _id: -1 });
+  
+
+    const format = reviews.map((review: any) => {
+      return {
+        _id: review._id,
+        date: review.date,
+        status: getStatus(review.status),
+        text: review.text,
+        rating: review.rating,
+      };
+    });
+
+    for (const delivery of availableReviews) {
+      format.push({
+        _id: delivery._id,
+        date: '',
+        status: "Доступен",
+        text: "",
+        rating: "",
+      });
+    }
+
   const workbook = new ExcelJS.Workbook()
 
   const sheet = workbook.addWorksheet('Отзывы', {
@@ -34,7 +90,7 @@ export default eventHandler(async (event) => {
     { header: 'Рейтинг', key: 'rating', font: { bold: true }, width: 16 },
   ]
 
-  sheet.addRows(reviews)
+  sheet.addRows(format)
   const buffer = await workbook.xlsx.writeBuffer()
 
   await userLog(event, {
