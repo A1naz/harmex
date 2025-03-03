@@ -4,6 +4,22 @@ import { ObjectId } from "mongodb";
 import { Delivery } from "~/server/lib/models/ozon/Delivery";
 import { Buyout } from "~/server/lib/models/ozon/Buyout";
 
+function getReviewType(review: any) {
+  if (review.images[0] !== "" && review.isVideoEnabled) {
+    return "Комбинированный";
+  }
+  if (review.images[0] !== "") {
+    return "Фото отзыв";
+  }
+  if (review.isVideoEnabled) {
+    return "Видео отзыв";
+  }
+  if (review.text !== "") {
+    return "Текстовый отзыв";
+  }
+  return "Отзыв";
+}
+
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
@@ -73,6 +89,8 @@ export default eventHandler(async (event) => {
         date: review.date,
         status: review.status,
         uuid: review.uuid,
+        type: getReviewType(review),
+        originalVideoName: review.originalVideoName,
       };
 
       // eslint-disable-next-line eqeqeq

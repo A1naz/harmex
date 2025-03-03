@@ -67,6 +67,39 @@ async function resumeStatus(item: any) {
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
     >
+      <div class="dropdown dropdown-end absolute right-1 top-2">
+        <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
+          <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
+        </label>
+        <ul
+          tabindex="0"
+          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+        >
+          <li>
+            <a  @click="emit('logModal', info)">
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/info.svg"
+                alt="settings"
+              />
+              Об отзыве
+            </a>
+          </li>
+
+
+
+          <li v-if="info.status === 'published'" class="cursor-pointer">
+            <a @click="emit('removeReview', info.id)">
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/delete.svg"
+                alt="settings"
+              />
+              <label class="cursor-pointer">Удалить</label>
+            </a>
+          </li>
+        </ul>
+      </div>
       <div class="flex gap-3 w-full truncate mt-6">
         <div
           class="flex-none"
@@ -151,7 +184,7 @@ async function resumeStatus(item: any) {
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
               >
                 <a
-                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
+                    :href="`https://www.ozon.ru/product/${info.article}`"
                   target="_blank"
                   class="link link-hover"
                 >
@@ -189,7 +222,7 @@ async function resumeStatus(item: any) {
                 >Площадка:
               </span>
               <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
-                Wildberries
+                OZON
               </div>
             </div>
           </div>
@@ -202,7 +235,7 @@ async function resumeStatus(item: any) {
         ></button>
       </div>
       <button
-        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
+        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary opacity-80 hover:opacity-100"
         @click="emit('infoModal', info)"
       >
         Детали

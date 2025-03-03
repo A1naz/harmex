@@ -79,7 +79,7 @@ async function exportToXLS() {
       >
         <button
           type="button"
-          class="btn btn-sm px-3 btn-primary dark:bg-primary bg-[#eff0ff] dark:bg-opacity-20 border-none text-base-content"
+          class="btn btn-sm px-3 btn-primary opacity-80 dark:bg-opacity-20 hover:opacity-100 border-none text-white"
         >
           <span v-if="!btnLoading">XLS</span>
         </button>

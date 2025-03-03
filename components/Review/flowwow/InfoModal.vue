@@ -155,7 +155,7 @@ const { $dayjs } = useNuxtApp();
                     class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
                   >
                     <a
-                      :href="`https://www.ozon.ru/product/${info.article}`"
+                      :href="info.article"
                       target="_blank"
                       class="link link-hover"
                     >
@@ -187,7 +187,7 @@ const { $dayjs } = useNuxtApp();
 
                 <div>
                   <span class="text-sm text-gray-500 mr-2">Площадка: </span>
-                  <span class="rounded-md py-0 px-2 text-sm">OZON</span>
+                  <span class="rounded-md py-0 px-2 text-sm">Flowwow</span>
                 </div>
               </div>
               <div>
@@ -239,7 +239,7 @@ const { $dayjs } = useNuxtApp();
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Текст отзыва:
                   </span>
-                  <span class="text-sm">
+                  <span class="text-sm ">
                     {{ info.text }}
                   </span>
                 </div>
@@ -247,7 +247,7 @@ const { $dayjs } = useNuxtApp();
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Плюсы:
                   </span>
-                  <span class="text-sm">
+                  <span class="text-sm ">
                     {{ info.positive }}
                   </span>
                 </div>
@@ -255,7 +255,7 @@ const { $dayjs } = useNuxtApp();
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Минусы:
                   </span>
-                  <span class="text-sm">
+                  <span class="text-sm ">
                     {{ info.negative }}
                   </span>
                 </div>

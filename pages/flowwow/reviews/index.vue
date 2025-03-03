@@ -13,6 +13,7 @@ const route = useRoute();
 const end = ref(false);
 const router = useRouter();
 const logModal = ref(false);
+const infoModal = ref(false);
 const selectedReview = ref({
   uuid: "",
 });
@@ -490,7 +491,7 @@ const siteUrl = config.public.siteUrl;
       >
         <div
           v-if="currentTab === 'available' || currentTab === 'all'"
-         class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
+          class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
         >
           <ReviewFlowwowCard
             v-for="(review, index) of availableReviews"
@@ -506,7 +507,7 @@ const siteUrl = config.public.siteUrl;
         ></div>
         <div
           v-if="currentTab !== 'available'"
-          class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
+          class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
         >
           <ReviewFlowwowPublishedCard
             v-for="(review, index) of reviews"
@@ -517,7 +518,8 @@ const siteUrl = config.public.siteUrl;
             @open-image="openPhoto"
             @resume-status="resumeStatus"
             @get-review="fetchData()"
-            @log-modal="(item:any) => [(selectedReview = item), (logModal = true)]"
+            @log-modal="(item: any) => [(selectedReview = item), (logModal = true)]"
+            @info-modal="(item: any) => [(selectedReview = item), (infoModal = true)]"
           />
         </div>
 
@@ -587,7 +589,7 @@ const siteUrl = config.public.siteUrl;
             >
             <label
               for="reviewRemoveModal"
-              class="btn btn-[#ebedff] hover:bg-[#b2baff] w-1/2"
+              class="btn btn-[#ebedff] hover:bg-primary w-1/2"
               @click="removeReview"
               >Удалить</label
             >
@@ -808,6 +810,11 @@ const siteUrl = config.public.siteUrl;
       :info="selectedReview"
       :state="logModal"
       @close="logModal = false"
+    />
+    <ReviewFlowwowInfoModal
+      :info="selectedReview"
+      :state="infoModal"
+      @close="infoModal = false"
     />
   </div>
 </template>

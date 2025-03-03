@@ -112,7 +112,7 @@ function openBuyout() {
       </div>
       <label
         for="review-modal"
-        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
+        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary opacity-80 hover:opacity-100"
         @click="$emit('openModal', buyoutuuId, deliveryId)"
       >
         Создать заявку

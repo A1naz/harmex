@@ -65,15 +65,7 @@ function openBuyout() {
               <div
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
               >
-                <a
-                  :href="
-                    info.url && info.url[0]
-                      ? info.url[0]
-                      : `https://www.flowwow.ru/${article}`
-                  "
-                  target="_blank"
-                  class="link link-hover"
-                >
+                <a :href="info.article" target="_blank" class="link link-hover">
                   {{ info.article }}
                 </a>
               </div>
@@ -116,7 +108,7 @@ function openBuyout() {
       </div>
       <label
         for="review-modal"
-        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
+        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary opacity-80 hover:opacity-100"
         @click="$emit('openModal', buyoutuuId, deliveryId)"
       >
         Создать заявку

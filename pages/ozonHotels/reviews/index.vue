@@ -593,7 +593,7 @@ const siteUrl = config.public.siteUrl;
             >
             <label
               for="reviewRemoveModal"
-              class="btn btn-[#ebedff] hover:bg-[#b2baff] w-1/2"
+              class="btn btn-[#ebedff] hover:bg-primary w-1/2"
               @click="removeReview"
               >Удалить</label
             >
