@@ -481,7 +481,7 @@ async function selectFilterDate(e: any) {
         >
           <div
             v-if="currentTab === 'available' || currentTab === 'all'"
-            class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
+            class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
           >
             <ReviewWildberriesCard
               v-for="(review, index) of availableReviews"
@@ -497,7 +497,7 @@ async function selectFilterDate(e: any) {
           ></div>
           <div
             v-if="currentTab !== 'available'"
-            class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
+            class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
           >
             <ReviewWildberriesPublishedCard
               v-for="(review, index) of reviews"
