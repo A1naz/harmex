@@ -489,7 +489,7 @@ const siteUrl = config.public.siteUrl;
       <div
         class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
       >
-        <div class="flex gap-2" v-if="user.username === 'test'">
+        <div class="flex gap-2">
           <NuxtLink
             to="/ym/buyouts/create"
             class="btn btn-primary dark:bg-primary border-none btn-sm gap-2 font-medium normal-case"
