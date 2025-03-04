@@ -36,6 +36,8 @@ const getStatus = computed(() => {
       return "Удален";
     case "deleting":
       return "На удалении";
+    case "archived":
+      return "В архиве";
   }
 });
 
@@ -86,7 +88,9 @@ const { $dayjs } = useNuxtApp();
 
           <div class="flex items-center">
             <div class="flex flex-col truncate gap-1 w-full">
-              <div class="bg-gray-200 w-full flex gap-1 flex-col px-8 pt-4 pb-4 rounded-md">
+              <div
+                class="bg-gray-200 w-full flex gap-1 flex-col px-8 pt-4 pb-4 rounded-md"
+              >
                 <div class="flex gap-2 w-2/3">
                   <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                     >Создано:
@@ -193,12 +197,17 @@ const { $dayjs } = useNuxtApp();
                 </div>
               </div>
               <div>
-                <div class="px-8 bg-primary bg-opacity-15 pt-2 -mt-1 pb-4 flex gap-1 flex-col">
+                <div
+                  class="px-8 bg-primary bg-opacity-15 pt-2 -mt-1 pb-4 flex gap-1 flex-col"
+                >
                   <div>
                     <span class="text-sm text-gray-500 mr-2 my-auto"
                       >Количество:
                     </span>
-                    <span class="rounded-md py-0 px-2 text-sm">1 ед.</span>
+                    <span
+                      class="rounded-md py-0 px-2 text-sm pb-0.5 bg-blue-300"
+                      >1 ед.</span
+                    >
                   </div>
                   <div>
                     <span class="text-sm text-gray-500 mr-2 my-auto"

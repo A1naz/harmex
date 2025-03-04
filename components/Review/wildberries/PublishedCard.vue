@@ -47,6 +47,8 @@ const getStatus = computed(() => {
       return "Удален";
     case "deleting":
       return "На удалении";
+      case "archived":
+      return "В архиве";
   }
 });
 

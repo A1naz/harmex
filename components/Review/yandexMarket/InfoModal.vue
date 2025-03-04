@@ -36,6 +36,8 @@ const getStatus = computed(() => {
       return "Удален";
     case "deleting":
       return "На удалении";
+    case "archived":
+      return "В архиве";
   }
 });
 
@@ -198,7 +200,7 @@ const { $dayjs } = useNuxtApp();
                     <span class="text-sm text-gray-500 mr-2 my-auto"
                       >Количество:
                     </span>
-                    <span class="rounded-md py-0 px-2 text-sm">1 ед.</span>
+                    <span class="rounded-md py-0 px-2 text-sm  pb-0.5 bg-blue-300">1 ед.</span>
                   </div>
                   <div>
                     <span class="text-sm text-gray-500 mr-2 my-auto"
