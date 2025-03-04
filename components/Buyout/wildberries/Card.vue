@@ -366,6 +366,7 @@ const { $dayjs } = useNuxtApp();
                 Wildberries
               </div>
             </div>
+            <div class="mt-[20px]" v-if="!info.executionTime" />
           </div>
         </div>
       </div>

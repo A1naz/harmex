@@ -145,7 +145,7 @@ async function resumeStatus(item: any) {
                     'bg-[#F8C68A] text-[#D67500]':
                       info.status === 'waiting' || info.status === 'created',
                     'bg-[#F8C68A]  text-red-500': info.status === 'nofunds',
-                    'bg-[#FF685E] text-[#9C0A00]':
+                    'bg-[#FF685E] text-white':
                       info.status === 'canceled' ||
                       info.status === 'deleted' ||
                       info.status === 'deleting',
@@ -228,6 +228,7 @@ async function resumeStatus(item: any) {
           </div>
         </div>
       </div>
+      <div class="mt-[20px]" v-if="!info.executionTime" />
       <div class="flex gap-2 w-2/3" v-if="!info.completedDate">
         <span class="text-sm text-[0.725rem] text-gray-500 my-auto"> </span>
         <button

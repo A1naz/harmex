@@ -380,6 +380,7 @@ async function copyToClipboard(text: string) {
                 Yandex market
               </div>
             </div>
+            <div class="mt-[20px]" v-if="!info.executionTime" />
           </div>
         </div>
       </div>

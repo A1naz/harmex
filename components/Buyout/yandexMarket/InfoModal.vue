@@ -82,7 +82,7 @@ onKeyStroke("Escape", (e) => {
 
           <div class="flex items-center">
             <div class="flex flex-col truncate gap-1">
-              <div class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md">
+              <div class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md flex gap-1 flex-col">
                 <div>
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Создано:
@@ -215,7 +215,7 @@ onKeyStroke("Escape", (e) => {
                 </div>
               </div>
               <div>
-                <div class="px-8 bg-primary bg-opacity-15 pt-2 -mt-1 pb-4">
+                <div class="px-8 bg-primary bg-opacity-15 pt-2 -mt-1 pb-4 flex gap-1 flex-col">
                   <div>
                     <span class="text-sm text-gray-500 mr-2 my-auto"
                       >Количество:

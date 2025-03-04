@@ -531,7 +531,7 @@ async function selectFilterDate(e: any) {
         ></div>
         <div
           v-if="currentTab !== 'available'"
-          class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
+          class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
         >
           <ReviewFlowwowPublishedCard
             v-for="(review, index) of reviews"

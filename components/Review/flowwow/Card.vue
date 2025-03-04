@@ -83,7 +83,7 @@ function openBuyout() {
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                 >Статус:
               </span>
-              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem] bg-success bg-opacity-50">
                 Доступно
               </div>
             </div>

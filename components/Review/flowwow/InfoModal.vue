@@ -86,7 +86,7 @@ const { $dayjs } = useNuxtApp();
 
           <div class="flex items-center">
             <div class="flex flex-col truncate gap-1 w-full">
-              <div class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md">
+              <div class="bg-gray-200 w-full flex gap-1 flex-col px-8 pt-4 pb-4 rounded-md">
                 <div class="flex gap-2 w-2/3">
                   <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                     >Создано:
@@ -113,7 +113,7 @@ const { $dayjs } = useNuxtApp();
                           info.status === 'waiting' ||
                           info.status === 'created',
                         'bg-[#F8C68A]  text-red-500': info.status === 'nofunds',
-                        'bg-[#FF685E] text-[#9C0A00]':
+                        'bg-[#FF685E] text-white':
                           info.status === 'canceled' ||
                           info.status === 'deleted' ||
                           info.status === 'deleting',
@@ -141,7 +141,9 @@ const { $dayjs } = useNuxtApp();
                   <span class="text-sm text-gray-500 mr-2 my-auto">ID: </span>
                   <label
                     class="rounded-md py-0 px-2 text-sm cursor-pointer"
-                    @click="navigateTo('/flowwow/buyouts?uuid=' + info.buyoutuuid)"
+                    @click="
+                      navigateTo('/flowwow/buyouts?uuid=' + info.buyoutuuid)
+                    "
                   >
                     #{{ info.buyoutuuid }}
                   </label>
@@ -191,7 +193,7 @@ const { $dayjs } = useNuxtApp();
                 </div>
               </div>
               <div>
-                <div class="px-8 bg-primary bg-opacity-15 pt-2 -mt-1 pb-4">
+                <div class="px-8 bg-primary bg-opacity-15 pt-2 -mt-1 pb-4 flex gap-1 flex-col">
                   <div>
                     <span class="text-sm text-gray-500 mr-2 my-auto"
                       >Количество:
@@ -243,7 +245,7 @@ const { $dayjs } = useNuxtApp();
                     {{ info.publicComment }}
                   </span>
                 </div>
-                <div class="whitespace-pre-line mt-2">
+                <div class="whitespace-pre-line mt-1">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Скрытый комментарий:
                   </span>
@@ -252,9 +254,7 @@ const { $dayjs } = useNuxtApp();
                   </span>
                 </div>
 
-                <div
-                  class="text-sm mt-1 pb-1 text-gray-500 mr-2 my-auto"
-                >
+                <div class="text-sm mt-1 pb-1 text-gray-500 mr-2 my-auto">
                   Фото:
                 </div>
                 <div
@@ -311,8 +311,6 @@ const { $dayjs } = useNuxtApp();
                     </label>
                   </div>
                 </div>
-
-          
               </div>
             </div>
           </div>

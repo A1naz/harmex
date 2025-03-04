@@ -359,6 +359,7 @@ async function copyToClipboard(text: string) {
                 Flowwow
               </div>
             </div>
+            <div class="mt-[20px]" v-if="!info.executionTime" />
           </div>
         </div>
       </div>

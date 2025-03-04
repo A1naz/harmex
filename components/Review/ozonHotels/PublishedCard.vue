@@ -111,7 +111,7 @@ async function resumeStatus(item: any) {
             'bg-[#F8C68A] text-[#D67500]':
               info.status === 'waiting' || info.status === 'created',
             'bg-[#F8C68A]  text-red-500': info.status === 'nofunds',
-            'bg-[#FF685E] text-[#9C0A00]':
+            'bg-[#FF685E] text-white':
               info.status === 'canceled' ||
               info.status === 'deleted' ||
               info.status === 'deleting',

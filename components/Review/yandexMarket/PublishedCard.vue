@@ -76,7 +76,7 @@ async function resumeStatus(item: any) {
           class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
         >
           <li>
-            <a  @click="emit('logModal', info)">
+            <a @click="emit('logModal', info)">
               <img
                 class="w-5 h-5"
                 src="/icons/figma/buyouts/info.svg"
@@ -85,8 +85,6 @@ async function resumeStatus(item: any) {
               Об отзыве
             </a>
           </li>
-
-
 
           <li v-if="info.status === 'published'" class="cursor-pointer">
             <a @click="emit('removeReview', info.id)">
@@ -145,7 +143,7 @@ async function resumeStatus(item: any) {
                     'bg-[#F8C68A] text-[#D67500]':
                       info.status === 'waiting' || info.status === 'created',
                     'bg-[#F8C68A]  text-red-500': info.status === 'nofunds',
-                    'bg-[#FF685E] text-[#9C0A00]':
+                    'bg-[#FF685E] text-white':
                       info.status === 'canceled' ||
                       info.status === 'deleted' ||
                       info.status === 'deleting',
@@ -184,7 +182,7 @@ async function resumeStatus(item: any) {
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
               >
                 <a
-             :href="`https://market.yandex.ru/pr/${info.article}`"
+                  :href="`https://market.yandex.ru/pr/${info.article}`"
                   target="_blank"
                   class="link link-hover"
                 >
@@ -225,6 +223,7 @@ async function resumeStatus(item: any) {
                 Yandex Market
               </div>
             </div>
+            <div class="mt-[20px]" v-if="!info.executionTime" />
           </div>
         </div>
       </div>

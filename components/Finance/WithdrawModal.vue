@@ -160,6 +160,12 @@ onMounted(() => {
       <!-- ///baseBalance form  -->
       <div v-if="modalType === 'baseBalance'">
         <div class="flex flex-col w-full justify-center gap-1.5">
+          <h1 class="text-2xl font-bold ml-1">
+            Вывод средств c личного кабинента
+            <div class="text-sm text-base-content font-normal">
+              Вывод осуществляется в течение 14 дней с даты подачи заявки
+            </div>
+          </h1>
           <div>
             <div class="label">
               <span class="label-text text-base-content">Сумма вывода</span>
@@ -251,12 +257,6 @@ onMounted(() => {
               placeholder="ФИО"
             />
           </div>
-          <h1 class="text-2xl font-bold">
-            Вывод средств c личного кабинента
-            <div class="text-sm text-base-content font-normal">
-              Вывод осуществляется в течение 14 дней с даты подачи заявки
-            </div>
-          </h1>
 
           <div class="agreement flex gap-2 items-center w-full">
             Пользовательское соглашение
@@ -268,6 +268,11 @@ onMounted(() => {
               Скачать
             </a>
           </div>
+          <div class="agreement flex gap-2 items-center w-full text-sm" v-if="user.fizFace">
+            После созданной заявки на вывод, сумма вывода будет уменьшена на 15%
+            для учета налоговых обязательств. В целях безопасности ваших данных,
+            пожалуйста, не начинайте процесс вывода самостоятельно.
+          </div>
           <div class="w-full flex justify-start sm:justify-end">
             <button class="btn btn-primary" @click="createBalanceWithdraw">
               Вывести
@@ -278,7 +283,13 @@ onMounted(() => {
       <!-- ///partnerBalance form  -->
       <div v-if="modalType === 'partnerBalance'">
         <div class="flex flex-col w-full justify-center gap-4">
-          <div>
+          <h1 class="text-2xl font-bold">
+            Вывод средств c партнерской программы
+            <div class="text-sm text-base-content font-normal mt-1">
+              Вывод осуществляется в течение 14 дней с даты подачи заявки
+            </div>
+          </h1>
+          <div class="-mt-2 -ml-1">
             <div class="label">
               <span class="label-text text-base-content">Сумма вывода</span>
             </div>
@@ -290,13 +301,6 @@ onMounted(() => {
               @input="updateAmount"
             />
           </div>
-
-          <h1 class="text-2xl font-bold">
-            Вывод средств c партнерской программы
-            <div class="text-sm text-base-content font-normal">
-              Вывод осуществляется в течение 14 дней с даты подачи заявки
-            </div>
-          </h1>
 
           <div
             v-if="partnerAgreement"
