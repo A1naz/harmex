@@ -84,7 +84,7 @@ const { $dayjs } = useNuxtApp();
             >✕</a
           >
 
-          <div class="flex items-center">
+          <div class="flex items-center w-full">
             <div class="flex flex-col truncate gap-1">
               <div class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md">
                 <div class="flex gap-2 w-2/3">
@@ -139,6 +139,7 @@ const { $dayjs } = useNuxtApp();
 
                 <div class="w-full truncate">
                   <span class="text-sm text-gray-500 mr-2 my-auto">ID: </span>
+
                   <label
                     class="rounded-md py-0 px-2 text-sm cursor-pointer"
                     @click="navigateTo('/ozon/buyouts?uuid=' + info.buyoutuuid)"
@@ -211,7 +212,7 @@ const { $dayjs } = useNuxtApp();
                       >Услуга:
                     </span>
                     <span class="rounded-md py-0 px-2 text-sm">{{
-                      currency.format(150)
+                      currency.format(85)
                     }}</span>
                   </div>
                   <div v-if="info.financePrice">
@@ -235,7 +236,7 @@ const { $dayjs } = useNuxtApp();
                     </span>
                   </div>
                 </div>
-                <div class="whitespace-pre-line mt-2" v-if="info.text">
+                <div class="whitespace-pre-line mt-1">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Текст отзыва:
                   </span>
@@ -260,10 +261,7 @@ const { $dayjs } = useNuxtApp();
                   </span>
                 </div>
 
-                <div
-                  v-if="info.images && info.images[0] !== ''"
-                  class="text-sm mt-1 text-gray-500 mr-2 my-auto"
-                >
+                <div class="text-sm mt-1 pb-1 text-gray-500 mr-2 my-auto">
                   Фото:
                 </div>
                 <div
@@ -321,7 +319,7 @@ const { $dayjs } = useNuxtApp();
                   </div>
                 </div>
 
-                <div class="flex pb-4" v-if="info.originalVideoName">
+                <div class="flex pb-4">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Видео:
                   </span>

@@ -86,6 +86,7 @@ async function fetchData() {
         skip: skip.value,
         limit: limit.value,
         tab: currentTab.value,
+        dateFilter: dateFilter.value,
         search:
           searchText.value.length > 0
             ? {
@@ -338,6 +339,17 @@ async function copyToClipboard(text: string) {
 
 const config = useRuntimeConfig();
 const siteUrl = config.public.siteUrl;
+const dateFilter = ref("all");
+
+async function selectFilterDate(e: any) {
+  dateFilter.value = e.value;
+  loading.value = true;
+  reviews.value = [];
+  availableReviews.value = [];
+  skip.value = 0;
+  end.value = false;
+  fetchData();
+}
 </script>
 
 <template>
@@ -398,6 +410,7 @@ const siteUrl = config.public.siteUrl;
               <span
                 ><CustomSelect
                   class="h-[2rem] min-w-[95px]"
+                  :width="173"
                   :tabs="customLinks"
                   :status-text="selectText()"
                   @change-value="changeTab"
@@ -410,13 +423,21 @@ const siteUrl = config.public.siteUrl;
                 <Icon name="ci:info" size="24" />
               </button>
             </div>
-            <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
-              <!-- <CustomSelect
-                class="h-[2rem] bg-[#f4f4f4]"
-                :tabs="searchOptions.map((el: any) => ({ title: el.name, value: el.value }))"
-                @change-value="(e: any) => (searchType = e.value)"
-              /> -->
-            </div>
+              <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
+                <CustomSelect
+                     class="h-[2rem] min-w-[95px]"
+                  :tabs="[
+                    { title: 'Все время', value: 'all' },
+                    { title: 'Сегодня', value: 'today' },
+                    { title: 'Вчера', value: '2days' },
+                    { title: '3 дня', value: '3days' },
+                    { title: 'Неделя', value: '7days' },
+                  ]"
+                  @change-value="selectFilterDate"
+                />
+              </div>
+          
+
             <div
               class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"
             >
@@ -479,7 +500,7 @@ const siteUrl = config.public.siteUrl;
             class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5"
           >
             <ReviewWildberriesPublishedCard
-            v-for="(review, index) of reviews"
+              v-for="(review, index) of reviews"
               :key="index"
               :index="index"
               :info="review"

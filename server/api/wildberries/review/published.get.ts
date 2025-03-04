@@ -25,7 +25,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { skip, limit, tab, search } = getQuery(event);
+  const { skip, limit, tab, search, dateFilter } = getQuery(event);
 
   let searchParse = search ? JSON.parse(search?.toString()) : {};
 
@@ -45,8 +45,45 @@ export default eventHandler(async (event) => {
     query = Object.assign(query, searchParse);
   }
 
+  let dateQuery = {};
+
+  switch (dateFilter) {
+    case "today":
+      dateQuery = {
+        createdAt: {
+          $gte: new Date(new Date().setHours(0, 0, 0)),
+          $lt: new Date(new Date().setHours(23, 59, 59)),
+        },
+      };
+      break;
+    case "2days":
+      dateQuery = {
+        createdAt: {
+          $gte: new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0),
+          $lt: new Date(new Date().setHours(23, 59, 59)),
+        },
+      };
+      break;
+    case "3days":
+      dateQuery = {
+        createdAt: {
+          $gte: new Date(new Date().setDate(new Date().getDate() - 2)).setHours(0, 0, 0),
+          $lt: new Date(new Date().setHours(23, 59, 59)),
+        },
+      };
+      break;
+    case "7days":
+      dateQuery = {
+        createdAt: {
+          $gte: new Date(new Date().setDate(new Date().getDate() - 6)).setHours(0, 0, 0),
+          $lt: new Date(new Date().setHours(23, 59, 59)),
+        },
+      };
+      break;
+  }
+
   if (tab === "all") {
-    reviews = await Review.find(query)
+    reviews = await Review.find({...query, ...dateQuery})
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0);
@@ -54,13 +91,13 @@ export default eventHandler(async (event) => {
     query = Object.assign(query, {
       status: { $in: ["created", "working", "waiting", "work"] },
     });
-    reviews = await Review.find(query)
+    reviews = await Review.find({...query, ...dateQuery})
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0);
   } else if (tab) {
     query = Object.assign(query, { status: tab.toString() });
-    reviews = await Review.find(query)
+    reviews = await Review.find({...query, ...dateQuery})
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0);
@@ -94,6 +131,7 @@ export default eventHandler(async (event) => {
         status: review.status,
         uuid: review.uuid,
         type: getReviewType(review),
+        originalVideoName: review.originalVideoName,
       };
 
       // eslint-disable-next-line eqeqeq
@@ -117,7 +155,6 @@ export default eventHandler(async (event) => {
 
       if (history) {
         format.completedDate = history.dataoperation;
-        console.log("history", history);
       }
 
       return format;

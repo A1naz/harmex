@@ -268,7 +268,7 @@ onMounted(() => {
               Скачать
             </a>
           </div>
-          <div class="w-full flex justify-end">
+          <div class="w-full flex justify-start sm:justify-end">
             <button class="btn btn-primary" @click="createBalanceWithdraw">
               Вывести
             </button>

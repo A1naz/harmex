@@ -533,16 +533,6 @@ const siteUrl = config.public.siteUrl;
               ]"
               @change-value="selectFilterDate"
             />
-
-            <!-- <CustomSelect
-              class="h-[2rem] bg-[#f4f4f4] min-w-[100px]"
-              :tabs="[
-                { title: 'Артикул', value: 'article' },
-                { title: 'ID выкупа', value: 'uuid' },
-                { title: 'Имя', value: 'name' },
-              ]"
-              @change-value="updateSearchType"
-            /> -->
           </div>
           <div
             class="absolute right-0 top-0 w-[calc(100%-55px)] lg:w-fit lg:static"

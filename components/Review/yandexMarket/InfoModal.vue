@@ -85,7 +85,7 @@ const { $dayjs } = useNuxtApp();
           >
 
           <div class="flex items-center">
-            <div class="flex flex-col truncate gap-1">
+            <div class="flex flex-col truncate gap-1 w-full">
               <div class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md">
                 <div class="flex gap-2 w-2/3">
                   <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
@@ -211,7 +211,7 @@ const { $dayjs } = useNuxtApp();
                       >Услуга:
                     </span>
                     <span class="rounded-md py-0 px-2 text-sm">{{
-                      currency.format(150)
+                      currency.format(100)
                     }}</span>
                   </div>
                   <div v-if="info.financePrice">
@@ -235,11 +235,11 @@ const { $dayjs } = useNuxtApp();
                     </span>
                   </div>
                 </div>
-                <div class="whitespace-pre-line mt-2" v-if="info.text">
+                <div class="whitespace-pre-line mt-1">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Текст отзыва:
                   </span>
-                  <span class="text-sm ">
+                  <span class="text-sm">
                     {{ info.text }}
                   </span>
                 </div>
@@ -247,7 +247,7 @@ const { $dayjs } = useNuxtApp();
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Плюсы:
                   </span>
-                  <span class="text-sm ">
+                  <span class="text-sm">
                     {{ info.positive }}
                   </span>
                 </div>
@@ -255,14 +255,13 @@ const { $dayjs } = useNuxtApp();
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Минусы:
                   </span>
-                  <span class="text-sm ">
+                  <span class="text-sm">
                     {{ info.negative }}
                   </span>
                 </div>
 
                 <div
-                  v-if="info.images && info.images[0] !== ''"
-                  class="text-sm mt-1 text-gray-500 mr-2 my-auto"
+                  class="text-sm mt-1 pb-1 text-gray-500 mr-2 my-auto"
                 >
                   Фото:
                 </div>
@@ -321,7 +320,7 @@ const { $dayjs } = useNuxtApp();
                   </div>
                 </div>
 
-                <div class="flex pb-4" v-if="info.originalVideoName">
+                <div class="flex pb-4">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Видео:
                   </span>

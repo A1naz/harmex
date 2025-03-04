@@ -4,6 +4,7 @@ import { Buyout } from "~/server/lib/models/flowwow/Buyout";
 import { ObjectId } from "mongodb";
 import { SelectOptionsReviews } from "@/data/enums";
 import { paymenthistory } from "~/server/lib/models/Paymenthistory";
+import { create } from "node:domain";
 
 function getReviewType(review: any) {
   if (review.images[0] !== "" && review.isVideoEnabled) {
@@ -94,7 +95,44 @@ export default eventHandler(async (event) => {
     { $sort: { countAvailable: -1 } },
   ];
 
-  const { skip, limit, search } = getQuery(event);
+  const { skip, limit, search, dateFilter } = getQuery(event);
+
+  let dateQuery = {};
+
+  switch (dateFilter) {
+    case "today":
+      dateQuery = {
+        createdAt: {
+          $gte: new Date(new Date().setHours(0, 0, 0)),
+          $lt: new Date(new Date().setHours(23, 59, 59)),
+        },
+      };
+      break;
+    case "2days":
+      dateQuery = {
+        createdAt: {
+          $gte: new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0),
+          $lt: new Date(new Date().setHours(23, 59, 59)),
+        },
+      };
+      break;
+    case "3days":
+      dateQuery = {
+        createdAt: {
+          $gte: new Date(new Date().setDate(new Date().getDate() - 2)).setHours(0, 0, 0),
+          $lt: new Date(new Date().setHours(23, 59, 59)),
+        },
+      };
+      break;
+    case "7days":
+      dateQuery = {
+        createdAt: {
+          $gte: new Date(new Date().setDate(new Date().getDate() - 6)).setHours(0, 0, 0),
+          $lt: new Date(new Date().setHours(23, 59, 59)),
+        },
+      };
+      break;
+  }
 
   let searchParse = search ? JSON.parse(search?.toString()) : {};
 
@@ -112,7 +150,7 @@ export default eventHandler(async (event) => {
   if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
     query = Object.assign(query, searchParse);
   }
-  reviews = await Review.find(query)
+  reviews = await Review.find({ ...query, ...dateQuery })
     .sort({ _id: -1 })
     .skip((skip as number) || 0)
     .limit((limit as number) || 0);
@@ -168,7 +206,6 @@ export default eventHandler(async (event) => {
 
       if (history) {
         format.completedDate = history.dataoperation;
-        console.log("history", history);
       }
 
       return format;

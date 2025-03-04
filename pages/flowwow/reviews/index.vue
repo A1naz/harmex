@@ -84,6 +84,7 @@ async function fetchData() {
       skip: skip.value,
       limit: limit.value,
       tab: currentTab.value,
+      dateFilter: dateFilter.value,
       search:
         searchText.value.length > 0
           ? {
@@ -333,6 +334,16 @@ async function copyToClipboard(text: string) {
 
 const config = useRuntimeConfig();
 const siteUrl = config.public.siteUrl;
+
+const dateFilter = ref("all");
+async function selectFilterDate(e: any) {
+  dateFilter.value = e.value;
+  reviews.value = [];
+  availableReviews.value = [];
+  skip.value = 0;
+  end.value = false;
+  fetchData();
+}
 </script>
 
 <template>
@@ -433,6 +444,19 @@ const siteUrl = config.public.siteUrl;
               @change-value="(e: any) => (searchType = e.value)"
             /> -->
           </div>
+          <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
+                <CustomSelect
+                     class="h-[2rem] min-w-[95px]"
+                  :tabs="[
+                    { title: 'Все время', value: 'all' },
+                    { title: 'Сегодня', value: 'today' },
+                    { title: 'Вчера', value: '2days' },
+                    { title: '3 дня', value: '3days' },
+                    { title: 'Неделя', value: '7days' },
+                  ]"
+                  @change-value="selectFilterDate"
+                />
+              </div>
           <div
             class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"
           >
