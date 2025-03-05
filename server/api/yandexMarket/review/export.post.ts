@@ -54,23 +54,25 @@ export default eventHandler(async (event) => {
     status: "completed",
   }).sort({ _id: -1 });
 
-  const format = reviews.map((review: any) => {
+  const format: any = reviews.map((review: any) => {
     return {
       _id: review._id,
       date: review.date,
+      article: review.article,
+      name: review.name,
       status: getStatus(review.status),
       text: review.text,
-      rating: review.rating,
+      positive: review.positive,
+      negative: review.negative,
     };
   });
 
   for (const delivery of availableReviews) {
     format.push({
       _id: delivery._id,
-      date: '',
+      date: "",
       status: "Доступен",
       text: "",
-      rating: "",
     });
   }
 
@@ -82,10 +84,13 @@ export default eventHandler(async (event) => {
 
   sheet.columns = [
     { header: "ID отзыва", key: "_id", font: { bold: true }, width: 25 },
-    { header: "Дата публикации", key: "date", font: { bold: true }, width: 16 },
+    { header: "Артикул", key: "article", font: { bold: true }, width: 16 },
+    { header: "Название", key: "name", font: { bold: true }, width: 54 },
     { header: "Статус", key: "status", font: { bold: true }, width: 16 },
-    { header: "Текст", key: "text", font: { bold: true }, width: 16 },
-    { header: "Рейтинг", key: "rating", font: { bold: true }, width: 16 },
+    { header: "Дата публикации", key: "date", font: { bold: true }, width: 16 },
+    { header: "Текст", key: "text", font: { bold: true }, width: 44 },
+    { header: "Плюсы", key: "positive", font: { bold: true }, width: 32 },
+    { header: "Минусы", key: "negative", font: { bold: true }, width: 32 },
   ];
 
   sheet.addRows(format);

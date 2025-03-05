@@ -56,13 +56,15 @@ export default eventHandler(async (event) => {
     status: "completed",
   }).sort({ _id: -1 });
 
-  const format = reviews.map((review: any) => {
+  const format: any = reviews.map((review: any) => {
     return {
       _id: review._id,
       date: review.date,
+      article: review.article,
+      name: review.name,
       status: getStatus(review.status),
-      text: review.text,
-      rating: review.rating,
+      publicComment: review.publicComment,
+      hiddenComment: review.hiddenComment,
     };
   });
 
@@ -72,7 +74,6 @@ export default eventHandler(async (event) => {
       date: "",
       status: "Доступен",
       text: "",
-      rating: "",
     });
   }
 
@@ -84,12 +85,13 @@ export default eventHandler(async (event) => {
 
   sheet.columns = [
     { header: "ID отзыва", key: "_id", font: { bold: true }, width: 25 },
-    { header: "Дата публикации", key: "date", font: { bold: true }, width: 16 },
+    { header: "Артикул", key: "article", font: { bold: true }, width: 54 },
+    { header: "Название", key: "name", font: { bold: true }, width: 54 },
     { header: "Статус", key: "status", font: { bold: true }, width: 16 },
-    { header: "Текст", key: "text", font: { bold: true }, width: 16 },
-    { header: "Рейтинг", key: "rating", font: { bold: true }, width: 16 },
+    { header: "Дата публикации", key: "date", font: { bold: true }, width: 16 },
+    { header: "Публичный отзыв", key: "publicComment", font: { bold: true }, width: 44 },
+    { header: "Скрытый комментарий", key: "hiddenComment", font: { bold: true }, width: 44 }
   ];
-
   sheet.addRows(format);
   const buffer = await workbook.xlsx.writeBuffer();
 

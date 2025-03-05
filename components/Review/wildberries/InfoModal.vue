@@ -38,6 +38,8 @@ const getStatus = computed(() => {
       return "На удалении";
     case "archived":
       return "В архиве";
+    case "completed":
+      return "Опубликован";
   }
 });
 
@@ -108,21 +110,21 @@ const { $dayjs } = useNuxtApp();
                   </span>
                   <div class="rounded-md px-2 text-sm text-[0.725rem]">
                     <span
-                      :class="{
-                        'bg-success bg-opacity-50 text-green-500':
-                          info.status === 'working' ||
-                          info.status === 'published' ||
-                          info.status === 'busy',
-                        'bg-[#F8C68A] text-[#D67500]':
-                          info.status === 'waiting' ||
-                          info.status === 'created',
-                        'bg-[#F8C68A]  text-red-500': info.status === 'nofunds',
-                        'bg-[#FF685E] text-white':
-                          info.status === 'canceled' ||
-                          info.status === 'deleted' ||
-                          info.status === 'deleting' ||
-                          info.status === 'archived',
-                      }"
+                    :class="{
+                    'bg-success bg-opacity-50 text-green-500':
+                      info.status === 'working' ||
+                      info.status === 'published' ||
+                      info.status === 'busy' ||
+                      info.status === 'completed',
+                    'bg-[#F8C68A] text-[#D67500]':
+                      info.status === 'waiting' || info.status === 'created',
+                    'bg-[#F8C68A]  text-red-500':
+                      info.status === 'nofunds' || info.status === 'archived',
+                    'bg-[#FF685E] text-white':
+                      info.status === 'canceled' ||
+                      info.status === 'deleted' ||
+                      info.status === 'deleting',
+                  }"
                       class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm"
                       >{{ getStatus }}
                     </span>

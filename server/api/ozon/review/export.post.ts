@@ -1,6 +1,6 @@
-import ExcelJS from 'exceljs'
-import { DocuemntEnum } from '~/data/enums'
-import { Review } from '~/server/lib/models/ozon/Review'
+import ExcelJS from "exceljs";
+import { DocuemntEnum } from "~/data/enums";
+import { Review } from "~/server/lib/models/ozon/Review";
 import { Delivery } from "~/server/lib/models/ozon/Delivery";
 
 const getStatus = (status: string) => {
@@ -31,14 +31,13 @@ const getStatus = (status: string) => {
 };
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { exportDates } = await readBody(event)
+  const { exportDates } = await readBody(event);
 
-  const startDate = new Date(exportDates[0])
-  const endDate = new Date(exportDates[1])
+  const startDate = new Date(exportDates[0]);
+  const endDate = new Date(exportDates[1]);
 
   const reviews = await Review.find({
     user,
@@ -46,58 +45,58 @@ export default eventHandler(async (event) => {
       $gt: startDate,
       $lt: endDate,
     },
-  }).sort({ _id: -1 })
+  }).sort({ _id: -1 });
 
-    const availableReviews = await Delivery.find({
-      user,
-      reviewed: { $ne: true },
-      'statusdelivery.status': { $regex: 'Получен' },
-      status: "completed",
-    }).sort({ _id: -1 });
-  
+  const availableReviews = await Delivery.find({
+    user,
+    reviewed: { $ne: true },
+    "statusdelivery.status": { $regex: "Получен" },
+    status: "completed",
+  }).sort({ _id: -1 });
 
-    const format = reviews.map((review: any) => {
-      return {
-        _id: review._id,
-        date: review.date,
-        status: getStatus(review.status),
-        text: review.text,
-        rating: review.rating,
-      };
+  const format: any = reviews.map((review: any) => {
+    return {
+      _id: review._id,
+      date: review.date,
+      article: review.article,
+      name: review.name,
+      status: getStatus(review.status),
+      text: review.text
+    };
+  });
+
+  for (const delivery of availableReviews) {
+    format.push({
+      _id: delivery._id,
+      date: "",
+      status: "Доступен",
+      text: "",
     });
+  }
 
-    for (const delivery of availableReviews) {
-      format.push({
-        _id: delivery._id,
-        date: '',
-        status: "Доступен",
-        text: "",
-        rating: "",
-      });
-    }
+  const workbook = new ExcelJS.Workbook();
 
-  const workbook = new ExcelJS.Workbook()
-
-  const sheet = workbook.addWorksheet('Отзывы', {
+  const sheet = workbook.addWorksheet("Отзывы", {
     headerFooter: { firstHeader: `Всего записей: ${reviews.length}` },
-  })
+  });
 
   sheet.columns = [
-    { header: 'ID отзыва', key: '_id', font: { bold: true }, width: 25 },
-    { header: 'Дата публикации', key: 'date', font: { bold: true }, width: 16 },
-    { header: 'Статус', key: 'status', font: { bold: true }, width: 16 },
-    { header: 'Текст', key: 'text', font: { bold: true }, width: 16 },
-    { header: 'Рейтинг', key: 'rating', font: { bold: true }, width: 16 },
-  ]
+    { header: "ID отзыва", key: "_id", font: { bold: true }, width: 25 },
+    { header: "Артикул", key: "article", font: { bold: true }, width: 16 },
+    { header: "Название", key: "name", font: { bold: true }, width: 54 },
+    { header: "Статус", key: "status", font: { bold: true }, width: 16 },
+    { header: "Дата публикации", key: "date", font: { bold: true }, width: 16 },
+    { header: "Текст", key: "text", font: { bold: true }, width: 44 }
+  ];
 
-  sheet.addRows(format)
-  const buffer = await workbook.xlsx.writeBuffer()
+  sheet.addRows(format);
+  const buffer = await workbook.xlsx.writeBuffer();
 
   await userLog(event, {
     documentType: DocuemntEnum.Review,
-    documentId: '',
-    comment: 'Экспорт отзывов',
-  })
+    documentId: "",
+    comment: "Экспорт отзывов",
+  });
 
-  return buffer
-})
+  return buffer;
+});
