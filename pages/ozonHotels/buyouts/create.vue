@@ -528,7 +528,7 @@ function removePromo(index: number) {
                 </div>
               </div>
               <div
-                class="label cursor-pointer flex gap-4 items-start justify-between"
+                class="label cursor-pointer gap-4 items-start justify-between hidden"
               >
                 <span class="label-text"
                   >{{ rule.id }}. {{ rule.description }}</span
