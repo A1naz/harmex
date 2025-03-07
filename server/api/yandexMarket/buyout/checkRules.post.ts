@@ -47,12 +47,11 @@ export default eventHandler(async (event) => {
 
   for (const item of products) {
     const curDate = new Date()
-    curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))
     const firstDate = new Date(item.dateRange[0])
 
     if (!item.purchaseSoon && firstDate < curDate) {
       result.success = false
-      result.message = `Дата ${item.article} не может быть меньше текущей по МСК`
+      result.message = `Дата ${item.article} не может быть меньше текущей`
     }
 
     // if (rules.includes(11)) sort = 'priceup'

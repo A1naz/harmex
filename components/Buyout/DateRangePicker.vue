@@ -84,13 +84,13 @@ function selectDateInternal(date: any, selectDate: any) {
   const userTimezoneOffsetHours = -userOffsetMinutes / 60
   const userTimezoneOffsetMinutesRemainder = -userOffsetMinutes % 60
   let curDate = new Date()
-  curDate.setHours(curDate.getHours() - userTimezoneOffsetHours + 3)
+  // curDate.setHours(curDate.getHours() - userTimezoneOffsetHours + 3)
   let dateFirst = new Date(date[0])
 
   if (dateFirst < curDate) {
     notify({
       title: 'Ошибка',
-      text: 'Выбрано прошедшее время по МСК',
+      text: 'Выбрано прошедшее время',
       type: 'error',
     })
 

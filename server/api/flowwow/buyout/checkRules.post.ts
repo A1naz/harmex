@@ -47,7 +47,7 @@ export default eventHandler(async (event) => {
 
   for (const item of products) {
     const curDate = new Date()
-    curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))
+    // curDate.setHours(curDate.getHours() - Number(userTimezoneOffsetHours))
     const firstDate = new Date(item.dateRange[0])
 
     // if (!item.purchaseSoon && firstDate < curDate) {

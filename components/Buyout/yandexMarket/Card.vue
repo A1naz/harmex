@@ -362,6 +362,11 @@ async function copyToClipboard(text: string) {
               </span>
               <div
                 class="text-[0.725rem] rounded-md py-0 px-2 bg-opacity-20 text-sm"
+                :class="{
+                  ' bg-[#b5ffbc] dark:bg-success': info.discount,
+                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                    !info.discount,
+                }"
               >
                 {{
                   info.discountPrice == info.product?.price

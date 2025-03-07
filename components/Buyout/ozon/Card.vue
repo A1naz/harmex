@@ -429,12 +429,17 @@ async function copyToClipboard(text: string) {
               </div>
             </div>
 
-            <div class="flex gap-2" v-if="info.discountPrice !== info.product?.price && info.discountPrice">
+            <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
                 >Скидка:
               </span>
               <div
                 class="text-[0.725rem] rounded-md py-0 px-2 bg-opacity-20 text-sm"
+                :class="{
+                  ' bg-[#b5ffbc] dark:bg-success': info.discount,
+                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                    !info.discount,
+                }"
               >
                 {{
                   info.discountPrice == info.product?.price
@@ -445,6 +450,7 @@ async function copyToClipboard(text: string) {
                 }}
               </div>
             </div>
+
             <div class="flex gap-2">
               <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
                 >Площадка:
@@ -464,7 +470,10 @@ async function copyToClipboard(text: string) {
           {{ info.FIO ? info.FIO : "-" }}
         </div>
       </div>
-      <div class="flex gap-1.5 -mt-2.5">
+      <div
+        class="flex gap-1.5 -mt-2.5"
+        v-if="info.discountPrice !== info.product?.price && info.discount"
+      >
         <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
           >Скидка запрошена:
         </span>
