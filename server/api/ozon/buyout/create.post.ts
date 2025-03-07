@@ -76,7 +76,7 @@ export default eventHandler(async (event) => {
       );
     }
 
-    if (product.discountPrice <= 0) {
+    if (product.discountPrice <= 0 || !product.discountPrice) {
       throw createError(
         `Для продукта ${product.article} указана некорректная цена скидки`
       );
