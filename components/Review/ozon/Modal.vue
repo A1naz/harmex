@@ -111,14 +111,14 @@ async function checkVideo(file: any) {
         });
         resolve(false);
       } else if (
-        videoElement.videoWidth < 480 ||
-        videoElement.videoHeight < 480
+        videoElement.videoWidth < 640 ||
+        videoElement.videoHeight < 360
       ) {
         form.video = "";
         isUploading.value = false;
         notify({
           title: "Ошибка",
-          text: "Минимальное разрешение видео должно быть 480x480",
+          text: "Минимальное разрешение видео должно быть 640x360",
           type: "error",
           duration: 3000,
         });

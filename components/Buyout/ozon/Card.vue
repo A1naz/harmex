@@ -429,7 +429,7 @@ async function copyToClipboard(text: string) {
               </div>
             </div>
 
-            <div class="flex gap-2">
+            <div class="flex gap-2" v-if="info.discountPrice !== info.product?.price && info.discountPrice">
               <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
                 >Скидка:
               </span>

@@ -92,7 +92,7 @@ defineEmits(["setFavourites", "vote"]);
 
           <div>
             <p class="text-[15px] font-normal mb-1">Доступные услуги:</p>
-            <div class="flex gap-x-1 text-[#fe6601c2] text-[15px]">
+            <div class="flex gap-x-0.5 text-[#fe6601c2] text-[15px] -ml-1">
               <NuxtLink
                 :to="social.disabled ? '' : `/${social.slug}${service.path}`"
                 v-for="(service, i) in getServices(social.items)"
