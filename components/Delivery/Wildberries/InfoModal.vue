@@ -212,6 +212,14 @@ onKeyStroke("Escape", (e) => {
                     {{ info.receiptcode }}
                   </label>
                 </div>
+                <div class="w-full truncate flex flex-wrap">
+                  <span class="text-sm text-gray-500 mr-2 my-auto"
+                    >Телефон получателя:
+                  </span>
+                  <label class="rounded-md py-0 px-2 text-sm cursor-pointer">
+                    {{ info.recipientphone }}
+                  </label>
+                </div>
                 <div class="w-full truncate">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Адрес:
