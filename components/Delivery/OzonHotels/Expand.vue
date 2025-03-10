@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const theme = useColorMode();
+const { notify } = useNotification();
+
 const props = defineProps({
   info: {
     type: Object as any,
@@ -13,15 +14,13 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["openModal", "openStatusModal", "openPenaltyModal"]);
+const theme = useColorMode();
 const currency = useCurrency();
 const store = useMainStore();
 const router = useRouter();
 const opened = ref();
 const qrCode = ref(null);
 
-function openBuyout() {
-  router.push(`/ozonHotels/buyouts?uuid=${props.info.uuid}`);
-}
 onMounted(async () => {
   opened.value = props.state;
 });
@@ -32,14 +31,16 @@ watch(
   }
 );
 function daysToPenalty(statusdelivery: any[]) {
-  const item = statusdelivery.find((item) => item.status === "Готов к выдаче");
+  const item = statusdelivery.find((item) =>
+    item.status.includes("Ожидает получения")
+  );
   if (!item) return;
 
   const updatedAt = new Date(item.date);
   const penaltyDay = new Date(updatedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
   const now = new Date();
   const timeLeft = penaltyDay.getTime() - now.getTime();
-  // eslint-disable-next-line max-statements-per-line
+
   if (timeLeft < 0) {
     return "Получение со штрафом!";
   } else {
@@ -47,187 +48,186 @@ function daysToPenalty(statusdelivery: any[]) {
     return `До штрафа осталось: ${days} д.`;
   }
 }
+
+function copyToClipboard(text: string) {
+  navigator.clipboard.writeText(text);
+  notify({ text: "Скопировано в буфер обмена", type: "success" });
+}
+
+const { $dayjs } = useNuxtApp();
 </script>
 
 <template>
-  <div
-    class="collapse collapse-arrow border bg-[#F3E9DD] rounded-box z-0 overflow-hidden border-[#eff0ff]"
-  >
-    <input v-model="opened" type="checkbox" />
-
+  <div class="buyout-card card bg-base-100 shadow-lg min-w-[214px] h-[340px]">
     <div
-      class="collapse-title relative text-xl font-medium bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10"
+      class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-3 relative"
     >
-      <div class="flex gap-4">
-        <nuxt-img
-          fit="contain"
-          :src="info?.productimage ? info?.productimage : 'null'"
-          width="36"
-          loading="lazy"
-          class="rounded-lg transition-opacity ease-in-out duration-200 hidden lg:block"
-        />
-
-        <div class="w-full">
-          <div class="flex justify-between flex-wrap lg:flex-nowrap gap-1">
-            <div class="flex gap-1">
-              <span> Доставка </span>
-              <div
-                v-if="
-                  info.currentstatus === 'Готов к выдаче' &&
-                  info.statusdelivery.length > 1
-                "
-                class="text-s link bg-[#FF6666] dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"
-                @click="emit('openPenaltyModal')"
-                style="min-width: fit-content"
-              >
-                <IconCSS name="ph:warning-circle-light" size="25" />
-
-                <span class="mr-1 my-auto">{{
-                  daysToPenalty(info.statusdelivery)
-                }}</span>
-              </div>
-            </div>
-
-            <label
-              class="text-[0.6rem] link link-hover sm:text-[0.8rem] lg:text-xs hover:text-primary break-all z-10"
-              @click="openBuyout"
-              style="white-space: nowrap"
-              >#{{ info.uuid }}
-            </label>
-          </div>
-
-          <div class="flex justify-between flex-wrap gap-1 items-center">
-            <div class="flex gap-2">
-              <button
-                class="text-xs font-normal btn btn-xs btn-primary bg-[#ff5e34b3] border-none text-base-content rounded-md z-10 mt-1 px-3"
-                @click="emit('openStatusModal', info.statusdelivery)"
-              >
-                <span class="font-semibold"> Статус:</span>
-                <span>{{ info.currentstatus }} </span>
-              </button>
-              <div
-                class="dark:bg-base-300 bg-[#d8d8d8] rounded-md text-sm font-normal my-auto p-0.5 mt-1 px-2"
-              >
-                Отели Ozon
-              </div>
-            </div>
-
-            <div class="mt-2 lg:m-0 text-xs text-primary font-normal">
-              Обновлено
-              {{
-                $dayjs(info.updatedAt).locale("ru").format("D MMMM YYYY HH:mm")
-              }}
-            </div>
-          </div>
-        </div>
+      <div class="dropdown dropdown-end absolute -right-1 top-2">
+        <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
+          <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
+        </label>
       </div>
-    </div>
 
-    <div
-      class="collapse-content bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10"
-    >
-      <div class="product flex flex-col gap-4 lg:gap-8 flex-wrap">
-        <div class="flex flex-col">
-          <div>
-            <!-- <div class="text-sm text-gray-500 ">
-                        Название
-                    </div> -->
-            <div>
-              {{ info.productname }}
-            </div>
-          </div>
-          <div>
-            <!-- <div class="text-sm text-gray-500">
-                    Артикул
-                </div> -->
-            <a
-              :href="`${info.article}`"
-              target="_blank"
-              class="text-primary link link-hover text-sm"
-            >
-              {{ info.article }}
-            </a>
-          </div>
+      <div class="flex gap-3 w-full truncate mt-6">
+        <div
+          class="flex-none"
+          style="
+            width: 80px;
+            height: 100px;
+            margin-top: auto;
+            margin-bottom: auto;
+          "
+        >
+          <nuxt-img
+            class="rounded-xl h-full"
+            width="120"
+            height="120"
+            format="webp"
+            loading="lazy"
+            :src="info?.productimage ? info?.productimage : 'null'"
+          />
         </div>
-        <div class="flex gap-10">
-          <div class="flex">
-            <div class="text-sm text-gray-500">
-              <span>Цена: </span>
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-1.5">
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Актуальность:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.updatedAt).format("DD.MM.YYYY") }}
+              </div>
+            </div>
+            <div
+              class="flex gap-2 cursor-pointer"
+              @click="emit('openStatusModal', info.statusdelivery)"
+            >
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Статус:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
+                :class="{
+                  'bg-orange-200':
+                    info.currentstatus.includes('Ожидает получения') &&
+                    info.statusdelivery.length > 1,
+                  'bg-green-200':
+                    info.currentstatus.includes('Оплачено') &&
+                    info.statusdelivery.length >= 1,
+                  'bg-red-200':
+                    info.currentstatus.includes('Возврат') &&
+                    info.statusdelivery.length > 1,
+                }"
+              >
+                {{ info.currentstatus }}
+              </div>
+            </div>
+            <div
+              v-if="
+                info.currentstatus.includes('Ожидает получения') &&
+                info.statusdelivery.length > 1
+              "
+              class="text-s link bg-[#FF6666] w-fit dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"
+              @click="emit('openPenaltyModal')"
+            >
+              <IconCSS name="ph:warning-circle-light" size="25" />
 
-              <span class="ml-2 rounded-md bg-success p-1 text-base-content">{{
-                currency.format(info.pricebuy)
+              <span class="mr-1 my-auto">{{
+                daysToPenalty(info.statusdelivery)
               }}</span>
             </div>
-          </div>
-
-          <div class="flex">
-            <div class="text-sm text-gray-500">
-              <span>Размер: </span>
-
-              <span
-                class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content"
-                >{{ info.size === "none" ? "Не указан" : info.size }}</span
+            <div class="flex gap-2" v-if="info.currentstatus === 'Получен'">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Получено:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.updatedAt).format("DD.MM.YYYY") }}
+              </div>
+            </div>
+            <div class="flex gap-2" v-if="info.executionTime">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Выполнено:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.executionTime).format("DD.MM.YYYY") }}
+              </div>
+            </div>
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >ID доставки:
+              </span>
+              <button
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
+                @click="copyToClipboard(info.uuid)"
               >
+                #{{ info.uuid }}
+              </button>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Товар:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
+              >
+                <a
+                  :href="info.article"
+                  target="_blank"
+                  class="link link-hover"
+                >
+                  {{ info.article }}
+                </a>
+              </div>
+            </div>
+
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Название:
+              </span>
+              <div class="truncate text-[0.9rem] text-bold">
+                {{ info.productname }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Цена:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ currency.format(info.pricebuy) }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Адрес:
+              </span>
+              <div
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] link-hover"
+              >
+                <a
+                  target="_blank"
+                  :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
+                >
+                  {{ info.point }}
+                </a>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Площадка:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                OZON отели
+              </div>
             </div>
           </div>
-
-          <!-- <div class="flex">
-                    <div class="text-sm text-gray-500">
-                        <span>Размер: </span>
-                        
-                        <span class="ml-2 rounded-md bg-[#ececec] dark:bg-base-300 dark:bg-opacity-30 p-1 text-base-content">{{ '%' }}</span>
-                    </div>
-                    
-                </div> -->
-        </div>
-      </div>
-
-      <div class="divider my-2" />
-
-      <div class="receipt flex gap-4 lg:gap-4 items-center flex-wrap">
-        <div class="flex gap-2 md:gap-10 lg:gap-10">
-          <div class="lg:mr-10 text-primary text-xs">
-            <div class="text-sm text-gray-500 mb-1">Получатель:</div>
-            {{ info.recipient }} {{ info.recipientphone }}
-          </div>
-
-          <div class="text-primary text-xs">
-            <div class="text-sm text-gray-500 mb-1">Код получения:</div>
-            {{ info?.receiptcode ? info?.receiptcode : "Товар не доставлен" }}
-          </div>
-
-          <div v-if="info.receiptcodeqr" class="flex justify-end">
-            <label
-              for="qr-modal"
-              class="btn btn-primary btn-xs flex bg-opacity-20 border-opacity-5 text-primary rounded-md gap-2"
-              @click="
-                emit(
-                  'openModal',
-                  parseInt(info.receiptcode),
-                  info.receiptcodeqr,
-                  info
-                )
-              "
-            >
-              <Icon name="material-symbols:qr-code" size="24" />
-              <span class="hidden lg:block">QR-код</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="w-76">
-          <div class="text-sm text-gray-500">Адрес:</div>
-          <a
-            target="_blank"
-            class="text-base-content text-xs link link-hover w-52 lg:w-76 break-all"
-            :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
-          >
-            {{ info.point }}
-            {{ info.appartmentNumber ? ", кв. " + info.appartmentNumber : "" }}
-          </a>
         </div>
       </div>
     </div>
+    <button
+      class="btn btn-sm h-[2.5rem] mb-3 text-[20px] mx-4 mt-2 rounded-2xl font-normal text-white btn-primary"
+      @click="$emit('openModal', index)"
+    >
+      Детали
+    </button>
   </div>
 </template>
 

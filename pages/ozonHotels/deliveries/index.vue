@@ -6,24 +6,32 @@ definePageMeta({
   middleware: "auth",
   title: "Доставки",
 });
-
 const openAll = ref(false);
 const route = useRoute();
 const deliveries = ref([]) as any;
 const autoTarget = ref(true);
+const loading = ref(true);
 const codeInputMob = ref();
 const loadingExport = ref(false);
-const status = computed(() => route.query?.status || "all");
-const loading = ref(false);
 const dateRange = ref([]);
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
-const search = ref<any>({
+const status = computed(() => route.query?.status || "all");
+const search = reactive({
   text: "",
   loading: false,
   error: false,
   type: "article",
 });
 
+// function selectStatus(e: Event) {
+//   const target = e.target as HTMLSelectElement
+//   router.push({
+//     path: '/delivery',
+//     query: {
+//       status: target.value,
+//     },
+//   })
+// }
 const modalInfo = reactive({
   src: "",
   code: 0,
@@ -32,12 +40,13 @@ const modal = ref(false);
 const statusModal = ref(false);
 const penaltyModal = ref(false);
 const currentStatusdDelivery = ref<any[]>([]);
-const currentDelivery = ref<any>();
-function openModal(code: number, src: string, info: any) {
-  modalInfo.src = src;
-  modalInfo.code = code;
+const selectedDelivery = ref<any>();
+const selectedIndex = ref(-1);
+function openModal(index: number) {
+  selectedIndex.value = index;
+  selectedDelivery.value = deliveries.value[index];
   modal.value = true;
-  currentDelivery.value = info;
+  // logModal.value = true;
 }
 function openStatusModal(statusdelivery: any[]) {
   currentStatusdDelivery.value = statusdelivery;
@@ -76,42 +85,13 @@ async function exportReadyXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
   const fileLink = document.createElement("a");
   fileLink.href = fileURL;
-  fileLink.setAttribute("download", "Готовы к выдаче Отели Ozon.xlsx");
+  fileLink.setAttribute("download", "Готовы к выдаче Ozon.xlsx");
   document.body.appendChild(fileLink);
   fileLink.click();
   loadingExport.value = false;
 }
-async function exportReadyUntilPenaltyXLS() {
-  loadingExport.value = true;
-  const { data, error } = await useFetch(
-    "/api/ozonHotels/delivery/exportReadyUntilPenalty",
-    {
-      params: {
-        dateRange: dateRange.value.length > 0 ? dateRange.value : null,
-      },
-      responseType: "blob",
-    }
-  );
-  if (error.value) {
-    notify({
-      type: "error",
-      title: "Что-то пошло не так",
-      text: "Не удалось экспортировать данные",
-    });
-    loadingExport.value = false;
-    return;
-  }
-  const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
-  const fileLink = document.createElement("a");
-  fileLink.href = fileURL;
-  fileLink.setAttribute(
-    "download",
-    "Готовы к выдаче Отели Озон до штрафа.xlsx"
-  );
-  document.body.appendChild(fileLink);
-  fileLink.click();
-  loadingExport.value = false;
-}
+
+
 async function exportXLS() {
   loadingExport.value = true;
   const { data, error } = await useFetch("/api/ozonHotels/delivery/export", {
@@ -121,10 +101,11 @@ async function exportXLS() {
     responseType: "blob",
   });
   if (error.value) {
+    console.log(error.value);
     notify({
       type: "error",
       title: "Что-то пошло не так",
-      text: "Не удалось экспортировать данные",
+      text: "Не удалось экспортировать данные" + error.value,
     });
     loadingExport.value = false;
     return;
@@ -132,7 +113,7 @@ async function exportXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
   const fileLink = document.createElement("a");
   fileLink.href = fileURL;
-  fileLink.setAttribute("download", "Общая таблица Отели Ozon.xlsx");
+  fileLink.setAttribute("download", "Общая таблица Ozon.xlsx");
   document.body.appendChild(fileLink);
   fileLink.click();
   loadingExport.value = false;
@@ -142,7 +123,7 @@ async function findDeliveries(value: string, type: string) {
   if (!value) {
     autoTarget.value = true;
     await getDeliveries();
-    search.value.loading = false;
+    search.loading = false;
     return;
   }
   const { data } = await useFetch("/api/ozonHotels/delivery/search", {
@@ -153,16 +134,21 @@ async function findDeliveries(value: string, type: string) {
   });
   if (data.value) deliveries.value = data.value;
 
-  search.value.loading = false;
+  search.loading = false;
 }
 
 const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000);
 
 async function onSearchInput() {
   autoTarget.value = false;
-  search.value.loading = true;
-  findDeliveriesDebounced(search.value.text, search.value.type);
+  search.loading = true;
+  findDeliveriesDebounced(search.text, search.type);
 }
+
+// const isInfoModal = ref<boolean>(false)
+// function toggleInfoModal() {
+//   isInfoModal.value = !isInfoModal.value
+// }
 
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value) {
@@ -172,7 +158,7 @@ watch(targetIsVisible, async (isVisible) => {
       query: {
         status: route.query?.status || "all",
         limit: 50,
-        skip: skip.value,
+        skip: skip.value ? skip.value : 0,
       },
     });
     if ((data.value as any)?.length === 0) {
@@ -238,28 +224,36 @@ const filters = [
     params: "?status=canceled",
     queryStatus: "canceled",
   },
-  {
-    title: "В архиве",
-    optionValue: "archived",
-    params: "?status=archived",
-    queryStatus: "archived",
-  },
+  // {
+  //   title: 'В архиве',
+  //   optionValue: 'archived',
+  //   params: '?status=archived',
+  //   queryStatus: 'archived',
+  // },
 ];
-
-const customLinks = filters.map((filter) => ({
-  title: filter.title,
-  slot: "/ozonHotels/deliveries",
-  query: filter.params,
-}));
-
 const statusText = computed(() => {
   return filters.find((el: any) => el.queryStatus === route.query.status)
     ?.title;
 });
 
 function updateSearchType(filter: any) {
-  search.value.type = filter.value;
+  search.type = filter.value;
 }
+
+// function changeFilter(e: any) {
+//   mpStore.changeMp(
+//     e.value,
+//     'deliveries',
+//     route.query?.status ? `?status=${route.query.status}` : '',
+//   )
+// }
+
+const customLinks = filters.map((filter) => ({
+  title: filter.title,
+  slot: "/ozon/deliveries",
+  query: filter.params,
+}));
+
 const orgInfo = ref({}) as any;
 const isVisible = ref(false);
 const router = useRouter();
@@ -285,6 +279,35 @@ async function getOrgInfo() {
 }
 getOrgInfo();
 
+const isChecked = ref(false);
+const manualModal = ref(false);
+
+function toggleCheckbox() {
+  const platform = "ozon";
+  const type = "deliveries";
+  const storedValue = localStorage.getItem("modalState");
+  const modalState = storedValue ? JSON.parse(storedValue) : {};
+
+  if (!modalState[platform]) {
+    modalState[platform] = {};
+  }
+  modalState[platform][type] = !modalState[platform][type];
+
+  localStorage.setItem("modalState", JSON.stringify(modalState));
+
+  isChecked.value = modalState[platform][type];
+}
+
+onMounted(() => {
+  const storedValue = localStorage.getItem("modalState");
+  const modalState = storedValue ? JSON.parse(storedValue) : {};
+
+  const platform = "ozonHotels";
+  const type = "deliveries";
+  isChecked.value = modalState[platform]?.[type] || false;
+  manualModal.value = !isChecked.value;
+});
+
 async function copyToClipboard(text: string) {
   await navigator.clipboard.writeText(text);
   notify({
@@ -300,7 +323,7 @@ const siteUrl = config.public.siteUrl;
 <template>
   <div class="px-4 sm:px-16 pt-8">
     <div
-      class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
+      class="breadcrumbs text-sm flex-wrap-reverse flex w-full justify-between"
     >
       <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
@@ -309,14 +332,11 @@ const siteUrl = config.public.siteUrl;
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink
-            to="/catalog/ozonHotels"
-            class="cursor-pointer text-[#909090]"
-          >
-            Отели Ozon
+          <NuxtLink to="/catalog/ozonHotels" class="cursor-pointer text-[#909090]">
+            Ozon отели
           </NuxtLink>
         </li>
-        <li class="cursor-pointer text-[#1e2734]">Доставки</li>
+        <li class="cursor-pointer text-[#1e2734]">Проживания</li>
       </ul>
       <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
         <div
@@ -336,6 +356,10 @@ const siteUrl = config.public.siteUrl;
         </div>
       </div>
     </div>
+    <!-- <div class="font-medium gap-1 mt-4">
+      Забирайте товары в течение
+      <span class="text-[#ff6666]"> 5 дней! </span>
+    </div> -->
     <div class="flex justify-start lg:justify-between mb-4 items-center mt-4">
       <div
         class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
@@ -351,7 +375,7 @@ const siteUrl = config.public.siteUrl;
                   v-model="search.text"
                   type="text"
                   class="input input-sm bg-transparent rounded-r-none w-full"
-                  placeholder="Поиск по uuid"
+                  placeholder="Поиск"
                   @input="onSearchInput()"
                 />
                 <span
@@ -374,7 +398,7 @@ const siteUrl = config.public.siteUrl;
               @reset="dateRange = []"
             >
               <button
-                class="div w-[48px] h-[32px] bg-[#eff0ff] border-[1px] rounded-[6px]"
+                class="div w-[48px] h-[32px] bg-[#fc7c5b] text-white border-[1px] rounded-[6px]"
               >
                 <Icon name="solar:calendar-linear" class="-mt-1" size="22px" />
               </button>
@@ -385,31 +409,14 @@ const siteUrl = config.public.siteUrl;
             >
               <label
                 tabindex="0"
-                class="btn btn-sm btn-primary bg-[#eff0ff] dark:bg-primary dark:bg-opacity-20 border-none text-base-content"
+                class="btn btn-sm btn-primary bg-[#fc7c5b] text-white border-none"
                 >XLS</label
               >
               <ul
                 tabindex="0"
-                class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-24"
+                class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
-                <!-- <li>
-                  <NuxtLink
-                    :to="`/ozonHotels/deliveries/export${
-                      dateRange.length
-                        ? '?dateRange=' +
-                          dateRange
-                            .map((date) => new Date(date).toISOString())
-                            .join(',')
-                        : ''
-                    }`"
-                  >
-                    Готовы к выдаче PDF
-                  </NuxtLink>
-                </li>
-                <li><a @click="exportReadyXLS">Готовы к выдаче Excel</a></li> -->
-
                 <li><a @click="exportXLS">Общая таблица Excel</a></li>
-                <!-- <li><a @click="exportReadyUntilPenaltyXLS">До штрафа</a></li> -->
               </ul>
             </div>
             <button
@@ -429,80 +436,56 @@ const siteUrl = config.public.siteUrl;
                 :status-text="statusText"
                 :links="customLinks"
               />
-            </span>
+          </span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- <div v-if="deliveries?.length" class="" >
-      <TransitionSlide group tag="ul" class="flex md:hidden flex-col gap-3">
-        <li v-for="(delivery, index) of deliveries" :key="index" class="overflow-visible z-0">
-          <DeliveryExpand
+    <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
+      <div
+        v-if="deliveries.length > 3"
+        group
+        class="cards grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] h-full"
+      >
+        <div
+          v-for="(delivery, index) of deliveries"
+          :key="delivery.uuid"
+          class="max-w-[400px]"
+        >
+          <DeliveryOzonHotelsExpand
             :state="openAll"
             :info="delivery"
             @open-modal="openModal"
+            :index="index"
             @open-status-modal="openStatusModal"
             @open-penalty-modal="penaltyModal = true"
-
           />
-        </li>
-        <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
-      </TransitionSlide>
-      <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
-    </div> -->
-    <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
-      <div
-        group
-        tag="ul"
-        class="flex flex-col md:flex-row navbar:flex-col lg:flex-row gap-3"
-      >
-        <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
-          <li
-            v-for="(delivery, index) of deliveries.slice(
-              0,
-              Math.ceil(deliveries.length / 2)
-            )"
-            :key="index"
-            class="overflow-visible z-0"
-          >
-            <DeliveryOzonHotelsExpand
-              :state="openAll"
-              :info="delivery"
-              @open-modal="openModal"
-              @open-status-modal="openStatusModal"
-              @open-penalty-modal="penaltyModal = true"
-            />
-          </li>
-        </ul>
-        <ul class="flex flex-col gap-3 lg:w-[49%] navbar:w-full">
-          <li
-            v-for="(delivery, index) of deliveries.slice(
-              Math.ceil(deliveries.length / 2)
-            )"
-            :key="index"
-            class="overflow-visible z-0"
-          >
-            <DeliveryOzonHotelsExpand
-              :state="openAll"
-              :info="delivery"
-              @open-modal="openModal"
-              @open-status-modal="openStatusModal"
-              @open-penalty-modal="penaltyModal = true"
-            />
-          </li>
-        </ul>
-        <div
-          ref="target"
-          class="flex justify-center items-center h-40 md:h-10"
-        />
+        </div>
       </div>
-      <DeliveryOzonHotelsQrModal
+      <div v-else group class="flex flex-wrap gap-x-4 gap-y-3">
+        <div
+          v-for="(delivery, index) of deliveries"
+          :key="delivery.uuid"
+          class="max-w-full sm:max-w-[320px]"
+        >
+          <DeliveryOzonHotelsExpand
+            :state="openAll"
+            :info="delivery"
+            :index="index"
+            @open-modal="openModal"
+            @open-status-modal="openStatusModal"
+            @open-penalty-modal="penaltyModal = true"
+          />
+        </div>
+      </div>
+
+      <!-- <DeliveryWildberriesQrModal
         v-if="modal"
         :code="modalInfo.code"
         :src="modalInfo.src"
         :info="currentDelivery"
-      />
+      /> -->
     </div>
     <Hero v-else-if="!loading" />
     <div v-else class="w-full mt-5 flex justify-center items-center">
@@ -515,7 +498,20 @@ const siteUrl = config.public.siteUrl;
       :state="statusModal"
       @close="statusModal = false"
     />
+    <DeliveryOzonHotelsInfoModal
+      v-if="modal"
+      :info="selectedDelivery"
+      :state="modal"
+      :index="selectedIndex"
+      @close="modal = false"
+    />
+    <div
+      ref="target"
+      class="flex justify-center items-center"
+      style="height: 60px"
+    />
   </div>
+  
 </template>
 
 <style scoped></style>

@@ -8,27 +8,25 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-});
-const { width } = useWindowSize();
-const emit = defineEmits(["openModal"]);
-const router = useRouter();
-
-const delIndex = 0;
-const deliveryId = props.info.delivs[delIndex].delivId;
-const buyoutuuId = props.info.delivs[delIndex].buyoutId;
-const article = props.info.article;
-const productimage = props.info.productimage[delIndex];
-const productname = props.info.productname[delIndex];
-const updatedAt = props.info.lastUpdated;
-const size = props.info.delivs[delIndex].sizeparam;
-const countAllAvailable = props.info.countAvailable;
+})
+const emit = defineEmits(['openModal'])
+const router = useRouter()
+const delIndex = 0
+const deliveryId = props.info.delivs[delIndex].delivId
+const buyoutuuId = props.info.delivs[delIndex].buyoutId
+const article = props.info.article
+const productimage = props.info.productimage[delIndex]
+const productname = props.info.productname[delIndex]
+const updatedAt = props.info.lastUpdated
+const size = props.info.delivs[delIndex].sizeparam
+const countAllAvailable = props.info.countAvailable
 const countSoonAvailable = props.info.countSoon
   ? props.info.countSoon
-  : undefined;
-const sex = props.info.delivs[delIndex].sex;
+  : undefined
+const sex = props.info.delivs[delIndex].sex
 
 function openBuyout() {
-  router.push(`/ozonHotels/buyouts?uuid=${buyoutuuId}`);
+  router.push(`/ozon/buyouts?uuid=${buyoutuuId}`)
 }
 </script>
 
@@ -42,7 +40,7 @@ function openBuyout() {
           class="flex-none"
           style="
             width: 80px;
-            height: 124px;
+            height: 80px;
             margin-top: auto;
             margin-bottom: auto;
           "
@@ -66,11 +64,7 @@ function openBuyout() {
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
               >
                 <a
-                :href="
-            info.url && info.url[0]
-              ? info.url[0]
-              : `https://www.ozon.ru/travel/hotels/product/${article}`
-          "
+                  :href="`https://www.ozon.ru/product/${article}`"
                   target="_blank"
                   class="link link-hover"
                 >
@@ -100,7 +94,7 @@ function openBuyout() {
                 >Площадка:
               </span>
               <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
-                OZON Hotels
+                OZON Отели
               </div>
             </div>
             <div class="flex gap-2">
@@ -116,7 +110,7 @@ function openBuyout() {
       </div>
       <label
         for="review-modal"
-        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
+        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary opacity-80 hover:opacity-100"
         @click="$emit('openModal', buyoutuuId, deliveryId)"
       >
         Создать заявку

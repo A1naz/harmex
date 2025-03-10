@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { SelectOptionsReviews as SelectOptions } from "@/data/enums";
+import { SelectOptionsReviews as SelectOptions } from "~/data/enums";
 
 const { notify } = useNotification();
 
 definePageMeta({
   layout: "app",
   middleware: "auth",
-  title: "Отзывы Отели Ozon",
+  title: "Отзывы Ozon Отели",
 });
+
+const { getData } = useApi();
 
 const route = useRoute();
 const end = ref(false);
+
+const mpStore = useMPStore();
 const router = useRouter();
+
 const logModal = ref(false);
+const infoModal = ref(false);
 const selectedReview = ref({
   uuid: "",
 });
 
 const target = ref(null);
 const targetIsVisible = ref(false);
-const { stop } = useIntersectionObserver(
-  target,
-  ([{ isIntersecting }], observerElement) => {
-    targetIsVisible.value = isIntersecting;
-  }
-);
 
 const tabs = [
   { value: "all", name: "Все отзывы" },
@@ -36,6 +36,7 @@ const tabs = [
   { value: "deleted", name: "Удаленные" },
   { value: "nofunds", name: "Недостаточно средств" },
   { value: "reviewsUpdate", name: "На проверке" },
+  { value: "archived", name: "В архиве" },
 ];
 
 const searchOptions = ref([
@@ -44,18 +45,17 @@ const searchOptions = ref([
   { value: SelectOptions.idReview, name: "ID отзыва" },
 ]);
 
+const currentTab = ref<string>("");
 const skip = ref<number>(0);
-const limit = computed(() => (currentTab.value == "available" ? 1000 : 50));
+const limit = computed(() => (currentTab.value === "available" ? 1000 : 50));
 const loading = ref(false);
-
 const searchType = ref<SelectOptions>(SelectOptions.article);
 const searchText = ref("");
 
-const currentTab = ref<string>("");
 const endpoint = computed(() =>
-  currentTab.value == "available"
+  currentTab.value === "available"
     ? "available"
-    : currentTab.value == "all"
+    : currentTab.value === "all"
     ? "all"
     : "published"
 );
@@ -77,26 +77,23 @@ async function fetchData() {
     ? SelectOptions.uuidBuyout
     : SelectOptions.idReview;
 
-  const response: any = await $fetch(
-    `/api/ozonHotels/review/${endpoint.value}`,
-    {
-      method: "GET",
-      params: {
-        skip: skip.value,
-        limit: limit.value,
-        tab: currentTab.value,
-        search:
-          searchText.value.length > 0
-            ? {
-                [searchType.value]: searchText.value
-                  .replaceAll(" ", "")
-                  .replace("#", ""),
-              }
-            : {},
-      },
-    }
-  );
-
+  const response: any[] = await $fetch(`/api/ozonHotels/review/${endpoint.value}`, {
+    method: "GET",
+    params: {
+      skip: skip.value,
+      limit: limit.value,
+      dateFilter: dateFilter.value,
+      tab: currentTab.value,
+      search:
+        searchText.value.length > 0
+          ? {
+              [searchType.value]: searchText.value
+                .replaceAll(" ", "")
+                .replace("#", ""),
+            }
+          : {},
+    },
+  });
   if (response) {
     if (response.reviews) {
       reviews.value = [...reviews.value, ...response.reviews];
@@ -104,11 +101,10 @@ async function fetchData() {
     if (response.availableReviews) {
       availableReviews.value = response.availableReviews;
     }
-
     if (response.length < limit.value) end.value = true;
   }
   isFetch.value = false;
-  loading.value = false;
+  // loading.value = false
 }
 
 function changeTab(tab: any) {
@@ -120,27 +116,15 @@ function changeTab(tab: any) {
   fetchData();
 }
 
-function selectText() {
-  const index = tabs.findIndex((item) =>
-    route.query?.status
-      ? item.value == route.query?.status
-      : item.value == "available"
-  );
-  if (index == -1) {
-    return "Доступные";
-  }
-  return tabs[index].name;
-}
-
-function onSearchInput() {
+function onSearchInput(_val: any) {
   if (searchText.value !== "" && searchText.value.trim() === "") {
     return;
   }
-  loading.value = true;
   reviews.value = [];
   availableReviews.value = [];
   skip.value = 0;
   end.value = false;
+  // loading.value= true
   fetchData();
 }
 
@@ -152,11 +136,10 @@ function openPhoto(src: string) {
 }
 const selectedDelivery = ref("");
 const modalOpen = ref(false);
-
 const selectedArticle = ref<any>({});
+
 function openModal(review: any, uuid: string, deliveryid: string) {
   selectedArticle.value = review;
-  // getDrafts(review.article)
   selectedUUID.value = uuid;
   selectedDelivery.value = deliveryid;
   modalOpen.value = true;
@@ -194,8 +177,7 @@ async function removeReview() {
       type: "success",
     });
     const startIn = reviews.value.find(
-      // eslint-disable-next-line eqeqeq
-      (rev: any) => rev.uuid == uuidForRemove.value
+      (rev: any) => rev.uuid === uuidForRemove.value
     );
     reviews.value.splice(startIn, 1);
   }
@@ -220,15 +202,17 @@ watch(
 );
 
 onMounted(() => {
-  if (route.query?.idReview && route.query?.idReview.length > 0) {
-    // const idReview = route.query?.idReview
-    // if (idReview && typeof idReview == 'string') {
-    //   currentTab.value = 'published'
-    //   searchType.value = SelectOptions.idReview
-    //   searchText.value = idReview
-    // }
-  } else if (route.query.status) {
+  if (route.query.status) {
     currentTab.value = route.query.status.toString();
+  }
+
+  if (route.query?.uuid && route.query?.uuid.length > 0) {
+    const uuidReview = route.query?.uuid;
+    if (uuidReview && typeof uuidReview == "string") {
+      // currentTab.value = 'published'
+      searchType.value = SelectOptions.idReview;
+      searchText.value = uuidReview;
+    }
   } else {
     currentTab.value = "all";
     router.push("/ozonHotels/reviews?status=all");
@@ -236,6 +220,24 @@ onMounted(() => {
   fetchData();
 });
 
+async function changeMP(e: any) {
+  mpStore.changeMp(
+    e.value,
+    "reviews",
+    route.query?.status ? `?status=${route.query.status}` : ""
+  );
+}
+function selectText() {
+  const index = tabs.findIndex((item) =>
+    route.query?.status
+      ? item.value === route.query?.status
+      : item.value === "available"
+  );
+  if (index === -1) {
+    return "Доступные";
+  }
+  return tabs[index].name;
+}
 const customLinks = tabs.map((filter) => ({
   title: filter.name,
   value: filter.value,
@@ -335,248 +337,224 @@ async function copyToClipboard(text: string) {
 
 const config = useRuntimeConfig();
 const siteUrl = config.public.siteUrl;
+
+const dateFilter = ref("all");
+async function selectFilterDate(e: any) {
+  dateFilter.value = e.value;
+  reviews.value = [];
+  availableReviews.value = [];
+  skip.value = 0;
+  end.value = false;
+  fetchData();
+}
 </script>
 
 <template>
-  <div class="px-4 sm:px-16 pt-8">
-    <div
-      class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
-    >
-      <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
-        <li class="cursor-pointer">
-          <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
-            Маркетплейсы
-          </NuxtLink>
-        </li>
-        <li class="cursor-pointer">
-          <NuxtLink
-            to="/catalog/ozonHotels"
-            class="cursor-pointer text-[#909090]"
-          >
-            Отели Ozon
-          </NuxtLink>
-        </li>
-        <li class="cursor-pointer text-[#1e2734]">Отзывы</li>
-      </ul>
-      <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
-        <div
-          class="bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center"
-        >
-          <div class="org-name font-semibold text-gray-800">
-            {{ orgInfo.title.toUpperCase() }}
-          </div>
-
-          <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
-          <button
-            class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
-            @click="copyToClipboard(`${siteUrl}/ozonHotels/reviews`)"
-          >
-            <Icon name="ph:share-fat-fill" size="20" />
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="page-header">
-      <!-- <div class="flex items-center gap-2 mt-4">
-        <h1 class="text-2xl font-bold">Отзывы</h1>
-        <InfoButton @openModal="toggleInfoModal" />
-      </div> -->
-
-      <!-- <InfoModal
-        :isModal="isInfoModal"
-        title="Отзывы"
-        ytSrc='https://www.youtube.com/embed/Zc0RYzPzNfY?si=LTgHXnmGixsDkmoG'
-        @changeVisibility="toggleInfoModal"
-        >
-        <p>
-            На каждый полученный артикул можно оставить отзыв. Оплачивается отдельно
-            от выкупа согласно вашему тарифу.
-        </p>
-        <p>
-            Стоимость одного отзыва -
-            <span class="font-bold"> {{ store.tariffString('review') }} </span>
-            Стоимость удаления отзыва
-            <span class="font-bold"> 100р. </span>
-
-            Все услуги оказываются по Московскому времени.
-        </p>
-        </InfoModal> -->
-    </div>
-
-    <div class="flex justify-start lg:justify-between mb-4 items-center mt-4">
+  <div class="px-4 sm:px-16">
+    <div>
       <div
-        class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
+        class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
       >
-        <div class="export lg:absolute right-0 top-0">
-          <ExportXls
-            api="/api/ozonHotels/review/export"
-            file-name="MARKETMONSTR Доступные отзывы"
-            :is-visible="true"
-          />
-        </div>
-        <div class="w-full flex gap-1 lg:gap-2">
-          <div class="flex gap-1 lg:gap-3 flex-nowrap whitespace-nowrap">
-            <span
-              ><CustomSelect
-                class="h-[2rem] min-w-[95px]"
-                :tabs="customLinks"
-                :status-text="selectText()"
-                @change-value="changeTab"
-              />
-            </span>
+        <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
+          <li class="cursor-pointer">
+            <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
+              Маркетплейсы
+            </NuxtLink>
+          </li>
+          <li class="cursor-pointer">
+            <NuxtLink to="/catalog/ozonHotels" class="cursor-pointer text-[#909090]">
+              Ozon Отели
+            </NuxtLink>
+          </li>
+          <li class="cursor-pointer text-[#1e2734]">Отзывы</li>
+        </ul>
+        <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
+          <div
+            class="bg-transparent rounded-lg shadow-xs flex gap-2 items-center text-center"
+          >
+            <div class="org-name font-semibold text-gray-800">
+              {{ orgInfo.title.toUpperCase() }}
+            </div>
+
+            <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
             <button
-              @click="manualModal = true"
-              class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
+              class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
+              @click="copyToClipboard(`${siteUrl}/wildberries/buyouts`)"
             >
-              <Icon name="ci:info" size="24" />
+              <Icon name="ph:share-fat-fill" size="20" />
             </button>
           </div>
-          <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
-            <!-- <CustomSelect
-              class="h-[2rem] bg-[#f4f4f4]"
-              :tabs="searchOptions.map((el: any) => ({ title: el.name, value: el.value }))"
-              @change-value="(e: any) => (searchType = e.value)"
-            /> -->
+        </div>
+      </div>
+      <div class="flex justify-start lg:justify-between mb-4 items-center mt-4">
+        <div
+          class="flex relative gap-2 lg:gap-3 flex-col lg:flex-row w-full lg:w-full"
+        >
+          <div class="export lg:absolute right-0 top-0">
+            <ExportXls
+              api="/api/ozonHotels/review/export"
+              file-name="MARKETMONSTR Доступные отзывы"
+              :is-visible="true"
+            />
           </div>
-          <div
-            class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"
-          >
-            <label
-              class="w-full flex bg-[#ececed] rounded-lg items-center justify-between"
-            >
-              <input
-                v-model="searchText"
-                type="text"
-                class="input input-sm w-[134px] bg-transparent bg-opacity-40 rounded-r-none"
-                placeholder="Поиск"
-                @change="onSearchInput"
-              />
-              <div
-                class="hover:bg-transparent bg-transparent bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
-                @click="onSearchInput"
-              >
-                <span
-                  v-if="loading"
-                  class="loading loading-spinner loading-xs"
+          <div class="w-full flex gap-1 lg:gap-2">
+            <div class="flex gap-1 lg:gap-3 flex-nowrap whitespace-nowrap">
+              <span
+                ><CustomSelect
+                  class="h-[2rem] min-w-[95px]"
+                  :tabs="customLinks"
+                  :status-text="selectText()"
+                  @change-value="changeTab"
                 />
-                <Icon
-                  v-else
-                  class="text-gray-500"
-                  name="tabler:search"
-                  size="20"
+              </span>
+              <button
+                @click="manualModal = true"
+                class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
+              >
+                <Icon name="ci:info" size="24" />
+              </button>
+            </div>
+            <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
+              <!-- <CustomSelect
+                class="h-[2rem] bg-[#f4f4f4]"
+                :tabs="searchOptions.map((el: any) => ({ title: el.name, value: el.value }))"
+                @change-value="(e: any) => (searchType = e.value)"
+              /> -->
+            </div>
+            <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
+                <CustomSelect
+                     class="h-[2rem] min-w-[95px]"
+                  :tabs="[
+                    { title: 'Все время', value: 'all' },
+                    { title: 'Сегодня', value: 'today' },
+                    { title: 'Вчера', value: '2days' },
+                    { title: '3 дня', value: '3days' },
+                    { title: 'Неделя', value: '7days' },
+                  ]"
+                  @change-value="selectFilterDate"
                 />
               </div>
-            </label>
+            <div
+              class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"
+            >
+              <label
+                class="w-full flex bg-[#ececed] rounded-lg items-center justify-between"
+              >
+                <input
+                  v-model="searchText"
+                  type="text"
+                  class="input input-sm w-[134px] bg-transparent bg-opacity-40 rounded-r-none"
+                  placeholder="Поиск"
+                  @change="onSearchInput"
+                />
+                <div
+                  class="hover:bg-transparent bg-transparent bg-opacity-40 flex items-center px-2 rounded-r-lg cursor-pointer"
+                  @click="onSearchInput"
+                >
+                  <span
+                    v-if="loading"
+                    class="loading loading-spinner loading-xs"
+                  />
+                  <Icon
+                    v-else
+                    class="text-gray-500"
+                    name="tabler:search"
+                    size="20"
+                  />
+                </div>
+              </label>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- <div class="search flex justify-between content-center my-4 flex-wrap gap-2">
-      <div class="flex gap-1 items-center">
-        <ExportXls
-          api="/api/review/export"
-          fileName="MARKETMONSTR Доступные отзывы"
-          :isVisible="true"
-        />
-        <NuxtLink
-            to="/reviews/drafts"
-            class="btn btn-primary btn-sm"
-            >Черновики</NuxtLink>
-      </div>
-
-    </div> -->
-    <div style="min-height: 500px">
-      <div
-        v-if="
-          (reviews && reviews.length > 0) ||
-          (availableReviews && availableReviews.length > 0)
-        "
-        class="mt-6"
-      >
+      <div style="min-height: 500px">
         <div
-          v-if="currentTab === 'available' || currentTab === 'all'"
-          class="cards grid grid-cols-1 gap-4 mb-4"
+          v-if="
+            (reviews && reviews.length > 0) ||
+            (availableReviews && availableReviews.length > 0)
+          "
+          class="mt-6"
         >
-          <ReviewOzonHotelsCard
-            v-for="(review, index) of availableReviews"
-            :key="index"
-            :index="index"
-            :info="review"
-            @open-modal="(b: string, d: string) => openModal(review, b, d)"
-          />
-        </div>
-        <div
-          class="mt-2 mb-5 divider"
-          v-if="currentTab == 'all' && availableReviews.length"
-        ></div>
-        <div
-          v-if="currentTab !== 'available'"
+          <div
+            v-if="currentTab === 'available' || currentTab === 'all'"
           class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
-        >
-          <ReviewOzonHotelsPublishedCard
-            v-for="(review, index) of reviews"
-            :key="index"
-            :index="index"
-            :info="review"
-            @remove-review="openRemoveReviewModal"
-            @open-image="openPhoto"
-            @resume-status="resumeStatus"
-            @get-review="fetchData()"
-            @log-modal="(item:any) => [(selectedReview = item), (logModal = true)]"
+          >
+            <ReviewOzonHotelsCard
+              v-for="(review, index) of availableReviews"
+              :key="index"
+              :index="index"
+              :info="review"
+              @open-modal="(b: string, d: string) => openModal(review, b, d)"
+            />
+          </div>
+          <div
+            class="mt-2 mb-5 divider"
+            v-if="currentTab == 'all' && availableReviews.length"
+          ></div>
+          <div
+            v-if="currentTab !== 'available'"
+            class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
+          >
+            <ReviewOzonHotelsPublishedCard
+              v-for="(review, index) of reviews"
+              :key="index"
+              :index="index"
+              :info="review"
+              @remove-review="openRemoveReviewModal"
+              @open-image="openPhoto"
+              @resume-status="resumeStatus"
+              @get-review="fetchData()"
+              @log-modal="(item: any) => [(selectedReview = item), (logModal = true)]"
+              @info-modal="(item: any) => [(selectedReview = item), (infoModal = true)]"
+            />
+          </div>
+
+          <div
+            v-if="!isFetch && reviews && reviews.length > 0"
+            ref="target"
+            class="flex justify-center items-center h-4 mb-10"
           />
         </div>
-
         <div
-          v-if="!isFetch && reviews && reviews.length > 0"
-          ref="target"
-          class="flex justify-center items-center h-4 mb-10"
-        />
-      </div>
-      <div
-        v-else-if="isFetch"
-        class="w-full mt-5 flex justify-center items-center"
-      >
-        <span class="loading loading-dots loading-lg text-primary" />
-      </div>
-      <Hero v-else />
-    </div>
-
-    <ReviewOzonHotelsModal
-      v-if="modalOpen"
-      :review="selectedArticle"
-      :deliveryid="selectedDelivery"
-      :state="modalOpen"
-      :uuid="selectedUUID"
-      @publish="goToPublished"
-      @close="closeModal"
-    />
-
-    <!-- Put this part before </body> tag -->
-    <input id="reviewImageModal" type="checkbox" class="modal-toggle" />
-
-    <label for="reviewImageModal" class="modal cursor-pointer">
-      <label
-        for=""
-        class="modal-box min-w-0 max-w-5xl max-h-[80vh] p-0 overflow-hidden"
-      >
-        <label
-          for="reviewImageModal"
-          class="btn btn-sm btn-ghost btn-circle absolute right-2 top-2"
-          >✕</label
+          v-else-if="isFetch"
+          class="w-full mt-5 flex justify-center items-center"
         >
-        <nuxt-img
-          v-if="openedPhoto"
-          fit="contain"
-          class="object-contain m-auto max-h-[80vh]"
-          :src="openedPhoto || ''"
-          loading="lazy"
-        />
-      </label>
-    </label>
-    <div>
-      <!-- You can open the modal using ID.showModal() method -->
+          <span class="loading loading-dots loading-lg text-primary" />
+        </div>
+        <Hero v-if="!reviews.length && !isFetch && !availableReviews.length" />
+      </div>
+
+      <ReviewOzonHotelsModal
+        v-if="modalOpen"
+        :review="selectedArticle"
+        :deliveryid="selectedDelivery"
+        :state="modalOpen"
+        :uuid="selectedUUID"
+        @publish="goToPublished"
+        @close="closeModal"
+      />
+
       <!-- Put this part before </body> tag -->
+      <input id="reviewImageModal" type="checkbox" class="modal-toggle" />
+
+      <label for="reviewImageModal" class="modal cursor-pointer">
+        <label for="" class="modal-box p-0 overflow-hidden">
+          <label
+            for="reviewImageModal"
+            class="btn btn-sm btn-ghost btn-circle absolute right-2 top-2"
+            >✕</label
+          >
+          <nuxt-img
+            v-if="openedPhoto"
+            fit="contain"
+            class="object-contain m-auto max-h-[80vh]"
+            :src="openedPhoto || ''"
+            loading="lazy"
+          />
+        </label>
+      </label>
+    </div>
+    <div>
       <input id="reviewRemoveModal" type="checkbox" class="modal-toggle" />
       <div class="modal">
         <div class="modal-box max-w-xs py-6 px-3">
@@ -632,7 +610,7 @@ const siteUrl = config.public.siteUrl;
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/flowwow/buyout2_3.png"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2_4.png"
       />
       <p class="divider"></p>
       <p class="mt-4 mb-2"><strong>Планирование публикации отзывов</strong></p>
@@ -814,6 +792,11 @@ const siteUrl = config.public.siteUrl;
       :info="selectedReview"
       :state="logModal"
       @close="logModal = false"
+    />
+    <ReviewOzonHotelsInfoModal
+      :info="selectedReview"
+      :state="infoModal"
+      @close="infoModal = false"
     />
   </div>
 </template>
