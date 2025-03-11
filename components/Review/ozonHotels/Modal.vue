@@ -291,7 +291,7 @@ async function publishReview() {
     }
   }
   // @ts-ignore
-  const { data, error } = await useFetch("/api/ozon/review/publish", {
+  const { data, error } = await useFetch("/api/ozonHotels/review/publish", {
     method: "POST",
     body: {
       ...form,

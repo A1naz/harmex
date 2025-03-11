@@ -95,6 +95,8 @@ export default eventHandler(async (event) => {
     recipientphone: delivery.recipientphone,
     uuid: uuid(),
   })
+
+
   const res = await review.save()
   delivery.reviewed = true
   await delivery.save()
