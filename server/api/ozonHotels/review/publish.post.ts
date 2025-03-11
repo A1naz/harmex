@@ -12,34 +12,15 @@ export default eventHandler(async (event) => {
   const {
     buyoutuuid,
     deliveryid,
-    serviceRating,
-    deliveryRating,
+    rating,
+    text,
     photos,
-    valuePerMoneyRating,
-    conformityRating,
-    publicComment,
-    hiddenComment,
     date,
+    videoKey,
+    video,
   } = await readBody(event)
 
-  if (publicComment) {
-    if (publicComment.length < 10 || publicComment.length > 1000) {
-      throw createError({
-        statusCode: 400,
-        message:
-          'Публичный отзыв должен быть длиннее 10 символов и не больше 1000',
-      })
-    }
-  }
-  if (hiddenComment) {
-    if (hiddenComment.length < 10 || hiddenComment.length > 1000) {
-      throw createError({
-        statusCode: 400,
-        message:
-          'Скрытый комментарий должен быть длиннее 10 символов и не больше 1000',
-      })
-    }
-  }
+
 
   const balanceIsExist = await checkBalance(user, { buyoutuuid, video: false, mp: 'flowwow' }, 'reviews')
 
@@ -81,12 +62,8 @@ export default eventHandler(async (event) => {
     article: buyout.article,
     name: buyout.product.name,
     images: photos.map((photo: any) => photo.url),
-    serviceRating,
-    deliveryRating,
-    valuePerMoneyRating,
-    conformityRating,
-    publicComment,
-    hiddenComment,
+    rating,
+    text,
     date,
     user,
     delivery,
