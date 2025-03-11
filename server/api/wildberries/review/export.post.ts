@@ -2,6 +2,7 @@ import ExcelJS from "exceljs";
 import { DocuemntEnum } from "~/data/enums";
 import { Review } from "~/server/lib/models/wildberries/Review";
 import { Delivery } from "~/server/lib/models/wildberries/Delivery";
+import { Buyout } from "~/server/lib/models/wildberries/Buyout";
 const getStatus = (status: string) => {
   switch (status) {
     case "created":
@@ -53,6 +54,11 @@ export default eventHandler(async (event) => {
     status: "completed",
   }).sort({ _id: -1 });
 
+  const buyouts = await Buyout.find({
+    user,
+    uuid: { $in: availableReviews.map((review: any) => review.uuidbuyout) },
+  });
+
   const format: any = reviews.map((review: any) => {
     return {
       _id: review._id,
@@ -67,11 +73,16 @@ export default eventHandler(async (event) => {
   });
 
   for (const delivery of availableReviews) {
+    const foundBuyout = buyouts.find(
+      (buyout: any) => buyout.uuid == delivery.uuidbuyout
+    );
     format.push({
       _id: delivery._id,
       date: "",
       status: "Доступен",
       text: "",
+      name: foundBuyout ? foundBuyout.product.name : "",
+      article: foundBuyout ? foundBuyout.article : "",
     });
   }
 
