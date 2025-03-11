@@ -163,7 +163,7 @@ const { $dayjs } = useNuxtApp();
                     class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
                   >
                     <a
-                      :href="`https://www.ozon.ru/product/${info.article}`"
+                      :href="`https://www.ozon.ru/travel/hotels/product/${info.article}`"
                       target="_blank"
                       class="link link-hover"
                     >

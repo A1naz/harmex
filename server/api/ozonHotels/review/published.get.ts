@@ -59,6 +59,7 @@ export default eventHandler(async (event) => {
                 conformityRating: review.conformityRating,
                 valuePerMoneyRating: review.valuePerMoneyRating,
                 serviceRating: review.serviceRating,
+                url: review.url,
                 deliveryRating: review.deliveryRating,
                 images: review.images,
                 date: review.date,

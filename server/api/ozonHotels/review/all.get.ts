@@ -137,6 +137,7 @@ export default eventHandler(async (event) => {
         text: review.text,
         positive: review.positive,
         negative: review.negative,
+        url: review.url,
         rating: review.rating,
         images: review.images,
         date: review.date,

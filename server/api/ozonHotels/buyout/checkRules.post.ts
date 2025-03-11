@@ -46,7 +46,8 @@ export default eventHandler(async (event) => {
 
     const curDate = new Date()
     const firstDate = new Date(item.dateRange[0])
-
+    firstDate.setHours(23, 59, 59, 999)
+console.log(firstDate, curDate)
     if (!item.purchaseSoon && firstDate < curDate) {
       result.success = false
       result.message = `Дата ${item.article} не может быть меньше текущей`

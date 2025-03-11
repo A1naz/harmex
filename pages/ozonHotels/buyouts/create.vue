@@ -397,13 +397,13 @@ function removePromo(index: number) {
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-                <th class="font-normal" @click="openInfoModal('rules')">
-                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
+                <!-- <th class="font-normal" @click="openInfoModal('rules')">
+   
                   <div class="text-center">
                     <span> Правила </span>
-                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+   
                   </div>
-                </th>
+                </th> -->
                 <th class="font-normal" @click="openInfoModal('dates')">
                   <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
@@ -511,22 +511,7 @@ function removePromo(index: number) {
               Выберите нужные правила для этого выкупа
             </h3>
             <div v-for="rule of defaultRules" :key="rule.id" class="">
-              <div
-                v-if="rule.id === 1"
-                class="label cursor-pointer flex gap-4 items-start justify-between"
-              >
-                <span class="label-text">{{
-                  "Выкупить товар(-ы) прямо сейчас "
-                }}</span>
-                <div class="flex gap-4">
-                  <input
-                    :disabled="products[selectedRuleProductIndex].key"
-                    v-model="products[selectedRuleProductIndex].purchaseSoon"
-                    type="checkbox"
-                    class="checkbox checkbox-primary border-base-content"
-                  />
-                </div>
-              </div>
+         
               <div
                 class="label cursor-pointer gap-4 items-start justify-between hidden"
               >

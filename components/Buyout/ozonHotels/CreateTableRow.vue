@@ -185,7 +185,7 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
         </select>
       </div>
     </td>
-    <td class="border-r border-base">
+    <!-- <td class="border-r border-base">
       <div class="w-full flex items-center justify-center gap-2">
         <div class="my-auto">
           {{
@@ -195,13 +195,14 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
           }}
         </div>
         <button
+        
           class="border-base-100 text-[#96959a] dark:text-base-content dark:text-opacity-40"
           @click="$emit('ruleModalOpen', index)"
         >
           <Icon name="mdi:settings" size="20" />
         </button>
       </div>
-    </td>
+    </td> -->
     <td class="border-r border-base w-10">
       <div class="text-center text-sm mt-2">
         <div>
