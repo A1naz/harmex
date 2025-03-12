@@ -27,7 +27,7 @@ const { notify } = useNotification();
 function handleSelect(address: any) {
   if (props.pickpoints.findIndex((item: any) => item.a === address.a) === -1) {
     return notify({
-      type: "error",
+     group: "error",
       title: "Что-то пошло не так",
       text: "Этот пункт выдачи не найден",
     });

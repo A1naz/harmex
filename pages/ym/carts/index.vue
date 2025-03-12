@@ -75,7 +75,7 @@ async function getCarts() {
 
   if (error.value) {
     notify({
-      type: "error",
+     group: "error",
       title: "Не удалось получить корзины",
       text: error.value.message,
     });
@@ -139,14 +139,14 @@ async function resumeStatus(item: any) {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     return;
   }
   if (data.value) {
     notify({
-      type: "success",
+     group: "success",
       title: "Успешно",
       text: "Корзина успешно возвращена в работу",
       duration: 3000,

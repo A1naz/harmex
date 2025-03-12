@@ -40,7 +40,7 @@ async function balanceUpdate() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     return;
@@ -51,7 +51,7 @@ async function balanceUpdate() {
     loading.value = false;
     bankDetails.value = data.value.bankDetails;
     notify({
-      type: "success",
+     group: "success",
       title: "Успешно",
       text: "Реквизиты для пополнения кошелька созданы",
     });

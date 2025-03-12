@@ -32,7 +32,7 @@ async function search(searchQuery: any) {
       searchData.value = data.value;
     } else if (error.value) {
       notify({
-        type: "error",
+       group: "error",
         title: "Ошибка",
         text: error.value.message,
       });

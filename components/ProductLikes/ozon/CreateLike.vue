@@ -28,7 +28,7 @@ async function create() {
   if (error.value) {
     creatingLike.value = false;
     return notify({
-      type: "error",
+     group: "error",
       title: "Что-то пошло не так",
       text: error.value.message,
     });
@@ -39,7 +39,7 @@ async function create() {
     url.value = "";
     amount.value = 0;
     productData.value = null;
-    notify({ type: "success", title: "Успешно" });
+    notify({group: "success", title: "Успешно" });
     emit("create");
     emit("closeModal");
     // getProductLikes()

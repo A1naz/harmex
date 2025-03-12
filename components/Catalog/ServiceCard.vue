@@ -23,13 +23,13 @@ async function vote(slug: string, mp: string) {
   });
   if (response.status === "ok") {
     notify({
-      type: "success",
+     group: "success",
       title: "Успешно",
       text: "Вы успешно проголосовали за добавление маркетплейса",
     });
   } else {
     notify({
-      type: "error",
+     group: "error",
       title: "Ошибка",
       text: response.message,
     });

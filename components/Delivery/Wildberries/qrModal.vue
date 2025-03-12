@@ -23,7 +23,7 @@ const deliveryClosedUuid = ref("");
 async function createRequest() {
   btnDisabled.value = true;
   notify({
-    type: "success",
+   group: "success",
     title: "Запрос отправлен",
   });
   const { data, error }: any = await useFetch(
@@ -47,7 +47,7 @@ async function createRequest() {
       return;
     }
     notify({
-      type: "success",
+     group: "success",
       title: "Скриншот получен",
     });
     newSrc.value = data.value;
@@ -56,7 +56,7 @@ async function createRequest() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   }

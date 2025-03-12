@@ -68,7 +68,7 @@ async function getAccesses() {
   })
     .catch((err) => {
       notify({
-        type: "error",
+       group: "error",
         title: "Не получить доступы",
         text: err.data.message || err.message,
       });
@@ -99,7 +99,7 @@ async function getFavourites() {
     watch: false,
   }).catch((err) => {
     notify({
-      type: "error",
+     group: "error",
       title: "Не получить доступы",
       text: err.data.message || err.message,
     });

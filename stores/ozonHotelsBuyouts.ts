@@ -33,7 +33,7 @@ export const useOzonHotelsBuyoutStore = defineStore("ozonHotelsBuyout", {
         notify({
           title: "Что-то пошло не так",
           text: error.value?.data.message,
-          type: "error",
+         group: "error",
           duration: 3000,
         });
         return;
@@ -65,7 +65,7 @@ export const useOzonHotelsBuyoutStore = defineStore("ozonHotelsBuyout", {
       if (this.createProducts.length >= 10) {
         notify({
           title: "За раз можно создать максимум 10 выкупов",
-          type: "error",
+         group: "error",
         });
         return;
       }
@@ -84,7 +84,7 @@ export const useOzonHotelsBuyoutStore = defineStore("ozonHotelsBuyout", {
         notify({
           title: "Ошибка",
           text: error.value?.data?.message,
-          type: "error",
+         group: "error",
         });
       }
 

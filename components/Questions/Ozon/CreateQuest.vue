@@ -26,7 +26,7 @@ async function getQuestions() {
   if (data.value) questions.value = data.value;
   if (error.value)
     notify({
-      type: "error",
+     group: "error",
       title: "Не удалось получить лайки",
       text: error.value.message,
     });
@@ -50,7 +50,7 @@ async function create() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     creating.value = false;
@@ -58,7 +58,7 @@ async function create() {
   }
   // notify({ type: 'error', title: 'Что-то пошло не так', text: error.value.message })
   if (data.value) {
-    notify({ type: "success", title: "Успешно" });
+    notify({group: "success", title: "Успешно" });
     removeProduct();
     publishDate.value = now.value;
     creating.value = false;

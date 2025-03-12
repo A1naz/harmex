@@ -37,7 +37,7 @@ function handleSelect(address: string) {
     ) === -1
   ) {
     return notify({
-      type: "error",
+     group: "error",
       title: "Что-то пошло не так",
       text: "Этот пункт выдачи не найден",
     });

@@ -37,7 +37,7 @@ async function getProductLikes() {
   // }
   if (error.value)
     notify({
-      type: "error",
+     group: "error",
       title: "Не удалось получить лайки",
       text: error.value.message,
     });
@@ -55,12 +55,12 @@ async function create() {
   });
   if (error.value)
     return notify({
-      type: "error",
+     group: "error",
       title: "Что-то пошло не так",
       text: error.value.message,
     });
   if (data.value) {
-    notify({ type: "success", title: "Успешно" });
+    notify({group: "success", title: "Успешно" });
     emit("create");
     getProductLikes();
   }
@@ -128,7 +128,7 @@ async function deleteLike() {
     notify({
       title: "Что-то пошло не так",
       text: error.value.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   }

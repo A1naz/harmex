@@ -51,7 +51,7 @@ function daysToPenalty(statusdelivery: any[]) {
 
 function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text);
-  notify({ text: "Скопировано в буфер обмена", type: "success" });
+  notify({ text: "Скопировано в буфер обмена",group: "success" });
 }
 
 const { $dayjs } = useNuxtApp();

@@ -21,14 +21,14 @@ const formData = reactive({
 onMounted(async () => {
   if (params?.emailConfirmed) {
     notify({
-      type: "success",
+     group: "success",
       title: "Email успешно подтвержден!",
       duration: 3000,
     });
   }
   if (params?.passwordChanged) {
     notify({
-      type: "success",
+     group: "success",
       title: "Пароль успешно изменен!",
       duration: 3000,
     });
@@ -82,7 +82,7 @@ async function login() {
   })
     .catch((err) => {
       notify({
-        type: "error",
+       group: "error",
         title: "Не удалось войти",
         text: err.data.message || err.message,
       });

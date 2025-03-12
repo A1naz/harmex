@@ -29,7 +29,7 @@ function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
       title: "За раз можно создать максимум 10 выкупов",
-      type: "error",
+     group: "error",
     });
     return;
   }

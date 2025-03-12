@@ -149,7 +149,7 @@ async function submitForm() {
       loading.value = false;
       if (data.value!.status === "error") {
         notify({
-          type: "error",
+         group: "error",
           title: data.value!.error as string,
           duration: 3000,
         });
@@ -160,7 +160,7 @@ async function submitForm() {
         localStorage.removeItem("referralCode");
         localStorage.removeItem("landing");
         notify({
-          type: "success",
+         group: "success",
           title: "Пользователь зарегистрирован.",
           duration: 3000,
         });
@@ -180,7 +180,7 @@ async function submitForm() {
       loading.value = false;
       if (data.value!.status === "error") {
         notify({
-          type: "error",
+         group: "error",
           title: data.value!.error as string,
           duration: 3000,
         });
@@ -191,7 +191,7 @@ async function submitForm() {
         localStorage.removeItem("referralCode");
         localStorage.removeItem("landing");
         notify({
-          type: "success",
+         group: "success",
           title: "Пользователь зарегистрирован.",
           duration: 3000,
         });
@@ -294,12 +294,12 @@ async function sendConfirmCode() {
     isCodeSent.value = true;
     confirmationCodeInput.value.focus();
     notify({
-      type: "success",
+     group: "success",
       title: "Код отправлен",
     });
   } else {
     notify({
-      type: "error",
+     group: "error",
       title: data.value.message,
     });
   }
@@ -316,7 +316,7 @@ async function confirmCode() {
   });
   if (data.value) {
     notify({
-      type: "success",
+     group: "success",
       title: "Код подтвержден",
     });
 
@@ -324,7 +324,7 @@ async function confirmCode() {
     isNumberConfirmed.value = true;
   } else {
     notify({
-      type: "error",
+     group: "error",
       title: "Неверный код",
     });
   }

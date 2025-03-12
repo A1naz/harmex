@@ -36,7 +36,7 @@ async function selectTemplate() {
     notify({
       title: "За раз можно создать максимум 10 выкупов",
       text: "Добавлены первые 10 выкупов",
-      type: "error",
+     group: "error",
     });
     store.createProducts = props.info.buyoutsArray.slice(0, 10);
   }
@@ -55,7 +55,7 @@ async function deleteTemplate() {
   if (data.value) {
     notify({
       title: "Шаблон удален",
-      type: "success",
+     group: "success",
       duration: 3000,
     });
 

@@ -58,7 +58,7 @@ function startTimer() {
 async function addProduct() {
   if (!dateRange.value || !dateRange.value.length) {
     notify({
-      type: "error",
+     group: "error",
       title: "Ошибка",
       text: "Выберите даты",
     });
@@ -138,7 +138,7 @@ async function openChecksModal() {
     notify({
       title: "Что-то пошло не так",
       text: errorMsg,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     return;
@@ -166,14 +166,14 @@ async function createBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     isCreateButtonDisabled.value = false;
   } else if (data.value!.status === "ok") {
     notify({
       title: "Выкуп успешно создан",
-      type: "success",
+     group: "success",
       duration: 3000,
     });
 

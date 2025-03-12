@@ -190,7 +190,7 @@ async function removeReview() {
     notify({
       title: "Отзыв удален",
       text: "Ваш отзыв выставлен на удаление",
-      type: "success",
+     group: "success",
     });
     const startIn = reviews.value.find(
       // eslint-disable-next-line eqeqeq
@@ -202,7 +202,7 @@ async function removeReview() {
     notify({
       title: "Что-то пошло не так",
       text: error.value.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   }
@@ -252,14 +252,14 @@ async function resumeStatus(item: any) {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     return;
   }
   if (data.value) {
     notify({
-      type: "success",
+     group: "success",
       title: "Успешно",
       text: "Отзыв успешно возвращен в работу",
       duration: 3000,

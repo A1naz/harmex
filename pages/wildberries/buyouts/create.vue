@@ -228,7 +228,7 @@ async function openChecksModal() {
     notify({
       title: "Что-то пошло не так",
       text: errorMsg,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     return;
@@ -256,14 +256,14 @@ async function createBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     isCreateButtonDisabled.value = false;
   } else if (data.value!.status === "ok") {
     notify({
       title: "Выкуп успешно создан",
-      type: "success",
+     group: "success",
       duration: 3000,
     });
 
@@ -290,7 +290,7 @@ async function getPickpoints() {
     notify({
       title: "Что-то пошло не так",
       text: e?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   }
@@ -308,7 +308,7 @@ async function getFFPickpoints(date: Date = new Date()) {
     notify({
       title: "Что-то пошло не так",
       text: e?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   }
@@ -379,7 +379,7 @@ async function createTemplate() {
     store.createProducts = [];
     notify({
       title: "Шаблон выкупа создан",
-      type: "success",
+     group: "success",
     });
 
     closeTemplateModal.value?.click();

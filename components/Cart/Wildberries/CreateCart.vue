@@ -28,7 +28,7 @@ async function getCarts() {
   if (data.value) carts.value = data.value;
   if (error.value) {
     notify({
-      type: "error",
+     group: "error",
       title: "Не удалось получить лайки",
       text: error.value.message,
     });
@@ -52,14 +52,14 @@ async function create() {
   if (error.value) {
     creatingCart.value = false;
     return notify({
-      type: "error",
+     group: "error",
       title: "Что-то пошло не так",
       text: error.value.message,
     });
   }
   if (data.value) {
     creatingCart.value = false;
-    notify({ type: "success", title: "Успешно" });
+    notify({group: "success", title: "Успешно" });
     removeProduct();
     emit("create");
   }

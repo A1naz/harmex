@@ -110,7 +110,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Видео слишком длинное. Максимальная длительность: 10 минут",
-          type: "error",
+         group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -123,7 +123,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Минимальное разрешение видео должно быть 176x144",
-          type: "error",
+         group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -136,7 +136,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Максимальное разрешение видео должно быть 4100x4100",
-          type: "error",
+         group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -182,7 +182,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Нельзя загружать вебпикчи",
-      type: "error",
+     group: "error",
       duration: 3000,
     });
 
@@ -200,7 +200,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Не удалось загрузить фото",
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     return;
@@ -311,7 +311,7 @@ async function publishReview() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     creatingReview.value = false;
@@ -320,7 +320,7 @@ async function publishReview() {
   notify({
     title: "Успешно",
     text: "Отзыв успешно опубликован",
-    type: "success",
+   group: "success",
     duration: 3000,
   });
   creatingReview.value = false;
@@ -352,7 +352,7 @@ function ratingAlert() {
   notify({
     title: "Что-то пошло не так",
     text: "В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд",
-    type: "error",
+   group: "error",
     duration: 3000,
   });
 }

@@ -96,7 +96,7 @@ async function exportXLS() {
   });
   if (error.value) {
     notify({
-      type: "error",
+     group: "error",
       title: "Что-то пошло не так",
       text: "Не удалось экспортировать данные",
     });
@@ -121,7 +121,7 @@ async function exportReadyUntilPenaltyXLS() {
   );
   if (error.value) {
     notify({
-      type: "error",
+     group: "error",
       title: "Что-то пошло не так",
       text: "Не удалось экспортировать данные",
     });

@@ -76,7 +76,7 @@ function handleSelectDate(
     selectDate();
   } else {
     notify({
-      type: "error",
+     group: "error",
       title: "Выберите 2 даты для применения фильтра",
     });
   }

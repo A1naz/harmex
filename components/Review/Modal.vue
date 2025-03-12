@@ -90,7 +90,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Нельзя загружать вебпикчи",
-      type: "error",
+     group: "error",
       duration: 3000,
     });
 
@@ -106,7 +106,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Не удалось загрузить фото",
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   }
@@ -175,7 +175,7 @@ async function publishReview() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     return;
@@ -183,7 +183,7 @@ async function publishReview() {
   notify({
     title: "Успешно",
     text: "Отзыв успешно опубликован",
-    type: "success",
+   group: "success",
     duration: 3000,
   });
   emit("close");
@@ -207,7 +207,7 @@ async function removePhoto(index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Не удалось удалить фото",
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     return;

@@ -47,14 +47,14 @@ async function deleteBuyOut() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   } else {
     notify({
       title: "Успешно",
       text: "Выкуп успешно удален",
-      type: "success",
+     group: "success",
       duration: 3000,
     });
     emit("remove", props.info.uuid);
@@ -72,14 +72,14 @@ async function unpauseBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   } else {
     notify({
       title: "Успешно",
       text: "Выкуп успешно возобновлен",
-      type: "success",
+     group: "success",
       duration: 3000,
     });
     emit("unpause", props.info.uuid);
@@ -98,14 +98,14 @@ async function unarchiveBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   } else {
     notify({
       title: "Успешно",
       text: "Выкуп успешно восстановлен",
-      type: "success",
+     group: "success",
       duration: 3000,
     });
     emit("unarchive", props.info.uuid);
@@ -131,14 +131,14 @@ async function archiveBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   } else {
     notify({
       title: "Успешно",
       text: "Выкуп успешно архивирован",
-      type: "success",
+     group: "success",
       duration: 3000,
     });
     emit("archive", props.info.uuid);

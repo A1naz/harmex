@@ -83,7 +83,7 @@ async function removeBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   } else {
@@ -91,7 +91,7 @@ async function removeBuyout() {
     notify({
       title: "Успешно",
       text: "Выкуп успешно удален",
-      type: "success",
+     group: "success",
       duration: 3000,
     });
     buyouts.value = buyouts.value.filter(

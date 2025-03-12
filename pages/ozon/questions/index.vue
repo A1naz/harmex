@@ -69,7 +69,7 @@ async function getQuestions() {
 
   if (error.value) {
     notify({
-      type: "error",
+     group: "error",
       title: "Не удалось получить вопросы",
       text: error.value.message,
     });
@@ -108,14 +108,14 @@ async function resumeStatus(item: any) {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
     return;
   }
   if (data.value) {
     notify({
-      type: "success",
+     group: "success",
       title: "Успешно",
       text: "Вопрос успешно возвращен в работу",
       duration: 3000,

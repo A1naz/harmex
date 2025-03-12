@@ -9,6 +9,56 @@
       :pause-on-hover="true"
       :speed="500"
     />
+    <NuxtNotifications
+      group="success"
+      type="success"
+      :duration="5000"
+      :width="400"
+      position="top right"
+      dangerously-set-inner-html
+    >
+      <template #body="{ item, close }">
+        <div class="bg-[#fce9e1] w-[364px] mt-5 min-h-[60px] rounded-lg flex pt-2">
+          <div class="w-[50px]">
+            <Icon name="si:info-fill" size="22" class="ml-3" />
+          </div>
+          <div>
+            <div class="text-[14px]">
+              {{ item.title }}
+            </div>
+            <div class="text-[12px] mb-2 max-w-[300px]">
+              {{ item.text }}
+            </div>
+          </div>
+        </div>
+      </template>
+    </NuxtNotifications>
+    <NuxtNotifications
+      group="error"
+      type="error"
+      :duration="5000"
+      :width="400"
+      position="top right"
+      dangerously-set-inner-html
+    >
+      <template #body="{ item, close }">
+        <div
+          class="bg-[#f4eaeb] w-[364px] mt-5 min-h-[60px] rounded-lg flex pt-2"
+        >
+          <div class="w-[50px]">
+            <Icon name="ix:error" size="22" class="ml-3" />
+          </div>
+          <div>
+            <div class="text-[14px]">
+              {{ item.title }}
+            </div>
+            <div class="text-[12px] mb-2 max-w-[300px]">
+              {{ item.text }}
+            </div>
+          </div>
+        </div>
+      </template>
+    </NuxtNotifications>
     <NuxtLayout class="overflow-hidden">
       <NuxtLoadingIndicator color="#296dff" />
       <NuxtPage />

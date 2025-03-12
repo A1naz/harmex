@@ -78,7 +78,7 @@ async function getFavourites() {
     }
   } catch (err) {
     notify({
-      type: "error",
+     group: "error",
       title: "Ошибка загрузки избранного",
       text: err.message,
     });
@@ -91,7 +91,7 @@ getFavourites();
 async function setFavourites(path: string) {
   if (!user.value) {
     notify({
-      type: "error",
+     group: "error",
       title: "Необходима авторизация",
     });
     return;
@@ -118,12 +118,12 @@ async function setFavourites(path: string) {
     });
 
     notify({
-      type: "success",
+     group: "success",
       title: "Избранное обновлено",
     });
   } catch (err) {
     notify({
-      type: "error",
+     group: "error",
       title: "Ошибка при обновлении избранного",
       text: err.message,
     });

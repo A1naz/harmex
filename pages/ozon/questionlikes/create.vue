@@ -49,7 +49,7 @@ async function getProductReviews() {
     notify({
       title: "Что-то пошло не так",
       text: error.value.data.message,
-      type: "error",
+     group: "error",
     });
     return;
   }
@@ -227,7 +227,7 @@ async function save() {
   });
   if (error.value) {
     notify({
-      type: "error",
+     group: "error",
       title: "Ошибка",
       text: error.value.message,
     });
@@ -236,7 +236,7 @@ async function save() {
   }
   if (data.value) {
     notify({
-      type: "success",
+     group: "success",
       title: "Успешно",
     });
 

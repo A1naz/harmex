@@ -31,7 +31,7 @@ const formData = reactive({
 const alert = reactive({
   show: false,
   message: "",
-  type: "success",
+ group: "success",
 });
 const rules = computed(() => {
   return {
@@ -63,7 +63,7 @@ async function submitForm() {
   });
   if (error.value) {
     notify({
-      type: "error",
+     group: "error",
       title: error.value.data.message,
     });
   } else {
@@ -93,14 +93,14 @@ async function sendConfirmCode() {
     isCodeSent.value = true;
     confirmationCodeInput.value.focus();
     notify({
-      type: "success",
+     group: "success",
       title: "Код отправлен",
     });
   } else if (error.value) {
     console.log(error.value);
 
     notify({
-      type: "error",
+     group: "error",
       title: error.value.data.message,
     });
   }
@@ -119,7 +119,7 @@ async function confirmCode() {
   );
   if (data.value) {
     notify({
-      type: "success",
+     group: "success",
       title: "Код подтвержден",
     });
 
@@ -127,7 +127,7 @@ async function confirmCode() {
     isNumberConfirmed.value = true;
   } else {
     notify({
-      type: "error",
+     group: "error",
       title: "Неверный код",
     });
   }

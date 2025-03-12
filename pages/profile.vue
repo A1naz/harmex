@@ -170,14 +170,14 @@ async function updatePassword() {
   });
   if (error.value) {
     return notify({
-      type: "error",
+     group: "error",
       title: "Не удалось поменять пароль.",
       text: error.value.data.message,
     });
   }
 
   if (data.value === "success")
-    notify({ type: "success", title: "Пароль успешно изменен." });
+    notify({group: "success", title: "Пароль успешно изменен." });
 
   passwordForm.oldPassword = "";
   passwordForm.newPassword = "";
@@ -246,7 +246,7 @@ async function closeConfirm(isConfirmed: boolean) {
         : "Повторите попытку";
     } else {
       notify({
-        type: "success",
+       group: "success",
         title: "Успешно",
         text: `Пользователь ${currentUser.value.username} удален`,
       });
@@ -326,7 +326,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
 function copyText(text: string) {
   navigator.clipboard.writeText(text);
   notify({
-    type: "success",
+   group: "success",
     title: "Успешно",
     text: "Логин скопирован",
   });

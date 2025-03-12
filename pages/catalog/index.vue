@@ -51,7 +51,7 @@ async function getFavourites() {
     }
   } catch (err: any) {
     notify({
-      type: "error",
+     group: "error",
       title: "Ошибка загрузки избранного",
       text: err.message,
     });
@@ -64,7 +64,7 @@ getFavourites();
 async function setFavourites(path: string) {
   if (!user.value) {
     notify({
-      type: "error",
+     group: "error",
       title: "Необходима авторизация",
     });
     return;
@@ -89,12 +89,12 @@ async function setFavourites(path: string) {
       },
     });
     notify({
-      type: "success",
+     group: "success",
       title: "Избранное обновлено",
     });
   } catch (err: any) {
     notify({
-      type: "error",
+     group: "error",
       title: "Ошибка при обновлении избранного",
       text: err.message,
     });
@@ -107,7 +107,7 @@ const voteLoading = ref(false);
 async function voteForMp(slug: string) {
   if (!user.value) {
     notify({
-      type: "error",
+     group: "error",
       title: "Необходима авторизация",
     });
     return;
@@ -121,13 +121,13 @@ async function voteForMp(slug: string) {
   });
   if (response.status === "ok") {
     notify({
-      type: "success",
+     group: "success",
       title: "Успешно",
       text: "Вы успешно проголосовали за добавление маркетплейса",
     });
   } else {
     notify({
-      type: "error",
+     group: "error",
       title: "Ошибка",
       text: response.message,
     });

@@ -82,7 +82,7 @@ async function createPartnerWithdraw() {
     notify({
       title: "Что-то пошло не так",
       text: data.value.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   }
@@ -105,7 +105,7 @@ async function createBalanceWithdraw() {
     notify({
       title: "Что-то пошло не так",
       text: data.value.message,
-      type: "error",
+     group: "error",
       duration: 3000,
     });
   }
