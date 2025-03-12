@@ -84,7 +84,7 @@ async function removeBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      type: "error",
       duration: 3000,
     });
   } else {
