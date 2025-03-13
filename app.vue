@@ -13,7 +13,7 @@
       group="success"
       type="success"
       :duration="5000"
-      :width="400"
+      :width="364"
       position="top right"
       dangerously-set-inner-html
     >
@@ -37,7 +37,7 @@
       group="error"
       type="error"
       :duration="5000"
-      :width="400"
+      :width="364"
       position="top right"
       dangerously-set-inner-html
     >
