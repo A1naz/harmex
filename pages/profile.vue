@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-// import { notify } from "@kyvg/vue3-notification";
 import MenuBuilder from "~/server/utils/menuBuilder";
 import { MenuEnums } from "~/data/menu/types";
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { notify } from "@kyvg/vue3-notification";
+const { notify } = useNotification();
 
 definePageMeta({ middleware: "auth", layout: "app" });
 

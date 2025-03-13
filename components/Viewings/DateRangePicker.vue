@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useMainStore } from '~~/stores/main'
-import { notify } from '@kyvg/vue3-notification'
 
 const props = defineProps({
   modelValue: {

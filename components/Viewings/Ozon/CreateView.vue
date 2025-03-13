@@ -1,67 +1,67 @@
 <script setup lang="ts">
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
 const props = defineProps({
   show: { type: Boolean, required: true },
-})
+});
 
-const emit = defineEmits(['closeModal', 'create'])
+const emit = defineEmits(["closeModal", "create"]);
 
-const viewings = ref([]) as any
-const amount = ref(10)
-const now = useNow()
-const dates = ref<Date[]>([new Date(), new Date()])
-const loading = ref(false)
-const searchText = ref('')
-const article = ref('')
-const searchType = ref('advertisement')
-const productData = ref<any>(null)
-const anonim = ref(false)
-const urlError = ref(false)
-const creating = ref(false)
+const viewings = ref([]) as any;
+const amount = ref(10);
+const now = useNow();
+const dates = ref<Date[]>([new Date(), new Date()]);
+const loading = ref(false);
+const searchText = ref("");
+const article = ref("");
+const searchType = ref("advertisement");
+const productData = ref<any>(null);
+const anonim = ref(false);
+const urlError = ref(false);
+const creating = ref(false);
 
-const timer = ref(25)
-const timerRunning = ref(false)
-const timerFinished = ref(false)
-let interval: any
+const timer = ref(25);
+const timerRunning = ref(false);
+const timerFinished = ref(false);
+let interval: any;
 const startTimer = () => {
-  timer.value = 25
-  timerRunning.value = true
+  timer.value = 25;
+  timerRunning.value = true;
   interval = setInterval(() => {
     if (timer.value > 0 && creating.value) {
-      timer.value--
+      timer.value--;
     } else {
-      clearInterval(interval)
-      timerRunning.value = false
-      timerFinished.value = true
+      clearInterval(interval);
+      timerRunning.value = false;
+      timerFinished.value = true;
     }
-  }, 1000)
-}
+  }, 1000);
+};
 
 async function getViewings() {
   // @ts-ignore
-  const { data, error } = await useFetch('/api/ozon/viewings/get', {
-    method: 'GET',
-  })
-  if (data.value) viewings.value = data.value
+  const { data, error } = await useFetch("/api/ozon/viewings/get", {
+    method: "GET",
+  });
+  if (data.value) viewings.value = data.value;
   if (error.value)
     notify({
-      type: 'error',
-      title: 'Не удалось получить лайки',
+      type: "error",
+      title: "Не удалось получить лайки",
       text: error.value.message,
-    })
+    });
 }
-await getViewings()
+await getViewings();
 async function create() {
-  creating.value = true
-  startTimer()
+  creating.value = true;
+  startTimer();
 
-  await getProductInfo()
-  if (!productData.value) return
+  await getProductInfo();
+  if (!productData.value) return;
 
   // @ts-ignore
-  const { data, error } = await useFetch('/api/ozon/viewings/create', {
-    method: 'POST',
+  const { data, error } = await useFetch("/api/ozon/viewings/create", {
+    method: "POST",
     body: {
       article: article.value,
       dateStart: dates.value[0],
@@ -71,62 +71,62 @@ async function create() {
       searchQuery: searchText.value,
       amount: amount.value,
     },
-  })
+  });
   if (error.value) {
     notify({
-      title: 'Что-то пошло не так',
+      title: "Что-то пошло не так",
       text: error.value?.data?.message,
-      type: 'error',
+      type: "error",
       duration: 3000,
-    })
-    creating.value = false
-    return
+    });
+    creating.value = false;
+    return;
   }
   // notify({ type: 'error', title: 'Что-то пошло не так', text: error.value.message })
   if (data.value) {
-    notify({ type: 'success', title: 'Успешно' })
-    removeProduct()
-    dates.value = [now.value, now.value]
-    creating.value = false
-    emit('create')
+    notify({ type: "success", title: "Успешно" });
+    removeProduct();
+    dates.value = [now.value, now.value];
+    creating.value = false;
+    emit("create");
   }
 }
 async function getProductInfo() {
-  if (!article.value) return
+  if (!article.value) return;
 
-  productData.value = null
+  productData.value = null;
   const { data, error } = await useFetch(`/api/ozon/product/${article.value}`, {
-    method: 'GET',
-  })
+    method: "GET",
+  });
   if ((data.value as any)?.product) {
-    productData.value = (data.value as any).product
-    urlError.value = false
+    productData.value = (data.value as any).product;
+    urlError.value = false;
   }
   if (error.value) {
     notify({
-      type: 'error',
-      title: 'Что-то пошло не так',
-      text: 'Не удалось получить информацию о продукте',
-    })
+      type: "error",
+      title: "Что-то пошло не так",
+      text: "Не удалось получить информацию о продукте",
+    });
   }
 
-  loading.value = false
+  loading.value = false;
 }
-let timeout = null as NodeJS.Timeout | null
+let timeout = null as NodeJS.Timeout | null;
 
 function selectSearchType(event: any) {
-  searchType.value = event.target.value
+  searchType.value = event.target.value;
 }
 function removeProduct() {
-  productData.value = null
-  article.value = ''
-  amount.value = 0
+  productData.value = null;
+  article.value = "";
+  amount.value = 0;
 }
 
 const isBtnDisabled = computed(() => {
-  if (article.value === '' || amount.value === 0 || loading.value) return true
-  return false
-})
+  if (article.value === "" || amount.value === 0 || loading.value) return true;
+  return false;
+});
 </script>
 
 <template class="font-mono">

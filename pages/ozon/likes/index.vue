@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { notify, useNotification } from "@kyvg/vue3-notification";
+const { notify } = useNotification();
 
 definePageMeta({
   layout: "app",

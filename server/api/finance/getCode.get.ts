@@ -1,5 +1,4 @@
 import { User } from '@/server/lib/models/User'
-import { getServerSession } from '#auth'
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
 

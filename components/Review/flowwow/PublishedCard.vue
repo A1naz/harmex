@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { notify } from "@kyvg/vue3-notification";
 import { UseImage } from "@vueuse/components";
 
 const props = defineProps({

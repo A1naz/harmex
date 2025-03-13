@@ -1,7 +1,6 @@
 <script setup lang="tsx">
 import type { Rule } from "@/data/buyout/rules";
 import { rules } from "@/data/buyout/rules";
-import { useNotification } from "@kyvg/vue3-notification";
 import { useWindowSize } from "@vueuse/core";
 
 const closeWarningModal = true;

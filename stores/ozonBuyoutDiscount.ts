@@ -1,6 +1,6 @@
 
 import { rules } from '@/data/buyout/rules'
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 import { defineStore } from 'pinia'
 
 interface ISearchQueryChangeOzon {

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useNotification } from '@kyvg/vue3-notification'
-
 // const isPageBtnsDisabled = ref(false)
 const limit = ref(50)
 const page = ref(1)

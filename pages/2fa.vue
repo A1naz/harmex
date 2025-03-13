@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { notify } from '@kyvg/vue3-notification'
+const { notify } = useNotification();
 
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 // console.log('2fa', user)
