@@ -169,14 +169,14 @@ async function updatePassword() {
   });
   if (error.value) {
     return notify({
-     group: "error",
+      group: "error",
       title: "Не удалось поменять пароль.",
       text: error.value.data.message,
     });
   }
 
   if (data.value === "success")
-    notify({group: "success", title: "Пароль успешно изменен." });
+    notify({ group: "success", title: "Пароль успешно изменен." });
 
   passwordForm.oldPassword = "";
   passwordForm.newPassword = "";
@@ -245,7 +245,7 @@ async function closeConfirm(isConfirmed: boolean) {
         : "Повторите попытку";
     } else {
       notify({
-       group: "success",
+        group: "success",
         title: "Успешно",
         text: `Пользователь ${currentUser.value.username} удален`,
       });
@@ -325,7 +325,7 @@ function openEditModal(isCreate: boolean, uuid?: string) {
 function copyText(text: string) {
   navigator.clipboard.writeText(text);
   notify({
-   group: "success",
+    group: "success",
     title: "Успешно",
     text: "Логин скопирован",
   });
@@ -580,46 +580,6 @@ function copyText(text: string) {
                 'oferta' +
                 user.docType +
                 'BalashovIP'
-              "
-            >
-              <Icon name="material-symbols:download-sharp" size="24" />
-            </a>
-          </div>
-          <div
-            class="flex flex-col sm:flex-row gap-2 p-2 justify-between text-primary w-full bg-secondary rounded-lg"
-          >
-            <div class="flex gap-2 items-center">
-              <Icon name="gg:file-document" size="24" />
-              <p class="font-medium sm:text-sm text-xs">
-                Пользовательское соглашение
-              </p>
-            </div>
-            <div class="flex items-center sm:text-md text-sm">
-              ИП ФИЛЮШОВ НИКИТА АНТОНОВИЧ
-
-              <a
-                class="btn btn-primary btn-sm rounded-full p-1 ml-3 justify-center items-center sm:hidden flex"
-                target="_blank"
-                :href="
-                  config.public.siteUrl +
-                  '/api/docs/getSigned?fileName=' +
-                  'oferta' +
-                  user.docType +
-                  'FilushovIP'
-                "
-              >
-                <Icon name="material-symbols:download-sharp" size="24" />
-              </a>
-            </div>
-            <a
-              class="btn btn-primary btn-sm rounded-full p-1 justify-center items-center hidden sm:flex"
-              target="_blank"
-              :href="
-                config.public.siteUrl +
-                '/api/docs/getSigned?fileName=' +
-                'oferta' +
-                user.docType +
-                'FilushovIP'
               "
             >
               <Icon name="material-symbols:download-sharp" size="24" />
