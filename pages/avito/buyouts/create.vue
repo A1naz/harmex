@@ -460,7 +460,7 @@ function startTimer() {
             </tbody>
           </table>
         </div>
-        <BuyoutFlowwowSelectPointModal
+        <BuyoutAvitoSelectPointModal
           v-if="modalOpen"
           :state="modalOpen"
           :pickpoints="[]"

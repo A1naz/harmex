@@ -1,7 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import type { Rule } from '@/data/buyout/rules'
 import { Buyout } from '@/server/lib/models/avito/Buyout'
-import getPickpoints from '@/server/utils/avito/getAvitoPoints'
 import { userLog } from '~/server/utils/userLog'
 import { DocuemntEnum } from '~/data/enums'
 
@@ -39,16 +38,9 @@ export default eventHandler(async (event) => {
     user,
     status: { $in: ['active', 'work', 'created'] },
   })
-  const sum = activeBuyouts.reduce((acc, item) => {
-    const price =
-      parseInt(item.product.price) * (item.quantity - item.completed)
-    return acc + price
-  }, 0)
 
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
-
-  const { points } = await getPickpoints()
 
   const products: Item[] = body
   if (products.length > 10) {
@@ -94,8 +86,6 @@ export default eventHandler(async (event) => {
 
       product.dateRange = [date1, date2]
     }
-
-    const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
 
     // let city, state
     // if (foundPoint.city && foundPoint.state) {
