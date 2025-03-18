@@ -213,7 +213,7 @@ const productQuantityModel = computed({
       </div>
     </td>
 
-    <td class="border-r border-base">
+    <!-- <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
         <label
           ><input
@@ -225,7 +225,7 @@ const productQuantityModel = computed({
           />
         </label>
       </div>
-    </td>
+    </td> -->
     <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
         <BuyoutAvitoCreateSearchQueries

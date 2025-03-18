@@ -28,6 +28,7 @@ const route = useRoute();
 const products = computed(() => store.createProducts);
 
 onMounted(() => {
+  getPickpoints();
   // if (products.value.length === 0 && !route.query.uuid)
   // modalShow.value = true
 });
@@ -269,6 +270,23 @@ function startTimer() {
     }
   }, 1000);
 }
+
+const pickpoints = shallowRef();
+async function getPickpoints() {
+  try {
+    const data = await $fetch("/api/yandexMarket/buyout/pickpoints", {
+      method: "GET",
+    });
+    pickpoints.value = (data as any).points;
+  } catch (e: any) {
+    notify({
+      title: "Что-то пошло не так",
+      text: e?.message,
+     group: "error",
+      duration: 3000,
+    });
+  }
+}
 </script>
 
 <template>
@@ -424,15 +442,15 @@ function startTimer() {
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-                <th
+                <!-- <th
                   class="font-normal text-base-content"
                   @click="openInfoModal('search')"
                 >
                   <div class="flex justify-center items-center gap-1">
                     <span>№ квартиры</span>
-                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+      
                   </div>
-                </th>
+                </th> -->
                 <th
                   class="font-normal text-base-content"
                   @click="openInfoModal('search')"
@@ -469,10 +487,10 @@ function startTimer() {
             </tbody>
           </table>
         </div>
-        <BuyoutAvitoSelectPointModal
+        <BuyoutAvitoSelectPointModalYandexMarket
           v-if="modalOpen"
           :state="modalOpen"
-          :pickpoints="[]"
+          :pickpoints="pickpoints"
           @callback="handleAddress"
           @close="closeModal"
         />
@@ -482,12 +500,12 @@ function startTimer() {
         class="mt-6 md:flex justify-start lg:justify-end"
       >
         <div class="m-5 mb-20">
-          <label
+          <!-- <label
             class="btn btn-sm btn-primary normal-case bg-base-200 text-base-content border-none mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal"
             for="template-modal"
           >
             Шаблон
-          </label>
+          </label> -->
 
           <button
             class="btn btn-sm btn-primary normal-case border-none mt-1 ml-2 font-normal text-white"
