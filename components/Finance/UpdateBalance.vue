@@ -195,11 +195,11 @@ const showTooltip = ref(false);
               class="flex flex-col rounded-[10px] leading-4 px-[13px] py-[7px] bg-[#f6f6f6]"
             >
               <span class="text-sm">Метод оплаты:</span>
-              <span class="font-semibold">Перевод на расчетный счет</span>
+              <span class="font-semibold">Перевод на расчетный счет с карты физ.лица или бизнес-карты</span>
             </div>
           </div>
           <div class="flex flex-col gap-[10px] w-full justify-start">
-            <span class="font-semibold">Быстрая оплата счета по QR-коду:</span>
+            <span class="font-semibold">Быстрое пополнение по QR-коду:</span>
             <div class="flex justify-around gap-4">
               <ol class="list-decimal pl-6 font-medium text-sm">
                 <li>Откройте приложение банка на моб. телефоне.</li>
@@ -210,8 +210,10 @@ const showTooltip = ref(false);
                   Оплата будет зачислена автоматически в течении 3х часов.
                 </li>
                 <li>
-                  Если у Вас возникли проблемы с платежом, напишите в
-                  техническую поддержку портала.
+                  Если у Вас возникли проблемы с платежом, напишите в службу поддержки (справа внизу).
+                </li>
+                <li>
+                  Для пополнения баланса по счетам с расчетного счета вашей организации на наш р/с, напишите в службу поддержки, чтобы заключиться между организациями по ЭДО и выставить счет на оплату.
                 </li>
               </ol>
        
