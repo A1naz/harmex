@@ -29,6 +29,7 @@ const products = computed(() => store.createProducts);
 
 onMounted(() => {
   getPickpoints();
+  getAvitoPickpoints();
   // if (products.value.length === 0 && !route.query.uuid)
   // modalShow.value = true
 });
@@ -130,7 +131,7 @@ async function openChecksModal() {
     notify({
       title: "Что-то пошло не так",
       text: errorMsg,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
@@ -158,14 +159,14 @@ async function createBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     isCreateButtonDisabled.value = false;
   } else if (data.value!.status === "ok") {
     notify({
       title: "Выкуп успешно создан",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
 
@@ -182,9 +183,7 @@ watch(products.value, (old, value) => {
   });
 });
 
-
 async function pointModalOpen(index: number) {
-
   store.selectedItem = index;
   modalOpen.value = true;
 }
@@ -220,7 +219,7 @@ async function createTemplate() {
     store.createProducts = [];
     notify({
       title: "Шаблон выкупа создан",
-     group: "success",
+      group: "success",
     });
 
     closeTemplateModal.value?.click();
@@ -271,21 +270,57 @@ function startTimer() {
   }, 1000);
 }
 
+const pickpointsLoading = ref(false);
 const pickpoints = shallowRef();
+const yandexPickpoints = shallowRef();
+const avitoPickpoints = shallowRef();
+const DPDPickpoints = shallowRef();
+const SDEKPickpoints = shallowRef();
+const BoxberryPickpoints = shallowRef();
+const RussianPostPickpoints = shallowRef();
+
 async function getPickpoints() {
+  pickpointsLoading.value = true;
   try {
     const data = await $fetch("/api/yandexMarket/buyout/pickpoints", {
       method: "GET",
     });
     pickpoints.value = (data as any).points;
+    yandexPickpoints.value = (data as any).points;
   } catch (e: any) {
     notify({
       title: "Что-то пошло не так",
       text: e?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
+
+  pickpointsLoading.value = false;
+}
+
+async function getAvitoPickpoints() {
+  pickpointsLoading.value = true;
+  try {
+    const data = await $fetch("/api/avito/buyout/pickpoints", {
+      method: "GET",
+    });
+
+    avitoPickpoints.value = (data as any).avitoPickpoints;
+    DPDPickpoints.value = (data as any).DPDPickpoints;
+    SDEKPickpoints.value = (data as any).SDEKPickpoints;
+    BoxberryPickpoints.value = (data as any).BoxberryPickpoints;
+    RussianPostPickpoints.value = (data as any).RussianPostPickpoints;
+  } catch (e: any) {
+    notify({
+      title: "Что-то пошло не так",
+      text: e?.message,
+      group: "error",
+      duration: 3000,
+    });
+  }
+
+  pickpointsLoading.value = false;
 }
 </script>
 
@@ -432,6 +467,12 @@ async function getPickpoints() {
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
+                <th class="font-normal" @click="openInfoModal('dates')">
+                  <div class="text-center">
+                    <span> Варинат доставки </span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                  </div>
+                </th>
                 <th
                   class="min-w-40 font-normal"
                   @click="openInfoModal('adress')"
@@ -460,9 +501,7 @@ async function getPickpoints() {
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
-                <th
-                  class="font-normal text-base-content"
-                >
+                <th class="font-normal text-base-content">
                   <div class="flex justify-center items-center gap-1">
                     <span>Регион поиска</span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
@@ -480,7 +519,7 @@ async function getPickpoints() {
                 :key="index"
                 :product="product"
                 :index="index"
-                :loading="false"
+                :loading="pickpointsLoading"
                 @rule-modal-open="ruleModalOpen"
                 @point-modal-open="pointModalOpen"
               />

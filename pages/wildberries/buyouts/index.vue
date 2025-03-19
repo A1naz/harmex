@@ -83,7 +83,7 @@ async function removeBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   } else {
@@ -91,7 +91,7 @@ async function removeBuyout() {
     notify({
       title: "Успешно",
       text: "Выкуп успешно удален",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
     buyouts.value = buyouts.value.filter(
@@ -674,13 +674,34 @@ const siteUrl = config.public.siteUrl;
       :is-checked="isChecked"
       @checkbox-toggle="toggleCheckbox"
     >
-      <h3 class="text-xl font-bold mb-2 flex items-center gap-1 pr-4">
-        Как создать заказ на выкуп товара?
+      <h3 class="text-[17px] font-bold mb-2 flex items-center gap-1 pr-4">
+        Для публикации отзыва на Wildberries, необходимо выполнить 3 простых
+        действия:
       </h3>
-      <p class="mb-2 text-[17px]">
-        Выкуп товара на
-        <span class="font-semibold">маркетплейсе Wildberries</span> происходит
-        автоматически, без вашего прямого участия.
+
+      <ol class="list-decimal ml-6 mb-4">
+        <li>Выкупить товар</li>
+
+        <li>Получить товар на ПВЗ</li>
+        <li>Опубликовать отзыв</li>
+      </ol>
+      <p class="mt-2">
+        Выкуп товара на Wildberries осуществляется автоматически используя
+        услугу “Выкуп”. Весь процесс происходит без вашего прямого участия.
+      </p>
+      <p class="my-2">
+        От вас нужно только пополнить баланс на покупку товара, стоимость наших
+        услуг и создать заявку с деталями для исполнения услуги.
+      </p>
+      <p class="my-2">
+        Затем, в меню Доставка, получите актуальные коды, которые предоставите
+        на ПВЗ, чтобы вам выдали товар (кнопка EXL - Готовы к выдаче). Чтобы
+        найти данные о Покупателе, перейдите в меню Доставка после выкупа
+        товара.
+      </p>
+      <p class="my-2">
+        После получения товара, появится заявка на публикацию Отзыва в меню
+        Отзывы. Инструкции по каждому меню находятся внутри услуги.
       </p>
       <video
         controls

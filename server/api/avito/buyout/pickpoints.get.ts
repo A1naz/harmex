@@ -1,32 +1,44 @@
 import fs from "node:fs";
-import {
-  createPickpointsFile,
-  removeExtraPickpoints,
-} from "~/server/utils/pickpoints";
+import { PVZ } from "~/server/lib/models/avito/PVZ";
 
 export default eventHandler(async (event) => {
   const session = (await getAdminEntity(event)) as any;
 
   if (!session) return sendRedirect(event, "/auth", 302);
 
-  if (fs.existsSync("pvz/wildberriesPoints.json")) {
-    const cached = fs.readFileSync("pvz/wildberriesPoints.json", "utf8");
-    const parsed = JSON.parse(cached);
-    const now = new Date();
-    const diff = now.getTime() - new Date(parsed.updated).getTime();
-    if (diff < 1000 * 60 * 60) {
-      return sendStream(
-        event,
-        fs.createReadStream("pvz/wildberriesPoints.json")
-      );
-    }
-  }
+  const points: any = await PVZ.find();
 
-  if (fs.existsSync("pvz/wildberriesPoints.json")) {
-    removeExtraPickpoints();
-    return sendStream(event, fs.createReadStream("pvz/wildberriesPoints.json"));
-  } else {
-    await createPickpointsFile();
-    return sendStream(event, fs.createReadStream("pvz/wildberriesPoints.json"));
-  }
+  const avitoPickpoints = points.filter((item: any) =>
+    item.name.includes("Авито")
+  );
+  const DPDPickpoints = points.filter((item: any) => item.name.includes("DPD"));
+  const SDEKPickpoints = points.filter((item: any) =>
+    item.name.includes("СДЭК")
+  );
+  const BoxberryPickpoints = points.filter((item: any) =>
+    item.name.includes("Boxberry")
+  );
+  const RussianPostPickpoints = points.filter(
+    (item: any) => item.name.includes("Почта России")
+  );
+
+  console.log(
+    "avitoPickpoints",
+    avitoPickpoints.length,
+    "DPDPickpoints",
+    DPDPickpoints.length,
+    "SDEKPickpoints",
+    SDEKPickpoints.length,
+    "BoxberryPickpoints",
+    BoxberryPickpoints.length,
+    "RussianPostPickpoints",
+    RussianPostPickpoints.length
+  )
+  return {
+    avitoPickpoints: [],
+    DPDPickpoints: [],
+    SDEKPickpoints: [],
+    BoxberryPickpoints: [],
+    RussianPostPickpoints: [],
+  };
 });

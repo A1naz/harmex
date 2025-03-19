@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const { notify } = useNotification()
-import { useAvitoBuyoutStore } from '../../../stores/avitoBuyout'
-import type { Rule } from '@/data/buyout/rules'
+const { notify } = useNotification();
+import { useAvitoBuyoutStore } from "../../../stores/avitoBuyout";
+import type { Rule } from "@/data/buyout/rules";
 
 const props = defineProps({
   product: {
@@ -16,69 +16,69 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
+});
 
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
+const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
 
-const startDate = ref(new Date(Date.now() + 1000 * 60 * 5))
+const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 
-const store = useAvitoBuyoutStore()
+const store = useAvitoBuyoutStore();
 
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
-      title: 'За раз можно создать максимум 10 выкупов',
-      type: 'error',
-    })
-    return
+      title: "За раз можно создать максимум 10 выкупов",
+      type: "error",
+    });
+    return;
   }
 
-  const item = JSON.stringify(store.createProducts[props.index])
-  store.createProducts.push(JSON.parse(item))
+  const item = JSON.stringify(store.createProducts[props.index]);
+  store.createProducts.push(JSON.parse(item));
 }
 async function deleteBuyOut() {
-  store.removeProduct(props.index)
+  store.removeProduct(props.index);
 }
 function onSizeChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSize(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSize(target.value, props.index);
 }
 function onSexChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSex(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSex(target.value, props.index);
 }
 
 function removeSearchQuery(index: number) {
-  store.removeSearchQuery(props.index, index)
+  store.removeSearchQuery(props.index, index);
 }
 function addSearchQuery() {
-  store.addSearchQuery(props.index)
+  store.addSearchQuery(props.index);
 }
 function productSearchQueryUpdate(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery({
     value: newValue,
     queryIndex: index,
     productIndex: props.index,
-  })
+  });
 }
 const productDateRangeModel = computed({
   get() {
-    return props.product.dateRange
+    return props.product.dateRange;
   },
   set(newValue: unknown[]) {
-    store.changeDateRange(newValue, props.index)
+    store.changeDateRange(newValue, props.index);
   },
-})
+});
 
 const productQuantityModel = computed({
   get() {
-    return props.product.quantity
+    return props.product.quantity;
   },
   set(newValue: number) {
-    store.changeQuantity(newValue, props.index)
+    store.changeQuantity(newValue, props.index);
   },
-})
+});
 </script>
 
 <template>
@@ -155,12 +155,11 @@ const productQuantityModel = computed({
         <div class="my-auto">
           {{
             product.rules.length
-              ? product.rules.map((rule: Rule) => rule.id).join(', ')
-              : ''
+              ? product.rules.map((rule: Rule) => rule.id).join(", ")
+              : ""
           }}
         </div>
         <button
-       
           class="border-base-100 text-base-content text-opacity-40"
           @click="$emit('ruleModalOpen', index)"
         >
@@ -180,6 +179,19 @@ const productQuantityModel = computed({
         </div>
       </div>
     </td>
+    <td class="border-r border-base">
+      <select
+        v-model="product.pvzType"
+        class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
+      >
+        <option disabled selected>Выберите тип доставки</option>
+        <option value="Почта России">Почта России</option>
+        <option value="Boxberry">Boxberry</option>
+        <option value="СДЭК">СДЭК</option>
+        <option value="DPD">DPD</option>
+        <option value="Яндекс Доставка">Яндекс Доставка</option>
+      </select>
+    </td>
     <td class="break-all max-w-[300px] border-r border-base">
       <div
         class="w-full flex flex-col items-center gap-1 flex-wrap overflow-hidden justify-center"
@@ -198,8 +210,8 @@ const productQuantityModel = computed({
             {{ product.adress }}
           </p>
         </div>
-        <!-- :disabled="loading" -->
         <button
+          :disabled="loading || !product.pvzType"
           v-if="!product.adress"
           :class="{
             'btn-outline': product.adress,
