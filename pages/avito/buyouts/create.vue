@@ -93,6 +93,11 @@ const totalQuantity = computed(() => {
 const modalOpen = ref(false);
 function closeModal() {
   modalOpen.value = false;
+  modalOpenAvito.value = false;
+  modalOpenRussianPost.value = false;
+  modalOpenDPD.value = false;
+  modalOpenSDEK.value = false;
+  modalOpenBoxberry.value = false;
 }
 
 async function openChecksModal() {
@@ -185,7 +190,33 @@ watch(products.value, (old, value) => {
 
 async function pointModalOpen(index: number) {
   store.selectedItem = index;
-  modalOpen.value = true;
+  if (!products.value[index].pvzType) {
+    notify({
+      title: "Что-то пошло не так",
+      text: "Выберите тип пункта выдачи",
+      group: "error",
+      duration: 3000,
+    });
+    return;
+  }
+  if (products.value[index].pvzType == "Почта России") {
+    modalOpenRussianPost.value = true;
+  }
+  if (products.value[index].pvzType == "Boxberry") {
+    modalOpenBoxberry.value = true;
+  }
+  if (products.value[index].pvzType == "СДЭК") {
+    modalOpenSDEK.value = true;
+  }
+  if (products.value[index].pvzType == "DPD") {
+    modalOpenDPD.value = true;
+  }
+  if (products.value[index].pvzType == "Яндекс Доставка") {
+    modalOpen.value = true;
+  }
+  if (products.value[index].pvzType == "Авито") {
+    modalOpenAvito.value = true;
+  }
 }
 
 onMounted(async () => {
@@ -274,10 +305,15 @@ const pickpointsLoading = ref(false);
 const pickpoints = shallowRef();
 const yandexPickpoints = shallowRef();
 const avitoPickpoints = shallowRef();
+const modalOpenAvito = ref(false);
 const DPDPickpoints = shallowRef();
+const modalOpenDPD = ref(false);
 const SDEKPickpoints = shallowRef();
+const modalOpenSDEK = ref(false);
 const BoxberryPickpoints = shallowRef();
+const modalOpenBoxberry = ref(false);
 const RussianPostPickpoints = shallowRef();
+const modalOpenRussianPost = ref(false);
 
 async function getPickpoints() {
   pickpointsLoading.value = true;
@@ -285,7 +321,6 @@ async function getPickpoints() {
     const data = await $fetch("/api/yandexMarket/buyout/pickpoints", {
       method: "GET",
     });
-    pickpoints.value = (data as any).points;
     yandexPickpoints.value = (data as any).points;
   } catch (e: any) {
     notify({
@@ -529,7 +564,42 @@ async function getAvitoPickpoints() {
         <BuyoutAvitoSelectPointModalYandexMarket
           v-if="modalOpen"
           :state="modalOpen"
-          :pickpoints="pickpoints"
+          :pickpoints="yandexPickpoints"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutAvitoSelectPointModalAvito
+          v-if="modalOpenAvito"
+          :state="modalOpenAvito"
+          :pickpoints="avitoPickpoints"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutAvitoSelectPointModalRussianPost
+          v-if="modalOpenRussianPost"
+          :state="modalOpenRussianPost"
+          :pickpoints="RussianPostPickpoints"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutAvitoSelectPointModalBoxberry
+          v-if="modalOpenBoxberry"
+          :state="modalOpenBoxberry"
+          :pickpoints="BoxberryPickpoints"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutAvitoSelectPointModalRussianSDEK
+          v-if="modalOpenSDEK"
+          :state="modalOpenSDEK"
+          :pickpoints="SDEKPickpoints"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutAvitoSelectPointModalDPD
+          v-if="modalOpenDPD"
+          :state="modalOpenDPD"
+          :pickpoints="DPDPickpoints"
           @callback="handleAddress"
           @close="closeModal"
         />
@@ -822,6 +892,7 @@ async function getAvitoPickpoints() {
         </div>
       </div>
     </div>
+
   </div>
 </template>
 

@@ -37,13 +37,13 @@ function handleSelect(address: string) {
     ) === -1
   ) {
     return notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
       text: "Этот пункт выдачи не найден",
     });
   }
 
-  let pointStore: any = localStorage.getItem("avitoPointStore");
+  let pointStore: any = localStorage.getItem("SDEKPointStore");
 
   const arr = JSON.parse(pointStore) || [];
 
@@ -62,7 +62,7 @@ function handleSelect(address: string) {
     });
   }
 
-  localStorage.setItem("avitoPointStore", JSON.stringify(arr));
+  localStorage.setItem("SDEKPointStore", JSON.stringify(arr));
   emit(
     "callback",
     address,
@@ -74,13 +74,13 @@ function handleSelect(address: string) {
 }
 
 function handleDelete(address: any) {
-  let pointStore: any = localStorage.getItem("avitoPointStore");
+  let pointStore: any = localStorage.getItem("SDEKPointStore");
   const arr = JSON.parse(pointStore) || [];
   arr.splice(
     arr.indexOf(arr.find((el: any) => el.address === address.address)),
     1
   );
-  localStorage.setItem("avitoPointStore", JSON.stringify(arr));
+  localStorage.setItem("SDEKPointStore", JSON.stringify(arr));
   emit(
     "callback",
     address.address,
@@ -89,15 +89,15 @@ function handleDelete(address: any) {
     lastAddress.value.id
   );
   lastPoints.value = JSON.parse(
-    localStorage.getItem("avitoPointStore") || "[]"
+    localStorage.getItem("SDEKPointStore") || "[]"
   );
 }
 
 const lastPoints = ref(
-  JSON.parse(localStorage.getItem("avitoPointStore") || "[]")
+  JSON.parse(localStorage.getItem("SDEKPointStore") || "[]")
 );
 
-const presetCluster = "islands#orangeClusterIcons";
+const presetCluster = "islands#darkGreenClusterIcons";
 
 const originalBounds = ref([
   [55.72435065000997, 37.421310551334145],
@@ -136,7 +136,7 @@ onMounted(async () => {
         geoObjectsArray.forEach((marker: any) => {
           marker.options.set({
             hasBalloon: false,
-            preset: "islands#orangeClusterIcons",
+            preset: "islands#darkGreenClusterIcons",
             iconOffset: [0, -25],
           });
           marker.properties.set({
@@ -189,7 +189,7 @@ onMounted(async () => {
             iconColor: "#00aaff",
             iconLayout: "default#image",
             iconImageHref:
-              "https://cdn.centra.ai/usercontent/r/600x600/731_98fcac83e5b1409e83b87f28690df2f2.png/Avito.png?s=1jq5g2cxEY5MDUgw4neaqA&e=2215190400&skv=1&on=1",
+              "https://scontent-fra3-1.xx.fbcdn.net/v/t39.30808-6/248272884_109760848168644_7767748159229370879_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=L683YGlh9yoQ7kNvgG5Z__8&_nc_oc=Adnt5JzjbJeing_Ui8Nu4goUnMvF7q0BFE1vA6SACr6xhxUbyJzUP8VXTteowznOjpI&_nc_zt=23&_nc_ht=scontent-fra3-1.xx&_nc_gid=ZT5nsUm-OWTvTR4-7zMOHQ&oh=00_AYFEs2Dp9c2TSm8CjLBpsFEZ_iV_jWHujzgOZaW9dAIjBg&oe=67E1B9E1",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
@@ -329,7 +329,10 @@ function openCourierModal() {
             @click="openCourierModal"
           />
         </div> -->
-        <div class="title mb-2">Выберите ПВЗ</div>
+        <div class="title mb-2">
+          Выберите ПВЗ {{ pickpoints ? pickpoints.length : 0 }}
+        </div>
+
         <div
           v-if="loading"
           class="loading flex justify-center items-center h-full"

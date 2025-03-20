@@ -37,13 +37,13 @@ function handleSelect(address: string) {
     ) === -1
   ) {
     return notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
       text: "Этот пункт выдачи не найден",
     });
   }
 
-  let pointStore: any = localStorage.getItem("avitoPointStore");
+  let pointStore: any = localStorage.getItem("boxberryPointStore");
 
   const arr = JSON.parse(pointStore) || [];
 
@@ -62,7 +62,7 @@ function handleSelect(address: string) {
     });
   }
 
-  localStorage.setItem("avitoPointStore", JSON.stringify(arr));
+  localStorage.setItem("boxberryPointStore", JSON.stringify(arr));
   emit(
     "callback",
     address,
@@ -74,13 +74,13 @@ function handleSelect(address: string) {
 }
 
 function handleDelete(address: any) {
-  let pointStore: any = localStorage.getItem("avitoPointStore");
+  let pointStore: any = localStorage.getItem("boxberryPointStore");
   const arr = JSON.parse(pointStore) || [];
   arr.splice(
     arr.indexOf(arr.find((el: any) => el.address === address.address)),
     1
   );
-  localStorage.setItem("avitoPointStore", JSON.stringify(arr));
+  localStorage.setItem("boxberryPointStore", JSON.stringify(arr));
   emit(
     "callback",
     address.address,
@@ -89,15 +89,15 @@ function handleDelete(address: any) {
     lastAddress.value.id
   );
   lastPoints.value = JSON.parse(
-    localStorage.getItem("avitoPointStore") || "[]"
+    localStorage.getItem("boxberryPointStore") || "[]"
   );
 }
 
 const lastPoints = ref(
-  JSON.parse(localStorage.getItem("avitoPointStore") || "[]")
+  JSON.parse(localStorage.getItem("boxberryPointStore") || "[]")
 );
 
-const presetCluster = "islands#orangeClusterIcons";
+const presetCluster = "islands#redClusterIcons";
 
 const originalBounds = ref([
   [55.72435065000997, 37.421310551334145],
@@ -136,7 +136,7 @@ onMounted(async () => {
         geoObjectsArray.forEach((marker: any) => {
           marker.options.set({
             hasBalloon: false,
-            preset: "islands#orangeClusterIcons",
+            preset: "islands#redClusterIcons",
             iconOffset: [0, -25],
           });
           marker.properties.set({
@@ -186,10 +186,10 @@ onMounted(async () => {
             },
           },
           options: {
-            iconColor: "#00aaff",
+            iconColor: "#e60041",
             iconLayout: "default#image",
             iconImageHref:
-              "https://cdn.centra.ai/usercontent/r/600x600/731_98fcac83e5b1409e83b87f28690df2f2.png/Avito.png?s=1jq5g2cxEY5MDUgw4neaqA&e=2215190400&skv=1&on=1",
+              "https://cdn.prod.website-files.com/64700b7f349828a5b8dc81ab/663b9be31ee171086abe0562_img-carriers-round-boxberry.svg",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
@@ -330,6 +330,7 @@ function openCourierModal() {
           />
         </div> -->
         <div class="title mb-2">Выберите ПВЗ</div>
+    
         <div
           v-if="loading"
           class="loading flex justify-center items-center h-full"

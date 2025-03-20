@@ -27,10 +27,12 @@ async function getReady(user: Document, dateRange: any) {
           { status: 'Готов к получению' },
           { status: '^Заберите до.*' },
           { status: '^Получите до.*' },
+          { status: '^Ждёт в пункте выдачи .*' },
           { status: { $regex: '^Готов к получению.*' } },
           { status: { $regex: '^Готов к выдаче.*' } },
           { status: { $regex: '^Заберите до.*' } },
           { status: { $regex: '^Получите до.*' } },
+          { status: { $regex: '^Ждёт в пункте выдачи.*' } },
         ],
       },
     },
@@ -149,7 +151,7 @@ export default eventHandler(async (event) => {
 
     sheet.columns = [
       { header: 'Номер', key: 'place', font: { bold: true } },
-      { header: 'QR код', key: 'receiptcode', width: 24, font: { bold: true } },
+      { header: 'QR код', key: 'receiptcode', width: 32, font: { bold: true } },
       {
         header: 'Статус',
         key: 'currentstatus',
@@ -246,9 +248,9 @@ export default eventHandler(async (event) => {
       })
       sheet.addImage(image, {
         tl: { col: 1.5, row: item!.place + 0.8 },
-        ext: { width: 100, height: 100 },
+        ext: { width: 175, height: 200 },
       })
-      sheet.getRow(item!.place + 1).height = 100
+      sheet.getRow(item!.place + 1).height = 210
     }
     const buffer = await workbook.xlsx.writeBuffer()
 

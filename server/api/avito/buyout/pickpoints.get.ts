@@ -6,39 +6,43 @@ export default eventHandler(async (event) => {
 
   if (!session) return sendRedirect(event, "/auth", 302);
 
-  const points: any = await PVZ.find();
+  const dbPoints: any = await PVZ.find().select(
+    "-__v -_id -pointType -dateLastUpdate"
+  );
 
-  const avitoPickpoints = points.filter((item: any) =>
-    item.name.includes("Авито")
+  const points = dbPoints.map((point: any, index: number) => {
+    return {
+      id: point.pointId,
+      name: point.name,
+      lt: point.coordinates.lat,
+      lg: point.coordinates.lon,
+    };
+  });
+
+  const avitoPickpoints = points.filter(
+    (item: any) =>
+      item.name && item.lt && item.lg && item.name.includes("Авито")
   );
-  const DPDPickpoints = points.filter((item: any) => item.name.includes("DPD"));
-  const SDEKPickpoints = points.filter((item: any) =>
-    item.name.includes("СДЭК")
+  const DPDPickpoints = points.filter(
+    (item: any) => item.name && item.lt && item.lg && item.name.includes("DPD")
   );
-  const BoxberryPickpoints = points.filter((item: any) =>
-    item.name.includes("Boxberry")
+  const SDEKPickpoints = points.filter(
+    (item: any) => item.name && item.lt && item.lg && item.name.includes("СДЭК")
+  );
+  const BoxberryPickpoints = points.filter(
+    (item: any) =>
+      item.name && item.lt && item.lg && item.name.includes("Boxberry")
   );
   const RussianPostPickpoints = points.filter(
-    (item: any) => item.name.includes("Почта России")
+    (item: any) =>
+      item.name && item.lt && item.lg && item.name.includes("Почта России")
   );
 
-  console.log(
-    "avitoPickpoints",
-    avitoPickpoints.length,
-    "DPDPickpoints",
-    DPDPickpoints.length,
-    "SDEKPickpoints",
-    SDEKPickpoints.length,
-    "BoxberryPickpoints",
-    BoxberryPickpoints.length,
-    "RussianPostPickpoints",
-    RussianPostPickpoints.length
-  )
   return {
-    avitoPickpoints: [],
-    DPDPickpoints: [],
-    SDEKPickpoints: [],
-    BoxberryPickpoints: [],
-    RussianPostPickpoints: [],
+    avitoPickpoints,
+    DPDPickpoints,
+    SDEKPickpoints,
+    BoxberryPickpoints,
+    RussianPostPickpoints,
   };
 });

@@ -51,11 +51,11 @@ async function exportToFile() {
     pdf.addImage(data.imgData, "PNG", 0, 0, data.pdfWidth, data.pdfHeight);
     progress.value = Math.round(((index + 1) / totalPages) * 100);
   });
-  pdf.save("Готовы к выдаче Wildberries.pdf");
+  pdf.save("Готовы к выдаче Yandex Market.pdf");
 }
 
 const modal = ref(false);
-const { data, error } = await useFetch(`/api/wildberries/delivery/getReady`, {
+const { data, error } = await useFetch(`/api/yandexMarket/delivery/getReady`, {
   method: "GET",
   params: {
     dateRange: route.query?.dateRange
