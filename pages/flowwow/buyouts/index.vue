@@ -366,7 +366,7 @@ async function removeBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   } else {
@@ -374,7 +374,7 @@ async function removeBuyout() {
     notify({
       title: "Успешно",
       text: "Выкуп успешно удален",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
     buyouts.value = buyouts.value.filter(
@@ -636,14 +636,40 @@ const siteUrl = config.public.siteUrl;
       :is-checked="isChecked"
       @checkbox-toggle="toggleCheckbox"
     >
-      <h3 class="text-xl font-bold mb-2 flex items-center gap-1 pr-4">
-        Как создать заказ на выкуп товара?
+      <h3 class="text-[19px] font-bold mb-2 flex items-center gap-1 pr-4">
+        Как оставить отзыв на Flowwow в 3 шага?
       </h3>
-      <p class="mb-2 text-[17px]">
-        Выкуп товара на
-        <span class="font-semibold">маркетплейсе Flowwow</span> происходит
-        автоматически, без вашего прямого участия.
+      <h3 class="text-[17px] font-bold mb-2 flex items-center gap-1 pr-4">
+        Чтобы оставить отзыв, нужно сделать три простых действия:
+      </h3>
+
+      <ol class="list-decimal ml-6 mb-4">
+        <li>
+          Купить товар – это происходит автоматически через услугу
+          <strong>Выкуп</strong>. Вам не нужно ничего делать вручную.
+        </li>
+
+        <li>
+          Отметить доставку – зайдите в личный кабинет Flowwow и отметьте, что
+          товар передан покупателю. Данные о покупателе можно найти в меню
+          <strong>Доставка</strong>.
+        </li>
+        <li>
+          Оставить отзыв – после подтверждения выдачи товара в личном кабинете
+          появится заявка на публикацию отзыва в разделе
+          <strong>Отзывы</strong>.
+        </li>
+      </ol>
+      <h3 class="text-[17px] font-bold mb-2 flex items-center gap-1 pr-4">
+        Что нужно от вас?
+      </h3>
+
+      <p class="mt-2">
+        Просто пополните баланс на покупку товара и оплату услуги, а затем
+        создайте заявку с деталями. Всё остальное – автоматизировано.
       </p>
+
+      <p class="my-2">Подробные инструкции находятся внутри каждой услуги!</p>
       <video
         controls
         poster="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/buyoutsVideoTitle.png"

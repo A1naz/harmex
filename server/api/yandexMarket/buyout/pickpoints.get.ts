@@ -27,7 +27,6 @@ export default eventHandler(async (event) => {
     }
   })
 
-  console.log(collection)
   const cache = {
     updated: new Date(),
     points: collection,
