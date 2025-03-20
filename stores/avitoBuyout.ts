@@ -195,13 +195,14 @@ export const useAvitoBuyoutStore = defineStore('avitoBuyout', {
     removeProduct(index: number) {
       this.createProducts.splice(index, 1)
     },
-    handleAddress(address: string, lt: number, lg: number) {
+    handleAddress(address: string, lt: number, lg: number, id: number) {
       const index = this.selectedItem!
       this.createProducts[index].adress = address
       this.createProducts[index].pointCoordinates = {
         lat: lt,
         lon: lg,
       }
+      this.createProducts[index].pointId = id
     },
   },
 })

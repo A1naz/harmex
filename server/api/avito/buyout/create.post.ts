@@ -24,6 +24,8 @@ interface Item {
   searchQueryRegion: any[]
   pointCoordinates: any[]
   appartmentNumber: string
+  pvzType: string
+  pointId: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -109,8 +111,10 @@ export default eventHandler(async (event) => {
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,
       quantity: product.quantity,
+      pvzType: product.pvzType,
       gender: product.sex,
       status: 'active',
+      pointId: product.pointId,
       user,
       rules,
       product: {

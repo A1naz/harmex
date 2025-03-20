@@ -69,9 +69,9 @@ function onRuleChange(event: Event, index: number, rule: number) {
   store.changeRule(target.checked, index, rule);
 }
 
-function handleAddress(address: string, lt: number, lg: number) {
+function handleAddress(address: string, lt: number, lg: number, id: string) {
   modalOpen.value = false;
-  store.handleAddress(address, lt, lg);
+  store.handleAddress(address, lt, lg, id);
 }
 function openInfoModal(type: string) {
   infoType.value = type;
@@ -316,7 +316,6 @@ const RussianPostPickpoints = shallowRef();
 const modalOpenRussianPost = ref(false);
 
 async function getPickpoints() {
-  pickpointsLoading.value = true;
   try {
     const data = await $fetch("/api/yandexMarket/buyout/pickpoints", {
       method: "GET",
@@ -331,7 +330,6 @@ async function getPickpoints() {
     });
   }
 
-  pickpointsLoading.value = false;
 }
 
 async function getAvitoPickpoints() {

@@ -88,9 +88,7 @@ function handleDelete(address: any) {
     lastAddress.value.lg,
     lastAddress.value.id
   );
-  lastPoints.value = JSON.parse(
-    localStorage.getItem("DPDPointStore") || "[]"
-  );
+  lastPoints.value = JSON.parse(localStorage.getItem("DPDPointStore") || "[]");
 }
 
 const lastPoints = ref(
@@ -189,7 +187,7 @@ onMounted(async () => {
             iconColor: "#00aaff",
             iconLayout: "default#image",
             iconImageHref:
-              "https://e7.pngegg.com/pngimages/256/218/png-clipart-dpd-group-delivery-dpd-pickup-laagri-rimi-pakiautomaat-united-parcel-service-mail-others-angle-company-thumbnail.png",
+              "https://c0.klipartz.com/pngpicture/71/650/sticker-png-united-kingdom-package-delivery-courier-dpd-group-united-kingdom-angle-freight-transport-text-logo-united-kingdom-thumbnail.png  ",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
