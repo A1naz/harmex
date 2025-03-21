@@ -43,7 +43,7 @@ function handleSelect(address: string) {
     });
   }
 
-  let pointStore: any = localStorage.getItem("DPDPointStore");
+  let pointStore: any = localStorage.getItem("fivePostPointStore");
 
   const arr = JSON.parse(pointStore) || [];
 
@@ -62,7 +62,7 @@ function handleSelect(address: string) {
     });
   }
 
-  localStorage.setItem("DPDPointStore", JSON.stringify(arr));
+  localStorage.setItem("fivePostPointStore", JSON.stringify(arr));
   emit(
     "callback",
     address,
@@ -74,13 +74,13 @@ function handleSelect(address: string) {
 }
 
 function handleDelete(address: any) {
-  let pointStore: any = localStorage.getItem("DPDPointStore");
+  let pointStore: any = localStorage.getItem("fivePostPointStore");
   const arr = JSON.parse(pointStore) || [];
   arr.splice(
     arr.indexOf(arr.find((el: any) => el.address === address.address)),
     1
   );
-  localStorage.setItem("DPDPointStore", JSON.stringify(arr));
+  localStorage.setItem("fivePostPointStore", JSON.stringify(arr));
   emit(
     "callback",
     address.address,
@@ -88,14 +88,16 @@ function handleDelete(address: any) {
     lastAddress.value.lg,
     lastAddress.value.id
   );
-  lastPoints.value = JSON.parse(localStorage.getItem("DPDPointStore") || "[]");
+  lastPoints.value = JSON.parse(
+    localStorage.getItem("fivePostPointStore") || "[]"
+  );
 }
 
 const lastPoints = ref(
-  JSON.parse(localStorage.getItem("DPDPointStore") || "[]")
+  JSON.parse(localStorage.getItem("fivePostPointStore") || "[]")
 );
 
-const presetCluster = "islands#brownClusterIcons";
+const presetCluster = "islands#greenClusterIcons";
 
 const originalBounds = ref([
   [55.72435065000997, 37.421310551334145],
@@ -134,7 +136,7 @@ onMounted(async () => {
         geoObjectsArray.forEach((marker: any) => {
           marker.options.set({
             hasBalloon: false,
-            preset: "islands#brownClusterIcons",
+            preset: "islands#greenClusterIcons",
             iconOffset: [0, -25],
           });
           marker.properties.set({
@@ -187,7 +189,7 @@ onMounted(async () => {
             iconColor: "#00aaff",
             iconLayout: "default#image",
             iconImageHref:
-              "https://c0.klipartz.com/pngpicture/71/650/sticker-png-united-kingdom-package-delivery-courier-dpd-group-united-kingdom-angle-freight-transport-text-logo-united-kingdom-thumbnail.png  ",
+              "https://ozonmpportal.hb.vkcs.cloud/5post.png",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],

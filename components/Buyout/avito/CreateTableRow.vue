@@ -191,6 +191,8 @@ const productQuantityModel = computed({
         <option value="DPD">DPD</option>
         <option value="Яндекс Доставка">Яндекс Доставка</option>
         <option value="Авито">Авито</option>
+        <option value="Постамат 5Post">Постамат 5Post</option>
+        <option value="Касса 5Post">Касса 5Post</option>
       </select>
     </td>
     <td class="break-all max-w-[300px] border-r border-base">

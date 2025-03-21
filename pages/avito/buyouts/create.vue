@@ -98,6 +98,8 @@ function closeModal() {
   modalOpenDPD.value = false;
   modalOpenSDEK.value = false;
   modalOpenBoxberry.value = false;
+  modalOpenPostamat5Post.value = false;
+  modalOpenCassa5Post.value = false;
 }
 
 async function openChecksModal() {
@@ -217,6 +219,12 @@ async function pointModalOpen(index: number) {
   if (products.value[index].pvzType == "Авито") {
     modalOpenAvito.value = true;
   }
+  if (products.value[index].pvzType == "Постамат 5Post") {
+    modalOpenPostamat5Post.value = true;
+  }
+  if (products.value[index].pvzType == "Касса 5Post") {
+    modalOpenCassa5Post.value = true;
+  }
 }
 
 onMounted(async () => {
@@ -314,6 +322,10 @@ const BoxberryPickpoints = shallowRef();
 const modalOpenBoxberry = ref(false);
 const RussianPostPickpoints = shallowRef();
 const modalOpenRussianPost = ref(false);
+const postamat5PostPickpoints = shallowRef();
+const modalOpenPostamat5Post = ref(false);
+const cassa5PostPickpoints = shallowRef();
+const modalOpenCassa5Post = ref(false);
 
 async function getPickpoints() {
   try {
@@ -329,7 +341,6 @@ async function getPickpoints() {
       duration: 3000,
     });
   }
-
 }
 
 async function getAvitoPickpoints() {
@@ -344,6 +355,8 @@ async function getAvitoPickpoints() {
     SDEKPickpoints.value = (data as any).SDEKPickpoints;
     BoxberryPickpoints.value = (data as any).BoxberryPickpoints;
     RussianPostPickpoints.value = (data as any).RussianPostPickpoints;
+    postamat5PostPickpoints.value = (data as any).postamat5PostPickpoints;
+    cassa5PostPickpoints.value = (data as any).cassa5PostPickpoints;
   } catch (e: any) {
     notify({
       title: "Что-то пошло не так",
@@ -450,7 +463,7 @@ async function getAvitoPickpoints() {
           <BuyoutAvitoCreateCard
             v-for="(product, index) in products"
             :key="index"
-            :loading="false"
+            :loading="pickpointsLoading"
             :product="product"
             :index="index"
             @point-modal-open="pointModalOpen"
@@ -598,6 +611,20 @@ async function getAvitoPickpoints() {
           v-if="modalOpenDPD"
           :state="modalOpenDPD"
           :pickpoints="DPDPickpoints"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutAvitoSelectPointModal5Cassa
+          v-if="modalOpenCassa5Post"
+          :state="modalOpenCassa5Post"
+          :pickpoints="cassa5PostPickpoints"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutAvitoSelectPointModal5Post
+          v-if="modalOpenPostamat5Post"
+          :state="modalOpenPostamat5Post"
+          :pickpoints="postamat5PostPickpoints"
           @callback="handleAddress"
           @close="closeModal"
         />
@@ -890,7 +917,6 @@ async function getAvitoPickpoints() {
         </div>
       </div>
     </div>
-
   </div>
 </template>
 

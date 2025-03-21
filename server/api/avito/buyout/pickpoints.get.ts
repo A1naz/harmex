@@ -38,11 +38,23 @@ export default eventHandler(async (event) => {
       item.name && item.lt && item.lg && item.name.includes("Почта России")
   );
 
+  const postamat5PostPickpoints = points.filter(
+    (item: any) =>
+      item.name && item.lt && item.lg && item.name.includes("Постамат 5Post")
+  );
+
+  const cassa5PostPickpoints = points.filter(
+    (item: any) =>
+      item.name && item.lt && item.lg && item.name.includes("Касса 5Post")
+  );
+
   return {
     avitoPickpoints,
     DPDPickpoints,
     SDEKPickpoints,
     BoxberryPickpoints,
     RussianPostPickpoints,
+    postamat5PostPickpoints,
+    cassa5PostPickpoints,
   };
 });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { notify } = useNotification()
+const { notify } = useNotification();
 const props = defineProps({
   product: {
     type: Object as any,
@@ -13,68 +13,68 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
+});
 
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
-      title: 'За раз можно создать максимум 10 выкупов',
-      type: 'error',
-    })
-    return
+      title: "За раз можно создать максимум 10 выкупов",
+      type: "error",
+    });
+    return;
   }
 
-  const item = JSON.stringify(store.createProducts[props.index])
-  store.createProducts.push(JSON.parse(item))
+  const item = JSON.stringify(store.createProducts[props.index]);
+  store.createProducts.push(JSON.parse(item));
 }
 
-const emit = defineEmits(['callback', 'pointModalOpen', 'ruleModalOpen'])
-const store = useAvitoBuyoutStore()
-const startDate = ref(new Date(Date.now()))
+const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
+const store = useAvitoBuyoutStore();
+const startDate = ref(new Date(Date.now()));
 
 async function deleteBuyOut() {
-  store.removeProduct(props.index)
+  store.removeProduct(props.index);
 }
 function onSizeChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSize(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSize(target.value, props.index);
 }
 function onSexChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  store.changeSex(target.value, props.index)
+  const target = event.target as HTMLInputElement;
+  store.changeSex(target.value, props.index);
 }
 
 function removeSearchQuery(index: number) {
-  store.removeSearchQuery(props.index, index)
+  store.removeSearchQuery(props.index, index);
 }
 function addSearchQuery() {
-  store.addSearchQuery(props.index)
+  store.addSearchQuery(props.index);
 }
 function productSearchQueryUpdate(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery({
     value: newValue,
     queryIndex: props.index,
     productIndex: index,
-  })
+  });
 }
 const productDateRangeModel = computed({
   get() {
-    return props.product.dateRange
+    return props.product.dateRange;
   },
   set(newValue: unknown[]) {
-    store.changeDateRange(newValue, props.index)
+    store.changeDateRange(newValue, props.index);
   },
-})
+});
 
 const productQuantityModel = computed({
   get() {
-    return props.product.quantity
+    return props.product.quantity;
   },
   set(newValue: number) {
-    store.changeQuantity(newValue, props.index)
+    store.changeQuantity(newValue, props.index);
   },
-})
+});
 </script>
 
 <template>
@@ -196,16 +196,19 @@ const productQuantityModel = computed({
             <div v-else class="text-sm text-center ml-2">Нет</div>
           </div>
         </div> -->
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-1">Пол: </span>
-          <select
-            class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
-            @change="onSexChange"
-          >
-            <option value="Нет">Нет</option>
-            <option value="male">Муж</option>
-            <option value="female">Жен</option>
-          </select>
+        <div class="flex">
+          <div class="flex flex-col">
+            <span class="text-md text-gray-500 mb-1">Пол: </span>
+            <select
+              class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
+              @change="onSexChange"
+            >
+              <option value="Нет">Нет</option>
+              <option value="male">Муж</option>
+              <option value="female">Жен</option>
+            </select>
+          </div>
+
         </div>
       </div>
       <!-- <div class="flex justify-between items-center">
@@ -221,13 +224,32 @@ const productQuantityModel = computed({
       </div> -->
       <div class="flex justify-start gap-5">
         <div class="flex flex-col">
+            <span class="text-md text-gray-500 mb-1">Вариант доставки: </span>
+            <select
+              v-model="product.pvzType"
+              class="select select-sm border-none bg-base-200 rounded-xl w-15 appearance-none"
+            >
+              <option disabled selected>Выберите тип доставки</option>
+              <option value="Почта России">Почта России</option>
+              <option value="Boxberry">Boxberry</option>
+              <option value="СДЭК">СДЭК</option>
+              <option value="DPD">DPD</option>
+              <option value="Яндекс Доставка">Яндекс Доставка</option>
+              <option value="Авито">Авито</option>
+              <option value="Постамат 5Post">Постамат 5Post</option>
+              <option value="Касса 5Post">Касса 5Post</option>
+            </select>
+          </div>
+      </div>
+      <div class="flex justify-start gap-5">
+        <div class="flex flex-col">
           <span class="text-md text-gray-500 mb-1">Правила: </span>
           <div class="w-full flex items-center justify-center gap-2">
             <div class="text-sm">
               {{
                 product.rules.length
-                  ? product.rules.map((rule: Rule) => rule.id).join(', ')
-                  : ''
+                  ? product.rules.map((rule: Rule) => rule.id).join(", ")
+                  : ""
               }}
             </div>
             <button
@@ -299,7 +321,7 @@ const productQuantityModel = computed({
           </div>
           <!-- :disabled="loading" -->
           <button
-            v-if="!product.adress"
+            :disabled="loading"
             :class="{
               'btn-outline': product.adress,
             }"
@@ -312,20 +334,7 @@ const productQuantityModel = computed({
         </div>
       </div>
       <div class="flex w-full">
-        <div class="w-[70%]">
-          <div class="text-md text-gray-500 mb-1">№ Квартиры:</div>
-          <div class="w-full flex flex-col gap-2">
-            <label
-              ><input
-                v-model="product.appartmentNumber"
-                type="text"
-                placeholder="№ квартиры"
-                class="input bg-base-200 input-sm w-full rounded-xl"
-              />
-            </label>
-          </div>
-        </div>
-        <div class="w-full ml-2">
+        <div class="w-[60%] ml-2">
           <div class="text-md text-gray-500 mb-1">Регион поиска:</div>
           <div class="w-full flex flex-col gap-2">
             <BuyoutAvitoCreateSearchQueriesRegion

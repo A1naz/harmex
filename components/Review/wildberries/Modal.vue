@@ -93,7 +93,7 @@ async function checkVideo(file: any) {
     const videoElement = document.createElement("video");
     videoElement.src = URL.createObjectURL(file);
 
-    if (file.size > 500 * 1024 * 1024) {
+    if (file.size > 100 * 1024 * 1024) {
       // Если размер файла превышает 500 МБ
       notify({
         title: "Ошибка",
@@ -166,7 +166,7 @@ async function generateVideoThumbnail(file: File) {
 }
 
 async function uploadToS3(event: Event, index: number) {
-  console.log("uploadToS3");
+
   loadingIndex.value = index;
   const fileList = (event.target! as HTMLInputElement).files;
   const file = (event.target! as HTMLInputElement).files[0];
@@ -191,7 +191,7 @@ async function uploadToS3(event: Event, index: number) {
   }
 
   const fileName = "reviewImages/" + uuid();
-  console.log(fileName);
+
   const result = await upload(file, {
     key: fileName,
   });

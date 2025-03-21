@@ -330,7 +330,7 @@ function openCourierModal() {
           />
         </div> -->
         <div class="title mb-2">
-          Выберите ПВЗ {{ pickpoints ? pickpoints.length : 0 }}
+          Выберите ПВЗ 
         </div>
 
         <div
