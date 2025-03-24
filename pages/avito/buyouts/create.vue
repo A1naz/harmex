@@ -25,7 +25,7 @@ definePageMeta({
 });
 const store = useAvitoBuyoutStore();
 const route = useRoute();
-const products = computed(() => store.createProducts);
+const products: any = computed(() => store.createProducts);
 
 onMounted(() => {
   getPickpoints();

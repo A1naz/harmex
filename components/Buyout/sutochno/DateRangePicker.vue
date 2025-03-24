@@ -1,0 +1,160 @@
+<script setup lang="ts">
+const props = defineProps({
+  modelValue: {
+    required: true,
+    type: Array as PropType<Date[]>,
+  },
+  startDate: {
+    required: true,
+    type: Date,
+  },
+  saveButton: {
+    required: false,
+    type: String,
+    default: "Применить",
+  },
+});
+const emit = defineEmits(["update:modelValue", "select"]);
+const { notify } = useNotification();
+const colorMode = useColorMode();
+const { $dayjs } = useNuxtApp();
+const { width } = useWindowSize();
+
+function getFirstDate(dates: [Date | null, Date | null] | []) {
+  if (dates && dates[0]) return `${$dayjs(dates[0]).format("D MMMM")}`;
+
+  return "";
+}
+function getSecondDate(dates: [Date | null, Date | null] | []) {
+  if (dates && dates[1]) return `${$dayjs(dates[1]).format("D MMMM")}`;
+
+  return "";
+}
+type UpdateMonthYear = (month: number, year: number) => void;
+type updateTime = (time: number[], hours: boolean) => void;
+
+function updateMonth(
+  event: InputEvent,
+  updateMonthYear: UpdateMonthYear,
+  year: number
+) {
+  updateMonthYear(+(event.target as HTMLSelectElement).value, year);
+}
+const hoursArray = computed(() => {
+  const arr = [];
+  for (let i = 0; i < 24; i++)
+    arr.push({ text: i < 10 ? `0${i}` : i, value: i });
+
+  return arr;
+});
+
+const dates = computed({
+  get: () => props.modelValue,
+  set: (val) => emit("update:modelValue", val),
+});
+
+function handleSelectDate(
+  internalModelValue: [Date | null, Date | null] | [],
+  selectDate: Function
+) {
+  if (
+    internalModelValue.length === 2 &&
+    internalModelValue[0] &&
+    internalModelValue[1]
+  ) {
+    selectDate();
+  } else {
+    notify({
+     group: "error",
+      title: "Выберите 2 даты для применения фильтра",
+    });
+  }
+}
+</script>
+
+<template>
+  <div>
+    <VueDatePicker
+      v-model="dates"
+      range
+      cancel-text=""
+      select-text="Сохранить"
+      locale="ru"
+      :min-date="startDate"
+      :prevent-min-max-navigation="false"
+      :dark="colorMode.value === 'dark'"
+      :time-picker-inline="true"
+      :teleport-center="width < 1024"
+      :teleport="false"
+      @update:model-value="$emit('select')"
+      position="left"
+    >
+      <template #trigger>
+        <slot />
+      </template>
+      <template #action-row="{ internalModelValue, selectDate }">
+        <div class="action-row flex flex-col justify-center gap-2 w-full">
+          <div class="flex flex-col w-full">
+            <div class="flex justify-between">
+              <span>Начало:</span>
+              <span>{{ getFirstDate(internalModelValue) }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Конец:</span>
+              <span>{{ getSecondDate(internalModelValue) }}</span>
+            </div>
+          </div>
+          <button
+            class="btn btn-primary btn-sm block normal-case"
+            @click="handleSelectDate(internalModelValue, selectDate)"
+          >
+            {{ saveButton }}
+          </button>
+        </div>
+      </template>
+      <template
+        #month-year="{
+          month,
+          year,
+          months,
+          updateMonthYear,
+          handleMonthYearChange,
+        }"
+      >
+        <div class="icons flex justify-between w-full items-center">
+          <span
+            class="custom-icon btn btn-ghost btn-sm btn-square"
+            @click="handleMonthYearChange(false)"
+          >
+            <Icon name="material-symbols:chevron-left-rounded" size="16" />
+          </span>
+          <div class="custom-month-year-component">
+            <select
+              class="select select-ghost select-sm"
+              :value="month"
+              @change="updateMonth($event as any, updateMonthYear, year)"
+            >
+              <option v-for="m in months" :key="m.value" :value="m.value">
+                {{ m.text }}
+              </option>
+            </select>
+          </div>
+          <span
+            class="custom-icon btn btn-ghost btn-sm btn-square"
+            @click="handleMonthYearChange(true)"
+          >
+            <Icon name="material-symbols:chevron-right-rounded" size="16" />
+          </span>
+        </div>
+      </template>
+      <template #clock-icon>
+        <div class="flex justify-center items-center gap-2">
+          <Icon name="fluent:clock-24-regular" />
+          <div class="text-base-content">Указать время</div>
+        </div>
+      </template>
+    </VueDatePicker>
+  </div>
+</template>
+
+<style scoped></style>

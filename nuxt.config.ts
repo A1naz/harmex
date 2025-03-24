@@ -236,6 +236,7 @@ export default defineNuxtConfig({
     BANK_DB_URI: process.env.BANK_DB_URI,
     YANDEX_MARKET_DB_URI: process.env.YANDEX_MARKET_DB_URI,
     OZON_HOTELS_DB_URI: process.env.OZON_HOTELS_DB_URI,
+    SUTOCHNO_DB_URI: process.env.SUTOCHNO_DB_URI,
     SECRET: process.env.SECRET,
     smtpHost: process.env.smtpHost,
     smtpPort: process.env.smtpPort,
