@@ -14,6 +14,7 @@ const menuItems = ref([
   "Стриминг",
   "Блоггинг",
   "Услуги",
+  "ИИ Услуги"
 ]);
 const modalStore = useModalStore();
 const introductionModal = ref(false);
