@@ -77,23 +77,26 @@ async function fetchData() {
     ? SelectOptions.uuidBuyout
     : SelectOptions.idReview;
 
-  const response: any[] = await $fetch(`/api/ozonHotels/review/${endpoint.value}`, {
-    method: "GET",
-    params: {
-      skip: skip.value,
-      limit: limit.value,
-      dateFilter: dateFilter.value,
-      tab: currentTab.value,
-      search:
-        searchText.value.length > 0
-          ? {
-              [searchType.value]: searchText.value
-                .replaceAll(" ", "")
-                .replace("#", ""),
-            }
-          : {},
-    },
-  });
+  const response: any[] = await $fetch(
+    `/api/ozonHotels/review/${endpoint.value}`,
+    {
+      method: "GET",
+      params: {
+        skip: skip.value,
+        limit: limit.value,
+        dateFilter: dateFilter.value,
+        tab: currentTab.value,
+        search:
+          searchText.value.length > 0
+            ? {
+                [searchType.value]: searchText.value
+                  .replaceAll(" ", "")
+                  .replace("#", ""),
+              }
+            : {},
+      },
+    }
+  );
   if (response) {
     if (response.reviews) {
       reviews.value = [...reviews.value, ...response.reviews];
@@ -174,7 +177,7 @@ async function removeReview() {
     notify({
       title: "Отзыв удален",
       text: "Ваш отзыв выставлен на удаление",
-     group: "success",
+      group: "success",
     });
     const startIn = reviews.value.find(
       (rev: any) => rev.uuid === uuidForRemove.value
@@ -185,7 +188,7 @@ async function removeReview() {
     notify({
       title: "Что-то пошло не так",
       text: error.value.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
@@ -255,14 +258,14 @@ async function resumeStatus(item: any) {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
   }
   if (data.value) {
     notify({
-     group: "success",
+      group: "success",
       title: "Успешно",
       text: "Отзыв успешно возвращен в работу",
       duration: 3000,
@@ -362,7 +365,10 @@ async function selectFilterDate(e: any) {
             </NuxtLink>
           </li>
           <li class="cursor-pointer">
-            <NuxtLink to="/catalog/ozonHotels" class="cursor-pointer text-[#909090]">
+            <NuxtLink
+              to="/catalog/ozonHotels"
+              class="cursor-pointer text-[#909090]"
+            >
               Суточно
             </NuxtLink>
           </li>
@@ -422,18 +428,18 @@ async function selectFilterDate(e: any) {
               /> -->
             </div>
             <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
-                <CustomSelect
-                     class="h-[2rem] min-w-[95px]"
-                  :tabs="[
-                    { title: 'Все время', value: 'all' },
-                    { title: 'Сегодня', value: 'today' },
-                    { title: 'Вчера', value: '2days' },
-                    { title: '3 дня', value: '3days' },
-                    { title: 'Неделя', value: '7days' },
-                  ]"
-                  @change-value="selectFilterDate"
-                />
-              </div>
+              <CustomSelect
+                class="h-[2rem] min-w-[95px]"
+                :tabs="[
+                  { title: 'Все время', value: 'all' },
+                  { title: 'Сегодня', value: 'today' },
+                  { title: 'Вчера', value: '2days' },
+                  { title: '3 дня', value: '3days' },
+                  { title: 'Неделя', value: '7days' },
+                ]"
+                @change-value="selectFilterDate"
+              />
+            </div>
             <div
               class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"
             >
@@ -477,7 +483,7 @@ async function selectFilterDate(e: any) {
         >
           <div
             v-if="currentTab === 'available' || currentTab === 'all'"
-          class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
+            class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
           >
             <ReviewOzonHotelsCard
               v-for="(review, index) of availableReviews"
@@ -744,6 +750,26 @@ async function selectFilterDate(e: any) {
         <li class="mt-1">
           <strong> Избегайте шаблонных текстов.</strong>
           <br />Уникальные и подробные отзывы вызывают больше доверия.
+        </li>
+        <li class="mt-1">
+          <strong>Почему отзывы проходят модерацию на маркетплейсах?</strong>
+          <br />Отзывы проходят <strong> ручную модерацию</strong> для
+          обеспечения их достоверности и соответствия правилам платформы. <br />
+          <strong> Особенности модерации:</strong> Срок проверки: до 72
+          часов.<br />
+          <strong>Цель:</strong> исключить фейковые, рекламные или неуместные
+          отзывы <strong><br />Что проверяется: </strong>
+          <ul class="list-disc ml-6">
+            <li class="mt-1">Соответствие содержания правилам платформы</li>
+            <li class="mt-1">
+              Наличие реального взаимодействия с товаром или услугой.
+            </li>
+            <li class="mt-1">
+              Отсутствие оскорблений, спама или ненадлежащего контента.
+            </li>
+          </ul>
+          После успешной модерации отзыв становится видимым для других
+          пользователей, что повышает доверие и репутацию товара.
         </li>
       </ul>
 
