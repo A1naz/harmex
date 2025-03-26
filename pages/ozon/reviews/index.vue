@@ -393,7 +393,7 @@ async function selectFilterDate(e: any) {
           <div class="export lg:absolute right-0 top-0">
             <ExportXls
               api="/api/ozon/review/export"
-              file-name="MARKETMONSTR Доступные отзывы"
+              file-name="HARMEX Доступные отзывы"
               :is-visible="true"
             />
           </div>

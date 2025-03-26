@@ -3,7 +3,7 @@ import speakeasy from 'speakeasy'
 
 export default function getQR() {
   const secret: any = speakeasy.generateSecret({
-    name: 'MARKETMONSTR',
+    name: 'HARMEX',
   })
 
   const getQR = () => {

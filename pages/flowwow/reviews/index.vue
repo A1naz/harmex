@@ -416,7 +416,7 @@ async function selectFilterDate(e: any) {
         <div class="export lg:absolute right-0 top-0">
           <ExportXls
             api="/api/flowwow/review/export"
-            file-name="MARKETMONSTR Доступные отзывы"
+            file-name="HARMEX Доступные отзывы"
             :is-visible="true"
           />
         </div>
@@ -495,7 +495,7 @@ async function selectFilterDate(e: any) {
       <div class="flex gap-1 items-center">
         <ExportXls
           api="/api/review/export"
-          fileName="MARKETMONSTR Доступные отзывы"
+          fileName="HARMEX Доступные отзывы"
           :isVisible="true"
         />
         <NuxtLink
