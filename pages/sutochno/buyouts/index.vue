@@ -636,7 +636,7 @@ const siteUrl = config.public.siteUrl;
       @checkbox-toggle="toggleCheckbox"
     >
       <h3 class="text-[19px] font-bold mb-2 flex items-center gap-1 pr-4">
-        Как оставить отзыв на Wildberries в 3 шага?
+        Как оставить отзыв на Суточно в 3 шага?
       </h3>
       <h3 class="text-[17px] font-bold mb-2 flex items-center gap-1 pr-4">
         Чтобы оставить отзыв, нужно сделать три простых действия:

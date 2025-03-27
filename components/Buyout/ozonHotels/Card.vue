@@ -47,14 +47,14 @@ async function deleteBuyOut() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   } else {
     notify({
       title: "Успешно",
       text: "Выкуп успешно удален",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
     emit("remove", props.info.uuid);
@@ -72,14 +72,14 @@ async function unpauseBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   } else {
     notify({
       title: "Успешно",
       text: "Выкуп успешно возобновлен",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
     emit("unpause", props.info.uuid);
@@ -98,14 +98,14 @@ async function unarchiveBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   } else {
     notify({
       title: "Успешно",
       text: "Выкуп успешно восстановлен",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
     emit("unarchive", props.info.uuid);
@@ -131,14 +131,14 @@ async function archiveBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   } else {
     notify({
       title: "Успешно",
       text: "Выкуп успешно архивирован",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
     emit("archive", props.info.uuid);
@@ -177,16 +177,16 @@ async function copyToClipboard(text: string) {
 <template>
   <div class="buyout-card card bg-base-100 shadow-lg min-w-[214px]">
     <div
-      class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-3 relative"
+      class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-4 relative"
     >
-      <!-- <button
+      <button
         v-show="info.status === 'paused' || info.status === 'nofunds'"
         class="btn btn-xs btn-neutral absolute left-3 top-3"
         @click="unpauseBuyout"
       >
         Возобновить
-      </button> -->
-      <div class="dropdown dropdown-end absolute -right-1 top-2">
+      </button>
+      <div class="dropdown dropdown-end absolute right-1 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
           <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
         </label>
@@ -204,7 +204,7 @@ async function copyToClipboard(text: string) {
               О выкупе
             </a>
           </li>
-          <!-- <li>
+          <li>
             <a @click="cloneBuyout">
               <img
                 class="w-5 h-5"
@@ -213,7 +213,7 @@ async function copyToClipboard(text: string) {
               />
               Дублировать
             </a>
-          </li> -->
+          </li>
           <li
             v-if="
               info.status === 'archived' ||
@@ -252,10 +252,13 @@ async function copyToClipboard(text: string) {
         </ul>
       </div>
 
-      <!-- <div  class="truncate -mt-4">
+      <!-- <div class="truncate">
         <div class="flex justify-between gap-1 items-center">
-          <div class="flex gap-x-2 flex-nowrap">
-            <span class="text-[0.6rem] text-gray-500 py-1">Создан: {{ defaultDate(info.createdAt) }}
+          <div class="flex gap-x-3 flex-wrap">
+            <span class="text-[0.6rem] text-gray-500 py-1">Создан: {{
+              $dayjs(info.createdAt).locale('ru').format(
+                'D MMMM YYYY HH:mm',
+              ) }}
             </span>
             <div
               :class="{
@@ -263,13 +266,15 @@ async function copyToClipboard(text: string) {
                   info.status !== 'active'
                   && info.status !== 'paused'
                   && info.status !== 'work'
+                  && info.status !== 'busy'
                   && info.status !== 'archived',
               }"
-              class="text-[0.6rem] rounded-2xl px-2 bg-base-200 py-1"
+              class="text-xs text-[0.6rem] rounded-2xl px-2 bg-[#f9f9f9] dark:bg-base-200 py-1"
             >
               Выкуплено {{ info.completed }} шт.
             </div>
             <button
+              v-show="info.status === 'paused' || info.status === 'nofunds'"
               class="btn btn-sm btn-neutral"
               @click="unpauseBuyout"
             >
@@ -278,28 +283,13 @@ async function copyToClipboard(text: string) {
           </div>
         </div>
 
-        <div class="flex gap-2 flex-nowrap">
-          <h2 class="card-title text-[1.1rem] mt-2">
+        <div class="flex gap-3 flex-wrap">
+          <h2 class="card-title mt-2 text-[1.1rem] ">
             Выкуп №{{ info.place }}
           </h2>
-          <div
-            class="mt-2 rounded-2xl py-0.5 px-2 text-md flex items-center w-fit text-sm text-[0.725rem]"
-            :class="{
-              'text-base-content bg-[#b5ffbc] dark:bg-green-600 ':
-                info.status === 'active'
-                || info.status === 'work'
-                || info.status === 'busy',
-              'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
-                info.status === 'completed' || info.status === 'nofunds',
-              'text-base-content bg-yellow-300':
-                info.status === 'archived' || info.status === 'paused',
-            }"
-          >
-            {{ getStatus }}
-          </div>
 
           <a
-            :href="`https://www.ozonHotels.ru/catalog/${info.article}/detail.aspx`"
+            :href="`https://www.ozon.ru/product/${info.article}`"
             target="_blank"
             class="text-base text-[0.85rem] text-primary link link-hover mt-0 flex items-center"
             :class="{
@@ -309,26 +299,33 @@ async function copyToClipboard(text: string) {
             {{ info.article }}
           </a>
         </div>
-
         <div
+          class="mt-2 rounded-2xl py-1.5 px-2 text-md flex items-center w-fit text-sm text-[0.725rem]"
+          :class="{
+            ' bg-[#b5ffbc] dark:bg-success':
+              info.status === 'active'
+              || info.status === 'work'
+              || info.status === 'busy'
+              || info.status === 'discountGiven',
+            'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+              info.status === 'completed' || info.status === 'nofunds',
+            'text-base-content bg-yellow-300':
+              info.status === 'archived'
+              || info.status === 'paused'
+              || info.status === 'discountAwaiting',
+          }"
+        >
+          {{ getStatus }}
+        </div>
 
-          class="flex justify-between mt-2"
-        />
+        <div class="flex justify-between mt-2" />
       </div> -->
 
-      <div class="flex gap-3 w-full truncate mt-6">
-        <div
-          class="flex-none"
-          style="
-            width: 80px;
-            height: 124px;
-            margin-top: auto;
-            margin-bottom: auto;
-          "
-        >
+      <div class="flex gap-4 mt-6 truncate">
+        <div class="flex-none my-auto" style="width: 90px; height: 90px">
           <nuxt-img
             class="rounded-xl h-full"
-            width="120"
+            width="150"
             height="150"
             format="webp"
             loading="lazy"
@@ -339,7 +336,61 @@ async function copyToClipboard(text: string) {
           <div class="flex flex-col gap-1.5">
             <div class="flex gap-2">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Артикул:
+                >Создано:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.createdAt).format("DD.MM.YYYY") }}
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Статус:
+              </span>
+              <div
+                :class="{
+                  ' bg-[#b5ffbc] dark:bg-success':
+                    info.status === 'active' ||
+                    info.status === 'work' ||
+                    info.status === 'busy' ||
+                    info.status === 'discountGiven',
+                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                    info.status === 'completed' || info.status === 'nofunds',
+                  'text-base-content bg-yellow-300':
+                    info.status === 'archived' ||
+                    info.status === 'paused' ||
+                    info.status === 'discountAwaiting',
+                }"
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] max-w-[150px] truncate"
+              >
+                {{ getStatus }}
+              </div>
+            </div>
+
+            <div class="flex gap-2" v-if="info.executionTime">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Выполнено:
+              </span>
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
+                {{ $dayjs(info.executionTime).format("DD.MM.YYYY") }}
+              </div>
+            </div>
+
+            <div class="flex gap-2 w-2/3">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >ID заказа:
+              </span>
+              <button
+                class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
+                @click="copyToClipboard(info.uuid)"
+              >
+                #{{ info.uuid }}
+              </button>
+            </div>
+
+            <div class="flex gap-2">
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                >Товар:
               </span>
               <div
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
@@ -353,40 +404,10 @@ async function copyToClipboard(text: string) {
                 </a>
               </div>
             </div>
-            <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Статус:
-              </span>
-              <div
-                class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
-                :class="{
-                  'text-base-content bg-[#b5ffbc] dark:bg-green-600 ':
-                    info.status === 'active' ||
-                    info.status === 'work' ||
-                    info.status === 'busy',
-                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
-                    info.status === 'completed' || info.status === 'nofunds',
-                  'text-base-content bg-yellow-300':
-                    info.status === 'archived' || info.status === 'paused',
-                }"
-              >
-                {{ getStatus }}
-              </div>
-            </div>
+
             <div class="flex gap-2 w-2/3">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >ID заказа:
-              </span>
-              <button
-                class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
-                @click="copyToClipboard(info.uuid)"
-              >
-                #{{ info.uuid }}
-              </button>
-            </div>
-            <div class="flex gap-2 w-2/3">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Наименование:
+                >Название:
               </span>
               <div class="truncate text-[0.9rem] text-bold">
                 {{ info.product?.name }}
@@ -397,47 +418,77 @@ async function copyToClipboard(text: string) {
                 >Цена:
               </span>
               <div
-                class="rounded-md py-0 px-2 bg-[#b5ffbc] dark:bg-success text-sm text-[0.725rem]"
+                class="rounded-md py-0 px-2 dark:bg-success text-sm text-[0.725rem]"
               >
                 {{ info.product?.priceText }}
               </div>
             </div>
+
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Количество:
+              <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
+                >Скидка:
               </span>
               <div
-                class="rounded-md py-0 px-2 bg-warning text-sm text-[0.725rem]"
+                class="text-[0.725rem] rounded-md py-0 px-2 bg-opacity-20 text-sm"
+                :class="{
+                  ' bg-[#b5ffbc] dark:bg-success': info.discount,
+                  'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                    !info.discount,
+                }"
               >
-                {{ info.quantity }} шт.
+                {{
+                  info.discountPrice == info.product?.price
+                    ? "нет"
+                    : info.discountPrice
+                    ? `${info.discountPrice} ₽`
+                    : "нет"
+                }}
               </div>
             </div>
-            <!-- <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Сумма: </span>
-              <div
-                class="rounded-md py-0 px-2 bg-[#bcc3ff] dark:bg-primary dark:bg-opacity-50 text-sm text-[0.725rem]"
-              >
-                {{ currency.format(info.quantity * info.product?.price) }}
-              </div>
-            </div> -->
+
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Источник:
+              <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
+                >Площадка:
               </span>
               <div
-                class="bg-[#ced3d9] rounded-md py-0 px-2 text-sm text-[0.725rem]"
+                class="text-[0.725rem] rounded-md py-0 px-2 bg-opacity-20 text-sm"
               >
-                Ozon отели
+                OZON Отели
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="flex gap-1.5 -mt-2.5">
+        <span class="text-sm text-gray-500 my-auto text-[0.725rem]">ФИО: </span>
+        <div class="rounded-md py-0 px-2 text-sm">
+          {{ info.FIO ? info.FIO : "-" }}
+        </div>
+      </div>
+      <div
+        class="flex gap-1.5 -mt-2.5"
+        v-if="info.discountPrice !== info.product?.price && info.discount"
+      >
+        <span class="text-sm text-gray-500 my-auto text-[0.725rem]"
+          >Скидка запрошена:
+        </span>
+        <div class="rounded-md py-0 px-2 text-sm">
+          {{
+            info.discountRequestTime
+              ? `${moscowDate(info.discountRequestTime)
+                  .split("T")[0]
+                  .replaceAll("-", ".")} ${moscowDate(info.discountRequestTime)
+                  .split("T")[1]
+                  .slice(0, 5)}`
+              : "-"
+          }}
+        </div>
+      </div>
       <button
-        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
+        class="btn mt-auto btn-sm h-[2.5rem] text-[20px] rounded-2xl font-normal text-white btn-primary"
         @click="$emit('openModal', index)"
       >
-        Открыть
+        Детали
       </button>
     </div>
     <StaticConfirmModal
