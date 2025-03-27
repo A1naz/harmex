@@ -18,17 +18,29 @@ const formData = reactive({
   password: "",
 });
 
+
+const referralFromLocal: any = ref("");
+async function linkFollow() {
+  await useFetch("/api/user/linkFollow", {
+    method: "GET",
+    query: {
+      referral: formData.referral,
+    },
+    watch: false,
+  });
+}
+
 onMounted(async () => {
   if (params?.emailConfirmed) {
     notify({
-     group: "success",
+      group: "success",
       title: "Email успешно подтвержден!",
       duration: 3000,
     });
   }
   if (params?.passwordChanged) {
     notify({
-     group: "success",
+      group: "success",
       title: "Пароль успешно изменен!",
       duration: 3000,
     });
@@ -41,6 +53,17 @@ onMounted(async () => {
       duration: 3000,
     });
   }
+
+  if (route.query?.ref && typeof route.query?.ref === "string") {
+    if (route.query?.ref !== localStorage.getItem("referralCode")) {
+      setTimeout(() => {
+        linkFollow();
+      });
+    }
+    localStorage.setItem("referralCode", route.query?.ref);
+  }
+  referralFromLocal.value = localStorage.getItem("referralCode");
+  const landingValue = localStorage.getItem("landing");
 });
 
 const passwordShow = ref(false);
@@ -82,7 +105,7 @@ async function login() {
   })
     .catch((err) => {
       notify({
-       group: "error",
+        group: "error",
         title: "Не удалось войти",
         text: err.data.message || err.message,
       });

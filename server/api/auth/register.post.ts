@@ -136,6 +136,8 @@ export default eventHandler(async (event) => {
         return
       }
     }
+    console.log(inviter);
+    return
     if (inviter.partner) {
       const refCount = inviter?.partner.refCount ?? 0
       inviter.partner.refCount = refCount + 1
