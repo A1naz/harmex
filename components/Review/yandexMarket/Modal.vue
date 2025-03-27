@@ -47,18 +47,6 @@ const form = reactive({
       url: "",
       public: "",
     },
-    {
-      url: "",
-      public: "",
-    },
-    {
-      url: "",
-      public: "",
-    },
-    {
-      url: "",
-      public: "",
-    },
   ],
   video: "",
 });
@@ -227,18 +215,6 @@ async function clearForm() {
   filetype.value = "";
 
   form.photos = [
-    {
-      url: "",
-      public: "",
-    },
-    {
-      url: "",
-      public: "",
-    },
-    {
-      url: "",
-      public: "",
-    },
     {
       url: "",
       public: "",
