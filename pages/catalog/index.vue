@@ -6,8 +6,7 @@ const { user } = useUserSession();
 const { notify } = useNotification();
 const menuItems = ref([
   "Маркетплейсы",
-  "Интернет-магазины",
-  "Отели",
+  "Недвижимость",
   "Доски объявлений",
   "Медицина",
   "Карты",
