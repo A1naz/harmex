@@ -456,7 +456,7 @@ const siteUrl = config.public.siteUrl;
       <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
-            Отели
+            Недвижимость
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
@@ -725,7 +725,7 @@ const siteUrl = config.public.siteUrl;
       <p class="my-4 text-[16px] flex items-center gap-1 text-[#4b5563]">
         Чтобы оформить заказ, следуйте простым шагам:
       </p>
-      <ol class="list-decimal ml-10 mb-4 text-[#4b5563]">
+      <ol class="list-decimal ml-10 mb-4 w-[80%] text-[#4b5563]">
         <li>Нажмите на кнопку <strong>“+”</strong>.</li>
         <li>Вставьте ссылку на <strong>объявление</strong></li>
         <li>Выберите <strong>даты</strong> бронирования номера</li>

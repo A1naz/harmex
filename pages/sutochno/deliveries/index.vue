@@ -328,7 +328,7 @@ const siteUrl = config.public.siteUrl;
       <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
-            Маркетплейсы
+            Недвижимость
           </NuxtLink>
         </li>
         <li class="cursor-pointer">

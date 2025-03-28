@@ -456,7 +456,7 @@ const siteUrl = config.public.siteUrl;
       <ul class="text-sm sm:text-base font-medium text-[18px] text-[#909090]">
         <li class="cursor-pointer">
           <NuxtLink to="/catalog" class="cursor-pointer text-[#909090]">
-            Отели
+            Недвижимость
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
@@ -682,8 +682,8 @@ const siteUrl = config.public.siteUrl;
         <li>Выберите <strong>даты</strong> бронирования номера</li>
         <li>Нажмите кнопку <strong>"Добавить"</strong></li>
         <nuxt-img
-          alt=""
-          class="flex mx-auto w-full px-4 mt-2"
+         
+          class="flex mx-auto w-[80%] px-4 mt-2"
           src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/introduction/sutochno2.png"
         />
         <li>
@@ -823,7 +823,7 @@ const siteUrl = config.public.siteUrl;
             не будет создана.
           </li>
         </ol>
-    
+
         <p><strong> 3. Планирование заявок </strong></p>
         <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
           <li>
@@ -841,9 +841,7 @@ const siteUrl = config.public.siteUrl;
               <li>2-я заявка: с 12:00 до 14:00.</li>
             </ol>
           </li>
-          <li>
-            Это предотвращает одновременное исполнение всех заказов.
-          </li>
+          <li>Это предотвращает одновременное исполнение всех заказов.</li>
         </ol>
         <p><strong> 4. Часовой пояс </strong></p>
         <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
@@ -852,7 +850,6 @@ const siteUrl = config.public.siteUrl;
             <strong>часовому поясу заказчика</strong>.
           </li>
         </ol>
-      
       </div>
 
       <p class="divider"></p>
@@ -947,11 +944,10 @@ const siteUrl = config.public.siteUrl;
         <p><strong>4. Финансовый учет </strong></p>
         <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
           <li>
-            Учитывайте, что расчеты происходят <strong>без промокодов</strong>, поэтому
-            следите за волатильностью цен и планируйте бюджет заранее.
+            Учитывайте, что расчеты происходят <strong>без промокодов</strong>,
+            поэтому следите за волатильностью цен и планируйте бюджет заранее.
           </li>
         </ol>
-
       </div>
       <p class="divider"></p>
       <p class="mb-4"><strong>Пример работы с заявками</strong></p>
