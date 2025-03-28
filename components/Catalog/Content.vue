@@ -99,7 +99,7 @@ defineEmits(["setFavourites", "vote"]);
                 :key="i"
               >
                 <div
-                  class="badge bg-[#ede9fe] rounded-md text-[#4338ca] h-[20px] text-[12px] font-medium"
+                  class="badge bg-[#ede9fe] rounded-md text-[#4338ca] h-[20px] text-[11px] font-medium"
                 >
                   {{ service.title }}
                 </div>

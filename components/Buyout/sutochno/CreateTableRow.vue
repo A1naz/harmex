@@ -30,7 +30,7 @@ function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
       title: "За раз можно создать максимум 10 выкупов",
-     group: "error",
+      group: "error",
     });
     return;
   }
@@ -212,19 +212,30 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
         />
       </div>
     </td>
-    <td class="w-[140px] border-r border-base">
-      <div class="flex justify-between mt-1 mx-5">
+    <td class="w-[80px] border-r border-base">
+      <div class="flex justify-center mt-1">
         <button
-          class="w-full text-center btn btn-ghost dark:border-[#51535a] border-base-300 btn-sm btn-square text-base-content font-normal hover:text-primary whitespace-nowrap px-1"
+          v-if="!product.promoCode"
+          :disabled="
+            product.discountPrice && product.discountPrice !== product.price
+          "
+          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
           @click="props.openPromo(index, product.price)"
-          disabled
         >
-          {{ product.promoCode ? `${product.promoCode}` : "Указать промокод" }}
+          <Icon
+            v-if="!product.promoCode"
+            name="fluent:add-24-filled"
+            size="20"
+          />
         </button>
+        <span
+          @click="props.openPromo(index, product.price)"
+          class="break-all whitespace-nowrap cursor-pointer text-primary mt-2 mr-1"
+          >{{ product.promoCode }}</span
+        >
         <button
           v-if="product.promoCode"
-          disabled
-          class="w-fit btn btn-ghost btn-sm border-base-300 px-1 ml-[1px] btn-square text-base-content font-normal hover:text-primary whitespace-nowrap"
+          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none w-fit h-fit"
           @click="$emit('removePromo', index)"
         >
           <Icon name="ep:close-bold" size="12" />
