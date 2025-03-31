@@ -464,7 +464,7 @@ const siteUrl = config.public.siteUrl;
             to="/catalog/sutochno"
             class="cursor-pointer text-[#909090]"
           >
-            Суточно отели
+            Суточно
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">Брони</li>
