@@ -41,7 +41,6 @@ async function removeSelectedNotifications() {
   const selectedNotifications = notifications.value.filter(
     (n: any) => n.isChecked
   );
-  console.log(selectedNotifications);
 
   await useFetch("/api/notifications/remove", {
     method: "POST",

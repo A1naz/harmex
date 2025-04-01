@@ -189,7 +189,7 @@ onMounted(async () => {
             iconColor: "#e60041",
             iconLayout: "default#image",
             iconImageHref:
-              "https://cdn.prod.website-files.com/64700b7f349828a5b8dc81ab/663b9be31ee171086abe0562_img-carriers-round-boxberry.svg",
+              "https://ozonmpportal.hb.vkcs.cloud/harmex/pvz/boxberry.png",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],

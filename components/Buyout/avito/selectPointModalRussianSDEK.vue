@@ -189,7 +189,7 @@ onMounted(async () => {
             iconColor: "#00aaff",
             iconLayout: "default#image",
             iconImageHref:
-              "https://scontent-fra3-1.xx.fbcdn.net/v/t39.30808-6/248272884_109760848168644_7767748159229370879_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=L683YGlh9yoQ7kNvgG5Z__8&_nc_oc=Adnt5JzjbJeing_Ui8Nu4goUnMvF7q0BFE1vA6SACr6xhxUbyJzUP8VXTteowznOjpI&_nc_zt=23&_nc_ht=scontent-fra3-1.xx&_nc_gid=ZT5nsUm-OWTvTR4-7zMOHQ&oh=00_AYFEs2Dp9c2TSm8CjLBpsFEZ_iV_jWHujzgOZaW9dAIjBg&oe=67E1B9E1",
+              "https://ozonmpportal.hb.vkcs.cloud/harmex/pvz/sdek.png",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
