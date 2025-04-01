@@ -189,7 +189,7 @@ onMounted(async () => {
             iconColor: "#00aaff",
             iconLayout: "default#image",
             iconImageHref:
-              "https://free-png.ru/wp-content/uploads/2021/12/free-png.ru-90.png",
+              "https://ozonmpportal.hb.vkcs.cloud/harmex/pvz/russianPost.png",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],

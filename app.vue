@@ -188,4 +188,5 @@ input::-webkit-inner-spin-button {
 .description {
   @apply text-sm font-light mt-1;
 }
+
 </style>

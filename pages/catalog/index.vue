@@ -189,7 +189,7 @@ watch(
           @click="introductionModal = true"
         >
           Введение
-          <Icon name="material-symbols:info-outline" size="24" class="ml-1" />
+          <Icon name="my-icon:test" size="24" class="ml-1 -mb-1" />
         </div>
       </div>
       <CatalogContent
