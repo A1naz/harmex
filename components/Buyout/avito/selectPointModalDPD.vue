@@ -187,7 +187,7 @@ onMounted(async () => {
             iconColor: "#00aaff",
             iconLayout: "default#image",
             iconImageHref:
-              "https://ozonmpportal.hb.vkcs.cloud/harmex/pvz/dpd.png",
+              "https://ozonmpportal.hb.vkcs.cloud/harmex/pvz/dpd.",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
