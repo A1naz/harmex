@@ -342,7 +342,7 @@ onMounted(() => {
             <button
               class="div w-[48px] h-[32px] border-primary mt-1 border-[1px] text-primary rounded-[6px]"
             >
-              <Icon name="solar:calendar-linear" class="mt-1" size="22px" />
+              <Icon name="solar:calendar-linear" class="-mt-1" size="22px" />
             </button>
           </DateRangePicker>
           <button

@@ -342,7 +342,7 @@ function startTimer() {
             <Icon
               class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
               name="tabler:search"
-             size="20"
+              size="35"
               @click="codeInput.focus()"
             />
           </div>

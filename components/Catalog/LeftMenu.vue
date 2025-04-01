@@ -39,7 +39,7 @@ const { height } = useWindowSize();
             <Icon
               name="iconamoon:menu-burger-horizontal-fill"
               size="25"
-              class="mr-4 -mb-2"
+              class="mr-4"
               :class="{
                 'text-primary': selectedType === item,
               }"

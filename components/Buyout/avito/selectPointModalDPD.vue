@@ -187,7 +187,7 @@ onMounted(async () => {
             iconColor: "#00aaff",
             iconLayout: "default#image",
             iconImageHref:
-              "https://ozonmpportal.hb.vkcs.cloud/harmex/pvz/dpd.png",
+              "https://c0.klipartz.com/pngpicture/71/650/sticker-png-united-kingdom-package-delivery-courier-dpd-group-united-kingdom-angle-freight-transport-text-logo-united-kingdom-thumbnail.png  ",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],

@@ -128,7 +128,7 @@ const dropdownWidth = computed(() => {
     @click.stop
   >
     <div
-      class="btn flex flex-1 flex-nowrap text-nowrap items-center justify-between px-2 text-xs font-normal normal-case text-base-content hover:bg-white hover:shadow-none"
+      class="btn flex flex-1 items-center justify-between px-2 text-xs font-normal normal-case text-base-content hover:bg-white hover:shadow-none"
       :class="customClass"
       :style="{ width: dropdownWidth + 'px' }"
     >
@@ -143,14 +143,14 @@ const dropdownWidth = computed(() => {
       <Icon
         v-if="dropdownOpened"
         name="formkit:up"
-        size="8"
+        size="12"
         class="text-[#1b38ca]"
         :class="arrowsClass"
       />
       <Icon
         v-else
         name="formkit:down"
-        size="8"
+        size="12"
         class="text-[#909090]"
         :class="arrowsClass"
       />
