@@ -95,7 +95,7 @@ const productQuantityModel = computed({
               <Icon name="material-symbols:delete-outline" />Удалить
             </a>
             <a  @click="copyBuyout">
-              <IconCSS name="fluent:copy-20-filled" size="20" />Дублировать
+              <Iconme="material-symbols:content-copy-outline-rounded" size="20" />Дублировать
             </a>
           </li>
         </ul>
@@ -137,13 +137,13 @@ const productQuantityModel = computed({
             class="w-8 btn btn-ghost btn-sm btn-square text-base-content text-opacity-50 -mr-2"
             @click="copyBuyout"
           >
-            <IconCSS name="material-symbols-light:content-copy" size="18" />
+            <Icon name="material-symbols-light:content-copy" size="18" />
           </div>
           <div
             class="w-8 btn btn-ghost btn-sm btn-square text-base-content text-opacity-50"
             @click="deleteBuyOut"
           >
-            <IconCSS name="material-symbols:close" size="18" />
+            <Icon name="material-symbols:close" size="18" />
           </div>
         </div>
       </div>
@@ -159,7 +159,7 @@ const productQuantityModel = computed({
               class="absolute left-0 btn btn-ghost btn-sm btn-square bg-base-200 border-none rounded-l-xl"
               @click="productQuantityModel--"
             >
-              <IconCSS size="16" name="ic:round-minus" />
+              <Icon size="16" name="ic:round-minus" />
             </div>
             <input
               v-model="productQuantityModel"
@@ -172,7 +172,7 @@ const productQuantityModel = computed({
               class="absolute right-0 btn btn-ghost btn-sm btn-square border-none bg-base-200 rounded-r-xl"
               @click="productQuantityModel++"
             >
-              <IconCSS size="16" name="ic:round-plus" />
+              <Icon size="16" name="ic:round-plus" />
             </div>
           </span>
         </div> -->

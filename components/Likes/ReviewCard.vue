@@ -108,7 +108,7 @@ function removeDislike() {
                 class="absolute left-0 btn btn-ghost btn-sm btn-square"
                 @click="removeLike"
               >
-                <IconCSS size="16" name="ic:round-minus" />
+                <Iconze="16" name="ic:round-minus" />
               </button>
               <div class="input-sm rounded-lg w-24 text-center bg-base-200">
                 {{ info.likes + addLikes }}
@@ -118,7 +118,7 @@ function removeDislike() {
                 class="absolute right-0 btn btn-ghost btn-sm btn-square"
                 @click="addLike"
               >
-                <IconCSS size="16" name="ic:round-plus" />
+                <Icon size="16" name="ic:round-plus" />
               </button>
             </div>
             <div class="dislikes flex gap-2 items-center">
@@ -129,7 +129,7 @@ function removeDislike() {
                   class="absolute left-0 btn btn-ghost btn-sm btn-square"
                   @click="removeDislike"
                 >
-                  <IconCSS size="16" name="ic:round-minus" />
+                  <Icon size="16" name="ic:round-minus" />
                 </button>
                 <div class="input-sm rounded-lg w-24 text-center bg-base-200">
                   {{ info.dislikes + addDislikes }}
@@ -139,7 +139,7 @@ function removeDislike() {
                   class="absolute right-0 btn btn-ghost btn-sm btn-square"
                   @click="addDislike"
                 >
-                  <IconCSS size="16" name="ic:round-plus" />
+                  <Icon size="16" name="ic:round-plus" />
                 </button>
               </div>
             </div>
@@ -165,7 +165,7 @@ function removeDislike() {
               class="absolute left-0 btn btn-ghost btn-sm btn-square"
               @click="removeLike"
             >
-              <IconCSS size="16" name="ic:round-minus" />
+              <Icon size="16" name="ic:round-minus" />
             </button>
             <div class="input-sm rounded-lg w-24 text-center bg-base-200">
               {{ info.likes + addLikes }}
@@ -175,7 +175,7 @@ function removeDislike() {
               class="absolute right-0 btn btn-ghost btn-sm btn-square"
               @click="addLike"
             >
-              <IconCSS size="16" name="ic:round-plus" />
+              <Icon size="16" name="ic:round-plus" />
             </button>
           </div>
         </div>
@@ -188,7 +188,7 @@ function removeDislike() {
               class="absolute left-0 btn btn-ghost btn-sm btn-square"
               @click="removeDislike"
             >
-              <IconCSS size="16" name="ic:round-minus" />
+              <Icon size="16" name="ic:round-minus" />
             </button>
             <div class="input-sm rounded-lg w-24 text-center bg-base-200">
               {{ info.dislikes + addDislikes }}
@@ -198,7 +198,7 @@ function removeDislike() {
               class="absolute right-0 btn btn-ghost btn-sm btn-square"
               @click="addDislike"
             >
-              <IconCSS size="16" name="ic:round-plus" />
+              <Icon size="16" name="ic:round-plus" />
             </button>
           </div>
         </div>

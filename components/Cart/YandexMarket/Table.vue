@@ -174,10 +174,10 @@ function removeCart(index: number) {}
           </td>
           <!-- <td class="text-center max-w-[60px]">
               <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="removeCart(item.id)">
-                <IconCSS name="material-symbols:close" size="15" />
+                <Icon name="material-symbols:close" size="15" />
               </div>
               <div class="w-5 btn btn-ghost btn-sm btn-square text-base-300 hover:text-primary" @click="">
-                <IconCSS name="fluent:copy-20-filled" size="15" />
+                <Icon name="material-symbols:content-copy-outline-rounded" size="15" />
               </div>
 
             </td> -->

@@ -232,7 +232,7 @@ async function generatePassword() {
                 class="hover:text-primary hover:cursor-pointer flex items-center"
                 @click.prevent="confirmCode"
               >
-                <IconCSS size="27" name="mdi:check" />
+                <Icon size="27" name="mdi:check" />
               </button>
             </label>
             <div class="text-xs text-gray-500">
@@ -264,13 +264,13 @@ async function generatePassword() {
                 class="hover:text-primary w-1/12 join-item rounded-r-lg"
                 @click="togglePassword"
               >
-                <IconCSS
+                <Icon
                   v-if="passwordInputType !== 'password'"
                   class="w-20 h-20"
                   size="25"
                   name="mdi:hide-outline"
                 />
-                <IconCSS
+                <Icon
                   v-else
                   class="w-20 h-20"
                   size="25"
@@ -283,7 +283,7 @@ async function generatePassword() {
                 class="hover:text-primary w-1/12 join-item rounded-r-lg"
                 @click="generatePassword"
               >
-                <IconCSS class="w-20 h-20" size="25" name="fe:random" />
+                <Icon class="w-20 h-20" size="25" name="fe:random" />
               </button>
             </label>
             <div
@@ -320,13 +320,13 @@ async function generatePassword() {
                 class="hover:text-primary w-1/12 join-item rounded-r-lg"
                 @click="toggleConfirmPassword"
               >
-                <IconCSS
+                <Icon
                   v-if="passwordConfirmInputType !== 'password'"
                   class="w-20 h-20"
                   size="25"
                   name="mdi:hide-outline"
                 />
-                <IconCSS
+                <Icon
                   v-else
                   class="w-20 h-20"
                   size="25"

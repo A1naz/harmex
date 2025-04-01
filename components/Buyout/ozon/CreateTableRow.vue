@@ -161,7 +161,7 @@ const productQuantityModel = computed({
           class="absolute left-0 btn btn-ghost btn-sm btn-square"
           @click="productQuantityModel--"
         >
-          <IconCSS size="16" name="ic:round-minus" />
+          <Icon size="16" name="ic:round-minus" />
         </div>
         <input
           v-model="productQuantityModel"
@@ -174,7 +174,7 @@ const productQuantityModel = computed({
           class="absolute right-0 btn btn-ghost btn-sm btn-square"
           @click="productQuantityModel++"
         >
-          <IconCSS size="16" name="ic:round-plus" />
+          <Icon size="16" name="ic:round-plus" />
         </div>
       </div>
     </td> -->
@@ -363,13 +363,13 @@ const productQuantityModel = computed({
           class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="deleteBuyOut"
         >
-          <IconCSS name="material-symbols:close" size="20" />
+          <Icon name="material-symbols:close" size="20" />
         </div>
         <div
           class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="copyBuyout"
         >
-          <IconCSS name="fluent:copy-20-filled" size="20" />
+          <Icon name="material-symbols:content-copy-outline-rounded" size="20" />
         </div>
       </div>
     </td>

@@ -172,13 +172,13 @@ async function login() {
                   class="hover:text-primary w-1/12"
                   @click="togglePassword"
                 >
-                  <IconCSS
+                  <Icon
                     v-if="passwordShow"
                     class="w-20 h-20"
                     size="25"
                     name="mdi:hide-outline"
                   />
-                  <IconCSS
+                  <Icon
                     v-else
                     class="w-20 h-20"
                     size="25"

@@ -84,13 +84,13 @@ defineEmits(["setFavourites"]);
           $emit('setFavourites', `/${item.slug}${item.items[index].path}`)
         "
       >
-        <IconCSS
+        <Icon
           v-if="favourites.includes(`/${item.slug}${item.items[index].path}`)"
           name="solar:heart-bold"
           class="text-[#1b38ca]"
           size="21"
         />
-        <IconCSS
+        <Icon
           v-else
           name="solar:heart-outline"
           class="text-[#c8c8c8] heart-outline"

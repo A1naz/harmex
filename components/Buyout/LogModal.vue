@@ -43,7 +43,7 @@ onKeyStroke('Escape', (e) => {
       <div class="">
         <a class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="$emit('close')">✕</a>
         <div class="text-xl font-bold flex items-center gap-2">
-          <IconCSS name="fluent:send-logging-24-filled" />
+          <Icon name="fluent:send-logging-24-filled" />
           <span>
             Инфо о выкупе
           </span>

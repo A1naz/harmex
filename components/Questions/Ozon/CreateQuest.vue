@@ -163,7 +163,7 @@ function removeProduct() {
 
                   <!-- Insert a backspace svg -->
                   <div v-if="!loadingUrl">
-                    <IconCSS
+                    <Icon
                       v-if="productData"
                       class="w-6 h-6"
                       name="fluent:backspace-24-regular"

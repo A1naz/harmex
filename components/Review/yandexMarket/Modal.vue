@@ -663,7 +663,7 @@ async function generateVideoThumbnail(file: File) {
                       class="hidden"
                       @change="(e: Event) => uploadToS3(e, index)"
                     />
-                    <IconCSS
+                    <Icon
                       v-show="loadingIndex !== index"
                       name="material-symbols:add-photo-alternate-outline"
                       class="text-base-content bg-primary"
@@ -746,7 +746,7 @@ async function generateVideoThumbnail(file: File) {
                     class="hidden"
                     @change="handleFileChange($event)"
                   />
-                  <IconCSS
+                  <Icon
                     v-show="!isUploading"
                     name="material-symbols:video-camera-back-add-outline-rounded"
                     class="text-base-content bg-primary"

@@ -137,7 +137,7 @@ const { $dayjs } = useNuxtApp();
               class="text-s link bg-[#FF6666] w-fit dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"
               @click="emit('openPenaltyModal')"
             >
-              <IconCSS name="ph:warning-circle-light" size="25" />
+              <Icon name="ph:warning-circle-light" size="25" />
 
               <span class="mr-1 my-auto">{{
                 daysToPenalty(info.statusdelivery)

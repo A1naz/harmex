@@ -1,60 +1,60 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import process from 'node:process'
+import process from "node:process";
 
-const baseUrl = process.env.NUXT_APP_BASE_URL || '/'
-const description = 'Harmex'
+const baseUrl = process.env.NUXT_APP_BASE_URL || "/";
+const description = "Harmex";
 
 export default defineNuxtConfig({
   app: {
     baseURL: baseUrl,
     head: {
-      viewport: 'width=device-width,initial-scale=1',
-      title: 'Harmex',
-      link: [{ rel: 'icon', href: '/img/H.svg' }],
+      viewport: "width=device-width,initial-scale=1",
+      title: "Harmex",
+      link: [{ rel: "icon", href: "/img/H.svg" }],
       meta: [
-        { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
         {
-          'http-equiv': 'Content-Security-Policy',
-          'content': 'upgrade-insecure-requests',
+          "http-equiv": "Content-Security-Policy",
+          content: "upgrade-insecure-requests",
         },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: description },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "description", content: description },
         {
-          name: 'apple-mobile-web-app-status-bar-style',
-          content: 'black-translucent',
+          name: "apple-mobile-web-app-status-bar-style",
+          content: "black-translucent",
         },
-        { name: 'yandex-verification', content: '8b9387e0d0a4e1a8' },
+        { name: "yandex-verification", content: "8b9387e0d0a4e1a8" },
       ],
     },
   },
 
   nitro: {
-    plugins: ['~/server/index.ts'],
+    plugins: ["~/server/index.ts"],
   },
 
   modules: [
-    'nuxt-lazy-load',
-    '@nuxtjs/tailwindcss',
-    '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
-    '@nuxt/icon',
-    '@vueuse/nuxt',
-    'nuxt-security',
-    '@nuxtjs/color-mode',
-    '@sfxcode/nuxt-primevue',
-    '@morev/vue-transitions/nuxt',
-    '@nuxt/fonts',
-    'nuxt-auth-utils',
-    '@nuxt/image',
-    'nuxt3-notifications',
-    '@nuxtjs/turnstile',
-    '@nuxt/scripts',
-    'radix-vue/nuxt',
-    'shadcn-nuxt',
-    '@nuxt/eslint',
-    '@bg-dev/nuxt-s3',
-    '@nuxtjs/i18n',
+    "nuxt-lazy-load",
+    "@nuxtjs/tailwindcss",
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
+    "@nuxt/icon",
+    "@vueuse/nuxt",
+    "nuxt-security",
+    "@nuxtjs/color-mode",
+    "@sfxcode/nuxt-primevue",
+    "@morev/vue-transitions/nuxt",
+    "@nuxt/fonts",
+    "nuxt-auth-utils",
+    "@nuxt/image",
+    "nuxt3-notifications",
+    "@nuxtjs/turnstile",
+    "@nuxt/scripts",
+    "radix-vue/nuxt",
+    "shadcn-nuxt",
+    "@nuxt/eslint",
+    "@bg-dev/nuxt-s3",
+    "@nuxtjs/i18n",
   ],
 
   lazyLoad: {
@@ -67,9 +67,9 @@ export default defineNuxtConfig({
     directiveOnly: false,
 
     // To remove class set value to false
-    loadingClass: 'isLoading',
-    loadedClass: 'isLoaded',
-    appendClass: 'lazyLoad',
+    loadingClass: "isLoading",
+    loadedClass: "isLoaded",
+    appendClass: "lazyLoad",
 
     observerConfig: {
       // See IntersectionObserver documentation
@@ -80,29 +80,29 @@ export default defineNuxtConfig({
     /**
      * Prefix for all the imported component
      */
-    prefix: 'sha',
+    prefix: "sha",
     /**
      * Directory that the component lives in.
      * @default "./components/ui"
      */
-    componentDir: './components/ui',
+    componentDir: "./components/ui",
   },
 
   primevue: {
     components: {
       include: [
-        'DataTable',
-        'Column',
-        'Chips',
-        'MultiSelect',
-        'Button',
-        'DataView',
+        "DataTable",
+        "Column",
+        "Chips",
+        "MultiSelect",
+        "Button",
+        "DataView",
       ],
     },
   },
 
   imports: {
-    dirs: ['./stores', './data', './server/lib', './server/lib/models'],
+    dirs: ["./stores", "./data", "./server/lib", "./server/lib/models"],
   },
 
   eslint: {
@@ -112,42 +112,43 @@ export default defineNuxtConfig({
   },
 
   turnstile: {
-    siteKey: '0x4AAAAAAAw5ArLU136z91q_',
+    siteKey: "0x4AAAAAAAw5ArLU136z91q_",
   },
 
   colorMode: {
-    preference: 'light',
-    dataValue: 'theme',
-    classSuffix: '',
+    preference: "light",
+    dataValue: "theme",
+    classSuffix: "",
   },
 
-
   icon: {
-    provider: 'server', // <-- this
+    provider: "server", // <-- this
+    serverBundle: {
+      collections: ["material-symbols"], // <!--- this
+    },
     customCollections: [
       {
-        prefix: 'my-icon',
-        dir: './assets/my-icons'
+        prefix: "my-icon",
+        dir: "./assets/my-icons",
       },
     ],
   },
 
-
   css: [
-    'primevue/resources/primevue.css',
-    'primeicons/primeicons.css',
+    "primevue/resources/primevue.css",
+    "primeicons/primeicons.css",
     // '@/assets/style/css/customButton.css',
-    '@vuepic/vue-datepicker/dist/main.css',
+    "@vuepic/vue-datepicker/dist/main.css",
   ],
 
   s3: {
-    driver: 's3',
-    secretAccessKey: process.env.VK_SECRET_KEY || '',
-    accessKeyId: process.env.VK_ACCESS_KEY || '',
-    endpoint: 'https://hb.vkcs.cloud',
-    region: 'ru-msk',
+    driver: "s3",
+    secretAccessKey: process.env.VK_SECRET_KEY || "",
+    accessKeyId: process.env.VK_ACCESS_KEY || "",
+    endpoint: "https://hb.vkcs.cloud",
+    region: "ru-msk",
     // publicBucketUrl: `${process.env.PUBLIC_SITE_URL}/images/get/`,
-    bucket: 'ozonmpportal',
+    bucket: "ozonmpportal",
     image: {
       compression: {
         maxSizeMB: 10,
@@ -174,18 +175,18 @@ export default defineNuxtConfig({
 
   hooks: {
     close: () => {
-      process.exit()
+      process.exit();
     },
   },
 
   build: {
-    transpile: ['primevue', '@vuepic/vue-datepicker'],
+    transpile: ["primevue", "@vuepic/vue-datepicker"],
   },
 
   security: {
     rateLimiter: {
       tokensPerInterval: 200,
-      interval: 'hour',
+      interval: "hour",
       fireImmediately: false,
     },
     headers: false,
@@ -204,21 +205,20 @@ export default defineNuxtConfig({
 
   i18n: {
     locales: [
-      { code: 'en', language: 'en-US', dir: 'ltr', file: 'en.json' },
-      { code: 'ru', language: 'ru-RU', dir: 'ltr', file: 'ru.json' },
+      { code: "en", language: "en-US", dir: "ltr", file: "en.json" },
+      { code: "ru", language: "ru-RU", dir: "ltr", file: "ru.json" },
     ],
-    defaultLocale: 'ru',
-    langDir: 'locales',
+    defaultLocale: "ru",
+    langDir: "locales",
     lazy: true,
   },
-
 
   runtimeConfig: {
     public: {
       siteName: process.env.NAME,
       BOT_ID: process.env.BOT_ID,
       siteUrl: process.env.PUBLIC_SITE_URL,
-      language: 'ru',
+      language: "ru",
       trailingSlash: true,
       BOT_LOGIN: process.env.BOT_LOGIN,
       DOMAIN_API_IMAGES_URL: process.env.DOMAIN_API_IMAGES_URL,
@@ -264,6 +264,6 @@ export default defineNuxtConfig({
     DADATA_SECRET: process.env.DADATA_SECRET,
     PARSER_TOKEN: process.env.PARSER_TOKEN,
   },
-  compatibilityDate: '2024-11-06',
-  ssr: false
-})
+  compatibilityDate: "2024-11-06",
+  ssr: false,
+});

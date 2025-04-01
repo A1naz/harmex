@@ -116,7 +116,7 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                   class="absolute left-0 btn btn-ghost btn-sm btn-square"
                   @click="removeLike"
                 >
-                  <IconCSS size="16" name="ic:round-minus" />
+                  <Icon size="16" name="ic:round-minus" />
                 </button>
                 <div class="input-sm rounded-lg w-24 text-center bg-base-200">
                   {{ info.question.likes + addLikes }}
@@ -126,7 +126,7 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                   class="absolute right-0 btn btn-ghost btn-sm btn-square"
                   @click="addLike"
                 >
-                  <IconCSS size="16" name="ic:round-plus" />
+                  <Icon size="16" name="ic:round-plus" />
                 </button>
               </div>
             </div>
@@ -181,7 +181,7 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                         ]
                       "
                     >
-                      <IconCSS size="16" name="ic:round-minus" />
+                      <Icon size="16" name="ic:round-minus" />
                     </button>
                     <div
                       class="input-sm rounded-lg w-24 text-center bg-base-200"
@@ -198,7 +198,7 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                         ]
                       "
                     >
-                      <IconCSS size="16" name="ic:round-plus" />
+                      <Icon size="16" name="ic:round-plus" />
                     </button>
                   </div>
                   <div class="dislikes flex gap-2 items-center">
@@ -217,7 +217,7 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                           ]
                         "
                       >
-                        <IconCSS size="16" name="ic:round-minus" />
+                        <Icon size="16" name="ic:round-minus" />
                       </button>
                       <div
                         class="input-sm rounded-lg w-24 text-center bg-base-200"
@@ -234,7 +234,7 @@ function changeCommentLikes(type: string, add: boolean, commentId: string) {
                           ]
                         "
                       >
-                        <IconCSS size="16" name="ic:round-plus" />
+                        <Icon size="16" name="ic:round-plus" />
                       </button>
                     </div>
                   </div>

@@ -211,7 +211,7 @@ async function copyImageToClipboard(base64Image: any) {
                 class="text-primary text-opacity-50 hover:text-opacity-100"
                 @click="copyToClipboard(refUrl)"
               >
-                <IconCSS
+                <Icon
                   name="clarity:copy-line"
                   size="20"
                   class="text-[#909090] scale-x-[-1]"

@@ -482,7 +482,7 @@ async function getAvitoPickpoints() {
                   class="w-12 text-center p-2 font-normal"
                   @click="openInfoModal('picture')"
                 >
-                  <!-- <IconCSS name="material-symbols:image-outline" size="20" /> -->
+                  <!-- <Iconme="material-symbols:image-outline" size="20" /> -->
                   Фото
                 </th>
                 <th class="w-36 3xl:w-48 text-center font-normal">Название</th>

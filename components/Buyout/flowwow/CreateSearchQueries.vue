@@ -165,14 +165,14 @@ onMounted(async () => {
       class="absolute right-0 btn btn-ghost btn-sm btn-square"
       @click="emit('add')"
     >
-      <IconCSS size="16" name="ic:round-plus" />
+      <Icon size="16" name="ic:round-plus" />
     </div>
     <div
       v-else
       class="absolute right-0 btn btn-ghost btn-sm btn-square"
       @click="emit('remove', index)"
     >
-      <IconCSS size="16" name="material-symbols:close" />
+      <Icon size="16" name="material-symbols:close" />
     </div>
   </div>
 </template>

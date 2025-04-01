@@ -384,7 +384,7 @@ async function generatePassword() {
       >
         <h3 class="text-xl mt-5 font-bold flex">
           <a href="https://harmex.ru" class="btn btn-ghost btn-sm">
-            <IconCSS name="tabler:arrow-left" size="20" />
+            <Icon name="tabler:arrow-left" size="20" />
           </a>
           <div class="w-full text-center -ml-10">
             Создайте ваш аккаунт на Harmex
@@ -449,7 +449,7 @@ async function generatePassword() {
                 class="btn btn-sm xl:btn-md join-item rounded-r-full"
                 @click="(isCodeSent = false), (isNumberConfirmed = false)"
               >
-                <IconCSS
+                <Icon
                   class="w-12 h-12"
                   size="20"
                   name="fluent:backspace-24-regular"
@@ -530,7 +530,7 @@ async function generatePassword() {
                     class="btn join-item rounded-r-full"
                     @click="clearFormData"
                   >
-                    <IconCSS size="24" name="fluent:backspace-24-regular" />
+                    <Icon size="24" name="fluent:backspace-24-regular" />
                   </button>
                 </div>
                 <div class="text-xs text-gray-500 ml-1">
@@ -770,13 +770,13 @@ async function generatePassword() {
                   class="absolute right-0 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
                   @click="togglePassword"
                 >
-                  <IconCSS
+                  <Icon
                     v-if="passwordInputType !== 'password'"
                     class="w-20 h-20"
                     size="25"
                     name="mdi:hide-outline"
                   />
-                  <IconCSS
+                  <Icon
                     v-else
                     class="w-20 h-20"
                     size="25"
@@ -789,7 +789,7 @@ async function generatePassword() {
                   class="absolute right-8 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
                   @click="generatePassword"
                 >
-                  <IconCSS class="w-20 h-20" size="25" name="fe:random" />
+                  <Icon class="w-20 h-20" size="25" name="fe:random" />
                 </button>
               </div>
 
@@ -825,13 +825,13 @@ async function generatePassword() {
                   class="absolute right-0 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
                   @click="toggleConfirmPassword"
                 >
-                  <IconCSS
+                  <Icon
                     v-if="passwordConfirmInputType !== 'password'"
                     class="w-20 h-20"
                     size="25"
                     name="mdi:hide-outline"
                   />
-                  <IconCSS
+                  <Icon
                     v-else
                     class="w-20 h-20"
                     size="25"

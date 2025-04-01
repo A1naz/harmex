@@ -271,13 +271,13 @@ const productQuantityModel = computed({
           class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="deleteBuyOut"
         >
-          <IconCSS name="material-symbols:close" size="20" />
+          <Iconme="material-symbols:close" size="20" />
         </div>
         <div
           class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="copyBuyout"
         >
-          <IconCSS name="fluent:copy-20-filled" size="20" />
+          <Icon name="material-symbols:content-copy-outline-rounded" size="20" />
         </div>
       </div>
     </td>

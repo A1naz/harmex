@@ -186,7 +186,7 @@ async function deleteLike() {
 
                 <!-- Insert a backspace svg -->
                 <div v-if="!loadingUrl">
-                  <IconCSS
+                  <Icon
                     v-if="productData"
                     class="w-6 h-6"
                     name="fluent:backspace-24-regular"
@@ -203,7 +203,7 @@ async function deleteLike() {
                 class="absolute left-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
                 @click="amount -= 10"
               >
-                <IconCSS size="16" name="ic:round-minus" />
+                <Icon size="16" name="ic:round-minus" />
               </button>
               <div
                 class="input-sm rounded-lg w-24 text-center bg-base-200 min-h-min md:min-h-[48px] md:pt-2.5 text-lg"
@@ -218,7 +218,7 @@ async function deleteLike() {
                 class="absolute right-0 btn btn-ghost btn-sm btn-square min-h-min md:min-h-[48px]"
                 @click="amount += 10"
               >
-                <IconCSS size="16" name="ic:round-plus" />
+                <Icon size="16" name="ic:round-plus" />
               </button>
             </div>
           </div>

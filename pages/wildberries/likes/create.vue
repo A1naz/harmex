@@ -438,7 +438,7 @@ function handleArticleChanged(
       class="fixed bottom-20 right-1 md:bottom-30 lg:right-5 z-[9999] w-60 sm:w-70 p-4 bg-base-100 rounded-lg border border-base-300 text-2xl"
     >
       <div class="flex gap-0.5">
-        <IconCSS class="text-primary mr-1" name="mdi:bar-chart" size="22" />
+        <Icon class="text-primary mr-1" name="mdi:bar-chart" size="22" />
         <span class="text-lg mr-auto">Статистика оценок</span>
       </div>
       <div class="info flex flex-col gap-1 mt-2">

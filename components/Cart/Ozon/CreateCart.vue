@@ -153,7 +153,7 @@ function removeProduct() {
 
                 <!-- Insert a backspace svg -->
                 <div v-if="!loadingUrl">
-                  <IconCSS
+                  <Icon
                     v-if="productData"
                     class="w-6 h-6"
                     name="fluent:backspace-24-regular"
@@ -210,7 +210,7 @@ function removeProduct() {
                     class="bg-base-200 absolute left-0 btn btn-ghost btn-sm btn-square h-[2.5rem]"
                     @click="amount -= 10"
                   >
-                    <IconCSS size="16" name="ic:round-minus" />
+                    <Icon size="16" name="ic:round-minus" />
                   </button>
                   <div
                     :class="{
@@ -229,7 +229,7 @@ function removeProduct() {
                     class="bg-base-200 absolute right-0 btn btn-ghost btn-sm btn-square h-[2.5rem]"
                     @click="amount += 10"
                   >
-                    <IconCSS size="16" name="ic:round-plus" />
+                    <Icon size="16" name="ic:round-plus" />
                   </button>
                 </div>
               </div>

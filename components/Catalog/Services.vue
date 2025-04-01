@@ -59,13 +59,13 @@ function getServices(items: Array<any>) {
             class="heart-btn absolute top-3 right-4"
             @click="$emit('setFavourites', `/catalog/${social.slug}`)"
           >
-            <IconCSS
+            <Icon
               v-if="favourites.includes(`/catalog/${social.slug}`)"
               name="solar:heart-bold"
               class="text-[#353742]"
               size="21"
             />
-            <IconCSS
+            <Icon
               v-else
               name="solar:heart-outline"
               class="text-[#c8c8c8] heart-outline"
