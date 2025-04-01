@@ -428,7 +428,7 @@ const siteUrl = config.public.siteUrl;
               <button
                 class="div w-[48px] h-[32px] bg-[#fc7c5b] text-white border-[1px] rounded-[6px]"
               >
-                <Icon name="solar:calendar-linear" class="mt-1" size="22px" />
+                <Icon name="solar:calendar-linear" class="-mt-1" size="22px" />
               </button>
             </DateRangePicker>
             <div

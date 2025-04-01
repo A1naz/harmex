@@ -38,7 +38,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    '@nuxt/icon',
+    'nuxt-icon',
     '@vueuse/nuxt',
     'nuxt-security',
     '@nuxtjs/color-mode',
@@ -123,11 +123,10 @@ export default defineNuxtConfig({
 
 
   icon: {
-    provider: 'server', // <-- this
-    customCollections: [
+    sources: [
       {
-        prefix: 'my-icon',
-        dir: './assets/my-icons'
+        src: '~/assets/icons',
+        prefix: 'custom', // Префикс для кастомных иконок
       },
     ],
   },

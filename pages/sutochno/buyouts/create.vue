@@ -288,7 +288,7 @@ function removePromo(index: number) {
             <Icon
               class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
               name="tabler:search"
-            size="20"
+              size="35"
               @click="codeInput.focus()"
             />
           </div>
@@ -303,7 +303,7 @@ function removePromo(index: number) {
                 v-if="!dateRange[0] && !dateRange[1]"
                 class="h-[32px] w-12 border-primary mt-1 border-[1px] text-primary rounded-[6px]"
               >
-                <Icon name="solar:calendar-linear" class="mt-1" size="22px" />
+                <Icon name="solar:calendar-linear" class="-mt-1" size="22px" />
               </button>
               <button
                 v-else
