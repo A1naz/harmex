@@ -174,13 +174,13 @@ async function login() {
                 >
                   <Icon
                     v-if="passwordShow"
-                    class="w-20 h-20"
+             
                     size="25"
                     name="mdi:hide-outline"
                   />
                   <Icon
                     v-else
-                    class="w-20 h-20"
+             
                     size="25"
                     name="mdi:show-outline"
                   />

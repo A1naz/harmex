@@ -31,7 +31,7 @@ const formData = reactive({
 const alert = reactive({
   show: false,
   message: "",
- group: "success",
+  group: "success",
 });
 const rules = computed(() => {
   return {
@@ -63,7 +63,7 @@ async function submitForm() {
   });
   if (error.value) {
     notify({
-     group: "error",
+      group: "error",
       title: error.value.data.message,
     });
   } else {
@@ -93,14 +93,14 @@ async function sendConfirmCode() {
     isCodeSent.value = true;
     confirmationCodeInput.value.focus();
     notify({
-     group: "success",
+      group: "success",
       title: "Код отправлен",
     });
   } else if (error.value) {
     console.log(error.value);
 
     notify({
-     group: "error",
+      group: "error",
       title: error.value.data.message,
     });
   }
@@ -119,7 +119,7 @@ async function confirmCode() {
   );
   if (data.value) {
     notify({
-     group: "success",
+      group: "success",
       title: "Код подтвержден",
     });
 
@@ -127,7 +127,7 @@ async function confirmCode() {
     isNumberConfirmed.value = true;
   } else {
     notify({
-     group: "error",
+      group: "error",
       title: "Неверный код",
     });
   }
@@ -266,16 +266,10 @@ async function generatePassword() {
               >
                 <Icon
                   v-if="passwordInputType !== 'password'"
-                  class="w-20 h-20"
                   size="25"
                   name="mdi:hide-outline"
                 />
-                <Icon
-                  v-else
-                  class="w-20 h-20"
-                  size="25"
-                  name="mdi:show-outline"
-                />
+                <Icon v-else size="25" name="mdi:show-outline" />
               </button>
               <button
                 :disabled="!isNumberConfirmed"
@@ -283,7 +277,7 @@ async function generatePassword() {
                 class="hover:text-primary w-1/12 join-item rounded-r-lg"
                 @click="generatePassword"
               >
-                <Icon class="w-20 h-20" size="25" name="fe:random" />
+                <Icon size="25" name="fe:random" />
               </button>
             </label>
             <div
@@ -322,16 +316,10 @@ async function generatePassword() {
               >
                 <Icon
                   v-if="passwordConfirmInputType !== 'password'"
-                  class="w-20 h-20"
                   size="25"
                   name="mdi:hide-outline"
                 />
-                <Icon
-                  v-else
-                  class="w-20 h-20"
-                  size="25"
-                  name="mdi:show-outline"
-                />
+                <Icon v-else size="25" name="mdi:show-outline" />
               </button>
             </label>
             <div

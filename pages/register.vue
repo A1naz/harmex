@@ -772,13 +772,13 @@ async function generatePassword() {
                 >
                   <Icon
                     v-if="passwordInputType !== 'password'"
-                    class="w-20 h-20"
+           
                     size="25"
                     name="mdi:hide-outline"
                   />
                   <Icon
                     v-else
-                    class="w-20 h-20"
+             
                     size="25"
                     name="mdi:show-outline"
                   />
@@ -789,7 +789,7 @@ async function generatePassword() {
                   class="absolute right-8 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
                   @click="generatePassword"
                 >
-                  <Icon class="w-20 h-20" size="25" name="fe:random" />
+                  <Icon  size="25" name="fe:random" />
                 </button>
               </div>
 
@@ -827,13 +827,13 @@ async function generatePassword() {
                 >
                   <Icon
                     v-if="passwordConfirmInputType !== 'password'"
-                    class="w-20 h-20"
+          
                     size="25"
                     name="mdi:hide-outline"
                   />
                   <Icon
                     v-else
-                    class="w-20 h-20"
+             
                     size="25"
                     name="mdi:show-outline"
                   />
