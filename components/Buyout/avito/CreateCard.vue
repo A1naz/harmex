@@ -95,7 +95,7 @@ const productQuantityModel = computed({
               <Icon name="material-symbols:delete-outline" />Удалить
             </a>
             <a  @click="copyBuyout">
-              <Iconme="material-symbols:content-copy-outline-rounded" size="20" />Дублировать
+              <Icon name="material-symbols:content-copy-outline-rounded" size="20" />Дублировать
             </a>
           </li>
         </ul>

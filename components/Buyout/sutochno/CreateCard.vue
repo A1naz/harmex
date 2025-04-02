@@ -117,7 +117,7 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
               <Icon name="material-symbols:delete-outline" />Удалить
             </a>
             <a  @click="copyBuyout">
-              <Iconme="material-symbols:content-copy-outline-rounded" size="20" />Дублировать
+              <Icon name="material-symbols:content-copy-outline-rounded" size="20" />Дублировать
             </a>
           </li>
         </ul>
@@ -159,7 +159,7 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
             class="w-8 btn btn-ghost btn-sm btn-square text-base-content text-opacity-50 -mr-2"
             @click="copyBuyout"
           >
-            <Iconme="material-symbols-light:content-copy" size="18" />
+            <Icon name="material-symbols-light:content-copy" size="18" />
           </div>
           <div
             class="w-8 btn btn-ghost btn-sm btn-square text-base-content text-opacity-50"

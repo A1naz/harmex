@@ -248,7 +248,7 @@ function getSecondDate(dates: [Date | null, Date | null] | []) {
           class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="deleteBuyOut"
         >
-          <Iconme="material-symbols:close" size="20" />
+          <Icon name="material-symbols:close" size="20" />
         </div>
         <div
           class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
