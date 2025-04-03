@@ -7,8 +7,7 @@ export default defineEventHandler(async (event) => {
         const { lastGetDate }: any = getQuery(event)
 
         const date = new Date(JSON.parse(lastGetDate))   
-        console.log(user)
-
+        
         const notifications = await Notification.find({
                 activationDate: { $lt: date },
                 // date: { $gt: date },
