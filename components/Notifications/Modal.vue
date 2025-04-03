@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const emit = defineEmits(["update:show"]);
 const notifications = ref<any>([]);
-const lastGetDate = ref(new Date("2000-01-01"));
+const lastGetDate = ref(new Date());
 const store = useMainStore();
 
 const props = defineProps({

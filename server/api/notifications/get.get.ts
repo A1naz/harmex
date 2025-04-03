@@ -6,13 +6,14 @@ export default defineEventHandler(async (event) => {
 
         const { lastGetDate }: any = getQuery(event)
 
-        const date = new Date(JSON.parse(lastGetDate))
+        const date = new Date(JSON.parse(lastGetDate))   
+        console.log(user)
 
         const notifications = await Notification.find({
-                activationDate: { $gt: date },
-                date: { $gt: date },
+                activationDate: { $lt: date },
+                // date: { $gt: date },
                 $or: [
-                        { isRemoved: { $ne: true }, users: { $in: [user._id] } },
+                        { forAll: false, removedUser: { $ne: user._id }, users: { $in: [user._id] } },
                         { forAll: true, removedUser: { $ne: user._id } },
                 ]
         }).sort({ date: -1 })
@@ -40,6 +41,6 @@ export default defineEventHandler(async (event) => {
                 }
         })
 
-        return format.sort(a => !a.isReaded ? -1 : 1)
+        return format
 
 })
