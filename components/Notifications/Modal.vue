@@ -14,7 +14,8 @@ async function getNotifications() {
     params: { lastGetDate: lastGetDate.value },
     watch: false,
   });
-
+  
+  notifications.value = [];
   lastGetDate.value = new Date(Date.now());
   notifications.value.push(...(data.value as any));
 }

@@ -82,7 +82,7 @@ async function createPartnerWithdraw() {
     notify({
       title: "Что-то пошло не так",
       text: data.value.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
@@ -95,6 +95,7 @@ async function createBalanceWithdraw() {
       amount: amountRaw.value,
       info: cardNumberInn,
       cardInfo: cardInfo.value,
+      modalType: modalType.value,
     },
     watch: false,
   });
@@ -105,7 +106,7 @@ async function createBalanceWithdraw() {
     notify({
       title: "Что-то пошло не так",
       text: data.value.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
@@ -142,11 +143,29 @@ onMounted(() => {
           <div class="flex flex-col gap-4 w-full">
             <button
               class="btn btn-ghost bg-base-200 w-full hover:text-blue-500 hover:bg-blue-50 shadow-none drop-shadow-none"
-              @click="modalType = 'baseBalance'"
+              @click="modalType = 'card'"
             >
-              <span class="text-base-content">Личный баланс</span>
+              <span class="text-base-content"
+                >Баланс, пополненный с карты физ. лица</span
+              >
               <Icon class="ml-auto" name="tabler:arrow-right" size="24" />
             </button>
+            <span class="text-base-content text-xs -mt-3 ml-3"
+              >Для тех кто пополнял по Qr-коду → выводим на вашу только карту с
+              которой пополняли.
+            </span>
+            <button
+              class="btn btn-ghost bg-base-200 w-full hover:text-blue-500 hover:bg-blue-50 shadow-none drop-shadow-none"
+              @click="modalType = 'INN'"
+            >
+              <span class="text-base-content"
+                >Баланс, пополненный по счету</span
+              >
+              <Icon class="ml-auto" name="tabler:arrow-right" size="24" />
+            </button>
+            <span class="text-base-content text-xs -mt-3 ml-3"
+              >Для тех кто пополнял по счету → выводим на расчетный счет.</span
+            >
             <button
               class="btn btn-ghost bg-base-200 w-full hover:text-blue-500 hover:bg-blue-50"
               @click="modalType = 'partnerBalance'"
@@ -158,7 +177,7 @@ onMounted(() => {
         </div>
       </div>
       <!-- ///baseBalance form  -->
-      <div v-if="modalType === 'baseBalance'">
+      <div v-if="modalType === 'card'">
         <div class="flex flex-col w-full justify-center gap-1.5">
           <h1 class="text-2xl font-bold ml-1">
             Вывод средств c личного кабинента
@@ -182,13 +201,13 @@ onMounted(() => {
           <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content">{{
-                user?.fizFace ? "Номер карты" : "ИНН организации"
+                "Номер карты"
               }}</span>
             </div>
             <input
               v-model="cardNumberInn"
               class="input input-primary w-full"
-              :placeholder="user?.fizFace ? 'Номер карты' : 'ИНН организации'"
+              :placeholder="'Номер карты'"
             />
           </div>
           <div class="-mt-2">
@@ -235,7 +254,7 @@ onMounted(() => {
               placeholder="Наименование банка"
             />
           </div>
-          <div class="-mt-2" v-if="!user.fizFace">
+          <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content"
                 >Наименование организации</span
@@ -245,16 +264,6 @@ onMounted(() => {
               v-model="cardInfo.orgName"
               class="input input-primary w-full"
               placeholder="Наименование организации"
-            />
-          </div>
-          <div class="-mt-2" v-if="user.fizFace">
-            <div class="label">
-              <span class="label-text text-base-content">ФИО</span>
-            </div>
-            <input
-              v-model="cardInfo.FIO"
-              class="input input-primary w-full"
-              placeholder="ФИО"
             />
           </div>
 
@@ -268,10 +277,117 @@ onMounted(() => {
               Скачать
             </a>
           </div>
-          <div class="agreement flex gap-2 items-center w-full text-sm" v-if="user.fizFace">
+          <div class="agreement flex gap-2 items-center w-full text-sm">
             После созданной заявки на вывод, сумма вывода будет уменьшена на 15%
             для учета налоговых обязательств. В целях безопасности ваших данных,
             пожалуйста, не начинайте процесс вывода самостоятельно.
+          </div>
+          <div class="w-full flex justify-start sm:justify-end">
+            <button class="btn btn-primary" @click="createBalanceWithdraw">
+              Вывести
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-if="modalType === 'INN'">
+        <div class="flex flex-col w-full justify-center gap-1.5">
+          <h1 class="text-2xl font-bold ml-1">
+            Вывод средств c личного кабинента
+            <div class="text-sm text-base-content font-normal">
+              Вывод осуществляется в течение 14 дней с даты подачи заявки
+            </div>
+          </h1>
+          <div>
+            <div class="label">
+              <span class="label-text text-base-content">Сумма вывода</span>
+            </div>
+            <input
+              v-model.lazy="formattedAmount"
+              type="text"
+              placeholder="Введите сумму вывода"
+              class="input input-primary w-full"
+              @input="updateAmount"
+            />
+          </div>
+
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">{{
+                "ИНН организации"
+              }}</span>
+            </div>
+            <input
+              v-model="cardNumberInn"
+              class="input input-primary w-full"
+              :placeholder="'ИНН организации'"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">БИК</span>
+            </div>
+            <input
+              v-model="cardInfo.BIK"
+              class="input input-primary w-full"
+              placeholder="БИК"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">Расчетный счет</span>
+            </div>
+            <input
+              v-model="cardInfo.RS"
+              class="input input-primary w-full"
+              placeholder="Расчетный счет"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content"
+                >Корреспондентский счет</span
+              >
+            </div>
+            <input
+              v-model="cardInfo.CS"
+              class="input input-primary w-full"
+              placeholder="Корреспондентский счет"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content"
+                >Наименование банка</span
+              >
+            </div>
+            <input
+              v-model="cardInfo.bankName"
+              class="input input-primary w-full"
+              placeholder="Наименование банка"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content"
+                >Наименование организации</span
+              >
+            </div>
+            <input
+              v-model="cardInfo.orgName"
+              class="input input-primary w-full"
+              placeholder="Наименование организации"
+            />
+          </div>
+
+          <div class="agreement flex gap-2 items-center w-full">
+            Пользовательское соглашение
+            <a
+              class="link link-primary"
+              :href="config.public.siteUrl + '/api/docs/get'"
+              target="_blank"
+            >
+              Скачать
+            </a>
           </div>
           <div class="w-full flex justify-start sm:justify-end">
             <button class="btn btn-primary" @click="createBalanceWithdraw">
