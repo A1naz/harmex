@@ -228,7 +228,7 @@ async function openChecksModal() {
     notify({
       title: "Что-то пошло не так",
       text: errorMsg,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
@@ -256,14 +256,14 @@ async function createBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     isCreateButtonDisabled.value = false;
   } else if (data.value!.status === "ok") {
     notify({
       title: "Выкуп успешно создан",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
 
@@ -290,7 +290,7 @@ async function getPickpoints() {
     notify({
       title: "Что-то пошло не так",
       text: e?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
@@ -308,7 +308,7 @@ async function getFFPickpoints(date: Date = new Date()) {
     notify({
       title: "Что-то пошло не так",
       text: e?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
@@ -379,7 +379,7 @@ async function createTemplate() {
     store.createProducts = [];
     notify({
       title: "Шаблон выкупа создан",
-     group: "success",
+      group: "success",
     });
 
     closeTemplateModal.value?.click();
@@ -414,6 +414,30 @@ function refreshElements() {
   // eslint-disable-next-line eqeqeq
   refreshKey.value == 1 ? (refreshKey.value = 0) : (refreshKey.value = 1);
 }
+
+const prices = ref({
+  minPrice: 50,
+  price: 10,
+  type: "price",
+});
+const mainStore = useMainStore();
+prices.value = await mainStore.getPrices("wildberries");
+
+const summ = computed(() => {
+  const summInfo = mainStore.getBuyoutsSumm(
+    products.value.map((item) => Number(item.price)),
+    prices.value
+  );
+
+  if (summInfo && summInfo.summ) {
+    return summInfo;
+  } else {
+    return {
+      summ: 0,
+      serviceSumm: 0,
+    };
+  }
+});
 </script>
 
 <template>
@@ -496,6 +520,14 @@ function refreshElements() {
         <div class="text-sm">
           <span class="text-gray-500">Сумма: </span>
           <span>{{ currency.format(totalSum) }}</span>
+        </div>
+        <div class="text-sm">
+          <span class="text-gray-500">Услуги: </span>
+          <span>{{ currency.format(summ.serviceSumm) }}</span>
+        </div>
+        <div class="text-sm">
+          <span class="text-gray-500">К списанию: </span>
+          <span>{{ currency.format(summ.summ) }}</span>
         </div>
       </div>
 

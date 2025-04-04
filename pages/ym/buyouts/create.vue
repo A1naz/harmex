@@ -487,6 +487,33 @@ function removePromo(index: number) {
   console.log(index);
   store.createProducts[index].promoCode = "";
 }
+
+
+
+
+const prices = ref({
+  minPrice: 50,
+  price: 10,
+  type: "price",
+});
+const mainStore = useMainStore();
+prices.value = await mainStore.getPrices("ym");
+
+const summ = computed(() => {
+  const summInfo = mainStore.getBuyoutsSumm(
+    products.value.map((item) => Number(item.price)),
+    prices.value
+  );
+
+  if (summInfo && summInfo.summ) {
+    return summInfo;
+  } else {
+    return {
+      summ: 0,
+      serviceSumm: 0,
+    };
+  }
+});
 </script>
 
 <template>
@@ -575,6 +602,14 @@ function removePromo(index: number) {
         <div class="text-sm">
           <span class="text-gray-500">Сумма: </span>
           <span>{{ currency.format(totalSum) }}</span>
+        </div>
+        <div class="text-sm">
+          <span class="text-gray-500">Услуги: </span>
+          <span>{{ currency.format(summ.serviceSumm) }}</span>
+        </div>
+        <div class="text-sm">
+          <span class="text-gray-500">К списанию: </span>
+          <span>{{ currency.format(summ.summ) }}</span>
         </div>
       </div>
 
