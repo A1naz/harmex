@@ -32,7 +32,7 @@ async function search(searchQuery: any) {
       searchData.value = data.value;
     } else if (error.value) {
       notify({
-       group: "error",
+        group: "error",
         title: "Ошибка",
         text: error.value.message,
       });
@@ -169,7 +169,7 @@ watch(isOpen, (newValue: boolean) => {
               >
                 <Icon name="pajamas:notifications" size="24" />
                 <span
-                  class="badge badge-sm indicator -mt-[8px] -mr-4 text-primary font-medium"
+                  class="badge badge-sm indicator -mt-[8px] py-2 -mr-4 text-white bg-primary font-medium"
                   v-if="store.notificationsLength"
                 >
                   {{ store.notificationsLength }}
@@ -180,7 +180,7 @@ watch(isOpen, (newValue: boolean) => {
                 class="menu dropdown-content z-[2] bg-white p-2 shadow rounded-2xl"
                 style="z-index: 1000"
               >
-                <NotificationsModal v-model:show="notificationsModal" />
+                <NotificationsModal v-model:show="notificationsModal" class="hidden sm:block" />
               </div>
             </div>
             <NuxtLinkLocale
@@ -277,10 +277,10 @@ watch(isOpen, (newValue: boolean) => {
             </NuxtLinkLocale>
 
             <button
-              @click="favouritesModal = true"
+              @click="navigateTo('/catalog')"
               class="myCustomBtnNavbar ml-2 text-base-300"
             >
-              <Icon name="tabler:heart" size="24" />
+              <Icon name="iconamoon:home-bold" size="24" />
             </button>
 
             <div
@@ -290,7 +290,7 @@ watch(isOpen, (newValue: boolean) => {
             >
               <Icon name="pajamas:notifications" size="24" />
               <span
-                class="badge badge-sm indicator -mt-[8px] -mr-4 text-primary font-medium"
+                class="badge badge-sm indicator -mt-[8px] ml-10 py-2.5 text-white bg-primary font-medium absolute"
                 v-if="store.notificationsLength"
               >
                 {{ store.notificationsLength }}
@@ -310,6 +310,7 @@ watch(isOpen, (newValue: boolean) => {
     </div>
     <NotEnoughtBalance :show="modalOpen" @close="modalOpen = false" />
   </div>
+  <NotificationsModalMobile v-model:show="notificationsModal" class="block sm:hidden" />
 </template>
 
 <style scoped>
