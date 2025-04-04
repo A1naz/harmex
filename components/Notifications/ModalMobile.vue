@@ -90,7 +90,7 @@ const modalContent = ref<HTMLDivElement | null>(null);
     :class="{ 'modal-open': show }"
   >
     <div
-      class="modal-box cursor-auto "
+      class="modal-box cursor-auto w-full"
       @click.stop
     >
     <div>
