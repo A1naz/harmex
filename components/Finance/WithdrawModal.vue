@@ -257,13 +257,13 @@ onMounted(() => {
           <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content"
-                >Наименование организации</span
+                >ФИО</span
               >
             </div>
             <input
-              v-model="cardInfo.orgName"
+              v-model="cardInfo.FIO"
               class="input input-primary w-full"
-              placeholder="Наименование организации"
+              placeholder="ФИО"
             />
           </div>
 
