@@ -51,6 +51,7 @@ const BuyoutSchema = new Schema({
   data16: { type: {}, default: '' },
   data17: { type: {}, default: '' },
   data18: { type: {}, default: '' },
+  categories: { type: Array, required: false },
 })
 
 

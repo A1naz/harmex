@@ -30,6 +30,7 @@ interface Item {
   }
   url: string,
   promocode: string
+  category: string[] | null
 }
 export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event)
@@ -128,6 +129,7 @@ export default eventHandler(async (event) => {
       url: product.url,
       promocode: product.promoCode,
       isPromocodeEnabled: product.promoCode && product.promoCode !== '' ? true : false,
+      categories: product.category,
     })
 
     await buyout.save()

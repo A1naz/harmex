@@ -136,6 +136,7 @@ const isAddBtnDisabled = computed(() => props.queries.length >= 5);
           :class="{
             'input-error': query.error,
           }"
+          :disabled="store.createProducts[props.productIndex].category"
           type="text"
           placeholder="Куртка белая"
           class="input bg-base-200 input-sm w-full rounded-xl"

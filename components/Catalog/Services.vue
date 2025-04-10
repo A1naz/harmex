@@ -73,7 +73,7 @@ function getServices(items: Array<any>) {
             />
           </button>
 
-          <div class="flex font-bold text-[12px]">
+          <div class="flex font-bold text-[12px] h-7">
             Организация:
             {{ social.organization }}
           </div>

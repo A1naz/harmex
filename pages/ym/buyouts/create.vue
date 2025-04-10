@@ -245,9 +245,10 @@ async function openChecksModal() {
       valid = false;
       errorMsg = "Не у всех товаров указаны даты выкупов";
     }
-    if (!item.searchQuery[0].value) {
+    if (!item.searchQuery[0].value && !item.category && !item.category.length) {
+      console.log(item.category);
       valid = false;
-      errorMsg = "Не у всех товаров указан поисковый запрос";
+      errorMsg = "Не у всех товаров указан поисковый запрос или категория";
     }
     if (!item.selectedSize) item.selectedSize = "none";
 
@@ -267,7 +268,7 @@ async function openChecksModal() {
     notify({
       title: "Что-то пошло не так",
       text: errorMsg,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
@@ -295,14 +296,14 @@ async function createBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     isCreateButtonDisabled.value = false;
   } else if (data.value!.status === "ok") {
     notify({
       title: "Выкуп успешно создан",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
 
@@ -329,7 +330,7 @@ async function getPickpoints() {
     notify({
       title: "Что-то пошло не так",
       text: e?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
@@ -424,7 +425,7 @@ async function createTemplate() {
     store.createProducts = [];
     notify({
       title: "Шаблон выкупа создан",
-     group: "success",
+      group: "success",
     });
 
     closeTemplateModal.value?.click();
@@ -488,9 +489,6 @@ function removePromo(index: number) {
   store.createProducts[index].promoCode = "";
 }
 
-
-
-
 const prices = ref({
   minPrice: 50,
   price: 10,
@@ -514,10 +512,15 @@ const summ = computed(() => {
     };
   }
 });
+
+
 </script>
 
 <template>
   <div class="px-4 sm:px-16 pt-8">
+    <!-- <div v-if="selectedCategory" class="mt-4 text-green-700">
+      Вы выбрали: {{ selectedCategory.name }}
+    </div> -->
     <div
       class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
     >
@@ -573,7 +576,7 @@ const summ = computed(() => {
             <Icon
               class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
               name="tabler:search"
-             size="20"
+              size="20"
               @click="codeInput.focus()"
             />
           </div>
@@ -694,6 +697,15 @@ const summ = computed(() => {
                   <div class="text-center">
                     <span> Адрес </span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
+                  </div>
+                </th>
+                <th
+                  class="font-normal text-base-content"
+            
+                >
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Категория</span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
                 <th
@@ -1109,6 +1121,8 @@ const summ = computed(() => {
       :price="currentProductPrice"
       @close-modal="promoModal = false"
     />
+
+
   </div>
 </template>
 
