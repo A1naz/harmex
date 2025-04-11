@@ -1,17 +1,17 @@
-import { Schema, model } from 'mongoose'
-import { yandexConnection } from '~/server/connections/yandexMarket'
-import { v4 as uuid } from 'uuid'
-import { User } from '../User'
+import { Schema, model } from "mongoose";
+import { yandexConnection } from "~/server/connections/yandexMarket";
+import { v4 as uuid } from "uuid";
+import { User } from "../User";
 
 const ProductSchema = new Schema({
   name: { type: String, required: true, text: true },
   price: { type: String, required: true },
   priceText: { type: String, required: true },
   image: { type: String, required: true },
-})
+});
 const BuyoutSchema = new Schema({
   url: { type: String, required: false, text: true },
-  searchQuery: { type: String, text: true, default: '' },
+  searchQuery: { type: String, text: true, default: "" },
   sizeparam: { type: String, required: true, text: true },
   quantity: { type: Number, required: true, text: true, max: 50 },
   gender: { type: String, required: true, text: true },
@@ -27,7 +27,20 @@ const BuyoutSchema = new Schema({
   dateEnd: { type: Date, required: true },
   product: { type: ProductSchema, required: true },
   rules: { type: Array, required: true },
-  status: { type: String, required: true, text: true, enum: ['completed', 'created', 'archived', 'active', 'work', 'paused', 'nofunds'] },
+  status: {
+    type: String,
+    required: true,
+    text: true,
+    enum: [
+      "completed",
+      "created",
+      "archived",
+      "active",
+      "work",
+      "paused",
+      "nofunds",
+    ],
+  },
   user: { type: Schema.Types.ObjectId, ref: User, required: true },
   uuid: { type: String, default: uuid() },
   createdAt: { type: Date, default: Date.now },
@@ -37,23 +50,22 @@ const BuyoutSchema = new Schema({
   completed: { type: Number, required: false, default: 0 },
   promocode: { type: String, required: false },
   isPromocodeEnabled: { type: Boolean, required: false, default: false },
-  data5: { type: {}, default: '' },
-  data6: { type: {}, default: '' },
-  data7: { type: {}, default: '' },
-  data8: { type: {}, default: '' },
-  data9: { type: {}, default: '' },
-  data10: { type: {}, default: '' },
-  data11: { type: {}, default: '' },
-  data12: { type: {}, default: '' },
-  data13: { type: {}, default: '' },
-  data14: { type: {}, default: '' },
-  data15: { type: {}, default: '' },
-  data16: { type: {}, default: '' },
-  data17: { type: {}, default: '' },
-  data18: { type: {}, default: '' },
+  data5: { type: {}, default: "" },
+  data6: { type: {}, default: "" },
+  data7: { type: {}, default: "" },
+  data8: { type: {}, default: "" },
+  data9: { type: {}, default: "" },
+  data10: { type: {}, default: "" },
+  data11: { type: {}, default: "" },
+  data12: { type: {}, default: "" },
+  data13: { type: {}, default: "" },
+  data14: { type: {}, default: "" },
+  data15: { type: {}, default: "" },
+  data16: { type: {}, default: "" },
+  data17: { type: {}, default: "" },
+  data18: { type: {}, default: "" },
   categories: { type: Array, required: false },
-})
+  isCategoriesEnabled: { type: Boolean, required: false, default: false },
+});
 
-
-export const Buyout = yandexConnection.model('Buyout', BuyoutSchema)
-
+export const Buyout = yandexConnection.model("Buyout", BuyoutSchema);
