@@ -144,6 +144,8 @@ export default eventHandler(async (event) => {
       pointDistrict,
       pointId: product.pointId,
       pointCoordinates: product.pointCoordinates,
+      categories: product.category,
+      isCategoriesEnabled: product.category && product.category.length > 0 ? true : false,
     })
 
     await buyout.save()
