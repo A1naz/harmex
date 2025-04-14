@@ -26,6 +26,8 @@ interface Item {
   appartmentNumber: string
   pvzType: string
   pointId: string
+  selectedParameter: string
+  category: string[] | null
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -129,6 +131,8 @@ export default eventHandler(async (event) => {
       ff: product.key || false,
       pointCoordinates: product.pointCoordinates,
       appartmentNumber: product.appartmentNumber,
+      categories: product.category,
+      isCategoriesEnabled: product.category && product.category.length > 0 ? true : false,
     })
 
     await buyout.save()

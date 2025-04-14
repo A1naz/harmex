@@ -134,6 +134,7 @@ onMounted(async () => {
           :class="{
             'input-error': query.error,
           }"
+             :disabled="store.createProducts[props.productIndex].category"
           type="text"
           placeholder="Поисковый запрос"
           class="input bg-base-200 input-sm w-full rounded-xl"
@@ -161,6 +162,7 @@ onMounted(async () => {
       class="absolute right-8 loading loading-spinner loading-xs p-2"
     />
     <div
+       :disabled="store.createProducts[props.productIndex].category"
       v-if="index === 0"
       class="absolute right-0 btn btn-ghost btn-sm btn-square"
       @click="emit('add')"

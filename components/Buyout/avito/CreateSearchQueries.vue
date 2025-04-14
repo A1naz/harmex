@@ -1,46 +1,46 @@
 <script setup lang="ts">
-import type { SearchQuery } from '@/data/buyout/createProduct'
-import { rules } from '~/data/buyout/rules'
+import type { SearchQuery } from "@/data/buyout/createProduct";
+import { rules } from "~/data/buyout/rules";
 
 interface Props {
-  queries: SearchQuery[]
-  article: number
-  productIndex: number
-  rules: []
+  queries: SearchQuery[];
+  article: number;
+  productIndex: number;
+  rules: [];
 }
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const sorts = [
   {
     ruleId: 10,
-    sort: 'popular',
+    sort: "popular",
   },
   {
     ruleId: 11,
-    sort: 'priceup',
+    sort: "priceup",
   },
   {
     ruleId: 12,
-    sort: 'pricedown',
+    sort: "pricedown",
   },
   {
     ruleId: 13,
-    sort: 'newly',
+    sort: "newly",
   },
   {
     ruleId: 14,
-    sort: 'benefit',
+    sort: "benefit",
   },
   {
     ruleId: 15,
-    sort: 'rate',
+    sort: "rate",
   },
-]
+];
 
-const emit = defineEmits(['update', 'add', 'remove'])
-const store = useAvitoBuyoutStore()
+const emit = defineEmits(["update", "add", "remove"]);
+const store = useAvitoBuyoutStore();
 async function findSearchQuery(value: string) {
-  let sortType = 'popular'
+  let sortType = "popular";
   // props.rules.forEach((rule: any) => {
   //   sorts.forEach((sort: any) => {
   //     if (rule.id === sort.ruleId) {
@@ -50,17 +50,17 @@ async function findSearchQuery(value: string) {
   // })
 
   return {
-      found: false,
-      page: -1,
-      advert: false,
-    }
+    found: false,
+    page: -1,
+    advert: false,
+  };
 }
-const findSearchQueryDebounced = useDebounceFn(findSearchQuery, 1000)
+const findSearchQueryDebounced = useDebounceFn(findSearchQuery, 1000);
 
-const queries = computed(() => props.queries)
+const queries = computed(() => props.queries);
 
 async function onInput(event: Event, index: number) {
-  const newValue = (event.target as HTMLInputElement).value
+  const newValue = (event.target as HTMLInputElement).value;
   store.changeSearchQuery(
     {
       value: newValue,
@@ -69,18 +69,18 @@ async function onInput(event: Event, index: number) {
     },
     false,
     false
-  )
+  );
 
-  store.changeSearchQueryStatus(index, props.productIndex, false, false, ``)
+  store.changeSearchQueryStatus(index, props.productIndex, false, false, ``);
 }
 
 onMounted(async () => {
   for (let i = 0; i < props.queries.length; i++) {
-    if (!props.queries[i].value) continue
-    const result = await findSearchQuery(props.queries[i].value)
-    if (!result) continue
+    if (!props.queries[i].value) continue;
+    const result = await findSearchQuery(props.queries[i].value);
+    if (!result) continue;
   }
-})
+});
 </script>
 
 <template>
@@ -92,6 +92,7 @@ onMounted(async () => {
     <div class="dropdown w-full">
       <label tabindex="0"
         ><input
+          :disabled="store.createProducts[props.productIndex].category"
           :value="query.value"
           :class="{
             'input-error': query.error,
@@ -124,6 +125,7 @@ onMounted(async () => {
     />
     <div
       v-if="index === 0"
+      :disabled="store.createProducts[props.productIndex].category"
       class="absolute right-0 btn btn-ghost btn-sm btn-square"
       @click="emit('add')"
     >

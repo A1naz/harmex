@@ -31,6 +31,7 @@ interface Item {
   deliveryType: string
   nameOrganization: string
   selectedParameter: string
+  category: string[] | null
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -150,6 +151,8 @@ export default eventHandler(async (event) => {
       selectedParameter: product.selectedParameter,
       // deliveryPeriodTime: product.deliveryPeriodTime,
       // deliveryPeriodDate: product.deliveryPeriodDate,
+      categories: product.category,
+      isCategoriesEnabled: product.category && product.category.length > 0 ? true : false,
     })
 
     await buyout.save()
