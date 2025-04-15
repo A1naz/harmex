@@ -228,12 +228,13 @@ async function generatePassword() {
                 @keydown.enter="confirmCode"
               />
               <button
-                :disabled="!isCodeSent || isNumberConfirmed"
-                class="hover:text-primary hover:cursor-pointer flex items-center"
+                :disabled="!isCodeSent || isNumberConfirmed "
+                class="flex items-center"
                 @click.prevent="confirmCode"
               >
-                <Icon size="27" name="mdi:check" />
+                Подтвердить
               </button>
+              
             </label>
             <div class="text-xs text-gray-500">
               Примите звонок и введите озвученные цифры. Не поступил звонок?
