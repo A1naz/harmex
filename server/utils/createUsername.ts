@@ -12,14 +12,14 @@ export async function generateUniqueUsername(): Promise<string> {
     }
     username = generateRandomUsernameWithDigits()
   }
-  return username
+  return username.replace(/[^a-zA-Z0-9_]/g, '')
 }
 
 function generateRandomUsername(): string {
   const randomName = generateUsername('', 0, 10)
-  return randomName
+  return randomName.replace(/[^a-zA-Z0-9_]/g, '')
 }
 function generateRandomUsernameWithDigits(): string {
   const randomName = generateUsername('', 2, 10)
-  return randomName
+  return randomName.replace(/[^a-zA-Z0-9_]/g, '')
 }

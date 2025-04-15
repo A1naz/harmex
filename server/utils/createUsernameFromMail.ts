@@ -17,5 +17,5 @@ export async function createUsername(email: string): Promise<string> {
       userName = `${userNickToCheck}_${start}`
     }
   }
-  return userName
+  return userName.replace(/[^a-zA-Z0-9_]/g, '')
 }
