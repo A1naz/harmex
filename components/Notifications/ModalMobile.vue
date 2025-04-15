@@ -89,103 +89,94 @@ const modalContent = ref<HTMLDivElement | null>(null);
     class="modal overflow-y-auto z-50"
     :class="{ 'modal-open': show }"
   >
-    <div
-      class="modal-box cursor-auto w-full"
-      @click.stop
-    >
-    <div>
-      <div class="flex justify-between text-[16px] font-medium mt-4 ">
-        
-        <p>Оповещения ({{ unreadNotificationsLength }})</p>
-        <form method="dialog">
-        <label
-          for="selectUsers"
-          class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3 text-lg"
-          @click="$emit('update:show', false)"
-        >
-          ✕
-        </label>
-      </form>
-        <p
-          class="text-[14px] text-red-400 cursor-pointer mr-2"
-          @click="removeSelectedNotifications"
-          v-if="notifications.some((n: any) => n.isChecked)"
-        >
-          Удалить выбранные
-        </p>
-      </div>
-      <div class="divider"></div>
-      <div class="form-control -ml-1" v-if="notifications.length > 0">
-        <label class="label cursor-pointer flex justify-start">
-          <input
-            type="checkbox"
-            :checked="isAllChecked"
-            @click="checkAll"
-            class="checkbox checkbox-primary mr-2"
-          />
-          <span class="label-text">Выбрать все</span>
-        </label>
-      </div>
-      <div
-        v-for="notification of notifications"
-        :key="notification.uuid"
-        class="flex"
-      >
-        <input
-          type="checkbox"
-          class="checkbox mt-8 checkbox-primary"
-          :checked="notification.isChecked"
-          @change="notification.isChecked = !notification.isChecked"
-          style="z-index: 9999"
-        />
+    <div class="modal-box cursor-auto w-full" @click.stop>
+      <div>
+        <div class="flex justify-between text-[16px] font-medium mt-4">
+          <p>Оповещения ({{ unreadNotificationsLength }})</p>
+          <form method="dialog">
+            <label
+              for="selectUsers"
+              class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3 text-lg"
+              @click="$emit('update:show', false)"
+            >
+              ✕
+            </label>
+          </form>
+          <p
+            class="text-[14px] text-red-400 cursor-pointer mr-2"
+            @click="removeSelectedNotifications"
+            v-if="notifications.some((n: any) => n.isChecked)"
+          >
+            Удалить выбранные
+          </p>
+        </div>
+        <div class="divider"></div>
+        <div class="form-control -ml-1" v-if="notifications.length > 0">
+          <label class="label cursor-pointer flex justify-start">
+            <input
+              type="checkbox"
+              :checked="isAllChecked"
+              @click="checkAll"
+              class="checkbox checkbox-primary mr-2"
+            />
+            <span class="label-text">Выбрать все</span>
+          </label>
+        </div>
         <div
-          class="collapse rounded-box border-[#eff0ff]"
-          :class="{
-            'bg-[#f9faff]': !notification.isReaded,
-            'bg-white': notification.isReaded,
-          }"
+          v-for="notification of notifications"
+          :key="notification.uuid"
+          class="flex"
         >
           <input
             type="checkbox"
-            @change="
-              [seenNotification(notification), (notification.isReaded = true)]
-            "
+            class="checkbox mt-8 checkbox-primary"
+            :checked="notification.isChecked"
+            @change="notification.isChecked = !notification.isChecked"
+            style="z-index: 9999"
           />
+          <div
+            class="collapse rounded-box border-[#eff0ff]"
+            :class="{
+              'bg-[#f9faff]': !notification.isReaded,
+              'bg-white': notification.isReaded,
+            }"
+          >
+            <input
+              type="checkbox"
+              @change="
+                [seenNotification(notification), (notification.isReaded = true)]
+              "
+            />
 
-          <div class="collapse-title">
-            <div class="flex mx-2 my-2 gap-2">
-        
-              <div class="flex flex-col flex-wrap w-full">
-                <div class="font-medium flex justify-start w-full">
-                  {{ notification.category }}
-                  <div class="text-xs ml-4 mt-1">
-                    {{ $dayjs(notification.date).fromNow() }}
+            <div class="collapse-title">
+              <div class="flex mx-2 my-2 gap-2">
+                <div class="flex flex-col flex-wrap w-full">
+                  <div class="font-medium flex justify-start w-full">
+                    {{ notification.category }}
+                    <div class="text-xs ml-4 mt-1">
+                      {{ $dayjs(notification.date).fromNow() }}
+                    </div>
                   </div>
+                  <p class="title-message text-nowrap max-w-40">
+                    {{ notification.text }}
+                  </p>
                 </div>
-                <p class="title-message">
-                  {{ notification.text }}
-                </p>
               </div>
             </div>
-          </div>
 
-          <div class="collapse-content mx-4 w-full whitespace-pre-line">
-            {{ notification.text }}
+            <div
+              class="collapse-content mx-4 w-full whitespace-normal break-words"
+            >
+              {{ notification.text }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.title-message {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 300px;
-}
 ::-webkit-scrollbar {
   height: 8px;
   width: 4px;

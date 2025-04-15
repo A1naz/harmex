@@ -158,7 +158,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <div class="collapse-content mx-4 w-full whitespace-pre-line">
+          <div class="collapse-content mx-4 w-[90%] whitespace-pre-line">
             {{ notification.text }}
           </div>
         </div>
