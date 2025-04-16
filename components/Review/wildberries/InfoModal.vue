@@ -40,7 +40,10 @@ const getStatus = computed(() => {
       return "В архиве";
     case "completed":
       return "Опубликован";
+      default:
+      return props.info.status;
   }
+
 });
 
 const getGender = computed(() => {

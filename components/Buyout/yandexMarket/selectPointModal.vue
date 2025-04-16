@@ -276,7 +276,7 @@ async function getAddressText(lt: number, lg: number, id: string) {
   addressText.value = "Загрузка...";
 
   // @ts-ignore
-  const { data, error }: any = await useFetch(`/api/ozon/buyout/addressText`, {
+  const { data, error }: any = await useFetch(`/api/yandexMarket/buyout/addressText`, {
     method: "GET",
     params: {
       lt,
