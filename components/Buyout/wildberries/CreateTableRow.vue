@@ -258,7 +258,7 @@ const selectCategory = (categories: any, index: number) => {
       </div>
     </td>
     <td class="border-r border-base">
-      <div class="w-full flex gap-2" v-if="user.username == 'test'">
+      <div class="w-full  flex gap-2" v-if="user.username == 'test'">
         <details
           class="dropdown disabled"
           v-if="
@@ -266,7 +266,7 @@ const selectCategory = (categories: any, index: number) => {
           "
         >
           <summary
-            class="btn m-1 text-sm z-1"
+            class="btn btn-sm normal-case text-sm font-normal  m-1 z-1"
             ref="categoryDropdown"
             style="z-index: 1 !important"
           >
@@ -301,14 +301,14 @@ const selectCategory = (categories: any, index: number) => {
         </details>
         <button
           v-else
-          class="btn m-1 text-sm z-1"
+          class="btn m-1 text-sm z-1 font-normal btn-sm normal-case"
           disabled
           style="z-index: 1 !important"
         >
           Выбрать категорию
         </button>
         <button
-          class="btn btn-sm btn-square mt-3 -ml-2.5"
+          class="btn btn-sm btn-square mt-1 -ml-2.5"
           v-if="product.category"
           @click="product.category = null"
         >

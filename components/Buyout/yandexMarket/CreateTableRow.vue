@@ -291,7 +291,7 @@ const selectCategory = (categories: any, index) => {
     </td>
 
     <td class="border-r border-base">
-      <div class="w-full flex gap-2" v-if="user.username == 'test'">
+      <div class="w-full  flex gap-2" v-if="user.username == 'test'">
         <details
           class="dropdown disabled"
           v-if="
@@ -299,7 +299,7 @@ const selectCategory = (categories: any, index) => {
           "
         >
           <summary
-            class="btn m-1 text-sm z-1"
+            class="btn btn-sm normal-case text-sm font-normal text-nowrap  m-1 z-1"
             ref="categoryDropdown"
             style="z-index: 1 !important"
           >
@@ -325,7 +325,7 @@ const selectCategory = (categories: any, index) => {
               class="overflow-y-auto bg-base-100 rounded-md -mt-10 fixed drop-shadow-lg pl-1"
               style="max-height: 400px; width: 500px"
             >
-              <BuyoutCategoryTreeSelect
+              <BuyoutWildberriesCategoryTreeSelect
                 :categories="categories"
                 @select-category="selectCategory($event, index)"
               />
@@ -333,15 +333,15 @@ const selectCategory = (categories: any, index) => {
           </ul>
         </details>
         <button
-        v-else
-          class="btn m-1 text-sm z-1"
+          v-else
+          class="btn m-1 text-sm z-1 font-normal btn-sm normal-case"
           disabled
           style="z-index: 1 !important"
         >
           Выбрать категорию
         </button>
         <button
-          class="btn btn-sm btn-square mt-3 -ml-2.5"
+          class="btn btn-sm btn-square mt-1 -ml-2.5"
           v-if="product.category"
           @click="product.category = null"
         >

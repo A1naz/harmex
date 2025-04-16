@@ -330,66 +330,66 @@ const selectCategory = (categories: any, index: number) => {
       </div>
       <div>
         <div class="text-md text-gray-500 mb-1">Категория:</div>
-        <div class="w-full flex gap-2" v-if="user.username == 'test'">
-          <details
-            class="dropdown disabled"
-            v-if="
-              product.searchQuery.length <= 1 && !product.searchQuery[0].value
-            "
-          >
-            <summary
-              class="btn m-1 text-sm z-1"
-              ref="categoryDropdown"
-              style="z-index: 1 !important"
-            >
-              {{
-                store.createProducts[props.index].category &&
-                store.createProducts[props.index].category.length
-                  ? store.createProducts[props.index].category.join(" > ")
-                  : "Выбрать категорию"
-              }}
-            </summary>
-            <ul
-              style="z-index: 9999 !important"
-              tabindex="0"
-              class="dropdown-content rounded-box z-1 w-52 p-2 shadow-sm"
-            >
-              <button
-                class="btn btn-sm btn-square relative left-1 -top-1 z-50"
-                @click="categoryDropdown.click()"
-              >
-                <Icon name="material-symbols:close-rounded" size="18" />
-              </button>
-              <div
-                class="overflow-y-auto bg-base-100 rounded-md -mt-10 fixed drop-shadow-lg pl-1"
-                style="max-height: 400px; width: 500px"
-              >
-                <BuyoutWildberriesCategoryTreeSelect
-                  :categories="categories"
-                  @select-category="selectCategory($event, index)"
-                />
-              </div>
-            </ul>
-          </details>
-          <button
-            v-else
-            class="btn m-1 text-sm z-1"
-            disabled
+        <div class="w-full  flex gap-2" v-if="user.username == 'test'">
+        <details
+          class="dropdown disabled"
+          v-if="
+            product.searchQuery.length <= 1 && !product.searchQuery[0].value
+          "
+        >
+          <summary
+            class="btn btn-sm normal-case text-sm font-normal  m-1 z-1"
+            ref="categoryDropdown"
             style="z-index: 1 !important"
           >
-            Выбрать категорию
-          </button>
-          <button
-            class="btn btn-sm btn-square mt-3 -ml-2.5"
-            v-if="product.category"
-            @click="product.category = null"
+            {{
+              store.createProducts[props.index].category &&
+              store.createProducts[props.index].category.length
+                ? store.createProducts[props.index].category.join(" > ")
+                : "Выбрать категорию"
+            }}
+          </summary>
+          <ul
+            style="z-index: 9999 !important"
+            tabindex="0"
+            class="dropdown-content rounded-box z-1 w-52 p-2 shadow-sm"
           >
-            <Icon name="material-symbols:close-rounded" size="18" />
-          </button>
-        </div>
-        <div v-else>
-          <button class="btn" disabled>Выберите категорию</button>
-        </div>
+            <button
+              class="btn btn-sm btn-square relative left-1 -top-1 z-50"
+              @click="categoryDropdown.click()"
+            >
+              <Icon name="material-symbols:close-rounded" size="18" />
+            </button>
+            <div
+              class="overflow-y-auto bg-base-100 rounded-md -mt-10 fixed drop-shadow-lg pl-1"
+              style="max-height: 400px; width: 500px"
+            >
+              <BuyoutWildberriesCategoryTreeSelect
+                :categories="categories"
+                @select-category="selectCategory($event, index)"
+              />
+            </div>
+          </ul>
+        </details>
+        <button
+          v-else
+          class="btn m-1 text-sm z-1 font-normal btn-sm normal-case"
+          disabled
+          style="z-index: 1 !important"
+        >
+          Выбрать категорию
+        </button>
+        <button
+          class="btn btn-sm btn-square mt-1 -ml-2.5"
+          v-if="product.category"
+          @click="product.category = null"
+        >
+          <Icon name="material-symbols:close-rounded" size="18" />
+        </button>
+      </div>
+      <div v-else>
+        <button class="btn" disabled>Выберите категорию</button>
+      </div>
       </div>
     </div>
   </div>
