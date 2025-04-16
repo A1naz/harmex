@@ -46,6 +46,11 @@ const cardInfo = ref({
   bankName: "",
   orgName: "",
   FIO: "",
+  birthDate: "",
+  passportSeries: "",
+  passportNumber: "",
+  passportAddress: "",
+  passportDate: "",
 });
 function formatCurrency(value: number) {
   return currency.format(value);
@@ -257,13 +262,72 @@ onMounted(() => {
           <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content"
-                >ФИО</span
+                >Наименование плательщика</span
               >
             </div>
             <input
               v-model="cardInfo.FIO"
               class="input input-primary w-full"
-              placeholder="ФИО"
+              placeholder="Введите ФИО владельца карты
+"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">Дата рождения</span>
+            </div>
+            <input
+              v-model="cardInfo.birthDate"
+              class="input input-primary w-full"
+              placeholder="Введите дату рождения"
+              v-maska
+              data-maska="##.##.####"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">Серия паспорта</span>
+            </div>
+            <input
+              v-model="cardInfo.passportSeries"
+              class="input input-primary w-full"
+              placeholder="Введите серию паспорта"
+              v-maska
+              data-maska="## ##"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">Номер паспорта</span>
+            </div>
+            <input
+              v-model="cardInfo.passportNumber"
+              class="input input-primary w-full"
+              placeholder="Введите номер паспорта"
+              v-maska
+              data-maska="######"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">Кем выдан</span>
+            </div>
+            <input
+              v-model="cardInfo.passportAddress"
+              class="input input-primary w-full"
+              placeholder="Введите кем выдан паспорт"
+            />
+          </div>
+          <div class="-mt-2">
+            <div class="label">
+              <span class="label-text text-base-content">Когда выдан</span>
+            </div>
+            <input
+              v-model="cardInfo.passportDate"
+              class="input input-primary w-full"
+              placeholder="Введите дату выдачи паспорта"
+              v-maska
+              data-maska="##.##.####"
             />
           </div>
 
