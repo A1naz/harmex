@@ -251,6 +251,14 @@ async function clearForm() {
       url: "",
       public: "",
     },
+    {
+      url: "",
+      public: "",
+    },
+    {
+      url: "",
+      public: "",
+    },
   ];
 }
 

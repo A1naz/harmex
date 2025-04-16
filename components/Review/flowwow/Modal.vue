@@ -93,7 +93,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Видео слишком длинное. Максимальная длительность: 10 минут",
-         group: "error",
+          group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -106,7 +106,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Минимальное разрешение видео должно быть 640x360",
-         group: "error",
+          group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -119,7 +119,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Максимальное разрешение видео должно быть 4100x4100",
-         group: "error",
+          group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -147,7 +147,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Нельзя загружать вебпикчи",
-     group: "error",
+      group: "error",
       duration: 3000,
     });
 
@@ -165,7 +165,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Не удалось загрузить фото",
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
@@ -221,6 +221,14 @@ async function clearForm() {
       url: "",
       public: "",
     },
+    {
+      url: "",
+      public: "",
+    },
+    {
+      url: "",
+      public: "",
+    },
   ];
 }
 
@@ -245,7 +253,7 @@ async function publishReview() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     creatingReview.value = false;
@@ -254,7 +262,7 @@ async function publishReview() {
   notify({
     title: "Успешно",
     text: "Отзыв успешно опубликован",
-   group: "success",
+    group: "success",
     duration: 3000,
   });
   creatingReview.value = false;
@@ -279,7 +287,7 @@ async function removePhoto(index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Не удалось удалить фото",
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
@@ -307,7 +315,7 @@ function ratingAlert() {
   notify({
     title: "Что-то пошло не так",
     text: "В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд",
-   group: "error",
+    group: "error",
     duration: 3000,
   });
 }
@@ -585,7 +593,7 @@ const handleMouseUp = (event: any) => {
         </div>
 
         <div>
-          <div class="pb-2 font-medium">Запланировать отзыв </div>
+          <div class="pb-2 font-medium">Запланировать отзыв</div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
               {{
