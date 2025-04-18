@@ -9,6 +9,7 @@ const props = defineProps({
 });
 
 async function getNotifications() {
+  //ts-ignore
   const { data }: any = await useFetch("/api/notifications/get", {
     method: "GET",
     params: { lastGetDate: lastGetDate.value },
@@ -56,8 +57,8 @@ const unreadNotificationsLength = computed(() => {
   return notifications.value.filter((n: any) => !n.isReaded).length;
 });
 
-store.notificationsLength = computed(() => {
-  return unreadNotificationsLength.value;
+watch(unreadNotificationsLength, (newValue: number) => {
+  store.notificationsLength = newValue;
 });
 
 const isAllChecked = computed(() => {
