@@ -125,11 +125,11 @@ const modalContent = ref<HTMLDivElement | null>(null);
         <div
           v-for="notification of notifications"
           :key="notification.uuid"
-          class="flex"
+          class="flex mt-1"
         >
           <input
             type="checkbox"
-            class="checkbox mt-8 checkbox-primary"
+            class="checkbox mt-8 mr-1 checkbox-primary"
             :checked="notification.isChecked"
             @change="notification.isChecked = !notification.isChecked"
             style="z-index: 9999"
@@ -151,13 +151,13 @@ const modalContent = ref<HTMLDivElement | null>(null);
             <div class="collapse-title">
               <div class="flex mx-2 my-2 gap-2">
                 <div class="flex flex-col flex-wrap w-full">
-                  <div class="font-medium flex justify-start w-full">
+                  <div class="font-medium flex justify-start w-full text-sm ">
                     {{ notification.category }}
-                    <div class="text-xs ml-4 mt-1">
+                    <div class="text-xs ml-4 mt-1 absolute right-4">
                       {{ $dayjs(notification.date).fromNow() }}
                     </div>
                   </div>
-                  <p class="title-message text-nowrap max-w-40">
+                  <p class="title-message text-nowrap max-w-40 text-xs">
                     {{ notification.text }}
                   </p>
                 </div>
@@ -165,7 +165,7 @@ const modalContent = ref<HTMLDivElement | null>(null);
             </div>
 
             <div
-              class="collapse-content mx-4 w-full whitespace-normal break-words"
+              class="collapse-content mx-4 w-full whitespace-normal break-words text-xs"
             >
               {{ notification.text }}
             </div>

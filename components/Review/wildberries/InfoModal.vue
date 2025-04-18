@@ -24,6 +24,8 @@ const getStatus = computed(() => {
       return "В очереди";
     case "working":
       return "В работе";
+    case "reviewsUpdate":
+      return "На проверке";
     case "busy":
       return "В работе";
     case "published":
@@ -103,6 +105,16 @@ const { $dayjs } = useNuxtApp();
                   <button
                     class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
                   >
+                    {{ $dayjs(info.createdAt).format("DD.MM.YYYY HH:mm") }}
+                  </button>
+                </div>
+                <div class="flex gap-2 w-2/3">
+                  <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                    >Запланировано:
+                  </span>
+                  <button
+                    class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
+                  >
                     {{ $dayjs(info.date).format("DD.MM.YYYY HH:mm") }}
                   </button>
                 </div>
@@ -128,7 +140,8 @@ const { $dayjs } = useNuxtApp();
                           info.status === 'busy' ||
                           info.status === 'canceled' ||
                           info.status === 'deleted' ||
-                          info.status === 'deleting',
+                          info.status === 'deleting' ||
+                          info.status === 'reviewsUpdate',
                       }"
                       class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm"
                       >{{ getStatus }}

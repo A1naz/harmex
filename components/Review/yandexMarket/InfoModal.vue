@@ -93,9 +93,19 @@ const { $dayjs } = useNuxtApp();
               <div
                 class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md flex gap-1 flex-col"
               >
-                <div class="flex gap-2 w-2/3">
+              <div class="flex gap-2 w-2/3">
                   <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                     >Создано:
+                  </span>
+                  <button
+                    class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
+                  >
+                    {{ $dayjs(info.createdAt).format("DD.MM.YYYY HH:mm") }}
+                  </button>
+                </div>
+                <div class="flex gap-2 w-2/3">
+                  <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                    >Запланировано:
                   </span>
                   <button
                     class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
