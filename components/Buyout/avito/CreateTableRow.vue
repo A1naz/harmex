@@ -198,14 +198,13 @@ const selectCategory = (categories: any, index: number) => {
         class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
       >
         <option disabled selected>Выберите тип доставки</option>
-        <option value="Почта России">Почта России</option>
-        <option value="Boxberry">Boxberry</option>
-        <option value="СДЭК">СДЭК</option>
-        <option value="DPD">DPD</option>
         <option value="Яндекс Доставка">Яндекс Доставка</option>
-        <option value="Авито">Авито</option>
-        <option value="Постамат 5Post">Постамат 5Post</option>
-        <option value="Касса 5Post">Касса 5Post</option>
+        <option value="Почта России" :disabled="user.username !== 'test'">Почта России</option>
+        <option value="Boxberry" :disabled="user.username !== 'test'" >Boxberry</option>
+        <option value="DPD" :disabled="user.username !== 'test'">DPD</option>
+        <option value="Авито" :disabled="user.username !== 'test'">Авито</option>
+        <option value="Постамат 5Post" :disabled="user.username !== 'test'">Постамат 5Post</option>
+        <option value="Касса 5Post" :disabled="user.username !== 'test'">Касса 5Post</option>
       </select>
     </td>
     <td class="break-all max-w-[300px] border-r border-base">
@@ -255,7 +254,7 @@ const selectCategory = (categories: any, index: number) => {
       </div>
     </td> -->
     <td class="border-r border-base">
-      <div class="w-full  flex gap-2" v-if="user.username == 'test'">
+      <div class="w-full flex gap-2" v-if="user.username == 'test'">
         <details
           class="dropdown disabled"
           v-if="
@@ -263,7 +262,7 @@ const selectCategory = (categories: any, index: number) => {
           "
         >
           <summary
-            class="btn btn-sm normal-case text-sm font-normal text-nowrap  m-1 z-1"
+            class="btn btn-sm normal-case text-sm font-normal text-nowrap m-1 z-1"
             ref="categoryDropdown"
             style="z-index: 1 !important"
           >
@@ -352,7 +351,10 @@ const selectCategory = (categories: any, index: number) => {
           class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="copyBuyout"
         >
-          <Icon name="material-symbols:content-copy-outline-rounded" size="20" />
+          <Icon
+            name="material-symbols:content-copy-outline-rounded"
+            size="20"
+          />
         </div>
       </div>
     </td>
