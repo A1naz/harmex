@@ -115,7 +115,10 @@ const { $dayjs } = useNuxtApp();
                     info.statusdelivery.length > 1,
                   'bg-red-200':
                     info.currentstatus.includes('Возврат') &&
-                    info.statusdelivery.length > 1,
+                    info.statusdelivery.length > 1 ||
+                    info.currentstatus.includes('Отменён') &&
+                    info.statusdelivery.length > 1
+
                 }"
               >
                 {{ info.currentstatus }}
@@ -126,7 +129,7 @@ const { $dayjs } = useNuxtApp();
                 info.currentstatus.includes('Ожидает получения') &&
                 info.statusdelivery.length > 1
               "
-              class="text-s link bg-[#FF6666] w-fit dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white z-20"
+              class="text-s link bg-[#FF6666] w-fit dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white"
               @click="emit('openPenaltyModal')"
             >
               <Icon name="ph:warning-circle-light" size="25" />
