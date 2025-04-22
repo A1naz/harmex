@@ -428,7 +428,7 @@ const siteUrl = config.public.siteUrl;
               >
                 <Icon
                   name="solar:calendar-linear"
-                  class="-mt-1 text-white"
+                  class="mt-1 text-white"
                   size="22px"
                 />
               </button>

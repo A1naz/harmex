@@ -424,11 +424,11 @@ const siteUrl = config.public.siteUrl;
               @reset="dateRange = []"
             >
               <button
-                class="div w-[48px] h-[32px] border-[1px] rounded-[6px] bg-[#fc7c5b]"
+                class="div w-[48px] h-[32px] border-[1px] rounded-[6px]  bg-[#fc7c5b]"
               >
                 <Icon
                   name="solar:calendar-linear"
-                  class="-mt-1 text-white"
+                  class="mt-1 text-white"
                   size="22px"
                 />
               </button>
