@@ -254,6 +254,12 @@ const filters = [
     params: "?status=canceled",
     queryStatus: "canceled",
   },
+  {
+    title: "Санкционные",
+    optionValue: "sanctions",
+    params: "?status=sanctions",
+    queryStatus: "sanctions",
+  },
   // {
   //   title: 'В архиве',
   //   optionValue: 'archived',
