@@ -23,6 +23,7 @@ export default defineNitroPlugin(() => {
       user.fizFace = admin.fizFace
       user.staff = true
       user.ffEnabled = admin.ffEnabled
+      user.adminUsername = admin.username
     }
 
     session.user = {
@@ -41,6 +42,8 @@ export default defineNitroPlugin(() => {
       docType: user.fizFace ? 'Fiz' : user.orgKey === 'ИП' ? 'IP' : 'OOO',
       orgIP: user.lastOrgInfo ? user.lastOrgInfo.orgName : 'ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ',
       docName: user.lastOrgInfo ? user.lastOrgInfo.docName : 'oferta',
+      staff: user.staff,
+      adminUsername: user.adminUsername,
     }
   })
 

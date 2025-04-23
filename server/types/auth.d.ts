@@ -16,6 +16,8 @@ declare module '#auth-utils' {
     orgIP: string | undefined
     docName: string | undefined
     docType: string | undefined
+    staff: boolean
+    adminUsername: string | undefined
   }
 
   interface UserSession {

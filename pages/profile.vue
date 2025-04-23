@@ -72,6 +72,7 @@ onMounted(() => {
   form.email = user.value?.email || "";
   form.phoneNumber = user.value?.phoneNumber || "";
   form.username = user.value?.username || "";
+  form.adminUsername = user.value?.adminUsername || "";
   if (params.partnerDetailsModal) {
     partnerDetailsModal.value = true;
   }
@@ -367,12 +368,38 @@ function copyText(text: string) {
                 </button>
               </label>
             </div>
+            <div class="flex flex-col gap-1 flex-1" v-if="user?.staff">
+              <p class="text-xs font-medium text-base-content">
+                {{ $t("Логин админа") }}
+              </p>
+              <label
+                class="input input-sm h-[2.5rem] bg-base-100 flex items-center justify-between relative"
+              >
+                <input
+                  v-model="form.adminUsername"
+                  readonly
+                  placeholder="Логин"
+                  class="flex-grow w-full text-ellipsis min-w-52"
+                  @click="copyText(form.adminUsername)"
+                />
+                <button
+                  class="flex items-center justify-center mx-2 text-base-300 hover:text-primary"
+                  @click="copyText(form.adminUsername)"
+                >
+                  <icon
+                    v-if="!user?.emailConfirmed"
+                    name="material-symbols:content-copy"
+                    size="24"
+                  />
+                </button>
+              </label>
+            </div>
             <div class="flex flex-col gap-1 flex-1">
               <p class="text-xs font-medium text-base-content">
                 {{ $t("Номер телефона") }}
               </p>
               <input
-                v-model="form.phoneNumber"
+                v-model="form.adminUsername"
                 readonly
                 placeholder="Номер телефона"
                 class="input input-sm h-[2.5rem] bg-base-100 w-full"

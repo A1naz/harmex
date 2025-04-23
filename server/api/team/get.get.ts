@@ -1,16 +1,33 @@
-import MenuBuilder from '~/server/utils/menuBuilder'
-import { User } from '~~/server/lib/models/User'
+import MenuBuilder from "~/server/utils/menuBuilder";
+import { User } from "~~/server/lib/models/User";
+
+function getRussianRoles(role: string) {
+  switch (role) {
+    case "manager":
+      return "менеджер";
+    case "courier":
+      return "курьер";
+    case "financier":
+      return "финансист";
+    case "accountant":
+      return "бухгалтер";
+    case "admin":
+      return "админ";
+    default:
+      return "";
+  }
+}
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  const myTeams = await User.find({ uuidCompany: user.uuid }).sort({ _id: -1 })
+  const myTeams = await User.find({ uuidCompany: user.uuid }).sort({ _id: -1 });
 
   const format = myTeams.map((user) => {
     const { menu, allowedPathes } = user.uuidCompany
       ? MenuBuilder.filteredAccess(user.acesses)
-      : MenuBuilder.filteredAccess()
+      : MenuBuilder.filteredAccess();
 
     return {
       isBanned: user.isBanned,
@@ -24,8 +41,8 @@ export default eventHandler(async (event) => {
       emailConfirmed: user.emailConfirmed,
       mmenuItems: menu,
       allowedPathes: allowedPathes,
-      post: user.post ? user.post : 'manager',
-    }
-  })
-  return format
-})
+      post: user.post && typeof user.post === "string" ? getRussianRoles(user.post) : "",
+    };
+  });
+  return format;
+});
