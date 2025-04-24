@@ -399,7 +399,7 @@ function copyText(text: string) {
                 {{ $t("Номер телефона") }}
               </p>
               <input
-                v-model="form.adminUsername"
+                v-model="form.phoneNumber"
                 readonly
                 placeholder="Номер телефона"
                 class="input input-sm h-[2.5rem] bg-base-100 w-full"
