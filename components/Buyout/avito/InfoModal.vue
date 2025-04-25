@@ -32,9 +32,9 @@ const getStatus = computed(() => {
     case 'paused':
       return 'Пауза'
       case 'discountAwaiting':
-      return 'Ожидаение скидки'
+      return 'Ожидание отправки'
     case 'discountGiven':
-      return 'Скидка предоставлена'
+      return 'Отправлено'
       default:
       return props.info.status
   }
