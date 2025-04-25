@@ -150,6 +150,12 @@ const getStatus = computed(() => {
       return 'Пауза'
     case 'nofunds':
       return 'Недостаточно средств'
+    case 'discountAwaiting':
+      return 'Ожидаение скидки'
+    case 'discountGiven':
+      return 'Скидка предоставлена'
+      default: 
+      return props.info.status
   }
 })
 </script>
