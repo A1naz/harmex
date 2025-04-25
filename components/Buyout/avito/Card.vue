@@ -354,6 +354,12 @@ const getStatus = computed(() => {
           </div>
         </div>
       </div>
+      <div class="flex gap-1.5 -mt-6">
+        <span class="text-sm text-gray-500 my-auto text-[0.725rem]">ФИО: </span>
+        <div class="rounded-md py-0 px-2 text-sm">
+          {{ info.FIO ? info.FIO : "-" }}
+        </div>
+      </div>
       <button
         class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary"
         @click="$emit('openModal', index)"

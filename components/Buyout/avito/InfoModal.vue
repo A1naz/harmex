@@ -184,6 +184,12 @@ onKeyStroke('Escape', (e) => {
                   <span class="rounded-md py-0 px-2 text-sm">Avito</span>
                 </div>
                 <div>
+                  <span class="text-sm text-gray-500 mr-2">ФИО: </span>
+                  <span class="rounded-md py-0 px-2 text-sm">
+                    {{ info.FIO ? info.FIO : "-" }}
+                  </span>
+                </div>
+                <div>
                   <span class="text-sm text-gray-500 mr-2">Дата выкупов: </span>
                   <span
                     class="rounded-md py-0 pr-2 text-sm flex gap-1 justify-start flex-wrap"

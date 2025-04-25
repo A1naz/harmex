@@ -65,6 +65,7 @@ const BuyoutSchema = new Schema({
   data18: { type: {}, default: '' },
   categories: { type: Array, required: false },
   isCategoriesEnabled: { type: Boolean, required: false, default: false },
+  FIO: { type: String, required: false, default: '' },
 })
 
 export const Buyout = AvitoConnection.model('Buyout', BuyoutSchema)
