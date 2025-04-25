@@ -7,7 +7,6 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, '/auth', 302)
 
   const { status, limit, skip } = getQuery(event)
-  console.log(limit, skip)
 
   // const all = await Delivery.find({ user })
   let deliveries
@@ -55,6 +54,7 @@ export default eventHandler(async (event) => {
       })
       .splice((skip as number) ? (skip as number) : 0, limit as number)
   } else if (status === 'pickupReady') {
+    console.log('pickupReady')
     deliveries = await Delivery.find({
       user,
       statusdelivery: {
@@ -64,10 +64,12 @@ export default eventHandler(async (event) => {
             { status: 'Готов к получению' },
             { status: '^Заберите до.*' },
             { status: '^Получите до.*' },
+            { status: '^Ждёт в пункте выдачи.*' },
             { status: { $regex: '^Готов к получению.*' } },
             { status: { $regex: '^Готов к выдаче.*' } },
             { status: { $regex: '^Заберите до.*' } },
             { status: { $regex: '^Получите до.*' } },
+            { status: { $regex: '^Ждёт в пункте выдачи.*' } },
           ],
         },
       },

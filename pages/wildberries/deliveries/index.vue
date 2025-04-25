@@ -75,7 +75,16 @@ async function getDeliveries() {
   deliveries.value = data.value;
   loading.value = false;
 }
-getDeliveries();
+
+const exportReadyCount = ref(0);
+async function getExportReadyCount() {
+  const { data } = await useFetch(
+    "/api/wildberries/delivery/getExportReadyCount"
+  );
+  exportReadyCount.value = data.value;
+}
+getExportReadyCount();
+// getDeliveries();
 
 async function exportReadyXLS() {
   loadingExport.value = true;
@@ -103,7 +112,7 @@ async function exportXLS() {
   });
   if (error.value) {
     notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
       text: "Не удалось экспортировать данные",
     });
@@ -131,7 +140,7 @@ async function exportReadyUntilPenaltyXLS() {
   );
   if (error.value) {
     notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
       text: "Не удалось экспортировать данные",
     });
@@ -183,6 +192,7 @@ async function onSearchInput() {
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value) {
     if (end.value) return;
+    loading.value = true;
     const { data } = await useFetch("/api/wildberries/delivery/get", {
       method: "GET",
       query: {
@@ -191,6 +201,7 @@ watch(targetIsVisible, async (isVisible) => {
         skip: skip.value,
       },
     });
+    loading.value = false;
     if ((data.value as any)?.length === 0) {
       end.value = true;
       return;
@@ -430,7 +441,7 @@ const siteUrl = config.public.siteUrl;
               @reset="dateRange = []"
             >
               <button
-                class="div w-[48px] h-[32px] border-[1px] rounded-[6px]  bg-[#fc7c5b]"
+                class="div w-[48px] h-[32px] border-[1px] rounded-[6px] bg-[#fc7c5b]"
               >
                 <Icon
                   name="solar:calendar-linear"
@@ -453,7 +464,7 @@ const siteUrl = config.public.siteUrl;
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
-                <li>
+                <li v-if="deliveries?.length && exportReadyCount <= 30">
                   <NuxtLink
                     :to="`/wildberries/deliveries/export${
                       dateRange.length

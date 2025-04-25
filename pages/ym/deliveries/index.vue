@@ -75,7 +75,7 @@ async function getDeliveries() {
   deliveries.value = data.value;
   loading.value = false;
 }
-await getDeliveries();
+// await getDeliveries();
 
 async function exportReadyXLS() {
   loadingExport.value = true;
@@ -204,6 +204,7 @@ watch(
   () => status.value,
   async () => {
     skip.value = 50;
+    loading.value = true;
     end.value = false;
     const { data } = await useFetch("/api/yandexMarket/delivery/get", {
       method: "GET",
@@ -212,6 +213,7 @@ watch(
         limit: 50,
       },
     });
+    loading.value = false;
     deliveries.value = data.value;
   },
   { deep: true, immediate: true }
@@ -341,6 +343,15 @@ async function copyToClipboard(text: string) {
 
 const config = useRuntimeConfig();
 const siteUrl = config.public.siteUrl;
+
+const exportReadyCount = ref(0);
+async function getExportReadyCount() {
+  const { data } = await useFetch(
+    "/api/yandexMarket/delivery/getExportReadyCount"
+  );
+  exportReadyCount.value = data.value;
+}
+getExportReadyCount();
 </script>
 
 <template>
@@ -439,7 +450,7 @@ const siteUrl = config.public.siteUrl;
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
-                <li>
+              <li v-if="deliveries?.length && exportReadyCount <= 30">
                   <NuxtLink
                     :to="`/ym/deliveries/export${
                       dateRange.length

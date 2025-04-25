@@ -72,7 +72,7 @@ async function getDeliveries() {
   deliveries.value = data.value;
   loading.value = false;
 }
-getDeliveries();
+// getDeliveries();
 
 async function exportReadyXLS() {
   loadingExport.value = true;
@@ -181,6 +181,7 @@ async function onSearchInput() {
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value) {
     if (end.value) return;
+    loading.value = true;
     const { data } = await useFetch("/api/ozon/delivery/get", {
       method: "GET",
       query: {
@@ -189,6 +190,7 @@ watch(targetIsVisible, async (isVisible) => {
         skip: skip.value ? skip.value : 0,
       },
     });
+    loading.value = false;
     if ((data.value as any)?.length === 0) {
       end.value = true;
       return;
@@ -352,6 +354,16 @@ async function copyToClipboard(text: string) {
 
 const config = useRuntimeConfig();
 const siteUrl = config.public.siteUrl;
+
+
+const exportReadyCount = ref(0);
+async function getExportReadyCount() {
+  const { data } = await useFetch(
+    "/api/ozon/delivery/getExportReadyCount"
+  );
+  exportReadyCount.value = data.value;
+}
+getExportReadyCount();
 </script>
 
 <template>
@@ -450,7 +462,7 @@ const siteUrl = config.public.siteUrl;
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
-                <li>
+              <li v-if="deliveries?.length && exportReadyCount <= 30">
                   <NuxtLink
                     :to="`/ozon/deliveries/export${
                       dateRange.length
