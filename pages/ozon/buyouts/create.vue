@@ -165,12 +165,12 @@ async function openChecksModal() {
       errorMsg = "Не у всех товаров указаны даты выкупов";
     }
     if (
-        !item.searchQuery[0].value &&
-        (!item.category || !item.category.length)
-      ) {
-        valid = false;
-        errorMsg = "Не у всех товаров указан поисковый запрос или категория";
-      }
+      !item.searchQuery[0].value &&
+      (!item.category || !item.category.length)
+    ) {
+      valid = false;
+      errorMsg = "Не у всех товаров указан поисковый запрос или категория";
+    }
     // if (!item.discountPrice || !item.discountRequestPrice) {
     // valid = false
     // errorMsg = 'Не у всех товаров указана скидка'
@@ -181,7 +181,7 @@ async function openChecksModal() {
     notify({
       title: "Что-то пошло не так",
       text: errorMsg,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
@@ -209,14 +209,14 @@ async function createBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     isCreateButtonDisabled.value = false;
   } else if (data.value!.status === "ok") {
     notify({
       title: "Выкуп успешно создан",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
 
@@ -246,7 +246,7 @@ async function getPickpoints() {
     notify({
       title: "Что-то пошло не так",
       text: e?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
@@ -287,7 +287,7 @@ async function getFFPickpoints(date: Date = new Date()) {
     notify({
       title: "Что-то пошло не так",
       text: e?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
@@ -333,7 +333,7 @@ async function createTemplate() {
     store.createProducts = [];
     notify({
       title: "Шаблон выкупа создан",
-     group: "success",
+      group: "success",
     });
     window.location.reload();
 
@@ -434,7 +434,6 @@ const addressForm = reactive({
   phone: "",
 });
 
-
 const prices = ref({
   minPrice: 50,
   price: 10,
@@ -530,7 +529,7 @@ getCategories();
             <Icon
               class="absolute right-2 mb-2 md:mb-0 p-2 text-base-content text-opacity-50"
               name="tabler:search"
-            size="20"
+              size="20"
               @click="codeInput.focus()"
             />
           </div>
@@ -583,7 +582,7 @@ getCategories();
             :index="index"
             :open-discount="openDiscount"
             :open-promo="openPromo"
-              :categories="categories"
+            :categories="categories"
             @point-modal-open="pointModalOpen"
             @rule-modal-open="ruleModalOpen"
             @remove-discount="removeDiscount"
@@ -658,9 +657,7 @@ getCategories();
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-                <th
-                  class="font-normal text-base-content"
-                >
+                <th class="font-normal text-base-content">
                   <div class="flex justify-center items-center gap-1">
                     <span>Категории</span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
@@ -709,7 +706,7 @@ getCategories();
                 :open-discount="openDiscount"
                 :open-promo="openPromo"
                 :loading="!pickpoints?.length"
-                  :categories="categories"
+                :categories="categories"
                 @rule-modal-open="ruleModalOpen"
                 @point-modal-open="pointModalOpen"
                 @remove-discount="removeDiscount"

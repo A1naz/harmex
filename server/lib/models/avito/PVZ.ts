@@ -7,6 +7,7 @@ const PVZSchema = new Schema({
   name: { type: String },
   isOwn: { type: Boolean },
   status: { type: String },
+  address: { type: String },
 })
 
 export const PVZ = PVZOzonConnection.model('avitopvz', PVZSchema, 'avitopvz')

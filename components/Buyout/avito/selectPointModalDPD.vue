@@ -179,7 +179,7 @@ onMounted(async () => {
             data: {
               lt: point.lt,
               lg: point.lg,
-              a: "Загрузка...",
+              a: point.address ? point.address : "Загрузка...",
               id: point.id,
             },
           },
@@ -209,7 +209,8 @@ onMounted(async () => {
       await getAddressText(
         obj.properties.data.lt,
         obj.properties.data.lg,
-        obj.properties.data.id
+        obj.properties.data.id,
+        obj.properties.data.a
       );
 
       obj.properties.data.a = addressText.value;
@@ -270,7 +271,18 @@ onKeyStroke("Escape", (e) => {
   emit("close");
 });
 
-async function getAddressText(lt: number, lg: number, id: string) {
+async function getAddressText(
+  lt: number,
+  lg: number,
+  id: string,
+  address: string
+) {
+
+  if (address && address !== "Загрузка...") {
+    lastAddress.value = { lt, lg, id };
+    addressText.value = address;
+    return addressText.value;
+  }
   addressText.value = "Загрузка...";
 
   // @ts-ignore

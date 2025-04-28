@@ -16,6 +16,7 @@ export default eventHandler(async (event) => {
       name: point.name,
       lt: point.coordinates.lat,
       lg: point.coordinates.lon,
+      address: point.address,
     };
   });
 

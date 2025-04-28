@@ -6,6 +6,7 @@ const PVZSchema = new Schema({
   coordinates: { type: Object },
   isOwn: { type: Boolean },
   status: { type: String },
+  address: { type: String },
 })
 
 export const PVZ = PVZOzonConnection.model('ympvz', PVZSchema, 'ympvz')

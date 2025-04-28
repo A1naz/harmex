@@ -23,13 +23,14 @@ function closeModal() {
 }
 const loading = ref(false);
 const map = ref();
-const addressText = ref("sadsd");
+const addressText = ref("Загрузка...");
 const lastAddress = ref({
   lt: 0,
   lg: 0,
   id: "",
 });
 function handleSelect(address: string) {
+  
   if (
     props.pickpoints.findIndex(
       (item: any) =>
@@ -37,7 +38,7 @@ function handleSelect(address: string) {
     ) === -1
   ) {
     return notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
       text: "Этот пункт выдачи не найден",
     });
@@ -179,7 +180,7 @@ onMounted(async () => {
             data: {
               lt: point.lt,
               lg: point.lg,
-              a: "Загрузка...",
+              a: point.address ? point.address : "Загрузка...",
               id: point.id,
             },
           },
@@ -209,7 +210,8 @@ onMounted(async () => {
       await getAddressText(
         obj.properties.data.lt,
         obj.properties.data.lg,
-        obj.properties.data.id
+        obj.properties.data.id,
+        obj.properties.data.a
       );
 
       obj.properties.data.a = addressText.value;
@@ -270,7 +272,18 @@ onKeyStroke("Escape", (e) => {
   emit("close");
 });
 
-async function getAddressText(lt: number, lg: number, id: string) {
+async function getAddressText(
+  lt: number,
+  lg: number,
+  id: string,
+  address: string
+) {
+
+  if (address && address !== "Загрузка...") {
+    lastAddress.value = { lt, lg, id };
+    addressText.value = address;
+    return addressText.value;
+  }
   addressText.value = "Загрузка...";
 
   // @ts-ignore

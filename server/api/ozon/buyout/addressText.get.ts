@@ -6,6 +6,7 @@ export default eventHandler(async (event) => {
   if (!user) return sendRedirect(event, "/auth", 302);
 
   const { lt, lg } = getQuery(event);
+
   const url =
     "http://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address";
   const token = `Token ${config.DADATA_TOKEN}`;
