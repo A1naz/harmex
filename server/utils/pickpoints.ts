@@ -104,6 +104,7 @@ export async function createOzonPickpointsFile() {
       id: point.pointId,
       lt: point.coordinates.lat,
       lg: point.coordinates.lon,
+      address: point.address,
     }
   })
 
@@ -124,6 +125,7 @@ export async function createYandexMarketPickpointsFile() {
       id: point.pointId,
       lt: point.coordinates.lat,
       lg: point.coordinates.lon,
+      address: point.address,
     }
   })
 
