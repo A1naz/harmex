@@ -464,7 +464,7 @@ const siteUrl = config.public.siteUrl;
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
-                <li v-if="deliveries?.length && exportReadyCount <= 30">
+                <li v-if="deliveries?.length && exportReadyCount <= 50">
                   <NuxtLink
                     :to="`/wildberries/deliveries/export${
                       dateRange.length

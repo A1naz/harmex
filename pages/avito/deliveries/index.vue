@@ -458,7 +458,7 @@ getExportReadyCount();
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
-              <li v-if="deliveries?.length && exportReadyCount <= 30">
+              <li v-if="deliveries?.length && exportReadyCount <= 50">
                   <NuxtLink
                     :to="`/avito/deliveries/export${
                       dateRange.length
