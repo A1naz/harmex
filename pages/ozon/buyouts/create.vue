@@ -164,10 +164,13 @@ async function openChecksModal() {
       valid = false;
       errorMsg = "Не у всех товаров указаны даты выкупов";
     }
-    if (!item.searchQuery[0].value) {
-      valid = false;
-      errorMsg = "Не у всех товаров указан поисковый запрос";
-    }
+    if (
+        !item.searchQuery[0].value &&
+        (!item.category || !item.category.length)
+      ) {
+        valid = false;
+        errorMsg = "Не у всех товаров указан поисковый запрос или категория";
+      }
     // if (!item.discountPrice || !item.discountRequestPrice) {
     // valid = false
     // errorMsg = 'Не у всех товаров указана скидка'
