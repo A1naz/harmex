@@ -165,6 +165,8 @@ export default eventHandler(async (event) => {
       promocode: product.promoCode,
       isPromocodeEnabled:
         product.promoCode && product.promoCode !== "" ? true : false,
+        categories: product.category,
+        isCategoriesEnabled: product.category && product.category.length > 0 ? true : false,
     });
 
     await buyout.save();

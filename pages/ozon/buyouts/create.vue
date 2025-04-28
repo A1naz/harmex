@@ -455,6 +455,17 @@ const summ = computed(() => {
     };
   }
 });
+
+const categories = ref([]);
+
+async function getCategories() {
+  const { data }: any = await useFetch("/api/ozon/product/categories");
+  if (data.value) {
+    categories.value = data.value;
+  }
+}
+
+getCategories();
 </script>
 
 <template>
@@ -569,6 +580,7 @@ const summ = computed(() => {
             :index="index"
             :open-discount="openDiscount"
             :open-promo="openPromo"
+              :categories="categories"
             @point-modal-open="pointModalOpen"
             @rule-modal-open="ruleModalOpen"
             @remove-discount="removeDiscount"
@@ -645,6 +657,14 @@ const summ = computed(() => {
                 </th>
                 <th
                   class="font-normal text-base-content"
+                >
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Категории</span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+                  </div>
+                </th>
+                <th
+                  class="font-normal text-base-content"
                   @click="openInfoModal('search')"
                 >
                   <div class="flex justify-center items-center gap-1">
@@ -686,6 +706,7 @@ const summ = computed(() => {
                 :open-discount="openDiscount"
                 :open-promo="openPromo"
                 :loading="!pickpoints?.length"
+                  :categories="categories"
                 @rule-modal-open="ruleModalOpen"
                 @point-modal-open="pointModalOpen"
                 @remove-discount="removeDiscount"

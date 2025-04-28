@@ -76,6 +76,7 @@ const isAddBtnDisabled = computed(() => props.queries.length >= 5);
     <div class="dropdown w-full">
       <label tabindex="0"
         ><input
+          :disabled="store.createProducts[props.productIndex].category"
           :value="query.value"
           :class="{
             'input-error': query.error,
@@ -106,7 +107,9 @@ const isAddBtnDisabled = computed(() => props.queries.length >= 5);
       class="absolute right-8 loading loading-spinner loading-xs p-2"
     /> -->
     <button
-      :disabled="isAddBtnDisabled"
+      :disabled="
+        isAddBtnDisabled || store.createProducts[props.productIndex].category
+      "
       v-if="index === 0"
       class="absolute right-0 btn btn-ghost btn-sm btn-square"
       @click="emit('add')"
