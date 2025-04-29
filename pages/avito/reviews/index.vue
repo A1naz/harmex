@@ -6,7 +6,7 @@ const { notify } = useNotification();
 definePageMeta({
   layout: "app",
   middleware: "auth",
-  title: "Отзывы Flowwow",
+  title: "Отзывы Avito",
 });
 
 const route = useRoute();
@@ -78,7 +78,7 @@ async function fetchData() {
     ? SelectOptions.uuidBuyout
     : SelectOptions.idReview;
 
-  const response: any = await $fetch(`/api/flowwow/review/${endpoint.value}`, {
+  const response: any = await $fetch(`/api/avito/review/${endpoint.value}`, {
     method: "GET",
     params: {
       skip: skip.value,
@@ -115,7 +115,7 @@ function changeTab(tab: any) {
   skip.value = 0;
   end.value = false;
   currentTab.value = tab.value;
-  router.push(`/flowwow/reviews?status=${tab.value}`);
+  router.push(`/avito/reviews?status=${tab.value}`);
   fetchData();
 }
 
@@ -180,7 +180,7 @@ function openRemoveReviewModal(uuid: any) {
 }
 
 async function removeReview() {
-  const { data, error } = await useFetch("/api/flowwow/review/delete", {
+  const { data, error } = await useFetch("/api/avito/review/delete", {
     method: "POST",
     query: {
       id: uuidForRemove.value,
@@ -230,7 +230,7 @@ onMounted(() => {
     currentTab.value = route.query.status.toString();
   } else {
     currentTab.value = "all";
-    router.push("/flowwow/reviews?status=all");
+    router.push("/avito/reviews?status=all");
   }
   fetchData();
 });
@@ -241,7 +241,7 @@ const customLinks = tabs.map((filter) => ({
 }));
 
 async function resumeStatus(item: any) {
-  const { data, error } = await useFetch(`/api/flowwow/review/resume`, {
+  const { data, error } = await useFetch(`/api/avito/review/resume`, {
     method: "POST",
     body: {
       item,
@@ -299,7 +299,7 @@ const isChecked = ref(false);
 const manualModal = ref(false);
 
 function toggleCheckbox() {
-  const platform = "flowwow";
+  const platform = "avito";
   const type = "reviews";
   const storedValue = localStorage.getItem("modalState");
   const modalState = storedValue ? JSON.parse(storedValue) : {};
@@ -318,7 +318,7 @@ onMounted(() => {
   const storedValue = localStorage.getItem("modalState");
   const modalState = storedValue ? JSON.parse(storedValue) : {};
 
-  const platform = "flowwow";
+  const platform = "avito";
   const type = "reviews";
   isChecked.value = modalState[platform]?.[type] || false;
   manualModal.value = !isChecked.value;
@@ -358,7 +358,7 @@ async function selectFilterDate(e: any) {
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink to="/catalog/flowwow" class="cursor-pointer text-[#909090]">
+          <NuxtLink to="/catalog/avito" class="cursor-pointer text-[#909090]">
             Avito
           </NuxtLink>
         </li>
@@ -375,7 +375,7 @@ async function selectFilterDate(e: any) {
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
           <button
             class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
-            @click="copyToClipboard(`${siteUrl}/flowwow/reviews`)"
+            @click="copyToClipboard(`${siteUrl}/avito/reviews`)"
           >
             <Icon name="ph:share-fat-fill" size="20" />
           </button>
@@ -415,7 +415,7 @@ async function selectFilterDate(e: any) {
       >
         <div class="export lg:absolute right-0 top-0">
           <ExportXls
-            api="/api/flowwow/review/export"
+            api="/api/avito/review/export"
             file-name="HARMEX Доступные отзывы"
             :is-visible="true"
           />
@@ -517,7 +517,7 @@ async function selectFilterDate(e: any) {
           v-if="currentTab === 'available' || currentTab === 'all'"
           class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
         >
-          <ReviewFlowwowCard
+          <ReviewAvitoCard
             v-for="(review, index) of availableReviews"
             :key="index"
             :index="index"
@@ -533,7 +533,7 @@ async function selectFilterDate(e: any) {
           v-if="currentTab !== 'available'"
           class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
         >
-          <ReviewFlowwowPublishedCard
+          <ReviewAvitoPublishedCard
             v-for="(review, index) of reviews"
             :key="index"
             :index="index"
@@ -562,7 +562,7 @@ async function selectFilterDate(e: any) {
       <Hero v-else />
     </div>
 
-    <ReviewFlowwowModal
+    <ReviewAvitoModal
       v-if="modalOpen"
       :review="selectedArticle"
       :deliveryid="selectedDelivery"
@@ -621,221 +621,12 @@ async function selectFilterDate(e: any) {
         </div>
       </div>
     </div>
-    <ManualModal
-      :show="manualModal"
-      @close="manualModal = false"
-      :is-checked="isChecked"
-      @checkbox-toggle="toggleCheckbox"
-    >
-      <h3 class="text-xl font-bold mb-2 flex items-center gap-1">
-        Как опубликовать отзыв?
-      </h3>
-      <p class="my-4">
-        Публикация отзывов на выполненные заказы — важный этап для поддержания
-        рейтинга вашего товара и нейтрализации негативных отзывов.
-      </p>
-      <p class="my-4">
-        Для этого используйте меню <strong>"Отзывы"</strong> в вашем личном
-        кабинете. Ниже приведена подробная инструкция с учетом всех нюансов.
-      </p>
-      <p class="divider"></p>
-      <p class="mt-4 mb-2"><strong>Переход в меню "Отзывы"</strong></p>
-      <ul class="list-disc ml-10">
-        <li class="mt-1">Войдите в личный кабинет Harmex.</li>
-        <li class="mt-1">Перейдите в раздел <strong>"Отзывы"</strong>.</li>
-        <li class="mt-1">
-          Здесь вы можете управлять всеми отзывами: планировать их публикацию,
-          отслеживать статусы и редактировать данные.
-        </li>
-      </ul>
-
-      <nuxt-img
-        alt=""
-        class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/flowwow/buyout2_3.png"
-      />
-      <p class="divider"></p>
-      <p class="mt-4 mb-2"><strong>Планирование публикации отзывов</strong></p>
-      <ul class="list-disc ml-10">
-        <li class="mt-1">
-          В меню <strong>"Отзывы"</strong> вы можете запланировать публикацию
-          отзывов <strong>на недели и месяцы вперед.</strong>
-        </li>
-        <li class="mt-1">
-          Это помогает поддерживать рейтинг товара и перекрывать негативные
-          отзывы.
-        </li>
-      </ul>
-      <p class="divider"></p>
-      <p class="mt-4 mb-2"><strong>Публикация отзыва</strong></p>
-      <p class="mt-4 mb-2">
-        Чтобы опубликовать отзыв, выполните следующие шаги:
-      </p>
-      <ul class="list-decimal ml-10">
-        <li class="mt-1">
-          <strong>Выберите доступный <strong>отзыв</strong></strong>
-          <ul class="list-disc ml-6">
-            <li class="mt-1">
-              В меню <strong>"Отзывы"</strong> найдите заказ, по которому хотите
-              оставить отзыв.
-            </li>
-          </ul>
-        </li>
-
-        <li class="mt-1">
-          <strong>Выберите нужный заказ</strong>
-          <ul class="list-disc ml-6">
-            <li class="mt-1">Нажмите на заказ, чтобы открыть детали.</li>
-          </ul>
-        </li>
-        <li class="mt-1">
-          <strong>Заполните поля данными</strong>
-          <ul class="list-disc ml-6">
-            <li class="mt-1">Введите текст отзыва.</li>
-            <li class="mt-1">Укажите оценку (например, 5 звезд).</li>
-            <li class="mt-1">Добавьте фото или видео, если это необходимо.</li>
-          </ul>
-        </li>
-        <li class="mt-1">
-          <strong>Запланируйте дату и время публикации</strong>
-          <ul class="list-disc ml-6">
-            <li class="mt-1">
-              Выберите удобную дату и время для публикации отзыва.
-            </li>
-            <li class="mt-1">
-              Это позволяет равномерно распределять отзывы и поддерживать
-              активность.
-            </li>
-          </ul>
-        </li>
-        <li class="mt-1">
-          <strong>Нажмите кнопку "Опубликовать"</strong>
-          <ul class="list-disc ml-6">
-            <li class="mt-1">
-              После заполнения всех данных нажмите кнопку
-              <strong>"Опубликовать"</strong>.
-            </li>
-            <li class="mt-1">Отзыв будет отправлен на модерацию.</li>
-          </ul>
-        </li>
-      </ul>
-      <p class="divider"></p>
-      <p class="my-4"><strong>Статусы отзывов</strong></p>
-      <ul class="list-decimal ml-10">
-        <li class="mt-1">
-          <strong>Активен</strong>
-          <ul class="list-disc ml-6">
-            <li class="mt-1">
-              Отзыв взят в работу и ожидает своего окна для прохождения
-              процедуры публикации.
-            </li>
-          </ul>
-        </li>
-        <li class="mt-1">
-          <strong>В работе</strong>
-          <ul class="list-disc ml-6">
-            <li class="mt-1">
-              Отзыв проходит модерацию на маркетплейсе и ожидает решения по
-              публикации.
-            </li>
-          </ul>
-        </li>
-        <li class="mt-1">
-          <strong>Опубликован</strong>
-          <ul class="list-disc ml-6">
-            <li class="mt-1">
-              Отзыв успешно прошел модерацию и опубликован в списке отзывов.
-            </li>
-            <li class="mt-1">
-              Списание за оказанную услугу вы найдете в меню
-              <strong>"Финансы"</strong>.
-            </li>
-          </ul>
-        </li>
-        <li class="mt-1">
-          <strong>Отменен</strong>
-          <ul class="list-disc ml-6">
-            <li class="mt-1">
-              Отзыв не прошел модерацию и убран из списка ожидания.
-            </li>
-            <li class="mt-1">
-              Услуга в этом случае <strong>не оплачивается</strong>.
-            </li>
-          </ul>
-        </li>
-      </ul>
-      <p class="divider"></p>
-      <p class="my-4"><strong>Важные примечания</strong></p>
-      <ul class="list-disc ml-10">
-        <li class="mt-1">
-          <strong>Планируйте отзывы заранее.</strong>
-          <br />
-          Это помогает поддерживать равномерный поток положительных отзывов и
-          улучшает рейтинг товара.
-        </li>
-        <li class="mt-1">
-          <strong> Следите за статусами. </strong>
-          <br />Регулярно проверяйте статусы отзывов, чтобы оперативно
-          реагировать на изменения.
-        </li>
-        <li class="mt-1">
-          <strong>Используйте фото и видео. </strong>
-          <br />Отзывы с мультимедиа имеют больший вес и привлекают больше
-          внимания покупателей.
-        </li>
-        <li class="mt-1">
-          <strong> Избегайте шаблонных текстов.</strong>
-          <br />Уникальные и подробные отзывы вызывают больше доверия.
-        </li>
-      </ul>
-
-      <p class="divider"></p>
-      <p class="my-4"><strong>Пример работы с меню "Отзывы"</strong></p>
-      <ul class="list-decimal ml-10">
-        <li>
-          Вы заходите в меню <strong>"Отзывы"</strong> и видите список заказов,
-          готовых к отзывам.
-        </li>
-        <li>Выбираете заказ, по которому хотите оставить отзыв.</li>
-        <li>
-          Заполняете текст отзыва, ставите оценку 5 звезд и добавляете фото
-          товара.
-        </li>
-        <li>Планируете публикацию на удобную дату и время.</li>
-        <li>Нажимаете кнопку <strong>"Опубликовать".</strong></li>
-        <li>
-          Отслеживаете статус отзыва: сначала <strong>"Активен"</strong>, затем
-          <strong>"В работе"</strong>, и, наконец,
-          <strong>"Опубликован"</strong>.
-        </li>
-        <li>
-          Если отзыв отклонен (статус <strong>"Отменен"</strong>>), то ваша
-          заявка не прошла модерацию и попытка опубликовать отзыв исчерпано
-          согласно правилам маркетплейса.
-        </li>
-      </ul>
-      <p class="divider"></p>
-      <p class="my-4"><strong>Рекомендации</strong></p>
-      <ul class="list-decimal ml-10">
-        <li>
-          Публикуйте отзывы регулярно, чтобы поддерживать высокий рейтинг
-          товара.
-        </li>
-        <li>
-          Используйте планирование для равномерного распределения отзывов.
-        </li>
-        <li>
-          В случае проблем с публикацией отзыва обращайтесь в службу заботы
-          Harmex.
-        </li>
-      </ul>
-    </ManualModal>
     <LogModal
       :info="selectedReview"
       :state="logModal"
       @close="logModal = false"
     />
-    <ReviewFlowwowInfoModal
+    <ReviewAvitoInfoModal
       :info="selectedReview"
       :state="infoModal"
       @close="infoModal = false"

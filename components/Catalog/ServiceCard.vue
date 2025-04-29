@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MenuBuilder from "~/server/utils/menuBuilder";
-const { user } = useUserSession();
+const { user }: any = useUserSession();
 
 defineProps({
   item: { type: Object, required: true },
@@ -23,13 +23,13 @@ async function vote(slug: string, mp: string) {
   });
   if (response.status === "ok") {
     notify({
-     group: "success",
+      group: "success",
       title: "Успешно",
       text: "Вы успешно проголосовали за добавление маркетплейса",
     });
   } else {
     notify({
-     group: "error",
+      group: "error",
       title: "Ошибка",
       text: response.message,
     });
@@ -123,7 +123,10 @@ defineEmits(["setFavourites"]);
       </p>
     </div>
     <NuxtLink
-      v-if="!item.items[index].disabled"
+      v-if="
+        !item.items[index].disabled ||
+        (user.username == 'test' && item.items[index].test == true)
+      "
       :to="
         checkAccess(item.items[index])
           ? `/${item.slug}${item.items[index].path}`
@@ -134,7 +137,10 @@ defineEmits(["setFavourites"]);
       Перейти
     </NuxtLink>
     <button
-      v-if="item.items[index].disabled"
+      v-if="
+        item.items[index].disabled &&
+        (user.username !== 'test' || item.items[index].test !== true)
+      "
       @click="vote(`${item.items[index].path}`, item.slug)"
       class="z-10 px-5 py-2 bg-primary text-xl rounded-lg text-white text-[16px] absolute font-medium cursor-pointer -bottom-[5px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 active:shadow-md"
     >
@@ -148,7 +154,11 @@ defineEmits(["setFavourites"]);
     </span>
 
     <div
-      v-if="item.items[index].disabled || !checkAccess(item.items[index])"
+      v-if="
+        (item.items[index].disabled || !checkAccess(item.items[index])) &&
+        user.username !== 'test' &&
+        item.items[index].test == true
+      "
       class="absolute inset-0 bg-black opacity-70 pointer-events-none rounded-lg"
     />
   </div>

@@ -11,9 +11,11 @@ export default eventHandler(async (event) => {
   const pipeLine: any[] = [
     {
       $match: {
-        user: new ObjectId(user._id),
+        user: user._id,
         reviewed: { $ne: true },
-        'statusdelivery.status': 'Получено',
+        'statusdelivery.status': {
+          $regex: '^(Получен|Доставлен|Получено)$',
+        },
         status: 'completed',
       },
     },
@@ -49,16 +51,18 @@ export default eventHandler(async (event) => {
         productimage: '$buyout.product.image',
         gender: ['$data8', '$buyout.gender'],
         sizeparam: '$buyout.sizeparam',
+        url: '$buyout.url',
       },
     },
     {
       $group: {
-        _id: '$article',
+        _id: '$uuidbuyout',
         article: { $last: '$article' },
         lastUpdated: { $last: '$updatedAt' },
         countAvailable: { $sum: 1 },
         productimage: { $addToSet: '$productimage' },
         productname: { $addToSet: '$productname' },
+        url: { $addToSet: '$url' },
         delivs: {
           $push: {
             delivId: '$_id',
@@ -83,7 +87,7 @@ export default eventHandler(async (event) => {
     if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
       searchParse = { uuidbuyout: searchParse.uudidBuyout.replace('#', '') };
       pipeLine.splice(3, 0, { $match: { ...searchParse } }) // after $project
-    }  else {
+    } else {
       if (Object.keys(searchParse)[0] === 'article') {
         searchParse.article = Number(searchParse.article);
       }
@@ -93,6 +97,7 @@ export default eventHandler(async (event) => {
 
   // if (skipA > 0) pipeLine.push({ $skip: skipA })
   // if (limitA > 0) pipeLine.push({ $limit: limitA })
+
 
   const readyForReview = await Delivery.aggregate(pipeLine)
   if (!readyForReview) return []
@@ -118,18 +123,16 @@ export default eventHandler(async (event) => {
     ['male', 'Мужской'],
   ])
   const sex = (genders: string[]): string => {
-    for (const gen of genders) {
-      if (gen !== null) {
-        let foundGen = genderMap.get(gen.toLowerCase())
-        if (foundGen) return foundGen
-      }
-    }
+    // for (const gen of genders) {
+    //   console.log(gen);
+
+    //   let foundGen = genderMap.get(gen.toLowerCase())
+    //   if (foundGen) return foundGen
+    // }
     return 'Нет'
   }
   const formated = readyForReview.map((deliveryForReview: any) => {
-    const countSoon = soonForReview.filter(
-      (sfr) => sfr._id == deliveryForReview.article
-    )
+    const countSoon = soonForReview.filter((sfr) => sfr._id == deliveryForReview.article)
     return {
       ...deliveryForReview,
       countSoon: countSoon.length > 0 ? countSoon[0].count : 0,
@@ -142,5 +145,7 @@ export default eventHandler(async (event) => {
     }
   })
 
-  return formated
+  return {
+    availableReviews: formated
+  }
 })
