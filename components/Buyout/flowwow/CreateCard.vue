@@ -397,7 +397,7 @@ const selectCategory = (categories: any, index: number) => {
               @remove="removeSearchQuery"
             />
           </div>
-          <div class="text-md text-gray-500 mb-1 mt-2">Категории:</div>
+          <!-- <div class="text-md text-gray-500 mb-1 mt-2">Категории:</div>
           <div class="w-full  flex gap-2" v-if="user.username == 'test'">
         <details
           class="dropdown disabled"
@@ -457,7 +457,7 @@ const selectCategory = (categories: any, index: number) => {
       </div>
       <div v-else>
         <button class="btn" disabled>Выберите категорию</button>
-      </div>
+      </div> -->
         </div>
         <div class="w-[60%] flex flex-col gap-2">
           <BuyoutAvitoCreateSearchQueriesRegion

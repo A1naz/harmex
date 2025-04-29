@@ -125,7 +125,7 @@ async function openChecksModal() {
         !item.category.length)
       ) {
         valid = false;
-        errorMsg = "Не у всех товаров указан поисковый запрос или категория";
+        errorMsg = "Не у всех товаров указан поисковый запрос";
       }
       if (!item.selectedSize) item.selectedSize = "none";
     }
@@ -1572,12 +1572,12 @@ const categories = ref([
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-                <th class="font-normal text-base-content">
+                <!-- <th class="font-normal text-base-content">
                   <div class="flex justify-center items-center gap-1">
                     <span>Категории</span>
-                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+
                   </div>
-                </th>
+                </th> -->
                 <th
                   class="font-normal text-base-content"
                   @click="openInfoModal('search')"
