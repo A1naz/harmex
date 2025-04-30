@@ -434,7 +434,7 @@ const selectCategory = (categories: any, index: number) => {
       </div>
       <div>
         <div class="text-md text-gray-500 mb-1">Категория:</div>
-        <div class="w-full  flex gap-2" v-if="user.username == 'test'">
+        <div class="w-full  flex gap-2">
         <details
           class="dropdown disabled"
           v-if="
@@ -490,9 +490,6 @@ const selectCategory = (categories: any, index: number) => {
         >
           <Icon name="material-symbols:close-rounded" size="18" />
         </button>
-      </div>
-      <div v-else>
-        <button class="btn  btn-sm" disabled>Выберите категорию</button>
       </div>
       </div>
       <!-- <div class="flex justify-between items-center">
