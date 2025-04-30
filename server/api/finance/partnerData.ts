@@ -7,7 +7,7 @@ export default async function (user: any, itemsPerPage?: number, page?: number, 
 
   const format = res.map((el: any) => {
     return {
-      summ: el.amount,
+      summ: el.amount.toString(),
       date: el.date,
       source: el.type,
       service: 'Вывод с партнерки',

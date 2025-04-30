@@ -154,13 +154,12 @@ async function updateTableData() {
         { value: "source", label: "Источник" },
         { value: "service", label: "Услуга" },
       ];
+      console.log(fetchedData)
       tableData.value = fetchedData.value.map((item: any) => ({
         summ: item.summ,
         date: item.date,
         source: item.source,
-        service: item.service,
-        orderId: item.orderId,
-        article: item.article,
+        service: item.service
       }));
       loading.value = false;
       break;
@@ -373,6 +372,7 @@ onMounted(() => {
         @swap-page="(page: number) => { currentPage = page}"
         @change-pagination="(itemsPerPage: number) => { limit = itemsPerPage}"
       />
+      {{ tableData }}
     </div>
     <div class="gap-4 w-full flex-1 m-4 bg-white rounded-lg md:hidden">
       <div class="flex flex-col w-full pr-8 ml-4">
