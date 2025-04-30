@@ -10,6 +10,7 @@ const ReviewSchema = new Schema({
   positive: { type: String, default: '' },
   negative: { type: String, default: '' },
   date: { type: Date, required: true },
+  publishDate: { type: Date, required: false },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   delivery: { type: Schema.Types.ObjectId, ref: 'Delivery', required: true },
   images: { type: Array, required: false },

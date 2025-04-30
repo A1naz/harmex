@@ -1,13 +1,13 @@
-import { Delivery } from '@/server/lib/models/flowwow/Delivery'
-import { Buyout } from '@/server/lib/models/flowwow/Buyout'
-import { Review } from '@/server/lib/models/flowwow/Review'
-import { DocuemntEnum } from '~/data/enums'
-import { v4 as uuid } from 'uuid'
-const config = useRuntimeConfig()
+import { Delivery } from "@/server/lib/models/flowwow/Delivery";
+import { Buyout } from "@/server/lib/models/flowwow/Buyout";
+import { Review } from "@/server/lib/models/flowwow/Review";
+import { DocuemntEnum } from "~/data/enums";
+import { v4 as uuid } from "uuid";
+const config = useRuntimeConfig();
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
   const {
     buyoutuuid,
@@ -20,15 +20,15 @@ export default eventHandler(async (event) => {
     publicComment,
     hiddenComment,
     date,
-  } = await readBody(event)
+  } = await readBody(event);
 
   if (publicComment) {
     if (publicComment.length < 10 || publicComment.length > 1000) {
       throw createError({
         statusCode: 400,
         message:
-          'Публичный отзыв должен быть длиннее 10 символов и не больше 1000',
-      })
+          "Публичный отзыв должен быть длиннее 10 символов и не больше 1000",
+      });
     }
   }
   if (hiddenComment) {
@@ -36,38 +36,41 @@ export default eventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         message:
-          'Скрытый комментарий должен быть длиннее 10 символов и не больше 1000',
-      })
+          "Скрытый комментарий должен быть длиннее 10 символов и не больше 1000",
+      });
     }
   }
 
-  const balanceIsExist = await checkBalance(user, { buyoutuuid, video: false, mp: 'flowwow' }, 'reviews')
+  const balanceIsExist = await checkBalance(
+    user,
+    { buyoutuuid, video: false, mp: "flowwow" },
+    "reviews"
+  );
 
   if (!balanceIsExist) {
     throw createError({
       statusCode: 400,
-      message:
-        `Недостаточно средств для совершения отзыва`,
-    })
+      message: `Недостаточно средств для совершения отзыва`,
+    });
   }
 
-  const buyout = await Buyout.findOne({ uuid: buyoutuuid })
+  const buyout = await Buyout.findOne({ uuid: buyoutuuid });
   if (!buyout) {
     return createError({
       statusCode: 400,
-      message: 'Выкуп не найден',
-    })
+      message: "Выкуп не найден",
+    });
   }
   const delivery = await Delivery.findOne({
     _id: deliveryid,
     idbuyout: buyout._id,
     reviewed: { $ne: true },
-  })
+  });
   if (!delivery) {
     return createError({
       statusCode: 400,
-      message: 'Доставка не найдена',
-    })
+      message: "Доставка не найдена",
+    });
   }
 
   // const images = photos.map((photo: any) =>
@@ -88,23 +91,24 @@ export default eventHandler(async (event) => {
     publicComment,
     hiddenComment,
     date,
+    publishDate: date,
     user,
     delivery,
     idDelivery: delivery.idDelivery,
-    status: 'waiting',
+    status: "waiting",
     recipientphone: delivery.recipientphone,
     uuid: uuid(),
-  })
-  const res = await review.save()
-  delivery.reviewed = true
-  await delivery.save()
+  });
+  const res = await review.save();
+  delivery.reviewed = true;
+  await delivery.save();
 
   await userLog(event, {
     documentType: DocuemntEnum.Review,
     documentId: res._id,
-  })
+  });
 
   return {
-    message: 'Отзыв успешно добавлен',
-  }
-})
+    message: "Отзыв успешно добавлен",
+  };
+});

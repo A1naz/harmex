@@ -78,6 +78,7 @@ export default eventHandler(async (event) => {
     rating,
     text,
     date,
+    publishDate: date,
     user,
     delivery,
     images: photos.map((photo: any) => photo.url),

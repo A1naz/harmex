@@ -70,6 +70,7 @@ export default eventHandler(async (event) => {
     rating: 5,
     text,
     date,
+    publishDate: date,
     user,
     delivery,
     idDelivery: delivery.idDelivery,
