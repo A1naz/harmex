@@ -521,7 +521,7 @@ const handleMouseUp = (event: any) => {
         >
           {{
             `${defaultDateShort(rev.updatedAt)} ${
-              rev.sex == "Нет" ? "" : " - пол: " + rev.sex
+              rev.sex == "Нет" ? "" : " - получатель: " + rev.sex
             } - размер: ${rev.sizeparam} - цена: ${rev.pricebuy}р.`
           }}
         </option>

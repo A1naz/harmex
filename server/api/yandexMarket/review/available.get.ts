@@ -38,7 +38,7 @@ export default eventHandler(async (event) => {
     }
   }
   const deliveries = await Delivery.find(filter)
-    .select('_id article updatedAt pricebuy idbuyout uuidbuyout data8')
+    .select('_id article updatedAt pricebuy idbuyout uuidbuyout data8 recipient')
     .sort({ _id: -1 })
 
     .lean()
@@ -84,6 +84,7 @@ export default eventHandler(async (event) => {
       buyoutId: delivery.uuidbuyout,
       gender: [delivery.data8, buyout?.gender],
       sizeparam: buyout?.sizeparam,
+      recipient: delivery.recipient,
     })
 
     return acc
@@ -95,21 +96,18 @@ export default eventHandler(async (event) => {
     productname: Array.from(article.productname),
   })).sort((a, b) => b.countAvailable - a.countAvailable)
 
-  const genderMap = new Map<string, string>([
-    ['female', 'Женский'],
-    ['male', 'Мужской'],
-  ])
+  // const genderMap = new Map<string, string>([
+  //   ['female', 'Женский'],
+  //   ['male', 'Мужской'],
+  // ])
 
-  const sex = (genders: string[]): string => {
-    for (const gen of genders) {
-      if (gen && typeof gen === 'string') {
-        const foundGen = genderMap.get(gen.toLowerCase())
-        if (foundGen)
-          return foundGen
-      }
+  const sex = (gender: string): string => {
+    if (gender && gender.length > 0) {
+      return gender.split(" ")[0];
     }
-    return 'Нет'
-  }
+
+    return "Нет";
+  };
 
   const formated = result.map((deliveryForReview: any) => {
     return {

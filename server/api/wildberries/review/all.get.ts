@@ -197,7 +197,7 @@ export default eventHandler(async (event) => {
     }
   }
   const deliveriesAvailable = await Delivery.find(filter)
-    .select("_id article updatedAt pricebuy idbuyout uuidbuyout data8")
+    .select("_id article updatedAt pricebuy idbuyout uuidbuyout data8 recipient")
     .sort({ _id: -1 })
     .lean();
 
@@ -241,7 +241,7 @@ export default eventHandler(async (event) => {
         pricebuy: delivery.pricebuy,
         updatedAt: delivery.updatedAt,
         buyoutId: delivery.uuidbuyout,
-        gender: [delivery.data8, buyout?.gender],
+        gender: delivery.recipient,
         sizeparam: buyout?.sizeparam,
       });
 
@@ -258,20 +258,20 @@ export default eventHandler(async (event) => {
     }))
     .sort((a, b) => b.countAvailable - a.countAvailable);
 
-  const genderMap = new Map<string, string>([
-    ["female", "Женский"],
-    ["male", "Мужской"],
-  ]);
+  // const genderMap = new Map<string, string>([
+  //   ["female", "Женский"],
+  //   ["male", "Мужской"],
+  // ]);
 
-  const sex = (genders: string[]): string => {
-    for (const gen of genders) {
-      if (gen && typeof gen === "string") {
-        const foundGen = genderMap.get(gen.toLowerCase());
-        if (foundGen) return foundGen;
-      }
-    }
-    return "Нет";
-  };
+  // const sex = (genders: string[]): string => {
+  //   for (const gen of genders) {
+  //     if (gen && typeof gen === "string") {
+  //       const foundGen = genderMap.get(gen.toLowerCase());
+  //       if (foundGen) return foundGen;
+  //     }
+  //   }
+  //   return "Нет";
+  // };
 
   const formated = result.map((deliveryForReview: any) => {
     return {
@@ -280,7 +280,7 @@ export default eventHandler(async (event) => {
       delivs: deliveryForReview.delivs.map((delivery: any) => {
         return {
           ...delivery,
-          sex: sex(delivery.gender),
+          sex: delivery.gender,
         };
       }),
     };

@@ -28,6 +28,7 @@ export default eventHandler(async (event) => {
         pricebuy: 1,
         idbuyout: 1,
         uuidbuyout: 1,
+        recipient: 1,
         data8: 1, // gender
       },
     },
@@ -71,6 +72,7 @@ export default eventHandler(async (event) => {
             buyoutId: '$uuidbuyout',
             gender: '$gender',
             sizeparam: '$sizeparam',
+            recipient: '$recipient',
           },
         },
       },
@@ -122,15 +124,12 @@ export default eventHandler(async (event) => {
     ['female', 'Женский'],
     ['male', 'Мужской'],
   ])
-  const sex = (genders: string[]): string => {
-    // for (const gen of genders) {
-    //   console.log(gen);
-
-    //   let foundGen = genderMap.get(gen.toLowerCase())
-    //   if (foundGen) return foundGen
-    // }
-    return 'Нет'
-  }
+  const sex = (gender: string): string => {
+    if (gender && gender.length > 0) {
+      return gender.split(" ")[0];
+    }
+    return "Нет";
+  };
   const formated = readyForReview.map((deliveryForReview: any) => {
     const countSoon = soonForReview.filter((sfr) => sfr._id == deliveryForReview.article)
     return {
@@ -139,7 +138,7 @@ export default eventHandler(async (event) => {
       delivs: deliveryForReview.delivs.map((delivery: any) => {
         return {
           ...delivery,
-          sex: (delivery.gender = sex(delivery.gender)),
+          sex: sex(delivery.recipient),
         }
       }),
     }
