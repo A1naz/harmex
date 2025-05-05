@@ -1,119 +1,119 @@
-import { SelectOptionsReviews } from '@/data/enums'
-import { Delivery } from '@/server/lib/models/ozonHotels/Delivery'
-import { ObjectId } from 'mongodb'
-import { Buyout } from '~/server/lib/models/ozonHotels/Buyout'
+import { SelectOptionsReviews } from "@/data/enums";
+import { Delivery } from "@/server/lib/models/ozonHotels/Delivery";
+import { ObjectId } from "mongodb";
+import { Buyout } from "~/server/lib/models/ozonHotels/Buyout";
 
 export default eventHandler(async (event) => {
-  const user: any = await getAdminEntity(event)
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  const user: any = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { search } = getQuery(event)
+  const { search } = getQuery(event);
 
-  const searchParse = search ? JSON.parse(search?.toString()) : undefined
+ 
+  const searchParseAvailable = search
+    ? JSON.parse(search?.toString())
+    : undefined;
 
   const filter: any = {
-    'user': new ObjectId(user._id),
-    'reviewed': { $ne: true },
-    'statusdelivery.status': { $regex: 'Оплачено ' },
-    'status': 'completed',
-  }
+    user: new ObjectId(user._id),
+    reviewed: { $ne: true },
+    "statusdelivery.status": { $regex: "Оплачено" },
+    status: "completed",
+  };
 
-  if (searchParse && Object.values(searchParse)[0] !== '') {
-    if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
-      filter.uuidbuyout = searchParse.uudidBuyout.replace('#', '')
-    }
-    else if (Object.keys(searchParse)[0] === 'article') {
-      const searchArticle = searchParse.article.trim().toLowerCase()
-      const numericArticle = Number.parseInt(searchArticle, 10)
+  if (searchParseAvailable && Object.values(searchParseAvailable)[0] !== "") {
+    if (
+      Object.keys(searchParseAvailable)[0] === SelectOptionsReviews.uuidBuyout
+    ) {
+      filter.uuidbuyout = searchParseAvailable.uudidBuyout.replace("#", "");
+    } else if (Object.keys(searchParseAvailable)[0] === "article") {
+      const searchArticle = searchParseAvailable.article.trim().toLowerCase();
+      const numericArticle = Number.parseInt(searchArticle, 10);
 
-      filter.$or = [
-        { article: searchArticle },
-        { article: numericArticle },
-      ]
-    }
-    else {
-      Object.assign(filter, searchParse)
+      filter.$or = [{ article: searchArticle }, { article: numericArticle }];
+    } else {
+      Object.assign(filter, searchParseAvailable);
     }
   }
-
-  const deliveries = await Delivery.find(filter)
-    .select('_id article updatedAt pricebuy idbuyout uuidbuyout data8')
+  const deliveriesAvailable = await Delivery.find(filter)
+    .select("_id article updatedAt pricebuy idbuyout uuidbuyout data8")
     .sort({ _id: -1 })
-    .lean()
+    .lean();
 
-  const buyoutIds = deliveries.map(delivery => delivery.idbuyout)
+  const buyoutIds = deliveriesAvailable.map((delivery) => delivery.idbuyout);
 
-  const buyouts = await Buyout.find({ _id: { $in: buyoutIds } })
-    .select('sizeparam product gender')
-    .lean() as any
+  const buyouts = (await Buyout.find({ _id: { $in: buyoutIds } })
+    .select("sizeparam product gender")
+    .lean()) as any;
 
   const buyoutMap = buyouts.reduce((acc: any, buyout: any) => {
-    acc[buyout._id] = buyout
-    return acc
-  }, {}) as any
+    acc[buyout._id] = buyout;
+    return acc;
+  }, {}) as any;
 
-  const groupedArticles = deliveries.reduce((acc: any, delivery: any) => {
-    const article = delivery.article.toString().trim().toLowerCase()
-    const buyout = buyoutMap[delivery.idbuyout]
+  const groupedArticles = deliveriesAvailable.reduce(
+    (acc: any, delivery: any) => {
+      const article = delivery.article.toString().trim().toLowerCase();
+      const buyout = buyoutMap[delivery.idbuyout];
 
-    if (!acc[article]) {
-      acc[article] = {
-        article,
-        lastUpdated: delivery.updatedAt,
-        countAvailable: 0,
-        productimage: new Set(),
-        productname: new Set(),
-        delivs: [],
+      if (!acc[article]) {
+        acc[article] = {
+          article,
+          lastUpdated: delivery.updatedAt,
+          countAvailable: 0,
+          productimage: new Set(),
+          productname: new Set(),
+          delivs: [],
+        };
       }
-    }
 
-    acc[article].countAvailable += 1
+      acc[article].countAvailable += 1;
 
-    const productImage = buyout?.product?.image || '/no-image.png'
-    const productName = buyout?.product?.name || 'Неизвестно'
+      const productImage = buyout?.product?.image || "/no-image.png";
+      const productName = buyout?.product?.name || "Неизвестно";
 
-    if (productImage !== '/no-image.png') {
-      acc[article].productimage.add(productImage)
-    }
-    if (productName !== 'Неизвестно') {
-      acc[article].productname.add(productName)
-    }
+      if (productImage !== "/no-image.png") {
+        acc[article].productimage.add(productImage);
+      }
+      if (productName !== "Неизвестно") {
+        acc[article].productname.add(productName);
+      }
 
-    acc[article].delivs.push({
-      delivId: delivery._id,
-      pricebuy: delivery.pricebuy,
-      updatedAt: delivery.updatedAt,
-      buyoutId: delivery.uuidbuyout,
-      gender: [delivery.data8, buyout?.gender],
-      sizeparam: buyout?.sizeparam || '0',
-    })
+      acc[article].delivs.push({
+        delivId: delivery._id,
+        pricebuy: delivery.pricebuy,
+        updatedAt: delivery.updatedAt,
+        buyoutId: delivery.uuidbuyout,
+        gender: delivery.recipient,
+        sizeparam: buyout?.sizeparam || "0",
+      });
 
-    return acc
-  }, {})
+      return acc;
+    },
+    {}
+  );
 
-  const result = Object.values(groupedArticles).map((article: any) => ({
-    ...article,
-    productimage: Array.from(article.productimage),
-    productname: Array.from(article.productname),
-  })).sort((a, b) => b.countAvailable - a.countAvailable)
+  const result = Object.values(groupedArticles)
+    .map((article: any) => ({
+      ...article,
+      productimage: Array.from(article.productimage),
+      productname: Array.from(article.productname),
+    }))
+    .sort((a, b) => b.countAvailable - a.countAvailable);
 
   const genderMap = new Map<string, string>([
-    ['female', 'Женский'],
-    ['male', 'Мужской'],
-  ])
+    ["female", "Женский"],
+    ["male", "Мужской"],
+  ]);
 
-  const sex = (genders: string[]): string => {
-    for (const gen of genders) {
-      if (gen && typeof gen === 'string') {
-        const foundGen = genderMap.get(gen.toLowerCase())
-        if (foundGen)
-          return foundGen
-      }
+  const sex = (gender: string): string => {
+    if (gender && gender.length > 0) {
+      return gender.split(" ")[0];
     }
-    return 'Нет'
-  }
+    return "Нет";
+  };
 
+  console.log
   const formated = result.map((deliveryForReview: any) => {
     return {
       ...deliveryForReview,
@@ -121,13 +121,13 @@ export default eventHandler(async (event) => {
       delivs: deliveryForReview.delivs.map((delivery: any) => {
         return {
           ...delivery,
-          sex: sex(delivery.gender),
-        }
+          sex: "Нет",
+        };
       }),
-    }
-  })
+    };
+  });
+
   return {
-    availableReviews: formated
-  }
-    
-})
+    availableReviews: formated,
+  };
+});

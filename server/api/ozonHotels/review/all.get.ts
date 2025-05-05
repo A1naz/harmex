@@ -22,7 +22,7 @@ function getReviewType(review: any) {
 }
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event);
+  const user: any = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
   const { skip, limit, tab, search, dateFilter } = getQuery(event);
@@ -118,6 +118,8 @@ export default eventHandler(async (event) => {
   const deliveries = await Delivery.find({
     _id: { $in: reviews.map((rev: any) => rev.delivery) },
   });
+
+
 
   const buyoutsPublished = await Buyout.find({
     _id: { $in: deliveries.map((del: any) => del.idbuyout) },
@@ -257,7 +259,7 @@ export default eventHandler(async (event) => {
         pricebuy: delivery.pricebuy,
         updatedAt: delivery.updatedAt,
         buyoutId: delivery.uuidbuyout,
-        gender: [delivery.data8, buyout?.gender],
+        gender: delivery.recipient,
         sizeparam: buyout?.sizeparam || "0",
       });
 
@@ -279,16 +281,14 @@ export default eventHandler(async (event) => {
     ["male", "Мужской"],
   ]);
 
-  const sex = (genders: string[]): string => {
-    for (const gen of genders) {
-      if (gen && typeof gen === "string") {
-        const foundGen = genderMap.get(gen.toLowerCase());
-        if (foundGen) return foundGen;
-      }
+  const sex = (gender: string): string => {
+    if (gender && gender.length > 0) {
+      return gender.split(" ")[0];
     }
     return "Нет";
   };
 
+  console.log
   const formated = result.map((deliveryForReview: any) => {
     return {
       ...deliveryForReview,
@@ -296,7 +296,7 @@ export default eventHandler(async (event) => {
       delivs: deliveryForReview.delivs.map((delivery: any) => {
         return {
           ...delivery,
-          sex: sex(delivery.gender),
+          sex: "Нет",
         };
       }),
     };

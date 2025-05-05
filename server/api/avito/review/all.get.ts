@@ -46,6 +46,7 @@ export default eventHandler(async (event) => {
         pricebuy: 1,
         idbuyout: 1,
         uuidbuyout: 1,
+        recipient: 1,
         data8: 1, // gender
       },
     },
@@ -86,6 +87,7 @@ export default eventHandler(async (event) => {
             updatedAt: "$updatedAt",
             buyoutId: "$uuidbuyout",
             gender: "$gender",
+            recipient: "$recipient",
             sizeparam: "$sizeparam",
           },
         },
@@ -261,7 +263,10 @@ export default eventHandler(async (event) => {
     },
   ]);
 
-  const sex = (genders: string[]): string => {
+  const sex = (gender: string): string => {
+    if (gender && gender.length > 0) {
+      return gender.split(" ")[0];
+    }
     return "Нет";
   };
   const formatedAvailable = readyForReview.map((deliveryForReview: any) => {
@@ -274,7 +279,7 @@ export default eventHandler(async (event) => {
       delivs: deliveryForReview.delivs.map((delivery: any) => {
         return {
           ...delivery,
-          sex: (delivery.gender = sex(delivery.gender)),
+          sex: sex(delivery.recipient),
         };
       }),
     };

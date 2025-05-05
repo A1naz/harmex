@@ -369,7 +369,7 @@ async function selectFilterDate(e: any) {
               to="/catalog/ozonHotels"
               class="cursor-pointer text-[#909090]"
             >
-              Суточно
+              Ozon отели
             </NuxtLink>
           </li>
           <li class="cursor-pointer text-[#1e2734]">Отзывы</li>
