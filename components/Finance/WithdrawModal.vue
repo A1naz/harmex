@@ -171,13 +171,13 @@ onMounted(() => {
             <span class="text-base-content text-xs -mt-3 ml-3"
               >Для тех кто пополнял по счету → выводим на расчетный счет.</span
             >
-            <button
+            <!-- <button
               class="btn btn-ghost bg-base-200 w-full hover:text-blue-500 hover:bg-blue-50"
               @click="modalType = 'partnerBalance'"
             >
               <span class="text-base-content">Партнерская программа</span>
               <Icon class="ml-auto" name="tabler:arrow-right" size="24" />
-            </button>
+            </button> -->
           </div>
         </div>
       </div>

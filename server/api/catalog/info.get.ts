@@ -1,4 +1,5 @@
 import { Service } from '~/server/lib/models/Service'
+import { DefaultPrices } from '~/server/lib/models/defaultPrices'
 
 export default eventHandler(async (event) => {
 
@@ -29,6 +30,30 @@ export default eventHandler(async (event) => {
 
         })
 
+      } else if (!isTariffExist) {
+        const prices: any = await DefaultPrices.findOne({})
+
+        if (!prices) {
+          return {
+            status: 'ok',
+            service,
+          }
+        }
+        const mpPrices = prices.values.find((item: any) => item.mp === service.slug)
+        if (!mpPrices) {
+          return {
+            status: 'ok',
+            service,
+          }
+        }
+    
+        service.items.forEach((item: any) => {
+          const isItemPrice = mpPrices.prices[item.slug ? item.slug : item.path]
+          if (isItemPrice) {
+            item.priceText = isItemPrice.type && isItemPrice.type === 'percent' ? `${isItemPrice.value} %` : `${isItemPrice.value} ₽`
+          }
+
+        })
       }
     }
 
