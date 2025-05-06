@@ -372,7 +372,6 @@ onMounted(() => {
         @swap-page="(page: number) => { currentPage = page}"
         @change-pagination="(itemsPerPage: number) => { limit = itemsPerPage}"
       />
-      {{ tableData }}
     </div>
     <div class="gap-4 w-full flex-1 m-4 bg-white rounded-lg md:hidden">
       <div class="flex flex-col w-full pr-8 ml-4">
