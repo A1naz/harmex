@@ -1,6 +1,13 @@
 import { defineStore } from "pinia";
 import { StateMain } from "~/data/types";
 import { ITariff } from "~/data/types";
+import { rules } from "@/data/buyout/rules";
+
+const prices: any = {
+  sex: 0,
+  searchQuery: 0,
+  promo: 0,
+};
 
 export const useMainStore = defineStore("main", {
   state: (): StateMain => ({
@@ -65,31 +72,49 @@ export const useMainStore = defineStore("main", {
     },
     getBuyoutsSumm(
       productsPrices: number[],
-      prices: { minPrice: number; value: number; type: string }
+      prices: { minPrice: number; value: number; type: string },
+      products: any = []
     ) {
-  
+      let extraSumm: number = 0;
       let summ: number = 0;
-      let serviceSumm : number = 0;
+      let serviceSumm: number = 0;
       if (prices.type === "price") {
         productsPrices.forEach((item) => {
           summ += item;
           summ += prices.value;
           serviceSumm += prices.value;
         });
-
       } else if (prices.type === "percent") {
         productsPrices.forEach((item) => {
           summ += item;
           serviceSumm += item * (prices.value / 100);
-         const currentServicePrice: number = item * (prices.value / 100);
-          summ += currentServicePrice < prices.minPrice ? prices.minPrice : currentServicePrice;
+          const currentServicePrice: number = item * (prices.value / 100);
+          summ +=
+            currentServicePrice < prices.minPrice
+              ? prices.minPrice
+              : currentServicePrice;
         });
-
-
       }
+
+      products.forEach((item: any) => {
+        if (item.rules && item.rules.length > 0) {
+          item.rules.forEach((rule: any) => {
+          if ( rules[rule.id - 1] && rules[rule.id - 1].price ) {
+            extraSumm += rules[rule.id - 1].price
+          }
+          });
+        }
+        if (item.purchaseSoon) {
+          extraSumm += 10
+        }
+      });
+
+      console.log({ summ, serviceSumm, extraSumm });
+
       return {
         summ: summ,
         serviceSumm: serviceSumm,
+        extraSumm,
       };
     },
   },

@@ -112,7 +112,7 @@ export default {
     themes: [
       {
         light: {
-          'primary': '#FF5E34',
+          'primary': '#eb6a38',
           'primary-focus': '#CC4A28',
           'primary-content': '#FFFFFF',
 

@@ -55,15 +55,23 @@ export default eventHandler(async (event) => {
     status: "completed",
   }).sort({ _id: -1 });
 
-    const buyouts = await Buyout.find({
-      user,
-      uuid: { $in: availableReviews.map((review: any) => review.uuidbuyout) },
-    });
-  
+  const postedDeliveries = await Delivery.find({
+    _id: { $in: reviews.map((review: any) => review.delivery) },
+    user,
+  });
+
+  const buyouts = await Buyout.find({
+    user,
+    uuid: { $in: availableReviews.map((review: any) => review.uuidbuyout) },
+  });
 
   const format: any = reviews.map((review: any) => {
+    const foundDelivery = postedDeliveries.find(
+      (delivery: any) => delivery._id.valueOf() == review.delivery.valueOf()
+    );
+
     return {
-      _id: review._id,
+      _id: foundDelivery ? foundDelivery.uuidbuyout : "",
       date: review.date,
       article: review.article,
       name: review.name,
@@ -75,14 +83,12 @@ export default eventHandler(async (event) => {
   });
 
   for (const delivery of availableReviews) {
-
     const foundBuyout = buyouts.find(
       (buyout: any) => buyout.uuid == delivery.uuidbuyout
     );
 
-
     format.push({
-      _id: delivery._id,
+      _id: foundBuyout ? foundBuyout.uuid : "",
       date: "",
       status: "Доступен",
       text: "",
@@ -98,8 +104,8 @@ export default eventHandler(async (event) => {
   });
 
   sheet.columns = [
-    { header: "ID отзыва", key: "_id", font: { bold: true }, width: 25 },
-    { header: "Ссылка", key: "article", font: { bold: true }, width: 64 },
+    { header: "ID отзыва", key: "_id", font: { bold: true }, width: 48 },
+    { header: "Ссылка", key: "article", font: { bold: true }, width: 18 },
     { header: "Название", key: "name", font: { bold: true }, width: 54 },
     { header: "Статус", key: "status", font: { bold: true }, width: 16 },
     { header: "Дата публикации", key: "date", font: { bold: true }, width: 16 },

@@ -11176,7 +11176,7 @@ const categories = ref([
           </div>
         </div>
       </div>
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-4 flex-wrap">
         <div class="text-sm">
           <span class="text-gray-500">Товаров: </span>
           <span class="text-nowrap">{{ totalQuantity }} шт.</span>
@@ -11399,13 +11399,14 @@ const categories = ref([
                 <span class="label-text">{{
                   "Выкупить товар(-ы) прямо сейчас "
                 }}</span>
-                <div class="flex gap-4">
+                <div class="flex gap-2">
                   <input
                     :disabled="products[selectedRuleProductIndex].key"
                     v-model="products[selectedRuleProductIndex].purchaseSoon"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
                   />
+                  <span class="text-sm text-primary">{{ rule.price }}р.</span>
                 </div>
               </div>
               <!-- <div
@@ -11461,6 +11462,7 @@ const categories = ref([
                 <span class="label-text"
                   >{{ rule.id }}. {{ rule.description }}</span
                 >
+                <div class="flex gap-2 justify-end">
 
                 <input
                   :disabled="
@@ -11484,6 +11486,10 @@ const categories = ref([
                     onRuleChange($event, selectedRuleProductIndex, rule.id)
                   "
                 />
+                <span class="text-sm text-primary">{{ rule.price }}р.</span>
+              </div>
+              
+
               </div>
             </div>
           </label>

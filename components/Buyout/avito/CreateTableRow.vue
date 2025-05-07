@@ -200,11 +200,11 @@ const selectCategory = (categories: any, index: number) => {
         <option disabled selected>Выберите тип доставки</option>
         <option value="Яндекс Доставка">Яндекс Доставка</option>
         <option value="Почта России" :disabled="user.username !== 'test'">Почта России</option>
-        <option value="Boxberry" :disabled="user.username !== 'test'" >Boxberry</option>
         <option value="DPD" :disabled="user.username !== 'test'">DPD</option>
         <option value="Авито" :disabled="user.username !== 'test'">Авито</option>
         <option value="Постамат 5Post" :disabled="user.username !== 'test'">Постамат 5Post</option>
         <option value="Касса 5Post" :disabled="user.username !== 'test'">Касса 5Post</option>
+        <!-- <option value="Boxberry" :disabled="user.username !== 'test'" >Boxberry</option> -->
       </select>
     </td>
     <td class="break-all max-w-[300px] border-r border-base">

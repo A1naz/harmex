@@ -61,6 +61,8 @@ export default eventHandler(async (event) => {
   });
 
   const format: any = reviews.map((review: any) => {
+
+    
     return {
       _id: review._id,
       date: review.date,
@@ -77,7 +79,7 @@ export default eventHandler(async (event) => {
     );
 
     format.push({
-      _id: delivery._id,
+      _id: foundBuyout ? foundBuyout.uuid : "",
       date: "",
       status: "Доступен",
       text: "",
@@ -92,8 +94,10 @@ export default eventHandler(async (event) => {
     headerFooter: { firstHeader: `Всего записей: ${reviews.length}` },
   });
 
+  
+
   sheet.columns = [
-    { header: "ID отзыва", key: "_id", font: { bold: true }, width: 25 },
+    { header: "ID отзыва", key: "_id", font: { bold: true }, width: 48 },
     { header: "Артикул", key: "article", font: { bold: true }, width: 16 },
     { header: "Название", key: "name", font: { bold: true }, width: 54 },
     { header: "Статус", key: "status", font: { bold: true }, width: 16 },

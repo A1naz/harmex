@@ -1468,7 +1468,7 @@ const categories = ref([
           </div>
         </div>
       </div>
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-4  flex-wrap">
         <div class="text-sm">
           <span class="text-gray-500">Товаров: </span>
           <span class="text-nowrap">{{ totalQuantity }} шт.</span>
@@ -1662,12 +1662,13 @@ const categories = ref([
                 <span class="label-text">{{
                   "Выкупить товар(-ы) прямо сейчас "
                 }}</span>
-                <div class="flex gap-4">
+                <div class="flex gap-2">
                   <input
                     v-model="products[selectedRuleProductIndex].purchaseSoon"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
                   />
+                  <span class="text-sm text-primary">{{ rule.price }}р.</span>
                 </div>
               </div>
 
@@ -1678,7 +1679,9 @@ const categories = ref([
                   >{{ rule.id }}. {{ rule.description }}</span
                 >
 
-                <input
+                <div class="flex gap-2 justify-end">
+
+                  <input
                   disabled
                   type="checkbox"
                   class="checkbox checkbox-primary border-base-content"
@@ -1686,11 +1689,13 @@ const categories = ref([
                     !!store.createProducts[selectedRuleProductIndex].rules.find(
                       (item: any) => item.id === rule.id,
                     )
-                  "
+                    "
                   @change="
                     onRuleChange($event, selectedRuleProductIndex, rule.id)
-                  "
+                    "
                 />
+                <span class="text-sm text-primary">{{ rule.price }}р.</span>
+              </div>
               </div>
             </div>
           </label>

@@ -526,7 +526,7 @@ getCategories();
           </div>
         </div>
       </div>
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-4 flex-wrap">
         <div class="text-sm">
           <span class="text-gray-500">Товаров: </span>
           <span class="text-nowrap">{{ totalQuantity }} шт.</span>
@@ -722,13 +722,14 @@ getCategories();
           <label for="" class="modal-box relative" @click.stop>
             <label
               for="ruleModal"
-              class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              class="btn btn-sm btn-circle btn-ghost absolute right-6 top-2"
               @click="ruleModal = false"
               >✕</label
             >
             <h3 class="font-bold text-lg mb-2">
               Выберите нужные правила для этого выкупа
             </h3>
+
             <div v-for="rule of defaultRules" :key="rule.id" class="">
               <div
                 v-if="rule.id === 1"
@@ -737,32 +738,25 @@ getCategories();
                 <span class="label-text">{{
                   "Выкупить товар(-ы) прямо сейчас "
                 }}</span>
-                <div class="flex gap-4">
+                <div class="flex gap-2">
+            
                   <input
                     :disabled="products[selectedRuleProductIndex].key"
                     v-model="products[selectedRuleProductIndex].purchaseSoon"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
                   />
+                  <span class="text-sm text-primary">{{ rule.price }}р.</span>
                 </div>
               </div>
-              <div
-                v-if="
-                  rule.id === 1 &&
-                  user.ffEnabled &&
-                  ffPickpoints &&
-                  ffPickpoints.length
-                "
+              <!-- <div
+                v-if="rule.id === 1 && user?.ffEnabled"
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
                 <span class="label-text">{{ "Выкуп под ключ " }}</span>
                 <div class="flex gap-4">
                   <input
-                    :disabled="
-                      products[selectedRuleProductIndex].purchaseSoon ||
-                      !ffPickpoints ||
-                      !ffPickpoints.length
-                    "
+                  :disabled="products[selectedRuleProductIndex].purchaseSoon"
                     v-model="products[selectedRuleProductIndex].key"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
@@ -771,21 +765,46 @@ getCategories();
                         refreshElements(),
                         (products[selectedRuleProductIndex].adress = ''),
                         (products[selectedRuleProductIndex].dateRange = [
-                          new Date().setHours(new Date().getHours() + 3),
+                          new Date().setHours(new Date().getHours()),
 
-                          new Date().setHours(new Date().getHours() + 3),
+                          new Date().setHours(new Date().getHours()),
                         ]),
                       ]
                     "
                   />
                 </div>
+              </div> -->
+              <!-- <span
+                v-if="rule.id === 1"
+                class="text-[#AA4A44] text-sm font-bold"
+              >
+                Функционал по добавлению правил временно недоступен
+              </span> -->
+              <!-- <div
+              v-if="rule.id === 1"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
+            >
+              <span class="label-text"
+                >{{ 'Выкуп под ключ ' }}</span
+              >
+              <div class="flex gap-4">
+
+                <input
+                  type="checkbox"
+                  v-model="products[selectedRuleProductIndex].key"
+                  class="checkbox checkbox-primary border-base-content"
+                />
               </div>
+            </div> -->
               <div
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
                 <span class="label-text"
                   >{{ rule.id }}. {{ rule.description }}</span
                 >
+                <div class="flex justify-end gap-2">
+
+             
                 <input
                   :disabled="
                     !!store.createProducts[selectedRuleProductIndex].rules.find(
@@ -794,7 +813,8 @@ getCategories();
                     ) ||
                     !!store.createProducts[selectedRuleProductIndex].rules.find(
                       (item) => item.id === rule?.relies
-                    )
+                    ) ||
+                    rule.disabled
                   "
                   type="checkbox"
                   class="checkbox checkbox-primary border-base-content"
@@ -807,6 +827,9 @@ getCategories();
                     onRuleChange($event, selectedRuleProductIndex, rule.id)
                   "
                 />
+                <span  class="text-sm text-primary">{{ rule.price }}р.</span>
+              </div>
+
               </div>
             </div>
           </label>

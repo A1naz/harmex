@@ -353,7 +353,7 @@ const summ = computed(() => {
           </div>
         </div>
       </div>
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-4 flex-wrap">
         <div class="text-sm">
           <span class="text-gray-500">Товаров: </span>
           <span class="text-nowrap">{{ totalQuantity }} шт.</span>

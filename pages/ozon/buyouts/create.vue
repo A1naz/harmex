@@ -445,7 +445,8 @@ prices.value = await mainStore.getPrices("ozon");
 const summ = computed(() => {
   const summInfo = mainStore.getBuyoutsSumm(
     products.value.map((item) => Number(item.price)),
-    prices.value
+    prices.value,
+    products.value
   );
 
   if (summInfo && summInfo.summ) {
@@ -550,7 +551,7 @@ getCategories();
           </div>
         </div>
       </div>
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-4 flex-wrap">
         <div class="text-sm">
           <span class="text-gray-500">Товаров: </span>
           <span class="text-nowrap">{{ totalQuantity }} шт.</span>
@@ -567,6 +568,10 @@ getCategories();
           <span class="text-gray-500">К списанию: </span>
           <span>{{ currency.format(summ.summ) }}</span>
         </div>
+        <!-- <div class="text-sm">
+          <span class="text-gray-500">Доп услуги: </span>
+          <span>{{ currency.format(summ.extraSumm) }}</span>
+        </div> -->
       </div>
 
       <ClientOnly>
@@ -798,13 +803,15 @@ getCategories();
                 <span class="label-text">{{
                   "Выкупить товар(-ы) прямо сейчас "
                 }}</span>
-                <div class="flex gap-4">
+                <div class="flex gap-2">
+            
                   <input
                     :disabled="products[selectedRuleProductIndex].key"
                     v-model="products[selectedRuleProductIndex].purchaseSoon"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
                   />
+                  <span class="text-sm text-primary">{{ rule.price }}р.</span>
                 </div>
               </div>
               <!-- <div
@@ -860,7 +867,9 @@ getCategories();
                 <span class="label-text"
                   >{{ rule.id }}. {{ rule.description }}</span
                 >
+                <div class="flex justify-end gap-2">
 
+             
                 <input
                   :disabled="
                     !!store.createProducts[selectedRuleProductIndex].rules.find(
@@ -883,6 +892,9 @@ getCategories();
                     onRuleChange($event, selectedRuleProductIndex, rule.id)
                   "
                 />
+                <span  class="text-sm text-primary">{{ rule.price }}р.</span>
+              </div>
+
               </div>
             </div>
           </label>

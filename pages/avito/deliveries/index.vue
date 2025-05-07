@@ -569,7 +569,182 @@ getExportReadyCount();
       :index="selectedIndex"
       @close="modal = false"
     />
+    <ManualModal
+      :show="manualModal"
+      @close="manualModal = false"
+      :is-checked="isChecked"
+      @checkbox-toggle="toggleCheckbox"
+    >
+      <p class="mb-5 text-xl font-semibold">Как получить товар на ПВЗ</p>
+      <p>
+        Для получения товаров с пункта выдачи заказов (ПВЗ) на Avito используйте меню <strong>"Доставка"</strong>.
+      </p>
+      <p class="mt-4">
+        Это меню позволяет отслеживать статусы всех доставок в режиме реального
+        времени и получать товары, готовые к выдаче. Ниже приведена пошаговая
+        инструкция с учетом всех нюансов.
+      </p>
+      <p class="divider"></p>
+      <p>Отслеживание статусов <strong>доставок</strong></p>
+      <ul class="list-disc ml-10">
+        <li class="mt-1">
+          Перейдите в меню <strong>"Доставка"</strong> в вашем личном кабинете
+          Harmex.
+        </li>
+        <li class="mt-1">
+          Здесь вы можете видеть актуальные статусы всех ваших заказов:
+          <ul class="list-disc ml-6">
+            <li class="mt-1">
+              <strong>В пути</strong> — товар находится в пути на ПВЗ.
+            </li>
+            <li class="mt-1">
+              <strong>Готов к выдаче / получению</strong> — товар прибыл на ПВЗ
+              и готов к выдаче.
+            </li>
+            <li class="mt-1">
+              <strong>Отменен </strong> — доставка отменена, товар возвращен на
+              склад.
+            </li>
+            <li class="mt-1">
+              <strong>Получено </strong> — товар был получен на ПВЗ и передан
+              курьеру или ответственному лицу.
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <p class="divider"></p>
+      <p>Получение товаров, <strong>готовых к выдаче</strong></p>
+      <ul class="list-disc ml-10">
+        <li class="mt-1">
+          Для получения товаров, которые имеют статус
+          <strong>"Готов к выдаче / получению"</strong>, используйте функционал
+          выгрузки файлов с актуальными QR-кодами и данными.
+        </li>
+        <li class="mt-1">
+          Доступно два варианта выгрузки:
+          <ul class="list-decimal ml-6">
+            <li class="mt-1">
+              <strong>Готовы к выдаче в PDF</strong> — удобно для печати и
+              использования на ПВЗ.
+            </li>
+            <li>
+              <strong>Excel-файл</strong> — подходит для анализа и сверки
+              данных.
+            </li>
+          </ul>
+        </li>
+        <li class="mt-1">
+          Чтобы выгрузить файлы:
+          <ul class="list-decimal ml-6">
+            <li class="mt-1">
+              В меню <strong>"Доставка"</strong> выберите заказы со статусом
+              <strong>"Готов к выдаче / получению"</strong>.
+            </li>
+            <li>
+              Нажмите на кнопку <strong>"Выгрузить"</strong> и выберите нужный
+              формат (PDF или Excel).
+            </li>
+            <li>Сохраните файл на устройство.</li>
+          </ul>
+        </li>
+      </ul>
+      <nuxt-img
+        alt=""
+        class="flex mx-auto w-full px-4 mt-4"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2_3.png"
+      />
+      <p class="divider"></p>
+      <p class="my-4"><strong>Сверка данных по доставкам:</strong></p>
+      <ul class="list-disc ml-10">
+        <li class="mt-1">
+          Для анализа всех доставок в разрезе промежутка времени используйте
+          Excel-файл под названием
+          <strong>"Общая таблица Excel"</strong>.
+        </li>
 
+        <li class="mt-1">
+          Этот файл содержит подробную информацию о каждом заказе:
+          <ul class="list-[square] ml-6">
+            <li class="mt-1">Номер заказа.</li>
+            <li>Статус доставки.</li>
+            <li>Дата и время прибытия на ПВЗ.</li>
+            <li>Дата и время получения на ПВЗ.</li>
+          </ul>
+        </li>
+      </ul>
+      <p class="divider"></p>
+      <p class="my-4"><strong>Важные примечания:</strong></p>
+      <ul class="list-disc ml-10">
+        <li class="mt-1">
+          <strong>Сроки получения товара:</strong>
+          <ul class="list-[square] ml-6">
+            <li class="mt-1">
+              Получайте товары со статусом
+              <strong>"Готов к выдаче / получению"</strong> в течение
+              <strong>5 дней</strong> с момента прибытия на ПВЗ.
+            </li>
+            <li>
+              Это необходимо для соблюдения параметров поведенческой активности
+              на маркетплейсе и поддержания минимум
+              <strong>4 покупок в месяц</strong> одним аккаунтом.
+            </li>
+          </ul>
+        </li>
+        <li class="mt-1">
+          <strong>Санкции за задержку:</strong>
+          <ul class="list-[square] ml-6">
+            <li>
+              Если вы не получаете товары в течение 5 дней с момента прибытия на
+              ПВЗ, вы можете получить санкцию.
+            </li>
+          </ul>
+        </li>
+
+        <li class="mt-1">
+          <strong>Отмененные доставки:</strong>
+          <ul class="list-[square] ml-6">
+            <li class="mt-1">
+              Если доставка отменена (статус <strong>"Отменен"</strong>),
+              обратитесь в <strong>службу заботы</strong> для возврата
+              финансовых средств.
+            </li>
+            <li>
+              Возврат средств будет произведен на ваш <strong>Кошелек</strong> в
+              меню <strong>"Финансы"</strong>.
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <p class="divider"></p>
+      <p class="mb-2"><strong>Пример работы с меню "Доставка"</strong></p>
+      <ul class="list-decimal ml-10">
+        <li>
+          Вы заходите в меню <strong>"Доставка"</strong> и видите, что несколько
+          заказов имеют статус <strong>"Готов к выдаче / получению"</strong>.
+        </li>
+        <li>Выгружаете файл с QR-кодами в формате PDF.</li>
+        <li>Сохраняете файл и отправляетесь в ПВЗ.</li>
+        <li>
+          На ПВЗ предъявляете QR-код или Код получения, Имя и Номер телефона.
+        </li>
+        <li>Получаете товар и проверяете его на соответствие заказу.</li>
+        <li>
+          Если один из заказов отменен, обращаетесь в службу заботы для возврата
+          средств.
+        </li>
+      </ul>
+      <p class="divider"></p>
+      <p class="mb-2"><strong>Рекомендации</strong></p>
+      <ul class="list-disc ml-10">
+        <li>Регулярно проверяйте статусы доставок в меню "Доставка".</li>
+        <li>Не затягивайте с получением товаров, чтобы избежать штрафов.</li>
+        <li>
+          Используйте Excel-файл "Общая таблица Excel" для анализа и
+          планирования.
+        </li>
+        <li>В случае проблем с доставкой сразу обращайтесь в службу заботы.</li>
+      </ul>
+    </ManualModal>
     <div
       ref="target"
       class="flex justify-center items-center"

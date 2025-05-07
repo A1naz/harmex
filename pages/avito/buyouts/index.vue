@@ -83,7 +83,7 @@ async function removeBuyout() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   } else {
@@ -91,7 +91,7 @@ async function removeBuyout() {
     notify({
       title: "Успешно",
       text: "Выкуп успешно удален",
-     group: "success",
+      group: "success",
       duration: 3000,
     });
     buyouts.value = buyouts.value.filter(
@@ -460,10 +460,7 @@ const siteUrl = config.public.siteUrl;
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink
-            to="/catalog/avito"
-            class="cursor-pointer text-[#909090]"
-          >
+          <NuxtLink to="/catalog/avito" class="cursor-pointer text-[#909090]">
             Avito
           </NuxtLink>
         </li>
@@ -668,6 +665,329 @@ const siteUrl = config.public.siteUrl;
       @remove="removeBuyout"
       @close="removeModal = false"
     />
+    <ManualModal
+      :show="manualModal"
+      @close="manualModal = false"
+      :is-checked="isChecked"
+      @checkbox-toggle="toggleCheckbox"
+    >
+      <h3 class="text-[19px] font-bold mb-2 flex items-center gap-1 pr-4">
+        Как оставить отзыв на Avito в 3 шага?
+      </h3>
+      <h3 class="text-[17px] font-bold mb-2 flex items-center gap-1 pr-4">
+        Чтобы оставить отзыв, нужно сделать три простых действия:
+      </h3>
+
+      <ol class="list-decimal ml-6 mb-4">
+        <li>
+          Купить товар – это происходит автоматически через услугу
+          <strong>Выкуп</strong>. Вам не нужно ничего делать вручную.
+        </li>
+
+        <li>
+          Получите товар на ПВЗ – зайдите в меню Доставка, скачайте актуальные
+          коды, которые предоставите на ПВЗ (кнопка EXL - Готовы к выдаче).
+          Данные о покупателе можно найти в меню
+          <strong>Доставка</strong>.
+        </li>
+        <li>
+          Оставить отзыв – после подтверждения выдачи товара в личном кабинете
+          появится заявка на публикацию отзыва в разделе
+          <strong>Отзывы</strong>.
+        </li>
+      </ol>
+      <h3 class="text-[17px] font-bold mb-2 flex items-center gap-1 pr-4">
+        Что нужно от вас?
+      </h3>
+
+      <p class="mt-2">
+        Просто пополните баланс на покупку товара и оплату услуги, а затем
+        создайте заявку с деталями. Всё остальное – автоматизировано.
+      </p>
+
+      <p class="my-2">Подробные инструкции находятся внутри каждой услуги!</p>
+      <video
+        controls
+        poster="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/buyoutsVideoTitle.png"
+        class="my-6 w-full"
+      >
+        <source
+          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/buyoutsVideo.mp4"
+          type="video/mp4"
+        />
+        Ваш браузер не поддерживает видео.
+      </video>
+      <p class="my-4 text-[16px] flex items-center gap-1 text-[#4b5563]">
+        Чтобы оформить заказ, следуйте простым шагам:
+      </p>
+      <ol class="list-decimal ml-10 mb-4 text-[#4b5563]">
+        <li>Нажмите на кнопку <strong>“+”</strong>.</li>
+
+        <li>Введите <strong>артикул товара</strong></li>
+        <p class="my-2 text-sm">
+          Артикул — это уникальный код, по которому идентифицируют товар на
+          маркетплейсе или в магазине.
+        </p>
+        <p class="my-2">
+          Артикул товара находиться в ссылке вашего объявления, пример:
+          https://www.avito.ru/sankt-peterburgotele_17_m_1_krovat_4558969967…….
+        </p>
+        <nuxt-img
+          alt=""
+          class="flex mx-auto w-full px-20 mt-2"
+          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/avito/1.png"
+        />
+        <nuxt-img
+          alt=""
+          class="flex mx-auto w-full px-20 mt-2"
+          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/avito/2.png"
+        />
+        <li>Нажмите кнопку <strong>"Добавить"</strong></li>
+        <li>
+          Заполните данные по заявке:
+          <ul class="list-disc ml-6 text-[#4b5563]">
+            <li>Размер.</li>
+            <li>Пол.</li>
+            <li>Поведенческие факторы "Правила".</li>
+            <li>Планируемое время заказа.</li>
+            <li>Адрес пункта выдачи заказов (ПВЗ).</li>
+            <li>Поисковый запрос.</li>
+          </ul>
+        </li>
+        <li>Проверьте заполненные данные</li>
+        <li>Нажмите кнопку Создать</li>
+        <li>После проверки AI нажмите Создать</li>
+        <li>Отслеживайте исполнение заказа в разрезе Статусов</li>
+      </ol>
+      <p>
+        Этот процесс позволяет легко и быстро организовать выкуп товара в любых
+        количествах, минимизируя ваше участие.
+      </p>
+      <nuxt-img
+        alt=""
+        class="flex mx-auto w-full px-4 mt-4"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2_1.png"
+      />
+      <nuxt-img
+        alt=""
+        class="flex mx-auto w-full px-4 mt-2"
+        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2_2.png"
+      />
+      <p class="my-4">
+        После того как заявка на выкуп товара получит статус
+        <strong>"Завершен"</strong>, вам нужно будет забрать товар с пункта
+        выдачи заказов (ПВЗ) используя меню
+        <strong> Доставка.</strong>
+      </p>
+      <p>В меню Финансы, ознакомьтесь с фактическими операциями:</p>
+      <ol class="list-item ml-4 mb-4 text-[#4b5563]">
+        <li class="mt-2">- списание средств на покупку товара.</li>
+        <li>- списание средств за услуги платформы.</li>
+        <li>- дата и время фактического исполнения.</li>
+        <li>- ID вашей заявки на услугу.</li>
+      </ol>
+      <p class="divider"></p>
+      <p><strong>Примечания по созданию заказов</strong></p>
+      <div class="ml-4 mt-4">
+        <p><strong> 1. Количество заявок </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>Создание заказов не ограничено по количеству.</li>
+          <li>
+            Одновременно можно создавать до <strong>10 заявок</strong>. Если
+            нужно больше, просто продолжайте создавать новые партии по
+            <strong>10 единиц</strong>.
+          </li>
+        </ol>
+        <p><strong> 2. Проверка заявок </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Каждая заявка проверяется системой по более чем
+            <strong>25 критериям</strong> для обеспечения безопасности.
+          </li>
+          <li>
+            Если заявка не соответствует требованиям, она не пройдет проверку и
+            не будет создана.
+          </li>
+        </ol>
+        <p><strong> 3. Шаблоны заявок </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Для ускорения процесса создавайте <strong>шаблоны заявок</strong>.
+            Это позволит быстро заполнять и отправлять заявки на исполнение.
+          </li>
+        </ol>
+        <p><strong> 4. Планирование заявок </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Планируйте заявки на выкуп не на весь день (с 09:00 до 20:00), а в
+            диапазоне
+
+            <strong> 90–120 минут.</strong>.
+          </li>
+          <li>
+            Это нужно для того, чтобы планировщик исполнял заявки в
+            <strong> точное время</strong>, а не когда появится свободное окно.
+          </li>
+          <li>
+            Пример планирования:
+            <ol class="list-[square] mb-4 ml-6 text-[#4b5563]">
+              <li>1-я заявка: с 09:00 до 10:00.</li>
+              <li>2-я заявка: с 12:00 до 14:00.</li>
+            </ol>
+          </li>
+        </ol>
+        <p><strong> 5. Часовой пояс </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Время создания и исполнения заявки фиксируется по
+            <strong>часовому поясу заказчика</strong>.
+          </li>
+        </ol>
+        <p><strong> 6. Покупка товара </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Покупка товара осуществляется по
+
+            <strong
+              >указанной цене в объявлении на момент создания заявки.</strong
+            >
+          </li>
+          <li>
+            Если сумма будет не совпадать в процессе выкупа, он
+            <strong> уйдет В Архив</strong> во избежание ошибки.
+          </li>
+        </ol>
+      </div>
+
+      <p class="divider"></p>
+      <p><strong>Статусы выкупов</strong></p>
+      <div class="ml-4 mt-4">
+        <p><strong>1. Активен </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Покупка товара находится в поиске свободного слота/окна для перехода
+            к действиям.
+          </li>
+          <li>Заявка ожидает своей очереди на исполнение.</li>
+        </ol>
+        <p><strong>2. В работе </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>Покупка товара перешла в стадию осуществления заказа.</li>
+          <li>Заявка активно обрабатывается системой.</li>
+        </ol>
+
+        <p><strong>3. Завершен </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>Покупка товара успешно осуществлена..</li>
+          <li>
+            Заказ переходит в меню:
+
+            <ol class="list-[square] mb-4 ml-6 text-[#4b5563]">
+              <li><storng>Доставка</storng> (товар доставляется на ПВЗ).</li>
+              <li>
+                <storng>Финансы</storng> (отображается точная дата и время
+                покупки, а также финансовые операции).
+              </li>
+            </ol>
+          </li>
+        </ol>
+        <p><strong>4. В архиве </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>Покупка товара не может быть осуществлена из-за ошибки.</li>
+          <li>
+            Чтобы узнать причину, нажмите на <strong>три точки</strong> рядом с
+            заявкой и выберите пункт <strong>"О выкупе"</strong>.
+          </li>
+        </ol>
+        <p><strong>5. На паузе </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Покупка товара приостановлена из-за
+            <strong>недостатка средств на балансе</strong>.
+          </li>
+          <li>Пополните баланс, чтобы возобновить выполнение заявки.</li>
+        </ol>
+      </div>
+      <p class="divider"></p>
+      <p><strong>Рекомендации для эффективной работы</strong></p>
+      <div class="ml-4 mt-4">
+        <p><strong>1. Создание заявок </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>Используйте шаблоны для быстрого заполнения данных.</li>
+          <li>
+            Убедитесь, что все поля заполнены корректно, чтобы избежать
+            отклонения заявки.
+          </li>
+        </ol>
+        <p><strong>2.Планирование </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Разбивайте заявки на временные интервалы (60–90 минут), чтобы
+            избежать перегрузки системы.
+          </li>
+          <li>
+            Пример:
+
+            <ol class="list-[square] mb-4 ml-6 text-[#4b5563]">
+              <li>Утренняя заявка: 09:00–10:00.</li>
+              <li>Дневная заявка: 12:00–14:00.</li>
+              <li>Вечерняя заявка: 16:00–17:30.</li>
+            </ol>
+          </li>
+        </ol>
+
+        <p><strong>3. Контроль статусов </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>Регулярно проверяйте статусы заявок в личном кабинете.</li>
+          <li>
+            Если заявка перешла в статус "<strong>В архиве"</strong>, изучите
+            причину и исправьте ошибку.
+          </li>
+          <li>
+            Если заявка на <strong>"Паузе"</strong>, пополните баланс для
+            продолжения работы.
+          </li>
+        </ol>
+        <p><strong>4. Финансовый учет </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            Учитывайте, что расчеты происходят <strong>без СПП</strong>, поэтому
+            следите за волатильностью цен и планируйте бюджет заранее.
+          </li>
+        </ol>
+        <p><strong>5. Получение товара </strong></p>
+        <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
+          <li>
+            После завершения заявки заберите товар с ПВЗ, используя меню
+            <strong> "Доставка".</strong>
+          </li>
+          <li>
+            Проверьте товар на соответствие заказу и отсутствие повреждений.
+          </li>
+        </ol>
+      </div>
+      <p class="divider"></p>
+      <p class="mb-4"><strong>Пример работы с заявками</strong></p>
+      <ul class="list-decimal ml-10">
+        <li>
+          Вы создаете заявку на 10 единиц товара, заполняете все данные
+          (артикул, размер, пол, поведенческие факторы и т.д.).
+        </li>
+        <li>
+          Система проверяет заявку по 25+ критериям и подтверждает ее создание.
+        </li>
+        <li>Вы планируете заявку на временной интервал с 09:00 до 10:00.</li>
+        <li>
+          Заявка переходит в статус <strong>"Активен"</strong>, затем
+          <strong>"В работе"</strong>, и, наконец, <strong>"Завершен"</strong>.
+        </li>
+        <li>После завершения вы забираете товар с ПВЗ и проверяете его.</li>
+        <li>
+          Если заявка отклонена, вы проверяете причину через меню
+          <strong>"О выкупе"</strong> и исправляете ошибки.
+        </li>
+      </ul>
+    </ManualModal>
   </div>
 </template>
 
