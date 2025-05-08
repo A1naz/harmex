@@ -341,6 +341,7 @@ async function pointModalOpen(index: number) {
 
 onMounted(async () => {
   getPickpoints();
+  
   if (route.query.uuid) {
     loading.value = true;
     await store.cloneBuyout(route.query.uuid.toString());
@@ -749,12 +750,12 @@ getCategories();
                   <span class="text-sm text-primary">{{ rule.price }}р.</span>
                 </div>
               </div>
-              <!-- <div
+               <div
                 v-if="rule.id === 1 && user?.ffEnabled"
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
                 <span class="label-text">{{ "Выкуп под ключ " }}</span>
-                <div class="flex gap-4">
+                <div class="flex gap-2">
                   <input
                   :disabled="products[selectedRuleProductIndex].purchaseSoon"
                     v-model="products[selectedRuleProductIndex].key"
@@ -772,8 +773,9 @@ getCategories();
                       ]
                     "
                   />
+                  <span class="text-sm text-primary">0р.</span>
                 </div>
-              </div> -->
+              </div>
               <!-- <span
                 v-if="rule.id === 1"
                 class="text-[#AA4A44] text-sm font-bold"
