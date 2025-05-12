@@ -97,9 +97,9 @@ async function copyImageToClipboard(base64Image: any) {
 
         <div class="flex justify-between px-[20px] py-[15px] mb-10 z-[2]">
           <div class="flex flex-col gap-[6px]">
-            <span class="text-lg font-semibold">Общий баланс</span>
+            <span class="text-lg font-semibold">Баланс</span>
             <span class="font-bold text-xl">
-              {{ currency.format(user.balance + props.refBalance) || 0 }}
+              {{   currency.format(props.balance) || 0 }}
             </span>
           </div>
 
@@ -109,14 +109,14 @@ async function copyImageToClipboard(base64Image: any) {
           </div>
         </div>
         <div class="flex justify-between p-[14px]">
-          <div
+          <!-- <div
             class="bg-transparent self-end flex flex-col py-[0.2rem] px-[0.3rem] rounded-lg drop-shadow-sm"
           >
             <span class="font-normal white">Кошелек</span>
             <span class="text-lg font-semibold white">{{
               currency.format(props.balance) || 0
             }}</span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
