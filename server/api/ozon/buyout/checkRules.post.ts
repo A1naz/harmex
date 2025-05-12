@@ -56,6 +56,7 @@ export default eventHandler(async (event) => {
   for (const item of products) {
     const rules = item.rules.map(rule => rule.id)
     let sort = 'popular'
+    console.log(item)
 
     const curDate = new Date()
     const firstDate = new Date(item.dateRange[0])

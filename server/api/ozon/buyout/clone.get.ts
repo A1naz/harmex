@@ -1,59 +1,62 @@
-import { findImage, findProductCard } from '@/server/lib/helpers'
-import { Buyout } from '@/server/lib/models/ozon/Buyout'
+import { findImage, findProductCard } from "@/server/lib/helpers";
+import { Buyout } from "@/server/lib/models/ozon/Buyout";
 
-const config = useRuntimeConfig()
+const config = useRuntimeConfig();
 
 export default eventHandler(async (event) => {
-  const session = (await getAdminEntity(event)) as any
-  if (!session)
-    return sendRedirect(event, '/auth', 302)
+  const session = (await getAdminEntity(event)) as any;
+  if (!session) return sendRedirect(event, "/auth", 302);
 
-  const query = getQuery(event)
+  const query = getQuery(event);
 
-  const buyout = await Buyout.findOne({ uuid: query.uuid })
+  const buyout = await Buyout.findOne({ uuid: query.uuid });
   if (!buyout) {
     return createError({
       statusCode: 400,
-      message: 'Выкуп не найден',
-    })
+      message: "Выкуп не найден",
+    });
   }
 
-  const article = buyout?.article
-  const data: any = await $fetch('http://95.163.249.133:3000', {
-    method: 'POST',
+  const article = buyout?.article;
+  const data: any = await $fetch("http://95.163.249.133:3000", {
+    method: "POST",
     body: {
-      type: 'ozonProduct',
+      type: "ozonProduct",
       url: `https://www.ozon.ru/product/${article}/`,
       token: config.PARSER_TOKEN,
     },
   }).catch((e) => {
-    console.log(e)
+    console.log(e);
 
     throw createError({
       statusCode: 404,
-      message: 'Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.',
-    })
-  })
+      message:
+        "Не удалось получить информацию по товару. Пожалуйста, проверьте правильность введенного артикула.",
+    });
+  });
 
   if (!data) {
     return createError({
       statusCode: 400,
-      message: 'Товар не найден',
-    })
+      message: "Товар не найден",
+    });
   }
   return {
-    image: data.image || '',
+    image: data.image || "",
     article,
-    name: data.name || '',
-    sizes: data.sizes.length ? data.sizes : ['0'],
+    name: data.name || "",
+    sizes: data.sizes.length ? data.sizes : ["0"],
     price: data.price || 0,
-    priceText: data.price ? `${data.price} ₽` : '',
+    priceText: data.price ? `${data.price} ₽` : "",
     quantity: buyout.quantity,
     sex: buyout.gender,
-    searchQuery: buyout.searchQuery.split(', '),
+    searchQuery: buyout.searchQuery.split(", "),
+    discountPrice: data.price || 1,
+    pointCoordinates: buyout.pointCoordinates,
+    pointId: buyout.pointId,
     adress: buyout.point,
     dateRange: [buyout.dateStart, buyout.dateEnd],
     selectedSize: buyout.sizeparam,
     rules: buyout.rules,
-  }
-})
+  };
+});
