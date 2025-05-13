@@ -26,6 +26,10 @@ const selectedReview = ref({
 const target = ref(null);
 const targetIsVisible = ref(false);
 
+const { stop } = useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  targetIsVisible.value = isIntersecting;
+});
+
 const tabs = [
   { value: "all", name: "Все отзывы" },
   { value: "published", name: "Опубликованные" },
@@ -208,6 +212,7 @@ async function removeReview() {
 watch(
   () => targetIsVisible.value,
   (isVisible) => {
+    console.log("isVisible", isVisible);
     if (isVisible && !end.value) {
       skip.value += limit.value;
       fetchData();
@@ -518,6 +523,7 @@ async function selectFilterDate(e: any) {
             ref="target"
             class="flex justify-center items-center h-4 mb-10"
           />
+          asdasd
         </div>
         <div
           v-else-if="isFetch"

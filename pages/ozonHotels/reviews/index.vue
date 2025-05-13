@@ -26,6 +26,10 @@ const selectedReview = ref({
 const target = ref(null);
 const targetIsVisible = ref(false);
 
+const { stop } = useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  targetIsVisible.value = isIntersecting;
+});
+
 const tabs = [
   { value: "all", name: "Все отзывы" },
   { value: "published", name: "Опубликованные" },
