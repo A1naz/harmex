@@ -203,7 +203,7 @@ onMounted(() => {
             />
           </div>
 
-          <div class="-mt-2">
+          <!-- <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content">{{
                 "Номер карты"
@@ -214,7 +214,7 @@ onMounted(() => {
               class="input input-primary w-full"
               :placeholder="'Номер карты'"
             />
-          </div>
+          </div> -->
           <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content">БИК</span>
@@ -272,7 +272,7 @@ onMounted(() => {
 "
             />
           </div>
-          <div class="-mt-2">
+          <!-- <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content">Дата рождения</span>
             </div>
@@ -283,8 +283,8 @@ onMounted(() => {
               v-maska
               data-maska="##.##.####"
             />
-          </div>
-          <div class="-mt-2">
+          </div> -->
+          <!-- <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content">Серия паспорта</span>
             </div>
@@ -295,8 +295,8 @@ onMounted(() => {
               v-maska
               data-maska="## ##"
             />
-          </div>
-          <div class="-mt-2">
+          </div> -->
+          <!-- <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content">Номер паспорта</span>
             </div>
@@ -307,8 +307,8 @@ onMounted(() => {
               v-maska
               data-maska="######"
             />
-          </div>
-          <div class="-mt-2">
+          </div> -->
+          <!-- <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content">Кем выдан</span>
             </div>
@@ -317,8 +317,8 @@ onMounted(() => {
               class="input input-primary w-full"
               placeholder="Введите кем выдан паспорт"
             />
-          </div>
-          <div class="-mt-2">
+          </div> -->
+          <!-- <div class="-mt-2">
             <div class="label">
               <span class="label-text text-base-content">Когда выдан</span>
             </div>
@@ -329,7 +329,7 @@ onMounted(() => {
               v-maska
               data-maska="##.##.####"
             />
-          </div>
+          </div> -->
 
           <div class="agreement flex gap-2 items-center w-full">
             Пользовательское соглашение
