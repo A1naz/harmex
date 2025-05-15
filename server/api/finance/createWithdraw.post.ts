@@ -12,10 +12,10 @@ export default eventHandler(async (event) => {
 
   const { amount, info, cardInfo, modalType } = await readBody(event);
 
-  if (Number(amount) < 100) {
+  if (Number(amount) < 1) {
     return {
       status: "error",
-      message: "Минимальная сумма вывода - 5000 руб.",
+      message: "Минимальная сумма вывода - 1 руб.",
     };
   }
   const balance = user.balance;
@@ -27,13 +27,7 @@ export default eventHandler(async (event) => {
     };
   }
 
-  if (
-    !cardInfo.BIK ||
-    !cardInfo.CS ||
-    !cardInfo.RS ||
-    !cardInfo.bankName ||
-    !cardInfo.FIO
-  ) {
+  if (!cardInfo.BIK || !cardInfo.CS || !cardInfo.RS || !cardInfo.bankName) {
     return {
       status: "error",
       message: "Заполните все поля",
@@ -41,6 +35,15 @@ export default eventHandler(async (event) => {
   }
   if (modalType === "INN") {
     if (!cardInfo.orgName) {
+      return {
+        status: "error",
+        message: "Заполните все поля",
+      };
+    }
+  }
+
+  if (modalType === "card") {
+    if (!cardInfo.FIO) {
       return {
         status: "error",
         message: "Заполните все поля",
