@@ -9,6 +9,8 @@ const PartnerPaymentHistoryModel = new Schema({
     amount: { type: Number, required: true },
     type: { type: String, required: true },
     description: { type: String, required: true },
+    paymenthistory: { type: Schema.Types.ObjectId, ref: 'paymenthistory' },
+    serviceType: { type: String },
     date: { type: Date, default: Date.now(), required: true },
   });
 

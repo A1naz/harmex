@@ -1,132 +1,145 @@
-import ExcelJS from 'exceljs'
-import { DocuemntEnum } from '~/data/enums'
-import { Buyout } from '~/server/lib/models/ozon/Buyout'
-import { Delivery } from '~/server/lib/models/ozon/Delivery'
-import expensesData from './export/expensesData'
-import generalData from './export/generalData'
-import partnerData from './partnerData'
-import replenishmentData from './export/replenishmentData'
-import genealogyData from './genealogyData'
+import ExcelJS from "exceljs";
+import { DocuemntEnum } from "~/data/enums";
+import { Buyout } from "~/server/lib/models/ozon/Buyout";
+import { Delivery } from "~/server/lib/models/ozon/Delivery";
+import expensesData from "./export/expensesData";
+import generalData from "./export/generalData";
+import partnerData from "./partnerData";
+import replenishmentData from "./export/replenishmentData";
+import genealogyData from "./genealogyData";
 
 function formatNumber(value: number): string {
-  return value.toLocaleString('ru-RU')
+  return value.toLocaleString("ru-RU");
 }
 
 const tableColumns = {
   general: [
-    { header: 'Сумма', key: 'summ', width: 16, font: { bold: true } },
-    { header: 'Дата', key: 'date', width: 16, font: { bold: true } },
-    { header: 'Источник', key: 'source', width: 16, font: { bold: true } },
-    { header: 'Услуга', key: 'service', width: 16, font: { bold: true } },
-    { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
-    { header: 'ID заказа', key: 'orderId', width: 46, font: { bold: true } },
-    { header: 'Комментарий', key: 'comment', width: 16, font: { bold: true } },
+    { header: "Сумма", key: "summ", width: 16, font: { bold: true } },
+    { header: "Дата", key: "date", width: 16, font: { bold: true } },
+    { header: "Источник", key: "source", width: 16, font: { bold: true } },
+    { header: "Услуга", key: "service", width: 16, font: { bold: true } },
+    { header: "Артикул", key: "article", width: 16, font: { bold: true } },
+    { header: "ID заказа", key: "orderId", width: 46, font: { bold: true } },
+    { header: "Комментарий", key: "comment", width: 16, font: { bold: true } },
   ],
   replenishment: [
-    { header: 'Сумма', key: 'summ', width: 16, font: { bold: true } },
-    { header: 'Дата', key: 'date', width: 16, font: { bold: true } },
-    { header: 'Источник', key: 'source', width: 16, font: { bold: true } },
-    { header: 'Услуга', key: 'service', width: 16, font: { bold: true } },
-    { header: 'ID заказа', key: 'orderId', width: 46, font: { bold: true } },
-    { header: 'Комментарий', key: 'comment', width: 16, font: { bold: true } },
+    { header: "Сумма", key: "summ", width: 16, font: { bold: true } },
+    { header: "Дата", key: "date", width: 16, font: { bold: true } },
+    { header: "Источник", key: "source", width: 16, font: { bold: true } },
+    { header: "Услуга", key: "service", width: 16, font: { bold: true } },
+    { header: "ID заказа", key: "orderId", width: 46, font: { bold: true } },
+    { header: "Комментарий", key: "comment", width: 16, font: { bold: true } },
   ],
   expenses: [
-    { header: 'Сумма', key: 'summ', width: 16, font: { bold: true } },
-    { header: 'Дата', key: 'date', width: 16, font: { bold: true } },
-    { header: 'Источник', key: 'source', width: 16, font: { bold: true } },
-    { header: 'Услуга', key: 'service', width: 16, font: { bold: true } },
-    { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
-    { header: 'ID заказа', key: 'orderId', width: 46, font: { bold: true } },
-    { header: 'Комментарий', key: 'comment', width: 16, font: { bold: true } },
+    { header: "Сумма", key: "summ", width: 16, font: { bold: true } },
+    { header: "Дата", key: "date", width: 16, font: { bold: true } },
+    { header: "Источник", key: "source", width: 16, font: { bold: true } },
+    { header: "Услуга", key: "service", width: 16, font: { bold: true } },
+    { header: "Артикул", key: "article", width: 16, font: { bold: true } },
+    { header: "ID заказа", key: "orderId", width: 46, font: { bold: true } },
+    { header: "Комментарий", key: "comment", width: 16, font: { bold: true } },
   ],
   partner: [
-    { header: 'Сумма', key: 'summ', width: 16, font: { bold: true } },
-    { header: 'Дата', key: 'date', width: 16, font: { bold: true } },
-    { header: 'Источник', key: 'source', width: 16, font: { bold: true } },
-    { header: 'Услуга', key: 'service', width: 16, font: { bold: true } },
+    { key: "summ", header: "Сумма", width: 16, font: { bold: true } },
+    { key: "date", header: "Дата", width: 16, font: { bold: true } },
+    { key: "source", header: "Источник", width: 16, font: { bold: true } },
+    { key: "service", header: "Услуга", width: 16, font: { bold: true } },
   ],
   genealogy: [
-    { header: 'Сумма', key: 'summ', width: 16, font: { bold: true } },
-    { header: 'Дата', key: 'date', width: 16, font: { bold: true } },
-    { header: 'Дата выполнения', key: 'executionDate', width: 16, font: { bold: true } },
-    { header: 'Источник', key: 'mp', width: 16, font: { bold: true } },
-    { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
-    { header: 'Услуга', key: 'service', width: 16, font: { bold: true } },
-    { header: 'ID заказа', key: 'orderId', width: 46, font: { bold: true } },
-    { header: 'Комментарий', key: 'comment', width: 16, font: { bold: true } },
-    { header: 'Пользователь', key: 'username', width: 16, font: { bold: true } },
-    { header: 'Комиссионные', key: 'commission', width: 16, font: { bold: true } },
-
+    { key: "commission", header: "Комиссионнные", width: 16, font: { bold: true } },
+    { key: "username", header: "Логин реферала", width: 16, font: { bold: true } },
+    { key: "date", header: "Дата добавления в рефералы", width: 16, font: { bold: true } },
   ],
-}
+};
 
 async function fetchData(type: string, user: any, dateRange?: any) {
-  console.log(type)
   switch (type) {
-    case 'general':
-      return await generalData(user, 100000, 0, 0, dateRange, '')
-    case 'replenishment':
-      return await replenishmentData(user, 100000, 0, 0, dateRange, '')
-    case 'expenses':
-      return await expensesData(user, 100000, 0, 0, dateRange, '')
-    case 'partner':
-      return await partnerData(user, 100000, 0, 0, dateRange)
-    case 'genealogy':
-      return await genealogyData(user, 100000, 0, 0)
+    case "general":
+      return await generalData(user, 100000, 0, 0, dateRange, "");
+    case "replenishment":
+      return await replenishmentData(user, 100000, 0, 0, dateRange, "");
+    case "expenses":
+      return await expensesData(user, 100000, 0, 0, dateRange, "");
+    case "partner":
+      return await partnerData(user, 100000, 0, 0, dateRange);
+    case "genealogy":
+      return await genealogyData(user, 100000, 0, 0);
     default:
-      return []
+      return [];
   }
 }
 
 export default defineEventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { tableType, page = 1, dateRange }: any = getQuery(event)
+  const { tableType, page = 1, dateRange }: any = getQuery(event);
 
-  let trueDateRange = {}
-  
-  if (dateRange) {
-    
-    const date1 = new Date(JSON.parse(dateRange[0]))
-    date1.setHours(0, 0, 0, 0)
-    const date2 = new Date(JSON.parse(dateRange[1]))
-    date2.setHours(23, 59, 0, 0)
-    
-    trueDateRange = {
-      dataoperation: {
-        $lte: date2,
-        $gte: date1,
-      },
+  let trueDateRange = {};
+  if (tableType !== "partner") {
+    if (dateRange) {
+      const date1 = new Date(JSON.parse(dateRange[0]));
+      date1.setHours(0, 0, 0, 0);
+      const date2 = new Date(JSON.parse(dateRange[1]));
+      date2.setHours(23, 59, 0, 0);
+
+      trueDateRange = {
+        dataoperation: {
+          $lte: date2,
+          $gte: date1,
+        },
+      };
+    } else {
+      trueDateRange = {
+        dataoperation: {
+          $lte: new Date(),
+          $gte: new Date(new Date("2020-01-01")),
+        },
+      };
     }
   } else {
-    trueDateRange = {
-      dataoperation: {
-        $lte: new Date(),
-        $gte: new Date(new Date('2020-01-01')),
-      },
+    if (dateRange) {
+      const date1 = new Date(JSON.parse(dateRange[0]));
+      date1.setHours(0, 0, 0, 0);
+      const date2 = new Date(JSON.parse(dateRange[1]));
+      date2.setHours(23, 59, 0, 0);
+
+      trueDateRange = {
+        date: {
+          $lte: date2,
+          $gte: date1,
+        },
+      };
+    } else {
+      trueDateRange = {
+        date: {
+          $lte: new Date(),
+          $gte: new Date(new Date("2020-01-01")),
+        },
+      };
     }
   }
 
   try {
-    const data: any[] = await fetchData(tableType, user, trueDateRange)
-    const columns: any = tableColumns[tableType] || tableColumns.general
+    const data: any[] = await fetchData(tableType, user, trueDateRange);
+    const columns: any = tableColumns[tableType] || tableColumns.general;
 
-    const workbook = new ExcelJS.Workbook()
-    const sheet = workbook.addWorksheet('Таблица', {
+
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Таблица", {
       headerFooter: { firstHeader: `Всего записей: ${data.length}` },
-    })
+    });
 
-    sheet.columns = columns
-    sheet.addRows(data)
+    sheet.columns = columns;
+    sheet.addRows(data);
 
-    const buffer = await workbook.xlsx.writeBuffer()
+    const buffer = await workbook.xlsx.writeBuffer();
 
-    return buffer
+    return buffer;
   } catch (e) {
     throw createError({
       statusCode: 500,
-      message: 'Не удалось создать таблицу',
-    })
+      message: "Не удалось создать таблицу",
+    });
   }
-})
+});
