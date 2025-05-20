@@ -195,7 +195,7 @@ async function copyImageToClipboard(base64Image: any) {
         <div class="flex gap-2">
           <h2 class="text-lg font-bold">Партнерка</h2>
         </div>
-        <div class="flex flex-col gap-[15px]">
+        <div class="flex flex-col gap-[15px] ">
           <div
             class="bg-white rounded-lg px-[15px] py-2.5 border border-[#ededed]"
           >
@@ -222,36 +222,7 @@ async function copyImageToClipboard(base64Image: any) {
             </div>
           </div>
 
-          <div
-            class="bg-white rounded-lg px-[15px] py-2.5 border border-[#ededed]"
-          >
-            <h3 class="mb-1 sm:mb-3">QR-код:</h3>
-            <div
-              class="join bg-white rounded-lg border border-none flex justify-between gap-2 items-center justify-self-end w-full"
-            >
-              <div
-                class="join-item bg-transparent rounded-lg w-full flex gap-1"
-              >
-                <button
-                  @click="copyImageToClipboard(qrCode)"
-                  class="w-full text-[#1B38CA] hover:text-opacity-100 flex items-center gap-3"
-                >
-                  <NuxtImg
-                    v-if="!qrLoading"
-                    class="rounded-lg"
-                    height="100"
-                    width="100"
-                    :src="qrCode"
-                  />
-                  <div v-else class="w-full flex justify-center items-center">
-                    <span
-                      class="loading loading-dots loading-lg text-primary"
-                    ></span>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
+    
         </div>
       </div>
     </div>

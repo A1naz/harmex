@@ -34,8 +34,10 @@ const tableType = ref("general");
 const currentPage = ref(1);
 const loadingExport = ref(false);
 const config = useRuntimeConfig();
-const refUrl = computed(
-  () => `https://harmex.ru/?ref=${user.value.uuid || "partner"}`
+const refUrl = computed(() =>
+  user.value.username === "dmagrunin" || user.value.username === "test"
+    ? `https://harmex.ru/avito.html?ref=${user.value.uuid}`
+    : `https://harmex.ru/?ref=${user.value.uuid || "partner"}`
 );
 
 const headersForTable = ref<any>([]);
@@ -154,12 +156,12 @@ async function updateTableData() {
         { value: "source", label: "Источник" },
         { value: "service", label: "Услуга" },
       ];
-      console.log(fetchedData)
+      console.log(fetchedData);
       tableData.value = fetchedData.value.map((item: any) => ({
         summ: item.summ,
         date: item.date,
         source: item.source,
-        service: item.service
+        service: item.service,
       }));
       loading.value = false;
       break;
@@ -195,7 +197,7 @@ async function exportReadyXLS() {
   fileLink.href = fileURL;
   fileLink.setAttribute(
     "download",
-    buttonsLine.find((item: any) => item.value === tableType.value).label +
+    (buttonsLine.find((item: any) => item.value === tableType.value)?.label || "export") +
       ".xlsx"
   );
   document.body.appendChild(fileLink);
