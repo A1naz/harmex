@@ -36,7 +36,7 @@ const loadingExport = ref(false);
 const config = useRuntimeConfig();
 const refUrl = computed(() =>
   user.value.username === "dmagrunin" || user.value.username === "test"
-    ? `https://harmex.ru/avito?ref=${user.value.uuid}`
+    ? `https://harmex.ru/samovykupy-tovarov-na-avito?ref=${user.value.uuid}`
     : `https://harmex.ru/?ref=${user.value.uuid || "partner"}`
 );
 
