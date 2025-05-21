@@ -1,8 +1,8 @@
-import { model, Schema } from 'mongoose'
-import { v4 as uuid } from 'uuid'
-import { Tariff } from './Tariff'
+import { model, Schema } from "mongoose";
+import { v4 as uuid } from "uuid";
+import { Tariff } from "./Tariff";
 
-interface IUserSchema extends IUser, Document { }
+interface IUserSchema extends IUser, Document {}
 
 const partnerSchema = new Schema({
   balance: { type: Number, default: 0 },
@@ -10,7 +10,7 @@ const partnerSchema = new Schema({
   rewardPercent: { type: Number, default: 5 },
   followCount: { type: Number, default: 0 },
   secondLevelPercent: { type: Number, default: 2 },
-})
+});
 
 const UserSchema = new Schema<IUserSchema>({
   orgKey: { type: String },
@@ -49,7 +49,7 @@ const UserSchema = new Schema<IUserSchema>({
 
   lastOrgInfo: { type: Object, required: false },
 
-  roles: [{ type: String, ref: 'Role' }],
+  roles: [{ type: String, ref: "Role" }],
   MPTariffs: [
     {
       mp: { type: String },
@@ -68,7 +68,7 @@ const UserSchema = new Schema<IUserSchema>({
   ffEnabled: { type: Boolean, default: false },
   partner: {
     type: partnerSchema,
-    ref: 'Partner',
+    ref: "Partner",
     default: {
       balance: 0,
       refCount: 0,
@@ -85,6 +85,7 @@ const UserSchema = new Schema<IUserSchema>({
   votedForService: { type: [Object], default: [] },
   isPartnerWithdrawAvailable: { type: Boolean, default: false },
   post: { type: String },
-})
+  changedMpTariff: { type: Boolean },
+});
 
-export const User = model<IUserSchema>('User', UserSchema)
+export const User = model<IUserSchema>("User", UserSchema);

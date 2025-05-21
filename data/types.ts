@@ -80,6 +80,7 @@ export interface IUser extends Entity {
   ks: string
   paymentEmail: string
   lastOrgInfo: object
+  changedMpTariff: boolean
 }
 
 export interface IUserLogs extends Entity {
