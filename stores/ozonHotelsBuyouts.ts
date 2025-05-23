@@ -125,7 +125,7 @@ export const useOzonHotelsBuyoutStore = defineStore("ozonHotelsBuyout", {
           promoCode: "",
         })
       );
-      this.changeRule(true, this.createProducts.length - 1, 5);
+      // this.changeRule(true, this.createProducts.length - 1, 5);
     },
     removeSearchQuery(index: number, place: number) {
       this.createProducts[index].searchQuery.splice(place, 1);
