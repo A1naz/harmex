@@ -16,6 +16,20 @@ export default eventHandler(async (event) => {
 
   const { summ, faceType, email }: any = getQuery(event)
 
+  if (!summ) {
+    throw createError({
+      statusCode: 400,
+      message: 'Сумма не указана',
+    })
+  }
+
+  if (summ > 1000000) {
+      throw createError({
+      statusCode: 400,
+      message: 'Максимальная сумма пополнения 1000000 рублей',
+    })
+  }
+
   const bank = await BankInfo.findOne({ portal: true }).sort({ balance: 1 })
   if (!bank) {
     throw createError({

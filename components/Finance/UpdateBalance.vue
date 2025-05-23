@@ -143,7 +143,7 @@ const showTooltip = ref(false);
 
         <div class="flex gap-[16px] self-end mt-1">
           <button
-            :disabled="!summ || loading || !isEmail || summ < 250"
+            :disabled="!summ || loading || !isEmail || summ < 10 || summ > 1000000"
             @click="balanceUpdate"
             class="py-2 px-9 btn btn-sm h-[2.5rem] disabled:text-white border rounded-lg disabled:bg-[#595959] disabled:border-[#595959] text-white bg-primary border-primary hover:bg-white hover:text-primary hover:border-primary"
           >
