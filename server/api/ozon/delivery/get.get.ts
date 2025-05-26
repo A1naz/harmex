@@ -69,8 +69,10 @@ export default eventHandler(async (event) => {
       statusdelivery: {
         $elemMatch: {
           $or: [
-            { status: "^Ожидает получения.*" },
-            { status: { $regex: "^Ожидает получения.*" } },
+          { status: '^Ожидает получения.*' },
+          { status: '^Можно забирать.*' },
+          { status: { $regex: '^Ожидает получения.*' } },
+          { status: { $regex: '^Можно забирать.*' } },
           ],
         },
       },
@@ -89,8 +91,10 @@ export default eventHandler(async (event) => {
       statusdelivery: {
         $elemMatch: {
           $or: [
-            { status: "^Ожидает получения.*" },
-            { status: { $regex: "^Ожидает получения.*" } },
+         { status: '^Ожидает получения.*' },
+          { status: '^Можно забирать.*' },
+          { status: { $regex: '^Ожидает получения.*' } },
+          { status: { $regex: '^Можно забирать.*' } },
           ],
         },
       },
