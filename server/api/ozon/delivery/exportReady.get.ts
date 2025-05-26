@@ -25,7 +25,9 @@ async function getReady(user: Document, dateRange: any) {
       $elemMatch: {
         $or: [
           { status: '^Ожидает получения.*' },
+          { status: '^Можно забирать.*' },
           { status: { $regex: '^Ожидает получения.*' } },
+          { status: { $regex: '^Можно забирать.*' } },
         ],
       },
     },

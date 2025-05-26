@@ -58,7 +58,7 @@ export default eventHandler(async (event) => {
   )
   const filtered = format.filter((item) => {
     if (item)
-      return item!.currentstatus.includes('Ожидает получения')
+      return item!.currentstatus.includes('Ожидает получения') || item!.currentstatus.includes('Можно забирать')
     else
       return false
   })
