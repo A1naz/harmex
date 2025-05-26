@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
       type: "price",
     };
   }
+  
 
 
 
@@ -45,6 +46,7 @@ export default defineEventHandler(async (event) => {
     value: prices.prices.buyouts.value,
     type: prices.prices.buyouts.type,
   });
+  
   return {
     minPrice: prices.prices.buyouts.minPrice,
     value: prices.prices.buyouts.value,

@@ -53,7 +53,13 @@ export const useMainStore = defineStore("main", {
       }
     },
     async getPrices(mp: string = "wildberries") {
-      const { data } = await useFetch("/api/prices/buyoutPrices", {
+      const { data }: {
+        data: {
+          minPrice: number;
+          value: number;
+          type: string;
+        };
+      } = await useFetch("/api/prices/buyoutPrices", {
         method: "GET",
         query: {
           mp,
@@ -61,6 +67,7 @@ export const useMainStore = defineStore("main", {
       });
 
       if (data.value) {
+        console.log(data.value);
         return data.value;
       } else {
         return {

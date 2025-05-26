@@ -57,8 +57,9 @@ const unreadNotificationsLength = computed(() => {
   return notifications.value.filter((n: any) => !n.isReaded).length;
 });
 
-watch(unreadNotificationsLength, (newValue: number) => {
-  store.notificationsLength = newValue;
+store.notificationsLength = computed(() => {
+  
+  return unreadNotificationsLength.value;
 });
 
 const isAllChecked = computed(() => {

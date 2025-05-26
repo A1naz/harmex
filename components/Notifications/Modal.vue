@@ -58,6 +58,7 @@ const unreadNotificationsLength = computed(() => {
 });
 
 store.notificationsLength = computed(() => {
+  
   return unreadNotificationsLength.value;
 });
 
