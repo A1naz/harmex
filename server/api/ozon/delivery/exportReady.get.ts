@@ -1,10 +1,10 @@
-import type { Document } from 'mongoose'
+import type { Document } from "mongoose";
 
-import { Buyout } from '~~/server/lib/models/ozon/Buyout'
-import { Buyoutlog } from '~~/server/lib/models/ozon/Buyoutlog'
-import { Delivery } from '~~/server/lib/models/ozon/Delivery'
-import ExcelJS from 'exceljs'
-import { DocuemntEnum } from '~/data/enums'
+import { Buyout } from "~~/server/lib/models/ozon/Buyout";
+import { Buyoutlog } from "~~/server/lib/models/ozon/Buyoutlog";
+import { Delivery } from "~~/server/lib/models/ozon/Delivery";
+import ExcelJS from "exceljs";
+import { DocuemntEnum } from "~/data/enums";
 
 const keys = Object.keys as <T>(
   obj: T
@@ -12,74 +12,77 @@ const keys = Object.keys as <T>(
   ? U extends string
     ? U
     : U extends number
-      ? `${U}`
-      : never
-  : never)[]
+    ? `${U}`
+    : never
+  : never)[];
 
 async function getReady(user: Document, dateRange: any) {
   const deliveries = await Delivery.find({
     ...dateRange,
     user,
-    status: { $ne: 'completed' },
+    status: { $ne: "completed" },
     statusdelivery: {
       $elemMatch: {
         $or: [
-          { status: '^Ожидает получения.*' },
-          { status: '^Можно забирать.*' },
-          { status: { $regex: '^Ожидает получения.*' } },
-          { status: { $regex: '^Можно забирать.*' } },
+          { status: "^Ожидает получения.*" },
+          { status: "^Можно забирать.*" },
+          { status: { $regex: "^Ожидает получения.*" } },
+          { status: { $regex: "^Можно забирать.*" } },
         ],
       },
     },
-  }).sort({ _id: -1 })
+  }).sort({ _id: -1 });
 
-  const buyoutsId = deliveries.map(item => item.idbuyout)
-  const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
-  const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
+  const buyoutsId = deliveries.map((item) => item.idbuyout);
+  const buyouts = await Buyout.find({ _id: { $in: buyoutsId } });
+  const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } });
 
   const format = await Promise.all(
     deliveries
       .map(async (delivery, index) => {
         const buyout = buyouts.find(
-          buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf(),
-        )
+          (buyout) => buyout._id.valueOf() === delivery.idbuyout.valueOf()
+        );
 
-        if (!buyout)
-          return undefined
+        if (!buyout) return undefined;
 
         const foundLog = logs.find(
-          item =>
-            item.buyout.valueOf() === buyout._id.valueOf()
-            && item.text.includes('Выкуп выполнен'),
-        )
-        const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt)
-        const place = index + 1
-        const finishDateHours = finishDate.getHours()
-        const finishDateMinutes = finishDate.getMinutes()
+          (item) =>
+            item.buyout.valueOf() === buyout._id.valueOf() &&
+            item.text.includes("Выкуп выполнен")
+        );
+        const finishDate = new Date(
+          foundLog ? foundLog.date : buyout.createdAt
+        );
+        const place = index + 1;
+        const finishDateHours = finishDate.getHours();
+        const finishDateMinutes = finishDate.getMinutes();
         const finishTime = `${finishDateHours
           .toString()
-          .padStart(2, '0')}:${finishDateMinutes.toString().padStart(2, '0')}`
+          .padStart(2, "0")}:${finishDateMinutes.toString().padStart(2, "0")}`;
 
-        const phone: any = delivery.recipientphone
-        const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
+        const phone: any = delivery.recipientphone;
+        const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`;
         const currentstatus = delivery.statusdelivery?.length
           ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
-          : 'Неизвестно'
+          : "Неизвестно";
         const statusupdated = delivery.statusdelivery?.length
           ? new Date(
-            delivery.statusdelivery[delivery.statusdelivery.length - 1].date,
-          )
-          : new Date()
+              delivery.statusdelivery[delivery.statusdelivery.length - 1].date
+            )
+          : new Date();
         const deliveryDate = delivery.statusdelivery?.length
           ? new Date(
-            delivery.statusdelivery?.find(item =>
-              item.status.includes('Ожидает получения'),
-            )?.date,
-          )
-          : new Date()
+              delivery.statusdelivery?.find(
+                (item) =>
+                  item.status.includes("Ожидает получения") ||
+                  item.status.includes("Можно забирать")
+              )?.date
+            )
+          : new Date();
         const expireDate = new Date(
-          deliveryDate.getTime() + 1000 * 60 * 60 * 24 * 7,
-        )
+          deliveryDate.getTime() + 1000 * 60 * 60 * 24 * 7
+        );
         return {
           index,
           place,
@@ -106,150 +109,150 @@ async function getReady(user: Document, dateRange: any) {
           finishTime,
           updatedAt: new Date(delivery.updatedAt),
           fio: buyout.FIO,
-        }
+        };
       })
-      .filter(item => item !== undefined),
-  )
+      .filter((item) => item !== undefined)
+  );
 
-  return format
+  return format;
 }
 
 export default eventHandler(async (event) => {
+  const { dateRange }: any = getQuery(event);
 
-  const { dateRange }: any = getQuery(event)
-
-  let trueDateRange = {}
+  let trueDateRange = {};
   if (dateRange) {
     trueDateRange = {
       updatedAt: {
         $gte: new Date(JSON.parse(dateRange[0])).setHours(0, 0, 0, 0),
         $lt: new Date(JSON.parse(dateRange[1])).setHours(23, 59, 0, 0),
       },
-    }
+    };
   }
   try {
-    const user = await getAdminEntity(event)
-    if (!user)
-      return sendRedirect(event, '/auth', 302)
+    const user = await getAdminEntity(event);
+    if (!user) return sendRedirect(event, "/auth", 302);
 
-    const { type } = getQuery(event)
-    const workbook = new ExcelJS.Workbook()
-    const ready = (await getReady(user, trueDateRange)).filter(item => item !== undefined)
+    const { type } = getQuery(event);
+    const workbook = new ExcelJS.Workbook();
+    const ready = (await getReady(user, trueDateRange)).filter(
+      (item) => item !== undefined
+    );
 
-    const sheet = workbook.addWorksheet('Готовы к выдаче', {
+    const sheet = workbook.addWorksheet("Готовы к выдаче", {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
-    })
+    });
 
     sheet.columns = [
-      { header: 'Номер', key: 'place', font: { bold: true } },
+      { header: "Номер", key: "place", font: { bold: true } },
       {
-        header: 'Штрих-код',
-        key: 'receiptcode',
+        header: "Штрих-код",
+        key: "receiptcode",
         width: 48,
         font: { bold: true },
       },
       {
-        header: 'Статус',
-        key: 'currentstatus',
+        header: "Статус",
+        key: "currentstatus",
         width: 16,
         font: { bold: true },
       },
-      { header: 'Товар', key: 'productname', width: 48, font: { bold: true } },
-      { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
-      { header: 'Размер', key: 'size', width: 16, font: { bold: true } },
+      { header: "Товар", key: "productname", width: 48, font: { bold: true } },
+      { header: "Артикул", key: "article", width: 16, font: { bold: true } },
+      { header: "Размер", key: "size", width: 16, font: { bold: true } },
       {
-        header: 'Дата создания заказа',
-        key: 'finishDate',
-        width: 16,
-        font: { bold: true },
-      },
-      {
-        header: 'Время создания заказа',
-        key: 'finishTime',
+        header: "Дата создания заказа",
+        key: "finishDate",
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'Дата доставки в ПВЗ',
-        key: 'deliveryDate',
+        header: "Время создания заказа",
+        key: "finishTime",
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'Дата окончания срока забора с ПВЗ',
-        key: 'expireDate',
+        header: "Дата доставки в ПВЗ",
+        key: "deliveryDate",
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'Код ПВЗ',
-        key: 'receiptcode',
-        width: 16,
-        font: { bold: true },
-      },
-      { header: 'ID Выкупа', key: 'uuid', width: 16, font: { bold: true } },
-      { header: 'ПВЗ', key: 'point', width: 64, font: { bold: true } },
-      {
-        header: 'Получатель',
-        key: 'recipient',
+        header: "Дата окончания срока забора с ПВЗ",
+        key: "expireDate",
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'Телефон',
-        key: 'recipientphone',
+        header: "Код ПВЗ",
+        key: "receiptcode",
+        width: 16,
+        font: { bold: true },
+      },
+      { header: "ID Выкупа", key: "uuid", width: 16, font: { bold: true } },
+      { header: "ПВЗ", key: "point", width: 64, font: { bold: true } },
+      {
+        header: "Получатель",
+        key: "recipient",
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'Дата обновления',
-        key: 'updatedAt',
+        header: "Телефон",
+        key: "recipientphone",
         width: 16,
         font: { bold: true },
       },
       {
-        header: 'ФИО',
-        key: 'fio',
+        header: "Дата обновления",
+        key: "updatedAt",
+        width: 16,
+        font: { bold: true },
+      },
+      {
+        header: "ФИО",
+        key: "fio",
         width: 32,
         font: { bold: true },
       },
-    ]
+    ];
 
-    sheet.addRows(ready)
+    sheet.addRows(ready);
     // add qr codes to sheet
 
     for (const item of ready) {
       if (
-        !item?.receiptcodeqr
-        || item?.receiptcodeqr?.length < 40
-        || item?.receiptcodeqr === 'undefined'
+        !item?.receiptcodeqr ||
+        item?.receiptcodeqr?.length < 40 ||
+        item?.receiptcodeqr === "undefined"
       ) {
-        continue
+        continue;
       }
 
       if (
         item.receiptcodeqr.includes(
-          'data:image/png;base64,data:image/png;base64,',
+          "data:image/png;base64,data:image/png;base64,"
         )
       ) {
         item.receiptcodeqr = item.receiptcodeqr.replace(
-          'data:image/png;base64,',
-          '',
-        )
+          "data:image/png;base64,",
+          ""
+        );
       }
 
       const image = workbook.addImage({
         base64: item?.receiptcodeqr,
-        extension: 'png',
-      })
+        extension: "png",
+      });
       sheet.addImage(image, {
         tl: { col: 1.3, row: item!.place + 0.8 },
         ext: { width: 280, height: 78 },
-      })
-      sheet.getRow(item!.place + 1).height = 100
+      });
+      sheet.getRow(item!.place + 1).height = 100;
     }
     // export table
-    const buffer = await workbook.xlsx.writeBuffer()
+    const buffer = await workbook.xlsx.writeBuffer();
 
     // await userLog(event, {
     //   documentType: DocuemntEnum.Delivery,
@@ -257,13 +260,12 @@ export default eventHandler(async (event) => {
     //   comment: 'Экспорт доставок готовых к выдаче',
     // })
 
-    return buffer
-  }
-  catch (e) {
-    console.log(e)
+    return buffer;
+  } catch (e) {
+    console.log(e);
     throw createError({
       statusCode: 500,
-      message: 'Не удалось создать таблицу',
-    })
+      message: "Не удалось создать таблицу",
+    });
   }
-})
+});

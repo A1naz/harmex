@@ -108,7 +108,7 @@ const { $dayjs } = useNuxtApp();
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
                 :class="{
                   'bg-orange-200':
-                    info.currentstatus.includes('Ожидает получения') &&
+                    info.currentstatus.includes('Ожидает получения') || info.currentstatus.includes('Можно забирать') &&
                     info.statusdelivery.length > 1,
                   'bg-green-200':
                     info.currentstatus.includes('Получен') &&
