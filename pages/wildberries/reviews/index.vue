@@ -523,7 +523,6 @@ async function selectFilterDate(e: any) {
             ref="target"
             class="flex justify-center items-center h-4 mb-10"
           />
-          asdasd
         </div>
         <div
           v-else-if="isFetch"
