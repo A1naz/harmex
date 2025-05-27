@@ -34,6 +34,14 @@ export default eventHandler(async (event) => {
     success: true,
     message: '',
   }
+
+    const balanceIsExist = await checkBalance(user, products, 'buyouts', 'avito')
+  if (!balanceIsExist) {
+    result.success = false
+    result.message = `Недостаточно средств для совершения выкупа`
+    return result
+  }
+
   for (const item of products) {
 
     const rules = item.rules.map((rule) => rule.id)

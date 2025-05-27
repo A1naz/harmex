@@ -3475,7 +3475,7 @@ const categories = ref<any>([
           </div>
         </form>
       </dialog>
-      <BuyoutFlowwowCreateChecksModal
+      <BuyoutAvitoCreateChecksModal
         v-if="checksModal"
         :is-create-button-disabled="isCreateButtonDisabled"
         :state="checksModal"

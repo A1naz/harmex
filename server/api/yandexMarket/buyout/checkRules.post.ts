@@ -34,7 +34,7 @@ export default eventHandler(async (event) => {
 
   const products: Item[] = body
 
-  const balanceIsExist = await checkBalance(user, products)
+  const balanceIsExist = await checkBalance(user, products,  'buyouts', 'ym')
   const result = {
     success: true,
     message: '',

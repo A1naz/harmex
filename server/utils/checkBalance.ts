@@ -11,8 +11,36 @@ import { Review as flowwowReview } from "../lib/models/flowwow/Review";
 import { Review as yandexMarketReview } from "../lib/models/yandexMarket/Review";
 import { Review as avitoReview } from "../lib/models/avito/Review";
 
-async function getPricesMap() {
+function getBuyoutsSumm(
+  products: any,
+  mp: string = "wildberries",
+  pricesMap: any
+) {
+  let summ = 0;
+
+  for (const product of products) {
+    summ += product.discountPrice
+      ? parseFloat(product.discountPrice)
+      : parseFloat(product.price);
+    if (pricesMap[mp].buyoutsType === "price") {
+      summ += pricesMap[mp].buyouts;
+    } else if (pricesMap[mp].buyoutsType === "percent") {
+      const percentSumm = parseFloat(product.discountPrice) ? parseFloat(product.discountPrice) : parseFloat(product.price) * (pricesMap[mp].buyouts / 100);
+      console.log(percentSumm);
+      if (percentSumm < pricesMap[mp].buyoutsMinPrice) {
+        summ += pricesMap[mp].buyoutsMinPrice;
+      } else {
+        summ += percentSumm;
+      }
+    }
+  }
+
+  return summ;
+}
+
+async function getPricesMap(user: any) {
   const pricesDocument = await DefaultPrices.findOne({});
+  const userTariffs = user.MPTariffs ? user.MPTariffs : [];
 
   if (!pricesDocument?.values) {
     console.log("Prices document not found");
@@ -20,15 +48,35 @@ async function getPricesMap() {
   }
 
   return pricesDocument.values.reduce((acc, item) => {
-    acc[item.mp] = {
-      review: item.prices?.review?.value || 0,
-      buyouts: item.prices?.buyouts?.value || 0,
-      viewings: item.prices?.viewing?.value || 0,
-      question: item.prices?.questionProduct?.value || 0,
-      cart: item.prices?.cart?.value || 0,
-      likes: item.prices?.likeReview?.value || 0,
-      productlikes: item.prices?.likeProduct?.value || 0,
-    };
+    const isUserHasMPTariff = userTariffs.find(
+      (tariff: any) => tariff.mp === item.mp
+    );
+    if (isUserHasMPTariff) {
+      acc[item.mp] = {
+        review: isUserHasMPTariff.prices?.review?.value || 0,
+        buyouts: isUserHasMPTariff.prices?.buyouts?.value || 0,
+        buyoutsType: isUserHasMPTariff.prices?.buyouts?.type || "price",
+        buyoutsMinPrice: isUserHasMPTariff.prices?.buyouts?.minPrice || 0,
+        viewings: isUserHasMPTariff.prices?.viewing?.value || 0,
+        question: isUserHasMPTariff.prices?.questionProduct?.value || 0,
+        cart: isUserHasMPTariff.prices?.cart?.value || 0,
+        likes: isUserHasMPTariff.prices?.likeReview?.value || 0,
+        productlikes: isUserHasMPTariff.prices?.likeProduct?.value || 0,
+      };
+    } else {
+      acc[item.mp] = {
+        review: item.prices?.review?.value || 0,
+        buyouts: item.prices?.buyouts?.value || 0,
+        buyoutsType: item.prices?.buyouts?.type || "price",
+        buyoutsMinPrice: item.prices?.buyouts?.minPrice || 0,
+        viewings: item.prices?.viewing?.value || 0,
+        question: item.prices?.questionProduct?.value || 0,
+        cart: item.prices?.cart?.value || 0,
+        likes: item.prices?.likeReview?.value || 0,
+        productlikes: item.prices?.likeProduct?.value || 0,
+      };
+    }
+
     return acc;
   }, {});
 }
@@ -42,6 +90,11 @@ function getCurrentProductSumm(product: any, prices: any, service: any) {
   } else if (service === "questions") {
     return prices.question;
   } else {
+    console.log(
+      "prices[service]" + product.amount
+        ? prices[service] * product.amount
+        : prices[service]
+    );
     return product.amount ? prices[service] * product.amount : prices[service];
   }
 }
@@ -49,10 +102,10 @@ function getCurrentProductSumm(product: any, prices: any, service: any) {
 export const checkBalance = async (
   user: any,
   products: any,
-  service = "buyouts"
+  service = "buyouts",
+  mp: string = "wildberries"
 ) => {
   try {
-    // console.log('checkBalance')
     if (!user) return false;
 
     if (user.username === "rabo4yn") {
@@ -61,7 +114,7 @@ export const checkBalance = async (
     }
 
     let totalPrice = 0;
-    const pricesMap = await getPricesMap();
+    const pricesMap = await getPricesMap(user);
 
     const [
       flowwowBuyoutSum,
@@ -81,7 +134,39 @@ export const checkBalance = async (
         { $project: { price: { $toDouble: "$product.price" } } },
         {
           $project: {
-            priceWithExtra: { $add: ["$price", pricesMap["flowwow"].buyouts] },
+            priceWithExtra: {
+              $cond: [
+                { $eq: [pricesMap["flowwow"].buyoutsType, "percent"] },
+                {
+                  $add: [
+                    "$price",
+                    {
+                      $cond: [
+                        {
+                          $lt: [
+                            {
+                              $multiply: [
+                                "$price",
+                                pricesMap["flowwow"].buyouts / 100,
+                              ],
+                            },
+                            pricesMap["flowwow"].buyoutsMinPrice,
+                          ],
+                        },
+                        pricesMap["flowwow"].buyoutsMinPrice,
+                        {
+                          $multiply: [
+                            "$price",
+                            pricesMap["flowwow"].buyouts / 100,
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                { $add: ["$price", pricesMap["flowwow"].buyouts] },
+              ],
+            },
           },
         },
         { $group: { _id: null, total: { $sum: "$priceWithExtra" } } },
@@ -101,8 +186,40 @@ export const checkBalance = async (
           },
         },
         {
-          $project: {
-            priceWithExtra: { $add: ["$price", pricesMap["ozon"].buyouts] },
+            $project: {
+            priceWithExtra: {
+              $cond: [
+                { $eq: [pricesMap["ozon"].buyoutsType, "percent"] },
+                {
+                  $add: [
+                    "$price",
+                    {
+                      $cond: [
+                        {
+                          $lt: [
+                            {
+                              $multiply: [
+                                "$price",
+                                pricesMap["ozon"].buyouts / 100,
+                              ],
+                            },
+                            pricesMap["ozon"].buyoutsMinPrice,
+                          ],
+                        },
+                        pricesMap["ozon"].buyoutsMinPrice,
+                        {
+                          $multiply: [
+                            "$price",
+                            pricesMap["ozon"].buyouts / 100,
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                { $add: ["$price", pricesMap["ozon"].buyouts] },
+              ],
+            },
           },
         },
         {
@@ -119,7 +236,39 @@ export const checkBalance = async (
         { $project: { price: { $toDouble: "$product.price" } } },
         {
           $project: {
-            priceWithExtra: { $add: ["$price", pricesMap["ozon"].buyouts] },
+            priceWithExtra: {
+              $cond: [
+                { $eq: [pricesMap["wildberries"].buyoutsType, "percent"] },
+                {
+                  $add: [
+                    "$price",
+                    {
+                      $cond: [
+                        {
+                          $lt: [
+                            {
+                              $multiply: [
+                                "$price",
+                                pricesMap["wildberries"].buyouts / 100,
+                              ],
+                            },
+                            pricesMap["wildberries"].buyoutsMinPrice,
+                          ],
+                        },
+                        pricesMap["wildberries"].buyoutsMinPrice,
+                        {
+                          $multiply: [
+                            "$price",
+                            pricesMap["wildberries"].buyouts / 100,
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                { $add: ["$price", pricesMap["wildberries"].buyouts] },
+              ],
+            },
           },
         },
         { $group: { _id: null, total: { $sum: "$priceWithExtra" } } },
@@ -129,7 +278,39 @@ export const checkBalance = async (
         { $project: { price: { $toDouble: "$product.price" } } },
         {
           $project: {
-            priceWithExtra: { $add: ["$price", pricesMap["ozon"].buyouts] },
+            priceWithExtra: {
+              $cond: [
+                { $eq: [pricesMap["ym"].buyoutsType, "percent"] },
+                {
+                  $add: [
+                    "$price",
+                    {
+                      $cond: [
+                        {
+                          $lt: [
+                            {
+                              $multiply: [
+                                "$price",
+                                pricesMap["ym"].buyouts / 100,
+                              ],
+                            },
+                            pricesMap["ym"].buyoutsMinPrice,
+                          ],
+                        },
+                        pricesMap["ym"].buyoutsMinPrice,
+                        {
+                          $multiply: [
+                            "$price",
+                            pricesMap["ym"].buyouts / 100,
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                { $add: ["$price", pricesMap["ym"].buyouts] },
+              ],
+            },
           },
         },
         { $group: { _id: null, total: { $sum: "$priceWithExtra" } } },
@@ -139,7 +320,39 @@ export const checkBalance = async (
         { $project: { price: { $toDouble: "$product.price" } } },
         {
           $project: {
-            priceWithExtra: { $add: ["$price", pricesMap["ozon"].buyouts] },
+            priceWithExtra: {
+              $cond: [
+                { $eq: [pricesMap["avito"].buyoutsType, "percent"] },
+                {
+                  $add: [
+                    "$price",
+                    {
+                      $cond: [
+                        {
+                          $lt: [
+                            {
+                              $multiply: [
+                                "$price",
+                                pricesMap["avito"].buyouts / 100,
+                              ],
+                            },
+                            pricesMap["avito"].buyoutsMinPrice,
+                          ],
+                        },
+                        pricesMap["avito"].buyoutsMinPrice,
+                        {
+                          $multiply: [
+                            "$price",
+                            pricesMap["avito"].buyouts / 100,
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                { $add: ["$price", pricesMap["avito"].buyouts] },
+              ],
+            },
           },
         },
         { $group: { _id: null, total: { $sum: "$priceWithExtra" } } },
@@ -220,7 +433,7 @@ export const checkBalance = async (
             total: {
               $sum: {
                 $add: [
-                  pricesMap["wildberries"].review,
+                  pricesMap["ym"].review,
                   { $cond: [{ $eq: ["$isVideoEnabled", true] }, 25, 0] },
                 ],
               },
@@ -241,7 +454,7 @@ export const checkBalance = async (
             total: {
               $sum: {
                 $add: [
-                  pricesMap["wildberries"].review,
+                  pricesMap["avito"].review,
                   { $cond: [{ $eq: ["$isVideoEnabled", true] }, 25, 0] },
                 ],
               },
@@ -250,6 +463,8 @@ export const checkBalance = async (
         },
       ]),
     ]);
+
+    console.log(wildberriesBuyoutSum);
 
     const balanceActive =
       (flowwowBuyoutSum[0]?.total || 0) +
@@ -263,33 +478,17 @@ export const checkBalance = async (
       (yandexMarketReviewSum[0]?.total || 0) +
       (avitoReviewSum[0]?.total || 0);
 
-    // console.log('ozonBuyoutSum', ozonBuyoutSum, 'wildberriesBuyoutSum', wildberriesBuyoutSum);
-    // console.log('ozonReviewSum', ozonReviewSum, 'wildberriesReviewSum', wildberriesReviewSum);
-    // console.log('ozonViewSum', ozonViewSum, pricesMap["ozon"].viewings, 'wildberriesViewSum', wildberriesViewSum, pricesMap["wildberries"].viewings);
-    // console.log('ozonQuestionSum', ozonQuestionSum, pricesMap["ozon"].question, 'wildberriesQuestionSum', wildberriesQuestionSum, pricesMap["wildberries"].question);
-    // console.log('ozonCartSum', ozonCartSum, pricesMap["ozon"].cart, 'wildberriesCartSum', wildberriesCartSum, pricesMap["wildberries"].cart);
-    // console.log('ozonLikeReviewSum', ozonLikeReviewSum, pricesMap["ozon"].likes, 'wildberriesLikeReviewSum', wildberriesLikeReviewSum, pricesMap["wildberries"].likes);
-    // console.log('ozonLikeProductSum', ozonLikeProductSum, pricesMap["ozon"].productlikes, 'wildberriesLikeProductSum', wildberriesLikeProductSum, pricesMap["wildberries"].productlikes);
-    // console.log('ozonQuestionLikeSum', ozonQuestionLikeSum, pricesMap["ozon"].likes);
-
-    // console.log(products)
+      
+    console.log(flowwowBuyoutSum)
     let currentProductSumm =
       service === "buyouts"
-        ? products.reduce((acc: any, item: any) => {
-            return (
-              acc +
-                (item.discountPrice
-                  ? parseFloat(item.discountPrice) + 150
-                  : item.price
-                  ? parseFloat(item.price) + 150
-                  : parseFloat(item.product.price) + 150) || 0
-            );
-          }, 0)
+        ? getBuyoutsSumm(products, mp, pricesMap)
         : getCurrentProductSumm(products, pricesMap[products.mp], service) || 0;
-    // console.log('currentProductSumm', currentProductSumm);
+    console.log("currentProductSumm", currentProductSumm);
 
     totalPrice += balanceActive + currentProductSumm;
 
+    console.log("totalPrice: ", mp, totalPrice);
     return user.balance >= totalPrice;
   } catch (e) {
     console.error(e);
