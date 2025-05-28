@@ -22,7 +22,9 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const balanceIsExist = await checkBalance(user, [found])
+  const balanceIsExist = await checkBalance(user, [
+    { ...found, price: parseFloat(found.product.price) },
+  ], "buyouts", "ym");
   if (!balanceIsExist) {
     throw createError({
       statusCode: 400,

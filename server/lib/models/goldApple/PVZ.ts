@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { goldApplePVZConnection } from '~/server/connections/goldApplePVZ'
+import { PVZOzonConnection } from '~/server/connections/ozonPVZ'
 
 const PVZSchema = new Schema({
   pointId: { type: Number },
@@ -9,4 +9,4 @@ const PVZSchema = new Schema({
   address: { type: String },
 })
 
-export const PVZ = goldApplePVZConnection.model('pvz', PVZSchema, 'pvz')
+export const PVZ = PVZOzonConnection.model('zyapvz', PVZSchema, 'zyapvz')

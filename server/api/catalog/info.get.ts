@@ -17,12 +17,12 @@ export default eventHandler(async (event) => {
   try {
 
     if (user && user.MPTariffs) {
-
       const isTariffExist: any = user.MPTariffs.find((item: any) => item.mp === service.slug)
       if (isTariffExist) {
         const prices = isTariffExist.prices ? isTariffExist.prices : []
         service.items.forEach((item: any) => {
-          const isItemPrice = prices[item.slug ? item.slug : item.path]
+          console.log(item)
+          const isItemPrice = prices[item.slug ? item.slug : item.path.replace('/', '')]
 
           if (isItemPrice) {
             item.priceText = isItemPrice.type && isItemPrice.type === 'percent' ? `${isItemPrice.value} %` : `${isItemPrice.value} ₽`
