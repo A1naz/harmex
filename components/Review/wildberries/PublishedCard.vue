@@ -88,6 +88,12 @@ async function resumeStatus(item: any) {
               Об отзыве
             </a>
           </li>
+          <li v-if="info.status === 'nofunds'">
+            <a @click="emit('resumeStatus', info)">
+              <Icon name="material-symbols:resume-outline-rounded" size="22" />
+              Возобновить
+            </a>
+          </li>
 
           <li v-if="info.status === 'published'" class="cursor-pointer">
             <a @click="emit('removeReview', info.id)">
