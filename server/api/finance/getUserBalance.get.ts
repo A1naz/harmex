@@ -19,6 +19,6 @@ export default defineEventHandler(async (event) => {
             userRefAcc?.partnerRewardType === 'service' ?
                 userRefAcc?.partnerServiceRewardSum + ' ₽'
                 : userRefAcc?.rewardPercent + ' % со всех услуг'
-            : '500 ₽'
+            : '250 ₽'
     }
 })

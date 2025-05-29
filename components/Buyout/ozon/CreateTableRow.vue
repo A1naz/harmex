@@ -48,7 +48,7 @@ function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
       title: "За раз можно создать максимум 10 выкупов",
-     group: "error",
+      group: "error",
     });
     return;
   }
@@ -286,7 +286,7 @@ const selectCategory = (categories: any, index: number) => {
     </td>
 
     <td class="border-r border-base">
-      <div class="w-full  flex gap-2">
+      <div class="w-full flex gap-2 justify-center">
         <details
           class="dropdown disabled"
           v-if="
@@ -294,16 +294,24 @@ const selectCategory = (categories: any, index: number) => {
           "
         >
           <summary
-            class="btn btn-sm normal-case text-sm font-normal  m-1 z-1 text-nowrap"
+            class="btn btn-sm normal-case text-sm font-normal m-1 z-1 text-nowrap"
             ref="categoryDropdown"
             style="z-index: 1 !important"
+            :class="{
+              'btn-circle': !store.createProducts[props.index].category,
+            }"
           >
             {{
               store.createProducts[props.index].category &&
               store.createProducts[props.index].category.length
                 ? store.createProducts[props.index].category.join(" > ")
-                : "Выбрать категорию"
+                : ""
             }}
+            <Icon
+              v-if="!store.createProducts[props.index].category"
+              name="fluent:add-24-filled"
+              size="20"
+            />
           </summary>
           <ul
             style="z-index: 9999 !important"
@@ -329,11 +337,11 @@ const selectCategory = (categories: any, index: number) => {
         </details>
         <button
           v-else
-          class="btn m-1 text-sm z-1 font-normal btn-sm normal-case"
+          class="btn m-1 text-sm z-1 font-normal btn-sm normal-case btn-circle"
           disabled
           style="z-index: 1 !important"
         >
-          Выбрать категорию
+          <Icon name="fluent:add-24-filled" size="20" />
         </button>
         <button
           class="btn btn-sm btn-square mt-1 -ml-2.5"
@@ -441,7 +449,10 @@ const selectCategory = (categories: any, index: number) => {
           class="w-8 btn btn-ghost btn-sm btn-square text-[#8f8e93] dark:text-base-300 hover:text-primary"
           @click="copyBuyout"
         >
-          <Icon name="material-symbols:content-copy-outline-rounded" size="20" />
+          <Icon
+            name="material-symbols:content-copy-outline-rounded"
+            size="20"
+          />
         </div>
       </div>
     </td>

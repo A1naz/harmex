@@ -23,7 +23,7 @@ const props = defineProps({
     type: Array as any,
     required: false,
     default: [],
-  }
+  },
 });
 
 const emit = defineEmits([
@@ -92,7 +92,6 @@ const productQuantityModel = computed({
     store.changeQuantity(newValue, props.index);
   },
 });
-
 
 const selectedCategory = ref(null);
 const categoryDropdown = ref(null);
@@ -291,7 +290,10 @@ const selectCategory = (categories: any, index) => {
     </td>
 
     <td class="border-r border-base">
-      <div class="w-full  flex gap-2" v-if="user.username == 'test'">
+      <div
+        class="w-full flex gap-2 justify-center"
+        v-if="user.username == 'test'"
+      >
         <details
           class="dropdown disabled"
           v-if="
@@ -299,16 +301,24 @@ const selectCategory = (categories: any, index) => {
           "
         >
           <summary
-            class="btn btn-sm normal-case text-sm font-normal text-nowrap  m-1 z-1"
+            class="btn btn-sm normal-case text-sm font-normal text-nowrap m-1 z-1"
             ref="categoryDropdown"
+            :class="{
+              'btn-circle': !store.createProducts[props.index].category,
+            }"
             style="z-index: 1 !important"
           >
             {{
               store.createProducts[props.index].category &&
               store.createProducts[props.index].category.length
                 ? store.createProducts[props.index].category.join(" > ")
-                : "Выбрать категорию"
+                : ""
             }}
+            <Icon
+              v-if="!store.createProducts[props.index].category"
+              name="fluent:add-24-filled"
+              size="20"
+            />
           </summary>
           <ul
             style="z-index: 9999 !important"
@@ -335,10 +345,17 @@ const selectCategory = (categories: any, index) => {
         <button
           v-else
           class="btn m-1 text-sm z-1 font-normal btn-sm normal-case"
+          :class="{
+            'btn-circle': !store.createProducts[props.index].category,
+          }"
           disabled
           style="z-index: 1 !important"
         >
-          Выбрать категорию
+          <Icon
+            v-if="!store.createProducts[props.index].category"
+            name="fluent:add-24-filled"
+            size="20"
+          />
         </button>
         <button
           class="btn btn-sm btn-square mt-1 -ml-2.5"

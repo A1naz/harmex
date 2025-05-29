@@ -209,7 +209,7 @@ const balanceForm = reactive({
   userBalance: 0,
   partnerBalance: 0,
   refCount: 0,
-  rewardSumm: "500 ₽",
+  rewardSumm: "250 ₽",
 });
 
 async function getBalance() {
