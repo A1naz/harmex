@@ -75,7 +75,7 @@ export default eventHandler(async (event) => {
 
     return {
       _id: foundDelivery ? foundDelivery.uuidbuyout : "",
-      date: review.date,
+     date: review.publishDate ? review.publishDate : review.date,
       article: review.article,
       name: review.name,
       status: getStatus(review.status),

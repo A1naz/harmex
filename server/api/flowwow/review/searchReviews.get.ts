@@ -53,7 +53,7 @@ export default eventHandler(async (event) => {
         text: review.text,
         rating: review.rating,
         images: review.images,
-        date: review.date,
+        date: review.publishDate ? review.publishDate : review.date,
         status: review.status,
       }
 

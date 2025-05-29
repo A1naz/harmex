@@ -142,7 +142,7 @@ export default eventHandler(async (event) => {
         url: review.url,
         rating: review.rating,
         images: review.images,
-        date: review.date,
+        date: review.publishDate ? review.publishDate : review.date,
         status: review.status,
         uuid: review.uuid,
         type: getReviewType(review),
