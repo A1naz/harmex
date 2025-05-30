@@ -22,7 +22,7 @@ export default eventHandler(async (event) => {
     let reviews: any = []
     let query: any = { user }
 
-    if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
+    if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidbuyout) {
         query = Object.assign(query, searchParse)
     }
 
@@ -82,8 +82,8 @@ export default eventHandler(async (event) => {
         })
     )
 
-    if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
-        format = format.filter(rev => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout])
+    if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidbuyout) {
+        format = format.filter(rev => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidbuyout])
     }
 
     return {

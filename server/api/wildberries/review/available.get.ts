@@ -21,8 +21,8 @@ export default eventHandler(async (event) => {
   }
 
   if (searchParse && Object.values(searchParse)[0] !== '') {
-    if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
-      filter.uuidbuyout = searchParse.uudidBuyout.replace('#', '')
+    if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidbuyout) {
+      filter.uuidbuyout = searchParse.uuidbuyout.replace('#', '')
     }
     else if (Object.keys(searchParse)[0] === 'article') {
       const searchArticle = searchParse.article.trim().toLowerCase()

@@ -90,7 +90,7 @@ export default eventHandler(async (event) => {
   let reviews: any = [];
   let query: any = { user };
 
-  if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
+  if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidbuyout) {
     query = Object.assign(query, searchParse);
   }
 
@@ -175,10 +175,10 @@ export default eventHandler(async (event) => {
   );
 
   // eslint-disable-next-line eqeqeq
-  if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
+  if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidbuyout) {
     // eslint-disable-next-line eqeqeq
     format = format.filter(
-      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout]
+      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidbuyout]
     );
   }
 
@@ -197,9 +197,9 @@ export default eventHandler(async (event) => {
 
   if (searchParseAvailable && Object.values(searchParseAvailable)[0] !== "") {
     if (
-      Object.keys(searchParseAvailable)[0] === SelectOptionsReviews.uuidBuyout
+      Object.keys(searchParseAvailable)[0] === SelectOptionsReviews.uuidbuyout
     ) {
-      filter.uuidbuyout = searchParseAvailable.uudidBuyout.replace("#", "");
+      filter.uuidbuyout = searchParseAvailable.uuidbuyout.replace("#", "");
     } else if (Object.keys(searchParseAvailable)[0] === "article") {
       const searchArticle = searchParseAvailable.article.trim().toLowerCase();
       const numericArticle = Number.parseInt(searchArticle, 10);

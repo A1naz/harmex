@@ -149,7 +149,7 @@ export default eventHandler(async (event) => {
   let reviews: any = [];
   let query: any = { user };
 
-  if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
+  if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidbuyout) {
     query = Object.assign(query, searchParse);
   }
   reviews = await Review.find({ ...query, ...dateQuery })
@@ -214,9 +214,9 @@ export default eventHandler(async (event) => {
     })
   );
 
-  if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
+  if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidbuyout) {
     publishedFormat = publishedFormat.filter(
-      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout]
+      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidbuyout]
     );
   }
 
@@ -226,10 +226,10 @@ export default eventHandler(async (event) => {
 
   if (Object.values(searchParseAvailable)[0] !== "") {
     if (
-      Object.keys(searchParseAvailable)[0] == SelectOptionsReviews.uuidBuyout
+      Object.keys(searchParseAvailable)[0] == SelectOptionsReviews.uuidbuyout
     ) {
       searchParseAvailable = {
-        uuidbuyout: searchParseAvailable.uudidBuyout.replace("#", ""),
+        uuidbuyout: searchParseAvailable.uuidbuyout.replace("#", ""),
       };
       pipeLine.splice(3, 0, { $match: { ...searchParseAvailable } }); // after $project
     } else {

@@ -41,7 +41,7 @@ const tabs = [
 
 const searchOptions = ref([
   { value: SelectOptions.article, name: "Артикул" },
-  { value: SelectOptions.uuidBuyout, name: "ID выкупа" },
+  { value: SelectOptions.uuidbuyout, name: "ID выкупа" },
   { value: SelectOptions.idReview, name: "ID отзыва" },
 ]);
 
@@ -75,7 +75,7 @@ async function fetchData() {
   searchType.value = containsOnlyNumbers(searchText.value)
     ? SelectOptions.article
     : searchText.value.length >= 35
-    ? SelectOptions.uuidBuyout
+    ? SelectOptions.uuidbuyout
     : SelectOptions.idReview;
 
   const response: any = await $fetch(`/api/flowwow/review/${endpoint.value}`, {

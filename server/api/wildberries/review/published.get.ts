@@ -41,7 +41,7 @@ export default eventHandler(async (event) => {
   let reviews: any = [];
   let query: any = { user };
 
-  if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
+  if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidbuyout) {
     query = Object.assign(query, searchParse);
   }
 
@@ -162,10 +162,10 @@ export default eventHandler(async (event) => {
   );
 
   // eslint-disable-next-line eqeqeq
-  if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
+  if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidbuyout) {
     // eslint-disable-next-line eqeqeq
     format = format.filter(
-      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout]
+      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidbuyout]
     );
   }
 
