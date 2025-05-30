@@ -60,11 +60,17 @@ export default eventHandler(async (event) => {
     uuid: { $in: availableReviews.map((review: any) => review.uuidbuyout) },
   });
 
-  const format: any = reviews.map((review: any) => {
+  const publshedDeliveries = await Delivery.find({
+    user,
+    _id: { $in: reviews.map((review: any) => review.delivery) },
+  }).sort({ _id: -1 });
 
-    
+  const format: any = reviews.map((review: any) => {
+    const foundDelivery = publshedDeliveries.find(
+      (delivery: any) => delivery._id.valueOf() == review.delivery.valueOf()
+    );
     return {
-      _id: review._id,
+      _id: foundDelivery ? foundDelivery.uuidbuyout : review._id,
       date: review.publishDate ? review.publishDate : review.date,
       article: review.article,
       name: review.name,
@@ -93,8 +99,6 @@ export default eventHandler(async (event) => {
   const sheet = workbook.addWorksheet("Отзывы", {
     headerFooter: { firstHeader: `Всего записей: ${reviews.length}` },
   });
-
-  
 
   sheet.columns = [
     { header: "ID отзыва", key: "_id", font: { bold: true }, width: 48 },
