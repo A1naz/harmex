@@ -109,6 +109,7 @@ async function fetchData() {
       availableReviews.value = response.availableReviews;
     if (response.length < limit.value) end.value = true;
   }
+  console.log(response);
   isFetch.value = false;
   loading.value = false;
 }

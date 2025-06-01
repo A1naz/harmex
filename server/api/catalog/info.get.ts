@@ -1,68 +1,79 @@
-import { Service } from '~/server/lib/models/Service'
-import { DefaultPrices } from '~/server/lib/models/defaultPrices'
+import { Service } from "~/server/lib/models/Service";
+import { DefaultPrices } from "~/server/lib/models/defaultPrices";
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event);
 
-  const user = await getAdminEntity(event)
-
-
-  const { slug } = getQuery(event)
+  const { slug } = getQuery(event);
   if (!slug)
-    throw createError({ statusCode: 400, statusMessage: 'Missing slug' })
+    throw createError({ statusCode: 400, statusMessage: "Missing slug" });
 
-  const service = await Service.findOne({ slug }).select('-_id -__v')
+  const service = await Service.findOne({ slug }).select("-_id -__v");
 
   if (!service)
-    throw createError({ statusCode: 404, statusMessage: 'Service not found' })
+    throw createError({ statusCode: 404, statusMessage: "Service not found" });
   try {
-
     if (user && user.MPTariffs) {
-      const isTariffExist: any = user.MPTariffs.find((item: any) => item.mp === service.slug)
+      const isTariffExist: any = user.MPTariffs.find(
+        (item: any) => item.mp === service.slug
+      );
       if (isTariffExist) {
-        const prices = isTariffExist.prices ? isTariffExist.prices : []
+
+        const prices = isTariffExist.prices ? isTariffExist.prices : [];
         service.items.forEach((item: any) => {
-          console.log(item)
-          const isItemPrice = prices[item.slug ? item.slug : item.path.replace('/', '')]
+          const searchPhrase = item.slug
+            ? item.slug == "reviews"
+              ? "review"
+              : item.slug
+            : item.path === "/reviews" ? "review" : item.path.replace("/", "");
+
+          const isItemPrice =
+            prices[searchPhrase];
 
           if (isItemPrice) {
-            item.priceText = isItemPrice.type && isItemPrice.type === 'percent' ? `${isItemPrice.value} %` : `${isItemPrice.value} ₽`
+            item.priceText =
+              isItemPrice.type && isItemPrice.type === "percent"
+                ? `${isItemPrice.value} %`
+                : `${isItemPrice.value} ₽`;
           }
-
-        })
-
+        });
       } else if (!isTariffExist) {
-        const prices: any = await DefaultPrices.findOne({})
+        const prices: any = await DefaultPrices.findOne({});
 
         if (!prices) {
           return {
-            status: 'ok',
+            status: "ok",
             service,
-          }
+          };
         }
-        const mpPrices = prices.values.find((item: any) => item.mp === service.slug)
+        const mpPrices = prices.values.find(
+          (item: any) => item.mp === service.slug
+        );
         if (!mpPrices) {
           return {
-            status: 'ok',
+            status: "ok",
             service,
-          }
+          };
         }
-    
-        service.items.forEach((item: any) => {
-          const isItemPrice = mpPrices.prices[item.slug ? item.slug : item.path]
-          if (isItemPrice) {
-            item.priceText = isItemPrice.type && isItemPrice.type === 'percent' ? `${isItemPrice.value} %` : `${isItemPrice.value} ₽`
-          }
 
-        })
+        service.items.forEach((item: any) => {
+          const isItemPrice =
+            mpPrices.prices[item.slug ? item.slug : item.path];
+          if (isItemPrice) {
+            item.priceText =
+              isItemPrice.type && isItemPrice.type === "percent"
+                ? `${isItemPrice.value} %`
+                : `${isItemPrice.value} ₽`;
+          }
+        });
       }
     }
-
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 
   return {
-    status: 'ok',
+    status: "ok",
     service,
-  }
-})
+  };
+});

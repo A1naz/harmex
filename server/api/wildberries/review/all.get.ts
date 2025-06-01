@@ -81,6 +81,7 @@ export default eventHandler(async (event) => {
   if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
     query = Object.assign(query, searchParse);
   }
+  console.log(query);
 
   if (tab === "all") {
     reviews = await Review.find({...query, ...dateQuery})

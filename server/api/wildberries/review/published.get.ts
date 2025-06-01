@@ -82,6 +82,7 @@ export default eventHandler(async (event) => {
       break;
   }
 
+  console.log(query);
   if (tab === "all") {
     reviews = await Review.find({...query, ...dateQuery})
       .sort({ _id: -1 })
