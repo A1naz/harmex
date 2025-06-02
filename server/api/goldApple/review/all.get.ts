@@ -151,7 +151,14 @@ export default eventHandler(async (event) => {
 
   if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
     query = Object.assign(query, searchParse);
-  }
+  } else {
+      const foundDelivery = await Delivery.findOne({
+        uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
+      });
+      if (foundDelivery) {
+        query = Object.assign(query, { delivery: foundDelivery._id });
+      }
+    }
   reviews = await Review.find({ ...query, ...dateQuery })
     .sort({ _id: -1 })
     .skip((skip as number) || 0)

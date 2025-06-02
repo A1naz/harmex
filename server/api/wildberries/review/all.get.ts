@@ -76,10 +76,18 @@ export default eventHandler(async (event) => {
   }
 
   let reviews: any = [];
-  let query: any = { user };
+  let query: any = { user: user._id };
 
   if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
     query = Object.assign(query, searchParse);
+  } else {
+    const foundDelivery = await Delivery.findOne({
+      uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
+    });
+    console.log("foundDelivery", foundDelivery);
+    if (foundDelivery) {
+      query = Object.assign(query, { delivery: foundDelivery._id });
+    }
   }
 
   if (tab === "all") {
@@ -162,12 +170,12 @@ export default eventHandler(async (event) => {
   );
 
   // eslint-disable-next-line eqeqeq
-  if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
-    // eslint-disable-next-line eqeqeq
-    format = format.filter(
-      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout]
-    );
-  }
+  // if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
+  //   // eslint-disable-next-line eqeqeq
+  //   format = format.filter(
+  //     (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout]
+  //   );
+  // }
 
   //===========================================================================
 
