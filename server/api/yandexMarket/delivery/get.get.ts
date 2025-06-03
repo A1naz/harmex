@@ -54,7 +54,6 @@ export default eventHandler(async (event) => {
       })
       .splice((skip as number) ? (skip as number) : 0, limit as number)
   } else if (status === 'pickupReady') {
-    console.log('pickupReady')
     deliveries = await Delivery.find({
       user,
       statusdelivery: {

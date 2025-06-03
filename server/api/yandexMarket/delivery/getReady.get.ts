@@ -76,7 +76,7 @@ export default eventHandler(async (event) => {
         item!.currentstatus === "Готов к получению" ||
         item!.currentstatus.includes("Получите до") ||
         item!.currentstatus.includes("Заберите до") ||
-        item!.currentstatus.includes("Ждёт в пункте выдачи")
+        item!.currentstatus.includes("Ждёт в пункте")
       );
     else return false;
   });
