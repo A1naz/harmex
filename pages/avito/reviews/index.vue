@@ -662,7 +662,7 @@ async function selectFilterDate(e: any) {
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2_4.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/manualImages/wildberries/buyout2_4.png"
       />
       <p class="divider"></p>
       <p class="mt-4 mb-2"><strong>Планирование публикации отзывов</strong></p>

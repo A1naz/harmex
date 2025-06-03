@@ -38,7 +38,7 @@ export default eventHandler(async (event) => {
     message: '',
   }
 
-  const balanceIsExist = await checkBalance(user, products,  'buyouts', 'ZY')
+  const balanceIsExist = await checkBalance(user, products,  'buyouts', 'zy')
   if (!balanceIsExist) {
     result.success = false
     result.message = `Недостаточно средств для совершения выкупа`

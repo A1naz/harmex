@@ -671,7 +671,7 @@ const siteUrl = config.public.siteUrl;
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-2"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/introduction/sutochno1.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/sutochno1.png"
       />
       <p class="my-4 text-[16px] flex items-center gap-1 text-[#4b5563]">
         Чтобы оформить заказ, следуйте простым шагам:
@@ -684,7 +684,7 @@ const siteUrl = config.public.siteUrl;
         <nuxt-img
          
           class="flex mx-auto w-[80%] px-4 mt-2"
-          src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/introduction/sutochno2.png"
+          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/sutochno2.png"
         />
         <li>
           Заполните данные по заявке:
@@ -713,7 +713,7 @@ const siteUrl = config.public.siteUrl;
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/introduction/sutochno3.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/sutochno3.png"
       />
       <p class="my-4">
         Для выкупа товара на Суточно, доступны 2 основных инструмента. Каждый из
@@ -785,7 +785,7 @@ const siteUrl = config.public.siteUrl;
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/introduction/sutochno4.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/sutochno4.png"
       />
       <p class="my-4">
         После того как заявка на выкуп товара получит статус

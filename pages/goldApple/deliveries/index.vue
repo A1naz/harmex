@@ -55,7 +55,7 @@ const skip = ref(50);
 const end = ref(false);
 async function getDeliveries() {
   loading.value = true;
-  const { data } = await useFetch("/api/flowwow/delivery/get", {
+  const { data } = await useFetch("/api/goldApple/delivery/get", {
     method: "GET",
     query: {
       status: status.value ?? "all",
@@ -69,7 +69,7 @@ getDeliveries();
 
 async function exportReadyXLS() {
   loadingExport.value = true;
-  const { data } = await useFetch("/api/flowwow/delivery/exportReady", {
+  const { data } = await useFetch("/api/goldApple/delivery/exportReady", {
     params: {
       dateRange: dateRange.value.length > 0 ? dateRange.value : null,
     },
@@ -78,7 +78,7 @@ async function exportReadyXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
   const fileLink = document.createElement("a");
   fileLink.href = fileURL;
-  fileLink.setAttribute("download", "Готовы к выдаче Flowwow.xlsx");
+  fileLink.setAttribute("download", "Готовы к выдаче Золотое яблоко.xlsx");
   document.body.appendChild(fileLink);
   fileLink.click();
   loadingExport.value = false;
@@ -86,7 +86,7 @@ async function exportReadyXLS() {
 async function exportReadyUntilPenaltyXLS() {
   loadingExport.value = true;
   const { data, error } = await useFetch(
-    "/api/flowwow/delivery/exportReadyUntilPenalty",
+    "/api/goldApple/delivery/exportReadyUntilPenalty",
     {
       params: {
         dateRange: dateRange.value.length > 0 ? dateRange.value : null,
@@ -106,14 +106,14 @@ async function exportReadyUntilPenaltyXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
   const fileLink = document.createElement("a");
   fileLink.href = fileURL;
-  fileLink.setAttribute("download", "Готовы к выдаче Flowwow до штрафа.xlsx");
+  fileLink.setAttribute("download", "Готовы к выдаче Золотое яблоко до штрафа.xlsx");
   document.body.appendChild(fileLink);
   fileLink.click();
   loadingExport.value = false;
 }
 async function exportXLS() {
   loadingExport.value = true;
-  const { data, error } = await useFetch("/api/flowwow/delivery/export", {
+  const { data, error } = await useFetch("/api/goldApple/delivery/export", {
     params: {
       dateRange: dateRange.value.length > 0 ? dateRange.value : null,
     },
@@ -131,7 +131,7 @@ async function exportXLS() {
   const fileURL = window.URL.createObjectURL(new Blob([data.value as any]));
   const fileLink = document.createElement("a");
   fileLink.href = fileURL;
-  fileLink.setAttribute("download", "Общая таблица Flowwow.xlsx");
+  fileLink.setAttribute("download", "Общая таблица Золотое яблоко.xlsx");
   document.body.appendChild(fileLink);
   fileLink.click();
   loadingExport.value = false;
@@ -144,7 +144,7 @@ async function findDeliveries(value: string, type: string) {
     search.value.loading = false;
     return;
   }
-  const { data } = await useFetch("/api/flowwow/delivery/search", {
+  const { data } = await useFetch("/api/goldApple/delivery/search", {
     query: {
       string: value,
       type,
@@ -166,7 +166,7 @@ async function onSearchInput() {
 watch(targetIsVisible, async (isVisible) => {
   if (isVisible && autoTarget.value) {
     if (end.value) return;
-    const { data } = await useFetch("/api/flowwow/delivery/get", {
+    const { data } = await useFetch("/api/goldApple/delivery/get", {
       method: "GET",
       query: {
         status: route.query?.status || "all",
@@ -188,7 +188,7 @@ watch(
   async () => {
     skip.value = 50;
     end.value = false;
-    const { data } = await useFetch("/api/flowwow/delivery/get", {
+    const { data } = await useFetch("/api/goldApple/delivery/get", {
       method: "GET",
       query: {
         status: status.value ?? "all",
@@ -247,7 +247,7 @@ const filters = [
 
 const customLinks = filters.map((filter) => ({
   title: filter.title,
-  slot: "/flowwow/deliveries",
+  slot: "/goldApple/deliveries",
   query: filter.params,
 }));
 
@@ -308,8 +308,8 @@ const siteUrl = config.public.siteUrl;
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink to="/catalog/flowwow" class="cursor-pointer text-[#909090]">
-            Flowwow
+          <NuxtLink to="/catalog/goldApple" class="cursor-pointer text-[#909090]">
+            Золотое яблооко
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">Доставки</li>
@@ -325,7 +325,7 @@ const siteUrl = config.public.siteUrl;
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
           <button
             class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
-            @click="copyToClipboard(`${siteUrl}/flowwow/deliveries`)"
+            @click="copyToClipboard(`${siteUrl}/goldApple/deliveries`)"
           >
             <Icon name="ph:share-fat-fill" size="20" />
           </button>
@@ -390,7 +390,7 @@ const siteUrl = config.public.siteUrl;
               >
                 <li>
                   <NuxtLink
-                    :to="`/flowwow/deliveries/export${
+                    :to="`/goldApple/deliveries/export${
                       dateRange.length
                         ? '?dateRange=' +
                           dateRange
@@ -426,6 +426,12 @@ const siteUrl = config.public.siteUrl;
                 :links="customLinks"
               />
             </span>
+              <button
+              @click="manualModal = true"
+              class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
+            >
+              <Icon name="ci:info" size="24" />
+            </button>
           </div>
         </div>
       </div>
@@ -443,10 +449,11 @@ const siteUrl = config.public.siteUrl;
 
           />
         </li>
-        <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
       </TransitionSlide>
       <DeliveryQrModal v-if="modal" :code="modalInfo.code" :src="modalInfo.src" />
     </div> -->
+    
+    <div ref="target" class="flex justify-center items-center h-40 md:h-10" />
     <div v-if="deliveries?.length" class="grid grid-cols-1 gap-4 mt-4 w-full">
       <div
         v-if="deliveries.length > 3"
@@ -458,7 +465,7 @@ const siteUrl = config.public.siteUrl;
           :key="delivery.uuid"
           class="max-w-[400px]"
         >
-          <DeliveryFlowwowExpand
+          <DeliveryGoldAppleExpand
             :state="openAll"
             :info="delivery"
             @open-modal="openModal"
@@ -474,7 +481,7 @@ const siteUrl = config.public.siteUrl;
           :key="delivery.uuid"
           class="max-w-full sm:max-w-[320px]"
         >
-          <DeliveryFlowwowExpand
+          <DeliveryGoldAppleExpand
             :state="openAll"
             :info="delivery"
             :index="index"
@@ -495,7 +502,7 @@ const siteUrl = config.public.siteUrl;
     <div v-else class="w-full mt-5 flex justify-center items-center">
       <span class="loading loading-dots loading-lg text-primary" />
     </div>
-    <DeliveryFlowwowInfoModal
+    <DeliveryGoldAppleInfoModal
       v-if="modal"
       :info="selectedDelivery"
       :state="modal"

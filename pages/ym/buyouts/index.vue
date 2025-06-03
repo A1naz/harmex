@@ -832,12 +832,12 @@ const siteUrl = config.public.siteUrl;
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-2"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/ym/1.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/manualImages/ym/1.png"
       />
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-2"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/ym/2.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/manualImages/ym/2.png"
       />
       <p>
         После того как заявка на выкуп товара получит статус

@@ -751,12 +751,12 @@ const siteUrl = config.public.siteUrl;
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2_1.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/manualImages/wildberries/buyout2_1.png"
       />
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-2"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/wildberries/buyout2_2.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/manualImages/wildberries/buyout2_2.png"
       />
       <p class="my-4">
         После того как заявка на выкуп товара получит статус

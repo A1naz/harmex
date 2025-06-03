@@ -460,7 +460,10 @@ const siteUrl = config.public.siteUrl;
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink to="/catalog/goldApple" class="cursor-pointer text-[#909090]">
+          <NuxtLink
+            to="/catalog/goldApple"
+            class="cursor-pointer text-[#909090]"
+          >
             Золотое яблоко
           </NuxtLink>
         </li>
@@ -630,14 +633,14 @@ const siteUrl = config.public.siteUrl;
       @remove="removeBuyout"
       @close="removeModal = false"
     />
-    <!-- <ManualModal
+    <ManualModal
       :show="manualModal"
       @close="manualModal = false"
       :is-checked="isChecked"
       @checkbox-toggle="toggleCheckbox"
     >
       <h3 class="text-[19px] font-bold mb-2 flex items-center gap-1 pr-4">
-        Как оставить отзыв на Flowwow в 3 шага?
+        Как оставить отзыв на Золотом яблоке в 3 шага?
       </h3>
       <h3 class="text-[17px] font-bold mb-2 flex items-center gap-1 pr-4">
         Чтобы оставить отзыв, нужно сделать три простых действия:
@@ -650,8 +653,9 @@ const siteUrl = config.public.siteUrl;
         </li>
 
         <li>
-          Отметить доставку – зайдите в личный кабинет Flowwow и отметьте, что
-          товар передан покупателю. Данные о покупателе можно найти в меню
+          Получите товар на ПВЗ – зайдите в меню Доставка, скачайте актуальные
+          коды, которые предоставите при заборе (кнопка EXL - Готовы к выдаче).
+          Данные о покупателе можно найти в меню
           <strong>Доставка</strong>.
         </li>
         <li>
@@ -681,7 +685,6 @@ const siteUrl = config.public.siteUrl;
         />
         Ваш браузер не поддерживает видео.
       </video>
-
       <p class="my-4 text-[16px] flex items-center gap-1 text-[#4b5563]">
         Чтобы оформить заказ, следуйте простым шагам:
       </p>
@@ -693,26 +696,18 @@ const siteUrl = config.public.siteUrl;
         <li>
           Заполните данные по заявке:
           <ul class="list-disc ml-6 text-[#4b5563]">
-            <li>Параметры.</li>
-            <li>Пол покупателя.</li>
+            <li>Размер.</li>
+            <li>Пол.</li>
             <li>Поведенческие факторы "Правила".</li>
             <li>Планируемое время заказа.</li>
-            <li>Тип доставки.</li>
-            <li>№ квартиры.</li>
-            <li>Адрес доставки.</li>
+            <li>Способ доставки товара.</li>
             <li>Поисковый запрос.</li>
           </ul>
         </li>
         <li>Проверьте заполненные данные</li>
-        <li>Нажмите кнопку <strong>Создать</strong></li>
-        <li>
-          Нажмите кнопку "Создать". После проверки искусственным интеллектом
-          (AI) подтвердите создание заказа, нажав <strong>Создать</strong> еще
-          раз.
-        </li>
-        <li>
-          Отслеживайте выполнение заказа через раздел <strong>"Выкупы"</strong>.
-        </li>
+        <li>Нажмите кнопку Создать</li>
+        <li>После проверки AI нажмите Создать</li>
+        <li>Отслеживайте исполнение заказа в разрезе Статусов</li>
       </ol>
       <p>
         Этот процесс позволяет легко и быстро организовать выкуп товара в любых
@@ -721,19 +716,18 @@ const siteUrl = config.public.siteUrl;
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/flowwow/buyout2_1.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/manualImages/wildberries/buyout2_1.png"
       />
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-2"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/flowwow/buyout2_2.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/manualImages/wildberries/buyout2_2.png"
       />
       <p class="my-4">
         После того как заявка на выкуп товара получит статус
-        <strong>"Завершен"</strong>, вам нужно будет выдать товар и отметить в
-        Личном кабинете на Flowwow статус Доставки <strong>“Выдан”</strong> и
-        получить доступный <strong>Отзыв</strong> к публикации в меню
-        <strong> Отзывы</strong>.
+        <strong>"Завершен"</strong>, вам нужно будет забрать товар с указанного
+        способа доставки (Магазин, ПВЗ, Курьер и т.д.) используя меню
+        <strong> Доставка.</strong>
       </p>
       <p>В меню Финансы, ознакомьтесь с фактическими операциями:</p>
       <ol class="list-item ml-4 mb-4 text-[#4b5563]">
@@ -823,7 +817,10 @@ const siteUrl = config.public.siteUrl;
             Заказ переходит в меню:
 
             <ol class="list-[square] mb-4 ml-6 text-[#4b5563]">
-              <li><storng>Доставка</storng> (товар доставляется на ПВЗ).</li>
+              <li>
+                <storng>Доставка</storng> (товар доставляется в указанный
+                пункт).
+              </li>
               <li>
                 <storng>Финансы</storng> (отображается точная дата и время
                 покупки, а также финансовые операции).
@@ -888,11 +885,15 @@ const siteUrl = config.public.siteUrl;
             продолжения работы.
           </li>
         </ol>
-        <p><strong>4. Финансовый учет </strong></p>
+
+        <p><strong>5. Получение товара </strong></p>
         <ol class="list-disc ml-10 mb-4 text-[#4b5563]">
           <li>
-            Учитывайте, что расчеты происходят по разным моделям выкупов,
-            поэтому следите за волатильностью цен и планируйте бюджет заранее.
+            После завершения заявки заберите товар с ПВЗ, используя меню
+            <strong> "Доставка".</strong>
+          </li>
+          <li>
+            Проверьте товар на соответствие заказу и отсутствие повреждений.
           </li>
         </ol>
       </div>
@@ -911,12 +912,13 @@ const siteUrl = config.public.siteUrl;
           Заявка переходит в статус <strong>"Активен"</strong>, затем
           <strong>"В работе"</strong>, и, наконец, <strong>"Завершен"</strong>.
         </li>
+        <li>После завершения вы забираете товар и проверяете его.</li>
         <li>
           Если заявка отклонена, вы проверяете причину через меню
           <strong>"О выкупе"</strong> и исправляете ошибки.
         </li>
       </ul>
-    </ManualModal> -->
+    </ManualModal>
   </div>
 </template>
 

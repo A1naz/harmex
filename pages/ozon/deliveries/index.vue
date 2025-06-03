@@ -657,7 +657,7 @@ getExportReadyCount();
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/ozon/buyout2_2.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/manualImages/ozon/buyout2_2.png"
       />
       <p class="divider"></p>
       <p class="my-4"><strong>Сверка данных по доставкам:</strong></p>

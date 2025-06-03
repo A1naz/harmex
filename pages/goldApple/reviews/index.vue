@@ -6,7 +6,7 @@ const { notify } = useNotification();
 definePageMeta({
   layout: "app",
   middleware: "auth",
-  title: "Отзывы Flowwow",
+  title: "Отзывы Золотое Яблоко",
 });
 
 const route = useRoute();
@@ -78,7 +78,7 @@ async function fetchData() {
     ? SelectOptions.uuidBuyout
     : SelectOptions.idReview;
 
-  const response: any = await $fetch(`/api/flowwow/review/${endpoint.value}`, {
+  const response: any = await $fetch(`/api/goldApple/review/${endpoint.value}`, {
     method: "GET",
     params: {
       skip: skip.value,
@@ -115,7 +115,7 @@ function changeTab(tab: any) {
   skip.value = 0;
   end.value = false;
   currentTab.value = tab.value;
-  router.push(`/flowwow/reviews?status=${tab.value}`);
+  router.push(`/goldApple/reviews?status=${tab.value}`);
   fetchData();
 }
 
@@ -180,7 +180,7 @@ function openRemoveReviewModal(uuid: any) {
 }
 
 async function removeReview() {
-  const { data, error } = await useFetch("/api/flowwow/review/delete", {
+  const { data, error } = await useFetch("/api/goldApple/review/delete", {
     method: "POST",
     query: {
       id: uuidForRemove.value,
@@ -230,7 +230,7 @@ onMounted(() => {
     currentTab.value = route.query.status.toString();
   } else {
     currentTab.value = "all";
-    router.push("/flowwow/reviews?status=all");
+    router.push("/goldApple/reviews?status=all");
   }
   fetchData();
 });
@@ -241,7 +241,7 @@ const customLinks = tabs.map((filter) => ({
 }));
 
 async function resumeStatus(item: any) {
-  const { data, error } = await useFetch(`/api/flowwow/review/resume`, {
+  const { data, error } = await useFetch(`/api/goldApple/review/resume`, {
     method: "POST",
     body: {
       item,
@@ -299,7 +299,7 @@ const isChecked = ref(false);
 const manualModal = ref(false);
 
 function toggleCheckbox() {
-  const platform = "flowwow";
+  const platform = "goldApple";
   const type = "reviews";
   const storedValue = localStorage.getItem("modalState");
   const modalState = storedValue ? JSON.parse(storedValue) : {};
@@ -318,7 +318,7 @@ onMounted(() => {
   const storedValue = localStorage.getItem("modalState");
   const modalState = storedValue ? JSON.parse(storedValue) : {};
 
-  const platform = "flowwow";
+  const platform = "goldApple";
   const type = "reviews";
   isChecked.value = modalState[platform]?.[type] || false;
   manualModal.value = !isChecked.value;
@@ -358,8 +358,8 @@ async function selectFilterDate(e: any) {
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink to="/catalog/flowwow" class="cursor-pointer text-[#909090]">
-            Avito
+          <NuxtLink to="/catalog/goldApple" class="cursor-pointer text-[#909090]">
+            Золотое яблоко
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">Отзывы</li>
@@ -375,7 +375,7 @@ async function selectFilterDate(e: any) {
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
           <button
             class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
-            @click="copyToClipboard(`${siteUrl}/flowwow/reviews`)"
+            @click="copyToClipboard(`${siteUrl}/goldApple/reviews`)"
           >
             <Icon name="ph:share-fat-fill" size="20" />
           </button>
@@ -415,7 +415,7 @@ async function selectFilterDate(e: any) {
       >
         <div class="export lg:absolute right-0 top-0">
           <ExportXls
-            api="/api/flowwow/review/export"
+            api="/api/goldApple/review/export"
             file-name="HARMEX Доступные отзывы"
             :is-visible="true"
           />
@@ -517,7 +517,7 @@ async function selectFilterDate(e: any) {
           v-if="currentTab === 'available' || currentTab === 'all'"
           class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
         >
-          <ReviewFlowwowCard
+          <ReviewGoldAppleCard
             v-for="(review, index) of availableReviews"
             :key="index"
             :index="index"
@@ -533,7 +533,7 @@ async function selectFilterDate(e: any) {
           v-if="currentTab !== 'available'"
           class="cards grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-4"
         >
-          <ReviewFlowwowPublishedCard
+          <ReviewGoldApplePublishedCard
             v-for="(review, index) of reviews"
             :key="index"
             :index="index"
@@ -562,7 +562,7 @@ async function selectFilterDate(e: any) {
       <Hero v-else />
     </div>
 
-    <ReviewFlowwowModal
+    <ReviewGoldAppleModal
       v-if="modalOpen"
       :review="selectedArticle"
       :deliveryid="selectedDelivery"
@@ -652,7 +652,7 @@ async function selectFilterDate(e: any) {
       <nuxt-img
         alt=""
         class="flex mx-auto w-full px-4 mt-4"
-        src="https://ozonmpportal.hb.vkcs.cloud//ozonmpportal/harmex/manualImages/flowwow/buyout2_3.png"
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/manualImages/flowwow/buyout2_3.png"
       />
       <p class="divider"></p>
       <p class="mt-4 mb-2"><strong>Планирование публикации отзывов</strong></p>
@@ -835,7 +835,7 @@ async function selectFilterDate(e: any) {
       :state="logModal"
       @close="logModal = false"
     />
-    <ReviewFlowwowInfoModal
+    <ReviewGoldAppleInfoModal
       :info="selectedReview"
       :state="infoModal"
       @close="infoModal = false"
