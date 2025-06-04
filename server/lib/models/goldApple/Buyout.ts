@@ -53,6 +53,7 @@ const BuyoutSchema = new Schema({
   deliveryType: { type: String, required: false, default: '', enum: ['self', 'courier'] },
   completed: { type: Number, required: false, default: 0 },
   FIO: { type: String, required: false, default: '' },
+  courierFIO: { type: String, required: false, default: '' },
   selectedParameter: { type: String, default: '0' },
   nameOrganization: { type: String },
   data5: { type: {}, default: '' },
