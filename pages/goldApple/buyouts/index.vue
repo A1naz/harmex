@@ -589,7 +589,7 @@ const siteUrl = config.public.siteUrl;
         />
       </div>
       <div class="flex flex-wrap gap-x-4 gap-y-3" v-else>
-        <BuyoutGoldAppleard
+        <BuyoutGoldAppleCard
           class="max-w-full sm:max-w-[320px]"
           v-for="(buyout, index) of buyouts"
           :key="buyout.uuid"

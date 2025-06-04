@@ -144,21 +144,9 @@ function handleAddress(address: string, lt: number, lg: number) {
             class="input bg-base-200 w-full rounded-xl"
           />
         </label>
-        <label
-          ><input
-            v-model="store.createProducts[store.selectedItem].FIO"
-            type="text"
-            placeholder="Введите ФИО"
-            class="input bg-base-200 w-full rounded-xl"
-          />
-        </label>
       </div>
       <button
-        :disabled="
-          addressText == 'Загрузка...' ||
-          !store.createProducts[store.selectedItem].appartmentNumber ||
-          !store.createProducts[store.selectedItem].FIO
-        "
+        :disabled="addressText == 'Загрузка...'"
         class="btn btn-primary my-2 w-full"
         @click="handleAddress(addressText, coordinates[0], coordinates[1])"
       >
