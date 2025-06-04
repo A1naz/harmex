@@ -40,6 +40,13 @@ const replacements = generateReplacements({
         "ям": 'yandexmarket',
         "золотое яблоко": 'goldapple',
         "яблоко золотое": 'goldapple',
+        "финансы": 'paymenthistory',
+        "партнерка": 'paymenthistory',
+        "пополнение": 'paymenthistory',
+        "пополнения": 'paymenthistory',
+        "пополнение счета": 'paymenthistory',
+        "вывод": 'paymenthistory',
+        "вывод средств": 'paymenthistory',
 })
 
 export default defineEventHandler(async (event) => {
