@@ -38,32 +38,45 @@ const replacements = generateReplacements({
         "market yandex": 'yandexmarket',
         "ym": 'yandexmarket',
         "ям": 'yandexmarket',
+        "золотое яблоко": 'goldapple',
+        "яблоко золотое": 'goldapple',
+        "финансы": 'paymenthistory',
+        "партнерка": 'paymenthistory',
+        "пополнение": 'paymenthistory',
+        "пополнения": 'paymenthistory',
+        "пополнение счета": 'paymenthistory',
+        "вывод": 'paymenthistory',
+        "вывод средств": 'paymenthistory',
 })
 
 export default defineEventHandler(async (event) => {
         const { query }: any = getQuery(event)
 
         const words = query.split(' ')
+        const seenMp = new Set<string>()
 
         for (let i = 0; i < words.length; i++) {
-                
                 if (replacements[words[i]]) {
-                      
-                      
-                        
                         const mp = replacements[words[i]]
-                        words.splice(i, 1)
-                        words.unshift(mp)
-                     
+                        if (!seenMp.has(mp)) {
+                                seenMp.add(mp)
+                                words.splice(i, 1)
+                                words.unshift(mp)
+                        } else {
+                                words.splice(i, 1)
+                                i--
+                        }
                 }
         }
+        
         const phrase = words.join('')
    
         const regex = new RegExp(phrase.trim().split(/\s+/).join('|'), 'i');
 
         const found = await Search.find(
                 {
-                        phrases: { $regex: regex }
+                        phrases: { $regex: regex },
+                        disabled: { $ne: true }
                 }
         ).select('-_id -__v -phrases').limit(20)
 

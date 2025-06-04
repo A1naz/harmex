@@ -1,9 +1,10 @@
-import { model, Schema } from 'mongoose'
+import { model, Schema } from "mongoose";
 
 const searchSchema = new Schema({
-        title: { type: String },
-        path: { type: String },
-        phrases: [{ type: String, required: false }],
-})
+  title: { type: String },
+  path: { type: String },
+  phrases: [{ type: String, required: false }],
+  disabled: { type: Boolean, default: false },
+});
 
-export const Search = model('search', searchSchema)
+export const Search = model("search", searchSchema);
