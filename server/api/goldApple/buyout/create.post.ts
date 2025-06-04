@@ -32,6 +32,7 @@ interface Item {
   nameOrganization: string
   selectedParameter: string
   category: string[] | null
+  FIO: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -122,6 +123,7 @@ export default eventHandler(async (event) => {
       url: product.url,
       slug: product.slug,
       appartmentNumber: product.appartmentNumber,
+      courierFIO: product.FIO,
       searchQuery: searchQueries.join(', '),
       point: product.adress,
       point_city: 'Москва',

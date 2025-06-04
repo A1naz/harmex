@@ -70,6 +70,12 @@ onMounted(() => {
   email.value = user.value?.email ? user.value?.email : "";
 });
 const showTooltip = ref(false);
+const ndsSumm = computed(() => {
+  return summ.value * 0.05
+})
+const finalSumm = computed(() => {
+  return summ.value - ndsSumm.value
+})
 </script>
 
 <template>
@@ -107,6 +113,9 @@ const showTooltip = ref(false);
               placeholder="Введите сумму пополнения"
               v-model="summ"
             />
+             <div class="my-2 mx-2 text-[12px]">
+            НДС 5% - {{ currency.format(ndsSumm) }}, к пополнению - {{ currency.format(finalSumm) }}
+          </div>
           </div>
           <div class="flex gap-[3px] w-full flex-nowrap flex-row justify-between">
             <button

@@ -306,7 +306,7 @@ const prices = ref({
   type: "price",
 });
 const mainStore = useMainStore();
-prices.value = await mainStore.getPrices("goldApple");
+prices.value = await mainStore.getPrices("zy");
 
 const summ = computed(() => {
   const summInfo = mainStore.getBuyoutsSumm(
