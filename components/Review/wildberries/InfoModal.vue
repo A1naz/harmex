@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { rules } from "~/data/buyout/rules";
+import { navigateTo } from "#app";
 
 const props = defineProps({
   info: {
