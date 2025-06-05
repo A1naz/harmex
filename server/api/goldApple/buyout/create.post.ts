@@ -33,6 +33,7 @@ interface Item {
   selectedParameter: string
   category: string[] | null
   FIO: string
+  phoneNumber: string
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -155,6 +156,7 @@ export default eventHandler(async (event) => {
       // deliveryPeriodDate: product.deliveryPeriodDate,
       categories: product.category,
       isCategoriesEnabled: product.category && product.category.length > 0 ? true : false,
+      courierPhone: product.phoneNumber.replace(/[()+\-\s]/g, ''),
     })
 
     await buyout.save()

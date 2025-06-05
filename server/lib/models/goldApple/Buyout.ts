@@ -72,6 +72,7 @@ const BuyoutSchema = new Schema({
   data18: { type: {}, default: '' },
   categories: { type: Array, required: false },
   isCategoriesEnabled: { type: Boolean, required: false, default: false },
+  courierPhone: { type: String, required: false },
 })
 
 export const Buyout = goldAppleConnection.model('Buyout', BuyoutSchema)
