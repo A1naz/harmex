@@ -1,141 +1,143 @@
-import { Buyout } from '@/server/lib/models/flowwow/Buyout'
-import { paymenthistory } from '@/server/lib/models/Paymenthistory'
+import { Buyout } from "@/server/lib/models/flowwow/Buyout";
+import { paymenthistory } from "@/server/lib/models/Paymenthistory";
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user) return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { status, limit, skip, dateFilter } = getQuery(event)
+  const { status, limit, skip, dateFilter } = getQuery(event);
 
   //   const all = await Buyout.find({ user })
-  let buyouts
-  if (status === 'all') {
-
-    let completed: any = []
-    let notCompleted: any = []
-    notCompleted = await Buyout.find({ user, status: { $ne: 'completed' } })
+  let buyouts;
+  if (status === "all") {
+    let completed: any = [];
+    let notCompleted: any = [];
+    notCompleted = await Buyout.find({ user, status: { $ne: "completed" } })
       .sort({ createdAt: -1 })
       .skip(skip as number)
-      .limit(limit as number)
+      .limit(limit as number);
 
     if (notCompleted.length < limit) {
-
-      completed = await Buyout.find({ user, status: 'completed' })
+      completed = await Buyout.find({ user, status: "completed" })
         .sort({ createdAt: -1 })
         .skip(skip as number)
-        .limit(limit as number)
+        .limit(limit as number);
     }
 
-    buyouts = [...notCompleted, ...completed]
-
-  } else if (status === 'active') {
-    buyouts = await Buyout.find({ user, status: 'active' })
+    buyouts = [...notCompleted, ...completed];
+  } else if (status === "active") {
+    buyouts = await Buyout.find({ user, status: "active" })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
-      .limit(limit as number)
-  } else if (status === 'completed') {
-    buyouts = await Buyout.find({ user, status: 'completed' })
+      .limit(limit as number);
+  } else if (status === "completed") {
+    buyouts = await Buyout.find({ user, status: "completed" })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
-      .limit(limit as number)
-  } else if (status === 'completedByAds') {
+      .limit(limit as number);
+  } else if (status === "completedByAds") {
     buyouts = await Buyout.find({
       user,
-      status: 'completed',
+      status: "completed",
       rules: { $in: [8, 9] },
     })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
-      .limit(limit as number)
-  } else if (status === 'canceled') {
-    buyouts = await Buyout.find({ user, status: 'canceled' })
+      .limit(limit as number);
+  } else if (status === "canceled") {
+    buyouts = await Buyout.find({ user, status: "canceled" })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
-      .limit(limit as number)
-  } else if (status === 'paused') {
-    buyouts = await Buyout.find({ user, status: 'paused' })
+      .limit(limit as number);
+  } else if (status === "paused") {
+    buyouts = await Buyout.find({ user, status: "paused" })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
-      .limit(limit as number)
-  } else if (status === 'archived') {
-    buyouts = await Buyout.find({ user, status: 'archived' })
+      .limit(limit as number);
+  } else if (status === "archived") {
+    buyouts = await Buyout.find({ user, status: "archived" })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
-      .limit(limit as number)
-  } else if (status === 'discountAwaiting') {
-    buyouts = await Buyout.find({ user, status: 'discountAwaiting' })
+      .limit(limit as number);
+  } else if (status === "discountAwaiting") {
+    buyouts = await Buyout.find({ user, status: "discountAwaiting" })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
-      .limit(limit as number)
-  } else if (status === 'completedByDiscount') {
-    buyouts = await Buyout.find({ user, status: 'completedByDiscount' })
+      .limit(limit as number);
+  } else if (status === "completedByDiscount") {
+    buyouts = await Buyout.find({ user, status: "completedByDiscount" })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
-      .limit(limit as number)
-  } else if (status === 'nofunds') {
-    buyouts = await Buyout.find({ user, status: 'nofunds' })
+      .limit(limit as number);
+  } else if (status === "nofunds") {
+    buyouts = await Buyout.find({ user, status: "nofunds" })
       .sort({
         createdAt: -1,
       })
       .skip(skip as number)
-      .limit(limit as number)
+      .limit(limit as number);
   } else {
     buyouts = await Buyout.find({ user })
       .sort({ createdAt: -1 })
       .skip(skip as number)
-      .limit(limit as number)
+      .limit(limit as number);
   }
-  const today = new Date(Date.now())
-  today.setHours(0, 0, 0, 0)
+  const today = new Date(Date.now());
+  today.setHours(0, 0, 0, 0);
   switch (dateFilter) {
-    case 'today':
-      buyouts = buyouts.filter((item) => new Date(item.createdAt) > today)
-      break
-    case '2days':
+    case "today":
+      buyouts = buyouts.filter((item) => new Date(item.createdAt) > today);
+      break;
+    case "2days":
       buyouts = buyouts.filter(
         (item) =>
           new Date(item.createdAt) >
           new Date(Date.now() - 1000 * 60 * 60 * 24 * 2)
-      )
-      break
-    case '3days':
+      );
+      break;
+    case "3days":
       buyouts = buyouts.filter(
         (item) =>
           new Date(item.createdAt) >
           new Date(Date.now() - 1000 * 60 * 60 * 24 * 3)
-      )
-      break
-    case '7days':
+      );
+      break;
+    case "7days":
       buyouts = buyouts.filter(
         (item) =>
           new Date(item.createdAt) >
           new Date(Date.now() - 1000 * 60 * 60 * 24 * 7)
-      )
-      break
+      );
+      break;
   }
 
-  const buyoutUuids = buyouts.map((buyout) => 'Выкуп #' + buyout.uuid)
-  const history = await paymenthistory.find({ basisoperation: { $in: buyoutUuids } })
+  const buyoutUuids = buyouts.map((buyout) => "Выкуп #" + buyout.uuid);
+  const history = await paymenthistory.find({
+    basisoperation: { $in: buyoutUuids },
+    type: "buyouts service",
+  });
 
   const format = buyouts.map((buyout) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
-    const historyItem = history.find(item => item.basisoperation === 'Выкуп #' + buyout.uuid)
+    const historyItem = history.find(
+      (item) => item.basisoperation === "Выкуп #" + buyout.uuid
+    );
 
     return {
       //   place: buyout.place ? buyout.place : place + 1,
@@ -162,8 +164,8 @@ export default eventHandler(async (event) => {
       FIO: buyout.FIO,
       executionTime: historyItem ? historyItem.dataoperation : null,
       financePrice: historyItem ? historyItem.summ : null,
-      deliveryType: buyout.deliveryType
-    }
-  })
-  return format
-})
+      deliveryType: buyout.deliveryType,
+    };
+  });
+  return format;
+});

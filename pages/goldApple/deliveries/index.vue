@@ -17,6 +17,7 @@ const status = computed(() => route.query?.status || "all");
 const loading = ref(false);
 const dateRange = ref([]);
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
+const manualModal = ref(false);
 const search = ref<any>({
   text: "",
   loading: false,
@@ -309,7 +310,7 @@ const siteUrl = config.public.siteUrl;
         </li>
         <li class="cursor-pointer">
           <NuxtLink to="/catalog/goldApple" class="cursor-pointer text-[#909090]">
-            Золотое яблооко
+            Золотое яблоко
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">Доставки</li>
