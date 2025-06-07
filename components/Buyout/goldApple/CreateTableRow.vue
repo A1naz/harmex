@@ -325,8 +325,8 @@ function onParameterChange(event: Event) {
             v-model="store.createProducts[props.index].deliveryType"
             @change="(product.adress = ''), (product.appartmentNumber = '')"
           >
-            <option value="self">Самовывоз</option>
-            <option value="courier">Курьер</option>
+          <option value="courier">Курьер</option>
+            <!-- <option value="self">Самовывоз</option> -->
           </select>
         </div>
       </div>
