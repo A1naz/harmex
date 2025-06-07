@@ -135,7 +135,7 @@ async function resumeStatus(item: any) {
               <button
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
               >
-                {{ $dayjs(info.date).format("DD.MM.YYYY HH:mm") }}
+        {{ $dayjs(info.createdAt).format("DD.MM.YYYY HH:mm") }}
               </button>
             </div>
             <div class="flex gap-2 w-2/3">

@@ -82,17 +82,15 @@ onKeyStroke("Escape", (e) => {
 
           <div class="flex items-center">
             <div class="flex flex-col truncate gap-1">
-              <div class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md flex flex-col gap-1">
+              <div
+                class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md flex flex-col gap-1"
+              >
                 <div>
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Создано:
                   </span>
                   <span class="rounded-md py-0 px-2 text-sm">
-                    {{
-                      $dayjs(info.createdAt)
-                        .locale("ru")
-                        .format("D.MM.YY, HH:mm")
-                    }}</span
+                    {{ $dayjs(info.createdAt).format("DD.MM.YYYY") }}</span
                   >
                 </div>
 
@@ -213,7 +211,9 @@ onKeyStroke("Escape", (e) => {
                 </div>
               </div>
               <div>
-                <div class="px-8 bg-primary bg-opacity-15 pt-2 -mt-1 pb-4 flex flex-col gap-1">
+                <div
+                  class="px-8 bg-primary bg-opacity-15 pt-2 -mt-1 pb-4 flex flex-col gap-1"
+                >
                   <div>
                     <span class="text-sm text-gray-500 mr-2 my-auto"
                       >Количество:

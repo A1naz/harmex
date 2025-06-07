@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
         user: user._id,
         reviewed: { $ne: true },
         'statusdelivery.status': {
-          $regex: '^(Получен|Доставлен|Получено)$',
+          $regex: '^(выполнен|Выполнен)$',
         },
         status: 'completed',
       },

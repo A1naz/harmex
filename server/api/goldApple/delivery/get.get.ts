@@ -60,7 +60,7 @@ export default eventHandler(async (event) => {
       .filter(
         (delivery, index) =>
           delivery.statusdelivery[delivery.statusdelivery.length - 1].status ==
-          'Доставлен'
+          'выполнен'
       )
       .splice(skip as number, limit as number)
   } else {

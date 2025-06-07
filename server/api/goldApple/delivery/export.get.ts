@@ -1,8 +1,7 @@
-import ExcelJS from 'exceljs'
-import { Delivery } from '~~/server/lib/models/goldApple/Delivery'
 import { Buyout } from '~~/server/lib/models/goldApple/Buyout'
 import { Buyoutlog } from '~~/server/lib/models/goldApple/Buyoutlog'
-import { DocuemntEnum } from '~/data/enums'
+import { Delivery } from '~~/server/lib/models/goldApple/Delivery'
+import ExcelJS from 'exceljs'
 
 const keys = Object.keys as <T>(
   obj: T
@@ -10,14 +9,15 @@ const keys = Object.keys as <T>(
   ? U extends string
     ? U
     : U extends number
-    ? `${U}`
-    : never
+      ? `${U}`
+      : never
   : never)[]
 
 export default eventHandler(async (event) => {
-  try {
+
     const user = await getAdminEntity(event)
-    if (!user) return sendRedirect(event, '/auth', 302)
+    if (!user)
+      return sendRedirect(event, '/auth', 302)
 
     const { dateRange }: any = getQuery(event)
 
@@ -39,16 +39,17 @@ export default eventHandler(async (event) => {
         message: 'Нет доставок для экспорта',
       })
     }
-    const buyoutsId = deliveries.map((item) => item.idbuyout)
+    const buyoutsId = deliveries.map(item => item.idbuyout)
     const buyouts = await Buyout.find({ _id: { $in: buyoutsId } })
     const logs = await Buyoutlog.find({ _id: { $in: buyoutsId } })
 
     const format = await Promise.all(
       deliveries.map(async (delivery, index) => {
         const buyout = buyouts.find(
-          (buyout) => buyout._id.valueOf() === delivery.idbuyout.valueOf()
+          buyout => buyout._id.valueOf() === delivery.idbuyout.valueOf(),
         )
-        if (!buyout) return undefined
+        if (!buyout)
+          return undefined
 
         const phone = delivery.recipientphone
         const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
@@ -59,18 +60,18 @@ export default eventHandler(async (event) => {
         const statusDelivery = delivery.statusdelivery
 
         const arrivedDate = statusDelivery.find(
-          (item) =>
-            item.status === 'Готов к выдаче' ||
-            item.status === 'Готов к получению'
+          item =>
+            item.status === 'выполнен'
+            || item.status === 'Выполнен',
         )
         const receivedDate = statusDelivery.find(
-          (item) => item.status === 'Получено' || item.status === 'Получен'
+          item => item.status === 'Получено' || item.status === 'Получен',
         )
 
         const foundLog = logs.find(
-          (item) =>
-            item.buyout.valueOf() === buyout._id.valueOf() &&
-            item.text.includes('Выкуп выполнен')
+          item =>
+            item.buyout.valueOf() === buyout._id.valueOf()
+            && item.text.includes('Выкуп выполнен'),
         )
         const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt)
         const place = index + 1
@@ -102,11 +103,11 @@ export default eventHandler(async (event) => {
           place: index + 1,
           key: buyout.ff ? 'Выкуп под ключ' : 'Выкуп',
         }
-      })
+      }),
     )
 
     const workbook = new ExcelJS.Workbook()
-    const ready = format.filter((item) => item)
+    const ready = format.filter(item => item)
     const sheet = workbook.addWorksheet('Общая таблица', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
     })
@@ -189,21 +190,21 @@ export default eventHandler(async (event) => {
 
     for (const item of ready) {
       if (
-        !item?.receiptcodeqr ||
-        item?.receiptcodeqr?.length < 40 ||
-        item?.receiptcodeqr === 'undefined'
+        !item?.receiptcodeqr
+        || item?.receiptcodeqr?.length < 40
+        || item?.receiptcodeqr === 'undefined'
       ) {
         continue
       }
 
       if (
         item.receiptcodeqr.includes(
-          'data:image/png;base64,data:image/png;base64,'
+          'data:image/png;base64,data:image/png;base64,',
         )
       ) {
         item.receiptcodeqr = item.receiptcodeqr.replace(
           'data:image/png;base64,',
-          ''
+          '',
         )
       }
 
@@ -231,17 +232,12 @@ export default eventHandler(async (event) => {
 
     const buffer = await workbook.xlsx.writeBuffer()
 
-    await userLog(event, {
-      documentType: DocuemntEnum.Delivery,
-      documentId: '',
-      comment: 'Экспорт всех доставок XLS',
-    })
+    // await userLog(event, {
+    //   documentType: DocuemntEnum.Delivery,
+    //   documentId: '',
+    //   comment: 'Экспорт всех доставок XLS',
+    // })
 
     return buffer
-  } catch (e) {
-    throw createError({
-      statusCode: 500,
-      message: 'Не удалось создать таблицу',
-    })
-  }
+  
 })
