@@ -114,7 +114,7 @@ const finalSumm = computed(() => {
               v-model="summ"
             />
              <div class="my-2 mx-2 text-[12px]">
-            НДС 5% - {{ currency.format(ndsSumm) }}, к пополнению - {{ currency.format(finalSumm) }}
+            
           </div>
           </div>
           <div class="flex gap-[3px] w-full flex-nowrap flex-row justify-between">
