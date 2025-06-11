@@ -321,12 +321,12 @@ function onParameterChange(event: Event) {
       <div class="flex items-center mt-2">
         <div class="w-full">
           <select
-            class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
+            class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none h-10 mb-2"
             v-model="store.createProducts[props.index].deliveryType"
             @change="(product.adress = ''), (product.appartmentNumber = '')"
           >
-          <option value="courier">Курьер</option>
-            <!-- <option value="self">Самовывоз</option> -->
+          <option value="courier" class="text-center">Курьер - от 100₽</option>
+            <option value="self" class="text-center">Самовывоз</option>
           </select>
         </div>
       </div>

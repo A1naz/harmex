@@ -14,20 +14,20 @@ export default eventHandler(async (event) => {
   if (status === 'all') {
     let completed: any = []
     let notCompleted: any = []
-    notCompleted = await Buyout.find({ user, status: { $ne: 'completed' } })
+    // notCompleted = await Buyout.find({ user, status: { $ne: 'completed' } })
+    //   .sort({ createdAt: -1 })
+    //   .skip(skip as number)
+    //   .limit(limit as number)
+
+    //   completed = await Buyout.find({ user, status: 'completed' })
+    //     .sort({ createdAt: -1 })
+    //     .skip(skip as number)
+    //     .limit(limit as number)
+    
+    buyouts = await Buyout.find({ user })
       .sort({ createdAt: -1 })
       .skip(skip as number)
       .limit(limit as number)
-
-    if (notCompleted.length < limit) {
-
-      completed = await Buyout.find({ user, status: 'completed' })
-        .sort({ createdAt: -1 })
-        .skip(skip as number)
-        .limit(limit as number)
-    }
-
-    buyouts = [...notCompleted, ...completed]
 
   }
   else if (status === 'active') {

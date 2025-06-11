@@ -97,7 +97,7 @@ const lastPoints = ref(
   JSON.parse(localStorage.getItem("goldApplePointStore") || "[]")
 );
 
-const presetCluster = "islands#yellowClusterIcons'";
+const presetCluster = "islands#darkGreenClusterIcons";
 
 const originalBounds = ref([
   [55.72435065000997, 37.421310551334145],
@@ -186,7 +186,7 @@ onMounted(async () => {
             },
           },
           options: {
-            iconColor: "#dbfe01",
+            iconColor: "#dffa39",
             iconLayout: "default#image",
             iconImageHref:
               "https://ozonmpportal.hb.vkcs.cloud/mp/goldApple.png",

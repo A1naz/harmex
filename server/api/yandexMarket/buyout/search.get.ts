@@ -1,11 +1,12 @@
-import { Buyout } from '@/server/lib/models/yandexMarket/Buyout'
+import { Buyout } from "@/server/lib/models/yandexMarket/Buyout";
+import { paymenthistory } from '@/server/lib/models/Paymenthistory'
+
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { string, type } = getQuery(event)
+  const { string, type } = getQuery(event);
 
   // const all = await Buyout.find({ user })
   // let buyouts
@@ -34,14 +35,23 @@ export default eventHandler(async (event) => {
     $or: [
       { uuid: string },
       { article: Number.isNaN(Number(string)) ? 0 : Number(string) },
-      { 'product.name': { $regex: string, $options: 'i' } },
+      { "product.name": { $regex: string, $options: "i" } },
     ],
+  }).limit(200);
 
-  }).limit(200)
+  const buyoutUuids = found.map((buyout) => "Выкуп #" + buyout.uuid);
+  const history = await paymenthistory.find({
+    basisoperation: { $in: buyoutUuids },
+    type: "buyouts service",
+  });
 
   const format = found.map((buyout, index) => {
+    const historyItem = history.find(
+      (item) => item.basisoperation === "Выкуп #" + buyout.uuid
+    );
+
     return {
-      place: buyout.place ? buyout.place : index + 1,
+      place: buyout.place,
       uuid: buyout.uuid,
       article: buyout.article,
       searchQuery: buyout.searchQuery,
@@ -56,7 +66,10 @@ export default eventHandler(async (event) => {
       rules: buyout.rules,
       createdAt: buyout.createdAt,
       product: buyout.product,
-    }
-  })
-  return format
-})
+      purchaseSoon: buyout.purchaseSoon,
+      executionTime: historyItem ? historyItem.dataoperation : null,
+      financePrice: historyItem ? historyItem.summ : null,
+    };
+  });
+  return format;
+});
