@@ -1619,6 +1619,24 @@ const categories = ref([
                   @click="openInfoModal('search')"
                 >
                   <div class="flex justify-center items-center gap-1">
+                    <span>ФИО</span>
+           
+                  </div>
+                </th>
+                <th
+                  class="font-normal text-base-content"
+                  @click="openInfoModal('search')"
+                >
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Номер телефона</span>
+           
+                  </div>
+                </th>
+                <th
+                  class="font-normal text-base-content"
+                  @click="openInfoModal('search')"
+                >
+                  <div class="flex justify-center items-center gap-1">
                     <span>Поисковые запросы</span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>

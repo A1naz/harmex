@@ -445,6 +445,32 @@ function onParameterChange(event: Event) {
         <button class="btn" disabled>Выберите категорию</button>
       </div>
     </td> -->
+      <td class="border-r border-base">
+      <div class="w-full flex flex-col gap-2">
+     <label
+          ><input
+            v-model="store.createProducts[props.index].FIO"
+            type="text"
+            placeholder="Введите ФИО"
+              class="input bg-base-200 input-sm w-full rounded-xl"
+          />
+        </label>
+      </div>
+    </td>
+      <td class="border-r border-base">
+      <div class="w-full flex flex-col gap-2">
+        <label>
+           <input
+               v-model="store.createProducts[props.index].phoneNumber"
+               v-maska
+               data-maska="+7 (###) ###-##-##"
+               placeholder="+7 (___) ___-__-__"
+               required="true"
+              class="input bg-base-200 input-sm w-full rounded-xl"
+             />
+           </label>
+      </div>
+    </td>
     <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
         <BuyoutGoldAppleCreateSearchQueries

@@ -12,18 +12,13 @@ export default eventHandler(async (event) => {
   const {
     buyoutuuid,
     deliveryid,
-    serviceRating,
-    deliveryRating,
-    photos,
-    valuePerMoneyRating,
-    conformityRating,
-    publicComment,
-    hiddenComment,
+    rating,
+    text,
     date,
   } = await readBody(event);
 
-  if (publicComment) {
-    if (publicComment.length < 10 || publicComment.length > 1000) {
+  if (text) {
+    if (text.length < 10 || text.length > 1000) {
       throw createError({
         statusCode: 400,
         message:
@@ -31,19 +26,10 @@ export default eventHandler(async (event) => {
       });
     }
   }
-  if (hiddenComment) {
-    if (hiddenComment.length < 10 || hiddenComment.length > 1000) {
-      throw createError({
-        statusCode: 400,
-        message:
-          "Скрытый комментарий должен быть длиннее 10 символов и не больше 1000",
-      });
-    }
-  }
 
   const balanceIsExist = await checkBalance(
     user,
-    { buyoutuuid, video: false, mp: "flowwow" },
+    { buyoutuuid, video: false, mp: "zy" },
     "reviews"
   );
 
@@ -73,26 +59,15 @@ export default eventHandler(async (event) => {
     });
   }
 
-  // const images = photos.map((photo: any) =>
-  //   photo.public.replace(
-  //     config.public.DOMAIN_API_IMAGES_URL + 'reviewImages/',
-  //     ''
-  //   )
-  // )
 
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
-    images: photos.map((photo: any) => photo.url),
-    serviceRating,
-    deliveryRating,
-    valuePerMoneyRating,
-    conformityRating,
-    publicComment,
-    hiddenComment,
     date,
     publishDate: date,
     user,
+    text,
+    rating,
     delivery,
     idDelivery: delivery.idDelivery,
     status: "waiting",
