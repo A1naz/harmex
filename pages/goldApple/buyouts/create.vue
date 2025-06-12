@@ -89,11 +89,14 @@ const totalQuantity = computed(() => {
 });
 
 const pickpoints = shallowRef();
+const pickpointsMarket = shallowRef();
 const modalOpen = ref(false);
 const modalOpenSelf = ref(false);
+const modalOpenMarket = ref(false);
 function closeModal() {
   modalOpen.value = false;
   modalOpenSelf.value = false;
+  modalOpenMarket.value = false;
 }
 
 async function openChecksModal() {
@@ -202,6 +205,21 @@ async function getPickpoints() {
     });
   }
 }
+async function getPickpointsMarket() {
+  try {
+    const data = await $fetch("/api/goldApple/buyout/pickpointsMarket", {
+      method: "GET",
+    });
+    pickpointsMarket.value = (data as any).points;
+  } catch (e: any) {
+    notify({
+      title: "Что-то пошло не так",
+      text: e?.message,
+      group: "error",
+      duration: 3000,
+    });
+  }
+}
 
 async function pointModalOpen(index: number) {
   if (!pickpoints.value) loading.value = true;
@@ -209,13 +227,16 @@ async function pointModalOpen(index: number) {
   store.selectedItem = index;
   if (products.value[index].deliveryType === "self") {
     modalOpenSelf.value = true;
-  } else {
+  } else if (products.value[index].deliveryType === "courier") {
     modalOpen.value = true;
+  } else if (products.value[index].deliveryType === "market") {
+    modalOpenMarket.value = true;
   }
 }
 
 onMounted(async () => {
   getPickpoints();
+  getPickpointsMarket();
   if (route.query.uuid) {
     startTimer();
     loading.value = true;
@@ -1404,6 +1425,7 @@ const categories = ref([
 
 <template>
   <div class="px-4 sm:px-16 pt-8">
+    {{ modalOpenMarket }}
     <div
       class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
     >
@@ -1633,6 +1655,13 @@ const categories = ref([
           v-if="modalOpenSelf"
           :state="modalOpenSelf"
           :pickpoints="pickpoints"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutGoldAppleSelectPointModalMarket
+          v-if="modalOpenMarket"
+          :state="modalOpenMarket"
+          :pickpoints="pickpointsMarket"
           @callback="handleAddress"
           @close="closeModal"
         />
