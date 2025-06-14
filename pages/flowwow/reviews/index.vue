@@ -359,7 +359,7 @@ async function selectFilterDate(e: any) {
         </li>
         <li class="cursor-pointer">
           <NuxtLink to="/catalog/flowwow" class="cursor-pointer text-[#909090]">
-            Avito
+            Flowwow
           </NuxtLink>
         </li>
         <li class="cursor-pointer text-[#1e2734]">Отзывы</li>

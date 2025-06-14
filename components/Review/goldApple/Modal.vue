@@ -28,6 +28,8 @@ const inputs: any = {
 };
 
 const form = reactive({
+  positive: "",
+  negative: "",
   text: "",
   rating: 5,
   date: now.value,
@@ -61,7 +63,8 @@ const newFileId = ref("");
 async function clearForm() {
   form.date = new Date();
   form.text = "";
-
+  form.positive = "";
+  form.negative = "";
   loadingIndex.value = null;
   isUploading.value = false;
   uploadProgress.value = "";
@@ -69,8 +72,6 @@ async function clearForm() {
   filetype.value = "";
   newFileId.value = "";
   filetype.value = "";
-
-
 }
 
 async function publishReview() {
@@ -327,7 +328,29 @@ const handleMouseUp = (event: any) => {
 
       <div class="flex flex-col gap-4">
         <div class="w-full">
-          <div class="pb-2 font-medium">Текст</div>
+          <div class="pb-2 font-medium">Достоинства</div>
+          <textarea
+            v-model="form.positive"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, хороший телефон"
+          />
+
+          <div class="text-error">
+            {{ textValidError }}
+          </div>
+
+          <div class="pb-2 font-medium">Недостатки</div>
+          <textarea
+            v-model="form.negative"
+            class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, хороший телефон"
+          />
+
+          <div class="text-error">
+            {{ textValidError }}
+          </div>
+
+          <div class="pb-2 font-medium">Другие особенности продукта</div>
           <textarea
             v-model="form.text"
             class="textarea w-full textarea-md bg-base-200"

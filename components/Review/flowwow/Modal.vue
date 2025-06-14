@@ -733,7 +733,7 @@ const handleMouseUp = (event: any) => {
         </div> -->
       </div>
 
-      <div class="mt-2">
+      <!-- <div class="mt-2">
         <div class="font-medium">Фото</div>
         <p class="mb-2 text-sm font-light text-gray-500">
           Разрешены фото в формате PNG, JPG.
@@ -804,7 +804,7 @@ const handleMouseUp = (event: any) => {
             </div>
           </div>
         </ClientOnly>
-      </div>
+      </div> -->
       <div class="modal-action justify-between">
         <div>
           <button
