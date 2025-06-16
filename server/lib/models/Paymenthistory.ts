@@ -1,10 +1,10 @@
-import { model, Schema } from 'mongoose'
+import { model, Schema } from "mongoose";
 
 const paymenthistorySchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   summ: { type: String, required: true },
   type: { type: String },
-  article: { type: String },
+  article: { type: Schema.Types.Mixed },
   typeoperations: { type: String },
   basisoperation: { type: String, text: true },
   dataoperation: { type: Date },
@@ -12,6 +12,6 @@ const paymenthistorySchema = new Schema({
   refRewarded: { type: Boolean, default: false },
   mp: { type: String },
   nameOrganization: { type: String },
-})
+});
 
-export const paymenthistory = model('paymenthistory', paymenthistorySchema)
+export const paymenthistory = model("paymenthistory", paymenthistorySchema);
