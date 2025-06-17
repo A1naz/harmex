@@ -186,31 +186,31 @@ watch(products.value, (old, value) => {
   });
 });
 
-async function getPickpoints() {
-  try {
-    const data = await $fetch("/api/flowwow/buyout/pickpoints", {
-      method: "GET",
-    });
-    pickpoints.value = (data as any).points;
-  } catch (e: any) {
-    notify({
-      title: "Что-то пошло не так",
-      text: e?.message,
-      group: "error",
-      duration: 3000,
-    });
-  }
-}
+// async function getPickpoints() {
+//   try {
+//     const data = await $fetch("/api/flowwow/buyout/pickpoints", {
+//       method: "GET",
+//     });
+//     pickpoints.value = (data as any).points;
+//   } catch (e: any) {
+//     notify({
+//       title: "Что-то пошло не так",
+//       text: e?.message,
+//       group: "error",
+//       duration: 3000,
+//     });
+//   }
+// }
 
 async function pointModalOpen(index: number) {
-  if (!pickpoints.value) loading.value = true;
+  // if (!pickpoints.value) loading.value = true;
 
   store.selectedItem = index;
   modalOpen.value = true;
 }
 
 onMounted(async () => {
-  getPickpoints();
+  // getPickpoints();
   if (route.query.uuid) {
     startTimer();
     loading.value = true;

@@ -29,7 +29,6 @@ const map = ref(null); // ссылка на карту
 
 const marker = ref();
 const name = ref("Custom");
-const loading = ref(false);
 const addressText = ref("Москва, улица Петровка, 5");
 const coordinates = ref([55.761438764655615, 37.617691166568456]);
 const error = ref("");
@@ -90,12 +89,6 @@ function handleAddress(address: string, lt: number, lg: number) {
 
         <div class="flex justify-center">
           <!-- <div class="ml-2">Адрес: {{ addressText }}</div> -->
-        </div>
-        <div
-          v-if="loading"
-          class="loading flex justify-center items-center h-full"
-        >
-          <Icon class="animate-spin" size="60" name="mdi:loading" />
         </div>
         <div
           v-if="error"
