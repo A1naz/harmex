@@ -14,6 +14,7 @@ const ReviewSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   delivery: { type: Schema.Types.ObjectId, ref: 'Delivery', required: true },
   images: { type: Array, required: false },
+    isPhotoEnabled: { type: Boolean, required: false },
   status: {
     type: String,
     required: true,

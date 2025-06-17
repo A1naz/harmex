@@ -72,8 +72,18 @@ export default eventHandler(async (event) => {
     })
   }
 
+   let isPhotoEnabled = false;
+  if (photos && photos.length > 0) {
+    photos.forEach((photo: any) => {
+      if (photo.url && photo.url !== "") {
+        isPhotoEnabled = true;
+      }
+    });
+  }
+
   const review = new Review({
     article: buyout.article,
+    isPhotoEnabled,
     name: buyout.product.name,
     rating,
     text,

@@ -61,6 +61,8 @@ export default eventHandler(async (event) => {
     })
   }
 
+
+
   const delivery = await Delivery.findOne({
     _id: deliveryid,
     idbuyout: buyout._id,
@@ -73,9 +75,17 @@ export default eventHandler(async (event) => {
     })
   }
 
+  let isPhotoEnabled = false
+  photos.forEach((photo: any) => {
+    if (photo.url && photo.url !== '') {
+      isPhotoEnabled = true
+    }
+  })
+
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
+    isPhotoEnabled,
     rating,
     text,
     positive,
