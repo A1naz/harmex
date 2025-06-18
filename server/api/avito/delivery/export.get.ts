@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
     if (!deliveries.length) {
       throw createError({
         statusCode: 400,
-        message: 'Нет доставок для экспорта',
+        statusMessage: 'Нет доставок для экспорта',
       })
     }
     const buyoutsId = deliveries.map(item => item.idbuyout);

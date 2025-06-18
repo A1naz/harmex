@@ -104,7 +104,7 @@ async function exportReadyUntilPenaltyXLS() {
   );
   if (error.value) {
     notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
       text: "Не удалось экспортировать данные",
     });
@@ -129,11 +129,13 @@ async function exportXLS() {
     responseType: "blob",
   });
   if (error.value) {
-    console.log(error.value);
+    const text = await error.value.data.text(); // error.value.data — это Blob
+    const json = JSON.parse(text);
+    const message = json.message
     notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
-      text: "Не удалось экспортировать данные" + error.value,
+      text: message || "Не удалось экспортировать данные",
     });
     loadingExport.value = false;
     return;
@@ -355,12 +357,9 @@ async function copyToClipboard(text: string) {
 const config = useRuntimeConfig();
 const siteUrl = config.public.siteUrl;
 
-
 const exportReadyCount = ref(0);
 async function getExportReadyCount() {
-  const { data } = await useFetch(
-    "/api/ozon/delivery/getExportReadyCount"
-  );
+  const { data } = await useFetch("/api/ozon/delivery/getExportReadyCount");
   exportReadyCount.value = data.value;
 }
 getExportReadyCount();
@@ -462,7 +461,7 @@ getExportReadyCount();
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
-              <li v-if="deliveries?.length && exportReadyCount <= 50">
+                <li v-if="deliveries?.length && exportReadyCount <= 50">
                   <NuxtLink
                     :to="`/ozon/deliveries/export${
                       dateRange.length

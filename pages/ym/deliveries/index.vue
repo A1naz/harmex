@@ -102,10 +102,13 @@ async function exportXLS() {
     responseType: "blob",
   });
   if (error.value) {
+    const text = await error.value.data.text(); // error.value.data — это Blob
+    const json = JSON.parse(text);
+    const message = json.message;
     notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
-      text: "Не удалось экспортировать данные",
+      text: message || "Не удалось экспортировать данные",
     });
     loadingExport.value = false;
     return;
@@ -131,7 +134,7 @@ async function exportReadyUntilPenaltyXLS() {
   );
   if (error.value) {
     notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
       text: "Не удалось экспортировать данные",
     });
@@ -450,7 +453,7 @@ getExportReadyCount();
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
-              <li v-if="deliveries?.length && exportReadyCount <= 50">
+                <li v-if="deliveries?.length && exportReadyCount <= 50">
                   <NuxtLink
                     :to="`/ym/deliveries/export${
                       dateRange.length

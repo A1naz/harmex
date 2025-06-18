@@ -117,13 +117,16 @@ async function exportXLS() {
     params: {
       dateRange: dateRange.value.length > 0 ? dateRange.value : null,
     },
-    responseType: "blob",
+      responseType: "blob",
   });
   if (error.value) {
+    const text = await error.value.data.text(); // error.value.data — это Blob
+    const json = JSON.parse(text);
+    const message = json.message
     notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
-      text: "Не удалось экспортировать данные",
+      text: message || "Не удалось экспортировать данные",
     });
     loadingExport.value = false;
     return;

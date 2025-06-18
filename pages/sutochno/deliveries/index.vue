@@ -91,21 +91,22 @@ async function exportReadyXLS() {
   loadingExport.value = false;
 }
 
-
 async function exportXLS() {
   loadingExport.value = true;
   const { data, error } = await useFetch("/api/ozonHotels/delivery/export", {
     params: {
       dateRange: dateRange.value.length > 0 ? dateRange.value : null,
     },
-    responseType: "blob",
+      responseType: "blob",
   });
-  if (error.value) {
-    console.log(error.value);
+   if (error.value) {
+    const text = await error.value.data.text(); // error.value.data — это Blob
+    const json = JSON.parse(text);
+    const message = json.message
     notify({
-     group: "error",
+      group: "error",
       title: "Что-то пошло не так",
-      text: "Не удалось экспортировать данные" + error.value,
+      text: message || "Не удалось экспортировать данные",
     });
     loadingExport.value = false;
     return;
@@ -332,7 +333,10 @@ const siteUrl = config.public.siteUrl;
           </NuxtLink>
         </li>
         <li class="cursor-pointer">
-          <NuxtLink to="/catalog/ozonHotels" class="cursor-pointer text-[#909090]">
+          <NuxtLink
+            to="/catalog/ozonHotels"
+            class="cursor-pointer text-[#909090]"
+          >
             Ozon отели
           </NuxtLink>
         </li>
@@ -436,7 +440,7 @@ const siteUrl = config.public.siteUrl;
                 :status-text="statusText"
                 :links="customLinks"
               />
-          </span>
+            </span>
           </div>
         </div>
       </div>
@@ -511,7 +515,6 @@ const siteUrl = config.public.siteUrl;
       style="height: 60px"
     />
   </div>
-  
 </template>
 
 <style scoped></style>
