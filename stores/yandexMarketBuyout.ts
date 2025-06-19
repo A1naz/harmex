@@ -117,11 +117,6 @@ export const useYandexMarketBuyoutStore = defineStore("yandexMarketBuyout", {
           priceText: product.priceText,
           rules: [
             {
-              id: 1,
-              description: "Добавление 1 товара конкурента",
-              category: 1,
-            },
-            {
               id: 5,
               description:
                 "Не выкупать если товар не найден в поисковой выдаче",

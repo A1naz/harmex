@@ -120,11 +120,7 @@ export const useFlowwowBuyoutStore = defineStore("flowwowBuyout", {
           selectedSize: product.sizes[0] ?? "none",
           priceText: product.priceText,
           rules: [
-            {
-              id: 1,
-              description: "Добавление 1 товара конкурента",
-              category: 1,
-            },
+     
             {
               id: 5,
               description:
