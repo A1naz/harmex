@@ -2,6 +2,15 @@ import { User } from '~~/server/lib/models/User'
 
 export async function createUsername(email: string): Promise<string> {
   let userName = email.split('@')[0].replaceAll('.', '').replaceAll('-', '_')
+
+    if (/^\d+$/.test(userName)) {
+    const randomLetters = () =>
+      Array.from({ length: 3 }, () =>
+        String.fromCharCode(97 + Math.floor(Math.random() * 26))
+      ).join('');
+    userName += randomLetters();
+  }
+
   const findUsernames = await User.find(
     { username: { $regex: `^${userName}`, $options: 'i' } },
     { username: 1, _id: 0 },

@@ -69,6 +69,28 @@ async function getAddressText(lt: number, lg: number, id: string) {
 function handleAddress(address: string, lt: number, lg: number) {
   emit("callback", address, lt, lg);
 }
+
+function getThreeDays(firstDate: string): string[] {
+  const date = new Date(firstDate);
+  const dateStr = date.toLocaleDateString("ru-RU");
+  const [day, month, year] = dateStr.split(".").map(Number);
+  const baseDate = new Date(year, month - 1, day);
+
+  const result: string[] = [];
+
+  for (let i = 0; i < 3; i++) {
+    const d = new Date(baseDate);
+    d.setDate(baseDate.getDate() + i);
+
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yyyy = d.getFullYear();
+
+    result.push(`${dd}.${mm}.${yyyy}`);
+  }
+
+  return result;
+}
 </script>
 
 <template>
@@ -135,10 +157,50 @@ function handleAddress(address: string, lt: number, lg: number) {
           </YandexMarker>
         </YandexMap>
       </div>
+      <div class="flex gap-2 my-3">
+        <div class="flex flex-col">
+          <span class="ml-1"> Дата доставки </span>
+          <select
+            class="select select-bordered"
+            v-model="
+              store.createProducts[store.selectedItem || 0].courierDeliveryDate
+            "
+          >
+            <option
+              v-for="date in getThreeDays(
+                store.createProducts[store.selectedItem || 0].dateRange[0]
+              )"
+              :key="date"
+              :value="date"
+            >
+              {{ date }}
+            </option>
+          </select>
+        </div>
+
+        <div class="flex flex-col">
+          <span class="ml-1"> Время доставки </span>
+          <select
+            class="select select-bordered"
+            v-model="
+              store.createProducts[store.selectedItem || 0].courierDeliveryTime
+            "
+          >
+            <option>09:00 - 16:00</option>
+            <option>09:00 - 18:00</option>
+            <option>13:00 - 16:00</option>
+            <option>14:00 - 18:00</option>
+            <option>16:00 - 19:00</option>
+            <option>19:00 - 23:00</option>
+          </select>
+        </div>
+      </div>
       <div class="w-full flex flex-col gap-2 my-3">
         <label
           ><input
-            v-model="store.createProducts[store.selectedItem].appartmentNumber"
+            v-model="
+              store.createProducts[store.selectedItem || 0].appartmentNumber
+            "
             type="text"
             placeholder="Введите № квартиры"
             class="input bg-base-200 w-full rounded-xl"
@@ -148,7 +210,7 @@ function handleAddress(address: string, lt: number, lg: number) {
       <button
         :disabled="
           addressText == 'Загрузка...' ||
-          !store.createProducts[store.selectedItem].appartmentNumber
+          !store.createProducts[store.selectedItem || 0].appartmentNumber
         "
         class="btn btn-primary my-2 w-full"
         @click="handleAddress(addressText, coordinates[0], coordinates[1])"
