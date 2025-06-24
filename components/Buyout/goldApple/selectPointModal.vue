@@ -186,8 +186,10 @@ function getThreeDays(firstDate: string): string[] {
               store.createProducts[store.selectedItem || 0].courierDeliveryTime
             "
           >
+            <option>09:00 - 16:00</option>
             <option>09:00 - 18:00</option>
             <option>13:00 - 16:00</option>
+            <option>14:00 - 18:00</option>
             <option>16:00 - 19:00</option>
             <option>19:00 - 23:00</option>
           </select>

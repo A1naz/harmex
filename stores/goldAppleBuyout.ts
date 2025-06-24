@@ -124,7 +124,7 @@ export const useGoldAppleBuyoutStore = defineStore("goldAppleBuyout", {
           phoneNumber: "",
           FIO: "",
           appartmentNumber: "",
-          courierDeliveryTime: "09:00 - 18:00",
+          courierDeliveryTime: "09:00 - 16:00",
           courierDeliveryDate: startDate.toLocaleDateString("ru-RU"),
         })
       );
