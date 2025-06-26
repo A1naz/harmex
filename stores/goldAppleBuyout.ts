@@ -120,7 +120,7 @@ export const useGoldAppleBuyoutStore = defineStore("goldAppleBuyout", {
           rules: [],
           colors: product?.colors,
           pointCoordinates: { lat: 0, lon: 0 },
-          deliveryType: "courier",
+          deliveryType: "self",
           phoneNumber: "",
           FIO: "",
           appartmentNumber: "",

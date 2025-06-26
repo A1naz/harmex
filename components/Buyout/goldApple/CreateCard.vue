@@ -346,8 +346,8 @@ function onParameterChange(event: Event) {
             class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
             v-model="store.createProducts[props.index].deliveryType"
           >
-            <option value="courier">Курьер</option>
-            <option value="self">Самовывоз</option>
+             <option value="self" class="text-center">Самовывоз</option>
+            <option value="market" class="text-center">Магазин</option>
           </select>
         </div>
       </div>
