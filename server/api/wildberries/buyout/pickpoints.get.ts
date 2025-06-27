@@ -19,36 +19,23 @@ export default eventHandler(async (event) => {
     }
   }
 
-  const points = await PVZ.aggregate([
-    {
-      $group: {
-        _id: { lt: "$lt", lg: "$lg" }, // Группируем по полям lt и lg
-        id: { $first: "$id" }, // Берем первое значение id для каждой группы
-        w: { $first: "$w" }, // Берем первое значение w для каждой группы
-        a: { $first: "$a" }, // Берем первое значение a для каждой группы
-      },
-    },
-    {
-      $project: {
-        _id: 0, // Исключаем поле _id из результата
-        id: 1,
-        lt: "$_id.lt", // Возвращаем lt из группировки
-        lg: "$_id.lg", // Возвращаем lg из группировки
-        w: 1,
-        a: 1,
-      },
-    },
-  ]);
+  const points: any = await PVZ.find();
 
-  if (!points || points.length < 50000) {
-    return sendStream(event, fs.createReadStream("pvz/wildberriesPoints.json"));
-  }
+  const collection = points.map((point: any) => {
+    return {
+      id: point.pointId,
+      lt:
+        point.coordinates && point.coordinates[0] ? point.coordinates[0] : null,
+      lg:
+        point.coordinates && point.coordinates[1] ? point.coordinates[1] : null,
+      a: point.address,
+    };
+  });
 
   const cache = {
     updated: new Date(),
-    points: points,
+    points: collection,
   };
-
   fs.writeFileSync("pvz/wildberriesPoints.json", JSON.stringify(cache));
   return sendStream(event, fs.createReadStream("pvz/wildberriesPoints.json"));
 });
