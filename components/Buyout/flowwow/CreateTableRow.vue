@@ -327,7 +327,7 @@ const selectCategory = (categories: any, index: number) => {
             class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
             v-model="store.createProducts[props.index].deliveryType"
           >
-            <option value="courier">Курьер</option>
+            <!-- <option value="courier">Курьер</option> -->
             <option value="self">Самовывоз</option>
           </select>
         </div>

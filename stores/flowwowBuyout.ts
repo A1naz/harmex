@@ -136,7 +136,7 @@ export const useFlowwowBuyoutStore = defineStore("flowwowBuyout", {
             },
           ],
           pointCoordinates: { lat: 0, lon: 0 },
-          deliveryType: "courier",
+          deliveryType: "self",
         })
       );
       // this.changeRule(true, this.createProducts.length - 1, 5)
