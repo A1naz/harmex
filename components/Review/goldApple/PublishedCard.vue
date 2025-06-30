@@ -227,7 +227,7 @@ async function resumeStatus(item: any) {
                 >Площадка:
               </span>
               <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
-                Flowwow
+                Золотое яблоко
               </div>
             </div>
           </div>

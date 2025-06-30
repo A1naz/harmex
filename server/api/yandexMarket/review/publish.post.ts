@@ -24,15 +24,15 @@ export default eventHandler(async (event) => {
     video,
   } = await readBody(event);
 
-  if (text) {
-    if (text.length < 10 || text.length > 1000) {
+ 
+    if (text.length < 5 || text.length > 1000) {
       throw createError({
         statusCode: 400,
         message:
-          "Текст отзыва должен быть длиннее 10 символов и не больше 1000",
+          "Текст отзыва должен быть длиннее 5 символов и не больше 1000",
       });
     }
-  }
+  
   if (rating < 4) {
     throw createError({
       statusCode: 400,

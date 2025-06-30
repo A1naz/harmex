@@ -444,7 +444,7 @@ function onParameterChange(event: Event) {
         <button class="btn" disabled>Выберите категорию</button>
       </div>
     </td> -->
-      <td class="border-r border-base">
+      <!-- <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
      <label
           ><input
@@ -455,8 +455,8 @@ function onParameterChange(event: Event) {
           />
         </label>
       </div>
-    </td>
-      <td class="border-r border-base">
+    </td> -->
+      <!-- <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
         <label>
            <input
@@ -469,7 +469,7 @@ function onParameterChange(event: Event) {
              />
            </label>
       </div>
-    </td>
+    </td> -->
     <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
         <BuyoutGoldAppleCreateSearchQueries

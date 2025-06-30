@@ -371,7 +371,7 @@ function onParameterChange(event: Event) {
       </div>
 
       <div>
-        <div class="w-[60%]">
+        <!-- <div class="w-[60%]">
           <div class="text-md text-gray-500 mb-1">Введите №:</div>
           <div class="w-full flex flex-col gap-2">
             <label
@@ -383,7 +383,7 @@ function onParameterChange(event: Event) {
               />
             </label>
           </div>
-        </div>
+        </div> -->
         <div>
           <div class="text-md text-gray-500 mb-1 mt-2">Поисковые запросы:</div>
           <div class="w-full flex flex-col gap-2">

@@ -1614,7 +1614,7 @@ const categories = ref([
 
                   </div>
                 </th> -->
-                <th
+                <!-- <th
                   class="font-normal text-base-content"
                   @click="openInfoModal('search')"
                 >
@@ -1631,7 +1631,7 @@ const categories = ref([
                     <span>Номер телефона</span>
            
                   </div>
-                </th>
+                </th> -->
                 <th
                   class="font-normal text-base-content"
                   @click="openInfoModal('search')"
