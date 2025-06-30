@@ -56,6 +56,15 @@ function handleDelete(address: string) {
   lastPoints.value = unique;
 }
 
+const RESET_FLAG_KEY = "wildberriesPointStoreReset";
+const STORAGE_KEY = "wildberriesPointStore";
+
+// Очистка только 1 раз
+if (!localStorage.getItem(RESET_FLAG_KEY)) {
+  localStorage.setItem(STORAGE_KEY, "");
+  localStorage.setItem(RESET_FLAG_KEY, "true");
+}
+
 const lastPoints = ref(
   localStorage.getItem("wildberriesPointStore")?.split("--")
 );
