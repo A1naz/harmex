@@ -50,7 +50,7 @@ const BuyoutSchema = new Schema({
   ff: { type: Boolean, required: false, default: false },
   deliveryPeriodTime: { type: String, required: false, default: '' },
   deliveryPeriodDate: { type: String, required: false, default: '' },
-  deliveryType: { type: String, required: false, default: '', enum: ['self', 'courier', 'market'] },
+  deliveryType: { type: String, required: false, default: '', enum: ['self', 'courier', 'market', '5Post', 'Яндекс Доставка'] },
   completed: { type: Number, required: false, default: 0 },
   FIO: { type: String, required: false, default: '' },
   courierFIO: { type: String, required: false, default: '' },
@@ -75,6 +75,8 @@ const BuyoutSchema = new Schema({
   courierPhone: { type: String, required: false },
   courierDeliveryTime: { type: String, required: false },
   courierDeliveryDate: { type: String, required: false },
+  placeId: { type: Number, required: false },
+  postcode: { type: String, required: false },
 })
 
 export const Buyout = goldAppleConnection.model('Buyout', BuyoutSchema)

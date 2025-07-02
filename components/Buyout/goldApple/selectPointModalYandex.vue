@@ -44,7 +44,7 @@ function handleSelect(address: string) {
     });
   }
 
-  let pointStore: any = localStorage.getItem("goldApplePointStore");
+  let pointStore: any = localStorage.getItem("goldApplePointStoreYandex");
 
   const arr = JSON.parse(pointStore) || [];
 
@@ -64,7 +64,7 @@ function handleSelect(address: string) {
     });
   }
 
-  localStorage.setItem("goldApplePointStore", JSON.stringify(arr));
+  localStorage.setItem("goldApplePointStoreYandex", JSON.stringify(arr));
   emit(
     "callback",
     address,
@@ -77,13 +77,13 @@ function handleSelect(address: string) {
 }
 
 function handleDelete(address: any) {
-  let pointStore: any = localStorage.getItem("goldApplePointStore");
+  let pointStore: any = localStorage.getItem("goldApplePointStoreYandex");
   const arr = JSON.parse(pointStore) || [];
   arr.splice(
     arr.indexOf(arr.find((el: any) => el.address === address.address)),
     1
   );
-  localStorage.setItem("goldApplePointStore", JSON.stringify(arr));
+  localStorage.setItem("goldApplePointStoreYandex", JSON.stringify(arr));
   emit(
     "callback",
     address.address,
@@ -93,12 +93,12 @@ function handleDelete(address: any) {
     lastAddress.value.postcode
   );
   lastPoints.value = JSON.parse(
-    localStorage.getItem("goldApplePointStore") || "[]"
+    localStorage.getItem("goldApplePointStoreYandex") || "[]"
   );
 }
 
 const lastPoints = ref(
-  JSON.parse(localStorage.getItem("goldApplePointStore") || "[]")
+  JSON.parse(localStorage.getItem("goldApplePointStoreYandex") || "[]")
 );
 
 const presetCluster = "islands#darkGreenClusterIcons";
@@ -194,7 +194,7 @@ onMounted(async () => {
             iconColor: "#dffa39",
             iconLayout: "default#image",
             iconImageHref:
-              "https://ozonmpportal.hb.vkcs.cloud/5post.png",
+              "https://avatars.mds.yandex.net/get-marketcms/475644/img-0ec60a9f-2803-4ab0-8408-ed0dd2cbec79.png/optimize",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],

@@ -327,6 +327,7 @@ function onParameterChange(event: Event) {
           </div>
           <!-- :disabled="loading" -->
           <button
+            :disabled="loading"
             v-if="!product.adress"
             :class="{
               'btn-outline': product.adress,
@@ -348,6 +349,8 @@ function onParameterChange(event: Event) {
           >
              <option value="self" class="text-center">Самовывоз</option>
             <option value="market" class="text-center">Магазин</option>
+            <option value="5Post" class="text-center">Постамат 5POST</option>
+            <option value="Яндекс Доставка" class="text-center">Яндекс доставка</option>
           </select>
         </div>
       </div>

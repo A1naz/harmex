@@ -198,9 +198,11 @@ export const useGoldAppleBuyoutStore = defineStore("goldAppleBuyout", {
     removeProduct(index: number) {
       this.createProducts.splice(index, 1);
     },
-    handleAddress(address: string, lt: number, lg: number) {
+    handleAddress(address: string, lt: number, lg: number, id, postcode: string) {
       const index = this.selectedItem!;
       this.createProducts[index].adress = address;
+      this.createProducts[index].placeId = id;
+      this.createProducts[index].postcode = postcode;
       this.createProducts[index].pointCoordinates = {
         lat: lt,
         lon: lg,

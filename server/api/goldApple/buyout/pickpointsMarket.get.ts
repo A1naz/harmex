@@ -12,7 +12,10 @@ export default eventHandler(async (event) => {
     const now = new Date();
     const diff = now.getTime() - new Date(parsed.updated).getTime();
     if (diff < 1000 * 60 * 60) {
-      return sendStream(event, fs.createReadStream("pvz/goldApplePointsMarket.json"));
+      return sendStream(
+        event,
+        fs.createReadStream("pvz/goldApplePointsMarket.json")
+      );
     }
   }
 
@@ -26,6 +29,8 @@ export default eventHandler(async (event) => {
       lt: point.coordinates.lat,
       lg: point.coordinates.lon,
       address: point.address,
+      placeId: point.placeId,
+      postcode: point.postcode,
     };
   });
 
@@ -34,5 +39,8 @@ export default eventHandler(async (event) => {
     points: collection,
   };
   fs.writeFileSync("pvz/goldApplePointsMarket.json", JSON.stringify(cache));
-  return sendStream(event, fs.createReadStream("pvz/goldApplePointsMarket.json"));
+  return sendStream(
+    event,
+    fs.createReadStream("pvz/goldApplePointsMarket.json")
+  );
 });

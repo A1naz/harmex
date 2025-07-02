@@ -28,6 +28,7 @@ const lastAddress = ref({
   lt: 0,
   lg: 0,
   id: "",
+  postcode: "",
 });
 function handleSelect(address: string) {
   if (
@@ -43,7 +44,7 @@ function handleSelect(address: string) {
     });
   }
 
-  let pointStore: any = localStorage.getItem("goldApplePointStore");
+  let pointStore: any = localStorage.getItem("goldApplePointStoreMarket");
 
   const arr = JSON.parse(pointStore) || [];
 
@@ -59,42 +60,45 @@ function handleSelect(address: string) {
       lt: lastAddress.value.lt,
       lg: lastAddress.value.lg,
       id: lastAddress.value.id,
+      postcode: lastAddress.value.postcode,
     });
   }
 
-  localStorage.setItem("goldApplePointStore", JSON.stringify(arr));
+  localStorage.setItem("goldApplePointStoreMarket", JSON.stringify(arr));
   emit(
     "callback",
     address,
     lastAddress.value.lt,
     lastAddress.value.lg,
-    lastAddress.value.id
+    lastAddress.value.id,
+    lastAddress.value.postcode
   );
   closeModal();
 }
 
 function handleDelete(address: any) {
-  let pointStore: any = localStorage.getItem("goldApplePointStore");
+  let pointStore: any = localStorage.getItem("goldApplePointStoreMarket");
   const arr = JSON.parse(pointStore) || [];
   arr.splice(
     arr.indexOf(arr.find((el: any) => el.address === address.address)),
     1
   );
-  localStorage.setItem("goldApplePointStore", JSON.stringify(arr));
+  localStorage.setItem("goldApplePointStoreMarket", JSON.stringify(arr));
   emit(
     "callback",
     address.address,
     lastAddress.value.lt,
     lastAddress.value.lg,
-    lastAddress.value.id
+    lastAddress.value.id,
+    lastAddress.value.postcode
   );
   lastPoints.value = JSON.parse(
-    localStorage.getItem("goldApplePointStore") || "[]"
+    localStorage.getItem("goldApplePointStoreMarket") || "[]"
   );
 }
 
 const lastPoints = ref(
-  JSON.parse(localStorage.getItem("goldApplePointStore") || "[]")
+  JSON.parse(localStorage.getItem("goldApplePointStoreMarket") || "[]")
 );
 
 const presetCluster = "islands#darkGreenClusterIcons";
@@ -183,13 +187,14 @@ onMounted(async () => {
               lg: point.lg,
               a: point.address ? point.address : "Загрузка...",
               id: point.id,
+              postcode: point.postcode,
             },
           },
           options: {
             iconColor: "#dffa39",
             iconLayout: "default#image",
             iconImageHref:
-              "https://ozonmpportal.hb.vkcs.cloud/mp/goldApple.png",
+              "https://ozonmpportal.hb.vkcs.cloud/5post.png",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
@@ -212,7 +217,8 @@ onMounted(async () => {
         obj.properties.data.lt,
         obj.properties.data.lg,
         obj.properties.data.id,
-        obj.properties.data.a
+        obj.properties.data.a,
+        obj.properties.data.postcode
       );
 
       obj.properties.data.a = addressText.value;
@@ -277,10 +283,11 @@ async function getAddressText(
   lt: number,
   lg: number,
   id: string,
-  address: string
+  address: string,
+  postcode: string
 ) {
   if (address && address !== "Загрузка...") {
-    lastAddress.value = { lt, lg, id };
+    lastAddress.value = { lt, lg, id,  postcode };
     addressText.value = address;
     return addressText.value;
   }
@@ -296,7 +303,7 @@ async function getAddressText(
   });
   if (data.value) {
     addressText.value = data.value;
-    lastAddress.value = { lt, lg, id };
+    lastAddress.value = { lt, lg, id, postcode };
     return addressText.value;
   } else {
     addressText.value = "Нет данных";
@@ -358,7 +365,7 @@ async function getAddressText(
                   class="btn pvz text-xs rounded-none h-16 rounded-l-md p-2 flex w-10/12 text-left"
                   @click="
                     [
-                      (lastAddress = { lt: item.lt, lg: item.lg, id: item.id }),
+                      (lastAddress = { lt: item.lt, lg: item.lg, id: item.id, postcode: item.postcode }),
                       handleSelect(item.address),
                     ]
                   "

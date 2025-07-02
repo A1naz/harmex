@@ -101,8 +101,10 @@ function onParameterChange(event: Event) {
   const index = store.createProducts[props.index].parameters.indexOf(
     (event.target as HTMLInputElement).value
   );
-  store.createProducts[props.index].price = store.createProducts[props.index].prices[index];
-  store.createProducts[props.index].priceText = store.createProducts[props.index].prices[index] + ' ₽';
+  store.createProducts[props.index].price =
+    store.createProducts[props.index].prices[index];
+  store.createProducts[props.index].priceText =
+    store.createProducts[props.index].prices[index] + " ₽";
 }
 </script>
 
@@ -327,6 +329,10 @@ function onParameterChange(event: Event) {
           >
             <option value="self" class="text-center">Самовывоз</option>
             <option value="market" class="text-center">Магазин</option>
+            <option value="5Post" class="text-center">Постамат 5POST</option>
+            <option value="Яндекс Доставка" class="text-center">
+              Яндекс доставка
+            </option>
           </select>
         </div>
       </div>
@@ -357,6 +363,7 @@ function onParameterChange(event: Event) {
         </div>
         <!-- :disabled="loading" -->
         <button
+          :disabled="loading"
           v-if="!product.adress"
           :class="{
             'btn-outline': product.adress,
@@ -444,7 +451,7 @@ function onParameterChange(event: Event) {
         <button class="btn" disabled>Выберите категорию</button>
       </div>
     </td> -->
-      <!-- <td class="border-r border-base">
+    <!-- <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
      <label
           ><input
@@ -456,7 +463,7 @@ function onParameterChange(event: Event) {
         </label>
       </div>
     </td> -->
-      <!-- <td class="border-r border-base">
+    <!-- <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
         <label>
            <input

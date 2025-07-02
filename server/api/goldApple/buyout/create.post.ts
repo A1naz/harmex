@@ -36,6 +36,8 @@ interface Item {
   phoneNumber: string;
   courierDeliveryTime: string;
   courierDeliveryDate: string;
+  placeId: number;
+  postcode: string;
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
@@ -168,6 +170,8 @@ export default eventHandler(async (event) => {
       courierPhone: product.phoneNumber.replace(/[()+\-\s]/g, ""),
       courierDeliveryTime: product.courierDeliveryTime,
       courierDeliveryDate: product.courierDeliveryDate,
+      placeId: product.placeId,
+      postcode: product.postcode,
     });
 
     await buyout.save();

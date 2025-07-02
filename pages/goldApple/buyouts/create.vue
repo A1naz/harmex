@@ -67,9 +67,9 @@ function onRuleChange(event: Event, index: number, rule: number) {
   store.changeRule(target.checked, index, rule);
 }
 
-function handleAddress(address: string, lt: number, lg: number) {
+function handleAddress(address: string, lt: number, lg: number, id: string, postcode: string) {
   modalOpen.value = false;
-  store.handleAddress(address, lt, lg);
+  store.handleAddress(address, lt, lg, id, postcode);
 }
 function openInfoModal(type: string) {
   infoType.value = type;
@@ -90,13 +90,19 @@ const totalQuantity = computed(() => {
 
 const pickpoints = shallowRef();
 const pickpointsMarket = shallowRef();
+const pickpoints5Post = shallowRef();
+const pickpointsYandex = shallowRef();
 const modalOpen = ref(false);
 const modalOpenSelf = ref(false);
 const modalOpenMarket = ref(false);
+const modalOpen5Post = ref(false);
+const modalOpenYandex = ref(false);
 function closeModal() {
   modalOpen.value = false;
   modalOpenSelf.value = false;
   modalOpenMarket.value = false;
+  modalOpen5Post.value = false;
+  modalOpenYandex.value = false;
 }
 
 async function openChecksModal() {
@@ -190,12 +196,17 @@ watch(products.value, (old, value) => {
   });
 });
 
+const loadingPickpoints = ref(false);
 async function getPickpoints() {
+  loadingPickpoints.value = true;
   try {
     const data = await $fetch("/api/goldApple/buyout/pickpoints", {
       method: "GET",
     });
     pickpoints.value = (data as any).points;
+    pickpointsMarket.value = (data as any).pickpointsMarket;
+    pickpoints5Post.value = (data as any).pickpoints5Post;
+    pickpointsYandex.value = (data as any).pickpointsYandex;
   } catch (e: any) {
     notify({
       title: "Что-то пошло не так",
@@ -204,21 +215,7 @@ async function getPickpoints() {
       duration: 3000,
     });
   }
-}
-async function getPickpointsMarket() {
-  try {
-    const data = await $fetch("/api/goldApple/buyout/pickpointsMarket", {
-      method: "GET",
-    });
-    pickpointsMarket.value = (data as any).points;
-  } catch (e: any) {
-    notify({
-      title: "Что-то пошло не так",
-      text: e?.message,
-      group: "error",
-      duration: 3000,
-    });
-  }
+  loadingPickpoints.value = false;
 }
 
 async function pointModalOpen(index: number) {
@@ -231,12 +228,19 @@ async function pointModalOpen(index: number) {
     modalOpen.value = true;
   } else if (products.value[index].deliveryType === "market") {
     modalOpenMarket.value = true;
+  } else if (
+    products.value[index].deliveryType === "5Post" 
+  ) {
+    modalOpen5Post.value = true;
+  } else if (
+    products.value[index].deliveryType === "Яндекс Доставка"
+  ) {
+    modalOpenYandex.value = true;
   }
 }
 
 onMounted(async () => {
   getPickpoints();
-  getPickpointsMarket();
   if (route.query.uuid) {
     startTimer();
     loading.value = true;
@@ -1532,7 +1536,7 @@ const categories = ref([
           <BuyoutGoldAppleCreateCard
             v-for="(product, index) in products"
             :key="index"
-            :loading="false"
+            :loading="loadingPickpoints"
             :product="product"
             :index="index"
             :categories="categories"
@@ -1654,7 +1658,7 @@ const categories = ref([
                 :key="index"
                 :product="product"
                 :index="index"
-                :loading="false"
+                :loading="loadingPickpoints"
                 :categories="categories"
                 @rule-modal-open="ruleModalOpen"
                 @point-modal-open="pointModalOpen"
@@ -1680,6 +1684,20 @@ const categories = ref([
           v-if="modalOpenMarket"
           :state="modalOpenMarket"
           :pickpoints="pickpointsMarket"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutGoldAppleSelectPointModal5Post
+          v-if="modalOpen5Post"
+          :state="modalOpen5Post"
+          :pickpoints="pickpoints5Post"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutGoldAppleSelectPointModalYandex
+          v-if="modalOpenYandex"
+          :state="modalOpenYandex"
+          :pickpoints="pickpointsYandex"
           @callback="handleAddress"
           @close="closeModal"
         />
