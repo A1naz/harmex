@@ -194,7 +194,7 @@ onMounted(async () => {
             iconColor: "#dffa39",
             iconLayout: "default#image",
             iconImageHref:
-              "https://ozonmpportal.hb.vkcs.cloud/5post.png",
+              "https://ozonmpportal.hb.vkcs.cloud/mp/goldApple.png",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],

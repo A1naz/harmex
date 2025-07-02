@@ -194,7 +194,7 @@ onMounted(async () => {
             iconColor: "#dffa39",
             iconLayout: "default#image",
             iconImageHref:
-              "https://avatars.mds.yandex.net/get-marketcms/475644/img-0ec60a9f-2803-4ab0-8408-ed0dd2cbec79.png/optimize",
+              "https://ozonmpportal.hb.vkcs.cloud/5post.png",
             iconimageoffset: [-5, -38],
             iconImageSize: [32, 32],
             iconOffset: [0, 0],
