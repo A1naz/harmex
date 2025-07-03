@@ -31,6 +31,7 @@ export default eventHandler(async (event) => {
   // }
 
   const found = await Buyout.find({
+        user: user._id,
     $or: [
       { uuid: string },
       { article: Number.isNaN(Number(string)) ? 0 : Number(string) },

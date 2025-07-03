@@ -1,11 +1,10 @@
-import { Buyout } from '@/server/lib/models/goldApple/Buyout'
+import { Buyout } from "@/server/lib/models/goldApple/Buyout";
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { string, type } = getQuery(event)
+  const { string, type } = getQuery(event);
 
   // const all = await Buyout.find({ user })
   // let buyouts
@@ -31,13 +30,13 @@ export default eventHandler(async (event) => {
   // }
 
   const found = await Buyout.find({
+    user: user._id,
     $or: [
       { uuid: string },
       { article: Number.isNaN(Number(string)) ? 0 : Number(string) },
-      { 'product.name': { $regex: string, $options: 'i' } },
+      { "product.name": { $regex: string, $options: "i" } },
     ],
-
-  }).limit(200)
+  }).limit(200);
 
   const format = found.map((buyout, index) => {
     return {
@@ -56,7 +55,7 @@ export default eventHandler(async (event) => {
       rules: buyout.rules,
       createdAt: buyout.createdAt,
       product: buyout.product,
-    }
-  })
-  return format
-})
+    };
+  });
+  return format;
+});
