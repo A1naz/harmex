@@ -16,6 +16,7 @@ const config = useRuntimeConfig();
 const store = useMainStore();
 const { user } = useUserSession();
 
+const AIGenerateModal = ref(false);
 const headers = useRequestHeaders(["cookie"]) as HeadersInit;
 const closeButton = ref<HTMLElement>();
 const { notify } = useNotification();
@@ -98,7 +99,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Видео слишком длинное. Максимальная длительность: 10 минут",
-         group: "error",
+          group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -111,7 +112,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Минимальное разрешение видео должно быть 176x144",
-         group: "error",
+          group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -124,7 +125,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Максимальное разрешение видео должно быть 4100x4100",
-         group: "error",
+          group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -154,7 +155,6 @@ async function generateVideoThumbnail(file: File) {
 }
 
 async function uploadToS3(event: Event, index: number) {
-
   loadingIndex.value = index;
   const fileList = (event.target! as HTMLInputElement).files;
   const file = (event.target! as HTMLInputElement).files[0];
@@ -170,7 +170,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Нельзя загружать вебпикчи",
-     group: "error",
+      group: "error",
       duration: 3000,
     });
 
@@ -188,7 +188,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Не удалось загрузить фото",
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
@@ -295,7 +295,7 @@ async function publishReview() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     creatingReview.value = false;
@@ -304,7 +304,7 @@ async function publishReview() {
   notify({
     title: "Успешно",
     text: "Отзыв успешно опубликован",
-   group: "success",
+    group: "success",
     duration: 3000,
   });
   creatingReview.value = false;
@@ -336,7 +336,7 @@ function ratingAlert() {
   notify({
     title: "Что-то пошло не так",
     text: "В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд",
-   group: "error",
+    group: "error",
     duration: 3000,
   });
 }
@@ -559,6 +559,9 @@ const handleMouseUp = (event: any) => {
       </select>
 
       <div class="flex flex-col gap-4">
+        <button class="btn btn-primary" @click="AIGenerateModal = true">
+          Сгенерировать ИИ - 10р
+        </button>
         <div class="w-full">
           <div class="pb-2 font-medium">Опишите достоинства</div>
 
@@ -604,19 +607,15 @@ const handleMouseUp = (event: any) => {
         <div class="font-medium w-full justify-start gap-2 flex flex-row">
           <div>Рейтинг</div>
 
-            <div class="flex items-center text-sm">
+          <div class="flex items-center text-sm">
             <span v-for="star in 5" :key="star" class="text-yellow-600">
               <Icon name="mdi:star" />
             </span>
-            </div>
+          </div>
         </div>
 
-        
         <div>
-          <div class="pb-2 font-medium">
-            Запланировать отзыв
-        
-          </div>
+          <div class="pb-2 font-medium">Запланировать отзыв</div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
               {{
@@ -821,6 +820,9 @@ const handleMouseUp = (event: any) => {
       </div>
     </div>
   </div>
+  <ReviewWildberriesAIGenerate
+    v-model:state="AIGenerateModal"
+  />
 </template>
 
 <style scoped>
