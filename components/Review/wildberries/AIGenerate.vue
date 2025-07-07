@@ -36,6 +36,34 @@ const copyToClipboard = (text: string) => {
     group: "success",
   });
 };
+
+interface ReviewData {
+  text: string;
+  positive: string;
+  negative: string;
+}
+
+const onModalOpen = async () => {
+  // @ts-ignore
+  const { data, error } = await useFetch<ReviewData[]>(
+    "/api/AI/getReviewText",
+    {}
+  );
+
+  if (data.value) {
+    variants.value = data.value;
+  }
+};
+
+// Следим за изменением props.state
+watch(
+  () => props.state,
+  (newVal) => {
+    if (newVal) {
+      onModalOpen();
+    }
+  }
+);
 </script>
 
 <template>
@@ -67,7 +95,10 @@ const copyToClipboard = (text: string) => {
           placeholder="Минусы"
         />
         <div class="mb-4">
-          <button @click="emit('accept', variant)" class="btn btn-primary">
+          <button
+            @click="[emit('accept', variant), emit('update:state', false)]"
+            class="btn btn-primary"
+          >
             Применить
           </button>
           <button

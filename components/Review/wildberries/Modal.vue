@@ -511,6 +511,16 @@ const handleMouseUp = (event: any) => {
     emit("close"); // Отправляем событие закрытия
   }
 };
+
+function acceptAIText(variant: {
+  positive: string;
+  negative: string;
+  text: string;
+}) {
+  form.positive = variant.positive;
+  form.negative = variant.negative;
+  form.text = variant.text;
+}
 </script>
 
 <template>
@@ -822,6 +832,7 @@ const handleMouseUp = (event: any) => {
   </div>
   <ReviewWildberriesAIGenerate
     v-model:state="AIGenerateModal"
+    @accept="acceptAIText"
   />
 </template>
 
