@@ -55,8 +55,6 @@ export default eventHandler(async (event) => {
       price = productInfo.sizes[i].price.product / 100;
     }
   }
-  
-  console.log(price);
 
   if (!price) {
     throw createError({
