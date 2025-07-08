@@ -1,6 +1,7 @@
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
+  console.log("getReviewText");
 
   const format = [
     {
@@ -25,6 +26,6 @@ export default eventHandler(async (event) => {
       negative: "Gemini минусы",
     },
   ];
-  
+
   return format;
 });

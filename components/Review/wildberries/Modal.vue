@@ -16,7 +16,7 @@ const config = useRuntimeConfig();
 const store = useMainStore();
 const { user } = useUserSession();
 
-const AIGenerateModal = ref(false);
+
 const headers = useRequestHeaders(["cookie"]) as HeadersInit;
 const closeButton = ref<HTMLElement>();
 const { notify } = useNotification();
@@ -512,6 +512,7 @@ const handleMouseUp = (event: any) => {
   }
 };
 
+const AIGenerateModal = ref(false);
 function acceptAIText(variant: {
   positive: string;
   negative: string;

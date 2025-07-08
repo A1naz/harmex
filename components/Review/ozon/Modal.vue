@@ -513,6 +513,13 @@ const handleMouseUp = (event: any) => {
     emit("close"); // Отправляем событие закрытия
   }
 };
+
+const AIGenerateModal = ref(false);
+function acceptAIText(variant: {
+  text: string;
+}) {
+  form.text = variant.text;
+}
 </script>
 
 <template>
@@ -561,6 +568,9 @@ const handleMouseUp = (event: any) => {
       </select>
 
       <div class="flex flex-col gap-4">
+           <button class="btn btn-primary" @click="AIGenerateModal = true">
+          Сгенерировать ИИ - 10р
+        </button>
         <div class="w-full">
           <div class="pb-2 font-medium">Комментарий:</div>
           <textarea
@@ -804,6 +814,10 @@ const handleMouseUp = (event: any) => {
       </div>
     </div>
   </div>
+    <ReviewOzonAIGenerate
+    v-model:state="AIGenerateModal"
+    @accept="acceptAIText"
+  />
 </template>
 
 <style scoped>
