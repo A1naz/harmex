@@ -198,6 +198,7 @@ const selectCategory = (categories: any, index: number) => {
         class="select select-sm w-full bg-base-300 bg-opacity-40 max-w-sm appearance-none"
       >
         <option disabled selected>Выберите тип доставки</option>
+        <option value="Курьер продавца">Курьер продавца</option>
         <option value="Яндекс Доставка">Яндекс Доставка</option>
         <option value="Почта России" :disabled="user.username !== 'test'">Почта России</option>
         <option value="DPD" :disabled="user.username !== 'test'">DPD</option>

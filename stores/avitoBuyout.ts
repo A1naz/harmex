@@ -111,6 +111,7 @@ export const useAvitoBuyoutStore = defineStore("avitoBuyout", {
           searchQueryRegion: [{ value: "", loading: false, error: false }],
           selectedSize: product.sizes[0] ?? "none",
           priceText: product.priceText,
+          pvzType: "Курьер продавца",
           rules: [
             {
               id: 5,
