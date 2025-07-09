@@ -94,10 +94,10 @@ watch(
           class="textarea w-full textarea-md bg-base-200"
           placeholder="Минусы"
         />
-        <div class="mb-4">
+        <div class="my-4 w-full flex justify-end">
           <button
             @click="[emit('accept', variant), emit('update:state', false)]"
-            class="btn btn-primary"
+            class="btn btn-primary btn-sm"
           >
             Применить
           </button>
@@ -107,9 +107,12 @@ watch(
                 variant.text + '\n' + variant.positive + '\n' + variant.negative
               )
             "
-            class="btn"
+            class="btn btn-sm ml-2"
           >
-            Скопировать
+            <Icon
+              name="material-symbols:content-copy-outline-rounded"
+              size="18"
+            />
           </button>
         </div>
       </div>

@@ -16,7 +16,6 @@ const config = useRuntimeConfig();
 const store = useMainStore();
 const { user } = useUserSession();
 
-
 const headers = useRequestHeaders(["cookie"]) as HeadersInit;
 const closeButton = ref<HTMLElement>();
 const { notify } = useNotification();
@@ -570,9 +569,14 @@ function acceptAIText(variant: {
       </select>
 
       <div class="flex flex-col gap-4">
-        <button class="btn btn-primary hidden" @click="AIGenerateModal = true">
-          Сгенерировать ИИ - 10р
-        </button>
+        <div class="w-full flex justify-center hidden">
+          <button
+            class="btn btn-primary max-w-80"
+            @click="AIGenerateModal = true"
+          >
+            Сгенерировать тексты ИИ - 15р
+          </button>
+        </div>
         <div class="w-full">
           <div class="pb-2 font-medium">Опишите достоинства</div>
 
