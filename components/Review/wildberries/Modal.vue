@@ -570,7 +570,7 @@ function acceptAIText(variant: {
       </select>
 
       <div class="flex flex-col gap-4">
-        <button class="btn btn-primary" @click="AIGenerateModal = true">
+        <button class="btn btn-primary hidden" @click="AIGenerateModal = true">
           Сгенерировать ИИ - 10р
         </button>
         <div class="w-full">
