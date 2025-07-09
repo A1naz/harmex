@@ -232,14 +232,7 @@ const { $dayjs } = useNuxtApp();
                       info.type
                     }}</span>
                   </div>
-                  <div>
-                    <span class="text-sm text-gray-500 mr-2 my-auto"
-                      >Услуга:
-                    </span>
-                    <span class="rounded-md py-0 px-2 text-sm">{{
-                      currency.format(100)
-                    }}</span>
-                  </div>
+              
                   <div v-if="info.financePrice">
                     <span class="text-sm text-gray-500 mr-2 my-auto"
                       >Услуга:

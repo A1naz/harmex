@@ -113,7 +113,11 @@ export default eventHandler(async (event) => {
     case "2days":
       dateQuery = {
         createdAt: {
-          $gte: new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0),
+          $gte: new Date(new Date().setDate(new Date().getDate() - 1)).setHours(
+            0,
+            0,
+            0
+          ),
           $lt: new Date(new Date().setHours(23, 59, 59)),
         },
       };
@@ -121,7 +125,11 @@ export default eventHandler(async (event) => {
     case "3days":
       dateQuery = {
         createdAt: {
-          $gte: new Date(new Date().setDate(new Date().getDate() - 2)).setHours(0, 0, 0),
+          $gte: new Date(new Date().setDate(new Date().getDate() - 2)).setHours(
+            0,
+            0,
+            0
+          ),
           $lt: new Date(new Date().setHours(23, 59, 59)),
         },
       };
@@ -129,7 +137,11 @@ export default eventHandler(async (event) => {
     case "7days":
       dateQuery = {
         createdAt: {
-          $gte: new Date(new Date().setDate(new Date().getDate() - 6)).setHours(0, 0, 0),
+          $gte: new Date(new Date().setDate(new Date().getDate() - 6)).setHours(
+            0,
+            0,
+            0
+          ),
           $lt: new Date(new Date().setHours(23, 59, 59)),
         },
       };
@@ -152,13 +164,13 @@ export default eventHandler(async (event) => {
   if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
     query = Object.assign(query, searchParse);
   } else {
-      const foundDelivery = await Delivery.findOne({
-        uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
-      });
-      if (foundDelivery) {
-        query = Object.assign(query, { delivery: foundDelivery._id });
-      }
+    const foundDelivery = await Delivery.findOne({
+      uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
+    });
+    if (foundDelivery) {
+      query = Object.assign(query, { delivery: foundDelivery._id });
     }
+  }
   reviews = await Review.find({ ...query, ...dateQuery })
     .sort({ _id: -1 })
     .skip((skip as number) || 0)
@@ -171,8 +183,8 @@ export default eventHandler(async (event) => {
     _id: { $in: deliveries.map((delivery: any) => delivery.idbuyout) },
   });
   const paymenthistories = await paymenthistory.find({
-    type: "reviews",
-    basisoperation: { $in: reviews.map((rev: any) => "Отзыв " + rev._id) },
+    type: "review",
+    basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
   });
 
   let publishedFormat = await Promise.all(
@@ -210,11 +222,12 @@ export default eventHandler(async (event) => {
       }
 
       const history = paymenthistories.find(
-        (history: any) => history.basisoperation === "Отзыв " + review._id
+        (history: any) => history.basisoperation === "" + review._id
       );
 
       if (history) {
         format.completedDate = history.dataoperation;
+        format.financePrice = history.summ;
       }
 
       return format;
@@ -276,7 +289,6 @@ export default eventHandler(async (event) => {
     return "Нет";
   };
   const formatedAvailable = readyForReview.map((deliveryForReview: any) => {
-    
     const countSoon = soonForReview.filter(
       (sfr) => sfr._id == deliveryForReview.article
     );

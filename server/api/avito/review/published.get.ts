@@ -129,8 +129,8 @@ export default eventHandler(async (event) => {
   });
 
   const paymenthistories = await paymenthistory.find({
-    type: "reviews",
-    basisoperation: { $in: reviews.map((rev: any) => "Отзыв " + rev._id) },
+    type: "review",
+    basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
   });
 
   let format = await Promise.all(
@@ -169,11 +169,12 @@ export default eventHandler(async (event) => {
       }
 
       const history = paymenthistories.find(
-        (history: any) => history.basisoperation === "Отзыв " + review._id
+        (history: any) => history.basisoperation === "" + review._id
       );
 
       if (history) {
         format.completedDate = history.dataoperation;
+        format.financePrice = history.summ;
       }
 
       return format;
