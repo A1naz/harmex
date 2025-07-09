@@ -70,6 +70,7 @@ function onRuleChange(event: Event, index: number, rule: number) {
 }
 
 function handleAddress(address: string, lt: number, lg: number, id: string) {
+  closeModal()
   modalOpen.value = false;
   store.handleAddress(address, lt, lg, id);
 }
@@ -99,6 +100,7 @@ function closeModal() {
   modalOpenSDEK.value = false;
   modalOpenBoxberry.value = false;
   modalOpenPostamat5Post.value = false;
+  modalOpenCourier.value = false;
   modalOpenCassa5Post.value = false;
 }
 
@@ -228,6 +230,9 @@ async function pointModalOpen(index: number) {
   if (products.value[index].pvzType == "Касса 5Post") {
     modalOpenCassa5Post.value = true;
   }
+  if (products.value[index].pvzType == "Курьер продавца") {
+    modalOpenCourier.value = true;
+  }
 }
 
 onMounted(async () => {
@@ -319,6 +324,7 @@ const avitoPickpoints = shallowRef();
 const modalOpenAvito = ref(false);
 const DPDPickpoints = shallowRef();
 const modalOpenDPD = ref(false);
+const modalOpenCourier = ref(false);
 const SDEKPickpoints = shallowRef();
 const modalOpenSDEK = ref(false);
 const BoxberryPickpoints = shallowRef();
@@ -3331,6 +3337,13 @@ const categories = ref<any>([
           v-if="modalOpenPostamat5Post"
           :state="modalOpenPostamat5Post"
           :pickpoints="postamat5PostPickpoints"
+          @callback="handleAddress"
+          @close="closeModal"
+        />
+        <BuyoutAvitoSelectPointModalCourier
+          v-if="modalOpenCourier"
+          :state="modalOpenCourier"
+          :pickpoints="[]"
           @callback="handleAddress"
           @close="closeModal"
         />
