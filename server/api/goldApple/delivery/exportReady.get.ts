@@ -22,12 +22,12 @@ async function getReady(user: Document, dateRange: any) {
     statusdelivery: {
       $elemMatch: {
         $or: [
-          { status: "выполнен" },
-          { status: "Выполнен" },
-          { status: "^выполнен.*" },
-          { status: "^Выполнен.*" },
-          { status: { $regex: "^Выполнен.*" } },
-          { status: { $regex: "^выполнен.*" } },
+          { status: "готов к выдаче" },
+          { status: "Готов к выдаче" },
+          { status: "^готов к выдаче.*" },
+          { status: "^Готов к выдаче.*" },
+          { status: { $regex: "^Готов к выдаче.*" } },
+          { status: { $regex: "^готов к выдаче.*" } },
         ],
       },
     },
@@ -77,10 +77,10 @@ async function getReady(user: Document, dateRange: any) {
           ? new Date(
               delivery.statusdelivery?.find(
                 (item) =>
-                  item.status === "выполнен" ||
-                  item.status === "Выполнен" ||
-                  item.status.includes("выполнен") ||
-                  item.status.includes("Выполнен")
+                  item.status === "готов к выдаче" ||
+                  item.status === "отов к выдаче" ||
+                  item.status.includes("готов к выдаче") ||
+                  item.status.includes("Готов к выдаче")
               )?.date
             )
           : new Date();

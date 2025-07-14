@@ -114,11 +114,10 @@ const { $dayjs } = useNuxtApp();
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
                 :class="{
                   'bg-orange-200':
-                    info.currentstatus.includes('Ждёт в') &&
+                    info.currentstatus.includes('готов к выд') &&
                     info.statusdelivery.length > 1,
                   'bg-green-200':
-                    info.currentstatus.includes('Получен') ||
-                    info.currentstatus.includes('Уже у'),
+                    info.currentstatus.includes('выполнен'),
                   'bg-red-200':
                     info.currentstatus.includes('Возврат') &&
                     info.statusdelivery.length > 1,

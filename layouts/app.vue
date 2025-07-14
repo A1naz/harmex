@@ -68,7 +68,6 @@ const modalStore = useModalStore();
 const menuItems = ref([
   "Маркетплейсы",
   "Недвижимость",
-  "Доски объявлений",
   "Медицина",
   "Карты",
   "Услуги",
