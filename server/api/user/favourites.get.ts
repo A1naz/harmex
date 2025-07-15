@@ -41,6 +41,7 @@ export default defineEventHandler(async (event) => {
       const itemPath = `/${service.slug}${item.path}`
 
       if (favouritesList.includes(itemPath)) {
+
         resultMap[itemPath] = {
           path: itemPath,
           title: item.title,

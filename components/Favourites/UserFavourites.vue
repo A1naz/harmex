@@ -169,7 +169,7 @@ function closeModal() {
               <div
                 class="flex items-center justify-center font-medium text-center text-white h-auto w-auto"
               >
-                {{ item.name }}
+                {{ item.name ? item.name : item.title }}
               </div>
               <!-- <NuxtImg
                 :src="item.image"
