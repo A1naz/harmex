@@ -183,10 +183,10 @@ export default eventHandler(async (event) => {
   const buyouts = await Buyout.find({
     _id: { $in: deliveries.map((delivery: any) => delivery.idbuyout) },
   });
-    const paymenthistories = await paymenthistory.find({
-      type: "review",
-      basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
-    });
+  const paymenthistories = await paymenthistory.find({
+    type: "review",
+    basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
+  });
 
   let publishedFormat = await Promise.all(
     reviews.map(async (review: any) => {
@@ -213,7 +213,7 @@ export default eventHandler(async (event) => {
 
       if (delivery) {
         format["buyoutuuid"] = delivery.uuidbuyout;
-
+        format.recipient = delivery.recipient;
         const foundBuyout = buyouts.find(
           (buyout: any) => buyout.uuid == delivery.uuidbuyout
         );
@@ -229,7 +229,7 @@ export default eventHandler(async (event) => {
 
       if (history) {
         format.completedDate = history.dataoperation;
-         format.financePrice = history.summ;
+        format.financePrice = history.summ;
       }
 
       return format;

@@ -147,6 +147,7 @@ export default eventHandler(async (event) => {
         const buyout = buyouts.find(
           (buyout: any) => buyout._id.valueOf() == delivery.idbuyout.valueOf()
         );
+            format.recipient = delivery.recipient;
         if (buyout) {
           format.product = buyout.product;
           format.gender = buyout.gender

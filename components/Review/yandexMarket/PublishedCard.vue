@@ -212,10 +212,10 @@ async function resumeStatus(item: any) {
             </div>
             <div class="flex gap-2">
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Пол:
+                >Получатель:
               </span>
               <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
-                {{ info.gender }}
+                {{ info.recipient }}
               </div>
             </div>
             <div class="flex gap-2">

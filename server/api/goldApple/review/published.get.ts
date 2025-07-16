@@ -157,6 +157,7 @@ export default eventHandler(async (event) => {
 
       if (delivery) {
         format["buyoutuuid"] = delivery.uuidbuyout;
+          format.recipient = delivery.recipient;
 
         const foundBuyout = buyouts.find(
           (buyout: any) => buyout.uuid == delivery.uuidbuyout

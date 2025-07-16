@@ -92,13 +92,13 @@ export default eventHandler(async (event) => {
   if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
     query = Object.assign(query, searchParse);
   } else {
-      const foundDelivery = await Delivery.findOne({
-        uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
-      });
-      if (foundDelivery) {
-        query = Object.assign(query, { delivery: foundDelivery._id });
-      }
+    const foundDelivery = await Delivery.findOne({
+      uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
+    });
+    if (foundDelivery) {
+      query = Object.assign(query, { delivery: foundDelivery._id });
     }
+  }
 
   if (tab === "all") {
     reviews = await Review.find({ ...query, ...dateQuery })
@@ -128,10 +128,10 @@ export default eventHandler(async (event) => {
     _id: { $in: deliveries.map((delivery: any) => delivery.idbuyout) },
   });
 
-    const paymenthistories = await paymenthistory.find({
-      type: "review",
-      basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
-    });
+  const paymenthistories = await paymenthistory.find({
+    type: "review",
+    basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
+  });
 
   let format = await Promise.all(
     reviews.map(async (review: any) => {
@@ -145,7 +145,7 @@ export default eventHandler(async (event) => {
         serviceRating: review.serviceRating,
         deliveryRating: review.deliveryRating,
         images: review.images,
-       date: review.publishDate ? review.publishDate : review.date,
+        date: review.publishDate ? review.publishDate : review.date,
         status: review.status,
         uuid: review.uuid,
         type: getReviewType(review),
@@ -157,6 +157,7 @@ export default eventHandler(async (event) => {
 
       if (delivery) {
         format["buyoutuuid"] = delivery.uuidbuyout;
+        format.recipient = delivery.recipient;
 
         const foundBuyout = buyouts.find(
           (buyout: any) => buyout.uuid == delivery.uuidbuyout
@@ -173,8 +174,7 @@ export default eventHandler(async (event) => {
 
       if (history) {
         format.completedDate = history.dataoperation;
-         format.financePrice = history.summ;
-        
+        format.financePrice = history.summ;
       }
 
       return format;
