@@ -31,8 +31,10 @@ watch(
   }
 );
 function daysToPenalty(statusdelivery: any[]) {
-  const item = statusdelivery.find((item) =>
-    item.status.includes("Ожидает получения")
+  const item = statusdelivery.find(
+    (item) =>
+      item.status.includes("Ожидает получения") ||
+      item.status.includes("Можно забирать")
   );
   if (!item) return;
 
@@ -51,7 +53,7 @@ function daysToPenalty(statusdelivery: any[]) {
 
 function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text);
-  notify({ text: "Скопировано в буфер обмена",group: "success" });
+  notify({ text: "Скопировано в буфер обмена", group: "success" });
 }
 
 const { $dayjs } = useNuxtApp();
@@ -108,17 +110,17 @@ const { $dayjs } = useNuxtApp();
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
                 :class="{
                   'bg-orange-200':
-                    info.currentstatus.includes('Ожидает получения') || info.currentstatus.includes('Можно забирать') &&
-                    info.statusdelivery.length > 1,
+                    info.currentstatus.includes('Ожидает получения') ||
+                    (info.currentstatus.includes('Можно забирать') &&
+                      info.statusdelivery.length > 1),
                   'bg-green-200':
                     info.currentstatus.includes('Получен') &&
                     info.statusdelivery.length > 1,
                   'bg-red-200':
-                    info.currentstatus.includes('Возврат') &&
-                    info.statusdelivery.length > 1 ||
-                    info.currentstatus.includes('Отменён') &&
-                    info.statusdelivery.length > 1
-
+                    (info.currentstatus.includes('Возврат') &&
+                      info.statusdelivery.length > 1) ||
+                    (info.currentstatus.includes('Отменён') &&
+                      info.statusdelivery.length > 1),
                 }"
               >
                 {{ info.currentstatus }}
@@ -126,7 +128,8 @@ const { $dayjs } = useNuxtApp();
             </div>
             <div
               v-if="
-                info.currentstatus.includes('Ожидает получения') &&
+                (info.currentstatus.includes('Ожидает получения') ||
+                  info.currentstatus.includes('Можно забирать')) &&
                 info.statusdelivery.length > 1
               "
               class="text-s link bg-[#FF6666] w-fit dark:bg-red-500 link-hover rounded-full my-auto max-h-6 font-normal text-xs flex gap-1 text-white"
