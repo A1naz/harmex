@@ -247,7 +247,6 @@ async function getUserFavourites() {
         @set-favourites="setFavourites"
       />
 
-      {{ store.client.favourites }}
     </div>
     <IntroductionModal
       :show="introductionModal"
