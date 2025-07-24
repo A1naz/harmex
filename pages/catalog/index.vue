@@ -47,7 +47,6 @@ async function getFavourites() {
     });
     if (response?.favouritesPaths) {
       favourites.value = response.favouritesPaths;
-      store.client.favourites = response.favouritesPaths;
     }
   } catch (err: any) {
     notify({
