@@ -2,6 +2,7 @@
 definePageMeta({ middleware: "auth", layout: "app" });
 
 const { user } = useUserSession();
+const store = useMainStore();
 
 const { notify } = useNotification();
 const menuItems = ref([
@@ -46,6 +47,7 @@ async function getFavourites() {
     });
     if (response?.favouritesPaths) {
       favourites.value = response.favouritesPaths;
+      store.client.favourites = response.favouritesPaths;
     }
   } catch (err: any) {
     notify({
@@ -86,6 +88,8 @@ async function setFavourites(path: string) {
         favourites: favourites.value,
       },
     });
+
+   getUserFavourites()
     notify({
       group: "success",
       title: "Избранное обновлено",
@@ -159,10 +163,47 @@ watch(
     getServices();
   }
 );
+
+
+async function getUserFavourites() {
+  // loading.value = true
+  const response: any = await useFetch("/api/user/favourites", {
+    method: "GET",
+    watch: false,
+  }).catch((err) => {
+    notify({
+     group: "error",
+      title: "Не получить доступы",
+      text: err.data.message || err.message,
+    });
+    // loading.value = false
+  });
+
+  if (response) {
+    store.client.favourites = response.data.value.favourites;
+
+    if (
+      store.client.favourites &&
+      store.client.favourites.length === 0
+    ) {
+      store.client.favourites = response.data.value.services
+        .map((item: any) => ({
+          path: `/catalog/${item.slug}`,
+          title: item.name,
+          image: item.mainImage,
+          disabled: item.disabled,
+        }))
+        .filter((item: any) => !item.disabled);
+    }
+  }
+
+  // loading.value = false
+}
 </script>
 
 <template>
   <div class="flex pt-4">
+    
     <div class="left-menu sm:block sm:ml-3 mr-6 -ml-10 hidden">
       <CatalogLeftMenu
         v-model:selected-type="modalStore.selectedCatalog"
@@ -205,6 +246,8 @@ watch(
         @vote="voteForMp"
         @set-favourites="setFavourites"
       />
+
+      {{ store.client.favourites }}
     </div>
     <IntroductionModal
       :show="introductionModal"
@@ -212,6 +255,7 @@ watch(
       @close="introductionModal = false"
       @checkbox-toggle="toggleCheckbox"
     />
+    
   </div>
 </template>
 

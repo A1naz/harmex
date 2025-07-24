@@ -8,6 +8,7 @@ const route: any = useRoute();
 const id = route.params.id;
 const loading = ref(true);
 const item = ref({} as any);
+const store = useMainStore();
 // const userInfo = ref([]) as any
 
 // function getUser() {
@@ -117,6 +118,7 @@ async function setFavourites(path: string) {
       },
     });
 
+    getUserFavourites();
     notify({
      group: "success",
       title: "Избранное обновлено",
@@ -130,6 +132,42 @@ async function setFavourites(path: string) {
   } finally {
     loadingFavourites.value = false;
   }
+}
+
+
+async function getUserFavourites() {
+  // loading.value = true
+  const response: any = await useFetch("/api/user/favourites", {
+    method: "GET",
+    watch: false,
+  }).catch((err) => {
+    notify({
+     group: "error",
+      title: "Не получить доступы",
+      text: err.data.message || err.message,
+    });
+    // loading.value = false
+  });
+
+  if (response) {
+    store.client.favourites = response.data.value.favourites;
+
+    if (
+      store.client.favourites &&
+      store.client.favourites.length === 0
+    ) {
+      store.client.favourites = response.data.value.services
+        .map((item: any) => ({
+          path: `/catalog/${item.slug}`,
+          title: item.name,
+          image: item.mainImage,
+          disabled: item.disabled,
+        }))
+        .filter((item: any) => !item.disabled);
+    }
+  }
+
+  // loading.value = false
 }
 </script>
 

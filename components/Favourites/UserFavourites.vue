@@ -6,6 +6,7 @@ defineProps({
 
 const emit = defineEmits(["update:show"]);
 
+const store = useMainStore()
 const { user } = useUserSession();
 
 const items: Array<{
@@ -52,7 +53,7 @@ const items: Array<{
   },
 ];
 
-const userFavourites = ref([]) as any;
+const userFavourites = store.client.favourites;
 
 const quickAccessModal = ref(false);
 const accesses = ref([]) as any;
@@ -107,14 +108,13 @@ async function getFavourites() {
   });
 
   if (response) {
-    userFavourites.value = response.data.value.favourites;
+    store.client.favourites = response.data.value.favourites;
 
     if (
-      userFavourites &&
-      userFavourites.value &&
-      userFavourites.value.length === 0
+      store.client.favourites &&
+      store.client.favourites.length === 0
     ) {
-      userFavourites.value = response.data.value.services
+      store.client.favourites = response.data.value.services
         .map((item: any) => ({
           path: `/catalog/${item.slug}`,
           title: item.name,
@@ -157,7 +157,7 @@ function closeModal() {
           </div>
           <Nuxt-link
             @click="closeModal"
-            v-for="item in userFavourites"
+            v-for="item in store.client.favourites"
             :key="item.id"
             :to="item.path"
             class="bg-white text-[14px] w-[110px] h-[125px] ml-2 mt-5 rounded-xl mb-2"

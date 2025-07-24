@@ -119,6 +119,7 @@ export interface Client
   mmenuItems: MenuSection[]
   allowedPathes: OptionsMulti[]
   isTwoFaEnabled: boolean
+  favourites: any[]
 }
 
 export interface Partner {
