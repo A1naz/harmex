@@ -70,7 +70,7 @@ const selectedDeliv = ref({
 
 const loadingIndex = ref(null) as Ref<number | null>;
 const videoInput = ref<HTMLInputElement | null>(null);
-  const videoThumbnail = ref<string | null>(null);
+const videoThumbnail = ref<string | null>(null);
 
 async function checkVideo(file: any) {
   return new Promise((resolve) => {
@@ -94,7 +94,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Видео слишком длинное. Максимальная длительность: 10 минут",
-         group: "error",
+          group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -107,7 +107,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Минимальное разрешение видео должно быть 640x360",
-         group: "error",
+          group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -120,7 +120,7 @@ async function checkVideo(file: any) {
         notify({
           title: "Ошибка",
           text: "Максимальное разрешение видео должно быть 4100x4100",
-         group: "error",
+          group: "error",
           duration: 3000,
         });
         resolve(false);
@@ -166,7 +166,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Нельзя загружать вебпикчи",
-     group: "error",
+      group: "error",
       duration: 3000,
     });
 
@@ -184,7 +184,7 @@ async function uploadToS3(event: Event, index: number) {
     notify({
       title: "Что-то пошло не так",
       text: "Не удалось загрузить фото",
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
@@ -292,7 +292,7 @@ async function publishReview() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     creatingReview.value = false;
@@ -301,7 +301,7 @@ async function publishReview() {
   notify({
     title: "Успешно",
     text: "Отзыв успешно опубликован",
-   group: "success",
+    group: "success",
     duration: 3000,
   });
   creatingReview.value = false;
@@ -333,7 +333,7 @@ function ratingAlert() {
   notify({
     title: "Что-то пошло не так",
     text: "В настоящее время нет возможности публикации отзыва с рейтингом менее 4 звезд",
-   group: "error",
+    group: "error",
     duration: 3000,
   });
 }
@@ -515,9 +515,7 @@ const handleMouseUp = (event: any) => {
 };
 
 const AIGenerateModal = ref(false);
-function acceptAIText(variant: {
-  text: string;
-}) {
+function acceptAIText(variant: { text: string }) {
   form.text = variant.text;
 }
 </script>
@@ -559,7 +557,7 @@ function acceptAIText(variant: {
           :value="{ deliveryid: rev.delivId, uuid: rev.buyoutId }"
           class="m-6"
         >
-        {{
+          {{
             `${defaultDateShort(rev.updatedAt)} ${
               rev.sex == "Нет" ? "" : " - получатель: " + rev.sex
             } - размер: ${rev.sizeparam} - цена: ${rev.pricebuy}р.`
@@ -568,9 +566,14 @@ function acceptAIText(variant: {
       </select>
 
       <div class="flex flex-col gap-4">
-           <button class="btn btn-primary hidden" @click="AIGenerateModal = true">
-          Сгенерировать ИИ - 10р
-        </button>
+        <div class="w-full flex justify-center">
+          <button
+            class="btn btn-primary max-w-80"
+            @click="AIGenerateModal = true"
+          >
+            Сгенерировать тексты ИИ - 30₽
+          </button>
+        </div>
         <div class="w-full">
           <div class="pb-2 font-medium">Комментарий:</div>
           <textarea
@@ -599,18 +602,15 @@ function acceptAIText(variant: {
         <div class="font-medium w-full justify-start gap-2 flex flex-row">
           <div>Рейтинг</div>
 
-            <div class="flex items-center text-sm">
+          <div class="flex items-center text-sm">
             <span v-for="star in 5" :key="star" class="text-yellow-600">
               <Icon name="mdi:star" />
             </span>
-            </div>
+          </div>
         </div>
 
         <div>
-          <div class="pb-2 font-medium">
-            Запланировать отзыв
-  
-          </div>
+          <div class="pb-2 font-medium">Запланировать отзыв</div>
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
               {{
@@ -814,8 +814,9 @@ function acceptAIText(variant: {
       </div>
     </div>
   </div>
-    <ReviewOzonAIGenerate
+  <ReviewOzonAIGenerate
     v-model:state="AIGenerateModal"
+    :buyoutUuid="selectedDeliv.uuid"
     @accept="acceptAIText"
   />
 </template>

@@ -548,7 +548,6 @@ function acceptAIText(variant: {
       </div>
 
       <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
-
       <div class="pb-2 font-medium">Доставка:</div>
       <select
         v-model="selectedDeliv"
@@ -569,14 +568,15 @@ function acceptAIText(variant: {
       </select>
 
       <div class="flex flex-col gap-4">
-        <div class="w-full flex justify-center hidden">
+        <div class="w-full flex justify-center">
           <button
             class="btn btn-primary max-w-80"
             @click="AIGenerateModal = true"
           >
-            Сгенерировать тексты ИИ - 15р
+            Сгенерировать тексты ИИ - 30₽
           </button>
         </div>
+        
         <div class="w-full">
           <div class="pb-2 font-medium">Опишите достоинства</div>
 
@@ -834,9 +834,11 @@ function acceptAIText(variant: {
         </div>
       </div>
     </div>
+
   </div>
   <ReviewWildberriesAIGenerate
     v-model:state="AIGenerateModal"
+    :buyoutUuid="selectedDeliv.uuid"
     @accept="acceptAIText"
   />
 </template>

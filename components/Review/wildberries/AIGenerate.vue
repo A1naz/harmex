@@ -1,10 +1,11 @@
 <script setup lang="ts">
 const props = defineProps({
   state: { type: Boolean, required: true },
+  buyoutUuid: { type: String, required: true },
 });
 const emit = defineEmits(["close", "accept", "update:state"]);
 const { notify } = useNotification();
-
+const loading = ref(false);
 const variants = ref([
   {
     id: 1,
@@ -44,15 +45,22 @@ interface ReviewData {
 }
 
 const onModalOpen = async () => {
+  loading.value = true;
   // @ts-ignore
   const { data, error } = await useFetch<ReviewData[]>(
     "/api/AI/getReviewText",
-    {}
+    {
+      params: {
+        buyoutUuid: props.buyoutUuid,
+        mp: "wildberries",
+      },
+    }
   );
 
   if (data.value) {
     variants.value = data.value;
   }
+  loading.value = false;
 };
 
 // Следим за изменением props.state
@@ -82,15 +90,18 @@ watch(
         <textarea
           v-model="variant.text"
           class="textarea w-full textarea-md bg-base-200"
+          rows="3"
           placeholder="Текст отзыва"
         />
         <textarea
           v-model="variant.positive"
+          rows="3"
           class="textarea w-full textarea-md bg-base-200"
           placeholder="Плюсы"
         />
         <textarea
           v-model="variant.negative"
+          rows="3"
           class="textarea w-full textarea-md bg-base-200"
           placeholder="Минусы"
         />
@@ -115,6 +126,17 @@ watch(
             />
           </button>
         </div>
+      </div>
+    </div>
+    <div
+      @click.stop
+      v-if="loading"
+      style="background-color: rgb(37, 37, 42); opacity: 80%; z-index: 9999"
+      class="fixed z-[50] top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center"
+    >
+      <span class="text-white text-2xl text-center"> </span>
+      <div class="ease-linear rounded-full mb-4">
+        <Icon name="mdi:loading" class="h-20 w-20 animate-spin text-white" />
       </div>
     </div>
   </div>
