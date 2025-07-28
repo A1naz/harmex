@@ -23,6 +23,7 @@ export default eventHandler(async (event) => {
 
   const { mp, buyoutUuid } = getQuery(event);
 
+  console.log(config.X_API_KEY);
   let buyout: any = null;
   if (mp === "wildberries") {
     buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid });
@@ -49,6 +50,7 @@ export default eventHandler(async (event) => {
       "X-API-KEY": config.X_API_KEY,
     },
   }).catch((error) => {
+    console.log(error)
     throw createError({
       message: "Не удалось получить ответ от ИИ.",
     });
