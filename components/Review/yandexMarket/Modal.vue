@@ -516,6 +516,17 @@ async function generateVideoThumbnail(file: File) {
     };
   });
 }
+
+const AIGenerateModal = ref(false);
+function acceptAIText(variant: {
+  positive: string;
+  negative: string;
+  text: string;
+}) {
+  form.positive = variant.positive;
+  form.negative = variant.negative;
+  form.text = variant.text;
+}
 </script>
 
 <template>
@@ -564,6 +575,14 @@ async function generateVideoThumbnail(file: File) {
       </select>
 
       <div class="flex flex-col gap-4">
+              <div class="w-full flex justify-center">
+          <button
+            class="btn btn-primary max-w-80"
+            @click="AIGenerateModal = true"
+          >
+            Сгенерировать тексты ИИ - 30₽
+          </button>
+        </div>
         <div class="w-full">
           <div class="pb-2 font-medium">Опишите достоинства</div>
 
@@ -822,6 +841,11 @@ async function generateVideoThumbnail(file: File) {
       </div>
     </div>
   </div>
+    <ReviewYandexMarketAIGenerate
+    v-model:state="AIGenerateModal"
+    :buyoutUuid="selectedDeliv.uuid"
+    @accept="acceptAIText"
+  />
 </template>
 
 <style scoped>

@@ -1,6 +1,7 @@
 const config = useRuntimeConfig();
 import { Buyout as wildberriesBuyout } from "~/server/lib/models/wildberries/Buyout";
 import { Buyout as ozonBuyout } from "~/server/lib/models/ozon/Buyout";
+import { Buyout as yandexMarketBuyout } from "~/server/lib/models/yandexMarket/Buyout";
 
 type ResponseData = {
   openai: string;
@@ -29,6 +30,8 @@ export default eventHandler(async (event) => {
     buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid });
   } else if (mp === "ozon") {
     buyout = await ozonBuyout.findOne({ uuid: buyoutUuid });
+  } else if (mp === "yandexMarket") {
+    buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid });
   }
 
   if (!buyout) {
@@ -41,16 +44,16 @@ export default eventHandler(async (event) => {
   // @ts-ignore
   const raw: { response: ResponseData } = await $fetch(url, {
     method: "POST",
-     body: {
+    body: {
       name: buyout.product.name,
-     user: user._id.toString(),
-   },
+      user: user._id.toString(),
+    },
     headers: {
       "Content-Type": "application/json",
       "X-API-KEY": config.X_API_KEY,
     },
   }).catch((error) => {
-    console.log(error)
+    console.log(error);
     throw createError({
       message: "Не удалось получить ответ от ИИ.",
     });
