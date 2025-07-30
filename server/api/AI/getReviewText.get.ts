@@ -24,7 +24,6 @@ export default eventHandler(async (event) => {
 
   const { mp, buyoutUuid } = getQuery(event);
 
-  console.log(config.X_API_KEY);
   let buyout: any = null;
   if (mp === "wildberries") {
     buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid });

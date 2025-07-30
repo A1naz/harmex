@@ -30,6 +30,8 @@ export default function getHistoryType(type: string) {
         break
       case 'viewing':
         result = 'Просмотр'
+        case 'generateRewievs':
+          result = 'AI'
     }
     return result
   }
