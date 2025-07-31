@@ -7,8 +7,8 @@ const emit = defineEmits(["close"]);
 const { notify } = useNotification();
 const { user } = useUserSession();
 const bankDetails: any = ref({});
-const currency = useCurrency()
-const {width} = useWindowSize()
+const currency = useCurrency();
+const { width } = useWindowSize();
 
 function closeModal() {
   summ.value = 500;
@@ -40,7 +40,7 @@ async function balanceUpdate() {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
@@ -51,7 +51,7 @@ async function balanceUpdate() {
     loading.value = false;
     bankDetails.value = data.value.bankDetails;
     notify({
-     group: "success",
+      group: "success",
       title: "Успешно",
       text: "Реквизиты для пополнения кошелька созданы",
     });
@@ -71,11 +71,11 @@ onMounted(() => {
 });
 const showTooltip = ref(false);
 const ndsSumm = computed(() => {
-  return summ.value * 0.05
-})
+  return summ.value * 0.05;
+});
 const finalSumm = computed(() => {
-  return summ.value - ndsSumm.value
-})
+  return summ.value - ndsSumm.value;
+});
 </script>
 
 <template>
@@ -93,7 +93,7 @@ const finalSumm = computed(() => {
           ✕
         </label>
       </form>
-      <div v-if="form == 'addBalance'" class="flex flex-col w-full gap-[72]">
+      <!-- <div v-if="form == 'addBalance'" class="flex flex-col w-full gap-[72]">
         <div
           class="flex flex-col w-full justify-center items-center gap-[15px] mb-[47px]"
         >
@@ -250,6 +250,15 @@ const finalSumm = computed(() => {
               >.</span
             >
           </div>
+        </div>
+      </div> -->
+
+      <div class="flex flex-col w-full gap-[72]">
+        <div
+          class="flex flex-col w-full justify-center items-center gap-[20px] text-center"
+        >
+          <h2 class="font-bold text-2xl">Уважаемые клиенты!</h2>
+          <p class="text-lg">Пополнение баланса будет возобновлено в 12.00 часов</p>
         </div>
       </div>
     </div>
