@@ -86,6 +86,7 @@ const UserSchema = new Schema<IUserSchema>({
   isPartnerWithdrawAvailable: { type: Boolean, default: false },
   post: { type: String },
   changedMpTariff: { type: Boolean },
+  needVerification: { type: Boolean },
 });
 
 export const User = model<IUserSchema>("User", UserSchema);

@@ -9,6 +9,7 @@ export default defineNitroPlugin(() => {
       })
     }
     const user = await User.findOne({ uuid: session.user.uuid })
+ 
     if (!user) {
       throw createError({})
     }
@@ -24,6 +25,7 @@ export default defineNitroPlugin(() => {
       user.staff = true
       user.ffEnabled = admin.ffEnabled
       user.adminUsername = admin.username
+      user.needVerification = admin.needVerification
     }
 
     session.user = {
@@ -44,7 +46,9 @@ export default defineNitroPlugin(() => {
       docName: user.lastOrgInfo ? user.lastOrgInfo.docName : 'oferta',
       staff: user.staff,
       adminUsername: user.adminUsername,
+      needVerification: user.needVerification ? user.needVerification : false,
     }
+
   })
 
   // Called when we call useUserSession().clear() or clearUserSession(event)

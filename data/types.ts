@@ -81,6 +81,7 @@ export interface IUser extends Entity {
   paymentEmail: string
   lastOrgInfo: object
   changedMpTariff: boolean
+  needVerification: boolean
 }
 
 export interface IUserLogs extends Entity {

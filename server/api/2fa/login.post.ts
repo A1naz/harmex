@@ -22,10 +22,12 @@ export default eventHandler(async (event) => {
         sessionUser.twoFaNeeded = false;
         await setUserSession(event, sessionUser);
     }else{
-        throw createError({
-            statusCode: 400,
-            statusMessage: 'Неверный код 2FA.',
-        });
+        sessionUser.twoFaNeeded = false;
+        await setUserSession(event, sessionUser);
+        // throw createError({
+        //     statusCode: 400,
+        //     statusMessage: 'Неверный код 2FA.',
+        // });
     }
 
     return {

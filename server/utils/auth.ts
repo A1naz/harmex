@@ -6,6 +6,7 @@ import { generateUniqueUsername } from './createUsername'
 const config = useRuntimeConfig()
 // Logs the user in as the given user model
 async function login(event: H3Event<Request>, user: IUser) {
+  
   await replaceUserSession(event, {
     user: {
       uuid: user.uuid,
@@ -19,7 +20,8 @@ async function login(event: H3Event<Request>, user: IUser) {
       fizFace: user.fizFace,
       orgInn: user.orgInn,
       orgName: user.orgName,
-      ffEnabled: user.ffEnabled
+      ffEnabled: user.ffEnabled,
+      needVerification: user.needVerification
     },
     twoFaNeeded: user.isTwoFaEnabled,
     loggedInAt: new Date(),

@@ -18,6 +18,7 @@ declare module '#auth-utils' {
     docType: string | undefined
     staff: boolean
     adminUsername: string | undefined
+    needVerification: boolean
   }
 
   interface UserSession {
