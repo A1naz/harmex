@@ -93,7 +93,7 @@ const finalSumm = computed(() => {
           ✕
         </label>
       </form>
-      <!-- <div v-if="form == 'addBalance'" class="flex flex-col w-full gap-[72]">
+      <div v-if="form == 'addBalance'" class="flex flex-col w-full gap-[72]">
         <div
           class="flex flex-col w-full justify-center items-center gap-[15px] mb-[47px]"
         >
@@ -251,16 +251,9 @@ const finalSumm = computed(() => {
             >
           </div>
         </div>
-      </div> -->
-
-      <div class="flex flex-col w-full gap-[72]">
-        <div
-          class="flex flex-col w-full justify-center items-center gap-[20px] text-center"
-        >
-          <h2 class="font-bold text-2xl">Уважаемые клиенты!</h2>
-          <p class="text-lg">Пополнение баланса будет возобновлено в 12.00 часов</p>
-        </div>
       </div>
+
+     
     </div>
   </div>
 </template>

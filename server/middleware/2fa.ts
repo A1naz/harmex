@@ -9,7 +9,6 @@ export default eventHandler(async (event) => {
   }
   
   const user = await User.findOne({ uuid: session.user?.uuid })
-  console.log("middleware", user?.needVerification)
 
   if (
     session.user?.isTwoFaEnabled && session.twoFaNeeded && !event._path?.includes('/2fa') && !event._path?.includes('/session')

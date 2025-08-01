@@ -39,7 +39,7 @@ async function logout() {
         <div class="-mb-2 mt-1 text-center text-xl">Верификация</div>
         <div class="divider mx-2" />
         <div class="-mt-5 text-center text-lg mb-3">
-          Для продолжения авторизации пожалуйста верифтцируйте ваш профиль в
+          Для продолжения авторизации пожалуйста верифицируйте ваш профиль в
           телеграм боте
           <a class="link text-primary" href="https://t.me/harmex">Harmex</a>
         </div>
