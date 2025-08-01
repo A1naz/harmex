@@ -113,8 +113,8 @@ const finalSumm = computed(() => {
               placeholder="Введите сумму пополнения"
               v-model="summ"
             />
-             <div class="my-2 mx-2 text-[12px]">
-            
+             <div class="my-1 mx-1 text-[14px]">
+            Комиссия платформы 5% - {{ currency.format(ndsSumm) }}, к пополнению - {{ currency.format(finalSumm) }}
           </div>
           </div>
           <div class="flex gap-[3px] w-full flex-nowrap flex-row justify-between">
