@@ -112,6 +112,7 @@ async function updateTableData() {
     case "replenishment":
       headersForTable.value = [
         { value: "summ", label: "Сумма" },
+        { value: "commission", label: "Комиссия" },
         { value: "date", label: "Дата" },
         { value: "source", label: "Источник" },
         { value: "service", label: "Услуга" },
@@ -120,6 +121,7 @@ async function updateTableData() {
       ];
       tableData.value = fetchedData.value.map((item: any) => ({
         summ: item.summ,
+        commission: item.commission,
         date: item.date,
         source: item.source,
         orderId: item.orderId,
@@ -517,6 +519,7 @@ onMounted(() => {
         </button>
       </div>
     </div>
+    
   </div>
 </template>
 <style scoped></style>

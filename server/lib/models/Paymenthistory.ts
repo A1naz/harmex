@@ -12,6 +12,8 @@ const paymenthistorySchema = new Schema({
   refRewarded: { type: Boolean, default: false },
   mp: { type: String },
   nameOrganization: { type: String },
+  nds: { type: Number },
+  summnds: { type: Number },
 });
 
 export const paymenthistory = model("paymenthistory", paymenthistorySchema);
