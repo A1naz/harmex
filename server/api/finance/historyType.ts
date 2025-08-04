@@ -32,6 +32,8 @@ export default function getHistoryType(type: string) {
         result = 'Просмотр'
         case 'generateRewievs':
           result = 'AI'
+        case 'commission':
+          result = 'Комиссия портала'
     }
     return result
   }
