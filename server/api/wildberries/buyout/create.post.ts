@@ -1,38 +1,37 @@
-import type { Rule } from '@/data/buyout/rules'
-import { Buyout } from '@/server/lib/models/wildberries/Buyout'
-import { userLog } from '@/server/utils/userLog'
-import getPickpoints from '@/server/utils/wildberries/getPoints'
-import { v4 as uuid } from 'uuid'
-import { DocuemntEnum } from '~/data/enums'
-import { getDisctrict } from '~/server/utils/getDisctrict'
+import type { Rule } from "@/data/buyout/rules";
+import { Buyout } from "@/server/lib/models/wildberries/Buyout";
+import { userLog } from "@/server/utils/userLog";
+import getPickpoints from "@/server/utils/wildberries/getPoints";
+import { v4 as uuid } from "uuid";
+import { DocuemntEnum } from "~/data/enums";
+import { getDisctrict } from "~/server/utils/getDisctrict";
 
 interface Item {
-  image: string
-  name: string
-  article: number
-  price: number
-  priceText: string
-  quantity: number
-  sizes: number[] | string[]
-  sex: string
-  searchQuery: any[]
-  adress: string
-  dateRange: [Date, Date]
-  newDateRange: [Date, Date]
-  selectedSize: number | string
-  rules: Rule[]
-  purchaseSoon: boolean
-  key: boolean
-  pointId: string | number
+  image: string;
+  name: string;
+  article: number;
+  price: number;
+  priceText: string;
+  quantity: number;
+  sizes: number[] | string[];
+  sex: string;
+  searchQuery: any[];
+  adress: string;
+  dateRange: [Date, Date];
+  newDateRange: [Date, Date];
+  selectedSize: number | string;
+  rules: Rule[];
+  purchaseSoon: boolean;
+  key: boolean;
+  pointId: string | number;
   pointCoordinates: {
-    lat: number
-    lon: number
-  }
+    lat: number;
+    lon: number;
+  };
 }
 export default eventHandler(async (event) => {
-  const user: any = await getAdminEntity(event)
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  const user: any = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
   // if (!user.fizFace && !user.bik && !user.rs) {
   //   throw createError(
@@ -40,85 +39,93 @@ export default eventHandler(async (event) => {
   //   )
   // }
 
-  const body = await readBody(event)
-  const last = await Buyout.findOne({ user }).sort({ _id: -1 })
-  const params = getQuery(event)
-  const { userTimezoneOffsetHours, userOffsetMinutes } = params
+  const body = await readBody(event);
+  const last = await Buyout.findOne({ user }).sort({ _id: -1 });
+  const params = getQuery(event);
+  const { userTimezoneOffsetHours, userOffsetMinutes } = params;
 
   // if (user.balance < sum)
   // throw createError('Пополните баланс для создания новых выкупов.')
 
-  const { points } = await getPickpoints()
+  const { points } = await getPickpoints();
 
-  const products: Item[] = body
+  const products: Item[] = body;
   if (products.length > 10) {
-    throw createError('Можно создать максимум 10 выкупов за раз')
+    throw createError("Можно создать максимум 10 выкупов за раз");
   }
   for await (const product of products) {
-    const rules = product.rules.map(rule => rule.id)
-    const searchQueries = product.searchQuery.map((item: any) => item.value)
+    const rules = product.rules.map((rule) => rule.id);
+    const searchQueries = product.searchQuery.map((item: any) => item.value);
     if (product.searchQuery.length > 5) {
       throw createError(
-        `Для продукта ${product.article} указано больше 5 поисковых запросов`,
-      )
+        `Для продукта ${product.article} указано больше 5 поисковых запросов`
+      );
     }
 
     if (userTimezoneOffsetHours && userOffsetMinutes) {
       const date1 = product.purchaseSoon
         ? new Date()
-        : new Date(product.dateRange[0])
+        : new Date(product.dateRange[0]);
       const date2 = product.purchaseSoon
         ? new Date()
-        : new Date(product.dateRange[1])
+        : new Date(product.dateRange[1]);
 
       if (!product.purchaseSoon) {
+        const curDate = new Date();
+        if (date1 < curDate) {
+          console.log(date1, curDate);
+          throw createError(
+            `Для продукта ${product.article} выбрано некорректное время, дата выкупа не может быть меньше текущей даты`
+          );
+        }
+
         date1.setHours(
-          date1.getHours(),
+          date1.getHours()
           // + Number(userTimezoneOffsetHours)
-        )
+        );
         date1.setMinutes(
-          date1.getMinutes(),
+          date1.getMinutes()
           // + Number(userOffsetMinutes)
-        )
+        );
 
         date2.setHours(
-          date2.getHours(),
+          date2.getHours()
           // + Number(userTimezoneOffsetHours)
-        )
+        );
         date2.setMinutes(
-          date2.getMinutes(),
+          date2.getMinutes()
           // + Number(userOffsetMinutes)
-        )
-      }
-      else {
-        date1.setHours(date1.getHours())
-        date2.setHours(date2.getHours())
+        );
+      } else {
+        date1.setHours(date1.getHours());
+        date2.setHours(date2.getHours());
       }
 
-      product.dateRange = [date1, date2]
+      product.dateRange = [date1, date2];
     }
 
-    const foundPoint = points.find((p: { a: string }) => p.a === product.adress)
+    const foundPoint = points.find(
+      (p: { a: string }) => p.a === product.adress
+    );
 
-    let city, state
+    let city, state;
     if (foundPoint.city && foundPoint.state) {
-      city = foundPoint.city
-      state = foundPoint.state
-    }
-    else {
-      ;({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg))
+      city = foundPoint.city;
+      state = foundPoint.state;
+    } else {
+      ({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg));
     }
 
-    const { pointRegion, pointDistrict } = await getDisctrict(product.adress)
+    const { pointRegion, pointDistrict } = await getDisctrict(product.adress);
 
     if (product.key && !user.ffEnabled) {
-      user.ffEnabled = true
-      await user.save()
+      user.ffEnabled = true;
+      await user.save();
     }
 
     const buyout = new Buyout({
       article: product.article,
-      searchQuery: searchQueries.join(', '),
+      searchQuery: searchQueries.join(", "),
       point: product.adress,
       point_city: city,
       point_state: state,
@@ -127,7 +134,7 @@ export default eventHandler(async (event) => {
       sizeparam: product.selectedSize,
       quantity: product.quantity,
       gender: product.sex,
-      status: 'active',
+      status: "active",
       user,
       rules,
       product: {
@@ -145,16 +152,17 @@ export default eventHandler(async (event) => {
       pointId: product.pointId,
       pointCoordinates: product.pointCoordinates,
       categories: product.category,
-      isCategoriesEnabled: product.category && product.category.length > 0 ? true : false,
-    })
+      isCategoriesEnabled:
+        product.category && product.category.length > 0 ? true : false,
+    });
 
-    await buyout.save()
+    await buyout.save();
 
     await userLog(event, {
       documentType: DocuemntEnum.Buyout,
       documentId: buyout.uuid,
-    })
+    });
   }
 
-  return { status: 'ok' }
-})
+  return { status: "ok" };
+});

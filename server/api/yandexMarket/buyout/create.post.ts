@@ -75,6 +75,15 @@ export default eventHandler(async (event) => {
         : new Date(product.dateRange[1])
 
       if (!product.purchaseSoon) {
+
+
+           const curDate = new Date();
+        if (date1 < curDate) {
+          throw createError(
+            `Для продукта ${product.article} выбрано некорректное время, дата выкупа не может быть меньше текущей даты`
+          );
+        }
+
         date1.setHours(
           date1.getHours(),
           // + Number(userTimezoneOffsetHours)

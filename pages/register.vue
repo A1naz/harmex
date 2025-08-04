@@ -470,6 +470,20 @@ async function generatePassword() {
             <div class="text-xs text-gray-500 mb-2 ml-1">
               Нажмите подтвердить для получения звонка
             </div>
+            <div class="flex">
+              <div class="hidden">
+                {{ timer }}
+              </div>
+              <span
+                v-if="isCodeSent && !isNumberConfirmed"
+                class="text-md font-medium underline cursor-pointer ml-1 mt-1"
+                @click="sendConfirmCode"
+                >Подтвердить обратным звонком</span
+              >
+            </div>
+            <div class="text-xs text-gray-500 mb-2 ml-1">
+              Нажмите подтвердить для подтверждения обратным звонком
+            </div>
             <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
               Введите код верификации
             </label>
