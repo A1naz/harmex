@@ -470,7 +470,7 @@ async function generatePassword() {
             <div class="text-xs text-gray-500 mb-2 ml-1">
               Нажмите подтвердить для получения звонка
             </div>
-            <div class="flex">
+            <!-- <div class="flex">
               <div class="hidden">
                 {{ timer }}
               </div>
@@ -483,7 +483,7 @@ async function generatePassword() {
             </div>
             <div class="text-xs text-gray-500 mb-2 ml-1">
               Нажмите подтвердить для подтверждения обратным звонком
-            </div>
+            </div> -->
             <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
               Введите код верификации
             </label>
