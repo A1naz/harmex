@@ -149,7 +149,7 @@ async function submitForm() {
       loading.value = false;
       if (data.value!.status === "error") {
         notify({
-         group: "error",
+          group: "error",
           title: data.value!.error as string,
           duration: 3000,
         });
@@ -160,7 +160,7 @@ async function submitForm() {
         localStorage.removeItem("referralCode");
         localStorage.removeItem("landing");
         notify({
-         group: "success",
+          group: "success",
           title: "Пользователь зарегистрирован.",
           duration: 3000,
         });
@@ -180,7 +180,7 @@ async function submitForm() {
       loading.value = false;
       if (data.value!.status === "error") {
         notify({
-         group: "error",
+          group: "error",
           title: data.value!.error as string,
           duration: 3000,
         });
@@ -191,7 +191,7 @@ async function submitForm() {
         localStorage.removeItem("referralCode");
         localStorage.removeItem("landing");
         notify({
-         group: "success",
+          group: "success",
           title: "Пользователь зарегистрирован.",
           duration: 3000,
         });
@@ -294,12 +294,12 @@ async function sendConfirmCode() {
     isCodeSent.value = true;
     confirmationCodeInput.value.focus();
     notify({
-     group: "success",
+      group: "success",
       title: "Код отправлен",
     });
   } else {
     notify({
-     group: "error",
+      group: "error",
       title: data.value.message,
     });
   }
@@ -316,7 +316,7 @@ async function confirmCode() {
   });
   if (data.value) {
     notify({
-     group: "success",
+      group: "success",
       title: "Код подтвержден",
     });
 
@@ -324,7 +324,7 @@ async function confirmCode() {
     isNumberConfirmed.value = true;
   } else {
     notify({
-     group: "error",
+      group: "error",
       title: "Неверный код",
     });
   }
@@ -368,6 +368,8 @@ async function generatePassword() {
     passwordConfirmInputType.value = "text";
   }
 }
+
+const returnCallModal = ref(false);
 </script>
 
 <template>
@@ -470,20 +472,17 @@ async function generatePassword() {
             <div class="text-xs text-gray-500 mb-2 ml-1">
               Нажмите подтвердить для получения звонка
             </div>
-            <!-- <div class="flex">
+            <div class="flex">
               <div class="hidden">
                 {{ timer }}
               </div>
               <span
-                v-if="isCodeSent && !isNumberConfirmed"
+            
                 class="text-md font-medium underline cursor-pointer ml-1 mt-1"
-                @click="sendConfirmCode"
+                @click="returnCallModal = true"
                 >Подтвердить обратным звонком</span
               >
             </div>
-            <div class="text-xs text-gray-500 mb-2 ml-1">
-              Нажмите подтвердить для подтверждения обратным звонком
-            </div> -->
             <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
               Введите код верификации
             </label>
@@ -786,16 +785,10 @@ async function generatePassword() {
                 >
                   <Icon
                     v-if="passwordInputType !== 'password'"
-           
                     size="25"
                     name="mdi:hide-outline"
                   />
-                  <Icon
-                    v-else
-             
-                    size="25"
-                    name="mdi:show-outline"
-                  />
+                  <Icon v-else size="25" name="mdi:show-outline" />
                 </button>
                 <button
                   :disabled="!isNumberConfirmed"
@@ -803,7 +796,7 @@ async function generatePassword() {
                   class="absolute right-8 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
                   @click="generatePassword"
                 >
-                  <Icon  size="25" name="fe:random" />
+                  <Icon size="25" name="fe:random" />
                 </button>
               </div>
 
@@ -841,16 +834,10 @@ async function generatePassword() {
                 >
                   <Icon
                     v-if="passwordConfirmInputType !== 'password'"
-          
                     size="25"
                     name="mdi:hide-outline"
                   />
-                  <Icon
-                    v-else
-             
-                    size="25"
-                    name="mdi:show-outline"
-                  />
+                  <Icon v-else size="25" name="mdi:show-outline" />
                 </button>
               </div>
               <div
@@ -926,6 +913,10 @@ async function generatePassword() {
         </div>
       </section>
     </div>
+    <RegistrationReturnCallModal
+      :show="returnCallModal"
+      @close="returnCallModal = false"
+    />
   </div>
 </template>
 
