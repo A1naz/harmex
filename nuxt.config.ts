@@ -265,6 +265,8 @@ export default defineNuxtConfig({
     DADATA_SECRET: process.env.DADATA_SECRET,
     PARSER_TOKEN: process.env.PARSER_TOKEN,
     X_API_KEY: process.env.X_API_KEY,
+    RETURN_CALL_CAMPAIGN_ID: process.env.RETURN_CALL_CAMPAIGN_ID,
+    RETURN_CALL_PUBLIC_KEY: process.env.RETURN_CALL_PUBLIC_KEY,
   },
   compatibilityDate: "2024-11-06",
   ssr: false,
