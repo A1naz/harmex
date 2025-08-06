@@ -381,12 +381,12 @@ const confirmFromReturnCallModal = () => {
 };
 
 function confirmWithReturnCallModal() {
-  // if (timerRunning.value) {
-  //   notify({
-  //     title: `Подождите ${timer.value} секунд`,
-  //   });
-  //   return;
-  // }
+  if (timerRunning.value) {
+    notify({
+      title: `Подождите ${timer.value} секунд`,
+    });
+    return;
+  }
   returnCallModal.value = true;
 }
 </script>
