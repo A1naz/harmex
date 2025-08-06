@@ -2,18 +2,18 @@ import { ReturnCallConfirm } from "~~/server/lib/models/ReturnCallConfirm";
 const config = useRuntimeConfig();
 
 export default eventHandler(async (event) => {
-  const { phone } = getQuery(event);
+  const { callId } = getQuery(event);
 
   const publicKey = config.RETURN_CALL_PUBLIC_KEY;
 
-  const found = await ReturnCallConfirm.findOne({ phone: "+" + phone }).sort({
+  const found = await ReturnCallConfirm.findOne({ callId }).sort({
     createdAt: -1,
   });
 
   if (!found) {
     throw createError({
       statusCode: 404,
-      statusMessage: "Not Found",
+      statusMessage: "Запрос не найден",
     });
   }
 

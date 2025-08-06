@@ -370,6 +370,25 @@ async function generatePassword() {
 }
 
 const returnCallModal = ref(false);
+const confirmFromReturnCallModal = () => {
+  isCodeSent.value = false;
+  isNumberConfirmed.value = true;
+  returnCallModal.value = false;
+  notify({
+    group: "success",
+    title: "Номер подтвержден",
+  });
+};
+
+function confirmWithReturnCallModal() {
+  // if (timerRunning.value) {
+  //   notify({
+  //     title: `Подождите ${timer.value} секунд`,
+  //   });
+  //   return;
+  // }
+  returnCallModal.value = true;
+}
 </script>
 
 <template>
@@ -452,7 +471,7 @@ const returnCallModal = ref(false);
                 @click="(isCodeSent = false), (isNumberConfirmed = false)"
               >
                 <Icon
-                  class="w-12 h-12"
+                  class="w-8 h-8"
                   size="20"
                   name="fluent:backspace-24-regular"
                 />
@@ -472,21 +491,20 @@ const returnCallModal = ref(false);
             <div class="text-xs text-gray-500 mb-2 ml-1">
               Нажмите подтвердить для получения звонка
             </div>
-            <div class="flex">
+            <div class="flex"     v-if="isCodeSent && !isNumberConfirmed">
               <div class="hidden">
                 {{ timer }}
               </div>
               <span
-            
                 class="text-md font-medium underline cursor-pointer ml-1 mt-1"
-                @click="returnCallModal = true"
+                @click="confirmWithReturnCallModal"
                 >Подтвердить обратным звонком</span
               >
             </div>
-            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
+            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium" v-if="!isNumberConfirmed">
               Введите код верификации
             </label>
-            <div class="join w-full">
+            <div class="join w-full" v-if="!isNumberConfirmed">
               <input
                 id="verificationCode"
                 ref="confirmationCodeInput"
@@ -509,7 +527,7 @@ const returnCallModal = ref(false);
                 Подтвердить
               </button>
             </div>
-            <div class="text-xs text-gray-500 mb-2 ml-1">
+            <div class="text-xs text-gray-500 mb-2 ml-1" v-if="!isNumberConfirmed">
               Примите звонок и введите озвученные цифры. Не поступил звонок?
               Повторите запрос на звонок.
             </div>
@@ -914,8 +932,16 @@ const returnCallModal = ref(false);
       </section>
     </div>
     <RegistrationReturnCallModal
-      :show="returnCallModal"
+      v-model:show="returnCallModal"
+      v-model:phone="formData.phoneNumber"
       @close="returnCallModal = false"
+      @confirm="
+        [
+          (isCodeSent = false),
+          (isNumberConfirmed = true),
+          (returnCallModal = false),
+        ]
+      "
     />
   </div>
 </template>

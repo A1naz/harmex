@@ -11,7 +11,7 @@ export default eventHandler(async (event) => {
   formData.append("phone", phone);
   formData.append("campaign_id", campaignId);
 
-  console.log(formData);
+
   //@ts-ignore
   const data: any = await $fetch(
     "https://zvonok.com/manager/cabapi_external/api/v1/phones/confirm/",

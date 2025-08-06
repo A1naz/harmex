@@ -1,13 +1,90 @@
 <script setup lang="ts">
+const { notify } = useNotification();
+
 const props = defineProps({
   show: { type: Boolean, required: true },
-  isChecked: { type: Boolean, required: true },
+  phone: { type: String, required: true },
 });
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "confirm"]);
+const isCodeSent = ref(false);
+const callId = ref("");
+
+const stopPolling = ref(false);
 
 function closeModal() {
   emit("close");
 }
+
+async function getCallStatus() {
+  //@ts-ignore
+  const { data, error } = await useFetch("/api/organization/getCallIdStatus", {
+    method: "GET",
+    query: {
+      callId: callId.value,
+    },
+    watch: false,
+  });
+
+  if (data.value?.status === "confirmed") {
+    stopPolling.value = true;
+    notify({
+      group: "success",
+      title: "Номер подтвержден",
+    });
+    emit("confirm");
+    emit("close");
+  }
+}
+
+let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+const poll = async () => {
+  await getCallStatus();
+
+  if (!stopPolling.value) {
+    timeoutId = setTimeout(() => {
+      poll();
+    }, 5000);
+  }
+};
+
+async function createReturnCall() {
+  //@ts-ignore
+  const { data, error }: any = await useFetch(
+    "/api/organization/createReturnCall",
+    {
+      method: "POST",
+      body: {
+        phone: props.phone.replace(/[()\-\s]/g, ""),
+      },
+      watch: false,
+    }
+  );
+
+  if (data.value) {
+    isCodeSent.value = true;
+    callId.value = data.value.callId;
+    notify({
+      group: "success",
+      title: "Запрос создан",
+    });
+    poll();
+  } else {
+    notify({
+      group: "error",
+      title: "Что-то пошло не так, не удалось создать запрос",
+    });
+  }
+}
+
+watch(
+  () => props.show,
+  () => {
+    if (props.show && !isCodeSent.value) {
+      createReturnCall();
+    }
+  }
+);
 </script>
 
 <template>
@@ -36,19 +113,22 @@ function closeModal() {
           ✕
         </label>
       </form>
-      <div
-        class="max-w-md mx-auto p-6 rounded-2xl   bg-white text-center"
-      >
+      <div class="max-w-md mx-auto p-6 rounded-2xl bg-white text-center">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">
           Подтверждение номера телефона
         </h2>
         <p class="text-gray-600 mb-2">Позвоните по номеру:</p>
-        <a class="text-2xl font-bold text-blue-600 mb-4" href="tel:+7 800 555-86-07">+7 800 555-86-07</a>
+        <a
+          class="text-2xl font-bold text-blue-600 mb-4"
+          href="tel:+7 800 555-86-07"
+          >+7 800 555-86-07</a
+        >
 
         <p class="text-gray-500 text-sm">
           Пожалуйста, позвоните на указанный номер с вашего телефона, чтобы
           завершить процесс подтверждения(Звонок бесплатный).
         </p>
+        {{ phone }}
       </div>
     </div>
   </div>
