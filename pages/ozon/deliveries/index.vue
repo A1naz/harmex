@@ -420,7 +420,7 @@ getExportReadyCount();
                   v-model="search.text"
                   type="text"
                   class="input input-sm bg-transparent rounded-r-none w-full"
-                  placeholder="Поиск"
+                  placeholder="Id, артикул, адрес"
                   @input="onSearchInput()"
                 />
                 <span

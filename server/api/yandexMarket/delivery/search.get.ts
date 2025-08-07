@@ -15,8 +15,9 @@ export default eventHandler(async (event) => {
     const uuid = string?.toString().replaceAll('#', '')
     deliveries = await Delivery.find({
       user,
-      $or: [
+     $or: [
         { uuidbuyout: uuid },
+        { point: { $regex: string, $options: 'i' } },
         { article: Number(string) },
         { article: string },
       ]

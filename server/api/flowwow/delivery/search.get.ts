@@ -16,6 +16,7 @@ export default eventHandler(async (event) => {
       user,
       $or: [
         { uuidbuyout: uuid },
+        { point: { $regex: string, $options: 'i' } },
         { article: Number(string) },
         { article: string },
       ]

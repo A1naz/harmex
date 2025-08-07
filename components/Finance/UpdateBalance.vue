@@ -71,7 +71,7 @@ onMounted(() => {
 });
 const showTooltip = ref(false);
 const ndsSumm = computed(() => {
-  return summ.value * 0.05;
+  return summ.value * 5 / 105;
 });
 const finalSumm = computed(() => {
   return summ.value - ndsSumm.value;

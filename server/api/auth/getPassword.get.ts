@@ -2,9 +2,9 @@ import generator from 'generate-password'
 
 export default eventHandler(async (event) => {
         const password = generator.generate({
-                length: 12,
+                length: 16,
                 numbers: true,
-                symbols: false,
+                symbols: true,
                 uppercase: true,
                 excludeSimilarCharacters: true,
                 strict: true,

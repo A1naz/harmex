@@ -351,7 +351,7 @@ const siteUrl = config.public.siteUrl;
                   v-model="search.text"
                   type="text"
                   class="input input-sm bg-transparent rounded-r-none w-full"
-                  placeholder="Поиск по uuid"
+                  placeholder="id, адрес"
                   @input="onSearchInput()"
                 />
                 <span

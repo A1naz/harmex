@@ -421,7 +421,7 @@ const siteUrl = config.public.siteUrl;
                   v-model="search.text"
                   type="text"
                   class="input input-sm bg-transparent rounded-r-none w-full"
-                  placeholder="Id, артикул"
+                  placeholder="Id, артикул, адрес"
                   @input="onSearchInput()"
                 />
                 <span

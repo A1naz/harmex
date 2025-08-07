@@ -412,7 +412,7 @@ function confirmWithReturnCallModal() {
           </div>
         </h3>
         <h1 class="text-center text-gray-500 text-xs">
-          Выберите удобный способ регистрации и оплаты перед началом действий...
+          Выберите удобный способ...
         </h1>
         <div class="w-full">
           <div class="btm-nav-xs w-full flex justify-between">
@@ -809,7 +809,7 @@ function confirmWithReturnCallModal() {
                   <Icon v-else size="25" name="mdi:show-outline" />
                 </button>
                 <button
-                  :disabled="!isNumberConfirmed"
+          
                   type="button"
                   class="absolute right-8 -top-1 xl:top-1 mt-2 mr-2 hover:text-primary disabled:text-black"
                   @click="generatePassword"
