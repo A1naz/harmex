@@ -1429,7 +1429,6 @@ const categories = ref([
 
 <template>
   <div class="px-4 sm:px-16 pt-8">
-    {{ modalOpenMarket }}
     <div
       class="breadcrumbs text-sm flex w-full justify-between flex-wrap-reverse"
     >
