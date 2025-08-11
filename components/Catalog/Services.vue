@@ -105,7 +105,7 @@ function getServices(items: Array<any>) {
               :href="`tel:${social.phoneNumber.replaceAll(' ', '')}`"
               class="text-[14px] btn btn-primary btn-sm flex justify-between mt-1 sm:w-[180px] w-[84%]"
               :class="{
-                'cursor-default': social.disabled,
+                'btn-disabled': !social.phoneNumber,
               }"
             >
               {{ social.phoneNumber }}
