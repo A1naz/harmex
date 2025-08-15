@@ -123,6 +123,13 @@ export const useYandexMarketBuyoutStore = defineStore("yandexMarketBuyout", {
               category: 5,
               disabled: true,
             },
+            {
+              id: 5,
+              description:
+                "Не выкупать если товар не найден в поисковой выдаче",
+              category: 3,
+              price: 0,
+            },
           ],
           pointCoordinates: { lat: 0, lon: 0 },
           promoCode: "",

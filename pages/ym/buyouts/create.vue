@@ -11167,12 +11167,12 @@ const categories = ref([
             >
               Добавить
             </button>
-            <!-- <label
+            <label
               for="template-select-modal"
               class="btn btn-sm btn-primary normal-case border-none bg-base-200 text-base-content mr-0 md:mr-1 mb-2 md:mb-0 font-normal hover:bg-primary hover:text-base-100"
               @click="getTemplates"
               >Шаблоны</label
-            > -->
+            >
           </div>
         </div>
       </div>
@@ -11350,12 +11350,12 @@ const categories = ref([
           for="removeAllModelCreateProducts"
           >Удалить все</label
         > -->
-          <!-- <label
+          <label
             class="btn btn-sm btn-primary normal-case border-none bg-base-200 text-base-content mt-2 md:mt-0 ml-1 md:ml-2 px-6 font-normal"
             for="template-modal"
           >
             Шаблон
-          </label> -->
+          </label>
 
           <button
             class="btn btn-sm btn-primary normal-case border-none text-white mt-1 ml-2 font-normal"
