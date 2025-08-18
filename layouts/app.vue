@@ -80,6 +80,7 @@ watch(
   }
 );
 
+
 watch(isOpen, (newValue: boolean) => {
   if (newValue) {
     document.body.style.overflow = "hidden"; // Отключить скролл
