@@ -1562,16 +1562,16 @@ const categories = ref([
                   </div>
                 </th>
 
-                <!-- <th
+                <th
                   class="min-w-40 font-normal"
                   @click="openInfoModal('adress')"
                 >
-                  <div class="flex justify-between w-full gap-1 items-center">
+                  <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
                     <span> Адрес </span>
-                    <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
-                </th> -->
+                </th>
                 <!-- <th class="font-normal text-base-content">
                   <div class="flex justify-center items-center gap-1">
                     <span>Категории</span>
