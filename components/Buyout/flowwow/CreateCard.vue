@@ -302,7 +302,7 @@ const selectCategory = (categories: any, index: number) => {
         </div>
 
         <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-2">Адрес: </span>
+          <!-- <span class="text-md text-gray-500 mb-2">Адрес: </span>
           <div
             v-if="product.adress"
             class="text-xs h-10 w-full truncate max-w-[150px]"
@@ -316,9 +316,9 @@ const selectCategory = (categories: any, index: number) => {
             >
               {{ product.adress }}
             </p>
-          </div>
+          </div> -->
           <!-- :disabled="loading" -->
-          <button
+          <!-- <button
             v-if="!product.adress"
             :class="{
               'btn-outline': product.adress,
@@ -328,7 +328,7 @@ const selectCategory = (categories: any, index: number) => {
           >
             <span v-show="loading" class="loading loading-spinner" />
             <Icon v-if="!loading" name="fluent:add-24-filled" size="20" />
-          </button>
+          </button> -->
         </div>
       </div>
       <div class="flex gap-5">
