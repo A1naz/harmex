@@ -133,7 +133,7 @@ export default eventHandler(async (event) => {
       slug: product.slug,
       appartmentNumber: product.appartmentNumber,
       searchQuery: searchQueries.join(', '),
-      point: product.adress,
+      point: product.adress || ' ',
       point_city: 'Москва',
       point_state: 'Московская область',
       dateStart: product.dateRange[0],
