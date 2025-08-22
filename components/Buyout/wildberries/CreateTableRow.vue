@@ -262,7 +262,9 @@ const selectCategory = (categories: any, index: number) => {
         <details
           class="dropdown disabled"
           v-if="
-            product.searchQuery.length <= 1 && !product.searchQuery[0].value
+            (product.searchQuery.length <= 1 &&
+              !product.searchQuery[0].value) &&
+            !product.shelves
           "
         >
           <summary
@@ -292,7 +294,6 @@ const selectCategory = (categories: any, index: number) => {
           >
             <button
               class="btn btn-sm btn-square relative left-1 -top-1 z-50"
-             
               @click="categoryDropdown.click()"
             >
               <Icon name="material-symbols:close-rounded" size="18" />
@@ -310,9 +311,9 @@ const selectCategory = (categories: any, index: number) => {
         </details>
         <button
           v-else
-             :class="{
-              'btn-circle': !store.createProducts[props.index].category,
-            }"
+          :class="{
+            'btn-circle': !store.createProducts[props.index].category,
+          }"
           class="btn m-1 text-sm z-1 font-normal btn-sm normal-case"
           disabled
           style="z-index: 1 !important"
@@ -341,6 +342,24 @@ const selectCategory = (categories: any, index: number) => {
           @update="productSearchQueryUpdate"
           @add="addSearchQuery"
           @remove="removeSearchQuery"
+        />
+      </div>
+    </td>
+    <td class="border-r border-base">
+      <div class="w-full flex flex-col gap-1">
+        <input
+          type="text"
+          class="input bg-base-200 input-sm w-full rounded-xl"
+          :disabled="!product.shelves"
+          v-model="product.competitorArticle"
+          placeholder="Первый артикул"
+        />
+        <input
+          type="text"
+          class="input bg-base-200 input-sm w-full rounded-xl"
+          :disabled="!product.shelves"
+          v-model="product.competitorArticle2"
+          placeholder="Второй артикул"
         />
       </div>
     </td>

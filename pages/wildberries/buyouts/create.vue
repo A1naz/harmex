@@ -645,6 +645,15 @@ getCategories();
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
+                <th
+                  class="font-normal text-base-content"
+                  @click="openInfoModal('search')"
+                >
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Артикулы конкурента</span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+                  </div>
+                </th>
 
                 <th class="text-base-content" />
               </tr>
@@ -774,6 +783,21 @@ getCategories();
                     "
                   />
                   <span class="text-sm text-primary">0р.</span>
+                </div>
+              </div>
+               <div
+                v-if="rule.id === 1"
+                class="label cursor-pointer flex gap-4 items-start justify-between"
+              >
+                <span class="label-text">{{ "Выкуп с полок " }}</span>
+                <div class="flex gap-2">
+                  <input
+                    v-model="products[selectedRuleProductIndex].shelves"
+                    type="checkbox"
+                    class="checkbox checkbox-primary border-base-content"
+                    @click="products[selectedRuleProductIndex].shelves = true"
+                  />
+                  <span class="text-sm text-primary -mr-[17px]">200р.</span>
                 </div>
               </div>
               <!-- <span

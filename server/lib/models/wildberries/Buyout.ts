@@ -50,6 +50,9 @@ const BuyoutSchema = new Schema({
   data18: { type: {}, default: '' },
   categories: { type: Array, required: false },
   isCategoriesEnabled: { type: Boolean, required: false, default: false },
+  competitorArticle: { type: String, required: false },
+  competitorArticle2: { type: String, required: false },
+  shelves: { type: Boolean, required: false, default: false },
 })
 
 

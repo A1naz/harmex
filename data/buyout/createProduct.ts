@@ -31,4 +31,5 @@ export interface Item {
   deliveryPeriodTime: string;
   deliveryPeriodDate: string;
   category: object | null;
+  shelves: boolean;
 }

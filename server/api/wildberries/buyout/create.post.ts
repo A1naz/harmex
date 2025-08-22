@@ -28,6 +28,9 @@ interface Item {
     lat: number;
     lon: number;
   };
+  shelves: boolean;
+  competitorArticle: string;
+  competitorArticle2: string;
 }
 export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event);
@@ -154,6 +157,9 @@ export default eventHandler(async (event) => {
       categories: product.category,
       isCategoriesEnabled:
         product.category && product.category.length > 0 ? true : false,
+      competitorArticle: product.competitorArticle,
+      competitorArticle2: product.competitorArticle2,
+      shelves: product.shelves,
     });
 
     await buyout.save();
