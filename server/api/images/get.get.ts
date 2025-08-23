@@ -20,6 +20,7 @@ export default eventHandler(async (event) => {
     Key: path.replace('ozonmpportal/', ''),
   }
 
+  console.log(params)
   const getImage = async (params: any) => {
     // eslint-disable-next-line no-useless-catch
     try {

@@ -159,11 +159,18 @@ function closeModal() {
   modalOpenFF.value = false;
 }
 
+interface LastBuyout {
+  article: number;
+  quantity: number;
+  adress: string;
+  dateRange: [Date, Date];
+}
+
 async function openChecksModal() {
   const productCountsByAddress: any = {};
 
   if (!isUserWarned.value) {
-    const { data }: any = await useFetch(
+    const { data } = await useFetch<{ lastBuyouts: LastBuyout[] }>(
       "/api/wildberries/buyout/checkPVZRestrictions",
       {
         method: "GET",
@@ -785,7 +792,7 @@ getCategories();
                   <span class="text-sm text-primary">0р.</span>
                 </div>
               </div>
-               <div
+               <!-- <div
                 v-if="rule.id === 1"
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
@@ -799,7 +806,7 @@ getCategories();
                   />
                   <span class="text-sm text-primary -mr-[17px]">200р.</span>
                 </div>
-              </div>
+              </div> -->
               <!-- <span
                 v-if="rule.id === 1"
                 class="text-[#AA4A44] text-sm font-bold"
