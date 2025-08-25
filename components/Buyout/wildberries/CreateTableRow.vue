@@ -345,8 +345,8 @@ const selectCategory = (categories: any, index: number) => {
         />
       </div>
     </td>
-    <td class="border-r border-base">
-      <div class="w-full flex flex-col gap-1">
+    <td class="border-r border-base max-w-[150px]">
+      <div class="w-full flex flex-col gap-0.5">
         <input
           type="text"
           class="input bg-base-200 input-sm w-full rounded-xl"
