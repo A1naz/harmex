@@ -126,6 +126,15 @@ function onRuleChange(event: Event, index: number, rule: number) {
   store.changeRule(target.checked, index, rule);
 }
 
+function handleShelvesChange(event: Event, index: number) {
+  const target = event.target as HTMLInputElement;
+  if (target.checked) {
+    store.createProducts[index].rules = store.createProducts[
+      index
+    ].rules.filter((rule: Rule) => rule.id < 5);
+  }
+}
+
 // function removeProduct(index: number) {
 //   store.removeProduct(index)
 // }
@@ -792,7 +801,7 @@ getCategories();
                   <span class="text-sm text-primary">0р.</span>
                 </div>
               </div>
-               <!-- <div
+               <div
                 v-if="rule.id === 1"
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
@@ -802,11 +811,11 @@ getCategories();
                     v-model="products[selectedRuleProductIndex].shelves"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
-                    @click="products[selectedRuleProductIndex].shelves = true"
+                    @change="handleShelvesChange($event, selectedRuleProductIndex)"
                   />
                   <span class="text-sm text-primary -mr-[17px]">200р.</span>
                 </div>
-              </div> -->
+              </div>
               <!-- <span
                 v-if="rule.id === 1"
                 class="text-[#AA4A44] text-sm font-bold"
@@ -847,7 +856,9 @@ getCategories();
                     !!store.createProducts[selectedRuleProductIndex].rules.find(
                       (item) => item.id === rule?.relies
                     ) ||
-                    rule.disabled
+                    rule.disabled ||
+                    (products[selectedRuleProductIndex].shelves &&
+                      rule.id >= 5)
                   "
                   type="checkbox"
                   class="checkbox checkbox-primary border-base-content"
