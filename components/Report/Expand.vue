@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Modal from "~/components/ui/Modal.vue";
+
 const props = defineProps({
   info: {
     type: Object as any,
@@ -14,7 +16,17 @@ const opened = ref();
 const selectedMP = ref("");
 const config = useRuntimeConfig();
 
+const isImageModalOpen = ref(false);
+const selectedImage = ref("");
+
 const { notify } = useNotification();
+
+function openImageModal(image: string) {
+  selectedImage.value = image.includes("yandex") || image.includes("data:image")
+      ? image
+      : config.public.DOMAIN_API_IMAGES_URL + image;
+  isImageModalOpen.value = true;
+}
 
 function openBuyout() {
   navigateTo(`/wildberries/buyouts/?uuid=${props.info.buyout.uuid}`);
@@ -75,9 +87,9 @@ watch(
       </div>
     </div>
     <div class="collapse-content">
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
         <div class="screenshots flex flex-col gap-2">
-          <div class="images flex gap-6 flex-wrap max-w-full">
+          <div class="images flex gap-2 flex-wrap max-w-full justify-start">
             <div v-for="(image, index) of info.screenshots" :key="index">
               <nuxt-img
                 v-if="image"
@@ -89,7 +101,8 @@ watch(
                     ? image
                     : config.public.DOMAIN_API_IMAGES_URL + image
                 "
-                class="rounded-lg object-contain w-full lg:w-64"
+                class="rounded-lg object-contain h-64 cursor-pointer"
+                @click="openImageModal(image)"
               />
             </div>
           </div>
@@ -97,6 +110,9 @@ watch(
       </div>
     </div>
   </div>
+  <Modal v-model:state="isImageModalOpen">
+    <img :src="selectedImage" class="w-full object-contain max-h-[80vh]" />
+  </Modal>
 </template>
 
 <style scoped>
