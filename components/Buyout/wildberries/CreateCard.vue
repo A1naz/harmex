@@ -327,6 +327,23 @@ const selectCategory = (categories: any, index: number) => {
             @remove="removeSearchQuery"
           />
         </div>
+        <div class="w-full flex flex-col gap-0.5">
+          <span class="text-md text-gray-500 mb-1 mt-2">Артикулы конкурентов: </span>
+        <input
+          type="text"
+          class="input bg-base-200 input-sm w-full rounded-xl"
+          :disabled="!product.shelves"
+          v-model="product.competitorArticle"
+          placeholder="Первый артикул"
+        />
+        <input
+          type="text"
+          class="input bg-base-200 input-sm w-full rounded-xl"
+          :disabled="!product.shelves"
+          v-model="product.competitorArticle2"
+          placeholder="Второй артикул"
+        />
+      </div>
       </div>
       <div>
         <div class="text-md text-gray-500 mb-1">Категория:</div>
