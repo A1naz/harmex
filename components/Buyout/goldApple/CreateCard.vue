@@ -349,8 +349,8 @@ function onParameterChange(event: Event) {
           >
              <option value="self" class="text-center">Самовывоз 0₽</option>
             <option value="market" class="text-center">Магазин 0₽</option>
-            <option value="5Post" class="text-center">Постамат 5POST 100₽</option>
-            <option value="Яндекс Доставка" class="text-center">Яндекс доставка 100₽</option>
+            <option value="5Post" class="text-center">Постамат 5POST 100+₽</option>
+            <option value="Яндекс Доставка" class="text-center">Яндекс доставка 100+₽</option>
           </select>
         </div>
       </div>
