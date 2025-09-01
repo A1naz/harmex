@@ -347,10 +347,10 @@ function onParameterChange(event: Event) {
             class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
             v-model="store.createProducts[props.index].deliveryType"
           >
-             <option value="self" class="text-center">Самовывоз</option>
-            <option value="market" class="text-center">Магазин</option>
-            <option value="5Post" class="text-center">Постамат 5POST</option>
-            <option value="Яндекс Доставка" class="text-center">Яндекс доставка</option>
+             <option value="self" class="text-center">Самовывоз 0₽</option>
+            <option value="market" class="text-center">Магазин 0₽</option>
+            <option value="5Post" class="text-center">Постамат 5POST 100₽</option>
+            <option value="Яндекс Доставка" class="text-center">Яндекс доставка 100₽</option>
           </select>
         </div>
       </div>
