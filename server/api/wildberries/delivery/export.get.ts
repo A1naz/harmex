@@ -73,8 +73,14 @@ export default eventHandler(async (event) => {
           item.buyout.valueOf() === buyout._id.valueOf() &&
           item.text.includes("Выкуп выполнен")
       );
-      const finishDate = new Date(foundLog ? foundLog.date : buyout.createdAt);
+      const finishDate = new Date(buyout.createdAt);
+      const deliveryCreatedAt = new Date(delivery.date);
       const place = index + 1;
+      const deliveryCreatedAtHours = deliveryCreatedAt.getHours();
+      const deliveryCreatedAtMinutes = deliveryCreatedAt.getMinutes();
+      const deliveryCreatedAtTime = `${deliveryCreatedAtHours
+        .toString()
+        .padStart(2, "0")}:${deliveryCreatedAtMinutes.toString().padStart(2, "0")}`;
       const finishDateHours = finishDate.getHours();
       const finishDateMinutes = finishDate.getMinutes();
       const finishTime = `${finishDateHours
@@ -92,6 +98,8 @@ export default eventHandler(async (event) => {
         productname: buyout.product.name,
         finishDate,
         finishTime,
+        deliveryCreatedAtTime,
+        deliveryCreatedAt,
         uuid: `#${buyout.uuid}`,
         seachquery: buyout.searchQuery,
         point: delivery.point,
@@ -131,6 +139,18 @@ export default eventHandler(async (event) => {
     {
       header: "Время заказа",
       key: "finishTime",
+      width: 16,
+      font: { bold: true },
+    },
+    {
+      header: "Дата выкупа",
+      key: "deliveryCreatedAt",
+      width: 16,
+      font: { bold: true },
+    },
+    {
+      header: "Время выкупа",
+      key: "deliveryCreatedAtTime",
       width: 16,
       font: { bold: true },
     },

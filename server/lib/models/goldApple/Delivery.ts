@@ -25,6 +25,7 @@ const DeliverySchema = new Schema({
   updatedAt: { type: Date, required: true, default: new Date() },
   reviewed: { type: Boolean, required: true, default: false },
   idDelivery: { type: String },
+  date: { type: Date, required: false },
   data5: { type: {}, default: '' },
   data6: { type: {}, default: '' },
   data7: { type: {}, default: '' },

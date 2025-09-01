@@ -21,6 +21,7 @@ const DeliverySchema = new Schema({
   recipient: { type: String, required: false },
   recipientphone: { type: String, required: false },
   status: { type: String, required: true },
+  date: { type: Date, required: false },
   updatedAt: { type: Date, required: true, default: new Date() },
   reviewed: { type: Boolean, required: true, default: false },
   idDelivery: { type: String },

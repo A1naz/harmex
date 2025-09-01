@@ -15,6 +15,11 @@ function getServiceLink(type: string, mp: string, uuid: string) {
 
 export default function getBuyoutLink(mp: string, uuid: string, type: string = 'buyout') {
         if (type == 'buyout' || type == 'buyouts service' || type == 'buyouts') {
+
+                if (mp == 'zy') {
+                            return `NUXTLINK||/goldApple/buyouts?uuid=${uuid.replace('Выкуп #', '')}||Выкуп #${uuid}`
+                }
+                
                 return `NUXTLINK||/${mp}/buyouts?uuid=${uuid.replace('Выкуп #', '')}||Выкуп #${uuid}`
         } else {
                 const serviceLink = getServiceLink(type, mp, uuid)

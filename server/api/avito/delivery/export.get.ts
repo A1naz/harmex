@@ -53,6 +53,13 @@ export default eventHandler(async (event) => {
           .toString()
           .padStart(2, '0')}:${finishDateMinutes.toString().padStart(2, '0')}`
 
+        const deliveryCreatedAt = new Date(delivery.createdAt)
+        const deliveryCreatedAtHours = deliveryCreatedAt.getHours()
+        const deliveryCreatedAtMinutes = deliveryCreatedAt.getMinutes()
+        const deliveryCreatedAtTime = `${deliveryCreatedAtHours
+          .toString()
+          .padStart(2, '0')}:${deliveryCreatedAtMinutes.toString().padStart(2, '0')}`
+
         return {
           receiptcodeqr: delivery.receiptcodeqr
             ? delivery.receiptcodeqr
@@ -64,6 +71,8 @@ export default eventHandler(async (event) => {
           productname: buyout.product.name,
           finishDate,
           finishTime,
+          deliveryCreatedAt,
+          deliveryCreatedAtTime,
           uuid: `#${buyout.uuid}`,
           seachquery: buyout.searchQuery,
           point: delivery.point,

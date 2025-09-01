@@ -82,6 +82,13 @@ export default eventHandler(async (event) => {
           .toString()
           .padStart(2, '0')}:${finishDateMinutes.toString().padStart(2, '0')}`
 
+        const deliveryCreatedAt = new Date(delivery.date)
+        const deliveryCreatedAtHours = deliveryCreatedAt.getHours()
+        const deliveryCreatedAtMinutes = deliveryCreatedAt.getMinutes()
+        const deliveryCreatedAtTime = `${deliveryCreatedAtHours
+          .toString()
+          .padStart(2, '0')}:${deliveryCreatedAtMinutes.toString().padStart(2, '0')}`
+
         return {
           receiptcodeqr: delivery.receiptcodeqr
             ? delivery.receiptcodeqr
@@ -93,6 +100,8 @@ export default eventHandler(async (event) => {
           productname: buyout.product.name,
           finishDate,
           finishTime,
+          deliveryCreatedAt,
+          deliveryCreatedAtTime,
           uuid: `#${buyout.uuid}`,
           seachquery: buyout.searchQuery,
           point: delivery.point,
@@ -132,6 +141,18 @@ export default eventHandler(async (event) => {
       {
         header: 'Время заказа',
         key: 'finishTime',
+        width: 16,
+        font: { bold: true },
+      },
+      {
+        header: 'Дата выкупа',
+        key: 'deliveryCreatedAt',
+        width: 16,
+        font: { bold: true },
+      },
+      {
+        header: 'Время выкупа',
+        key: 'deliveryCreatedAtTime',
         width: 16,
         font: { bold: true },
       },

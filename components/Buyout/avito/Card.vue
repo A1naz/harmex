@@ -225,16 +225,7 @@ const getStatus = computed(() => {
             </a>
           </li>
 
-          <li v-if="info.status !== 'work'" class="cursor-pointer">
-            <a @click="$emit('removeBuyout', index)">
-              <img
-                class="w-5 h-5"
-                src="/icons/figma/buyouts/delete.svg"
-                alt="settings"
-              />
-              <label class="cursor-pointer">Удалить</label>
-            </a>
-          </li>
+ 
         </ul>
       </div>
 
