@@ -116,13 +116,6 @@ export const useWildberriesBuyoutStore = defineStore("wildberriesBuyout", {
           priceText: product.priceText,
           rules: [
             {
-              id: 9,
-              description:
-                "Выкупать с рекламы, если реклама не найдена - выкупать с поиска",
-              category: 5,
-              disabled: true,
-            },
-            {
               id: 5,
               description:
                 "Не выкупать если товар не найден в поисковой выдаче",

@@ -119,13 +119,7 @@ export const useAvitoBuyoutStore = defineStore("avitoBuyout", {
                 "Не выкупать если товар не найден в поисковой выдаче",
               category: 3,
             },
-            {
-              id: 9,
-              description:
-                "Выкупать с рекламы, если реклама не найдена - выкупать с поиска",
-              category: 5,
-              disabled: true,
-            },
+
           ],
           pointCoordinates: { lat: 0, lon: 0 },
         })
