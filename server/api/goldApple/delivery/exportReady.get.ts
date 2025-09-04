@@ -187,7 +187,7 @@ export default eventHandler(async (event) => {
       {
         header: "Код ПВЗ",
         key: "receiptcode",
-        width: 16,
+        width: 32,
         font: { bold: true },
       },
       { header: "ID Выкупа", key: "uuid", width: 16, font: { bold: true } },
