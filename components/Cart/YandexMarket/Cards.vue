@@ -26,7 +26,7 @@ const props = defineProps<IProps>();
           <div class="article flex flex-col gap-0.5">
             <div class="text-xs">Артикул</div>
             <a
-              :href="`https://market.yandex.ru/pr/${item.article}`"
+              :href="`https://market.yandex.ru/search?text=${item.article}&cvredirect=1`"
               target="_blank"
               class="text-primary link link-hover text-sm"
             >

@@ -18,7 +18,7 @@ export default async function getMPLink(mp: string, article: any) {
                 return 'неизвестно'
         }
         if (mp === 'ym') {
-                return 'EXTERNALHREF||https://market.yandex.ru/pr/' + article
+                return 'EXTERNALHREF||' + `https://market.yandex.ru/search?text=${article}&cvredirect=1`
         }
         if (mp === 'zy') {
                 return ""

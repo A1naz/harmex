@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import type { Rule } from "@/data/buyout/rules";
-import { rules } from "@/data/buyout/rules";
+import { rules } from "@/data/buyout/ZYRules";
 import { useWindowSize } from "@vueuse/core";
 
 const closeWarningModal = true;
@@ -1749,6 +1749,7 @@ const categories = ref([
                 }}</span>
                 <div class="flex gap-2">
                   <input
+                    :disabled="products[selectedRuleProductIndex].key"
                     v-model="products[selectedRuleProductIndex].purchaseSoon"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
@@ -1756,23 +1757,78 @@ const categories = ref([
                   <span class="text-sm text-primary">{{ rule.price }}р.</span>
                 </div>
               </div>
+              <!-- <div
+                v-if="rule.id === 1 && user?.ffEnabled"
+                class="label cursor-pointer flex gap-4 items-start justify-between"
+              >
+                <span class="label-text">{{ "Выкуп под ключ " }}</span>
+                <div class="flex gap-4">
+                  <input
+                  :disabled="products[selectedRuleProductIndex].purchaseSoon"
+                    v-model="products[selectedRuleProductIndex].key"
+                    type="checkbox"
+                    class="checkbox checkbox-primary border-base-content"
+                    @click="
+                      [
+                        refreshElements(),
+                        (products[selectedRuleProductIndex].adress = ''),
+                        (products[selectedRuleProductIndex].dateRange = [
+                          new Date().setHours(new Date().getHours()),
 
+                          new Date().setHours(new Date().getHours()),
+                        ]),
+                      ]
+                    "
+                  />
+                </div>
+              </div> -->
+              <span
+                v-if="rule.id === 1"
+                class="text-[#AA4A44] text-sm font-bold"
+              >
+                Функционал по добавлению правил временно недоступен
+              </span>
+              <!-- <div
+              v-if="rule.id === 1"
+              class="label cursor-pointer flex gap-4 items-start justify-between"
+            >
+              <span class="label-text"
+                >{{ 'Выкуп под ключ ' }}</span
+              >
+              <div class="flex gap-4">
+
+                <input
+                  type="checkbox"
+                  v-model="products[selectedRuleProductIndex].key"
+                  class="checkbox checkbox-primary border-base-content"
+                />
+              </div>
+            </div> -->
               <div
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
                 <span class="label-text"
                   >{{ rule.id }}. {{ rule.description }}</span
                 >
-
                 <div class="flex gap-2 justify-end">
                   <input
-                    disabled
+                    :disabled="
+                      !!store.createProducts[
+                        selectedRuleProductIndex
+                      ].rules.find(
+                        (item) =>
+                          item.category === rule.category && item.id !== rule.id
+                      ) ||
+                      !!store.createProducts[
+                        selectedRuleProductIndex
+                      ].rules.find((item) => item.id === rule?.relies) || rule.disabled
+                    "
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
                     :checked="
-                    !!store.createProducts[selectedRuleProductIndex].rules.find(
-                      (item: any) => item.id === rule.id,
-                    )
+                      !!store.createProducts[
+                        selectedRuleProductIndex
+                      ].rules.find((item) => item.id === rule.id)
                     "
                     @change="
                       onRuleChange($event, selectedRuleProductIndex, rule.id)

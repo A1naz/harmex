@@ -157,7 +157,7 @@ onKeyStroke("Escape", (e) => {
                     class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary truncate"
                   >
                     <a
-                      :href="`https://market.yandex.ru/pr/${info.article}`"
+                      :href="`https://market.yandex.ru/search?text=${info.article}&cvredirect=1`"
                       target="_blank"
                       class="link link-hover"
                     >

@@ -86,7 +86,7 @@ const classEditing = [
                   @dblclick="toEdit(true)"
                 >
                   <a
-                    :href="`https://market.yandex.ru/pr/${draft.article}`"
+                    :href="`https://market.yandex.ru/search?text=${draft.article}&cvredirect=1`"
                     target="_blank"
                   >
                     {{ draft.article }}

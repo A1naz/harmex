@@ -275,7 +275,7 @@ function removeProduct() {
             />
             <div class="article">
               <a
-                :href="`https://market.yandex.ru/pr/${productData.article}`"
+                :href="`https://market.yandex.ru/search?text=${productData.article}&cvredirect=1`"
                 target="_blank"
                 class="text-primary link link-hover"
               >

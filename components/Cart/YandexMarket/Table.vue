@@ -69,7 +69,7 @@ function removeCart(index: number) {}
             class="text-center border-r border-[#f9fafb] text-base-content truncate"
           >
             <a
-              :href="`https://market.yandex.ru/pr/${item.article}`"
+              :href="`https://market.yandex.ru/search?text=${item.article}&cvredirect=1`"
               class="text-sm text-primary link link-hover"
             >
               {{ item.article }}
