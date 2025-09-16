@@ -80,7 +80,9 @@ export default eventHandler(async (event) => {
       const deliveryCreatedAtMinutes = deliveryCreatedAt.getMinutes();
       const deliveryCreatedAtTime = `${deliveryCreatedAtHours
         .toString()
-        .padStart(2, "0")}:${deliveryCreatedAtMinutes.toString().padStart(2, "0")}`;
+        .padStart(2, "0")}:${deliveryCreatedAtMinutes
+        .toString()
+        .padStart(2, "0")}`;
       const finishDateHours = finishDate.getHours();
       const finishDateMinutes = finishDate.getMinutes();
       const finishTime = `${finishDateHours

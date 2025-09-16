@@ -82,6 +82,7 @@ export interface IUser extends Entity {
   lastOrgInfo: object
   changedMpTariff: boolean
   needVerification: boolean
+  forceLoginDate: Date | null
 }
 
 export interface IUserLogs extends Entity {

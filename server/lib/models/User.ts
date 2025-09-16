@@ -87,6 +87,7 @@ const UserSchema = new Schema<IUserSchema>({
   post: { type: String },
   changedMpTariff: { type: Boolean },
   needVerification: { type: Boolean },
+  forceLoginDate: { type: Date, required: false },
 });
 
 export const User = model<IUserSchema>("User", UserSchema);

@@ -79,7 +79,7 @@ async function changePassword(
     const hashedPassword = bcrypt.hashSync(newPassword, 7)
     await User.updateOne(
       { phoneNumber: phoneNumber.replace(/[()\-\s]/g, '') },
-      { $set: { password: hashedPassword } },
+      { $set: { password: hashedPassword, forceLoginDate: new Date() } },
     )
   }
 }

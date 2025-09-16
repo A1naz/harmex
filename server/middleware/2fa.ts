@@ -10,6 +10,11 @@ export default eventHandler(async (event) => {
   
   const user = await User.findOne({ uuid: session.user?.uuid })
 
+  if(user?.forceLoginDate && new Date(session.loggedInAt) < new Date(user.forceLoginDate)) {
+    await clearUserSession(event)
+    return sendRedirect(event, '/auth', 302)
+  }
+
   if (
     session.user?.isTwoFaEnabled && session.twoFaNeeded && !event._path?.includes('/2fa') && !event._path?.includes('/session')
   ) {

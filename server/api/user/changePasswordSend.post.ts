@@ -61,6 +61,7 @@ export default eventHandler(async (event) => {
     const hash = bcrypt.hashSync(password, 7)
 
     found.password = hash
+    found.forceLoginDate = new Date()
     await found.save()
     //Не используется
     // const token = jwt.sign(
