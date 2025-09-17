@@ -120,7 +120,7 @@ onMounted(async () => {
   }
 });
 
-const isAddBtnDisabled = computed(() => props.queries.length >= 5);
+const isAddBtnDisabled = computed(() => props.queries.length >= 3);
 </script>
 
 <template>
