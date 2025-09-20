@@ -1,0 +1,12 @@
+import { Schema, model } from 'mongoose'
+import { reportsConnection } from "~/server/connections/reports";
+
+const ReportSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  date: { type: Date, required: true },
+  card: { type: String, required: true },
+  screenshots: [{type: String, required: true}],
+  buyout: { type: Schema.Types.ObjectId, required: true, ref: 'Buyout'},
+})
+
+export const Report = reportsConnection.model('YM', ReportSchema, 'YM')
