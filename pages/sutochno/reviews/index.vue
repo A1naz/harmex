@@ -564,7 +564,7 @@ async function selectFilterDate(e: any) {
           <h3 class="font-bold text-xl">
             Вы уверены что хотите удалить отзыв?
           </h3>
-          <p class="py-2.5">Стоимость услуги 100 рублей!</p>
+     
           <div class="flex justify-between">
             <label
               ref="reviewRemoveModalClose"
