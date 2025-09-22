@@ -26,8 +26,6 @@ export default eventHandler(async (event) => {
 
   let history
   const format: historyItem[] = []
-
-  console.log(status)
   if (status && status !== 'all') {
     switch (status) {
       case 'today':

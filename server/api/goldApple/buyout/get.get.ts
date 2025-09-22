@@ -162,7 +162,8 @@ export default eventHandler(async (event) => {
       FIO: buyout.FIO,
       executionTime: historyItem ? historyItem.dataoperation : null,
       financePrice: historyItem ? historyItem.summ : null,
-      deliveryType: buyout.deliveryType
+      deliveryType: buyout.deliveryType,
+      shelves: buyout.shelves,
     }
   })
 
