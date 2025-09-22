@@ -147,7 +147,8 @@ const selectCategory = (categories: any, index) => {
         </div>
         <div class="text-center">
           <a
-            :href="product.url"
+            :href="`https://market.yandex.ru/search?text=${product.article}&cvredirect=1`"
+       
             target="_blank"
             class="text-sm text-primary link link-hover text-center"
           >

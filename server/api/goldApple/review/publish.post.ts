@@ -13,11 +13,11 @@ export default eventHandler(async (event) => {
     await readBody(event);
 
   if (text) {
-    if (text.length < 10 || text.length > 1000) {
+    if (text.length < 10 || text.length > 700) {
       throw createError({
         statusCode: 400,
         message:
-          "Публичный отзыв должен быть длиннее 10 символов и не больше 1000",
+          "Публичный отзыв должен быть длиннее 10 символов и не больше 700",
       });
     }
   }

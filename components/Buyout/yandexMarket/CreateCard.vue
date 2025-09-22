@@ -149,7 +149,7 @@ const selectCategory = (categories: any, index) => {
                 {{ product.name }}
               </p>
               <a
-                :href="product.url"
+                :href="`https://market.yandex.ru/search?text=${product.article}&cvredirect=1`"
                 target="_blank"
                 class="text-sm text-primary link link-hover"
               >
