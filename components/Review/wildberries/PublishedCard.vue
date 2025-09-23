@@ -266,7 +266,7 @@ async function resumeStatus(item: any) {
       </button>
       <button
         v-if="showSupplementButton"
-        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal btn-info opacity-80 hover:opacity-100"
+        class="btn btn-sm h-[2.5rem] hidden text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
         @click="emit('openSupplementModal', info)"
       >
         Дополнить отзыв
