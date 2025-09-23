@@ -26,6 +26,7 @@ const ReviewSchema = new Schema({
       'nofunds',
       'deleting',
       'deleted',
+      'addition',
     ],
   },
   recipientphone: { type: String, required: true },
@@ -35,6 +36,7 @@ const ReviewSchema = new Schema({
   isPhotoEnabled: { type: Boolean, required: false },
   createdAt: { type: Date, required: false, default: Date.now },
   uuid: { type: String},
+  additionText: { type: String, default: '' },
 })
 
 export const Review = wildberriesConnection.model('Review', ReviewSchema)

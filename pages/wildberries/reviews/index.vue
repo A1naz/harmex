@@ -210,6 +210,54 @@ async function removeReview() {
   }
 }
 
+const supplementModalOpen = ref(false);
+const selectedReviewForSupplement = ref<any>(null);
+
+function openSupplementModal(review: any) {
+  selectedReviewForSupplement.value = review;
+  supplementModalOpen.value = true;
+}
+
+function closeSupplementModal() {
+  supplementModalOpen.value = false;
+  selectedReviewForSupplement.value = null;
+}
+
+async function submitSupplement(payload: { reviewId: string; text: string }) {
+  const { data, error } = await useFetch(
+    "/api/wildberries/review/addition",
+    {
+      method: "POST",
+      body: {
+        id: payload.reviewId,
+        text: payload.text,
+      },
+    }
+  );
+
+  if (error.value) {
+    notify({
+      title: "Ошибка",
+      text: error.value.data?.message || "Не удалось дополнить отзыв",
+      group: "error",
+    });
+    return;
+  }
+
+  if (data.value) {
+    notify({
+      title: "Успешно",
+      text: "Отзыв отправлен на дополнение",
+      group: "success",
+    });
+    closeSupplementModal();
+    reviews.value = [];
+    skip.value = 0;
+    end.value = false;
+    fetchData();
+  }
+}
+
 watch(
   () => targetIsVisible.value,
   (isVisible) => {
@@ -516,6 +564,7 @@ async function selectFilterDate(e: any) {
               @get-review="fetchData()"
               @log-modal="(item: any) => [(selectedReview = item), (logModal = true)]"
               @info-modal="(item: any) => [(selectedReview = item), (infoModal = true)]"
+              @open-supplement-modal="openSupplementModal"
             />
           </div>
 
@@ -836,6 +885,13 @@ async function selectFilterDate(e: any) {
       :info="selectedReview"
       :state="infoModal"
       @close="infoModal = false"
+    />
+    <ReviewWildberriesSupplementModal
+      v-if="supplementModalOpen"
+      :info="selectedReviewForSupplement"
+      :state="supplementModalOpen"
+      @close="closeSupplementModal"
+      @submit="submitSupplement"
     />
   </div>
 </template>

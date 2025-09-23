@@ -20,11 +20,22 @@ const emit = defineEmits([
   "resumeStatus",
   "logModal",
   "infoModal",
+  "openSupplementModal",
 ]);
 const router = useRouter();
 const config = useRuntimeConfig();
 
 const { $dayjs } = useNuxtApp();
+
+const showSupplementButton = computed(() => {
+  if (props.info.status === "published" && props.info.completedDate) {
+    const completedDate = $dayjs(props.info.completedDate);
+    const now = $dayjs();
+    return now.diff(completedDate, "hour") >= 24;
+  }
+  return false;
+});
+
 onMounted(() => {});
 const getStatus = computed(() => {
   switch (props.info.status) {
@@ -50,6 +61,8 @@ const getStatus = computed(() => {
       return "В архиве";
     case "completed":
       return "Опубликован";
+    case "addition":
+      return "Дополнение";
   }
 });
 
@@ -157,7 +170,8 @@ async function resumeStatus(item: any) {
                       info.status === 'busy' ||
                       info.status === 'canceled' ||
                       info.status === 'deleted' ||
-                      info.status === 'deleting',
+                      info.status === 'deleting' ||
+                      info.status === 'addition',
                   }"
                   class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
                   >{{ getStatus }}
@@ -249,6 +263,13 @@ async function resumeStatus(item: any) {
         @click="emit('infoModal', info)"
       >
         Детали
+      </button>
+      <button
+        v-if="showSupplementButton"
+        class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal btn-info opacity-80 hover:opacity-100"
+        @click="emit('openSupplementModal', info)"
+      >
+        Дополнить отзыв
       </button>
     </div>
   </div>

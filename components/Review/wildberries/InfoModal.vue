@@ -43,6 +43,8 @@ const getStatus = computed(() => {
       return "В архиве";
     case "completed":
       return "Опубликован";
+    case "addition":
+      return "Дополнение";
       default:
       return props.info.status;
   }
@@ -142,7 +144,8 @@ const { $dayjs } = useNuxtApp();
                           info.status === 'canceled' ||
                           info.status === 'deleted' ||
                           info.status === 'deleting' ||
-                          info.status === 'reviewsUpdate',
+                          info.status === 'reviewsUpdate' ||
+                          info.status === 'addition',
                       }"
                       class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm"
                       >{{ getStatus }}
