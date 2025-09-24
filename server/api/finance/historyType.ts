@@ -37,6 +37,9 @@ export default function getHistoryType(type: string) {
     case "commission":
       result = "Комиссия портала";
       break;
+    case "addition":
+      result = "Дополнение отзыва";
+      break;
   }
   return result;
 }

@@ -63,6 +63,8 @@ const getStatus = computed(() => {
       return "Опубликован";
     case "addition":
       return "Дополнение";
+      case "added":
+      return "Добавлен";
   }
 });
 
@@ -160,6 +162,7 @@ async function resumeStatus(item: any) {
                   :class="{
                     'bg-success bg-opacity-50 text-green-500':
                       info.status === 'published' ||
+                      info.status === 'added' ||
                       info.status === 'completed',
                     'bg-[#F8C68A] text-[#D67500]':
                       info.status === 'waiting' || info.status === 'created',
@@ -172,6 +175,7 @@ async function resumeStatus(item: any) {
                       info.status === 'deleted' ||
                       info.status === 'deleting' ||
                       info.status === 'addition',
+                  
                   }"
                   class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
                   >{{ getStatus }}
@@ -266,7 +270,7 @@ async function resumeStatus(item: any) {
       </button>
       <button
         v-if="showSupplementButton"
-        class="btn btn-sm h-[2.5rem] hidden text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
+        class="btn btn-sm h-[2.5rem] text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
         @click="emit('openSupplementModal', info)"
       >
         Дополнить отзыв

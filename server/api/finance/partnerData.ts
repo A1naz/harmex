@@ -21,6 +21,8 @@ function getRussianServiceNames(role: string) {
       return "Вопрос";
     case "reviewRemoving":
       return "Удаление отзыва";
+    case "addition":
+      return "Дополнение отзыва";
     default:
       return "";
   }
