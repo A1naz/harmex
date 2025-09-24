@@ -216,7 +216,7 @@ const { $dayjs } = useNuxtApp();
                 <div class="w-full whitespace-normal">
                   <span class="text-sm text-gray-500 mr-2 my-auto">Пол: </span>
                   <span class="rounded-md py-0 px-2 text-sm">
-                    {{ info.gender }}
+                    {{ getGender }}
                   </span>
                 </div>
 
@@ -274,6 +274,17 @@ const { $dayjs } = useNuxtApp();
                   </span>
                   <span class="text-sm">
                     {{ info.text }}
+                  </span>
+                </div>
+                <div
+                  class="whitespace-pre-line mt-1"
+                  v-if="info.additionText"
+                >
+                  <span class="text-sm text-gray-500 mr-2 my-auto"
+                    >Текст дополнения:
+                  </span>
+                  <span class="text-sm">
+                    {{ info.additionText }}
                   </span>
                 </div>
                 <div class="whitespace-pre-line mt-1" v-if="info.positive">

@@ -141,6 +141,7 @@ export default eventHandler(async (event) => {
         uuid: review.uuid,
         type: getReviewType(review),
         originalVideoName: review.originalVideoName,
+        additionText: review.additionText,
       };
 
       // eslint-disable-next-line eqeqeq
