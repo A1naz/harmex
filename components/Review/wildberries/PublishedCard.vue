@@ -64,7 +64,7 @@ const getStatus = computed(() => {
     case "addition":
       return "Дополнение";
       case "added":
-      return "Добавлен";
+      return "Дополнен";
   }
 });
 
