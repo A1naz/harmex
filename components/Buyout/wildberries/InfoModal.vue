@@ -240,6 +240,7 @@ onKeyStroke("Escape", (e) => {
                     <span class="text-sm text-gray-500 mr-2 my-auto">
                       Выкуп с полок</span
                     >
+
                     
                   </div>
                   <div v-if="info.financePrice">
@@ -264,6 +265,11 @@ onKeyStroke("Escape", (e) => {
               <span class="text-sm text-gray-500 mb-1">Поисковый запрос:</span>
               <span class="text-sm">{{ info.searchQuery }}</span>
             </div>
+        
+          </div>
+          <div class="flex items-start flex-col" v-if="info.shelves"> 
+            <span class="text-sm text-gray-500 mb-1">Артикулы конкурентов:</span>
+            <span class="text-sm">{{ info.competitorArticle }} {{ info.competitorArticle2 ? '|' : '' }} {{ info.competitorArticle2 }}</span>
           </div>
           <div class="flex items-start flex-col">
             <span class="text-sm text-gray-500 mb-1">Адрес:</span>

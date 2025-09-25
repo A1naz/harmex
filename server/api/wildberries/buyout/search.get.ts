@@ -69,6 +69,9 @@ export default eventHandler(async (event) => {
       purchaseSoon: buyout.purchaseSoon,
       executionTime: historyItem ? historyItem.dataoperation : null,
       financePrice: historyItem ? historyItem.summ : null,
+      shelves: buyout.shelves,
+      competitorArticle: buyout.competitorArticle,
+      competitorArticle2: buyout.competitorArticle2,
     };
   });
   return format;

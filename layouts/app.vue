@@ -187,8 +187,8 @@ watch(isOpen, (newValue: boolean) => {
               :to="loggedIn ? '/profile' : '/auth'"
               class="myCustomBtnNavbar ml-2"
             >
+            <Icon name="gg:profile" size="24" />
             {{ user?.username }}
-              <Icon name="gg:profile" size="24" />
             </NuxtLinkLocale>
           </div>
         </div>
