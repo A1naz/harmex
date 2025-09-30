@@ -66,6 +66,10 @@ const isEmail = computed(() => {
   return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email.value);
 });
 
+const isGmail = computed(() => {
+  return email.value.includes("@gmail.com");
+});
+
 onMounted(() => {
   email.value = user.value?.email ? user.value?.email : "";
 });
@@ -106,6 +110,7 @@ const finalSumm = computed(() => {
               placeholder="example@example.com"
               v-model="email"
             />
+            <span v-if="isGmail" class="text-red-500 text-sm">Данная почта(gmail.com) не используется для отправки чеков</span>
             <span>{{ "Сумма пополнения" }}</span>
             <input
               type="number"
@@ -150,7 +155,7 @@ const finalSumm = computed(() => {
 
         <div class="flex gap-[16px] self-end mt-1">
           <button
-            :disabled="!summ || loading || !isEmail || summ < 10 || summ > 1000000"
+            :disabled="!summ || loading || !isEmail || summ < 10 || summ > 1000000 || isGmail"
             @click="balanceUpdate"
             class="py-2 px-9 btn btn-sm h-[2.5rem] disabled:text-white border rounded-lg disabled:bg-[#595959] disabled:border-[#595959] text-white bg-primary border-primary hover:bg-white hover:text-primary hover:border-primary"
           >

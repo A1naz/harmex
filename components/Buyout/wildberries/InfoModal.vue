@@ -269,7 +269,13 @@ onKeyStroke("Escape", (e) => {
           </div>
           <div class="flex items-start flex-col" v-if="info.shelves"> 
             <span class="text-sm text-gray-500 mb-1">Артикулы конкурентов:</span>
-            <span class="text-sm">{{ info.competitorArticle }} {{ info.competitorArticle2 ? '|' : '' }} {{ info.competitorArticle2 }}</span>
+            <span class="text-sm text-bold">
+              <span class="text-primary">{{ info.competitorArticle }}</span>
+              <template v-if="info.competitorArticle2">
+                <span> | </span>
+                <span class="text-primary">{{ info.competitorArticle2 }}</span>
+              </template>
+            </span>
           </div>
           <div class="flex items-start flex-col">
             <span class="text-sm text-gray-500 mb-1">Адрес:</span>

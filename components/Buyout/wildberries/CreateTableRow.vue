@@ -352,15 +352,15 @@ const selectCategory = (categories: any, index: number) => {
           class="input bg-base-200 input-sm w-full rounded-xl"
           :disabled="!product.shelves"
           v-model="product.competitorArticle"
-          placeholder="Первый артикул"
+          placeholder="Арткул конкурента"
         />
-        <input
+        <!-- <input
           type="text"
           class="input bg-base-200 input-sm w-full rounded-xl"
           :disabled="!product.shelves"
           v-model="product.competitorArticle2"
           placeholder="Второй артикул"
-        />
+        /> -->
       </div>
     </td>
     <td class="border-r border-base w-[90px]">
