@@ -35,6 +35,7 @@ const tabs = [
   { value: "published", name: "Опубликованные" },
   { value: "available", name: "Доступные" },
   { value: "work", name: "В работе" },
+  { value: "added", name: "Дополненные" },
   { value: "canceled", name: "Отмененные" },
   // { value: 'deleting', name: 'На удалении' },
   { value: "deleted", name: "Удаленные" },
