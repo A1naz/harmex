@@ -33,7 +33,7 @@ function openBuyout() {
 </script>
 
 <template>
-  <div class="card bg-[#f2f4f6] shadow-lg min-w-[214px]">
+  <div class="card bg-[#f2f4f6p] shadow-lg min-w-[214px]">
     <div
       class="card-body flex-shrink-0 flex flex-col justify-start gap-4 p-3 relative"
     >

@@ -110,7 +110,7 @@ async function resumeStatus(item: any) {
             </a>
           </li>
 
-          <li v-if="info.status === 'published'" class="cursor-pointer">
+          <li v-if="info.status === 'published' || info.status === 'added'" class="cursor-pointer">
             <a @click="emit('removeReview', info.id)">
               <img
                 class="w-5 h-5"
