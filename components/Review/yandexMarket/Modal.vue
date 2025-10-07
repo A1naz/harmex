@@ -518,6 +518,8 @@ async function generateVideoThumbnail(file: File) {
 }
 
 const AIGenerateModal = ref(false);
+const confirmAIModal = ref(false);
+
 function acceptAIText(variant: {
   positive: string;
   negative: string;
@@ -526,6 +528,15 @@ function acceptAIText(variant: {
   form.positive = variant.positive;
   form.negative = variant.negative;
   form.text = variant.text;
+}
+
+function handleAIGenerateClick() {
+  confirmAIModal.value = true;
+}
+
+function confirmAIGenerate() {
+  confirmAIModal.value = false;
+  AIGenerateModal.value = true;
 }
 </script>
 
@@ -578,7 +589,7 @@ function acceptAIText(variant: {
               <div class="w-full flex justify-center">
           <button
             class="btn btn-primary max-w-80"
-            @click="AIGenerateModal = true"
+            @click="handleAIGenerateClick"
           >
             Сгенерировать тексты ИИ - 30₽
           </button>
@@ -841,6 +852,37 @@ function acceptAIText(variant: {
       </div>
     </div>
   </div>
+  <!-- Модалка подтверждения -->
+  <input id="confirm-ai-modal" type="checkbox" class="modal-toggle" />
+  <div
+    :class="{
+      'modal-open': confirmAIModal,
+    }"
+    class="modal"
+  >
+    <div class="modal-box">
+      <h3 class="text-lg font-bold">Подтверждение</h3>
+      <p class="py-4">
+        Вы уверены, что хотите сгенерировать тексты с помощью ИИ? 
+        С вашего баланса будет списано 30₽.
+      </p>
+      <div class="modal-action">
+        <button
+          class="btn btn-ghost"
+          @click="confirmAIModal = false"
+        >
+          Отмена
+        </button>
+        <button
+          class="btn btn-primary"
+          @click="confirmAIGenerate"
+        >
+          Подтвердить
+        </button>
+      </div>
+    </div>
+  </div>
+
     <ReviewYandexMarketAIGenerate
     v-model:state="AIGenerateModal"
     :buyoutUuid="selectedDeliv.uuid"
