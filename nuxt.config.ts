@@ -245,7 +245,7 @@ export default defineNuxtConfig({
     smtpPort: process.env.smtpPort,
     smtpUser: process.env.smtpUser,
     smtpPass: process.env.smtpPass,
-    privateKey: process.env.privateKey,
+    dkimKey: process.env.dkimKey,
     PUBLIC_SITE_URL: process.env.PUBLIC_SITE_URL,
     BOT_TOKEN: process.env.BOT_TOKEN,
     fkSecret1: process.env.fkSecret1,

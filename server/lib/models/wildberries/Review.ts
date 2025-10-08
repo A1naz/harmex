@@ -27,6 +27,7 @@ const ReviewSchema = new Schema({
       'deleting',
       'deleted',
       'addition',
+      'added',
     ],
   },
   recipientphone: { type: String, required: true },
