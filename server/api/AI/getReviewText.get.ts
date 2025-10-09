@@ -52,7 +52,7 @@ export default eventHandler(async (event) => {
       "X-API-KEY": config.X_API_KEY,
     },
   }).catch((error) => {
-    console.log(error);
+    console.log("Не удалось получить ответ от ИИ.", error);
     throw createError({
       message: "Не удалось получить ответ от ИИ.",
     });
