@@ -4,7 +4,7 @@ import { generateUsername } from 'unique-username-generator'
 export async function createUsername(email: string): Promise<string> {
   let userName = email.split('@')[0].replaceAll('.', '').replaceAll('-', '_')
 
-  if (/^\d+$/.test(userName)) {
+  if (userName.length < 5 || /^\d+$/.test(userName)) {
     userName = generateUsername('', 0, 10)
     let isUnique = false
     while (!isUnique) {
