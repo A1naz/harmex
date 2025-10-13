@@ -8,10 +8,7 @@ const { notify } = useNotification();
 const menuItems = ref([
   "Маркетплейсы",
   "Недвижимость",
-  "Медицина",
   "Карты",
-  "Стриминг",
-  "Блоггинг",
   "Услуги", 
 ]);
 const modalStore = useModalStore();
