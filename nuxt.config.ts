@@ -268,6 +268,7 @@ export default defineNuxtConfig({
     X_API_KEY: process.env.X_API_KEY,
     RETURN_CALL_CAMPAIGN_ID: process.env.RETURN_CALL_CAMPAIGN_ID,
     RETURN_CALL_PUBLIC_KEY: process.env.RETURN_CALL_PUBLIC_KEY,
+    NEUROTASK_KEY: process.env.NEUROTASK_KEY,
   },
   compatibilityDate: "2024-11-06",
   ssr: false,
