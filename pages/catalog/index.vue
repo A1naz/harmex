@@ -19,12 +19,20 @@ const loading = ref(true);
 
 async function getServices() {
   loading.value = true;
-  const { data }: any = await useFetch("/api/catalog/get", {
+  const { data, error }: any = await useFetch("/api/catalog/get", {
     method: "GET",
     params: {
       type: modalStore.selectedCatalog,
     },
   });
+
+  if (error.value) {
+    notify({
+      group: "error",
+      title: "Ошибка",
+      text: error.value.message,
+    });
+  }
 
   if (data.value) {
     socialNetworks.value = data.value.services;
