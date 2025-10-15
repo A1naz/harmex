@@ -52,7 +52,7 @@ const onModalOpen = async () => {
     {
       params: {
         buyoutUuid: props.buyoutUuid,
-        mp: "yandexMarket",
+        mp: "ym",
       },
     }
   );

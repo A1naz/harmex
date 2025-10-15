@@ -38,7 +38,7 @@ export default eventHandler(async (event) => {
     buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid });
   } else if (mp === "ozon") {
     buyout = await ozonBuyout.findOne({ uuid: buyoutUuid });
-  } else if (mp === "yandexMarket") {
+  } else if (mp === "ym") {
     buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid });
   }
 
