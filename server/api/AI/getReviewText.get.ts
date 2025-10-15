@@ -4,6 +4,7 @@ const config = useRuntimeConfig();
 import { Buyout as wildberriesBuyout } from "~/server/lib/models/wildberries/Buyout";
 import { Buyout as ozonBuyout } from "~/server/lib/models/ozon/Buyout";
 import { Buyout as yandexMarketBuyout } from "~/server/lib/models/yandexMarket/Buyout";
+import { GenerateReviews } from "~/server/lib/models/GenerateReviews";
 const NEUROTASK_KEY = config.NEUROTASK_KEY;
 
 type ReviewProvider = "openai" | "gemini" | "deepseek";
@@ -81,7 +82,17 @@ export default eventHandler(async (event) => {
   //   },
   // };
 
-  console.log(raw);
+  await GenerateReviews.create({
+    user: buyout.user,
+    summ: 0,
+    status: "created",
+    taskId: "Генерация отзыва " + buyout.uuid,
+    createdDate: new Date(),
+    type: "generateRewievs",
+    mp: mp,
+    article: buyout.article,
+  });
+
   const format: ParsedItem[] = raw.reviews.map(
     (review: Review, index: number): ParsedItem => {
       const safeFullText = review.content;
@@ -95,9 +106,13 @@ export default eventHandler(async (event) => {
       return {
         id: index + 1,
         name: review.provider,
-        text: textPart.trim(),
-        positive: positiveMatch ? positiveMatch[1].trim() : "",
-        negative: negativeMatch ? negativeMatch[1].trim() : "",
+        text: textPart.trim().replace(/\*\*/g, ""),
+        positive: positiveMatch
+          ? positiveMatch[1].trim().replace(/\*\*/g, "")
+          : "",
+        negative: negativeMatch
+          ? negativeMatch[1].trim().replace(/\*\*/g, "")
+          : "",
       };
     }
   );

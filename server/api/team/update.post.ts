@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
 
   const body = await readBody(event)
 
-  const { uuid, phoneNumber, username, firstName, lastName, newPassword, allowedPathes, post } = body
+  const { uuid, phoneNumber, username, firstName, lastName, password, allowedPathes, post } = body
 
   if (phoneNumber.replace(/[\(\)\-\s]/g, '').length < 12) {
     throw createError({
@@ -66,13 +66,12 @@ export default eventHandler(async (event) => {
   //   phoneNumberUpdated = true
   // }
 
-  if(newPassword){
-    const hash = bcrypt.hashSync(newPassword, 7)
+  if(password){
+    const hash = bcrypt.hashSync(password, 7)
     user.password = hash
+    console.log('user', password)
   }
 
-  console.log('post', post)
-  
   user.username = username
   user.firstName = firstName
   user.lastName = lastName

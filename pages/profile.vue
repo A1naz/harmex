@@ -273,7 +273,7 @@ async function saveUser(selectedUser: any) {
     firstName: selectedUser.firstName,
     lastName: selectedUser.lastName,
     phoneNumber: selectedUser.phoneNumber,
-    newPassword: selectedUser.newPassword,
+    password: selectedUser.password,
     allowedPathes: selectedUser.allowedPathes
       ? selectedUser.allowedPathes.length == multiOptions.length
         ? [MenuEnums.fullAccess]
