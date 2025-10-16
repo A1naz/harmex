@@ -11434,12 +11434,7 @@ const categories = ref([
                   />
                 </div>
               </div> -->
-              <span
-                v-if="rule.id === 1"
-                class="text-[#AA4A44] text-sm font-bold"
-              >
-                Функционал по добавлению правил временно недоступен
-              </span>
+        
               <!-- <div
               v-if="rule.id === 1"
               class="label cursor-pointer flex gap-4 items-start justify-between"
