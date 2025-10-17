@@ -387,7 +387,7 @@ const selectCategory = (categories: any, index) => {
         <button
           v-if="!product.promoCode"
           class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
-          disabled
+       
           @click="props.openPromo(index, product.price)"
         >
           <Icon
