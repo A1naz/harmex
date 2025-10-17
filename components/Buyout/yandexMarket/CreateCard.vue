@@ -337,6 +337,7 @@ const selectCategory = (categories: any, index) => {
                 'rounded-r-none': product.promoCode,
               }"
               @click="props.openPromo(index, product.price)"
+              disabled
             >
               {{
                 product.promoCode ? `${product.promoCode}` : "Указать промокод"
