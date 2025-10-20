@@ -20,6 +20,7 @@ const modalInfo = reactive({
   src: "",
   code: 0,
 });
+
 async function exportToFile() {
   progress.value = 0;
 
@@ -52,6 +53,15 @@ async function exportToFile() {
     progress.value = Math.round(((index + 1) / totalPages) * 100);
   });
   pdf.save("Готовы к выдаче Wildberries.pdf");
+}
+
+// Функция для разделения массива на чанки
+function chunkArray(array: any[], chunkSize: number) {
+  const result = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
+  }
+  return result;
 }
 
 const modal = ref(false);
@@ -88,69 +98,69 @@ onMounted(async () => {
       <button class="btn m-2 mt-4" @click="exportToFile">Скачать PDF</button>
     </div>
     <div v-if="deliveries" ref="pdfSection" class="h-[90vh]">
-      <h1 class="text-3xl font-bold text-center p-4 bg-purple-700 text-white">
-        Готовы к выдаче
-      </h1>
-      <div
-        v-for="(point, index) of Object.keys(deliveries)"
-        :key="index"
-        :aria-label="`pdf-page-${index + 1}`"
-        class="point relative"
-      >
-        <h1 class="text-center text-2xl font-bold absolute top-1 w-full">
-          {{ point }}
-        </h1>
-        <div
-          class="deliveryCards grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 px-2"
-        >
+      <template v-for="(point, pointIndex) of Object.keys(deliveries)" :key="pointIndex">
+        <!-- Разделяем доставки каждой точки на группы по 3 -->
+        <template v-for="(deliveryChunk, chunkIndex) in chunkArray(deliveries[point], 3)" :key="chunkIndex">
           <div
-            v-for="(delivery, index) of deliveries[point]"
-            :key="index"
-            class="card h-[703px] rounded-none shadow-xl border border-primary mt-[65px] mb-[25px] mx-2"
+            :aria-label="`pdf-page-${pointIndex * 100 + chunkIndex + 1}`"
+            class="point relative"
           >
-            <figure>
-              <nuxt-img
-                class="p-4 object-contain h-72"
-                :src="delivery.receiptcodeqr"
-                :alt="delivery.receiptcode"
-              />
-            </figure>
-            <div class="card-body p-0">
-              <h2 class="card-title text-center">
-                {{ delivery.productname }}
-              </h2>
+            <h1 class="text-center text-2xl font-bold absolute top-1 w-full">
+              {{ point }} (часть {{ chunkIndex + 1 }})
+            </h1>
+            <div
+              class="deliveryCards grid grid-cols-3 px-2"
+            >
               <div
-                class="info grid grid-cols-2 gap-2 mt-4 justify-center text-center"
+                v-for="(delivery, deliveryIndex) in deliveryChunk"
+                :key="deliveryIndex"
+                class="card h-[703px] rounded-none shadow-xl border border-primary mt-[65px] mb-[25px] mx-2"
               >
-                <div>
-                  {{ currency.format(delivery.pricebuy) }}
+                <figure>
+                  <nuxt-img
+                    class="p-4 object-contain h-72"
+                    :src="delivery.receiptcodeqr"
+                    :alt="delivery.receiptcode"
+                  />
+                </figure>
+                <div class="card-body p-0">
+                  <h2 class="card-title text-center">
+                    {{ delivery.productname }}
+                  </h2>
+                  <div
+                    class="info grid grid-cols-2 gap-2 mt-4 justify-center text-center"
+                  >
+                    <div>
+                      {{ currency.format(delivery.pricebuy) }}
+                    </div>
+                    <div>
+                      {{ $dayjs(delivery.updatedAt).format("D.MM.YYYY") }}
+                    </div>
+                    <div>Артикул</div>
+                    <div>{{ delivery.article }}</div>
+                    <div>Размер</div>
+                    <div>{{ delivery.size }}</div>
+                    <div>Получатель</div>
+                    <div>{{ delivery.recipient }}</div>
+                    <div>Телефон</div>
+                    <div>{{ delivery.recipientphone }}</div>
+                    <div class="font-bold">Код получения</div>
+                    <div class="font-bold text-lg">
+                      {{ delivery.receiptcode }}
+                    </div>
+                  </div>
+                  <div class="text-center my-4 text-sm">
+                    <div>ID выкупа</div>
+                    <a class="link" :href="`/buyouts?uuid=${delivery.uuid}`"
+                      >#{{ delivery.uuid }}</a
+                    >
+                  </div>
                 </div>
-                <div>
-                  {{ $dayjs(delivery.updatedAt).format("D.MM.YYYY") }}
-                </div>
-                <div>Артикул</div>
-                <div>{{ delivery.article }}</div>
-                <div>Размер</div>
-                <div>{{ delivery.size }}</div>
-                <div>Получатель</div>
-                <div>{{ delivery.recipient }}</div>
-                <div>Телефон</div>
-                <div>{{ delivery.recipientphone }}</div>
-                <div class="font-bold">Код получения</div>
-                <div class="font-bold text-lg">
-                  {{ delivery.receiptcode }}
-                </div>
-              </div>
-              <div class="text-center my-4 text-sm">
-                <div>ID выкупа</div>
-                <a class="link" :href="`/buyouts?uuid=${delivery.uuid}`"
-                  >#{{ delivery.uuid }}</a
-                >
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </template>
     </div>
     <div v-else class="hero">
       <div
