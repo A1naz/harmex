@@ -198,6 +198,12 @@ const filters = [
     queryStatus: undefined,
   },
   {
+    title: "Активные",
+    optionValue: "active",
+    params: "?status=active",
+    queryStatus: "active",  
+  },
+  {
     title: "В архиве",
     optionValue: "archived",
     params: "?status=archived",

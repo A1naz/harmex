@@ -31,7 +31,7 @@ export default eventHandler(async (event) => {
 
   }
   else if (status === 'active') {
-    buyouts = await Buyout.find({ user, status: 'active' })
+    buyouts = await Buyout.find({ user, status: { $or: ['active', 'work']} })
       .sort({
         createdAt: -1,
       })
@@ -125,6 +125,21 @@ export default eventHandler(async (event) => {
       break
   }
 
+  const statusOrder: any = {
+    'work': 1,
+    'active': 2,
+    'archived': 3,
+  }
+
+  buyouts.sort((a, b) => {
+    const orderA = statusOrder[a.status] || 4
+    const orderB = statusOrder[b.status] || 4
+
+    if (orderA !== orderB)
+      return orderA - orderB
+
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  })
 
   const buyoutUuids = buyouts.map((buyout) => 'Выкуп #' + buyout.uuid)
   const history = await paymenthistory.find({ basisoperation: { $in: buyoutUuids }, type: 'buyouts service' })
@@ -162,3 +177,4 @@ export default eventHandler(async (event) => {
 
   return format
 })
+

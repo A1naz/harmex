@@ -92,6 +92,17 @@ const selectCategory = (categories: any, index: number) => {
   store.createProducts[index].category = categories;
   categoryDropdown.value.click();
 };
+
+const rulesText = computed(() => {
+  const parts = [];
+  if (props.product.rules && props.product.rules.length > 0) {
+    parts.push(props.product.rules.map((rule: Rule) => rule.id).join(", "));
+  }
+  if (props.product.shelves) {
+    parts.push("Выкуп с полок");
+  }
+  return parts.join(", ");
+});
 </script>
 
 <template>
@@ -187,11 +198,7 @@ const selectCategory = (categories: any, index: number) => {
     <td class="border-r border-base">
       <div class="w-full flex items-center justify-center gap-2">
         <div class="my-auto">
-          {{
-            product.rules.length
-              ? product.rules.map((rule: Rule) => rule.id).join(", ")
-              : ""
-          }}
+          {{ rulesText }}
         </div>
         <button
           class="border-base-100 text-[#96959a] dark:text-base-content dark:text-opacity-40"

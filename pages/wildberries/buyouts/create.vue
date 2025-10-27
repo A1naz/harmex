@@ -223,12 +223,12 @@ async function openChecksModal() {
       errorMsg = "Не у всех товаров указаны даты выкупов";
     }
     if (
-        !item.searchQuery[0].value &&
-        (!item.category || !item.category.length)
-      ) {
-        valid = false;
-        errorMsg = "Не у всех товаров указан поисковый запрос или категория";
-      }
+      !item.searchQuery[0].value &&
+      (!item.category || !item.category.length)
+    ) {
+      valid = false;
+      errorMsg = "Не у всех товаров указан поисковый запрос или категория";
+    }
     if (!item.selectedSize) item.selectedSize = "none";
 
     const minDate = new Date(item.dateRange[0]);
@@ -357,7 +357,7 @@ async function pointModalOpen(index: number) {
 
 onMounted(async () => {
   getPickpoints();
-  
+
   if (route.query.uuid) {
     loading.value = true;
     await store.cloneBuyout(route.query.uuid.toString());
@@ -448,8 +448,15 @@ const summ = computed(() => {
     products.value.map((item) => Number(item.price)),
     prices.value
   );
+  const shelvesCount = products.value.filter(
+    (item) => item.shelves === true
+  ).length;
 
+  console.log(shelvesCount)
   if (summInfo && summInfo.summ) {
+    if (shelvesCount) {
+      summInfo.serviceSumm += 200 * shelvesCount;
+    }
     return summInfo;
   } else {
     return {
@@ -644,9 +651,7 @@ getCategories();
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-                <th
-                  class="font-normal text-base-content"
-                >
+                <th class="font-normal text-base-content">
                   <div class="flex justify-center items-center gap-1">
                     <span>Категории</span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
@@ -765,7 +770,6 @@ getCategories();
                   "Выкупить товар(-ы) прямо сейчас "
                 }}</span>
                 <div class="flex gap-2">
-            
                   <input
                     :disabled="products[selectedRuleProductIndex].key"
                     v-model="products[selectedRuleProductIndex].purchaseSoon"
@@ -775,14 +779,14 @@ getCategories();
                   <span class="text-sm text-primary">{{ rule.price }}р.</span>
                 </div>
               </div>
-               <div
+              <div
                 v-if="rule.id === 1 && user?.ffEnabled"
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
                 <span class="label-text">{{ "Выкуп под ключ " }}</span>
                 <div class="flex gap-2">
                   <input
-                  :disabled="products[selectedRuleProductIndex].purchaseSoon"
+                    :disabled="products[selectedRuleProductIndex].purchaseSoon"
                     v-model="products[selectedRuleProductIndex].key"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
@@ -801,7 +805,7 @@ getCategories();
                   <span class="text-sm text-primary">0р.</span>
                 </div>
               </div>
-               <div
+              <div
                 v-if="rule.id === 1"
                 class="label cursor-pointer flex gap-4 items-start justify-between"
               >
@@ -811,7 +815,9 @@ getCategories();
                     v-model="products[selectedRuleProductIndex].shelves"
                     type="checkbox"
                     class="checkbox checkbox-primary border-base-content"
-                    @change="handleShelvesChange($event, selectedRuleProductIndex)"
+                    @change="
+                      handleShelvesChange($event, selectedRuleProductIndex)
+                    "
                   />
                   <span class="text-sm text-primary -mr-[17px]">200р.</span>
                 </div>
@@ -845,35 +851,34 @@ getCategories();
                   >{{ rule.id }}. {{ rule.description }}</span
                 >
                 <div class="flex justify-end gap-2">
-
-             
-                <input
-                  :disabled="
-                    !!store.createProducts[selectedRuleProductIndex].rules.find(
-                      (item) =>
-                        item.category === rule.category && item.id !== rule.id
-                    ) ||
-                    !!store.createProducts[selectedRuleProductIndex].rules.find(
-                      (item) => item.id === rule?.relies
-                    ) ||
-                    rule.disabled ||
-                    (products[selectedRuleProductIndex].shelves &&
-                      rule.id >= 5)
-                  "
-                  type="checkbox"
-                  class="checkbox checkbox-primary border-base-content"
-                  :checked="
-                    !!store.createProducts[selectedRuleProductIndex].rules.find(
-                      (item) => item.id === rule.id
-                    )
-                  "
-                  @change="
-                    onRuleChange($event, selectedRuleProductIndex, rule.id)
-                  "
-                />
-                <span  class="text-sm text-primary">{{ rule.price }}р.</span>
-              </div>
-
+                  <input
+                    :disabled="
+                      !!store.createProducts[
+                        selectedRuleProductIndex
+                      ].rules.find(
+                        (item) =>
+                          item.category === rule.category && item.id !== rule.id
+                      ) ||
+                      !!store.createProducts[
+                        selectedRuleProductIndex
+                      ].rules.find((item) => item.id === rule?.relies) ||
+                      rule.disabled ||
+                      (products[selectedRuleProductIndex].shelves &&
+                        rule.id >= 5)
+                    "
+                    type="checkbox"
+                    class="checkbox checkbox-primary border-base-content"
+                    :checked="
+                      !!store.createProducts[
+                        selectedRuleProductIndex
+                      ].rules.find((item) => item.id === rule.id)
+                    "
+                    @change="
+                      onRuleChange($event, selectedRuleProductIndex, rule.id)
+                    "
+                  />
+                  <span class="text-sm text-primary">{{ rule.price }}р.</span>
+                </div>
               </div>
             </div>
           </label>

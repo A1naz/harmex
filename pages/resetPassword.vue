@@ -221,7 +221,7 @@ async function generatePassword() {
                 :disabled="isNumberConfirmed || !isCodeSent"
                 id="verificationCode"
                 v-model="formData.verificationCode"
-                type="number"
+                type="text"
                 class="w-full"
                 name="verificationCode"
                 required="true"

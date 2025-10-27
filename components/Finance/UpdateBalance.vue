@@ -110,7 +110,7 @@ const finalSumm = computed(() => {
               placeholder="example@example.com"
               v-model="email"
             />
-            <span v-if="isGmail" class="text-red-500 text-sm">Данная почта(gmail.com) не используется для отправки чеков</span>
+            <span v-if="isGmail" class="text-red-500 text-sm">Почта gmail.com не используется для отправки чеков. Введите .ru почту</span>
             <span>{{ "Сумма пополнения" }}</span>
             <input
               type="number"
