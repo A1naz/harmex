@@ -15,6 +15,7 @@ const route = useRoute();
 const currency = useCurrency();
 const font = ref();
 const deliveries = ref([]) as any;
+const loading = ref(false);
 
 const modalInfo = reactive({
   src: "",
@@ -22,6 +23,8 @@ const modalInfo = reactive({
 });
 
 async function exportToFile() {
+  loading.value = true;
+  await nextTick();
   progress.value = 0;
 
   const pages = Array.from(
@@ -53,6 +56,7 @@ async function exportToFile() {
     progress.value = Math.round(((index + 1) / totalPages) * 100);
   });
   pdf.save("Готовы к выдаче Wildberries.pdf");
+  loading.value = false;
 }
 
 // Функция для разделения массива на чанки
@@ -109,7 +113,8 @@ onMounted(async () => {
               {{ point }} (часть {{ chunkIndex + 1 }})
             </h1>
             <div
-              class="deliveryCards grid grid-cols-3 px-2"
+              class="deliveryCards px-2"
+              :class="loading ? 'grid grid-cols-3' : 'grid grid-cols-1 lg:grid-cols-3'"
             >
               <div
                 v-for="(delivery, deliveryIndex) in deliveryChunk"
