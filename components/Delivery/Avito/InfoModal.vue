@@ -225,7 +225,7 @@ onKeyStroke("Escape", (e) => {
                     >Адрес:
                   </span>
                   <label
-                    class="rounded-md py-0 px-2 text-sm cursor-pointer link-hover"
+                    class="rounded-md py-0 px-2 text-sm cursor-pointer link-hover  whitespace-normal"
                   >
                     <a
                       target="_blank"

@@ -57,7 +57,7 @@ export default eventHandler(async (event) => {
   if (!buyout) {
     return createError({
       statusCode: 400,
-      message: 'Выкуп не найден',
+      message: 'Не удалось найти выкуп',
     })
   }
 
@@ -82,6 +82,21 @@ export default eventHandler(async (event) => {
     }
   })
 
+  const allowedExtensions = ['.png', '.gif', '.jfif', '.pjpeg', '.jpeg', '.pjp', '.jpg']
+  for (const photo of photos) {
+    if (!photo.url) {
+      continue
+    }
+    const extension = photo.url.substring(photo.url.lastIndexOf('.')).toLowerCase()
+    if (!allowedExtensions.includes(extension)) {
+      throw createError({
+        statusCode: 400,
+        message: 'Неверный формат файла',
+      })
+    }
+  }
+
+ 
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
@@ -103,6 +118,7 @@ export default eventHandler(async (event) => {
     createdAt: Date.now(),
     uuid: uuid(),
   })
+
   const res = await review.save()
   delivery.reviewed = true
   await delivery.save()
