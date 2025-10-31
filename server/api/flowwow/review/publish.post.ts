@@ -80,19 +80,6 @@ export default eventHandler(async (event) => {
   //   )
   // )
 
-  const allowedExtensions = ['.png', '.gif', '.jfif', '.pjpeg', '.jpeg', '.pjp', '.jpg']
-  for (const photo of photos) {
-    if (!photo.url) {
-      continue
-    }
-    const extension = photo.url.substring(photo.url.lastIndexOf('.')).toLowerCase()
-    if (!allowedExtensions.includes(extension)) {
-      throw createError({
-        statusCode: 400,
-        message: 'Неверный формат файла',
-      })
-    }
-  }
 
   const allowedExtensions = ['.png', '.gif', '.jfif', '.pjpeg', '.jpeg', '.pjp', '.jpg']
   for (const photo of photos) {
@@ -111,6 +98,7 @@ export default eventHandler(async (event) => {
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
+    uuidbuyout: buyout.uuid,
     images: photos.map((photo: any) => photo.url),
     serviceRating,
     deliveryRating,

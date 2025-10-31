@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid'
 const ReviewSchema = new Schema({
   article: { type: Number, required: true },
   name: { type: String, required: true },
+  uuidbuyout: { type: String },
   rating: { type: Number, required: true },
   text: { type: String, required: false },
   date: { type: Date, required: true },

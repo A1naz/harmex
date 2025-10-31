@@ -88,6 +88,7 @@ export default eventHandler(async (event) => {
 
   const review = new Review({
     article: buyout.article,
+    uuidbuyout: buyout.uuid,
     isPhotoEnabled,
     name: buyout.product.name,
     images: photos.map((photo: any) => photo.url),

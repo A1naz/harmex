@@ -101,6 +101,7 @@ export default eventHandler(async (event) => {
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
+    uuidbuyout: buyout.uuid,
     isPhotoEnabled,
     rating,
     text,

@@ -16,6 +16,7 @@ const ReviewSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   delivery: { type: Schema.Types.ObjectId, ref: 'Delivery', required: true },
   idDelivery: { type: String },
+  uuidbuyout: { type: String },
   images: { type: Array, required: false },
   status: {
     type: String,
