@@ -9,7 +9,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { buyoutuuid, deliveryid, rating, text, positive, negative, date } =
+  const { buyoutuuid, deliveryid, rating, text, positive, negative, date, photos } =
     await readBody(event);
 
   if (text) {
@@ -71,6 +71,7 @@ export default eventHandler(async (event) => {
     article: buyout.article,
     name: buyout.product.name,
     uuidbuyout: buyout.uuid,
+    images: photos.map((photo: any) => photo.url),
     date,
     publishDate: date,
     user,

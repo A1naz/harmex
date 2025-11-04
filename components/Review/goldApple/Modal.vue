@@ -2,6 +2,7 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { Upload } from "tus-js-client";
+import { v4 as uuid } from "uuid";
 
 const props = defineProps({
   review: {} as any,
@@ -33,6 +34,24 @@ const form = reactive({
   text: "",
   rating: 5,
   date: now.value,
+  photos: [
+    {
+      url: "",
+      public: "",
+    },
+    {
+      url: "",
+      public: "",
+    },
+    {
+      url: "",
+      public: "",
+    },
+    {
+      url: "",
+      public: "",
+    },
+  ],
 });
 
 const textValidation = computed(() => {
@@ -72,6 +91,25 @@ async function clearForm() {
   filetype.value = "";
   newFileId.value = "";
   filetype.value = "";
+
+  form.photos = [
+    {
+      url: "",
+      public: "",
+    },
+    {
+      url: "",
+      public: "",
+    },
+    {
+      url: "",
+      public: "",
+    },
+    {
+      url: "",
+      public: "",
+    },
+  ];
 }
 
 async function publishReview() {
@@ -112,6 +150,16 @@ async function publishReview() {
   emit("publish");
 }
 
+async function removePhoto(index: number) {
+  const fileInput = inputs[`file${(index + 1) as 1 | 2 | 3 | 4 | 5}`];
+  fileInput.value = null;
+
+  form.photos[index] = {
+    url: "",
+    public: "",
+  };
+}
+
 watch(
   () => props.uuid,
   (uuid) => {
@@ -129,6 +177,65 @@ function ratingAlert() {
     group: "error",
     duration: 3000,
   });
+}
+
+async function uploadToS3(event: Event, index: number) {
+  loadingIndex.value = index;
+  const fileList = (event.target! as HTMLInputElement).files;
+  const file = (event.target! as HTMLInputElement).files[0];
+
+  const files = Array.from(fileList!);
+  if (!files) return;
+
+  if (
+    files[0] &&
+    files[0].name &&
+    files[0].name.toLowerCase().endsWith(".webp")
+  ) {
+    notify({
+      title: "Что-то пошло не так",
+      text: "Нельзя загружать вебпикчи",
+      group: "error",
+      duration: 3000,
+    });
+
+    loadingIndex.value = null;
+    return;
+  }
+
+  const fileName = "reviewImages/" + uuid();
+
+  const result = await upload(file, {
+    key: fileName,
+  });
+
+  if (!result) {
+    notify({
+      title: "Что-то пошло не так",
+      text: "Не удалось загрузить фото",
+      group: "error",
+      duration: 3000,
+    });
+    return;
+  }
+  console.log(result);
+  console.log(result);
+  //@ts-ignore
+  await useFetch("/api/images/openForPublic", {
+    method: "GET",
+    params: {
+      path: result.split("query/")[1],
+    },
+  });
+
+  form.photos[index] = {
+    url: `${result.replace("/api/s3/query/reviewImages/", "")}`,
+    public: `https://ozonmpportal.hb.vkcs.cloud/${result.split("query/")[1]}`,
+  };
+
+  setTimeout(() => {
+    loadingIndex.value = null;
+  }, 1500);
 }
 
 async function calculateHash(file: any) {
@@ -384,6 +491,92 @@ const handleMouseUp = (event: any) => {
               <DatePicker v-model="form.date" />
             </div>
           </div>
+        </div>
+
+        <div>
+          <div class="font-medium">Фото</div>
+          <p class="mb-2 text-sm font-light text-gray-500">
+            Разрешены фото в формате PNG, JPG.
+          </p>
+          <ClientOnly>
+            <div
+              class="flex gap-2 items-center overflow-x-scroll flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]"
+            >
+              <div v-for="(photo, index) of form.photos" :key="index">
+                <div
+                  class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none"
+                >
+                  <div
+                    v-if="photo.url"
+                    class="absolute right-0 top-0 z-50"
+                    @click="removePhoto(index)"
+                  >
+                    <label for="photo" class="btn btn-sm btn-circle btn-ghost"
+                      >✕</label
+                    >
+                  </div>
+
+                  <label
+                    v-show="!photo.public"
+                    class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer"
+                  >
+                    <div
+                      v-show="loadingIndex === index"
+                      class="absolute inset-0 flex items-center justify-center"
+                    >
+                      <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                    </div>
+                    <input
+                      :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)"
+                      type="file"
+                      accept="image/png, image/gif, image/jpeg"
+                      class="hidden"
+                      @change="(e: Event) => uploadToS3(e, index)"
+                    />
+                    <Icon
+                      v-show="loadingIndex !== index"
+                      name="material-symbols:add-photo-alternate-outline"
+                      class="text-base-content bg-primary"
+                      size="30"
+                    />
+                  </label>
+
+                  <div v-show="photo.public" class="absolute inset-0">
+                    <UseImage :src="photo.public">
+                      <template #default>
+                        <nuxt-img
+                          :src="photo.public"
+                          fit="contain"
+                          class="w-full h-full object-contain rounded-lg"
+                          loading="lazy"
+                        />
+                      </template>
+                      <template #loading>
+                        <div
+                          class="absolute inset-0 flex items-center justify-center"
+                        >
+                          <Icon
+                            name="mdi:loading"
+                            class="h-8 w-8 animate-spin"
+                          />
+                        </div>
+                      </template>
+                      <template #error>
+                        <div
+                          class="absolute inset-0 flex items-center justify-center"
+                        >
+                          <Icon
+                            name="mdi:loading"
+                            class="h-8 w-8 animate-spin"
+                          />
+                        </div>
+                      </template>
+                    </UseImage>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ClientOnly>
         </div>
       </div>
       <div class="modal-action justify-between">
