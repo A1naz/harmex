@@ -16,7 +16,7 @@ const loadingExport = ref(false);
 const dateRange = ref([]);
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 const status = computed(() => route.query?.status || "all");
-const search = reactive({
+const search = ref({
   text: "",
   loading: false,
   error: false,
@@ -67,6 +67,7 @@ async function getDeliveries() {
     query: {
       status: status.value ?? "all",
       limit: 50,
+      string: search.value.text,
     },
   });
   deliveries.value = data.value;
@@ -150,29 +151,18 @@ async function exportXLS() {
 }
 
 async function findDeliveries(value: string, type: string) {
-  if (!value) {
     autoTarget.value = true;
     await getDeliveries();
-    search.loading = false;
+    search.value.loading = false;
     return;
-  }
-  const { data } = await useFetch("/api/ozon/delivery/search", {
-    query: {
-      string: value,
-      type,
-    },
-  });
-  if (data.value) deliveries.value = data.value;
-
-  search.loading = false;
 }
 
 const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000);
 
 async function onSearchInput() {
   autoTarget.value = false;
-  search.loading = true;
-  findDeliveriesDebounced(search.text, search.type);
+  search.value.loading = true;
+  findDeliveriesDebounced(search.value.text, search.value.type);
 }
 
 // const isInfoModal = ref<boolean>(false)
@@ -190,6 +180,7 @@ watch(targetIsVisible, async (isVisible) => {
         status: route.query?.status || "all",
         limit: 50,
         skip: skip.value ? skip.value : 0,
+        string: search.value.text,
       },
     });
     loading.value = false;
@@ -212,6 +203,7 @@ watch(
       query: {
         status: status.value ?? "all",
         limit: 50,
+        string: search.value.text,
       },
     });
     deliveries.value = data.value;
@@ -275,7 +267,7 @@ const statusText = computed(() => {
 });
 
 function updateSearchType(filter: any) {
-  search.type = filter.value;
+  search.value.type = filter.value;
 }
 
 // function changeFilter(e: any) {

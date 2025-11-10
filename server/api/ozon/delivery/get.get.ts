@@ -7,24 +7,36 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { status, limit, skip } = getQuery(event);
+  const { status, limit, skip,string } = getQuery(event);
 
   // const all = await Delivery.find({ user })
   let deliveries;
+  let searchOption = {};
+  if (string) {
+    const uuid = string?.toString().replaceAll("#", "");
+    searchOption = {
+      $or: [
+        { uuidbuyout: uuid },
+        { point: { $regex: string, $options: "i" } },
+        { article: Number(string) },
+        { article: string },
+      ],
+    };
+  }
   if (status === "all") {
-    deliveries = await Delivery.find({ user })
+    deliveries = await Delivery.find({ user, ...searchOption })
       .sort({ _id: -1 })
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "active") {
-    deliveries = await Delivery.find({ user, status: "work" })
+    deliveries = await Delivery.find({ user, status: "work", ...searchOption })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "completed") {
-    deliveries = await Delivery.find({ user, status: "completed" })
+    deliveries = await Delivery.find({ user, status: "completed", ...searchOption })
       .sort({
         _id: -1,
       })
@@ -32,6 +44,7 @@ export default eventHandler(async (event) => {
       .limit(limit as number);
   } else if (status === "canceled") {
     deliveries = await Delivery.find({
+      ...searchOption,
       user,
       $expr: {
         $eq: [{ $arrayElemAt: ["$statusdelivery.status", -1] }, "Отменён"],
@@ -44,6 +57,7 @@ export default eventHandler(async (event) => {
       .limit(limit as number);
   } else if (status === "onTheWay") {
     deliveries = await Delivery.find({
+      ...searchOption,
       user,
       $expr: {
         $or: [
@@ -64,6 +78,7 @@ export default eventHandler(async (event) => {
       .limit(limit as number);
   } else if (status === "pickupReady") {
     deliveries = await Delivery.find({
+      ...searchOption,
       user,
       status: { $ne: "completed" },
       statusdelivery: {
@@ -87,6 +102,7 @@ export default eventHandler(async (event) => {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     const allDeliveries = await Delivery.find({
+      ...searchOption,
       user,
       statusdelivery: {
         $elemMatch: {

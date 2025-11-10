@@ -6,12 +6,25 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { status, limit, skip } = getQuery(event);
+  const { status, limit, skip, string } = getQuery(event);
 
   // const all = await Delivery.find({ user })
   let deliveries;
+  let searchOption = {};
+  console.log(string)
+  if (string) {
+    const uuid = string?.toString().replaceAll("#", "");
+    searchOption = {
+      $or: [
+        { uuidbuyout: uuid },
+        { point: { $regex: string, $options: "i" } },
+        { article: Number(string) },
+        { article: string },
+      ],
+    };
+  }
   if (status === "all") {
-    deliveries = await Delivery.find({ user })
+    deliveries = await Delivery.find({ user, ...searchOption })
       .sort({ _id: -1 })
       .skip(skip as number)
       .limit(limit as number);
@@ -19,6 +32,7 @@ export default eventHandler(async (event) => {
     deliveries = await Delivery.find({
       user,
       status: { $in: ["active", "work"] },
+      ...searchOption,
     })
       .sort({
         _id: -1,
@@ -26,21 +40,34 @@ export default eventHandler(async (event) => {
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "completed") {
-    deliveries = await Delivery.find({ user, status: "completed" })
+    console.log(searchOption)
+    deliveries = await Delivery.find({
+      user,
+      status: "completed",
+      ...searchOption,
+    })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "canceled") {
-    deliveries = await Delivery.find({ user, status: "canceled" })
+    deliveries = await Delivery.find({
+      user,
+      status: "canceled",
+      ...searchOption,
+    })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "onTheWay") {
-    const response = await Delivery.find({ user, status: "active" }).sort({
+    const response = await Delivery.find({
+      user,
+      status: "active",
+      ...searchOption,
+    }).sort({
       _id: -1,
     });
     const substrings = ["Ожидается", "пути", "задерживается"];
@@ -56,6 +83,7 @@ export default eventHandler(async (event) => {
   } else if (status === "pickupReady") {
     deliveries = await Delivery.find({
       user,
+      ...searchOption,
       statusdelivery: {
         $elemMatch: {
           $or: [
@@ -83,6 +111,7 @@ export default eventHandler(async (event) => {
 
     const allDeliveries = await Delivery.find({
       user,
+      ...searchOption,
       statusdelivery: {
         $elemMatch: {
           $or: [

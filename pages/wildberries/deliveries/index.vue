@@ -70,6 +70,7 @@ async function getDeliveries() {
     query: {
       status: status.value ?? "all",
       limit: 50,
+      string: search.value.text,
     },
   });
   deliveries.value = data.value;
@@ -163,21 +164,10 @@ async function exportReadyUntilPenaltyXLS() {
 }
 
 async function findDeliveries(value: string, type: string) {
-  if (!value) {
     autoTarget.value = true;
     await getDeliveries();
     search.value.loading = false;
     return;
-  }
-  const { data } = await useFetch("/api/wildberries/delivery/search", {
-    query: {
-      string: value,
-      type,
-    },
-  });
-  if (data.value) deliveries.value = data.value;
-
-  search.value.loading = false;
 }
 
 const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000);
@@ -202,6 +192,7 @@ watch(targetIsVisible, async (isVisible) => {
         status: route.query?.status || "all",
         limit: 50,
         skip: skip.value,
+        string: search.value.text,
       },
     });
     loading.value = false;
@@ -224,6 +215,7 @@ watch(
       query: {
         status: status.value ?? "all",
         limit: 50,
+        string: search.value.text,
       },
     });
     deliveries.value = data.value;
