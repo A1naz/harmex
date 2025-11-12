@@ -194,7 +194,7 @@ async function removeReview() {
     notify({
       title: "Отзыв удален",
       text: "Ваш отзыв выставлен на удаление",
-     group: "success",
+      group: "success",
     });
     const startIn = reviews.value.find(
       (rev: any) => rev.uuid === uuidForRemove.value
@@ -205,7 +205,7 @@ async function removeReview() {
     notify({
       title: "Что-то пошло не так",
       text: error.value.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
   }
@@ -225,16 +225,13 @@ function closeSupplementModal() {
 }
 
 async function submitSupplement(payload: { reviewId: string; text: string }) {
-  const { data, error } = await useFetch(
-    "/api/wildberries/review/addition",
-    {
-      method: "POST",
-      body: {
-        id: payload.reviewId,
-        text: payload.text,
-      },
-    }
-  );
+  const { data, error } = await useFetch("/api/wildberries/review/addition", {
+    method: "POST",
+    body: {
+      id: payload.reviewId,
+      text: payload.text,
+    },
+  });
 
   if (error.value) {
     notify({
@@ -313,14 +310,14 @@ async function resumeStatus(item: any) {
     notify({
       title: "Что-то пошло не так",
       text: error.value?.data?.message,
-     group: "error",
+      group: "error",
       duration: 3000,
     });
     return;
   }
   if (data.value) {
     notify({
-     group: "success",
+      group: "success",
       title: "Успешно",
       text: "Отзыв успешно возвращен в работу",
       duration: 3000,
@@ -405,6 +402,33 @@ async function selectFilterDate(e: any) {
   end.value = false;
   fetchData();
 }
+async function disputeReview(item: any) {
+  const { data, error } = await useFetch(`/api/wildberries/review/dispute`, {
+    method: "POST",
+    body: {
+      uuid: item.uuid,
+    },
+  });
+  if (error.value) {
+    notify({
+      title: "Что-то пошло не так",
+      text: error.value?.data?.message,
+      group: "error",
+    });
+    return;
+  }
+  if (data.value) {
+    notify({
+      title: "Успешно",
+      text: "Отзыв успешно оспорен",
+      group: "success",
+    });
+    reviews.value = [];
+    skip.value = 0;
+    end.value = false;
+    fetchData();
+  }
+}
 </script>
 
 <template>
@@ -478,20 +502,19 @@ async function selectFilterDate(e: any) {
                 <Icon name="ci:info" size="24" />
               </button>
             </div>
-              <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
-                <CustomSelect
-                     class="h-[2rem] min-w-[95px]"
-                  :tabs="[
-                    { title: 'Все время', value: 'all' },
-                    { title: 'Сегодня', value: 'today' },
-                    { title: 'Вчера', value: '2days' },
-                    { title: '3 дня', value: '3days' },
-                    { title: 'Неделя', value: '7days' },
-                  ]"
-                  @change-value="selectFilterDate"
-                />
-              </div>
-          
+            <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
+              <CustomSelect
+                class="h-[2rem] min-w-[95px]"
+                :tabs="[
+                  { title: 'Все время', value: 'all' },
+                  { title: 'Сегодня', value: 'today' },
+                  { title: 'Вчера', value: '2days' },
+                  { title: '3 дня', value: '3days' },
+                  { title: 'Неделя', value: '7days' },
+                ]"
+                @change-value="selectFilterDate"
+              />
+            </div>
 
             <div
               class="absolute right-0 top-0 w-[calc(100%-60px)] lg:w-fit lg:static lg:mr-[60px]"
@@ -566,6 +589,7 @@ async function selectFilterDate(e: any) {
               @log-modal="(item: any) => [(selectedReview = item), (logModal = true)]"
               @info-modal="(item: any) => [(selectedReview = item), (infoModal = true)]"
               @open-supplement-modal="openSupplementModal"
+              @dispute-review="disputeReview"
             />
           </div>
 

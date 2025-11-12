@@ -1,5 +1,5 @@
 import { Review } from '~/server/lib/models/wildberries/Review';
-
+import { TaskLog } from '@/server/lib/models/wildberries/TaskLog'
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) {

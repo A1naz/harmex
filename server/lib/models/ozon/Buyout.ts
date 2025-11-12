@@ -72,6 +72,8 @@ const BuyoutSchema = new Schema({
   data18: { type: {}, default: '' },
   categories: { type: Array, required: false },
   isCategoriesEnabled: { type: Boolean, required: false, default: false },
+  unArchivedAt: { type: Date, required: false },
+  unArchived: { type: Boolean, required: false, default: false },
 })
 
 export const Buyout = OzonConnection.model('Buyout', BuyoutSchema)

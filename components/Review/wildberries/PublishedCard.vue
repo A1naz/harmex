@@ -21,6 +21,8 @@ const emit = defineEmits([
   "logModal",
   "infoModal",
   "openSupplementModal",
+  "disputeReview",
+  
 ]);
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -35,6 +37,7 @@ const showSupplementButton = computed(() => {
   }
   return false;
 });
+
 
 onMounted(() => {});
 const getStatus = computed(() => {
@@ -65,6 +68,10 @@ const getStatus = computed(() => {
       return "Дополнение";
       case "added":
       return "Дополнен";
+    case "disputing":
+      return "В процессе оспорения";
+      case "disputed":
+      return "Оспорен";
   }
 });
 
@@ -77,6 +84,9 @@ function removeReview() {
 }
 async function resumeStatus(item: any) {
   emit("resumeStatus", item);
+}
+async function disputeReview(item: any) {
+  emit("disputeReview", item);
 }
 </script>
 
@@ -163,7 +173,9 @@ async function resumeStatus(item: any) {
                     'bg-success bg-opacity-50 text-green-500':
                       info.status === 'published' ||
                       info.status === 'added' ||
-                      info.status === 'completed',
+                      info.status === 'completed' ||
+                      info.status === 'disputing' ||
+                      info.status === 'disputed',
                     'bg-[#F8C68A] text-[#D67500]':
                       info.status === 'waiting' || info.status === 'created',
                     'bg-[#F8C68A]  text-red-500':
@@ -274,6 +286,13 @@ async function resumeStatus(item: any) {
         @click="emit('openSupplementModal', info)"
       >
         Дополнить отзыв
+      </button>
+      <button
+        v-if="info.status === 'archived' && !info.disputed"
+        class="btn btn-sm h-[2.5rem] text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
+        @click="emit('disputeReview', info)"
+      >
+        Оспорить
       </button>
     </div>
   </div>

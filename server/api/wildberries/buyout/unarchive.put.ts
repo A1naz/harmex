@@ -19,6 +19,12 @@ export default eventHandler(async (event) => {
       message: "Выкуп не найден",
     });
   }
+  if (found.unArchived) {
+    throw createError({
+      statusCode: 400,
+      message: "Выкуп уже был разархивирован",
+    });
+  }
 
   const balanceIsExist = await checkBalance(user, [
     { ...found, price: parseFloat(found.product.price) },
@@ -45,6 +51,8 @@ export default eventHandler(async (event) => {
   }
 
   found.status = "active";
+  found.unArchivedAt = new Date();
+  found.unArchived = true;
   await found.save();
 
   await userLog(event, {

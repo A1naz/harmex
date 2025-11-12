@@ -45,6 +45,10 @@ const getStatus = computed(() => {
       return "Опубликован";
     case "addition":
       return "Дополнение";
+    case "disputing":
+      return "В процессе оспорения";
+    case "disputed":
+      return "Оспорен";
       default:
       return props.info.status;
   }
@@ -131,7 +135,9 @@ const { $dayjs } = useNuxtApp();
                       :class="{
                         'bg-success bg-opacity-50 text-green-500':
                           info.status === 'published' ||
-                          info.status === 'completed',
+                          info.status === 'completed' ||
+                          info.status === 'disputing' ||
+                          info.status === 'disputed',
                         'bg-[#F8C68A] text-[#D67500]':
                           info.status === 'waiting' ||
                           info.status === 'created',
@@ -145,7 +151,8 @@ const { $dayjs } = useNuxtApp();
                           info.status === 'deleted' ||
                           info.status === 'deleting' ||
                           info.status === 'reviewsUpdate' ||
-                          info.status === 'addition',
+                          info.status === 'addition' 
+                     
                       }"
                       class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm"
                       >{{ getStatus }}

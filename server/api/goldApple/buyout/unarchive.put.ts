@@ -21,7 +21,16 @@ export default eventHandler(async (event) => {
     })
   }
 
+  if (found.unArchived) {
+    throw createError({
+      statusCode: 400,
+      message: 'Выкуп уже был разархивирован',
+    })
+  }
+
   found.status = 'active'
+  found.unArchivedAt = new Date();
+  found.unArchived = true;
   await found.save()
 
   await userLog(event, {

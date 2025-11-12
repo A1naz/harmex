@@ -53,6 +53,8 @@ const BuyoutSchema = new Schema({
   competitorArticle: { type: String, required: false },
   competitorArticle2: { type: String, required: false },
   shelves: { type: Boolean, required: false, default: false },
+  unArchivedAt: { type: Date, required: false },
+  unArchived: { type: Boolean, required: false, default: false },
 })
 
 

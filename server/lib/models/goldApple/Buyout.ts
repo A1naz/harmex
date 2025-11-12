@@ -77,6 +77,8 @@ const BuyoutSchema = new Schema({
   courierDeliveryDate: { type: String, required: false },
   placeId: { type: Number, required: false },
   postcode: { type: String, required: false },
+  unArchivedAt: { type: Date, required: false },
+  unArchived: { type: Boolean, required: false, default: false },
 })
 
 export const Buyout = goldAppleConnection.model('Buyout', BuyoutSchema)
