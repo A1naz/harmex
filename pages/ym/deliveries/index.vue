@@ -445,7 +445,7 @@ getExportReadyCount();
                 tabindex="0"
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-40"
               >
-                <li v-if="deliveries?.length && exportReadyCount <= 50">
+                <li v-if="deliveries?.length && exportReadyCount <= 70">
                   <NuxtLink
                     :to="`/ym/deliveries/export${
                       dateRange.length
