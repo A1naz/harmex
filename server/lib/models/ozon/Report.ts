@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { OzonConnection } from '~/server/connections/ozon'
+import { reportsConnection } from '~/server/connections/reports'
 
 const ReportSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -9,4 +9,4 @@ const ReportSchema = new Schema({
   buyout: { type: Schema.Types.ObjectId, required: true, ref: 'Buyout'},
 })
 
-export const Report = OzonConnection.model('Report', ReportSchema)
+export const Report = reportsConnection.model('Ozon', ReportSchema, 'Ozon')

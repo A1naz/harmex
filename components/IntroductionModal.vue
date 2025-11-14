@@ -91,7 +91,7 @@ const config = useRuntimeConfig();
           <li><strong>Выкуп:</strong> 100 ₽/ед.</li>
         </ul>
 
-        <hr class="my-4 border-gray-300" />
+     
 
         <ul class="list-disc ml-10 mb-4">
           <li><strong>Отзыв:</strong> 50 ₽/ед.</li>
@@ -107,7 +107,7 @@ const config = useRuntimeConfig();
           src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/3_2.png"
           class="mx-1 my-2"
         />
-
+        <hr class="my-4 border-gray-300" />
         <p class="text-xl mb-2 mt-4">
           <strong>Чек-лист для быстрого старта</strong>
         </p>
@@ -137,7 +137,7 @@ const config = useRuntimeConfig();
           ⚠️ <strong>Важно: правила пополнения баланса</strong>
         </p>
 
-        <p class="font-semibold mb-1">Пополнение с карты физического лица</p>
+        <p class="font-semibold mb-1">1. Пополнение с карты физического лица</p>
         <ul class="list-disc ml-10 mb-3">
           <li>Оплатить можно по QR-коду, указанному выше.</li>
           <li>После оплаты чек автоматически поступит на ваш Email.</li>
@@ -146,7 +146,7 @@ const config = useRuntimeConfig();
           <li>Если в течение 15 минут баланс не обновился, напишите в Службу заботы Harmex — мы поможем оперативно решить вопрос.</li>
         </ul>
 
-        <p class="font-semibold mb-1">Пополнение по безналичному расчёту от организации</p>
+        <p class="font-semibold mb-1">2. Пополнение по безналичному расчёту от организации</p>
         <ul class="list-disc ml-10 mb-4">
           <li>Доступна возможность пополнения баланса по счёту от юридического лица.</li>
           <li>После оплаты вы получаете закрывающие документы по ЭДО или на корпоративную почту.</li>
@@ -169,6 +169,7 @@ const config = useRuntimeConfig();
           src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/3_4.png"
           class="mx-1 my-2"
         />
+        <hr class="my-4 border-gray-300" />
         <p class="text-lg mb-2">Процесс исполнения услуги по самовыкупам проходит в 3 этапа:</p>
 
         <ol class="list-decimal ml-10 mb-4">
@@ -190,11 +191,6 @@ const config = useRuntimeConfig();
         <ul class="list-disc ml-10 mb-3">
           <li>просмотреть логин и данные пользователя;</li>
           <li>ознакомиться с документами и соглашениями;</li>
-        </ul>
-
-        <hr class="my-4 border-gray-300" />
-
-        <ul class="list-disc ml-10 mb-4">
           <li>добавить <strong>членов команды</strong> и настроить <strong>уровень доступа</strong> для каждого</li>
         </ul>
         <NuxtImg

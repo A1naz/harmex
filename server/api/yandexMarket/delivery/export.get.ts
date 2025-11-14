@@ -145,7 +145,7 @@ export default eventHandler(async (event) => {
         font: { bold: true },
       },
       {
-        header: 'Дата выкупа(UTC+00)',
+        header: 'Дата последнего обновления(UTC+00)',
         key: 'deliveryCreatedAt',
         width: 16,
         font: { bold: true },
