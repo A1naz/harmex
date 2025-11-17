@@ -120,7 +120,7 @@ const finalSumm = computed(() => {
               placeholder="Введите сумму пополнения"
               v-model="summ"
               />
-              <button class="btn btn-primary mt-1" @click="summ = user?.balance">Всё</button>
+            
             </div>
              <div class="my-1 mx-1 text-[14px]">
             Комиссия платформы 5% - {{ currency.format(ndsSumm) }}, к пополнению - {{ currency.format(finalSumm) }}

@@ -194,6 +194,7 @@ onMounted(() => {
             <div class="label">
               <span class="label-text text-base-content">Сумма вывода</span>
             </div>
+            <div class="flex gap-2">
             <input
               v-model.lazy="formattedAmount"
               type="text"
@@ -201,6 +202,10 @@ onMounted(() => {
               class="input input-primary w-full"
               @input="updateAmount"
             />
+
+              <button class="btn btn-primary" @click="[formattedAmount = currency.format(user?.balance),  amountRaw = user?.balance]">Всё</button>
+            </div>
+     
           </div>
 
           <!-- <div class="-mt-2">
@@ -365,6 +370,7 @@ onMounted(() => {
             <div class="label">
               <span class="label-text text-base-content">Сумма вывода</span>
             </div>
+            <div class="flex gap-2">
             <input
               v-model.lazy="formattedAmount"
               type="text"
@@ -372,7 +378,10 @@ onMounted(() => {
               class="input input-primary w-full"
               @input="updateAmount"
             />
+            <button class="btn btn-primary" @click="[formattedAmount = currency.format(user?.balance),  amountRaw = user?.balance]">Всё</button>
+            </div>
           </div>
+       
 
           <div class="-mt-2">
             <div class="label">
