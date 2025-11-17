@@ -42,6 +42,8 @@ const tabs = [
   { value: "nofunds", name: "Недостаточно средств" },
   { value: "reviewsUpdate", name: "На проверке" },
   { value: "archived", name: "В архиве" },
+  { value: "disputing", name: "Оспориваются" },
+  { value: "disputed", name: "Оспоренные" },
 ];
 
 const searchOptions = ref([

@@ -16,7 +16,7 @@ const introductionModal = ref(false);
 const route = useRoute();
 const socialNetworks = ref([]);
 const loading = ref(true);
-
+const introductionModalManager = ref(false);
 async function getServices() {
   loading.value = true;
   const { data, error }: any = await useFetch("/api/catalog/get", {
@@ -228,13 +228,24 @@ async function getUserFavourites() {
             </li>
           </ul>
         </div>
-        <div
+        <div class="flex gap-3">
+
+          <div
           class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
-          @click="introductionModal = true"
-        >
-          Введение
+          @click="introductionModalManager = true"
+          >
+          Менеджерам
           <Icon name="material-symbols:info-outline-rounded" size="24" class="ml-1 -mb-1" />
         </div>
+          <div
+          class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
+          @click="introductionModal = true"
+          >
+          Введение
+          <Icon name="material-symbols:info-outline-rounded" size="24" class="ml-1 -mb-1" />
+       
+        </div>
+      </div>
       </div>
       <CatalogContent
         v-if="!loading && modalStore.selectedCatalog !== 'Услуги'"
@@ -258,7 +269,10 @@ async function getUserFavourites() {
       @close="introductionModal = false"
       @checkbox-toggle="toggleCheckbox"
     />
-    
+    <IntroductionModalManager
+      :show="introductionModalManager"
+      @close="introductionModalManager = false"
+    />
   </div>
 </template>
 

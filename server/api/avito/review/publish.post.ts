@@ -72,7 +72,7 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const allowedExtensions = ['.png', '.gif', '.jfif', '.pjpeg', '.jpeg', '.pjp', '.jpg']
+  const allowedExtensions = ['.png', '.gif', '.pjpeg', '.jpeg', '.pjp', '.jpg']
   for (const photo of photos) {
     if (!photo.url) {
       continue

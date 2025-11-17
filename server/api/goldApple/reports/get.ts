@@ -22,6 +22,7 @@ export default eventHandler(async (event) => {
     const user = await getAdminEntity(event)
     if (!user) return sendRedirect(event, '/auth', 302)
 
+  const userID = user?._id?.toString() || '';
   const { limit, skip, status } = getQuery(event)
 
   let history
@@ -30,7 +31,7 @@ export default eventHandler(async (event) => {
     switch (status) {
       case 'today':
         history = await Report.find({
-          user,
+          user: userID,
           date: {
             $gte: new Date(Date.now() - 1000 * 60 * 60 * 24),
           },
@@ -38,7 +39,7 @@ export default eventHandler(async (event) => {
         break
       case '3days':
         history = await Report.find({
-          user,
+          user: userID,
           date: {
             $gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
           },
@@ -46,17 +47,17 @@ export default eventHandler(async (event) => {
         break
       case '7days':
         history = await Report.find({
-          user,
+          user: userID,
           date: {
             $gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
           },
         }).skip(skip as number).limit(limit as number)
         break
       default:
-        history = await Report.find({ user })
+        history = await Report.find({ user: userID })
     }
   }
-  else { history = await Report.find({ user }).sort({ _id: -1 }).skip(skip as number).limit(limit as number) }
+  else { history = await Report.find({ user: userID  }).sort({ _id: -1 }).skip(skip as number).limit(limit as number) }
   for await (const item of history) {
     const buyout = await Buyout.findOne({ _id: item.buyout })
     if (!buyout)

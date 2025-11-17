@@ -53,7 +53,7 @@ export default eventHandler(async (event) => {
       message: "Доставка не найдена",
     });
   }
-  const allowedExtensions = ['.png', '.gif', '.jfif', '.pjpeg', '.jpeg', '.pjp', '.jpg']
+  const allowedExtensions = ['.png', '.gif', '.pjpeg', '.jpeg','.jpg']
   for (const photo of photos) {
     if (!photo.url) {
       continue

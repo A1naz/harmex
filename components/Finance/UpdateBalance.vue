@@ -112,12 +112,16 @@ const finalSumm = computed(() => {
             />
             <span v-if="isGmail" class="text-red-500 text-sm">Почта gmail.com не используется для отправки чеков. Введите .ru почту</span>
             <span>{{ "Сумма пополнения" }}</span>
-            <input
+            <div class="flex gap-2">
+
+              <input
               type="number"
               class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
               placeholder="Введите сумму пополнения"
               v-model="summ"
-            />
+              />
+              <button class="btn btn-primary mt-1" @click="summ = user?.balance">Всё</button>
+            </div>
              <div class="my-1 mx-1 text-[14px]">
             Комиссия платформы 5% - {{ currency.format(ndsSumm) }}, к пополнению - {{ currency.format(finalSumm) }}
           </div>

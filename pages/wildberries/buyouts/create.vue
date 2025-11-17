@@ -456,6 +456,7 @@ const summ = computed(() => {
   if (summInfo && summInfo.summ) {
     if (shelvesCount) {
       summInfo.serviceSumm += 200 * shelvesCount;
+      summInfo.summ += 200 * shelvesCount;
     }
     return summInfo;
   } else {

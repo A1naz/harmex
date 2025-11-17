@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import { reportsConnection } from '~/server/connections/reports'
 
 const ReportSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: String, required: true },
   date: { type: Date, required: true },
   card: { type: String, required: true },
   screenshots: [{type: String, required: true}],
