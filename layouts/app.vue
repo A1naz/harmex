@@ -266,7 +266,7 @@ watch(isOpen, (newValue: boolean) => {
               class="btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white hover:bg-white hover:border-base-200 hover:shadow-xl active:bg-base-300 active:text-white flex justify-center items-center text-xs hover:text-primary ml-2"
             >
               <Icon name="solar:wallet-linear" size="24" />
-              {{ user?.balance ? user.balance + " рублей" : "" }}
+              {{ user?.balance ? currency.format(user.balance) : "" }}
 
               <button
                 class="btn -mt-1 btn-sm btn-circle btn-outline border-[#e6eaec] btn-primary"

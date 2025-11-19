@@ -5,12 +5,7 @@ const { user } = useUserSession();
 const store = useMainStore();
 
 const { notify } = useNotification();
-const menuItems = ref([
-  "Маркетплейсы",
-  "Недвижимость",
-  "Карты",
-  "Услуги", 
-]);
+const menuItems = ref(["Маркетплейсы", "Недвижимость", "Карты", "Услуги"]);
 const modalStore = useModalStore();
 const introductionModal = ref(false);
 const route = useRoute();
@@ -93,7 +88,7 @@ async function setFavourites(path: string) {
       },
     });
 
-   getUserFavourites()
+    getUserFavourites();
     notify({
       group: "success",
       title: "Избранное обновлено",
@@ -168,7 +163,6 @@ watch(
   }
 );
 
-
 async function getUserFavourites() {
   // loading.value = true
   const response: any = await useFetch("/api/user/favourites", {
@@ -176,7 +170,7 @@ async function getUserFavourites() {
     watch: false,
   }).catch((err) => {
     notify({
-     group: "error",
+      group: "error",
       title: "Не получить доступы",
       text: err.data.message || err.message,
     });
@@ -186,10 +180,7 @@ async function getUserFavourites() {
   if (response) {
     store.client.favourites = response.data.value.favourites;
 
-    if (
-      store.client.favourites &&
-      store.client.favourites.length === 0
-    ) {
+    if (store.client.favourites && store.client.favourites.length === 0) {
       store.client.favourites = response.data.value.services
         .map((item: any) => ({
           path: `/catalog/${item.slug}`,
@@ -207,7 +198,6 @@ async function getUserFavourites() {
 
 <template>
   <div class="flex pt-4">
-    
     <div class="left-menu sm:block sm:ml-3 mr-6 -ml-10 hidden">
       <CatalogLeftMenu
         v-model:selected-type="modalStore.selectedCatalog"
@@ -221,31 +211,66 @@ async function getUserFavourites() {
     </div> -->
     <div class="md:px-10 px-0 sm:mr-0 mr-3 w-full mb-12">
       <div class="flex justify-between">
-        <div class="breadcrumbs text-sm ml-3 mb-5">
+        <div class="breadcrumbs text-sm ml-5 mb-5">
+          <div class="sm:hidden">
+            <ul
+              class="font-medium text-[18px] mt-0.5 text-[#909090]"
+              @click="introductionModal = true"
+            >
+              <li class="cursor-pointer mb-4">
+                Введение
+                <Icon
+                  name="material-symbols:info-outline-rounded"
+                  size="24"
+                  class="ml-1 -mb-1"
+                />
+              </li>
+            </ul>
+            <ul
+              class="font-medium text-[18px] mt-0.5 text-[#909090] "
+              @click="introductionModalManager = true"
+            >
+              <li class="cursor-pointer mb-4">
+                Менеджерам
+                <Icon
+                  name="material-symbols:info-outline-rounded"
+                  size="24"
+                  class="ml-1 -mb-1"
+                />
+              </li>
+            </ul>
+          </div>
+
           <ul class="font-medium text-[18px] mt-0.5 text-[#909090]">
             <li v-if="!loading" class="cursor-pointer">
               {{ modalStore.selectedCatalog }}
             </li>
           </ul>
         </div>
-        <div class="flex gap-3">
-
+        <div class="hidden sm:flex gap-3">
           <div
-          class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
-          @click="introductionModalManager = true"
+            class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
+            @click="introductionModalManager = true"
           >
-          Менеджерам
-          <Icon name="material-symbols:info-outline-rounded" size="24" class="ml-1 -mb-1" />
-        </div>
+            Менеджерам
+            <Icon
+              name="material-symbols:info-outline-rounded"
+              size="24"
+              class="ml-1 -mb-1"
+            />
+          </div>
           <div
-          class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
-          @click="introductionModal = true"
+            class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
+            @click="introductionModal = true"
           >
-          Введение
-          <Icon name="material-symbols:info-outline-rounded" size="24" class="ml-1 -mb-1" />
-       
+            Введение
+            <Icon
+              name="material-symbols:info-outline-rounded"
+              size="24"
+              class="ml-1 -mb-1"
+            />
+          </div>
         </div>
-      </div>
       </div>
       <CatalogContent
         v-if="!loading && modalStore.selectedCatalog !== 'Услуги'"
@@ -261,7 +286,6 @@ async function getUserFavourites() {
         @vote="voteForMp"
         @set-favourites="setFavourites"
       />
-
     </div>
     <IntroductionModal
       :show="introductionModal"

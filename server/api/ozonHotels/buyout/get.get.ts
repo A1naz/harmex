@@ -30,7 +30,7 @@ export default eventHandler(async (event) => {
 
   }
   else if (status === 'active') {
-    buyouts = await Buyout.find({ user, status: { $or: ['active', 'work']} })
+    buyouts = await Buyout.find({ user, status: { $in: ['active', 'work']} })
       .sort({
         createdAt: -1,
       })
