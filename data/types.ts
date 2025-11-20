@@ -83,6 +83,10 @@ export interface IUser extends Entity {
   changedMpTariff: boolean
   needVerification: boolean
   forceLoginDate: Date | null
+  // Email campaign fields
+  emailCampaignDay: number
+  lastCampaignEmailSent: Date
+  emailCampaignEnabled: boolean
 }
 
 export interface IUserLogs extends Entity {

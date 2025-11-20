@@ -149,6 +149,9 @@ importers:
       mongoose:
         specifier: ^7.8.2
         version: 7.8.3
+      node-cron:
+        specifier: ^4.2.1
+        version: 4.2.1
       node-pre-gyp:
         specifier: ^0.17.0
         version: 0.17.0
@@ -270,6 +273,9 @@ importers:
       '@types/node':
         specifier: ^20.17.5
         version: 20.17.29
+      '@types/node-cron':
+        specifier: ^3.0.11
+        version: 3.0.11
       '@types/nodemailer':
         specifier: ^6.4.9
         version: 6.4.17
@@ -1322,8 +1328,8 @@ packages:
   '@formkit/addons@1.6.9':
     resolution: {integrity: sha512-Qfq789kpQ5EYqFl6QPE32vMCs0qivbvR50NNRwUadC2hgfGcayKe8Gc43G8neW6HHPjmyzkHQHLknLxHrGni3Q==}
 
-  '@formkit/auto-animate@0.8.2':
-    resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
+  '@formkit/auto-animate@0.9.0':
+    resolution: {integrity: sha512-VhP4zEAacXS3dfTpJpJ88QdLqMTcabMg0jwpOSxZ/VzfQVfl3GkZSCZThhGC5uhq/TxPHPzW0dzr4H9Bb1OgKA==}
 
   '@formkit/auto-animate@1.0.0-beta.6':
     resolution: {integrity: sha512-PVDhLAlr+B4Xb7e+1wozBUWmXa6BFU8xUPR/W/E+TsQhPS1qkAdAsJ25keEnFrcePSnXHrOsh3tiFbEToOzV9w==}
@@ -2598,6 +2604,9 @@ packages:
 
   '@types/ms@0.7.34':
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
+
+  '@types/node-cron@3.0.11':
+    resolution: {integrity: sha512-0ikrnug3/IyneSHqCBeslAhlK2aBfYek1fGo4bP4QnZPmiqSGRK+Oy7ZMisLWkesffJvQ1cqAcBnJC+8+nxIAg==}
 
   '@types/node@14.18.63':
     resolution: {integrity: sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==}
@@ -6008,6 +6017,10 @@ packages:
 
   node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
+
+  node-cron@4.2.1:
+    resolution: {integrity: sha512-lgimEHPE/QDgFlywTd8yTR61ptugX3Qer29efeyWw2rv259HtGBNn1vZVmp8lB9uo9wC0t/AT4iGqXxia+CJFg==}
+    engines: {node: '>=6.0.0'}
 
   node-fetch-native@1.6.4:
     resolution: {integrity: sha512-IhOigYzAKHd244OC0JIMIUrjzctirCmPkaIfhDeGcEETWof5zKYUW7e7MYvChGWh/4CJeXEgsRyGzuF334rOOQ==}
@@ -9494,12 +9507,12 @@ snapshots:
 
   '@formkit/addons@1.6.9':
     dependencies:
-      '@formkit/auto-animate': 0.8.2
+      '@formkit/auto-animate': 0.9.0
       '@formkit/core': 1.6.9
       '@formkit/inputs': 1.6.9
       '@formkit/utils': 1.6.9
 
-  '@formkit/auto-animate@0.8.2': {}
+  '@formkit/auto-animate@0.9.0': {}
 
   '@formkit/auto-animate@1.0.0-beta.6': {}
 
@@ -11495,6 +11508,8 @@ snapshots:
       '@types/unist': 3.0.3
 
   '@types/ms@0.7.34': {}
+
+  '@types/node-cron@3.0.11': {}
 
   '@types/node@14.18.63': {}
 
@@ -15752,6 +15767,8 @@ snapshots:
     optional: true
 
   node-addon-api@7.1.1: {}
+
+  node-cron@4.2.1: {}
 
   node-fetch-native@1.6.4: {}
 

@@ -208,6 +208,21 @@ class MailService {
     })
     return result
   }
+
+  async sendCampaignEmail(
+    to: string | undefined,
+    subject: string,
+    htmlContent: string,
+  ) {
+    const result = await this.transporter.sendMail({
+      from: alias,
+      to,
+      subject,
+      text: '',
+      html: htmlContent,
+    })
+    return result
+  }
 }
 
 export default new MailService()

@@ -1,6 +1,7 @@
 import type { Nitro } from 'nitropack'
 import mongoose from 'mongoose'
 import { createAllPickpoints } from '~/server/utils/pickpoints'
+import { initializeCronJobs } from '~/server/lib/cronJobs'
 
 export default async (_nitroApp: Nitro) => {
   const config = useRuntimeConfig()
@@ -13,6 +14,12 @@ export default async (_nitroApp: Nitro) => {
     await mongoose.connect(config.MONGODB_URI)
     // eslint-disable-next-line no-console
     console.log('Connected to MongoDB')
+
+    // Initialize cron jobs for email campaigns
+    if (config.env !== 'developer') {
+      initializeCronJobs()
+      console.log('Cron jobs initialized')
+    }
   }
   catch (error) {
     console.error(error)

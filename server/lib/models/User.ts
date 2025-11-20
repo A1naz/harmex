@@ -88,6 +88,11 @@ const UserSchema = new Schema<IUserSchema>({
   changedMpTariff: { type: Boolean },
   needVerification: { type: Boolean },
   forceLoginDate: { type: Date, required: false },
+  
+  // Email campaign fields
+  emailCampaignDay: { type: Number, default: 0 }, // Current day in campaign (0-21)
+  lastCampaignEmailSent: { type: Date }, // Last time campaign email was sent
+  emailCampaignEnabled: { type: Boolean, default: true }, // Can be disabled
 });
 
 export const User = model<IUserSchema>("User", UserSchema);
