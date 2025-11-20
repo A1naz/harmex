@@ -208,6 +208,17 @@ class MailService {
     })
     return result
   }
+
+  async sendAutoEmail(to: string | undefined, subject: string, html: string) {
+    const result = await this.transporter.sendMail({
+      from: alias,
+      to,
+      subject: `[HARMEX] ${subject}`,
+      text: '',
+      html,
+    })
+    return result
+  }
 }
 
 export default new MailService()

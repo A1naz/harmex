@@ -83,6 +83,8 @@ export interface IUser extends Entity {
   changedMpTariff: boolean
   needVerification: boolean
   forceLoginDate: Date | null
+  emailAutoSentCount: number
+  emailLastSentDate: Date
 }
 
 export interface IUserLogs extends Entity {
