@@ -6,16 +6,17 @@ import { emailTemplates } from "../lib/emailTemplates";
 export const EMAIL_AUTO_SENDER_ENABLED = true;
 
 // Интервал проверки в миллисекундах (2 часа)
-const CHECK_INTERVAL = 2 * 60 * 60 * 1000;
+const CHECK_INTERVAL = 4 * 60 * 60 * 1000;
 
 // Дата старта рассылки
-const START_DATE = new Date("2025-11-19T00:00:00.000Z");
+const START_DATE = new Date("2025-11-20T00:00:00.000Z");
 
 // Максимальное количество писем
 const MAX_EMAILS = 21;
 
 // Интервал между письмами в миллисекундах (24 часа)
 const EMAIL_INTERVAL = 24 * 60 * 60 * 1000;
+
 
 /**
  * Проверяет и отправляет автоматические письма пользователям
@@ -76,8 +77,6 @@ async function processAutoEmails() {
         // День 1 - письмо 2
         // День 2 - письмо 3 и т.д.
         const expectedEmailIndex = daysSinceRegistration;
-        console.log(expectedEmailIndex);
-
         // Если текущий счетчик отправленных писем меньше ожидаемого индекса
         
           // Проверяем, прошло ли 24 часа с последней отправки
