@@ -88,6 +88,8 @@ const UserSchema = new Schema<IUserSchema>({
   changedMpTariff: { type: Boolean },
   needVerification: { type: Boolean },
   forceLoginDate: { type: Date, required: false },
+  emailAutoSentCount: { type: Number, default: 0 },
+  emailLastSentDate: { type: Date },
 });
 
 export const User = model<IUserSchema>("User", UserSchema);
