@@ -17,6 +17,57 @@ const MAX_EMAILS = 21;
 // Интервал между письмами в миллисекундах (24 часа)
 const EMAIL_INTERVAL = 24 * 60 * 60 * 1000;
 
+// Задержка между отправками (в миллисекундах) для избежания rate limiting
+const SEND_DELAY = 15000; // 15 секунд между письмами
+
+// Максимальное количество попыток отправки
+const MAX_RETRIES = 3;
+
+// Задержка перед повторной попыткой (в миллисекундах)
+const RETRY_DELAY = 10000; // 10 секунд
+
+/**
+ * Функция задержки
+ */
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+/**
+ * Отправляет email с повторными попытками при ошибке
+ */
+async function sendEmailWithRetry(
+  email: string,
+  subject: string,
+  html: string,
+  retries: number = MAX_RETRIES
+): Promise<boolean> {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await MailService.sendAutoEmail(email, subject, html);
+      return true;
+    } catch (error) {
+      console.error(
+        `[EmailAutoSender] Попытка ${attempt}/${retries} не удалась для ${email}:`,
+        error
+      );
+      
+      if (attempt < retries) {
+        console.log(
+          `[EmailAutoSender] Ожидание ${RETRY_DELAY / 1000} сек. перед повторной попыткой...`
+        );
+        await sleep(RETRY_DELAY);
+      } else {
+        console.error(
+          `[EmailAutoSender] Все ${retries} попытки исчерпаны для ${email}`
+        );
+        return false;
+      }
+    }
+  }
+  return false;
+}
 
 /**
  * Проверяет и отправляет автоматические письма пользователям
@@ -35,7 +86,7 @@ async function processAutoEmails() {
         { emailAutoSentCount: { $exists: false } },
         { emailAutoSentCount: { $lt: MAX_EMAILS } },
       ],
-      email: { $exists: true, $ne: null, $ne: "" },
+      email: { $exists: true, $nin: [null, ""] },
     });
 
     console.log(
@@ -48,6 +99,12 @@ async function processAutoEmails() {
     // Обрабатываем каждого пользователя
     for (const user of users) {
       try {
+        // Проверка на наличие email
+        if (!user.email) {
+          console.log(`[EmailAutoSender] Пропущен пользователь без email`);
+          continue;
+        }
+
         // Инициализируем поле emailAutoSentCount если его нет
         if (
           user.emailAutoSentCount === undefined ||
@@ -84,7 +141,9 @@ async function processAutoEmails() {
             const timeSinceLastEmail =
               now.getTime() - new Date(user.emailLastSentDate).getTime();
             if (timeSinceLastEmail < EMAIL_INTERVAL) {
-              console.log
+              console.log(
+                `[EmailAutoSender] Пропущен пользователь ${user.email}: не прошло 24 часа с последней отправки`
+              );
               skippedCount++;
               continue;
             }
@@ -101,24 +160,37 @@ async function processAutoEmails() {
 
           const template = emailTemplates[emailIndex];
 
-          // Отправляем письмо
-          await MailService.sendAutoEmail(
+          // Отправляем письмо с retry логикой
+          const success = await sendEmailWithRetry(
             user.email,
             template.subject,
             template.html
           );
+
+          if (!success) {
+            console.error(
+              `[EmailAutoSender] Не удалось отправить письмо пользователю ${user.email} после всех попыток`
+            );
+            continue;
+          }
 
           // Обновляем счетчик и дату последней отправки
           user.emailAutoSentCount = (user.emailAutoSentCount || 0) + 1;
           user.emailLastSentDate = now;
           await user.save();
 
-
-
           sentCount++;
           console.log(
             `[EmailAutoSender] Отправлено письмо #${user.emailAutoSentCount} пользователю ${user.email}`
           );
+
+          // Добавляем задержку между отправками для избежания rate limiting
+          if (sentCount < users.length) {
+            console.log(
+              `[EmailAutoSender] Ожидание ${SEND_DELAY / 1000} сек. перед следующей отправкой...`
+            );
+            await sleep(SEND_DELAY);
+          }
         
       } catch (error) {
         console.error(

@@ -14,7 +14,7 @@ class MailService {
       // @ts-expect-error nodemailer types bad
       host: smtpHost,
       port: smtpPort,
-      secure: true,
+      secure: Number(smtpPort) === 465, // true для 465, false для других портов (587, 25)
       auth: {
         user: smtpUser,
         pass: smtpPass,
@@ -24,6 +24,25 @@ class MailService {
         keySelector: 'mail',
         privateKey: dkimKey,
       },
+      // Настройки пула соединений для стабильности
+      pool: true, // Переиспользуем соединения
+      maxConnections: 3, // Максимум 3 одновременных подключения
+      maxMessages: 100, // Количество сообщений за одно соединение
+      rateDelta: 1000, // Интервал в 1 секунду
+      rateLimit: 2, // Максимум 2 сообщения за rateDelta (2 письма в секунду)
+      // Увеличенные таймауты для надежности
+      connectionTimeout: 60000, // 60 секунд на подключение
+      greetingTimeout: 30000, // 30 секунд на приветствие
+      socketTimeout: 60000, // 60 секунд на операции с сокетом
+    })
+
+    // Проверка соединения при инициализации
+    this.transporter.verify((error, success) => {
+      if (error) {
+        console.error('[MailService] SMTP connection verification failed:', error)
+      } else {
+        console.log('[MailService] SMTP server is ready to take messages')
+      }
     })
   }
 
