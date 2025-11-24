@@ -10,8 +10,8 @@ export default async (_nitroApp: Nitro) => {
     if (config.env !== 'developer') {
       createAllPickpoints()
       // Запускаем автоматическую рассылку писем
+      startEmailAutoSender()
     }
-    startEmailAutoSender()
 
     await mongoose.connect(config.MONGODB_URI)
     // eslint-disable-next-line no-console

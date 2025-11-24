@@ -5,9 +5,6 @@ import { emailTemplates } from "../lib/emailTemplates";
 // Флаг для включения/выключения автоматической рассылки
 export const EMAIL_AUTO_SENDER_ENABLED = true;
 
-// Интервал проверки в миллисекундах (2 часа)
-const CHECK_INTERVAL = 4 * 60 * 60 * 1000;
-
 // Дата старта рассылки
 const START_DATE = new Date("2025-11-20T00:00:00.000Z");
 
@@ -18,7 +15,7 @@ const MAX_EMAILS = 21;
 const EMAIL_INTERVAL = 24 * 60 * 60 * 1000;
 
 // Задержка между отправками (в миллисекундах) для избежания rate limiting
-const SEND_DELAY = 15000; // 15 секунд между письмами
+const SEND_DELAY = 30000; // 15 секунд между письмами
 
 // Максимальное количество попыток отправки
 const MAX_RETRIES = 3;
@@ -26,11 +23,72 @@ const MAX_RETRIES = 3;
 // Задержка перед повторной попыткой (в миллисекундах)
 const RETRY_DELAY = 10000; // 10 секунд
 
+// Рабочее окно времени (МСК)
+const WORK_START_HOUR = 8; // Начало работы: 8:00 утра
+const WORK_END_HOUR = 10; // Конец работы: 10:00 утра
+const MAX_CYCLES_PER_DAY = 5; // Максимум 5 циклов рассылки в день
+const CYCLE_INTERVAL = 24 * 60 * 1000; // 24 минуты между циклами (5 циклов за 2 часа)
+
+// Переменная для отслеживания циклов
+let cyclesCompletedToday = 0;
+let lastCycleDate = "";
+
 /**
  * Функция задержки
  */
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Получает текущее время в часовом поясе МСК
+ */
+function getMoscowTime(): Date {
+  const now = new Date();
+  // Преобразуем в МСК (UTC+3)
+  const moscowTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Moscow" }));
+  return moscowTime;
+}
+
+/**
+ * Проверяет, находимся ли мы в рабочем окне времени (8:00 - 10:00 МСК)
+ */
+function isInWorkingHours(): boolean {
+  const moscowTime = getMoscowTime();
+  const hour = moscowTime.getHours();
+  return hour >= WORK_START_HOUR && hour < WORK_END_HOUR;
+}
+
+/**
+ * Получает дату в формате YYYY-MM-DD для МСК
+ */
+function getMoscowDateString(): string {
+  const moscowTime = getMoscowTime();
+  return moscowTime.toISOString().split('T')[0];
+}
+
+/**
+ * Вычисляет время до следующего запуска (8:00 утра МСК следующего дня)
+ */
+function getTimeUntilNextRun(): number {
+  const moscowTime = getMoscowTime();
+  const hour = moscowTime.getHours();
+  
+  // Создаем дату для следующего запуска в 8:00 МСК
+  const nextRun = new Date(moscowTime);
+  
+  if (hour < WORK_START_HOUR) {
+    // Если еще не 8 утра сегодня, запускаем сегодня в 8:00
+    nextRun.setHours(WORK_START_HOUR, 0, 0, 0);
+  } else {
+    // Если уже прошло 8 утра или позже, запускаем завтра в 8:00
+    nextRun.setDate(nextRun.getDate() + 1);
+    nextRun.setHours(WORK_START_HOUR, 0, 0, 0);
+  }
+  
+  // Вычисляем разницу в миллисекундах
+  const diff = nextRun.getTime() - moscowTime.getTime();
+  return diff;
 }
 
 
@@ -212,6 +270,92 @@ async function processAutoEmails() {
 }
 
 /**
+ * Выполняет цикл рассылки с проверкой рабочего времени
+ */
+async function runCycleIfAllowed() {
+  const todayDate = getMoscowDateString();
+  
+  // Сбрасываем счетчик циклов, если наступил новый день
+  if (lastCycleDate !== todayDate) {
+    cyclesCompletedToday = 0;
+    lastCycleDate = todayDate;
+    console.log(`[EmailAutoSender] Новый день: ${todayDate}. Счетчик циклов сброшен.`);
+  }
+  
+  // Проверяем, находимся ли в рабочем окне времени
+  if (!isInWorkingHours()) {
+    const moscowTime = getMoscowTime();
+    console.log(
+      `[EmailAutoSender] Сейчас ${moscowTime.toLocaleTimeString('ru-RU')} МСК. ` +
+      `Рабочее время: ${WORK_START_HOUR}:00 - ${WORK_END_HOUR}:00. Пропуск цикла.`
+    );
+    return false;
+  }
+  
+  // Проверяем, не превышен ли лимит циклов за день
+  if (cyclesCompletedToday >= MAX_CYCLES_PER_DAY) {
+    console.log(
+      `[EmailAutoSender] Выполнено ${cyclesCompletedToday} из ${MAX_CYCLES_PER_DAY} циклов за сегодня. ` +
+      `Ожидание следующего дня.`
+    );
+    return false;
+  }
+  
+  // Выполняем рассылку
+  const moscowTime = getMoscowTime();
+  console.log(
+    `[EmailAutoSender] Запуск цикла #${cyclesCompletedToday + 1}/${MAX_CYCLES_PER_DAY} ` +
+    `в ${moscowTime.toLocaleTimeString('ru-RU')} МСК`
+  );
+  
+  await processAutoEmails();
+  
+  cyclesCompletedToday++;
+  console.log(`[EmailAutoSender] Цикл #${cyclesCompletedToday} завершен.`);
+  
+  return true;
+}
+
+/**
+ * Планирует следующий запуск рассылки
+ */
+function scheduleNextRun() {
+  const todayDate = getMoscowDateString();
+  
+  // Сбрасываем счетчик циклов, если наступил новый день
+  if (lastCycleDate !== todayDate) {
+    cyclesCompletedToday = 0;
+    lastCycleDate = todayDate;
+  }
+  
+  // Если мы в рабочем окне и еще не выполнили все циклы
+  if (isInWorkingHours() && cyclesCompletedToday < MAX_CYCLES_PER_DAY) {
+    // Запускаем следующий цикл через CYCLE_INTERVAL
+    console.log(
+      `[EmailAutoSender] Следующий цикл через ${CYCLE_INTERVAL / 1000 / 60} минут`
+    );
+    setTimeout(() => {
+      runCycleIfAllowed().then(() => scheduleNextRun());
+    }, CYCLE_INTERVAL);
+  } else {
+    // Вычисляем время до следующего запуска (8:00 утра следующего дня)
+    const timeUntilNext = getTimeUntilNextRun();
+    const hours = Math.floor(timeUntilNext / (1000 * 60 * 60));
+    const minutes = Math.floor((timeUntilNext % (1000 * 60 * 60)) / (1000 * 60));
+    
+    console.log(
+      `[EmailAutoSender] Переход в спящий режим. ` +
+      `Следующий запуск через ${hours} ч. ${minutes} мин. (в 8:00 МСК)`
+    );
+    
+    setTimeout(() => {
+      cyclesCompletedToday = 0; // Сброс счетчика для нового дня
+      runCycleIfAllowed().then(() => scheduleNextRun());
+    }, timeUntilNext);
+  }
+}
+
+/**
  * Запускает автоматическую рассылку писем
  */
 export function startEmailAutoSender() {
@@ -222,16 +366,17 @@ export function startEmailAutoSender() {
 
   console.log("[EmailAutoSender] Автоматическая рассылка запущена");
   console.log(
-    `[EmailAutoSender] Интервал проверки: ${CHECK_INTERVAL / 1000 / 60} минут`
+    `[EmailAutoSender] Рабочее время: ${WORK_START_HOUR}:00 - ${WORK_END_HOUR}:00 МСК`
+  );
+  console.log(
+    `[EmailAutoSender] Циклов в день: ${MAX_CYCLES_PER_DAY}, интервал: ${CYCLE_INTERVAL / 1000 / 60} мин.`
   );
 
-  // Запускаем первую проверку сразу
-  processAutoEmails();
+  const moscowTime = getMoscowTime();
+  console.log(`[EmailAutoSender] Текущее время МСК: ${moscowTime.toLocaleString('ru-RU')}`);
 
-  // Запускаем периодическую проверку каждые 2 часа
-  setInterval(() => {
-    processAutoEmails();
-  }, CHECK_INTERVAL);
+  // Запускаем первый цикл (если в рабочее время)
+  runCycleIfAllowed().then(() => scheduleNextRun());
 }
 
 /**
