@@ -1,0 +1,141 @@
+import axios from "axios";
+import https from "https";
+const config = useRuntimeConfig();
+import { Buyout as wildberriesBuyout } from "~/server/lib/models/wildberries/Buyout";
+import { Review as wildberriesReview } from "~/server/lib/models/wildberries/Review";
+import { Delivery as wildberriesDelivery } from "~/server/lib/models/wildberries/Delivery";
+import { Review as ozonReview } from "~/server/lib/models/ozon/Review";
+import { Delivery as ozonDelivery } from "~/server/lib/models/ozon/Delivery";
+import { Review as yandexMarketReview } from "~/server/lib/models/yandexMarket/Review";
+import { Delivery as yandexMarketDelivery } from "~/server/lib/models/yandexMarket/Delivery";
+import { Buyout as ozonBuyout } from "~/server/lib/models/ozon/Buyout";
+import { Buyout as yandexMarketBuyout } from "~/server/lib/models/yandexMarket/Buyout";
+import { GenerateReviews } from "~/server/lib/models/GenerateReviews";
+const NEUROTASK_KEY = config.NEUROTASK_KEY;
+
+type ReviewProvider = "openai" | "gemini" | "deepseek";
+
+type Review = {
+  content: string;
+  provider: ReviewProvider;
+};
+
+type ApiResponse = {
+  reviews: Review[];
+};
+
+type ParsedItem = {
+  id: number;
+  name: ReviewProvider;
+  text: string;
+  positive: string;
+  negative: string;
+};
+
+export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
+  const url = "https://neurotask.ru/api/harmex/review-additional-text";
+
+  const { mp = "wildberries", buyoutUuid }: { mp: string; buyoutUuid: string } =
+    getQuery(event);
+
+    console.log(mp, buyoutUuid);
+  let buyout: any = null;
+  let delivery: any = null;
+  let review: any = null;
+  
+  if (mp === "wildberries") {
+    buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid });
+    delivery = await wildberriesDelivery.findOne({ uuidbuyout: buyoutUuid });
+    review = await wildberriesReview.findOne({ delivery: delivery?._id });
+  } else if (mp === "ozon") {
+    buyout = await ozonBuyout.findOne({ uuid: buyoutUuid });
+  } else if (mp === "ym") {
+    buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid });
+  }
+
+  if (!buyout) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Buyout not found",
+    });
+  }
+  if (!review) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Review not found",
+    });
+  }
+
+  const httpsAgent = new https.Agent({
+    rejectUnauthorized: false,
+  });
+
+  let raw: ApiResponse;
+  try {
+    const response = await axios.get<ApiResponse>(url, {
+      params: {
+        key: NEUROTASK_KEY as string,
+        productName: buyout.product.name,
+        oldReview: review.text,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": config.X_API_KEY as string,
+      },
+      httpsAgent,
+    });
+    raw = response.data;
+  } catch (error) {
+    console.log("Не удалось получить ответ от ИИ.", error);
+    throw createError({
+      message: "Не удалось получить ответ от ИИ.",
+    });
+  }
+
+  // const raw: { response: ResponseData } = {
+  //   response: {
+  //     openai: `...`, // сюда вставь текст
+  //     gemini: `...`,
+  //     grok: `...`,
+  //   },
+  // };
+
+  // await GenerateReviews.create({
+  //   user: buyout.user,
+  //   summ: 0,
+  //   status: "created",
+  //   taskId: "Генерация отзыва " + buyout.uuid,
+  //   createdDate: new Date(),
+  //   type: "generateRewievs",
+  //   mp: mp,
+  //   article: buyout.article,
+  // });
+
+  const format: ParsedItem[] = raw.reviews.map(
+    (review: Review, index: number): ParsedItem => {
+      const safeFullText = review.content;
+
+      const [textPart, ...rest] = safeFullText.split(/\n+/);
+      const restJoined = rest.join("\n");
+
+      const positiveMatch = restJoined.match(/плюсы:\s*(.+)/i);
+      const negativeMatch = restJoined.match(/минусы:\s*(.+)/i);
+
+      return {
+        id: index + 1,
+        name: review.provider,
+        text: textPart.trim().replace(/\*\*/g, ""),
+        positive: positiveMatch
+          ? positiveMatch[1].trim().replace(/\*\*/g, "")
+          : "",
+        negative: negativeMatch
+          ? negativeMatch[1].trim().replace(/\*\*/g, "")
+          : "",
+      };
+    }
+  );
+
+  return format;
+});

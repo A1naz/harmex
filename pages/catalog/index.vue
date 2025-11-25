@@ -211,10 +211,10 @@ async function getUserFavourites() {
     </div> -->
     <div class="md:px-10 px-0 sm:mr-0 mr-3 w-full mb-12">
       <div class="flex justify-between">
-        <div class="breadcrumbs text-sm ml-5 mb-5">
+        <div class="breadcrumbs text-sm ml-5 sm:mb-2">
           <div class="sm:hidden">
             <ul
-              class="font-medium text-[18px] mt-0.5 text-[#909090]"
+              class="font-medium  sm:text-[18px]  text-sm mt-0.5 -mb-5 text-[#909090]"
               @click="introductionModal = true"
             >
               <li class="cursor-pointer mb-4">
@@ -227,10 +227,10 @@ async function getUserFavourites() {
               </li>
             </ul>
             <ul
-              class="font-medium text-[18px] mt-0.5 text-[#909090] "
+              class="font-medium text-sm sm:text-[18px] mt-0.5 text-[#909090] "
               @click="introductionModalManager = true"
             >
-              <li class="cursor-pointer mb-4">
+              <li class="cursor-pointer">
                 Менеджерам
                 <Icon
                   name="material-symbols:info-outline-rounded"
@@ -241,13 +241,8 @@ async function getUserFavourites() {
             </ul>
           </div>
 
-          <ul class="font-medium text-[18px] mt-0.5 text-[#909090]">
-            <li v-if="!loading" class="cursor-pointer">
-              {{ modalStore.selectedCatalog }}
-            </li>
-          </ul>
         </div>
-        <div class="hidden sm:flex gap-3">
+        <div class="hidden sm:flex gap-3  sm:mb-4">
           <div
             class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
             @click="introductionModalManager = true"

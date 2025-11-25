@@ -22,7 +22,6 @@ const emit = defineEmits([
   "infoModal",
   "openSupplementModal",
   "disputeReview",
-  
 ]);
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -30,6 +29,7 @@ const config = useRuntimeConfig();
 const { $dayjs } = useNuxtApp();
 
 const showSupplementButton = computed(() => {
+  console.log("showSupplementButton", props.info.status, props.info.completedDate);
   if (props.info.status === "published" && props.info.completedDate) {
     const completedDate = $dayjs(props.info.completedDate);
     const now = $dayjs();
