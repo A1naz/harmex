@@ -16,7 +16,53 @@ const keys = Object.keys as <T>(
   : never
   : never)[]
 
-async function getReady(user: Document, dateRange: any) {
+/**
+ * Нормализует адрес для сортировки, убирая префиксы населенных пунктов
+ */
+function normalizeAddressForSorting(address: string): string {
+  if (!address) return ''
+  
+  // Список префиксов для игнорирования при сортировке
+  const prefixes = [
+    'г\\.',
+    'город',
+    'г ',
+    'д\\.',
+    'деревня',
+    'д ',
+    'с\\.',
+    'село',
+    'с ',
+    'пос\\.',
+    'посёлок',
+    'поселок',
+    'пгт\\.',
+    'ст\\.',
+    'станица',
+    'хутор',
+    'аул',
+    'рп\\.',
+  ]
+  
+  // Создаем регулярное выражение для поиска префиксов в начале строки
+  const regex = new RegExp(`^\\s*(${prefixes.join('|')})\\s*`, 'i')
+  
+  // Убираем префикс и приводим к нижнему регистру для корректной сортировки
+  return address.replace(regex, '').trim().toLowerCase()
+}
+
+/**
+ * Сортирует доставки по адресу с учетом нормализации
+ */
+function sortByAddress(deliveries: any[]): any[] {
+  return deliveries.sort((a, b) => {
+    const addressA = normalizeAddressForSorting(a.point || '')
+    const addressB = normalizeAddressForSorting(b.point || '')
+    return addressA.localeCompare(addressB, 'ru')
+  })
+}
+
+async function getReady(user: any, dateRange: any) {
   const deliveries = await Delivery.find({
     ...dateRange,
     user: user._id,
@@ -115,6 +161,7 @@ async function getReady(user: Document, dateRange: any) {
           finishTime,
           updatedAt: new Date(delivery.updatedAt),
           key: buyout.ff ? 'Выкуп под ключ' : 'Выкуп',
+          excelRowNumber: undefined as number | undefined,
         }
       })
       .filter(item => item !== undefined),
@@ -143,7 +190,17 @@ export default eventHandler(async (event) => {
 
     const { type } = getQuery(event)
     const workbook = new ExcelJS.Workbook()
-    const ready = (await getReady(user, trueDateRange)).filter(item => item !== undefined)
+    let ready = (await getReady(user, trueDateRange)).filter(item => item !== undefined)
+    
+    // Сортируем по адресу с учетом нормализации
+    ready = sortByAddress(ready)
+    
+    // Обновляем нумерацию после сортировки
+    ready = ready.map((item, index) => ({
+      ...item,
+      place: index + 1,
+      index,
+    }))
 
     const sheet = workbook.addWorksheet('Готовы к выдаче', {
       headerFooter: { firstHeader: `Всего доставок: ${ready.length}` },
@@ -219,9 +276,49 @@ export default eventHandler(async (event) => {
       },
     ]
 
-    sheet.addRows(ready)
+    // Добавляем строки с визуальным разделением по адресам
+    let currentAddress = ''
+    let rowOffset = 0 // Смещение строк из-за добавленных разделителей
+    
+    for (let i = 0; i < ready.length; i++) {
+      const item = ready[i]
+      const itemAddress = item.point || ''
+      
+      // Если адрес изменился, добавляем строку-разделитель
+      if (itemAddress !== currentAddress && i > 0) {
+        const separatorRow = sheet.addRow({})
+        separatorRow.height = 5
+        separatorRow.eachCell((cell) => {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFE0E0E0' },
+          }
+        })
+        rowOffset++
+      }
+      
+      currentAddress = itemAddress
+      const dataRow = sheet.addRow(item)
+      
+      // Подсвечиваем группы адресов чередующимися цветами для лучшей читаемости
+      if (i > 0 && ready[i - 1]?.point !== itemAddress) {
+        // Новая группа - делаем легкую подсветку заголовка группы
+        dataRow.eachCell((cell) => {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFF0F8FF' },
+          }
+          cell.font = { bold: true }
+        })
+      }
+      
+      // Сохраняем реальный номер строки для QR кодов
+      item.excelRowNumber = dataRow.number
+    }
+    
     // add qr codes to sheet
-
     for (const item of ready) {
       if (
         !item?.receiptcodeqr
@@ -246,11 +343,14 @@ export default eventHandler(async (event) => {
         base64: item?.receiptcodeqr,
         extension: 'png',
       })
+      
+      // Используем реальный номер строки в Excel
+      const rowNumber = item.excelRowNumber || item.place + 1
       sheet.addImage(image, {
-        tl: { col: 1.5, row: item!.place + 0.8 },
+        tl: { col: 1.5, row: rowNumber - 0.2 },
         ext: { width: 100, height: 100 },
       })
-      sheet.getRow(item!.place + 1).height = 100
+      sheet.getRow(rowNumber).height = 100
     }
     const buffer = await workbook.xlsx.writeBuffer()
 

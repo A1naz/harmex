@@ -31,19 +31,19 @@ const config = useRuntimeConfig();
   >
     <div
       v-if="props.show"
-      class="modal-box rounded-[8px] w-full lg:max-w-5xl md:max-w-2xl sm:max-w-lg cursor-auto border p-3 sm:p-5 border-[#dee2e6]"
+      class="modal-box rounded-[8px] w-full lg:max-w-5xl md:max-w-2xl sm:max-w-lg max-h-[85vh] overflow-y-auto cursor-auto border p-3 sm:p-5 border-[#dee2e6]"
       @click.stop
     >
-      <form method="dialog">
+      <div class="sticky top-0 z-10 flex justify-end">
         <label
-          class="btn btn-sm btn-circle btn-ghost bg-transparent absolute right-2 top-2 text-[#9ca3af] text-xl"
+          class="btn btn-sm btn-circle btn-ghost bg-transparent text-[#9ca3af] text-xl"
           @click="closeModal"
         >
           ✕
         </label>
-      </form>
+      </div>
 
-      <div class="px-0 sm:px-3">
+      <div class="px-0 sm:px-3 -mt-10">
         <p class="mt-2 text-xl">
           <strong>👋 Добро пожаловать на платформу Harmex!</strong>
         </p>
@@ -213,7 +213,8 @@ const config = useRuntimeConfig();
         
       </div>
 
-      <div class="sm:flex flex-col justify-between mt-8 mb-2">
+      
+      <div class="sticky bottom-0 bg-base-100 py-4 mt-8 z-10 border-t border-gray-200 w-52 rounded-lg">
         <div class="flex items-center gap-2">
           <input
             id="checkbox"

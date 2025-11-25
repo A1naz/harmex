@@ -14,13 +14,20 @@ export default eventHandler(async (event) => {
     $or: [{ uuid }, { buyoutuuid: uuid }],
   }).sort({ _id: -1 });
 
-  console.log(allLogs)
+  let isViolation = false;
   if (allLogs && allLogs.length) {
     for (const log of allLogs) {
       if (log.text && log.text.includes("нарушает правила")) {
-        throw createError("Отзыв нарушает правила платформы");
+        isViolation = true
       }
     }
+  }
+
+  if (!isViolation) {
+    throw createError({
+      statusCode: 400,
+      message: "Отзыв не подходит для оспорения",
+    });
   }
 
   const review = await Review.findOne({ uuid });
@@ -31,7 +38,7 @@ export default eventHandler(async (event) => {
   if (review.disputed) {
     throw createError({
       statusCode: 400,
-      message: "Отзыв уже оспорен",
+      message: "Отзыв уже был оспорен",
     });
   }
   review.disputed = true;

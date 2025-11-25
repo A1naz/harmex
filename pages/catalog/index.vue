@@ -241,6 +241,11 @@ async function getUserFavourites() {
             </ul>
           </div>
 
+          <!-- <ul class="font-medium text-[18px] mt-0.5 text-[#909090]">
+            <li v-if="!loading" class="cursor-pointer">
+              {{ modalStore.selectedCatalog }}
+            </li>
+          </ul> -->
         </div>
         <div class="hidden sm:flex gap-3  sm:mb-4">
           <div
