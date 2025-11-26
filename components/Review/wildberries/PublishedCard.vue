@@ -22,6 +22,7 @@ const emit = defineEmits([
   "infoModal",
   "openSupplementModal",
   "disputeReview",
+  "cancelReview"
 ]);
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -286,6 +287,13 @@ async function disputeReview(item: any) {
         @click="emit('openSupplementModal', info)"
       >
         Дополнить отзыв
+      </button>
+      <button
+        v-if="info.status === 'waiting'"
+        class="btn btn-sm btn-error bg-[#FF685E] text-white h-[2.5rem] text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
+        @click="emit('cancelReview', info)"
+      >
+        Отменить заявку
       </button>
       <button
         v-if="info.status === 'archived' && !info.disputed"
