@@ -278,7 +278,6 @@ export default eventHandler(async (event) => {
 
     // Добавляем строки с визуальным разделением по адресам
     let currentAddress = ''
-    let rowOffset = 0 // Смещение строк из-за добавленных разделителей
     
     for (let i = 0; i < ready.length; i++) {
       const item = ready[i]
@@ -295,24 +294,10 @@ export default eventHandler(async (event) => {
             fgColor: { argb: 'FFE0E0E0' },
           }
         })
-        rowOffset++
       }
       
       currentAddress = itemAddress
       const dataRow = sheet.addRow(item)
-      
-      // Подсвечиваем группы адресов чередующимися цветами для лучшей читаемости
-      if (i > 0 && ready[i - 1]?.point !== itemAddress) {
-        // Новая группа - делаем легкую подсветку заголовка группы
-        dataRow.eachCell((cell) => {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FFF0F8FF' },
-          }
-          cell.font = { bold: true }
-        })
-      }
       
       // Сохраняем реальный номер строки для QR кодов
       item.excelRowNumber = dataRow.number
@@ -347,7 +332,7 @@ export default eventHandler(async (event) => {
       // Используем реальный номер строки в Excel
       const rowNumber = item.excelRowNumber || item.place + 1
       sheet.addImage(image, {
-        tl: { col: 1.5, row: rowNumber - 0.2 },
+        tl: { col: 1.5, row: rowNumber - 1 + 0.8 },
         ext: { width: 100, height: 100 },
       })
       sheet.getRow(rowNumber).height = 100
