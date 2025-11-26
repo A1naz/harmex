@@ -581,7 +581,7 @@ function confirmAIGenerate() {
       <div class="flex flex-col gap-4">
         <div class="w-full flex justify-center">
           <button
-            class="btn btn-primary max-w-80"
+            class="btn btn-primary  max-w-80"
             @click="handleAIGenerateClick"
           >
             Сгенерировать тексты ИИ - 30₽
