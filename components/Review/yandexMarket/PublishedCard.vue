@@ -267,6 +267,13 @@ function confirmCancel() {
       >
         Детали
       </button>
+      <button
+        v-if="info.status === 'waiting'"
+        class="btn btn-sm btn-error bg-[#FF685E] text-white h-[2.5rem] text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
+        @click="openCancelModal"
+      >
+        Отменить заявку
+      </button>
     </div>
   </div>
 
