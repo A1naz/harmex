@@ -32,9 +32,8 @@ export default eventHandler(async (event) => {
     }
 
     delivery.reviewed = false
-    await Review.deleteOne({ uuid: review.uuid })
-    await review.save()
     await delivery.save()
+    await Review.deleteOne({ uuid: review.uuid })
 
     return {
         message: 'Заявка на отзыв успешно отменена',

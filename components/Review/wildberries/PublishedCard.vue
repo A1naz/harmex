@@ -29,6 +29,21 @@ const config = useRuntimeConfig();
 
 const { $dayjs } = useNuxtApp();
 
+const showCancelModal = ref(false);
+
+function openCancelModal() {
+  showCancelModal.value = true;
+}
+
+function closeCancelModal() {
+  showCancelModal.value = false;
+}
+
+function confirmCancel() {
+  emit('cancelReview', props.info);
+  closeCancelModal();
+}
+
 const showSupplementButton = computed(() => {
   console.log("showSupplementButton", props.info.status, props.info.completedDate);
   if (props.info.status === "published" && props.info.completedDate) {
@@ -291,7 +306,7 @@ async function disputeReview(item: any) {
       <button
         v-if="info.status === 'waiting'"
         class="btn btn-sm btn-error bg-[#FF685E] text-white h-[2.5rem] text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
-        @click="emit('cancelReview', info)"
+        @click="openCancelModal"
       >
         Отменить заявку
       </button>
@@ -303,6 +318,23 @@ async function disputeReview(item: any) {
         Оспорить
       </button>
     </div>
+  </div>
+
+  <!-- Модальное окно подтверждения отмены заявки -->
+  <div v-if="showCancelModal" class="modal modal-open">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Подтверждение отмены</h3>
+      <p class="py-4">Вы действительно хотите отменить заявку на отзыв? После отмены заявки вы сможете заново создать заявку на отзыв</p>
+      <div class="modal-action">
+        <button class="btn btn-ghost" @click="closeCancelModal">
+          Нет
+        </button>
+        <button class="btn btn-error bg-[#FF685E] text-white" @click="confirmCancel">
+          Да, отменить
+        </button>
+      </div>
+    </div>
+    <div class="modal-backdrop" @click="closeCancelModal"></div>
   </div>
 </template>
 
