@@ -20,6 +20,7 @@ const emit = defineEmits([
   "resumeStatus",
   "logModal",
   "infoModal",
+  "cancelReview"
 ]);
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -62,6 +63,22 @@ function removeReview() {
 }
 async function resumeStatus(item: any) {
   emit("resumeStatus", item);
+}
+
+
+const showCancelModal = ref(false);
+
+function openCancelModal() {
+  showCancelModal.value = true;
+}
+
+function closeCancelModal() {
+  showCancelModal.value = false;
+}
+
+function confirmCancel() {
+  emit('cancelReview', props.info);
+  closeCancelModal();
 }
 </script>
 
@@ -246,6 +263,23 @@ async function resumeStatus(item: any) {
         Детали
       </button>
     </div>
+  </div>
+
+    <!-- Модальное окно подтверждения отмены заявки -->
+    <div v-if="showCancelModal" class="modal modal-open">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Подтверждение отмены</h3>
+      <p class="py-4">Вы действительно хотите отменить заявку на отзыв? После отмены заявки вы сможете заново создать заявку на отзыв</p>
+      <div class="modal-action">
+        <button class="btn btn-ghost" @click="closeCancelModal">
+          Нет
+        </button>
+        <button class="btn btn-error bg-[#FF685E] text-white" @click="confirmCancel">
+          Да, отменить
+        </button>
+      </div>
+    </div>
+    <div class="modal-backdrop" @click="closeCancelModal"></div>
   </div>
 </template>
 

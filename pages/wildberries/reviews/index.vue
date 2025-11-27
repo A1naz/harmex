@@ -431,6 +431,36 @@ async function disputeReview(item: any) {
     fetchData();
   }
 }
+
+async function cancelReview(item: any) {
+  const { data, error } = await useFetch(`/api/wildberries/review/cancel`, {
+    method: "POST",
+    body: {
+      uuid: item.uuid,
+    },
+  });
+  if (error.value) {
+    notify({
+      title: "Что-то пошло не так",
+      text: error.value?.data?.message,
+      group: "error",
+    });
+    return;
+  }
+  if (data.value) {
+    notify({
+      title: "Успешно",
+      text: "Заявка на отзыв успешно отменена",
+      group: "success",
+    });
+    reviews.value = [];
+    skip.value = 0;
+    end.value = false;
+    fetchData();
+  }
+}
+
+
 </script>
 
 <template>
@@ -592,6 +622,7 @@ async function disputeReview(item: any) {
               @info-modal="(item: any) => [(selectedReview = item), (infoModal = true)]"
               @open-supplement-modal="openSupplementModal"
               @dispute-review="disputeReview"
+              @cancelReview="cancelReview"
             />
           </div>
 
