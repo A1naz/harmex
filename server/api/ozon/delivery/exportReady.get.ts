@@ -63,6 +63,9 @@ function sortByAddress(deliveries: any[]): any[] {
 }
 
 async function getReady(user: any, dateRange: any) {
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+  
   const deliveries = await Delivery.find({
     ...dateRange,
     user,
@@ -77,6 +80,7 @@ async function getReady(user: any, dateRange: any) {
         ],
       },
     },
+    updatedAt: { $gte: todayStart },
   }).sort({ _id: -1 });
 
   const buyoutsId = deliveries.map((item) => item.idbuyout);

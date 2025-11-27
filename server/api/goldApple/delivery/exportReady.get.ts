@@ -62,6 +62,9 @@ function sortByAddress(deliveries: any[]): any[] {
 }
 
 async function getReady(user: any, dateRange: any) {
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+  
   const deliveries = await Delivery.find({
     ...dateRange,
     user: user._id,
@@ -78,6 +81,7 @@ async function getReady(user: any, dateRange: any) {
       },
     },
     status: { $ne: "completed" },
+    updatedAt: { $gte: todayStart },
   });
   if (!deliveries.length) {
     return [];
