@@ -23,62 +23,10 @@ export default eventHandler(async (event) => {
     };
   }
   if (status === 'all') {
-    // Используем агрегацию для приоритетной сортировки
-    deliveries = await Delivery.aggregate([
-      {
-        $match: { user: user._id, ...searchOption }
-      },
-      {
-        $addFields: {
-          // Определяем приоритет сортировки
-          sortPriority: {
-            $cond: {
-              if: {
-                $and: [
-                  { $ne: ["$status", "completed"] },
-                  {
-                    $anyElementTrue: {
-                      $map: {
-                        input: "$statusdelivery",
-                        as: "sd",
-                        in: {
-                          $or: [
-                            { $eq: ["$$sd.status", "Готов к выдаче"] },
-                            { $eq: ["$$sd.status", "Готов к получению"] },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Готов к получению.*" } },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Готов к выдаче.*" } },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Заберите до.*" } },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Получите до.*" } },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Ждёт в пункте выдачи.*" } }
-                          ]
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              then: 1, // Готовые к выдаче
-              else: {
-                $cond: {
-                  if: { $in: ["$status", ["active", "work"]] },
-                  then: 2, // Активные
-                  else: 3  // Все остальные
-                }
-              }
-            }
-          }
-        }
-      },
-      {
-        $sort: { sortPriority: 1, _id: -1 }
-      },
-      {
-        $skip: Number(skip) || 0
-      },
-      {
-        $limit: Number(limit) || 50
-      }
-    ]);
+    deliveries = await Delivery.find({ user, ...searchOption })
+      .sort({ _id: -1 })
+      .skip(skip as number)
+      .limit(limit as number)
   } else if (status === 'active') {
     deliveries = await Delivery.find({
       user,

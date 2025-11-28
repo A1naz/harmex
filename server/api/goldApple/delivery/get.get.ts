@@ -23,49 +23,10 @@ export default eventHandler(async (event) => {
     };
   }
   if (status === "all") {
-    // Используем агрегацию для приоритетной сортировки
-    deliveries = await Delivery.aggregate([
-      {
-        $match: { user: user._id, ...searchOption }
-      },
-      {
-        $addFields: {
-          // Определяем приоритет сортировки
-          sortPriority: {
-            $cond: {
-              if: {
-                $and: [
-                  { $ne: ["$status", "completed"] },
-                  {
-                    $eq: [
-                      { $arrayElemAt: ["$statusdelivery.status", -1] },
-                      "готов к выдаче"
-                    ]
-                  }
-                ]
-              },
-              then: 1, // Готовые к выдаче
-              else: {
-                $cond: {
-                  if: { $eq: ["$status", "active"] },
-                  then: 2, // Активные
-                  else: 3  // Все остальные
-                }
-              }
-            }
-          }
-        }
-      },
-      {
-        $sort: { sortPriority: 1, _id: -1 }
-      },
-      {
-        $skip: Number(skip) || 0
-      },
-      {
-        $limit: Number(limit) || 50
-      }
-    ]);
+    deliveries = await Delivery.find({ user, ...searchOption })
+      .sort({ _id: -1 })
+      .skip(skip as number)
+      .limit(limit as number);
   } else if (status === "active") {
     deliveries = await Delivery.find({ user, status: "active", ...searchOption })
       .sort({
