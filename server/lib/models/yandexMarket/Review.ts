@@ -28,6 +28,7 @@ const ReviewSchema = new Schema({
       'nofunds',
       'deleting',
       'deleted',
+      'archived',
     ],
   },
   recipientphone: { type: String, required: true },

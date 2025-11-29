@@ -171,10 +171,34 @@ export default eventHandler(async (event) => {
       query = Object.assign(query, { delivery: foundDelivery._id });
     }
   }
-  reviews = await Review.find({ ...query, ...dateQuery })
-    .sort({ _id: -1 })
-    .skip((skip as number) || 0)
-    .limit((limit as number) || 0);
+  // Используем агрегацию для приоритетной сортировки
+  reviews = await Review.aggregate([
+    {
+      $match: { ...query, ...dateQuery }
+    },
+    {
+      $addFields: {
+        sortPriority: {
+          $switch: {
+            branches: [
+              { case: { $in: ["$status", ["waiting", "working"]] }, then: 1 }, // Активные
+              { case: { $in: ["$status", ["archived", "nofunds"]] }, then: 2 }, // Архив/нет средств
+            ],
+            default: 3 // Все остальные
+          }
+        }
+      }
+    },
+    {
+      $sort: { sortPriority: 1, _id: -1 }
+    },
+    {
+      $skip: Number(skip) || 0
+    },
+    {
+      $limit: Number(limit) || 50
+    }
+  ]);
 
   const deliveries = await Delivery.find({
     _id: { $in: reviews.map((rev: any) => rev.delivery) },
