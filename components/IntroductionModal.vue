@@ -88,7 +88,7 @@ const config = useRuntimeConfig();
         <ul class="list-disc ml-10 mb-3">
           <li>Стоимость указана <strong>за 1 единицу услуги</strong>.</li>
           <li>При заказе <strong>от 1 000 ед.</strong> — скидка <strong>10%</strong>.</li>
-          <li><strong>Выкуп:</strong> 100 ₽/ед.</li>
+          <li><strong>Выкуп:</strong> 130 ₽/ед.</li>
         </ul>
 
      

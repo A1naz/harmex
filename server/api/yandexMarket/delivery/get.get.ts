@@ -30,6 +30,13 @@ export default eventHandler(async (event) => {
       },
       {
         $addFields: {
+          lastStatus: {
+            $arrayElemAt: ["$statusdelivery.status", -1]
+          }
+        }
+      },
+      {
+        $addFields: {
           // Определяем приоритет сортировки
           sortPriority: {
             $cond: {
@@ -37,23 +44,40 @@ export default eventHandler(async (event) => {
                 $and: [
                   { $ne: ["$status", "completed"] },
                   {
-                    $anyElementTrue: {
-                      $map: {
-                        input: "$statusdelivery",
-                        as: "sd",
-                        in: {
-                          $or: [
-                            { $eq: ["$$sd.status", "Готов к выдаче"] },
-                            { $eq: ["$$sd.status", "Готов к получению"] },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Готов к получению.*" } },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Готов к выдаче.*" } },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Заберите до.*" } },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Получите до.*" } },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Ждёт в пункте выдачи.*" } }
-                          ]
-                        }
+                    $or: [
+                      { $eq: ["$lastStatus", "Готов к выдаче"] },
+                      { $eq: ["$lastStatus", "Готов к получению"] },
+                      { 
+                        $eq: [
+                          { $substr: ["$lastStatus", 0, 17] },
+                          "Готов к получению"
+                        ]
+                      },
+                      { 
+                        $eq: [
+                          { $substr: ["$lastStatus", 0, 15] },
+                          "Готов к выдаче"
+                        ]
+                      },
+                      { 
+                        $eq: [
+                          { $substr: ["$lastStatus", 0, 11] },
+                          "Заберите до"
+                        ]
+                      },
+                      { 
+                        $eq: [
+                          { $substr: ["$lastStatus", 0, 11] },
+                          "Получите до"
+                        ]
+                      },
+                      { 
+                        $eq: [
+                          { $substr: ["$lastStatus", 0, 21] },
+                          "Ждёт в пункте выдачи"
+                        ]
                       }
-                    }
+                    ]
                   }
                 ]
               },

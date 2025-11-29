@@ -31,6 +31,13 @@ export default eventHandler(async (event) => {
       },
       {
         $addFields: {
+          lastStatus: {
+            $arrayElemAt: ["$statusdelivery.status", -1]
+          }
+        }
+      },
+      {
+        $addFields: {
           // Определяем приоритет сортировки
           sortPriority: {
             $cond: {
@@ -38,18 +45,20 @@ export default eventHandler(async (event) => {
                 $and: [
                   { $ne: ["$status", "completed"] },
                   {
-                    $anyElementTrue: {
-                      $map: {
-                        input: "$statusdelivery",
-                        as: "sd",
-                        in: {
-                          $or: [
-                            { $regexMatch: { input: "$$sd.status", regex: "^Ожидает получения.*" } },
-                            { $regexMatch: { input: "$$sd.status", regex: "^Можно забирать.*" } }
-                          ]
-                        }
+                    $or: [
+                      { 
+                        $eq: [
+                          { $substr: ["$lastStatus", 0, 17] },
+                          "Ожидает получения"
+                        ]
+                      },
+                      { 
+                        $eq: [
+                          { $substr: ["$lastStatus", 0, 15] },
+                          "Можно забирать"
+                        ]
                       }
-                    }
+                    ]
                   }
                 ]
               },
