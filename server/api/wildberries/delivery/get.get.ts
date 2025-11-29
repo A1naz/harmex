@@ -50,25 +50,25 @@ export default eventHandler(async (event) => {
                       { $eq: ["$lastStatus", "Готов к получению"] },
                       { 
                         $eq: [
-                          { $substr: ["$lastStatus", 0, 17] },
+                          { $substrCP: ["$lastStatus", 0, 17] },
                           "Готов к получению"
                         ]
                       },
                       { 
                         $eq: [
-                          { $substr: ["$lastStatus", 0, 15] },
+                          { $substrCP: ["$lastStatus", 0, 15] },
                           "Готов к выдаче"
                         ]
                       },
                       { 
                         $eq: [
-                          { $substr: ["$lastStatus", 0, 11] },
+                          { $substrCP: ["$lastStatus", 0, 11] },
                           "Заберите до"
                         ]
                       },
                       { 
                         $eq: [
-                          { $substr: ["$lastStatus", 0, 11] },
+                          { $substrCP: ["$lastStatus", 0, 11] },
                           "Получите до"
                         ]
                       }

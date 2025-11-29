@@ -48,13 +48,13 @@ export default eventHandler(async (event) => {
                     $or: [
                       { 
                         $eq: [
-                          { $substr: ["$lastStatus", 0, 17] },
+                          { $substrCP: ["$lastStatus", 0, 17] },
                           "Ожидает получения"
                         ]
                       },
                       { 
                         $eq: [
-                          { $substr: ["$lastStatus", 0, 15] },
+                          { $substrCP: ["$lastStatus", 0, 15] },
                           "Можно забирать"
                         ]
                       }
