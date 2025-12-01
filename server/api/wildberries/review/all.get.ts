@@ -223,7 +223,7 @@ export default eventHandler(async (event) => {
     if (
       Object.keys(searchParseAvailable)[0] === SelectOptionsReviews.uuidBuyout
     ) {
-      filter.uuidbuyout = searchParseAvailable.uudidBuyout.replace("#", "");
+      filter.uuidbuyout = searchParseAvailable[SelectOptionsReviews.uuidBuyout].replace("#", "");
     } else if (Object.keys(searchParseAvailable)[0] === "article") {
       const searchArticle = searchParseAvailable.article.trim().toLowerCase();
       const numericArticle = Number.parseInt(searchArticle, 10);

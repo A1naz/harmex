@@ -41,11 +41,7 @@ export default eventHandler(async (event) => {
     case "2days":
       dateQuery = {
         createdAt: {
-          $gte: new Date(new Date().setDate(new Date().getDate() - 1)).setHours(
-            0,
-            0,
-            0
-          ),
+          $gte: new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0),
           $lt: new Date(new Date().setHours(23, 59, 59)),
         },
       };
@@ -53,11 +49,7 @@ export default eventHandler(async (event) => {
     case "3days":
       dateQuery = {
         createdAt: {
-          $gte: new Date(new Date().setDate(new Date().getDate() - 2)).setHours(
-            0,
-            0,
-            0
-          ),
+          $gte: new Date(new Date().setDate(new Date().getDate() - 2)).setHours(0, 0, 0),
           $lt: new Date(new Date().setHours(23, 59, 59)),
         },
       };
@@ -65,11 +57,7 @@ export default eventHandler(async (event) => {
     case "7days":
       dateQuery = {
         createdAt: {
-          $gte: new Date(new Date().setDate(new Date().getDate() - 6)).setHours(
-            0,
-            0,
-            0
-          ),
+          $gte: new Date(new Date().setDate(new Date().getDate() - 6)).setHours(0, 0, 0),
           $lt: new Date(new Date().setHours(23, 59, 59)),
         },
       };
@@ -88,18 +76,19 @@ export default eventHandler(async (event) => {
   }
 
   let reviews: any = [];
-  let query: any = { user };
+  let query: any = { user: user._id };
 
   if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
     query = Object.assign(query, searchParse);
   } else {
-      const foundDelivery = await Delivery.findOne({
-        uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
-      });
-      if (foundDelivery) {
-        query = Object.assign(query, { delivery: foundDelivery._id });
-      }
+    const foundDelivery = await Delivery.findOne({
+      uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
+    });
+    console.log("foundDelivery", foundDelivery);
+    if (foundDelivery) {
+      query = Object.assign(query, { delivery: foundDelivery._id });
     }
+  }
 
   if (tab === "all") {
     // Используем агрегацию для приоритетной сортировки
@@ -134,13 +123,13 @@ export default eventHandler(async (event) => {
     query = Object.assign(query, {
       status: { $in: ["created", "working", "waiting", "work"] },
     });
-    reviews = await Review.find({ ...query, ...dateQuery })
+    reviews = await Review.find({...query, ...dateQuery})
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0);
   } else if (tab) {
     query = Object.assign(query, { status: tab.toString() });
-    reviews = await Review.find({ ...query, ...dateQuery })
+    reviews = await Review.find({...query, ...dateQuery})
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0);
@@ -154,6 +143,7 @@ export default eventHandler(async (event) => {
     _id: { $in: deliveries.map((del: any) => del.idbuyout) },
   });
 
+  
     const paymenthistories = await paymenthistory.find({
       type: "review",
       basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
@@ -175,6 +165,8 @@ export default eventHandler(async (event) => {
         uuid: review.uuid,
         type: getReviewType(review),
         originalVideoName: review.originalVideoName,
+        additionText: review.additionText,
+        disputed: review.disputed,
       };
 
       // eslint-disable-next-line eqeqeq
@@ -183,13 +175,15 @@ export default eventHandler(async (event) => {
       );
       if (delivery) {
         format.buyoutuuid = delivery.uuidbuyout;
+
         const buyout = buyoutsPublished.find(
           (buyout: any) => buyout._id.valueOf() == delivery.idbuyout.valueOf()
         );
-           format.recipient = delivery.recipient;
+        format.recipient = delivery.recipient;
+        
         if (buyout) {
           format.product = buyout.product;
-          format.gender = buyout.gender;
+          format.gender = buyout.gender == "male" ? "Мужской" : "Женский";
         }
       }
       const history = paymenthistories.find(
@@ -197,20 +191,12 @@ export default eventHandler(async (event) => {
       );
       if (history) {
         format.completedDate = history.dataoperation;
-         format.financePrice = history.summ;
+        format.financePrice = history.summ;
       }
 
       return format;
     })
   );
-
-  // eslint-disable-next-line eqeqeq
-  if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
-    // eslint-disable-next-line eqeqeq
-    format = format.filter(
-      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout]
-    );
-  }
 
   // =================================
 
@@ -229,7 +215,7 @@ export default eventHandler(async (event) => {
     if (
       Object.keys(searchParseAvailable)[0] === SelectOptionsReviews.uuidBuyout
     ) {
-      filter.uuidbuyout = searchParseAvailable.uudidBuyout.replace("#", "");
+      filter.uuidbuyout = searchParseAvailable[SelectOptionsReviews.uuidBuyout].replace("#", "");
     } else if (Object.keys(searchParseAvailable)[0] === "article") {
       const searchArticle = searchParseAvailable.article.trim().toLowerCase();
       const numericArticle = Number.parseInt(searchArticle, 10);

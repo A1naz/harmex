@@ -25,7 +25,7 @@ export enum TariffTypeEnum {
 
 export enum SelectOptionsReviews {
     article = 'article',
-    uuidBuyout = 'uudidBuyout',
+    uuidBuyout = 'uuidBuyout',
     idReview = 'idReview'
 } 
 
