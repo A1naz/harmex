@@ -5,7 +5,7 @@ const { user } = useUserSession();
 const store = useMainStore();
 
 const { notify } = useNotification();
-const menuItems = ref(["Маркетплейсы", "Недвижимость", "Карты", "Услуги"]);
+const menuItems = ref(["Маркетплейсы", "Недвижимость", "Карты"]);
 const modalStore = useModalStore();
 const introductionModal = ref(false);
 const route = useRoute();
