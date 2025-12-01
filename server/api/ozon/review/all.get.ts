@@ -78,16 +78,35 @@ export default eventHandler(async (event) => {
   let reviews: any = [];
   let query: any = { user: user._id };
 
-  if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
-    query = Object.assign(query, searchParse);
-  } else {
+  if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
     const foundDelivery = await Delivery.findOne({
       uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
     });
-    console.log("foundDelivery", foundDelivery);
+ 
     if (foundDelivery) {
       query = Object.assign(query, { delivery: foundDelivery._id });
     }
+  } else if (Object.keys(searchParse)[0] === "article" && searchParse.article) {
+    // Обрабатываем поиск по артикулу - ищем и как строку, и как число
+    const searchArticle = searchParse.article.toString().trim();
+    const numericArticle = Number.parseInt(searchArticle, 10);
+    
+    // Находим все delivery с таким артикулом
+    const foundDeliveries = await Delivery.find({
+      user: user._id,
+      $or: [{ article: searchArticle }, { article: numericArticle }],
+    }).select("_id");
+    
+    if (foundDeliveries.length > 0) {
+      query = Object.assign(query, { 
+        delivery: { $in: foundDeliveries.map(d => d._id) } 
+      });
+    } else {
+      // Если не нашли доставки, делаем так чтобы ничего не нашлось
+      query = Object.assign(query, { _id: new ObjectId("000000000000000000000000") });
+    }
+  } else if (Object.keys(searchParse)[0] && Object.values(searchParse)[0] !== "") {
+    query = Object.assign(query, searchParse);
   }
 
   if (tab === "all") {
@@ -198,6 +217,9 @@ export default eventHandler(async (event) => {
     })
   );
 
+
+
+  
   // =================================
 
   const searchParseAvailable = search

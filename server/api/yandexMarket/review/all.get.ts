@@ -76,18 +76,38 @@ export default eventHandler(async (event) => {
   }
 
   let reviews: any = [];
-  let query: any = { user };
+  let query: any = { user: user._id };
 
-  if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
-    query = Object.assign(query, searchParse);
-  } else {
-      const foundDelivery = await Delivery.findOne({
-        uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
-      });
-      if (foundDelivery) {
-        query = Object.assign(query, { delivery: foundDelivery._id });
-      }
+  if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
+    const foundDelivery = await Delivery.findOne({
+      uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
+    });
+ 
+    if (foundDelivery) {
+      query = Object.assign(query, { delivery: foundDelivery._id });
     }
+  } else if (Object.keys(searchParse)[0] === "article" && searchParse.article) {
+    // Обрабатываем поиск по артикулу - ищем и как строку, и как число
+    const searchArticle = searchParse.article.toString().trim();
+    const numericArticle = Number.parseInt(searchArticle, 10);
+    
+    // Находим все delivery с таким артикулом
+    const foundDeliveries = await Delivery.find({
+      user: user._id,
+      $or: [{ article: searchArticle }, { article: numericArticle }],
+    }).select("_id");
+    
+    if (foundDeliveries.length > 0) {
+      query = Object.assign(query, { 
+        delivery: { $in: foundDeliveries.map(d => d._id) } 
+      });
+    } else {
+      // Если не нашли доставки, делаем так чтобы ничего не нашлось
+      query = Object.assign(query, { _id: new ObjectId("000000000000000000000000") });
+    }
+  } else if (Object.keys(searchParse)[0] && Object.values(searchParse)[0] !== "") {
+    query = Object.assign(query, searchParse);
+  }
 
   if (tab === "all") {
     // Используем агрегацию для приоритетной сортировки
@@ -142,6 +162,7 @@ export default eventHandler(async (event) => {
     _id: { $in: deliveries.map((del: any) => del.idbuyout) },
   });
 
+  
     const paymenthistories = await paymenthistory.find({
       type: "review",
       basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
@@ -163,6 +184,8 @@ export default eventHandler(async (event) => {
         uuid: review.uuid,
         type: getReviewType(review),
         originalVideoName: review.originalVideoName,
+        additionText: review.additionText,
+        disputed: review.disputed,
       };
 
       // eslint-disable-next-line eqeqeq
@@ -171,10 +194,12 @@ export default eventHandler(async (event) => {
       );
       if (delivery) {
         format.buyoutuuid = delivery.uuidbuyout;
+
         const buyout = buyoutsPublished.find(
           (buyout: any) => buyout._id.valueOf() == delivery.idbuyout.valueOf()
         );
-           format.recipient = delivery.recipient;
+        format.recipient = delivery.recipient;
+        
         if (buyout) {
           format.product = buyout.product;
           format.gender = buyout.gender == "male" ? "Мужской" : "Женский";
@@ -185,19 +210,12 @@ export default eventHandler(async (event) => {
       );
       if (history) {
         format.completedDate = history.dataoperation;
-         format.financePrice = history.summ;
+        format.financePrice = history.summ;
       }
+
       return format;
     })
   );
-
-  // eslint-disable-next-line eqeqeq
-  if (Object.keys(searchParse)[0] == SelectOptionsReviews.uuidBuyout) {
-    // eslint-disable-next-line eqeqeq
-    format = format.filter(
-      (rev) => rev.buyoutuuid == searchParse[SelectOptionsReviews.uuidBuyout]
-    );
-  }
 
   //===========================================================================
 

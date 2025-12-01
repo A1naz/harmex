@@ -88,6 +88,8 @@ const getStatus = computed(() => {
       return "В процессе оспорения";
       case "disputed":
       return "Оспорен";
+      case "reviewsUpdate":
+      return "На проверке";
   }
 });
 
@@ -136,7 +138,10 @@ async function disputeReview(item: any) {
             </a>
           </li>
 
-          <li v-if="info.status === 'published' || info.status === 'added'" class="cursor-pointer">
+          <li
+            v-if="info.status === 'published' || info.status === 'added'"
+            class="cursor-pointer"
+          >
             <a @click="emit('removeReview', info.id)">
               <img
                 class="w-5 h-5"
@@ -176,7 +181,7 @@ async function disputeReview(item: any) {
               <button
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
               >
-               {{ $dayjs(info.createdAt).format("DD.MM.YYYY HH:mm") }}
+                {{ $dayjs(info.createdAt).format("DD.MM.YYYY HH:mm") }}
               </button>
             </div>
             <div class="flex gap-2 w-2/3">
@@ -202,8 +207,8 @@ async function disputeReview(item: any) {
                       info.status === 'canceled' ||
                       info.status === 'deleted' ||
                       info.status === 'deleting' ||
-                      info.status === 'addition',
-                  
+                      info.status === 'addition' ||
+                      info.status === 'reviewsUpdate',
                   }"
                   class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
                   >{{ getStatus }}
@@ -324,12 +329,16 @@ async function disputeReview(item: any) {
   <div v-if="showCancelModal" class="modal modal-open">
     <div class="modal-box">
       <h3 class="font-bold text-lg">Подтверждение отмены</h3>
-      <p class="py-4">Вы действительно хотите отменить заявку на отзыв? После отмены заявки вы сможете заново создать заявку на отзыв</p>
+      <p class="py-4">
+        Вы действительно хотите отменить заявку на отзыв? После отмены заявки вы
+        сможете заново создать заявку на отзыв
+      </p>
       <div class="modal-action">
-        <button class="btn btn-ghost" @click="closeCancelModal">
-          Нет
-        </button>
-        <button class="btn btn-error bg-[#FF685E] text-white" @click="confirmCancel">
+        <button class="btn btn-ghost" @click="closeCancelModal">Нет</button>
+        <button
+          class="btn btn-error bg-[#FF685E] text-white"
+          @click="confirmCancel"
+        >
           Да, отменить
         </button>
       </div>
