@@ -136,8 +136,11 @@ onKeyStroke("Escape", (e) => {
                 </div>
 
                 <div class="w-full truncate">
-                  <span class="text-sm text-gray-500 mr-2 my-auto"
-                    >ID заказа:
+                   <button @click="copyToClipboard(info.uuid)">
+                    <Icon name="si:copy-fill" class="-mb-1.5 w-6 h-6 mr-1" />
+                  </button>
+                  <span class="text-sm text-gray-500 my-auto"
+                    >ID:
                   </span>
                   <label
                     class="rounded-md py-0 px-2 text-sm cursor-pointer"
