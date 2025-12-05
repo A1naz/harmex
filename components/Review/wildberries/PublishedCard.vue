@@ -22,7 +22,7 @@ const emit = defineEmits([
   "infoModal",
   "openSupplementModal",
   "disputeReview",
-  "cancelReview"
+  "cancelReview",
 ]);
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -40,12 +40,16 @@ function closeCancelModal() {
 }
 
 function confirmCancel() {
-  emit('cancelReview', props.info);
+  emit("cancelReview", props.info);
   closeCancelModal();
 }
 
 const showSupplementButton = computed(() => {
-  console.log("showSupplementButton", props.info.status, props.info.completedDate);
+  console.log(
+    "showSupplementButton",
+    props.info.status,
+    props.info.completedDate
+  );
   if (props.info.status === "published" && props.info.completedDate) {
     const completedDate = $dayjs(props.info.completedDate);
     const now = $dayjs();
@@ -53,7 +57,6 @@ const showSupplementButton = computed(() => {
   }
   return false;
 });
-
 
 onMounted(() => {});
 const getStatus = computed(() => {
@@ -82,13 +85,13 @@ const getStatus = computed(() => {
       return "Опубликован";
     case "addition":
       return "Дополнение";
-      case "added":
+    case "added":
       return "Дополнен";
     case "disputing":
       return "В процессе оспорения";
-      case "disputed":
+    case "disputed":
       return "Оспорен";
-      case "reviewsUpdate":
+    case "reviewsUpdate":
       return "На проверке";
   }
 });
@@ -105,6 +108,11 @@ async function resumeStatus(item: any) {
 }
 async function disputeReview(item: any) {
   emit("disputeReview", item);
+}
+const { notify } = useNotification();
+function copyToClipboard(text: string) {
+  navigator.clipboard.writeText(text);
+  notify({ text: "Скопировано в буфер обмена", group: "success" });
 }
 </script>
 
@@ -227,6 +235,9 @@ async function disputeReview(item: any) {
             </div>
 
             <div class="flex gap-2 w-2/3">
+              <button @click="copyToClipboard(info.uuid)">
+                <Icon name="si:copy-fill" class="-mb-1.5 w-6 h-6 mr-1" />
+              </button>
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                 >ID:
               </span>
