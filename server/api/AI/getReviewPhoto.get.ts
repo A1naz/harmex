@@ -1,43 +1,55 @@
 import axios from "axios";
-import https from "https";
-const config = useRuntimeConfig();
-import { Buyout as wildberriesBuyout } from "~/server/lib/models/wildberries/Buyout";
-import { Buyout as ozonBuyout } from "~/server/lib/models/ozon/Buyout";
-import { Buyout as yandexMarketBuyout } from "~/server/lib/models/yandexMarket/Buyout";
-import { GenerateReviews } from "~/server/lib/models/GenerateReviews";
-const NEUROTASK_KEY = config.NEUROTASK_KEY;
+import { readBody } from "h3";
 
-type ParsedItem = {
-  id: number;
-  name: ReviewProvider;
-  text: string;
-  positive: string;
-  negative: string;
-};
+const HARMEX_KEY = "9efb2c5d-a7a3-48db-9a43-75d398e09b40";
+const PROVIDER_BASE_URL = "http://89.208.222.84:3004";
+const SYSTEM_PROMPT = `Сделай объект на фото в жизни, как будто на столе лежит для отзыва для маркетплейса, как-будто сфоткали на телефон`;
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event);
-  if (!user) return sendRedirect(event, "/auth", 302);
-  const url = "https://neurotask.ru/api/harmex/review-text";
 
-  const { mp, buyoutUuid } = getQuery(event);
 
-  // let buyout: any = null;
-  // if (mp === "wildberries") {
-  //   buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid });
-  // } else if (mp === "ozon") {
-  //   buyout = await ozonBuyout.findOne({ uuid: buyoutUuid });
-  // } else if (mp === "ym") {
-  //   buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid });
-  // }
+  if (!PROVIDER_BASE_URL) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "AI provider base URL is not configured",
+    });
+  }
 
-  // if (!buyout) {
-  //   throw createError({
-  //     statusCode: 404,
-  //     statusMessage: "Buyout not found",
-  //   });
-  // }
-  
-const format = "https://sccr.storage.yandexcloud.net/neurotask/dalle/1764078312954-dalle-image.png"
-  return format;
+  try {
+    const response = await axios.post(
+      `${PROVIDER_BASE_URL}/api/ai/dalle`,
+      {
+        key: HARMEX_KEY,
+        message: SYSTEM_PROMPT,
+        systemPrompt: SYSTEM_PROMPT,
+        provider: "dalle",
+        model: "dall-e-3",
+        context: [],
+        userId: "68e61fc8e93a63122d0547aa",
+        generationType: "image",
+        numberOfImages: 1,
+        imageUrl: "https://basket-02.wbcontent.net/vol167/part16781/16781598/images/big/1.webp",
+      },
+      {
+        timeout: 60000,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("dalle response", response.data);
+
+    return {
+      success: true,
+      provider: "dalle",
+      data: response.data,
+    };
+  } catch (error) {
+    console.error("dalle error", error);
+    throw createError({
+      statusCode: 502,
+      statusMessage: "Failed to generate photo",
+    });
+  }
 });
