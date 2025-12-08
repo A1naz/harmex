@@ -12,6 +12,7 @@ export default eventHandler(async (event) => {
   // Получаем актуальные cookies
   const cookies = await getWbCookies();
   
+  console.log(cookies)
   // Используем новый API v4 с cookies
   const url = `https://www.wildberries.ru/__internal/card/cards/v4/detail?appType=1&curr=rub&dest=-8312850&spp=30&hide_vflags=4294967296&hide_dtype=9%3B11&ab_testing=false&lang=ru&nm=${params.article}`;
 
@@ -29,7 +30,7 @@ export default eventHandler(async (event) => {
         "Accept-Encoding": "gzip, deflate, br",
         "Referer": "https://www.wildberries.ru/",
         "Origin": "https://www.wildberries.ru",
-        "Cookie": '_wbauid=9826255971761809560; _cp=1; x_wbaas_token=1.1000.32d013a554694d4eb5006c5dc0ddb966.MHw5NS42NS4zNC4xMDJ8TW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTVfNykgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzE0Mi4wLjAuMCBTYWZhcmkvNTM3LjM2fDE3NjU5MDEwOTl8cmV1c2FibGV8MnxleUpvWVhOb0lqb2lJbjA9fDB8M3wxNzY1Mjk2Mjk5fDE=.MEQCIAknhccSds0pImJNkljikTWfEkcK6yl+5wpyKhj1ytO0AiAaAH/XHrJePmKZZMXjzZoeRVV5kXW8dn6FKcgLPzZ57g==; routeb=1765183801.275.1973.764575|fc3b37d75a18d923fd0e9c7589719997', // Используем свежие cookies
+        "Cookie": cookies, // Используем свежие cookies
         "sec-ch-ua": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": '"Windows"',
