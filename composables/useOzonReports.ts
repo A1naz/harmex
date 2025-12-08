@@ -1,24 +1,24 @@
-interface ReportLog {
+interface OzonReportLog {
   timestamp: string;
   message: string;
 }
 
-export interface Report {
+export interface OzonReport {
   uuid: string;
   status: string;
   createdAt: string;
-  logs: ReportLog[];
+  logs: OzonReportLog[];
 }
 
 export const useOzonReports = () => {
-  const fetchReports = async (skip: number, limit: number, status: string | string[]): Promise<Report[]> => {
+  const fetchReports = async (skip: number, limit: number, status: string | string[]): Promise<OzonReport[]> => {
     return await $fetch('/api/ozon/reports/get', {
       method: 'GET',
       query: { skip, limit, status },
     });
   };
 
-  const searchReports = async (query: string, type: string): Promise<Report[]> => {
+  const searchReports = async (query: string, type: string): Promise<OzonReport[]> => {
     return await $fetch('/api/ozon/reports/search', {
       query: { string: query, type },
     });

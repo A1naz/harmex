@@ -12,7 +12,6 @@ export default eventHandler(async (event) => {
   // Получаем актуальные cookies
   const cookies = await getWbCookies();
   
-  console.log(cookies)
   // Используем новый API v4 с cookies
   const url = `https://www.wildberries.ru/__internal/card/cards/v4/detail?appType=1&curr=rub&dest=-8312850&spp=30&hide_vflags=4294967296&hide_dtype=9%3B11&ab_testing=false&lang=ru&nm=${params.article}`;
 

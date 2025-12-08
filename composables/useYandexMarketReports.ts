@@ -1,24 +1,24 @@
-interface ReportLog {
+interface YandexMarketReportLog {
   timestamp: string;
   message: string;
 }
 
-export interface Report {
+export interface YandexMarketReport {
   uuid: string;
   status: string;
   createdAt: string;
-  logs: ReportLog[];
+  logs: YandexMarketReportLog[];
 }
 
 export const useYandexMarketReports = () => {
-  const fetchReports = async (skip: number, limit: number, status: string | string[]): Promise<Report[]> => {
+  const fetchReports = async (skip: number, limit: number, status: string | string[]): Promise<YandexMarketReport[]> => {
     return await $fetch('/api/yandexMarket/reports/get', {
       method: 'GET',
       query: { skip, limit, status },
     });
   };
 
-  const searchReports = async (query: string, type: string): Promise<Report[]> => {
+  const searchReports = async (query: string, type: string): Promise<YandexMarketReport[]> => {
     return await $fetch('/api/yandexMarket/reports/search', {
       query: { string: query, type },
     });
