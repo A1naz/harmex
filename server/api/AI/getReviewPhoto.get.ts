@@ -1,9 +1,11 @@
 import axios from "axios";
 import { readBody } from "h3";
-
+import { Buyout as wildberriesBuyout } from "~/server/lib/models/wildberries/Buyout";
+import { PutObjectCommand, PutObjectAclCommand, S3Client } from "@aws-sdk/client-s3";
+import crypto from "crypto";
 const HARMEX_KEY = "9efb2c5d-a7a3-48db-9a43-75d398e09b40";
 const PROVIDER_BASE_URL = "http://89.208.222.84:3004";
-const SYSTEM_PROMPT = `Сделай объект на фото в жизни, как будто на столе лежит для отзыва для маркетплейса, как-будто сфоткали на телефон`;
+const SYSTEM_PROMPT = `Сделай объект на фото в жизни, как будто на столе лежит для отзыва для маркетплейса, как-будто сфоткали на телефон, без лишних надписей`;
 
 const PROVIDERS = [
   {
@@ -20,6 +22,72 @@ const PROVIDERS = [
   },
 ];
 
+// Функция для загрузки изображения в VK Cloud и получения публичной ссылки
+async function uploadImageToVKCloud(imageUrl: string): Promise<string> {
+  const config = useRuntimeConfig();
+  
+  const s3 = new S3Client({
+    region: "ru-central1",
+    credentials: {
+      accessKeyId: config.VK_ACCESS_KEY,
+      secretAccessKey: config.VK_SECRET_KEY,
+    },
+    endpoint: "https://hb.vkcs.cloud",
+  });
+
+  const bucket = "ozonmpportal";
+  
+  try {
+    // Скачиваем изображение
+    const imageResponse = await axios.get(imageUrl, {
+      responseType: "arraybuffer",
+    });
+    
+    const imageBuffer = Buffer.from(imageResponse.data);
+    
+    // Определяем расширение файла
+    const contentType = imageResponse.headers["content-type"] || "image/webp";
+    let extension = "webp";
+    if (contentType.includes("jpeg") || contentType.includes("jpg")) {
+      extension = "jpg";
+    } else if (contentType.includes("png")) {
+      extension = "png";
+    }
+    
+    // Генерируем уникальное имя файла
+    const fileName = `ai-review-photos/${crypto.randomUUID()}.${extension}`;
+    
+    // Загружаем файл в S3
+    const putObjectCommand = new PutObjectCommand({
+      Bucket: bucket,
+      Key: fileName,
+      Body: imageBuffer,
+      ContentType: contentType,
+    });
+    
+    await s3.send(putObjectCommand);
+    
+    // Делаем файл публичным
+    const putAclCommand = new PutObjectAclCommand({
+      Bucket: bucket,
+      Key: fileName,
+      ACL: "public-read",
+    });
+    
+    await s3.send(putAclCommand);
+    
+    // Возвращаем публичный URL
+    const publicUrl = `https://hb.vkcs.cloud/${bucket}/${fileName}`;
+    
+    console.log(`Image uploaded to VK Cloud: ${publicUrl}`);
+    
+    return publicUrl;
+  } catch (error: any) {
+    console.error("Error uploading image to VK Cloud:", error);
+    throw new Error(`Failed to upload image to VK Cloud: ${error.message}`);
+  }
+}
+
 export default eventHandler(async (event) => {
   if (!PROVIDER_BASE_URL) {
     throw createError({
@@ -28,7 +96,36 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const imageUrl = "https://basket-03.wbbasket.ru/vol351/part35100/35100982/images/big/1.webp";
+  const { mp, buyoutUuid } = getQuery(event);
+
+let imageUrl = ''
+let imageUrlVKCloud = ''
+
+if (mp === 'wildberries') {
+  const buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid }).lean()
+
+  if (buyout && buyout.product && buyout.product.image) {
+    imageUrl = buyout.product.image
+    // Загружаем изображение в VK Cloud и получаем публичную ссылку
+    imageUrlVKCloud = await uploadImageToVKCloud(imageUrl)
+  }
+} else {
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Buyout not found",
+  });
+}
+
+if (!imageUrlVKCloud) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Product image not found",
+  });
+}
+
+console.log('Original image URL:', imageUrl);
+console.log('VK Cloud image URL:', imageUrlVKCloud);
+console.log(buyoutUuid)
 
   // Создаем запросы ко всем провайдерам
   const requests = PROVIDERS.map(async (provider) => {
@@ -43,16 +140,16 @@ export default eventHandler(async (event) => {
         userId: "68e61fc8e93a63122d0547aa",
         generationType: "image",
         numberOfImages: 1,
-        imageUrl,
+        imageUrl: imageUrlVKCloud, // Используем ссылку из VK Cloud
       };
 
       console.log(`Sending request to ${provider.name}:`, requestBody);
-
+console.log(requestBody)
       const response = await axios.post(
         `${PROVIDER_BASE_URL}/api/ai/${provider.name}`,
         requestBody,
         {
-          timeout: 120000,
+          timeout: 600000,
           headers: {
             "Content-Type": "application/json",
           },
@@ -92,10 +189,19 @@ export default eventHandler(async (event) => {
       const providerResult = result.value;
       if (providerResult.success && "data" in providerResult) {
         // Извлекаем URL из ответа
-        const photoUrl =
+        let photoUrl =
           providerResult.data?.url ||
           providerResult.data?.imageUrl ||
           providerResult.data;
+        
+        // Проверяем на videoUrl (для sora и подобных)
+        if (providerResult.data?.videoUrl) {
+          // Если videoUrl - массив, берем первый элемент
+          photoUrl = Array.isArray(providerResult.data.videoUrl) 
+            ? providerResult.data.videoUrl[0] 
+            : providerResult.data.videoUrl;
+        }
+        
         response[providerResult.provider] =
           typeof photoUrl === "string"
             ? photoUrl
