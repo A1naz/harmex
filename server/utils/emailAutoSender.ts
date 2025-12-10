@@ -25,7 +25,7 @@ const RETRY_DELAY = 30000; // 30 секунд
 
 // Рабочее окно времени (МСК)
 const WORK_START_HOUR = 8; // Начало работы: 8:00 утра
-const WORK_END_HOUR = 12; // Конец работы: 12:00 утра
+const WORK_END_HOUR = 13; // Конец работы: 13:00 утра
 const MAX_CYCLES_PER_DAY = 5; // Максимум 5 циклов рассылки в день
 const CYCLE_INTERVAL = 24 * 60 * 1000; // 24 минуты между циклами (5 циклов за 2 часа)
 
