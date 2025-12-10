@@ -1,11 +1,24 @@
 export interface EmailTemplate {
-  subject: string
-  html: string
+  subject: string;
+  html: string;
+}
+
+/**
+ * Генерирует HTML письма с подставленными параметрами
+ */
+export function generateEmailHtml(
+  template: EmailTemplate,
+  username: string,
+  emailNumber: number
+): string {
+  return template.html
+    .replace(/{{username}}/g, username)
+    .replace(/{{emailNumber}}/g, emailNumber.toString());
 }
 
 export const emailTemplates: EmailTemplate[] = [
   {
-    subject: '[Harmex] Добро пожаловать в Harmex',
+    subject: "[Harmex] Добро пожаловать в Harmex",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -57,7 +70,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -84,7 +97,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Как работает система внутри?',
+    subject: "[Harmex] Как работает система внутри?",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -145,7 +158,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -172,7 +185,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Как создать первую задачу правильно',
+    subject: "[Harmex] Как создать первую задачу правильно",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -271,7 +284,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -298,7 +311,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Почему важны первые 72 часа',
+    subject: "[Harmex] Почему важны первые 72 часа",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -363,7 +376,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -390,7 +403,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Что влияет на скорость выполнения задач',
+    subject: "[Harmex] Что влияет на скорость выполнения задач",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -455,7 +468,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -482,7 +495,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Как правильно распределять бюджет',
+    subject: "[Harmex] Как правильно распределять бюджет",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -570,7 +583,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -597,7 +610,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Частые ошибки новичков',
+    subject: "[Harmex] Частые ошибки новичков",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -658,7 +671,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -685,7 +698,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Когда ждать первые результаты',
+    subject: "[Harmex] Когда ждать первые результаты",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -770,7 +783,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -797,7 +810,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Глубокая аналитика продвижения',
+    subject: "[Harmex] Глубокая аналитика продвижения",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -863,7 +876,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -890,7 +903,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Почему важна регулярность',
+    subject: "[Harmex] Почему важна регулярность",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -962,7 +975,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -989,7 +1002,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Работа с отзывами и рейтингом',
+    subject: "[Harmex] Работа с отзывами и рейтингом",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1057,7 +1070,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1158,7 +1171,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1185,7 +1198,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Как работать с несколькими магазинами',
+    subject: "[Harmex] Как работать с несколькими магазинами",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1260,7 +1273,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1287,7 +1300,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Партнёрская программа',
+    subject: "[Harmex] Партнёрская программа",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1356,7 +1369,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1383,7 +1396,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Как увеличить объём продаж x2',
+    subject: "[Harmex] Как увеличить объём продаж x2",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1498,7 +1511,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1525,7 +1538,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Как выйти в ТОП выдачи',
+    subject: "[Harmex] Как выйти в ТОП выдачи",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1594,7 +1607,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1621,7 +1634,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Почему 50% клиентов выходят на повторные пополнения',
+    subject: "[Harmex] Почему 50% клиентов выходят на повторные пополнения",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1700,7 +1713,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1727,7 +1740,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Как масштабировать магазин',
+    subject: "[Harmex] Как масштабировать магазин",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1791,7 +1804,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1818,7 +1831,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Какие KPI нужно считать продавцу',
+    subject: "[Harmex] Какие KPI нужно считать продавцу",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1896,7 +1909,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1923,7 +1936,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Ваш стратегический план на 30 дней',
+    subject: "[Harmex] Ваш стратегический план на 30 дней",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -2047,7 +2060,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -2074,7 +2087,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Как сделать правильный старт на маркетплейсах',
+    subject: "[Harmex] Как сделать правильный старт на маркетплейсах",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -2139,7 +2152,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/profile" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 18px 48px; border-radius: 8px; font-size: 17px; font-weight: 700; box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 18px 48px; border-radius: 8px; font-size: 17px; font-weight: 700; box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);">
                             🎯 Войти в личный кабинет
                           </a>
                         </td>
@@ -2169,5 +2182,4 @@ export const emailTemplates: EmailTemplate[] = [
       </html>
     `,
   },
-]
-
+];

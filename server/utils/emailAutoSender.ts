@@ -1,6 +1,6 @@
 import { User } from "../lib/models/User";
 import MailService from "../lib/mailService";
-import { emailTemplates } from "../lib/emailTemplates";
+import { emailTemplates, generateEmailHtml } from "../lib/emailTemplates";
 
 // Флаг для включения/выключения автоматической рассылки
 export const EMAIL_AUTO_SENDER_ENABLED = true;
@@ -218,11 +218,18 @@ async function processAutoEmails() {
 
           const template = emailTemplates[emailIndex];
 
+          // Генерируем HTML с подставленными параметрами
+          const htmlWithParams = generateEmailHtml(
+            template,
+            user.uuid,
+            emailIndex + 1 // Номер письма начинается с 1
+          );
+
           // Отправляем письмо с retry логикой
           const success = await sendEmailWithRetry(
             user.email,
             template.subject,
-            template.html
+            htmlWithParams
           );
 
           if (!success) {

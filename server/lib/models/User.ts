@@ -2,8 +2,6 @@ import { model, Schema } from "mongoose";
 import { v4 as uuid } from "uuid";
 import { Tariff } from "./Tariff";
 
-interface IUserSchema extends IUser, Document {}
-
 const partnerSchema = new Schema({
   balance: { type: Number, default: 0 },
   refCount: { type: Number, default: 0 },
@@ -12,7 +10,7 @@ const partnerSchema = new Schema({
   secondLevelPercent: { type: Number, default: 2 },
 });
 
-const UserSchema = new Schema<IUserSchema>({
+const UserSchema = new Schema({
   orgKey: { type: String },
   orgName: { type: String },
   orgOgrn: { type: String },
@@ -90,6 +88,14 @@ const UserSchema = new Schema<IUserSchema>({
   forceLoginDate: { type: Date, required: false },
   emailAutoSentCount: { type: Number, default: 0 },
   emailLastSentDate: { type: Date },
+  emailFunnel: [
+    {
+      emailNumber: { type: Number, required: true },
+      isClicked: { type: Boolean, default: false },
+      clickedAt: { type: Date },
+    },
+  ],
+  emailFunnelClicksCount: { type: Number, default: 0 },
 });
 
-export const User = model<IUserSchema>("User", UserSchema);
+export const User = model("User", UserSchema);
