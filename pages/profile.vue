@@ -33,6 +33,42 @@ const isTwoFaEnabled = ref(user.value?.isTwoFaEnabled || false);
 const partnerAgreement = ref(false);
 const myTeam = ref([]) as any;
 
+// Реферальная ссылка
+const refUrl = computed(() =>
+  user.value?.username === "dmagrunin" || user.value?.username === "test"
+    ? `https://harmex.ru/samovykupy-tovarov-na-avito?ref=${user.value?.uuid}`
+    : `https://harmex.ru/?ref=${user.value?.uuid || "partner"}`
+);
+
+async function copyToClipboard(text: string) {
+  await navigator.clipboard.writeText(text);
+  notify({
+    title: "Успешно",
+    text: "Скопировано в буфер обмена",
+  });
+}
+
+// Партнерский счет
+const partnerBalance = reactive({
+  balance: 0,
+  commissions: 0,
+  refCount: 0,
+  rewardSumm: "0 ₽",
+});
+
+async function getPartnerBalance() {
+  const { data }: any = await useFetch("/api/finance/getUserBalance", {
+    method: "get",
+    watch: false,
+  });
+  if (data.value) {
+    partnerBalance.balance = data.value.balance;
+    partnerBalance.commissions = data.value.commissions;
+    partnerBalance.refCount = data.value.firstLevelReferralsCount;
+    partnerBalance.rewardSumm = data.value.rewardSumm;
+  }
+}
+
 async function openTwoFaQRModal() {
   if (!isTwoFaEnabled.value) {
     const { data }: any = await useFetch("/api/2fa/turnOnOff", {
@@ -76,6 +112,7 @@ onMounted(() => {
   if (params.partnerDetailsModal) {
     partnerDetailsModal.value = true;
   }
+  getPartnerBalance();
 });
 
 const docsArray = ref([
@@ -525,6 +562,63 @@ function copyText(text: string) {
               placeholder="-"
               class="input input-sm h-[2.5rem] bg-base-100 w-full"
             />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
+          <h2 class="text-lg font-medium">Персональная ссылка для рекомендаций</h2>
+          <div class="flex flex-col gap-1 flex-1 w-full">
+            <p class="text-xs font-medium text-base-content">
+              Реферальная ссылка
+            </p>
+            <div
+              class="bg-base-100 h-[2.5rem] rounded-lg px-3 flex gap-2 w-full justify-between items-center"
+            >
+              <span
+                class="cursor-pointer hover:underline truncate text-sm"
+                @click="copyToClipboard(refUrl)"
+              >
+                {{ refUrl }}
+              </span>
+              <button
+                class="text-primary hover:opacity-80 transition-opacity"
+                @click="copyToClipboard(refUrl)"
+              >
+                <Icon
+                  name="clarity:copy-line"
+                  size="20"
+                  class="text-[#909090] scale-x-[-1]"
+                />
+              </button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-4 mt-2">
+            <div class="flex justify-between">
+              <div class="flex flex-col gap-[10px]">
+                <span class="text-base font-normal">Партнерский счет</span>
+                <span class="font-bold text-xl">
+                  {{ (partnerBalance.commissions || 0).toFixed(1) + " ₽" }}
+                </span>
+              </div>
+            </div>
+            <div class="flex">
+              <span class="text-xs text-left text-[#909090]">
+                Доходность зависит от количества приглашенных пользователей
+              </span>
+            </div>
+            <div class="flex justify-start w-full">
+              <div
+                class="bg-base-100 self-start gap-1 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg w-full border border-[#ededed]"
+              >
+                <div class="font-bold text-[0.9rem] whitespace-nowrap text-[#9e9e9e]">
+                  {{ `${partnerBalance.refCount} человек` }}
+                </div>
+                <div class="text-[1rem] text-start text-black font-bold">
+                  {{ partnerBalance.rewardSumm }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
