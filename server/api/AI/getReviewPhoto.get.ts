@@ -1,6 +1,13 @@
 import axios from "axios";
 import { readBody } from "h3";
 import { Buyout as wildberriesBuyout } from "~/server/lib/models/wildberries/Buyout";
+import { Buyout as ozonBuyout } from "~/server/lib/models/ozon/Buyout";
+import { Buyout as yandexMarketBuyout } from "~/server/lib/models/yandexMarket/Buyout";
+import { Buyout as avitoBuyout } from "~/server/lib/models/avito/Buyout";
+import { Buyout as goldAppleBuyout } from "~/server/lib/models/goldApple/Buyout";
+import { Buyout as flowwowBuyout } from "~/server/lib/models/flowwow/Buyout";
+import { Buyout as ozonHotelsBuyout } from "~/server/lib/models/ozonHotels/Buyout";
+import { Buyout as sutochnoBuyout } from "~/server/lib/models/sutochno/Buyout";
 import { PutObjectCommand, PutObjectAclCommand, S3Client } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 const HARMEX_KEY = "9efb2c5d-a7a3-48db-9a43-75d398e09b40";
@@ -100,19 +107,49 @@ export default eventHandler(async (event) => {
 
 let imageUrl = ''
 let imageUrlVKCloud = ''
+let buyout = null;
 
-if (mp === 'wildberries') {
-  const buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid }).lean()
+// Определяем модель в зависимости от маркетплейса
+switch (mp) {
+  case 'wildberries':
+    buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid }).lean();
+    break;
+  case 'ozon':
+    buyout = await ozonBuyout.findOne({ uuid: buyoutUuid }).lean();
+    break;
+  case 'yandexMarket':
+    buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid }).lean();
+    break;
+  case 'avito':
+    buyout = await avitoBuyout.findOne({ uuid: buyoutUuid }).lean();
+    break;
+  case 'goldApple':
+    buyout = await goldAppleBuyout.findOne({ uuid: buyoutUuid }).lean();
+    break;
+  case 'flowwow':
+    buyout = await flowwowBuyout.findOne({ uuid: buyoutUuid }).lean();
+    break;
+  case 'ozonHotels':
+    buyout = await ozonHotelsBuyout.findOne({ uuid: buyoutUuid }).lean();
+    break;
+  case 'sutochno':
+    buyout = await sutochnoBuyout.findOne({ uuid: buyoutUuid }).lean();
+    break;
+  default:
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Marketplace not supported",
+    });
+}
 
-  if (buyout && buyout.product && buyout.product.image) {
-    imageUrl = buyout.product.image
-    // Загружаем изображение в VK Cloud и получаем публичную ссылку
-    imageUrlVKCloud = await uploadImageToVKCloud(imageUrl)
-  }
+if (buyout && buyout.product && buyout.product.image) {
+  imageUrl = buyout.product.image;
+  // Загружаем изображение в VK Cloud и получаем публичную ссылку
+  imageUrlVKCloud = await uploadImageToVKCloud(imageUrl);
 } else {
   throw createError({
     statusCode: 404,
-    statusMessage: "Buyout not found",
+    statusMessage: "Buyout or product image not found",
   });
 }
 
