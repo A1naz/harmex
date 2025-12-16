@@ -1,186 +1,203 @@
-import { Schema, model, Document } from "mongoose";
-import { MultiChatConnection } from "~/server/connections/multiChat";
+import { Schema, model, Document, Model } from 'mongoose'
 
-export interface ChatMessage {
-  role: "user" | "assistant";
+// Интерфейс для сообщения
+export interface IChatMessage {
+  role: "user" | "assistant" | "system";
   content: string;
   imageUrl?: string;
   timestamp: Date;
 }
 
-interface IChatHistorySchema extends Document {
-  userId: string;
-  provider: string;
+// Интерфейс для документа
+export interface IChatHistory extends Document {
+  userId: Schema.Types.ObjectId;
   chatId: string;
-  title: string;
-  messages: ChatMessage[];
-  createdAt: Date;
-  updatedAt: Date;
+  chatTitle: string;
+  provider: string;
+  messages: IChatMessage[];
+  systemPrompt: string;
+  lastActivity: Date;
+  
+  // Методы экземпляра
+  addMessage(role: string, content: string, imageUrl?: string | null): Promise<this>;
+  clearHistory(): Promise<this>;
+  getContext(limit?: number): IChatMessage[];
 }
 
-const ChatMessageSchema = new Schema({
-  role: { type: String, enum: ["user", "assistant"], required: true },
-  content: { type: String, required: true },
-  imageUrl: { type: String, required: false },
-  timestamp: { type: Date, default: Date.now },
-});
+// Интерфейс для статических методов модели
+export interface IChatHistoryModel extends Model<IChatHistory> {
+  getOrCreate(
+    userId: string,
+    provider: string,
+    chatId: string,
+    defaultChatTitle: string
+  ): Promise<IChatHistory>;
+  findByUser(userId: string): Promise<IChatHistory[]>;
+  findByProvider(provider: string): Promise<IChatHistory[]>;
+}
 
-const ChatHistorySchema = new Schema<IChatHistorySchema>(
+const chatHistorySchema = new Schema<IChatHistory, IChatHistoryModel>(
   {
-    userId: { type: String, required: true, index: true },
-    provider: { type: String, required: true, index: true },
-    chatId: { type: String, required: true, index: true },
-    title: { type: String, required: true },
-    messages: { type: [ChatMessageSchema], default: [] },
+    // ID пользователя
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+
+    // ID чата
+    chatId: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+
+    // Заголовок чата
+    chatTitle: {
+      type: String,
+      required: true,
+    },
+
+    // Провайдер AI
+    provider: {
+      type: String,
+      required: true,
+      enum: [
+        "openai",
+        "gemini",
+        "anthropic",
+        "xai",
+        "yandexgpt",
+        "gigachat",
+        "mistral",
+        "cohere",
+        "huggingface",
+        "replicate",
+        "deepseek",
+        "veo3",
+        "imagen",
+        "dalle",
+        "stable-diffusion",
+        "firefly",
+        "leonardo",
+        "midjourney",
+        "mubert",
+        "runway",
+        "pika",
+        "sora",
+        "soraVideo",
+        "soraImage",
+      ],
+      index: true,
+    },
+
+    // Сообщения в чате
+    messages: [
+      {
+        role: {
+          type: String,
+          enum: ["user", "assistant", "system"],
+          required: true,
+        },
+        content: {
+          type: String,
+          required: true,
+        },
+        imageUrl: {
+          type: String,
+          required: false,
+        },
+        timestamp: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+
+    // Системный промпт
+    systemPrompt: {
+      type: String,
+      default:
+        "Ты полезный ассистент. Отвечай на вопросы пользователя кратко и по делу.",
+    },
+
+    // Последняя активность
+    lastActivity: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Составной индекс для быстрого поиска
-ChatHistorySchema.index({ userId: 1, provider: 1, chatId: 1 }, { unique: true });
-
-const ChatHistoryModel = MultiChatConnection.model<IChatHistorySchema>(
-  "MultiChatHistory",
-  ChatHistorySchema
+// Индексы
+chatHistorySchema.index({ userId: 1, provider: 1 });
+chatHistorySchema.index(
+  { userId: 1, chatId: 1, provider: 1 },
+  { unique: true }
 );
+chatHistorySchema.index({ lastActivity: -1 });
 
-export class ChatHistory {
-  _id: string;
-  userId: string;
-  provider: string;
-  chatId: string;
-  title: string;
-  messages: ChatMessage[];
-  createdAt: Date;
-  updatedAt: Date;
+// Метод для добавления сообщения
+chatHistorySchema.methods.addMessage = function (
+  role: string,
+  content: string,
+  imageUrl: string | null = null
+) {
+  this.messages.push({
+    role,
+    content,
+    ...(imageUrl && { imageUrl }),
+    timestamp: new Date(),
+  });
+  this.lastActivity = new Date();
+  return this.save();
+};
 
-  constructor(doc: IChatHistorySchema) {
-    this._id = doc._id.toString();
-    this.userId = doc.userId;
-    this.provider = doc.provider;
-    this.chatId = doc.chatId;
-    this.title = doc.title;
-    this.messages = doc.messages || [];
-    this.createdAt = doc.createdAt;
-    this.updatedAt = doc.updatedAt;
-  }
+// Метод для очистки истории
+chatHistorySchema.methods.clearHistory = function () {
+  this.messages = [];
+  this.lastActivity = new Date();
+  return this.save();
+};
 
-  /**
-   * Получить или создать историю чата
-   */
-  static async getOrCreate(
-    userId: string,
-    provider: string,
-    chatId: string,
-    title: string
-  ): Promise<ChatHistory> {
-    try {
-      // Пытаемся найти существующий чат
-      let chat = await ChatHistoryModel.findOne({
-        userId,
-        provider,
-        chatId,
-      });
+// Метод для получения контекста (последние N сообщений)
+chatHistorySchema.methods.getContext = function (limit = 10) {
+  return this.messages.slice(-limit);
+};
 
-      // Если не найден, создаем новый
-      if (!chat) {
-        chat = await ChatHistoryModel.create({
-          userId,
-          provider,
-          chatId,
-          title,
-          messages: [],
-        });
-      }
+// Статический метод для поиска или создания истории чата
+chatHistorySchema.statics.getOrCreate = async function (
+  userId: string,
+  provider: string,
+  chatId: string,
+  defaultChatTitle: string
+) {
+  const chatTitleToUse = defaultChatTitle;
 
-      return new ChatHistory(chat);
-    } catch (error) {
-      console.error("Error in getOrCreate:", error);
-      throw error;
-    }
-  }
+  return this.findOneAndUpdate(
+    { userId, provider, chatId },
+    { userId, provider, chatId, chatTitle: chatTitleToUse },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
+};
 
-  /**
-   * Добавить сообщение в историю
-   */
-  async addMessage(
-    role: "user" | "assistant",
-    content: string,
-    imageUrl?: string
-  ): Promise<void> {
-    const newMessage: ChatMessage = {
-      role,
-      content,
-      imageUrl,
-      timestamp: new Date(),
-    };
+// Статический метод для поиска истории пользователя
+chatHistorySchema.statics.findByUser = function (userId: string) {
+  return this.find({ userId }).sort({ lastActivity: -1 });
+};
 
-    this.messages.push(newMessage);
+// Статический метод для поиска истории по провайдеру
+chatHistorySchema.statics.findByProvider = function (provider: string) {
+  return this.find({ provider }).sort({ lastActivity: -1 });
+};
 
-    await ChatHistoryModel.updateOne(
-      { _id: this._id },
-      {
-        $push: { messages: newMessage },
-        $set: { updatedAt: new Date() },
-      }
-    );
-  }
-
-  /**
-   * Получить контекст для AI (последние N сообщений)
-   */
-  getContext(limit: number = 10): ChatMessage[] {
-    return this.messages.slice(-limit);
-  }
-
-  /**
-   * Получить все чаты пользователя
-   */
-  static async getUserChats(userId: string): Promise<ChatHistory[]> {
-    const chats = await ChatHistoryModel.find({ userId }).sort({
-      updatedAt: -1,
-    });
-
-    return chats.map((chat) => new ChatHistory(chat));
-  }
-
-  /**
-   * Получить чаты пользователя по провайдеру
-   */
-  static async getUserChatsByProvider(
-    userId: string,
-    provider: string
-  ): Promise<ChatHistory[]> {
-    const chats = await ChatHistoryModel.find({ userId, provider }).sort({
-      updatedAt: -1,
-    });
-
-    return chats.map((chat) => new ChatHistory(chat));
-  }
-
-  /**
-   * Удалить чат
-   */
-  static async delete(chatId: string, userId: string): Promise<void> {
-    await ChatHistoryModel.deleteMany({
-      chatId,
-      userId,
-    });
-  }
-
-  /**
-   * Очистить историю сообщений чата
-   */
-  async clearMessages(): Promise<void> {
-    this.messages = [];
-    await ChatHistoryModel.updateOne(
-      { _id: this._id },
-      {
-        $set: { messages: [], updatedAt: new Date() },
-      }
-    );
-  }
-}
+export const ChatHistory = model<IChatHistory, IChatHistoryModel>(
+  "ChatHistory",
+  chatHistorySchema
+);
 

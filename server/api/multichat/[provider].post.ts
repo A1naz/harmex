@@ -1,6 +1,6 @@
 import { ChatHistory } from "~/server/lib/models/multiChat/ChatHistory";
-import { AISettings } from "~/server/lib/models/multiChat/AISettings";
 import { aiModelsConfig } from "./AI";
+import mongoose from "mongoose";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -26,22 +26,18 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    // Получаем userId из заголовков или сессии
-    const userId = getHeader(event, "x-user-id") || event.context.user?.id;
-
-    if (!userId) {
-      throw createError({
-        statusCode: 400,
-        message: "x-user-id заголовок обязателен",
-      });
-    }
-
     if (!chatId) {
       throw createError({
         statusCode: 400,
         message: "chatId обязателен",
       });
     }
+
+    // Получаем пользователя
+    const user = await getAdminEntity(event);
+    if (!user || !user._id) return sendRedirect(event, "/auth", 302);
+
+    const userId = user._id.toString(); // Преобразуем в строку для getOrCreate
 
     console.log("🔍 provider", provider);
     console.log("🔍 chatId", chatId);
@@ -59,10 +55,10 @@ export default defineEventHandler(async (event) => {
     const contentToSave = imageUrl
       ? `${message} <IMAGE_URL:${imageUrl}>`
       : message;
-    
+
     console.log("🔍 contentToSave", contentToSave);
     console.log("🔍 imageUrl", imageUrl);
-    
+
     await chatHistory.addMessage("user", contentToSave, imageUrl);
 
     // Получаем контекст из истории чата
@@ -78,33 +74,31 @@ export default defineEventHandler(async (event) => {
       const config = useRuntimeConfig();
 
       // Определяем URL сервиса провайдера
-      const providerUrls: Record<string, string | undefined> = {
-        openai: config.public.OPENAI_SERVICE_URL || config.OPENAI_SERVICE_URL,
-        gemini: config.public.GEMINI_SERVICE_URL || config.GEMINI_SERVICE_URL,
-        anthropic: config.public.ANTHROPIC_SERVICE_URL || config.ANTHROPIC_SERVICE_URL,
-        xai: config.public.XAI_SERVICE_URL || config.XAI_SERVICE_URL,
-        yandexgpt: config.public.YANDEXGPT_SERVICE_URL || config.YANDEXGPT_SERVICE_URL,
-        gigachat: config.public.GIGACHAT_SERVICE_URL || config.GIGACHAT_SERVICE_URL,
-        deepseek: config.public.DEEPSEEK_SERVICE_URL || config.DEEPSEEK_SERVICE_URL,
-        veo3: config.public.GEMINI_SERVICE_URL || config.GEMINI_SERVICE_URL,
-        imagen: config.public.GEMINI_SERVICE_URL || config.GEMINI_SERVICE_URL,
-        dalle: config.public.OPENAI_SERVICE_URL || config.OPENAI_SERVICE_URL,
-        soraImage: config.public.OPENAI_SERVICE_URL || config.OPENAI_SERVICE_URL,
-        soraVideo: config.public.OPENAI_SERVICE_URL || config.OPENAI_SERVICE_URL,
+      const providerUrls: Record<string, string> = {
+        openai: 'http://89.208.222.84:3004',
+        gemini:'http://89.208.222.84:3004',
+        anthropic:'http://89.208.222.84:3004',
+        xai:'http://89.208.222.84:3004',
+        yandexgpt:'http://89.208.222.84:3004',
+        gigachat:'http://89.208.222.84:3004',
+        deepseek:'http://89.208.222.84:3004',
+        veo3:'http://89.208.222.84:3004',
+        imagen:'http://89.208.222.84:3004',
+        dalle:'http://89.208.222.84:3004',
+        soraImage:'http://89.208.222.84:3004',
+        soraVideo:'http://89.208.222.84:3004',
       };
 
-      const providerUrl = providerUrls[provider];
+      const providerUrl = providerUrls[provider] || "";
 
       if (!providerUrl) {
         aiResponse = `Провайдер ${provider} не настроен. Отсутствует переменная окружения ${provider.toUpperCase()}_SERVICE_URL`;
         success = false;
       } else {
-        // Получаем настройки AI для пользователя
-        const aiSettings = await AISettings.findByUserId(userId);
-
-        // Получаем модель из настроек или используем дефолтную
-        const providerConfig = aiModelsConfig[provider as keyof typeof aiModelsConfig];
-        let selectedModel = aiSettings?.getModelForProvider(provider) || providerConfig?.defaultModel || provider;
+        // Получаем дефолтную модель из конфига
+        const providerConfig =
+          aiModelsConfig[provider as keyof typeof aiModelsConfig];
+        const selectedModel = providerConfig?.defaultModel || provider;
 
         // Определяем тип генерации
         let generationType: string | undefined = providerConfig?.type;
@@ -135,7 +129,7 @@ export default defineEventHandler(async (event) => {
           provider: actualProvider,
           model: selectedModel,
           context: chatContext,
-          userId: userId,
+          userId: "68e61fc8e93a63122d0547aa",
           numberOfImages: 1,
         };
 
@@ -156,17 +150,19 @@ export default defineEventHandler(async (event) => {
         }
 
         // Отправляем запрос к AI провайдеру
-        const aiResponseData = await $fetch<any>(
+        const response = await fetch(
           `${providerUrl}/api/ai/${actualProvider}`,
           {
             method: "POST",
-            body: requestBody,
-            timeout: 200000,
+            body: JSON.stringify(requestBody),
             headers: {
               "Content-Type": "application/json",
             },
           }
         );
+
+        console.log(response)
+        const aiResponseData = await response.json();
 
         if (aiResponseData?.success) {
           console.log("🔍 aiResponseData", aiResponseData);
@@ -212,7 +208,9 @@ export default defineEventHandler(async (event) => {
       }
     } catch (aiError: any) {
       console.error("🔍 aiError", aiError);
-      aiResponse = `Ошибка связи с провайдером ${provider}: ${aiError.message || aiError}`;
+      aiResponse = `Ошибка связи с провайдером ${provider}: ${
+        aiError.message || aiError
+      }`;
       success = false;
     }
 
@@ -236,11 +234,10 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error("🔍 error", error);
-    
+
     throw createError({
       statusCode: error.statusCode || 500,
       message: error.message || "Ошибка отправки сообщения провайдеру",
     });
   }
 });
-
