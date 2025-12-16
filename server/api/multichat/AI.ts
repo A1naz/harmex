@@ -1,0 +1,106 @@
+export const aiModelsConfig = {
+    yandexgpt: {
+      label: "YandexGPT",
+      models: ["yandexgpt-lite", "yandexgpt"],
+      defaultModel: "yandexgpt-lite",
+      type: 'chat',
+      url: 'yandexgpt'
+    },
+    xai: {
+      label: "Grok",
+      models: ["grok-4", "grok-3", "grok-3-mini"],
+      defaultModel: "grok-4",
+      type: 'chat',
+      url: 'xai'
+    },
+    openai: {
+      label: "OpenAI",
+      models: [
+        "gpt-5",
+        "gpt-5-mini",
+        "gpt-5-nano",
+        "gpt-4.1",
+        "gpt-4.1-nano",
+        "gpt-4.1-mini",
+      ],
+      type: 'chat',
+      defaultModel: "gpt-4.1",
+      url: 'openai'
+    },
+    gigachat: {
+      label: "GigaChat",
+      models: ["GigaChat-2-Pro", "GigaChat-2", "GigaChat-2-Max"],
+      type: 'chat',
+      defaultModel: "GigaChat-2",
+      url: 'gigachat'
+    },
+    gemini: {
+      label: "Gemini",
+      models: [
+        "gemini-2.5-pro",
+        "gemini-2.5-flash",
+        "gemini-2.5-flash-image-preview",
+        "gemini-2.0-flash",
+      ],
+      type: 'chat',
+      defaultModel: "gemini-2.5-pro",
+      url: 'gemini'
+    },
+    deepseek: {
+      label: "DeepSeek",
+      models: ["deepseek-chat", "deepseek-reasoner"],
+      type: 'chat',
+      defaultModel: "deepseek-chat",
+      url: 'deepseek'
+    },
+    anthropic: {
+      label: "Anthropic",
+      models: [
+        "claude-opus-4-1-20250805",
+        "claude-opus-4-20250514",
+        "claude-sonnet-4-20250514",
+        "claude-3-7-sonnet-latest",
+        "claude-3-5-haiku-latest",
+        "claude-3-haiku-20240307",
+      ],
+      type: 'chat',
+      defaultModel: "claude-opus-4-1-20250805",
+      url: 'anthropic'
+    },
+    veo3: {
+      label: "Google Veo3",
+      models: ["veo-3.0-generate-001"],
+      type: 'video',
+      defaultModel: "veo-3.0-generate-001",
+      url: 'veo3'
+    },
+    imagen: {
+      label: "Google Imagen",
+      models: ["imagen-4.0-generate-001", "imagen-3.0-generate-002"],
+      type: 'image',
+      defaultModel: "imagen-4.0-generate-001",
+      url: 'imagen'
+    },
+    dalle: {
+      label: "DALL-E",
+      models: ["dall-e-3"],
+      type: 'image',
+      defaultModel: "dall-e-3",
+      url: 'dalle'
+    },
+      soraImage: {
+        label: "OpenAI Sora Image",
+        models: ["sora image"],
+        type: 'image',
+        defaultModel: "sora image",
+        url: 'sora'
+      },
+      soraVideo: {
+        label: "OpenAI Sora Video",
+        models: ["sora video"],
+        type: 'video',
+        defaultModel: "sora video",
+        url: 'sora'
+      },
+  };
+  
