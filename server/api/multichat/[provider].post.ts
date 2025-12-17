@@ -39,9 +39,6 @@ export default defineEventHandler(async (event) => {
 
     const userId = user._id.toString(); // Преобразуем в строку для getOrCreate
 
-    console.log("🔍 provider", provider);
-    console.log("🔍 chatId", chatId);
-
     // Создаем или получаем историю чата
     const defaultChatTitle = `Чат ${new Date().toLocaleDateString("ru-RU")}`;
     const chatHistory = await ChatHistory.getOrCreate(

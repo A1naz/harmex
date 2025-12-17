@@ -12,5 +12,6 @@ export interface Message {
   text: string;
   timestamp: Date;
   isOwn: boolean;
+  imageUrl?: string; // URL загруженного изображения
 }
 

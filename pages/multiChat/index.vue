@@ -4,6 +4,9 @@ import ChatCard from '~/components/multiChat/ChatCard.vue';
 import Sidebar from '~/components/multiChat/Sidebar.vue';
 import type { Chat } from '~/components/multiChat/types';
 import { v4 as uuid } from 'uuid';
+import { useNotification } from '@kyvg/vue3-notification';
+
+const { notify } = useNotification();
 
 definePageMeta({ middleware: "auth", layout: "app" });
 
@@ -29,6 +32,9 @@ const chats = reactive<Chat[]>([]);
 
 // Глобальное сообщение для отправки всем
 const globalMessage = ref('');
+const globalUploadedImageUrl = ref<string>('');
+const globalUploadingImage = ref(false);
+const isGlobalDraggingFile = ref(false);
 
 // Sidebar состояние
 const isSidebarOpen = ref(false);
@@ -60,6 +66,21 @@ const filteredChats = computed<Chat[]>(() => {
     const config = aiModelsConfig.value[provider];
     return config?.type === selectedType.value;
   });
+});
+
+// Placeholder для глобального поля ввода
+const globalInputPlaceholder = computed(() => {
+  if (filteredChats.value.length === 0) {
+    return 'Нет доступных чатов в этой категории...';
+  }
+  
+  const categoryName = 
+    selectedType.value === 'chat' ? 'Текст' :
+    selectedType.value === 'video' ? 'Видео' :
+    selectedType.value === 'audio' ? 'Аудио' :
+    'Изображения';
+  
+  return `Отправить всем в категории "${categoryName}"...`;
 });
 
 // Подсчет количества чатов по типам
@@ -292,7 +313,7 @@ watch(selectedType, (newValue) => {
 const loadingChats = ref<Record<number, boolean>>({});
 
 // Отправка сообщения в конкретный чат
-const sendMessageToChat = async (chat: Chat) => {
+const sendMessageToChat = async (chat: Chat, imageUrl?: string) => {
   if (!chat.input.trim() || loadingChats.value[chat.id]) return;
   
   const userMessage = chat.input;
@@ -303,7 +324,8 @@ const sendMessageToChat = async (chat: Chat) => {
     id: Date.now(),
     text: userMessage,
     timestamp: new Date(),
-    isOwn: true
+    isOwn: true,
+    imageUrl: imageUrl, // Добавляем imageUrl если есть
   });
   
   chat.input = '';
@@ -328,6 +350,7 @@ const sendMessageToChat = async (chat: Chat) => {
         message: userMessage,
         chatId: currentChatId.value || uuid(),
         systemPrompt: 'Ты полезный ассистент. Отвечай на вопросы пользователя кратко и по делу.',
+        imageUrl: imageUrl || undefined, // Передаем imageUrl в запросе
       }),
     });
     
@@ -377,29 +400,172 @@ const sendMessageToChat = async (chat: Chat) => {
 // Глобальная загрузка
 const globalLoading = ref(false);
 
-// Отправка сообщения всем чатам
+// Общая функция для загрузки файла для глобального инпута
+const uploadGlobalFile = async (file: File) => {
+  
+  // Проверка на webp
+  if (file.name && file.name.toLowerCase().endsWith('.webp')) {
+    notify({
+      title: 'Что-то пошло не так',
+      text: 'Нельзя загружать вебпикчи',
+      group: 'error',
+      duration: 3000,
+    });
+    return;
+  }
+  
+  globalUploadingImage.value = true;
+  
+  try {
+    const fileName = 'reviewImages/' + uuid();
+    
+    const { upload } = useS3Object();
+    const result = await upload(file, {
+      key: fileName,
+    });
+    
+    if (!result) {
+      notify({
+        title: 'Что-то пошло не так',
+        text: 'Не удалось загрузить фото',
+        group: 'error',
+        duration: 3000,
+      });
+      return;
+    }
+    
+    await useFetch('/api/images/openForPublic', {
+      method: 'GET',
+      params: {
+        path: result.split('query/')[1],
+      },
+    });
+    
+    globalUploadedImageUrl.value = `https://ozonmpportal.hb.vkcs.cloud/${result.split('query/')[1]}`;
+    
+    notify({
+      title: 'Успешно',
+      text: 'Изображение загружено',
+      group: 'success',
+      duration: 2000,
+    });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    notify({
+      title: 'Ошибка',
+      text: 'Не удалось загрузить изображение',
+      group: 'error',
+      duration: 3000,
+    });
+  } finally {
+    globalUploadingImage.value = false;
+  }
+};
+
+// Загрузка изображения из input для глобального инпута
+const handleGlobalImageUpload = async (event: Event) => {
+  const fileList = (event.target as HTMLInputElement).files;
+  if (!fileList || !fileList[0]) return;
+  
+  await uploadGlobalFile(fileList[0]);
+  
+  // Очищаем input
+  (event.target as HTMLInputElement).value = '';
+};
+
+// Drag and Drop обработчики для глобального инпута
+const handleGlobalDragOver = (event: DragEvent) => {
+  event.preventDefault();
+  event.stopPropagation();
+  if (event.dataTransfer) {
+    event.dataTransfer.dropEffect = 'copy';
+  }
+  isGlobalDraggingFile.value = true;
+};
+
+const handleGlobalDragLeave = (event: DragEvent) => {
+  event.preventDefault();
+  event.stopPropagation();
+  
+  // Проверяем, что мы действительно покинули область
+  const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+  if (
+    event.clientX <= rect.left ||
+    event.clientX >= rect.right ||
+    event.clientY <= rect.top ||
+    event.clientY >= rect.bottom
+  ) {
+    isGlobalDraggingFile.value = false;
+  }
+};
+
+const handleGlobalDrop = async (event: DragEvent) => {
+  event.preventDefault();
+  event.stopPropagation();
+  isGlobalDraggingFile.value = false;
+  
+  if (!event.dataTransfer?.files || event.dataTransfer.files.length === 0) return;
+  
+  const file = event.dataTransfer.files[0];
+  
+  // Проверяем, что это изображение
+  if (!file.type.startsWith('image/')) {
+    notify({
+      title: 'Ошибка',
+      text: 'Можно загружать только изображения',
+      group: 'error',
+      duration: 3000,
+    });
+    return;
+  }
+  
+  await uploadGlobalFile(file);
+};
+
+// Удаление загруженного изображения для глобального инпута
+const removeGlobalUploadedImage = () => {
+  globalUploadedImageUrl.value = '';
+};
+
+// Отправка сообщения всем чатам в выбранной категории
 const sendToAll = async () => {
   if (!globalMessage.value.trim() || globalLoading.value) return;
   
+  // Используем только чаты из выбранной категории
+  const chatsToSend = filteredChats.value;
+  
+  if (chatsToSend.length === 0) {
+    console.warn('Нет доступных чатов в выбранной категории');
+    return;
+  }
+  
   const userMessage = globalMessage.value;
+  const imageUrl = globalUploadedImageUrl.value;
   globalMessage.value = '';
+  globalUploadedImageUrl.value = ''; // Очищаем после отправки
   globalLoading.value = true;
   
-  // Добавляем сообщение пользователя во все чаты
+  // Устанавливаем состояние загрузки для каждого чата
+  chatsToSend.forEach(chat => {
+    loadingChats.value[chat.id] = true;
+  });
+  
+  // Добавляем сообщение пользователя только в чаты выбранной категории
   const message = {
     id: Date.now(),
     text: userMessage,
     timestamp: new Date(),
-    isOwn: true
+    isOwn: true,
+    imageUrl: imageUrl || undefined, // Добавляем imageUrl если есть
   };
   
-  chats.forEach(chat => {
+  chatsToSend.forEach(chat => {
     chat.messages.push({ ...message });
   });
   
-  // Прокрутка всех чатов вниз
+  // Прокрутка чатов выбранной категории вниз
   nextTick(() => {
-    chats.forEach(chat => {
+    chatsToSend.forEach(chat => {
       const chatElement = document.getElementById(`chat-messages-${chat.id}`);
       if (chatElement) {
         chatElement.scrollTop = chatElement.scrollHeight;
@@ -407,8 +573,8 @@ const sendToAll = async () => {
     });
   });
   
-  // Отправляем запросы ко всем провайдерам параллельно
-  const promises = chats.map(async (chat) => {
+  // Отправляем запросы только к провайдерам выбранной категории параллельно
+  const promises = chatsToSend.map(async (chat) => {
     const provider = chat.provider || 'openai';
     
     try {
@@ -421,6 +587,7 @@ const sendToAll = async () => {
           message: userMessage,
           chatId: currentChatId.value || uuid(),
           systemPrompt: 'Ты полезный ассистент. Отвечай на вопросы пользователя кратко и по делу.',
+          imageUrl: imageUrl || undefined, // Передаем imageUrl в запросе
         }),
       });
       
@@ -449,6 +616,9 @@ const sendToAll = async () => {
         timestamp: new Date(),
         isOwn: false
       });
+    } finally {
+      // Снимаем состояние загрузки для каждого чата
+      loadingChats.value[chat.id] = false;
     }
     
     // Прокрутка после получения ответа
@@ -531,7 +701,7 @@ const handleDragEnd = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white pb-32">
+  <div class="min-h-screen pb-32">
     <!-- Sidebar -->
     <Sidebar
       :is-open="isSidebarOpen"
@@ -672,21 +842,74 @@ const handleDragEnd = () => {
       </div>
 
       <!-- Глобальное поле отправки всем -->
-      <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-4">
+      <div 
+        class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-4"
+        :class="{ 'border-4 border-dashed border-blue-500 bg-blue-50': isGlobalDraggingFile }"
+        @dragover="handleGlobalDragOver"
+        @dragleave="handleGlobalDragLeave"
+        @drop="handleGlobalDrop"
+      >
+        <!-- Индикатор перетаскивания для глобального инпута -->
+        <div 
+          v-if="isGlobalDraggingFile" 
+          class="absolute inset-0 flex items-center justify-center bg-blue-50 bg-opacity-95 z-50 pointer-events-none"
+        >
+          <div class="text-center">
+            <svg class="w-20 h-20 mx-auto mb-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <p class="text-blue-600 font-semibold text-lg">Отпустите для загрузки изображения</p>
+            <p class="text-blue-500 text-sm mt-1">Изображение будет отправлено всем провайдерам в категории</p>
+          </div>
+        </div>
+        
         <div class="max-w-7xl mx-auto px-6">
+          <!-- Превью загруженного изображения -->
+          <div v-if="globalUploadedImageUrl" class="mb-3">
+            <div class="relative inline-block">
+              <img :src="globalUploadedImageUrl" alt="Uploaded" class="h-20 w-20 object-cover rounded border border-gray-300" />
+              <button
+                @click="removeGlobalUploadedImage"
+                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 text-sm font-bold"
+                type="button"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+          
           <form @submit.prevent="sendToAll" class="flex gap-2">
+            <!-- Кнопка загрузки изображения -->
+            <label class="px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer flex items-center justify-center">
+              <input
+                type="file"
+                accept="image/*"
+                class="hidden"
+                @change="handleGlobalImageUpload"
+                :disabled="globalLoading || globalUploadingImage || filteredChats.length === 0"
+              />
+              <svg v-if="!globalUploadingImage" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+              <svg v-else class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </label>
+            
             <input
               v-model="globalMessage"
               type="text"
-              placeholder="Введите ваш запрос..."
+              :placeholder="globalInputPlaceholder"
               class="flex-1 px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :disabled="filteredChats.length === 0"
               @keydown.enter.exact.prevent="sendToAll"
             />
             <button
               type="submit"
               class="px-6 py-3 bg-gray-800 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2 flex-shrink-0"
-              :disabled="!globalMessage.trim() || globalLoading"
-              :class="{ 'opacity-50 cursor-not-allowed': !globalMessage.trim() || globalLoading }"
+              :disabled="!globalMessage.trim() || globalLoading || filteredChats.length === 0"
+              :class="{ 'opacity-50 cursor-not-allowed': !globalMessage.trim() || globalLoading || filteredChats.length === 0 }"
             >
               <svg v-if="!globalLoading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>

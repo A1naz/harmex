@@ -8,6 +8,7 @@ export default async (_nitroApp: Nitro) => {
 
   try { 
     if (config.env !== 'developer') {
+      console.log('createAllPickpoints')
       createAllPickpoints()
       // Запускаем автоматическую рассылку писем
       startEmailAutoSender()

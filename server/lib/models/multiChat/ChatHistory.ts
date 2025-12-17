@@ -50,7 +50,6 @@ const chatHistorySchema = new Schema<IChatHistory, IChatHistoryModel>(
     chatId: {
       type: String,
       required: true,
-      unique: true,
       index: true,
     },
 
