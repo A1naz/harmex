@@ -1,6 +1,6 @@
 import { ChatHistory } from "~/server/lib/models/multiChat/ChatHistory";
 import { aiModelsConfig } from "./AI";
-import mongoose from "mongoose";
+import { GenerateReviews } from "~/server/lib/models/GenerateReviews";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -65,6 +65,7 @@ export default defineEventHandler(async (event) => {
     // Переменные для ответа AI
     let aiResponse = "";
     let success = true;
+    let generationType: string | undefined;
 
     try {
       // Получаем конфигурацию провайдера
@@ -98,7 +99,7 @@ export default defineEventHandler(async (event) => {
         const selectedModel = providerConfig?.defaultModel || provider;
 
         // Определяем тип генерации
-        let generationType: string | undefined = providerConfig?.type;
+        generationType = providerConfig?.type;
         let actualProvider = provider;
 
         // Обработка sora вариантов
@@ -213,6 +214,30 @@ export default defineEventHandler(async (event) => {
 
     // Добавляем ответ AI в историю
     await chatHistory.addMessage("assistant", aiResponse);
+
+    // Создаем запись GenerateReviews при успешном ответе
+    if (success) {
+      let recordType: string;
+      
+      if (generationType === "image") {
+        recordType = "generatePhoto";
+      } else if (generationType === "video") {
+        recordType = "generateVideo";
+      } else {
+        recordType = "generateText";
+      }
+
+      await GenerateReviews.create({
+        user: user._id,
+        summ: 0,
+        status: "created",
+        taskId: `${recordType}_${chatId}_${new Date().getTime()}`,
+        createdDate: new Date(),
+        type: recordType,
+        mp: 'wildberries',
+        article: 0, // Сохраняем начало сообщения как артикул
+      });
+    }
 
     // Возвращаем ответ
     return {

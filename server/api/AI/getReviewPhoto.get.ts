@@ -8,11 +8,16 @@ import { Buyout as goldAppleBuyout } from "~/server/lib/models/goldApple/Buyout"
 import { Buyout as flowwowBuyout } from "~/server/lib/models/flowwow/Buyout";
 import { Buyout as ozonHotelsBuyout } from "~/server/lib/models/ozonHotels/Buyout";
 import { Buyout as sutochnoBuyout } from "~/server/lib/models/sutochno/Buyout";
-import { PutObjectCommand, PutObjectAclCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  PutObjectAclCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import crypto from "crypto";
 const HARMEX_KEY = "9efb2c5d-a7a3-48db-9a43-75d398e09b40";
 const PROVIDER_BASE_URL = "http://89.208.222.84:3004";
-const SYSTEM_PROMPT = `Сделай объект на фото в жизни, как будто на столе лежит для отзыва для маркетплейса, как-будто сфоткали на телефон, без лишних надписей`;
+const SYSTEM_PROMPT = `Сгенерируй фотографию товара для отзыва на Wildberries. Фото должно выглядеть максимально естественно, словно сделано на обычный телефон, без признаков AI-генерации. Покажи товар в повседневной обстановке, возможно, на столе или в руках, при естественном освещении. Избегай водяных знаков и излишних надписей. Цель – фото, которое органично впишется в раздел отзывов`;
+import { GenerateReviews } from "~/server/lib/models/GenerateReviews";
 
 const PROVIDERS = [
   {
@@ -32,7 +37,7 @@ const PROVIDERS = [
 // Функция для загрузки изображения в VK Cloud и получения публичной ссылки
 async function uploadImageToVKCloud(imageUrl: string): Promise<string> {
   const config = useRuntimeConfig();
-  
+
   const s3 = new S3Client({
     region: "ru-central1",
     credentials: {
@@ -43,15 +48,15 @@ async function uploadImageToVKCloud(imageUrl: string): Promise<string> {
   });
 
   const bucket = "ozonmpportal";
-  
+
   try {
     // Скачиваем изображение
     const imageResponse = await axios.get(imageUrl, {
       responseType: "arraybuffer",
     });
-    
+
     const imageBuffer = Buffer.from(imageResponse.data);
-    
+
     // Определяем расширение файла
     const contentType = imageResponse.headers["content-type"] || "image/webp";
     let extension = "webp";
@@ -60,10 +65,10 @@ async function uploadImageToVKCloud(imageUrl: string): Promise<string> {
     } else if (contentType.includes("png")) {
       extension = "png";
     }
-    
+
     // Генерируем уникальное имя файла
     const fileName = `ai-review-photos/${crypto.randomUUID()}.${extension}`;
-    
+
     // Загружаем файл в S3
     const putObjectCommand = new PutObjectCommand({
       Bucket: bucket,
@@ -71,23 +76,23 @@ async function uploadImageToVKCloud(imageUrl: string): Promise<string> {
       Body: imageBuffer,
       ContentType: contentType,
     });
-    
+
     await s3.send(putObjectCommand);
-    
+
     // Делаем файл публичным
     const putAclCommand = new PutObjectAclCommand({
       Bucket: bucket,
       Key: fileName,
       ACL: "public-read",
     });
-    
+
     await s3.send(putAclCommand);
-    
+
     // Возвращаем публичный URL
     const publicUrl = `https://hb.vkcs.cloud/${bucket}/${fileName}`;
-    
+
     console.log(`Image uploaded to VK Cloud: ${publicUrl}`);
-    
+
     return publicUrl;
   } catch (error: any) {
     console.error("Error uploading image to VK Cloud:", error);
@@ -96,6 +101,9 @@ async function uploadImageToVKCloud(imageUrl: string): Promise<string> {
 }
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event);
+  if (!user || !user._id) return sendRedirect(event, "/auth", 302);
+
   if (!PROVIDER_BASE_URL) {
     throw createError({
       statusCode: 500,
@@ -105,64 +113,64 @@ export default eventHandler(async (event) => {
 
   const { mp, buyoutUuid } = getQuery(event);
 
-let imageUrl = ''
-let imageUrlVKCloud = ''
-let buyout = null;
+  let imageUrl = "";
+  let imageUrlVKCloud = "";
+  let buyout = null;
 
-// Определяем модель в зависимости от маркетплейса
-switch (mp) {
-  case 'wildberries':
-    buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid }).lean();
-    break;
-  case 'ozon':
-    buyout = await ozonBuyout.findOne({ uuid: buyoutUuid }).lean();
-    break;
-  case 'yandexMarket':
-    buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid }).lean();
-    break;
-  case 'avito':
-    buyout = await avitoBuyout.findOne({ uuid: buyoutUuid }).lean();
-    break;
-  case 'goldApple':
-    buyout = await goldAppleBuyout.findOne({ uuid: buyoutUuid }).lean();
-    break;
-  case 'flowwow':
-    buyout = await flowwowBuyout.findOne({ uuid: buyoutUuid }).lean();
-    break;
-  case 'ozonHotels':
-    buyout = await ozonHotelsBuyout.findOne({ uuid: buyoutUuid }).lean();
-    break;
-  case 'sutochno':
-    buyout = await sutochnoBuyout.findOne({ uuid: buyoutUuid }).lean();
-    break;
-  default:
+  // Определяем модель в зависимости от маркетплейса
+  switch (mp) {
+    case "wildberries":
+      buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid }).lean();
+      break;
+    case "ozon":
+      buyout = await ozonBuyout.findOne({ uuid: buyoutUuid }).lean();
+      break;
+    case "yandexMarket":
+      buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid }).lean();
+      break;
+    case "avito":
+      buyout = await avitoBuyout.findOne({ uuid: buyoutUuid }).lean();
+      break;
+    case "goldApple":
+      buyout = await goldAppleBuyout.findOne({ uuid: buyoutUuid }).lean();
+      break;
+    case "flowwow":
+      buyout = await flowwowBuyout.findOne({ uuid: buyoutUuid }).lean();
+      break;
+    case "ozonHotels":
+      buyout = await ozonHotelsBuyout.findOne({ uuid: buyoutUuid }).lean();
+      break;
+    case "sutochno":
+      buyout = await sutochnoBuyout.findOne({ uuid: buyoutUuid }).lean();
+      break;
+    default:
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Marketplace not supported",
+      });
+  }
+
+  if (buyout && buyout.product && buyout.product.image) {
+    imageUrl = buyout.product.image;
+    // Загружаем изображение в VK Cloud и получаем публичную ссылку
+    imageUrlVKCloud = await uploadImageToVKCloud(imageUrl);
+  } else {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Marketplace not supported",
+      statusCode: 404,
+      statusMessage: "Buyout or product image not found",
     });
-}
+  }
 
-if (buyout && buyout.product && buyout.product.image) {
-  imageUrl = buyout.product.image;
-  // Загружаем изображение в VK Cloud и получаем публичную ссылку
-  imageUrlVKCloud = await uploadImageToVKCloud(imageUrl);
-} else {
-  throw createError({
-    statusCode: 404,
-    statusMessage: "Buyout or product image not found",
-  });
-}
+  if (!imageUrlVKCloud) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Product image not found",
+    });
+  }
 
-if (!imageUrlVKCloud) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: "Product image not found",
-  });
-}
-
-console.log('Original image URL:', imageUrl);
-console.log('VK Cloud image URL:', imageUrlVKCloud);
-console.log(buyoutUuid)
+  console.log("Original image URL:", imageUrl);
+  console.log("VK Cloud image URL:", imageUrlVKCloud);
+  console.log(buyoutUuid);
 
   // Создаем запросы ко всем провайдерам
   const requests = PROVIDERS.map(async (provider) => {
@@ -181,7 +189,7 @@ console.log(buyoutUuid)
       };
 
       console.log(`Sending request to ${provider.name}:`, requestBody);
-console.log(requestBody)
+      console.log(requestBody);
       const response = await axios.post(
         `${PROVIDER_BASE_URL}/api/ai/${provider.name}`,
         requestBody,
@@ -230,15 +238,15 @@ console.log(requestBody)
           providerResult.data?.url ||
           providerResult.data?.imageUrl ||
           providerResult.data;
-        
+
         // Проверяем на videoUrl (для sora и подобных)
         if (providerResult.data?.videoUrl) {
           // Если videoUrl - массив, берем первый элемент
-          photoUrl = Array.isArray(providerResult.data.videoUrl) 
-            ? providerResult.data.videoUrl[0] 
+          photoUrl = Array.isArray(providerResult.data.videoUrl)
+            ? providerResult.data.videoUrl[0]
             : providerResult.data.videoUrl;
         }
-        
+
         response[providerResult.provider] =
           typeof photoUrl === "string"
             ? photoUrl
@@ -253,6 +261,17 @@ console.log(requestBody)
   }
 
   console.log("Final response:", response);
+
+  await GenerateReviews.create({
+    user: user._id,
+    summ: 30,
+    status: "created",
+    taskId: `Генерация фото для отзыва ` + buyout.uuid,
+    createdDate: new Date(),
+    type: "generatePhoto",
+    mp: "wildberries",
+    article: buyout.article,
+  });
 
   return response;
 });

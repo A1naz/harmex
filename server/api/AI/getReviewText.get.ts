@@ -84,7 +84,7 @@ export default eventHandler(async (event) => {
 
   await GenerateReviews.create({
     user: buyout.user,
-    summ: 0,
+    summ: 30,
     status: "created",
     taskId: "Генерация отзыва " + buyout.uuid,
     createdDate: new Date(),
