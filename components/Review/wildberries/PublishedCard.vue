@@ -235,7 +235,7 @@ function copyToClipboard(text: string) {
             </div>
 
             <div class="flex gap-2 w-2/3">
-              <button @click="copyToClipboard(info.uuid)">
+              <button @click="copyToClipboard(info.buyoutuuid)">
                 <Icon name="si:copy-fill" class="-mb-1.5 w-6 h-6 mr-1" />
               </button>
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"

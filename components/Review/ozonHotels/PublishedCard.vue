@@ -63,6 +63,12 @@ function removeReview() {
 async function resumeStatus(item: any) {
   emit("resumeStatus", item);
 }
+
+const { notify } = useNotification();
+function copyToClipboard(text: string) {
+  navigator.clipboard.writeText(text);
+  notify({ text: "Скопировано в буфер обмена", group: "success" });
+}
 </script>
 
 <template>
@@ -176,6 +182,9 @@ async function resumeStatus(item: any) {
             </div>
 
             <div class="flex gap-2 w-2/3">
+              <button @click="copyToClipboard(info.buyoutuuid)">
+                <Icon name="si:copy-fill" class="-mb-1.5 w-6 h-6 mr-1" />
+              </button>
               <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
                 >ID:
               </span>
