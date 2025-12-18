@@ -698,7 +698,7 @@ async function acceptPhotoAIText(photoUrl: string) {
             class="btn btn-primary  max-w-80 btn-sm -ml-1 my-2"
             @click="handlePhotoGenerateClick"
           >
-            Сгенерировать фото - 30₽
+            Сгенерировать фото - 15₽
           </button>
     
           <p class="mb-2 text-sm font-light text-gray-500">

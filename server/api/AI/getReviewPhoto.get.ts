@@ -262,16 +262,29 @@ export default eventHandler(async (event) => {
 
   console.log("Final response:", response);
 
-  await GenerateReviews.create({
-    user: user._id,
-    summ: 30,
-    status: "created",
-    taskId: `Генерация фото для отзыва ` + buyout.uuid,
-    createdDate: new Date(),
-    type: "generatePhoto",
-    mp: "wildberries",
-    article: buyout.article,
-  });
+  let hasSuccessfulResponse = false;
+  for (const result of results) {
+    if (result.status === "fulfilled" && result.value.success && result.value.data) {
+      const photoUrl = result.value.data?.url || result.value.data?.imageUrl || result.value.data;
+      if (typeof photoUrl === "string" && photoUrl) {
+        hasSuccessfulResponse = true;
+        break;
+      }
+    }
+  }
+
+  if (hasSuccessfulResponse) {
+    await GenerateReviews.create({
+      user: user._id,
+      summ: 30,
+      status: "created",
+      taskId: `Генерация фото для отзыва ` + buyout.uuid,
+      createdDate: new Date(),
+      type: "generatePhoto",
+      mp: "wildberries",
+      article: buyout.article,
+    });
+  }
 
   return response;
 });

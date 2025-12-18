@@ -149,20 +149,22 @@ async function generateVideoThumbnail(file: File) {
   });
 }
 
-async function uploadToS3(event: Event, index: number) {
+async function uploadToS3(eventOrFile: Event | File, index: number) {
   console.log("uploadToS3");
   loadingIndex.value = index;
-  const fileList = (event.target! as HTMLInputElement).files;
-  const file = (event.target! as HTMLInputElement).files[0];
+  
+  // Если передан Event, извлекаем файл из него, иначе используем File напрямую
+  let file: File;
+  if (eventOrFile instanceof File) {
+    file = eventOrFile;
+  } else {
+    const fileList = (eventOrFile.target! as HTMLInputElement).files;
+    if (!fileList || !fileList[0]) return;
+    file = fileList[0];
+  }
 
-  const files = Array.from(fileList!);
-  if (!files) return;
-
-  if (
-    files[0] &&
-    files[0].name &&
-    files[0].name.toLowerCase().endsWith(".webp")
-  ) {
+  // Проверка на webp
+  if (file.name && file.name.toLowerCase().endsWith(".webp")) {
     notify({
       title: "Что-то пошло не так",
       text: "Нельзя загружать вебпикчи",
@@ -446,27 +448,18 @@ async function acceptPhotoAIText(photoUrl: string) {
       return;
     }
     
-    // Загружаем файл в S3
-    const uuid = crypto.randomUUID();
-    const path = `reviews/ozon/photo-${uuid}.jpg`;
-    const imageUrl = await upload(file, path);
+    // Используем существующую функцию uploadToS3 для загрузки
+    await uploadToS3(file, emptyIndex);
     
-    if (imageUrl) {
-      form.photos[emptyIndex].url = imageUrl;
-      form.photos[emptyIndex].public = imageUrl;
-      
-      notify({
-        title: "Успешно",
-        text: "AI-фото добавлено",
-      });
-    }
   } catch (error) {
-    console.error('Error adding AI photo:', error);
+    console.error('Ошибка при загрузке фото:', error);
     notify({
-      title: "Ошибка",
-      text: "Не удалось добавить AI-фото",
+      title: "Что-то пошло не так",
+      text: "Не удалось загрузить сгенерированное фото",
       group: "error",
+      duration: 3000,
     });
+    loadingIndex.value = null;
   }
 }
 
@@ -713,7 +706,7 @@ function confirmAIGenerate() {
             class="btn btn-primary max-w-80 btn-sm -ml-1 my-2"
             @click="handlePhotoGenerateClick"
           >
-            Сгенерировать фото - 30₽
+            Сгенерировать фото - 15₽
           </button>
           <p class="mb-2 text-sm font-light text-gray-500">
             Разрешены фото в формате PNG, JPG.

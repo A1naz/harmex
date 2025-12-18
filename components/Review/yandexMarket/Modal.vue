@@ -135,19 +135,27 @@ async function checkVideo(file: any) {
   });
 }
 
-async function uploadToS3(event: Event, index: number) {
+async function uploadToS3(eventOrFile: Event | File, index: number) {
   console.log("uploadToS3");
   loadingIndex.value = index;
-  const fileList = (event.target! as HTMLInputElement).files;
-  const file = (event.target! as HTMLInputElement).files[0];
+  
+  // Если передан Event, извлекаем файл из него, иначе используем File напрямую
+  let file: File;
+  if (eventOrFile instanceof File) {
+    file = eventOrFile;
+  } else {
+    const fileList = (eventOrFile.target! as HTMLInputElement).files;
+    if (!fileList || !fileList[0]) return;
+    file = fileList[0];
+  }
 
   const files = Array.from(fileList!);
   if (!files) return;
 
   if (
-    files[0] &&
-    files[0].name &&
-    files[0].name.toLowerCase().endsWith(".webp")
+    file &&
+    file.name &&
+    file.name.toLowerCase().endsWith(".webp")
   ) {
     notify({
       title: "Что-то пошло не так",
@@ -486,6 +494,7 @@ const handleMouseUp = (event: any) => {
   }
 };
 
+
 async function clearVideo() {
   form.video = "";
   isUploading.value = false;
@@ -738,7 +747,7 @@ async function acceptPhotoAIText(photoUrl: string) {
             class="btn btn-primary max-w-80 btn-sm -ml-1 my-2"
             @click="handlePhotoGenerateClick"
           >
-            Сгенерировать фото - 30₽
+            Сгенерировать фото - 15₽
           </button>
           <p class="mb-2 text-sm font-light text-gray-500">
             Разрешены фото в формате PNG, JPG.
