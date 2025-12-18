@@ -135,19 +135,27 @@ async function checkVideo(file: any) {
   });
 }
 
-async function uploadToS3(event: Event, index: number) {
+async function uploadToS3(eventOrFile: Event | File, index: number) {
   console.log("uploadToS3");
   loadingIndex.value = index;
-  const fileList = (event.target! as HTMLInputElement).files;
-  const file = (event.target! as HTMLInputElement).files[0];
+  
+  // Если передан Event, извлекаем файл из него, иначе используем File напрямую
+  let file: File;
+  if (eventOrFile instanceof File) {
+    file = eventOrFile;
+  } else {
+    const fileList = (eventOrFile.target! as HTMLInputElement).files;
+    if (!fileList || !fileList[0]) return;
+    file = fileList[0];
+  }
 
   const files = Array.from(fileList!);
   if (!files) return;
 
   if (
-    files[0] &&
-    files[0].name &&
-    files[0].name.toLowerCase().endsWith(".webp")
+    file &&
+    file.name &&
+    file.name.toLowerCase().endsWith(".webp")
   ) {
     notify({
       title: "Что-то пошло не так",
@@ -486,6 +494,7 @@ const handleMouseUp = (event: any) => {
   }
 };
 
+
 async function clearVideo() {
   form.video = "";
   isUploading.value = false;
@@ -537,6 +546,77 @@ function handleAIGenerateClick() {
 function confirmAIGenerate() {
   confirmAIModal.value = false;
   AIGenerateModal.value = true;
+}
+
+// AI-генерация фото
+const confirmPhotoModal = ref(false);
+function handlePhotoGenerateClick() {
+  confirmPhotoModal.value = true;
+}
+
+async function acceptPhotoAIText(photoUrl: string) {
+  try {
+    // Скачиваем фото через серверный endpoint (чтобы избежать CORS)
+    const response = await fetch(`/api/AI/downloadPhoto?url=${encodeURIComponent(photoUrl)}`);
+    
+    if (!response.ok) {
+      throw new Error('Не удалось скачать фото');
+    }
+    
+    const blob = await response.blob();
+    
+    // Создаем File объект из blob
+    const file = new File([blob], 'ai-generated-photo.jpg', { type: blob.type });
+    
+    // Находим первый пустой слот для фото
+    let emptyIndex = -1;
+    for (let i = 0; i < form.photos.length; i++) {
+      if (!form.photos[i].url) {
+        emptyIndex = i;
+        break;
+      }
+    }
+    
+    // Если все слоты заняты, добавляем новый
+    if (emptyIndex === -1 && form.photos.length < 5) {
+      emptyIndex = form.photos.length;
+      form.photos.push({
+        url: "",
+        public: "",
+      });
+    }
+    
+    if (emptyIndex === -1) {
+      notify({
+        title: "Ошибка",
+        text: "Достигнуто максимальное количество фото (5)",
+        group: "error",
+      });
+      return;
+    }
+    
+    // Загружаем файл в S3
+    const uuid = crypto.randomUUID();
+    const path = `reviews/yandexMarket/photo-${uuid}.jpg`;
+    const imageUrl = await upload(file, path);
+    
+    if (imageUrl) {
+      form.photos[emptyIndex].url = imageUrl;
+      form.photos[emptyIndex].public = imageUrl;
+      
+      notify({
+        title: "Успешно",
+        text: "AI-фото добавлено",
+      });
+    }
+  } catch (error) {
+    console.error('Error adding AI photo:', error);
+    notify({
+      title: "Ошибка",
+      text: "Не удалось добавить AI-фото",
+      group: "error",
+    });
+  }
 }
 </script>
 
@@ -663,6 +743,12 @@ function confirmAIGenerate() {
         </div>
         <div>
           <div class="font-medium">Фото</div>
+          <button
+            class="btn btn-primary max-w-80 btn-sm -ml-1 my-2"
+            @click="handlePhotoGenerateClick"
+          >
+            Сгенерировать фото - 15₽
+          </button>
           <p class="mb-2 text-sm font-light text-gray-500">
             Разрешены фото в формате PNG, JPG.
           </p>
@@ -887,6 +973,12 @@ function confirmAIGenerate() {
     v-model:state="AIGenerateModal"
     :buyoutUuid="selectedDeliv.uuid"
     @accept="acceptAIText"
+  />
+  <ReviewPhotoAIGenerate
+    v-model:state="confirmPhotoModal"
+    :buyoutUuid="selectedDeliv.uuid"
+    mp="yandexMarket"
+    @accept="acceptPhotoAIText"
   />
 </template>
 

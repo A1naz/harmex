@@ -153,19 +153,21 @@ async function generateVideoThumbnail(file: File) {
   });
 }
 
-async function uploadToS3(event: Event, index: number) {
+async function uploadToS3(eventOrFile: Event | File, index: number) {
   loadingIndex.value = index;
-  const fileList = (event.target! as HTMLInputElement).files;
-  const file = (event.target! as HTMLInputElement).files[0];
+  
+  // Если передан Event, извлекаем файл из него, иначе используем File напрямую
+  let file: File;
+  if (eventOrFile instanceof File) {
+    file = eventOrFile;
+  } else {
+    const fileList = (eventOrFile.target! as HTMLInputElement).files;
+    if (!fileList || !fileList[0]) return;
+    file = fileList[0];
+  }
 
-  const files = Array.from(fileList!);
-  if (!files) return;
-
-  if (
-    files[0] &&
-    files[0].name &&
-    files[0].name.toLowerCase().endsWith(".webp")
-  ) {
+  // Проверка на webp
+  if (file.name && file.name.toLowerCase().endsWith(".webp")) {
     notify({
       title: "Что-то пошло не так",
       text: "Нельзя загружать вебпикчи",
@@ -532,6 +534,41 @@ function confirmAIGenerate() {
   confirmAIModal.value = false;
   AIGenerateModal.value = true;
 }
+
+const confirmPhotoModal = ref(false);
+function handlePhotoGenerateClick() {
+  confirmPhotoModal.value = true;
+}
+
+async function acceptPhotoAIText(photoUrl: string) {
+  try {
+    // Скачиваем фото через серверный endpoint (чтобы избежать CORS)
+    const response = await fetch(`/api/AI/downloadPhoto?url=${encodeURIComponent(photoUrl)}`);
+    
+    if (!response.ok) {
+      throw new Error('Не удалось скачать фото');
+    }
+    
+    const blob = await response.blob();
+    
+    // Создаем File объект из blob
+    const fileName = "ai-generated-" + uuid() + ".jpg";
+    const file = new File([blob], fileName, { type: blob.type || 'image/jpeg' });
+    
+    // Используем существующую функцию uploadToS3 для загрузки
+    await uploadToS3(file, 0);
+    
+  } catch (error) {
+    console.error('Ошибка при загрузке фото:', error);
+    notify({
+      title: "Что-то пошло не так",
+      text: "Не удалось загрузить сгенерированное фото",
+      group: "error",
+      duration: 3000,
+    });
+    loadingIndex.value = null;
+  }
+}
 </script>
 
 <template>
@@ -657,6 +694,13 @@ function confirmAIGenerate() {
         </div>
         <div>
           <div class="font-medium">Фото</div>
+          <button
+            class="btn btn-primary  max-w-80 btn-sm -ml-1 my-2"
+            @click="handlePhotoGenerateClick"
+          >
+            Сгенерировать фото - 15₽
+          </button>
+    
           <p class="mb-2 text-sm font-light text-gray-500">
             Разрешены фото в формате PNG, JPG.
           </p>
@@ -874,7 +918,9 @@ function confirmAIGenerate() {
         >
           Подтвердить
         </button>
+        
       </div>
+
     </div>
   </div>
 
@@ -882,6 +928,11 @@ function confirmAIGenerate() {
     v-model:state="AIGenerateModal"
     :buyoutUuid="selectedDeliv.uuid"
     @accept="acceptAIText"
+  />
+  <ReviewPhotoAIGenerate
+    v-model:state="confirmPhotoModal"
+    :buyoutUuid="selectedDeliv.uuid"
+    @accept="acceptPhotoAIText"
   />
 </template>
 
