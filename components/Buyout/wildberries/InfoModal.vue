@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { rules } from "~/data/buyout/rules";
+import { navigateTo } from "#app";
+
+const { $dayjs } = useNuxtApp();
 
 const props = defineProps({
   info: {
@@ -13,6 +16,14 @@ const props = defineProps({
   state: {
     type: Boolean,
     required: true,
+  },
+  fromReviewPage: {
+    type: Boolean,
+    default: false,
+  },
+  reviewUuid: {
+    type: String,
+    default: undefined,
   },
 });
 const emit = defineEmits(["close"]);
@@ -58,6 +69,12 @@ async function copyToClipboard(text: string) {
   });
 }
 
+async function goBack() {
+  emit("close");
+  if (props.fromReviewPage && props.reviewUuid) {
+    await navigateTo(`/wildberries/reviews?uuid=${props.reviewUuid}&status=all`);
+  }
+}
 onKeyStroke("Escape", (e) => {
   e.preventDefault();
   emit("close");
@@ -85,6 +102,16 @@ onKeyStroke("Escape", (e) => {
               <div
                 class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md flex flex-col gap-1"
               >
+                <div>
+                  <button
+                    v-if="fromReviewPage"
+                    class="btn btn-sm btn-ghost -ml-5"
+                    @click="goBack"
+                  >
+                    <Icon name="mdi:arrow-left" size="20" />
+                    Назад
+                  </button>
+                </div>
                 <div>
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Создано:
@@ -136,12 +163,10 @@ onKeyStroke("Escape", (e) => {
                 </div>
 
                 <div class="w-full truncate">
-                   <button @click="copyToClipboard(info.uuid)">
+                  <button @click="copyToClipboard(info.uuid)">
                     <Icon name="si:copy-fill" class="-mb-1.5 w-6 h-6 mr-1" />
                   </button>
-                  <span class="text-sm text-gray-500 my-auto"
-                    >ID:
-                  </span>
+                  <span class="text-sm text-gray-500 my-auto">ID: </span>
                   <label
                     class="rounded-md py-0 px-2 text-sm cursor-pointer"
                     @click="copyToClipboard(info.uuid)"
@@ -243,8 +268,6 @@ onKeyStroke("Escape", (e) => {
                     <span class="text-sm text-gray-500 mr-2 my-auto">
                       Выкуп с полок</span
                     >
-
-                    
                   </div>
                   <div v-if="info.financePrice">
                     <span class="text-sm text-gray-500 mr-2 my-auto"
@@ -268,10 +291,11 @@ onKeyStroke("Escape", (e) => {
               <span class="text-sm text-gray-500 mb-1">Поисковый запрос:</span>
               <span class="text-sm">{{ info.searchQuery }}</span>
             </div>
-        
           </div>
-          <div class="flex items-start flex-col" v-if="info.shelves"> 
-            <span class="text-sm text-gray-500 mb-1">Артикулы конкурентов:</span>
+          <div class="flex items-start flex-col" v-if="info.shelves">
+            <span class="text-sm text-gray-500 mb-1"
+              >Артикулы конкурентов:</span
+            >
             <span class="text-sm text-bold">
               <span class="text-primary">{{ info.competitorArticle }}</span>
               <template v-if="info.competitorArticle2">
@@ -296,10 +320,13 @@ onKeyStroke("Escape", (e) => {
               <template v-if="!info.rules.length">
                 <span class="text-sm">Не выбраны</span>
               </template>
-              <template v-else>
+              <template v-if="info.rules && info.rules.length">
                 <ul class="list-disc list-inside text-sm">
-                  <li v-for="rule in info.rules" :key="rule.id">
-                    {{ rules.find((r) => r.id === rule).description }}
+                  <li v-for="ruleId in info.rules" :key="ruleId">
+                    {{
+                      rules.find((r) => r.id === ruleId)?.description ||
+                      "Неизвестное правило"
+                    }}
                   </li>
                 </ul>
               </template>

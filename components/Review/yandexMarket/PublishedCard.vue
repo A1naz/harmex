@@ -55,7 +55,7 @@ const getStatus = computed(() => {
 });
 
 function openBuyout() {
-  router.push(`/ozon/buyouts?uuid=${props.info.buyoutuuid}`);
+  router.push(`/ym/buyouts?uuid=${props.info.buyoutuuid}&fromReview=true&reviewUuid=${props.info.buyoutuuid}`);
 }
 
 function removeReview() {

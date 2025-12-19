@@ -164,7 +164,9 @@ const { $dayjs } = useNuxtApp();
                   <label
                     class="rounded-md py-0 px-2 text-sm cursor-pointer"
                     @click="
-                      navigateTo('/goldApple/buyouts?uuid=' + info.buyoutuuid)
+                      navigateTo(
+                        `/goldApple/buyouts?uuid=${info.buyoutuuid}&fromReview=true&reviewUuid=${info.buyoutuuid}`,
+                      )
                     "
                   >
                     #{{ info.buyoutuuid }}

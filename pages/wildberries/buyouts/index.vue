@@ -664,6 +664,8 @@ const siteUrl = config.public.siteUrl;
       :info="selectedBuyout"
       :state="modal"
       :index="selectedIndex"
+      :from-review-page="!!route.query.fromReview"
+      :review-uuid="route.query.reviewUuid"
       @close="modal = false"
     />
     <BuyoutRemoveModal

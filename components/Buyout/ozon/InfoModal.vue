@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { rules } from "~/data/buyout/rules";
+import { navigateTo } from "#app";
+
+const { $dayjs } = useNuxtApp();
 
 const { notify } = useNotification();
 
@@ -16,11 +19,25 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  fromReviewPage: {
+    type: Boolean,
+    default: false,
+  },
+  reviewUuid: {
+    type: String,
+    default: undefined,
+  },
 });
 const emit = defineEmits(["close"]);
 const theme = useColorMode();
 const currency = useCurrency();
 const store = useMainStore();
+async function goBack() {
+  emit("close");
+  if (props.fromReviewPage && props.reviewUuid) {
+    await navigateTo(`/ozon/reviews?uuid=${props.reviewUuid}&status=all`);
+  }
+}
 const getStatus = computed(() => {
   switch (props.info.status) {
     case "active":
@@ -86,10 +103,19 @@ onKeyStroke("Escape", (e) => {
             @click="$emit('close')"
             >✕</a
           >
-
           <div class="flex items-center">
             <div class="flex flex-col truncate gap-1">
               <div class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md flex gap-1 flex-col">
+                <div>
+                  <button
+                    v-if="fromReviewPage"
+                    class="btn btn-sm btn-ghost -ml-5"
+                    @click="goBack()"
+                  >
+                    <Icon name="mdi:arrow-left" size="20" />
+                    Назад
+                  </button>
+                </div>
                 <div>
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Создано:

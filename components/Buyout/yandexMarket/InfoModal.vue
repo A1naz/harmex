@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { rules } from "~/data/buyout/rules";
+import { navigateTo } from "#app";
+
+const { $dayjs } = useNuxtApp();
 
 const props = defineProps({
   info: {
@@ -14,6 +17,14 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  fromReviewPage: {
+    type: Boolean,
+    default: false,
+  },
+  reviewUuid: {
+    type: String,
+    default: undefined,
+  },
 });
 const emit = defineEmits(["close"]);
 const theme = useColorMode();
@@ -23,7 +34,6 @@ const getStatus = computed(() => {
     case "active":
       return "Активный";
     case "work":
-      return "В работе";
     case "busy":
       return "В работе";
     case "completed":
@@ -58,10 +68,18 @@ async function copyToClipboard(text: string) {
   });
 }
 
+async function goBack() {
+  emit("close");
+  if (props.fromReviewPage && props.reviewUuid) {
+    await navigateTo(`/ym/reviews?uuid=${props.reviewUuid}&status=all`);
+  }
+}
+
 onKeyStroke("Escape", (e) => {
   e.preventDefault();
   emit("close");
 });
+
 </script>
 
 <template class="overflow-hidden">
@@ -79,10 +97,22 @@ onKeyStroke("Escape", (e) => {
             @click="$emit('close')"
             >✕</a
           >
+   
 
           <div class="flex items-center">
             <div class="flex flex-col truncate gap-1">
+       
               <div class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md flex gap-1 flex-col">
+                <div>
+                  <button
+                    v-if="fromReviewPage"
+                    class="btn btn-sm btn-ghost -ml-5"
+                    @click="goBack()"
+                  >
+                    <Icon name="mdi:arrow-left" size="20" />
+                    Назад
+                  </button>
+                </div>
                 <div>
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Создано:
@@ -138,8 +168,7 @@ onKeyStroke("Escape", (e) => {
                 </div>
 
                 <div class="w-full truncate">
-
-                  <button @click="copyToClipboard(info.uuid)">
+                  <button @click="copyToClipboard(info.buyoutuuid)">
                     <Icon name="si:copy-fill" class="-mb-1.5 w-6 h-6 mr-1" />
                   </button>
                   <span class="text-sm text-gray-500 mr-2 my-auto"
@@ -298,15 +327,15 @@ onKeyStroke("Escape", (e) => {
           <div class="flex items-start flex-col">
             <span class="text-sm text-gray-500 mb-1">Правила:</span>
             <div class="text-sm">
-              <template v-if="!info.rules.length">
-                <span class="text-sm">Не выбраны</span>
-              </template>
-              <template v-else>
+              <template v-if="info.rules && info.rules.length">
                 <ul class="list-disc list-inside text-sm">
-                  <li v-for="rule in info.rules" :key="rule.id">
-                    {{ rules.find((r) => r.id === rule).description }}
+                  <li v-for="ruleId in info.rules" :key="ruleId">
+                    {{ rules.find((r) => r.id === ruleId)?.description || 'Неизвестное правило' }}
                   </li>
                 </ul>
+              </template>
+              <template v-else>
+                <span class="text-sm">Не выбраны</span>
               </template>
             </div>
           </div>

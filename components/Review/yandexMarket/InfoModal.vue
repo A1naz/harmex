@@ -23,7 +23,6 @@ const getStatus = computed(() => {
     case "waiting":
       return "В очереди";
     case "working":
-      return "В работе";
     case "busy":
       return "В работе";
     case "published":
@@ -163,7 +162,11 @@ const { $dayjs } = useNuxtApp();
                   <span class="text-sm text-gray-500 mr-2 my-auto">ID: </span>
                   <label
                     class="rounded-md py-0 px-2 text-sm cursor-pointer"
-                    @click="navigateTo('/ym/buyouts?uuid=' + info.buyoutuuid)"
+                    @click="
+                      navigateTo(
+                        `/ym/buyouts?uuid=${info.buyoutuuid}&fromReview=true&reviewUuid=${info.buyoutuuid}`,
+                      )
+                    "
                   >
                     #{{ info.buyoutuuid }}
                   </label>

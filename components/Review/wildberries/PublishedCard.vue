@@ -97,7 +97,7 @@ const getStatus = computed(() => {
 });
 
 function openBuyout() {
-  router.push(`/wildberries/buyouts?uuid=${props.info.buyoutuuid}`);
+  router.push(`/wildberries/buyouts?uuid=${props.info.buyoutuuid}&fromReview=true&reviewUuid=${props.info.buyoutuuid}`);
 }
 
 function removeReview() {
