@@ -149,9 +149,6 @@ async function uploadToS3(eventOrFile: Event | File, index: number) {
     file = fileList[0];
   }
 
-  const files = Array.from(fileList!);
-  if (!files) return;
-
   if (
     file &&
     file.name &&
@@ -566,56 +563,21 @@ async function acceptPhotoAIText(photoUrl: string) {
     const blob = await response.blob();
     
     // Создаем File объект из blob
-    const file = new File([blob], 'ai-generated-photo.jpg', { type: blob.type });
+    const fileName = "ai-generated-" + uuid() + ".jpg";
+    const file = new File([blob], fileName, { type: blob.type || 'image/jpeg' });
     
-    // Находим первый пустой слот для фото
-    let emptyIndex = -1;
-    for (let i = 0; i < form.photos.length; i++) {
-      if (!form.photos[i].url) {
-        emptyIndex = i;
-        break;
-      }
-    }
+    // Используем существующую функцию uploadToS3 для загрузки
+    await uploadToS3(file, 0);
     
-    // Если все слоты заняты, добавляем новый
-    if (emptyIndex === -1 && form.photos.length < 5) {
-      emptyIndex = form.photos.length;
-      form.photos.push({
-        url: "",
-        public: "",
-      });
-    }
-    
-    if (emptyIndex === -1) {
-      notify({
-        title: "Ошибка",
-        text: "Достигнуто максимальное количество фото (5)",
-        group: "error",
-      });
-      return;
-    }
-    
-    // Загружаем файл в S3
-    const uuid = crypto.randomUUID();
-    const path = `reviews/yandexMarket/photo-${uuid}.jpg`;
-    const imageUrl = await upload(file, path);
-    
-    if (imageUrl) {
-      form.photos[emptyIndex].url = imageUrl;
-      form.photos[emptyIndex].public = imageUrl;
-      
-      notify({
-        title: "Успешно",
-        text: "AI-фото добавлено",
-      });
-    }
   } catch (error) {
-    console.error('Error adding AI photo:', error);
+    console.error('Ошибка при загрузке фото:', error);
     notify({
-      title: "Ошибка",
-      text: "Не удалось добавить AI-фото",
+      title: "Что-то пошло не так",
+      text: "Не удалось загрузить сгенерированное фото",
       group: "error",
+      duration: 3000,
     });
+    loadingIndex.value = null;
   }
 }
 </script>

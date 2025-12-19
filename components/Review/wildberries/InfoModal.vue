@@ -45,14 +45,15 @@ const getStatus = computed(() => {
       return "Опубликован";
     case "addition":
       return "Дополнение";
+    case "added":
+      return "Дополнен";
     case "disputing":
       return "В процессе оспорения";
     case "disputed":
       return "Оспорен";
-      default:
+    default:
       return props.info.status;
   }
-
 });
 
 const getGender = computed(() => {
@@ -137,7 +138,8 @@ const { $dayjs } = useNuxtApp();
                           info.status === 'published' ||
                           info.status === 'completed' ||
                           info.status === 'disputing' ||
-                          info.status === 'disputed',
+                          info.status === 'disputed' ||
+                          info.status === 'added',
                         'bg-[#F8C68A] text-[#D67500]':
                           info.status === 'waiting' ||
                           info.status === 'created',
@@ -151,8 +153,7 @@ const { $dayjs } = useNuxtApp();
                           info.status === 'deleted' ||
                           info.status === 'deleting' ||
                           info.status === 'reviewsUpdate' ||
-                          info.status === 'addition' 
-                     
+                          info.status === 'addition',
                       }"
                       class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm"
                       >{{ getStatus }}
@@ -182,13 +183,12 @@ const { $dayjs } = useNuxtApp();
                     class="rounded-md py-0 px-2 text-sm cursor-pointer"
                     @click="
                       navigateTo(
-                        `/wildberries/buyouts?uuid=${info.buyoutuuid}&fromReview=true&reviewUuid=${info.buyoutuuid}`,
+                        `/wildberries/buyouts?uuid=${info.buyoutuuid}&fromReview=true&reviewUuid=${info.buyoutuuid}`
                       )
                     "
                   >
                     #{{ info.buyoutuuid }}
                   </label>
-                  
                 </div>
 
                 <div class="flex gap-2">
@@ -255,7 +255,7 @@ const { $dayjs } = useNuxtApp();
                       info.type
                     }}</span>
                   </div>
-           
+
                   <div v-if="info.financePrice">
                     <span class="text-sm text-gray-500 mr-2 my-auto"
                       >Услуга:
@@ -285,10 +285,7 @@ const { $dayjs } = useNuxtApp();
                     {{ info.text }}
                   </span>
                 </div>
-                <div
-                  class="whitespace-pre-line mt-1"
-                  v-if="info.additionText"
-                >
+                <div class="whitespace-pre-line mt-1" v-if="info.additionText">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Текст дополнения:
                   </span>
