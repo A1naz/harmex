@@ -136,12 +136,12 @@ async function login() {
       class="flex flex-col justify-center align-center w-full max-w-md lg:max-w-lg rounded-lg p-4 shadow-lg gap-3"
     >
       <h3 class="logo font-bold text-2xl text-center">HARMEX</h3>
-      <h3 class="font-bold text-2xl text-center mb-4">Войдите в ваш аккаунт</h3>
+      <h3 class="font-bold text-2xl text-center mb-4">{{ $t("Войдите в ваш аккаунт") }}</h3>
 
       <div class="box flex flex-col gap-3">
         <form class="flex flex-col gap-3" @submit.prevent="login">
           <div class="flex flex-col gap-1">
-            <label>Ваш номер телефона </label>
+            <label>{{ $t("Номер телефона") }} </label>
             <input
               v-model="formData.phoneNumber"
               v-maska
@@ -154,11 +154,11 @@ async function login() {
               {{ v$.phoneNumber.$errors[0].$message }}
             </div>
             <div class="text-xs text-gray-500">
-              Сохраните данные, чтобы всегда были под рукой
+              {{ $t("Сохраните данные, чтобы всегда были под рукой") }}
             </div>
           </div>
           <div class="flex flex-col gap-1">
-            <label>Введите ваш пароль </label>
+            <label>{{ $t("Введите ваш пароль") }} </label>
             <div class="flex flex-col gap-0.5">
               <label class="input input-bordered w-full flex">
                 <input
@@ -190,14 +190,14 @@ async function login() {
                 </button>
               </label>
               <NuxtLink class="text-primary my-1" href="/resetPassword">
-                Не помните пароль?
+                {{ $t("Не помните пароль?") }}
               </NuxtLink>
             </div>
             <div v-if="v$.password.$error" class="text-red-500 text-xs mt-1">
               {{ v$.password.$errors[0].$message }}
             </div>
             <div class="text-xs text-gray-500">
-              Нужна помощь? Служба заботы рядом. Напишите нам в чат.
+              {{ $t("Нужна помощь? Служба заботы рядом. Напишите нам в чат.") }}
             </div>
           </div>
 
@@ -208,13 +208,13 @@ async function login() {
             >
               <span v-show="loading" class="loading loading-spinner" />
 
-              Войти
+              {{ $t("Войти") }}
             </button>
 
             <p class="mt-3 mb-1">
-              Ещё не зарегистрированы?
+              {{ $t("Ещё не зарегистрированы?") }}
               <NuxtLink href="/register" class="text-primary underline">
-                Регистрация
+                {{ $t("Регистрация") }}
               </NuxtLink>
             </p>
           </div>
