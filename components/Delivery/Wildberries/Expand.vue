@@ -72,6 +72,21 @@ const { $dayjs } = useNuxtApp();
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
           <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
         </label>
+        <ul
+          tabindex="0"
+          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10"
+        >
+          <li>
+            <a @click="emit('openStatusModal', info.statusdelivery)">
+              <Icon name="fluent:history-24-filled" />История доставки
+            </a>
+          </li>
+          <li>
+            <a @click="$emit('openModal', index)">
+              <Icon name="fluent:info-24-filled" />Детали
+            </a>
+          </li>
+        </ul>
       </div>
 
       <div class="flex gap-3 w-full truncate mt-6">
