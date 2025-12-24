@@ -10,6 +10,8 @@ const props = defineProps({
   state: { type: Boolean, required: true },
   uuid: { type: String, required: true },
   deliveryid: { type: String, required: true },
+  isEditMode: { type: Boolean, default: false },
+  existingReview: { type: Object as any, default: null },
 });
 const emit = defineEmits(["close", "publish", "notEnoughMoney"]);
 const config = useRuntimeConfig();
@@ -21,6 +23,12 @@ const { upload, remove } = useS3Object();
 const creatingReview = ref(false);
 const now = useNow();
 const { restrictUrl } = useValidation();
+const { $dayjs } = useNuxtApp();
+
+// Функция для форматирования даты
+const defaultDateShort = (date: any) => {
+  return $dayjs(date).format("DD.MM.YYYY HH:mm");
+};
 
 const inputs: any = {
   file1: ref(),
@@ -60,13 +68,15 @@ function useDraft(draft: IReviewDraft) {
   form.text = draft.text;
 }
 
-const defaultDelIndex = props.review.delivs.findIndex(
-  (rev: any) => rev.delivId == props.deliveryid
+const defaultDelIndex = props.isEditMode 
+  ? 0 
+  : props.review.delivs.findIndex((rev: any) => rev.delivId == props.deliveryid);
+
+const selectedDeliv = ref(
+  props.isEditMode
+    ? { deliveryid: props.existingReview?.delivery?._id || '', uuid: props.existingReview?.uuidbuyout || '' }
+    : { deliveryid: props.review.delivs[defaultDelIndex].delivId, uuid: props.review.delivs[defaultDelIndex].buyoutId }
 );
-const selectedDeliv = ref({
-  deliveryid: props.review.delivs[defaultDelIndex].delivId,
-  uuid: props.review.delivs[defaultDelIndex].buyoutId,
-});
 
 const loadingIndex = ref(null) as Ref<number | null>;
 const videoInput = ref<HTMLInputElement | null>(null);
@@ -265,6 +275,12 @@ async function clearForm() {
 }
 
 async function publishReview() {
+  if (props.isEditMode) {
+    // Открываем модалку подтверждения для редактирования
+    confirmEditModal.value = true;
+    return;
+  }
+
   creatingReview.value = true;
   const photos = form.photos;
   for await (const photo of photos) {
@@ -311,6 +327,63 @@ async function publishReview() {
   emit("publish");
 }
 
+const confirmEditModal = ref(false);
+
+async function confirmEditReview() {
+  confirmEditModal.value = false;
+  creatingReview.value = true;
+
+  const photos = form.photos;
+  for await (const photo of photos) {
+    try {
+    } catch {
+      notify({
+        title: "Что-то пошло не так",
+        text: "Не удалось загрузить все фото, попробуйте еще раз",
+      });
+    }
+  }
+
+  // @ts-ignore
+  const { data, error } = await useFetch("/api/ozon/review/edit", {
+    method: "POST",
+    body: {
+      uuid: props.existingReview.uuid,
+      text: form.text,
+      rating: form.rating,
+      photos: form.photos,
+      date: form.date,
+      videoKey: `reviewVideos/${newFileId.value}.${filetype.value.replace(
+        "video/",
+        ""
+      )}`,
+      video: form.video,
+    },
+    headers,
+  });
+
+  if (error.value) {
+    notify({
+      title: "Что-то пошло не так",
+      text: error.value?.data?.message,
+      group: "error",
+      duration: 3000,
+    });
+    creatingReview.value = false;
+    return;
+  }
+
+  notify({
+    title: "Успешно",
+    text: "Отзыв успешно изменен",
+    group: "success",
+    duration: 3000,
+  });
+  creatingReview.value = false;
+  emit("close");
+  emit("publish");
+}
+
 async function removePhoto(index: number) {
   const fileInput = inputs[`file${(index + 1) as 1 | 2 | 3 | 4 | 5}`];
   fileInput.value = null;
@@ -324,12 +397,41 @@ async function removePhoto(index: number) {
 watch(
   () => props.uuid,
   (uuid) => {
-    clearForm();
+    if (!props.isEditMode) {
+      clearForm();
+    }
   }
 );
 
 onMounted(() => {
-  clearForm();
+  if (props.isEditMode && props.existingReview) {
+    // Заполняем форму данными существующего отзыва
+    form.text = props.existingReview.text || "";
+    form.rating = props.existingReview.rating || 5;
+    form.date = props.existingReview.date ? new Date(props.existingReview.date) : now.value;
+    
+    // Загружаем фото
+    if (props.existingReview.images && props.existingReview.images.length > 0) {
+      props.existingReview.images.forEach((img: string, index: number) => {
+        if (index < form.photos.length && img) {
+          form.photos[index] = {
+            url: img,
+            public: `https://ozonmpportal.hb.vkcs.cloud/reviewImages/${img}`,
+          };
+        }
+      });
+    }
+    
+    // Загружаем видео
+    if (props.existingReview.videoKey) {
+      form.video = props.existingReview.originalVideoName || "video";
+      newFileId.value = props.existingReview.videoKey.replace('reviewVideos/', '').split('.')[0];
+      filetype.value = 'video/' + props.existingReview.videoKey.split('.').pop();
+      uploadProgress.value = "Файл загружен";
+    }
+  } else {
+    clearForm();
+  }
 });
 function ratingAlert() {
   notify({
@@ -513,7 +615,7 @@ async function handleFileChange(e: any) {
     metadata: {
       filename: file.name,
       filetype: file.type,
-      filehash: hash,
+      filehash: hash as string,
     },
     chunkSize: 5 * 1024 * 1024,
     onProgress: (bytesUploaded, bytesTotal) => {
@@ -620,10 +722,11 @@ function confirmAIGenerate() {
         </p>
       </div>
 
-      <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
+      <h3 class="text-xl font-bold mb-4">{{ isEditMode ? 'Изменить отзыв' : 'Оставить отзыв' }}</h3>
 
-      <div class="pb-2 font-medium">Доставка:</div>
+      <div v-if="!isEditMode" class="pb-2 font-medium">Доставка:</div>
       <select
+        v-if="!isEditMode"
         v-model="selectedDeliv"
         class="select w-full mb-4 bg-base-200 text-gray-500"
       >
@@ -634,7 +737,7 @@ function confirmAIGenerate() {
           class="m-6"
         >
           {{
-            `${defaultDateShort(rev.updatedAt)} ${
+            `${$dayjs(rev.updatedAt).format("DD.MM.YYYY HH:mm")} ${
               rev.sex == "Нет" ? "" : " - получатель: " + rev.sex
             } - размер: ${rev.sizeparam} - цена: ${rev.pricebuy}р.`
           }}
@@ -938,6 +1041,36 @@ function confirmAIGenerate() {
     mp="ozon"
     @accept="acceptPhotoAIText"
   />
+
+  <!-- Модалка подтверждения редактирования -->
+  <input id="confirm-edit-modal" type="checkbox" class="modal-toggle" />
+  <div
+    :class="{
+      'modal-open': confirmEditModal,
+    }"
+    class="modal"
+  >
+    <div class="modal-box">
+      <h3 class="text-lg font-bold">Подтверждение изменения отзыва</h3>
+      <p class="py-4">
+        Услуга платная - 100 рублей, вы уверены?
+      </p>
+      <div class="modal-action">
+        <button
+          class="btn btn-ghost"
+          @click="confirmEditModal = false"
+        >
+          Отмена
+        </button>
+        <button
+          class="btn btn-primary"
+          @click="confirmEditReview"
+        >
+          Подтвердить
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>

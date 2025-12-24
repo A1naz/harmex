@@ -10,11 +10,18 @@ const props = defineProps({
   state: { type: Boolean, required: true },
   uuid: { type: String, required: true },
   deliveryid: { type: String, required: true },
+  isEditMode: { type: Boolean, default: false },
+  existingReview: { type: Object as any, default: null },
 });
 const emit = defineEmits(["close", "publish"]);
 const config = useRuntimeConfig();
 const store = useMainStore();
 const { user } = useUserSession();
+const { $dayjs } = useNuxtApp();
+
+function defaultDateShort(date: any) {
+  return $dayjs(date).format("DD.MM.YYYY");
+}
 
 const headers = useRequestHeaders(["cookie"]) as HeadersInit;
 const closeButton = ref<HTMLElement>();
@@ -64,13 +71,15 @@ function useDraft(draft: IReviewDraft) {
   form.text = draft.text;
 }
 
-const defaultDelIndex = props.review.delivs.findIndex(
-  (rev: any) => rev.delivId == props.deliveryid
+const defaultDelIndex = props.isEditMode 
+  ? 0 
+  : props.review.delivs.findIndex((rev: any) => rev.delivId == props.deliveryid);
+
+const selectedDeliv = ref(
+  props.isEditMode
+    ? { deliveryid: props.existingReview?.delivery?._id || '', uuid: props.existingReview?.uuidbuyout || '' }
+    : { deliveryid: props.review.delivs[defaultDelIndex].delivId, uuid: props.review.delivs[defaultDelIndex].buyoutId }
 );
-const selectedDeliv = ref({
-  deliveryid: props.review.delivs[defaultDelIndex].delivId,
-  uuid: props.review.delivs[defaultDelIndex].buyoutId,
-});
 
 const loadingIndex = ref(null) as Ref<number | null>;
 const videoThumbnail = ref<string | null>(null);
@@ -240,6 +249,12 @@ async function clearForm() {
 }
 
 async function publishReview() {
+  if (props.isEditMode) {
+    // Открываем модалку подтверждения для редактирования
+    confirmEditModal.value = true;
+    return;
+  }
+
   creatingReview.value = true;
   const photos = form.photos;
   for await (const photo of photos) {
@@ -286,6 +301,65 @@ async function publishReview() {
   emit("publish");
 }
 
+const confirmEditModal = ref(false);
+
+async function confirmEditReview() {
+  confirmEditModal.value = false;
+  creatingReview.value = true;
+
+  const photos = form.photos;
+  for await (const photo of photos) {
+    try {
+    } catch {
+      notify({
+        title: "Что-то пошло не так",
+        text: "Не удалось загрузить все фото, попробуйте еще раз",
+      });
+    }
+  }
+
+  // @ts-ignore
+  const { data, error } = await useFetch("/api/yandexMarket/review/edit", {
+    method: "POST",
+    body: {
+      uuid: props.existingReview.uuid,
+      text: form.text,
+      positive: form.positive,
+      negative: form.negative,
+      rating: form.rating,
+      photos: form.photos,
+      date: form.date,
+      videoKey: `reviewVideos/${newFileId.value}.${filetype.value.replace(
+        "video/",
+        ""
+      )}`,
+      video: form.video,
+    },
+    headers,
+  });
+
+  if (error.value) {
+    notify({
+      title: "Что-то пошло не так",
+      text: error.value?.data?.message,
+      group: "error",
+      duration: 3000,
+    });
+    creatingReview.value = false;
+    return;
+  }
+
+  notify({
+    title: "Успешно",
+    text: "Отзыв успешно изменен",
+    group: "success",
+    duration: 3000,
+  });
+  creatingReview.value = false;
+  emit("close");
+  emit("publish");
+}
+
 async function removePhoto(index: number) {
   const fileInput = inputs[`file${(index + 1) as 1 | 2 | 3 | 4 | 5}`];
   fileInput.value = null;
@@ -299,12 +373,43 @@ async function removePhoto(index: number) {
 watch(
   () => props.uuid,
   (uuid) => {
-    clearForm();
+    if (!props.isEditMode) {
+      clearForm();
+    }
   }
 );
 
 onMounted(() => {
-  clearForm();
+  if (props.isEditMode && props.existingReview) {
+    // Заполняем форму данными существующего отзыва
+    form.text = props.existingReview.text || "";
+    form.positive = props.existingReview.positive || "";
+    form.negative = props.existingReview.negative || "";
+    form.rating = props.existingReview.rating || 5;
+    form.date = props.existingReview.date ? new Date(props.existingReview.date) : now.value;
+    
+    // Загружаем фото
+    if (props.existingReview.images && props.existingReview.images.length > 0) {
+      props.existingReview.images.forEach((img: string, index: number) => {
+        if (index < form.photos.length && img) {
+          form.photos[index] = {
+            url: img,
+            public: `https://ozonmpportal.hb.vkcs.cloud/reviewImages/${img}`,
+          };
+        }
+      });
+    }
+    
+    // Загружаем видео
+    if (props.existingReview.videoKey) {
+      form.video = props.existingReview.originalVideoName || "video";
+      newFileId.value = props.existingReview.videoKey.replace('reviewVideos/', '').split('.')[0];
+      filetype.value = 'video/' + props.existingReview.videoKey.split('.').pop();
+      uploadProgress.value = "Файл загружен";
+    }
+  } else {
+    clearForm();
+  }
 });
 function ratingAlert() {
   notify({
@@ -315,8 +420,8 @@ function ratingAlert() {
   });
 }
 
-async function calculateHash(file: any) {
-  return new Promise((resolve, reject) => {
+async function calculateHash(file: any): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
     const chunkSize = 5 * 1024 * 1024;
     const chunks = Math.ceil(file.size / chunkSize);
     let currentChunk = 0;
@@ -409,7 +514,7 @@ async function handleFileChange(e: any) {
     return;
   }
 
-  const hash = await calculateHash(file);
+  const hash: string = await calculateHash(file);
 
   isUploading.value = true;
   fileHash.value = hash;
@@ -505,7 +610,7 @@ async function clearVideo() {
   }
 }
 
-async function generateVideoThumbnail(file: File) {
+async function generateVideoThumbnail(file: File): Promise<string> {
   return new Promise<string>((resolve) => {
     const videoElement = document.createElement("video");
     videoElement.src = URL.createObjectURL(file);
@@ -606,10 +711,11 @@ async function acceptPhotoAIText(photoUrl: string) {
         </p>
       </div>
 
-      <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
+      <h3 class="text-xl font-bold mb-4">{{ isEditMode ? 'Изменить отзыв' : 'Оставить отзыв' }}</h3>
 
-      <div class="pb-2 font-medium">Доставка:</div>
+      <div v-if="!isEditMode" class="pb-2 font-medium">Доставка:</div>
       <select
+        v-if="!isEditMode"
         v-model="selectedDeliv"
         class="select w-full mb-4 bg-base-200 text-gray-500"
       >
@@ -936,12 +1042,42 @@ async function acceptPhotoAIText(photoUrl: string) {
     :buyoutUuid="selectedDeliv.uuid"
     @accept="acceptAIText"
   />
-  <ReviewPhotoAIGenerate
+    <ReviewPhotoAIGenerate
     v-model:state="confirmPhotoModal"
     :buyoutUuid="selectedDeliv.uuid"
     mp="yandexMarket"
     @accept="acceptPhotoAIText"
   />
+
+  <!-- Модалка подтверждения редактирования -->
+  <input id="confirm-edit-modal" type="checkbox" class="modal-toggle" />
+  <div
+    :class="{
+      'modal-open': confirmEditModal,
+    }"
+    class="modal"
+  >
+    <div class="modal-box">
+      <h3 class="text-lg font-bold">Подтверждение изменения отзыва</h3>
+      <p class="py-4">
+        Услуга платная - 100 рублей, вы уверены?
+      </p>
+      <div class="modal-action">
+        <button
+          class="btn btn-ghost"
+          @click="confirmEditModal = false"
+        >
+          Отмена
+        </button>
+        <button
+          class="btn btn-primary"
+          @click="confirmEditReview"
+        >
+          Подтвердить
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>

@@ -60,6 +60,17 @@ export default eventHandler(async (event) => {
         images: review.images,
         date: review.publishDate ? review.publishDate : review.date,
         status: review.status,
+        createdAt: review.createdAt,
+        // Измененные поля
+        textEdited: review.textEdited,
+        ratingEdited: review.ratingEdited,
+        imagesEdited: review.imagesEdited,
+        videoKeyEdited: review.videoKeyEdited,
+        originalVideoNameEdited: review.originalVideoNameEdited,
+        isPhotoEnabledEdited: review.isPhotoEnabledEdited,
+        isVideoEnabledEdited: review.isVideoEnabledEdited,
+        publishDateEdited: review.publishDateEdited,
+        editedAt: review.editedAt,
       }
 
       const delivery = await Delivery.findOne({ _id: review.delivery })

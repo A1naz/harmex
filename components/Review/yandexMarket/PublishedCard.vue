@@ -20,7 +20,8 @@ const emit = defineEmits([
   "resumeStatus",
   "logModal",
   "infoModal",
-  "cancelReview"
+  "cancelReview",
+  "editReview"
 ]);
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -115,6 +116,13 @@ function copyToClipboard(text: string) {
             <a @click="emit('resumeStatus', info)">
               <Icon name="material-symbols:resume-outline-rounded" size="22" />
               Возобновить
+            </a>
+          </li>
+
+          <li v-if="info.status === 'published'" class="cursor-pointer">
+            <a @click="emit('editReview', info)">
+              <Icon name="material-symbols:edit-outline" size="22" />
+              <label class="cursor-pointer">Изменить отзыв</label>
             </a>
           </li>
 
