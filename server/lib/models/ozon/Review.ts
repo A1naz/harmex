@@ -17,7 +17,7 @@ const ReviewSchema = new Schema({
   recipientphone: { type: String, required: true },
   videoKey: { type: String, required: false },
   originalVideoName: { type: String, required: false },
-    isPhotoEnabled: { type: Boolean, required: false },
+  isPhotoEnabled: { type: Boolean, required: false },
   isVideoEnabled: { type: Boolean, required: false },
   createdAt: { type: Date, required: false, default: Date.now },
   uuid: { type: String},
