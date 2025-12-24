@@ -415,7 +415,7 @@ function copyText(text: string) {
                 <input
                   v-model="form.adminUsername"
                   readonly
-                  placeholder="Логин"
+                  :placeholder="$t('Логин')"
                   class="flex-grow w-full text-ellipsis min-w-52"
                   @click="copyText(form.adminUsername)"
                 />
@@ -438,7 +438,7 @@ function copyText(text: string) {
               <input
                 v-model="form.phoneNumber"
                 readonly
-                placeholder="Номер телефона"
+                :placeholder="$t('Номер телефона')"
                 class="input input-sm h-[2.5rem] bg-base-100 w-full"
               />
             </div>
@@ -452,7 +452,7 @@ function copyText(text: string) {
               >
                 <input
                   v-model="form.email"
-                  placeholder="Введите почту"
+                  :placeholder="$t('Введите почту')"
                   readonly
                   class="flex-grow w-full text-ellipsis min-w-52"
                 />
@@ -476,8 +476,8 @@ function copyText(text: string) {
                 <custom-tooltip
                   :text="
                     !user?.emailConfirmed
-                      ? 'Email не подтвержден'
-                      : 'Email подтвержден'
+                      ? $t('Email не подтвержден')
+                      : $t('Email подтвержден')
                   "
                   :visible="tooltipVisible"
                 />
@@ -486,7 +486,7 @@ function copyText(text: string) {
                 v-if="!user?.emailConfirmed"
                 class="text-red-600 text-xs absolute right-0 md:hidden"
               >
-                Email не подтвержден
+                {{ $t("Email не подтвержден") }}
               </p>
             </div>
             <div class="flex flex-col gap-1 flex-1">
@@ -544,12 +544,12 @@ function copyText(text: string) {
 
         <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
           <div class="flex gap-3">
-            <h2 class="text-lg font-medium">Реквизиты</h2>
+            <h2 class="text-lg font-medium">{{ $t("Реквизиты") }}</h2>
             <span
               v-if="!partnerAgreement"
               class="mt-1 underline text-[#1B38CA] text-sm cursor-pointer"
               @click="partnerDetailsModal = true"
-              >Заполнить реквизиты</span
+              >{{ $t("Заполнить реквизиты") }}</span
             >
           </div>
           <div class="flex flex-col gap-1 flex-1 w-full">
@@ -566,10 +566,10 @@ function copyText(text: string) {
         </div>
 
         <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
-          <h2 class="text-lg font-medium">Персональная ссылка для рекомендаций</h2>
+          <h2 class="text-lg font-medium">{{ $t("Персональная ссылка для рекомендаций") }}</h2>
           <div class="flex flex-col gap-1 flex-1 w-full">
             <p class="text-xs font-medium text-base-content">
-              Реферальная ссылка
+              {{ $t("Реферальная ссылка") }}
             </p>
             <div
               class="bg-base-100 h-[2.5rem] rounded-lg px-3 flex gap-2 w-full justify-between items-center"
@@ -596,7 +596,7 @@ function copyText(text: string) {
           <div class="flex flex-col gap-4 mt-2">
             <div class="flex justify-between">
               <div class="flex flex-col gap-[10px]">
-                <span class="text-base font-normal">Партнерский счет</span>
+                <span class="text-base font-normal">{{ $t("Партнерский счет") }}</span>
                 <span class="font-bold text-xl">
                   {{ (partnerBalance.commissions || 0).toFixed(1) + " ₽" }}
                 </span>
@@ -604,7 +604,7 @@ function copyText(text: string) {
             </div>
             <div class="flex">
               <span class="text-xs text-left text-[#909090]">
-                Доходность зависит от количества приглашенных пользователей
+                {{ $t("Доходность зависит от количества приглашенных пользователей") }}
               </span>
             </div>
             <div class="flex justify-start w-full">
@@ -612,7 +612,7 @@ function copyText(text: string) {
                 class="bg-base-100 self-start gap-1 flex flex-col py-[0.4rem] px-[0.5rem] rounded-lg w-full border border-[#ededed]"
               >
                 <div class="font-bold text-[0.9rem] whitespace-nowrap text-[#9e9e9e]">
-                  {{ `${partnerBalance.refCount} человек` }}
+                  {{ `${partnerBalance.refCount} ${$t("человек")}` }}
                 </div>
                 <div class="text-[1rem] text-start text-black font-bold">
                   {{ partnerBalance.rewardSumm }}
@@ -624,7 +624,7 @@ function copyText(text: string) {
 
         <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
           <div class="flex gap-3">
-            <h2 class="text-lg font-medium">Документооборот</h2>
+            <h2 class="text-lg font-medium">{{ $t("Документооборот") }}</h2>
           </div>
           <div
             class="flex flex-col sm:flex-row gap-2 p-2 justify-between text-primary w-full bg-secondary rounded-lg"
@@ -632,7 +632,7 @@ function copyText(text: string) {
             <div class="flex gap-2 items-center">
               <Icon name="gg:file-document" size="24" />
               <p class="font-medium sm:text-sm text-xs">
-                Пользовательское соглашение
+                {{ $t("Пользовательское соглашение") }}
               </p>
             </div>
             <div class="flex items-center sm:text-md text-sm">
@@ -672,7 +672,7 @@ function copyText(text: string) {
             <div class="flex gap-2 items-center">
               <Icon name="gg:file-document" size="24" />
               <p class="font-medium sm:text-sm text-xs">
-                Пользовательское соглашение
+                {{ $t("Пользовательское соглашение") }}
               </p>
             </div>
             <div class="flex items-center sm:text-md text-sm">
@@ -709,21 +709,21 @@ function copyText(text: string) {
         </div>
 
         <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
-          <h2 class="text-lg font-medium">Пароль</h2>
+          <h2 class="text-lg font-medium">{{ $t("Пароль") }}</h2>
           <div class="flex flex-col gap-2.5">
             <div v-if="user" class="flex flex-col gap-2.5 xl:flex-row">
               <input
                 v-model="passwordForm.oldPassword"
                 :disabled="isCodeSent"
                 type="password"
-                placeholder="Старый пароль"
+                :placeholder="$t('Старый пароль')"
                 class="input input-sm h-[2.5rem] w-full"
               />
               <input
                 v-model="passwordForm.newPassword"
                 :disabled="isCodeSent"
                 type="password"
-                placeholder="Новый пароль"
+                :placeholder="$t('Новый пароль')"
                 class="input input-sm h-[2.5rem] w-full"
               />
               <button
@@ -735,7 +735,7 @@ function copyText(text: string) {
                     | (passwordForm.newPassword.length < 6)
                 "
               >
-                Изменить
+                {{ $t("Изменить") }}
               </button>
             </div>
           </div>
@@ -752,7 +752,7 @@ function copyText(text: string) {
           class="flex flex-col gap-4 p-4 bg-white rounded-lg"
         >
           <div class="flex gap-2 justify-between w-full">
-            <h2 class="text-lg font-medium">Команда</h2>
+            <h2 class="text-lg font-medium">{{ $t("Команда") }}</h2>
             <button
               class="btn btn-sm btn-outline h-[2rem] btn-primary mr-1"
               @click="[(teamModal = true), (currentUser = {})]"
@@ -768,23 +768,23 @@ function copyText(text: string) {
                     <tr>
                       <th scope="col" class="table-header text-[14px]">
                         <div class="header-content">
-                          <span>Логин</span>
+                          <span>{{ $t("Логин") }}</span>
                         </div>
                       </th>
                       <th scope="col" class="table-header text-[14px]">
                         <div class="header-content">
-                          <span>Номер телефона</span>
+                          <span>{{ $t("Номер телефона") }}</span>
                         </div>
                       </th>
 
                       <th scope="col" class="table-header text-[14px]">
                         <div class="header-content">
-                          <span>Должности</span>
+                          <span>{{ $t("Должности") }}</span>
                         </div>
                       </th>
                       <th scope="col" class="table-header text-[14px]">
                         <div class="header-content">
-                          <span>Разрешения</span>
+                          <span>{{ $t("Разрешения") }}</span>
                         </div>
                       </th>
                       <th
@@ -793,7 +793,7 @@ function copyText(text: string) {
                         class="table-header text-[14px]"
                       >
                         <div class="header-content">
-                          <span>Функционал</span>
+                          <span>{{ $t("Функционал") }}</span>
                         </div>
                       </th>
                     </tr>
@@ -826,7 +826,7 @@ function copyText(text: string) {
                           <div
                             class="text-sm py-1 px-2 rounded-2xl font-semibold bg-success bg-opacity-50 border-none text-center flex justify-center"
                           >
-                            Полный доступ
+                            {{ $t("Полный доступ") }}
                           </div>
                         </div>
                         <div v-else class="flex flex-wrap justify-center gap-2">
@@ -907,7 +907,7 @@ function copyText(text: string) {
                             class="hover:bg-[#d4d8ff] dark:hover:bg-primary dark:hover:bg-opacity-10 rounded-lg"
                           >
                             <a @click="openEditModal(false, item.uuid)">
-                              <Icon name="tabler:user-edit" size="20" />Изменить
+                              <Icon name="tabler:user-edit" size="20" />{{ $t("Изменить") }}
                             </a>
                           </li>
                           <li
@@ -917,7 +917,7 @@ function copyText(text: string) {
                               <Icon
                                 name="fluent:delete-24-regular"
                                 size="20"
-                              />Удалить
+                              />{{ $t("Удалить") }}
                             </a>
                           </li>
                         </ul>
@@ -944,7 +944,7 @@ function copyText(text: string) {
                             </span>
                           </div>
                           <div class="flex flex-col">
-                            <dt class="mb-2 text-sm">Разрешения:</dt>
+                            <dt class="mb-2 text-sm">{{ $t("Разрешения:") }}</dt>
                             <dd class="font-semibold">
                               <div
                                 class="flex flex-wrap gap-1 overflow-y-hidden sm:overflow-y-auto sm:h-[60px] align-center items-center"
@@ -956,7 +956,7 @@ function copyText(text: string) {
                                   "
                                   class="text-sm p-1 rounded-2xl bg-success bg-opacity-50 w-fit border-none"
                                 >
-                                  Полный доступ
+                                  {{ $t("Полный доступ") }}
                                 </div>
                                 <div
                                   v-else
@@ -981,7 +981,7 @@ function copyText(text: string) {
                 class="hero-content text-center flex justify-center items-center h-40"
               >
                 <div class="max-w-md">
-                  <h1 class="text-3xl font-bold">Добавьте сотрудников</h1>
+                  <h1 class="text-3xl font-bold">{{ $t("Добавьте сотрудников") }}</h1>
                 </div>
               </div>
             </div>
@@ -989,7 +989,7 @@ function copyText(text: string) {
         </div>
 
         <div class="flex flex-col gap-4 rounded-lg bg-white p-4">
-          <h2 class="text-lg font-[500]">Двухфакторная аутентификация</h2>
+          <h2 class="text-lg font-[500]">{{ $t("Двухфакторная аутентификация") }}</h2>
 
           <div class="form-control bg-secondary rounded-lg p-3">
             <label class="label cursor-pointer flex flex-col lg:flex-row">
@@ -999,9 +999,9 @@ function copyText(text: string) {
                   class="w-10 h-10"
                 />
                 <div class="flex-col gap-1">
-                  <p class="text-sm font-medium">Усиленная защита аккаунта</p>
+                  <p class="text-sm font-medium">{{ $t("Усиленная защита аккаунта") }}</p>
                   <p class="text-xs font-normal text-gray-500">
-                    Укрепите безопасность своего аккаунта
+                    {{ $t("Укрепите безопасность своего аккаунта") }}
                   </p>
                 </div>
               </div>
@@ -1015,14 +1015,14 @@ function copyText(text: string) {
                   class="toggle toggle-sm toggle-primary"
                   @change="openTwoFaQRModal"
                 />
-                <span class="text-xs">Включить</span>
+                <span class="text-xs">{{ $t("Включить") }}</span>
               </div>
             </label>
           </div>
         </div>
 
         <div class="flex flex-col gap-4 p-4 bg-white rounded-lg">
-          <h2 class="text-lg font-medium">Чат-бот уведомлений</h2>
+          <h2 class="text-lg font-medium">{{ $t("Чат-бот уведомлений") }}</h2>
           <div class="flex flex-col gap-3 bg-secondary p-4 rounded-lg">
             <div class="flex flex-col justify-between w-full">
               <div class="flex justify-between w-full flex-col lg:flex-row">
@@ -1032,9 +1032,9 @@ function copyText(text: string) {
                     class="w-10 h-10"
                   />
                   <div class="flex flex-col gap-1 flex-1">
-                    <p class="text-sm font-normal">Уведомления Email</p>
+                    <p class="text-sm font-normal">{{ $t("Уведомления Email") }}</p>
                     <p class="text-xs font-normal text-gray-500">
-                      Функции недоступны. Подключите уведомления Email
+                      {{ $t("Функции недоступны. Подключите уведомления Email") }}
                     </p>
                   </div>
                 </div>
@@ -1051,7 +1051,7 @@ function copyText(text: string) {
                         :checked="emailAlerts.value"
                         @click="emailAlerts.value = !emailAlerts.value"
                       />
-                      <span class="text-xs font-normal">Включить все</span>
+                      <span class="text-xs font-normal">{{ $t("Включить все") }}</span>
                     </label>
                   </div>
                   <transition name="slide-fade">
@@ -1095,11 +1095,11 @@ function copyText(text: string) {
                   class="w-10 h-10 mb-3 lg:mb-0"
                 />
                 <div class="flex gap-3 flex-col lg:flex-row lg:w-full">
-                  <div class="flex gap-3">
+                    <div class="flex gap-3">
                     <div class="flex flex-col gap-1 flex-1">
-                      <p class="text-sm font-normal">Telegram чат-бот</p>
+                      <p class="text-sm font-normal">{{ $t("Telegram чат-бот") }}</p>
                       <p class="text-xs font-normal text-gray-500">
-                        Функции недоступны. Подключите Telegram-бот.
+                        {{ $t("Функции недоступны. Подключите Telegram-бот.") }}
                       </p>
                     </div>
                   </div>
@@ -1107,7 +1107,7 @@ function copyText(text: string) {
                     href="#"
                     class="flex items-start py-3 text-primary hover:text-base-content lg:ml-auto text-xs pt-10 lg:pt-3"
                   >
-                    <span>Перейти в чат бот</span>
+                    <span>{{ $t("Перейти в чат бот") }}</span>
                     <icon
                       name="solar:arrow-right-linear"
                       class="ml-1 w-4 h-4 transition-colors duration-200"
@@ -1129,7 +1129,7 @@ function copyText(text: string) {
                         @click="tgAlerts.value = !tgAlerts.value"
                       />
                       <span class="whitespace-nowrap text-black"
-                        >Включить все</span
+                        >{{ $t("Включить все") }}</span
                       >
                     </label>
                   </div>
