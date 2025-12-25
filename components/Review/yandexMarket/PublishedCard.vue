@@ -52,6 +52,8 @@ const getStatus = computed(() => {
       return "В архиве";
     case "completed":
       return "Опубликован";
+    case "editing":
+      return "На изменении";
   }
 });
 
@@ -188,7 +190,8 @@ function copyToClipboard(text: string) {
                       info.status === 'busy' ||
                       info.status === 'canceled' ||
                       info.status === 'deleted' ||
-                      info.status === 'deleting',
+                      info.status === 'deleting' ||
+                      info.status === 'editing',
                   }"
                   class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
                   >{{ getStatus }}

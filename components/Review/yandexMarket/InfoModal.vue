@@ -39,6 +39,8 @@ const getStatus = computed(() => {
       return "В архиве";
     case "completed":
       return "Опубликован";
+    case "editing":
+      return "На изменении";
   }
 });
 
@@ -147,7 +149,8 @@ const router = useRouter();
                           info.status === 'busy' ||
                           info.status === 'canceled' ||
                           info.status === 'deleted' ||
-                          info.status === 'deleting',
+                          info.status === 'deleting'||
+                          info.status === 'editing',
                       }"
                       class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm"
                       >{{ getStatus }}
