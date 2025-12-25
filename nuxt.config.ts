@@ -189,8 +189,32 @@ export default defineNuxtConfig({
       interval: "hour",
       fireImmediately: false,
     },
-    headers: false,
-    xssValidator: false,
+    headers: {
+      crossOriginEmbedderPolicy: false, // Отключаем только это (конфликтует с картами)
+      contentSecurityPolicy: {
+        'base-uri': ["'self'"],
+        'font-src': ["'self'", "https:", "data:"],
+        'form-action': ["'self'"],
+        'frame-ancestors': ["'self'"],
+        'img-src': ["'self'", "data:", "https:", "blob:"],
+        'object-src': ["'none'"],
+        'script-src-attr': ["'none'"],
+        'style-src': ["'self'", "https:", "'unsafe-inline'"],
+        'script-src': [
+          "'self'",
+          "https:",
+          "'unsafe-inline'",
+          "'strict-dynamic'",
+          "'nonce-{{nonce}}'",
+        ],
+        'upgrade-insecure-requests': true,
+      },
+    },
+    xssValidator: {
+      methods: ['POST', 'PUT', 'PATCH'],
+      // Отключаем проверку для безопасных эндпоинтов
+      excludedUrls: ['/api/auth/login', '/api/auth/register'],
+    },
   },
 
   devtools: {
