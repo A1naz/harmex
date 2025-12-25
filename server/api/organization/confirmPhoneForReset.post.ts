@@ -25,10 +25,10 @@ export default eventHandler(async (event) => {
   })
 
   if (!isUserExist) {
-    throw createError({
-      statusCode: 404,
-      message: 'Пользователя с этим номером не существует',
-    })
+    return {
+      status: 'ok',
+      message: 'Если номер зарегистрирован, код был отправлен',
+    }
   }
 
   let data: any = null

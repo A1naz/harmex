@@ -19,69 +19,47 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const found = await User.findOne({ phoneNumber: email.replace(/[\(\)\-\s]/g, '') })
+  const phoneNumber = email.replace(/[\(\)\-\s]/g, '')
+  
+  const found = await User.findOne({ phoneNumber })
+  const confirm = await ConfirmPhone.findOne({ phone: phoneNumber, code: verificationCode })
 
-  if (!found) {
+  if (!found || !confirm) {
+    const errorConfirm = await ConfirmPhone.findOne({ phone: phoneNumber })
+    if (errorConfirm) {
+      errorConfirm.errorCount = (errorConfirm.errorCount || 0) + 1
+      await errorConfirm.save()
+    //Если 3 ошибки, то удалим код
+      if (errorConfirm.errorCount >= 3) {
+        await ConfirmPhone.deleteOne({ phone: phoneNumber })
+      }
+    }
+    
+    throw createError({
+      statusCode: 404,
+      message: 'Код подтверждения не найден',
+    })
+  }
+
+  const confirmDate = new Date(confirm.date)
+  const now = new Date()
+  const difference = Math.abs(now.getTime() - confirmDate.getTime())
+   
+  if (difference > 300 * 1000) { 
     throw createError({
       statusCode: 400,
-      message: 'User not found',
+      message: 'Код подтверждения истек',
     })
+  }
 
-  } else {
+  const hash = bcrypt.hashSync(password, 7)
+  found.password = hash
+  found.forceLoginDate = new Date()
+  await found.save()
 
-    const confirm = await ConfirmPhone.findOne({ phone: email.replace(/[\(\)\-\s]/g, ""), code: verificationCode })
+  await ConfirmPhone.deleteOne({ phone: phoneNumber })
 
-    if (!confirm) {
-      const errorConfirm = await ConfirmPhone.findOne({ phone: email.replace(/[\(\)\-\s]/g, "") })
-      if (errorConfirm) {
-        errorConfirm.errorCount ? errorConfirm.errorCount++ : errorConfirm.errorCount = 1
-        await errorConfirm.save()
-        if (errorConfirm.errorCount >= 3) {
-          await ConfirmPhone.deleteOne({ phone: email.replace(/[\(\)\-\s]/g, "") })
-        }
-      }
-      throw createError({
-        statusCode: 404,
-        message: 'Код подтверждения не найден',
-      })
-    }
-
-
-    const confirmDate = new Date(confirm.date)
-    const now = new Date()
-    const difference = Math.abs(now.getTime() - confirmDate.getTime())
-   
-    if (difference > 300 * 1000) {
-      throw createError({
-        statusCode: 400,
-        message: 'Код подтверждения истек',
-      })
-    }
-
-    const hash = bcrypt.hashSync(password, 7)
-
-    found.password = hash
-    found.forceLoginDate = new Date()
-    await found.save()
-    //Не используется
-    // const token = jwt.sign(
-    // { email: found.email, id: found.id, password },
-    // runtimeConfig.SECRET,
-    // {
-    // expiresIn: '10m',
-    // },
-    // )
-
-
-    // const url = `${runtimeConfig.PUBLIC_SITE_URL}/api/user/changePassword/${token}`
-    // await mailService.sendChangePasswordMail(
-    //   found.email,
-    //   url,
-    //   found.firstName || found.username,
-    // )
-
-    return {
-      status: 'ok',
-    }
+  return {
+    status: 'ok',
   }
 })

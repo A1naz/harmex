@@ -104,12 +104,27 @@ async function attempt(
   phoneNumber: string,
   password: string,
 ) {
+  // Импортируем rate limiter
+  const { checkRateLimit, logLoginAttempt, clearOldLoginAttempts } = await import('./rateLimiter')
+
+  // Проверяем rate limit ПЕРЕД любыми операциями с БД
+  const rateLimitCheck = await checkRateLimit(event, phoneNumber)
+  
+  if (!rateLimitCheck.allowed) {
+    throw createError({
+      statusCode: 429,
+      message: rateLimitCheck.reason || 'Слишком много попыток входа',
+    })
+  }
 
   const foundUser = await User.findOne({
     phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
   })
 
-  if (!foundUser) {
+  if (!foundUser || !foundUser.password) {
+    // Логируем неудачную попытку
+    await logLoginAttempt(event, phoneNumber, false)
+    
     throw createError({
       statusCode: 401,
       message: 'Неверный номер телефона или пароль.',
@@ -121,12 +136,21 @@ async function attempt(
   if (
     !isPasswordCorrect
   ) {
+    // Логируем неудачную попытку
+    await logLoginAttempt(event, phoneNumber, false)
+    
     // return an error if the user is not found or the password doesn't match
     throw createError({
       statusCode: 401,
       message: 'Неверный логин или пароль.',
     })
   }
+
+  // Логируем успешную попытку
+  await logLoginAttempt(event, phoneNumber, true)
+  
+  // Очищаем старые неудачные попытки
+  await clearOldLoginAttempts(phoneNumber)
 
   // log in as the selected user
   await login(event, foundUser)
