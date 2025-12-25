@@ -167,6 +167,6 @@ export default eventHandler(async (event) => {
   );
 
   const filtered = format;
-  console.log("filtered" + filtered.length);
+
   return filtered;
 });

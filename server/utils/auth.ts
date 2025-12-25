@@ -104,7 +104,6 @@ async function attempt(
   phoneNumber: string,
   password: string,
 ) {
-  // console.log('attempt', phoneNumber, password)
 
   const foundUser = await User.findOne({
     phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
@@ -121,7 +120,6 @@ async function attempt(
 
   if (
     !isPasswordCorrect
-    && config.env !== "developer"
   ) {
     // return an error if the user is not found or the password doesn't match
     throw createError({

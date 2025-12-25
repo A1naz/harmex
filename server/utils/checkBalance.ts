@@ -109,7 +109,6 @@ export const checkBalance = async (
     if (!user) return false;
 
     if (user.username === "rabo4yn") {
-      console.log("approver Balance ", user.username);
       return true;
     }
 

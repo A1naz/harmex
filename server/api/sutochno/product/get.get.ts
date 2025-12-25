@@ -5,8 +5,6 @@ export default eventHandler(async (event) => {
   if (!session) return sendRedirect(event, "/auth", 302);
 
   const { link } = getQuery(event);
-  console.log(link);
-  console.log(config.PARSER_TOKEN);
 
   const data: any = await $fetch("http://95.163.249.133:3000", {
     method: "POST",
@@ -32,8 +30,6 @@ export default eventHandler(async (event) => {
       message: "Номер(а) не найден(ы)",
     });
   }
-
-  console.log(data);
 
   return {
     product: {

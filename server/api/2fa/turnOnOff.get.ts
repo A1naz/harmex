@@ -14,7 +14,6 @@ export default eventHandler(async (event) => {
   } else {
     foundedUser.isTwoFaEnabled = changeTo;
   }
-  console.log(foundedUser.isTwoFaEnabled);
   
    await foundedUser.save()
 

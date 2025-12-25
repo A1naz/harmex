@@ -163,8 +163,7 @@ async function uploadToS3(event: Event, index: number) {
     });
     return;
   }
-  console.log(result);
-  console.log(result);
+
   //@ts-ignore
   await useFetch("/api/images/openForPublic", {
     method: "GET",

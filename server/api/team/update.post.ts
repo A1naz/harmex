@@ -69,7 +69,6 @@ export default eventHandler(async (event) => {
   if(password){
     const hash = bcrypt.hashSync(password, 7)
     user.password = hash
-    console.log('user', password)
   }
 
   user.username = username

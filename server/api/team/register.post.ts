@@ -24,12 +24,6 @@ export default eventHandler(async (event) => {
     post,
   } = await readBody(event)
 
-  console.log(
-    'phoneNumber',
-    phoneNumber,
-    'password',
-    password,
-  )
 
   if (!phoneNumber || !password) {
     throw createError({
@@ -38,7 +32,6 @@ export default eventHandler(async (event) => {
     })
   }
 
-  console.log('allowedPathes', allowedPathes)
 
   if(allowedPathes == '') {
     throw createError({
@@ -47,7 +40,6 @@ export default eventHandler(async (event) => {
     })
   }
 
-  console.log('post', post)
 
   if(post == '') {
     throw createError({
