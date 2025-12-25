@@ -151,6 +151,9 @@ export default eventHandler(async (event) => {
         uuid: review.uuid,
         type: getReviewType(review),
         originalVideoName: review.originalVideoName,
+        videoKey: review.videoKey,
+        isVideoEnabled: review.isVideoEnabled,
+        isPhotoEnabled: review.isPhotoEnabled,
         createdAt: review.createdAt,
         // Измененные поля
         textEdited: review.textEdited,
@@ -172,6 +175,7 @@ export default eventHandler(async (event) => {
       );
       if (delivery) {
         format.buyoutuuid = delivery.uuidbuyout;
+        format.delivery = { _id: delivery._id };
         const buyout = buyoutsPublished.find(
           (buyout: any) => buyout._id.valueOf() == delivery.idbuyout.valueOf()
         );
