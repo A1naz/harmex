@@ -20,7 +20,8 @@ const emit = defineEmits([
   "resumeStatus",
   "logModal",
   "infoModal",
-  "cancelReview"
+  "cancelReview",
+  "editReview"
 ]);
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -51,6 +52,8 @@ const getStatus = computed(() => {
       return "В архиве";
     case "completed":
       return "Опубликован";
+    case "editing":
+      return "На изменении";
   }
 });
 
@@ -119,6 +122,13 @@ function copyToClipboard(text: string) {
           </li>
 
           <li v-if="info.status === 'published'" class="cursor-pointer">
+            <a @click="emit('editReview', info)">
+              <Icon name="material-symbols:edit-outline" size="22" />
+              <label class="cursor-pointer">Изменить отзыв</label>
+            </a>
+          </li>
+
+          <li v-if="info.status === 'published'" class="cursor-pointer">
             <a @click="emit('removeReview', info.id)">
               <img
                 class="w-5 h-5"
@@ -180,7 +190,8 @@ function copyToClipboard(text: string) {
                       info.status === 'busy' ||
                       info.status === 'canceled' ||
                       info.status === 'deleted' ||
-                      info.status === 'deleting',
+                      info.status === 'deleting' ||
+                      info.status === 'editing',
                   }"
                   class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
                   >{{ getStatus }}

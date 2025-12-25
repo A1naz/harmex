@@ -39,6 +39,8 @@ const getStatus = computed(() => {
       return "В архиве";
     case "completed":
       return "Опубликован";
+    case "editing":
+      return "На изменении";
   }
 });
 
@@ -69,6 +71,7 @@ onKeyStroke("Escape", (e) => {
   emit("close");
 });
 const { $dayjs } = useNuxtApp();
+const router = useRouter();
 </script>
 
 <template class="overflow-hidden">
@@ -112,6 +115,18 @@ const { $dayjs } = useNuxtApp();
                     {{ $dayjs(info.date).format("DD.MM.YYYY HH:mm") }}
                   </button>
                 </div>
+                
+                <!-- Измененная дата публикации -->
+                <div v-if="info.publishDateEdited" class="flex gap-2 w-2/3">
+                  <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
+                    >Изменено на:
+                  </span>
+                  <button
+                    class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
+                  >
+                    {{ $dayjs(info.publishDateEdited).format("DD.MM.YYYY HH:mm") }}
+                  </button>
+                </div>
 
                 <div class="flex gap-2">
                   <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
@@ -134,7 +149,8 @@ const { $dayjs } = useNuxtApp();
                           info.status === 'busy' ||
                           info.status === 'canceled' ||
                           info.status === 'deleted' ||
-                          info.status === 'deleting',
+                          info.status === 'deleting'||
+                          info.status === 'editing',
                       }"
                       class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm"
                       >{{ getStatus }}
@@ -163,7 +179,7 @@ const { $dayjs } = useNuxtApp();
                   <label
                     class="rounded-md py-0 px-2 text-sm cursor-pointer"
                     @click="
-                      navigateTo(
+                      router.push(
                         `/ym/buyouts?uuid=${info.buyoutuuid}&fromReview=true&reviewUuid=${info.buyoutuuid}`,
                       )
                     "
@@ -255,19 +271,24 @@ const { $dayjs } = useNuxtApp();
                     >Рейтинг:
                   </span>
                   <div class="flex items-center text-sm">
-                    <span v-for="star in 5" :key="star" class="text-yellow-600">
+                    <span v-for="star in info.rating" :key="star" class="text-yellow-600">
                       <Icon name="mdi:star" />
                     </span>
                   </div>
                 </div>
-                <div class="whitespace-pre-line mt-1">
+                
+                <!-- Измененный рейтинг -->
+                <div v-if="info.ratingEdited" class="flex mt-2">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
-                    >Текст отзыва:
+                    >Измененный рейтинг:
                   </span>
-                  <span class="text-sm">
-                    {{ info.text }}
-                  </span>
+                  <div class="flex items-center text-sm">
+                    <span v-for="star in info.ratingEdited" :key="star" class="text-yellow-600">
+                      <Icon name="mdi:star" />
+                    </span>
+                  </div>
                 </div>
+
                 <div class="whitespace-pre-line mt-1" v-if="info.positive">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Плюсы:
@@ -276,6 +297,17 @@ const { $dayjs } = useNuxtApp();
                     {{ info.positive }}
                   </span>
                 </div>
+
+                <!-- Измененные плюсы -->
+                <div v-if="info.positiveEdited" class="whitespace-pre-line mt-1">
+                  <span class="text-sm text-gray-500 mr-2 my-auto"
+                    >Измененные плюсы:
+                  </span>
+                  <span class="text-sm">
+                    {{ info.positiveEdited }}
+                  </span>
+                </div>
+
                 <div class="whitespace-pre-line mt-1" v-if="info.negative">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Минусы:
@@ -285,12 +317,41 @@ const { $dayjs } = useNuxtApp();
                   </span>
                 </div>
 
+                <!-- Измененные минусы -->
+                <div v-if="info.negativeEdited" class="whitespace-pre-line mt-1">
+                  <span class="text-sm text-gray-500 mr-2 my-auto"
+                    >Измененные минусы:
+                  </span>
+                  <span class="text-sm">
+                    {{ info.negativeEdited }}
+                  </span>
+                </div>
+
+                <div class="whitespace-pre-line mt-1">
+                  <span class="text-sm text-gray-500 mr-2 my-auto"
+                    >Текст отзыва:
+                  </span>
+                  <span class="text-sm">
+                    {{ info.text }}
+                  </span>
+                </div>
+
+                <!-- Измененный текст -->
+                <div v-if="info.textEdited" class="whitespace-pre-line mt-1">
+                  <span class="text-sm text-gray-500 mr-2 my-auto"
+                    >Измененный текст:
+                  </span>
+                  <span class="text-sm">
+                    {{ info.textEdited }}
+                  </span>
+                </div>
+
                 <div class="text-sm mt-1 pb-1 text-gray-500 mr-2 my-auto">
                   Фото:
                 </div>
                 <div
                   v-if="info.images && info.images[0] !== ''"
-                  class="flex gap-2 items-center overflow-x-auto flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]"
+                  class="flex gap-2 items-center overflow-x-auto flex-nowrap basis-32 pb-2 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]"
                 >
                   <div v-for="(photo, i) of info.images" :key="i">
                     <label v-if="photo">
@@ -343,13 +404,85 @@ const { $dayjs } = useNuxtApp();
                   </div>
                 </div>
 
-                <div class="flex pb-4">
+                <!-- Измененные фото -->
+                <div v-if="info.imagesEdited && info.imagesEdited.length > 0 && info.imagesEdited[0] !== ''">
+                  <div class="text-sm mt-2 pb-1 text-gray-500 mr-2 my-auto">
+                    Измененные фото:
+                  </div>
+                  <div
+                    class="flex gap-2 items-center overflow-x-auto flex-nowrap basis-32 pb-2 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]"
+                  >
+                    <div v-for="(photo, i) of info.imagesEdited" :key="i">
+                      <label v-if="photo">
+                        <div
+                          class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-16 h-16 hover:bg-base-200 rounded-lg flex-none"
+                          @click.stop
+                        >
+                          <div class="absolute inset-0">
+                            <UseImage
+                              :src="
+                                photo.startsWith('http')
+                                  ? photo
+                                  : `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`
+                              "
+                            >
+                              <template #default>
+                                <nuxt-img
+                                  :src="
+                                    photo.startsWith('http')
+                                      ? photo
+                                      : `${config.public.DOMAIN_API_IMAGES_URL}reviewImages/${photo}`
+                                  "
+                                  class="w-full h-full object-contain rounded-lg"
+                                  loading="lazy"
+                                />
+                              </template>
+                              <template #loading>
+                                <div
+                                  class="absolute inset-0 flex items-center justify-center"
+                                >
+                                  <Icon
+                                    name="mdi:loading"
+                                    class="loader ease-linear h-8 w-8 animate-spin"
+                                  />
+                                </div>
+                              </template>
+                              <template #error>
+                                <div
+                                  class="absolute inset-0 flex items-center justify-center"
+                                >
+                                  <div class="text-red-500 text-center">
+                                    Ошибка загрузки
+                                  </div>
+                                </div>
+                              </template>
+                            </UseImage>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex pb-2 mt-2">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
                     >Видео:
                   </span>
                   <div class="flex items-center text-sm">
                     <span>
-                      {{ info.originalVideoName }}
+                      {{ info.originalVideoName || 'Нет' }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Измененное видео -->
+                <div v-if="info.originalVideoNameEdited" class="flex pb-4 mt-2">
+                  <span class="text-sm text-gray-500 mr-2 my-auto"
+                    >Измененное видео:
+                  </span>
+                  <div class="flex items-center text-sm">
+                    <span>
+                      {{ info.originalVideoNameEdited }}
                     </span>
                   </div>
                 </div>

@@ -151,6 +151,19 @@ export default eventHandler(async (event) => {
         uuid: review.uuid,
         type: getReviewType(review),
         originalVideoName: review.originalVideoName,
+        createdAt: review.createdAt,
+        // Измененные поля
+        textEdited: review.textEdited,
+        positiveEdited: review.positiveEdited,
+        negativeEdited: review.negativeEdited,
+        ratingEdited: review.ratingEdited,
+        imagesEdited: review.imagesEdited,
+        videoKeyEdited: review.videoKeyEdited,
+        originalVideoNameEdited: review.originalVideoNameEdited,
+        isPhotoEnabledEdited: review.isPhotoEnabledEdited,
+        isVideoEnabledEdited: review.isVideoEnabledEdited,
+        publishDateEdited: review.publishDateEdited,
+        editedAt: review.editedAt,
       };
 
       // eslint-disable-next-line eqeqeq

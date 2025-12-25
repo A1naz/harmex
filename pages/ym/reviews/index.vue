@@ -69,7 +69,7 @@ const isFetch = ref(true);
 const reviews = ref<any>([]);
 const availableReviews = ref<any>([]);
 
-function containsOnlyNumbers(str) {
+function containsOnlyNumbers(str: string) {
   return /^[0-9]+$/.test(str);
 }
 
@@ -82,6 +82,7 @@ async function fetchData() {
     ? SelectOptions.uuidBuyout
     : SelectOptions.idReview;
 
+  // @ts-ignore
   const response: any = await $fetch(
     `/api/yandexMarket/review/${endpoint.value}`,
     {
@@ -155,11 +156,21 @@ function openPhoto(src: string) {
 const selectedDelivery = ref("");
 const modalOpen = ref(false);
 const selectedArticle = ref<any>({});
+const isEditMode = ref(false);
+const editingReview = ref<any>(null);
 
 function openModal(review: any, uuid: string, deliveryid: string) {
   selectedArticle.value = review;
   selectedUUID.value = uuid;
   selectedDelivery.value = deliveryid;
+  isEditMode.value = false;
+  editingReview.value = null;
+  modalOpen.value = true;
+}
+
+function openEditModal(review: any) {
+  editingReview.value = review;
+  isEditMode.value = true;
   modalOpen.value = true;
 }
 function closeModal() {
@@ -520,7 +531,7 @@ async function cancelReview(item: any) {
             <ReviewYandexMarketCard
               v-for="(review, index) of availableReviews"
               :key="index"
-              :index="index"
+              :index="Number(index)"
               :info="review"
               @open-modal="(b: string, d: string) => openModal(review, b, d)"
             />
@@ -536,7 +547,7 @@ async function cancelReview(item: any) {
             <ReviewYandexMarketPublishedCard
             v-for="(review, index) of reviews"
               :key="index"
-              :index="index"
+              :index="Number(index)"
               :info="review"
               @remove-review="openRemoveReviewModal"
               @open-image="openPhoto"
@@ -545,6 +556,7 @@ async function cancelReview(item: any) {
               @log-modal="(item: any) => [(selectedReview = item), (logModal = true)]"
               @info-modal="(item: any) => [(selectedReview = item), (infoModal = true)]"
               @cancelReview="cancelReview"
+              @edit-review="openEditModal"
             />
           </div>
 
@@ -565,10 +577,12 @@ async function cancelReview(item: any) {
 
       <ReviewYandexMarketModal
         v-if="modalOpen"
-        :review="selectedArticle"
-        :deliveryid="selectedDelivery"
+        :review="isEditMode ? editingReview : selectedArticle"
+        :deliveryid="isEditMode ? '' : selectedDelivery"
         :state="modalOpen"
-        :uuid="selectedUUID"
+        :uuid="isEditMode ? editingReview?.uuid : selectedUUID"
+        :is-edit-mode="isEditMode"
+        :existing-review="isEditMode ? editingReview : null"
         @publish="goToPublished"
         @close="closeModal"
       />

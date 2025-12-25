@@ -29,6 +29,7 @@ const ReviewSchema = new Schema({
       'deleting',
       'deleted',
       'archived',
+      'editing',
     ],
   },
   recipientphone: { type: String, required: true },
@@ -37,6 +38,18 @@ const ReviewSchema = new Schema({
   isVideoEnabled: { type: Boolean, required: false },
   createdAt: { type: Date, required: false, default: Date.now },
   uuid: { type: String},
+  // Поля для хранения измененных данных
+  textEdited: { type: String, required: false },
+  positiveEdited: { type: String, required: false },
+  negativeEdited: { type: String, required: false },
+  ratingEdited: { type: Number, required: false },
+  imagesEdited: { type: Array, required: false },
+  videoKeyEdited: { type: String, required: false },
+  originalVideoNameEdited: { type: String, required: false },
+  isPhotoEnabledEdited: { type: Boolean, required: false },
+  isVideoEnabledEdited: { type: Boolean, required: false },
+  publishDateEdited: { type: Date, required: false },
+  editedAt: { type: Date, required: false },
 })
 
 export const Review = yandexConnection.model('Review', ReviewSchema)
