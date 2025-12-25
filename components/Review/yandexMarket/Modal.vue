@@ -401,11 +401,49 @@ onMounted(() => {
     }
     
     // Загружаем видео
-    if (props.existingReview.videoKey) {
+    if (props.existingReview.videoKey && props.existingReview.isVideoEnabled) {
       form.video = props.existingReview.originalVideoName || "video";
       newFileId.value = props.existingReview.videoKey.replace('reviewVideos/', '').split('.')[0];
       filetype.value = 'video/' + props.existingReview.videoKey.split('.').pop();
       uploadProgress.value = "Файл загружен";
+      
+      // Генерируем превью для существующего видео
+      const videoUrl = `https://videos.videos.harmex.ru/${props.existingReview.videoKey}`;
+      
+      // Создаем видеоэлемент для генерации превью
+      const videoElement = document.createElement("video");
+      videoElement.crossOrigin = "anonymous";
+      videoElement.preload = "metadata";
+      
+      videoElement.onloadedmetadata = () => {
+        // Устанавливаем время на 1 секунду или на середину если видео короче
+        videoElement.currentTime = Math.min(1, videoElement.duration / 2);
+      };
+      
+      videoElement.onseeked = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = videoElement.videoWidth || 320;
+          canvas.height = videoElement.videoHeight || 240;
+          const context = canvas.getContext("2d");
+          if (context) {
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            videoThumbnail.value = canvas.toDataURL("image/png");
+          }
+        } catch (error) {
+          console.error("Ошибка при генерации превью видео:", error);
+          // Если не удалось создать превью, показываем заглушку
+          videoThumbnail.value = "placeholder";
+        }
+      };
+      
+      videoElement.onerror = (error) => {
+        console.error("Ошибка при загрузке видео:", error);
+        // Устанавливаем заглушку при ошибке
+        videoThumbnail.value = "placeholder";
+      };
+      
+      videoElement.src = videoUrl;
     }
   } else {
     clearForm();
@@ -960,12 +998,20 @@ async function acceptPhotoAIText(photoUrl: string) {
                   <div
                     v-else
                     class="absolute inset-0 flex items-center justify-center"
-                    :style="{
+                    :style="videoThumbnail && videoThumbnail !== 'placeholder' ? {
                       backgroundImage: `url(${videoThumbnail})`,
                       backgroundSize: 'cover',
-                    }"
+                    } : {}"
                   >
                     <div
+                      v-if="!videoThumbnail || videoThumbnail === 'placeholder'"
+                      class="text-primary flex flex-col items-center justify-center h-full"
+                    >
+                      <Icon name="material-symbols:video-library" size="48" />
+                      <div class="text-xs mt-2">Видео загружено</div>
+                    </div>
+                    <div
+                      v-else
                       class="text-white bg-black bg-opacity-50 h-full p-2 rounded text-center"
                     >
                       <div class="mt-6">Файл загружен</div>
@@ -1060,7 +1106,7 @@ async function acceptPhotoAIText(photoUrl: string) {
     <div class="modal-box">
       <h3 class="text-lg font-bold">Подтверждение изменения отзыва</h3>
       <p class="py-4">
-        Услуга платная - 100 рублей, вы уверены?
+        Услуга платная - 50 рублей, вы уверены?
       </p>
       <div class="modal-action">
         <button
@@ -1096,3 +1142,4 @@ input[type="file"]::-ms-browse {
   display: none;
 }
 </style>
+
