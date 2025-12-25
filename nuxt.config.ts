@@ -189,19 +189,8 @@ export default defineNuxtConfig({
       interval: "hour",
       fireImmediately: false,
     },
-    headers: {
-      crossOriginEmbedderPolicy: process.env.NODE_ENV === 'production',
-      contentSecurityPolicy: {
-        'default-src': ["'self'"],
-        'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn-ru.bitrix24.ru"],
-        'style-src': ["'self'", "'unsafe-inline'"],
-        'img-src': ["'self'", "data:", "https:", "blob:"],
-        'font-src': ["'self'", "data:"],
-        'connect-src': ["'self'", "https:", "wss:"],
-      },
-      xFrameOptions: 'SAMEORIGIN',
-    },
-    xssValidator: true, // ✅ ВКЛЮЧИТЬ
+    headers: false,
+    xssValidator: false,
   },
 
   devtools: {

@@ -41,7 +41,7 @@ export async function checkRateLimit(
   if (ipAttempts >= RATE_LIMITS.PER_IP_PER_15_MIN) {
     return {
       allowed: false,
-      reason: 'Слишком много попыток входа с вашего IP. Подождите 15 минут.',
+      reason: 'Слишком много попыток входа. Подождите 15 минут.',
       waitTime: 900
     }
   }
@@ -70,7 +70,7 @@ export async function checkRateLimit(
   if (phoneAttempts >= RATE_LIMITS.PER_PHONE_PER_HOUR) {
     return {
       allowed: false,
-      reason: 'Слишком много попыток входа для этого номера. Попробуйте через 1 час.',
+      reason: 'Слишком много попыток входа. Попробуйте через 1 час.',
       waitTime: 3600
     }
   }

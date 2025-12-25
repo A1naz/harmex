@@ -104,11 +104,21 @@ async function login() {
     },
   })
     .catch((err) => {
-      notify({
-        group: "error",
-        title: "Не удалось войти",
-        text: err.data.message || err.message,
-      });
+      if (err.statusCode === 429) {
+        const message = err.data?.message || err.message || "Слишком много попыток входа";
+        notify({
+          group: "error",
+          title: "⏱️ Слишком много попыток",
+          text: message + "\n\nВоспользуйтесь восстановлением пароля, если забыли его.",
+          duration: 10000,
+        });
+      } else {
+        notify({
+          group: "error",
+          title: "Не удалось войти",
+          text: err.data?.message || err.message,
+        });
+      }
     })
     .finally(() => {
       loading.value = false;
