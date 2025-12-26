@@ -54,6 +54,12 @@ const getStatus = computed(() => {
       return "Опубликован";
       case "editing":
       return "На изменении"
+      case "reviewsUpdate":
+      return "На проверке";
+    case "errorEditing":
+      return "Ошибка редактирования";
+    case "edited":
+      return "Редактирован";
   }
 });
 

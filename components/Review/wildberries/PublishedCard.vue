@@ -91,8 +91,12 @@ const getStatus = computed(() => {
       return "В процессе оспорения";
     case "disputed":
       return "Оспорен";
-    case "reviewsUpdate":
+      case "reviewsUpdate":
       return "На проверке";
+    case "errorEditing":
+      return "Ошибка редактирования";
+    case "edited":
+      return "Редактирован";
   }
 });
 

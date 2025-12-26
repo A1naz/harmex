@@ -21,7 +21,7 @@ const emit = defineEmits([
   "logModal",
   "infoModal",
   "cancelReview",
-  "editReview"
+  "editReview",
 ]);
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -54,11 +54,19 @@ const getStatus = computed(() => {
       return "Опубликован";
     case "editing":
       return "На изменении";
+    case "reviewsUpdate":
+      return "На проверке";
+    case "errorEditing":
+      return "Ошибка редактирования";
+    case "edited":
+      return "Редактирован";
   }
 });
 
 function openBuyout() {
-  router.push(`/ym/buyouts?uuid=${props.info.buyoutuuid}&fromReview=true&reviewUuid=${props.info.buyoutuuid}`);
+  router.push(
+    `/ym/buyouts?uuid=${props.info.buyoutuuid}&fromReview=true&reviewUuid=${props.info.buyoutuuid}`
+  );
 }
 
 function removeReview() {
@@ -67,7 +75,6 @@ function removeReview() {
 async function resumeStatus(item: any) {
   emit("resumeStatus", item);
 }
-
 
 const showCancelModal = ref(false);
 
@@ -80,7 +87,7 @@ function closeCancelModal() {
 }
 
 function confirmCancel() {
-  emit('cancelReview', props.info);
+  emit("cancelReview", props.info);
   closeCancelModal();
 }
 
@@ -114,7 +121,7 @@ function copyToClipboard(text: string) {
               Об отзыве
             </a>
           </li>
-           <li v-if="info.status === 'nofunds'">
+          <li v-if="info.status === 'nofunds'">
             <a @click="emit('resumeStatus', info)">
               <Icon name="material-symbols:resume-outline-rounded" size="22" />
               Возобновить
@@ -297,16 +304,20 @@ function copyToClipboard(text: string) {
     </div>
   </div>
 
-    <!-- Модальное окно подтверждения отмены заявки -->
-    <div v-if="showCancelModal" class="modal modal-open">
+  <!-- Модальное окно подтверждения отмены заявки -->
+  <div v-if="showCancelModal" class="modal modal-open">
     <div class="modal-box">
       <h3 class="font-bold text-lg">Подтверждение отмены</h3>
-      <p class="py-4">Вы действительно хотите отменить заявку на отзыв? После отмены заявки вы сможете заново создать заявку на отзыв</p>
+      <p class="py-4">
+        Вы действительно хотите отменить заявку на отзыв? После отмены заявки вы
+        сможете заново создать заявку на отзыв
+      </p>
       <div class="modal-action">
-        <button class="btn btn-ghost" @click="closeCancelModal">
-          Нет
-        </button>
-        <button class="btn btn-error bg-[#FF685E] text-white" @click="confirmCancel">
+        <button class="btn btn-ghost" @click="closeCancelModal">Нет</button>
+        <button
+          class="btn btn-error bg-[#FF685E] text-white"
+          @click="confirmCancel"
+        >
           Да, отменить
         </button>
       </div>

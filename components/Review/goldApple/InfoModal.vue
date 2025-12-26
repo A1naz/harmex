@@ -40,6 +40,12 @@ const getStatus = computed(() => {
       return "В архиве";
     case "completed":
       return "Опубликован";
+      case "reviewsUpdate":
+      return "На проверке";
+    case "errorEditing":
+      return "Ошибка редактирования";
+    case "edited":
+      return "Редактирован";
   }
 });
 

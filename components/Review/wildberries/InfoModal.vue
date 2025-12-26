@@ -51,6 +51,12 @@ const getStatus = computed(() => {
       return "В процессе оспорения";
     case "disputed":
       return "Оспорен";
+      case "reviewsUpdate":
+      return "На проверке";
+    case "errorEditing":
+      return "Ошибка редактирования";
+    case "edited":
+      return "Редактирован";
     default:
       return props.info.status;
   }
@@ -139,7 +145,7 @@ const { $dayjs } = useNuxtApp();
                           info.status === 'completed' ||
                           info.status === 'disputing' ||
                           info.status === 'disputed' ||
-                          info.status === 'added',
+                          info.status === 'edited',
                         'bg-[#F8C68A] text-[#D67500]':
                           info.status === 'waiting' ||
                           info.status === 'created',
