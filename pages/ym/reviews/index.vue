@@ -797,6 +797,7 @@ async function cancelReview(item: any) {
       :info="selectedReview"
       :state="logModal"
       @close="logModal = false"
+      :mp="'yandexMarket'"
     />
     <ReviewYandexMarketInfoModal
       :info="selectedReview"

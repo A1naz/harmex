@@ -1,161 +1,167 @@
-import type { H3Event } from 'h3'
-import { User } from '~~/server/lib/models/User'
-import bcrypt from 'bcryptjs'
-import { v4 as uuid } from 'uuid'
-import { generateUniqueUsername } from './createUsername'
-const config = useRuntimeConfig()
+import type { H3Event } from "h3";
+import { User } from "~~/server/lib/models/User";
+import bcrypt from "bcryptjs";
+import { v4 as uuid } from "uuid";
+import { generateUniqueUsername } from "./createUsername";
+const config = useRuntimeConfig();
 // Logs the user in as the given user model
 async function login(event: H3Event<Request>, user: IUser) {
-  
-  await replaceUserSession(event, {
-    user: {
-      uuid: user.uuid,
-      phoneNumber: user.phoneNumber,
-      email: user.email ? user.email : '',
-      emailConfirmed: user.emailConfirmed,
-      isTwoFaEnabled: user.isTwoFaEnabled,
-      acesses: user.acesses,
-      username: user.username,
-      balance: user.balance,
-      fizFace: user.fizFace,
-      orgInn: user.orgInn,
-      orgName: user.orgName,
-      ffEnabled: user.ffEnabled,
-      needVerification: user.needVerification
+  await replaceUserSession(
+    event,
+    {
+      user: {
+        uuid: user.uuid,
+        phoneNumber: user.phoneNumber,
+        email: user.email ? user.email : "",
+        emailConfirmed: user.emailConfirmed,
+        isTwoFaEnabled: user.isTwoFaEnabled,
+        acesses: user.acesses,
+        username: user.username,
+        balance: user.balance,
+        fizFace: user.fizFace,
+        orgInn: user.orgInn,
+        orgName: user.orgName,
+        ffEnabled: user.ffEnabled,
+        needVerification: user.needVerification,
+      },
+      twoFaNeeded: user.isTwoFaEnabled,
+      loggedInAt: new Date(),
     },
-    twoFaNeeded: user.isTwoFaEnabled,
-    loggedInAt: new Date(),
-  }, {
-    maxAge: 60 * 60 * 24 * 30,
-  })
+    {
+      maxAge: 60 * 60 * 24 * 30,
+    }
+  );
 }
 
 async function registerUser(
   event: H3Event<Request>,
-  data: { phoneNumber: string, password: string },
+  data: { phoneNumber: string; password: string }
 ) {
-  const { phoneNumber, password } = data
+  const { phoneNumber, password } = data;
   if (!phoneNumber || !password) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid phoneNumber or password',
-    })
-  }
-  else {
-    const hashedPassword = bcrypt.hashSync(password, 7)
-    const username = await generateUniqueUsername()
+      statusMessage: "Invalid phoneNumber or password",
+    });
+  } else {
+    const hashedPassword = bcrypt.hashSync(password, 7);
+    const username = await generateUniqueUsername();
     const user = await User.create({
-      phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
+      phoneNumber: phoneNumber.replace(/[()\-\s]/g, ""),
       password: hashedPassword,
       username,
       uuid: uuid(),
-    })
-    await login(event, user)
+    });
+    await login(event, user);
   }
 }
 
 async function changePassword(
   event: H3Event<Request>,
-  data: { phoneNumber: string, newPassword: string },
+  data: { phoneNumber: string; newPassword: string }
 ) {
-  const { phoneNumber, newPassword } = data
+  const { phoneNumber, newPassword } = data;
   if (!phoneNumber || !newPassword) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid phoneNumber or newPassword',
-    })
-  }
-  else {
+      statusMessage: "Invalid phoneNumber or newPassword",
+    });
+  } else {
     const found = await User.findOne({
-      phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
-    })
+      phoneNumber: phoneNumber.replace(/[()\-\s]/g, ""),
+    });
     if (!found) {
       throw createError({
         statusCode: 404,
-        message: 'User not found',
-      })
+        message: "User not found",
+      });
     }
 
-    const hashedPassword = bcrypt.hashSync(newPassword, 7)
+    const hashedPassword = bcrypt.hashSync(newPassword, 7);
     await User.updateOne(
-      { phoneNumber: phoneNumber.replace(/[()\-\s]/g, '') },
-      { $set: { password: hashedPassword, forceLoginDate: new Date() } },
-    )
+      { phoneNumber: phoneNumber.replace(/[()\-\s]/g, "") },
+      { $set: { password: hashedPassword, forceLoginDate: new Date() } }
+    );
   }
 }
 
 async function getCurrentUser(event: H3Event<Request>) {
-  const session = await getUserSession(event)
+  const session = await getUserSession(event);
 
   // return null if there's no user
   if (!session.user) {
-    return null
+    return null;
   }
-  const dbUser = await User.findOne({ uuid: session.user.uuid }).select('-password')
+  const dbUser = await User.findOne({ uuid: session.user.uuid }).select(
+    "-password"
+  );
   // we're getting the whole user object by default for convenience, but always remove the password
-  const result = dbUser?.toObject()
-  if (!result)
-    return null
-  return result
+  const result = dbUser?.toObject();
+  if (!result) return null;
+  return result;
 }
 
 async function attempt(
   event: H3Event<Request>,
   phoneNumber: string,
-  password: string,
+  password: string
 ) {
   // Импортируем rate limiter
-  const { checkRateLimit, logLoginAttempt, clearOldLoginAttempts } = await import('./rateLimiter')
+  const { checkRateLimit, logLoginAttempt, clearOldLoginAttempts } =
+    await import("./rateLimiter");
 
   // Проверяем rate limit ПЕРЕД любыми операциями с БД
-  const rateLimitCheck = await checkRateLimit(event, phoneNumber)
-  
+  const rateLimitCheck = await checkRateLimit(event, phoneNumber);
+
   if (!rateLimitCheck.allowed) {
     throw createError({
       statusCode: 429,
-      message: rateLimitCheck.reason || 'Слишком много попыток входа',
-    })
+      message: rateLimitCheck.reason || "Слишком много попыток входа",
+    });
   }
 
   const foundUser = await User.findOne({
-    phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
-  })
+    phoneNumber: phoneNumber.replace(/[()\-\s]/g, ""),
+  });
 
   if (!foundUser || !foundUser.password) {
     // Логируем неудачную попытку
-    await logLoginAttempt(event, phoneNumber, false)
-    
+    await logLoginAttempt(event, phoneNumber, false);
+
     throw createError({
       statusCode: 401,
-      message: 'Неверный номер телефона или пароль.',
-    })
+      message: "Неверный номер телефона или пароль.",
+    });
   }
 
-  const isPasswordCorrect = await bcrypt.compareSync(password, foundUser.password)
+  const isPasswordCorrect = await bcrypt.compareSync(
+    password,
+    foundUser.password
+  );
 
-  if (
-    !isPasswordCorrect
-  ) {
+  // && config.env !== 'developer'
+
+  if (!isPasswordCorrect) {
     // Логируем неудачную попытку
-    await logLoginAttempt(event, phoneNumber, false)
-    
+    await logLoginAttempt(event, phoneNumber, false);
+
     // return an error if the user is not found or the password doesn't match
     throw createError({
       statusCode: 401,
-      message: 'Неверный логин или пароль.',
-    })
+      message: "Неверный логин или пароль.",
+    });
   }
 
   // Логируем успешную попытку
-  await logLoginAttempt(event, phoneNumber, true)
-  
+  await logLoginAttempt(event, phoneNumber, true);
+
   // Очищаем старые неудачные попытки
-  await clearOldLoginAttempts(phoneNumber)
+  await clearOldLoginAttempts(phoneNumber);
 
   // log in as the selected user
-  await login(event, foundUser)
+  await login(event, foundUser);
 
-  return true
+  return true;
 }
 
 export default {
@@ -164,4 +170,4 @@ export default {
   attempt,
   registerUser,
   changePassword,
-}
+};

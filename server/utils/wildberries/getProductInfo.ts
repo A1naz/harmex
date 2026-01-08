@@ -48,6 +48,7 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
       validateStatus: (status) => status < 500,
     });
     
+
     if (response.status === 498 || response.status === 403) {
       await refreshWbCookies();
       throw createError({

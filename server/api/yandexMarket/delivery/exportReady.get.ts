@@ -222,6 +222,7 @@ export default eventHandler(async (event) => {
       { header: 'Товар', key: 'productname', width: 48, font: { bold: true } },
       { header: 'Артикул', key: 'article', width: 16, font: { bold: true } },
       { header: 'Размер', key: 'size', width: 16, font: { bold: true } },
+      { header: 'Цена товара', key: 'pricebuy', width: 16, font: { bold: true } },
       {
         header: 'Дата создания заказа',
         key: 'finishDate',
