@@ -278,7 +278,7 @@ const { $dayjs } = useNuxtApp();
                     >Рейтинг:
                   </span>
                   <div class="flex items-center text-sm">
-                    <span v-for="star in 5" :key="star" class="text-yellow-600">
+                    <span v-for="star in info.rating" :key="star" class="text-yellow-600">
                       <Icon name="mdi:star" />
                     </span>
                   </div>

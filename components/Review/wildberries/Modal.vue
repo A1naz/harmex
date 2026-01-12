@@ -36,7 +36,7 @@ const form = reactive({
   text: "",
   positive: "",
   negative: "",
-  rating: 5,
+  rating: 4,
   date: now.value,
   photos: [
     {
@@ -668,13 +668,53 @@ async function acceptPhotoAIText(photoUrl: string) {
         </div>
 
         <div class="font-medium w-full justify-start gap-2 flex flex-row">
-          <div>Рейтинг</div>
 
-          <div class="flex items-center text-sm">
-            <span v-for="star in 5" :key="star" class="text-yellow-600">
-              <Icon name="mdi:star" />
-            </span>
+
+          <div>
+          <div class="font-medium">Рейтинг</div>
+          <div class="relative w-full py-6 bg-base-100 rounded-lg">
+            <div class="rating absolute left-0 top-3 gap-2">
+              <label class="cursor-not-allowed" @click.prevent="ratingAlert">
+                <input
+                  type="radio"
+                  name="rating-2"
+                  class="mask mask-star-2 bg-yellow-400 cursor-not-allowed"
+              
+                />
+              </label>
+              <label class="cursor-not-allowed" @click.prevent="ratingAlert">
+                <input
+                  type="radio"
+                  name="rating-2"
+                  class="mask mask-star-2 bg-yellow-400 cursor-not-allowed"
+                 
+                />
+              </label>
+              <label class="cursor-not-allowed" @click.prevent="ratingAlert">
+                <input
+                  type="radio"
+                  name="rating-2"
+                  class="mask mask-star-2 bg-yellow-400 cursor-not-allowed"
+                  
+                />
+              </label>
+              <input
+                type="radio"
+                name="rating-2"
+                class="mask mask-star-2 bg-yellow-400"
+         
+                @input="form.rating = 4"
+              />
+              <input
+                type="radio"
+                name="rating-2"
+                class="mask mask-star-2 bg-yellow-400"
+                @input="form.rating = 5"
+              />
+
           </div>
+        </div>
+        </div>
         </div>
 
         <div>
