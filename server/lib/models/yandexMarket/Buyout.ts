@@ -68,6 +68,7 @@ const BuyoutSchema = new Schema({
   isCategoriesEnabled: { type: Boolean, required: false, default: false },
   unArchivedAt: { type: Date, required: false },
   unArchived: { type: Boolean, required: false, default: false },
+  digitalProduct:  { type: Boolean, required: false, default: false },
 });
 
 export const Buyout = yandexConnection.model("Buyout", BuyoutSchema);

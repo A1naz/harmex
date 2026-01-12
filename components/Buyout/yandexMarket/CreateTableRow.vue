@@ -384,6 +384,20 @@ const selectCategory = (categories: any, index) => {
     </td>
     <td class="w-[140px] border-r border-base">
       <div class="flex justify-center mt-1">
+        <div class="flex gap-2">
+            
+            <input
+             
+              v-model="product.digitalProduct"
+              type="checkbox"
+              class="checkbox checkbox-primary border-base-content"
+            />
+          
+          </div>
+      </div>
+    </td>
+    <td class="w-[140px] border-r border-base">
+      <div class="flex justify-center mt-1">
         <button
           v-if="!product.promoCode"
           class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
