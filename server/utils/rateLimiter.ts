@@ -2,12 +2,12 @@ import { LoginAttempt } from '@/server/lib/models/LoginAttempt'
 import type { H3Event } from 'h3'
 
 const RATE_LIMITS = {
-  PER_IP_PER_15_MIN: 300,           // 3 попытки за 15 минут с одного IP
-  PER_PHONE_PER_HOUR: 500,          // 5 попыток в час на один номер
-  PER_PHONE_PER_15_MIN: 300,        // 3 попытки за 15 минут (жесткое ограничение)
-  BLOCK_AFTER_FAILED: 700,          // Блокировка после 7 неудачных попыток
+  PER_IP_PER_15_MIN: 3,           // 3 попытки за 15 минут с одного IP
+  PER_PHONE_PER_HOUR: 5,          // 5 попыток в час на один номер
+  PER_PHONE_PER_15_MIN: 3,        // 3 попытки за 15 минут (жесткое ограничение)
+  BLOCK_AFTER_FAILED: 7,          // Блокировка после 7 неудачных попыток
   BLOCK_DURATION: 3600000,         // Блокировка на 60 минут (в миллисекундах)
-  SUSPICIOUS_IPS_THRESHOLD: 300,    // Подозрительно если 3+ разных IP для одного номера
+  SUSPICIOUS_IPS_THRESHOLD: 3,    // Подозрительно если 3+ разных IP для одного номера
 }
 
 export function getClientIP(event: H3Event): string {
