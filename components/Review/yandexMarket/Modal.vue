@@ -90,11 +90,11 @@ async function checkVideo(file: any) {
     const videoElement = document.createElement("video");
     videoElement.src = URL.createObjectURL(file);
 
-    if (file.size > 500 * 1024 * 1024) {
-      // Если размер файла превышает 500 МБ
+    if (file.size > 300 * 1024 * 1024) {
+      // Если размер файла превышает 300 МБ
       notify({
         title: "Ошибка",
-        text: "Максимальный размер видео должен быть 500 МБ",
+        text: "Максимальный размер видео должен быть 300 МБ",
       });
       resolve(false);
       return;
@@ -941,7 +941,7 @@ async function acceptPhotoAIText(photoUrl: string) {
         <div class="flex flex-col">
           <div class="font-medium">Видео</div>
           <p class="mb-2 text-sm font-light text-gray-500">
-            Разрешены видео в формате MP4, AVI, MPG.
+            Разрешены видео в формате MP4, AVI, MPG, размер не более 300 МБ.
           </p>
           <ClientOnly>
             <div
