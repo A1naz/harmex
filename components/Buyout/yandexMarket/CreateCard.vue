@@ -352,6 +352,17 @@ const selectCategory = (categories: any, index) => {
             </button>
           </div>
         </div>
+        <div class="flex mt-2">
+          <span class="text-md text-gray-500 mr-3 my-auto">Цифровой товар: </span>
+          <div class="flex">
+            <input
+             
+             v-model="product.digitalProduct"
+             type="checkbox"
+             class="checkbox checkbox-primary border-base-content"
+           />
+          </div>
+        </div>
         <div class="text-md text-gray-500 mb-1 mt-2">Поисковые запросы:</div>
         <div class="w-full flex flex-col gap-2">
           <BuyoutYandexMarketCreateSearchQueries

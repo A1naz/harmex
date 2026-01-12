@@ -115,6 +115,7 @@ export const useYandexMarketBuyoutStore = defineStore("yandexMarketBuyout", {
           searchQuery: [{ value: "", loading: false, error: false }],
           selectedSize: product.sizes[0] ?? "none",
           priceText: product.priceText,
+          digitalProduct: false,
           rules: [
             {
               id: 5,

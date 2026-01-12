@@ -1,57 +1,57 @@
-import type { Rule } from '@/data/buyout/rules'
-import getPickpoints from '@/server/utils/yandexMarket/getPoints'
+import type { Rule } from "@/data/buyout/rules";
+import getPickpoints from "@/server/utils/yandexMarket/getPoints";
 
 interface Item {
-  image: string
-  name: string
-  article: number
-  price: number
-  priceText: string
-  quantity: number
-  sizes: number[] | string[]
-  sex: string
-  searchQuery: any[]
-  adress: string
-  dateRange: [Date, Date]
-  selectedSize: number | string
-  rules: Rule[]
-  purchaseSoon: boolean
+  image: string;
+  name: string;
+  article: number;
+  price: number;
+  priceText: string;
+  quantity: number;
+  sizes: number[] | string[];
+  sex: string;
+  searchQuery: any[];
+  adress: string;
+  dateRange: [Date, Date];
+  selectedSize: number | string;
+  rules: Rule[];
+  purchaseSoon: boolean;
+  digitalProduct: boolean;
   pointCoordinates: {
-    lat: number
-    lon: number
-  }
+    lat: number;
+    lon: number;
+  };
 }
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
-  if (!user)
-    return sendRedirect(event, '/auth', 302)
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  const body = await readBody(event)
-  const query = getQuery(event)
-  const { userTimezoneOffsetHours } = query
-  const { points } = await getPickpoints()
+  const body = await readBody(event);
+  const query = getQuery(event);
+  const { userTimezoneOffsetHours } = query;
+  const { points } = await getPickpoints();
 
-  const products: Item[] = body
+  const products: Item[] = body;
 
-  const balanceIsExist = await checkBalance(user, products,  'buyouts', 'ym')
+  const balanceIsExist = await checkBalance(user, products, "buyouts", "ym");
   const result = {
     success: true,
-    message: '',
-  }
+    message: "",
+  };
   if (!balanceIsExist) {
-    result.success = false
-    result.message = `Недостаточно средств для совершения выкупа`
-    return result
+    result.success = false;
+    result.message = `Недостаточно средств для совершения выкупа`;
+    return result;
   }
 
   for (const item of products) {
-    const curDate = new Date()
-    const firstDate = new Date(item.dateRange[0])
+    const curDate = new Date();
+    const firstDate = new Date(item.dateRange[0]);
 
     if (!item.purchaseSoon && firstDate < curDate) {
-      result.success = false
-      result.message = `Дата ${item.article} не может быть меньше текущей`
+      result.success = false;
+      result.message = `Дата ${item.article} не может быть меньше текущей`;
     }
 
     // if (rules.includes(11)) sort = 'priceup'
@@ -105,23 +105,25 @@ export default eventHandler(async (event) => {
     //     }
     //   }
     // }
-    console.log(item.adress)
-  
-    const foundPoint = points.find(
-      (p: any) =>
-        p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon
-    )
-    if (!foundPoint) {
-      result.success = false
-      result.message = `ПВЗ ${item.adress} не найдено`
-      return result
-    }
-    if (!foundPoint) {
-      result.success = false
-      result.message = `ПВЗ ${item.adress} не найдено`
-      return result
+    console.log(item.adress);
+    if (!item.digitalProduct) {
+      const foundPoint = points.find(
+        (p: any) =>
+          p.lt === item.pointCoordinates.lat &&
+          p.lg === item.pointCoordinates.lon
+      );
+      if (!foundPoint) {
+        result.success = false;
+        result.message = `ПВЗ ${item.adress} не найдено`;
+        return result;
+      }
+      if (!foundPoint) {
+        result.success = false;
+        result.message = `ПВЗ ${item.adress} не найдено`;
+        return result;
+      }
     }
   }
 
-  return result
-})
+  return result;
+});

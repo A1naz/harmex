@@ -237,7 +237,7 @@ async function openChecksModal() {
   let valid = true;
   let errorMsg = "";
   products.value.forEach((item: any) => {
-    if (!item.adress) {
+    if (!item.adress && !item.digitalProduct) {
       valid = false;
       errorMsg = "Не у всех товаров указан адрес доставки";
     }
