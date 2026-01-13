@@ -71,6 +71,10 @@ async function getDeliveries() {
       status: status.value ?? "all",
       limit: 50,
       string: search.value.text,
+      dateRange:
+        dateRange.value.length > 0
+          ? JSON.stringify(dateRange.value)
+          : undefined,
     },
   });
   deliveries.value = data.value;
@@ -82,7 +86,7 @@ async function getExportReadyCount() {
   const { data } = await useFetch(
     "/api/wildberries/delivery/getExportReadyCount"
   );
-  exportReadyCount.value = data.value;
+  exportReadyCount.value = data.value ?? 0;
 }
 getExportReadyCount();
 // getDeliveries();
@@ -111,10 +115,10 @@ async function exportXLS() {
     },
     responseType: "blob",
   });
-    if (error.value) {
+  if (error.value) {
     const text = await error.value.data.text(); // error.value.data — это Blob
     const json = JSON.parse(text);
-    const message = json.message
+    const message = json.message;
     notify({
       group: "error",
       title: "Что-то пошло не так",
@@ -164,10 +168,10 @@ async function exportReadyUntilPenaltyXLS() {
 }
 
 async function findDeliveries(value: string, type: string) {
-    autoTarget.value = true;
-    await getDeliveries();
-    search.value.loading = false;
-    return;
+  autoTarget.value = true;
+  await getDeliveries();
+  search.value.loading = false;
+  return;
 }
 
 const findDeliveriesDebounced = useDebounceFn(findDeliveries, 1000);
@@ -193,6 +197,10 @@ watch(targetIsVisible, async (isVisible) => {
         limit: 50,
         skip: skip.value,
         string: search.value.text,
+        dateRange:
+          dateRange.value.length > 0
+            ? JSON.stringify(dateRange.value)
+            : undefined,
       },
     });
     loading.value = false;
@@ -216,11 +224,25 @@ watch(
         status: status.value ?? "all",
         limit: 50,
         string: search.value.text,
+        dateRange:
+          dateRange.value.length > 0
+            ? JSON.stringify(dateRange.value)
+            : undefined,
       },
     });
     deliveries.value = data.value;
   },
   { deep: true, immediate: true }
+);
+
+watch(
+  dateRange,
+  async () => {
+    skip.value = 50;
+    end.value = false;
+    await getDeliveries();
+  },
+  { deep: true }
 );
 
 const filters = [
@@ -429,6 +451,7 @@ const siteUrl = config.public.siteUrl;
                 />
               </label>
             </div>
+
             <DateRangePicker
               class="w-46"
               v-model="dateRange"
@@ -436,7 +459,7 @@ const siteUrl = config.public.siteUrl;
               @reset="dateRange = []"
             >
               <button
-                class="div w-[48px] h-[32px] border-[1px] rounded-[6px] bg-[#fc7c5b]"
+                class="div w-[48px] h-[32px] border-[0px] rounded-[6px] bg-[#fc7c5b]"
               >
                 <Icon
                   name="solar:calendar-linear"
@@ -445,6 +468,13 @@ const siteUrl = config.public.siteUrl;
                 />
               </button>
             </DateRangePicker>
+            <button
+            @click="dateRange = []"
+              v-if="dateRange && dateRange.length > 0"
+              class="div w-[34px] h-[32px] border-[1px] -ml-3 rounded-[6px] bg-[#fc7c5b]"
+            >
+              <Icon name="mdi:cancel-bold" class="mt-1 text-white" size="22px" />
+            </button>
             <div
               v-if="!loadingExport"
               class="dropdown lg:dropdown-end z-10 flex flex-nowrap items-center gap-2 lg:gap-3"
@@ -578,13 +608,14 @@ const siteUrl = config.public.siteUrl;
     >
       <p class="mb-5 text-xl font-semibold">Как получить товар на ПВЗ</p>
       <p>
-        Для получения товаров с <strong>Пункта Выдачи Заказов (ПВЗ)</strong> на маркетплейсе
-        Wildberries используйте меню <strong>"Доставки"</strong> в вашем личном кабинете Harmex.
-        .
+        Для получения товаров с <strong>Пункта Выдачи Заказов (ПВЗ)</strong> на
+        маркетплейсе Wildberries используйте меню <strong>"Доставки"</strong> в
+        вашем личном кабинете Harmex. .
       </p>
       <p class="mt-4">
-        Это меню показывает все статусы доставок в <strong>режиме реального времени</strong> и помогает быстро получить товары, готовые к выдаче.
-
+        Это меню показывает все статусы доставок в
+        <strong>режиме реального времени</strong> и помогает быстро получить
+        товары, готовые к выдаче.
       </p>
 
       <NuxtImg
@@ -597,15 +628,26 @@ const siteUrl = config.public.siteUrl;
       <p class="font-bold mb-3">Шаг 1. Перейдите в меню «Доставки»</p>
 
       <p class="mb-4">
-        В этом разделе вы увидите список всех ваших заказов с актуальными статусами:
+        В этом разделе вы увидите список всех ваших заказов с актуальными
+        статусами:
       </p>
 
       <ol class="list-decimal ml-6 mb-4 space-y-1">
-        <li><strong>«Создана»</strong> - доставка сформирована и ожидает обработки</li>
+        <li>
+          <strong>«Создана»</strong> - доставка сформирована и ожидает обработки
+        </li>
         <li><strong>«В пути»</strong> - товар направлен в ПВЗ</li>
-        <li><strong>«Готов к выдаче»</strong> - товар прибыл, можно забирать</li>
-        <li><strong>«Отменена»</strong> - товар не был забран в срок, заказ отменён со стороны маркетплейса или магазина</li>
-        <li><strong>«Возврат средств»</strong> - деньги за отменённый заказ возвращены на ваш баланс</li>
+        <li>
+          <strong>«Готов к выдаче»</strong> - товар прибыл, можно забирать
+        </li>
+        <li>
+          <strong>«Отменена»</strong> - товар не был забран в срок, заказ
+          отменён со стороны маркетплейса или магазина
+        </li>
+        <li>
+          <strong>«Возврат средств»</strong> - деньги за отменённый заказ
+          возвращены на ваш баланс
+        </li>
         <li><strong>«Получено»</strong> - товар был получен на ПВЗ</li>
       </ol>
 
@@ -616,17 +658,19 @@ const siteUrl = config.public.siteUrl;
 
       <hr class="my-4 border-gray-300" />
 
-      <p class="font-bold mb-3">Шаг 2. Найдите заказы со статусом «Готов к выдаче»</p>
-
-      <p class="mb-3">
-        Именно эти товары уже доступны к получению.
+      <p class="font-bold mb-3">
+        Шаг 2. Найдите заказы со статусом «Готов к выдаче»
       </p>
+
+      <p class="mb-3">Именно эти товары уже доступны к получению.</p>
       <p class="mb-4">
-        Проверьте адрес ПВЗ, дату прибытия и срок хранения (указан в карточке доставки).
+        Проверьте адрес ПВЗ, дату прибытия и срок хранения (указан в карточке
+        доставки).
       </p>
 
       <p class="flex items-center gap-2 mb-4">
-        ⚠️ Заберите товар <strong>в течение 5–7 дней</strong>, чтобы избежать штрафов или автоматической отмены.
+        ⚠️ Заберите товар <strong>в течение 5–7 дней</strong>, чтобы избежать
+        штрафов или автоматической отмены.
       </p>
 
       <hr class="my-4 border-gray-300" />
@@ -634,7 +678,8 @@ const siteUrl = config.public.siteUrl;
       <p class="font-bold mb-3">Шаг 3. Выгрузите коды для получения</p>
 
       <p class="mb-4">
-        Чтобы получить товар, необходимо показать код ПВЗ (QR или код получателя). Вы можете получить его двумя способами:
+        Чтобы получить товар, необходимо показать код ПВЗ (QR или код
+        получателя). Вы можете получить его двумя способами:
       </p>
 
       <p class="font-bold mb-2">Вариант 1 — выгрузка PDF:</p>
@@ -658,21 +703,18 @@ const siteUrl = config.public.siteUrl;
         class="mx-1 my-2"
       />
 
-   
-
       <hr class="my-4 border-gray-300" />
 
       <p class="font-bold mb-3">Шаг 4. Получите заказ на ПВЗ</p>
 
-      <p class="mb-3">
-        При получении покажите код из PDF или Excel файла.
-      </p>
+      <p class="mb-3">При получении покажите код из PDF или Excel файла.</p>
       <p class="mb-4">
         Проверяйте соответствие товара: артикул, количество и упаковку.
       </p>
 
       <p class="mb-4">
-        Если товар не соответствует заказу (подмена, брак, другая позиция) — зафиксируйте это у менеджера ПВЗ и сообщите в службу заботы Harmex.
+        Если товар не соответствует заказу (подмена, брак, другая позиция) —
+        зафиксируйте это у менеджера ПВЗ и сообщите в службу заботы Harmex.
       </p>
 
       <hr class="my-4 border-gray-300" />
@@ -680,11 +722,15 @@ const siteUrl = config.public.siteUrl;
       <p class="font-bold mb-3">Шаг 5. Обновление статуса доставки</p>
 
       <p class="mb-4">
-        После получения товара статус в системе обновится автоматически — обычно <strong>в течение 6–12 часов</strong> (время обновления: с <strong>15:00 до 18:00</strong> и с <strong>03:00 до 10:00</strong>).
+        После получения товара статус в системе обновится автоматически — обычно
+        <strong>в течение 6–12 часов</strong> (время обновления: с
+        <strong>15:00 до 18:00</strong> и с <strong>03:00 до 10:00</strong>).
       </p>
 
       <p class="mb-4">
-        Если спустя 12 часов статус не изменился, напишите в поддержку — мы проверим вручную и скорректируем статус или вышлем скриншот доставки с аккаунта.
+        Если спустя 12 часов статус не изменился, напишите в поддержку — мы
+        проверим вручную и скорректируем статус или вышлем скриншот доставки с
+        аккаунта.
       </p>
 
       <hr class="my-4 border-gray-300" />
@@ -694,9 +740,21 @@ const siteUrl = config.public.siteUrl;
       </p>
 
       <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>Забирайте товар <strong>в срок</strong>, чтобы не получить штраф <strong>25₽ в день</strong> после 7-го дня хранения. Данная санкция введена, чтобы поддерживать аккаунты в постоянной покупательской активности и покрытия расходников на его содержание.</li>
-        <li>Если не планируете забирать заказ — <strong>напишите в поддержку</strong>, чтобы оформить возврат и избежать санкций.</li>
-        <li>Вся история доставок и возвратов отображается в разделе <strong>«Финансы»</strong>.</li>
+        <li>
+          Забирайте товар <strong>в срок</strong>, чтобы не получить штраф
+          <strong>25₽ в день</strong> после 7-го дня хранения. Данная санкция
+          введена, чтобы поддерживать аккаунты в постоянной покупательской
+          активности и покрытия расходников на его содержание.
+        </li>
+        <li>
+          Если не планируете забирать заказ —
+          <strong>напишите в поддержку</strong>, чтобы оформить возврат и
+          избежать санкций.
+        </li>
+        <li>
+          Вся история доставок и возвратов отображается в разделе
+          <strong>«Финансы»</strong>.
+        </li>
       </ul>
 
       <hr class="my-4 border-gray-300" />
@@ -705,7 +763,8 @@ const siteUrl = config.public.siteUrl;
 
       <p class="font-bold mb-2">Причина:</p>
       <p class="mb-3">
-        Доставка автоматически переходит в статус «Отменена», если товар не был забран из ПВЗ в течение 5–7 дней после прибытия.
+        Доставка автоматически переходит в статус «Отменена», если товар не был
+        забран из ПВЗ в течение 5–7 дней после прибытия.
       </p>
       <p class="mb-3">
         Маркетплейс возвращает товар на склад, а заказ закрывается.
@@ -715,9 +774,18 @@ const siteUrl = config.public.siteUrl;
       <ol class="list-decimal ml-6 mb-4 space-y-1">
         <li>Перейдите в раздел <strong>«Доставки»</strong>.</li>
         <li>Скопируйте <strong>ID доставки</strong> со статусом "Отмена".</li>
-        <li>Отправьте <strong>ID доставки и ваш логин</strong> в службу заботы Harmex.</li>
-        <li>Мы оформим <strong>возврат средств за товар</strong> (за вычетом стоимости выкупа и логистки маркетплейса).</li>
-        <li>Средства поступят на баланс в течение <strong>3–5 рабочих дней</strong>.</li>
+        <li>
+          Отправьте <strong>ID доставки и ваш логин</strong> в службу заботы
+          Harmex.
+        </li>
+        <li>
+          Мы оформим <strong>возврат средств за товар</strong> (за вычетом
+          стоимости выкупа и логистки маркетплейса).
+        </li>
+        <li>
+          Средства поступят на баланс в течение
+          <strong>3–5 рабочих дней</strong>.
+        </li>
       </ol>
 
       <hr class="my-4 border-gray-300" />
@@ -727,16 +795,23 @@ const siteUrl = config.public.siteUrl;
       </p>
 
       <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li><strong>"До штрафа осталось: Х дней"</strong> — товар прибыл в ПВЗ, у вас есть Х дней, чтобы забрать его без штрафа.</li>
-        <li><strong>"Получение со штрафом"</strong> — срок хранения истёк, и уже начисляется штраф 25₽ в день за каждую единицу товара.</li>
+        <li>
+          <strong>"До штрафа осталось: Х дней"</strong> — товар прибыл в ПВЗ, у
+          вас есть Х дней, чтобы забрать его без штрафа.
+        </li>
+        <li>
+          <strong>"Получение со штрафом"</strong> — срок хранения истёк, и уже
+          начисляется штраф 25₽ в день за каждую единицу товара.
+        </li>
       </ul>
 
       <p class="font-bold mb-2">Как избежать штрафов:</p>
       <ol class="list-decimal ml-6 mb-4 space-y-1">
         <li>Следите за статусами в разделе <strong>«Доставки»</strong>.</li>
-        <li>Забирайте заказы в течение <strong>7 дней</strong> после прибытия.</li>
+        <li>
+          Забирайте заказы в течение <strong>7 дней</strong> после прибытия.
+        </li>
       </ol>
-     
     </ManualModal>
     <div
       ref="target"

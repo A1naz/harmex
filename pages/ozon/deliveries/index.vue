@@ -68,6 +68,10 @@ async function getDeliveries() {
       status: status.value ?? "all",
       limit: 50,
       string: search.value.text,
+      dateRange:
+        dateRange.value.length > 0
+          ? JSON.stringify(dateRange.value)
+          : undefined,
     },
   });
   deliveries.value = data.value;
@@ -181,6 +185,10 @@ watch(targetIsVisible, async (isVisible) => {
         limit: 50,
         skip: skip.value ? skip.value : 0,
         string: search.value.text,
+        dateRange:
+          dateRange.value.length > 0
+            ? JSON.stringify(dateRange.value)
+            : undefined,
       },
     });
     loading.value = false;
@@ -204,11 +212,25 @@ watch(
         status: status.value ?? "all",
         limit: 50,
         string: search.value.text,
+        dateRange:
+          dateRange.value.length > 0
+            ? JSON.stringify(dateRange.value)
+            : undefined,
       },
     });
     deliveries.value = data.value;
   },
   { deep: true, immediate: true }
+);
+
+watch(
+  dateRange,
+  async () => {
+    skip.value = 50;
+    end.value = false;
+    await getDeliveries();
+  },
+  { deep: true }
 );
 
 const filters = [
@@ -435,11 +457,18 @@ getExportReadyCount();
               @reset="dateRange = []"
             >
               <button
-                class="div w-[48px] h-[32px] bg-[#fc7c5b] text-white border-[1px] rounded-[6px]"
+                class="div w-[48px] h-[32px] bg-[#fc7c5b] text-white border-[0px] rounded-[6px]"
               >
                 <Icon name="solar:calendar-linear" class="mt-1" size="22px" />
               </button>
             </DateRangePicker>
+            <button
+              @click="dateRange = []"
+              v-if="dateRange && dateRange.length > 0"
+              class="div w-[34px] h-[32px] border-[1px] -ml-3 rounded-[6px] bg-[#fc7c5b]"
+            >
+              <Icon name="mdi:cancel-bold" class="mt-1 text-white" size="22px" />
+            </button>
             <div
               v-if="!loadingExport"
               class="dropdown lg:dropdown-end z-10 flex flex-nowrap items-center gap-2 lg:gap-3"

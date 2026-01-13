@@ -6,11 +6,32 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { status, limit, skip,string } = getQuery(event);
+  const { status, limit, skip, string, dateRange } = getQuery(event);
 
   // const all = await Delivery.find({ user })
   let deliveries;
   let searchOption = {};
+  
+  // Обработка dateRange
+  let dateFilter = {};
+  if (dateRange) {
+    try {
+      const parsedDateRange = JSON.parse(dateRange as string);
+      if (Array.isArray(parsedDateRange) && parsedDateRange.length === 2) {
+        const startDate = new Date(parsedDateRange[0]);
+        const endDate = new Date(parsedDateRange[1]);
+        dateFilter = {
+          updatedAt: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        };
+      }
+    } catch (e) {
+      console.error("Error parsing dateRange:", e);
+    }
+  }
+  
   if (string) {
     const uuid = string?.toString().replaceAll("#", "");
     searchOption = {
@@ -26,7 +47,7 @@ export default eventHandler(async (event) => {
     // Используем агрегацию для приоритетной сортировки
     deliveries = await Delivery.aggregate([
       {
-        $match: { user: user._id, ...searchOption }
+        $match: { user: user._id, ...searchOption, ...dateFilter }
       },
       {
         $addFields: {
@@ -67,28 +88,28 @@ export default eventHandler(async (event) => {
       }
     ]);
   } else if (status === "active") {
-    deliveries = await Delivery.find({ user, status: "active", ...searchOption })
+    deliveries = await Delivery.find({ user, status: "active", ...searchOption, ...dateFilter })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "completed") {
-    deliveries = await Delivery.find({ user, status: "completed", ...searchOption })
+    deliveries = await Delivery.find({ user, status: "completed", ...searchOption, ...dateFilter })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "canceled") {
-    deliveries = await Delivery.find({ user, status: "canceled", ...searchOption })
+    deliveries = await Delivery.find({ user, status: "canceled", ...searchOption, ...dateFilter })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "onTheWay") {
-    const response = await Delivery.find({ user, status: "active", ...searchOption }).sort({
+    const response = await Delivery.find({ user, status: "active", ...searchOption, ...dateFilter }).sort({
       _id: -1,
     });
     const substrings = ["Ожидается", "пути", "задерживается"];
@@ -102,7 +123,7 @@ export default eventHandler(async (event) => {
       })
       .splice((skip as number) ? (skip as number) : 0, limit as number);
   } else if (status === "pickupReady") {
-    const response = await Delivery.find({ user, status: "completed", ...searchOption }).sort({
+    const response = await Delivery.find({ user, status: "completed", ...searchOption, ...dateFilter }).sort({
       _id: -1,
     });
 

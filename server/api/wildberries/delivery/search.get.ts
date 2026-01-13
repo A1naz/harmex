@@ -7,14 +7,36 @@ export default eventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/auth', 302)
 
-  const { type, string } = getQuery(event)
+  const { type, string, dateRange } = getQuery(event)
 
   console.log('string: ', string)
+  
+  // Обработка dateRange
+  let dateFilter = {};
+  if (dateRange) {
+    try {
+      const parsedDateRange = JSON.parse(dateRange as string);
+      if (Array.isArray(parsedDateRange) && parsedDateRange.length === 2) {
+        const startDate = new Date(parsedDateRange[0]);
+        const endDate = new Date(parsedDateRange[1]);
+        dateFilter = {
+          updatedAt: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        };
+      }
+    } catch (e) {
+      console.error("Error parsing dateRange:", e);
+    }
+  }
+  
   let deliveries
   if (string) {
     const uuid = string?.toString().replaceAll('#', '')
     deliveries = await Delivery.find({
       user,
+      ...dateFilter,
       $or: [
         { uuidbuyout: uuid },
         { point: { $regex: string, $options: 'i' } },
@@ -25,7 +47,10 @@ export default eventHandler(async (event) => {
       _id: -1,
     })
   } else {
-    deliveries = await Delivery.find({ user }).sort({
+    deliveries = await Delivery.find({ 
+      user,
+      ...dateFilter
+    }).sort({
       _id: -1,
     })
   }
@@ -43,8 +68,8 @@ export default eventHandler(async (event) => {
       if (!buyout)
         return null
 
-      const phone = delivery.recipientphone
-      const replaced = `+${phone[0]} (***) *** ${phone.slice(7)}`
+      const phone: string = delivery.recipientphone || ""
+      const replaced: string = phone ? `+${phone[0]} (***) *** ${phone.slice(7)}` : ""
       const currentstatus = delivery.statusdelivery?.length
         ? delivery.statusdelivery[delivery.statusdelivery.length - 1].status
         : 'Неизвестно'

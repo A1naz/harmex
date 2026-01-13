@@ -7,11 +7,32 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { status, limit, skip,string } = getQuery(event);
+  const { status, limit, skip, string, dateRange } = getQuery(event);
 
   // const all = await Delivery.find({ user })
   let deliveries;
   let searchOption = {};
+  
+  // Обработка dateRange
+  let dateFilter = {};
+  if (dateRange) {
+    try {
+      const parsedDateRange = JSON.parse(dateRange as string);
+      if (Array.isArray(parsedDateRange) && parsedDateRange.length === 2) {
+        const startDate = new Date(parsedDateRange[0]);
+        const endDate = new Date(parsedDateRange[1]);
+        dateFilter = {
+          updatedAt: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        };
+      }
+    } catch (e) {
+      console.error("Error parsing dateRange:", e);
+    }
+  }
+  
   if (string) {
     const uuid = string?.toString().replaceAll("#", "");
     searchOption = {
@@ -27,7 +48,7 @@ export default eventHandler(async (event) => {
     // Используем агрегацию для приоритетной сортировки
     deliveries = await Delivery.aggregate([
       {
-        $match: { user: user._id, ...searchOption }
+        $match: { user: user._id, ...searchOption, ...dateFilter }
       },
       {
         $addFields: {
@@ -85,14 +106,14 @@ export default eventHandler(async (event) => {
       }
     ]);
   } else if (status === "active") {
-    deliveries = await Delivery.find({ user, status: "work", ...searchOption })
+    deliveries = await Delivery.find({ user, status: "work", ...searchOption, ...dateFilter })
       .sort({
         _id: -1,
       })
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "completed") {
-    deliveries = await Delivery.find({ user, status: "completed", ...searchOption })
+    deliveries = await Delivery.find({ user, status: "completed", ...searchOption, ...dateFilter })
       .sort({
         _id: -1,
       })
@@ -101,6 +122,7 @@ export default eventHandler(async (event) => {
   } else if (status === "canceled") {
     deliveries = await Delivery.find({
       ...searchOption,
+      ...dateFilter,
       user,
       $expr: {
         $eq: [{ $arrayElemAt: ["$statusdelivery.status", -1] }, "Отменён"],
@@ -114,6 +136,7 @@ export default eventHandler(async (event) => {
   } else if (status === "onTheWay") {
     deliveries = await Delivery.find({
       ...searchOption,
+      ...dateFilter,
       user,
       $expr: {
         $or: [
@@ -135,6 +158,7 @@ export default eventHandler(async (event) => {
   } else if (status === "pickupReady") {
     deliveries = await Delivery.find({
       ...searchOption,
+      ...dateFilter,
       user,
       status: { $ne: "completed" },
       statusdelivery: {
@@ -159,6 +183,7 @@ export default eventHandler(async (event) => {
 
     const allDeliveries = await Delivery.find({
       ...searchOption,
+      ...dateFilter,
       user,
       statusdelivery: {
         $elemMatch: {

@@ -6,12 +6,33 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { status, limit, skip, string } = getQuery(event);
+  const { status, limit, skip, string, dateRange } = getQuery(event);
 
   // const all = await Delivery.find({ user })
   let deliveries;
   let searchOption = {};
   console.log(string)
+  
+  // Обработка dateRange
+  let dateFilter = {};
+  if (dateRange) {
+    try {
+      const parsedDateRange = JSON.parse(dateRange as string);
+      if (Array.isArray(parsedDateRange) && parsedDateRange.length === 2) {
+        const startDate = new Date(parsedDateRange[0]);
+        const endDate = new Date(parsedDateRange[1]);
+        dateFilter = {
+          updatedAt: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        };
+      }
+    } catch (e) {
+      console.error("Error parsing dateRange:", e);
+    }
+  }
+  
   if (string) {
     const uuid = string?.toString().replaceAll("#", "");
     searchOption = {
@@ -27,7 +48,7 @@ export default eventHandler(async (event) => {
     // Используем агрегацию для приоритетной сортировки
     deliveries = await Delivery.aggregate([
       {
-        $match: { user: user._id, ...searchOption }
+        $match: { user: user._id, ...searchOption, ...dateFilter }
       },
       {
         $addFields: {
@@ -103,6 +124,7 @@ export default eventHandler(async (event) => {
       user,
       status: { $in: ["active", "work"] },
       ...searchOption,
+      ...dateFilter,
     })
       .sort({
         _id: -1,
@@ -115,6 +137,7 @@ export default eventHandler(async (event) => {
       user,
       status: "completed",
       ...searchOption,
+      ...dateFilter,
     })
       .sort({
         _id: -1,
@@ -126,6 +149,7 @@ export default eventHandler(async (event) => {
       user,
       status: "canceled",
       ...searchOption,
+      ...dateFilter,
     })
       .sort({
         _id: -1,
@@ -137,6 +161,7 @@ export default eventHandler(async (event) => {
       user,
       status: "active",
       ...searchOption,
+      ...dateFilter,
     }).sort({
       _id: -1,
     });
@@ -154,6 +179,7 @@ export default eventHandler(async (event) => {
     deliveries = await Delivery.find({
       user,
       ...searchOption,
+      ...dateFilter,
       statusdelivery: {
         $elemMatch: {
           $or: [
@@ -182,6 +208,7 @@ export default eventHandler(async (event) => {
     const allDeliveries = await Delivery.find({
       user,
       ...searchOption,
+      ...dateFilter,
       statusdelivery: {
         $elemMatch: {
           $or: [

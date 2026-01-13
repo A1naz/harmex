@@ -6,7 +6,27 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
-  const { type, string } = getQuery(event)
+  const { type, string, dateRange } = getQuery(event)
+
+  // Обработка dateRange
+  let dateFilter = {};
+  if (dateRange) {
+    try {
+      const parsedDateRange = JSON.parse(dateRange as string);
+      if (Array.isArray(parsedDateRange) && parsedDateRange.length === 2) {
+        const startDate = new Date(parsedDateRange[0]);
+        const endDate = new Date(parsedDateRange[1]);
+        dateFilter = {
+          updatedAt: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        };
+      }
+    } catch (e) {
+      console.error("Error parsing dateRange:", e);
+    }
+  }
 
   let deliveries
 
@@ -14,6 +34,7 @@ export default eventHandler(async (event) => {
     const uuid = string?.toString().replaceAll('#', '')
     deliveries = await Delivery.find({
       user,
+      ...dateFilter,
      $or: [
         { uuidbuyout: uuid },
         { point: { $regex: string, $options: 'i' } },
@@ -24,7 +45,10 @@ export default eventHandler(async (event) => {
       _id: -1,
     })
   } else {
-    deliveries = await Delivery.find({ user }).sort({
+    deliveries = await Delivery.find({ 
+      user,
+      ...dateFilter
+    }).sort({
       _id: -1,
     })
   }
