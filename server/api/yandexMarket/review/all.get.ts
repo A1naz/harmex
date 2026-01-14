@@ -240,12 +240,15 @@ export default eventHandler(async (event) => {
     ? JSON.parse(search?.toString())
     : undefined;
 
-  const filter: any = {
-    user: new ObjectId(user._id),
-    reviewed: { $ne: true },
-    "statusdelivery.status": { $regex: "Уже у вас" },
-    status: "completed",
-  };
+    const filter: any = {
+      'user': new ObjectId(user._id),
+      'reviewed': { $ne: true },
+      $or: [
+        { 'statusdelivery.status': 'Уже у вас' }, // с обычными пробелами
+        { 'statusdelivery.status': 'Уже у вас' } // с неразрывным пробелом (char 160)
+      ],
+      'status': 'completed',
+    }
 
   if (searchParseAvailable && Object.values(searchParseAvailable)[0] !== "") {
     if (
