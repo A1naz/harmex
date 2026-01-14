@@ -4,7 +4,7 @@ import { yandexConnection } from '~/server/connections/yandexMarket'
 const DeliverySchema = new Schema({
   article: { type: Schema.Types.Mixed, required: true, text: true },
   pricebuy: { type: Number, required: true },
-  point: { type: String, required: true },
+  point: { type: String, required: false },
   point_city: { type: String, required: false },
   point_state: { type: String, required: false },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },

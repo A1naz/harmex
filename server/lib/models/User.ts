@@ -96,6 +96,7 @@ const UserSchema = new Schema({
     },
   ],
   emailFunnelClicksCount: { type: Number, default: 0 },
+  disableEmailAutoSender: { type: Boolean, default: false },
 });
 
 export const User = model("User", UserSchema);
