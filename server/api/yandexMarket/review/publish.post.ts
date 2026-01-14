@@ -63,15 +63,36 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const delivery = await Delivery.findOne({
-    _id: deliveryid,
-    idbuyout: buyout._id,
-    reviewed: { $ne: true },
+  // Проверяем, нет ли уже активного отзыва для этой доставки
+  const existingReview = await Review.findOne({
+    delivery: deliveryid,
   });
-  if (!delivery) {
-    return createError({
+  
+  if (existingReview) {
+    throw createError({
       statusCode: 400,
-      message: "Доставка не найдена",
+      message: "Отзыв для этой доставки уже существует",
+    });
+  }
+
+  const delivery = await Delivery.findOneAndUpdate(
+    {
+      _id: deliveryid,
+      idbuyout: buyout._id,
+      reviewed: { $ne: true },
+    },
+    {
+      $set: { reviewed: true }
+    },
+    {
+      new: false // возвращаем документ ДО обновления
+    }
+  );
+  
+  if (!delivery) {
+    throw createError({
+      statusCode: 400,
+      message: "Доставка не найдена или уже была использована для отзыва",
     });
   }
 
@@ -121,8 +142,7 @@ export default eventHandler(async (event) => {
     uuid: uuid(),
   });
   const res = await review.save();
-  delivery.reviewed = true;
-  await delivery.save();
+  // reviewed уже установлен в true через findOneAndUpdate выше
 
   await userLog(event, {
     documentType: DocuemntEnum.Review,
