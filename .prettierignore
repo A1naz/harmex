@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+dist
+.nuxt
+.output
+
+# Build files
+*.min.js
+*.min.css
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lockb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# Other
+coverage
+.env
+.env.*
+!.env.example
+public
+

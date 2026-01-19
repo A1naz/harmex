@@ -112,6 +112,17 @@ onMounted(() => {
   if (params.partnerDetailsModal) {
     partnerDetailsModal.value = true;
   }
+  // Проверяем, была ли успешная отписка от рассылки
+  if (params.unsubscribed === "true") {
+    notify({
+      title: "Отписка от рассылки",
+      text: "Вы успешно отписались от автоматической email-рассылки",
+      group: "success",
+      duration: 5000,
+    });
+    // Очищаем параметр из URL
+    router.replace({ query: { ...params, unsubscribed: undefined } });
+  }
   getPartnerBalance();
 });
 

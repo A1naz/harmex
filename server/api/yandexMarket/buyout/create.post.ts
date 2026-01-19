@@ -109,7 +109,7 @@ export default eventHandler(async (event) => {
 
     const buyout = new Buyout({
       article: product.article,
-      searchQuery: searchQueries.join(", "),
+      searchQuery: searchQueries.join("& "),
       point: product.adress,
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],

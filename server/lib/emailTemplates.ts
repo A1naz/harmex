@@ -82,10 +82,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -170,10 +183,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -296,10 +322,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -388,10 +427,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -480,10 +532,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -595,10 +660,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -683,10 +761,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -795,10 +886,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -888,10 +992,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -987,10 +1104,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -1082,10 +1212,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -1183,10 +1326,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -1285,10 +1441,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -1381,10 +1550,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -1523,10 +1705,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -1619,10 +1814,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -1725,10 +1933,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -1816,10 +2037,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -1921,10 +2155,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -2072,10 +2319,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -2168,10 +2428,23 @@ export const emailTemplates: EmailTemplate[] = [
                 <!-- Footer -->
                 <tr>
                   <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                    <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
-                      С уважением,<br>
-                      <strong style="color: #495057;">команда Harmex</strong>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="padding-bottom: 16px;">
+                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
+                            Отписаться от рассылки
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; color: #6c757d; font-size: 14px; line-height: 1.6; text-align: center;">
+                            С уважением,<br>
+                            <strong style="color: #495057;">команда Harmex</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
