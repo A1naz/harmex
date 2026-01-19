@@ -100,6 +100,19 @@ const selectCategory = (categories: any, index) => {
   store.createProducts[index].category = categories;
   categoryDropdown.value.click();
 };
+
+function notifyDigitalProduct() {
+  if (!props.product.digitalProduct) {
+
+    props.product.adress = ""
+    notify({
+      title: "Цифровой товар не будет доставлен на пвз, будьте внимательны",
+      text: "",
+      group: "success",
+      duration: 5000,
+    });
+  }
+}
 </script>
 
 <template>
@@ -386,8 +399,8 @@ const selectCategory = (categories: any, index) => {
       <div class="flex justify-center mt-1">
         <div class="flex gap-2">
             
-            <input
-             
+            <input     
+            @click="notifyDigitalProduct"
               v-model="product.digitalProduct"
               type="checkbox"
               class="checkbox checkbox-primary border-base-content"
