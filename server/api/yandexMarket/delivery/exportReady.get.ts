@@ -64,7 +64,7 @@ function sortByAddress(deliveries: any[]): any[] {
 
 async function getReady(user: any, dateRange: any) {
   const todayStart = new Date()
-  todayStart.setHours(0, 0, 0, 0)
+  todayStart.setHours(-26, 0, 0, 0)
 
   const deliveries = await Delivery.find({
     ...dateRange,
@@ -76,12 +76,12 @@ async function getReady(user: any, dateRange: any) {
           { status: 'Готов к получению' },
           { status: '^Заберите до.*' },
           { status: '^Получите до.*' },
-          { status: '^Ждёт в пункте выдачи .*' },
+          { status: '^Ждёт.*' },
           { status: { $regex: '^Готов к получению.*' } },
           { status: { $regex: '^Готов к выдаче.*' } },
           { status: { $regex: '^Заберите до.*' } },
           { status: { $regex: '^Получите до.*' } },
-          { status: { $regex: '^Ждёт в пункте выдачи.*' } },
+          { status: { $regex: '^Ждёт.*' } },
         ],
       },
     },
