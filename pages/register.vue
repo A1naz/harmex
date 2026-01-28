@@ -293,10 +293,17 @@ async function sendConfirmCode() {
   if (data.value.status === "ok") {
     isCodeSent.value = true;
     confirmationCodeInput.value.focus();
-    notify({
-      group: "success",
-      title: "Код отправлен",
-    });
+    if (data.value.requiresSupport) {
+      notify({
+        group: "error",
+        title: "При отправке кода возникла ошибка, обратитесь в поддержку для получения кода",
+      });
+    } else {
+      notify({
+        group: "success",
+        title: "Код отправлен",
+      });
+    }
   } else {
     notify({
       group: "error",
