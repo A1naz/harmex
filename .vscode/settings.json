@@ -3,7 +3,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   
   // Автоформатирование при сохранении
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   
   // Форматтеры для конкретных языков
   "[javascript]": {
@@ -13,7 +13,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "Vue.volar"
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

@@ -46,6 +46,11 @@ export default eventHandler(async (event) => {
       }
     }
 
+    // Ensure code exists before saving (in case of corrupted data)
+    if (!isConfirmExist.code) {
+      isConfirmExist.code = Math.floor(1000 + Math.random() * 9000).toString()
+    }
+
     isConfirmExist.date = new Date()
     await isConfirmExist.save()
     
@@ -66,6 +71,7 @@ export default eventHandler(async (event) => {
         const fallbackCode = Math.floor(1000 + Math.random() * 9000).toString()
         isConfirmExist.code = fallbackCode
         isConfirmExist.date = new Date()
+        isConfirmExist.errorCount += 1
         await isConfirmExist.save()
 
         return {
@@ -110,8 +116,6 @@ export default eventHandler(async (event) => {
         data = await confirmViaHiCall(hiCallKey, phoneNumber)
       }
 
-      console.log(data)
-
       if (!data || !data.code || data.status === 'error') {
         // Generate fallback 4-digit code
         const fallbackCode = Math.floor(1000 + Math.random() * 9000).toString()
@@ -120,6 +124,7 @@ export default eventHandler(async (event) => {
           phone: phoneNumber,
           code: fallbackCode,
           date: new Date(),
+          errorCount: 1,
         })
 
         await newConfirm.save()

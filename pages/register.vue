@@ -296,7 +296,8 @@ async function sendConfirmCode() {
     if (data.value.requiresSupport) {
       notify({
         group: "error",
-        title: "При отправке кода возникла ошибка, обратитесь в поддержку для получения кода",
+        title: "При отправке кода возникла ошибка, обратитесь в поддержку для получения кода через синюю кнопку снизу страницы",
+        duration: 10000
       });
     } else {
       notify({

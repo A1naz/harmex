@@ -1,18 +1,22 @@
 import request from 'request'
 
 export async function confirmViaHiCall(hiCallKey: string, phoneNumber: string) {
-  const data: any = await $fetch(
-    `https://a.hi-call.ru/voice/${hiCallKey}/${phoneNumber.replace('+', '')}`,
-  )
+  try {
+    const data: any = await $fetch(
+      `https://a.hi-call.ru/voice/${hiCallKey}/${phoneNumber.replace('+', '')}`,
+    )
 
-  if (!data) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Не удалось отправить код',
-    })
+    if (!data || !data.code) {
+      return { status: 'error', message: 'Не удалось отправить код' }
+    }
+
+    return data
   }
-
-  return data
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('confirmViaHiCall error:', e)
+    return { status: 'error', message: 'Не удалось отправить код' }
+  }
 }
 
 export async function confirmViaZvonokApi(
@@ -20,31 +24,40 @@ export async function confirmViaZvonokApi(
   campaignId: string,
   phoneNumber: string,
 ) {
-  const data: any = await new Promise((resolve, reject) => {
-    request.get(
-      {
-        url: `https://zvonok.com/manager/cabapi_external/api/v1/phones/tellcode/?campaign_id=${campaignId}&phone=${phoneNumber}&public_key=${publicKey}`,
-      },
-      (error, response, body) => {
-        if (!error) {
-          resolve(JSON.parse(body))
-        }
-        else {
-          reject(new Error(`Не удалось отправить код`))
-        }
-      },
-    )
-  })
-
-  if (!data) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Не удалось отправить код',
+  try {
+    const data: any = await new Promise((resolve, reject) => {
+      request.get(
+        {
+          url: `https://zvonok.com/manager/cabapi_external/api/v1/phones/tellcode/?campaign_id=${campaignId}&phone=${phoneNumber}&public_key=${publicKey}`,
+        },
+        (error, response, body) => {
+          if (!error) {
+            try {
+              resolve(JSON.parse(body))
+            }
+            catch (parseError) {
+              reject(new Error(`Ошибка парсинга ответа`))
+            }
+          }
+          else {
+            reject(error)
+          }
+        },
+      )
     })
-  }
 
-  return {
-    status: data.status,
-    code: data.data.pincode,
+    if (!data || !data.data || !data.data.pincode || data.status === 'error') {
+      return { status: 'error', message: 'Не удалось отправить код' }
+    }
+
+    return {
+      status: data.status,
+      code: data.data.pincode,
+    }
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('confirmViaZvonokApi error:', e)
+    return { status: 'error', message: 'Не удалось отправить код' }
   }
 }
