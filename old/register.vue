@@ -389,13 +389,6 @@ const confirmFromReturnCallModal = () => {
 };
 
 function confirmWithReturnCallModal() {
-  if (formData.phoneNumber.replace(/[()\-\s]/g, "").length < 11) {
-    notify({
-      title: "Введите корректный номер",
-    });
-    return;
-  }
-  
   if (timerRunning.value) {
     notify({
       title: `Подождите ${timer.value} секунд`,
@@ -469,13 +462,13 @@ function confirmWithReturnCallModal() {
                 data-maska="+7 (###) ###-##-##"
                 placeholder="+7 (___) ___-__-__"
                 required="true"
-                @keydown.enter="confirmWithReturnCallModal"
+                @keydown.enter="sendConfirmCode"
               />
               <button
                 v-if="!isCodeSent"
                 :disabled="isNumberConfirmed"
                 class="btn btn-sm xl:btn-md join-item rounded-r-full"
-                @click="confirmWithReturnCallModal"
+                @click="sendConfirmCode"
               >
                 {{ $t("Подтвердить") }}
               </button>
@@ -504,13 +497,16 @@ function confirmWithReturnCallModal() {
               >
             </div>
             <div class="text-xs text-gray-500 mb-2 ml-1">
-              {{ $t("Нажмите подтвердить для подтверждения номера через обратный звонок") }}
+              {{ $t("Нажмите подтвердить для получения звонка") }}
             </div>
-            <div class="flex" v-if="!isCodeSent && !isNumberConfirmed">
+            <div class="flex"     v-if="isCodeSent && !isNumberConfirmed">
+              <div class="hidden">
+                {{ timer }}
+              </div>
               <span
                 class="text-md font-medium underline cursor-pointer ml-1 mt-1"
-                @click="sendConfirmCode"
-                >{{ $t("Не прошёл звонок? Отправить SMS код") }}</span
+                @click="confirmWithReturnCallModal"
+                >{{ $t("Подтвердить обратным звонком") }}</span
               >
             </div>
             <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium" v-if="!isNumberConfirmed">
@@ -946,7 +942,13 @@ function confirmWithReturnCallModal() {
       v-model:show="returnCallModal"
       v-model:phone="formData.phoneNumber"
       @close="returnCallModal = false"
-      @confirm="confirmFromReturnCallModal"
+      @confirm="
+        [
+          (isCodeSent = false),
+          (isNumberConfirmed = true),
+          (returnCallModal = false),
+        ]
+      "
     />
   </div>
 </template>
