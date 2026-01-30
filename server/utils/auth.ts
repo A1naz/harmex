@@ -141,7 +141,7 @@ async function attempt(
 
   // && config.env !== 'developer'
 
-  if (!isPasswordCorrect && config.env !== 'developer') {
+  if (!isPasswordCorrect) {
     // Логируем неудачную попытку
     await logLoginAttempt(event, phoneNumber, false);
 
