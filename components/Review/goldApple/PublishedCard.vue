@@ -225,7 +225,7 @@ function copyToClipboard(text: string) {
               <div
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
               >
-                <a :href="info.article" target="_blank" class="link link-hover">
+                <a  target="_blank" class="link link-hover">
                   {{ info.article }}
                 </a>
               </div>

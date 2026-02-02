@@ -195,7 +195,7 @@ const { $dayjs } = useNuxtApp();
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
               >
                 <a
-                  :href="info.article"
+                
                   target="_blank"
                   class="link link-hover"
                 >
@@ -240,7 +240,7 @@ const { $dayjs } = useNuxtApp();
                 >Площадка:
               </span>
               <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
-                Yandex Market
+                Золотое яблоко
               </div>
             </div>
           </div>
