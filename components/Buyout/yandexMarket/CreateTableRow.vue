@@ -306,7 +306,7 @@ function notifyDigitalProduct() {
     <td class="border-r border-base">
       <div
         class="w-full flex gap-2 justify-center"
-        v-if="user.username == 'test'"
+
       >
         <details
           class="dropdown disabled"
@@ -379,9 +379,9 @@ function notifyDigitalProduct() {
           <Icon name="material-symbols:close-rounded" size="18" />
         </button>
       </div>
-      <div v-else>
+      <!-- <div v-else>
         <button class="btn" disabled>Выберите категорию</button>
-      </div>
+      </div> -->
     </td>
     <td class="border-r border-base">
       <div class="w-full flex flex-col gap-2">
