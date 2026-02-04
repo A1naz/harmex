@@ -459,6 +459,7 @@ const siteUrl = config.public.siteUrl;
               @reset="dateRange = []"
             >
               <button
+              v-if="dateRange && !dateRange.length"
                 class="div w-[48px] h-[32px] border-[0px] rounded-[6px] bg-[#fc7c5b]"
               >
                 <Icon
@@ -471,7 +472,7 @@ const siteUrl = config.public.siteUrl;
             <button
             @click="dateRange = []"
               v-if="dateRange && dateRange.length > 0"
-              class="div w-[34px] h-[32px] border-[1px] -ml-3 rounded-[6px] bg-[#fc7c5b]"
+              class="div w-[46px] h-[32px] border-[1px] -ml-3 rounded-[6px] bg-[#fc7c5b]"
             >
               <Icon name="mdi:cancel-bold" class="mt-1 text-white" size="22px" />
             </button>

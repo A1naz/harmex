@@ -449,15 +449,20 @@ getExportReadyCount();
               @reset="dateRange = []"
             >
               <button
-                class="div w-[48px] h-[32px] bg-[#fc7c5b] text-white border-[0px] rounded-[6px]"
+              v-if="dateRange && !dateRange.length"
+                class="div w-[48px] h-[32px] border-[0px] rounded-[6px] bg-[#fc7c5b]"
               >
-                <Icon name="solar:calendar-linear" class="mt-1" size="22px" />
+                <Icon
+                  name="solar:calendar-linear"
+                  class="mt-1 text-white"
+                  size="22px"
+                />
               </button>
             </DateRangePicker>
             <button
-              @click="dateRange = []"
+            @click="dateRange = []"
               v-if="dateRange && dateRange.length > 0"
-              class="div w-[34px] h-[32px] border-[1px] -ml-3 rounded-[6px] bg-[#fc7c5b]"
+              class="div w-[46px] h-[32px] border-[1px] -ml-3 rounded-[6px] bg-[#fc7c5b]"
             >
               <Icon name="mdi:cancel-bold" class="mt-1 text-white" size="22px" />
             </button>
