@@ -23,6 +23,7 @@ export default eventHandler(async (event) => {
     date,
     videoKey,
     video,
+    randomTag
   } = await readBody(event)
 
   if (text) {
@@ -82,7 +83,7 @@ export default eventHandler(async (event) => {
     }
   })
 
-  const allowedExtensions = ['.png', '.gif',  '.pjpeg', '.jpeg','.jpg']
+  const allowedExtensions = ['.png', '.gif', '.pjpeg', '.jpeg', '.jpg']
   for (const photo of photos) {
     if (!photo.url) {
       continue
@@ -96,7 +97,7 @@ export default eventHandler(async (event) => {
     }
   }
 
- 
+
   const review = new Review({
     article: buyout.article,
     name: buyout.product.name,
@@ -110,6 +111,7 @@ export default eventHandler(async (event) => {
     publishDate: date,
     user,
     delivery,
+    randomTag,
     images: photos.map((photo: any) => photo.url),
     status: 'waiting',
     recipientphone: delivery.recipientphone,
@@ -118,6 +120,7 @@ export default eventHandler(async (event) => {
     isVideoEnabled: video !== '',
     createdAt: Date.now(),
     uuid: uuid(),
+
   })
 
   const res = await review.save()

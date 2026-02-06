@@ -43,7 +43,7 @@ const ReviewSchema = new Schema({
   uuid: { type: String },
   additionText: { type: String, default: "" },
   disputed: { type: Boolean, default: false },
-  randomWord: {type: Boolean, default: false}
+  randomTag: {type: Boolean, default: false}
 });
 
 export const Review = wildberriesConnection.model("Review", ReviewSchema);

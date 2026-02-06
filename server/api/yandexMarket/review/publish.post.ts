@@ -22,7 +22,6 @@ export default eventHandler(async (event) => {
     date,
     videoKey,
     video,
-    randomWord
   } = await readBody(event);
 
 
@@ -141,7 +140,6 @@ export default eventHandler(async (event) => {
     isVideoEnabled: video !== "",
     createdAt: Date.now(),
     uuid: uuid(),
-    randomWord: randomWord ? randomWord : false,
   });
   const res = await review.save();
   // reviewed уже установлен в true через findOneAndUpdate выше

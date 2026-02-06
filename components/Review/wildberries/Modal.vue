@@ -37,7 +37,7 @@ const form = reactive({
   positive: "",
   negative: "",
   rating: 5,
-  randomWord: false,
+  randomTag: false,
   date: now.value,
   photos: [
     {
@@ -636,8 +636,8 @@ async function acceptPhotoAIText(photoUrl: string) {
         </div>
 
         <div class="font-medium w-full justify-start gap-2 flex flex-row">
-          <input type="checkbox" checked="checked" class="checkbox checkbox-primary" v-model="form.randomWord" />
-          Случайный выбор
+          <input type="checkbox" class="checkbox checkbox-primary" v-model="form.randomTag" />
+          Случайный тег 
         </div>
         <div class="font-medium w-full justify-start gap-2 flex flex-row">
 
