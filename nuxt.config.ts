@@ -151,8 +151,8 @@ export default defineNuxtConfig({
     bucket: "ozonmpportal",
     image: {
       compression: {
-        maxSizeMB: 10,
-        maxWidthOrHeight: 4000,
+        maxSizeMB: 100,
+        maxWidthOrHeight: 100000,
       },
     },
   },

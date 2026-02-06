@@ -37,6 +37,7 @@ const form = reactive({
   positive: "",
   negative: "",
   rating: 5,
+  randomWord: false,
   date: now.value,
   photos: [
     {
@@ -155,7 +156,7 @@ async function generateVideoThumbnail(file: File) {
 
 async function uploadToS3(eventOrFile: Event | File, index: number) {
   loadingIndex.value = index;
-  
+
   // Если передан Event, извлекаем файл из него, иначе используем File напрямую
   let file: File;
   if (eventOrFile instanceof File) {
@@ -544,20 +545,20 @@ async function acceptPhotoAIText(photoUrl: string) {
   try {
     // Скачиваем фото через серверный endpoint (чтобы избежать CORS)
     const response = await fetch(`/api/AI/downloadPhoto?url=${encodeURIComponent(photoUrl)}`);
-    
+
     if (!response.ok) {
       throw new Error('Не удалось скачать фото');
     }
-    
+
     const blob = await response.blob();
-    
+
     // Создаем File объект из blob
     const fileName = "ai-generated-" + uuid() + ".jpg";
     const file = new File([blob], fileName, { type: blob.type || 'image/jpeg' });
-    
+
     // Используем существующую функцию uploadToS3 для загрузки
     await uploadToS3(file, 0);
-    
+
   } catch (error) {
     console.error('Ошибка при загрузке фото:', error);
     notify({
@@ -573,22 +574,12 @@ async function acceptPhotoAIText(photoUrl: string) {
 
 <template>
   <input id="review-modal" type="checkbox" class="modal-toggle" />
-  <div
-    ref="closeButton"
-    :class="{
-      'modal-open': state,
-    }"
-    class="modal overflow-x-hidden cursor-pointer"
-    @mousedown="handleMouseDown"
-    @mouseup="handleMouseUp"
-  >
+  <div ref="closeButton" :class="{
+    'modal-open': state,
+  }" class="modal overflow-x-hidden cursor-pointer" @mousedown="handleMouseDown" @mouseup="handleMouseUp">
     <div class="modal-box z-50 max-w-xl sm:w-xs w-xl cursor-auto" @click.stop>
-      <label
-        for="review-modal"
-        class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
-        @click="$emit('close')"
-        >✕</label
-      >
+      <label for="review-modal" class="btn btn-sm btn-circle absolute right-2 top-2 btn-ghost"
+        @click="$emit('close')">✕</label>
       <div class="flex flex-row justify-center -mt-4">
         <p class="text-xs text-gray-500 justify-self-center">
           - {{ review.article }} -
@@ -597,19 +588,11 @@ async function acceptPhotoAIText(photoUrl: string) {
 
       <h3 class="text-xl font-bold mb-4">Оставить отзыв</h3>
       <div class="pb-2 font-medium">Доставка:</div>
-      <select
-        v-model="selectedDeliv"
-        class="select w-full mb-4 bg-base-200 text-gray-500"
-      >
-        <option
-          v-for="(rev, index) in review.delivs"
-          :default="index == rev[defaultDelIndex]"
-          :value="{ deliveryid: rev.delivId, uuid: rev.buyoutId }"
-          class="m-6"
-        >
+      <select v-model="selectedDeliv" class="select w-full mb-4 bg-base-200 text-gray-500">
+        <option v-for="(rev, index) in review.delivs" :default="index == rev[defaultDelIndex]"
+          :value="{ deliveryid: rev.delivId, uuid: rev.buyoutId }" class="m-6">
           {{
-            `${defaultDateShort(rev.updatedAt)} ${
-              rev.sex == "Нет" ? "" : " - получатель: " + rev.sex
+            `${defaultDateShort(rev.updatedAt)} ${rev.sex == "Нет" ? "" : " - получатель: " + rev.sex
             } - размер: ${rev.sizeparam} - цена: ${rev.pricebuy}р.`
           }}
         </option>
@@ -617,44 +600,29 @@ async function acceptPhotoAIText(photoUrl: string) {
 
       <div class="flex flex-col gap-4">
         <div class="w-full flex justify-center">
-          <button
-            class="btn btn-primary  max-w-80"
-            @click="handleAIGenerateClick"
-          >
+          <button class="btn btn-primary  max-w-80" @click="handleAIGenerateClick">
             Сгенерировать тексты ИИ - 30₽
           </button>
         </div>
-        
+
         <div class="w-full">
           <div class="pb-2 font-medium">Опишите достоинства</div>
 
-          <textarea
-            v-model="form.positive"
-            class="textarea w-full textarea-md bg-base-200"
-            placeholder="Например, хороший телефон"
-          />
+          <textarea v-model="form.positive" class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, хороший телефон" />
           <div class="pb-2 font-medium">Опишите недостатки</div>
 
-          <textarea
-            v-model="form.negative"
-            class="textarea w-full textarea-md bg-base-200"
-            placeholder="Например, плохая камера"
-          />
+          <textarea v-model="form.negative" class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, плохая камера" />
           <div class="pb-2 font-medium">Поделитесь впечатлениями</div>
 
-          <textarea
-            v-model="form.text"
-            class="textarea w-full textarea-md bg-base-200"
-            placeholder="Например, понравился товар"
-          />
+          <textarea v-model="form.text" class="textarea w-full textarea-md bg-base-200"
+            placeholder="Например, понравился товар" />
 
           <div v-if="review.drafts" class="text-xs">
             черновики:
-            <button
-              v-for="draft in review.drafts"
-              class="mx-1 text-primary hover:underline hover:cursor-pointer"
-              @click="useDraft(draft)"
-            >
+            <button v-for="draft in review.drafts" class="mx-1 text-primary hover:underline hover:cursor-pointer"
+              @click="useDraft(draft)">
               <p v-if="draft.draftName">
                 {{ draft.draftName }}
               </p>
@@ -668,53 +636,31 @@ async function acceptPhotoAIText(photoUrl: string) {
         </div>
 
         <div class="font-medium w-full justify-start gap-2 flex flex-row">
+          <input type="checkbox" checked="checked" class="checkbox checkbox-primary" v-model="form.randomWord" />
+          Случайный выбор
+        </div>
+        <div class="font-medium w-full justify-start gap-2 flex flex-row">
 
 
           <div>
-          <div class="font-medium">Рейтинг</div>
-          <div class="relative w-full py-6 bg-base-100 rounded-lg">
-            <div class="rating absolute left-0 top-3 gap-2">
-              <label class="cursor-not-allowed" @click.prevent="ratingAlert">
-                <input
-                  type="radio"
-                  name="rating-2"
-                  class="mask mask-star-2 bg-yellow-400 cursor-not-allowed"
-              
-                />
-              </label>
-              <label class="cursor-not-allowed" @click.prevent="ratingAlert">
-                <input
-                  type="radio"
-                  name="rating-2"
-                  class="mask mask-star-2 bg-yellow-400 cursor-not-allowed"
-                 
-                />
-              </label>
-              <label class="cursor-not-allowed" @click.prevent="ratingAlert">
-                <input
-                  type="radio"
-                  name="rating-2"
-                  class="mask mask-star-2 bg-yellow-400 cursor-not-allowed"
-                  
-                />
-              </label>
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-         
-                @input="form.rating = 4"
-              />
-              <input
-                type="radio"
-                name="rating-2"
-                class="mask mask-star-2 bg-yellow-400"
-                @input="form.rating = 5"
-              />
+            <div class="font-medium">Рейтинг</div>
+            <div class="relative w-full py-6 bg-base-100 rounded-lg">
+              <div class="rating absolute left-0 top-3 gap-2">
+                <label class="cursor-not-allowed" @click.prevent="ratingAlert">
+                  <input type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400 cursor-not-allowed" />
+                </label>
+                <label class="cursor-not-allowed" @click.prevent="ratingAlert">
+                  <input type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400 cursor-not-allowed" />
+                </label>
+                <label class="cursor-not-allowed" @click.prevent="ratingAlert">
+                  <input type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400 cursor-not-allowed" />
+                </label>
+                <input type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400" @input="form.rating = 4" />
+                <input type="radio" name="rating-2" class="mask mask-star-2 bg-yellow-400" @input="form.rating = 5" />
 
+              </div>
+            </div>
           </div>
-        </div>
-        </div>
         </div>
 
         <div>
@@ -722,258 +668,154 @@ async function acceptPhotoAIText(photoUrl: string) {
           <div class="relative w-full p-6 bg-base-200 rounded-lg">
             <div class="absolute left-3 top-3 text-gray-500">
               {{
-                form.date <= now
-                  ? "Опубликовать сейчас"
-                  : $dayjs(form.date).format("DD.MM.YYYY HH:mm")
-              }}
-            </div>
-            <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
-              <DatePicker v-model="form.date" />
+                form.date <= now ? "Опубликовать сейчас" : $dayjs(form.date).format("DD.MM.YYYY HH:mm") }} </div>
+                <div class="absolute right-3 top-2 w-30" style="z-index: 9999999">
+                  <DatePicker v-model="form.date" />
+                </div>
             </div>
           </div>
-        </div>
-        <div>
-          <div class="font-medium">Фото</div>
-          <button
-            class="btn btn-primary  max-w-80 btn-sm -ml-1 my-2"
-            @click="handlePhotoGenerateClick"
-          >
-            Сгенерировать фото - 15₽
-          </button>
-    
-          <p class="mb-2 text-sm font-light text-gray-500">
-            Разрешены фото в формате PNG, JPG.
-          </p>
-          <ClientOnly>
-            <div
-              class="flex gap-2 items-center overflow-x-scroll flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]"
-            >
-              <div v-for="(photo, index) of form.photos" :key="index">
-                <div
-                  class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none"
-                >
-                  <div
-                    v-if="photo.url"
-                    class="absolute right-0 top-0 z-50"
-                    @click="removePhoto(index)"
-                  >
-                    <label for="photo" class="btn btn-sm btn-circle btn-ghost"
-                      >✕</label
-                    >
-                  </div>
+          <div>
+            <div class="font-medium">Фото</div>
+            <button class="btn btn-primary  max-w-80 btn-sm -ml-1 my-2" @click="handlePhotoGenerateClick">
+              Сгенерировать фото - 15₽
+            </button>
 
-                  <label
-                    v-show="!photo.public"
-                    class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer"
-                  >
-                    <div
-                      v-show="loadingIndex === index"
-                      class="absolute inset-0 flex items-center justify-center"
-                    >
+            <p class="mb-2 text-sm font-light text-gray-500">
+              Разрешены фото в формате PNG, JPG.
+            </p>
+            <ClientOnly>
+              <div
+                class="flex gap-2 items-center overflow-x-scroll flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]">
+                <div v-for="(photo, index) of form.photos" :key="index">
+                  <div
+                    class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none">
+                    <div v-if="photo.url" class="absolute right-0 top-0 z-50" @click="removePhoto(index)">
+                      <label for="photo" class="btn btn-sm btn-circle btn-ghost">✕</label>
+                    </div>
+
+                    <label v-show="!photo.public"
+                      class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer">
+                      <div v-show="loadingIndex === index" class="absolute inset-0 flex items-center justify-center">
+                        <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                      </div>
+                      <input :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)" type="file"
+                        accept="image/png, image/gif, image/jpeg" class="hidden"
+                        @change="(e: Event) => uploadToS3(e, index)" />
+                      <Icon v-show="loadingIndex !== index" name="material-symbols:add-photo-alternate-outline"
+                        class="text-base-content bg-primary" size="30" />
+                    </label>
+
+                    <div v-show="photo.public" class="absolute inset-0">
+                      <UseImage :src="photo.public">
+                        <template #default>
+                          <nuxt-img :src="photo.public" fit="contain" class="w-full h-full object-contain rounded-lg"
+                            loading="lazy" />
+                        </template>
+                        <template #loading>
+                          <div class="absolute inset-0 flex items-center justify-center">
+                            <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                          </div>
+                        </template>
+                        <template #error>
+                          <div class="absolute inset-0 flex items-center justify-center">
+                            <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                          </div>
+                        </template>
+                      </UseImage>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ClientOnly>
+          </div>
+          <div class="flex flex-col">
+            <div class="font-medium">Видео</div>
+            <p class="mb-2 text-sm font-light text-gray-500">
+              Разрешены видео в формате MP4, AVI, MPG, размер не более 300 МБ.
+            </p>
+            <ClientOnly>
+              <div
+                class="flex gap-2 items-center flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200">
+                <div
+                  class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none">
+                  <div v-if="form.video" class="absolute right-0 top-0 z-50" @click="clearVideo">
+                    <label for="video" class="btn btn-sm btn-circle btn-ghost">✕</label>
+                  </div>
+                  <label v-show="!form.video"
+                    class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer">
+                    <div v-show="isUploading" class="absolute inset-0 flex items-center justify-center">
                       <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
                     </div>
-                    <input
-                      :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)"
-                      type="file"
-                      accept="image/png, image/gif, image/jpeg"
-                      class="hidden"
-                      @change="(e: Event) => uploadToS3(e, index)"
-                    />
-                    <Icon
-                      v-show="loadingIndex !== index"
-                      name="material-symbols:add-photo-alternate-outline"
-                      class="text-base-content bg-primary"
-                      size="30"
-                    />
+                    <input ref="videoInput" type="file" accept="video/mp4, video/x-msvideo, video/mpeg" class="hidden"
+                      @change="handleFileChange($event)" />
+                    <Icon v-show="!isUploading" name="material-symbols:video-camera-back-add-outline-rounded"
+                      class="text-base-content bg-primary" size="32" />
                   </label>
-
-                  <div v-show="photo.public" class="absolute inset-0">
-                    <UseImage :src="photo.public">
-                      <template #default>
-                        <nuxt-img
-                          :src="photo.public"
-                          fit="contain"
-                          class="w-full h-full object-contain rounded-lg"
-                          loading="lazy"
-                        />
-                      </template>
-                      <template #loading>
-                        <div
-                          class="absolute inset-0 flex items-center justify-center"
-                        >
-                          <Icon
-                            name="mdi:loading"
-                            class="h-8 w-8 animate-spin"
-                          />
-                        </div>
-                      </template>
-                      <template #error>
-                        <div
-                          class="absolute inset-0 flex items-center justify-center"
-                        >
-                          <Icon
-                            name="mdi:loading"
-                            class="h-8 w-8 animate-spin"
-                          />
-                        </div>
-                      </template>
-                    </UseImage>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ClientOnly>
-        </div>
-        <div class="flex flex-col">
-          <div class="font-medium">Видео</div>
-          <p class="mb-2 text-sm font-light text-gray-500">
-            Разрешены видео в формате MP4, AVI, MPG, размер не более 300 МБ.
-          </p>
-          <ClientOnly>
-            <div
-              class="flex gap-2 items-center flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200"
-            >
-              <div
-                class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none"
-              >
-                <div
-                  v-if="form.video"
-                  class="absolute right-0 top-0 z-50"
-                  @click="clearVideo"
-                >
-                  <label for="video" class="btn btn-sm btn-circle btn-ghost"
-                    >✕</label
-                  >
-                </div>
-                <label
-                  v-show="!form.video"
-                  class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer"
-                >
-                  <div
-                    v-show="isUploading"
-                    class="absolute inset-0 flex items-center justify-center"
-                  >
-                    <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
-                  </div>
-                  <input
-                    ref="videoInput"
-                    type="file"
-                    accept="video/mp4, video/x-msvideo, video/mpeg"
-                    class="hidden"
-                    @change="handleFileChange($event)"
-                  />
-                  <Icon
-                    v-show="!isUploading"
-                    name="material-symbols:video-camera-back-add-outline-rounded"
-                    class="text-base-content bg-primary"
-                    size="32"
-                  />
-                </label>
-                <div
-                  v-show="form.video"
-                  class="absolute inset-0 flex items-center justify-center"
-                >
-                  <div
-                    v-if="uploadProgress !== 'Файл загружен'"
-                    class="radial-progress text-primary"
-                    :style="{ '--value': uploadProgress }"
-                    role="progressbar"
-                  >
-                    {{ uploadProgress + "%" }}
-                  </div>
-                  <div
-                    v-else
-                    class="absolute inset-0 flex items-center justify-center"
-                    :style="{
+                  <div v-show="form.video" class="absolute inset-0 flex items-center justify-center">
+                    <div v-if="uploadProgress !== 'Файл загружен'" class="radial-progress text-primary"
+                      :style="{ '--value': uploadProgress }" role="progressbar">
+                      {{ uploadProgress + "%" }}
+                    </div>
+                    <div v-else class="absolute inset-0 flex items-center justify-center" :style="{
                       backgroundImage: `url(${videoThumbnail})`,
                       backgroundSize: 'cover',
-                    }"
-                  >
-                    <div
-                      class="text-white bg-black bg-opacity-50 h-full p-2 rounded text-center"
-                    >
-                      <div class="mt-6">Файл загружен</div>
+                    }">
+                      <div class="text-white bg-black bg-opacity-50 h-full p-2 rounded text-center">
+                        <div class="mt-6">Файл загружен</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </ClientOnly>
+            </ClientOnly>
+          </div>
+        </div>
+        <div class="modal-action justify-between">
+          <div>
+            <button :disabled="isUploading" class="btn btn-sm btn-ghost btn-outline border-none text-error"
+              @click="clearForm">
+              Сбросить
+            </button>
+          </div>
+          <div class="flex gap-2">
+            <label for="review-modal" class="btn btn-sm btn-ghost" @click="$emit('close')">Отмена</label>
+            <button for="review-modal" class="btn btn-primary btn-sm border-none text-white"
+              :disabled="!textValidation || isUploading || creatingReview" @click="publishReview">
+              Отправить
+            </button>
+          </div>
         </div>
       </div>
-      <div class="modal-action justify-between">
-        <div>
-          <button
-            :disabled="isUploading"
-            class="btn btn-sm btn-ghost btn-outline border-none text-error"
-            @click="clearForm"
-          >
-            Сбросить
-          </button>
-        </div>
-        <div class="flex gap-2">
-          <label
-            for="review-modal"
-            class="btn btn-sm btn-ghost"
-            @click="$emit('close')"
-            >Отмена</label
-          >
-          <button
-            for="review-modal"
-            class="btn btn-primary btn-sm border-none text-white"
-            :disabled="!textValidation || isUploading || creatingReview"
-            @click="publishReview"
-          >
-            Отправить
-          </button>
-        </div>
-      </div>
-    </div>
 
-  </div>
-  <!-- Модалка подтверждения -->
-  <input id="confirm-ai-modal" type="checkbox" class="modal-toggle" />
-  <div
-    :class="{
+    </div>
+    <!-- Модалка подтверждения -->
+    <input id="confirm-ai-modal" type="checkbox" class="modal-toggle" />
+    <div :class="{
       'modal-open': confirmAIModal,
-    }"
-    class="modal"
-  >
-    <div class="modal-box">
-      <h3 class="text-lg font-bold">Подтверждение</h3>
-      <p class="py-4">
-        Вы уверены, что хотите сгенерировать тексты с помощью ИИ? 
-        С вашего баланса будет списано 30₽.
-      </p>
-      <div class="modal-action">
-        <button
-          class="btn btn-ghost"
-          @click="confirmAIModal = false"
-        >
-          Отмена
-        </button>
-        <button
-          class="btn btn-primary"
-          @click="confirmAIGenerate"
-        >
-          Подтвердить
-        </button>
-        
+    }" class="modal">
+      <div class="modal-box">
+        <h3 class="text-lg font-bold">Подтверждение</h3>
+        <p class="py-4">
+          Вы уверены, что хотите сгенерировать тексты с помощью ИИ?
+          С вашего баланса будет списано 30₽.
+        </p>
+        <div class="modal-action">
+          <button class="btn btn-ghost" @click="confirmAIModal = false">
+            Отмена
+          </button>
+          <button class="btn btn-primary" @click="confirmAIGenerate">
+            Подтвердить
+          </button>
+
+        </div>
+
       </div>
-
     </div>
-  </div>
 
-  <ReviewWildberriesAIGenerate
-    v-model:state="AIGenerateModal"
-    :buyoutUuid="selectedDeliv.uuid"
-    @accept="acceptAIText"
-  />
-  <ReviewPhotoAIGenerate
-    v-model:state="confirmPhotoModal"
-    :buyoutUuid="selectedDeliv.uuid"
-    @accept="acceptPhotoAIText"
-  />
+    <ReviewWildberriesAIGenerate v-model:state="AIGenerateModal" :buyoutUuid="selectedDeliv.uuid"
+      @accept="acceptAIText" />
+    <ReviewPhotoAIGenerate v-model:state="confirmPhotoModal" :buyoutUuid="selectedDeliv.uuid"
+      @accept="acceptPhotoAIText" />
 </template>
 
 <style scoped>

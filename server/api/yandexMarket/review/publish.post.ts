@@ -22,17 +22,18 @@ export default eventHandler(async (event) => {
     date,
     videoKey,
     video,
+    randomWord
   } = await readBody(event);
 
- 
-    if (text.length < 5 || text.length > 1000) {
-      throw createError({
-        statusCode: 400,
-        message:
-          "Текст отзыва должен быть длиннее 5 символов и не больше 1000",
-      });
-    }
-  
+
+  if (text.length < 5 || text.length > 1000) {
+    throw createError({
+      statusCode: 400,
+      message:
+        "Текст отзыва должен быть длиннее 5 символов и не больше 1000",
+    });
+  }
+
   if (rating < 4) {
     throw createError({
       statusCode: 400,
@@ -67,7 +68,7 @@ export default eventHandler(async (event) => {
   const existingReview = await Review.findOne({
     delivery: deliveryid,
   });
-  
+
   if (existingReview) {
     throw createError({
       statusCode: 400,
@@ -88,7 +89,7 @@ export default eventHandler(async (event) => {
       new: false // возвращаем документ ДО обновления
     }
   );
-  
+
   if (!delivery) {
     throw createError({
       statusCode: 400,
@@ -140,6 +141,7 @@ export default eventHandler(async (event) => {
     isVideoEnabled: video !== "",
     createdAt: Date.now(),
     uuid: uuid(),
+    randomWord: randomWord ? randomWord : false,
   });
   const res = await review.save();
   // reviewed уже установлен в true через findOneAndUpdate выше
