@@ -37,7 +37,7 @@ const form = reactive({
   positive: "",
   negative: "",
   rating: 5,
-  randomTag: false,
+  randomTag: true,
   date: now.value,
   photos: [
     {
