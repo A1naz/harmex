@@ -9,16 +9,21 @@ export default eventHandler(async (event) => {
     return sendRedirect(event, '/auth', 302)
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const { skip, limit, search } = getQuery(event)
+  const { skip, limit, search, pvz } = getQuery(event)
 
   const searchParse = search ? JSON.parse(search?.toString()) : undefined
 
-  const filter: any = {
-    'user': new ObjectId(user._id),
-    'reviewed': { $ne: true },
-    'statusdelivery.status': { $regex: 'Получен' },
-    'status': 'completed',
-  }
+  const filter: any = pvz === 'true' ? {
+    user: new ObjectId(user._id),
+    reviewedPVZ: { $ne: true },
+    "statusdelivery.status": { $regex: "Получен" },
+    status: "completed",
+  } : {
+    user: new ObjectId(user._id),
+    reviewed: { $ne: true },
+    "statusdelivery.status": { $regex: "Получен" },
+    status: "completed",
+  };
 
   if (searchParse && Object.values(searchParse)[0] !== '') {
     if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {

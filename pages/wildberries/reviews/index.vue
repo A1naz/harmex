@@ -17,6 +17,7 @@ const end = ref(false);
 const store = useMainStore();
 const mpStore = useMPStore();
 const router = useRouter();
+const pvz = ref(route.query?.pvz === 'true');
 const logModal = ref(false);
 const infoModal = ref(false);
 const selectedReview = ref({
@@ -94,6 +95,7 @@ async function fetchData() {
         limit: limit.value,
         tab: currentTab.value,
         dateFilter: dateFilter.value,
+        pvz: pvz.value,
         search:
           searchText.value.length > 0
             ? {
@@ -122,7 +124,7 @@ function changeTab(tab: any) {
   skip.value = 0;
   end.value = false;
   currentTab.value = tab.value;
-  router.push(`/wildberries/reviews?status=${tab.value}`);
+  router.push(`/wildberries/reviews?status=${tab.value}&pvz=${pvz.value}`);
   fetchData();
 }
 
@@ -159,15 +161,21 @@ function openPhoto(src: string) {
 const selectedDelivery = ref("");
 const modalOpen = ref(false);
 const selectedArticle = ref<any>({});
-
+const modalOpenPVZ = ref(false)
 function openModal(review: any, uuid: string, deliveryid: string) {
   selectedArticle.value = review;
   selectedUUID.value = uuid;
   selectedDelivery.value = deliveryid;
-  modalOpen.value = true;
+  if (pvz.value == true) {
+    modalOpenPVZ.value = true
+  } else {
+
+    modalOpen.value = true;
+  }
 }
 function closeModal() {
   modalOpen.value = false;
+  modalOpenPVZ.value = false
 }
 function goToPublished() {
   closeModal();
@@ -190,6 +198,7 @@ async function removeReview() {
     method: "POST",
     query: {
       id: uuidForRemove.value,
+      pvz: pvz.value,
     },
   });
   if (data.value) {
@@ -232,6 +241,7 @@ async function submitSupplement(payload: { reviewId: string; text: string }) {
     body: {
       id: payload.reviewId,
       text: payload.text,
+      pvz: pvz.value,
     },
   });
 
@@ -283,7 +293,7 @@ onMounted(() => {
     }
   } else {
     currentTab.value = "all";
-    router.push("/wildberries/reviews?status=all");
+    router.push(`/wildberries/reviews?status=all&pvz=${pvz.value}`);
   }
   fetchData();
 });
@@ -305,6 +315,7 @@ async function resumeStatus(item: any) {
     method: "POST",
     body: {
       item,
+      pvz: pvz.value,
     },
     watch: false,
   });
@@ -346,6 +357,7 @@ async function getOrgInfo() {
     query: {
       serviceType,
       mp,
+      pvz: pvz.value,
     },
   });
 
@@ -409,6 +421,7 @@ async function disputeReview(item: any) {
     method: "POST",
     body: {
       uuid: item.uuid,
+      pvz: pvz.value,
     },
   });
   if (error.value) {
@@ -437,6 +450,7 @@ async function cancelReview(item: any) {
     method: "POST",
     body: {
       uuid: item.uuid,
+      pvz: pvz.value,
     },
   });
   if (error.value) {
@@ -482,7 +496,7 @@ async function cancelReview(item: any) {
             Wildberries
           </NuxtLink>
         </li>
-        <li class="cursor-pointer text-[#1e2734]">Отзывы</li>
+        <li class="cursor-pointer text-[#1e2734]">Отзывы {{pvz == true ? 'ПВЗ' : ''}}</li>
       </ul>
       <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
         <div
@@ -495,7 +509,7 @@ async function cancelReview(item: any) {
           <CustomShopTooltip :visible="isVisible" :info="orgInfo" />
           <button
             class="p-1 flex flex-col justify-center items-center text-center bg-gray-10 hover:bg-gray-200 rounded-lg text-[#909090]"
-            @click="copyToClipboard(`${siteUrl}/wildberries/reviews`)"
+            @click="copyToClipboard(`${siteUrl}/wildberries/reviews&pvz=${pvz}`)"
           >
             <Icon name="ph:share-fat-fill" size="20" />
           </button>
@@ -581,6 +595,10 @@ async function cancelReview(item: any) {
           </div>
         </div>
       </div>
+      <div class=" text-red-400 text-xl" v-if="pvz">
+       
+        Публикация отзыва доступна в течение 24-48 часов с момента Получения товара на ПВЗ
+      </div>
       <div style="min-height: 500px">
         <div
           v-if="
@@ -614,6 +632,7 @@ async function cancelReview(item: any) {
               :key="index"
               :index="index"
               :info="review"
+              :pvz="pvz"
               @remove-review="openRemoveReviewModal"
               @open-image="openPhoto"
               @resume-status="resumeStatus"
@@ -646,6 +665,15 @@ async function cancelReview(item: any) {
         :review="selectedArticle"
         :deliveryid="selectedDelivery"
         :state="modalOpen"
+        :uuid="selectedUUID"
+        @publish="goToPublished"
+        @close="closeModal"
+      />
+      <ReviewWildberriesModalPVZ
+        v-if="modalOpenPVZ"
+        :review="selectedArticle"
+        :deliveryid="selectedDelivery"
+        :state="modalOpenPVZ"
         :uuid="selectedUUID"
         @publish="goToPublished"
         @close="closeModal"
@@ -866,6 +894,7 @@ async function cancelReview(item: any) {
       :info="selectedReview"
       :state="infoModal"
       @close="infoModal = false"
+      :pvz="pvz"
     />
     <ReviewWildberriesSupplementModal
       v-if="supplementModalOpen"
@@ -873,6 +902,7 @@ async function cancelReview(item: any) {
       :state="supplementModalOpen"
       @close="closeSupplementModal"
       @submit="submitSupplement"
+      :pvz="pvz"
     />
   </div>
 </template>
