@@ -23,6 +23,7 @@ const DeliverySchema = new Schema({
   status: { type: String, required: true },
   updatedAt: { type: Date, required: true, default: new Date() },
   reviewed: { type: Boolean, required: true, default: false },
+  reviewedPVZ: { type: Boolean, required: true, default: false },
   date: { type: Date, required: false },
   data5: { type: {}, default: '' },
   data6: { type: {}, default: '' },

@@ -637,7 +637,7 @@ async function acceptPhotoAIText(photoUrl: string) {
 
         <div class="font-medium w-full justify-start gap-2 flex flex-row">
           <input type="checkbox" class="checkbox checkbox-primary" v-model="form.randomTag" />
-          Добавить случайный тег 
+          Добавить случайный тег
         </div>
         <div class="font-medium w-full justify-start gap-2 flex flex-row">
 

@@ -22,10 +22,10 @@ function getReviewType(review: any) {
 }
 
 export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event);
+  const user: any = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { skip, limit, tab, search, dateFilter } = getQuery(event);
+  const { skip, limit, tab, search, dateFilter, pvz } = getQuery(event);
 
   let dateQuery = {};
 
@@ -76,13 +76,13 @@ export default eventHandler(async (event) => {
   }
 
   let reviews: any = [];
-  let query: any = { user: user._id };
+  let query: any = { user: user._id, pvz: pvz == 'true' ? true : { $ne: true } };
 
   if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
     const foundDelivery = await Delivery.findOne({
       uuidbuyout: searchParse[SelectOptionsReviews.uuidBuyout],
     });
- 
+
     if (foundDelivery) {
       query = Object.assign(query, { delivery: foundDelivery._id });
     }
@@ -90,16 +90,16 @@ export default eventHandler(async (event) => {
     // Обрабатываем поиск по артикулу - ищем и как строку, и как число
     const searchArticle = searchParse.article.toString().trim();
     const numericArticle = Number.parseInt(searchArticle, 10);
-    
+
     // Находим все delivery с таким артикулом
     const foundDeliveries = await Delivery.find({
       user: user._id,
       $or: [{ article: searchArticle }, { article: numericArticle }],
     }).select("_id");
-    
+
     if (foundDeliveries.length > 0) {
-      query = Object.assign(query, { 
-        delivery: { $in: foundDeliveries.map(d => d._id) } 
+      query = Object.assign(query, {
+        delivery: { $in: foundDeliveries.map(d => d._id) }
       });
     } else {
       // Если не нашли доставки, делаем так чтобы ничего не нашлось
@@ -110,6 +110,7 @@ export default eventHandler(async (event) => {
   }
 
   if (tab === "all") {
+    console.log(query)
     // Используем агрегацию для приоритетной сортировки
     reviews = await Review.aggregate([
       {
@@ -142,13 +143,13 @@ export default eventHandler(async (event) => {
     query = Object.assign(query, {
       status: { $in: ["created", "working", "waiting", "work", "reviewsUpdate"] },
     });
-    reviews = await Review.find({...query, ...dateQuery})
+    reviews = await Review.find({ ...query, ...dateQuery })
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0);
   } else if (tab) {
     query = Object.assign(query, { status: tab.toString() });
-    reviews = await Review.find({...query, ...dateQuery})
+    reviews = await Review.find({ ...query, ...dateQuery })
       .sort({ _id: -1 })
       .skip((skip as number) || 0)
       .limit((limit as number) || 0);
@@ -162,11 +163,11 @@ export default eventHandler(async (event) => {
     _id: { $in: deliveries.map((del: any) => del.idbuyout) },
   });
 
-  
-    const paymenthistories = await paymenthistory.find({
-      type: "review",
-      basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
-    });
+
+  const paymenthistories = await paymenthistory.find({
+    type: "review",
+    basisoperation: { $in: reviews.map((rev: any) => "" + rev._id) },
+  });
 
   let format = await Promise.all(
     reviews.map(async (review: any) => {
@@ -199,7 +200,7 @@ export default eventHandler(async (event) => {
           (buyout: any) => buyout._id.valueOf() == delivery.idbuyout.valueOf()
         );
         format.recipient = delivery.recipient;
-        
+
         if (buyout) {
           format.product = buyout.product;
           format.gender = buyout.gender == "male" ? "Мужской" : "Женский";
@@ -231,12 +232,18 @@ export default eventHandler(async (event) => {
     ? JSON.parse(search?.toString())
     : undefined;
 
-  const filter: any = {
+  const filter: any = pvz === 'true' ? {
+    user: new ObjectId(user._id),
+    reviewedPVZ: { $ne: true },
+    "statusdelivery.status": { $regex: "Получен" },
+    status: "completed",
+  } : {
     user: new ObjectId(user._id),
     reviewed: { $ne: true },
     "statusdelivery.status": { $regex: "Получен" },
     status: "completed",
   };
+
 
   if (searchParseAvailable && Object.values(searchParseAvailable)[0] !== "") {
     if (
@@ -252,6 +259,8 @@ export default eventHandler(async (event) => {
       Object.assign(filter, searchParseAvailable);
     }
   }
+
+
   const deliveriesAvailable = await Delivery.find(filter)
     .select("_id article updatedAt pricebuy idbuyout uuidbuyout data8 recipient")
     .sort({ _id: -1 })

@@ -25,7 +25,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { skip, limit, tab, search, dateFilter } = getQuery(event);
+  const { skip, limit, tab, search, dateFilter, pvz } = getQuery(event);
 
   let searchParse = search ? JSON.parse(search?.toString()) : {};
 
@@ -39,7 +39,8 @@ export default eventHandler(async (event) => {
   }
 
   let reviews: any = [];
-  let query: any = { user };
+  
+  let query: any = { user: user._id, pvz: pvz == 'true' ? true : { $ne: true } };
 
   if (Object.keys(searchParse)[0] !== SelectOptionsReviews.uuidBuyout) {
     query = Object.assign(query, searchParse);

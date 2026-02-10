@@ -10,6 +10,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  pvz: {
+    type: Boolean,
+    default: false,
+  }
 });
 const emit = defineEmits([
   "callback",
@@ -58,7 +62,7 @@ const showSupplementButton = computed(() => {
   return false;
 });
 
-onMounted(() => {});
+onMounted(() => { });
 const getStatus = computed(() => {
   switch (props.info.status) {
     case "created":
@@ -91,7 +95,7 @@ const getStatus = computed(() => {
       return "В процессе оспорения";
     case "disputed":
       return "Оспорен";
-      case "reviewsUpdate":
+    case "reviewsUpdate":
       return "На проверке";
     case "errorEditing":
       return "Ошибка редактирования";
@@ -122,24 +126,15 @@ function copyToClipboard(text: string) {
 
 <template>
   <div class="buyout-card card bg-base-100 shadow-lg">
-    <div
-      class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative"
-    >
+    <div class="card-body flex-shrink-0 flex flex-col justify-start p-4 relative">
       <div class="dropdown dropdown-end absolute right-1 top-2">
         <label tabindex="0" class="btn btn-sm btn-square btn-ghost">
           <Icon name="ph:dots-three-outline-vertical-fill" size="22" />
         </label>
-        <ul
-          tabindex="0"
-          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-        >
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
           <li>
             <a @click="emit('logModal', info)">
-              <img
-                class="w-5 h-5"
-                src="/icons/figma/buyouts/info.svg"
-                alt="settings"
-              />
+              <img class="w-5 h-5" src="/icons/figma/buyouts/info.svg" alt="settings" />
               Об отзыве
             </a>
           </li>
@@ -150,90 +145,64 @@ function copyToClipboard(text: string) {
             </a>
           </li>
 
-          <li
-            v-if="info.status === 'published' || info.status === 'added'"
-            class="cursor-pointer"
-          >
+          <li v-if="info.status === 'published' || info.status === 'added'" class="cursor-pointer">
             <a @click="emit('removeReview', info.id)">
-              <img
-                class="w-5 h-5"
-                src="/icons/figma/buyouts/delete.svg"
-                alt="settings"
-              />
+              <img class="w-5 h-5" src="/icons/figma/buyouts/delete.svg" alt="settings" />
               <label class="cursor-pointer">Удалить</label>
             </a>
           </li>
         </ul>
       </div>
       <div class="flex gap-3 w-full truncate mt-6">
-        <div
-          class="flex-none"
-          style="
+        <div class="flex-none" style="
             width: 80px;
             height: 80px;
             margin-top: auto;
             margin-bottom: auto;
-          "
-        >
-          <nuxt-img
-            class="rounded-xl h-full"
-            width="120"
-            height="150"
-            format="webp"
-            loading="lazy"
-            :src="info?.product?.image || '/logo/logocolor.svg'"
-          />
+          ">
+          <nuxt-img class="rounded-xl h-full" width="120" height="150" format="webp" loading="lazy"
+            :src="info?.product?.image || '/logo/logocolor.svg'" />
         </div>
         <div class="flex flex-col w-full">
           <div class="flex flex-col gap-1.5">
             <div class="flex gap-2 w-2/3">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Создано:
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Создано:
               </span>
-              <button
-                class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
-              >
+              <button class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate">
                 {{ $dayjs(info.createdAt).format("DD.MM.YYYY HH:mm") }}
               </button>
             </div>
             <div class="flex gap-2 w-2/3">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Статус:
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Статус:
               </span>
               <button class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
-                <span
-                  :class="{
-                    'bg-success bg-opacity-50 text-green-500':
-                      info.status === 'published' ||
-                      info.status === 'added' ||
-                      info.status === 'completed' ||
-                      info.status === 'disputing' ||
-                      info.status === 'disputed',
-                    'bg-[#F8C68A] text-[#D67500]':
-                      info.status === 'waiting' || info.status === 'created',
-                    'bg-[#F8C68A]  text-red-500':
-                      info.status === 'nofunds' || info.status === 'archived',
-                    'bg-[#FF685E] text-white':
-                      info.status === 'working' ||
-                      info.status === 'busy' ||
-                      info.status === 'canceled' ||
-                      info.status === 'deleted' ||
-                      info.status === 'deleting' ||
-                      info.status === 'addition' ||
-                      info.status === 'reviewsUpdate',
-                  }"
-                  class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5"
-                  >{{ getStatus }}
+                <span :class="{
+                  'bg-success bg-opacity-50 text-green-500':
+                    info.status === 'published' ||
+                    info.status === 'added' ||
+                    info.status === 'completed' ||
+                    info.status === 'disputing' ||
+                    info.status === 'disputed',
+                  'bg-[#F8C68A] text-[#D67500]':
+                    info.status === 'waiting' || info.status === 'created',
+                  'bg-[#F8C68A]  text-red-500':
+                    info.status === 'nofunds' || info.status === 'archived',
+                  'bg-[#FF685E] text-white':
+                    info.status === 'working' ||
+                    info.status === 'busy' ||
+                    info.status === 'canceled' ||
+                    info.status === 'deleted' ||
+                    info.status === 'deleting' ||
+                    info.status === 'addition' ||
+                    info.status === 'reviewsUpdate',
+                }" class="text-black p-0.5 px-4 rounded-2xl text-center w-fit text-sm my-2.5">{{ getStatus }}
                 </span>
               </button>
             </div>
             <div class="flex gap-2 w-2/3" v-if="info.completedDate">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Выполнено:
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Выполнено:
               </span>
-              <button
-                class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate"
-              >
+              <button class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate">
                 {{ $dayjs(info.completedDate).format("DD.MM.YYYY HH:mm") }}
               </button>
             </div>
@@ -242,59 +211,45 @@ function copyToClipboard(text: string) {
               <button @click="copyToClipboard(info.buyoutuuid)">
                 <Icon name="si:copy-fill" class="-mb-1.5 w-6 h-6 mr-1" />
               </button>
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >ID:
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">ID:
               </span>
-              <label
-                class="rounded-md py-0 px-2 text-sm text-[0.725rem] link-hover hover:text-primary truncate"
-                @click="openBuyout"
-                >#{{ info.buyoutuuid }}</label
-              >
+              <label class="rounded-md py-0 px-2 text-sm text-[0.725rem] link-hover hover:text-primary truncate"
+                @click="openBuyout">#{{ info.buyoutuuid }}</label>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Товар:
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Товар:
               </span>
-              <div
-                class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
-              >
-                <a
-                  :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`"
-                  target="_blank"
-                  class="link link-hover"
-                >
+              <div class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary">
+                <a :href="`https://www.wildberries.ru/catalog/${info.article}/detail.aspx`" target="_blank"
+                  class="link link-hover">
                   {{ info.article }}
                 </a>
               </div>
             </div>
 
             <div class="flex gap-2 w-2/3">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Название:
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Название:
               </span>
               <div class="truncate text-[0.9rem] text-bold">
                 {{ info.product?.name }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Получатель:
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Получатель:
               </span>
               <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 {{ info.recipient }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Цена:
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Цена:
               </span>
               <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 {{ info.product?.priceText }}
               </div>
             </div>
             <div class="flex gap-2">
-              <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                >Площадка:
+              <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Площадка:
               </span>
               <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]">
                 Wildberries
@@ -306,35 +261,26 @@ function copyToClipboard(text: string) {
       <div class="mt-[20px]" v-if="!info.executionTime" />
       <div class="flex gap-2 w-2/3" v-if="!info.completedDate">
         <span class="text-sm text-[0.725rem] text-gray-500 my-auto"> </span>
-        <button
-          class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate h-5"
-        ></button>
+        <button class="rounded-md py-0 px-2 text-sm text-[0.725rem] truncate h-5"></button>
       </div>
       <button
         class="btn btn-sm h-[2.5rem] mt-2 text-[20px] rounded-2xl font-normal text-white btn-primary opacity-80 hover:opacity-100"
-        @click="emit('infoModal', info)"
-      >
+        @click="emit('infoModal', info)">
         Детали
       </button>
-      <button
-        v-if="showSupplementButton"
+      <button v-if="showSupplementButton && !pvz"
         class="btn btn-sm h-[2.5rem] text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
-        @click="emit('openSupplementModal', info)"
-      >
+        @click="emit('openSupplementModal', info)">
         Дополнить отзыв
       </button>
-      <button
-        v-if="info.status === 'waiting'"
+      <button v-if="info.status === 'waiting'"
         class="btn btn-sm btn-error bg-[#FF685E] text-white h-[2.5rem] text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
-        @click="openCancelModal"
-      >
+        @click="openCancelModal">
         Отменить заявку
       </button>
-      <button
-        v-if="info.status === 'archived' && !info.disputed"
+      <button v-if="info.status === 'archived' && !info.disputed && !pvz"
         class="btn btn-sm h-[2.5rem] text-[20px] rounded-2xl font-normal opacity-80 hover:opacity-100"
-        @click="emit('disputeReview', info)"
-      >
+        @click="emit('disputeReview', info)">
         Оспорить
       </button>
     </div>
@@ -350,10 +296,7 @@ function copyToClipboard(text: string) {
       </p>
       <div class="modal-action">
         <button class="btn btn-ghost" @click="closeCancelModal">Нет</button>
-        <button
-          class="btn btn-error bg-[#FF685E] text-white"
-          @click="confirmCancel"
-        >
+        <button class="btn btn-error bg-[#FF685E] text-white" @click="confirmCancel">
           Да, отменить
         </button>
       </div>
