@@ -29,6 +29,11 @@ const alertText = ref("");
 const route = useRoute();
 const alertType = ref("success");
 const referral = ref(route.query?.ref || null);
+const utmCode = ref(
+  (route.query?.utm as string) || 
+  localStorage.getItem('utmCode') || 
+  null
+);
 const formData = reactive({
   email: "",
   password: "",
@@ -47,6 +52,7 @@ const formData = reactive({
   landing: "",
   bik: "",
   rs: "",
+  utmCode,
 });
 const passwordInputType = ref("password");
 const passwordConfirmInputType = ref("password");
@@ -63,6 +69,34 @@ async function linkFollow() {
 }
 
 onMounted(async () => {
+  // UTM tracking
+  if (route.query?.utm && typeof route.query?.utm === "string") {
+    const utmCodeFromQuery = route.query.utm;
+    const trackedUTMs = JSON.parse(localStorage.getItem("trackedUTMs") || "[]");
+    
+    // Сохраняем UTM код для регистрации
+    localStorage.setItem('utmCode', utmCodeFromQuery);
+    utmCode.value = utmCodeFromQuery;
+    formData.utmCode = utmCodeFromQuery;
+    
+    if (!trackedUTMs.includes(utmCodeFromQuery)) {
+      await useFetch("/api/utm/transitionToPortal", {
+        method: "GET",
+        query: {
+          utmCode: utmCodeFromQuery,
+        },
+        watch: false,
+      });
+      
+      trackedUTMs.push(utmCodeFromQuery);
+      localStorage.setItem("trackedUTMs", JSON.stringify(trackedUTMs));
+    }
+  } else if (localStorage.getItem('utmCode')) {
+    // Если UTM есть в localStorage, используем его
+    utmCode.value = localStorage.getItem('utmCode');
+    formData.utmCode = utmCode.value;
+  }
+
   if (route.query?.ref && typeof route.query?.ref === "string") {
     if (route.query?.ref !== localStorage.getItem("referralCode")) {
       setTimeout(() => {
@@ -159,6 +193,7 @@ async function submitForm() {
       } else {
         localStorage.removeItem("referralCode");
         localStorage.removeItem("landing");
+        localStorage.removeItem("utmCode");
         notify({
           group: "success",
           title: "Пользователь зарегистрирован.",
@@ -190,6 +225,7 @@ async function submitForm() {
       } else {
         localStorage.removeItem("referralCode");
         localStorage.removeItem("landing");
+        localStorage.removeItem("utmCode");
         notify({
           group: "success",
           title: "Пользователь зарегистрирован.",

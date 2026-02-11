@@ -27,6 +27,7 @@ export default eventHandler(async (event) => {
     name,
     middleName,
     lastname,
+    utmCode,
   } = body
 
   if (!email || !password)
@@ -112,7 +113,8 @@ export default eventHandler(async (event) => {
     middleName,
     phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
     emailConfirmed: true,
-    landing
+    landing,
+    utmCode: utmCode || undefined,
   })
 
   user.bankInfo = { ...bankInfo, rs }

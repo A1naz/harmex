@@ -54,6 +54,25 @@ onMounted(async () => {
     });
   }
 
+  // UTM tracking
+  if (route.query?.utm && typeof route.query?.utm === "string") {
+    const utmCode = route.query.utm;
+    const trackedUTMs = JSON.parse(localStorage.getItem("trackedUTMs") || "[]");
+    
+    if (!trackedUTMs.includes(utmCode)) {
+      await useFetch("/api/utm/transitionToPortal", {
+        method: "GET",
+        query: {
+          utmCode,
+        },
+        watch: false,
+      });
+      
+      trackedUTMs.push(utmCode);
+      localStorage.setItem("trackedUTMs", JSON.stringify(trackedUTMs));
+    }
+  }
+
   if (route.query?.ref && typeof route.query?.ref === "string") {
     if (route.query?.ref !== localStorage.getItem("referralCode")) {
       setTimeout(() => {
