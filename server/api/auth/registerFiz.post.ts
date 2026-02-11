@@ -15,6 +15,7 @@ export default eventHandler(async (event) => {
     referral,
     phoneNumber,
     landing,
+    utmCode,
   } = body
 
   if (!email || !password)
@@ -73,6 +74,7 @@ export default eventHandler(async (event) => {
     emailConfirmed: true,
     fizFace: true,
     landing,
+    utmCode: utmCode || undefined,
   })
   const url = useRuntimeConfig().PUBLIC_SITE_URL
   const link = `${url}/api/auth/activate?uuid=${user.uuid}`
