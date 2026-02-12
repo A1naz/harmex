@@ -43,7 +43,7 @@ defineEmits(["setFavourites", "vote"]);
       <div
         v-for="(social, index) in items"
         :key="index"
-        class="card border rounded-lg shadow-md md:w-[236px] w-full p-3 relative bg-[#fafbff]"
+        class="card border rounded-lg shadow-md md:w-[250px] w-full p-3 relative bg-[#fafbff]"
       >
         <div class="flex flex-col gap-2 w-full">
           <div
