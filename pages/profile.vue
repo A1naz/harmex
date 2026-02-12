@@ -687,7 +687,7 @@ function copyText(text: string) {
               </p>
             </div>
             <div class="flex items-center sm:text-md text-sm">
-              ИП БАЛАШОВ АНДРЕЙ ЮРЬЕВИЧ
+              ИП БАЛАШОВ АНДРЕЙ ЭДУАРДОВИЧ
 
               <a
                 class="btn btn-primary btn-sm rounded-full p-1 ml-3 justify-center items-center sm:hidden flex"
