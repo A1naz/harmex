@@ -21,11 +21,15 @@ export default eventHandler(async (event) => {
 
         const prices = isTariffExist.prices ? isTariffExist.prices : [];
         service.items.forEach((item: any) => {
-          const searchPhrase = item.slug
-            ? item.slug == "reviews"
+          // Убираем query параметры из slug (например, "reviews?pvz=true" -> "reviews")
+          const cleanSlug = item.slug ? item.slug.split('?')[0] : null;
+          const cleanPath = item.path ? item.path.split('?')[0] : null;
+          
+          const searchPhrase = cleanSlug
+            ? cleanSlug == "reviews"
               ? "review"
-              : item.slug
-            : item.path === "/reviews" ? "review" : item.path.replace("/", "");
+              : cleanSlug
+            : cleanPath === "/reviews" ? "review" : cleanPath ? cleanPath.replace("/", "") : "";
 
           const isItemPrice =
             prices[searchPhrase];
@@ -57,8 +61,12 @@ export default eventHandler(async (event) => {
         }
 
         service.items.forEach((item: any) => {
+          // Убираем query параметры из slug (например, "reviews?pvz=true" -> "reviews")
+          const cleanSlug = item.slug ? item.slug.split('?')[0] : null;
+          const cleanPath = item.path ? item.path.split('?')[0] : null;
+          
           const isItemPrice =
-            mpPrices.prices[item.slug ? item.slug : item.path];
+            mpPrices.prices[cleanSlug ? cleanSlug : cleanPath];
           if (isItemPrice) {
             item.priceText =
               isItemPrice.type && isItemPrice.type === "percent"
