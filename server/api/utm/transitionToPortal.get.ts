@@ -1,4 +1,5 @@
 import { UTMTag } from '~/server/lib/models/UTMTag'
+import { UTMClick } from '~/server/lib/models/UTMClick'
 
 export default eventHandler(async (event) => {
   const { utmCode } = getQuery(event)
@@ -22,6 +23,13 @@ export default eventHandler(async (event) => {
 
     utmTag.transitionToPortal = (utmTag.transitionToPortal || 0) + 1
     await utmTag.save()
+
+    // Создаем запись о клике для отслеживания даты
+    await UTMClick.create({
+      utmCode,
+      type: 'portal',
+      date: new Date(),
+    })
 
     return {
       status: 'success',
