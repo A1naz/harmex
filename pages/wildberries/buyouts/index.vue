@@ -415,6 +415,7 @@ getOrgInfo();
 
 const isChecked = ref(false);
 const manualModal = ref(false);
+const manualModalPVZ = ref(false)
 
 function toggleCheckbox() {
   const platform = "wildberries";
@@ -506,7 +507,7 @@ const siteUrl = config.public.siteUrl;
           </NuxtLink>
         </div>
         <div class="w-full flex gap-1 lg:gap-2">
-          <div class="flex gap-1 lg:gap-3 flex-nowrap whitespace-nowrap">
+          <div class="flex gap-1 lg:gap-3 flex-wrap whitespace-nowrap">
             <!-- <span><CustomSelect
               class="h-[2rem]  lg:min-w-[120px]"
               status-text="Wildberries"
@@ -524,7 +525,13 @@ const siteUrl = config.public.siteUrl;
               @click="manualModal = true"
               class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
             >
-              <Icon name="ci:info" size="24" />
+              SKU
+            </button>
+            <button
+              @click="manualModalPVZ = true"
+              class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
+            >
+              ПВЗ
             </button>
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
@@ -1073,6 +1080,423 @@ const siteUrl = config.public.siteUrl;
       <hr class="my-4 border-gray-300" />
 
       <p class="font-bold mb-3">№13. Если Wildberries лишил СПП (скидки поставщика)</p>
+
+      <ol class="list-decimal ml-6 mb-4 space-y-2">
+        <li>Подключите тариф <strong>1%</strong> для пробных закупок собственных товаров.</li>
+        <li>Подключите модуль <strong>"Джем"</strong> — он позволяет восстановить СПП <strong>через 24 часа</strong>.</li>
+        <li>После восстановления СПП вы сможете продолжить выкупы без потери маржи.</li>
+      </ol>
+
+    </ManualModal>
+    <ManualModal
+      :show="manualModalPVZ"
+      @close="manualModalPVZ = false"
+      :is-checked="isChecked"
+      @checkbox-toggle="toggleCheckbox"
+    >
+      <h2 class="text-2xl font-bold mb-4">
+        Как опубликовать отзыв на ПВЗ используя Harmex
+      </h2>
+
+      <h3 class="text-lg font-bold mb-2">Что важно знать перед началом?</h3>
+
+      <p class="mb-2">
+        На <strong>Wildberries</strong> и других маркетплейсах выкуп товара происходит <strong>автоматически</strong> — без вашего участия.
+      </p>
+
+      <p class="mb-2">
+        Вам <strong>не нужно</strong> ничего покупать вручную, использовать личные карты, прокси или аккаунты.
+      </p>
+
+      <p class="mb-4">
+        Все операции выполняет платформа <strong>Harmex</strong>, строго в рамках законодательства РФ.
+      </p>
+
+      <h3 class="text-lg font-bold mb-2">Что вам нужно сделать?</h3>
+
+      <ol class="list-decimal ml-6 mb-4 space-y-1">
+        <li>Выбрать самый дешевый товар на маркетплейсе</li>
+        <li>Пополнить баланс на товар по СПП + услуги наши + комиссия</li>
+        <li>Создать заявку на выкуп (Выкупы):
+          <ul class="list-[circle] ml-6 mt-1 space-y-1">
+            <li>с выкупом по артикулу</li>
+            <li>в ближайшее время</li>
+            <li>по правилу 9</li>
+            <li>и низкочастотным запросом</li>
+          </ul>
+        </li>
+        <li>Отслеживать статус исполнения.</li>
+        <li>Получить товар на ПВЗ (Доставки).</li>
+        <li>Создать заявку на публикацию отзыва (Отзывы).
+          <ul class="list-[circle] ml-6 mt-1 space-y-1">
+            <li>публикация отзыва доступна в течение 24-48 часов с момента "Получения товара на ПВЗ"</li>
+          </ul>
+        </li>
+        <li>Всё остальное — мы делаем за вас!</li>
+      </ol>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/pvz1.png"
+        class="mx-1 my-2"
+      />
+
+      <p class="font-bold mb-1">Чек-лист быстрого изучения</p>
+      <p class="text-sm mb-1">00:00 - 04:00. Пополнение баланса</p>
+      <p class="text-sm mb-1">04:01 - 10:00. Создание заявки на выкуп</p>
+      <p class="text-sm mb-1">10:01 - 14:00. Получение товара на ПВЗ</p>
+      <p class="text-sm mb-3">14:01 - 16:29. Публикация отзывов</p>
+
+      <video
+        controls
+        poster="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/buyoutsVideoTitle.png"
+        class="my-6 w-full"
+      >
+        <source
+          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/buyoutsVideo.mp4"
+          type="video/mp4"
+        />
+        Ваш браузер не поддерживает видео.
+      </video>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="mb-3">
+        Ознакомьтесь с разделом <strong>FAQ</strong>, где собраны ответы на популярные вопросы:
+      </p>
+
+      <ul class="list-disc ml-6 mb-4 text-sm space-y-1">
+        <li>№1. Что нужно подготовить для создания заявки на выкуп / отзыв?</li>
+        <li>№2. Как создать заявку на выкуп товара?</li>
+        <li>№3. Что означают статусы исполнения заявки?</li>
+        <li>№4. Как происходит процесс исполнения заявки?</li>
+        <li>№5. По какой цене покупаем товар?</li>
+        <li>№6. Как списываются финансы с баланса (аванс или пост-факт)?</li>
+        <li>№7. Где получить финансовый отчет по каждой услуге?</li>
+        <li>№8. В каком проценте по какой цене был куплен товар?</li>
+        <li>№9. Какие закрывающие документы предоставляете?</li>
+        <li>№10. Почему финансы не зачисляются в выходные?</li>
+        <li>№11. Как выкупать новые карточки на маркетплейсе?</li>
+        <li>№12. Какие способы выкупа товара для выдачи в поиске?</li>
+        <li>№13. Как действовать, если заявка ушла в архив</li>
+        <li>№14. Если Wildberries лишил СПП (скидки поставщика)</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№1. Подготовьте данные для заявки</p>
+
+      <p class="mb-3">Перед созданием заявки соберите простые исходные данные:</p>
+
+      <ol class="list-decimal ml-6 mb-3 space-y-1">
+        <li>Артикул товара (123456789)</li>
+        <li>Пол аккаунтов (Женский / Мужской / Случайный)</li>
+        <li>Дата и время выкупа (12 ноября, 15:00–19:00)</li>
+        <li>Стратегия выкупа (Поиск / Реклама / Полки)</li>
+        <li>Поисковые запросы ("женские сапоги", "зимние ботинки")</li>
+        <li>Адреса ПВЗ (Казань, ул. Пушкина 23к1)</li>
+      </ol>
+
+      <p class="mb-4">
+        <strong>Рекомендация:</strong> Если не уверены, какую стратегию выбрать — начните с "реклама+поиск", это универсальный вариант для старта.
+      </p>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/2.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№2. Создайте заявку на выкуп</p>
+
+      <ol class="list-decimal ml-6 mb-4 space-y-1">
+        <li>Перейдите в раздел <strong>Каталог услуг</strong>.</li>
+        <li>Выберите <strong>Wildberries — Выкупы</strong>.</li>
+        <li>Нажмите <strong>Создать заявку</strong>.</li>
+        <li>Заполните все поля: артикул, дата, количество, правила, адрес ПВЗ и т.д.</li>
+        <li>Нажмите <strong>Создать</strong>.</li>
+      </ol>
+
+      <p class="mb-4">
+        После создания вы увидите заявку в статусе <strong>"Активен"</strong>.
+      </p>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/3.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">Использование персонального идентификатора (ID):</p>
+
+      <p class="mb-4">
+        Каждая услуга, которую вы заказываете, получает уникальный идентификатор (ID). Это позволяет службе поддержки быстро находить ваш заказ и оперативно решать возникающие вопросы.
+      </p>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/4.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№3. Отслеживайте процесс исполнения</p>
+
+      <p class="mb-3">У каждой заявки есть <strong>4 статуса</strong>:</p>
+
+      <ol class="list-decimal ml-6 mb-4 space-y-2">
+        <li>🟡 <strong>Активный</strong> - заявка создана и готовится к исполнению</li>
+        <li>🟢 <strong>В работе</strong> - подключен аккаунт, карта, устройство, геолокация, нагул</li>
+        <li>🔴 <strong>Завершено</strong> - заказ выполнен, скриншоты добавлены, фин.отчет внесен</li>
+        <li>🟠 <strong>В архиве</strong> - заявка архивирована по причине указанной <strong>3 точки - О выкупе</strong></li>
+      </ol>
+
+      <p class="mb-4">
+        Когда заявка переходит в статус <strong>"В работе"</strong>, она уже выполняется через наш автоматизированный модуль.
+      </p>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/5.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№4. Как работает процесс "Самовыкупа" (внутри)</p>
+
+      <p class="mb-3">
+        Чтобы имитация выглядела максимально естественно, мы выполняем следующие действия от имени реальных пользователей:
+      </p>
+
+      <ol class="list-decimal ml-6 mb-4 space-y-1">
+        <li>Входим в приложение Wildberries с мобильного устройства.</li>
+        <li>"Гуляем" по каталогу 5–7 минут.</li>
+        <li>Вводим поисковый запрос.</li>
+        <li>Просматриваем 3–5 карточек конкурентов.</li>
+        <li>Добавляем в корзину 1–3 карточки конкурентов.</li>
+        <li>Ищем вашу карточку (до 40-й страницы).</li>
+        <li>Переходим в неё, изучаем изображения и инфографику.</li>
+        <li>Добавляем в корзину ваш товар.</li>
+        <li>Оформляем заказ и оплачиваем.</li>
+        <li>Прикладываем скриншоты для прозрачности.</li>
+      </ol>
+
+      <p class="mb-4">
+        <strong>
+        Все действия фиксируются в отчете, чтобы вы могли убедиться, что всё выполнено корректно.
+        </strong>
+      </p>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№5. Оплатите услуги</p>
+
+      <p class="mb-3">Для оплаты за товар и услуги:</p>
+
+      <ol class="list-decimal ml-6 mb-3 space-y-1">
+        <li><strong>Пополните баланс</strong> на сумму, достаточную для дневного бюджета (стоимость товара по СПП + услуга = Аванс).</li>
+        <li>После исполнения услуги сумма автоматически спишется с баланса.</li>
+        <li>В разделе <strong>Финансы</strong> отображаются:
+          <ul class="list-[circle] ml-6 mt-1 space-y-1">
+            <li>дата и время исполнения;</li>
+            <li>сумма списания;</li>
+            <li>идентификатор заказа (ID заказа)</li>
+            <li>маркетплейс оказания услуги</li>
+            <li>категория услуги</li>
+          </ul>
+        </li>
+      </ol>
+
+      <p class="mb-4">
+        Harmex списывает средства <strong>только за фактически оказанные услуги</strong>. Отчет формируется <strong>по вашему местному времени</strong>, а не по МСК.
+      </p>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/6.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№8. Как проверить цену выкупа</p>
+
+      <p class="mb-3">2 простых способа:</p>
+
+      <ol class="list-decimal ml-6 mb-3 space-y-2">
+        <li><strong>При создании заявки</strong> — система подтягивает актуальную цену автоматически с карточки товара.</li>
+        <li><strong>После исполнения</strong> — откройте раздел <strong>Отчетность</strong>, введите <strong>ID заявки</strong> и посмотрите скриншот, где указана фактическая цена товара при выкупе</li>
+        <li>Или Откройте заявку <strong>"Детали" - Выполнено</strong> и кликните по дате исполнения. Вы увидите фактическую цену списания</li>
+      </ol>
+
+      <p class="mb-4">
+        Полная прозрачность для долгосрочного сотрудничества - залог нашего бизнеса.
+      </p>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/7.png"
+        class="mx-1 my-2"
+      />
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/8.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№9. Отчетность и закрывающие документы</p>
+
+      <ul class="list-disc ml-6 mb-4 space-y-1">
+        <li>Финансовая отчетность — в меню <strong>Финансы - Excel</strong>.</li>
+        <li>Чеки пост оплаты по QR-коду уходят на ваш email</li>
+        <li>Закрывающие документы (по ЭДО) — формируются <strong>до 15 числа следующего месяца</strong>.</li>
+      </ul>
+
+      <p class="mb-2"><strong>Пример:</strong></p>
+      <p class="ml-4">за сентябрь — до 15 октября,</p>
+      <p class="ml-4 mb-4">за октябрь — до 15 ноября, и т.д.</p>
+
+      <p class="mb-4">
+        В документах отражаются <strong>фактические расходы по балансу</strong>, а не выставленные счета.
+      </p>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/9.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№10. Рекомендации для старта</p>
+
+      <ul class="list-disc ml-6 mb-4 space-y-2">
+        <li>Пополняйте баланс <strong>заранее</strong>, особенно перед выходными (банки не зачисляют переводы в сб и вс).</li>
+        <li>Все операции по выкупам выполняются <strong>24/7</strong>, но зачисления — только <strong>в рабочие дни банков</strong>.</li>
+        <li>Перед созданием заявки — <strong>проверьте сумму на балансе</strong>.</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№11. Как выкупать новые карточки на маркетплейсе?</p>
+
+      <p class="mb-3">
+        Чтобы <strong>новая карточка товара появилась в поиске и начала подниматься в топ</strong>, нужно пройти <strong>два этапа</strong>:
+      </p>
+
+      <ol class="list-decimal ml-6 mb-3 space-y-2">
+        <li><strong>Создать оборотку</strong> — первые 2–3 выкупа по артикулу, чтобы товар появился в поисковой выдаче.</li>
+        <li><strong>Подключить рекламу</strong> и выполнять выкупы <strong>по поисковому запросу</strong> (до 40-й страницы).</li>
+      </ol>
+
+      <p class="mb-3">
+        Это базовый алгоритм, без которого продвижение карточки невозможно.
+      </p>
+
+      <p class="mb-4">
+        Если вы сразу создаёте выкупы по поисковому запросу, но карточка ещё не появилась в поиске — заявка уйдёт в архив с причиной <strong>"Не находит в поиске"</strong>.
+      </p>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№12. Какие способы выкупа товара для выдачи в поиске?</p>
+
+      <p class="mb-3">
+        Перед созданием заявки определите, <strong>по какой стратегии</strong> вы будете работать:
+      </p>
+
+      <ul class="list-disc ml-6 mb-4 space-y-2">
+        <li>Выкупы по артикулу
+          <ul class="list-[circle] ml-6 mt-1 space-y-1">
+            <li>Новая карточка, без продаж</li>
+            <li>Цель - создать оборотку, попасть в поиск</li>
+          </ul>
+        </li>
+        <li>Выкупы с рекламой
+          <ul class="list-[circle] ml-6 mt-1 space-y-1">
+            <li>После появления карточки в поиске</li>
+            <li>Цель - укрепить позиции и ускорить рост</li>
+          </ul>
+        </li>
+        <li>Выкупы по поисковому запросу
+          <ul class="list-[circle] ml-6 mt-1 space-y-1">
+            <li>Когда карточка уже видна в поиске</li>
+            <li>Цель - закрепиться в выдаче</li>
+          </ul>
+        </li>
+        <li>Выкупы по сортировке
+          <ul class="list-[circle] ml-6 mt-1 space-y-1">
+            <li>Если карточка далеко (30–40 стр.)</li>
+            <li>Цель - помочь алгоритму "подхватить" карточку</li>
+          </ul>
+        </li>
+      </ul>
+
+      <p class="font-bold mb-2">Оптимальный порядок:</p>
+      <p class="mb-4 ml-4">
+        1️⃣ Выкупы по артикулу → 2️⃣ Реклама → 3️⃣ Поиск → 4️⃣ Сортировка
+      </p>
+
+      <p class="font-bold mb-2">Пример:</p>
+      <p class="ml-4">2–3 выкупа по артикулу → Подключение рекламы.</p>
+      <p class="ml-4">3–5 выкупов по поисковому запросу → Если не проходят, то</p>
+      <p class="ml-4 mb-4">1–2 выкупа по сортировке (при необходимости) → Повторение</p>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№12. Как действовать, если заявка ушла в архив</p>
+
+      <p class="font-bold mb-2">Причина: "Не находит в поиске"</p>
+      <p class="mb-3">
+        Значит, ваша карточка ещё не появилась в выдаче или находится дальше 40-й страницы.
+      </p>
+
+      <p class="mb-2"><strong>Решение:</strong></p>
+      <ol class="list-decimal ml-6 mb-4 space-y-1">
+        <li>Перезапустите заявку "3 точки - Убрать с Архива"</li>
+        <li>Пересоздайте заявку <strong>по артикулу</strong>, чтобы создать оборотку.</li>
+        <li>После 2–3 успешных выкупов создайте заявку <strong>по поисковому запросу</strong>.</li>
+        <li>Если карточка всё ещё не находится — добавьте стратегию <strong>"по сортировке"</strong>.</li>
+      </ol>
+
+      <p class="mb-4">
+        Сначала попасть в поиск → потом продвигаться в поиске.
+      </p>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-2">Причина: "Техническая ошибка"</p>
+
+      <p class="mb-3">
+        Это временные сбои со стороны маркетплейса или сети (свет, интернет, API).
+      </p>
+
+      <ul class="list-disc ml-6 mb-4 space-y-1">
+        <li>Перезапустите заявку ("Снять с архива").</li>
+        <li>Если после 2–3 попыток ошибка повторяется — напишите в <strong>Службу заботы Harmex</strong>.</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-2">Причина: "Недостаточно средств"</p>
+
+      <ul class="list-disc ml-6 mb-4 space-y-1">
+        <li>Пополните баланс (QR / счёт от организации).</li>
+        <li>После зачисления средств система автоматически возобновит исполнение.</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-2">Причина: "ПВЗ не найден на карте"</p>
+
+      <ul class="list-disc ml-6 mb-4 space-y-1">
+        <li>Попробуйте изменить формат названия (например, "ул. Ленина, 10" → "Ленина 10").</li>
+        <li>Если не помогает — обратитесь в поддержку, и мы добавим адрес вручную.</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№14. Если Wildberries лишил СПП (скидки поставщика)</p>
 
       <ol class="list-decimal ml-6 mb-4 space-y-2">
         <li>Подключите тариф <strong>1%</strong> для пробных закупок собственных товаров.</li>

@@ -600,7 +600,7 @@ async function acceptPhotoAIText(photoUrl: string) {
 
       <div class="flex flex-col gap-4">
         <div class="w-full flex justify-center">
-          <button class="btn btn-primary  max-w-80" @click="handleAIGenerateClick">
+          <button class="btn btn-primary  max-w-80 hidden" @click="handleAIGenerateClick">
             Сгенерировать тексты ИИ - 30₽
           </button>
         </div>
@@ -676,7 +676,7 @@ async function acceptPhotoAIText(photoUrl: string) {
           </div>
           <div>
             <div class="font-medium">Фото</div>
-            <button class="btn btn-primary  max-w-80 btn-sm -ml-1 my-2" @click="handlePhotoGenerateClick">
+            <button class="btn btn-primary  max-w-80 btn-sm -ml-1 my-2 hidden" @click="handlePhotoGenerateClick">
               Сгенерировать фото - 15₽
             </button>
 

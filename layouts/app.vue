@@ -67,8 +67,6 @@ onMounted(() => {
 const modalStore = useModalStore();
 const menuItems = ref([
   "Маркетплейсы",
-  "Недвижимость",
-  "Карты"
 ]);
 
 watch(
