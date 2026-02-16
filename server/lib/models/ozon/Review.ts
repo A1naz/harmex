@@ -45,6 +45,9 @@ const ReviewSchema = new Schema({
   isVideoEnabledEdited: { type: Boolean, required: false },
   publishDateEdited: { type: Date, required: false },
   editedAt: { type: Date, required: false },
+  point: { type: String, default: "" },
+  pvz: { type: Boolean, default: false },
+  whatLiked: { type: Object }
 });
 
 export const Review = OzonConnection.model("Review", ReviewSchema);

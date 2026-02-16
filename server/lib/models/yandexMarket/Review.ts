@@ -15,7 +15,7 @@ const ReviewSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   delivery: { type: Schema.Types.ObjectId, ref: 'Delivery', required: true },
   images: { type: Array, required: false },
-    isPhotoEnabled: { type: Boolean, required: false },
+  isPhotoEnabled: { type: Boolean, required: false },
   status: {
     type: String,
     required: true,
@@ -37,7 +37,7 @@ const ReviewSchema = new Schema({
   originalVideoName: { type: String, required: false },
   isVideoEnabled: { type: Boolean, required: false },
   createdAt: { type: Date, required: false, default: Date.now },
-  uuid: { type: String},
+  uuid: { type: String },
   // Поля для хранения измененных данных
   textEdited: { type: String, required: false },
   positiveEdited: { type: String, required: false },
@@ -50,6 +50,11 @@ const ReviewSchema = new Schema({
   isVideoEnabledEdited: { type: Boolean, required: false },
   publishDateEdited: { type: Date, required: false },
   editedAt: { type: Date, required: false },
+  point: { type: String, default: "" },
+  pvz: { type: Boolean, default: false },
+  whatLikedInDelivery: { type: Object },
+  whatLikedInPVZ: { type: Object },
+  whatLikedInProduct: { type: Object },
 })
 
 export const Review = yandexConnection.model('Review', ReviewSchema)

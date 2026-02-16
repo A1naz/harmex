@@ -17,6 +17,7 @@ const end = ref(false);
 const store = useMainStore();
 const mpStore = useMPStore();
 const router = useRouter();
+const pvz = ref(route.query?.pvz === 'true');
 const logModal = ref(false);
 const infoModal = ref(false);
 const selectedReview = ref({
@@ -92,6 +93,7 @@ async function fetchData() {
         limit: limit.value,
         tab: currentTab.value,
         dateFilter: dateFilter.value,
+        pvz: pvz.value,
         search:
           searchText.value.length > 0
             ? {
@@ -119,7 +121,7 @@ function changeTab(tab: any) {
   skip.value = 0;
   end.value = false;
   currentTab.value = tab.value;
-  router.push(`/ym/reviews?status=${tab.value}`);
+  router.push(`/ym/reviews?status=${tab.value}&pvz=${pvz.value}`);
   fetchData();
 }
 
@@ -158,6 +160,7 @@ const modalOpen = ref(false);
 const selectedArticle = ref<any>({});
 const isEditMode = ref(false);
 const editingReview = ref<any>(null);
+  const modalOpenPVZ = ref(false)
 
 function openModal(review: any, uuid: string, deliveryid: string) {
   selectedArticle.value = review;
@@ -165,7 +168,12 @@ function openModal(review: any, uuid: string, deliveryid: string) {
   selectedDelivery.value = deliveryid;
   isEditMode.value = false;
   editingReview.value = null;
-  modalOpen.value = true;
+  if (pvz.value == true) {
+    modalOpenPVZ.value = true
+  } else {
+
+    modalOpen.value = true;
+  }
 }
 
 function openEditModal(review: any) {
@@ -175,6 +183,7 @@ function openEditModal(review: any) {
 }
 function closeModal() {
   modalOpen.value = false;
+  modalOpenPVZ.value = false
 }
 function goToPublished() {
   closeModal();
@@ -197,6 +206,7 @@ async function removeReview() {
     method: "POST",
     query: {
       id: uuidForRemove.value,
+      pvz: pvz.value,
     },
   });
   if (data.value) {
@@ -244,7 +254,7 @@ onMounted(() => {
     }
   } else {
     currentTab.value = "all";
-    router.push("/ym/reviews?status=all");
+    router.push(`/ym/reviews?status=all&pvz=${pvz.value}`);
   }
   fetchData();
 });
@@ -266,6 +276,7 @@ async function resumeStatus(item: any) {
     method: "POST",
     body: {
       item,
+      pvz: pvz.value,
     },
     watch: false,
   });
@@ -371,6 +382,7 @@ async function cancelReview(item: any) {
     method: "POST",
     body: {
       uuid: item.uuid,
+      pvz: pvz.value,
     },
   });
   if (error.value) {
@@ -583,6 +595,16 @@ async function cancelReview(item: any) {
         :uuid="isEditMode ? editingReview?.uuid : selectedUUID"
         :is-edit-mode="isEditMode"
         :existing-review="isEditMode ? editingReview : null"
+        @publish="goToPublished"
+        @close="closeModal"
+      />
+
+      <ReviewYandexMarketModalPVZ
+        v-if="modalOpenPVZ"
+        :review="selectedArticle"
+        :deliveryid="selectedDelivery"
+        :state="modalOpenPVZ"
+        :uuid="selectedUUID"
         @publish="goToPublished"
         @close="closeModal"
       />
