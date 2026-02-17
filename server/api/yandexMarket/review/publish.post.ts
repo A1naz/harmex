@@ -11,6 +11,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
+  const body = await readBody(event);
   const {
     buyoutuuid,
     deliveryid,
@@ -18,7 +19,6 @@ export default eventHandler(async (event) => {
     text,
     positive,
     negative,
-    photos,
     date,
     videoKey,
     video,
@@ -26,8 +26,13 @@ export default eventHandler(async (event) => {
     whatLikedInDelivery,
     whatLikedInPVZ,
     whatLikedInProduct,
-  } = await readBody(event);
+  } = body;
 
+  // Безопасное преобразование photos в массив
+  let photos = body.photos
+  if (!Array.isArray(photos)) {
+    photos = []
+  }
 
   if (text.length < 5 || text.length > 1000) {
     throw createError({
@@ -64,18 +69,6 @@ export default eventHandler(async (event) => {
     return createError({
       statusCode: 400,
       message: "Выкуп не найден",
-    });
-  }
-
-  // Проверяем, нет ли уже активного отзыва для этой доставки
-  const existingReview = await Review.findOne({
-    delivery: deliveryid,
-  });
-
-  if (existingReview) {
-    throw createError({
-      statusCode: 400,
-      message: "Отзыв для этой доставки уже существует",
     });
   }
 

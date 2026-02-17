@@ -11,18 +11,24 @@ export default eventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/auth', 302)
 
+  const body = await readBody(event)
   const {
     buyoutuuid,
     deliveryid,
     rating,
     text,
-    photos,
     date,
     videoKey,
     video,
     pvz,
     whatLiked
-  } = await readBody(event)
+  } = body
+
+  // Безопасное преобразование photos в массив
+  let photos = body.photos
+  if (!Array.isArray(photos)) {
+    photos = []
+  }
 
   if (text) {
     if (text.length < 10 || text.length > 1000) {
@@ -86,19 +92,19 @@ export default eventHandler(async (event) => {
         isPhotoEnabled = true;
       }
     });
-  }
 
-  const allowedExtensions = ['.png', '.gif', '.jfif', '.pjpeg', '.jpeg', '.pjp', '.jpg']
-  for (const photo of photos) {
-    if (!photo.url) {
-      continue
-    }
-    const extension = photo.url.substring(photo.url.lastIndexOf('.')).toLowerCase()
-    if (!allowedExtensions.includes(extension)) {
-      throw createError({
-        statusCode: 400,
-        message: 'Неверный формат файла',
-      })
+    const allowedExtensions = ['.png', '.gif', '.jfif', '.pjpeg', '.jpeg', '.pjp', '.jpg']
+    for (const photo of photos) {
+      if (!photo.url) {
+        continue
+      }
+      const extension = photo.url.substring(photo.url.lastIndexOf('.')).toLowerCase()
+      if (!allowedExtensions.includes(extension)) {
+        throw createError({
+          statusCode: 400,
+          message: 'Неверный формат файла',
+        })
+      }
     }
   }
 

@@ -12,6 +12,7 @@ export default eventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/auth', 302)
 
+  const body = await readBody(event)
   const {
     buyoutuuid,
     deliveryid,
@@ -19,13 +20,18 @@ export default eventHandler(async (event) => {
     text,
     positive,
     negative,
-    photos,
     date,
     videoKey,
     video,
     randomTag,
     pvz
-  } = await readBody(event)
+  } = body
+
+  // Безопасное преобразование photos в массив
+  let photos = body.photos
+  if (!Array.isArray(photos)) {
+    photos = []
+  }
 
   if (text) {
     if (text.length < 10 || text.length > 1000) {
@@ -84,26 +90,27 @@ export default eventHandler(async (event) => {
   }
 
   let isPhotoEnabled = false
-  photos.forEach((photo: any) => {
-    if (photo.url && photo.url !== '') {
-      isPhotoEnabled = true
-    }
-  })
+  if (photos && photos.length > 0) {
+    photos.forEach((photo: any) => {
+      if (photo.url && photo.url !== '') {
+        isPhotoEnabled = true
+      }
+    })
 
-  const allowedExtensions = ['.png', '.gif', '.pjpeg', '.jpeg', '.jpg']
-  for (const photo of photos) {
-    if (!photo.url) {
-      continue
-    }
-    const extension = photo.url.substring(photo.url.lastIndexOf('.')).toLowerCase()
-    if (!allowedExtensions.includes(extension)) {
-      throw createError({
-        statusCode: 400,
-        message: 'Неверный формат файла',
-      })
+    const allowedExtensions = ['.png', '.gif', '.pjpeg', '.jpeg', '.jpg']
+    for (const photo of photos) {
+      if (!photo.url) {
+        continue
+      }
+      const extension = photo.url.substring(photo.url.lastIndexOf('.')).toLowerCase()
+      if (!allowedExtensions.includes(extension)) {
+        throw createError({
+          statusCode: 400,
+          message: 'Неверный формат файла',
+        })
+      }
     }
   }
-
 
   const review = new Review({
     article: buyout.article,
