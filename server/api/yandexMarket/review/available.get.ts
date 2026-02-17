@@ -19,7 +19,7 @@ export default eventHandler(async (event) => {
     'reviewedPVZ': { $ne: true },
     $or: [
       { 'statusdelivery.status': 'Уже у вас' }, // с обычными пробелами
-      { 'statusdelivery.status': 'Уже у вас' } // с неразрывным пробелом (char 160)
+      { 'statusdelivery.status': 'Уже у вас' } // с неразрывным пробелом (char 160)
     ],
     'status': 'completed',
   } : {
@@ -27,10 +27,13 @@ export default eventHandler(async (event) => {
     'reviewed': { $ne: true },
     $or: [
       { 'statusdelivery.status': 'Уже у вас' }, // с обычными пробелами
-      { 'statusdelivery.status': 'Уже у вас' } // с неразрывным пробелом (char 160)
+      { 'statusdelivery.status': 'Уже у вас' } // с неразрывным пробелом (char 160)
     ],
     'status': 'completed',
   }
+
+  console.log(filter)
+  console.log(pvz)
 
 if (searchParseAvailable && Object.values(searchParseAvailable)[0] !== "") {
   if (
