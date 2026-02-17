@@ -167,6 +167,7 @@ function openEditModal(review: any) {
 }
 function closeModal() {
   modalOpen.value = false;
+  modalOpenPVZ.value = false
 }
 function goToPublished() {
   closeModal();
@@ -418,7 +419,8 @@ async function cancelReview(item: any) {
               Ozon
             </NuxtLink>
           </li>
-          <li class="cursor-pointer text-[#1e2734]">Отзывы</li>
+
+            <li class="cursor-pointer text-[#1e2734]">Отзывы {{pvz == true ? 'ПВЗ' : ''}}</li>
         </ul>
         <div v-if="orgInfo && orgInfo.title" class="flex gap-3">
           <div
@@ -519,6 +521,10 @@ async function cancelReview(item: any) {
           </div>
         </div>
       </div>
+      <div class=" text-red-400 text-xl" v-if="pvz">
+       
+       Публикация отзыва доступна в течение 24-48 часов с момента Получения товара на ПВЗ
+     </div>
       <div style="min-height: 500px">
         <div
           v-if="
@@ -813,6 +819,7 @@ async function cancelReview(item: any) {
       :info="selectedReview"
       :state="infoModal"
       @close="infoModal = false"
+       :pvz="pvz"
     />
   </div>
 </template>

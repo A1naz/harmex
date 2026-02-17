@@ -20,6 +20,8 @@ export default eventHandler(async (event) => {
     date,
     videoKey,
     video,
+    pvz,
+    whatLiked
   } = await readBody(event)
 
   if (text) {
@@ -57,14 +59,19 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const delivery = await Delivery.findOne({
+  const deliveryQuery: any = {
     _id: deliveryid,
     idbuyout: buyout._id,
-    reviewed: { $ne: true },
-  })
+  }
 
-  console.log(deliveryid)
-  console.log(buyout._id)
+  if (pvz === true) {
+    deliveryQuery.reviewedPVZ = { $ne: true }
+  } else {
+    deliveryQuery.reviewed = { $ne: true }
+  }
+
+  const delivery = await Delivery.findOne(deliveryQuery)
+
   if (!delivery) {
     return createError({
       statusCode: 400,
@@ -114,11 +121,18 @@ export default eventHandler(async (event) => {
     isVideoEnabled: video !== '',
     createdAt: Date.now(),
     uuid: uuid(),
+    point: buyout.point,
+    pvz,
+    whatLiked
   })
 
   const res = await review.save()
-  delivery.reviewed = true
 
+  if (pvz === true) {
+    delivery.reviewedPVZ = true
+  } else {
+    delivery.reviewed = true
+  }
   await delivery.save()
 
   await userLog(event, {

@@ -25,7 +25,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  const { skip, limit, tab, search, dateFilter } = getQuery(event);
+  const { skip, limit, tab, search, dateFilter, pvz } = getQuery(event);
 
   let dateQuery = {};
 
@@ -76,7 +76,7 @@ export default eventHandler(async (event) => {
   }
 
   let reviews: any = [];
-  let query: any = { user: user._id };
+  let query: any = { user: user._id, pvz: pvz == 'true' ? true : { $ne: true } };
 
   if (Object.keys(searchParse)[0] === SelectOptionsReviews.uuidBuyout) {
     const foundDelivery = await Delivery.findOne({
@@ -241,8 +241,13 @@ export default eventHandler(async (event) => {
     ? JSON.parse(search?.toString())
     : undefined;
 
-  const filter: any = {
-    user: new ObjectId(user._id),
+  const filter: any = pvz === 'true' ? {
+    user: user._id,
+    reviewedPVZ: { $ne: true },
+    "statusdelivery.status": { $regex: "Получен" },
+    status: "completed",
+  } : {
+    user: user._id,
     reviewed: { $ne: true },
     "statusdelivery.status": { $regex: "Получен" },
     status: "completed",

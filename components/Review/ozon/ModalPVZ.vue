@@ -24,28 +24,19 @@ const { restrictUrl } = useValidation();
 
 const inputs: any = {
     file1: ref(),
-    file2: ref(),
-    file3: ref(),
-    file4: ref(),
 };
 
 const form = reactive({
     text: "",
     rating: 5,
     date: now.value,
+    whatLiked: {
+        serviceSpeed: false,
+        staffPoliteness: false,
+        convenientLocation: false,
+        pickupPointCondition: false,
+    },
     photos: [
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
         {
             url: "",
             public: "",
@@ -136,21 +127,15 @@ async function clearForm() {
     form.date = new Date();
     form.text = "";
     form.rating = 5;
+    form.whatLiked = {
+        serviceSpeed: false,
+        staffPoliteness: false,
+        convenientLocation: false,
+        pickupPointCondition: false,
+    };
     loadingIndex.value = null;
 
     form.photos = [
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
         {
             url: "",
             public: "",
@@ -280,6 +265,44 @@ const handleMouseUp = (event: any) => {
                 </div>
 
                 <div>
+                    <div class="pb-2 font-medium">Что вам понравилось</div>
+                    <div class="flex flex-col gap-2">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input 
+                                v-model="form.whatLiked.serviceSpeed" 
+                                type="checkbox" 
+                                class="checkbox checkbox-primary checkbox-sm"
+                            />
+                            <span class="text-sm">Скорость обслуживания в пункте выдачи</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input 
+                                v-model="form.whatLiked.staffPoliteness" 
+                                type="checkbox" 
+                                class="checkbox checkbox-primary checkbox-sm"
+                            />
+                            <span class="text-sm">Вежливость и компетентность сотрудников пвз</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input 
+                                v-model="form.whatLiked.convenientLocation" 
+                                type="checkbox" 
+                                class="checkbox checkbox-primary checkbox-sm"
+                            />
+                            <span class="text-sm">Удобное расположение пункта выдачи</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input 
+                                v-model="form.whatLiked.pickupPointCondition" 
+                                type="checkbox" 
+                                class="checkbox checkbox-primary checkbox-sm"
+                            />
+                            <span class="text-sm">Состояние пункта выдачи</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
                     <div class="pb-2 font-medium">Запланировать отзыв</div>
                     <div class="relative w-full p-6 bg-base-200 rounded-lg">
                         <div class="absolute left-3 top-3 text-gray-500">
@@ -297,49 +320,46 @@ const handleMouseUp = (event: any) => {
                             Разрешены фото в формате PNG, JPG.
                         </p>
                         <ClientOnly>
-                            <div
-                                class="flex gap-2 items-center overflow-x-scroll flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]">
-                                <div v-for="(photo, index) of form.photos" :key="index">
-                                    <div
-                                        class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none">
-                                        <div v-if="photo.url" class="absolute right-0 top-0 z-50"
-                                            @click="removePhoto(index)">
-                                            <label for="photo" class="btn btn-sm btn-circle btn-ghost">✕</label>
-                                        </div>
+                            <div class="flex gap-2 items-center pb-4">
+                                <div
+                                    class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none">
+                                    <div v-if="form.photos[0].url" class="absolute right-0 top-0 z-50"
+                                        @click="removePhoto(0)">
+                                        <label for="photo" class="btn btn-sm btn-circle btn-ghost">✕</label>
+                                    </div>
 
-                                        <label v-show="!photo.public"
-                                            class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer">
-                                            <div v-show="loadingIndex === index"
-                                                class="absolute inset-0 flex items-center justify-center">
-                                                <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
-                                            </div>
-                                            <input :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)" type="file"
-                                                accept="image/png, image/gif, image/jpeg" class="hidden"
-                                                @change="(e: Event) => uploadToS3(e, index)" />
-                                            <Icon v-show="loadingIndex !== index"
-                                                name="material-symbols:add-photo-alternate-outline"
-                                                class="text-base-content bg-primary" size="30" />
-                                        </label>
-
-                                        <div v-show="photo.public" class="absolute inset-0">
-                                            <UseImage :src="photo.public">
-                                                <template #default>
-                                                    <nuxt-img :src="photo.public" fit="contain"
-                                                        class="w-full h-full object-contain rounded-lg"
-                                                        loading="lazy" />
-                                                </template>
-                                                <template #loading>
-                                                    <div class="absolute inset-0 flex items-center justify-center">
-                                                        <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
-                                                    </div>
-                                                </template>
-                                                <template #error>
-                                                    <div class="absolute inset-0 flex items-center justify-center">
-                                                        <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
-                                                    </div>
-                                                </template>
-                                            </UseImage>
+                                    <label v-show="!form.photos[0].public"
+                                        class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer">
+                                        <div v-show="loadingIndex === 0"
+                                            class="absolute inset-0 flex items-center justify-center">
+                                            <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
                                         </div>
+                                        <input :ref="(el: any) => (inputs.file1 = el)" type="file"
+                                            accept="image/png, image/gif, image/jpeg" class="hidden"
+                                            @change="(e: Event) => uploadToS3(e, 0)" />
+                                        <Icon v-show="loadingIndex !== 0"
+                                            name="material-symbols:add-photo-alternate-outline"
+                                            class="text-base-content bg-primary" size="30" />
+                                    </label>
+
+                                    <div v-show="form.photos[0].public" class="absolute inset-0">
+                                        <UseImage :src="form.photos[0].public">
+                                            <template #default>
+                                                <nuxt-img :src="form.photos[0].public" fit="contain"
+                                                    class="w-full h-full object-contain rounded-lg"
+                                                    loading="lazy" />
+                                            </template>
+                                            <template #loading>
+                                                <div class="absolute inset-0 flex items-center justify-center">
+                                                    <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                                                </div>
+                                            </template>
+                                            <template #error>
+                                                <div class="absolute inset-0 flex items-center justify-center">
+                                                    <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
+                                                </div>
+                                            </template>
+                                        </UseImage>
                                     </div>
                                 </div>
                             </div>

@@ -8,12 +8,17 @@ export default eventHandler(async (event) => {
   if (!user)
     return sendRedirect(event, '/auth', 302)
 
-  const { search } = getQuery(event)
+  const { search, pvz } = getQuery(event)
 
   const searchParse = search ? JSON.parse(search?.toString()) : undefined
 
-  const filter: any = {
-    'user': new ObjectId(user._id),
+  const filter: any = pvz === 'true' ? {
+    'user': user._id,
+    'reviewedPVZ': { $ne: true },
+    'statusdelivery.status': { $regex: 'Получен' },
+    'status': 'completed',
+  } : {
+    'user': user._id,
     'reviewed': { $ne: true },
     'statusdelivery.status': { $regex: 'Получен' },
     'status': 'completed',

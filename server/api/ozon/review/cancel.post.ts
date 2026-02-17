@@ -7,8 +7,8 @@ export default eventHandler(async (event) => {
         return sendRedirect(event, '/auth', 302)
     }
 
-    const { uuid } = await readBody(event)
-    const review = await Review.findOne({ uuid })
+    const { uuid, pvz } = await readBody(event)
+    const review = await Review.findOne({ uuid, status: 'waiting' })
     if (!review) {
         throw createError({
             statusCode: 404,
@@ -27,11 +27,16 @@ export default eventHandler(async (event) => {
     if (!delivery) {
         throw createError({
             statusCode: 404,
-            message: 'Доставка не найдена',
+            message: 'Доставка не найдена или статус успел измениться',
         })
     }
 
-    delivery.reviewed = false
+    if (pvz === true) {
+        delivery.reviewedPVZ = false
+    } else {
+        delivery.reviewed = false
+    }
+
     await delivery.save()
     await Review.deleteOne({ uuid: review.uuid })
 

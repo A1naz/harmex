@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { UseImage } from "@vueuse/components";
-import { v4 as uuid } from "uuid";
 
 const props = defineProps({
     review: {} as any,
@@ -17,40 +15,29 @@ const { user } = useUserSession();
 const headers = useRequestHeaders(["cookie"]) as HeadersInit;
 const closeButton = ref<HTMLElement>();
 const { notify } = useNotification();
-const { upload, remove } = useS3Object();
 const creatingReview = ref(false);
 const now = useNow();
 const { restrictUrl } = useValidation();
-
-const inputs: any = {
-    file1: ref(),
-    file2: ref(),
-    file3: ref(),
-    file4: ref(),
-};
 
 const form = reactive({
     text: "",
     rating: 5,
     date: now.value,
-    photos: [
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
-    ],
+    whatLikedInDelivery: {
+        fastDelivery: false,
+        easyToTrack: false,
+    },
+    whatLikedInPVZ: {
+        canCheckOrder: false,
+        easyToFind: false,
+        fastService: false,
+        politeStaff: false,
+        goodCondition: false,
+    },
+    whatLikedInProduct: {
+        goodQuality: false,
+        wellPackaged: false,
+    },
 });
 
 const textValidation = computed(() => {
@@ -70,106 +57,30 @@ const selectedDeliv = ref({
     uuid: props.review.delivs[defaultDelIndex].buyoutId,
 });
 
-const loadingIndex = ref(null) as Ref<number | null>;
-
-async function uploadToS3(eventOrFile: Event | File, index: number) {
-    loadingIndex.value = index;
-
-    // Если передан Event, извлекаем файл из него, иначе используем File напрямую
-    let file: File;
-    if (eventOrFile instanceof File) {
-        file = eventOrFile;
-    } else {
-        const fileList = (eventOrFile.target! as HTMLInputElement).files;
-        if (!fileList || !fileList[0]) return;
-        file = fileList[0];
-    }
-
-    // Проверка на webp
-    if (file.name && file.name.toLowerCase().endsWith(".webp")) {
-        notify({
-            title: "Что-то пошло не так",
-            text: "Нельзя загружать вебпикчи",
-            group: "error",
-            duration: 3000,
-        });
-
-        loadingIndex.value = null;
-        return;
-    }
-
-    const fileName = "reviewImages/" + uuid();
-
-    const result = await upload(file, {
-        key: fileName,
-    });
-
-    if (!result) {
-        notify({
-            title: "Что-то пошло не так",
-            text: "Не удалось загрузить фото",
-            group: "error",
-            duration: 3000,
-        });
-        return;
-    }
-
-    //@ts-ignore
-    await useFetch("/api/images/openForPublic", {
-        method: "GET",
-        params: {
-            path: result.split("query/")[1],
-        },
-    });
-
-    form.photos[index] = {
-        url: `${result.replace("/api/s3/query/reviewImages/", "")}`,
-        public: `https://ozonmpportal.hb.vkcs.cloud/${result.split("query/")[1]}`,
-    };
-
-    setTimeout(() => {
-        loadingIndex.value = null;
-    }, 1500);
-}
 
 async function clearForm() {
     form.date = new Date();
     form.text = "";
     form.rating = 5;
-    loadingIndex.value = null;
-
-    form.photos = [
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
-        {
-            url: "",
-            public: "",
-        },
-    ];
+    form.whatLikedInDelivery = {
+        fastDelivery: false,
+        easyToTrack: false,
+    };
+    form.whatLikedInPVZ = {
+        canCheckOrder: false,
+        easyToFind: false,
+        fastService: false,
+        politeStaff: false,
+        goodCondition: false,
+    };
+    form.whatLikedInProduct = {
+        goodQuality: false,
+        wellPackaged: false,
+    };
 }
 
 async function publishReview() {
     creatingReview.value = true;
-    const photos = form.photos;
-    for await (const photo of photos) {
-        try {
-        } catch {
-            notify({
-                title: "Что-то пошло не так",
-                text: "Не удалось загрузить все фото, попробуйте еще раз",
-            });
-        }
-    }
     // @ts-ignore
     const { data, error } = await useFetch("/api/yandexMarket/review/publish", {
         method: "POST",
@@ -200,16 +111,6 @@ async function publishReview() {
     creatingReview.value = false;
     emit("close");
     emit("publish");
-}
-
-async function removePhoto(index: number) {
-    const fileInput = inputs[`file${(index + 1) as 1 | 2 | 3 | 4}`];
-    fileInput.value = null;
-
-    form.photos[index] = {
-        url: "",
-        public: "",
-    };
 }
 
 watch(
@@ -280,6 +181,100 @@ const handleMouseUp = (event: any) => {
                 </div>
 
                 <div>
+                    <div class="pb-2 font-medium mb-4">Что вам особенно понравилось</div>
+                    
+                    <div class="mb-4">
+                        <div class="text-sm font-semibold mb-2">Доставка</div>
+                        <div class="flex flex-col gap-2 ml-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    v-model="form.whatLikedInDelivery.fastDelivery" 
+                                    type="checkbox" 
+                                    class="checkbox checkbox-primary checkbox-sm"
+                                />
+                                <span class="text-sm">Быстро привезли</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    v-model="form.whatLikedInDelivery.easyToTrack" 
+                                    type="checkbox" 
+                                    class="checkbox checkbox-primary checkbox-sm"
+                                />
+                                <span class="text-sm">Удобно отследить</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="text-sm font-semibold mb-2">Пункт выдачи</div>
+                        <div class="flex flex-col gap-2 ml-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    v-model="form.whatLikedInPVZ.canCheckOrder" 
+                                    type="checkbox" 
+                                    class="checkbox checkbox-primary checkbox-sm"
+                                />
+                                <span class="text-sm">Можно проверить заказ</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    v-model="form.whatLikedInPVZ.easyToFind" 
+                                    type="checkbox" 
+                                    class="checkbox checkbox-primary checkbox-sm"
+                                />
+                                <span class="text-sm">Пункт выдачи легко найти</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    v-model="form.whatLikedInPVZ.fastService" 
+                                    type="checkbox" 
+                                    class="checkbox checkbox-primary checkbox-sm"
+                                />
+                                <span class="text-sm">Быстрое обслуживание</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    v-model="form.whatLikedInPVZ.politeStaff" 
+                                    type="checkbox" 
+                                    class="checkbox checkbox-primary checkbox-sm"
+                                />
+                                <span class="text-sm">Вежливые сотрудники</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    v-model="form.whatLikedInPVZ.goodCondition" 
+                                    type="checkbox" 
+                                    class="checkbox checkbox-primary checkbox-sm"
+                                />
+                                <span class="text-sm">Состояние: чистота и ремонт</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="text-sm font-semibold mb-2">Товары</div>
+                        <div class="flex flex-col gap-2 ml-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    v-model="form.whatLikedInProduct.goodQuality" 
+                                    type="checkbox" 
+                                    class="checkbox checkbox-primary checkbox-sm"
+                                />
+                                <span class="text-sm">Хорошее качество</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    v-model="form.whatLikedInProduct.wellPackaged" 
+                                    type="checkbox" 
+                                    class="checkbox checkbox-primary checkbox-sm"
+                                />
+                                <span class="text-sm">Товары надёжно упакованы</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
                     <div class="pb-2 font-medium">Запланировать отзыв</div>
                     <div class="relative w-full p-6 bg-base-200 rounded-lg">
                         <div class="absolute left-3 top-3 text-gray-500">
@@ -290,60 +285,6 @@ const handleMouseUp = (event: any) => {
                                     <DatePicker v-model="form.date" />
                                 </div>
                         </div>
-                    </div>
-                    <div>
-                        <div class="font-medium">Фото</div>
-                        <p class="mb-2 text-sm font-light text-gray-500">
-                            Разрешены фото в формате PNG, JPG.
-                        </p>
-                        <ClientOnly>
-                            <div
-                                class="flex gap-2 items-center overflow-x-scroll flex-nowrap basis-32 pb-4 scrollbar-thumb-primary scrollbar-track-base-200 scrollbar-thin scrollbar-rounded-[12px]">
-                                <div v-for="(photo, index) of form.photos" :key="index">
-                                    <div
-                                        class="border border-base-300 relative text-primary hover:text-primary-focus cursor-pointer w-32 h-32 hover:bg-base-200 rounded-lg flex-none">
-                                        <div v-if="photo.url" class="absolute right-0 top-0 z-50"
-                                            @click="removePhoto(index)">
-                                            <label for="photo" class="btn btn-sm btn-circle btn-ghost">✕</label>
-                                        </div>
-
-                                        <label v-show="!photo.public"
-                                            class="file-select w-full h-full flex justify-center items-center hover:cursor-pointer">
-                                            <div v-show="loadingIndex === index"
-                                                class="absolute inset-0 flex items-center justify-center">
-                                                <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
-                                            </div>
-                                            <input :ref="(el: any) => (inputs[`file${(index + 1)}`] = el)" type="file"
-                                                accept="image/png, image/gif, image/jpeg" class="hidden"
-                                                @change="(e: Event) => uploadToS3(e, index)" />
-                                            <Icon v-show="loadingIndex !== index"
-                                                name="material-symbols:add-photo-alternate-outline"
-                                                class="text-base-content bg-primary" size="30" />
-                                        </label>
-
-                                        <div v-show="photo.public" class="absolute inset-0">
-                                            <UseImage :src="photo.public">
-                                                <template #default>
-                                                    <nuxt-img :src="photo.public" fit="contain"
-                                                        class="w-full h-full object-contain rounded-lg"
-                                                        loading="lazy" />
-                                                </template>
-                                                <template #loading>
-                                                    <div class="absolute inset-0 flex items-center justify-center">
-                                                        <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
-                                                    </div>
-                                                </template>
-                                                <template #error>
-                                                    <div class="absolute inset-0 flex items-center justify-center">
-                                                        <Icon name="mdi:loading" class="h-8 w-8 animate-spin" />
-                                                    </div>
-                                                </template>
-                                            </UseImage>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </ClientOnly>
                     </div>
                 </div>
                 <div class="modal-action justify-between">
@@ -366,18 +307,4 @@ const handleMouseUp = (event: any) => {
 </template>
 
 <style scoped>
-input[type="file"]::file-selector-button {
-    display: none;
-}
-
-input[type="file"]::-webkit-file-upload-button {
-    display: block;
-    width: 0;
-    height: 0;
-    margin-left: -100%;
-}
-
-input[type="file"]::-ms-browse {
-    display: none;
-}
 </style>

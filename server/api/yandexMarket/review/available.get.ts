@@ -9,17 +9,25 @@ export default eventHandler(async (event) => {
     return sendRedirect(event, '/auth', 302)
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const { skip, limit, search } = getQuery(event)
+  const { skip, limit, search, pvz } = getQuery(event)
   const searchParseAvailable = search
   ? JSON.parse(search?.toString())
   : undefined;
 
-  const filter: any = {
-    'user': new ObjectId(user._id),
+  const filter: any = pvz === 'true' ? {
+    'user': user._id,
+    'reviewedPVZ': { $ne: true },
+    $or: [
+      { 'statusdelivery.status': 'Уже у вас' }, // с обычными пробелами
+      { 'statusdelivery.status': 'Уже у вас' } // с неразрывным пробелом (char 160)
+    ],
+    'status': 'completed',
+  } : {
+    'user': user._id,
     'reviewed': { $ne: true },
     $or: [
       { 'statusdelivery.status': 'Уже у вас' }, // с обычными пробелами
-      { 'statusdelivery.status': 'Уже у вас' } // с неразрывным пробелом (char 160)
+      { 'statusdelivery.status': 'Уже у вас' } // с неразрывным пробелом (char 160)
     ],
     'status': 'completed',
   }

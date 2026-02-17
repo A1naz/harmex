@@ -22,6 +22,10 @@ export default eventHandler(async (event) => {
     date,
     videoKey,
     video,
+    pvz,
+    whatLikedInDelivery,
+    whatLikedInPVZ,
+    whatLikedInProduct,
   } = await readBody(event);
 
 
@@ -75,15 +79,24 @@ export default eventHandler(async (event) => {
     });
   }
 
+  const deliveryQuery: any = {
+    _id: deliveryid,
+    idbuyout: buyout._id,
+  }
+
+  const deliveryUpdate: any = {}
+
+  if (pvz === true) {
+    deliveryQuery.reviewedPVZ = { $ne: true }
+    deliveryUpdate.$set = { reviewedPVZ: true }
+  } else {
+    deliveryQuery.reviewed = { $ne: true }
+    deliveryUpdate.$set = { reviewed: true }
+  }
+
   const delivery = await Delivery.findOneAndUpdate(
-    {
-      _id: deliveryid,
-      idbuyout: buyout._id,
-      reviewed: { $ne: true },
-    },
-    {
-      $set: { reviewed: true }
-    },
+    deliveryQuery,
+    deliveryUpdate,
     {
       new: false // возвращаем документ ДО обновления
     }
@@ -140,6 +153,11 @@ export default eventHandler(async (event) => {
     isVideoEnabled: video !== "",
     createdAt: Date.now(),
     uuid: uuid(),
+    point: buyout.point,
+    pvz,
+    whatLikedInDelivery,
+    whatLikedInPVZ,
+    whatLikedInProduct,
   });
   const res = await review.save();
   // reviewed уже установлен в true через findOneAndUpdate выше
