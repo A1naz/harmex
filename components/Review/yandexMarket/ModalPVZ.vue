@@ -173,7 +173,7 @@ const handleMouseUp = (event: any) => {
                     <div class="pb-2 font-medium">Комментарий</div>
 
                     <textarea v-model="form.text" class="textarea w-full textarea-md bg-base-200"
-                        placeholder="Поделитесь впечатлениями о товаре" />
+                        placeholder="Поделитесь впечатлениями о пункте выдачи" />
 
                     <div class="text-error">
                         {{ textValidError }}
