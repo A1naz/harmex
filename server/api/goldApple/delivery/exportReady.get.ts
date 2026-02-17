@@ -135,7 +135,7 @@ async function getReady(user: any, dateRange: any) {
             )
           : new Date();
         const expireDate = new Date(
-          deliveryDate.getTime() + 1000 * 60 * 60 * 24 * 14
+          deliveryDate.getTime() + 1000 * 60 * 60 * 24 * 3
         );
         return {
           index,

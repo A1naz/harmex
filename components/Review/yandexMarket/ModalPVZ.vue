@@ -23,6 +23,7 @@ const form = reactive({
     text: "",
     rating: 5,
     date: now.value,
+    video: '',
     whatLikedInDelivery: {
         fastDelivery: false,
         easyToTrack: false,

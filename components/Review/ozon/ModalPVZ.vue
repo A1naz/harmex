@@ -30,6 +30,7 @@ const form = reactive({
     text: "",
     rating: 5,
     date: now.value,
+    video: '',
     whatLiked: {
         serviceSpeed: false,
         staffPoliteness: false,

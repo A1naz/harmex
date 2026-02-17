@@ -47,9 +47,9 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const balanceIsExist = await checkBalance(user, {buyoutuuid, video, mp: 'ozon'}, 'reviews')
+  const balanceIsExist = await checkBalance(user, { buyoutuuid, video, mp: 'ozon' }, 'reviews')
 
-  if(!balanceIsExist){
+  if (!balanceIsExist) {
     throw createError({
       statusCode: 400,
       message:
@@ -85,7 +85,7 @@ export default eventHandler(async (event) => {
     })
   }
 
-   let isPhotoEnabled = false;
+  let isPhotoEnabled = false;
   if (photos && photos.length > 0) {
     photos.forEach((photo: any) => {
       if (photo.url && photo.url !== "") {
