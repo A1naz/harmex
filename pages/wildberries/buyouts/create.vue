@@ -70,7 +70,7 @@ async function addProduct() {
       loading.value = false;
     });
   }
-  article.value = "";
+  // article.value = "";
 }
 
 async function ruleModalOpen(index: number) {
@@ -426,7 +426,7 @@ function closeTemplateModalFN() {
   closeTemplateSelectModal.value?.click();
 }
 function modalAddProduct(changedArticle: any) {
-  article.value = changedArticle;
+ article.value = changedArticle;
   addProduct();
 }
 

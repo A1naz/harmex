@@ -81,13 +81,27 @@ export function findImage(input: string) {
     host = '//basket-17.wbbasket.ru'
   } else if (vol >= 2839 && vol <= 3054) {
     host = '//basket-18.wbbasket.ru'
-  }  
-  else {
+  }
+  else if (vol >= 3055 && vol <= 3270) {
     host = '//basket-19.wbbasket.ru'
+  } else if (vol >= 3271 && vol <= 3552) {
+    host = '//basket-20.wbbasket.ru'
+  } else if (vol >= 3553 && vol <= 3701) {
+    host = '//basket-21.wbbasket.ru'
+  } else if (vol >= 3702 && vol <= 3951) {
+    host = '//basket-22.wbbasket.ru'
+  } else if (vol >= 3952 && vol <= 4140) {
+      host = '//basket-23.wbbasket.ru'
+  } else if (vol >= 4141 && vol <=  4349) {
+     host = '//basket-24.wbbasket.ru'
+  } else if (vol >= 4350 && vol <= 9999) {
+    host = '//basket-25.wbbasket.ru'
+  } else {
+    host = '//basket-26.wbbasket.ru'
   }
 
-  console.log(input)
   console.log(vol)
+  console.log(host)
   return `https:${host}/vol${vol}/part${part}/${nm}/images/big/1.webp`
 }
 
