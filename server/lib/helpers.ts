@@ -91,13 +91,25 @@ export function findImage(input: string) {
   } else if (vol >= 3702 && vol <= 3951) {
     host = '//basket-22.wbbasket.ru'
   } else if (vol >= 3952 && vol <= 4140) {
-      host = '//basket-23.wbbasket.ru'
-  } else if (vol >= 4141 && vol <=  4349) {
-     host = '//basket-24.wbbasket.ru'
-  } else if (vol >= 4350 && vol <= 9999) {
+    host = '//basket-23.wbbasket.ru'
+  } else if (vol >= 4141 && vol <= 4349) {
+    host = '//basket-24.wbbasket.ru'
+  } else if (vol >= 4350 && vol <= 4565) {
     host = '//basket-25.wbbasket.ru'
-  } else {
+  } else if (vol >= 4565 && vol <= 4877) {
     host = '//basket-26.wbbasket.ru'
+  } else if (vol >= 4877 && vol <= 5189) {
+    host = '//basket-27.wbbasket.ru'
+  } else if (vol <= 5190 && vol <= 5489) { 
+    host = '//basket-28.wbbasket.ru'
+  } else if (vol <= 5490 && vol <= 6126)  {
+    host = '//basket-29.wbbasket.ru'
+  } else if (vol <= 6127 && vol <= 6125) {
+    host = '//basket-30.wbbasket.ru'
+  } else if (vol <= 6126 && vol <= 6437) {
+    host = '//basket-31.wbbasket.ru'
+  } else {
+       host = '//basket-32.wbbasket.ru'
   }
 
   console.log(vol)
