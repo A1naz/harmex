@@ -29,7 +29,6 @@ export default eventHandler(async (event) => {
       body: formData,
     }
   );
-  console.log(data);
 
   if (data && data.status && data.status === "ok") {
     const returnCallConfirm = new ReturnCallConfirm({
