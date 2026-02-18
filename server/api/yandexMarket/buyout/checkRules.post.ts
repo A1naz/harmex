@@ -39,6 +39,13 @@ export default eventHandler(async (event) => {
     success: true,
     message: "",
   };
+
+  if (!user.phoneConfirmed) {
+    result.success = false;
+    result.message = `Для создания выкупа необходимо подтвердить номер телефона во вкладке профиль`;
+    return result;
+  }
+
   if (!balanceIsExist) {
     result.success = false;
     result.message = `Недостаточно средств для совершения выкупа`;

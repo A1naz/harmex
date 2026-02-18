@@ -22,6 +22,7 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
+
   const body = await readBody(event);
   const query = getQuery(event);
   const { userTimezoneOffsetHours } = query;
@@ -39,6 +40,14 @@ export default eventHandler(async (event) => {
     success: true,
     message: "",
   };
+
+  if (!user.phoneConfirmed) {
+    result.success = false;
+    result.message = `Для создания выкупа необходимо подтвердить номер телефона во вкладке профиль`;
+    return result;
+  }
+
+
   if (!balanceIsExist) {
     result.success = false;
     result.message = `Недостаточно средств для совершения выкупа`;

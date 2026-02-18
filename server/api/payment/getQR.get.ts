@@ -8,6 +8,13 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
 
+    
+  if (!user.phoneConfirmed) {
+    throw createError(
+      `Для пополнения необходимо подтвердить номер телефона во вкладке профиль`
+    );
+  }
+
   const userFromDB = await User.findOne({ uuid: user.uuid })
 
   if (!userFromDB) {

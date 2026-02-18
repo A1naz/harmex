@@ -71,20 +71,20 @@ export default eventHandler(async (event) => {
     name: '',
     middleName: '',
     phoneNumber: phoneNumber.replace(/[()\-\s]/g, ''),
-    emailConfirmed: true,
+    emailConfirmed: false,
     fizFace: true,
     landing,
     utmCode: utmCode || undefined,
   })
   const url = useRuntimeConfig().PUBLIC_SITE_URL
   const link = `${url}/api/auth/activate?uuid=${user.uuid}`
-  // try {
-  //   await MailService.sendActivationMail(user.email, link)
-  // }
+  try {
+    await MailService.sendActivationMail(user.email, link)
+  }
 
-  // catch (error) {
-  //   return { status: 'error', error: 'Ошибка отправки письма.' }
-  // }
+  catch (error) {
+    return { status: 'error', error: 'Ошибка отправки письма.' }
+  }
   await user.save()
 
   if (referral) {

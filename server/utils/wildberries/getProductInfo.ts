@@ -18,7 +18,9 @@ export interface WBProductInfo {
  */
 export async function getWBProductInfo(article: string | number): Promise<WBProductInfo> {
   const articleStr = String(article);
-  
+
+  const image = findImage(articleStr);
+
   // Получаем актуальные cookies
   const cookies = await getWbCookies();
   
@@ -133,7 +135,7 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
     maximumFractionDigits: 0,
   });
   const priceText = currency.format(price);
-  const image = findImage(articleStr);
+
 
   return {
     image,

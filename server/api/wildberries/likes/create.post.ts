@@ -35,7 +35,7 @@ export default eventHandler(async (event) => {
         `Недостаточно средств для публикаций лайков на отзывы`,
     })
   }
-  const image = findImage(Number(article))
+  const image = await findImage(Number(article))
   const created = new Like({
     user,
     article,

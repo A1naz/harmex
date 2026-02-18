@@ -14,9 +14,16 @@ definePageMeta({
   title: "Регистрация",
 });
 
+const timer = ref(60);
+const timerRunning = ref(false);
+const timerVisible = ref(false);
+const timerFinished = ref(false);
 const faceType = ref("fizFace");
+const confirmationCodeInput = ref<any>(null);
 const isInnConfirmed = ref(false);
 const isInnLoading = ref(false);
+const isCodeSent = ref(false);
+const isNumberConfirmed = ref(false);
 const alert = ref(false);
 const alertText = ref("");
 const route = useRoute();
@@ -39,6 +46,7 @@ const formData = reactive({
   name: "",
   middleName: "",
   phoneNumber: "",
+  verificationCode: "",
   checked: false,
   referral,
   landing: "",
@@ -292,6 +300,97 @@ function clearFormData() {
   formData.orgOgrn = "";
 }
 
+async function sendConfirmCode() {
+  if (formData.phoneNumber.replace(/[()\-\s]/g, "").length < 11) {
+    notify({
+      title: "Введите корректный номер",
+    });
+    return;
+  }
+
+  if (timerRunning.value) {
+    notify({
+      title: `Следующая попытка будет доступна через ${timer.value} сек.`,
+    });
+    return;
+  }
+  timer.value = 60;
+  timerFinished.value = false;
+  startTimer();
+
+  const { data }: any = await useFetch("/api/organization/confirmPhone", {
+    method: "POST",
+    body: {
+      phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ""),
+    },
+    watch: false,
+  });
+
+  if (data.value.status === "ok") {
+    isCodeSent.value = true;
+    confirmationCodeInput.value.focus();
+    if (data.value.requiresSupport) {
+      notify({
+        group: "error",
+        title: "При отправке кода возникла ошибка, обратитесь в поддержку для получения кода через синюю кнопку снизу страницы",
+        duration: 10000
+      });
+    } else {
+      notify({
+        group: "success",
+        title: "Код отправлен",
+      });
+    }
+  } else {
+    notify({
+      group: "error",
+      title: data.value.message,
+    });
+  }
+}
+
+async function confirmCode() {
+  const { data }: any = await useFetch("/api/organization/confirmPhone", {
+    method: "GET",
+    params: {
+      phoneNumber: formData.phoneNumber.replace(/[()\-\s]/g, ""),
+      code: formData.verificationCode,
+    },
+    watch: false,
+  });
+  if (data.value) {
+    notify({
+      group: "success",
+      title: "Код подтвержден",
+    });
+
+    isCodeSent.value = false;
+    isNumberConfirmed.value = true;
+  } else {
+    notify({
+      group: "error",
+      title: "Неверный код",
+    });
+  }
+}
+
+let interval: any;
+
+function startTimer() {
+  timerRunning.value = true;
+  timerVisible.value = true;
+  interval = setInterval(() => {
+    if (timer.value > 0) {
+      timer.value--;
+    } else {
+      clearInterval(interval);
+      timerRunning.value = false;
+      timerFinished.value = true;
+      timer.value = 60;
+    }
+  }, 1000);
+}
+
 function togglePassword() {
   passwordInputType.value =
     passwordInputType.value === "password" ? "text" : "password";
@@ -314,6 +413,33 @@ async function generatePassword() {
   }
 }
 
+const returnCallModal = ref(false);
+const confirmFromReturnCallModal = () => {
+  isCodeSent.value = false;
+  isNumberConfirmed.value = true;
+  returnCallModal.value = false;
+  notify({
+    group: "success",
+    title: "Номер подтвержден",
+  });
+};
+
+function confirmWithReturnCallModal() {
+  if (formData.phoneNumber.replace(/[()\-\s]/g, "").length < 11) {
+    notify({
+      title: "Введите корректный номер",
+    });
+    return;
+  }
+  
+  if (timerRunning.value) {
+    notify({
+      title: `Подождите ${timer.value} секунд`,
+    });
+    return;
+  }
+  returnCallModal.value = true;
+}
 </script>
 
 <template>
@@ -365,19 +491,93 @@ async function generatePassword() {
         </div>
         <div class="px-5 pb-2">
           <div class="relative">
-            <label for="tnumber" class="block mb-2 ml-1 my-1 text-sm font-medium">
+            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium">
               {{ $t("Номер телефона") }}
             </label>
-            <input
-              id="tnumber"
-              v-model="formData.phoneNumber"
-              v-maska
-              name="tnumber"
-              class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              data-maska="+7 (###) ###-##-##"
-              placeholder="+7 (___) ___-__-__"
-              required="true"
-            />
+            <div class="join w-full">
+              <input
+                id="tnumber"
+                v-model="formData.phoneNumber"
+                v-maska
+                :disabled="isCodeSent || isNumberConfirmed"
+                name="tnumber"
+                class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                data-maska="+7 (###) ###-##-##"
+                placeholder="+7 (___) ___-__-__"
+                required="true"
+                @keydown.enter="confirmWithReturnCallModal"
+              />
+              <button
+                v-if="!isCodeSent"
+                :disabled="isNumberConfirmed"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                @click="confirmWithReturnCallModal"
+              >
+                {{ $t("Подтвердить") }}
+              </button>
+              <button
+                v-else
+                :disabled="isNumberConfirmed"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                @click="(isCodeSent = false), (isNumberConfirmed = false)"
+              >
+                <Icon
+                  class="w-8 h-8"
+                  size="20"
+                  name="fluent:backspace-24-regular"
+                />
+              </button>
+            </div>
+            <div class="flex">
+              <div class="hidden">
+                {{ timer }}
+              </div>
+              <span
+                v-if="isCodeSent && !isNumberConfirmed"
+                class="text-md font-medium underline cursor-pointer ml-1 mt-1"
+                @click="sendConfirmCode"
+                >{{ $t("Отправить код повторно") }}</span
+              >
+            </div>
+            <div class="text-xs text-gray-500 mb-2 ml-1">
+              {{ $t("Нажмите подтвердить для подтверждения номера через обратный звонок") }}
+            </div>
+            <div class="flex" v-if="!isCodeSent && !isNumberConfirmed">
+              <span
+                class="text-md font-medium underline cursor-pointer ml-1 mt-1"
+                @click="sendConfirmCode"
+                >{{ $t("Не прошёл звонок? Отправить SMS код") }}</span
+              >
+            </div>
+            <label for="email" class="block mb-2 ml-1 my-1 text-sm font-medium" v-if="!isNumberConfirmed">
+              {{ $t("Введите код верификации") }}
+            </label>
+            <div class="join w-full" v-if="!isNumberConfirmed">
+              <input
+                id="verificationCode"
+                ref="confirmationCodeInput"
+                v-model="formData.verificationCode"
+                v-maska
+                :disabled="isNumberConfirmed || !isCodeSent"
+                type="text"
+                data-maska="####"
+                name="verificationCode"
+                class="input input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder=""
+                required="true"
+                @keydown.enter="confirmCode"
+              />
+              <button
+                :disabled="!isCodeSent || isNumberConfirmed"
+                class="btn btn-sm xl:btn-md join-item rounded-r-full"
+                @click="confirmCode"
+              >
+                {{ $t("Подтвердить") }}
+              </button>
+            </div>
+            <div class="text-xs text-gray-500 mb-2 ml-1" v-if="!isNumberConfirmed">
+              {{ $t("Примите звонок и введите озвученные цифры. Не поступил звонок? Повторите запрос на звонок.") }}
+            </div>
             <div v-if="faceType === 'yurFace'">
               <div>
                 <label class="block ml-1 my-1 text-sm font-medium">
@@ -388,7 +588,7 @@ async function generatePassword() {
                     id="orgInn"
                     v-model="formData.orgInn"
                     v-maska
-                    :disabled="isInnConfirmed"
+                    :disabled="isInnConfirmed || !isNumberConfirmed"
                     data-maska="#######################"
                     name="orgInn"
                     class="input join-item input-sm xl:input-md input-bordered sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
@@ -397,7 +597,7 @@ async function generatePassword() {
                   />
                   <button
                     v-if="!isInnConfirmed"
-                    :disabled="isInnLoading"
+                    :disabled="isInnLoading || !isNumberConfirmed"
                     class="btn btn-sm xl:btn-md join-item rounded-r-full"
                     @click="checkInn"
                   >
@@ -744,7 +944,7 @@ async function generatePassword() {
           <div v-if="faceType === 'yurFace'" class="flex flex-col gap-0.5">
             <button
               :disabled="
-                !formData.checked || !isInnConfirmed
+                !formData.checked || !isInnConfirmed || !isNumberConfirmed
               "
               class="btn btn-block btn-primary bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-2"
               @click="submitForm"
@@ -761,7 +961,7 @@ async function generatePassword() {
           </div>
           <div v-if="faceType === 'fizFace'" class="flex flex-col gap-0.5">
             <button
-              :disabled="!formData.checked"
+              :disabled="!formData.checked || !isNumberConfirmed"
               class="btn btn-block btn-primary bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-2"
               @click="submitForm"
             >
@@ -778,6 +978,12 @@ async function generatePassword() {
         </div>
       </section>
     </div>
+    <RegistrationReturnCallModal
+      v-model:show="returnCallModal"
+      v-model:phone="formData.phoneNumber"
+      @close="returnCallModal = false"
+      @confirm="confirmFromReturnCallModal"
+    />
   </div>
 </template>
 

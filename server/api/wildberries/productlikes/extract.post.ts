@@ -82,7 +82,7 @@ export default eventHandler(async (event) => {
       maximumFractionDigits: 0,
     })
     const priceText = currency.format(price)
-    const image = findImage(Number(article))
+    const image = await findImage(Number(article))
 
     return {
       type: 'product',

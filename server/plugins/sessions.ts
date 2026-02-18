@@ -33,6 +33,7 @@ export default defineNitroPlugin(() => {
       phoneNumber: user.phoneNumber,
       email: user.email ? user.email : '',
       emailConfirmed: user.emailConfirmed,
+      phoneConfirmed: user.phoneConfirmed,
       isTwoFaEnabled: user.isTwoFaEnabled,
       acesses: user.acesses,
       username: user.username,

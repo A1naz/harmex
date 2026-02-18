@@ -1,4 +1,5 @@
 import { ReturnCallConfirm } from "~~/server/lib/models/ReturnCallConfirm";
+import { User } from "~~/server/lib/models/User";
 const config = useRuntimeConfig();
 
 export default eventHandler(async (event) => {
@@ -13,7 +14,7 @@ export default eventHandler(async (event) => {
   if (!found) {
     throw createError({
       statusCode: 404,
-      statusMessage: "Запрос не найден",
+      statusMessage: "Запрос не найден",
     });
   }
 
@@ -28,6 +29,22 @@ export default eventHandler(async (event) => {
   if (data && data[0] && data[0].dial_status && data[0].dial_status === 5) {
     found.dialStatus = "confirmed";
     await found.save();
+
+    // Помечаем телефон пользователя как подтверждённый
+    const session = await getUserSession(event);
+    if (session?.user?.uuid) {
+      await User.findOneAndUpdate(
+        { uuid: session.user.uuid },
+        { phoneConfirmed: true }
+      );
+    } else {
+      // Без сессии — ищем по номеру телефона из записи о звонке
+      await User.findOneAndUpdate(
+        { phoneNumber: found.phone },
+        { phoneConfirmed: true }
+      );
+    }
+
     return {
       status: "confirmed",
     };

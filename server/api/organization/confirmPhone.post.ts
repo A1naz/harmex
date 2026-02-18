@@ -19,6 +19,15 @@ export default eventHandler(async (event) => {
     })
   }
 
+  // Если пользователь авторизован — проверяем, что номер совпадает с его профилем
+  const session = await getUserSession(event)
+  if (session?.user?.uuid && session.user.phoneNumber !== phoneNumber) {
+    throw createError({
+      statusCode: 400,
+      message: 'Номер телефона не совпадает с номером в вашем профиле',
+    })
+  }
+
   let data: any = null
 
   const isConfirmExist = await ConfirmPhone.findOne({
