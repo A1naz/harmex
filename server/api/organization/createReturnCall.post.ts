@@ -4,6 +4,15 @@ const config = useRuntimeConfig();
 export default eventHandler(async (event) => {
   const { phone } = await readBody(event);
 
+  // Если пользователь авторизован — проверяем, что номер совпадает с его профилем
+  const session = await getUserSession(event);
+  if (session?.user?.uuid && session.user.phoneNumber !== phone) {
+    throw createError({
+      statusCode: 400,
+      message: 'Номер телефона не совпадает с номером в вашем профиле',
+    });
+  }
+
   const publicKey = config.RETURN_CALL_PUBLIC_KEY;
   const campaignId = config.RETURN_CALL_CAMPAIGN_ID;
   const formData = new FormData();

@@ -43,6 +43,12 @@ export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
+  if (!user.phoneConfirmed) {
+    throw createError(
+      `Для создания выкупа необходимо подтвердить номер телефона во вкладке профиль`
+    );
+  }
+
   const body = await readBody(event);
   const last = await Buyout.findOne({ user }).sort({ _id: -1 });
   const params = getQuery(event);

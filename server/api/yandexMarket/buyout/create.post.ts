@@ -37,6 +37,13 @@ export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
+  
+  if (!user.phoneConfirmed) {
+    throw createError(
+      `Для создания выкупа необходимо подтвердить номер телефона во вкладке профиль`
+    );
+  }
+
   // if (!user.fizFace && !user.bik && !user.rs) {
   //   throw createError(
   //     'Необходимо заполнить банковские реквизиты в меню Профиль'

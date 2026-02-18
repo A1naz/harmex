@@ -41,6 +41,13 @@ export default eventHandler(async (event) => {
     success: true,
     message: '',
   }
+
+  if (!user.phoneConfirmed) {
+    result.success = false;
+    result.message = `Для создания выкупа необходимо подтвердить номер телефона во вкладке профиль`;
+    return result;
+  }
+  
   const balanceIsExist = await checkBalance(user, products,  'buyouts', 'ozon')
   if (!balanceIsExist) {
   result.success = false
@@ -48,6 +55,7 @@ export default eventHandler(async (event) => {
   return result
   }
 
+  
   // if (!user.fizFace && !user.bik && !user.rs) {
   //   result.success = false
   //   result.message = 'Необходимо заполнить банковские реквизиты в меню'

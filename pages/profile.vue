@@ -101,6 +101,7 @@ const form = reactive({
   wallet: "rubles",
   username: "",
   orgInn: "",
+  phoneConfirmed: false,
 });
 
 onMounted(() => {
@@ -109,6 +110,7 @@ onMounted(() => {
   form.phoneNumber = user.value?.phoneNumber || "";
   form.username = user.value?.username || "";
   form.adminUsername = user.value?.adminUsername || "";
+  form.phoneConfirmed = user.value?.phoneConfirmed || false;
   if (params.partnerDetailsModal) {
     partnerDetailsModal.value = true;
   }
@@ -196,6 +198,110 @@ const tgAlerts = reactive({
 });
 
 const isCodeSent = ref(false);
+
+// Верификация номера телефона
+const phoneTimer = ref(60);
+const phoneTimerRunning = ref(false);
+const phoneTimerFinished = ref(false);
+const phoneConfirmationCodeInput = ref<any>(null);
+const isPhoneCodeSent = ref(false);
+const isPhoneVerified = ref(user.value?.phoneConfirmed || false);
+const phoneVerificationCode = ref("");
+const phoneReturnCallModal = ref(false);
+const phoneVerifyHelpModal = ref(false);
+let phoneInterval: any;
+
+function startPhoneTimer() {
+  phoneTimerRunning.value = true;
+  phoneInterval = setInterval(() => {
+    if (phoneTimer.value > 0) {
+      phoneTimer.value--;
+    } else {
+      clearInterval(phoneInterval);
+      phoneTimerRunning.value = false;
+      phoneTimerFinished.value = true;
+      phoneTimer.value = 60;
+    }
+  }, 1000);
+}
+
+async function sendPhoneConfirmCode() {
+  if (form.phoneNumber.replace(/[()\-\s]/g, "").length < 11) {
+    notify({ title: "Введите корректный номер" });
+    return;
+  }
+  if (phoneTimerRunning.value) {
+    notify({ title: `Следующая попытка будет доступна через ${phoneTimer.value} сек.` });
+    return;
+  }
+  phoneTimer.value = 60;
+  phoneTimerFinished.value = false;
+  startPhoneTimer();
+
+  const { data }: any = await useFetch("/api/organization/confirmPhone", {
+    method: "POST",
+    body: { phoneNumber: form.phoneNumber.replace(/[()\-\s]/g, "") },
+    watch: false,
+  });
+
+  if (data.value?.status === "ok") {
+    isPhoneCodeSent.value = true;
+    nextTick(() => phoneConfirmationCodeInput.value?.focus());
+    if (data.value.requiresSupport) {
+      notify({
+        group: "error",
+        title: "При отправке кода возникла ошибка, обратитесь в поддержку для получения кода через синюю кнопку снизу страницы",
+        duration: 10000,
+      });
+    } else {
+      notify({ group: "success", title: "Код отправлен" });
+    }
+  } else {
+    notify({ group: "error", title: data.value?.message || "Ошибка отправки кода" });
+  }
+}
+
+async function confirmPhoneCode() {
+  const { data }: any = await useFetch("/api/organization/confirmPhone", {
+    method: "GET",
+    params: {
+      phoneNumber: form.phoneNumber.replace(/[()\-\s]/g, ""),
+      code: phoneVerificationCode.value,
+    },
+    watch: false,
+  });
+  if (data.value) {
+    notify({ group: "success", title: "Номер подтвержден" });
+    isPhoneCodeSent.value = false;
+    isPhoneVerified.value = true;
+    form.phoneConfirmed = true;
+    await fetch();
+  } else {
+    notify({ group: "error", title: "Неверный код" });
+  }
+}
+
+function confirmPhoneWithReturnCallModal() {
+  if (form.phoneNumber.replace(/[()\-\s]/g, "").length < 11) {
+    notify({ title: "Введите корректный номер" });
+    return;
+  }
+  if (phoneTimerRunning.value) {
+    notify({ title: `Подождите ${phoneTimer.value} секунд` });
+    return;
+  }
+  phoneReturnCallModal.value = true;
+}
+
+const confirmFromPhoneReturnCallModal = async () => {
+  isPhoneCodeSent.value = false;
+  isPhoneVerified.value = true;
+  form.phoneConfirmed = true;
+  phoneReturnCallModal.value = false;
+  notify({ group: "success", title: "Номер подтвержден" });
+  await fetch();
+};
+
 const passwordForm = reactive({
   oldPassword: "",
   newPassword: "",
@@ -446,12 +552,79 @@ function copyText(text: string) {
               <p class="text-xs font-medium text-base-content">
                 {{ $t("Номер телефона") }}
               </p>
-              <input
-                v-model="form.phoneNumber"
-                readonly
-                :placeholder="$t('Номер телефона')"
-                class="input input-sm h-[2.5rem] bg-base-100 w-full"
-              />
+              <div class="join w-full">
+                <input
+                  v-model="form.phoneNumber"
+                  v-maska
+                  :readonly="isPhoneVerified"
+                  :disabled="isPhoneCodeSent || form.phoneConfirmed"
+                  :placeholder="$t('Номер телефона')"
+                  data-maska="+7 (###) ###-##-##"
+                  class="input input-sm h-[2.5rem] bg-base-100 w-full join-item"
+                  @keydown.enter="confirmPhoneWithReturnCallModal"
+                />
+                <button
+                :disabled="form.phoneConfirmed"
+                  v-if="!isPhoneVerified"
+                  class="btn btn-sm h-[2.5rem] join-item rounded-r-full"
+                  @click="confirmPhoneWithReturnCallModal"
+                >
+                  {{ $t("Подтвердить") }}
+                </button>
+                <button
+                  v-else
+                  disabled
+                  class="btn btn-sm h-[2.5rem] join-item rounded-r-full btn-success"
+                >
+                  <Icon name="quill:checkmark-double" size="20" />
+                </button>
+              </div>
+              <div v-if="!isPhoneVerified" class="mt-1">
+                <p class="text-xs text-gray-500 ml-1">
+                  {{ $t("Нажмите подтвердить для подтверждения номера через обратный звонок") }}
+                </p>
+                <span
+                  v-if="!form.phoneConfirmed"
+                  class="text-xs font-medium underline cursor-pointer ml-1 mt-1"
+                 
+                  @click="sendPhoneConfirmCode"
+                >{{ $t("Не прошёл звонок? Отправить SMS код") }}</span>
+              </div>
+              <div v-if="isPhoneCodeSent && !isPhoneVerified" class="mt-1">
+                <label class="block mb-1 ml-1 text-sm font-medium">
+                  {{ $t("Введите код верификации") }}
+                </label>
+                <div class="join w-full">
+                  <input
+                    ref="phoneConfirmationCodeInput"
+                    v-model="phoneVerificationCode"
+                    v-maska
+                    type="text"
+                    data-maska="####"
+                    class="input input-sm h-[2.5rem] input-bordered block w-full join-item"
+                    placeholder="____"
+                    @keydown.enter="confirmPhoneCode"
+                  />
+                  <button
+                    class="btn btn-sm h-[2.5rem] join-item rounded-r-full"
+                    @click="confirmPhoneCode"
+                  >
+                    {{ $t("Подтвердить") }}
+                  </button>
+                </div>
+                <span
+                  class="text-xs font-medium underline cursor-pointer ml-1 mt-1"
+                  @click="sendPhoneConfirmCode"
+                >{{ $t("Отправить код повторно") }}</span>
+              </div>
+              <div v-if="!isPhoneVerified" class="mt-2">
+                <button
+                  class="text-xs text-gray-400 hover:text-gray-600 underline cursor-pointer ml-1 transition-colors"
+                  @click="phoneVerifyHelpModal = true"
+                >
+                  {{ $t("Не получается верифицировать номер ни одним из способов?") }}
+                </button>
+              </div>
             </div>
             <div class="flex flex-col gap-1 flex-1 relative">
               <p class="text-xs font-medium text-base-content">
@@ -1220,8 +1393,19 @@ function copyText(text: string) {
       :btnSaveLoading="btnSaveLoading"
       @click="closeConfirm"
     />
-    
+    <RegistrationReturnCallModal
+      v-model:show="phoneReturnCallModal"
+      v-model:phone="form.phoneNumber"
+      @close="phoneReturnCallModal = false"
+      @confirm="confirmFromPhoneReturnCallModal"
+    />
+
+    <ProfilePhoneVerifyHelpModal
+      :show="phoneVerifyHelpModal"
+      @close="phoneVerifyHelpModal = false"
+    />
   </div>
+  
 </template>
 
 <style scoped>

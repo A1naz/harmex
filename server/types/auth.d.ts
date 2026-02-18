@@ -2,8 +2,10 @@
 declare module '#auth-utils' {
   interface User {
     uuid: string
+    phoneNumber: string
     email: string
     emailConfirmed: boolean
+    phoneConfirmed: boolean
     isTwoFaEnabled: boolean
     phoneNumber: string
     acesses: string[]

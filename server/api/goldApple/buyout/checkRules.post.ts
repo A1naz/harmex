@@ -38,6 +38,12 @@ export default eventHandler(async (event) => {
     message: '',
   }
 
+  if (!user.phoneConfirmed) {
+    result.success = false;
+    result.message = `Для создания выкупа необходимо подтвердить номер телефона во вкладке профиль`;
+    return result;
+  }
+
   const balanceIsExist = await checkBalance(user, products,  'buyouts', 'zy')
   if (!balanceIsExist) {
     result.success = false

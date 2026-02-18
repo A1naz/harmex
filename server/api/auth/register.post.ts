@@ -112,7 +112,7 @@ export default eventHandler(async (event) => {
     firstName: name,
     middleName,
     phoneNumber: phoneNumber.replace(/[\(\)\-\s]/g, ''),
-    emailConfirmed: true,
+    emailConfirmed: false,
     landing,
     utmCode: utmCode || undefined,
   })

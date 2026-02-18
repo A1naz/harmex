@@ -133,7 +133,7 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
     maximumFractionDigits: 0,
   });
   const priceText = currency.format(price);
-  const image = findImage(articleStr);
+  const image = await findImage(articleStr);
 
   return {
     image,
