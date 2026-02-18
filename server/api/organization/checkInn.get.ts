@@ -3,13 +3,6 @@ import { ConfirmInn } from '~/server/lib/models/ConfirmInn'
 export default eventHandler(async (event) => {
   const { inn, phoneNumber }: any = getQuery(event)
 
-  return {
-    orgKey: "213123123",
-    orgName: "ИП 231231231",
-    orgOgrn: "2312312",
-    orgInn: "213123123",
-  }
-
   // if (inn.length < 10) {
   //   throw createError({
   //     statusCode: 400,
