@@ -11,10 +11,6 @@ const callId = ref("");
 
 const stopPolling = ref(false);
 
-function closeModal() {
-  emit("close");
-}
-
 async function getCallStatus() {
   //@ts-ignore
   const { data, error } = await useFetch("/api/organization/getCallIdStatus", {
@@ -77,6 +73,15 @@ async function createReturnCall() {
   }
 }
 
+function handleClose() {
+  stopPolling.value = true;
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    timeoutId = null;
+  }
+  emit("close");
+}
+
 watch(
   () => props.show,
   () => {
@@ -96,8 +101,7 @@ watch(
     :class="{ 'modal-open': props.show }"
   />
   <div
-    class="modal cursor-pointer"
-    @click="$emit('close')"
+    class="modal cursor-default"
     style="z-index: 99999"
   >
     <div
@@ -105,14 +109,6 @@ watch(
       class="modal-box rounded-[8px] cursor-auto border p-3 sm:p-5 border-[#dee2e6]"
       @click.stop
     >
-      <form method="dialog">
-        <label
-          class="btn btn-sm btn-circle btn-ghost bg-transparent absolute right-2 top-2 text-[#9ca3af] text-xl"
-          @click="closeModal"
-        >
-          ✕
-        </label>
-      </form>
       <div class="max-w-md mx-auto p-6 rounded-2xl bg-white text-center">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">
           Подтверждение номера телефона
@@ -120,16 +116,23 @@ watch(
         <p class="text-gray-600 mb-2">Позвоните по номеру:</p>
         <a
           class="text-2xl font-bold text-blue-600 mb-4"
-          href="tel:+7 800 555-86-07"
+          href="tel:+78005558607"
           >+7 800 555-86-07</a
         >
 
-        <p class="text-gray-500 text-sm">
+        <p class="text-gray-500 text-sm mt-4">
           Пожалуйста, позвоните на указанный номер с вашего телефона, чтобы
-          завершить процесс подтверждения(Звонок бесплатный).
+          завершить процесс подтверждения (звонок бесплатный).
           <br />
-          Если не вышло подтвердить обратным звонком, закройте это окно и попробуйте отправить смс код.
+          Если не вышло подтвердить обратным звонком, нажмите кнопку ниже и попробуйте отправить SMS-код.
         </p>
+
+        <button
+          class="btn btn-outline btn-sm mt-6 w-full "
+          @click="handleClose"
+        >
+          Не получилось подтвердить
+        </button>
       </div>
     </div>
   </div>
