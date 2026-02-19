@@ -70,7 +70,7 @@ async function addProduct() {
       loading.value = false;
     });
   }
-  // article.value = "";
+  article.value = "";
 }
 
 async function ruleModalOpen(index: number) {
