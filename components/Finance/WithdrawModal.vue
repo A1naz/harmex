@@ -178,7 +178,35 @@ onMounted(() => {
               <span class="text-base-content">Партнерская программа</span>
               <Icon class="ml-auto" name="tabler:arrow-right" size="24" />
             </button> -->
+            
           </div>
+          <div class="p-4  border rounded-lg text-sm text-gray-700 leading-relaxed flex flex-col gap-3">
+              <p class="font-semibold text-gray-800">Уважаемый клиент!</p>
+
+              <p>
+                Для обеспечения легальности финансовых операций и прохождения обязательного финансового мониторинга банка в соответствии с&nbsp;<strong>115-ФЗ</strong>, вывод средств осуществляется только при наличии полного пакета документов.
+              </p>
+
+              <p class="font-medium"><strong>Пожалуйста, перед отправкой заявки на вывод пришлите в чат:</strong></p>
+              <ol class="list-decimal list-inside flex flex-col gap-1.5 pl-1">
+                <li><strong>Чек или счёт</strong> последнего перевода.</li>
+                <li>
+                  <a
+                    href="/docs/Заявление на вывод средств.docx"
+                    download
+                    class="text-primary underline hover:opacity-75 font-bold"
+                  >Заявление на вывод средств</a>, подписанное лично плательщиком (тем, кто совершал перевод).
+                </li>
+                <li><strong>Заявку на вывод</strong> с указанием полных реквизитов плательщика.</li>
+              </ol>
+
+              <p class="font-medium">Условия осуществления вывода:</p>
+              <ul class="list-disc list-inside flex flex-col gap-1.5 pl-1">
+                <li>Все документы и чеки предоставлены в корректном и заполненном виде.</li>
+                <li>Реквизиты в заявке совпадают с данными плательщика.</li>
+                <li>Регламентированный срок вывода — <strong>до 30 рабочих дней</strong>.</li>
+              </ul>
+            </div>
         </div>
       </div>
       <!-- ///baseBalance form  -->
