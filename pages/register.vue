@@ -476,7 +476,7 @@ async function generatePassword() {
                 />
 
                 <div
-                  class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                  class="input-errors text-sm text-error mt-1 flex justify-end min-h-[1.25rem]"
                 >
                   {{ v$.bik?.$errors[0]?.$message }}
                 </div>
@@ -504,7 +504,7 @@ async function generatePassword() {
                 />
 
                 <div
-                  class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                  class="input-errors text-sm text-error mt-1 flex justify-end min-h-[1.25rem]"
                 >
                   {{ v$.rs?.$errors[0]?.$message }}
                 </div>
@@ -530,7 +530,7 @@ async function generatePassword() {
                 />
 
                 <div
-                  class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                  class="input-errors text-sm text-error mt-1 flex justify-end min-h-[1.25rem]"
                 >
                   {{ v$.name?.$errors[0]?.$message }}
                 </div>
@@ -559,7 +559,7 @@ async function generatePassword() {
                 />
 
                 <div
-                  class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                  class="input-errors text-sm text-error mt-1 flex justify-end min-h-[1.25rem]"
                 >
                   {{ v$.lastname?.$errors[0]?.$message }}
                 </div>
@@ -612,7 +612,7 @@ async function generatePassword() {
               <div
                 v-for="error of v$.email.$errors"
                 :key="error.$uid"
-                class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                class="input-errors text-sm text-error mt-1 flex justify-end min-h-[1.25rem]"
               >
                 <!-- <div class="error-msg">
                 {{ error.$message }}
@@ -666,7 +666,7 @@ async function generatePassword() {
               </div>
 
               <div
-                class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                class="input-errors text-sm text-error mt-1 flex justify-end min-h-[1.25rem]"
               >
                 {{ v$.password?.$errors[0]?.$message }}
               </div>
@@ -707,7 +707,7 @@ async function generatePassword() {
               </div>
               <div
                 v-if="v$.confirmPassword.$errors"
-                class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
+                class="input-errors text-sm text-error mt-1 flex justify-end min-h-[1.25rem]"
               >
                 <div class="error-msg">
                   {{ v$.confirmPassword?.$errors[0]?.$message }}
