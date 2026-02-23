@@ -15,7 +15,7 @@ const BuyoutSchema = new Schema({
   quantity: { type: Number, required: true, text: true, max: 50 },
   gender: { type: String, required: true, text: true },
   article: { type: Number, required: true, text: true },
-  point: { type: String, required: true, text: true },
+  point: { type: String, required: false, default: '', text: true },
   pointId: { type: Number },
   pointCoordinates: { type: Object, required: false },
   point_city: { type: String, required: false },
@@ -74,6 +74,7 @@ const BuyoutSchema = new Schema({
   isCategoriesEnabled: { type: Boolean, required: false, default: false },
   unArchivedAt: { type: Date, required: false },
   unArchived: { type: Boolean, required: false, default: false },
+  digitalProduct: { type: Boolean, required: false, default: false },
 })
 
 export const Buyout = OzonConnection.model('Buyout', BuyoutSchema)

@@ -25,7 +25,7 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
   const cookies = await getWbCookies();
   
   // Используем новый API v4 с cookies
-  const url = `https://www.wildberries.ru/__internal/card/cards/v4/detail?appType=1&curr=rub&dest=-8312850&spp=30&hide_vflags=4294967296&hide_dtype=9%3B11&ab_testing=false&lang=ru&nm=${articleStr}`;
+  const url = `https://www.wildberries.ru/__internal/u-card/cards/v4/detail?appType=1&curr=rub&dest=-3314466&spp=30&hide_vflags=4294967296&ab_testing=false&lang=ru&nm=${articleStr}`;
 
   let data: any;
   try {
@@ -50,6 +50,7 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
       validateStatus: (status) => status < 500,
     });
     
+   
 
     if (response.status === 498 || response.status === 403) {
       await refreshWbCookies();
@@ -67,6 +68,7 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
     }
     
     data = response.data;
+
   } catch (e: any) {
     if (e.statusCode) throw e;
     
@@ -88,9 +90,11 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
 
   let sizes = [];
 
+
   if (productInfo.sizes) {
+    const isSingleSize = productInfo.sizes.length === 1;
     sizes = productInfo.sizes
-      .filter((item: any) => item.stocks.length)
+      .filter((item: any) => isSingleSize || item.stocks.length)
       .map((item: any) => item.origName);
   }
 
@@ -102,9 +106,11 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
     });
   }
 
+  const isSingleSize = productInfo.sizes.length === 1;
+
   let instock = false;
   productInfo.sizes.forEach((size: any) => {
-    if (size.stocks.length > 0) instock = true;
+    if (isSingleSize || size.stocks.length > 0) instock = true;
   });
   
   if (!instock) {
@@ -115,9 +121,10 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
   }
 
   let price = 0;
+  console.log(productInfo)
   for (let i = 0; i < productInfo.sizes.length; i++) {
-    if (productInfo.sizes[i].stocks.length > 0) {
-      price = productInfo.sizes[i].price.product / 100;
+    if (isSingleSize || productInfo.sizes[i].stocks.length > 0) {
+      price = productInfo.sizes[i].price?.product / 100;
     }
   }
 

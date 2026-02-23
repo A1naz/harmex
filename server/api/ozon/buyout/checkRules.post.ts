@@ -23,6 +23,7 @@ interface Item {
   }
   FBS: boolean
   addressInfo: any
+  digitalProduct: boolean | null;
 }
 
 export default eventHandler(async (event) => {
@@ -129,7 +130,7 @@ export default eventHandler(async (event) => {
     }
 
     if (!item.FBS) {
-
+      if (!item.digitalProduct) {
       const foundPoint = points.find(
         (p: any) =>
           p.lt === item.pointCoordinates.lat && p.lg === item.pointCoordinates.lon
@@ -139,6 +140,7 @@ export default eventHandler(async (event) => {
         result.message = `ПВЗ ${item.adress} не найдено`
         return result
       }
+    }
     } else if (item.FBS) {
       if (!item.addressInfo || !item.addressInfo.apartment) {
         result.success = false

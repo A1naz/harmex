@@ -34,12 +34,13 @@ interface Item {
   promoCode: string;
   addressInfo: any;
   FBS: boolean;
+  digitalProduct: boolean;
 }
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  
+
   if (!user.phoneConfirmed) {
     throw createError(
       `Для создания выкупа необходимо подтвердить номер телефона во вкладке профиль`
@@ -103,7 +104,7 @@ export default eventHandler(async (event) => {
       if (!product.purchaseSoon) {
 
 
-           const curDate = new Date();
+        const curDate = new Date();
         if (date1 < curDate) {
           console.log(date1, curDate);
           throw createError(
@@ -136,13 +137,15 @@ export default eventHandler(async (event) => {
       product.dateRange = [date1, date2];
     }
 
-    let city, state;
-    ({ city, state } = await getCityByGeo(
-      product.pointCoordinates.lat.toString(),
-      product.pointCoordinates.lon.toString()
-    ));
+    let city, state, pointRegion, pointDistrict;
+    if (!product.digitalProduct) {
+      ({ city, state } = await getCityByGeo(
+        product.pointCoordinates.lat.toString(),
+        product.pointCoordinates.lon.toString()
+      ));
 
-    const { pointRegion, pointDistrict } = await getDisctrict(product.adress);
+      ({ pointRegion, pointDistrict } = await getDisctrict(product.adress))
+    }
 
     const buyout = new Buyout({
       article: product.article,
@@ -182,8 +185,9 @@ export default eventHandler(async (event) => {
       promocode: product.promoCode,
       isPromocodeEnabled:
         product.promoCode && product.promoCode !== "" ? true : false,
-        categories: product.category,
-        isCategoriesEnabled: product.category && product.category.length > 0 ? true : false,
+      categories: product.category,
+      isCategoriesEnabled: product.category && product.category.length > 0 ? true : false,
+      digitalProduct: product.digitalProduct ? product.digitalProduct : false,
     });
 
     await buyout.save();

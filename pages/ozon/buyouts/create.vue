@@ -156,7 +156,7 @@ async function openChecksModal() {
   let valid = true;
   let errorMsg = "";
   products.value.forEach((item) => {
-    if (!item.adress) {
+    if (!item.adress && !item.digitalProduct) {
       valid = false;
       errorMsg = "Не у всех товаров указан адрес доставки";
     }
@@ -677,6 +677,12 @@ getCategories();
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
+                <th class="font-normal text-base-content" @click="openInfoModal('digitalProduct')">
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Цифровой товар</span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+                  </div>
+                </th>
                 <th class="min-w-30 font-normal">
                   <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
@@ -907,6 +913,10 @@ getCategories();
             <p v-if="infoType === 'picture'">
               <span class="font-bold"> Изображение </span>
               - Увеличивайте изображение товара просто наводя на него курсором
+            </p>
+            <p v-if="infoType === 'digitalProduct'">
+              <span class="font-bold"> Цифровой товар </span>
+              - Поставьте галочку, если продукт цифровой(не имеет физической копии и не доставляется на пвз)
             </p>
             <p v-if="infoType === 'price'">
               <span class="font-bold"> Цена </span>
