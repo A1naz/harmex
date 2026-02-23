@@ -21,9 +21,13 @@ const props = defineProps({
     required: false,
     default: [],
   },
+  openPromo: {
+    type: Function as any,
+    required: false,
+  },
 });
 
-const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
+const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen", "removePromo"]);
 
 const startDate = ref(new Date(Date.now() + 1000 * 60 * 5));
 
@@ -396,6 +400,29 @@ function notifyDigitalProduct() {
           v-model="product.competitorArticle2"
           placeholder="Второй артикул"
         /> -->
+      </div>
+    </td>
+    <td class="border-r border-base">
+      <div class="flex justify-center mt-1">
+        <button
+          v-if="!product.promoCode"
+          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
+          @click="props.openPromo && props.openPromo(index, product.price)"
+        >
+          <Icon name="fluent:add-24-filled" size="20" />
+        </button>
+        <span
+          v-if="product.promoCode"
+          class="break-all whitespace-nowrap cursor-pointer text-primary mt-2 mr-1"
+          @click="props.openPromo && props.openPromo(index, product.price)"
+        >{{ product.promoCode }}</span>
+        <button
+          v-if="product.promoCode"
+          class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none w-fit h-fit"
+          @click="$emit('removePromo', index)"
+        >
+          <Icon name="ep:close-bold" size="12" />
+        </button>
       </div>
     </td>
     <td class="border-r border-base w-[90px]">

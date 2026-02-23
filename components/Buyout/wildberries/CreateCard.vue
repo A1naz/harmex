@@ -18,7 +18,14 @@ const props = defineProps({
     required: false,
     default: [],
   },
+  openPromo: {
+    type: Function as any,
+    required: false,
+    default: () => {},
+  },
 });
+
+const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen", "removePromo"]);
 
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
@@ -33,7 +40,6 @@ function copyBuyout() {
   store.createProducts.push(JSON.parse(item));
 }
 
-const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen"]);
 const store = useWildberriesBuyoutStore();
 const startDate = ref(new Date(Date.now()));
 
@@ -374,6 +380,30 @@ function notifyDigitalProduct() {
           placeholder="Второй артикул"
         /> -->
       </div>
+      </div>
+      <div class="flex mt-2">
+        <span class="text-md text-gray-500 mr-3 my-auto">Промокод: </span>
+        <div class="flex justify-center mt-1">
+          <button
+            v-if="!product.promoCode"
+            class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
+            @click="props.openPromo(index, product.price)"
+          >
+            <Icon name="fluent:add-24-filled" size="20" />
+          </button>
+          <span
+            v-if="product.promoCode"
+            class="break-all whitespace-nowrap cursor-pointer text-primary mt-1 mr-1"
+            @click="props.openPromo(index, product.price)"
+          >{{ product.promoCode }}</span>
+          <button
+            v-if="product.promoCode"
+            class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none w-fit h-fit"
+            @click="emit('removePromo', index)"
+          >
+            <Icon name="ep:close-bold" size="12" />
+          </button>
+        </div>
       </div>
       <div>
         <div class="text-md text-gray-500 mb-1">Категория:</div>

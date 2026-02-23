@@ -56,6 +56,7 @@ const BuyoutSchema = new Schema({
   unArchivedAt: { type: Date, required: false },
   unArchived: { type: Boolean, required: false, default: false },
   digitalProduct: { type: Boolean, required: false, default: false },
+  promoCode: { type: String, required: false, default: '' },
 })
 
 

@@ -32,6 +32,7 @@ interface Item {
   competitorArticle: string;
   competitorArticle2: string;
   digitalProduct: boolean;
+  promoCode: string;
 }
 export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event);
@@ -174,6 +175,7 @@ export default eventHandler(async (event) => {
       competitorArticle2: product.competitorArticle2,
       shelves: product.shelves,
       digitalProduct: product.digitalProduct ? product.digitalProduct : false,
+      promoCode: product.promoCode || '',
     });
 
     await buyout.save();

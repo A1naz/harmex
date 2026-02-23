@@ -54,6 +54,7 @@ export const useWildberriesBuyoutStore = defineStore("wildberriesBuyout", {
           })),
           rules: [],
           dateRange: [startDate, endDate],
+          promoCode: productData.promoCode || "",
         };
         this.createProducts.push(product as any);
       }
@@ -114,6 +115,7 @@ export const useWildberriesBuyoutStore = defineStore("wildberriesBuyout", {
           searchQuery: [{ value: "", loading: false, error: false }],
           selectedSize: product.sizes[0] ?? "none",
           priceText: product.priceText,
+          promoCode: "",
           rules: [
             {
               id: 5,

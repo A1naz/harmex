@@ -33,6 +33,11 @@ const templates = ref<any>([]);
 const codeInput = ref();
 const refreshKey = ref(1);
 const lastItemDateRange = ref<any>([]);
+const promoModal = ref(false);
+const promoModalIndex = ref(0);
+const promoModalPrice = ref(0);
+const currentProductIndex = ref(0);
+const currentProductPrice = ref(0);
 
 definePageMeta({
   layout: "app",
@@ -334,6 +339,16 @@ async function getFFPickpoints(date: Date = new Date()) {
   }
 }
 
+function openPromo(productIndex: number, price: number) {
+  currentProductIndex.value = productIndex;
+  currentProductPrice.value = price;
+  promoModal.value = true;
+}
+
+function removePromo(index: number) {
+  store.createProducts[index].promoCode = "";
+}
+
 async function pointModalOpen(index: number) {
   if (!pickpoints.value) loading.value = true;
 
@@ -583,8 +598,10 @@ getCategories();
             :product="product"
             :index="index"
             :categories="categories"
+            :open-promo="openPromo"
             @point-modal-open="pointModalOpen"
             @rule-modal-open="ruleModalOpen"
+            @remove-promo="removePromo"
           />
         </div>
         <div
@@ -684,7 +701,11 @@ getCategories();
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
-
+                <th class="font-normal text-base-content">
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Промокод</span>
+                  </div>
+                </th>
                 <th class="text-base-content" />
               </tr>
             </thead>
@@ -697,8 +718,10 @@ getCategories();
                 :index="index"
                 :loading="!pickpoints?.length"
                 :categories="categories"
+                :open-promo="openPromo"
                 @rule-modal-open="ruleModalOpen"
                 @point-modal-open="pointModalOpen"
+                @remove-promo="removePromo"
               />
             </tbody>
           </table>
@@ -1100,6 +1123,12 @@ getCategories();
         </div>
       </div>
     </div>
+    <BuyoutWildberriesPromoModal
+      :show="promoModal"
+      :index="currentProductIndex"
+      :price="currentProductPrice"
+      @close-modal="promoModal = false"
+    />
   </div>
 </template>
 
