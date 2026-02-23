@@ -175,7 +175,9 @@ export default eventHandler(async (event) => {
       competitorArticle2: product.competitorArticle2,
       shelves: product.shelves,
       digitalProduct: product.digitalProduct ? product.digitalProduct : false,
-      promoCode: product.promoCode || '',
+      promocode: product.promoCode,
+      isPromocodeEnabled:
+        product.promoCode && product.promoCode !== "" ? true : false,
     });
 
     await buyout.save();
