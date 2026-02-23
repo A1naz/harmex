@@ -214,7 +214,8 @@ async function openChecksModal() {
   let valid = true;
   let errorMsg = "";
   products.value.forEach((item: any) => {
-    if (!item.adress) {
+
+    if (!item.adress && !item.digitalProduct) {
       valid = false;
       errorMsg = "Не у всех товаров указан адрес доставки";
     }
@@ -667,6 +668,13 @@ getCategories();
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
+            
+                <th class="font-normal text-base-content" @click="openInfoModal('digitalProduct')">
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Цифровой товар</span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+                  </div>
+                </th>
                 <th
                   class="font-normal text-base-content"
                   @click="openInfoModal('search')"
@@ -897,7 +905,10 @@ getCategories();
               <span class="font-bold"> Цена </span>
               - Цена товара указана без СПП
             </p>
-
+            <p v-if="infoType === 'digitalProduct'">
+              <span class="font-bold"> Цифровой товар </span>
+              - Поставьте галочку, если продукт цифровой(не имеет физической копии и не доставляется на пвз)
+            </p>
             <p v-if="infoType === 'size'">
               <span class="font-bold"> Размер </span>
               - Выберите желаемый размер товара

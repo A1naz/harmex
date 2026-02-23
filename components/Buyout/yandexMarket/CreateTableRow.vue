@@ -395,6 +395,7 @@ function notifyDigitalProduct() {
         />
       </div>
     </td>
+    
     <td class="w-[140px] border-r border-base">
       <div class="flex justify-center mt-1">
         <div class="flex gap-2">

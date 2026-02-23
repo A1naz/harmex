@@ -103,6 +103,19 @@ const rulesText = computed(() => {
   }
   return parts.join(", ");
 });
+
+function notifyDigitalProduct() {
+  if (!props.product.digitalProduct) {
+
+    props.product.adress = ""
+    notify({
+      title: "Цифровой товар не будет доставлен на пвз, будьте внимательны",
+      text: "",
+      group: "success",
+      duration: 5000,
+    });
+  }
+}
 </script>
 
 <template>
@@ -352,6 +365,21 @@ const rulesText = computed(() => {
         />
       </div>
     </td>
+    <td class="w-[140px] border-r border-base">
+      <div class="flex justify-center mt-1">
+        <div class="flex gap-2">
+            
+            <input     
+            @click="notifyDigitalProduct"
+              v-model="product.digitalProduct"
+              type="checkbox"
+              class="checkbox checkbox-primary border-base-content"
+            />
+          
+          </div>
+      </div>
+    </td>
+    
     <td class="border-r border-base max-w-[150px]">
       <div class="w-full flex flex-col gap-0.5">
         <input

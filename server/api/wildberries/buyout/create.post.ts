@@ -31,6 +31,7 @@ interface Item {
   shelves: boolean;
   competitorArticle: string;
   competitorArticle2: string;
+  digitalProduct: boolean;
 }
 export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event);
@@ -113,19 +114,25 @@ export default eventHandler(async (event) => {
       product.dateRange = [date1, date2];
     }
 
-    const foundPoint = points.find(
-      (p: { a: string }) => p.a === product.adress
-    );
+    let city, state, pointRegion, pointDistrict;
+    if (!product.digitalProduct) {
 
-    let city, state;
-    if (foundPoint.city && foundPoint.state) {
-      city = foundPoint.city;
-      state = foundPoint.state;
-    } else {
-      ({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg));
+      const foundPoint = points.find(
+        (p: { a: string }) => p.a === product.adress
+      );
+
+
+
+
+      if (foundPoint && foundPoint.city && foundPoint.state) {
+        city = foundPoint.city;
+        state = foundPoint.state;
+      } else {
+        ({ city, state } = await getCityByGeo(foundPoint.lt, foundPoint.lg));
+      }
+
+      ({ pointRegion, pointDistrict } = await getDisctrict(product.adress));
     }
-
-    const { pointRegion, pointDistrict } = await getDisctrict(product.adress);
 
     if (product.key && !user.ffEnabled) {
       user.ffEnabled = true;
@@ -136,8 +143,8 @@ export default eventHandler(async (event) => {
       article: product.article,
       searchQuery: searchQueries.join(", "),
       point: product.adress,
-      point_city: city,
-      point_state: state,
+      point_city: city || '',
+      point_state: state || '',
       dateStart: product.dateRange[0],
       dateEnd: product.dateRange[1],
       sizeparam: product.selectedSize,
@@ -156,8 +163,8 @@ export default eventHandler(async (event) => {
       place: last ? last.place + 1 : 1,
       purchaseSoon: product.purchaseSoon,
       ff: product.key || false,
-      pointRegion,
-      pointDistrict,
+      pointRegion: pointRegion || '',
+      pointDistrict: pointDistrict || '',
       pointId: product.pointId,
       pointCoordinates: product.pointCoordinates,
       categories: product.category,
@@ -166,6 +173,7 @@ export default eventHandler(async (event) => {
       competitorArticle: product.competitorArticle,
       competitorArticle2: product.competitorArticle2,
       shelves: product.shelves,
+      digitalProduct: product.digitalProduct ? product.digitalProduct : false,
     });
 
     await buyout.save();

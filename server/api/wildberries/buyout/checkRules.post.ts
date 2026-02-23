@@ -16,6 +16,7 @@ interface Item {
   selectedSize: number | string;
   rules: Rule[];
   purchaseSoon: boolean;
+  digitalProduct: boolean | null;
 }
 
 export default eventHandler(async (event) => {
@@ -115,14 +116,17 @@ export default eventHandler(async (event) => {
     //   }
     // }
 
-    const foundPoint = points.find((p: { a: string }) => p.a === item.adress);
+    if (!item.digitalProduct) {
 
-    if (!foundPoint) {
-      result.success = false;
-      result.message = `ПВЗ ${item.adress} не найдено`;
-      return result;
+      const foundPoint = points.find((p: { a: string }) => p.a === item.adress);
+
+      if (!foundPoint) {
+        result.success = false;
+        result.message = `ПВЗ ${item.adress} не найдено`;
+        return result;
+      }
     }
-  }
+    }
 
   return result;
 });
