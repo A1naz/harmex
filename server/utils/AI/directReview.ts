@@ -3,7 +3,6 @@ import { AIKey } from '~/server/lib/models/AIKey'
 import { getAxiosProxy } from '~/server/utils/AI/proxy'
 
 
-
 export type ReviewProvider = 'openai' | 'gemini' | 'deepseek'
 
 export type ParsedItem = {
@@ -52,7 +51,8 @@ async function callOpenAI(apiKey: string, prompt: string): Promise<string> {
     },
     {
       headers: { Authorization: `Bearer ${apiKey}` },
-      proxy: getAxiosProxy(),
+      proxy: false,
+      httpsAgent: getAxiosProxy(),
       timeout: 60000,
     }
   )
@@ -71,7 +71,8 @@ async function callGemini(apiKey: string, prompt: string): Promise<string> {
       },
     },
     {
-      proxy: getAxiosProxy(),
+      proxy: false,
+      httpsAgent: getAxiosProxy(),
       timeout: 60000,
     }
   )
@@ -91,7 +92,8 @@ async function callDeepSeek(apiKey: string, prompt: string): Promise<string> {
     },
     {
       headers: { Authorization: `Bearer ${apiKey}` },
-      proxy: getAxiosProxy(),
+      proxy: false,
+      httpsAgent: getAxiosProxy(),
       timeout: 60000,
     }
   )

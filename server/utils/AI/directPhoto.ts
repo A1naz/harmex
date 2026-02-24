@@ -47,7 +47,8 @@ async function uploadToVKCloud(source: string, isBase64: boolean): Promise<strin
     // Для загрузки изображения по URL — тоже через прокси
     const resp = await axios.get(source, {
       responseType: 'arraybuffer',
-      proxy: getAxiosProxy(),
+      proxy: false,
+      httpsAgent: getAxiosProxy(),
       timeout: 60000,
     })
     imageBuffer = Buffer.from(resp.data)
@@ -83,7 +84,8 @@ async function callDALLE3(productName: string): Promise<string> {
     },
     {
       headers: { Authorization: `Bearer ${apiKey}` },
-      proxy: getAxiosProxy(),
+      proxy: false,
+      httpsAgent: getAxiosProxy(),
       timeout: 120000,
     }
   )
@@ -108,7 +110,8 @@ async function callGPTImage1(productName: string): Promise<string> {
     },
     {
       headers: { Authorization: `Bearer ${apiKey}` },
-      proxy: getAxiosProxy(),
+      proxy: false,
+      httpsAgent: getAxiosProxy(),
       timeout: 120000,
     }
   )
@@ -130,7 +133,8 @@ async function callImagen4(productName: string): Promise<string> {
       parameters: { sampleCount: 1 },
     },
     {
-      proxy: getAxiosProxy(),
+      proxy: false,
+      httpsAgent: getAxiosProxy(),
       timeout: 120000,
     }
   )
