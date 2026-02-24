@@ -35,7 +35,7 @@ export default eventHandler(async (event) => {
     status: 'created',
     taskId: 'Генерация отзыва ' + buyout.uuid,
     createdDate: new Date(),
-    type: 'generateReviews',
+    type: 'generateRewievs',
     mp,
     article: buyout.article,
   })
