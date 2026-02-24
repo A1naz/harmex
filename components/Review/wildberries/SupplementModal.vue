@@ -50,7 +50,7 @@ function acceptAITextAddition(variant: any) {
       <div class="w-full text-center">
         <h3 class="font-bold text-lg mb-3">Дополнить отзыв</h3>
           <button
-            class="btn btn-primary max-w-80 hidden"
+            class="btn btn-primary max-w-80"
             @click="handleAIGenerateClick"
           >
             Сгенерировать тексты ИИ - 30₽

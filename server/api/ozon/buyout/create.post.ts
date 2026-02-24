@@ -184,7 +184,7 @@ export default eventHandler(async (event) => {
       addressInfo: product.addressInfo,
       promocode: product.promoCode,
       isPromocodeEnabled:
-        product.promoCode && product.promoCode !== "" ? true : false,
+      product.promoCode && product.promoCode !== "" && product.promoCode.length >= 3 ? true : false,
       categories: product.category,
       isCategoriesEnabled: product.category && product.category.length > 0 ? true : false,
       digitalProduct: product.digitalProduct ? product.digitalProduct : false,

@@ -270,6 +270,7 @@ export default defineNuxtConfig({
     RETURN_CALL_CAMPAIGN_ID: process.env.RETURN_CALL_CAMPAIGN_ID,
     RETURN_CALL_PUBLIC_KEY: process.env.RETURN_CALL_PUBLIC_KEY,
     NEUROTASK_KEY: process.env.NEUROTASK_KEY,
+    PROXY_URL: process.env.PROXY_URL,
   },
   compatibilityDate: "2024-11-06",
   ssr: false,
