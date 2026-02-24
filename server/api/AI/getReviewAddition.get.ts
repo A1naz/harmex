@@ -6,6 +6,7 @@ import { Delivery as ozonDelivery } from '~/server/lib/models/ozon/Delivery'
 import { Buyout as ozonBuyout } from '~/server/lib/models/ozon/Buyout'
 import { Buyout as yandexMarketBuyout } from '~/server/lib/models/yandexMarket/Buyout'
 import { generateReviewAdditionDirect } from '~/server/utils/AI/directReview'
+import { GenerateReviews } from '~/server/lib/models/GenerateReviews'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -41,6 +42,17 @@ export default eventHandler(async (event) => {
   if (!format.length) {
     throw createError({ message: 'Не удалось получить ответ ни от одного ИИ.' })
   }
+
+  await GenerateReviews.create({
+    user: buyout.user,
+    summ: 30,
+    status: 'created',
+    taskId: 'Генерация отзыва ' + buyout.uuid,
+    createdDate: new Date(),
+    type: 'generateRewievs',
+    mp,
+    article: buyout.article,
+  })
 
   return format
 })
