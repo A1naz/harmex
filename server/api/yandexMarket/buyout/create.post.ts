@@ -29,7 +29,7 @@ interface Item {
     lon: number;
   };
   url: string;
-  promocode: string;
+  promoCode: string | null;
   category: string[] | null;
   digitalProduct: boolean;
 }
@@ -37,7 +37,7 @@ export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
 
-  
+
   if (!user.phoneConfirmed) {
     throw createError(
       `Для создания выкупа необходимо подтвердить номер телефона во вкладке профиль`
@@ -141,7 +141,7 @@ export default eventHandler(async (event) => {
       url: product.url,
       promocode: product.promoCode,
       isPromocodeEnabled:
-        product.promoCode && product.promoCode !== "" ? true : false,
+        product.promoCode && product.promoCode !== "" && product.promoCode.length >= 3 ? true : false,
       categories: product.category,
       isCategoriesEnabled:
         product.category && product.category.length > 0 ? true : false,

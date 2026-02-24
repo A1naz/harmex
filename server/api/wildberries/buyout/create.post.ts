@@ -177,7 +177,7 @@ export default eventHandler(async (event) => {
       digitalProduct: product.digitalProduct ? product.digitalProduct : false,
       promocode: product.promoCode,
       isPromocodeEnabled:
-        product.promoCode && product.promoCode !== "" ? true : false,
+        product.promoCode && product.promoCode !== "" && product.promoCode.length >= 3 ? true : false,
     });
 
     await buyout.save();
