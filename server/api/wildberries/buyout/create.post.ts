@@ -175,7 +175,7 @@ export default eventHandler(async (event) => {
       competitorArticle2: product.competitorArticle2,
       shelves: product.shelves,
       digitalProduct: product.digitalProduct ? product.digitalProduct : false,
-      promocode: product.promoCode,
+      promoCode: product.promoCode,
       isPromocodeEnabled:
         product.promoCode && product.promoCode !== "" && product.promoCode.length >= 3 ? true : false,
     });
