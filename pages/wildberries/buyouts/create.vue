@@ -697,7 +697,7 @@ getCategories();
                   @click="openInfoModal('search')"
                 >
                   <div class="flex justify-center items-center gap-1">
-                    <span>Артикул конкурента</span>
+                    <span>SKU конкурента</span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>

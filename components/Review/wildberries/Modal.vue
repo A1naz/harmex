@@ -419,7 +419,7 @@ async function handleFileChange(e: any) {
     return;
   }
 
-  const allowedFormats = ["video/mp4", "video/avi", "video/mpeg"];
+  const allowedFormats = ["video/mp4", "video/avi", "video/mpeg", "video/hevc"];
 
   if (!allowedFormats.includes(file.type)) {
     notify({
