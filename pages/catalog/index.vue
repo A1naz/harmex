@@ -261,7 +261,7 @@ async function getUserFavourites() {
             />
           </div>
           <div
-            class="font-medium text-[18px] text-[#909090] cursor-pointer mt-1.5 mr-3"
+            class="font-medium text-[16px] text-[#909090] cursor-pointer mt-1.5 mr-3"
             @click="introductionModalManager = true"
           >
             Менеджерам

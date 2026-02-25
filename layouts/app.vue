@@ -133,7 +133,7 @@ watch(isOpen, (newValue: boolean) => {
             :loading="dataLoading"
             @search="search"
           />
-          <div class="sm:flex hidden mr-12 ml-4">
+          <div class="sm:flex hidden  mr-12 ml-4">
             <NuxtLinkLocale
               to="/paymenthistory"
               class="btn btn-outline border-base-200 btn-sm h-[2.5rem] text-base-300 rounded-full p-2 bg-white hover:bg-white hover:border-base-200 hover:shadow-xl active:bg-base-300 active:text-white flex justify-center items-center text-xs hover:text-primary"

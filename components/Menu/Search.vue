@@ -73,12 +73,12 @@ function toFound(path: string) {
         : ''
     "
   >
-    <label class="flex items-center gap-2 w-full ml-4">
+    <label class="flex  items-center gap-2 w-full ml-4">
       <input
         v-model="searchQuery"
         type="text"
         placeholder="Найти на хармекс"
-        class="input input-sm h-[2.5rem] input-bordered w-full border-base-200 bg-white outline-none"
+        class="input input-sm h-[2.5rem] text-[16px] input-bordered w-full border-base-200 bg-white outline-none"
         @input="onInput()"
         @focus="show = true"
       />

@@ -26,9 +26,10 @@ const { height } = useWindowSize();
 
 <template>
   <div
-    class="w-[260px] absolute h-screen overflow-hidden py-4 border-2 border-l-0 border-t-0 border-b-0 border-[#bdc8fc] lg:block hidden"
+    class="w-[260px] absolute h-screen overflow-hidden py-4 lg:block hidden"
   >
-    <ul class="mt-4 cursor-pointer">
+    <div class="fixed top-[65px] bottom-0 w-[2px] bg-[#bdc8fc] pointer-events-none" style="left: 260px;" />
+    <ul class="-mt-4 cursor-pointer">
       <li v-for="item in items" :key="item">
         <a
           class="flex justify-between p-2 text-[##909090] rounded-lg w-[240px]"
@@ -44,7 +45,7 @@ const { height } = useWindowSize();
                 'text-primary': selectedType === item,
               }"
             />
-            <span class="font-medium text-sm">{{ item }}</span>
+            <span class="font-medium text-[16px]">{{ item }}</span>
           </div>
           <div>
             <Icon
