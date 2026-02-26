@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import { UTMTag } from '~/server/lib/models/UTMTag'
 import { UTMClick } from '~/server/lib/models/UTMClick'
 
@@ -12,12 +13,15 @@ export default eventHandler(async (event) => {
   }
 
   try {
-    const utmTag = await UTMTag.findOne({ utmCode })
+    let utmTag = await UTMTag.findOne({ utmCode })
 
     if (!utmTag) {
-      throw createError({
-        statusCode: 404,
-        message: 'UTM метка не найдена',
+      utmTag = await UTMTag.create({
+        utmCode,
+        name: utmCode,
+        createdBy: new mongoose.Types.ObjectId(),
+        createdByUsername: 'auto',
+        transitionToPortal: 0,
       })
     }
 
