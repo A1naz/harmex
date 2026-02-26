@@ -1091,7 +1091,7 @@ async function acceptPhotoAIText(photoUrl: string) {
     <ReviewPhotoAIGenerate
     v-model:state="confirmPhotoModal"
     :buyoutUuid="selectedDeliv.uuid"
-    mp="yandexMarket"
+    mp="ym"
     @accept="acceptPhotoAIText"
   />
 
