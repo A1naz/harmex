@@ -262,7 +262,13 @@ onKeyStroke("Escape", (e) => {
                     <span class="text-sm text-gray-500 mr-2 my-auto"
                       >Тип услуги:
                     </span>
-                    <span class="rounded-md py-0 px-2 text-sm">Выкуп</span>
+                    <span class="rounded-md py-0 px-2 text-sm">{{
+                      info.promoCode
+                        ? "Выкуп по промокоду"
+                        : info.discountRequestTime
+                        ? "Выкуп по скидке"
+                        : "Выкуп"
+                    }}</span>
                   </div>
                   <div v-if="info.shelves">
                     <span class="text-sm text-gray-500 mr-2 my-auto">

@@ -43,7 +43,7 @@ defineEmits(["setFavourites", "vote"]);
       <div
         v-for="(social, index) in items"
         :key="index"
-        class="card border rounded-lg shadow-md md:w-[250px] w-full p-3 relative bg-[#fafbff]"
+        class="card border rounded-lg shadow-md md:w-[234px] w-full p-3 relative bg-[#fafbff]"
       >
         <div class="flex flex-col gap-2 w-full">
           <div
@@ -101,7 +101,7 @@ defineEmits(["setFavourites", "vote"]);
                 <div
                   class="badge bg-[#ede9fe] rounded-md text-[#4338ca] h-[20px] text-[11px] font-medium"
                 >
-                  {{ service.title }}
+                  {{ service.title.split(' ')[0] }}
                 </div>
               </NuxtLink>
             </div>

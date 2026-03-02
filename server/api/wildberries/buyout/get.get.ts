@@ -172,6 +172,7 @@ export default eventHandler(async (event) => {
       executionTime: historyItem ? historyItem.dataoperation : null,
       financePrice: historyItem ? historyItem.summ : null,
       shelves: buyout.shelves,
+      promoCode: buyout.promoCode,
     }
   })
 
