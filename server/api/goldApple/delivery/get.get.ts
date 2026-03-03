@@ -8,10 +8,12 @@ export default eventHandler(async (event) => {
 
   const { status, limit, skip, string, dateRange } = getQuery(event);
 
+
+
   // const all = await Delivery.find({ user })
   let deliveries;
   let searchOption = {};
-  
+
   // Обработка dateRange
   let dateFilter = {};
   if (dateRange) {
@@ -31,64 +33,73 @@ export default eventHandler(async (event) => {
       console.error("Error parsing dateRange:", e);
     }
   }
-  
+
   if (string) {
     const uuid = string?.toString().replaceAll("#", "");
+    const numericValue = Number(string);
+    const isNumeric = !isNaN(numericValue) && string.toString().trim() !== "";
     searchOption = {
       $or: [
         { uuidbuyout: uuid },
         { point: { $regex: string, $options: "i" } },
-        { article: Number(string) },
-        { article: string },
+        ...(isNumeric ? [{ article: numericValue }] : []),
       ],
     };
   }
   if (status === "all") {
-    // Используем агрегацию для приоритетной сортировки
-    deliveries = await Delivery.aggregate([
-      {
-        $match: { user: user._id, ...searchOption, ...dateFilter }
-      },
-      {
-        $addFields: {
-          // Определяем приоритет сортировки
-          sortPriority: {
-            $cond: {
-              if: {
-                $and: [
-                  { $ne: ["$status", "completed"] },
-                  {
-                    $eq: [
-                      { $arrayElemAt: ["$statusdelivery.status", -1] },
-                      "готов к выдаче"
-                    ]
-                  }
-                ]
-              },
-              then: 1, // Готовые к выдаче
-              else: {
-                $cond: {
-                  if: { $eq: ["$status", "active"] },
-                  then: 2, // Активные
-                  else: 3  // Все остальные
-                }
-              }
-            }
-          }
-        }
-      },
-      {
-        $sort: { sortPriority: 1, _id: -1 }
-      },
-      {
-        $skip: Number(skip) || 0
-      },
-      {
-        $limit: Number(limit) || 50
-      }
-    ]);
+    const isFirstPage = !skip || Number(skip) === 0;
+
+    if (isFirstPage) {
+      const todayStart = new Date()
+      todayStart.setHours(0, 0, 0, 0)
+
+      const readyDeliveries = await Delivery.find({
+        user, ...searchOption, ...dateFilter,
+        statusdelivery: {
+          $elemMatch: {
+            $or: [
+              { status: "готов к выдаче" },
+              { status: "Готов к выдаче" },
+              { status: "^готов к выдаче.*" },
+              { status: "^Готов к выдаче.*" },
+              { status: { $regex: "^Готов к выдаче.*" } },
+              { status: { $regex: "^готов к выдаче.*" } },
+            ],
+          },
+        },
+        status: { $ne: "completed" },
+        updatedAt: { $gte: todayStart },
+      }).sort({
+        _id: -1,
+      });
+
+      const trueReadyDeliveries = readyDeliveries
+        .filter(
+          (delivery, index) =>
+            delivery.statusdelivery[delivery.statusdelivery.length - 1].status.includes("готов к выдаче")
+        )
+
+      const restDeliveries = await Delivery.find({ user, ...searchOption, ...dateFilter })
+        .sort({ _id: -1 })
+        .limit(Number(limit) || 50);
+
+      const trueRestDeliveries = restDeliveries.filter(
+        (delivery, index) =>
+          !delivery.statusdelivery[delivery.statusdelivery.length - 1].status.includes("готов к выдаче")
+      )
+
+      deliveries = [...trueReadyDeliveries, ...trueRestDeliveries]
+
+
+    } else {
+      // Не первая страница — просто все доставки с пагинацией
+      deliveries = await Delivery.find({ user, ...searchOption, ...dateFilter })
+        .sort({ _id: -1 })
+        .skip(Number(skip))
+        .limit(Number(limit) || 50);
+    }
   } else if (status === "active") {
-    deliveries = await Delivery.find({ user, status: "active", ...searchOption, ...dateFilter })
+    deliveries = await Delivery.find({ user, status: "work", ...searchOption, ...dateFilter })
       .sort({
         _id: -1,
       })
@@ -123,23 +134,41 @@ export default eventHandler(async (event) => {
       })
       .splice((skip as number) ? (skip as number) : 0, limit as number);
   } else if (status === "pickupReady") {
-    const response = await Delivery.find({ user, status: "completed", ...searchOption, ...dateFilter }).sort({
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+
+    const response = await Delivery.find({
+      user, ...searchOption, ...dateFilter,
+      statusdelivery: {
+        $elemMatch: {
+          $or: [
+            { status: "готов к выдаче" },
+            { status: "Готов к выдаче" },
+            { status: "^готов к выдаче.*" },
+            { status: "^Готов к выдаче.*" },
+            { status: { $regex: "^Готов к выдаче.*" } },
+            { status: { $regex: "^готов к выдаче.*" } },
+          ],
+        },
+      },
+      status: { $ne: "completed" },
+      updatedAt: { $gte: todayStart },
+    }).sort({
       _id: -1,
     });
 
     deliveries = response
       .filter(
         (delivery, index) =>
-          delivery.statusdelivery[delivery.statusdelivery.length - 1].status ==
-          "готов к выдаче"
+          delivery.statusdelivery[delivery.statusdelivery.length - 1].status.includes("готов к выдаче")
       )
-      .splice(skip as number, limit as number);
+
   } else {
     return {
       error: "Неизвестный статус",
     };
   }
-  
+
   const buyouts = await Buyout.find({
     user: user._id,
     _id: { $in: deliveries.map((item) => item.idbuyout) },
@@ -177,7 +206,8 @@ export default eventHandler(async (event) => {
         productimage: buyout.product.image,
         receiptcode: delivery.receiptcode ? delivery.receiptcode : undefined,
         receiptcodeqr: delivery.receiptcodeqr
-          ? delivery.receiptcodeqr
+          ? delivery.receiptcodeqr.includes('data:image/png;base64,') ? delivery.receiptcodeqr :
+            'data:image/png;base64,' + delivery.receiptcodeqr
           : undefined,
         recipient: delivery.recipient,
         recipientphone: replaced,
