@@ -20,6 +20,7 @@ const selectedPlace = ref(-1);
 const status = computed(() => route.query?.status || "all");
 const loading = ref(false);
 const manualModal = ref(false);
+const manualModalPVZ = ref(false);
 const dateFilter = ref("all");
 const autoTarget = ref(true);
 const search = reactive({
@@ -510,7 +511,13 @@ const siteUrl = config.public.siteUrl;
               @click="manualModal = true"
               class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
             >
-              <Icon name="ci:info" size="24" />
+              SKU
+            </button>
+            <button
+              @click="manualModalPVZ = true"
+              class="btn btn-primary bg-base-200 text-base-content hover:text-white border-none btn-sm gap-2 font-medium normal-case"
+            >
+              ПВЗ
             </button>
           </div>
           <div class="flex lg:ml-auto gap-0.5 lg:gap-3">
@@ -1015,6 +1022,237 @@ const siteUrl = config.public.siteUrl;
 
       <p class="font-bold mb-2">Причина: "ПВЗ не найден на карте"</p>
 
+      <ul class="list-disc ml-6 mb-4 space-y-1">
+        <li>Попробуйте изменить формат названия (например, "ул. Ленина, 10" → "Ленина 10").</li>
+        <li>Если не помогает — обратитесь в поддержку, и мы добавим адрес вручную.</li>
+      </ul>
+
+    </ManualModal>
+    <ManualModal
+      :show="manualModalPVZ"
+      @close="manualModalPVZ = false"
+      :is-checked="isChecked"
+      @checkbox-toggle="toggleCheckbox"
+    >
+      <h2 class="text-2xl font-bold mb-4">
+        Как опубликовать отзыв на ПВЗ используя Harmex
+      </h2>
+
+      <h3 class="text-lg font-bold mb-2">Что важно знать перед началом?</h3>
+
+      <p class="mb-2">
+        На <strong>Ozon</strong> и других маркетплейсах выкуп товара происходит <strong>автоматически</strong> — без вашего участия.
+      </p>
+
+      <p class="mb-2">
+        Вам <strong>не нужно</strong> ничего покупать вручную, использовать личные карты, прокси или аккаунты.
+      </p>
+
+      <p class="mb-4">
+        Все операции выполняет платформа <strong>Harmex</strong>, строго в рамках законодательства РФ.
+      </p>
+
+      <h3 class="text-lg font-bold mb-2">Что вам нужно сделать?</h3>
+
+      <ol class="list-decimal ml-6 mb-4 space-y-1">
+        <li>Выбрать самый дешевый товар на маркетплейсе</li>
+        <li>Пополнить баланс на товар по СПП + услуги наши + комиссия</li>
+        <li>Создать заявку на выкуп (Выкупы):
+          <ul class="list-[circle] ml-6 mt-1 space-y-1">
+            <li>с выкупом по артикулу</li>
+            <li>в ближайшее время</li>
+            <li>по правилу 9</li>
+            <li>и низкочастотным запросом</li>
+          </ul>
+        </li>
+        <li>Отслеживать статус исполнения.</li>
+        <li>Получить товар на ПВЗ (Доставки).</li>
+        <li>Создать заявку на публикацию отзыва (Отзывы).
+          <ul class="list-[circle] ml-6 mt-1 space-y-1">
+            <li>публикация отзыва доступна в течение 24-48 часов с момента "Получения товара на ПВЗ"</li>
+          </ul>
+        </li>
+        <li>Всё остальное — мы делаем за вас!</li>
+      </ol>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/pvz1.png"
+        class="mx-1 my-2"
+      />
+
+      <p class="font-bold mb-1">Чек-лист быстрого изучения</p>
+      <p class="text-sm mb-1">00:00 - 04:00. Пополнение баланса</p>
+      <p class="text-sm mb-1">04:01 - 10:00. Создание заявки на выкуп</p>
+      <p class="text-sm mb-1">10:01 - 14:00. Получение товара на ПВЗ</p>
+      <p class="text-sm mb-3">14:01 - 16:29. Публикация отзывов</p>
+
+      <video
+        controls
+        poster="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/buyoutsVideoTitle.png"
+        class="my-6 w-full"
+      >
+        <source
+          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/Ozon.mp4"
+          type="video/mp4"
+        />
+        Ваш браузер не поддерживает видео.
+      </video>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="mb-3">
+        Ознакомьтесь с разделом <strong>FAQ</strong>, где собраны ответы на популярные вопросы:
+      </p>
+
+      <ul class="list-disc ml-6 mb-4 text-sm space-y-1">
+        <li>№1. Что нужно подготовить для создания заявки на выкуп / отзыв?</li>
+        <li>№2. Как создать заявку на выкуп товара?</li>
+        <li>№3. Что означают статусы исполнения заявки?</li>
+        <li>№4. Как происходит процесс исполнения заявки?</li>
+        <li>№5. По какой цене покупаем товар?</li>
+        <li>№6. Как списываются финансы с баланса (аванс или пост-факт)?</li>
+        <li>№7. Где получить финансовый отчет по каждой услуге?</li>
+        <li>№8. В каком проценте по какой цене был куплен товар?</li>
+        <li>№9. Какие закрывающие документы предоставляете?</li>
+        <li>№10. Почему финансы не зачисляются в выходные?</li>
+        <li>№11. Как выкупать новые карточки на маркетплейсе?</li>
+        <li>№12. Какие способы выкупа товара для выдачи в поиске?</li>
+        <li>№13. Как действовать, если заявка ушла в архив</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№1. Подготовьте данные для заявки</p>
+
+      <p class="mb-3">Перед созданием заявки соберите простые исходные данные:</p>
+
+      <ol class="list-decimal ml-6 mb-3 space-y-1">
+        <li>Артикул товара (123456789)</li>
+        <li>Пол аккаунтов (Женский / Мужской / Случайный)</li>
+        <li>Дата и время выкупа (12 ноября, 15:00–19:00)</li>
+        <li>Стратегия выкупа (Поиск / Реклама / Полки)</li>
+        <li>Поисковые запросы ("женские сапоги", "зимние ботинки")</li>
+        <li>Адреса ПВЗ (Казань, ул. Пушкина 23к1)</li>
+      </ol>
+
+      <p class="mb-4">
+        <strong>Рекомендация:</strong> Если не уверены, какую стратегию выбрать — начните с "реклама+поиск", это универсальный вариант для старта.
+      </p>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/2.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№2. Создайте заявку на выкуп</p>
+
+      <ol class="list-decimal ml-6 mb-4 space-y-1">
+        <li>Перейдите в раздел <strong>Каталог услуг</strong>.</li>
+        <li>Выберите <strong>Ozon — Выкупы</strong>.</li>
+        <li>Нажмите <strong>Создать заявку</strong>.</li>
+        <li>Заполните все поля: артикул, дата, количество, правила, адрес ПВЗ и т.д.</li>
+        <li>Нажмите <strong>Создать</strong>.</li>
+      </ol>
+
+      <p class="mb-4">
+        После создания вы увидите заявку в статусе <strong>"Активен"</strong>.
+      </p>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/3.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№3. Отслеживайте процесс исполнения</p>
+
+      <p class="mb-3">У каждой заявки есть <strong>4 статуса</strong>:</p>
+
+      <ol class="list-decimal ml-6 mb-4 space-y-2">
+        <li>🟡 <strong>Активный</strong> - заявка создана и готовится к исполнению</li>
+        <li>🟢 <strong>В работе</strong> - подключен аккаунт, карта, устройство, геолокация, нагул</li>
+        <li>🔴 <strong>Завершено</strong> - заказ выполнен, скриншоты добавлены, фин.отчет внесен</li>
+        <li>🟠 <strong>В архиве</strong> - заявка архивирована по причине указанной <strong>3 точки - О выкупе</strong></li>
+      </ol>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/5.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№5. Оплатите услуги</p>
+
+      <ol class="list-decimal ml-6 mb-3 space-y-1">
+        <li><strong>Пополните баланс</strong> на сумму, достаточную для дневного бюджета (стоимость товара по СПП + услуга = Аванс).</li>
+        <li>После исполнения услуги сумма автоматически спишется с баланса.</li>
+      </ol>
+
+      <NuxtImg
+        src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/wildberries/6.png"
+        class="mx-1 my-2"
+      />
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№9. Отчетность и закрывающие документы</p>
+
+      <ul class="list-disc ml-6 mb-4 space-y-1">
+        <li>Финансовая отчетность — в меню <strong>Финансы - Excel</strong>.</li>
+        <li>Чеки пост оплаты по QR-коду уходят на ваш email</li>
+        <li>Закрывающие документы (по ЭДО) — формируются <strong>до 15 числа следующего месяца</strong>.</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№10. Рекомендации для старта</p>
+
+      <ul class="list-disc ml-6 mb-4 space-y-2">
+        <li>Пополняйте баланс <strong>заранее</strong>, особенно перед выходными (банки не зачисляют переводы в сб и вс).</li>
+        <li>Все операции по выкупам выполняются <strong>24/7</strong>, но зачисления — только <strong>в рабочие дни банков</strong>.</li>
+        <li>Перед созданием заявки — <strong>проверьте сумму на балансе</strong>.</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-3">№13. Как действовать, если заявка ушла в архив</p>
+
+      <p class="font-bold mb-2">Причина: "Не находит в поиске"</p>
+      <p class="mb-3">
+        Значит, ваша карточка ещё не появилась в выдаче или находится дальше 40-й страницы.
+      </p>
+
+      <p class="mb-2"><strong>Решение:</strong></p>
+      <ol class="list-decimal ml-6 mb-4 space-y-1">
+        <li>Перезапустите заявку "3 точки - Убрать с Архива"</li>
+        <li>Пересоздайте заявку <strong>по артикулу</strong>, чтобы создать оборотку.</li>
+        <li>После 2–3 успешных выкупов создайте заявку <strong>по поисковому запросу</strong>.</li>
+        <li>Если карточка всё ещё не находится — добавьте стратегию <strong>"по сортировке"</strong>.</li>
+      </ol>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-2">Причина: "Техническая ошибка"</p>
+      <ul class="list-disc ml-6 mb-4 space-y-1">
+        <li>Перезапустите заявку ("Снять с архива").</li>
+        <li>Если после 2–3 попыток ошибка повторяется — напишите в <strong>Службу заботы Harmex</strong>.</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-2">Причина: "Недостаточно средств"</p>
+      <ul class="list-disc ml-6 mb-4 space-y-1">
+        <li>Пополните баланс (QR / счёт от организации).</li>
+        <li>После зачисления средств система автоматически возобновит исполнение.</li>
+      </ul>
+
+      <hr class="my-4 border-gray-300" />
+
+      <p class="font-bold mb-2">Причина: "ПВЗ не найден на карте"</p>
       <ul class="list-disc ml-6 mb-4 space-y-1">
         <li>Попробуйте изменить формат названия (например, "ул. Ленина, 10" → "Ленина 10").</li>
         <li>Если не помогает — обратитесь в поддержку, и мы добавим адрес вручную.</li>
