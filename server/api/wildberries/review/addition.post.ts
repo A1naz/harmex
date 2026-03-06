@@ -15,7 +15,16 @@ export default eventHandler(async (event) => {
     });
   }
 
-  console.log(id, text);
+  if (text) {
+    if (text.length < 10 || text.length > 1000) {
+      throw createError({
+        statusCode: 400,
+        message:
+          'Текст отзыва должен быть длиннее 10 символов и не больше 1000',
+      })
+    }
+  }
+
   const review = await Review.findOne({ _id: id });
 
   if (!review) {
