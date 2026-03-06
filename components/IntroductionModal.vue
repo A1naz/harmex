@@ -75,6 +75,23 @@ const config = useRuntimeConfig();
         <p>
           <strong>8. Служба заботы Harmex</strong> — оперативная помощь и ответы на любые вопросы.
         </p>
+        <p >
+          <strong>9. Будьте в курсе обновлений алгоритмов</strong> — чтобы ваши отзывы проходили, а выкупы были безопасными, следите за нашими новостями:
+        </p>
+        <ul class="list-none ml-4 mt-1 mb-5 space-y-2">
+          <li>
+            📢 <strong>Telegram-папка (Все каналы):</strong><br />
+            <a href="https://t.me/addlist/tV_NhWxajg02NTAy" target="_blank" class="text-primary underline">Подписаться в 1 клик</a> — здесь оперативные сводки по штормам на ВБ, обновлениям платформы.
+          </li>
+          <li>
+            🔥 <strong>MAX-канал:</strong><br />
+            <a href="https://max.ru/join/1jR1bEN_z6kWYf1Fj3An_LFlZeQXyZabUSbyB0RCpYw" target="_blank" class="text-primary underline">Перейти в закрытый чат</a> — кейсы, стратегии и инсайды.
+          </li>
+          <li>
+            🟦 <strong>VK-сообщество:</strong><br />
+            <a href="https://vk.com/harmex_samovikupi" target="_blank" class="text-primary underline">Harmex ВКонтакте</a> — статьи, гайды и записи эфиров.
+          </li>
+        </ul>
 
 
         <NuxtImg
