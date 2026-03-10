@@ -27,7 +27,7 @@ async function getCallStatus() {
       group: "success",
       title: "Номер подтвержден",
     });
-    emit("confirm");
+    emit("confirm", callId.value);
     emit("close");
   }
 }

@@ -55,62 +55,33 @@ export default eventHandler(async (event) => {
       }
     }
 
-    // Ensure code exists before saving (in case of corrupted data)
-    if (!isConfirmExist.code) {
-      isConfirmExist.code = Math.floor(1000 + Math.random() * 9000).toString()
-    }
-
     isConfirmExist.date = new Date()
     await isConfirmExist.save()
-    
-    try {
-      if (isConfirmExist.count > 2) {
-        data = await confirmViaHiCall(hiCallKey, phoneNumber)
-      }
-      else {
-        data = await confirmViaZvonokApi(
-          zvonokPublicKey,
-          zvonokCampaignId,
-          phoneNumber,
-        )
-      }
 
-      if (!data || !data.code || data.status === 'error') {
-        // Generate fallback 4-digit code
-        const fallbackCode = Math.floor(1000 + Math.random() * 9000).toString()
-        isConfirmExist.code = fallbackCode
-        isConfirmExist.date = new Date()
-        isConfirmExist.errorCount += 1
-        await isConfirmExist.save()
+    if (isConfirmExist.count > 2) {
+      data = await confirmViaHiCall(hiCallKey, phoneNumber)
+    }
+    else {
+      data = await confirmViaZvonokApi(
+        zvonokPublicKey,
+        zvonokCampaignId,
+        phoneNumber,
+      )
+    }
 
-        return {
-          status: 'ok',
-          requiresSupport: true,
-        }
-      }
-
-      isConfirmExist.code = data.code
-      isConfirmExist.date = new Date()
-      await isConfirmExist.save()
-
+    if (!data?.code) {
       return {
-        status: 'ok',
+        status: 'error',
+        message: 'Не удалось отправить код',
       }
     }
-    catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e)
-      
-      // Generate fallback 4-digit code
-      const fallbackCode = Math.floor(1000 + Math.random() * 9000).toString()
-      isConfirmExist.code = fallbackCode
-      isConfirmExist.date = new Date()
-      await isConfirmExist.save()
 
-      return {
-        status: 'ok',
-        requiresSupport: true,
-      }
+    isConfirmExist.code = data.code
+    isConfirmExist.date = new Date()
+    await isConfirmExist.save()
+
+    return {
+      status: 'ok',
     }
   }
   else {
@@ -121,26 +92,14 @@ export default eventHandler(async (event) => {
         phoneNumber,
       )
 
-      if (!data || !data.code || data.status === 'error') {
+      if (!data?.code || data.status === 'error') {
         data = await confirmViaHiCall(hiCallKey, phoneNumber)
       }
 
-      if (!data || !data.code || data.status === 'error') {
-        // Generate fallback 4-digit code
-        const fallbackCode = Math.floor(1000 + Math.random() * 9000).toString()
-        
-        const newConfirm = new ConfirmPhone({
-          phone: phoneNumber,
-          code: fallbackCode,
-          date: new Date(),
-          errorCount: 1,
-        })
-
-        await newConfirm.save()
-
+      if (!data?.code) {
         return {
-          status: 'ok',
-          requiresSupport: true,
+          status: 'error',
+          message: 'Не удалось отправить код',
         }
       }
 
@@ -156,24 +115,11 @@ export default eventHandler(async (event) => {
         status: 'ok',
       }
     }
+    // eslint-disable-next-line unused-imports/no-unused-vars
     catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e)
-
-      // Generate fallback 4-digit code
-      const fallbackCode = Math.floor(1000 + Math.random() * 9000).toString()
-      
-      const newConfirm = new ConfirmPhone({
-        phone: phoneNumber,
-        code: fallbackCode,
-        date: new Date(),
-      })
-
-      await newConfirm.save()
-
       return {
-        status: 'ok',
-        requiresSupport: true,
+        status: 'error',
+        message: 'Не удалось отправить код',
       }
     }
   }

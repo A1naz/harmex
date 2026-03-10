@@ -17,10 +17,48 @@ definePageMeta({
 });
 const name = useRuntimeConfig().NAME;
 
-const isCodeSent = ref(false);
-const confirmationCodeInput = ref<any>(null);
+const isPhoneCodeSent = ref(false);
 const isNumberConfirmed = ref(false);
+const phoneReturnCallModal = ref(false);
+const confirmationCodeInput = ref<any>(null);
+const phoneTimerRunning = ref(false);
+const phoneTimer = ref(60);
+let phoneInterval: any;
 const router = useRouter();
+
+function startPhoneTimer() {
+  phoneTimerRunning.value = true;
+  phoneInterval = setInterval(() => {
+    if (phoneTimer.value > 0) {
+      phoneTimer.value--;
+    } else {
+      clearInterval(phoneInterval);
+      phoneTimerRunning.value = false;
+      phoneTimer.value = 60;
+    }
+  }, 1000);
+}
+
+function confirmPhoneWithReturnCallModal() {
+  if (formData.email.replace(/[\(\)\-\s]/g, "").length < 11) {
+    notify({ title: "Введите корректный номер" });
+    return;
+  }
+  if (phoneTimerRunning.value) {
+    notify({ title: `Подождите ${phoneTimer.value} секунд` });
+    return;
+  }
+  phoneReturnCallModal.value = true;
+}
+
+const confirmedCallId = ref("");
+
+function confirmFromReturnCallModal(callId: string) {
+  confirmedCallId.value = callId;
+  isNumberConfirmed.value = true;
+  phoneReturnCallModal.value = false;
+  notify({ group: "success", title: "Номер подтвержден" });
+}
 
 const formData = reactive({
   email: "",
@@ -59,7 +97,10 @@ async function submitForm() {
   v$.value.$validate();
   const { error } = await useFetch("/api/user/changePasswordSend", {
     method: "POST",
-    body: formData,
+    body: {
+      ...formData,
+      callId: confirmedCallId.value || undefined,
+    },
   });
   if (error.value) {
     notify({
@@ -73,63 +114,46 @@ async function submitForm() {
 
 async function sendConfirmCode() {
   if (formData.email.replace(/[\(\)\-\s]/g, "").length < 11) {
-    notify({
-      title: "Введите корректный номер",
-    });
+    notify({ title: "Введите корректный номер" });
     return;
   }
-  //@ts-ignore
-  const { data, error }: any = await useFetch(
-    "/api/organization/confirmPhoneForReset",
-    {
-      method: "POST",
-      body: {
-        phoneNumber: formData.email.replace(/[\(\)\-\s]/g, ""),
-      },
-    }
-  );
+  if (phoneTimerRunning.value) {
+    notify({ title: `Следующая попытка будет доступна через ${phoneTimer.value} сек.` });
+    return;
+  }
+  phoneTimer.value = 60;
+  startPhoneTimer();
 
-  if (data && data.value && data.value.status == "ok") {
-    isCodeSent.value = true;
-    confirmationCodeInput.value.focus();
-    notify({
-      group: "success",
-      title: "Код отправлен",
-    });
-  } else if (error.value) {
-    console.log(error.value);
+  const { data }: any = await useFetch("/api/organization/confirmPhoneForReset", {
+    method: "POST",
+    body: { phoneNumber: formData.email.replace(/[\(\)\-\s]/g, "") },
+    watch: false,
+  });
 
-    notify({
-      group: "error",
-      title: error.value.data.message,
-    });
+  if (data.value?.status === "ok") {
+    isPhoneCodeSent.value = true;
+    nextTick(() => confirmationCodeInput.value?.focus());
+    notify({ group: "success", title: "SMS код отправлен" });
+  } else {
+    notify({ group: "error", title: data.value?.message || "Ошибка отправки кода" });
   }
 }
 
 async function confirmCode() {
-  const { data, error }: any = await useFetch(
-    "/api/organization/confirmPhone",
-    {
-      method: "GET",
-      params: {
-        phoneNumber: formData.email.replace(/[\(\)\-\s]/g, ""),
-        code: formData.verificationCode,
-      },
-    }
-  );
+  const { data }: any = await useFetch("/api/organization/confirmPhone", {
+    method: "GET",
+    params: {
+      phoneNumber: formData.email.replace(/[\(\)\-\s]/g, ""),
+      code: formData.verificationCode,
+    },
+    watch: false,
+  });
   if (data.value) {
-    notify({
-      group: "success",
-      title: "Код подтвержден",
-    });
-
-    isCodeSent.value = false;
+    notify({ group: "success", title: "Код подтвержден" });
+    isPhoneCodeSent.value = false;
     isNumberConfirmed.value = true;
   } else {
-    notify({
-      group: "error",
-      title: "Неверный код",
-    });
+    notify({ group: "error", title: "Неверный код" });
   }
 }
 
@@ -181,20 +205,27 @@ async function generatePassword() {
                 id="email"
                 v-model="formData.email"
                 name="email"
-                :class="{
-                  'input-error': v$.email.$error,
-                }"
+                :disabled="isNumberConfirmed"
+                :class="{ 'input-error': v$.email.$error }"
                 class="min-w-10"
                 v-maska
                 data-maska="+7 (###) ###-##-##"
                 placeholder="+7 (___) ___-__-__"
+                @keydown.enter.prevent="confirmPhoneWithReturnCallModal"
               />
               <button
-                v-if="!isCodeSent"
+                v-if="!isNumberConfirmed"
                 class="btn btn-ghost shadow-none hover:shadow-none"
-                @click.prevent="sendConfirmCode"
+                @click.prevent="confirmPhoneWithReturnCallModal"
               >
                 Подтвердить
+              </button>
+              <button
+                v-else
+                disabled
+                class="btn btn-ghost btn-success shadow-none"
+              >
+                <Icon name="quill:checkmark-double" size="20" />
               </button>
             </label>
             <div
@@ -202,43 +233,42 @@ async function generatePassword() {
               :key="error.$uid"
               class="input-errors text-sm text-error mt-1 flex justify-end absolute r-0 w-full"
             >
-              <div class="error-msg">
-                {{ error.$message }}
-              </div>
+              <div class="error-msg">{{ error.$message }}</div>
             </div>
-            <div class="text-xs text-gray-500">
-              Нажмите подтвердить для получения звонка
+            <div v-if="!isNumberConfirmed" class="mt-1">
+              <p class="text-xs text-gray-500">
+                Нажмите подтвердить для подтверждения номера через обратный звонок
+              </p>
+              <span
+                class="text-xs font-medium underline cursor-pointer mt-1 inline-block"
+                @click="sendConfirmCode"
+              >Не прошёл звонок? Отправить SMS код</span>
             </div>
-            <label
-              for="email"
-              class="block mb-2 ml-1 my-1 text-sm font-medium mt-5"
-            >
-              Введите код верификации
-            </label>
-            <label class="input input-bordered w-full flex justify-end">
-              <input
-                ref="confirmationCodeInput"
-                :disabled="isNumberConfirmed || !isCodeSent"
-                id="verificationCode"
-                v-model="formData.verificationCode"
-                type="text"
-                class="w-full"
-                name="verificationCode"
-                required="true"
-                @keydown.enter="confirmCode"
-              />
-              <button
-                :disabled="!isCodeSent || isNumberConfirmed "
-                class="flex items-center"
-                @click.prevent="confirmCode"
-              >
-                Подтвердить
-              </button>
-              
-            </label>
-            <div class="text-xs text-gray-500">
-              Примите звонок и введите озвученные цифры. Не поступил звонок?
-              Повторите запрос на звонок.
+            <div v-if="isPhoneCodeSent && !isNumberConfirmed" class="mt-3">
+              <label for="verificationCode" class="block mb-1 ml-1 text-sm font-medium">
+                Введите код верификации
+              </label>
+              <label class="input input-bordered w-full flex justify-end">
+                <input
+                  ref="confirmationCodeInput"
+                  id="verificationCode"
+                  v-model="formData.verificationCode"
+                  v-maska
+                  data-maska="####"
+                  type="text"
+                  class="w-full"
+                  name="verificationCode"
+                  placeholder="____"
+                  @keydown.enter="confirmCode"
+                />
+                <button class="flex items-center" @click.prevent="confirmCode">
+                  Подтвердить
+                </button>
+              </label>
+              <span
+                class="text-xs font-medium underline cursor-pointer mt-1 inline-block"
+                @click="sendConfirmCode"
+              >Отправить код повторно</span>
             </div>
           </div>
           <div>
@@ -352,6 +382,12 @@ async function generatePassword() {
         </form>
       </div>
     </div>
+    <RegistrationReturnCallModal
+      :show="phoneReturnCallModal"
+      :phone="formData.email"
+      @confirm="confirmFromReturnCallModal"
+      @close="phoneReturnCallModal = false"
+    />
   </section>
 </template>
 

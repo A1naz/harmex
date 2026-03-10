@@ -71,13 +71,16 @@ export default eventHandler(async (event) => {
       )
     }
 
-    if (!data) {
-      isConfirmExist.save()
+    if (!data?.code) {
+      return {
+        status: 'error',
+        message: 'Не удалось отправить код',
+      }
     }
 
     isConfirmExist.code = data.code
     isConfirmExist.date = new Date()
-    isConfirmExist.save()
+    await isConfirmExist.save()
 
     return {
       status: 'ok',
@@ -91,8 +94,15 @@ export default eventHandler(async (event) => {
         phoneNumber,
       )
 
-      if (!data || !data.code || data.status === 'error') {
+      if (!data?.code || data.status === 'error') {
         data = await confirmViaHiCall(hiCallKey, phoneNumber)
+      }
+
+      if (!data?.code) {
+        return {
+          status: 'error',
+          message: 'Не удалось отправить код',
+        }
       }
 
       const newConfirm = new ConfirmPhone({
