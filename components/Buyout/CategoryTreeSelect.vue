@@ -66,7 +66,7 @@ const selectCategory = (oldCategories, index) => {
           </button>
         </div>
 
-        <BuyoutCategoryTreeSelect
+        <BuyoutWildberriesCategoryTreeSelect
           v-if="category.subcategories && isOpen(index)"
           :categories="category.subcategories"
           @selectCategory="(val) => selectCategory(val, index)"
