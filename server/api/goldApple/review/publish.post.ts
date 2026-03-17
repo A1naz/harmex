@@ -12,12 +12,19 @@ export default eventHandler(async (event) => {
   const { buyoutuuid, deliveryid, rating, text, positive, negative, date, photos } =
     await readBody(event);
 
-  if (text) {
-    if (text.length < 10 || text.length > 700) {
+  if (!text && !positive && !negative) {
+    throw createError({
+      statusCode: 400,
+      message: "Заполните хотя бы одно текстовое поле: отзыв, достоинства или недостатки",
+    });
+  }
+
+  const fields = { text, positive, negative };
+  for (const [, value] of Object.entries(fields)) {
+    if (value && (value.length < 5 || value.length > 700)) {
       throw createError({
         statusCode: 400,
-        message:
-          "Публичный отзыв должен быть длиннее 10 символов и не больше 700",
+        message: "Каждое текстовое поле должно содержать от 5 до 700 символов",
       });
     }
   }
