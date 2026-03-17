@@ -35,6 +35,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   inject(
     window,
     document,
-    'https://cdn-ru.bitrix24.ru/b25122566/crm/site_button/loader_11_0xmbbt.js'
+    'https://harmex.pro/widget/harmex-widget.js'
   );
 });
