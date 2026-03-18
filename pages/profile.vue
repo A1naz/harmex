@@ -114,16 +114,10 @@ onMounted(() => {
   if (params.partnerDetailsModal) {
     partnerDetailsModal.value = true;
   }
-  // Проверяем, была ли успешная отписка от рассылки
   if (params.unsubscribed === "true") {
-    notify({
-      title: "Отписка от рассылки",
-      text: "Вы успешно отписались от автоматической email-рассылки",
-      group: "success",
-      duration: 5000,
-    });
-    // Очищаем параметр из URL
-    router.replace({ query: { ...params, unsubscribed: undefined } });
+    unsubscribeUuid.value = params.uuid as string | undefined;
+    unsubscribeModal.value = true;
+    router.replace({ query: { ...params, unsubscribed: undefined, uuid: undefined } });
   }
   getPartnerBalance();
 });
@@ -198,6 +192,9 @@ const tgAlerts = reactive({
 });
 
 const isCodeSent = ref(false);
+
+const unsubscribeModal = ref(false);
+const unsubscribeUuid = ref<string | undefined>(undefined);
 
 // Верификация номера телефона
 const phoneTimer = ref(60);
@@ -1403,6 +1400,12 @@ function copyText(text: string) {
     <ProfilePhoneVerifyHelpModal
       :show="phoneVerifyHelpModal"
       @close="phoneVerifyHelpModal = false"
+    />
+    <ProfileUnsubscribeModal
+      :show="unsubscribeModal"
+      :uuid="unsubscribeUuid"
+      @close="unsubscribeModal = false"
+      @unsubscribed="unsubscribeModal = false"
     />
   </div>
   

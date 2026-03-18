@@ -18,7 +18,7 @@ export function generateEmailHtml(
 
 export const emailTemplates: EmailTemplate[] = [
   {
-    subject: "[Harmex] Добро пожаловать в Harmex",
+    subject: "Добро пожаловать в Harmex",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -85,9 +85,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -110,7 +111,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Как работает система внутри?",
+    subject: "Как работает система внутри?",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -186,9 +187,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -211,7 +213,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Как создать первую задачу правильно",
+    subject: "Как создать первую задачу правильно",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -325,9 +327,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -350,7 +353,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Почему важны первые 72 часа",
+    subject: "Почему важны первые 72 часа",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -430,9 +433,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -455,7 +459,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Что влияет на скорость выполнения задач",
+    subject: "Что влияет на скорость выполнения задач",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -535,9 +539,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -560,7 +565,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Как правильно распределять бюджет",
+    subject: "Как правильно распределять бюджет",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -663,9 +668,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -688,7 +694,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Частые ошибки новичков",
+    subject: "Частые ошибки новичков",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -764,9 +770,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -789,7 +796,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Когда ждать первые результаты",
+    subject: "Когда ждать первые результаты",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -889,9 +896,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -914,7 +922,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Глубокая аналитика продвижения",
+    subject: "Глубокая аналитика продвижения",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -995,9 +1003,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -1020,7 +1029,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Почему важна регулярность",
+    subject: "Почему важна регулярность",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1107,9 +1116,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -1132,7 +1142,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Работа с отзывами и рейтингом",
+    subject: "Работа с отзывами и рейтингом",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1215,9 +1225,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -1240,7 +1251,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: '[Harmex] Что делать, если выкуп "завис"',
+    subject: 'Что делать, если выкуп "завис"',
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1329,9 +1340,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -1354,7 +1366,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Как работать с несколькими магазинами",
+    subject: "Как работать с несколькими магазинами",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1444,9 +1456,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -1469,7 +1482,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Партнёрская программа",
+    subject: "Партнёрская программа",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1553,9 +1566,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -1578,7 +1592,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Как увеличить объём продаж x2",
+    subject: "Как увеличить объём продаж x2",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1708,9 +1722,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -1733,7 +1748,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Как выйти в ТОП выдачи",
+    subject: "Как выйти в ТОП выдачи",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1817,9 +1832,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -1842,7 +1858,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Почему 50% клиентов выходят на повторные пополнения",
+    subject: "Почему 50% клиентов выходят на повторные пополнения",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -1936,9 +1952,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -1961,7 +1978,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Как масштабировать магазин",
+    subject: "Как масштабировать магазин",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -2040,9 +2057,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -2065,7 +2083,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Какие KPI нужно считать продавцу",
+    subject: "Какие KPI нужно считать продавцу",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -2158,9 +2176,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -2183,7 +2202,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Ваш стратегический план на 30 дней",
+    subject: "Ваш стратегический план на 30 дней",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -2322,9 +2341,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
@@ -2347,7 +2367,7 @@ export const emailTemplates: EmailTemplate[] = [
     `,
   },
   {
-    subject: "[Harmex] Как сделать правильный старт на маркетплейсах",
+    subject: "Как сделать правильный старт на маркетплейсах",
     html: `
       <!DOCTYPE html>
       <html lang="ru">
@@ -2431,9 +2451,10 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding-bottom: 16px;">
-                          <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="display: inline-block; color: #6c757d; text-decoration: underline; font-size: 13px;">
-                            Отписаться от рассылки
-                          </a>
+                          <p style="margin: 0; color: #6c757d; font-size: 13px; line-height: 1.6; text-align: center;">
+                            Вы получили это сообщение, потому что выразили согласие получать письма от «Harmex».<br>
+                            Если Вы хотите отказаться от получения, нажмите <a href="https://app.harmex.ru/api/unsubscribeEmail?username={{username}}" target="_blank" style="color: #1565c0; text-decoration: underline;">здесь</a>.
+                          </p>
                         </td>
                       </tr>
                       <tr>
