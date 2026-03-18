@@ -34,8 +34,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Добро пожаловать в Harmex
                     </h1>
                   </td>
@@ -56,7 +62,7 @@ export const emailTemplates: EmailTemplate[] = [
                       С этого момента у вас появляется инструмент, который экономит время, снижает ошибки и помогает вывести магазин на стабильные показатели.
                     </p>
                     
-                    <div style="background-color: #f8f9fa; border-left: 4px solid #667eea; padding: 20px; margin: 30px 0; border-radius: 4px;">
+                    <div style="background-color: #f8f9fa; border-left: 4px solid #FF5E34; padding: 20px; margin: 30px 0; border-radius: 4px;">
                       <p style="margin: 0; color: #333333; font-size: 16px; line-height: 1.6;">
                         В ближайшие дни вы получите серию писем, где мы разберём механику продвижения, структуру задач и стратегии, которые используют сильнейшие продавцы.
                       </p>
@@ -70,7 +76,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -127,8 +133,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Как работает система внутри?
                     </h1>
                   </td>
@@ -172,7 +184,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -229,8 +241,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Как создать первую задачу правильно
                     </h1>
                   </td>
@@ -251,7 +269,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
                       <tr>
                         <td style="width: 40px; vertical-align: top; padding-top: 2px;">
-                          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 700; font-size: 16px; text-align: center; line-height: 32px;">
+                          <div style="width: 32px; height: 32px; background-color: #FF5E34; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 700; font-size: 16px; text-align: center; line-height: 32px;">
                             1
                           </div>
                         </td>
@@ -267,7 +285,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
                       <tr>
                         <td style="width: 40px; vertical-align: top; padding-top: 2px;">
-                          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 700; font-size: 16px; text-align: center; line-height: 32px;">
+                          <div style="width: 32px; height: 32px; background-color: #FF5E34; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 700; font-size: 16px; text-align: center; line-height: 32px;">
                             2
                           </div>
                         </td>
@@ -283,7 +301,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
                       <tr>
                         <td style="width: 40px; vertical-align: top; padding-top: 2px;">
-                          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 700; font-size: 16px; text-align: center; line-height: 32px;">
+                          <div style="width: 32px; height: 32px; background-color: #FF5E34; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 700; font-size: 16px; text-align: center; line-height: 32px;">
                             3
                           </div>
                         </td>
@@ -312,7 +330,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -369,8 +387,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Почему важны первые 72 часа
                     </h1>
                   </td>
@@ -418,7 +442,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -475,8 +499,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Что влияет на скорость выполнения задач
                     </h1>
                   </td>
@@ -493,7 +523,7 @@ export const emailTemplates: EmailTemplate[] = [
                       Скорость выполнения задач зависит от ряда факторов, и важно понимать их заранее.
                     </p>
                     
-                    <div style="background-color: #f8f9fa; padding: 24px; margin: 24px 0; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <div style="background-color: #f8f9fa; padding: 24px; margin: 24px 0; border-radius: 8px; border-left: 4px solid #FF5E34;">
                       <p style="margin: 0 0 12px; color: #333333; font-size: 15px; line-height: 1.6; font-weight: 600;">
                         На процесс влияет:
                       </p>
@@ -524,7 +554,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -581,8 +611,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Как правильно распределять бюджет
                     </h1>
                   </td>
@@ -653,7 +689,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -710,8 +746,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Частые ошибки новичков
                     </h1>
                   </td>
@@ -755,7 +797,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -812,8 +854,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Когда ждать первые результаты
                     </h1>
                   </td>
@@ -881,7 +929,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -938,8 +986,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Глубокая аналитика продвижения
                     </h1>
                   </td>
@@ -988,7 +1042,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1045,8 +1099,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Почему важна регулярность
                     </h1>
                   </td>
@@ -1101,7 +1161,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1158,8 +1218,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Работа с отзывами и рейтингом
                     </h1>
                   </td>
@@ -1210,7 +1276,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1267,8 +1333,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Что делать, если выкуп "завис"
                     </h1>
                   </td>
@@ -1325,7 +1397,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1382,8 +1454,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Как работать с несколькими магазинами
                     </h1>
                   </td>
@@ -1441,7 +1519,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1498,8 +1576,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Партнёрская программа
                     </h1>
                   </td>
@@ -1551,7 +1635,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1608,8 +1692,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Как увеличить объём продаж x2
                     </h1>
                   </td>
@@ -1707,7 +1797,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1764,8 +1854,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Как выйти в ТОП выдачи
                     </h1>
                   </td>
@@ -1817,7 +1913,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1874,8 +1970,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.3;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.3;">
                       Почему 50% клиентов выходят<br>на повторные пополнения
                     </h1>
                   </td>
@@ -1937,7 +2039,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -1994,8 +2096,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Как масштабировать магазин
                     </h1>
                   </td>
@@ -2042,7 +2150,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -2099,8 +2207,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Какие KPI нужно считать продавцу
                     </h1>
                   </td>
@@ -2117,7 +2231,7 @@ export const emailTemplates: EmailTemplate[] = [
                       💪 Сильные продавцы всегда держат под контролем правильные показатели.
                     </p>
                     
-                    <div style="background-color: #f8f9fa; padding: 24px; margin: 24px 0; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <div style="background-color: #f8f9fa; padding: 24px; margin: 24px 0; border-radius: 8px; border-left: 4px solid #FF5E34;">
                       <p style="margin: 0 0 16px; color: #333333; font-size: 16px; line-height: 1.4; font-weight: 600;">
                         📊 В Harmex вы можете отслеживать:
                       </p>
@@ -2161,7 +2275,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -2218,8 +2332,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">
                       Ваш стратегический план на 30 дней
                     </h1>
                   </td>
@@ -2326,7 +2446,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(255, 94, 52, 0.35);">
                             Войти в личный кабинет
                           </a>
                         </td>
@@ -2383,8 +2503,14 @@ export const emailTemplates: EmailTemplate[] = [
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; max-width: 600px;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 30px; text-align: center;">
-                    <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.3;">
+                  <td style="background-color: #FF5E34; padding: 20px 40px; text-align: center;">
+                    <span style="font-size: 24px; font-weight: 900; color: #1a1a1a; letter-spacing: 4px; font-family: Arial, Helvetica, sans-serif;">HARMEX</span>
+                  </td>
+                </tr>
+                <!-- Title -->
+                <tr>
+                  <td style="padding: 30px 40px 0; text-align: center;">
+                    <h1 style="margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.3;">
                       Как сделать правильный старт<br>на маркетплейсах
                     </h1>
                   </td>
@@ -2432,7 +2558,7 @@ export const emailTemplates: EmailTemplate[] = [
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" style="padding: 20px 0;">
-                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 18px 48px; border-radius: 8px; font-size: 17px; font-weight: 700; box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);">
+                          <a href="https://app.harmex.ru/api/emailsSent?username={{username}}&numberOfEmail={{emailNumber}}" style="display: inline-block; background-color: #FF5E34; color: #ffffff; text-decoration: none; padding: 18px 48px; border-radius: 8px; font-size: 17px; font-weight: 700; box-shadow: 0 6px 16px rgba(255, 94, 52, 0.4);">
                             🎯 Войти в личный кабинет
                           </a>
                         </td>
