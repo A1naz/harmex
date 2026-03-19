@@ -17,6 +17,7 @@ export default eventHandler(async (event) => {
       const isTariffExist: any = user.MPTariffs.find(
         (item: any) => item.mp === service.slug
       );
+
       if (isTariffExist) {
 
         const prices = isTariffExist.prices ? isTariffExist.prices : [];
@@ -49,7 +50,10 @@ export default eventHandler(async (event) => {
             status: "ok",
             service,
           };
+        
         }
+    
+
         const mpPrices = prices.values.find(
           (item: any) => item.mp === service.slug
         );
@@ -61,12 +65,16 @@ export default eventHandler(async (event) => {
         }
 
         service.items.forEach((item: any) => {
-          // Убираем query параметры из slug (например, "reviews?pvz=true" -> "reviews")
           const cleanSlug = item.slug ? item.slug.split('?')[0] : null;
           const cleanPath = item.path ? item.path.split('?')[0] : null;
-          
-          const isItemPrice =
-            mpPrices.prices[cleanSlug ? cleanSlug : cleanPath];
+
+          const searchPhrase = cleanSlug
+            ? cleanSlug === "reviews"
+              ? "review"
+              : cleanSlug
+            : cleanPath === "/reviews" ? "review" : cleanPath ? cleanPath.replace("/", "") : "";
+
+          const isItemPrice = mpPrices.prices[searchPhrase];
           if (isItemPrice) {
             item.priceText =
               isItemPrice.type && isItemPrice.type === "percent"
