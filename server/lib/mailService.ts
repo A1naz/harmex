@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer'
 const config = useRuntimeConfig()
 const { smtpHost, smtpPort, smtpUser, smtpPass } = config
 
-const alias = smtpUser
+const alias = `HARMEX <${smtpUser}>`
 const dkimKey = `-----BEGIN PRIVATE KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQChf8ef6j1jSFf2SW9BeOfupbROnSWglCbnhyhZmOIrKFAPHaTNwnXP6VKJ4vwpMG/KJrzt44qs2/PepOt99xDU4prAMV8JfqWUzXxFQH1uq+Mlg4O2bHN7eINh7JgbL8fEsv5VRswPGhNHzHn3zJ3ndEu07QPf+kL2lPwpqXqLzwIDAQAB
 -----END PRIVATE KEY-----`
@@ -50,7 +50,7 @@ class MailService {
     const result = await this.transporter.sendMail({
       from: alias,
       to,
-      subject: '[HARMEX] Завершите регистрацию',
+      subject: 'Завершите регистрацию',
       text: '',
       html: `
                 <div>
@@ -103,7 +103,7 @@ class MailService {
     const result = await this.transporter.sendMail({
       from: alias,
       to,
-      subject: '[HARMEX] Подтвердите новый адрес электронной почты',
+      subject: 'Подтвердите новый адрес электронной почты',
       text: '',
       html: `
                 <div>
@@ -155,7 +155,7 @@ class MailService {
     const result = await this.transporter.sendMail({
       from: alias,
       to,
-      subject: '[HARMEX] Подтверждение отвязки Telegram',
+      subject: 'Подтверждение отвязки Telegram',
       text: '',
       html: `
                 <div>
@@ -178,7 +178,7 @@ class MailService {
     const result = this.transporter.sendMail({
       from: alias,
       to: 'support@harmex.ru',
-      subject: '[HARMEX] Получить консультацию',
+      subject: 'Получить консультацию',
       text: '',
       html: `
                 <div>
@@ -206,7 +206,7 @@ class MailService {
     const result = this.transporter.sendMail({
       from: alias,
       to,
-      subject: '[HARMEX] Запрос на смену пароля',
+      subject: 'Запрос на смену пароля',
       text: '',
       html: `
                 <div>
@@ -232,7 +232,7 @@ class MailService {
     const result = await this.transporter.sendMail({
       from: alias,
       to,
-      subject: `[HARMEX] ${subject}`,
+      subject: `${subject}`,
       text: '',
       html,
     })

@@ -11,8 +11,33 @@ const START_DATE = new Date("2025-11-20T00:00:00.000Z");
 // Максимальное количество писем
 const MAX_EMAILS = 21;
 
-// Интервал между письмами в миллисекундах (24 часа)
-const EMAIL_INTERVAL = 24 * 60 * 60 * 1000;
+/**
+ * Расписание отправки: количество часов с момента регистрации до отправки каждого письма.
+ * Индекс = номер письма - 1 (0-based).
+ */
+const EMAIL_SCHEDULE_HOURS: number[] = [
+  0,     // Письмо 1  — сразу после регистрации
+  2.5,   // Письмо 2  — через 2-3 часа
+  24,    // Письмо 3  — через 1 день
+  48,    // Письмо 4  — через 2 дня
+  120,   // Письмо 5  — через 5 дней
+  168,   // Письмо 6  — через 7 дней
+  240,   // Письмо 7  — через 10 дней
+  264,   // Письмо 8  — через 11 дней
+  504,   // Письмо 9  — через 21 день
+  720,   // Письмо 10 — через 30 дней
+  888,   // Письмо 11 — через 37 дней
+  1080,  // Письмо 12 — через 45 дней
+  1200,  // Письмо 13 — через 50 дней
+  1440,  // Письмо 14 — через 60 дней
+  1680,  // Письмо 15 — через 70 дней
+  1920,  // Письмо 16 — через 80 дней
+  2160,  // Письмо 17 — через 90 дней
+  2400,  // Письмо 18 — через 100 дней
+  2640,  // Письмо 19 — через 110 дней
+  2880,  // Письмо 20 — через 120 дней
+  3120,  // Письмо 21 — через 130 дней
+];
 
 // Задержка между отправками (в миллисекундах) для избежания rate limiting
 const SEND_DELAY = 30000; // 15 секунд между письмами
@@ -23,15 +48,12 @@ const MAX_RETRIES = 3;
 // Задержка перед повторной попыткой (в миллисекундах)
 const RETRY_DELAY = 30000; // 30 секунд
 
-// Рабочее окно времени (МСК)
-const WORK_START_HOUR = 8; // Начало работы: 8:00 утра
-const WORK_END_HOUR = 13; // Конец работы: 13:00 утра
-const MAX_CYCLES_PER_DAY = 5; // Максимум 5 циклов рассылки в день
-const CYCLE_INTERVAL = 24 * 60 * 1000; // 24 минуты между циклами (5 циклов за 2 часа)
+// Рабочее окно времени для писем 3–21 (МСК)
+const WORK_START_HOUR = 8;  // 8:00
+const WORK_END_HOUR = 13;   // 13:00
 
-// Переменная для отслеживания циклов
-let cyclesCompletedToday = 0;
-let lastCycleDate = "";
+// Цикл проверки: каждые 30 минут, 24/7
+const CYCLE_INTERVAL = 30 * 60 * 1000;
 
 /**
  * Функция задержки
@@ -69,29 +91,6 @@ function getMoscowDateString(): string {
   return moscowTime.toISOString().split("T")[0];
 }
 
-/**
- * Вычисляет время до следующего запуска (8:00 утра МСК следующего дня)
- */
-function getTimeUntilNextRun(): number {
-  const moscowTime = getMoscowTime();
-  const hour = moscowTime.getHours();
-
-  // Создаем дату для следующего запуска в 8:00 МСК
-  const nextRun = new Date(moscowTime);
-
-  if (hour < WORK_START_HOUR) {
-    // Если еще не 8 утра сегодня, запускаем сегодня в 8:00
-    nextRun.setHours(WORK_START_HOUR, 0, 0, 0);
-  } else {
-    // Если уже прошло 8 утра или позже, запускаем завтра в 8:00
-    nextRun.setDate(nextRun.getDate() + 1);
-    nextRun.setHours(WORK_START_HOUR, 0, 0, 0);
-  }
-
-  // Вычисляем разницу в миллисекундах
-  const diff = nextRun.getTime() - moscowTime.getTime();
-  return diff;
-}
 
 /**
  * Отправляет email с повторными попытками при ошибке
@@ -187,33 +186,39 @@ async function processAutoEmails() {
         // Время регистрации пользователя
         const registrationDate = new Date(user.registrationDate);
 
-        // Количество полных дней с момента регистрации
-        const daysSinceRegistration = Math.floor(
-          (now.getTime() - registrationDate.getTime()) / EMAIL_INTERVAL
-        );
+        // Часов прошло с момента регистрации
+        const hoursSinceRegistration =
+          (now.getTime() - registrationDate.getTime()) / (1000 * 60 * 60);
 
-        // Определяем, какое письмо должно быть отправлено (номер письма = количество дней с регистрации)
-        // День 0 (день регистрации) - письмо 1
-        // День 1 - письмо 2
-        // День 2 - письмо 3 и т.д.
-        const expectedEmailIndex = daysSinceRegistration;
-        // Если текущий счетчик отправленных писем меньше ожидаемого индекса
+        // Индекс следующего письма для отправки
+        const emailIndex = user.emailAutoSentCount;
 
-        // Проверяем, прошло ли 24 часа с последней отправки
+        // Минимум часов с регистрации, необходимый для отправки этого письма
+        const requiredHours = EMAIL_SCHEDULE_HOURS[emailIndex];
+
+        if (hoursSinceRegistration < requiredHours) {
+          const hoursLeft = (requiredHours - hoursSinceRegistration).toFixed(1);
+          console.log(
+            `[EmailAutoSender] Пропущен ${user.email}: письмо #${emailIndex + 1} — ещё ${hoursLeft} ч. до отправки`
+          );
+          skippedCount++;
+          continue;
+        }
+
+        // Письма 3–21 (index >= 2) — только в рабочие часы (8:00–13:00 МСК)
+        if (emailIndex >= 2 && !isInWorkingHours()) {
+          skippedCount++;
+          continue;
+        }
+
+        // Защита: не отправлять, если последнее письмо было < 1 часа назад
         if (user.emailLastSentDate) {
-          const timeSinceLastEmail =
-            now.getTime() - new Date(user.emailLastSentDate).getTime();
-          if (timeSinceLastEmail < EMAIL_INTERVAL) {
-            console.log(
-              `[EmailAutoSender] Пропущен пользователь ${user.email}: не прошло 24 часа с последней отправки`
-            );
+          const minGapMs = 60 * 60 * 1000; // 1 час
+          if (now.getTime() - new Date(user.emailLastSentDate).getTime() < minGapMs) {
             skippedCount++;
             continue;
           }
         }
-
-        // Получаем шаблон письма по индексу счетчика
-        const emailIndex = user.emailAutoSentCount;
         if (emailIndex >= emailTemplates.length) {
           console.log(
             `[EmailAutoSender] Нет шаблона для индекса ${emailIndex}, пользователь ${user.email}`
@@ -283,99 +288,27 @@ async function processAutoEmails() {
 }
 
 /**
- * Выполняет цикл рассылки с проверкой рабочего времени
+ * Выполняет один цикл рассылки
  */
-async function runCycleIfAllowed() {
-  const todayDate = getMoscowDateString();
-
-  // Сбрасываем счетчик циклов, если наступил новый день
-  if (lastCycleDate !== todayDate) {
-    cyclesCompletedToday = 0;
-    lastCycleDate = todayDate;
-    console.log(
-      `[EmailAutoSender] Новый день: ${todayDate}. Счетчик циклов сброшен.`
-    );
-  }
-
-  // Проверяем, находимся ли в рабочем окне времени
-  if (!isInWorkingHours()) {
-    const moscowTime = getMoscowTime();
-    console.log(
-      `[EmailAutoSender] Сейчас ${moscowTime.toLocaleTimeString(
-        "ru-RU"
-      )} МСК. ` +
-        `Рабочее время: ${WORK_START_HOUR}:00 - ${WORK_END_HOUR}:00. Пропуск цикла.`
-    );
-    return false;
-  }
-
-  // Проверяем, не превышен ли лимит циклов за день
-  if (cyclesCompletedToday >= MAX_CYCLES_PER_DAY) {
-    console.log(
-      `[EmailAutoSender] Выполнено ${cyclesCompletedToday} из ${MAX_CYCLES_PER_DAY} циклов за сегодня. ` +
-        `Ожидание следующего дня.`
-    );
-    return false;
-  }
-
-  // Выполняем рассылку
+async function runCycle() {
   const moscowTime = getMoscowTime();
   console.log(
-    `[EmailAutoSender] Запуск цикла #${
-      cyclesCompletedToday + 1
-    }/${MAX_CYCLES_PER_DAY} ` +
-      `в ${moscowTime.toLocaleTimeString("ru-RU")} МСК`
+    `[EmailAutoSender] Запуск цикла в ${moscowTime.toLocaleTimeString("ru-RU")} МСК`
   );
-
   await processAutoEmails();
-
-  cyclesCompletedToday++;
-  console.log(`[EmailAutoSender] Цикл #${cyclesCompletedToday} завершен.`);
-
-  return true;
+  console.log(`[EmailAutoSender] Цикл завершен.`);
 }
 
 /**
- * Планирует следующий запуск рассылки
+ * Планирует следующий запуск через CYCLE_INTERVAL (30 мин)
  */
 function scheduleNextRun() {
-  const todayDate = getMoscowDateString();
-
-  // Сбрасываем счетчик циклов, если наступил новый день
-  if (lastCycleDate !== todayDate) {
-    cyclesCompletedToday = 0;
-    lastCycleDate = todayDate;
-  }
-
-  // Если мы в рабочем окне и еще не выполнили все циклы
-  if (isInWorkingHours() && cyclesCompletedToday < MAX_CYCLES_PER_DAY) {
-    // Запускаем следующий цикл через CYCLE_INTERVAL
-    console.log(
-      `[EmailAutoSender] Следующий цикл через ${
-        CYCLE_INTERVAL / 1000 / 60
-      } минут`
-    );
-    setTimeout(() => {
-      runCycleIfAllowed().then(() => scheduleNextRun());
-    }, CYCLE_INTERVAL);
-  } else {
-    // Вычисляем время до следующего запуска (8:00 утра следующего дня)
-    const timeUntilNext = getTimeUntilNextRun();
-    const hours = Math.floor(timeUntilNext / (1000 * 60 * 60));
-    const minutes = Math.floor(
-      (timeUntilNext % (1000 * 60 * 60)) / (1000 * 60)
-    );
-
-    console.log(
-      `[EmailAutoSender] Переход в спящий режим. ` +
-        `Следующий запуск через ${hours} ч. ${minutes} мин. (в 8:00 МСК)`
-    );
-
-    setTimeout(() => {
-      cyclesCompletedToday = 0; // Сброс счетчика для нового дня
-      runCycleIfAllowed().then(() => scheduleNextRun());
-    }, timeUntilNext);
-  }
+  console.log(
+    `[EmailAutoSender] Следующий цикл через ${CYCLE_INTERVAL / 1000 / 60} мин.`
+  );
+  setTimeout(() => {
+    runCycle().then(() => scheduleNextRun());
+  }, CYCLE_INTERVAL);
 }
 
 /**
@@ -387,23 +320,18 @@ export function startEmailAutoSender() {
     return;
   }
 
-  console.log("[EmailAutoSender] Автоматическая рассылка запущена");
-  console.log(
-    `[EmailAutoSender] Рабочее время: ${WORK_START_HOUR}:00 - ${WORK_END_HOUR}:00 МСК`
-  );
-  console.log(
-    `[EmailAutoSender] Циклов в день: ${MAX_CYCLES_PER_DAY}, интервал: ${
-      CYCLE_INTERVAL / 1000 / 60
-    } мин.`
-  );
-
   const moscowTime = getMoscowTime();
+  console.log("[EmailAutoSender] Автоматическая рассылка запущена (24/7)");
   console.log(
     `[EmailAutoSender] Текущее время МСК: ${moscowTime.toLocaleString("ru-RU")}`
   );
+  console.log(
+    `[EmailAutoSender] Письма 1–2 — круглосуточно. Письма 3–21 — только ${WORK_START_HOUR}:00–${WORK_END_HOUR}:00 МСК.`
+  );
+  console.log(`[EmailAutoSender] Интервал цикла: ${CYCLE_INTERVAL / 1000 / 60} мин.`);
 
-  // Запускаем первый цикл (если в рабочее время)
-  runCycleIfAllowed().then(() => scheduleNextRun());
+  // Первый цикл сразу
+  runCycle().then(() => scheduleNextRun());
 }
 
 /**

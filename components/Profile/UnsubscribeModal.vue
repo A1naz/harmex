@@ -137,7 +137,7 @@ function close() {
 
           <div class="flex flex-col gap-2 mt-1">
             <button
-              class="btn btn-error w-full"
+              class="btn btn-primary w-full"
               :disabled="!selectedReason || loading"
               @click="unsubscribe"
             >
