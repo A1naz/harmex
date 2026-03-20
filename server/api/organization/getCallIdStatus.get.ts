@@ -7,18 +7,12 @@ export default eventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: "Не передан callId" });
   }
 
-  const found = await ReturnCallConfirm.findOne({ callId }).sort({
-    createdAt: -1,
-  });
+  const found = await ReturnCallConfirm.findOne({ callId }).sort({ createdAt: -1 });
 
   if (!found) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: "Запрос не найден",
-    });
+    throw createError({ statusCode: 404, statusMessage: "Запрос не найден" });
   }
 
-  // Статус обновляется вебхуком /api/organization/zvonokWebhook
   return {
     status: found.dialStatus === "confirmed" ? "confirmed" : "pending",
   };

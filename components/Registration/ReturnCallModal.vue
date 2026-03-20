@@ -6,86 +6,48 @@ const props = defineProps({
   phone: { type: String, required: true },
 });
 const emit = defineEmits(["close", "confirm"]);
-const isCodeSent = ref(false);
-const callId = ref("");
 
-const stopPolling = ref(false);
-
-async function getCallStatus() {
-  //@ts-ignore
-  const { data, error } = await useFetch("/api/organization/getCallIdStatus", {
-    method: "GET",
-    query: {
-      callId: callId.value,
-    },
-    watch: false,
-  });
-
-  if (data.value?.status === "confirmed") {
-    stopPolling.value = true;
-    notify({
-      group: "success",
-      title: "Номер подтвержден",
-    });
-    emit("confirm", callId.value);
-    emit("close");
-  }
-}
-
-let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-const poll = async () => {
-  await getCallStatus();
-
-  if (!stopPolling.value) {
-    timeoutId = setTimeout(() => {
-      poll();
-    }, 5000);
-  }
-};
+const isWaiting = ref(false);
 
 async function createReturnCall() {
-  //@ts-ignore
-  const { data, error }: any = await useFetch(
-    "/api/organization/createReturnCall",
-    {
-      method: "POST",
-      body: {
-        phone: props.phone.replace(/[()\-\s]/g, ""),
-      },
-      watch: false,
-    }
-  );
+  isWaiting.value = true;
 
-  if (data.value) {
-    isCodeSent.value = true;
-    callId.value = data.value.callId;
-    notify({
-      group: "success",
-      title: "Запрос создан",
+  try {
+    const data: any = await $fetch("/api/organization/createReturnCall", {
+      method: "POST",
+      body: { phone: props.phone.replace(/[()\-\s]/g, "") },
     });
-    poll();
-  } else {
-    notify({
-      group: "error",
-      title: "Что-то пошло не так, не удалось создать запрос",
-    });
+
+    if (data?.status === "confirmed") {
+      // Показываем уведомление в любом случае — даже если модалка уже закрыта
+      notify({ group: "success", title: "Номер подтвержден" });
+      emit("confirm", data.callId);
+      emit("close");
+    } else if (data?.requiresSupport) {
+      emit("close");
+    } else {
+      // timeout — предлагаем SMS
+      emit("close");
+    }
+  } catch {
+    notify({ group: "error", title: "Что-то пошло не так" });
+    emit("close");
+  } finally {
+    isWaiting.value = false;
   }
 }
 
 function handleClose() {
-  stopPolling.value = true;
-  if (timeoutId) {
-    clearTimeout(timeoutId);
-    timeoutId = null;
-  }
+  // Закрываем модалку, но $fetch продолжает ждать в фоне.
+  // Если юзер позвонит позже — notify сработает и без открытой модалки.
   emit("close");
 }
 
 watch(
   () => props.show,
-  () => {
-    if (props.show && !isCodeSent.value) {
+  (val) => {
+    // Если запрос уже летит — просто показываем модалку, новый звонок не создаём
+    if (val && !isWaiting.value) {
       createReturnCall();
     }
   }
@@ -117,8 +79,12 @@ watch(
         <a
           class="text-2xl font-bold text-blue-600 mb-4"
           href="tel:+78005558607"
-          >+7 800 555-86-07</a
-        >
+        >+7 800 555-86-07</a>
+
+        <div v-if="isWaiting" class="mt-4 flex flex-col items-center gap-2">
+          <span class="loading loading-spinner loading-md text-orange-400" />
+          <p class="text-gray-500 text-sm">Ожидаем подтверждения звонка...</p>
+        </div>
 
         <p class="text-gray-500 text-sm mt-4">
           Пожалуйста, позвоните на указанный номер с вашего телефона, чтобы
@@ -128,7 +94,7 @@ watch(
         </p>
 
         <button
-          class="btn btn-outline btn-sm mt-6 w-full "
+          class="btn btn-outline btn-sm mt-6 w-full"
           @click="handleClose"
         >
           Не получилось подтвердить
