@@ -86,6 +86,8 @@ export default eventHandler(async (event) => {
     });
   }
 
+  console.log('createReturnCall', JSON.stringify(session, null, 2));
+
   const phone = session.user.phoneNumber;
   const publicKey  = config.RETURN_CALL_PUBLIC_KEY;
   const campaignId = config.RETURN_CALL_CAMPAIGN_ID;

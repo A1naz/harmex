@@ -9,21 +9,26 @@ const emit = defineEmits(["close", "confirm"]);
 
 const isWaiting = ref(false);
 
+const { data, error, execute } = useFetch("/api/organization/createReturnCall", {
+  method: "POST",
+  immediate: false,
+  watch: false,
+});
+
 async function createReturnCall() {
   isWaiting.value = true;
 
   try {
-    const data: any = await $fetch("/api/organization/createReturnCall", {
-      method: "POST",
-      body: { phone: props.phone.replace(/[()\-\s]/g, "") },
-    });
+    await execute();
 
-    if (data?.status === "confirmed") {
-      // Показываем уведомление в любом случае — даже если модалка уже закрыта
+    if (error.value) throw error.value;
+
+    const result = data.value as any;
+    if (result?.status === "confirmed") {
       notify({ group: "success", title: "Номер подтвержден" });
-      emit("confirm", data.callId);
+      emit("confirm", result.callId);
       emit("close");
-    } else if (data?.requiresSupport) {
+    } else if (result?.requiresSupport) {
       emit("close");
     } else {
       // timeout — предлагаем SMS
@@ -38,7 +43,7 @@ async function createReturnCall() {
 }
 
 function handleClose() {
-  // Закрываем модалку, но $fetch продолжает ждать в фоне.
+  // Закрываем модалку, но useFetch продолжает ждать в фоне.
   // Если юзер позвонит позже — notify сработает и без открытой модалки.
   emit("close");
 }
