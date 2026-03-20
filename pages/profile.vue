@@ -562,7 +562,7 @@ function copyText(text: string) {
                 <input
                   v-model="form.phoneNumber"
                   v-maska
-                  :readonly="isPhoneVerified"
+                  readonly
                   :disabled="isPhoneCodeSent || form.phoneConfirmed"
                   :placeholder="$t('Номер телефона')"
                   data-maska="+7 (###) ###-##-##"
