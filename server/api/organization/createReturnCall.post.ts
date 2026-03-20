@@ -78,16 +78,15 @@ async function pollCallStatus(
 }
 
 export default eventHandler(async (event) => {
-  const { phone } = await readBody(event);
-
   const session = await getUserSession(event);
-  if (session?.user?.uuid && session.user.phoneNumber !== phone) {
+  if (!session?.user?.uuid) {
     throw createError({
-      statusCode: 400,
-      message: "Номер телефона не совпадает с номером в вашем профиле",
+      statusCode: 401,
+      message: "Необходима авторизация",
     });
   }
 
+  const phone = session.user.phoneNumber;
   const publicKey  = config.RETURN_CALL_PUBLIC_KEY;
   const campaignId = config.RETURN_CALL_CAMPAIGN_ID;
 
