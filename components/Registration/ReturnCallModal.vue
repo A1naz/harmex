@@ -55,48 +55,31 @@ watch(
 </script>
 
 <template>
-  <input
-    id="selectUser"
-    type="checkbox"
-    :checked="props.show"
-    class="modal-toggle"
-    :class="{ 'modal-open': props.show }"
-  />
-  <div
-    class="modal cursor-default"
-    style="z-index: 99999"
-  >
-    <div
-      v-if="props.show"
-      class="modal-box rounded-[8px] cursor-auto border p-3 sm:p-5 border-[#dee2e6]"
-      @click.stop
-    >
+  <input id="selectUser" type="checkbox" :checked="props.show" class="modal-toggle"
+    :class="{ 'modal-open': props.show }" />
+  <div class="modal cursor-default" style="z-index: 99999">
+    <div v-if="props.show" class="modal-box rounded-[8px] cursor-auto border p-3 sm:p-5 border-[#dee2e6]" @click.stop>
       <div class="max-w-md mx-auto p-6 rounded-2xl bg-white text-center">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">
           Подтверждение номера телефона
         </h2>
         <p class="text-gray-600 mb-2">Позвоните по номеру:</p>
-        <a
-          class="text-2xl font-bold text-blue-600 mb-4"
-          href="tel:+78005558607"
-        >+7 800 555-86-07</a>
+        <a class="text-2xl font-bold text-blue-600 mb-4" href="tel:+78005558607">+7 800 555-86-07</a>
 
         <div v-if="isWaiting" class="mt-4 flex flex-col items-center gap-2">
           <span class="loading loading-spinner loading-md text-orange-400" />
-          <p class="text-gray-500 text-sm">Ожидаем подтверждения звонка...</p>
+          <p class="text-gray-500 text-sm">Проверяем статус звонка...</p>
         </div>
 
         <p class="text-gray-500 text-sm mt-4">
           Пожалуйста, позвоните на указанный номер с вашего телефона, чтобы
-          завершить процесс подтверждения (звонок бесплатный).
+          завершить процесс подтверждения (звонок бесплатный). После окончания звонка подождите несколько секунд, пока
+          мы проверим статус звонка.
           <br />
           Если не вышло подтвердить обратным звонком, нажмите кнопку ниже и попробуйте отправить SMS-код.
         </p>
 
-        <button
-          class="btn btn-outline btn-sm mt-6 w-full"
-          @click="handleClose"
-        >
+        <button class="btn btn-outline btn-sm mt-6 w-full" @click="handleClose">
           Не получилось подтвердить
         </button>
       </div>
