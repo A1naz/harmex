@@ -112,16 +112,16 @@ async function sendEmailWithRetry(
       );
 
       if (attempt < retries) {
-        console.log(
-          `[EmailAutoSender] Ожидание ${
-            RETRY_DELAY / 1000
-          } сек. перед повторной попыткой...`
-        );
+        // console.log(
+        //   `[EmailAutoSender] Ожидание ${
+        //     RETRY_DELAY / 1000
+        //   } сек. перед повторной попыткой...`
+        // );
         await sleep(RETRY_DELAY);
       } else {
-        console.error(
-          `[EmailAutoSender] Все ${retries} попытки исчерпаны для ${email}`
-        );
+        // console.error(
+        //   `[EmailAutoSender] Все ${retries} попытки исчерпаны для ${email}`
+        // );
         return false;
       }
     }
@@ -134,9 +134,9 @@ async function sendEmailWithRetry(
  */
 async function processAutoEmails() {
   try {
-    console.log(
-      "[EmailAutoSender] Запуск проверки пользователей для автоматической рассылки..."
-    );
+    // console.log(
+    //   "[EmailAutoSender] Запуск проверки пользователей для автоматической рассылки..."
+    // );
 
     // Получаем всех пользователей, зарегистрированных после 21.11.2025
     // и у которых emailAutoSentCount < 21 или поля нет
@@ -151,9 +151,9 @@ async function processAutoEmails() {
       disableEmailAutoSender: { $ne: true },
     });
 
-    console.log(
-      `[EmailAutoSender] Найдено пользователей для обработки: ${users.length}`
-    );
+    // console.log(
+    //   `[EmailAutoSender] Найдено пользователей для обработки: ${users.length}`
+    // );
 
     let sentCount = 0;
     let skippedCount = 0;
@@ -163,7 +163,7 @@ async function processAutoEmails() {
       try {
         // Проверка на наличие email
         if (!user.email) {
-          console.log(`[EmailAutoSender] Пропущен пользователь без email`);
+          // console.log(`[EmailAutoSender] Пропущен пользователь без email`);
           continue;
         }
 
@@ -198,9 +198,9 @@ async function processAutoEmails() {
 
         if (hoursSinceRegistration < requiredHours) {
           const hoursLeft = (requiredHours - hoursSinceRegistration).toFixed(1);
-          console.log(
-            `[EmailAutoSender] Пропущен ${user.email}: письмо #${emailIndex + 1} — ещё ${hoursLeft} ч. до отправки`
-          );
+          // console.log(
+          //   `[EmailAutoSender] Пропущен ${user.email}: письмо #${emailIndex + 1} — ещё ${hoursLeft} ч. до отправки`
+          // );
           skippedCount++;
           continue;
         }
@@ -220,9 +220,9 @@ async function processAutoEmails() {
           }
         }
         if (emailIndex >= emailTemplates.length) {
-          console.log(
-            `[EmailAutoSender] Нет шаблона для индекса ${emailIndex}, пользователь ${user.email}`
-          );
+            // console.log(
+            //   `[EmailAutoSender] Нет шаблона для индекса ${emailIndex}, пользователь ${user.email}`
+            // );
           continue;
         }
 
@@ -243,9 +243,9 @@ async function processAutoEmails() {
         );
 
         if (!success) {
-          console.error(
-            `[EmailAutoSender] Не удалось отправить письмо пользователю ${user.email} после всех попыток`
-          );
+          // console.error(
+          //   `[EmailAutoSender] Не удалось отправить письмо пользователю ${user.email} после всех попыток`
+          // );
           continue;
         }
 
@@ -255,35 +255,35 @@ async function processAutoEmails() {
         await user.save();
 
         sentCount++;
-        console.log(
-          `[EmailAutoSender] Отправлено письмо #${user.emailAutoSentCount} пользователю ${user.email}`
-        );
+        // console.log(
+        //   `[EmailAutoSender] Отправлено письмо #${user.emailAutoSentCount} пользователю ${user.email}`
+        // );
 
         // Добавляем задержку между отправками для избежания rate limiting
         if (sentCount < users.length) {
-          console.log(
-            `[EmailAutoSender] Ожидание ${
-              SEND_DELAY / 1000
-            } сек. перед следующей отправкой...`
-          );
+          // console.log(
+          //   `[EmailAutoSender] Ожидание ${
+          //     SEND_DELAY / 1000
+          //   } сек. перед следующей отправкой...`
+          // );
           await sleep(SEND_DELAY);
         }
       } catch (error) {
-        console.error(
-          `[EmailAutoSender] Ошибка при обработке пользователя ${user.email}:`,
-          error
-        );
+        // console.error(
+        //   `[EmailAutoSender] Ошибка при обработке пользователя ${user.email}:`,
+        //   error
+        // );
       }
     }
 
-    console.log(
-      `[EmailAutoSender] Завершено. Отправлено писем: ${sentCount}, Пропущено: ${skippedCount}`
-    );
+    // console.log(
+    //   `[EmailAutoSender] Завершено. Отправлено писем: ${sentCount}, Пропущено: ${skippedCount}`
+    // );
   } catch (error) {
-    console.error(
-      "[EmailAutoSender] Критическая ошибка при обработке автоматической рассылки:",
-      error
-    );
+    // console.error(
+    //   "[EmailAutoSender] Критическая ошибка при обработке автоматической рассылки:",
+    //   error
+    // );
   }
 }
 
@@ -292,9 +292,9 @@ async function processAutoEmails() {
  */
 async function runCycle() {
   const moscowTime = getMoscowTime();
-  console.log(
-    `[EmailAutoSender] Запуск цикла в ${moscowTime.toLocaleTimeString("ru-RU")} МСК`
-  );
+  // console.log(
+  //   `[EmailAutoSender] Запуск цикла в ${moscowTime.toLocaleTimeString("ru-RU")} МСК`
+  // );
   await processAutoEmails();
   console.log(`[EmailAutoSender] Цикл завершен.`);
 }
@@ -303,9 +303,9 @@ async function runCycle() {
  * Планирует следующий запуск через CYCLE_INTERVAL (30 мин)
  */
 function scheduleNextRun() {
-  console.log(
-    `[EmailAutoSender] Следующий цикл через ${CYCLE_INTERVAL / 1000 / 60} мин.`
-  );
+  // console.log(
+  //   `[EmailAutoSender] Следующий цикл через ${CYCLE_INTERVAL / 1000 / 60} мин.`
+  // );
   setTimeout(() => {
     runCycle().then(() => scheduleNextRun());
   }, CYCLE_INTERVAL);
@@ -316,19 +316,19 @@ function scheduleNextRun() {
  */
 export function startEmailAutoSender() {
   if (!EMAIL_AUTO_SENDER_ENABLED) {
-    console.log("[EmailAutoSender] Автоматическая рассылка отключена");
+    // console.log("[EmailAutoSender] Автоматическая рассылка отключена");
     return;
   }
 
   const moscowTime = getMoscowTime();
-  console.log("[EmailAutoSender] Автоматическая рассылка запущена (24/7)");
-  console.log(
-    `[EmailAutoSender] Текущее время МСК: ${moscowTime.toLocaleString("ru-RU")}`
-  );
-  console.log(
-    `[EmailAutoSender] Письма 1–2 — круглосуточно. Письма 3–21 — только ${WORK_START_HOUR}:00–${WORK_END_HOUR}:00 МСК.`
-  );
-  console.log(`[EmailAutoSender] Интервал цикла: ${CYCLE_INTERVAL / 1000 / 60} мин.`);
+  // console.log("[EmailAutoSender] Автоматическая рассылка запущена (24/7)");
+  // console.log(
+  //   `[EmailAutoSender] Текущее время МСК: ${moscowTime.toLocaleString("ru-RU")}`
+  // );
+  // console.log(
+  //   `[EmailAutoSender] Письма 1–2 — круглосуточно. Письма 3–21 — только ${WORK_START_HOUR}:00–${WORK_END_HOUR}:00 МСК.`
+  // );
+  // console.log(`[EmailAutoSender] Интервал цикла: ${CYCLE_INTERVAL / 1000 / 60} мин.`);
 
   // Первый цикл сразу
   runCycle().then(() => scheduleNextRun());
@@ -338,6 +338,6 @@ export function startEmailAutoSender() {
  * Останавливает автоматическую рассылку (для будущего использования)
  */
 export function stopEmailAutoSender() {
-  console.log("[EmailAutoSender] Автоматическая рассылка остановлена");
+  // console.log("[EmailAutoSender] Автоматическая рассылка остановлена");
   // В будущем здесь можно добавить логику для очистки интервала
 }
