@@ -20,6 +20,7 @@ export default eventHandler(async (event) => {
   formData.append("public_key", publicKey);
   formData.append("phone", phone);
   formData.append("campaign_id", campaignId);
+  formData.append("webhook", "https://app.harmex.ru/api/organization/zvonokWebhook");
 
   try {
     //@ts-ignore
