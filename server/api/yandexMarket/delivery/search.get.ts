@@ -8,8 +8,6 @@ export default eventHandler(async (event) => {
     return sendRedirect(event, '/auth', 302)
 
   const { type, string, dateRange } = getQuery(event)
-
-  console.log('string: ', string)
   
   // Обработка dateRange
   let dateFilter = {};

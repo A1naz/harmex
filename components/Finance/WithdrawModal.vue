@@ -107,7 +107,6 @@ async function createBalanceWithdraw() {
   if (data.value && data.value.status === "ok") {
     modalType.value = "finalForm";
   } else if (data.value && data.value.status === "error") {
-    console.log(error.value);
     notify({
       title: "Что-то пошло не так",
       text: data.value.message,

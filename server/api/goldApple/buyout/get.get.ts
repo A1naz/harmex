@@ -167,6 +167,5 @@ export default eventHandler(async (event) => {
     }
   })
 
-  console.log(format.length)
   return format
 })

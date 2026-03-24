@@ -263,7 +263,6 @@ onMounted(async () => {
     loading.value = false;
   } catch (e) {
     loading.value = false;
-    console.log(e);
     error.value = "Не удалось загрузить карту";
   }
 });

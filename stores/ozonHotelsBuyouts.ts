@@ -174,7 +174,7 @@ export const useOzonHotelsBuyoutStore = defineStore("ozonHotelsBuyout", {
     changeSize(value: string | number, index: number) {
       this.createProducts[index].selectedSize = value;
       this.createProducts[index].priceText = value.split("|")[0];
-      console.log(value.split("|")[0].replaceAll(" ", "").replace("₽", ""));
+ 
       this.createProducts[index].price = Number(
         value
           .split("|")[0]

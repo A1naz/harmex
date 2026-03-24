@@ -464,7 +464,7 @@ function refreshElements() {
 }
 
 function handleAddressCourier(address: string, lt: number, lg: number) {
-  console.log(address, lt, lg);
+
   modalOpenCourier.value = false;
 
   store.handleAddressCourier(address, lt, lg, addressForm);
@@ -487,7 +487,7 @@ function openPromo(productIndex: number, price: number) {
 }
 
 function removePromo(index: number) {
-  console.log(index);
+ 
   store.createProducts[index].promoCode = "";
 }
 

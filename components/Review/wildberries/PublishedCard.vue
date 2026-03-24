@@ -49,11 +49,7 @@ function confirmCancel() {
 }
 
 const showSupplementButton = computed(() => {
-  console.log(
-    "showSupplementButton",
-    props.info.status,
-    props.info.completedDate
-  );
+
   if (props.info.status === "published" && props.info.completedDate) {
     const completedDate = $dayjs(props.info.completedDate);
     const now = $dayjs();

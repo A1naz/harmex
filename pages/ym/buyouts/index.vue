@@ -283,7 +283,7 @@ const filters = [
 ];
 
 watch(targetIsVisible, async (isVisible) => {
-  console.log("isVisible", isVisible);
+
   if (isVisible && autoTarget.value && buyouts.value.length >= 50) {
     if (end.value) return;
     const { data } = await useFetch("/api/yandexMarket/buyout/get", {

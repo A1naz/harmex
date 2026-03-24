@@ -9,7 +9,6 @@ export default eventHandler(async (event) => {
 
   const { type, string, dateRange } = getQuery(event)
 
-  console.log('string: ', string)
   
   // Обработка dateRange
   let dateFilter = {};

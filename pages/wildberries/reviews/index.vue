@@ -271,7 +271,7 @@ async function submitSupplement(payload: { reviewId: string; text: string }) {
 watch(
   () => targetIsVisible.value,
   (isVisible) => {
-    console.log("isVisible", isVisible);
+   
     if (isVisible && !end.value) {
       skip.value += limit.value;
       fetchData();

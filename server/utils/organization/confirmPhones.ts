@@ -7,14 +7,16 @@ export async function confirmViaHiCall(hiCallKey: string, phoneNumber: string) {
     )
 
     if (!data || !data.code) {
+      // eslint-disable-next-line no-console
+      console.error(`[confirmViaHiCall] Неожиданный ответ от hi-call.ru для номера ${phoneNumber}:`, JSON.stringify(data))
       return { status: 'error', message: 'Не удалось отправить код' }
     }
 
     return data
   }
-  catch (e) {
+  catch (e: any) {
     // eslint-disable-next-line no-console
-    console.log('confirmViaHiCall error:', e)
+    console.error(`[confirmViaHiCall] Ошибка запроса к hi-call.ru для номера ${phoneNumber}:`, e?.message ?? e)
     return { status: 'error', message: 'Не удалось отправить код' }
   }
 }
@@ -47,6 +49,8 @@ export async function confirmViaZvonokApi(
     })
 
     if (!data || !data.data || !data.data.pincode || data.status === 'error') {
+      // eslint-disable-next-line no-console
+      console.error(`[confirmViaZvonokApi] Неожиданный ответ от zvonok.com для номера ${phoneNumber}:`, JSON.stringify(data))
       return { status: 'error', message: 'Не удалось отправить код' }
     }
 
@@ -55,9 +59,9 @@ export async function confirmViaZvonokApi(
       code: data.data.pincode,
     }
   }
-  catch (e) {
+  catch (e: any) {
     // eslint-disable-next-line no-console
-    console.log('confirmViaZvonokApi error:', e)
+    console.error(`[confirmViaZvonokApi] Ошибка запроса к zvonok.com для номера ${phoneNumber}:`, e?.message ?? e)
     return { status: 'error', message: 'Не удалось отправить код' }
   }
 }

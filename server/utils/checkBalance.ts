@@ -26,7 +26,6 @@ function getBuyoutsSumm(
       summ += pricesMap[mp].buyouts;
     } else if (pricesMap[mp].buyoutsType === "percent") {
       const percentSumm = parseFloat(product.discountPrice) ? parseFloat(product.discountPrice) : parseFloat(product.price) * (pricesMap[mp].buyouts / 100);
-      console.log(percentSumm);
       if (percentSumm < pricesMap[mp].buyoutsMinPrice) {
         summ += pricesMap[mp].buyoutsMinPrice;
       } else {
@@ -43,7 +42,6 @@ async function getPricesMap(user: any) {
   const userTariffs = user.MPTariffs ? user.MPTariffs : [];
 
   if (!pricesDocument?.values) {
-    console.log("Prices document not found");
     return {};
   }
 
@@ -90,11 +88,6 @@ function getCurrentProductSumm(product: any, prices: any, service: any) {
   } else if (service === "questions") {
     return prices.question;
   } else {
-    console.log(
-      "prices[service]" + product.amount
-        ? prices[service] * product.amount
-        : prices[service]
-    );
     return product.amount ? prices[service] * product.amount : prices[service];
   }
 }
@@ -463,7 +456,6 @@ export const checkBalance = async (
       ]),
     ]);
 
-    console.log(wildberriesBuyoutSum);
 
     const balanceActive =
       (flowwowBuyoutSum[0]?.total || 0) +
@@ -478,16 +470,13 @@ export const checkBalance = async (
       (avitoReviewSum[0]?.total || 0);
 
       
-    console.log(flowwowBuyoutSum)
     let currentProductSumm =
       service === "buyouts"
         ? getBuyoutsSumm(products, mp, pricesMap)
         : getCurrentProductSumm(products, pricesMap[products.mp], service) || 0;
-    console.log("currentProductSumm", currentProductSumm);
 
     totalPrice += balanceActive + currentProductSumm;
 
-    console.log("totalPrice: ", mp, totalPrice);
     return user.balance >= totalPrice;
   } catch (e) {
     console.error(e);

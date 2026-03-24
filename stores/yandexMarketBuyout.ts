@@ -201,7 +201,7 @@ export const useYandexMarketBuyoutStore = defineStore("yandexMarketBuyout", {
       this.createProducts.splice(index, 1);
     },
     handleAddress(address: string, lt: number, lg: number, id: number) {
-      console.log(address, lt, lg, id);
+    
       const index = this.selectedItem!;
       this.createProducts[index].adress = address;
       this.createProducts[index].pointId = id;

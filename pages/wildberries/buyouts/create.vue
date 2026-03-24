@@ -468,7 +468,7 @@ const summ = computed(() => {
     (item) => item.shelves === true
   ).length;
 
-  console.log(shelvesCount)
+  
   if (summInfo && summInfo.summ) {
     if (shelvesCount) {
       summInfo.serviceSumm += 200 * shelvesCount;

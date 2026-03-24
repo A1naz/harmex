@@ -394,7 +394,7 @@ function removeDiscount(index: number) {
   store.createProducts[index].discountPrice = store.createProducts[index].price;
 }
 function removePromo(index: number) {
-  console.log(index);
+ 
   store.createProducts[index].promoCode = "";
 }
 function refreshElements() {
@@ -409,7 +409,7 @@ function closeModal() {
 }
 
 function handleAddressFBS(address: string, lt: number, lg: number) {
-  console.log(address, lt, lg);
+
   modalOpenFBS.value = false;
 
   store.handleAddressFBS(address, lt, lg, addressForm);

@@ -150,7 +150,6 @@ async function generateVideoThumbnail(file: File) {
 }
 
 async function uploadToS3(event: Event, index: number) {
-  console.log("uploadToS3");
   loadingIndex.value = index;
   const fileList = (event.target! as HTMLInputElement).files;
   const file = (event.target! as HTMLInputElement).files[0];
@@ -175,7 +174,6 @@ async function uploadToS3(event: Event, index: number) {
   }
 
   const fileName = "reviewImages/" + uuid();
-  console.log(fileName);
   const result = await upload(file, {
     key: fileName,
   });
@@ -189,8 +187,6 @@ async function uploadToS3(event: Event, index: number) {
     });
     return;
   }
-  console.log(result);
-  console.log(result);
   //@ts-ignore
   await useFetch("/api/images/openForPublic", {
     method: "GET",
@@ -421,7 +417,7 @@ async function handleFileChange(e: any) {
       title: "Неверный формат",
       text: "Разрешены только файлы MP4, AVI и MPG",
     });
-    console.log("handleFileChange");
+
     form.video = "";
     return;
   }

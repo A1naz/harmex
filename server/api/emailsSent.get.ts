@@ -50,13 +50,6 @@ export default defineEventHandler(async (event) => {
       // Сохраняем пользователя
       await user.save();
 
-      console.log(
-        `[emailsSent] Зарегистрирован клик: пользователь ${username}, письмо #${emailNumber}`
-      );
-    } else {
-      console.log(
-        `[emailsSent] Клик уже был зарегистрирован: пользователь ${username}, письмо #${emailNumber}`
-      );
     }
 
     // Редиректим на профиль

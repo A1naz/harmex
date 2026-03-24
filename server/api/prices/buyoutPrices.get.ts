@@ -27,11 +27,7 @@ export default defineEventHandler(async (event) => {
     const isTariffExist: any = user.MPTariffs.find((item: any) => item.mp === mp);
     if (isTariffExist) {
       const prices = isTariffExist.prices ? isTariffExist.prices : [];
-      console.log({
-        minPrice: prices.buyouts.minPrice,
-        value: prices.buyouts.value,
-        type: prices.buyouts.type,
-      })
+  
       return {
         minPrice: prices.buyouts.minPrice,
         value: prices.buyouts.value,
@@ -41,11 +37,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const prices = defaultPrices.values.find((item: any) => item.mp === mp);
-  console.log("prices", {
-    minPrice: prices.prices.buyouts.minPrice,
-    value: prices.prices.buyouts.value,
-    type: prices.prices.buyouts.type,
-  });
+
   
   return {
     minPrice: prices.prices.buyouts.minPrice,

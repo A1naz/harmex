@@ -63,7 +63,7 @@ async function uploadToVKCloud(source: string, isBase64: boolean): Promise<strin
 // Функция для получения ключа API
 async function getAIKey(provider: AIProvider): Promise<{apiKey: string, folderId: string}> {
   const record = await AIKey.findOne({ aiProvider: provider, isActive: true }).sort({ priority: 1 });
-  console.log(provider)
+
   if (!record?.apiKey) throw new Error(`Нет активного ключа для провайдера: ${provider}`);
   return {
     apiKey: record.apiKey,

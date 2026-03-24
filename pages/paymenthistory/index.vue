@@ -158,7 +158,7 @@ async function updateTableData() {
         { value: "source", label: "Источник" },
         { value: "service", label: "Услуга" },
       ];
-      console.log(fetchedData);
+    
       tableData.value = fetchedData.value.map((item: any) => ({
         summ: item.summ,
         date: item.date,

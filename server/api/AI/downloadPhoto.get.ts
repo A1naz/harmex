@@ -20,9 +20,6 @@ export default eventHandler(async (event) => {
       decodedUrl = decodeURIComponent(decodedUrl);
     }
     
-    console.log('Original URL:', url);
-    console.log('Decoded URL:', decodedUrl);
-    
     // Определяем маркетплейс по URL для специфичных заголовков
     const isOzon = decodedUrl.includes('ozone.ru') || decodedUrl.includes('cdn.ozone.ru') || decodedUrl.includes('cdn1.ozone.ru');
     const isYandex = decodedUrl.includes('yandex.net') || decodedUrl.includes('avatars.mds.yandex.net') || decodedUrl.includes('avatars.mds.yandex.ru');
@@ -115,14 +112,13 @@ export default eventHandler(async (event) => {
       }
     } catch (err) {
       // Вариант 2: Используем оригинальный URL (может быть он должен остаться закодированным)
-      console.log('Trying with original encoded URL...');
       try {
         response = await fetch(url, {
           headers: baseHeaders
         });
       } catch (err2) {
         // Вариант 3: Минимальные заголовки
-        console.log('Trying with minimal headers...');
+  
         response = await fetch(decodedUrl, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -132,16 +128,12 @@ export default eventHandler(async (event) => {
     }
     
     if (!response.ok) {
-      console.error('Response status:', response.status);
-      console.error('Response statusText:', response.statusText);
       throw new Error(`Failed to download image: ${response.status} ${response.statusText}`);
     }
 
     const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     
-    console.log('Downloaded image size:', buffer.length, 'bytes');
-
     // Возвращаем изображение как blob
     setHeader(event, "Content-Type", response.headers.get("content-type") || "image/png");
     

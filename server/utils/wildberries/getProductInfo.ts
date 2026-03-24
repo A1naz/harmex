@@ -121,7 +121,7 @@ export async function getWBProductInfo(article: string | number): Promise<WBProd
   }
 
   let price = 0;
-  console.log(productInfo)
+
   for (let i = 0; i < productInfo.sizes.length; i++) {
     if (isSingleSize || productInfo.sizes[i].stocks.length > 0) {
       price = productInfo.sizes[i].price?.product / 100;

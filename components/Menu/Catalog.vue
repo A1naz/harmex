@@ -15,7 +15,7 @@ const emit = defineEmits(["update:selectedType"]);
 const selectedType = toRef(props, "selectedType");
 
 function selectType(type: string) {
-        console.log(type);
+
   emit("update:selectedType", type);
 }
 </script>

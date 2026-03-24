@@ -121,7 +121,7 @@ const mpStore = {
 
 function changeFilter(e: { value: string }) {
   // Placeholder for mpStore.changeMp(e.value, 'reports')
-  console.log("Marketplace changed to:", e.value);
+
 }
 </script>
 

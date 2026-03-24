@@ -14,11 +14,9 @@ export default eventHandler(async (event) => {
   //   const diff = now.getTime() - new Date(parsed.updated).getTime();
   //   if (diff < 1000 * 60 * 60) {
   //     points = JSON.parse(cached).points;
-  //     console.log("points from cache");
   //   }
   // } else {
   points = await PVZ.find({ name: { $exists: true } });
-  console.log(points);
   // }
 
   const pickpoints: any[] = [];

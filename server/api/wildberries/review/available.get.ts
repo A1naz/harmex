@@ -106,7 +106,7 @@ export default eventHandler(async (event) => {
   ])
 
 //  const sex = (genders: string[]): string => {
-//   console.log(genders)
+
 //     for (const gen of genders) {
 //       if (gen && typeof gen === 'string') {
 //         const foundGen = genderMap.get(gen.toLowerCase())

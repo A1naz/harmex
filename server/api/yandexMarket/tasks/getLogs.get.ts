@@ -11,7 +11,6 @@ export default eventHandler(async (event) => {
     $or: [{ uuid: uuid }, { buyoutuuid: uuid }],
   }).sort({ _id: -1 })
 
-  console.log(all)
 
   return all
 })

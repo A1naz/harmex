@@ -32,9 +32,6 @@ export default eventHandler(async (event) => {
     'status': 'completed',
   }
 
-  console.log(filter)
-  console.log(pvz)
-
 if (searchParseAvailable && Object.values(searchParseAvailable)[0] !== "") {
   if (
     Object.keys(searchParseAvailable)[0] === SelectOptionsReviews.uuidBuyout

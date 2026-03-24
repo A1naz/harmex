@@ -18,7 +18,6 @@ export async function getWbCookies(): Promise<string> {
       // Пробуем получить из ENV как fallback
       const config = useRuntimeConfig();
       if (config.WB_COOKIES) {
-        console.log("[WB Cookies] Using fallback cookies from ENV");
         return config.WB_COOKIES as string;
       }
       
@@ -31,19 +30,19 @@ export async function getWbCookies(): Promise<string> {
     
     // Проверяем, не устарели ли cookies (больше 2 часов)
     if (age > COOKIE_LIFETIME) {
-      console.warn(`[WB Cookies] Cookies are outdated (${Math.round(age / 1000 / 60)} minutes old)`);
+
     } else {
-      console.log(`[WB Cookies] Using DB cookies (age: ${Math.round(age / 1000 / 60)} minutes)`);
+
     }
     
     return cookieDoc.cookieString;
   } catch (error: any) {
-    console.error("[WB Cookies] Failed to get cookies from DB:", error.message);
+  
     
     // Fallback на ENV
     const config = useRuntimeConfig();
     if (config.WB_COOKIES) {
-      console.log("[WB Cookies] Using fallback cookies from ENV");
+
       return config.WB_COOKIES as string;
     }
     
@@ -55,7 +54,7 @@ export async function getWbCookies(): Promise<string> {
  * Принудительно обновляет cookies (перечитывает из БД)
  */
 export async function refreshWbCookies(): Promise<void> {
-  console.log("[WB Cookies] Force refresh - getting fresh cookies from DB");
+
   await getWbCookies();
 }
 

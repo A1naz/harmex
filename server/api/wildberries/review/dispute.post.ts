@@ -44,7 +44,6 @@ export default eventHandler(async (event) => {
   review.disputed = true;
   review.status = "disputing";
 
-  console.log(review);
   await review.save();
   return {
     message: "Отзыв успешно оспорен",

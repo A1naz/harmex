@@ -116,8 +116,6 @@ export function findImage(input: string) {
       host = '//basket-34.wbbasket.ru'
   }
 
-  console.log(vol)
-  console.log(host)
   return `https:${host}/vol${vol}/part${part}/${nm}/images/big/1.webp`
 }
 

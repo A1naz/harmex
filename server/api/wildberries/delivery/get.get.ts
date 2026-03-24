@@ -11,7 +11,6 @@ export default eventHandler(async (event) => {
   // const all = await Delivery.find({ user })
   let deliveries;
   let searchOption = {};
-  console.log(string)
   
   // Обработка dateRange
   let dateFilter = {};
@@ -132,7 +131,7 @@ export default eventHandler(async (event) => {
       .skip(skip as number)
       .limit(limit as number);
   } else if (status === "completed") {
-    console.log(searchOption)
+
     deliveries = await Delivery.find({
       user,
       status: "completed",

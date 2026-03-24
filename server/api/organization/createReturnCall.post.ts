@@ -53,24 +53,20 @@ async function pollCallStatus(
       const callStatus = entry.call_status;
 
       // eslint-disable-next-line no-console
-      console.log(`[createReturnCall] poll callId=${callId} dial_status=${dialStatus} call_status=${callStatus}`);
 
       if (dialStatus === 5 || callStatus === "pincode_ok" || callStatus === "compl_finished") {
         await ReturnCallConfirm.findOneAndUpdate({ callId }, { dialStatus: "confirmed" });
         await User.findOneAndUpdate({ phoneNumber: phone }, { phoneConfirmed: true });
         // eslint-disable-next-line no-console
-        console.log(`[createReturnCall] Подтверждено: phone=${phone} callId=${callId}`);
         return { status: "confirmed", callId };
       }
 
       if (TERMINAL_FAIL_STATUSES.includes(dialStatus)) {
         // eslint-disable-next-line no-console
-        console.log(`[createReturnCall] Терминальный статус ${dialStatus} для phone=${phone}`);
         break;
       }
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.log("[createReturnCall] Ошибка при опросе zvonok:", e);
     }
   }
 
@@ -86,7 +82,6 @@ export default eventHandler(async (event) => {
     });
   }
 
-  console.log('createReturnCall', JSON.stringify(session, null, 2));
 
   const phone = session.user.phoneNumber;
   const publicKey  = config.RETURN_CALL_PUBLIC_KEY;
@@ -101,7 +96,6 @@ export default eventHandler(async (event) => {
     const remaining = COOLDOWN_MS - elapsed;
     if (remaining > 0) {
       // eslint-disable-next-line no-console
-      console.log(`[createReturnCall] Кулдаун для ${phone}, опрашиваем старый callId=${lastRecord.callId}, ждём ещё ${Math.round(remaining / 1000)}с`);
       const result = await pollCallStatus(phone, lastRecord.callId, publicKey, remaining);
       if (result.status === "confirmed") return result;
       // Кулдаун истёк без подтверждения — идём создавать новый звонок
@@ -124,7 +118,6 @@ export default eventHandler(async (event) => {
     );
 
     // eslint-disable-next-line no-console
-    console.log("[createReturnCall] zvonok ответ:", JSON.stringify(data));
 
     if (!data || !data.data?.call_id || data.status !== "ok") {
       await saveFallbackCode(phone);
@@ -134,7 +127,6 @@ export default eventHandler(async (event) => {
     callId = data.data.call_id;
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.log("[createReturnCall] Ошибка при создании звонка:", e);
     await saveFallbackCode(phone);
     return { status: "ok", requiresSupport: true };
   }

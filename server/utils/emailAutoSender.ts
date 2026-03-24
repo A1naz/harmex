@@ -296,7 +296,7 @@ async function runCycle() {
   //   `[EmailAutoSender] Запуск цикла в ${moscowTime.toLocaleTimeString("ru-RU")} МСК`
   // );
   await processAutoEmails();
-  console.log(`[EmailAutoSender] Цикл завершен.`);
+
 }
 
 /**

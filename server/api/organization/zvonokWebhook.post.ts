@@ -39,10 +39,6 @@ export default eventHandler(async (event) => {
   const callStatus = body.call_status ?? body.callStatus;
 
   // eslint-disable-next-line no-console
-  console.log("[zvonokWebhook] Входящий запрос:", JSON.stringify(body, null, 2));
-  // eslint-disable-next-line no-console
-  console.log(`[zvonokWebhook] call_id=${callId} phone=${phone} dial_status=${dialStatus} call_status=${callStatus}`);
-
   if (!callId && !phone) {
     return { ok: false, message: "Нет данных" };
   }

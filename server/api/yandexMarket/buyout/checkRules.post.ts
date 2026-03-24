@@ -112,7 +112,7 @@ export default eventHandler(async (event) => {
     //     }
     //   }
     // }
-    console.log(item.adress);
+
     if (!item.digitalProduct) {
       const foundPoint = points.find(
         (p: any) =>

@@ -219,9 +219,9 @@ export const useOzonBuyoutStoreDiscount = defineStore("ozonBuyoutDiscount", {
       lg: number,
       addressInfo: any
     ) {
-      console.log(addressInfo);
+    
       const index = this.selectedItem!;
-      console.log(address, lt, lg);
+ 
       this.createProducts[index].adress = address;
       this.createProducts[index].pointCoordinates = {
         lat: lt,

@@ -2,7 +2,6 @@
 const { notify } = useNotification();
 
 const { loggedIn, user, session, fetch, clear } = useUserSession()
-// console.log('2fa', user)
 
 // if (!user || !user.value.uuid) {
 //   await clear()

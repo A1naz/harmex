@@ -70,7 +70,7 @@ function useApi() {
   }
 
   const _showMessage = (mes: any) => {
-    console.log(mes.message)
+
     notify({
       title: 'Что-то пошло не так',
       text: mes,

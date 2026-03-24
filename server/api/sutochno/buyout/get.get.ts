@@ -161,6 +161,6 @@ export default eventHandler(async (event) => {
     }
   })
 
-  console.log(format)
+
   return format
 })

@@ -24,7 +24,7 @@ const paginations = ref([
 const totalPages = 100;
 
 function changePagination(value: number) {
-  console.log(value);
+
   itemsPerPage.value = value;
   emit("changePagination", itemsPerPage.value);
 }

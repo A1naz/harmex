@@ -219,7 +219,7 @@ onMounted(async () => {
   } catch (e) {
     loading.value = false;
     // eslint-disable-next-line no-console
-    console.log(e);
+ 
     error.value = "Не удалось загрузить карту";
   }
 });

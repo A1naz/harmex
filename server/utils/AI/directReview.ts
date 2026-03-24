@@ -77,7 +77,7 @@ async function callGemini(apiKey: string, prompt: string): Promise<string> {
     }
   )
   const text: string = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
-  console.log('[Gemini raw]:', JSON.stringify(text))
+
   return text
 }
 

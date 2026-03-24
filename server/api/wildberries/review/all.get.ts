@@ -110,7 +110,7 @@ export default eventHandler(async (event) => {
   }
 
   if (tab === "all") {
-    console.log(query)
+
     // Используем агрегацию для приоритетной сортировки
     reviews = await Review.aggregate([
       {

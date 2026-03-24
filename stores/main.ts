@@ -67,7 +67,7 @@ export const useMainStore = defineStore("main", {
       });
 
       if (data.value) {
-        console.log(data.value);
+     
         return data.value;
       } else {
         return {
@@ -116,7 +116,7 @@ export const useMainStore = defineStore("main", {
         }
       });
 
-      console.log({ summ, serviceSumm, extraSumm });
+
 
       return {
         summ: summ,

@@ -22,9 +22,7 @@ export default eventHandler(async (event) => {
     customText: reason === "other" ? (customText || null) : null,
   });
 
-  console.log(
-    `[UnsubscribeEmail] ${user.email} (${user.uuid}) отписался. Причина: ${reason}${customText ? ` — ${customText}` : ""}`
-  );
+ 
 
   return { ok: true };
 });

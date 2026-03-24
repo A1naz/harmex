@@ -123,7 +123,6 @@ export async function createOzonPickpointsFile() {
     points: collection,
   };
 
-  console.log("creating ozonPoints.json");
   fs.writeFileSync("pvz/ozonPoints.json", JSON.stringify(cache));
 }
 
@@ -144,7 +143,6 @@ export async function createYandexMarketPickpointsFile() {
     points: collection,
   };
 
-  console.log("creating YandexMarketPoints.json");
   fs.writeFileSync("pvz/yandexMarketPoints.json", JSON.stringify(cache));
 }
 

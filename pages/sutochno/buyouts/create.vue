@@ -220,7 +220,7 @@ function openPromo(productIndex: number, price: number) {
 }
 
 function removePromo(index: number) {
-  console.log(index);
+
   store.createProducts[index].promoCode = "";
 }
 

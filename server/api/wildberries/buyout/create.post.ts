@@ -84,7 +84,7 @@ export default eventHandler(async (event) => {
       if (!product.purchaseSoon) {
         const curDate = new Date();
         if (date1 < curDate) {
-          console.log(date1, curDate);
+  
           throw createError(
             `Для продукта ${product.article} выбрано некорректное время, дата выкупа не может быть меньше текущей даты`
           );
