@@ -9,16 +9,17 @@ const emit = defineEmits(["close", "confirm"]);
 
 const isWaiting = ref(false);
 
+const fetchBody = ref({ phone: '' });
+
 const { data, error, execute } = useFetch("/api/organization/createReturnCall", {
   method: "POST",
-  body: {
-    phone: props.phone.replace(/[\(\)\-\s]/g, ''),
-  },
+  body: fetchBody,
   immediate: false,
   watch: false,
 });
 
 async function createReturnCall() {
+  fetchBody.value = { phone: props.phone.replace(/[()\-\s]/g, '') };
   isWaiting.value = true;
 
   try {

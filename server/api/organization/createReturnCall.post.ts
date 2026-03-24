@@ -65,8 +65,9 @@ async function pollCallStatus(
         // eslint-disable-next-line no-console
         break;
       }
-    } catch (e) {
+    } catch (e: any) {
       // eslint-disable-next-line no-console
+      console.error(`[createReturnCall] Ошибка опроса статуса callId=${callId}:`, e?.message ?? e);
     }
   }
 
@@ -77,7 +78,13 @@ export default eventHandler(async (event) => {
   const { phone: phoneFromBody }: any = await readBody(event);
   const session = await getUserSession(event);
 
-  const phone = session && session.user ? session.user.phoneNumber : phoneFromBody.replace(/[\(\)\-\s]/g, '');
+  const phone: string = session?.user?.phoneNumber
+    || phoneFromBody?.replace(/[()\-\s]/g, '')
+    || '';
+
+  if (!phone) {
+    throw createError({ statusCode: 400, message: 'Номер телефона не указан' });
+  }
   const publicKey  = config.RETURN_CALL_PUBLIC_KEY;
   const campaignId = config.RETURN_CALL_CAMPAIGN_ID;
 
@@ -114,13 +121,16 @@ export default eventHandler(async (event) => {
     // eslint-disable-next-line no-console
 
     if (!data || !data.data?.call_id || data.status !== "ok") {
+      // eslint-disable-next-line no-console
+      console.error(`[createReturnCall] Неожиданный ответ zvonok для ${phone}:`, JSON.stringify(data));
       await saveFallbackCode(phone);
       return { status: "ok", requiresSupport: true };
     }
 
     callId = data.data.call_id;
-  } catch (e) {
+  } catch (e: any) {
     // eslint-disable-next-line no-console
+    console.error(`[createReturnCall] Ошибка создания звонка для ${phone}:`, e?.message ?? e);
     await saveFallbackCode(phone);
     return { status: "ok", requiresSupport: true };
   }

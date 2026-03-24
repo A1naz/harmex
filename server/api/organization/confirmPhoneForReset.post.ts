@@ -63,6 +63,8 @@ export default eventHandler(async (event) => {
     )
 
     if (!data?.code) {
+      // eslint-disable-next-line no-console
+      console.error(`[confirmPhoneForReset] zvonok не вернул код для существующего номера ${phoneNumber}, ответ:`, JSON.stringify(data))
       return {
         status: 'error',
         message: 'Не удалось отправить код',
@@ -86,6 +88,8 @@ export default eventHandler(async (event) => {
       )
 
       if (!data?.code) {
+        // eslint-disable-next-line no-console
+        console.error(`[confirmPhoneForReset] zvonok не вернул код для нового номера ${phoneNumber}, ответ:`, JSON.stringify(data))
         return {
           status: 'error',
           message: 'Не удалось отправить код',
@@ -104,8 +108,9 @@ export default eventHandler(async (event) => {
         status: 'ok',
       }
     }
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    catch (e) {
+    catch (e: any) {
+      // eslint-disable-next-line no-console
+      console.error(`[confirmPhoneForReset] Необработанная ошибка для номера ${phoneNumber}:`, e?.message ?? e)
       return {
         status: 'error',
         message: 'Не удалось отправить код',
