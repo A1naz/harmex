@@ -106,10 +106,10 @@ async function sendEmailWithRetry(
       await MailService.sendAutoEmail(email, subject, html);
       return true;
     } catch (error) {
-      console.error(
-        `[EmailAutoSender] Попытка ${attempt}/${retries} не удалась для ${email}:`,
-        error
-      );
+      // console.error(
+      //   `[EmailAutoSender] Попытка ${attempt}/${retries} не удалась для ${email}:`,
+      //   error
+      // );
 
       if (attempt < retries) {
         // console.log(

@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
     // Редиректим на профиль
     return sendRedirect(event, "/profile", 302);
   } catch (error) {
-    console.error("[emailsSent] Ошибка при обработке клика:", error);
+    // console.error("[emailsSent] Ошибка при обработке клика:", error);
     return sendRedirect(event, "/profile", 302);
   }
 });

@@ -39,9 +39,9 @@ class MailService {
     // Проверка соединения при инициализации
     this.transporter.verify((error, success) => {
       if (error) {
-        console.error('[MailService] SMTP connection verification failed:', error)
+        // console.error('[MailService] SMTP connection verification failed:', error)
       } else {
-        console.log('[MailService] SMTP server is ready to take messages')
+        // console.log('[MailService] SMTP server is ready to take messages')
       }
     })
   }
