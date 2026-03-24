@@ -381,6 +381,7 @@ async function generatePassword() {
           </p>
         </form>
       </div>
+
     </div>
     <RegistrationReturnCallModal
       :show="phoneReturnCallModal"

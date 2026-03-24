@@ -1,11 +1,7 @@
 import { ConfirmPhone } from '~/server/lib/models/ConfirmPhone'
-import {
-  confirmViaHiCall,
-  confirmViaZvonokApi,
-} from '~/server/utils/organization/confirmPhones'
+import { confirmViaZvonokApi } from '~/server/utils/organization/confirmPhones'
 
 const config = useRuntimeConfig()
-const hiCallKey = config.HI_CALL_KEY
 const zvonokCampaignId = config.ZVONOK_CAMPAIGN_ID
 const zvonokPublicKey = config.ZVONOK_PUBLIC_KEY
 
@@ -58,16 +54,11 @@ export default eventHandler(async (event) => {
     isConfirmExist.date = new Date()
     await isConfirmExist.save()
 
-    if (isConfirmExist.count > 2) {
-      data = await confirmViaHiCall(hiCallKey, phoneNumber)
-    }
-    else {
-      data = await confirmViaZvonokApi(
-        zvonokPublicKey,
-        zvonokCampaignId,
-        phoneNumber,
-      )
-    }
+    data = await confirmViaZvonokApi(
+      zvonokPublicKey,
+      zvonokCampaignId,
+      phoneNumber,
+    )
 
     if (!data?.code) {
       return {
@@ -91,10 +82,6 @@ export default eventHandler(async (event) => {
         zvonokCampaignId,
         phoneNumber,
       )
-
-      if (!data?.code || data.status === 'error') {
-        data = await confirmViaHiCall(hiCallKey, phoneNumber)
-      }
 
       if (!data?.code) {
         return {

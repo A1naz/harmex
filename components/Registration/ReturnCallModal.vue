@@ -11,6 +11,9 @@ const isWaiting = ref(false);
 
 const { data, error, execute } = useFetch("/api/organization/createReturnCall", {
   method: "POST",
+  body: {
+    phone: props.phone.replace(/[\(\)\-\s]/g, ''),
+  },
   immediate: false,
   watch: false,
 });
