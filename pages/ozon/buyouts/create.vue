@@ -97,7 +97,7 @@ function handleAddress(address: string, lt: number, lg: number, id: string) {
 }
 function openInfoModal(type: string) {
   infoType.value = type;
-  infoModal.value?.showModal();
+  infoModal.value?.show();
 }
 
 const totalSum = computed(() => {
@@ -662,7 +662,7 @@ getCategories();
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-                <th class="font-normal text-base-content">
+                <th class="font-normal text-base-content" @click="openInfoModal('category')">
                   <div class="flex justify-center items-center gap-1">
                     <span>Категории</span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
@@ -683,14 +683,14 @@ getCategories();
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
-                <th class="min-w-30 font-normal">
+                <th class="min-w-30 font-normal" @click="openInfoModal('discount')">
                   <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
                     <span> Скидка </span>
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs"> ? </span> -->
                   </div>
                 </th>
-                <th class="min-w-30 font-normal">
+                <th class="min-w-30 font-normal" @click="openInfoModal('promoCode')">
                   <!-- <div class="flex justify-between w-full gap-1 items-center"> -->
                   <div class="text-center">
                     <span> Промокод </span>
@@ -906,66 +906,7 @@ getCategories();
           </label>
         </label>
       </div>
-      <dialog id="infoModal" ref="infoModal" class="modal">
-        <form method="dialog" class="modal-box p-4">
-          <h3 class="font-bold text-lg">Информация</h3>
-          <div class="py-4 flex flex-col gap-2">
-            <p v-if="infoType === 'picture'">
-              <span class="font-bold"> Изображение </span>
-              - Увеличивайте изображение товара просто наводя на него курсором
-            </p>
-            <p v-if="infoType === 'digitalProduct'">
-              <span class="font-bold"> Цифровой товар </span>
-              - Поставьте галочку, если продукт цифровой(не имеет физической копии и не доставляется на пвз)
-            </p>
-            <p v-if="infoType === 'price'">
-              <span class="font-bold"> Цена </span>
-              - Цена товара указана без СПП
-            </p>
-            <p v-if="infoType === 'quantity'">
-              <span class="font-bold"> Количество </span>
-              - Указывайте желаемое количество выкупов, но не более 1 выкупа на
-              1 ПВЗ в сутки
-            </p>
-            <p v-if="infoType === 'size'">
-              <span class="font-bold"> Размер </span>
-              - Выберите желаемый размер товара
-            </p>
-            <p v-if="infoType === 'sex'">
-              <span class="font-bold"> Пол </span>
-              - Выберите желаемый Пол для выкупов
-            </p>
-            <div v-if="infoType === 'search'">
-              <div>
-                <span class="font-bold"> Поисковые запросы </span>
-                - Введите поисковые запросы, чем больше, тем лучше нажимая на
-                "+"
-              </div>
-              <div class="text-sm">
-                Например, при указании 5 поисковых запросов - каждый будет
-                выкупаться по своему запросу, если по данному запросу товар не
-                найден, то запрос игнорируется.
-              </div>
-            </div>
-            <p v-if="infoType === 'adress'">
-              <span class="font-bold"> Адрес </span>
-              - Добавьте Адрес желаемого ПВЗ от куда вы будете забирать товар
-            </p>
-            <p v-if="infoType === 'dates'">
-              <span class="font-bold"> Даты выкупов </span>
-              - Выберите желаемый диапазон дат и времени для выкупов
-            </p>
-            <p v-if="infoType === 'rules'">
-              <span class="font-bold"> Правила </span>
-              - Используйте Правила для создания дополнительной безопасности
-              ваших выкупов
-            </p>
-          </div>
-          <div class="modal-action mt-0">
-            <button class="btn btn-sm">Закрыть</button>
-          </div>
-        </form>
-      </dialog>
+      <BuyoutHelpModal ref="infoModal" :info-type="infoType" />
       <BuyoutOzonCreateChecksModal
         v-if="checksModal"
         :is-create-button-disabled="isCreateButtonDisabled"
