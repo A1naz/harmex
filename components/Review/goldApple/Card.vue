@@ -65,7 +65,7 @@ function openBuyout() {
               <div
                 class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary"
               >
-                <a :href="info.article" target="_blank" class="link link-hover">
+                <a :href="info.url?.[0]" target="_blank" class="link link-hover">
                   {{ info.article }}
                 </a>
               </div>
