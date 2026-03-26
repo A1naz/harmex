@@ -267,18 +267,26 @@ const { $dayjs } = useNuxtApp();
                 </div>
                 <div class="whitespace-pre-line mt-1">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
-                    >Публичный отзыв:
+                    >Текст отзыва:
                   </span>
                   <span class="text-sm">
-                    {{ info.publicComment }}
+                    {{ info.text }}
                   </span>
                 </div>
                 <div class="whitespace-pre-line mt-1">
                   <span class="text-sm text-gray-500 mr-2 my-auto"
-                    >Скрытый комментарий:
+                    >Достоинства:
                   </span>
                   <span class="text-sm">
-                    {{ info.hiddenComment }}
+                    {{ info.positive }}
+                  </span>
+                </div>
+                <div class="whitespace-pre-line mt-1">
+                  <span class="text-sm text-gray-500 mr-2 my-auto"
+                    >Недостатки:
+                  </span>
+                  <span class="text-sm">
+                    {{ info.negative }}
                   </span>
                 </div>
 

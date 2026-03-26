@@ -88,22 +88,18 @@ export default eventHandler(async (event) => {
       query = Object.assign(query, { delivery: foundDelivery._id });
     }
   } else if (Object.keys(searchParse)[0] === "article" && searchParse.article) {
-    // Обрабатываем поиск по артикулу - ищем и как строку, и как число
-    const searchArticle = searchParse.article.toString().trim();
-    const numericArticle = Number.parseInt(searchArticle, 10);
-    
-    // Находим все delivery с таким артикулом
+    const numericArticle = Number(searchParse.article);
+
     const foundDeliveries = await Delivery.find({
       user: user._id,
-      $or: [{ article: searchArticle }, { article: numericArticle }],
+      article: numericArticle,
     }).select("_id");
     
     if (foundDeliveries.length > 0) {
-      query = Object.assign(query, { 
-        delivery: { $in: foundDeliveries.map(d => d._id) } 
+      query = Object.assign(query, {
+        delivery: { $in: foundDeliveries.map(d => d._id) },
       });
     } else {
-      // Если не нашли доставки, делаем так чтобы ничего не нашлось
       query = Object.assign(query, { _id: new ObjectId("000000000000000000000000") });
     }
   } else if (Object.keys(searchParse)[0] && Object.values(searchParse)[0] !== "") {
@@ -271,7 +267,7 @@ export default eventHandler(async (event) => {
     },
     {
       $group: {
-        _id: '$uuidbuyout',
+        _id: '$article',
         article: { $last: '$article' },
         lastUpdated: { $last: '$updatedAt' },
         countAvailable: { $sum: 1 },

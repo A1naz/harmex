@@ -57,7 +57,7 @@ export default eventHandler(async (event) => {
     },
     {
       $group: {
-        _id: '$uuidbuyout',
+        _id: '$article',
         article: { $last: '$article' },
         lastUpdated: { $last: '$updatedAt' },
         countAvailable: { $sum: 1 },
