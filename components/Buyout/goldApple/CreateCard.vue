@@ -102,6 +102,13 @@ function onParameterChange(event: Event) {
   store.createProducts[props.index].priceText =
     store.createProducts[props.index].prices[index] + " ₽";
 }
+
+const infoModal = ref<any>(null);
+const infoType = ref("");
+function openInfoModal(type: string) {
+  infoType.value = type;
+  infoModal.value?.show();
+}
 </script>
 
 <template>
@@ -174,59 +181,21 @@ function onParameterChange(event: Event) {
           </div>
         </div>
       </div>
-      <div class="flex justify-start gap-3 md:gap-2">
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-2">Цена: </span>
+      <div class="flex justify-start gap-8 mt-1">
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors"
+            @click="openInfoModal('price')"
+          >Цена</span>
           <span class="text-sm font-bold">{{ product.priceText }}</span>
         </div>
-        <!-- <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-1">Кол-во: </span>
-          <span class="relative flex items-center flex-grow-0 w-15">
-            <div
-              class="absolute left-0 btn btn-ghost btn-sm btn-square bg-base-200 border-none rounded-l-xl"
-              @click="productQuantityModel--"
-            >
-              <Icon size="16" name="ic:round-minus" />
-            </div>
-            <input
-              v-model="productQuantityModel"
-              type="number"
-              min="1"
-              max="1000"
-              class="input border-none input-sm w-full text-center bg-base-200 rounded-xl"
-            />
-            <div
-              class="absolute right-0 btn btn-ghost btn-sm btn-square border-none bg-base-200 rounded-r-xl"
-              @click="productQuantityModel++"
-            >
-              <Icon size="16" name="ic:round-plus" />
-            </div>
-          </span>
-        </div> -->
-        <!-- <div class="flex flex-col">
-          <span class="text-md text-gray-500">Размер: </span>
-          <div class="flex items-center m-1">
-            <select
-              v-if="product.sizes.length"
-              class="select select-sm border-none bg-base-200 w-full rounded-xl"
-              @change="onSizeChange"
-            >
-              <option
-                v-for="size in product.sizes"
-                :key="size"
-                :selected="product.selectedSize === size"
-                :value="size"
-              >
-                {{ size }}
-              </option>
-            </select>
-            <div v-else class="text-sm text-center ml-2">Нет</div>
-          </div>
-        </div> -->
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-1">Пол: </span>
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors"
+            @click="openInfoModal('sex')"
+          >Пол</span>
           <select
-            class="select select-sm border-none bg-[#F3E9DD] rounded-xl w-15 appearance-none"
+            class="select select-sm border-none bg-[#F3E9DD] rounded-xl w-20 appearance-none"
             @change="onSexChange"
           >
             <option value="Нет">Нет</option>
@@ -234,89 +203,48 @@ function onParameterChange(event: Event) {
             <option value="female">Жен</option>
           </select>
         </div>
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-1">Правила: </span>
-          <div class="w-full flex items-center justify-center gap-2">
-            <div class="text-sm">
-              {{
-                product.rules.length
-                  ? product.rules.map((rule: any) => rule.id).join(", ")
-                  : ""
-              }}
-            </div>
-            <button
-              class="border-base-100"
-              @click="$emit('ruleModalOpen', index)"
-            >
-              <Icon
-                class="w-5 h-5"
-                name="solar:settings-outline"
-                alt="settings"
-              />
-            </button>
+      </div>
+
+      <div class="flex flex-col gap-1 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+          @click="openInfoModal('rules')"
+        >Правила</span>
+        <div class="flex items-center gap-2">
+          <div class="text-sm">
+            {{ product.rules.length ? product.rules.map((rule: any) => rule.id).join(", ") : "" }}
           </div>
+          <button class="border-base-100" @click="$emit('ruleModalOpen', index)">
+            <Icon class="w-5 h-5" name="solar:settings-outline" alt="settings" />
+          </button>
         </div>
       </div>
-      <!-- <div class="flex justify-between items-center">
-        <span>Пол:</span>
-        <select
-          class="select select-sm select-bordered w-32 appearance-none"
-          @change="onSexChange"
-        >
-          <option value="Нет">Нет</option>
-          <option value="male">Муж</option>
-          <option value="female">Жен</option>
-        </select>
-      </div> -->
-      <div class="flex justify-start gap-5">
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-2">Дата выкупов: </span>
-          <div>
-            <!-- <div
-                v-if="!product.purchaseSoon"
-                v-show="product.dateRange[1] && product.dateRange[0]"
-                class="text-sm flex flex-col justify-center items-start mb-2"
-              >
-                <div>
-                  {{
-                    `${defaultDateShort(product.dateRange[0])} - ${defaultDateShort(
-                      product.dateRange[1]
-                    )}`
-                  }}
-                </div>
-              </div> -->
 
+      <div class="flex justify-start gap-6 mt-3">
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+            @click="openInfoModal('dates')"
+          >Дата выкупов</span>
+          <div>
             <BuyoutDateRangePicker
               v-if="!product.purchaseSoon"
               v-model="productDateRangeModel"
               :start-date="startDate"
             />
-            <!-- <button
-              v-else
-              disabled
-              :class="{
-                'btn-outline': product.dateRange[0] && product.dateRange[1],
-              }"
-              class="btn btn-primary btn-sm normal-case w-full"
-            >
-              {{
-                product.dateRange[0] && product.dateRange[1]
-                  ? 'Изменить'
-                  : 'Выбрать'
-              }}
-            </button> -->
             <div v-else class="text-center text-xs">Ближайшее время</div>
           </div>
         </div>
-
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-2">Адрес: </span>
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+            @click="openInfoModal('adress')"
+          >Адрес</span>
           <div
             v-if="product.adress"
             class="text-xs h-10 w-full truncate max-w-[150px]"
           >
             <span v-show="loading" class="loading loading-spinner" />
-
             <p
               v-if="!loading"
               class="truncate cursor-pointer text-primary"
@@ -325,13 +253,10 @@ function onParameterChange(event: Event) {
               {{ product.adress }}
             </p>
           </div>
-          <!-- :disabled="loading" -->
           <button
-            :disabled="loading"
             v-if="!product.adress"
-            :class="{
-              'btn-outline': product.adress,
-            }"
+            :disabled="loading"
+            :class="{ 'btn-outline': product.adress }"
             class="btn btn-sm normal-case rounded-full p-1 bg-[#f0f5ff] dark:bg-primary dark:bg-opacity-10 w-fit mx-auto"
             @click="$emit('pointModalOpen', index)"
           >
@@ -340,140 +265,68 @@ function onParameterChange(event: Event) {
           </button>
         </div>
       </div>
-      <div class="flex gap-5">
-        <span class="text-md text-gray-500 mb-2">Тип доставки: </span>
-        <div class="text-xs flex justify-start">
-          <select
-            class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
-            v-model="store.createProducts[props.index].deliveryType"
-          >
-             <option value="self" class="text-center">Самовывоз 0₽</option>
-            <option value="market" class="text-center">Магазин 0₽</option>
-            <option value="5Post" class="text-center">Постамат 5POST 100+₽</option>
-            <option value="Яндекс Доставка" class="text-center">Яндекс доставка 100+₽</option>
-          </select>
-        </div>
-      </div>
-      <div class="flex gap-5">
-        <span class="text-md text-gray-500 mb-2">Параметры: </span>
-        <div class="text-xs flex justify-start">
-          <select
-            class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
-            v-model="store.createProducts[props.index].selectedParameter"
-            @change="onParameterChange($event)"
-          >
-            <option
-              v-for="parameter in product.parameters"
-              :key="parameter"
-              :value="parameter"
-            >
-              {{ parameter }}
-            </option>
-          </select>
-        </div>
+
+      <div class="flex flex-col gap-1 mt-3">
+        <span class="text-sm text-gray-500">Тип доставки</span>
+        <select
+          v-model="store.createProducts[props.index].deliveryType"
+          class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
+        >
+          <option value="self" class="text-center">Самовывоз 0₽</option>
+          <option value="market" class="text-center">Магазин 0₽</option>
+          <option value="5Post" class="text-center">Постамат 5POST 100+₽</option>
+          <option value="Яндекс Доставка" class="text-center">Яндекс доставка 100+₽</option>
+        </select>
       </div>
 
-      <div>
-        <!-- <div class="w-[60%]">
-          <div class="text-md text-gray-500 mb-1">Введите №:</div>
-          <div class="w-full flex flex-col gap-2">
-            <label
-              ><input
-                v-model="product.appartmentNumber"
-                type="text"
-                placeholder="№ квартиры"
-                class="input bg-base-200 input-sm w-full rounded-xl"
-              />
-            </label>
-          </div>
-        </div> -->
-        <div>
-          <div class="text-md text-gray-500 mb-1 mt-2">Поисковые запросы:</div>
-          <div class="w-full flex flex-col gap-2">
-            <BuyoutGoldAppleCreateSearchQueries
-              :product-index="props.index"
-              :article="product.article"
-              :queries="product.searchQuery"
-              @update="productSearchQueryUpdate"
-              @add="addSearchQuery"
-              @remove="removeSearchQuery"
-            />
-          </div>
-          <!-- <div class="text-md text-gray-500 mb-1 mt-2">Категории:</div>
-          <div class="w-full  flex gap-2" v-if="user.username == 'test'">
-        <details
-          class="dropdown disabled"
-          v-if="
-            product.searchQuery.length <= 1 && !product.searchQuery[0].value
-          "
+      <div class="flex flex-col gap-1 mt-3">
+        <span class="text-sm text-gray-500">Параметры</span>
+        <select
+          v-model="store.createProducts[props.index].selectedParameter"
+          class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
+          @change="onParameterChange($event)"
         >
-          <summary
-            class="btn btn-sm normal-case text-sm font-normal  m-1 z-1"
-            ref="categoryDropdown"
-            style="z-index: 1 !important"
+          <option
+            v-for="parameter in product.parameters"
+            :key="parameter"
+            :value="parameter"
           >
-            {{
-              store.createProducts[props.index].category &&
-              store.createProducts[props.index].category.length
-                ? store.createProducts[props.index].category.join(" > ")
-                : "Выбрать категорию"
-            }}
-          </summary>
-          <ul
-            style="z-index: 9999 !important"
-            tabindex="0"
-            class="dropdown-content rounded-box z-1 w-52 p-2 shadow-sm"
-          >
-            <button
-              class="btn btn-sm btn-square relative left-1 -top-1 z-50"
-              @click="categoryDropdown.click()"
-            >
-              <Icon name="material-symbols:close-rounded" size="18" />
-            </button>
-            <div
-              class="overflow-y-auto bg-base-100 rounded-md -mt-10 fixed drop-shadow-lg pl-1"
-              style="max-height: 400px; width: 500px"
-            >
-              <BuyoutWildberriesCategoryTreeSelect
-                :categories="categories"
-                @select-category="selectCategory($event, index)"
-              />
-            </div>
-          </ul>
-        </details>
-        <button
-          v-else
-          class="btn m-1 text-sm z-1 font-normal btn-sm normal-case"
-          disabled
-          style="z-index: 1 !important"
-        >
-          Выбрать категорию
-        </button>
-        <button
-          class="btn btn-sm btn-square mt-1 -ml-2.5"
-          v-if="product.category"
-          @click="product.category = null"
-        >
-          <Icon name="material-symbols:close-rounded" size="18" />
-        </button>
+            {{ parameter }}
+          </option>
+        </select>
       </div>
-      <div v-else>
-        <button class="btn" disabled>Выберите категорию</button>
-      </div> -->
-        </div>
-        <div class="w-[60%] flex flex-col gap-2">
-          <BuyoutAvitoCreateSearchQueriesRegion
+
+      <div class="flex flex-col gap-1 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+          @click="openInfoModal('search')"
+        >Поисковые запросы</span>
+        <div class="w-full flex flex-col gap-2">
+          <BuyoutGoldAppleCreateSearchQueries
             :product-index="props.index"
             :article="product.article"
-            :regions="product.searchQueryRegion"
+            :queries="product.searchQuery"
             @update="productSearchQueryUpdate"
             @add="addSearchQuery"
             @remove="removeSearchQuery"
           />
         </div>
       </div>
+
+      <div class="w-[60%] flex flex-col gap-2 mt-3">
+        <BuyoutAvitoCreateSearchQueriesRegion
+          :product-index="props.index"
+          :article="product.article"
+          :regions="product.searchQueryRegion"
+          @update="productSearchQueryUpdate"
+          @add="addSearchQuery"
+          @remove="removeSearchQuery"
+        />
+      </div>
     </div>
   </div>
+
+  <BuyoutHelpModal ref="infoModal" :info-type="infoType" />
 </template>
 
 <style scoped></style>

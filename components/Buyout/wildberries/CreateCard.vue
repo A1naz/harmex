@@ -27,6 +27,14 @@ const props = defineProps({
 
 const emit = defineEmits(["callback", "pointModalOpen", "ruleModalOpen", "removePromo"]);
 
+const infoModal = ref<any>(null);
+const infoType = ref("");
+
+function openInfoModal(type: string) {
+  infoType.value = type;
+  infoModal.value?.show();
+}
+
 function copyBuyout() {
   if (store.createProducts.length >= 10) {
     notify({
@@ -190,38 +198,20 @@ function notifyDigitalProduct() {
           </div>
         </div>
       </div>
-      <div class="flex justify-start gap-3 md:gap-2">
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-2">Цена: </span>
+      <div class="flex justify-start gap-8 mt-1">
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors"
+            @click="openInfoModal('price')"
+          >Цена</span>
           <span class="text-sm font-bold">{{ product.priceText }}</span>
         </div>
-        <!-- <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-1">Кол-во: </span>
-          <span class="relative flex items-center flex-grow-0 w-15">
-            <div
-              class="absolute left-0 btn btn-ghost btn-sm btn-square bg-base-200 border-none rounded-l-xl"
-              @click="productQuantityModel--"
-            >
-              <Icon size="16" name="ic:round-minus" />
-            </div>
-            <input
-              v-model="productQuantityModel"
-              type="number"
-              min="1"
-              max="1000"
-              class="input border-none input-sm w-full text-center bg-base-200 rounded-xl"
-            />
-            <div
-              class="absolute right-0 btn btn-ghost btn-sm btn-square border-none bg-base-200 rounded-r-xl"
-              @click="productQuantityModel++"
-            >
-              <Icon size="16" name="ic:round-plus" />
-            </div>
-          </span>
-        </div> -->
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500">Размер: </span>
-          <div class="flex items-center m-1">
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors"
+            @click="openInfoModal('size')"
+          >Размер</span>
+          <div class="flex items-center">
             <select
               v-if="product.sizes.length"
               class="select select-sm border-none bg-[#F3E9DD] w-full rounded-xl"
@@ -236,13 +226,16 @@ function notifyDigitalProduct() {
                 {{ size }}
               </option>
             </select>
-            <div v-else class="text-sm text-center ml-2">Нет</div>
+            <div v-else class="text-sm">Нет</div>
           </div>
         </div>
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-1">Пол: </span>
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors"
+            @click="openInfoModal('sex')"
+          >Пол</span>
           <select
-            class="select select-sm border-none bg-[#F3E9DD] rounded-xl w-15 appearance-none"
+            class="select select-sm border-none bg-[#F3E9DD] rounded-xl w-20 appearance-none"
             @change="onSexChange"
           >
             <option value="Нет">Нет</option>
@@ -251,68 +244,43 @@ function notifyDigitalProduct() {
           </select>
         </div>
       </div>
-      <div class="flex justify-between items-center">
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-1">Правила: </span>
-          <div class="w-full flex items-center justify-center gap-2">
-            <div class="text-sm">
-              {{ rulesText }}
-            </div>
-            <button
-              class="border-base-100"
-              @click="$emit('ruleModalOpen', index)"
-            >
-              <Icon
-                class="w-5 h-5"
-                name="solar:settings-outline"
-                alt="settings"
-              />
-            </button>
-          </div>
+
+      <div class="flex flex-col gap-1 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+          @click="openInfoModal('rules')"
+        >Правила</span>
+        <div class="flex items-center gap-2">
+          <div class="text-sm">{{ rulesText }}</div>
+          <button
+            class="border-base-100"
+            @click="$emit('ruleModalOpen', index)"
+          >
+            <Icon class="w-5 h-5" name="solar:settings-outline" alt="settings" />
+          </button>
         </div>
       </div>
-      <div class="flex justify-start gap-5">
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-2">Дата выкупов: </span>
-          <div>
-            <!-- <div
-                v-if="!product.purchaseSoon"
-                v-show="product.dateRange[1] && product.dateRange[0]"
-                class="text-sm flex flex-col justify-center items-start mb-2"
-              >
-                <div>
-                  {{
-                    `${defaultDateShort(product.dateRange[0])} - ${defaultDateShort(
-                      product.dateRange[1]
-                    )}`
-                  }}
-                </div>
-              </div> -->
 
+      <div class="flex justify-start gap-6 mt-3">
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+            @click="openInfoModal('dates')"
+          >Дата выкупов</span>
+          <div>
             <BuyoutDateRangePicker
               v-if="!product.purchaseSoon"
               v-model="productDateRangeModel"
               :start-date="startDate"
             />
-            <!-- <button
-              v-else
-              disabled
-              :class="{
-                'btn-outline': product.dateRange[0] && product.dateRange[1],
-              }"
-              class="btn btn-primary btn-sm normal-case w-full"
-            >
-              {{
-                product.dateRange[0] && product.dateRange[1]
-                  ? 'Изменить'
-                  : 'Выбрать'
-              }}
-            </button> -->
             <div v-else class="text-center text-xs">Ближайшее время</div>
           </div>
         </div>
-        <div class="flex flex-col">
-          <span class="text-md text-gray-500 mb-2">Адрес: </span>
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+            @click="openInfoModal('adress')"
+          >Адрес</span>
           <div
             v-if="product.adress"
             class="text-xs h-10 w-full truncate max-w-[150px]"
@@ -320,8 +288,8 @@ function notifyDigitalProduct() {
             <span v-show="loading" class="loading loading-spinner" />
             <p
               v-if="!loading"
-              @click="$emit('pointModalOpen', index)"
               class="truncate cursor-pointer text-primary"
+              @click="$emit('pointModalOpen', index)"
             >
               {{ product.adress }}
             </p>
@@ -329,9 +297,7 @@ function notifyDigitalProduct() {
           <button
             v-if="!product.adress"
             :disabled="loading"
-            :class="{
-              'btn-outline': product.adress,
-            }"
+            :class="{ 'btn-outline': product.adress }"
             class="btn btn-sm normal-case rounded-full p-1 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 w-fit mx-auto"
             @click="$emit('pointModalOpen', index)"
           >
@@ -340,19 +306,25 @@ function notifyDigitalProduct() {
           </button>
         </div>
       </div>
-      <div class="flex mt-2">
-          <span class="text-md text-gray-500 mr-3 my-auto">Цифровой товар: </span>
-          <div class="flex">
-            <input
-             @click="notifyDigitalProduct"
-             v-model="product.digitalProduct"
-             type="checkbox"
-             class="checkbox checkbox-primary border-base-content"
-           />
-          </div>
-        </div>
-      <div>
-        <div class="text-md text-gray-500 mb-1">Поисковые запросы:</div>
+
+      <div class="flex items-center gap-3 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors"
+          @click="openInfoModal('digitalProduct')"
+        >Цифровой товар</span>
+        <input
+          v-model="product.digitalProduct"
+          type="checkbox"
+          class="checkbox checkbox-primary border-base-content"
+          @click="notifyDigitalProduct"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+          @click="openInfoModal('search')"
+        >Поисковые запросы</span>
         <div class="w-full flex flex-col gap-2">
           <BuyoutWildberriesCreateSearchQueries
             :product-index="props.index"
@@ -363,27 +335,29 @@ function notifyDigitalProduct() {
             @remove="removeSearchQuery"
           />
         </div>
-        <div class="w-full flex flex-col gap-0.5">
-          <span class="text-md text-gray-500 mb-1 mt-2">Артикул конкурента: </span>
+      </div>
+
+      <div class="flex flex-col gap-1 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+          @click="openInfoModal('shelves')"
+        >SKU конкурента</span>
         <input
-          type="text"
-          class="input bg-base-200 input-sm w-full rounded-xl"
-          :disabled="!product.shelves"
           v-model="product.competitorArticle"
-          placeholder="Арткул конкурента"
-        />
-        <!-- <input
           type="text"
           class="input bg-base-200 input-sm w-full rounded-xl"
           :disabled="!product.shelves"
-          v-model="product.competitorArticle2"
-          placeholder="Второй артикул"
-        /> -->
+          placeholder="Артикул конкурента"
+        />
       </div>
-      </div>
-      <div class="flex mt-2">
-        <span class="text-md text-gray-500 mr-3 my-auto">Промокод: </span>
-        <div class="flex justify-center mt-1">
+
+      <div class="flex items-center gap-3 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors"
+          @click="openInfoModal('promoCode')"
+        >Промокод</span>
+        
+        <div class="flex items-center gap-1">
           <button
             v-if="!product.promoCode"
             class="btn btn-sm normal-case rounded-full p-1.5 bg-[#F3E9DD] dark:bg-primary dark:bg-opacity-10 border-none"
@@ -393,7 +367,7 @@ function notifyDigitalProduct() {
           </button>
           <span
             v-if="product.promoCode"
-            class="break-all whitespace-nowrap cursor-pointer text-primary mt-1 mr-1"
+            class="break-all whitespace-nowrap cursor-pointer text-primary mr-1"
             @click="props.openPromo(index, product.price)"
           >{{ product.promoCode }}</span>
           <button
@@ -405,68 +379,84 @@ function notifyDigitalProduct() {
           </button>
         </div>
       </div>
-      <div>
-        <div class="text-md text-gray-500 mb-1">Категория:</div>
-        <div class="w-full  flex gap-2">
-        <details
-          class="dropdown disabled"
-          v-if="
-            product.searchQuery.length <= 1 && !product.searchQuery[0].value
-          "
-        >
-          <summary
-            class="btn btn-sm normal-case text-sm font-normal  m-1 z-1"
-            ref="categoryDropdown"
+
+        <div class="flex items-center gap-3 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors"
+          @click="openInfoModal('digitalProduct')"
+        >Цифровой товар</span>
+        <input
+          v-model="product.digitalProduct"
+          type="checkbox"
+          class="checkbox checkbox-primary border-base-content"
+          @click="notifyDigitalProduct"
+        />
+      </div>
+      <div class="flex flex-col gap-1 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+          @click="openInfoModal('category')"
+        >Категория</span>
+        <div class="w-full flex gap-2">
+          <details
+            v-if="product.searchQuery.length <= 1 && !product.searchQuery[0].value"
+            class="dropdown disabled"
+          >
+            <summary
+              ref="categoryDropdown"
+              class="btn btn-sm normal-case text-sm font-normal m-1 z-1"
+              style="z-index: 1 !important"
+            >
+              {{
+                store.createProducts[props.index].category &&
+                store.createProducts[props.index].category.length
+                  ? store.createProducts[props.index].category.join(" > ")
+                  : "Выбрать категорию"
+              }}
+            </summary>
+            <ul
+              tabindex="0"
+              class="dropdown-content rounded-box z-1 w-52 p-2 shadow-sm"
+              style="z-index: 9999 !important"
+            >
+              <button
+                class="btn btn-sm btn-square relative left-1 -top-1 z-50"
+                @click="categoryDropdown.click()"
+              >
+                <Icon name="material-symbols:close-rounded" size="18" />
+              </button>
+              <div
+                class="overflow-y-auto bg-base-100 rounded-md -mt-10 fixed drop-shadow-lg pl-1"
+                style="max-height: 400px; width: 500px"
+              >
+                <BuyoutWildberriesCategoryTreeSelect
+                  :categories="categories"
+                  @select-category="selectCategory($event, index)"
+                />
+              </div>
+            </ul>
+          </details>
+          <button
+            v-else
+            class="btn m-1 text-sm z-1 font-normal btn-sm normal-case"
+            disabled
             style="z-index: 1 !important"
           >
-            {{
-              store.createProducts[props.index].category &&
-              store.createProducts[props.index].category.length
-                ? store.createProducts[props.index].category.join(" > ")
-                : "Выбрать категорию"
-            }}
-          </summary>
-          <ul
-            style="z-index: 9999 !important"
-            tabindex="0"
-            class="dropdown-content rounded-box z-1 w-52 p-2 shadow-sm"
+            Выбрать категорию
+          </button>
+          <button
+            v-if="product.category"
+            class="btn btn-sm btn-square mt-1 -ml-2.5"
+            @click="product.category = null"
           >
-            <button
-              class="btn btn-sm btn-square relative left-1 -top-1 z-50"
-              @click="categoryDropdown.click()"
-            >
-              <Icon name="material-symbols:close-rounded" size="18" />
-            </button>
-            <div
-              class="overflow-y-auto bg-base-100 rounded-md -mt-10 fixed drop-shadow-lg pl-1"
-              style="max-height: 400px; width: 500px"
-            >
-              <BuyoutWildberriesCategoryTreeSelect
-                :categories="categories"
-                @select-category="selectCategory($event, index)"
-              />
-            </div>
-          </ul>
-        </details>
-        <button
-          v-else
-          class="btn m-1 text-sm z-1 font-normal btn-sm normal-case"
-          disabled
-          style="z-index: 1 !important"
-        >
-          Выбрать категорию
-        </button>
-        <button
-          class="btn btn-sm btn-square mt-1 -ml-2.5"
-          v-if="product.category"
-          @click="product.category = null"
-        >
-          <Icon name="material-symbols:close-rounded" size="18" />
-        </button>
-      </div>
+            <Icon name="material-symbols:close-rounded" size="18" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
+
+  <BuyoutHelpModal ref="infoModal" :info-type="infoType" />
 </template>
 
 <style scoped></style>

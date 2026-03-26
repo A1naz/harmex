@@ -694,7 +694,7 @@ getCategories();
                 </th>
                 <th
                   class="font-normal text-base-content"
-                  @click="openInfoModal('search')"
+                  @click="openInfoModal('shelves')"
                 >
                   <div class="flex justify-center items-center gap-1">
                     <span>SKU конкурента</span>
