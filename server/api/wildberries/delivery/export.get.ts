@@ -73,7 +73,7 @@ export default eventHandler(async (event) => {
           item.buyout.valueOf() === buyout._id.valueOf() &&
           item.text.includes("Выкуп выполнен")
       );
-      const finishDate = new Date(buyout.createdAt);
+      const finishDate = new Date(buyout.date ? buyout.date : buyout.createdAt);
       const deliveryCreatedAt = new Date(delivery.date);
       const place = index + 1;
       const deliveryCreatedAtHours = deliveryCreatedAt.getHours();
