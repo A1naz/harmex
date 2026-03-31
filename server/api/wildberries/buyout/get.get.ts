@@ -1,5 +1,6 @@
 import { Buyout } from '@/server/lib/models/wildberries/Buyout'
 import { paymenthistory } from '@/server/lib/models/Paymenthistory'
+import { findImage } from '@/server/lib/helpers'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -164,7 +165,9 @@ export default eventHandler(async (event) => {
       completed: buyout.completed,
       rules: buyout.rules,
       createdAt: buyout.createdAt,
-      product: buyout.product,
+      product: buyout.product
+        ? { ...buyout.product.toObject?.() ?? buyout.product, image: findImage(String(buyout.article)) }
+        : buyout.product,
       purchaseSoon: buyout.purchaseSoon,
       key: buyout.key,
       competitorArticle: buyout.competitorArticle,

@@ -102,9 +102,9 @@ export function findImage(input: string) {
     host = '//basket-27.wbbasket.ru'
   } else if (vol >= 5190 && vol <= 5489) { 
     host = '//basket-28.wbbasket.ru'
-  } else if (vol >= 5490 && vol <= 6126)  {
+  } else if (vol >= 5490 && vol <= 5910)  {
     host = '//basket-29.wbbasket.ru'
-  } else if (vol >= 6127 && vol <= 6125) {
+  } else if (vol >= 5911 && vol <= 6126) {
     host = '//basket-30.wbbasket.ru'
   } else if (vol >= 6126 && vol <= 6437) {
     host = '//basket-31.wbbasket.ru'
