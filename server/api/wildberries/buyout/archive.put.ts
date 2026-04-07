@@ -16,6 +16,12 @@ export default eventHandler(async (event) => {
       message: 'not found',
     })
   }
+  if (found.status == 'archived') {
+    throw createError({
+      statusCode: 404,
+      message: 'Выкуп уже в архиве.',
+    })
+  }
   if (found.status !== 'active') {
     throw createError({
       statusCode: 404,
