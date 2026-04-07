@@ -1,45 +1,17 @@
-import fs from "node:fs";
-
-function formatWBCategories(categories) {
-  // Рекурсивная функция для обработки категорий
-  function processCategory(category) {
-    const formattedCategory = {
-      name: category.name,
-      childrenOnly: category.childrenOnly || false,
-    };
-
-    // Если есть подкатегории (nodes), обрабатываем их
-    if (category.nodes && category.nodes.length > 0) {
-      formattedCategory.subcategories = category.nodes.map(processCategory);
-    }
-
-    return formattedCategory;
-  }
-
-  // Обрабатываем все корневые категории
-  return categories.map(processCategory);
-}
+import { Categories } from "~/server/lib/models/Categories";
 
 export default defineEventHandler(async (event) => {
-  const response: any = await $fetch(
-    "https://catalog.wb.ru/menu/v11/api?locale=ru&lang=ru",
-    {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const user = await getAdminEntity(event);
+  if (!user) return sendRedirect(event, "/auth", 302);
 
-  if (!response || !response.data) {
-    const categoriesFromFile = fs.readFileSync(
-   "./pvz/wbCategories.json",
-      "utf8"
-    );
-    const parsed = JSON.parse(categoriesFromFile);
-    return formatWBCategories(parsed.data);
+  const found = await Categories.findOne({ marketplace: "WB" });
+
+  if (!found) {
+    throw createError({
+      statusCode: 404,
+      message: "not found",
+    });
   }
 
-  return formatWBCategories(response.data);
+  return found.categories;
 });
