@@ -255,7 +255,16 @@ async function copyToClipboard(text: string) {
               <label class="cursor-pointer">Удалить</label>
             </a>
           </li>
-
+          <li  class="cursor-pointer">
+            <a @click="copyToClipboard(info.uuid)">
+              <img
+                class="w-5 h-5"
+                src="/icons/figma/buyouts/copy.svg"
+                alt="settings"
+              />
+              <label class="cursor-pointer">Копировать ID</label>
+            </a>
+          </li>
         </ul>
       </div>
 
