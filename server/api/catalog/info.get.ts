@@ -1,10 +1,12 @@
 import { Service } from "~/server/lib/models/Service";
 import { DefaultPrices } from "~/server/lib/models/defaultPrices";
 
+
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
 
-  const { slug } = getQuery(event);
+  let { slug } = getQuery(event);
+
   if (!slug)
     throw createError({ statusCode: 400, statusMessage: "Missing slug" });
 
@@ -13,9 +15,16 @@ export default eventHandler(async (event) => {
   if (!service)
     throw createError({ statusCode: 404, statusMessage: "Service not found" });
   try {
-    if (user && user.MPTariffs) {
+
+
+    const slugAliases: Record<string, string> = {
+      goldApple: "zy",
+    };
+    const tariffSlug = slugAliases[service.slug] ?? service.slug;
+
+  if (user && user.MPTariffs) {
       const isTariffExist: any = user.MPTariffs.find(
-        (item: any) => item.mp === service.slug
+        (item: any) => item.mp === tariffSlug
       );
 
       if (isTariffExist) {
@@ -55,7 +64,7 @@ export default eventHandler(async (event) => {
     
 
         const mpPrices = prices.values.find(
-          (item: any) => item.mp === service.slug
+          (item: any) => item.mp === tariffSlug
         );
         if (!mpPrices) {
           return {
