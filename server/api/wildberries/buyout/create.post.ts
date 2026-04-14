@@ -118,11 +118,9 @@ export default eventHandler(async (event) => {
     let city, state, pointRegion, pointDistrict;
     if (!product.digitalProduct) {
 
-      const foundPoint = points.find(
+      let foundPoint = points.find(
         (p: { a: string }) => p.a === product.adress
       );
-
-
 
 
       if (foundPoint && foundPoint.city && foundPoint.state) {
@@ -133,6 +131,14 @@ export default eventHandler(async (event) => {
       }
 
       ({ pointRegion, pointDistrict } = await getDisctrict(product.adress));
+
+
+      if (foundPoint && foundPoint.lt && foundPoint.lg) {
+        product.pointCoordinates = {
+          lat: foundPoint.lt,
+          lon: foundPoint.lg,
+        }
+      }
     }
 
     if (product.key && !user.ffEnabled) {
