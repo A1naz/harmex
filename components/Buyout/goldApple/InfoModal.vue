@@ -80,79 +80,57 @@ onKeyStroke("Escape", (e) => {
 </script>
 
 <template class="overflow-hidden">
-  <div
-    id="buyoutInfoModal"
-    :class="{ 'modal-open': state }"
-    class="modal cursor-pointer"
-    @click="$emit('close')"
-  >
+  <div id="buyoutInfoModal" :class="{ 'modal-open': state }" class="modal cursor-pointer" @click="$emit('close')">
     <div v-if="state" class="modal-box max-w-md max-h-[90%] p-0">
       <div class="cursor-auto" @click.stop>
         <div class="rounded-md">
-          <a
-            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            @click="$emit('close')"
-            >✕</a
-          >
+          <a class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="$emit('close')">✕</a>
           <div class="flex items-center">
             <div class="flex flex-col truncate gap-1">
               <div class="bg-gray-200 w-full px-8 pt-4 pb-4 rounded-md flex gap-1 flex-col">
                 <div>
-                  <button
-                    v-if="fromReviewPage"
-                    class="btn btn-sm btn-ghost -ml-5"
-                    @click="goBack()"
-                  >
+                  <button v-if="fromReviewPage" class="btn btn-sm btn-ghost -ml-5" @click="goBack()">
                     <Icon name="mdi:arrow-left" size="20" />
                     Назад
                   </button>
                 </div>
                 <div>
-                  <span class="text-sm text-gray-500 mr-2 my-auto"
-                    >Создано:
+                  <span class="text-sm text-gray-500 mr-2 my-auto">Создано:
                   </span>
                   <span class="rounded-md py-0 px-2 text-sm">
                     {{
                       $dayjs(info.createdAt)
                         .locale("ru")
                         .format("D.MM.YY, HH:mm")
-                    }}</span
-                  >
+                    }}</span>
                 </div>
 
                 <div class="flex gap-2">
-                  <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                    >Статус:
+                  <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Статус:
                   </span>
-                  <div
-                    class="rounded-md py-0 px-2 text-sm text-[0.725rem]"
-                    :class="{
-                      ' bg-[#b5ffbc] dark:bg-success':
-                        info.status === 'active' ||
-                        info.status === 'work' ||
-                        info.status === 'busy' ||
-                        info.status === 'discountGiven',
-                      'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
-                        info.status === 'completed' ||
-                        info.status === 'nofunds',
-                      'text-base-content bg-yellow-300':
-                        info.status === 'archived' ||
-                        info.status === 'paused' ||
-                        info.status === 'discountAwaiting',
-                    }"
-                  >
+                  <div class="rounded-md py-0 px-2 text-sm text-[0.725rem]" :class="{
+                    ' bg-[#b5ffbc] dark:bg-success':
+                      info.status === 'active' ||
+                      info.status === 'work' ||
+                      info.status === 'busy' ||
+                      info.status === 'discountGiven',
+                    'dark:text-base-content text-[#ac5858] bg-[#fecaca] dark:bg-red-700':
+                      info.status === 'completed' ||
+                      info.status === 'nofunds',
+                    'text-base-content bg-yellow-300':
+                      info.status === 'archived' ||
+                      info.status === 'paused' ||
+                      info.status === 'discountAwaiting',
+                  }">
                     {{ getStatus }}
                   </div>
                 </div>
 
                 <div class="flex gap-2" v-if="info.executionTime">
-                  <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                    >Выполнено:
+                  <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Выполнено:
                   </span>
-                  <div
-                    @click="navigateTo('/paymenthistory?uuid=' + info.uuid)"
-                    class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary link-hover cursor-pointer"
-                  >
+                  <div @click="navigateTo('/paymenthistory?uuid=' + info.uuid)"
+                    class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary link-hover cursor-pointer">
                     {{
                       $dayjs(info.executionTime)
                         .locale("ru")
@@ -165,24 +143,17 @@ onKeyStroke("Escape", (e) => {
                   <button @click="copyToClipboard(info.buyoutuuid)">
                     <Icon name="si:copy-fill" class="-mb-1.5 w-6 h-6 mr-1" />
                   </button>
-                  <span class="text-sm text-gray-500 my-auto"
-                    >ID:
+                  <span class="text-sm text-gray-500 my-auto">ID:
                   </span>
-                  <label
-                    class="rounded-md py-0 px-2 text-sm cursor-pointer"
-                    @click="copyToClipboard(info.uuid)"
-                  >
+                  <label class="rounded-md py-0 px-2 text-sm cursor-pointer" @click="copyToClipboard(info.uuid)">
                     #{{ info.uuid }}
                   </label>
                 </div>
 
                 <div class="flex gap-2">
-                  <span class="text-sm text-[0.725rem] text-gray-500 my-auto"
-                    >Товар:
+                  <span class="text-sm text-[0.725rem] text-gray-500 my-auto">Товар:
                   </span>
-                  <div
-                    class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary truncate"
-                  >
+                  <div class="rounded-md py-0 px-2 text-sm text-[0.725rem] text-primary truncate">
                     <a :href="info.url" target="_blank" class="link link-hover">
                       {{ info.url }}
                     </a>
@@ -190,8 +161,7 @@ onKeyStroke("Escape", (e) => {
                 </div>
 
                 <div class="w-full whitespace-normal">
-                  <span class="text-sm text-gray-500 mr-2 my-auto"
-                    >Название:
+                  <span class="text-sm text-gray-500 mr-2 my-auto">Название:
                   </span>
                   <span class="rounded-md py-0 px-2 text-sm">
                     {{ info.product?.name }}
@@ -215,9 +185,7 @@ onKeyStroke("Escape", (e) => {
                 </div>
                 <div>
                   <span class="text-sm text-gray-500 mr-2">Дата выкупов: </span>
-                  <span
-                    class="rounded-md py-0 pr-2 text-sm flex gap-1 justify-start flex-wrap"
-                  >
+                  <span class="rounded-md py-0 pr-2 text-sm flex gap-1 justify-start flex-wrap">
                     <div class="text-sm">
                       {{
                         `${$dayjs(info.dateStart)
@@ -238,34 +206,36 @@ onKeyStroke("Escape", (e) => {
               <div>
                 <div class="px-8 bg-primary bg-opacity-15 pt-2 -mt-1 pb-4 flex gap-1 flex-col">
                   <div>
-                    <span class="text-sm text-gray-500 mr-2 my-auto"
-                      >Количество:
+                    <span class="text-sm text-gray-500 mr-2 my-auto">Количество:
                     </span>
-                    <span class="rounded-md py-0 px-2 text-sm"
-                      >{{ info.quantity }} ед.</span
-                    >
+                    <span class="rounded-md py-0 px-2 text-sm">{{ info.quantity }} ед.</span>
                   </div>
                   <div>
-                    <span class="text-sm text-gray-500 mr-2 my-auto"
-                      >Цена:
+                    <span class="text-sm text-gray-500 mr-2 my-auto">Цена:
                     </span>
                     <span class="rounded-md py-0 px-2 text-sm">{{
                       currency.format(info.quantity * info.product?.price)
                     }}</span>
                   </div>
                   <div>
-                    <span class="text-sm text-gray-500 mr-2 my-auto"
-                      >Тип услуги:
+                    <span class="text-sm text-gray-500 mr-2 my-auto">Тип доставки:
                     </span>
                     <span class="rounded-md py-0 px-2 text-sm">{{
-                      info.deliveryType === "courier"
-                        ? "Выкуп силами курьера"
-                        : "Выкуп через самовывоз"
+                      info.deliveryType === "market"
+                        ? "Магазин"
+                        : info.deliveryType === "self" ? "Самовывоз"
+                          : info.deliveryType === "5Post" ? "Постамат 5POST"
+                            : info.deliveryType === "courier" ? "Курьер"
+                              : info.deliveryType === "Яндекс Доставка" ? "Яндекс Доставка" : "Не указано"
                     }}</span>
                   </div>
+
+
+
+
+
                   <div v-if="info.financePrice">
-                    <span class="text-sm text-gray-500 mr-2 my-auto"
-                      >Услуга:
+                    <span class="text-sm text-gray-500 mr-2 my-auto">Услуга:
                     </span>
                     <span class="rounded-md py-0 px-2 text-sm">{{
                       currency.format(info.financePrice)
@@ -278,9 +248,7 @@ onKeyStroke("Escape", (e) => {
         </div>
 
         <div class="flex flex-col gap-2 justify-center px-5 pb-5 bg-gray-200">
-          <div
-            class="flex items-start justify-between flex-col md:flex-row gap-2 mt-2"
-          >
+          <div class="flex items-start justify-between flex-col md:flex-row gap-2 mt-2">
             <div class="flex items-start flex-col">
               <span class="text-sm text-gray-500 mb-1">Поисковый запрос:</span>
               <span class="text-sm">{{ info.searchQuery }}</span>
@@ -288,11 +256,8 @@ onKeyStroke("Escape", (e) => {
           </div>
           <div class="flex items-start flex-col">
             <span class="text-sm text-gray-500 mb-1">Адрес:</span>
-            <a
-              target="_blank"
-              class="text-sm link link-hover truncate max-w-[90%] whitespace-normal"
-              :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`"
-            >
+            <a target="_blank" class="text-sm link link-hover truncate max-w-[90%] whitespace-normal"
+              :href="`https://yandex.ru/maps/?mode=search&text=${info.point}`">
               {{ info.point }}
             </a>
           </div>
@@ -305,7 +270,7 @@ onKeyStroke("Escape", (e) => {
               <template v-else>
                 <ul class="list-disc list-inside text-sm">
                   <li v-for="rule in info.rules" :key="rule.id">
-                    {{ rules.find((r) => r.id === rule).description }}
+                    {{rules.find((r) => r.id === rule).description}}
                   </li>
                 </ul>
               </template>
