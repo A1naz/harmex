@@ -339,7 +339,7 @@ async function generatePassword() {
         <h1 class="text-center text-gray-500 text-xs">
           {{ $t("Выберите удобный способ...") }}
         </h1>
-        <!-- <div class="w-full">
+        <div class="w-full">
           <div class="btm-nav-xs w-full flex justify-between">
             <button
               class="w-full"
@@ -362,7 +362,7 @@ async function generatePassword() {
               {{ $t("Юридическое лицо") }}
             </button>
           </div>
-        </div> -->
+        </div>
         <div class="px-5 pb-2">
           <div class="relative">
             <label for="tnumber" class="block mb-2 ml-1 my-1 text-sm font-medium">
