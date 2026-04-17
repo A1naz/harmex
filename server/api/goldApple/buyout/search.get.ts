@@ -56,6 +56,7 @@ export default eventHandler(async (event) => {
       createdAt: buyout.createdAt,
       product: buyout.product,
       shelves: buyout.shelves,
+      deliveryType: buyout.deliveryType,
     };
   });
   return format;

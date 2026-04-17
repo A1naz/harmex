@@ -16,7 +16,21 @@ export default eventHandler(async (event) => {
     };
   }
 
-  const all = await Delivery.find({ ...trueDateRange, user }).sort({ _id: -1 });
+  const all = await Delivery.find({
+    ...trueDateRange,
+    user,
+    statusdelivery: {
+      $elemMatch: {
+        $or: [
+          { status: "готов к выдаче" },
+          { status: "Готов к выдаче" },
+          { status: { $regex: "^Готов к выдаче.*" } },
+          { status: { $regex: "^готов к выдаче.*" } },
+        ],
+      },
+    },
+    status: { $ne: "completed" },
+  }).sort({ _id: -1 });
 
   const buyoutsId = all.map((item) => item.idbuyout);
   const buyouts = await Buyout.find({ _id: { $in: buyoutsId } });
@@ -62,13 +76,7 @@ export default eventHandler(async (event) => {
       };
     })
   );
-  const filtered = format.filter((item) => {
-    if (item)
-      return (
-        item!.currentstatus === "выполнен" || item!.currentstatus === "Выполнен"
-      );
-    else return false;
-  });
+  const filtered = format.filter((item) => !!item);
   const points = {} as any;
   filtered.forEach((item, index) => {
     if (points[item!.point]) points[item!.point].push(item);
