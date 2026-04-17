@@ -142,10 +142,6 @@ export default eventHandler(async (event) => {
       statusdelivery: {
         $elemMatch: {
           $or: [
-            { status: "готов к выдаче" },
-            { status: "Готов к выдаче" },
-            { status: "^готов к выдаче.*" },
-            { status: "^Готов к выдаче.*" },
             { status: { $regex: "^Готов к выдаче.*" } },
             { status: { $regex: "^готов к выдаче.*" } },
           ],
@@ -159,8 +155,10 @@ export default eventHandler(async (event) => {
 
     deliveries = response
       .filter(
-        (delivery, index) =>
-          delivery.statusdelivery[delivery.statusdelivery.length - 1].status.includes("готов к выдаче")
+        (delivery) =>
+          delivery.statusdelivery[delivery.statusdelivery.length - 1].status
+            .toLowerCase()
+            .includes("готов к выдаче")
       )
 
   } else {
