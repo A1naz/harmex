@@ -45,6 +45,8 @@ const getStatus = computed(() => {
       return "Опубликован";
     case "addition":
       return "Дополнение";
+      case 'additionError':
+      return "Ошибка дополнения";
     case "added":
       return "Дополнен";
     case "disputing":

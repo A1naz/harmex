@@ -85,6 +85,8 @@ const getStatus = computed(() => {
       return "Опубликован";
     case "addition":
       return "Дополнение";
+    case "additionError":
+      return "Ошибка дополнения";
     case "added":
       return "Дополнен";
     case "disputing":
@@ -180,7 +182,7 @@ function copyToClipboard(text: string) {
                     info.status === 'disputing' ||
                     info.status === 'disputed',
                   'bg-[#F8C68A] text-[#D67500]':
-                    info.status === 'waiting' || info.status === 'created',
+                    info.status === 'waiting' || info.status === 'created' || info.status === 'additionError',
                   'bg-[#F8C68A]  text-red-500':
                     info.status === 'nofunds' || info.status === 'archived',
                   'bg-[#FF685E] text-white':

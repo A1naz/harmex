@@ -175,6 +175,10 @@ export default eventHandler(async (event) => {
       })
       .splice((skip as number) ? (skip as number) : 0, limit as number);
   } else if (status === "pickupReady") {
+
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+    
     deliveries = await Delivery.find({
       user,
       ...searchOption,
@@ -194,6 +198,7 @@ export default eventHandler(async (event) => {
         },
       },
       status: { $ne: "completed" },
+      updatedAt: { $gte: todayStart },
     })
       .sort({
         _id: -1,

@@ -31,7 +31,8 @@ const ReviewSchema = new Schema({
       "added",
       "disputing",
       "disputed",
-      "reviewsUpdate"
+      "reviewsUpdate",
+      "additionError"
     ],
   },
   recipientphone: { type: String, required: true },
