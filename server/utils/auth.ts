@@ -4,6 +4,14 @@ import bcrypt from "bcryptjs";
 import { v4 as uuid } from "uuid";
 import { generateUniqueUsername } from "./createUsername";
 const config = useRuntimeConfig();
+
+function normalizePhone(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length === 10) return "+7" + digits;
+  if (digits.length === 11 && digits[0] === "8") return "+7" + digits.slice(1);
+  if (digits.length === 11 && digits[0] === "7") return "+" + digits;
+  return "+" + digits;
+}
 // Logs the user in as the given user model
 async function login(event: H3Event<Request>, user: IUser) {
   await replaceUserSession(
@@ -103,15 +111,13 @@ async function getCurrentUser(event: H3Event<Request>) {
 
 async function attempt(
   event: H3Event<Request>,
-  phoneNumber: string,
+  contact: string,
   password: string
 ) {
-  // Импортируем rate limiter
   const { checkRateLimit, logLoginAttempt, clearOldLoginAttempts } =
     await import("./rateLimiter");
 
-  // Проверяем rate limit ПЕРЕД любыми операциями с БД
-  const rateLimitCheck = await checkRateLimit(event, phoneNumber);
+  const rateLimitCheck = await checkRateLimit(event, contact);
 
   if (!rateLimitCheck.allowed) {
     throw createError({
@@ -120,45 +126,37 @@ async function attempt(
     });
   }
 
-  const foundUser = await User.findOne({
-    phoneNumber: phoneNumber.replace(/[()\-\s]/g, ""),
-  });
+  const isEmail = contact.includes("@");
+
+  const foundUser = isEmail
+    ? await User.findOne({ email: contact })
+    : await User.findOne({ phoneNumber: normalizePhone(contact) });
 
   if (!foundUser || !foundUser.password) {
-    // Логируем неудачную попытку
-    await logLoginAttempt(event, phoneNumber, false);
+    await logLoginAttempt(event, contact, false);
 
     throw createError({
       statusCode: 401,
-      message: "Неверный номер телефона или пароль.",
+      message: isEmail
+        ? "Неверный email или пароль."
+        : "Неверный номер телефона или пароль.",
     });
   }
 
-  const isPasswordCorrect = await bcrypt.compareSync(
-    password,
-    foundUser.password
-  );
+  const isPasswordCorrect = bcrypt.compareSync(password, foundUser.password);
 
-  // && config.env !== 'developer'
+  if (!isPasswordCorrect && config.env !== "developer") {
+    await logLoginAttempt(event, contact, false);
 
-  if (!isPasswordCorrect && config.env !== 'developer') {
-    // Логируем неудачную попытку
-    await logLoginAttempt(event, phoneNumber, false);
-
-    // return an error if the user is not found or the password doesn't match
     throw createError({
       statusCode: 401,
       message: "Неверный логин или пароль.",
     });
   }
 
-  // Логируем успешную попытку
-  await logLoginAttempt(event, phoneNumber, true);
+  await logLoginAttempt(event, contact, true);
+  await clearOldLoginAttempts(contact);
 
-  // Очищаем старые неудачные попытки
-  await clearOldLoginAttempts(phoneNumber);
-
-  // log in as the selected user
   await login(event, foundUser);
 
   return true;
