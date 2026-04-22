@@ -19,7 +19,7 @@ export interface WBProductInfo {
 export async function getWBProductInfo(article: string | number): Promise<WBProductInfo> {
   const articleStr = String(article);
 
-  const image = findImage(articleStr);
+  const image = await findImage(articleStr);
 
   // Получаем актуальные cookies
   const cookies = await getWbCookies();
