@@ -423,7 +423,7 @@ async function saveUser(selectedUser: any) {
     username: selectedUser.username,
     firstName: selectedUser.firstName,
     lastName: selectedUser.lastName,
-    phoneNumber: selectedUser.phoneNumber,
+    contact: selectedUser.contact,
     password: selectedUser.password,
     allowedPathes: selectedUser.allowedPathes
       ? selectedUser.allowedPathes.length == multiOptions.length
@@ -441,7 +441,9 @@ async function saveUser(selectedUser: any) {
   } else {
     userData.password = selectedUser.password;
     endpoint = "/api/team/register";
+  
   }
+
   const { error } = await useFetch(endpoint, {
     method: "POST",
     body: userData,
@@ -963,7 +965,7 @@ function copyText(text: string) {
                       </th>
                       <th scope="col" class="table-header text-[14px]">
                         <div class="header-content">
-                          <span>{{ $t("Номер телефона") }}</span>
+                          <span>{{ $t("Номер телефона / email") }}</span>
                         </div>
                       </th>
 
@@ -994,6 +996,7 @@ function copyText(text: string) {
                       <td class="table-cell">
                         <span class="rounded-md py-2 font-medium">
                           {{
+                            row.phoneNumber.includes("@") ? row.phoneNumber :
                             "+" +
                             row.phoneNumber.slice(1, 2) +
                             " (" +

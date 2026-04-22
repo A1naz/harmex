@@ -151,6 +151,7 @@ async function generateLogin() {
               @blur="onContactBlur"
             />
           </div>
+      
           <div class="flex flex-col gap-2">
             <label> Разрешения </label>
             <CustomDropdown position="bottom-end" :matchTriggerWidth="true">
