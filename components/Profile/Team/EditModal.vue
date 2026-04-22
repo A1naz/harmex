@@ -13,16 +13,24 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue", "save", "close"]);
 
+function resolveContact(mv: any): string {
+  const phone = mv.phoneNumber || "";
+  const email = mv.email || "";
+  if (phone && !phone.startsWith("nophone_")) return phone;
+  if (email && !email.startsWith("noemail_")) return email;
+  return "";
+}
+
 watch(
   () => props.modelValue,
   () => {
     if (!props.btnSaveLoading) {
-      (form.username = props.modelValue.username || ""),
-        (form.phoneNumber = props.modelValue.phoneNumber || ""),
-        (form.allowedPathes = props.modelValue.allowedPathes
-          ? props.modelValue.allowedPathes.map((item: any) => item.value)
-          : []),
-        (form.post = props.modelValue.post);
+      form.username = props.modelValue.username || "";
+      form.contact = resolveContact(props.modelValue);
+      form.allowedPathes = props.modelValue.allowedPathes
+        ? props.modelValue.allowedPathes.map((item: any) => item.value)
+        : [];
+      form.post = props.modelValue.post;
     }
   }
 );
@@ -37,11 +45,27 @@ const selectOptions = [
 
 const form = reactive({
   username: "",
-  phoneNumber: "",
+  contact: "",
   allowedPathes: [] as string[],
   post: "",
   password: "",
 });
+
+function formatPhone(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  let norm = digits;
+  if (digits.length === 10) norm = "7" + digits;
+  else if (digits.length === 11 && digits[0] === "8") norm = "7" + digits.slice(1);
+  else if (digits.length === 11 && digits[0] === "7") norm = digits;
+  else return raw;
+  return `+7 ${norm.slice(1, 4)} ${norm.slice(4, 7)}-${norm.slice(7, 9)}-${norm.slice(9, 11)}`;
+}
+
+function onContactBlur() {
+  if (form.contact && !form.contact.includes("@")) {
+    form.contact = formatPhone(form.contact);
+  }
+}
 
 function toggleAll() {
   const isFullySelected =
@@ -67,7 +91,7 @@ function save() {
   const user = props.modelValue;
 
   user.username = form.username;
-  user.phoneNumber = form.phoneNumber;
+  user.contact = form.contact;
   user.allowedPathes = props.multiOptions.filter((option) =>
     form.allowedPathes.includes(option.value)
   );
@@ -118,17 +142,16 @@ async function generateLogin() {
             </div>
           </div>
           <div class="flex flex-col gap-2">
-            <label> Номер телефона </label>
+            <label>Номер телефона / email</label>
             <input
-              v-model="form.phoneNumber"
+              v-model="form.contact"
               type="text"
               class="input input-sm h-[2.5rem] bg-base-100 border-none w-full"
-              v-maska
-              data-maska="+7 (###) ###-##-##"
-              placeholder="+7 (___) ___-__-__"
-              required="true"
+              placeholder="+7 999 000-00-00 или email@example.com"
+              @blur="onContactBlur"
             />
           </div>
+      
           <div class="flex flex-col gap-2">
             <label> Разрешения </label>
             <CustomDropdown position="bottom-end" :matchTriggerWidth="true">

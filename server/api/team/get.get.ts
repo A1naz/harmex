@@ -34,7 +34,7 @@ export default eventHandler(async (event) => {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
+      phoneNumber: user.phoneNumber?.includes("nophone") ? user.email : user.phoneNumber,
       uuid: user.uuid,
       uuidCompany: user.uuidCompany,
       acesses: user.acesses,

@@ -14,9 +14,25 @@ definePageMeta({
 const { notify } = useNotification();
 const loading = ref(false);
 const formData = reactive({
-  phoneNumber: "",
+  contact: "",
   password: "",
 });
+
+function formatPhone(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  let norm = digits;
+  if (digits.length === 10) norm = "7" + digits;
+  else if (digits.length === 11 && digits[0] === "8") norm = "7" + digits.slice(1);
+  else if (digits.length === 11 && digits[0] === "7") norm = digits;
+  else return raw;
+  return `+7 ${norm.slice(1, 4)} ${norm.slice(4, 7)}-${norm.slice(7, 9)}-${norm.slice(9, 11)}`;
+}
+
+function onContactBlur() {
+  if (formData.contact && !formData.contact.includes("@")) {
+    formData.contact = formatPhone(formData.contact);
+  }
+}
 
 
 const referralFromLocal: any = ref("");
@@ -94,10 +110,16 @@ function togglePassword() {
 
 const rules = computed(() => {
   return {
-    phoneNumber: {
-      required: helpers.withMessage("Введите номер телефона", required),
-      minLength: helpers.withMessage("Неверный номер телефона", minLength(18)),
-      maxLength: helpers.withMessage("Неверный номер телефона", maxLength(18)),
+    contact: {
+      required: helpers.withMessage("Введите номер телефона или email", required),
+      validContact: helpers.withMessage(
+        "Введите корректный номер телефона или email",
+        (value: string) => {
+          if (!value) return false;
+          if (value.includes("@")) return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+          return value.replace(/\D/g, "").length >= 10;
+        }
+      ),
     },
     password: {
       required: helpers.withMessage("Введите пароль", required),
@@ -118,7 +140,7 @@ async function login() {
   const response = await $fetch("/api/auth/login", {
     method: "POST",
     body: {
-      phoneNumber: formData.phoneNumber,
+      contact: formData.contact,
       password: formData.password,
     },
   })
@@ -170,17 +192,16 @@ async function login() {
       <div class="box flex flex-col gap-3">
         <form class="flex flex-col gap-3" @submit.prevent="login">
           <div class="flex flex-col gap-1">
-            <label>{{ $t("Номер телефона") }} </label>
+            <label>{{ $t("Номер телефона или email") }}</label>
             <input
-              v-model="formData.phoneNumber"
-              v-maska
-              data-maska="+7 (###) ###-##-##"
-              placeholder="+7 (___) ___-__-__"
-              required="true"
+              v-model="formData.contact"
+              type="text"
+              placeholder="+7 999 000-00-00 или email@example.com"
               class="input input-bordered"
+              @blur="onContactBlur"
             />
-            <div v-if="v$.phoneNumber.$error" class="text-red-500 text-xs mt-1">
-              {{ v$.phoneNumber.$errors[0].$message }}
+            <div v-if="v$.contact.$error" class="text-red-500 text-xs mt-1">
+              {{ v$.contact.$errors[0].$message }}
             </div>
             <div class="text-xs text-gray-500">
               {{ $t("Сохраните данные, чтобы всегда были под рукой") }}
