@@ -145,7 +145,7 @@ export default eventHandler(async (event) => {
   const buyoutUuids = buyouts.map((buyout) => 'Выкуп #' + buyout.uuid)
   const history = await paymenthistory.find({ basisoperation: { $in: buyoutUuids }, type: 'buyouts service' })
 
-  const format = buyouts.map((buyout) => {
+  const format = await Promise.all(buyouts.map(async (buyout) => {
     // const place = all.findIndex(item => item.uuid === buyout.uuid)
     const historyItem = history.find(item => item.basisoperation === 'Выкуп #' + buyout.uuid)
 
@@ -166,7 +166,7 @@ export default eventHandler(async (event) => {
       rules: buyout.rules,
       createdAt: buyout.createdAt,
       product: buyout.product
-        ? { ...buyout.product.toObject?.() ?? buyout.product, image: findImage(String(buyout.article)) }
+        ? { ...buyout.product.toObject?.() ?? buyout.product, image: await findImage(String(buyout.article)) }
         : buyout.product,
       purchaseSoon: buyout.purchaseSoon,
       key: buyout.key,
@@ -177,7 +177,7 @@ export default eventHandler(async (event) => {
       shelves: buyout.shelves,
       promoCode: buyout.promoCode,
     }
-  })
+  }))
 
   return format
 })

@@ -26,7 +26,7 @@ function p(t: any, e: any) {
 }
 const sleep = (ms: any) => new Promise(r => setTimeout(r, ms))
 
-export function findImage(input: string) {
+export async function findImage(input: string) {
   const nm = Number.parseInt(input, 10)
   const vol = Math.floor(nm / 1e5)
   const part = Math.floor(nm / 1e3)
@@ -100,37 +100,48 @@ export function findImage(input: string) {
     host = '//basket-26.wbbasket.ru'
   } else if (vol >= 4877 && vol <= 5189) {
     host = '//basket-27.wbbasket.ru'
-  } else if (vol >= 5190 && vol <= 5489) { 
+  } else if (vol >= 5190 && vol <= 5489) {
     host = '//basket-28.wbbasket.ru'
-  } else if (vol >= 5490 && vol <= 5910)  {
+  } else if (vol >= 5490 && vol <= 5910) {
     host = '//basket-29.wbbasket.ru'
   } else if (vol >= 5911 && vol <= 6126) {
     host = '//basket-30.wbbasket.ru'
   } else if (vol >= 6126 && vol <= 6437) {
     host = '//basket-31.wbbasket.ru'
   } else if (vol >= 6438 && vol <= 6749) {
-       host = '//basket-32.wbbasket.ru'
-  } else if (vol >= 6750 && vol <= 7061)  {
-     host = '//basket-33.wbbasket.ru'
+    host = '//basket-32.wbbasket.ru'
+  } else if (vol >= 6750 && vol <= 7061) {
+    host = '//basket-33.wbbasket.ru'
   } else if (vol >= 7062 && vol <= 7373) {
-      host = '//basket-34.wbbasket.ru'
+    host = '//basket-34.wbbasket.ru'
   } else if (vol >= 7374 && vol <= 7685) {
-      host = '//basket-35.wbbasket.ru'
+    host = '//basket-35.wbbasket.ru'
   } else if (vol >= 7686 && vol <= 7997) {
-      host = '//basket-36.wbbasket.ru'
+    host = '//basket-36.wbbasket.ru'
   } else if (vol >= 7998 && vol <= 8309) {
-      host = '//basket-37.wbbasket.ru'
+    host = '//basket-37.wbbasket.ru'
   } else if (vol >= 8310 && vol <= 8661) {
-      host = '//basket-38.wbbasket.ru'
+    host = '//basket-38.wbbasket.ru'
   } else if (vol >= 8662 && vol <= 8933) {
-      host = '//basket-39.wbbasket.ru'
+    host = '//basket-39.wbbasket.ru'
   } else if (vol >= 8934 && vol <= 9245) {
-      host = '//basket-40.wbbasket.ru'
+    host = '//basket-40.wbbasket.ru'
   } else if (vol >= 9246 && vol <= 9557) {
-      host = '//basket-41.wbbasket.ru'
+    host = '//basket-41.wbbasket.ru'
   }
 
-  return `https:${host}/vol${vol}/part${part}/${nm}/images/big/1.webp`
+  const primaryUrl = `https:${host}/vol${vol}/part${part}/${nm}/images/big/1.webp`
+
+  try {
+    const res = await fetch(primaryUrl, { method: 'HEAD' })
+    if (res.ok) {
+      return primaryUrl
+    }
+  } catch {
+    // primary host unavailable, fall through to fallback
+  }
+
+  return `https://mow-basket-cdn-19.geobasket.ru/vol${vol}/part${part}/${nm}/images/big/1.webp`
 }
 
 export function findProductCard(article: number) {
