@@ -249,9 +249,19 @@ async function openChecksModal() {
       !item.searchQuery[0].value &&
       (!item.category || !item.category.length)
     ) {
+
+      if (!item.buyFromShelves) {
+
       valid = false;
       errorMsg = "Не у всех товаров указан поисковый запрос или категория";
+      }
     }
+
+    if (item.buyFromShelves && !item.shopLink) {
+      valid = false;
+      errorMsg = "Не у всех товаров указана ссылка на магазин";
+    }
+
     if (!item.selectedSize) item.selectedSize = "none";
 
     const minDate = new Date(item.dateRange[0]);
@@ -694,6 +704,12 @@ getCategories()
                     <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
                   </div>
                 </th>
+                <th class="font-normal text-base-content" @click="openInfoModal('buyFromShelves')">
+                  <div class="flex justify-center items-center gap-1">
+                    <span>Ссылка на магазин</span>
+                    <!-- <span class="rounded-lg bg-base-200 px-1 text-xs">?</span> -->
+                  </div>
+                </th>
                 <th class="font-normal text-base-content" @click="openInfoModal('promoCode')">
                   <div class="flex justify-center items-center gap-1">
                     <span>Промокод</span>
@@ -771,6 +787,17 @@ getCategories()
                 <div class="flex gap-2">
                   <input :disabled="products[selectedRuleProductIndex].key"
                     v-model="products[selectedRuleProductIndex].purchaseSoon" type="checkbox"
+                    class="checkbox checkbox-primary border-base-content" />
+                  <span class="text-sm text-primary">{{ rule.price }}р.</span>
+                </div>
+              </div>
+              <div v-if="rule.id === 1" class="label cursor-pointer flex gap-4 items-start justify-between">
+                <span class="label-text">{{
+                  "Выкуп с витрины"
+                }}</span>
+                <div class="flex gap-2">
+                  <input 
+                    v-model="products[selectedRuleProductIndex].buyFromShelves" type="checkbox"
                     class="checkbox checkbox-primary border-base-content" />
                   <span class="text-sm text-primary">{{ rule.price }}р.</span>
                 </div>

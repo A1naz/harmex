@@ -410,6 +410,24 @@ function notifyDigitalProduct() {
           </div>
       </div>
     </td>
+    <td class="border-r border-base max-w-[150px]">
+      <div class="w-full flex flex-col gap-0.5">
+        <input
+          type="text"
+          class="input bg-base-200 input-sm w-full rounded-xl"
+          :disabled="!product.buyFromShelves"
+          v-model="product.shopLink"
+          placeholder="Ссылка на магазин"
+        />
+        <!-- <input
+          type="text"
+          class="input bg-base-200 input-sm w-full rounded-xl"
+          :disabled="!product.shelves"
+          v-model="product.competitorArticle2"
+          placeholder="Второй артикул"
+        /> -->
+      </div>
+    </td>
     <td class="w-[140px] border-r border-base">
       <div class="flex justify-center mt-1">
         <button

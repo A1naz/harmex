@@ -32,6 +32,8 @@ interface Item {
   promoCode: string | null;
   category: string[] | null;
   digitalProduct: boolean;
+  buyFromShelves: boolean;
+  shopLink: string;
 }
 export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event);
@@ -146,6 +148,8 @@ export default eventHandler(async (event) => {
       isCategoriesEnabled:
         product.category && product.category.length > 0 ? true : false,
       digitalProduct: product.digitalProduct ? product.digitalProduct : false,
+      buyFromShelves: product.buyFromShelves ? product.buyFromShelves : false,
+      shopLink: product.shopLink ? product.shopLink : "",
     });
 
     await buyout.save();

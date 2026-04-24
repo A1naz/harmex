@@ -357,6 +357,21 @@ function openInfoModal(type: string) {
       <div class="flex flex-col gap-1 mt-3">
         <span
           class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
+          @click="openInfoModal('shelves')"
+        >Ссылка на магазин</span>
+        <input
+          v-model="product.shopLink"
+          type="text"
+          class="input bg-base-200 input-sm w-full rounded-xl"
+          :disabled="!product.buyFromShelves"
+          placeholder="Ссылка на магазин"
+        />
+      </div>
+
+
+      <div class="flex flex-col gap-1 mt-3">
+        <span
+          class="text-sm text-gray-500 underline decoration-dotted cursor-pointer hover:text-primary transition-colors w-fit"
           @click="openInfoModal('category')"
         >Категории</span>
         <div class="w-full flex gap-2">
