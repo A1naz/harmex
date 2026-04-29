@@ -146,6 +146,7 @@ export default eventHandler(async (event) => {
       await user.save();
     }
 
+    console.log(product);
     const buyout = new Buyout({
       article: product.article,
       searchQuery: searchQueries.join(", "),

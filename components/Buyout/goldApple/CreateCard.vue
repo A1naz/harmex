@@ -197,6 +197,7 @@ function openInfoModal(type: string) {
           <select
             class="select select-sm border-none bg-[#F3E9DD] rounded-xl w-20 appearance-none"
             @change="onSexChange"
+            v-model="product.sex"
           >
             <option value="Нет">Нет</option>
             <option value="male">Муж</option>

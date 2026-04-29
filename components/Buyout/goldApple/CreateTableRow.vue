@@ -231,6 +231,7 @@ function onParameterChange(event: Event) {
         <select
           class="select select-sm w-full bg-[#F3E9DD] max-w-sm appearance-none"
           @change="onSexChange"
+          v-model="product.sex"
         >
           <option value="Нет">Нет</option>
           <option value="male">Муж</option>
