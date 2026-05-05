@@ -47,15 +47,15 @@ export default eventHandler(async (event) => {
     })
   }
 
-  // const balanceIsExist = await checkBalance(user, { buyoutuuid, video, mp: 'ozon' }, 'reviews')
+  const balanceIsExist = await checkBalance(user, { buyoutuuid, video, mp: 'ozon' }, 'reviews')
 
-  // if (!balanceIsExist) {
-  //   throw createError({
-  //     statusCode: 400,
-  //     message:
-  //       `Недостаточно средств для совершения отзыва`,
-  //   })
-  // }
+  if (!balanceIsExist) {
+    throw createError({
+      statusCode: 400,
+      message:
+        `Недостаточно средств для совершения отзыва`,
+    })
+  }
 
   const buyout = await Buyout.findOne({ uuid: buyoutuuid })
   if (!buyout) {
