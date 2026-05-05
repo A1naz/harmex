@@ -93,6 +93,15 @@ export default eventHandler(async (event) => {
     uuid: uuid(),
   });
   
+
+  const isReviewExist = await Review.findOne({ uuidbuyout: buyout.uuid})
+  if (isReviewExist) {
+    return createError({
+      statusCode: 400,
+      message: `Отзыв на эту доставку уже был оставлен`,
+    })
+  }
+
   const res = await review.save();
   delivery.reviewed = true;
   await delivery.save();

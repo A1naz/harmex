@@ -152,6 +152,14 @@ export default eventHandler(async (event) => {
     whatLikedInPVZ,
     whatLikedInProduct,
   });
+  
+  const isReviewExist = await Review.findOne({ uuidbuyout: buyout.uuid,  pvz: pvz === true ? true : false})
+  if (isReviewExist) {
+    return createError({
+      statusCode: 400,
+      message: `Отзыв на ${pvz ? 'этот ПВЗ' : 'эту доставку'} уже был оставлен`,
+    })
+  }
   const res = await review.save();
   // reviewed уже установлен в true через findOneAndUpdate выше
 
