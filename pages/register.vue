@@ -725,15 +725,15 @@ async function generatePassword() {
                 class="text-xs cursor-pointer"
                 @click="formData.checked = !formData.checked"
               >
-                {{ $t("Регистрируясь вы принимаете") }}
-                <a target="_blank" href="/docs/oferta.pdf" class="text-primary"
-                  >{{ $t("Пользовательское соглашение") }}</a
-                >, {{ $t("и подтверждаете, что ознакомлены с") }}
+               {{ $t("Я даю") }}  
+                <a target="_blank" href="https://harmex.ru/docs/soglasieNaObrabotku.pdf" class="text-primary"
+                  >{{ $t("согласие на обработку персональных данных") }}</a
+                > {{ $t("в соответствии с") }} 
                 <a
                   target="_blank"
-                  href="/docs/conf_policy.pdf"
+                  href="https://harmex.ru/docs/politikaPersonalnyhDannyh.pdf"
                   class="text-primary"
-                  >{{ $t("Политикой конфиденциальности") }}</a
+                  >{{ $t("Политикой конфиденциальности персональных данных") }}</a
                 >.
               </p>
             </div>

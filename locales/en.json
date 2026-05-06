@@ -87,5 +87,9 @@
   "Разрешения:": "Permissions:",
   "Email не подтвержден": "Email not confirmed",
   "Email подтвержден": "Email confirmed",
-  "Введите почту": "Enter email"
+  "Введите почту": "Enter email",
+  "согласие на обработку персональных данных": "consent to the processing of personal data",
+  "в соответствии с": "in accordance with",
+  "Политикой конфиденциальности персональных данных": "Privacy Policy of personal data",
+  "Я даю": "I give"
 }
