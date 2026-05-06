@@ -9,6 +9,13 @@ export default eventHandler(async (event) => {
   if (!userFound) return sendRedirect(event, '/auth', 302)
 
   if (userFound.twoFaQR) {
+    if (userFound.isTwoFaEnabled) {
+      throw createError({
+        statusCode: 400,
+        message: '2FA уже включена',
+      })
+    }
+
     return {
       qrCode: userFound.twoFaQR,
       secret: userFound.twoFaSecret,

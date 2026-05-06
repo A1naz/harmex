@@ -7,7 +7,7 @@ export default eventHandler(async (event) => {
 
   const query = getQuery(event)
   
-  const buyout = await Buyout.findOne({ uuid: query.uuid })
+  const buyout = await Buyout.findOne({ uuid: query.uuid, user: session._id })
   if (!buyout) {
     return createError({
       statusCode: 400,

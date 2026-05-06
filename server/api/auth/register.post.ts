@@ -5,6 +5,7 @@ import { User } from '~~/server/lib/models/User'
 import { HarmexReferrals } from '~/server/lib/models/HarmexReferrals'
 import MailService from '~~/server/lib/mailService.js'
 import { createUsername } from '~/server/utils/createUsernameFromMail'
+import { escapeRegex } from '~/server/utils/security'
 
 function hasWhiteSpace(s: string) {
   return s.includes(' ') || !/^[a-zA-Z0-9_-]{4,14}$/.test(s)
@@ -48,7 +49,7 @@ export default eventHandler(async (event) => {
   }
 
   const checkEmail = await User.findOne({
-    email: { $regex: new RegExp(email, 'i') },
+    email: { $regex: new RegExp(`^${escapeRegex(email)}$`, 'i') },
   })
   if (checkEmail) {
     return {
@@ -69,7 +70,7 @@ export default eventHandler(async (event) => {
   }
 
   const checkInn = await User.findOne({
-    orgInn: { $regex: new RegExp(orgInn, 'i') },
+    orgInn: { $regex: new RegExp(`^${escapeRegex(orgInn)}$`, 'i') },
   })
   if (checkInn) {
     return {

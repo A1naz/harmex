@@ -71,9 +71,15 @@ async function getPartnerBalance() {
 
 async function openTwoFaQRModal() {
   if (!isTwoFaEnabled.value) {
+    const code = window.prompt("Введите код 2FA для отключения");
+    if (!code) {
+      isTwoFaEnabled.value = true;
+      return;
+    }
+
     const { data }: any = await useFetch("/api/2fa/turnOnOff", {
       method: "GET",
-      query: { changeTo: isTwoFaEnabled.value },
+      query: { changeTo: isTwoFaEnabled.value, code },
       watch: false,
     });
     if (data.value) {

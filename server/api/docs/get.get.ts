@@ -11,6 +11,17 @@ import path from 'node:path'
 import he from 'he'
 import checkAndRemove from './checkAndRemove'
 
+function getTemplatePath(fileName: unknown, fallback: string) {
+  const safeFileName = typeof fileName === 'string' ? fileName : fallback
+  const templatesDir = path.resolve('server/docs/templates')
+  const templatePath = path.resolve(templatesDir, `${safeFileName}.docx`)
+
+  if (!templatePath.startsWith(`${templatesDir}${path.sep}`) || !fs.existsSync(templatePath))
+    return path.resolve(templatesDir, `${fallback}.docx`)
+
+  return templatePath
+}
+
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
   if (!user) return sendRedirect(event, '/auth', 302)
@@ -22,7 +33,7 @@ export default eventHandler(async (event) => {
   if (user.fizFace) {
 
     doc = await patchDocument(
-      fs.readFileSync(`server/docs/templates/${user.lastOrgInfo && user.lastOrgInfo.docName ? user.lastOrgInfo.docName : 'ofertaFIZ'}.docx`),
+      fs.readFileSync(getTemplatePath(user.lastOrgInfo?.docName, 'ofertaFIZ')),
       {
         patches: {
           username: {
@@ -113,7 +124,7 @@ export default eventHandler(async (event) => {
       })
 
     doc = await patchDocument(
-      fs.readFileSync(`server/docs/templates/${user.lastOrgInfo && user.lastOrgInfo.docName ? user.lastOrgInfo.docName : 'ofertaOOO'}.docx`),
+      fs.readFileSync(getTemplatePath(user.lastOrgInfo?.docName, 'ofertaOOO')),
       {
         patches: {
           ogrn: {
@@ -359,7 +370,7 @@ export default eventHandler(async (event) => {
       })
 
     doc = await patchDocument(
-      fs.readFileSync(`server/docs/templates/${user.lastOrgInfo && user.lastOrgInfo.docName ? user.lastOrgInfo.docName : 'ofertaIP'}.docx`),
+      fs.readFileSync(getTemplatePath(user.lastOrgInfo?.docName, 'ofertaIP')),
       {
         patches: {
           ogrn: {

@@ -1,5 +1,6 @@
-﻿import { Delivery } from '@/server/lib/models/yandexMarket/Delivery'
+import { Delivery } from '@/server/lib/models/yandexMarket/Delivery'
 import { Review } from '@/server/lib/models/yandexMarket/Review'
+import { parseObjectId } from '~/server/utils/security'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -25,7 +26,7 @@ export default eventHandler(async (event) => {
   }
 
   if (type === 'uuidReview') {
-    reviews = await Review.find({ _id: string }).sort({ createdAt: -1 })
+    reviews = await Review.find({ user: user._id, _id: parseObjectId(string) }).sort({ createdAt: -1 })
     if (!reviews)
       return []
   }

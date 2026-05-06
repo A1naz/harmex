@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
 
   const body = await readBody(event)
 
-  const found: any = await Buyout.findOne({ uuid: body.uuid })
+  const found: any = await Buyout.findOne({ uuid: body.uuid, user: user._id })
   if (!found) {
     throw createError({
       statusCode: 404,
@@ -43,7 +43,7 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const deleted = await Buyout.deleteOne({ uuid: body.uuid })
+  const deleted = await Buyout.deleteOne({ uuid: body.uuid, user: user._id })
   if (deleted) {
     await userLog(event, {
       documentType: DocuemntEnum.Buyout,

@@ -11,17 +11,7 @@ const RATE_LIMITS = {
 }
 
 export function getClientIP(event: H3Event): string {
-  const forwarded = getHeader(event, 'x-forwarded-for')
-  const realIP = getHeader(event, 'x-real-ip')
-  
-  if (forwarded) {
-    return forwarded.split(',')[0].trim()
-  }
-  
-  if (realIP) {
-    return realIP
-  }
-  
+  // Не доверяем X-Forwarded-For от клиента: без trust-proxy его легко подделать.
   return event.node.req.socket?.remoteAddress || 'unknown'
 }
 

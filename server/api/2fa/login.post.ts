@@ -18,17 +18,15 @@ export default eventHandler(async (event) => {
 
     const isVerified = confirmTwoFaCode(code, userFound.twoFaSecret);
 
-    if (isVerified) {
-        sessionUser.twoFaNeeded = false;
-        await setUserSession(event, sessionUser);
-    }else{
-        sessionUser.twoFaNeeded = false;
-        await setUserSession(event, sessionUser);
-        // throw createError({
-        //     statusCode: 400,
-        //     statusMessage: 'Неверный код 2FA.',
-        // });
+    if (!isVerified) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Неверный код 2FA.',
+        });
     }
+
+    sessionUser.twoFaNeeded = false;
+    await setUserSession(event, sessionUser);
 
     return {
         status: isVerified,

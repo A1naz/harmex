@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { DocuemntEnum } from '~/data/enums'
 import { ReviewDraft } from '~/server/lib/models/ozon/ReviewDraft'
+import { parseObjectId, pickAllowedFields } from '~/server/utils/security'
 
 export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event)
@@ -8,15 +9,17 @@ export default eventHandler(async (event) => {
     return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
-  if (!body)
+  if (!body?._id)
     throw new Error('Неправильный запрос')
+
+  const update = pickAllowedFields(body, ['draftName', 'article', 'text'])
 
   const res = await ReviewDraft.updateOne(
     {
       user: new ObjectId(user._id),
-      _id: body._id,
+      _id: parseObjectId(body._id),
     },
-    { ...body },
+    { $set: update },
   )
 
   await userLog(event, {

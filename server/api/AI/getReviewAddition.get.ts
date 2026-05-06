@@ -19,15 +19,15 @@ export default eventHandler(async (event) => {
   let review: any = null
 
   if (mp === 'wildberries') {
-    buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid })
-    delivery = await wildberriesDelivery.findOne({ uuidbuyout: buyoutUuid })
-    review = await wildberriesReview.findOne({ delivery: delivery?._id })
+    buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid, user: user._id })
+    delivery = await wildberriesDelivery.findOne({ user: user._id, uuidbuyout: buyoutUuid })
+    review = await wildberriesReview.findOne({ user: user._id, delivery: delivery?._id })
   } else if (mp === 'ozon') {
-    buyout = await ozonBuyout.findOne({ uuid: buyoutUuid })
-    delivery = await ozonDelivery.findOne({ uuidbuyout: buyoutUuid })
-    review = await ozonReview.findOne({ delivery: delivery?._id })
+    buyout = await ozonBuyout.findOne({ uuid: buyoutUuid, user: user._id })
+    delivery = await ozonDelivery.findOne({ user: user._id, uuidbuyout: buyoutUuid })
+    review = await ozonReview.findOne({ user: user._id, delivery: delivery?._id })
   } else if (mp === 'ym') {
-    buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid })
+    buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid, user: user._id })
   }
 
   if (!buyout) {

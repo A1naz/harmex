@@ -1,5 +1,6 @@
 import { Buyoutlog } from '@/server/lib/models/goldApple/Buyoutlog'
 import { User } from '@/server/lib/models/User'
+import { Buyout } from '@/server/lib/models/goldApple/Buyout'
 
 export default eventHandler(async (event) => {
   const user = (await getAdminEntity(event)) as any
@@ -8,7 +9,11 @@ export default eventHandler(async (event) => {
 
   const { uuid } = getQuery(event)
 
-  const all = await Buyoutlog.find({ buyoutuuid: uuid }).sort({ _id: -1 })
+  const buyout = await Buyout.findOne({ uuid, user: user._id })
+  if (!buyout)
+    throw createError({ statusCode: 404, message: 'Выкуп не найден' })
+
+  const all = await Buyoutlog.find({ buyout: buyout._id, buyoutuuid: uuid }).sort({ _id: -1 })
 
   return all
 })
