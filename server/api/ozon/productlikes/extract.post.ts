@@ -1,10 +1,8 @@
 import { findImage, findProductCard } from '@/server/lib/helpers'
 import { User } from '@/server/lib/models/User'
-import request from 'request'
 import { v4 as uuid } from 'uuid'
 
 const config = useRuntimeConfig()
-const proxy = config.CHANGING_PROXY
 
 function extractArticulFromOzonLink(link: string) {
   const pattern = /(\d+)\/?(?:\?.*)?$/

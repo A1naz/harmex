@@ -1,30 +1,16 @@
-import request from 'request'
-
 export async function confirmViaZvonokApi(
   publicKey: string,
   campaignId: string,
   phoneNumber: string,
 ) {
   try {
-    const data: any = await new Promise((resolve, reject) => {
-      request.get(
-        {
-          url: `https://zvonok.com/manager/cabapi_external/api/v1/phones/tellcode/?campaign_id=${campaignId}&phone=${phoneNumber}&public_key=${publicKey}`,
-        },
-        (error, response, body) => {
-          if (!error) {
-            try {
-              resolve(JSON.parse(body))
-            }
-            catch (parseError) {
-              reject(new Error(`Ошибка парсинга ответа`))
-            }
-          }
-          else {
-            reject(error)
-          }
-        },
-      )
+    const data: any = await $fetch('https://zvonok.com/manager/cabapi_external/api/v1/phones/tellcode/', {
+      method: 'GET',
+      query: {
+        campaign_id: campaignId,
+        phone: phoneNumber,
+        public_key: publicKey,
+      },
     })
 
     if (!data || !data.data || !data.data.pincode || data.status === 'error') {

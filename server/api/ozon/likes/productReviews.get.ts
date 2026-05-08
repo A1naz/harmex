@@ -1,9 +1,5 @@
-import request from 'request'
-
 const config = useRuntimeConfig()
-const proxy = config.CHANGING_PROXY
 const elPerPage = 50
-const apiKey = config.serverLoadApiKey
 
 export default eventHandler(async (event) => {
   const session = ((await getUserSession(event)).user) as any

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { LazyReviewWildberriesAIAddition } from '#build/components';
-
 const props = defineProps({
   info: {
     type: Object as any,
