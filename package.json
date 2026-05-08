@@ -121,7 +121,6 @@
   },
   "trustedDependencies": [
     "@morev/vue-transitions",
-    "aws-sdk",
     "core-js",
     "esbuild",
     "sharp",
