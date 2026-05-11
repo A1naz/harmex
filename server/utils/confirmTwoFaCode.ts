@@ -7,5 +7,6 @@ export default function confirmTwoFaCode(code: string, secret: string) {
     secret,
     encoding: 'base32',
     token: code,
+    window: 1,
   })
 }

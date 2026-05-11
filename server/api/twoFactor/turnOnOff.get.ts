@@ -3,10 +3,14 @@ import confirmTwoFaCode from '~~/server/utils/confirmTwoFaCode'
 
 export default eventHandler(async (event) => {
   const userAuth = await getUserSession(event)
-
-  const foundedUser = await User.findOne({ uuid: userAuth.user?.uuid })
-
-  if (!foundedUser) return sendRedirect(event, '/auth', 302)
+  if (!userAuth?.user?.uuid) {
+    throw createError({ statusCode: 401, message: 'Не авторизован' })
+  }
+  console.log(userAuth)
+  const foundedUser = await User.findOne({ uuid: userAuth.user.uuid })
+  if (!foundedUser) {
+    throw createError({ statusCode: 401, message: 'Пользователь не найден' })
+  }
 
   const { changeTo, code } = getQuery(event)
   const shouldEnable = changeTo === true || changeTo === 'true'
@@ -30,8 +34,8 @@ export default eventHandler(async (event) => {
 
     foundedUser.isTwoFaEnabled = shouldEnable
   }
-  
-   await foundedUser.save()
+
+  await foundedUser.save()
 
   return {
     status: 'ok',

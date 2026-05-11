@@ -4,9 +4,13 @@ import qrcode from 'qrcode'
 
 export default eventHandler(async (event) => {
   const userAuth = await getUserSession(event)
-  if (!userAuth) return sendRedirect(event, '/auth', 302)
-  const userFound = await User.findOne({ uuid: userAuth.user?.uuid })
-  if (!userFound) return sendRedirect(event, '/auth', 302)
+  if (!userAuth?.user?.uuid) {
+    throw createError({ statusCode: 401, message: 'Не авторизован' })
+  }
+  const userFound = await User.findOne({ uuid: userAuth.user.uuid })
+  if (!userFound) {
+    throw createError({ statusCode: 401, message: 'Пользователь не найден' })
+  }
 
   if (userFound.twoFaQR) {
     if (userFound.isTwoFaEnabled) {
@@ -21,7 +25,6 @@ export default eventHandler(async (event) => {
       secret: userFound.twoFaSecret,
     }
   } else {
-    
     const secret: any = speakeasy.generateSecret({
       length: 10,
       name: 'HARMEX: ' + userFound.username.replace(/[\(\)\-\s]/g, ''),
@@ -29,11 +32,8 @@ export default eventHandler(async (event) => {
 
     const qrCode: string = await new Promise((resolve, reject) => {
       qrcode.toDataURL(secret.otpauth_url, (err: any, data: any) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(data)
-        }
+        if (err) reject(err)
+        else resolve(data)
       })
     })
 
