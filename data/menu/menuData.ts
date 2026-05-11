@@ -1,4 +1,4 @@
-import { MenuSectionList, MenuDataList } from "./types";
+import type { MenuSectionList, MenuDataList } from "./types";
 
 export const menuSectionList: MenuSectionList[] = [
     { section: 'products', subTitle: 'Продвижение' },

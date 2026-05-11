@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IReviewDraft } from "~/data/types";
+import type { IReviewDraft } from "~/data/types";
 import { OzonConnection } from "~/server/connections/ozon";
 
 

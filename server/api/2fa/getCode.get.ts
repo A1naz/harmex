@@ -24,7 +24,7 @@ export default eventHandler(async (event) => {
     
     const secret: any = speakeasy.generateSecret({
       length: 10,
-      name: 'HARMEX: ' + userFound.phoneNumber.replace(/[\(\)\-\s]/g, ''),
+      name: 'HARMEX: ' + userFound.username.replace(/[\(\)\-\s]/g, ''),
     })
 
     const qrCode: string = await new Promise((resolve, reject) => {

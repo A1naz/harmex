@@ -13,11 +13,14 @@ const props = defineProps({
 
 async function getQr() {
   if (twoFaSecret.value == "") {
-    const { data }: any = await useFetch("/api/2fa/getCode");
-    qrCode.value = data.value.qrCode;
-    twoFaSecret.value = data.value.secret;
-
-    loading.value = false;
+    try {
+      const data: any = await $fetch("/api/2fa/getCode");
+      qrCode.value = data.qrCode;
+      twoFaSecret.value = data.secret;
+      loading.value = false;
+    } catch {
+      notify({ title: "Ошибка при получении QR-кода" });
+    }
   }
 }
 

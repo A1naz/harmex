@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-import { StateMain } from "~/data/types";
-import { ITariff } from "~/data/types";
+import type { StateMain, ITariff } from "~/data/types";
 import { rules } from "@/data/buyout/rules";
 
 const prices: any = {

@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IReviewDraft } from "~/data/types";
+import type { IReviewDraft } from "~/data/types";
 import { wildberriesConnection } from "~/server/connections/wildberries";
 
 interface IReviewDraftSchema extends IReviewDraft, Document {}
