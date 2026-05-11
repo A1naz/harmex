@@ -1,3 +1,5 @@
+import { assertAllowedRemoteImageUrl } from '~/server/utils/security';
+
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event);
   if (!user) return sendRedirect(event, "/auth", 302);
@@ -19,6 +21,7 @@ export default eventHandler(async (event) => {
     while (decodedUrl !== decodeURIComponent(decodedUrl)) {
       decodedUrl = decodeURIComponent(decodedUrl);
     }
+    decodedUrl = assertAllowedRemoteImageUrl(decodedUrl);
     
     // Определяем маркетплейс по URL для специфичных заголовков
     const isOzon = decodedUrl.includes('ozone.ru') || decodedUrl.includes('cdn.ozone.ru') || decodedUrl.includes('cdn1.ozone.ru');
@@ -113,7 +116,7 @@ export default eventHandler(async (event) => {
     } catch (err) {
       // Вариант 2: Используем оригинальный URL (может быть он должен остаться закодированным)
       try {
-        response = await fetch(url, {
+        response = await fetch(decodedUrl, {
           headers: baseHeaders
         });
       } catch (err2) {
@@ -138,7 +141,10 @@ export default eventHandler(async (event) => {
     setHeader(event, "Content-Type", response.headers.get("content-type") || "image/png");
     
     return buffer;
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.statusCode)
+      throw error;
+
     console.error("Error downloading photo:", error);
     throw createError({
       statusCode: 500,

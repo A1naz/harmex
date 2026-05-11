@@ -13,11 +13,14 @@ const props = defineProps({
 
 async function getQr() {
   if (twoFaSecret.value == "") {
-    const { data }: any = await useFetch("/api/2fa/getCode");
-    qrCode.value = data.value.qrCode;
-    twoFaSecret.value = data.value.secret;
-
-    loading.value = false;
+    try {
+      const data: any = await $fetch("/api/twoFactor/getCode");
+      qrCode.value = data.qrCode;
+      twoFaSecret.value = data.secret;
+      loading.value = false;
+    } catch {
+      notify({ title: "Ошибка при получении QR-кода" });
+    }
   }
 }
 
@@ -38,17 +41,17 @@ async function copyToClipboard(text: string) {
 }
 
 async function turnOnTwoFa() {
-  const { data }: any = await useFetch("/api/2fa/turnOnOff", {
-    method: "GET",
-    query: {
-      changeTo: true,
-    },
-  });
-  if (data.value) {
-    notify({
-      title: "Двухфакторная аутентификация включена",
+  try {
+    const data: any = await $fetch("/api/twoFactor/turnOnOff", {
+      method: "GET",
+      query: { changeTo: true },
     });
-    emit("closeWithTurnOn");
+    if (data) {
+      notify({ title: "Двухфакторная аутентификация включена" });
+      emit("closeWithTurnOn");
+    }
+  } catch {
+    notify({ title: "Ошибка при включении 2FA" });
   }
 }
 
@@ -65,25 +68,21 @@ async function findSearchQuery() {
     return;
   }
 
-  const { data, error }: any = await useFetch("/api/2fa/confirm", {
-    method: "GET",
-    params: {
-      code: code.value.replaceAll(" ", ""),
-    },
-  });
+  try {
+    const data: any = await $fetch("/api/twoFactor/confirm", {
+      method: "GET",
+      params: { code: code.value.replaceAll(" ", "") },
+    });
 
-  if (data.value) {
-    isCodeConfirmed.value = data.value.status;
+    isCodeConfirmed.value = data.status;
 
     if (!isCodeConfirmed.value) {
-      notify({
-        title: "Неверный код",
-      });
+      notify({ title: "Неверный код" });
     } else {
-      notify({
-        title: "Код подтвержден",
-      });
+      notify({ title: "Код подтвержден" });
     }
+  } catch {
+    notify({ title: "Ошибка при проверке кода" });
   }
 }
 

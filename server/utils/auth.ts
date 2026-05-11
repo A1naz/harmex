@@ -145,7 +145,7 @@ async function attempt(
 
   const isPasswordCorrect = bcrypt.compareSync(password, foundUser.password);
 
-  if (!isPasswordCorrect && config.env !== "developer") {
+  if (!isPasswordCorrect) {
     await logLoginAttempt(event, contact, false);
 
     throw createError({

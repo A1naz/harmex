@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { DocuemntEnum } from '~/data/enums'
 import { ReviewDraft } from '~/server/lib/models/ozon/ReviewDraft'
+import { parseObjectId } from '~/server/utils/security'
 
 export default eventHandler(async (event) => {
   const user: any = await getAdminEntity(event)
@@ -14,7 +15,7 @@ export default eventHandler(async (event) => {
   const res = await ReviewDraft.deleteOne(
     {
       user: new ObjectId(user._id),
-      _id: body._id,
+      _id: parseObjectId(body._id),
     },
   )
 

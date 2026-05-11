@@ -9,7 +9,7 @@ export default eventHandler(async (event) => {
 
   const body = await readBody(event)
 
-  const found = await Buyout.findOne({ uuid: body.uuid })
+  const found = await Buyout.findOne({ uuid: body.uuid, user: user._id })
   if (!found) {
     throw createError({
       statusCode: 404,

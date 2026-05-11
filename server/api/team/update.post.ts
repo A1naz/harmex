@@ -1,6 +1,7 @@
 import validator from 'validator'
 import { User } from '@/server/lib/models/User'
 import bcrypt from 'bcryptjs'
+import { Types } from 'mongoose'
 
 function normalizePhone(raw: string): string {
   const digits = raw.replace(/\D/g, '')
@@ -12,6 +13,9 @@ function normalizePhone(raw: string): string {
 import { DocuemntEnum } from '~/data/enums'
 
 export default eventHandler(async (event) => {
+  const admin: any = await getAdminEntity(event)
+  if (!admin)
+    return sendRedirect(event, '/auth', 302)
 
   const body = await readBody(event)
 
@@ -42,9 +46,14 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const user = await User.findOne({ uuid })
+  const user = await User.findOne({ uuid, uuidCompany: admin.uuid })
   if (!user) {
     throw createError({ statusCode: 400, message: 'Такого пользователя не существует' })
+  }
+
+  const adminId = admin._id instanceof Types.ObjectId ? admin._id : new Types.ObjectId(admin._id)
+  if (!user.uuidCompany || user.uuidCompany !== admin.uuid || user._id.equals(adminId)) {
+    throw createError({ statusCode: 403, message: 'Недостаточно прав для изменения пользователя' })
   }
 
   const isEmail = contact.includes('@')

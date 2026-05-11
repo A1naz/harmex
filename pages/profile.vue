@@ -71,9 +71,15 @@ async function getPartnerBalance() {
 
 async function openTwoFaQRModal() {
   if (!isTwoFaEnabled.value) {
-    const { data }: any = await useFetch("/api/2fa/turnOnOff", {
+    const code = window.prompt("Введите код 2FA для отключения");
+    if (!code) {
+      isTwoFaEnabled.value = true;
+      return;
+    }
+
+    const { data }: any = await useFetch("/api/twoFactor/turnOnOff", {
       method: "GET",
-      query: { changeTo: isTwoFaEnabled.value },
+      query: { changeTo: isTwoFaEnabled.value, code },
       watch: false,
     });
     if (data.value) {
@@ -1188,7 +1194,7 @@ function copyText(text: string) {
             <label class="label cursor-pointer flex flex-col lg:flex-row">
               <div class="flex flex-col lg:flex-row gap-3 w-full">
                 <nuxt-img
-                  src="/icons/figma/profile/2fa.svg"
+                  src="/icons/figma/profile/twoFactor.svg"
                   class="w-10 h-10"
                 />
                 <div class="flex-col gap-1">

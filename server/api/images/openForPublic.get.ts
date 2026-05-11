@@ -1,9 +1,15 @@
 import { GetObjectCommand, PutObjectAclCommand, S3Client } from '@aws-sdk/client-s3'
+import { assertSafeS3Key } from '~/server/utils/security'
 
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
+
   const { path }: any = getQuery(event)
+  const key = assertSafeS3Key(path)
 
   const bucket = 'ozonmpportal'
   const s3 = new S3Client({
@@ -19,7 +25,7 @@ export default eventHandler(async (event) => {
     // Получаем объект из S3
     const getObjectParams = {
       Bucket: bucket,
-      Key: path,
+      Key: key,
     }
     const getObjectCommand = new GetObjectCommand(getObjectParams)
     await s3.send(getObjectCommand)
@@ -27,7 +33,7 @@ export default eventHandler(async (event) => {
     // Устанавливаем права доступа (ACL) для объекта
     const aclParams = {
       Bucket: bucket,
-      Key: path,
+      Key: key,
       ACL: 'public-read',
     }
 
@@ -42,7 +48,7 @@ export default eventHandler(async (event) => {
     console.error('Ошибка при работе с S3:', err)
     return {
       status: 'error',
-      message: err.message,
+      message: 'Не удалось открыть доступ к файлу',
     }
   }
 })

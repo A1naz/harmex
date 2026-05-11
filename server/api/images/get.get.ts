@@ -1,10 +1,16 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { assertSafeS3Key } from '~/server/utils/security'
 
 const config = useRuntimeConfig()
 
 export default eventHandler(async (event) => {
+  const user = await getAdminEntity(event)
+  if (!user)
+    return sendRedirect(event, '/auth', 302)
+
   const { path }: any = getQuery(event)
+  const key = assertSafeS3Key(path)
 
   const s3 = new S3Client({
     region: 'ru-central1',
@@ -17,7 +23,7 @@ export default eventHandler(async (event) => {
 
   const params = {
     Bucket: 'ozonmpportal',
-    Key: path.replace('ozonmpportal/', ''),
+    Key: key,
   }
 
   const getImage = async (params: any) => {

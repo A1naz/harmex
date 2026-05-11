@@ -17,8 +17,16 @@ export default eventHandler(async (event) => {
 
 
   const { fileName } = getQuery(event)
-  if (!fileName) {
+  if (!fileName || typeof fileName !== 'string') {
     return 'no file'
+  }
+  const templatesDir = path.resolve('server/docs/templates')
+  const templatePath = path.resolve(templatesDir, `${fileName}.docx`)
+  if (!templatePath.startsWith(`${templatesDir}${path.sep}`) || !fs.existsSync(templatePath)) {
+    throw createError({
+      statusCode: 400,
+      message: 'Некорректный шаблон документа',
+    })
   }
   checkAndRemove('server/docs/signedOferta.docx')
 
@@ -27,7 +35,7 @@ export default eventHandler(async (event) => {
   if (user.fizFace) {
 
     doc = await patchDocument(
-      fs.readFileSync(`server/docs/templates/${fileName}.docx`),
+      fs.readFileSync(templatePath),
       {
         patches: {
           username: {
@@ -118,7 +126,7 @@ export default eventHandler(async (event) => {
       })
 
     doc = await patchDocument(
-      fs.readFileSync(`server/docs/templates/${fileName}.docx`),
+      fs.readFileSync(templatePath),
       {
         patches: {
           ogrn: {
@@ -364,7 +372,7 @@ export default eventHandler(async (event) => {
       })
 
     doc = await patchDocument(
-      fs.readFileSync(`server/docs/templates/${fileName}.docx`),
+      fs.readFileSync(templatePath),
       {
         patches: {
           ogrn: {

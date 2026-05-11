@@ -12,11 +12,11 @@ export default eventHandler(async (event) => {
 
   let buyout: any = null
   if (mp === 'wildberries') {
-    buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid })
+    buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid, user: user._id })
   } else if (mp === 'ozon') {
-    buyout = await ozonBuyout.findOne({ uuid: buyoutUuid })
+    buyout = await ozonBuyout.findOne({ uuid: buyoutUuid, user: user._id })
   } else if (mp === 'ym') {
-    buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid })
+    buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid, user: user._id })
   }
 
   if (!buyout) {

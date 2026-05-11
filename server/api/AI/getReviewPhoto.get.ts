@@ -17,14 +17,14 @@ export default eventHandler(async (event) => {
 
   let buyout: any = null
   switch (mp) {
-    case 'wildberries': buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid }).lean(); break
-    case 'ozon': buyout = await ozonBuyout.findOne({ uuid: buyoutUuid }).lean(); break
-    case 'ym': buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid }).lean(); break
-    case 'avito': buyout = await avitoBuyout.findOne({ uuid: buyoutUuid }).lean(); break
-    case 'goldApple': buyout = await goldAppleBuyout.findOne({ uuid: buyoutUuid }).lean(); break
-    case 'flowwow': buyout = await flowwowBuyout.findOne({ uuid: buyoutUuid }).lean(); break
-    case 'ozonHotels': buyout = await ozonHotelsBuyout.findOne({ uuid: buyoutUuid }).lean(); break
-    case 'sutochno': buyout = await sutochnoBuyout.findOne({ uuid: buyoutUuid }).lean(); break
+    case 'wildberries': buyout = await wildberriesBuyout.findOne({ uuid: buyoutUuid, user: user._id }).lean(); break
+    case 'ozon': buyout = await ozonBuyout.findOne({ uuid: buyoutUuid, user: user._id }).lean(); break
+    case 'ym': buyout = await yandexMarketBuyout.findOne({ uuid: buyoutUuid, user: user._id }).lean(); break
+    case 'avito': buyout = await avitoBuyout.findOne({ uuid: buyoutUuid, user: user._id }).lean(); break
+    case 'goldApple': buyout = await goldAppleBuyout.findOne({ uuid: buyoutUuid, user: user._id }).lean(); break
+    case 'flowwow': buyout = await flowwowBuyout.findOne({ uuid: buyoutUuid, user: user._id }).lean(); break
+    case 'ozonHotels': buyout = await ozonHotelsBuyout.findOne({ uuid: buyoutUuid, user: user._id }).lean(); break
+    case 'sutochno': buyout = await sutochnoBuyout.findOne({ uuid: buyoutUuid, user: user._id }).lean(); break
     default:
       throw createError({ statusCode: 400, statusMessage: 'Marketplace not supported' })
   }

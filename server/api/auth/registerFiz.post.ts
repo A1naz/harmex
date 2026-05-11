@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs'
 import { v4 as uuid } from 'uuid'
 import validator from 'validator'
 import { createUsername } from '~/server/utils/createUsernameFromMail'
+import { escapeRegex } from '~/server/utils/security'
 
 export default eventHandler(async (event) => {
   const body = await readBody(event)
@@ -36,7 +37,7 @@ export default eventHandler(async (event) => {
   }
 
   const checkEmail = await User.findOne({
-    email: { $regex: new RegExp(email, 'i') },
+    email: { $regex: new RegExp(`^${escapeRegex(email)}$`, 'i') },
   })
   if (checkEmail) {
     return {

@@ -1,0 +1,13 @@
+.env
+.env.*
+.git
+.nuxt
+.output
+node_modules
+agent-tools
+agent-transcripts
+*.log
+*.pem
+*.key
+coverage
+dist

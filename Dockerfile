@@ -1,4 +1,4 @@
-FROM node:19-alpine
+FROM node:20-alpine
 
 RUN mkdir -p /usr/src/nuxt-app
 WORKDIR /usr/src/nuxt-app
@@ -113,7 +113,7 @@ ENV REPORTS_DB_URI=${REPORTS_DB_URI}
 ENV NEUROTASK_KEY=${NEUROTASK_KEY}
 ENV PROXY_URL=${PROXY_URL}
 
-RUN npm install -g pnpm
+RUN corepack enable && corepack prepare pnpm@10.7.1 --activate
 RUN apk add --no-cache python3 make g++
 ENV NODE_OPTIONS="--max-old-space-size=6144"
 RUN pnpm install
