@@ -1,5 +1,4 @@
 ﻿import { Buyout } from '@/server/lib/models/wildberries/Buyout'
-import { User } from '~/server/lib/models/User'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)

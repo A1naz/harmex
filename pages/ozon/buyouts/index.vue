@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Buyout } from "~/server/lib/models/ozon/Buyout";
+// import { Buyout } from "~/server/lib/models/ozon/Buyout";
 
 const { notify } = useNotification();
 

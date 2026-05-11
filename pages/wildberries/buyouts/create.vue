@@ -184,7 +184,7 @@ async function openChecksModal() {
   const productCountsByAddress: any = {};
 
   if (!isUserWarned.value) {
-    const { data } = await useFetch<{ lastBuyouts: LastBuyout[] }>(
+    const { data }: any = await useFetch(
       "/api/wildberries/buyout/checkPVZRestrictions",
       {
         method: "GET",

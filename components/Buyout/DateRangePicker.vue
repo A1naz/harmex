@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useMainStore } from '~~/stores/main'
-import { AnyTxtRecord } from 'dns'
 const { notify } = useNotification()
 
 const props = defineProps({
