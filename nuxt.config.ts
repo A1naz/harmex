@@ -31,6 +31,9 @@ export default defineNuxtConfig({
 
   nitro: {
     plugins: ["~/server/index.ts"],
+    imports: {
+      dirs: ["./server/lib", "./server/lib/models"],
+    },
   },
 
   modules: [
@@ -102,7 +105,7 @@ export default defineNuxtConfig({
   },
 
   imports: {
-    dirs: ["./stores", "./data", "./server/lib", "./server/lib/models"],
+    dirs: ["./stores", "./data"],
   },
 
   eslint: {

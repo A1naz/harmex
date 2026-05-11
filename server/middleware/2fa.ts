@@ -2,6 +2,8 @@ import MenuBuilder from '~/server/utils/menuBuilder'
 import { User } from '~~/server/lib/models/User'
 
 export default eventHandler(async (event) => {
+  if (event._path?.startsWith('/api/')) return
+
   const session = await getUserSession(event);
 
   if(!session) {
