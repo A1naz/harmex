@@ -41,6 +41,9 @@ ${oldReview}
 }
 
 async function callOpenAI(apiKey: string, prompt: string): Promise<string> {
+
+
+
   const { data } = await axios.post(
     'https://api.openai.com/v1/chat/completions',
     {

@@ -3,6 +3,8 @@ import { Buyout as ozonBuyout } from '~/server/lib/models/ozon/Buyout'
 import { Buyout as yandexMarketBuyout } from '~/server/lib/models/yandexMarket/Buyout'
 import { GenerateReviews } from '~/server/lib/models/GenerateReviews'
 import { generateReviewsDirect } from '~/server/utils/AI/directReview'
+import { getAxiosProxy } from '~/server/utils/AI/proxy'
+import axios from 'axios'
 
 export default eventHandler(async (event) => {
   const user = await getAdminEntity(event)
@@ -22,6 +24,8 @@ export default eventHandler(async (event) => {
   if (!buyout) {
     throw createError({ statusCode: 404, statusMessage: 'Buyout not found' })
   }
+  const testIpAddres: any = await axios.get('https://api.ipify.org?format=json', { proxy: false, httpsAgent: getAxiosProxy(), timeout: 60000 })
+  console.log('testIpAddres', testIpAddres.data.ip)
 
   const format = await generateReviewsDirect(buyout.product.name)
 
