@@ -24,8 +24,6 @@ export default eventHandler(async (event) => {
   if (!buyout) {
     throw createError({ statusCode: 404, statusMessage: 'Buyout not found' })
   }
-  const testIpAddres: any = await axios.get('https://api.ipify.org?format=json', { proxy: false, httpsAgent: getAxiosProxy(), timeout: 60000 })
-  console.log('testIpAddres', testIpAddres.data.ip)
 
   const format = await generateReviewsDirect(buyout.product.name)
 
