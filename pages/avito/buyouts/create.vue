@@ -28,6 +28,8 @@ const route = useRoute();
 const products: any = computed(() => store.createProducts);
 
 onMounted(() => {
+  showSuspendedModal.value = true;
+  disabledCreateButton.value = true;
   getPickpoints();
   getAvitoPickpoints();
   // if (products.value.length === 0 && !route.query.uuid)
@@ -37,6 +39,7 @@ onMounted(() => {
 const isWarningChecked = ref(false);
 
 const disabledCreateButton = ref(false);
+const showSuspendedModal = ref(false);
 const ruleModal = ref(false);
 const selectedRuleProductIndex = ref(0);
 const checksModal = ref(false);
@@ -3641,6 +3644,12 @@ const categories = ref<any>([
       </div>
     </div>
   </div>
+  <IntroductionModal
+    :show="showSuspendedModal"
+    :is-checked="false"
+    @close="showSuspendedModal = false"
+    @checkbox-toggle="() => {}"
+  />
 </template>
 
 <style scoped>

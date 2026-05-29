@@ -21,6 +21,7 @@ const timerRunning = ref(false);
 const timerFinished = ref(false);
 let interval: any;
 const disabledCreateButton = ref(false);
+const showSuspendedModal = ref(false);
 const ruleModal = ref(false);
 const selectedRuleProductIndex = ref(0);
 const checksModal = ref(false);
@@ -50,7 +51,8 @@ definePageMeta({
 const isUserWarned: any = ref(false);
 onMounted(() => {
   isUserWarned.value = localStorage.getItem("isUserWarned") === "true";
-  // if (products.value.length === 0 && !route.query.uuid) modalShow.value = true;
+  showSuspendedModal.value = true;
+  disabledCreateButton.value = true;
 });
 
 // products.value.forEach((product: any, i: number) => {
@@ -1072,6 +1074,12 @@ getCategories();
       @close-modal="promoModal = false"
     />
   </div>
+  <IntroductionModal
+    :show="showSuspendedModal"
+    :is-checked="false"
+    @close="showSuspendedModal = false"
+    @checkbox-toggle="() => {}"
+  />
 </template>
 
 <style scoped>

@@ -13,7 +13,10 @@ function closeModal() {
   emit("close");
 }
 
-const config = useRuntimeConfig();
+function openWithdraw() {
+  emit("close");
+  navigateTo("/paymenthistory?withdraw=true");
+}
 </script>
 
 <template>
@@ -31,7 +34,7 @@ const config = useRuntimeConfig();
   >
     <div
       v-if="props.show"
-      class="modal-box rounded-[8px] w-full lg:max-w-5xl md:max-w-2xl sm:max-w-lg max-h-[85vh] overflow-y-auto cursor-auto border p-3 sm:p-5 border-[#dee2e6]"
+      class="modal-box rounded-[8px] w-full lg:max-w-2xl md:max-w-xl sm:max-w-lg max-h-[85vh] overflow-y-auto cursor-auto border p-6 sm:p-8 border-[#dee2e6]"
       @click.stop
     >
       <div class="sticky top-0 z-10 flex justify-end">
@@ -43,201 +46,78 @@ const config = useRuntimeConfig();
         </label>
       </div>
 
-      <div class="px-0 sm:px-3 -mt-10">
-        <p class="mt-2 text-xl">
-          <strong>👋 Добро пожаловать на платформу Harmex!</strong>
-        </p>
+      <div class="px-0 sm:px-2 -mt-8">
 
-        <p class="mb-5">Мы рады, что вы с нами!
-Это краткое руководство поможет вам разобраться в интерфейсе, тарифах и первых шагах по
-работе с платформой.</p>
-        <p class="text-xl mb-1">
-          <strong>Обзор личного кабинета (60 секунд)</strong>
-        </p>
-        <p><strong>1. Каталог услуг</strong> — полный список актуальных предложений платформы.</p>
-        <p><strong>2. Быстрый поиск</strong> — мгновенно находите нужную услугу по названию.</p>
-        <p>
-          <strong>3. Финансовые операции</strong> — раздел для пополнения, расходов, вывода и отчетности.
-        </p>
-        <p class="ml-4">
-          <strong>3.1. Партнёрская программа</strong> — ваша уникальная реферальная ссылка для приглашений и бонус 250 ₽ за друга.
-        </p>
-        <p>
-          <strong>4. Быстрое пополнение по QR-коду</strong> — моментальное пополнение личного баланса.
-        </p>
-        <p>
-          <strong>5. Профиль</strong> — информация о вашем логине, команде и настройках доступа.
-        </p>
-        <p><strong>6. Обзор кабинета</strong> — сводка всех ваших действий и финансов.</p>
-        <p>
-          <strong>7. Услуги на маркетплейсах</strong> — быстрый доступ к заказам, отчётам и статусам выполнения.
-        </p>
-        <p>
-          <strong>8. Служба заботы Harmex</strong> — оперативная помощь и ответы на любые вопросы.
-        </p>
-        <p >
-          <strong>9. Будьте в курсе обновлений алгоритмов</strong> — чтобы ваши отзывы проходили, а выкупы были безопасными, следите за нашими новостями:
-        </p>
-        <ul class="list-none ml-4 mt-1 mb-5 space-y-2">
-          <li>
-            📢 <strong>Telegram-папка (Все каналы):</strong><br />
-            <a href="https://t.me/addlist/tV_NhWxajg02NTAy" target="_blank" class="text-primary underline">Подписаться в 1 клик</a> — здесь оперативные сводки по штормам на ВБ, обновлениям платформы.
-          </li>
-          <li>
-            🔥 <strong>MAX-канал:</strong><br />
-            <a href="https://max.ru/join/1jR1bEN_z6kWYf1Fj3An_LFlZeQXyZabUSbyB0RCpYw" target="_blank" class="text-primary underline">Перейти в закрытый чат</a> — кейсы, стратегии и инсайды.
-          </li>
-          <li>
-            🟦 <strong>VK-сообщество:</strong><br />
-            <a href="https://vk.com/harmex_samovikupi" target="_blank" class="text-primary underline">Harmex ВКонтакте</a> — статьи, гайды и записи эфиров.
-          </li>
-        </ul>
+        <!-- Заголовок -->
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-1 h-10 bg-error rounded-full flex-shrink-0"></div>
+          <h2 class="text-xl font-bold text-error leading-tight">
+            Важное уведомление
+          </h2>
+        </div>
 
+        <!-- Основной текст -->
+        <div class="bg-error/5 border border-error/20 rounded-xl p-5 mb-6">
+          <p class="text-base leading-relaxed mb-3">
+            Уважаемые клиенты!
+          </p>
+          <p class="text-base leading-relaxed mb-3">
+            Сообщаем вам, что с сегодняшнего дня компания <strong>Harmex</strong> приостанавливает
+            фактическую деятельность по оказанию всех услуг самовыкупов на товарах маркетплейсов.
+          </p>
+          <p class="text-base leading-relaxed font-semibold">
+            Заберите оставшиеся товары на ПВЗ и опубликуйте все отзывы.
+          </p>
+        </div>
 
-        <NuxtImg
-          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/3_1.png"
-          class="mx-1 my-2"
-        />
+        <!-- Вывод средств -->
+        <div class="bg-base-200 rounded-xl p-5 mb-6">
+          <p class="text-base leading-relaxed mb-4">
+            В связи с этим для вывода оставшихся финансовых средств необходимо пройти процедуру
+            <button
+              class="text-primary underline underline-offset-2 font-semibold hover:text-primary/80 transition-colors cursor-pointer"
+              @click="openWithdraw"
+            >
+              оформления заявки на вывод
+            </button>.
+          </p>
 
-        <p class="text-xl mb-2 mt-4">
-          <strong>Тарифные планы Harmex</strong>
-        </p>
-        <ul class="list-disc ml-10 mb-3">
-          <li>Стоимость указана <strong>за 1 единицу услуги</strong>.</li>
-          <li>При заказе <strong>от 1 000 ед.</strong> — скидка <strong>15%</strong>.</li>
-          <li><strong>Выкуп:</strong> 130 ₽/ед.</li>
-          <li><strong>Отзыв:</strong> 50 ₽/ед.</li>
-          <li>Забор товара можно:
-            <ul class="list-[circle] ml-6 mt-1">
-              <li>выполнить самостоятельно;</li>
-              <li>либо заказать <strong>услугу забора с ПВЗ нашими курьерами</strong>.</li>
-            </ul>
-          </li>
-        </ul>
+          <p class="text-sm font-semibold text-base-content/70 uppercase tracking-wide mb-3">
+            Порядок действий:
+          </p>
+          <ol class="space-y-2">
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-content text-xs font-bold flex items-center justify-center mt-0.5">1</span>
+              <span>Заполнить форму заявки на вывод финансовых средств.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-content text-xs font-bold flex items-center justify-center mt-0.5">2</span>
+              <span>Подготовить подтверждающий документ.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-content text-xs font-bold flex items-center justify-center mt-0.5">3</span>
+              <span>Отправить заявку и документы в техническую поддержку.</span>
+            </li>
+          </ol>
+        </div>
 
-        <NuxtImg
-          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/3_2.png"
-          class="mx-1 my-2"
-        />
-        <hr class="my-4 border-gray-300" />
-        <p class="text-xl mb-2 mt-4">
-          <strong>Чек-лист для быстрого старта</strong>
-        </p>
-        <video
-          controls
-          poster="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/videoTitle.png"
-          class="my-6 w-full"
-        >
-          <source
-            src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/video.mp4"
-            type="video/mp4"
-          />
-          Ваш браузер не поддерживает видео.
-        </video>
+        <!-- Нижний блок -->
+        <div class="text-center text-sm text-base-content/60 mb-2">
+          После получения обращения средства будут выведены по мере возможности и в порядке обработки заявок.
+        </div>
 
-        <p class="text-lg mb-2">
-          <strong>Шаг 1. Пополните баланс</strong>
-        </p>
-        <ol class="list-decimal ml-10 mb-3">
-          <li>Нажмите на кнопку «+» или перейдите в меню <strong>Финансы → Пополнение</strong>.</li>
-          <li>Введите сумму и <strong>email на домене .ru</strong> (зарубежные почты не принимают чеки).</li>
-          <li>Сканируйте QR-код через банковское приложение и подтвердите оплату.</li>
-          <li>Средства зачисляются автоматически после получения платежа банком.</li>
-        </ol>
+        <div class="text-center text-sm text-base-content/50">
+          Благодарим вас за сотрудничество, понимание и доверие.
+        </div>
 
-        <p class="mb-2">
-          ⚠️ <strong>Важно: правила пополнения баланса</strong>
-        </p>
-
-        <p class="font-semibold mb-1">1. Пополнение с карты физического лица</p>
-        <ul class="list-disc ml-10 mb-3">
-          <li>Оплатить можно по QR-коду, указанному выше.</li>
-          <li>После оплаты чек автоматически поступит на ваш Email.</li>
-          <li>Пожалуйста, не изменяйте поле «Назначение платежа» — это важно для корректного и своевременного зачисления средств.</li>
-          <li>Средства зачисляются автоматически в течение нескольких минут после получения банком.</li>
-          <li>Если в течение 15 минут баланс не обновился, напишите в Службу заботы Harmex — мы поможем оперативно решить вопрос.</li>
-        </ul>
-
-        <p class="font-semibold mb-1">2. Пополнение по безналичному расчёту от организации</p>
-        <ul class="list-disc ml-10 mb-4">
-          <li>Доступна возможность пополнения баланса по счёту от юридического лица.</li>
-          <li>После оплаты вы получаете закрывающие документы по ЭДО или на корпоративную почту.</li>
-          <li>Для выставления счёта и уточнения деталей обратитесь в Службу заботы Harmex.</li>
-        </ul>
-        <NuxtImg
-          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/3_3.png"
-          class="mx-1 my-2"
-        />
-        <p class="text-lg mb-2"> <strong>Шаг 2. Выберите услугу</strong></p>
-        
-        <ol class="list-decimal ml-10 mb-4">
-          <li>Перейдите в <strong>Каталог</strong>.</li>
-          <li>Ознакомьтесь с услугами для нужного маркетплейса (например, Wildberries).</li>
-          <li>Выберите услугу, например «<strong>Wildberries — Выкупы</strong>».</li>
-          <li>Изучите <strong>руководство</strong> по направлению — оно открывается на странице услуги.</li>
-          <li>Нажмите «<strong>Перейти</strong>», чтобы увидеть стоимость и отчетность по заказам.</li>
-        </ol>
-        <NuxtImg
-          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/3_4.png"
-          class="mx-1 my-2"
-        />
-        <hr class="my-4 border-gray-300" />
-        <p class="text-lg mb-2">Процесс исполнения услуги по самовыкупам проходит в 3 этапа:</p>
-
-        <ol class="list-decimal ml-10 mb-4">
-          <li><strong>Выкупы</strong> — заказ товара на маркетплейсе и отчет по исполнению.</li>
-          <li><strong>Доставка</strong> — отправка товара на ПВЗ, получение и возврат средств при отмене.</li>
-          <li><strong>Отзывы</strong> — публикация оценки (текст, фото, видео) по заказанному товару.</li>
-        </ol>
-
-        <hr class="my-4 border-gray-300" />
-
-        <p class="text-lg mb-2">
-          <strong>Шаг 3. Управление кабинетом</strong>
-        </p>
-
-        <p class="mb-2">
-          В разделе <strong>Профиль</strong> вы можете:
-        </p>
-
-        <ul class="list-disc ml-10 mb-3">
-          <li>просмотреть логин и данные пользователя;</li>
-          <li>ознакомиться с документами и соглашениями;</li>
-          <li>добавить <strong>членов команды</strong> и настроить <strong>уровень доступа</strong> для каждого</li>
-        </ul>
-        <NuxtImg
-          src="https://ozonmpportal.hb.vkcs.cloud/harmex/introduction/3_5.png"
-          class="mx-1 my-2"
-        />
-
-        <p class="text-lg mb-2 mt-4">
-          <strong>🍀 Поддержка и обратная связь</strong>
-        </p>
-
-        <p class="mb-2">
-          Если у вас возник вопрос или требуется уточнение:
-        </p>
-
-        <ul class="list-disc ml-10 mb-4">
-          <li>Напишите в <strong>службу заботы Harmex</strong> прямо из кабинета;</li>
-          <li>или воспользуйтесь формой обратной связи в разделе <strong>Поддержка</strong>.</li>
-        </ul>
-        
-      </div>
-
-      
-      <div class="sticky bottom-0 bg-base-100 py-4 mt-8 z-10 border-t border-gray-200 w-52 rounded-lg">
-        <div class="flex items-center gap-2">
-          <input
-            id="checkbox"
-            type="checkbox"
-            class="checkbox checkbox-primary"
-            :checked="isChecked"
-            @change="toggleCheckbox"
-          />
-          <label for="checkbox" class="text-sm text-gray-600 cursor-pointer">
-            Больше не показывать
-          </label>
+        <!-- Кнопка вывода -->
+        <div class="mt-6">
+          <button
+            class="btn btn-primary w-full"
+            @click="openWithdraw"
+          >
+            Оформить заявку на вывод средств
+          </button>
         </div>
       </div>
     </div>

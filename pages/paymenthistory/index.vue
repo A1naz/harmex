@@ -1,13 +1,12 @@
 <!-- eslint-disable ts/ban-ts-comment -->
 <script lang="ts" setup>
-import { isNumber } from "util";
-
 definePageMeta({
   layout: "app",
   middleware: "auth",
 });
 
-const params = useRoute().query;
+const route = useRoute();
+const params = route.query;
 const { user }: any = useUserSession();
 const dateRange = ref([]);
 const searchInput = ref("");
@@ -44,6 +43,13 @@ const headersForTable = ref<any>([]);
 const loading = ref(false);
 const limit = ref(15);
 const skip = ref(0);
+const showWithdrawModal = ref(false);
+
+onMounted(() => {
+  if (route.query.withdraw === 'true') {
+    showWithdrawModal.value = true;
+  }
+});
 
 async function getData() {
   fetchedData.value = [];
@@ -521,5 +527,10 @@ onMounted(() => {
     </div>
     
   </div>
+
+  <FinanceWithdrawModal
+    :show="showWithdrawModal"
+    @close="showWithdrawModal = false"
+  />
 </template>
 <style scoped></style>

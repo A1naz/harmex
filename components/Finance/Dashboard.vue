@@ -148,7 +148,7 @@ async function copyImageToClipboard(base64Image: any) {
       </button> -->
 
       <button
-        :disabled="user?.staff"
+        disabled
         class="btn btn-sm h-[2.5rem] w-[49%] text-[14px] font-medium px-[50px] rounded-xl relative group btn-neutral"
         @click="modalStore.payment = true"
       >

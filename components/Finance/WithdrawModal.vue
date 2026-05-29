@@ -195,6 +195,11 @@ onMounted(() => {
                     download
                     class="text-primary underline hover:opacity-75 font-bold"
                   >Заявление на вывод средств</a>, подписанное лично плательщиком (тем, кто совершал перевод).
+                  <a
+                    href="https://ozonmpportal.hb.vkcs.cloud/example.png"
+                    target="_blank"
+                    class="text-primary underline hover:opacity-75 font-bold"
+                  >Пример правильного заявления на вывод средств</a>
                 </li>
                 <li><strong>Заявку на вывод</strong> с указанием полных реквизитов плательщика.</li>
               </ol>

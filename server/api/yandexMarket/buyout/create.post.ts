@@ -35,9 +35,13 @@ interface Item {
   buyFromShelves: boolean;
   shopLink: string;
 }
-export default eventHandler(async (event) => {
-  const user: any = await getAdminEntity(event);
-  if (!user) return sendRedirect(event, "/auth", 302);
+export default eventHandler(async (_event) => {
+  throw createError({
+    statusCode: 503,
+    message: 'Создание выкупов приостановлено. Компания Harmex прекратила оказание услуг самовыкупов. Для вывода средств оформите заявку в разделе Финансы.',
+  });
+  const user: any = await getAdminEntity(_event);
+  if (!user) return sendRedirect(_event, "/auth", 302);
 
 
   if (!user.phoneConfirmed) {

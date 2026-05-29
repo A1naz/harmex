@@ -14,6 +14,7 @@ const timerRunning = ref(false);
 const timerFinished = ref(false);
 let interval: any;
 const disabledCreateButton = ref(false);
+const showSuspendedModal = ref(false);
 const ruleModal = ref(false);
 const selectedRuleProductIndex = ref(0);
 const checksModal = ref(false);
@@ -36,7 +37,10 @@ definePageMeta({
   title: "Бронировать отель озон",
 });
 const isUserWarned: any = ref(false);
-onMounted(() => {});
+onMounted(() => {
+  showSuspendedModal.value = true;
+  disabledCreateButton.value = true;
+});
 
 const loading = ref(false);
 
@@ -647,6 +651,12 @@ const summ = computed(() => {
       @close-modal="promoModal = false"
     />
   </div>
+  <IntroductionModal
+    :show="showSuspendedModal"
+    :is-checked="false"
+    @close="showSuspendedModal = false"
+    @checkbox-toggle="() => {}"
+  />
 </template>
 
 <style scoped>

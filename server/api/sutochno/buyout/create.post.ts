@@ -29,8 +29,12 @@ interface Item {
   addressInfo: any
   FBS: boolean
 }
-export default eventHandler(async (event) => {
-  const user = await getAdminEntity(event)
+export default eventHandler(async (_event) => {
+  throw createError({
+    statusCode: 503,
+    message: 'Создание выкупов приостановлено. Компания Harmex прекратила оказание услуг самовыкупов. Для вывода средств оформите заявку в разделе Финансы.',
+  })
+  const user = await getAdminEntity(_event)
   if (!user)
     return sendRedirect(event, '/auth', 302)
 

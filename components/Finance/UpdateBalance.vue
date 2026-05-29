@@ -97,77 +97,36 @@ const finalSumm = computed(() => {
           ✕
         </label>
       </form>
-      <div v-if="form == 'addBalance'" class="flex flex-col w-full gap-[72]">
-        <div
-          class="flex flex-col w-full justify-center items-center gap-[15px] mb-[47px]"
-        >
-          <h1 class="text-xl font-bold">Пополнение счета</h1>
-          <div class="flex flex-col gap-[4px] justify-start w-full">
-            <span>{{ "Введите почту для отправки чека" }}</span>
-            <input
-              type="text"
-              class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
-              placeholder="example@example.com"
-              v-model="email"
-            />
-            <span v-if="isGmail" class="text-red-500 text-sm">Почта gmail.com не используется для отправки чеков. Введите .ru почту</span>
-            <span>{{ "Сумма пополнения" }}</span>
-            <div class="flex gap-2">
+      <div class="flex flex-col w-full gap-5">
+        <h1 class="text-xl font-bold text-center">Пополнение счета</h1>
 
-              <input
-              type="number"
-              class="w-full input input-bordered rounded-lg p-2 mt-[4px]"
-              placeholder="Введите сумму пополнения"
-              v-model="summ"
-              />
-            
-            </div>
-             <div class="my-1 mx-1 text-[14px]">
-            Комиссия платформы 5% - {{ currency.format(ndsSumm) }}, к пополнению - {{ currency.format(finalSumm) }}
-          </div>
-          </div>
-          <div class="flex gap-[3px] w-full flex-nowrap flex-row justify-between">
-            <button
-              @click="summ = item"
-              v-for="item in summArr"
-              class="md:px-6 rounded-[10px] btn btn-sm py-1.5 mt-0.5 md:mt-0 btn-neutral text-white"
-            >
-              {{ currency.format(item) }} <span class="hidden md:inline">
-
-        
-              </span>
-            </button>
-          </div>
-        </div>
-        <div class="w-full">
-          <div class="my-2 mx-2 text-[12px] -mt-8">
-            Пополнение с Понедельника по Пятницу с 07:00 до 19:00.
-          </div>
-          <div class="my-2 mx-2 text-[12px]">
-            Переводы, сделанные в <strong>выходные</strong>, начисляются в Понедельник до 09:00.
-          </div>
-          <div class="my-2 mx-2 text-[12px]">
-            Финансовые средства зачисляются на баланс от <strong>3х минут до 72 часов</strong>.
-          </div>
+        <!-- Баннер: пополнение недоступно -->
+        <div class="rounded-xl border border-error/30 bg-error/5 px-5 py-4 flex gap-3">
+          <span class="text-error text-xl mt-0.5 flex-shrink-0">⛔</span>
           <div>
-      
-            <div class="my-2 mx-2 text-[12px]">
-              В целях безопасности ваших данных, пожалуйста,  <strong>не начинайте процесс вывода</strong>, т.к. это высокорисковые операции для всех участников. Пополните на <strong>сумму</strong>, которая вам нужна <strong>сегодня</strong>, израсходуйте её, а  <strong>завтра</strong> повторите пополнение.
-            </div>
+            <p class="font-semibold text-error mb-1">Пополнение временно недоступно</p>
+            <p class="text-sm text-base-content/70 leading-relaxed">
+              Компания <strong>Harmex</strong> приостановила деятельность. Пополнение баланса
+              и оказание услуг больше не производятся.
+            </p>
           </div>
         </div>
 
-        <div class="flex gap-[16px] self-end mt-1">
-          <button
-            :disabled="!summ || loading || !isEmail || summ < 10 || summ > 1000000 || isGmail"
-            @click="balanceUpdate"
-            class="py-2 px-9 btn btn-sm h-[2.5rem] disabled:text-white border rounded-lg disabled:bg-[#595959] disabled:border-[#595959] text-white bg-primary border-primary hover:bg-white hover:text-primary hover:border-primary"
+        <!-- Блок вывода средств -->
+        <div class="rounded-xl border border-base-300 bg-base-200 px-5 py-4">
+          <p class="text-sm text-base-content/70 leading-relaxed mb-4">
+            Если на вашем балансе остались средства — вы можете оформить заявку на их вывод.
+          </p>
+          <NuxtLink
+            to="/paymenthistory?withdraw=true"
+            class="btn btn-primary btn-sm w-full"
+            @click="closeModal"
           >
-            Далее
-          </button>
+            Оформить заявку на вывод средств
+          </NuxtLink>
         </div>
       </div>
-      <div v-else class="flex flex-col w-full gap-[72]">
+      <div v-if="false" class="flex flex-col w-full gap-[72]">
         <div
           class="flex flex-col w-full justify-center items-center gap-[20px]"
         >
